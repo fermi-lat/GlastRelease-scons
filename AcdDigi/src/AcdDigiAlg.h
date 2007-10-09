@@ -3,21 +3,15 @@
 
 #include "GaudiKernel/Algorithm.h"
 
-#include "AcdDigiUtil.h"
-
 #include "idents/AcdId.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "Event/MonteCarlo/McPositionHit.h"
-
-// to access an XML containing Digi parameters file
-#include "xmlBase/IFile.h"
-#include "facilities/Util.h"
 
 #include "AcdTileList.h"
-#include "AcdUtil/IAcdCalibSvc.h"
-
+#include "AcdDigiUtil.h"
 
 #include <map>
+
+#include "Event/Digi/AcdDigi.h"
+#include "Event/MonteCarlo/McPositionHit.h"
 
 /** @class AcdDigiAlg
 * @brief Algorithm to convert from hit data stored as McPositionHits into digitization data 
@@ -32,107 +26,57 @@ class AcdDigiAlg : public Algorithm {
     
 public:
     
-    AcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator); 
-    
-    StatusCode initialize();
-    StatusCode execute();
-    StatusCode finalize();
+  AcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+  
+  StatusCode initialize();
+  StatusCode execute();
+  StatusCode finalize();
+
+protected:
+
+  StatusCode fillEnergyMap( const Event::McPositionHitCol& mcHits,
+			    std::map<idents::AcdId, double>& energyIdMap);
+
+  StatusCode convertEnergyToMips( const std::map<idents::AcdId, double>& energyIdMap,
+				  std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
+  
+  StatusCode makeDigis(const std::map<idents::AcdId, std::pair<double,double> >& mipsMap,
+		       Event::AcdDigiCol& digiCol);
+  
+  /// Clear the local paramaters
+  void clear();  
         
 private:
 
-    void clear();
+  /// input XML file containing parameters for Digitization
+  std::string m_xmlFileName;
+        
+  /// input AcdCalibration service
+  std::string m_calibSvcName;  
 
-    /// Read data from the input XML file
-    void getParameters();
+  /// JobOptions parameter denoting whether or not to apply Poisson fluctuations
+  bool m_apply_poisson;
+  
+  /// JobOptions parameter denoting whether or not to apply Gaussian noise 
+  /// before determining PHA and discriminators
+  bool m_apply_noise;
+  
+  /// JobOptions parameter denoting whether or not to apply Coherent readout noise 
+  /// to the PHA values
+  bool m_apply_coherent_noise;
 
-    /// add noise to all PMTs that exist (currently for tiles only)
-    void addNoise();
+ /// JobOptions parameter denoting whether or not to apply edge effects
+  /// according to the position of MC hits.
+  bool m_edge_effect;
 
-    /// Adjusts the deposited energy recorded in an ACD volume 
-    /// based on the location of the hit
-    double edgeEffect(const Event::McPositionHit *hit);
-
-    bool getPeds(const idents::AcdId& id, float& valA, float& valB) const;
-
-    bool getMips(const idents::AcdId& id, float& valA, float& valB) const;
-
+  /// Access the methods in the AcdDigiUtil class
+  AcdDigiUtil m_util;
+  
+  /// A list of all the tiles and ribbons
+  AcdTileList m_tiles;
     
-    /// Default value read in from XML file
-    double m_low_threshold_mips_xml;
-    /// Low discrim threshold which activates PHA
-    double m_low_threshold_mips;  
-    /// High discrim threshold for CNO
-    double m_high_threshold_mips;
-    /// Veto discrim threshold for nominal veto signal
-    double m_veto_threshold_mips; 
-    
-    /// input XML file containing parameters for Digitization
-    std::string	m_xmlFile;
-
-    /// Access the methods in the AcdDigiUtil class
-    AcdDigiUtil util;
-
-    /// access to the Glast Detector Service to read in geometry 
-    /// constants from XML files
-    IGlastDetSvc *m_glastDetSvc;
-
-    AcdTileList m_tiles;
-    
-    /// standard deviation for gaussian noise for PHA, 
-    /// veto and CNO discriminators
-    double m_noise_std_dev_pha, m_noise_std_dev_veto, m_noise_std_dev_cno;
-    
-    /// full scale for PHA
-    unsigned short m_full_scale;
-    
-    /// Global ratio of photoelectrons to mips
-    unsigned short m_mean_pe_per_mip;
-    
-    /// number of MIPs tha correspond to full scale PHA
-    double m_mips_full_scale;
-    
-    /// MeV per MIP
-    double m_mev_per_mip;
-
-    /// Distance (mm) cutoff for applying edge effects
-    double m_max_edge_dist;
-    
-    /// JobOptions parameter denoting whether or not to perform auto 
-    /// calibration to determine the number of MIPs for full scale PHA
-    bool m_auto_calibrate;
-    
-    /// JobOptions parameter denoting whether or not to apply Poisson fluctuations
-    bool m_apply_poisson;
-
-    /// JobOptions parameter denoting whether or not to apply Gaussian noise 
-    /// before determining PHA and discriminators
-    bool m_apply_noise;
-
-    /// JobOptions parameter denoting whether or not to apply edge effects
-    /// according to the position of MC hits.
-    bool m_edge_effect;
-
-    /// Slope of the linear function used to estimate the edge effect
-    double m_edge_slope;
-    /// y-intercept of the linear function used to estimate the edge effect
-    double m_edge_intercept;
-
-    std::string  m_calibSvcName;
-
-    AcdUtil::IAcdCalibSvc* m_calibSvc;
-
-    std::map<idents::AcdId, double> m_energyDepMap;
-    std::map<idents::AcdId, double> m_pmtA_toFullScaleMap;
-    std::map<idents::AcdId, double> m_pmtA_phaMipsMap;
-    std::map<idents::AcdId, double> m_pmtA_vetoMipsMap;
-    std::map<idents::AcdId, double> m_pmtA_cnoMipsMap;
-
-    std::map<idents::AcdId, double> m_pmtB_toFullScaleMap;
-    std::map<idents::AcdId, double> m_pmtB_phaMipsMap;
-    std::map<idents::AcdId, double> m_pmtB_vetoMipsMap;
-    std::map<idents::AcdId, double> m_pmtB_cnoMipsMap;
-
-    std::map<idents::AcdId, int> m_acdId_volCount;
+  std::map<idents::AcdId, double> m_energyDepMap;
+  std::map<idents::AcdId, std::pair<double, double> > m_mipsMap;
 
 };
 

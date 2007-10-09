@@ -2,6 +2,10 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r0    09-Oct-2007 EAC Use AcdUtil::AcdCalibFuncs for conversion to ensure that 
+                         sim and recon use same conversion functions.
+                         (But maybe not same calibration constants.)
+                         Get more calibrations from AcdSimCalibSvc.
  v2r0    26-Aug-2007 HMK Use CalibrationSvc to obtain pedestals and gains
          Now the default unless auto_calibrate is set to true
  v1r21p1 26-Jul-2007 HMK Patch to catch new tile volume names introduced with

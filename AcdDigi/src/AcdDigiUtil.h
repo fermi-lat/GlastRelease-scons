@@ -1,17 +1,42 @@
 #ifndef _AcdDigi_AcdDigiUtil_H
 #define _AcdDigi_AcdDigiUtil_H 1
 
-#include <map>
-#include <utility>
-#include "Event/Digi/AcdDigi.h"
 
+// stl
+#include <map>
+#include <string>
+
+// GLAST
+#include "GaudiKernel/StatusCode.h"
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
+#include "Event/Digi/AcdDigi.h"
 
-#include "facilities/Util.h"
-#include "xmlBase/IFile.h"
 
-#include "AcdTileList.h"
+class IAcdGeometrySvc;
+
+// Forward Declartions
+namespace AcdUtil {
+  class IAcdCalibSvc;
+};
+
+namespace xmlBase {
+  class IFile;
+};
+
+namespace CalibData {
+  class AcdPed;
+  class AcdGain;
+  class AcdHighRange;
+  class AcdRange;
+  class AcdVeto;
+  class AcdCno;
+  class AcdCoherentNoise;
+};
+
+namespace Event {
+  class McPositionHit;
+};
 
 /** @class AcdDigiUtil
 * @brief Utility class that defines the methods used for ACD digitization.
@@ -20,97 +45,209 @@
 * $Header$
 */
 
-class AcdDigiUtil  {
+
+
+class AcdSimCalibData {
+public: 
+
+  AcdSimCalibData();
     
+  virtual ~AcdSimCalibData(){;}
+    
+  inline void setPedestal(CalibData::AcdPed& ped) { m_ped = &ped; };
+  inline void setMipPeak(CalibData::AcdGain& gain) { m_gain = &gain; };
+  inline void setHighRange(CalibData::AcdHighRange& highRange) { m_highRange = &highRange; };
+  inline void setRangeXOver(CalibData::AcdRange& range) { m_range = &range; };  
+  inline void setVetoThresh(CalibData::AcdVeto& veto) { m_veto = &veto; };
+  inline void setCnoThresh(CalibData::AcdCno& cno) { m_cno = &cno; };
+  inline void setCoherentNoise(CalibData::AcdCoherentNoise& coherentNoise) { m_coherentNoise = &coherentNoise; };
+  
+  inline void setPe_per_mip(double val) {  m_pe_per_mip = val; };
+  inline void setMip_per_MeV(double val) {  m_mip_per_MeV = val; };
+  inline void setPhaThreshold(unsigned short val) {  m_threshold_pha = val; };
+  inline void setVetoThresholdMips(double veto, double width) {  m_veto_threshold_mips = veto;  m_veto_width_mips = width; };
+  inline void setVetoWidthMips(double width) { m_veto_width_mips = width; };
+  inline void setCnoThresholdMips(double cno, double width) {  m_cno_threshold_mips = cno;  m_cno_width_mips = width; };
+  inline void setCnoWidthMips(double width) { m_cno_width_mips = width; };
+  inline void setXOverMips(double val) {  m_xover_mips = val; };
+
+  StatusCode latchPePerMeV();
+  StatusCode latchPhaThreshold(double countsAbovePed);
+  StatusCode latchVetoThreshold();  
+  StatusCode latchCnoThreshold();  
+  StatusCode latchXOverMips();    
+
+  // calibrations
+  inline CalibData::AcdPed* ped_calib() const { return m_ped; }
+  inline CalibData::AcdGain* gain_calib() const { return m_gain; }
+  inline CalibData::AcdHighRange* highRange_calib() const { return m_highRange; }
+  inline CalibData::AcdRange* range_calib() const { return m_range; }
+  inline CalibData::AcdVeto* veto_calib() const { return m_veto; }
+  inline CalibData::AcdCno* cno_calib() const { return m_cno; }
+  inline CalibData::AcdCoherentNoise* coherentNoise_calib() const { return m_coherentNoise; }
+
+  // photo-electrons per mip
+  inline double pe_per_mip() const { return m_pe_per_mip; } 
+  // mip-equivalent light yield by MeV
+  inline double mip_per_MeV() const { return m_mip_per_MeV; }
+  // photo-electrons by MeV
+  inline double pe_per_MeV() const { return m_pe_per_MeV; }
+  // pedestals
+  inline unsigned short threshold_pha() const { return m_threshold_pha; }
+  // veto threshold  
+  inline double veto_threshold_mips() const { return m_veto_threshold_mips; }
+  inline double veto_width_mips() const { return m_veto_width_mips; }
+  // range crossover
+  inline double xover_mips() const { return m_xover_mips; }
+  // cno threshold
+  inline double cno_threshold_mips() const { return m_cno_threshold_mips; }
+  inline double cno_width_mips() const { return m_cno_width_mips; }
+
+private:  
+
+  // calibrations
+  CalibData::AcdPed* m_ped;
+  CalibData::AcdGain* m_gain;
+  CalibData::AcdHighRange* m_highRange;
+  CalibData::AcdRange* m_range;  
+  CalibData::AcdVeto* m_veto;
+  CalibData::AcdCno* m_cno;
+  CalibData::AcdCoherentNoise* m_coherentNoise;  
+
+  // Derived/ set values
+
+  // photo-electrons per mip
+  double m_pe_per_mip;  
+  // mip-equivalent light yield by MeV
+  double m_mip_per_MeV;  
+  // photo-electrons per MeV
+  double m_pe_per_MeV;
+  // Zero suppresion threshold
+  unsigned short m_threshold_pha;       
+  // veto threshold  
+  double m_veto_threshold_mips;
+  double m_veto_width_mips;
+  // range crossover
+  double m_xover_mips;
+  // cno threshold
+  double m_cno_threshold_mips;
+  double m_cno_width_mips;
+  // high range calibraion
+  double m_pedestal_highRange;
+
+};
+
+
+class AcdDigiUtil  {
+
+public:
+
+  /// Returns the number of pe seen in a tube
+  /// 
+  static double simulateDynodeChain(double pe_meanValue);
+  
+  /// Returns a value sampled from a Poisson distribution
+  /// @param pmtPhotoElectrons is the mean of the Poisson distribution
+  static double shootPoisson(double pmtPhotoElectrons);
+
+  /// Returns a value sampled from a Gaussian distribution
+  /// @param std_dev Standard Deviation to be  used when sampling
+  static double shootGaussian(double std_dev);
+  
+  /// Compares two volume IDs, returns true if the screw belongs with the tile
+  static bool compareVolIds(const idents::VolumeIdentifier& tileId,
+			    const idents::VolumeIdentifier& screwId);
+  
+
 public:
     
-    AcdDigiUtil(); 
+  AcdDigiUtil(); 
+  
+  virtual ~AcdDigiUtil();
 
-    ~AcdDigiUtil();
+  StatusCode initialize(AcdUtil::IAcdCalibSvc& calibSvc, IAcdGeometrySvc& geomSvc,
+			const std::string& xmlFileName);
 
-    /// Read data from the input XML file
-    void getParameters(const std::string &xmlFile);
+  /// calulates the number of pe seen in each tube given the 
+  /// deposited energy
+  StatusCode photoElectronsFromEnergy(const idents::AcdId& id, double energy,
+				      double& pe_pmtA, double& pe_pmtB);
 
-    std::ostream& dumpMeanPePerPmt(std::ostream& s) const;
+  
+  /// calulates the light yield expressed in mip equivalent from the number of observed PE 
+  StatusCode mipEquivalentLightYeild(const idents::AcdId& id, double pe_pmtA, double pe_pmtB,
+				     double& mipEquivA, double& mipEquivB);
 
-    /// Convert from energy (MeV) to MIPs
-    static double convertMevToMips(double energy_mev);
+  /// get the PHA counts from the mip equivalent light yield
+  StatusCode phaCounts(const idents::AcdId& id, const double mipEquiv[2], bool applyNoise,
+		       Event::AcdDigi::Range range[2], unsigned short pha[2]);
 
-    /// Converts MIPs to PhotoElectrons
-    /// @param id an AcdId identifer
-    /// used to retrieve specific conversion parameters if available
-    /// @param pmtA_mips input number of MIPs detected by PMT A
-    /// @param pmtA_pe output number of PEs detected by PMT A
-    /// @param pmtB_mips input number of MIPs detected by PMT B
-    /// @param pmtB_pe output number of PEs detected by PMT B
-    static void convertMipsToPhotoElectrons(const idents::AcdId &id, 
-        double pmtA_mips, double &pmtA_pe,
-        double pmtB_mips, double &pmtB_pe);
+  /// get the PHA counts from the mip equivalent light yield
+  StatusCode applyCoherentNoiseToPha(const idents::AcdId& id, unsigned int deltaGemEventTime, unsigned short pha[2]);    
 
-    /// Converts PhotoElectrons to MIPs
-    /// @param id an AcdId identifer
-    /// used to retrieve specific conversion parameters if available
-    /// @param pmtA_pe input number of PEs detected by PMT A
-    /// @param pmtA_mips output number of MIPs detected by PMT A
-    /// @param pmtB_pe input number of PEs detected by PMT B
-    /// @param pmtB_mips output number of MIPs detected by PMT B
-    static void convertPhotoElectronsToMips(const idents::AcdId &id, 
-        double pmtA_pe, double &pmtA_mips,
-        double pmtB_pe, double &pmtB_mips);
+  /// Adjusts the deposited energy recorded in an ACD volume 
+  /// based on the location of the hit
+  StatusCode tileEdgeEffect(const Event::McPositionHit *hit, double& energy);
 
-    /// Determine MIPS to Full Scale conversion for both PMTs for a particular AcdId
-    static void calcMipsToFullScale(const idents::AcdId&, 
-        double pmtA_mips, double pmtA_pe, double &mipsToFullScaleA, 
-        double pmtB_mips, double pmtB_pe, double& mipsToFullScaleB );
+  /// Adjusts the deposited energy recorded in an ACD volume 
+  /// based on the location of the hit
+  StatusCode ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energy);
 
-    /// calculate mipsToFullScale based on the specific parameters provided for AcdIds
-    /// @param id an AcdId identifer
-    /// @param mipsToFullScaleA the calculated parameter relating MIPs to Full Scale for PMT A
-    /// @param mipsToFullScaleB the calculated parameter relating MIPs to Full Scale for PMT B
-    static void applyGains(const idents::AcdId &id, 
-        double &mipsToFullScaleA, double &mipsToFullScaleB);
-    
-    /// Converts MIPs to a PHA value - if the number of MIPs is offscale, returns
-    /// the fullscale value
-    static unsigned short convertMipsToPha(double mips, double mipsToFullScale, 
-					   Event::AcdDigi::Range& range);
+  /// Checks all the various thresholds
+  StatusCode checkThresholds(const idents::AcdId& id, const double mipEquiv[2],
+			     const unsigned short phaArr[2], bool applyNoise, 
+			     bool& makeDigi, bool phaThreshArr[2], bool vetoArr[2],  bool highArr[2]);			     
+  
+  
+protected:
 
-    /// Returns a value sampled from a Poisson distribution
-    /// @param pmtPhotoElectrons is the mean of the Poisson distribution
-    static double shootPoisson(double pmtPhotoElectrons);
+  // get the calibration data from the local map, of fetch in from the DB if needed
+  StatusCode getCalibData(const idents::AcdId& id, AcdSimCalibData*& pmtACalib, AcdSimCalibData*& pmtBCalib);
+  
+  // fetch the calibration data from the DB
+  StatusCode fetchCalibData(const idents::AcdId& id, Event::AcdDigi::PmtId pmt, AcdSimCalibData*& pmtCalib);  
 
-    /// Returns a value sampled from a Gaussian distribution
-    /// @param std_dev Standard Deviation to be  used when sampling
-    static double shootGaussian(double std_dev);
+  /// Read data from the input XML file
+  StatusCode getParameters(const std::string &xmlFile);
 
-    static bool compareVolIds(const idents::VolumeIdentifier &tileId,
-                              const idents::VolumeIdentifier &screwId);
-    
 private:
-            
-    static xmlBase::IFile *m_ifile;
-    
-    /// standard deviation for gaussian noise for PHA, veto and CNO discriminators
-    static double m_noise_std_dev_pha, m_noise_std_dev_veto, m_noise_std_dev_cno;
-    
-    /// full scale for PHA
-    static unsigned short m_full_scale;
-    
-    /// Global ratio of photoelectrons to mips
-    static unsigned short m_mean_pe_per_mip;
-    static unsigned short m_mean_pe_per_mip_ribbon;
-    
-    /// number of MIPs tha correspond to full scale PHA
-    static double m_mips_full_scale;
-    
-    /// MeV per MIP
-    static double m_mev_per_mip;
-     
-    /// store AcdId specific number of photoelectrons per mip as they are read in
-    static std::map< unsigned int, std::pair<float, float> > m_pePerMipMap;
-    /// store AcdId specific gain values as they are read in
-    static std::map< unsigned int, std::pair<double, double> > m_gainMap;
+  
+  /// The calibration service
+  AcdUtil::IAcdCalibSvc* m_calibSvc;
+  
+  /// The geometry service
+  IAcdGeometrySvc* m_geomSvc;
 
+  /// The xml input file
+  xmlBase::IFile *m_ifile;
+  
+  /// Distance (mm) cutoff for applying edge effects 
+  double m_max_edge_dist;
+  /// Slope of the linear function used to estimate the edge effect
+  double m_edge_slope;
+  /// y-intercept of the linear function used to estimate the edge effect
+  double m_edge_intercept;
+  
+  /// Global ratio of photoelectrons to mips
+  double m_mean_pe_per_mip;
+  double m_mean_pe_per_mip_ribbon;  
+
+  /// MIP per MeV
+  double m_mip_per_MeV;
+  double m_mip_per_MeV_ribbon;
+
+  double m_veto_mips;
+  double m_veto_width_mips;
+  double m_cno_mips;
+  double m_cno_width_mips;
+
+  /// counts above pedestal to set PHA threshold
+  double m_counts_above_pedestal;
+
+  /// store AcdId specific number of photoelectrons per mip as they are read in
+  std::map< unsigned int, std::pair<AcdSimCalibData*,AcdSimCalibData*> > m_calibMap;
+
+  
 };
 
 #endif

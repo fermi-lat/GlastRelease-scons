@@ -5,10 +5,26 @@
 // Description
 // Some utility methods helpful for performing the ACD digitization.
 
+
 #include "AcdDigiUtil.h"
 
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandGauss.h"
+
+#include "CalibData/Acd/AcdPed.h"
+#include "CalibData/Acd/AcdGain.h"
+#include "CalibData/Acd/AcdHighRange.h"
+#include "CalibData/Acd/AcdRange.h"
+#include "CalibData/Acd/AcdVeto.h"
+#include "CalibData/Acd/AcdCno.h"
+#include "CalibData/Acd/AcdCoherentNoise.h"
+
+#include "AcdUtil/AcdCalibFuncs.h"
+#include "AcdUtil/AcdTileDim.h"
+#include "AcdUtil/AcdGeomMap.h"
+#include "AcdUtil/IAcdCalibSvc.h"
+
+#include "Event/MonteCarlo/McPositionHit.h"
 
 // for min and floor functions
 #include <algorithm>
@@ -21,149 +37,80 @@
 #include "xmlBase/IFile.h"
 #include "facilities/Util.h"
 
-xmlBase::IFile *AcdDigiUtil::m_ifile;
-double AcdDigiUtil::m_noise_std_dev_pha;
-double AcdDigiUtil::m_noise_std_dev_veto;
-double AcdDigiUtil::m_noise_std_dev_cno;
-unsigned short AcdDigiUtil::m_full_scale;
-unsigned short AcdDigiUtil::m_mean_pe_per_mip;
-unsigned short AcdDigiUtil::m_mean_pe_per_mip_ribbon;
-double AcdDigiUtil::m_mips_full_scale;
-double AcdDigiUtil::m_mev_per_mip;
-std::map< unsigned int, std::pair<float, float> > AcdDigiUtil::m_pePerMipMap;
-std::map< unsigned int, std::pair<double, double> > AcdDigiUtil::m_gainMap;
+AcdSimCalibData::AcdSimCalibData()
+  :m_ped(0),
+   m_gain(0),
+   m_highRange(0),
+   m_range(0),  
+   m_veto(0),
+   m_cno(0),
+   m_coherentNoise(0),
+   m_pe_per_mip(0.),
+   m_mip_per_MeV(0.),
+   m_threshold_pha(0),    
+   m_veto_threshold_mips(0.),
+   m_xover_mips(0.),
+   m_cno_threshold_mips(0.),
+   m_pedestal_highRange(0.)
+{;}
 
+StatusCode AcdSimCalibData::latchPePerMeV( ) {
+  m_pe_per_MeV = m_pe_per_mip * m_mip_per_MeV;
+  return StatusCode::SUCCESS;
+}
 
-AcdDigiUtil::AcdDigiUtil() {    
-    
-    m_ifile = 0;
+StatusCode AcdSimCalibData::latchPhaThreshold(double countsAbovePed) {
+  if  ( m_ped == 0 ) return StatusCode::FAILURE;
+  m_threshold_pha = (unsigned short) ( m_ped->getMean() + countsAbovePed );
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AcdSimCalibData::latchVetoThreshold() {
+  if ( m_ped == 0 || m_gain == 0 || m_veto == 0 ) return StatusCode::FAILURE;
+  double pedestal = m_ped->getMean();
+  double mipPeak = m_gain->getPeak();
+  unsigned short veto_pha = (unsigned short)(m_veto->getVeto());
+  return AcdCalib::mipEquivalent_lowRange(veto_pha,pedestal,mipPeak,m_veto_threshold_mips);
+}
+
+StatusCode AcdSimCalibData::latchCnoThreshold() {
+  if ( m_cno == 0 || m_highRange == 0 ) return StatusCode::FAILURE;
+  double pedestal = m_highRange->getPedestal();
+  double slope = m_highRange->getSlope();
+  double saturation = m_highRange->getSaturation();  
+  unsigned short cno_pha = (unsigned short)(m_cno->getCno());
+  return AcdCalib::mipEquivalent_highRange(cno_pha,pedestal,slope,saturation,m_cno_threshold_mips);
+}
+
+StatusCode AcdSimCalibData::latchXOverMips() {
+  if ( m_ped == 0 || m_gain == 0 || m_range == 0 ) return StatusCode::FAILURE;
+  double pedestal = m_ped->getMean();
+  double mipPeak = m_gain->getPeak();
+  unsigned short xover_pha = (unsigned short)(m_range->getLowMax());
+  return AcdCalib::mipEquivalent_lowRange(xover_pha,pedestal,mipPeak,m_xover_mips); 
 }
 
 
-AcdDigiUtil::~AcdDigiUtil() {
-    if (m_ifile) delete m_ifile;
-}
+double AcdDigiUtil::simulateDynodeChain(double pe_meanValue)  {
+ 
+  if ( pe_meanValue <= 0 ) return 0.;
+  
+  unsigned poisson_steps = 4;  //Number of "dynodes" considered
+  double gain=5.;         //Nominal gain in each dynode
 
-
-void AcdDigiUtil::getParameters(const std::string &xmlFile) {
-    
-    // Purpose and Method:  Read in the parameters from the XML file using IFile
-    
-    m_ifile = new xmlBase::IFile(xmlFile.c_str());
-        
-    m_mean_pe_per_mip = m_ifile->getInt("global_constants", "mean_pe_per_mip");
-    m_mean_pe_per_mip_ribbon = m_ifile->getInt("global_constants", "mean_pe_per_mip_ribbon");
-    
-    m_noise_std_dev_pha = m_ifile->getDouble("global_constants", "noise_std_dev_pha");
-    m_noise_std_dev_veto = m_ifile->getDouble("global_constants", "noise_std_dev_veto");
-    m_noise_std_dev_cno = m_ifile->getDouble("global_constants", "noise_std_dev_cno");
-    
-    m_full_scale = m_ifile->getInt("global_constants", "full_scale");
-    
-    m_mips_full_scale = m_ifile->getDouble("global_constants", "mips_full_scale");
-    
-    m_mev_per_mip = m_ifile->getDouble("global_constants", "mev_per_mip");
-    
-    return;
-}
-
-std::ostream& AcdDigiUtil::dumpMeanPePerPmt(std::ostream& s) const {
-
-    s  << "Dump All Mean PE per PMT values read in from XML" << std::endl;
-    std::map< unsigned int, std::pair<float, float> >::const_iterator mapIt;
-    for (mapIt = m_pePerMipMap.begin(); mapIt != m_pePerMipMap.end(); mapIt++) {
-        std::pair<float, float> pePerMip = (*mapIt).second;
-        s << "ID: " << (*mapIt).first << " PMTA: " << pePerMip.first 
-          << " PMTB: " << pePerMip.second << std::endl;
-    }
-    return s;
-}
-
-
-double AcdDigiUtil::convertMevToMips(double energy_mev) {
-    return energy_mev / m_mev_per_mip;
-}
-
-void AcdDigiUtil::convertMipsToPhotoElectrons(const idents::AcdId &id, 
-                                             double pmtA_mips, double &pmtA_pe, 
-                                             double pmtB_mips, double &pmtB_pe) {
-    // Purpose and Method:  Convert from MIPs to PhotoElectrons for both PMTs of an AcdId.
-    //   First check to see if an individual pePerMip has been assigned for this PMT
-    //   Check both in a map that stores the values already read in from the input XML file
-    //   and checks the XML file itself.  If no pePerMip is provided for these PMTs, we use
-    //   the global m_mean_pe_per_mip to compute the photoelectrons for each PMT.
-    // Input: pmtA_mips, pmtB_mips - the number of MIPs for each PMT and the AcdId
-    // Output:  pmtA_pe and pmtB_pe - the number of photoelectrons for each PMT
-    
-    // Check the map
-    if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
-        std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
-        pmtA_pe = pmtA_mips * pePerMip.first;
-        pmtB_pe = pmtB_mips * pePerMip.second;
-        return;
-    } 
-    // Check the XML file
-    std::string idStr;
-    facilities::Util::itoa(id.id(), idStr);
-    std::string pmtIdStr = idStr;
-    if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
-        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
-        m_pePerMipMap[id.id()] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
-        pmtA_pe = pmtA_mips * pePerMipVec[0];
-        pmtB_pe = pmtB_mips * pePerMipVec[1];
-        return;
-    }
-    // Now use the global mean_pe_per_mip
-    if (id.tile()) {
-        pmtA_pe = pmtA_mips * m_mean_pe_per_mip;
-        pmtB_pe = pmtB_mips * m_mean_pe_per_mip;
-    } else if (id.ribbon()) {
-        pmtA_pe = pmtA_mips * m_mean_pe_per_mip_ribbon;
-        pmtB_pe = pmtB_mips * m_mean_pe_per_mip_ribbon;
-    }
-    return;
-}
-
-void AcdDigiUtil::convertPhotoElectronsToMips(const idents::AcdId &id, 
-                                             double pmtA_pe, double &pmtA_mips, 
-                                             double pmtB_pe, double &pmtB_mips) {
-    // Purpose and Method:  Convert from PhotoElectrons to MIPs for both PMTs of an AcdId.
-    //   First check to see if an individual pePerMip has been assigned for this PMT
-    //   Check both in a map that stores the values already read in from the input XML file
-    //   and checks the XML file itself.  If no pePerMip is provided for these PMTs, we use
-    //   the global m_mean_pe_per_mip to compute the MIPs for each PMT.
-    // Input:  pmtA_pe and pmtB_pe - the number of photoelectrons for each PMT
-    // Output: pmtA_mips, pmtB_mips - the number of MIPs for each PMT and the AcdId
-    
-    // Check the map
-    if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
-        std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
-        pmtA_mips = pmtA_pe / pePerMip.first;
-        pmtB_mips = pmtB_pe / pePerMip.second;
-        return;
-    } 
-    // Check the XML file
-    std::string idStr;
-    facilities::Util::itoa(id.id(), idStr);
-    std::string pmtIdStr = idStr;
-    if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
-        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
-        m_pePerMipMap[id] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
-        pmtA_mips = pmtA_pe / pePerMipVec[0];
-        pmtB_mips = pmtB_pe / pePerMipVec[1];
-        return;
-    }
-    // Now use the global mean_pe_per_mip
-    if (id.tile()) {
-        pmtA_mips = ((double) pmtA_pe) / ( m_mean_pe_per_mip);
-        pmtB_mips = ((double) pmtB_pe) / ( m_mean_pe_per_mip);
-    } else if (id.ribbon()) {
-        pmtA_mips = ((double) pmtA_pe) / ( m_mean_pe_per_mip_ribbon);
-        pmtB_mips = ((double) pmtB_pe) / ( m_mean_pe_per_mip_ribbon);
-    }
-
-    return;
-    
+  double norm(1.);
+  double val = pe_meanValue;
+  for ( unsigned i(0); i < poisson_steps; i++ ) {
+    val = shootPoisson(val);
+    if ( val <= 0. ) return val;
+    val *= gain;
+    norm *= gain;
+    // no need to simulate huge signals
+    if ( val > 1000. ) break;
+  }
+  
+  val /= norm;
+  return val;
 }
 
 double AcdDigiUtil::shootPoisson(double pmtPhotoElectrons) {
@@ -184,113 +131,359 @@ double AcdDigiUtil::shootGaussian(double std_dev) {
     return CLHEP::RandGauss::shoot(0.0, std_dev);
 }
 
-void AcdDigiUtil::calcMipsToFullScale(const idents::AcdId& id, 
-                                     double pmtA_mips, double pmtA_pe, double &pmtA_mipsToFullScale, 
-                                     double pmtB_mips, double pmtB_pe, double &pmtB_mipsToFullScale) {
-    
-    // Check the map
-    if (m_pePerMipMap.find(id.id()) != m_pePerMipMap.end()) {
-        std::pair<float, float> pePerMip = m_pePerMipMap[id.id()];
-
-        pmtA_mipsToFullScale = m_mips_full_scale * (( pePerMip.first) / (pmtA_pe / pmtA_mips) );
-        pmtB_mipsToFullScale = m_mips_full_scale * (( pePerMip.second) / (pmtB_pe / pmtB_mips) );
-
-        return;
-    } 
-    // Check the XML file
-    std::string idStr;
-    facilities::Util::itoa(id.id(), idStr);
-    std::string pmtIdStr = idStr;
-    if (m_ifile->contains("meanPePerMip", pmtIdStr.c_str())) {
-        std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
-        m_pePerMipMap[id] = std::make_pair(pePerMipVec[0], pePerMipVec[1]);
-
-
-        pmtA_mipsToFullScale = m_mips_full_scale * (( pePerMipVec[0] ) / (pmtA_pe / pmtA_mips) );
-        pmtB_mipsToFullScale = m_mips_full_scale * (( pePerMipVec[1] ) / (pmtB_pe / pmtB_mips) );
-
-        return;
-    }
-
-    // Or use the global mean_pe_per_mip
-
-    if (id.tile()) {
-        pmtA_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip) / (pmtA_pe / pmtA_mips) );
-        pmtB_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip) / (pmtB_pe / pmtB_mips) );
-    } else if (id.ribbon()) {
-        pmtA_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip_ribbon) / (pmtA_pe / pmtA_mips) );
-        pmtB_mipsToFullScale = m_mips_full_scale * (( m_mean_pe_per_mip_ribbon) / (pmtB_pe / pmtB_mips) );
-
-    }
-    
-    return;
-}
-
-void AcdDigiUtil::applyGains(const idents::AcdId &id, 
-                            double &pmtA_mipsToFullScale, double &pmtB_mipsToFullScale) {
-    
-    // Check the map
-    if (m_gainMap.find(id.id()) != m_gainMap.end()) {
-        std::pair<double, double> gain = m_gainMap[id.id()];
-        pmtA_mipsToFullScale = m_mips_full_scale * gain.first;
-        pmtB_mipsToFullScale = m_mips_full_scale * gain.second;
-        return;
-    } 
-    
-    // Check the XML file
-    std::string idStr;
-    facilities::Util::itoa(id.id(), idStr);
-    std::string gainIdStr = "Gain_" + idStr;
-    if (m_ifile->contains("Gains", gainIdStr.c_str())) {
-        std::vector<double> gainVec = m_ifile->getDoubleVector("gains", gainIdStr.c_str());
-        m_gainMap[id.id()] = std::make_pair( gainVec[0], gainVec[1] );
-        pmtA_mipsToFullScale = m_mips_full_scale * gainVec[0];
-        pmtB_mipsToFullScale = m_mips_full_scale * gainVec[1];
-        return;
-    }
-    
-    // No Gains provided for this id, use global mipsToFullScale
-    pmtA_mipsToFullScale = m_mips_full_scale;
-    pmtB_mipsToFullScale = m_mips_full_scale;
-    
-    return;
-}
-
-
-
-unsigned short AcdDigiUtil::convertMipsToPha(double mips, double mipsToFullScale,
-					     Event::AcdDigi::Range& range) {
-     
-  double fractionFullScale = mips / mipsToFullScale;
-  unsigned short returnValue(0);
-  if ( fractionFullScale < 1 ) { 
-    // low range, return the value
-    range = Event::AcdDigi::LOW;
-    // convert the fraction of the full scale into PHA (multiply by full scale value)
-    returnValue = static_cast<unsigned short>(floor(fractionFullScale * m_full_scale));
-  } else {
-    range = Event::AcdDigi::HIGH;
-    // high range, first subtract off the low-range full scale
-    fractionFullScale -= 1.;
-    // gain factor is 100 : 1, so divide by 100
-    fractionFullScale /= 100.;
-    // convert the fraction of the full scale into PHA (multiply by full scale value)
-    returnValue = static_cast<unsigned short>(floor(fractionFullScale * m_full_scale));    
-  }
-  return returnValue;
-}
-
 bool AcdDigiUtil::compareVolIds(const idents::VolumeIdentifier& tileId, 
                                 const idents::VolumeIdentifier& screwVolId) {
 
-    ///Purpose and Method:  Compare the volumeIdentfiers of a tile and a 
-    /// AcdScrewSq to see if the AcdScrewSq occurs within the given tile
-
-    if ((tileId[0] != 1) && (screwVolId[0] != 1) ) return false;
-    unsigned int i;
-    // compare the entries one by one to see if they are equal
-    for (i = 0; i<5; i++) {
-        if(tileId[i] != screwVolId[i]) return false;
-    }
-    return true;
+  ///Purpose and Method:  Compare the volumeIdentfiers of a tile and a 
+  /// AcdScrewSq to see if the AcdScrewSq occurs within the given tile
+  
+  if ((tileId[0] != 1) && (screwVolId[0] != 1) ) return false;
+  unsigned int i;
+  // compare the entries one by one to see if they are equal
+  for (i = 0; i<5; i++) {
+    if(tileId[i] != screwVolId[i]) return false;
+  }
+  return true;
 }
+
+AcdDigiUtil::AcdDigiUtil()
+  :m_ifile(0){;}
+
+
+AcdDigiUtil::~AcdDigiUtil() {
+  if (m_ifile) delete m_ifile;
+}
+
+
+StatusCode AcdDigiUtil::initialize(AcdUtil::IAcdCalibSvc& calibSvc, IAcdGeometrySvc& geomSvc, 
+				   const std::string &xmlFileName) {
+  // Purpose and Method:  Read in the parameters from the XML file using IFile
+  
+    
+  // latch the services
+  m_calibSvc = &calibSvc;
+  m_geomSvc = &geomSvc;
+
+  m_ifile = new xmlBase::IFile(xmlFileName.c_str());
+  
+  // pe per MIP
+  m_mean_pe_per_mip = m_ifile->getDouble("global_constants", "mean_pe_per_mip",18.0);
+  m_mean_pe_per_mip_ribbon = m_ifile->getDouble("global_constants", "mean_pe_per_mip_ribbon",4.5);
+    
+  // mip per MeV
+  m_mip_per_MeV = m_ifile->getDouble("global_constants", "mip_per_MeV",0.52631);
+  m_mip_per_MeV_ribbon = m_ifile->getDouble("global_constants", "mip_per_MeV_ribbon",0.52631);
+
+  // counts above pedestal to set PHA threshold
+  m_counts_above_pedestal = m_ifile->getDouble("global_constants", "counts_above_pedestal", 15);
+
+  m_veto_mips = m_ifile->getDouble("global_constants", "veto_mips",-1);
+  m_cno_mips = m_ifile->getDouble("global_constants", "cno_mips",-1);
+  
+  // noise levels
+  m_veto_width_mips = m_ifile->getDouble("global_constants", "noise_std_dev_veto", 0.02);
+  m_cno_width_mips = m_ifile->getDouble("global_constants", "noise_std_dev_cno", 0.02);
+
+  // Edge Effects
+  m_max_edge_dist = m_ifile->getDouble("edge_effects", "max_edge_dist", 20.0);
+  m_edge_slope = m_ifile->getDouble("edge_effects", "edge_slope", 0.01);  
+  m_edge_intercept = m_ifile->getDouble("edge_effects", "edge_intercept", 0.8);
+
+  return StatusCode::SUCCESS;
+
+}
+
+
+StatusCode AcdDigiUtil::photoElectronsFromEnergy(const idents::AcdId& id, double energy,
+						double& pe_pmtA, double& pe_pmtB) {
+
+  StatusCode sc = StatusCode::SUCCESS;
+
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+  sc = getCalibData(id,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+
+  // check the map
+  double pePerMeV_A = pmtACalib->pe_per_MeV();
+  double pePerMeV_B = pmtBCalib->pe_per_MeV();
+
+  // OK, have the numbers, now just combine them
+  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
+  if ( sc.isFailure() ) return sc;
+
+  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_B,pe_pmtB);
+  if ( sc.isFailure() ) return sc;
+
+  return sc;
+}
+
+
+/// calulates the light yield expressed in mip equivalent from the number of observed PE 
+StatusCode AcdDigiUtil::mipEquivalentLightYeild(const idents::AcdId& id, double pe_pmtA, double pe_pmtB,
+					       double& mipEquivA, double& mipEquivB) {
+    
+  double pePerMip_A(0.);
+  double pePerMip_B(0.);
+
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+
+  StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+  pePerMip_A = pmtACalib->pe_per_mip();
+  pePerMip_B = pmtBCalib->pe_per_mip();
+  
+  sc = AcdCalib::lightYeildMipEquivalent(pe_pmtA,pePerMip_A,mipEquivA);
+  if ( sc.isFailure() ) return sc;
+
+  sc = AcdCalib::lightYeildMipEquivalent(pe_pmtB,pePerMip_B,mipEquivB);
+  if ( sc.isFailure() ) return sc;
+
+  return sc;
+
+}
+
+/// get the PHA counts from the mip equivalent light yield
+StatusCode AcdDigiUtil::phaCounts(const idents::AcdId& id, const double mipEquiv[2], bool applyNoise,	       
+				 Event::AcdDigi::Range range[2], unsigned short pha[2]) {
+  
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+
+  StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+
+  for ( unsigned i(0); i < 2; i++ ) {
+    const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
+
+    double xOverMips = calibData->xover_mips();
+    range[i] = mipEquiv[i] > xOverMips ? Event::AcdDigi::HIGH : Event::AcdDigi::LOW;
+  
+    if ( range[i] == Event::AcdDigi::LOW ) { 
+      double pedestal = calibData->ped_calib()->getMean();
+      double mipPeak = calibData->gain_calib()->getPeak();
+      sc = AcdCalib::PHA_lowRange(mipEquiv[i],pedestal,mipPeak,pha[i]);
+      if ( applyNoise ) {
+	short noise = (short)shootGaussian( calibData->ped_calib()->getWidth() );
+	pha[i] = ( -1 * noise < pha[i] ) ? pha[i] + noise : 0;
+      }
+      if ( sc.isFailure() ) return sc;
+    } else {
+      double slope = calibData->highRange_calib()->getSlope();
+      double pedestal = calibData->highRange_calib()->getPedestal();
+      double saturation = calibData->highRange_calib()->getSaturation();
+      sc = AcdCalib::PHA_highRange(mipEquiv[i],pedestal,slope,saturation,pha[i]);
+      if ( sc.isFailure() ) return sc;
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+
+/// get the PHA counts from the mip equivalent light yield
+StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigned int deltaGemEventTime, unsigned short pha[2]) {
+
+  if ( deltaGemEventTime > 2500 ) return StatusCode::SUCCESS;
+
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+
+  StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+
+  for ( unsigned i(0); i < 2; i++ ) {
+    const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
+    const CalibData::AcdCoherentNoise* cNoise = calibData->coherentNoise_calib();
+    // function form is A * sin ( b*x + c ) * exp(-dx)
+    double effect = cNoise->getAmplitude();
+    if ( effect < 0.5 ) continue;
+    effect *= sin( cNoise->getFrequency() * deltaGemEventTime + cNoise->getPhase());
+    effect *= exp( -1.0 * cNoise->getDecay() *  deltaGemEventTime);
+    int effectInt = int(effect);
+    pha[i] = ( -1* effect > pha[i] ) ? 0 : pha[i] - effectInt;    
+  }
+  return StatusCode::SUCCESS;
+}
+
+/// Adjusts the deposited energy recorded in an ACD volume 
+/// based on the location of the hit
+StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& energy) {
+      
+
+  idents::VolumeIdentifier volId = hit->volumeID();
+  idents::AcdId tileId(volId);
+  
+  // In local coordinates the box should be centered at (0,0,0)
+  const HepPoint3D local_x0 = hit->entryPoint();
+  
+  const AcdTileDim* tileDim = m_geomSvc->geomMap().getTile(tileId,*m_geomSvc);
+  if ( tileDim == 0 ) return StatusCode::FAILURE;
+  
+  double activeX(0.);
+  double activeY(0.);
+  
+  tileDim->activeDistance(local_x0, volId[6], activeX, activeY );
+  double dist = activeX > activeY ? activeY : activeX;
+  
+    // Apply edge correction if within m_max_edge_dist (mm) of the edge
+  if (dist < m_max_edge_dist) {
+    energy = (m_edge_slope*dist + m_edge_intercept) * hit->depositedEnergy();   
+  } else {
+    energy = hit->depositedEnergy();
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+
+/// Adjusts the deposited energy recorded in an ACD volume 
+/// based on the location of the hit
+StatusCode AcdDigiUtil::ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energy) {  
+  energy = hit->depositedEnergy();
+  return StatusCode::SUCCESS;
+}
+
+
+/// Checks all the various thresholds
+StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mipEquiv[2],
+					const unsigned short phaArr[2], bool applyNoise, 
+					bool& makeDigi, bool phaThreshArr[2], bool vetoArr[2],  bool highArr[2]) {
+  
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+
+  StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+
+  makeDigi = false;  
+  for ( unsigned i(0); i < 2; i++ ) {
+    const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
+    phaThreshArr[i] = phaArr[i] >= calibData->threshold_pha();
+    double mipVeto = mipEquiv[i];
+    double cnoVeto = mipEquiv[i];
+    if ( applyNoise ) { 
+      mipVeto += shootGaussian( calibData->veto_width_mips() );
+      cnoVeto += shootGaussian( calibData->cno_width_mips() );
+    }
+    vetoArr[i] = mipVeto >= calibData->veto_threshold_mips();
+    highArr[i] = cnoVeto >= calibData->cno_threshold_mips();
+    makeDigi |= phaThreshArr[i] || vetoArr[i] || highArr[i];
+  }
+
+  return StatusCode::SUCCESS;
+}			     
+  
+
+
+
+StatusCode AcdDigiUtil::getCalibData(const idents::AcdId& id, AcdSimCalibData*& pmtACalib, AcdSimCalibData*& pmtBCalib) {
+
+  std::map< unsigned int, std::pair<AcdSimCalibData*,AcdSimCalibData*> >::const_iterator itrFind = m_calibMap.find(id);
+  if ( itrFind != m_calibMap.end() ) {
+    // go it
+    pmtACalib = itrFind->second.first;
+    pmtBCalib = itrFind->second.second;
+    return StatusCode::SUCCESS;
+  }
+  
+  // not in map, fetch from DB
+  StatusCode sc = fetchCalibData(id,Event::AcdDigi::A,pmtACalib);
+  if ( sc.isFailure() ) return sc;
+  sc = fetchCalibData(id,Event::AcdDigi::B,pmtBCalib);
+  return sc;
+}
+
+
+StatusCode AcdDigiUtil::fetchCalibData(const idents::AcdId& id, Event::AcdDigi::PmtId pmt, AcdSimCalibData*& pmtCalib ) {
+
+  StatusCode sc = StatusCode::SUCCESS;
+
+  CalibData::AcdPed* ped(0);
+  CalibData::AcdGain* gain(0);
+  CalibData::AcdHighRange* highRange(0);
+  CalibData::AcdRange* range(0);  
+  CalibData::AcdVeto* veto(0);
+  CalibData::AcdCno* cno(0);
+  CalibData::AcdCoherentNoise* coherentNoise(0);  
+  
+  pmtCalib = new AcdSimCalibData;
+    
+  // Check the XML file
+  std::string idStr;
+  facilities::Util::itoa(id.id(), idStr);
+  std::string pmtIdStr = idStr;
+  if ( m_ifile->contains("meanPePerMip", pmtIdStr.c_str())){
+    std::vector<double> pePerMipVec = m_ifile->getDoubleVector("meanPePerMip", pmtIdStr.c_str());
+    pmtCalib->setPe_per_mip( pePerMipVec[pmt] );
+  } else {
+    if ( id.tile() ) {
+      pmtCalib->setPe_per_mip( m_mean_pe_per_mip );
+    } else if ( id.ribbon() ) {
+      pmtCalib->setPe_per_mip( m_mean_pe_per_mip_ribbon );
+    } else {
+      pmtCalib->setPe_per_mip( 0. );
+    }
+  }
+
+  if ( id.tile() ) {
+    pmtCalib->setMip_per_MeV( m_mip_per_MeV );
+  } else if ( id.ribbon() ) {
+    pmtCalib->setMip_per_MeV( m_mip_per_MeV_ribbon );
+  } else {
+    pmtCalib->setMip_per_MeV( 0. );
+  }
+
+  sc = pmtCalib->latchPePerMeV();
+
+  sc = m_calibSvc->getPedestal(id,pmt,ped);
+  if ( sc.isFailure() ) return sc;
+  pmtCalib->setPedestal(*ped);
+  sc = pmtCalib->latchPhaThreshold(m_counts_above_pedestal);
+  if ( sc.isFailure() ) return sc;
+
+  sc = m_calibSvc->getMipPeak(id,pmt,gain);
+  if ( sc.isFailure() ) return sc;
+  pmtCalib->setMipPeak(*gain);
+
+  sc = m_calibSvc->getHighRange(id,pmt,highRange);
+  if ( sc.isFailure() ) return sc;  
+  pmtCalib->setHighRange(*highRange);
+
+  sc = m_calibSvc->getRange(id,pmt,range);
+  if ( sc.isFailure() ) return sc;  
+  pmtCalib->setRangeXOver(*range);
+  sc = pmtCalib->latchXOverMips( );
+  if ( sc.isFailure() ) return sc;
+ 
+  if ( m_veto_mips > 0. ) {
+    pmtCalib->setVetoThresholdMips(m_veto_mips,m_veto_width_mips);
+  } else {
+    sc = m_calibSvc->getVeto(id,pmt,veto);
+    if ( sc.isFailure() ) return sc;
+    pmtCalib->setVetoThresh(*veto);
+    pmtCalib->setVetoWidthMips(m_veto_width_mips);
+    sc = pmtCalib->latchVetoThreshold( );
+    if ( sc.isFailure() ) return sc;
+  }
+
+  if ( m_cno_mips > 0. ) {
+    pmtCalib->setCnoThresholdMips(m_cno_mips,m_cno_width_mips);
+  } else {
+    sc = m_calibSvc->getCno(id,pmt,cno);
+    if ( sc.isFailure() ) return sc;
+    pmtCalib->setCnoThresh(*cno);  
+    pmtCalib->setCnoWidthMips(m_cno_width_mips);
+    sc = pmtCalib->latchCnoThreshold( );
+    if ( sc.isFailure() ) return sc;
+  }
+
+  sc = m_calibSvc->getCoherentNoise(id,pmt,coherentNoise);
+  if ( sc.isFailure() ) return sc;
+  pmtCalib->setCoherentNoise(*coherentNoise);  
+
+  return sc;
+}
+
+
+

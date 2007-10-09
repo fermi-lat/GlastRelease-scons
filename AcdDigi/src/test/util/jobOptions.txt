@@ -1,10 +1,10 @@
 //##############################################################
 //
 // List of Dlls
-ApplicationMgr.DLLs   = { "GlastSvc" };
+ApplicationMgr.DLLs   = { "GlastSvc", "AcdUtil" };
 
 // List of required services
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc" };
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastEventSelector/EventSelector" , "EventCnvSvc", "AcdGeometrySvc", "AcdSimCalibSvc" };
 
 
 ApplicationMgr.TopAlg = { "TestAcdDigiAlg" };

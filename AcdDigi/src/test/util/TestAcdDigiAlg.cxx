@@ -17,6 +17,9 @@
 
 #include "GaudiKernel/Algorithm.h"
 
+#include "AcdUtil/IAcdGeometrySvc.h"
+#include "AcdUtil/IAcdCalibSvc.h"
+
 #include "../../AcdDigiUtil.h"
 
 /** @class TestAcdDigiAlg.cpp
@@ -70,7 +73,33 @@ StatusCode TestAcdDigiAlg::initialize() {
     // Use the Job options service to set the Algorithm's parameters
     setProperties();
 
-    m_util.getParameters(m_xmlFile);
+    IAcdGeometrySvc* acdGeomSvc(0);
+    sc = service("AcdGeometrySvc", acdGeomSvc, true);
+    if (sc.isSuccess() ) {
+      sc = acdGeomSvc->queryInterface(IID_IAcdGeometrySvc, (void**)&acdGeomSvc);
+    }
+   
+    if ( !sc.isSuccess() ) {
+      log << MSG::WARNING << "AcdDigiAlg failed to get the AcdGeometrySvc" << endreq;
+      return sc;
+    } else {
+      log << MSG::INFO << "Got AcdGeometrySvc" << endreq;
+    }
+
+    AcdUtil::IAcdCalibSvc* calibSvc(0);
+    sc = service("AcdSimCalibSvc", calibSvc, true);
+    if (sc.isSuccess() ) {
+      sc = calibSvc->queryInterface(IID_IAcdCalibSvc, (void**)&calibSvc);
+    }
+
+    if ( !sc.isSuccess() ) {
+      log << MSG::WARNING << "Could not get AcdSimCalibSvc"  << endreq;
+      return sc;
+    } else {
+      log << MSG::INFO << "Got AcdSimCalibSvc" << endreq;
+    } 
+
+    m_util.initialize(*calibSvc,*acdGeomSvc,m_xmlFile);
 
     return sc;
 }
@@ -84,46 +113,35 @@ StatusCode TestAcdDigiAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
-    float mips = m_util.convertMevToMips(1.0);
-    log << MSG::DEBUG << "1.0 MeV = " << mips << " MIPs" << endreq;
-    float pmtA_mips = mips;
-    mips = m_util.convertMevToMips(20.0);
-    log <<  MSG::DEBUG << "20.0 MeV = " << mips << " MIPs" << endreq;
-    float pmtB_mips = mips;
+    const double energy1MeV(1.0);
+    const double energy20MeV(20.0);
 
     idents::AcdId id(0, 1, 1, 1);
 
-    double pmtA_pe, pmtB_pe;
+    double pe_pmt[2];
+    double pmt_mips[2];
+    Event::AcdDigi::Range range[2];
+    unsigned short pha[2];
 
-    m_util.convertMipsToPhotoElectrons(id, pmtA_mips, pmtA_pe,
-        pmtB_mips, pmtB_pe);
-
-    log << MSG::DEBUG << pmtA_mips << " is " << pmtA_pe << " pes" << endreq;
-    log << MSG::DEBUG << pmtB_mips << " is " << pmtB_pe << " pes" << endreq;
-
-    double pmtA2_mips, pmtB2_mips;
-
-    m_util.convertPhotoElectronsToMips(id, pmtA_pe, pmtA2_mips,
-        pmtB_pe, pmtB2_mips);
-
-    log << MSG::DEBUG << pmtA_pe << " is " << pmtA2_mips << " MIPs" << endreq;
-    log << MSG::DEBUG << pmtB_pe << " is " << pmtB2_mips << " MIPs" << endreq;
-
-    double mipsToFullScaleA, mipsToFullScaleB;
-
-    m_util.calcMipsToFullScale(id, pmtA_mips, pmtA_pe, 
-        mipsToFullScaleA, pmtB_mips, pmtB_pe, mipsToFullScaleB );
-
-    log << MSG::DEBUG << "mipsToFullScaleA " << mipsToFullScaleA << endreq;
-    log << MSG::DEBUG << "mipsToFullScaleB " << mipsToFullScaleB << endreq;
-
-    Event::AcdDigi::Range rangeArr[2] = { Event::AcdDigi::LOW, Event::AcdDigi::LOW };
-
-    unsigned short pmtA_pha = m_util.convertMipsToPha(pmtA_mips, mipsToFullScaleA, rangeArr[0]);
-    unsigned short pmtB_pha = m_util.convertMipsToPha(pmtB_mips, mipsToFullScaleB, rangeArr[1]);
-
-    log << MSG::DEBUG << "pmtA_pha " << pmtA_pha << endreq;
-    log << MSG::DEBUG << "pmtB_pha " << pmtB_pha << endreq;
+    sc = m_util.photoElectronsFromEnergy(id,energy1MeV,pe_pmt[0],pe_pmt[1]);
+    if ( sc.isFailure() ) return sc;
+    log << MSG::DEBUG << "1.0 MeV = " << pe_pmt[0] << ',' << pe_pmt[1] << " photo electrons." << endreq;
+    sc = m_util.mipEquivalentLightYeild(id,pe_pmt[0],pe_pmt[1],pmt_mips[0],pmt_mips[0]);
+    if ( sc.isFailure() ) return sc;
+    log << MSG::DEBUG << "1.0 MeV = " << pmt_mips[0] << ',' << pmt_mips[0] << " mips." << endreq;
+    sc = m_util.phaCounts(id,pmt_mips,false,range,pha);
+    log << MSG::DEBUG << "1.0 MeV = " << range[0] << ':' << pha[0] << ","
+	<< range[1] << ':' << pha[1] << " PHA." << endreq;
+    
+    sc = m_util.photoElectronsFromEnergy(id,energy20MeV,pe_pmt[0],pe_pmt[1]);
+    if ( sc.isFailure() ) return sc;
+    log << MSG::DEBUG << "20.0 MeV = " << pe_pmt[0] << ',' << pe_pmt[1] << " photo electrons." << endreq;
+    sc = m_util.mipEquivalentLightYeild(id,pe_pmt[0],pe_pmt[1],pmt_mips[0],pmt_mips[0]);
+    if ( sc.isFailure() ) return sc;
+    log << MSG::DEBUG << "20.0 MeV = " << pmt_mips[0] << ',' << pmt_mips[0] << " mips." << endreq;
+    sc = m_util.phaCounts(id,pmt_mips,false,range,pha);
+    log << MSG::DEBUG << "20.0 MeV = " << range[0] << ':' << pha[0] << ","
+	<< range[1] << ':' << pha[1] << " PHA." << endreq;
 
     m_poisson.push_back(m_util.shootPoisson(5));
 
