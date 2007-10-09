@@ -2,27 +2,52 @@
 #ifndef CalibData_AcdVeto_h
 #define CalibData_AcdVeto_h
 
-#include "CalibData/RangeBase.h"
+#include "CalibData/Acd/AcdCalibObj.h"
+#include "CalibData/CalibModel.h"
+#include "CalibData/Acd/AcdCalibEnum.h"
 
 namespace CalibData {
 
-  class AcdVeto : public RangeBase {
+  class AcdVetoFitDesc : public AcdCalibDescription {
+  public:    
+    static const AcdVetoFitDesc& instance() {
+      static const AcdVetoFitDesc desc;
+      return desc;
+    };     
   public:
-    AcdVeto(float veto = 0.0, float width = 0.0, unsigned status=0) :
-      m_veto(veto), m_width(width), m_status(status) {}
-    ~AcdVeto() {}
+    virtual ~AcdVetoFitDesc(){;};    
+  private:    
+    AcdVetoFitDesc()
+      :AcdCalibDescription(AcdCalibData::VETO,"ACD_Veto"){
+      addVarName("veto");
+      addVarName("width");
+    }
+  };
 
-    float getVeto() const {return m_veto;}
+  class AcdVeto : public AcdCalibObj {
+  public:
+    static const CLID& calibCLID() {
+      return CLID_Calib_ACD_ThreshVeto;
+    }
+    static AcdCalibData::CALTYPE calibType() {
+      return AcdCalibData::VETO;
+    }
+  public:
+    AcdVeto(const AcdCalibDescription& desc, const std::vector<float>& vals, STATUS status=NOFIT) :
+      AcdCalibObj(status,vals,desc){
+      assert( desc.calibType() == calibType() );
+      setVals(vals,status);
+    }
+    AcdVeto(float veto, float width, STATUS status) :
+      AcdCalibObj(status,AcdVetoFitDesc::instance()){
+      setVals(veto,width,status);
+    }
+    virtual ~AcdVeto() {}
 
-    float getWidth() const {return m_width;}
-    int getStatus() const {return m_status;}
-    virtual void update(RangeBase* other);
-
-  private:
-    float m_veto;
-    float m_width;
-    int m_status;
+    float getVeto() const { return (*this)[0];}
+    float getWidth() const { return (*this)[1]; }
   };
 }
+
 
 #endif

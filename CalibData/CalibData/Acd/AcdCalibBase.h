@@ -7,11 +7,13 @@
 
 #include <vector>
 #include "CalibData/CalibBase.h"
+#include "CalibData/Acd/AcdCalibEnum.h"
 #include "idents/AcdId.h"
 
 namespace CalibData {
   class AcdFinder;
-  class RangeBase;
+  class AcdCalibObj;
+  class AcdCalibDescription;
 
   /**
        Base class for ACD calibration data, at least for those
@@ -24,37 +26,39 @@ namespace CalibData {
   class AcdCalibBase : public CalibBase {
 
   public:
-    AcdCalibBase(unsigned nFace=5, unsigned nRow=5, unsigned nCol=5, 
+    AcdCalibBase(const AcdCalibDescription& desc,
+		 unsigned nFace=5, unsigned nRow=5, unsigned nCol=5, 
                  unsigned nNA=11, unsigned nPmt=2);
 
     virtual ~AcdCalibBase();
-
-    /** 
-        Pick out calibration data associated with a particular tile, pmt
-     */
-    virtual RangeBase* getPmt(idents::AcdId id, unsigned pmt=0);
-
-    bool putPmt(idents::AcdId id, unsigned pmt, RangeBase* data);
-
-    /* Do we need this version?  I hope not - doesn't cover NAs */
-    bool putPmt(unsigned face, unsigned row, unsigned col, 
-                  unsigned pmt, RangeBase* data);
-
 
     virtual const CLID& clID() const = 0;     // must be overridden
     static const CLID& classID();   // shouldn't get called
 
     // Maybe won't need to be virtual after all
-    virtual StatusCode update(CalibBase& other, MsgStream* log);
+    StatusCode update(CalibBase& other, MsgStream* log);
     
   protected:
-    AcdFinder* m_finder;
 
-    std::vector<RangeBase* > m_pmts;  // tiles and ribbons
-    std::vector<RangeBase* > m_NAs;   // no detector
+    /** 
+        Pick out calibration data associated with a particular tile, pmt
+     */
+    AcdCalibObj* get(idents::AcdId id,unsigned pmt);    
+    bool put(idents::AcdId id,unsigned pmt, AcdCalibObj& pmtCalib);
+    virtual AcdCalibObj* makeNew() const = 0;
+
+    const AcdCalibDescription* desc() const { return m_desc; }
 
   private:
+
     static const CLID noCLID;
+
+    AcdFinder* m_finder;
+
+    std::vector<AcdCalibObj* > m_pmts;  // tiles and ribbons
+    std::vector<AcdCalibObj* > m_NAs;   // no detector
+
+    const AcdCalibDescription* m_desc;
 
     /** Due to bug in gcc, gdb can't find symbols in constructors.  This
         method is called by the constructor and does most of the work
@@ -65,4 +69,8 @@ namespace CalibData {
   };
 
 }  
+
+
+
+
 #endif

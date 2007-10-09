@@ -2,26 +2,50 @@
 #ifndef CalibData_AcdGain_h
 #define CalibData_AcdGain_h
 
-#include "CalibData/RangeBase.h"
+#include "CalibData/Acd/AcdCalibObj.h"
+#include "CalibData/CalibModel.h"
+#include "CalibData/Acd/AcdCalibEnum.h"
 
 namespace CalibData {
 
-  class AcdGain : public RangeBase {
+  class AcdGainFitDesc : public AcdCalibDescription {
   public:
-    AcdGain(float peak = 0.0, float width = 0.0, unsigned status=0) :
-      m_peak(peak), m_width(width), m_status(status) {}
-    ~AcdGain() {}
+    static const AcdGainFitDesc & instance() {
+      static const AcdGainFitDesc desc;
+      return desc;
+    }
+  public:
+    virtual ~AcdGainFitDesc(){;};    
+  private:    
+    AcdGainFitDesc()
+      :AcdCalibDescription(AcdCalibData::GAIN,"ACD_Gain"){
+      addVarName("peak");
+      addVarName("width");
+    }
+  };
 
-    float getPeak() const {return m_peak;}
+  class AcdGain : public AcdCalibObj {    
+  public:
+    static const CLID& calibCLID() {
+      return CLID_Calib_ACD_ElecGain;
+    }
+    static AcdCalibData::CALTYPE calibType() {
+      return AcdCalibData::GAIN;
+    }
+  public:
+    AcdGain(const AcdCalibDescription& desc, const std::vector<float>& vals, STATUS status=NOFIT) :
+      AcdCalibObj(status,vals,desc){
+      assert( desc.calibType() == calibType() );
+      setVals(vals,status);
+    }
+    AcdGain(float peak, float width, STATUS status) :
+      AcdCalibObj(status,AcdGainFitDesc::instance()){
+      setVals(peak,width,status);
+    }
+    virtual ~AcdGain() {}
 
-    float getWidth() const {return m_width;}
-    int getStatus() const {return m_status;}
-    virtual void update(RangeBase* other);
-
-  private:
-    float m_peak;
-    float m_width;
-    int m_status;
+    float getPeak() const { return (*this)[0];}
+    float getWidth() const { return (*this)[1]; }
   };
 }
 

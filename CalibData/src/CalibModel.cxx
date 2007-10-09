@@ -63,6 +63,10 @@ public:
     CalibData::ACD_ThreshVeto = CalibData::acd +"_ThreshVeto";
     CalibData::ACD_Ped = CalibData::acd +"_Ped";
     CalibData::ACD_ElecGain = CalibData::acd +"_ElecGain";
+    CalibData::ACD_Range = CalibData::acd +"_Range";
+    CalibData::ACD_HighRange = CalibData::acd +"_Range";
+    CalibData::ACD_CoherentNoise = CalibData::acd +"_CoherentNoise";
+
     CalibData::TKR_BadChan = CalibData::tkr + "_BadChan";
     CalibData::TKR_HotChan = CalibData::tkr + "_HotChan";
     CalibData::TKR_DeadChan = CalibData::tkr + "_DeadChan";
@@ -150,10 +154,21 @@ public:
                                               CLID_Calib_CAL_Asym));
 
 
-    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_Ped,
-                                              CLID_Calib_ACD_Ped));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_ThreshVeto,
+                                              CLID_Calib_ACD_ThreshVeto));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_ThreshHigh,
+                                              CLID_Calib_ACD_ThreshHigh));
+
     CalibData::pairs.push_back(std::make_pair(CalibData::ACD_ElecGain,
                                               CLID_Calib_ACD_ElecGain));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_Ped,
+                                              CLID_Calib_ACD_Ped));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_Range,
+                                              CLID_Calib_ACD_Range));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_HighRange,
+                                              CLID_Calib_ACD_HighRange));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_CoherentNoise,
+                                              CLID_Calib_ACD_CoherentNoise));
 
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));
