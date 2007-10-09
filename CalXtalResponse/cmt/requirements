@@ -28,7 +28,7 @@ library CalXtalResponse *.cxx *.h   \
         CalTuple/*.cxx CalTuple/*.h \        
         CalFailureMode/*.cxx CalFailureMode/*.h \
         Xtalk/*.cxx Xtalk/*.h       \
-        Trig/*.cxx Trig/*.h         \
+        CalTrig/*.cxx CalTrig/*.h         \
         Dll/*.cxx Dll/*.h
 
 #=============================================================

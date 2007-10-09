@@ -666,9 +666,11 @@ StatusCode test_CalXtalResponse::initialize(){
   // open optional tuple file
   if (m_tupleFilename.value().length() > 0 ) {
     m_tupleFile.reset(new TFile(m_tupleFilename.value().c_str(),"RECREATE","test_CalXtalResponse"));
-    if (!m_tupleFile.get())
-      // allow to continue w/out tuple file as it is not a _real_ failure
+    if (!m_tupleFile.get()) {
       msglog << MSG::ERROR << "Unable to create TTree object: " << m_tupleFilename << endreq;
+      return StatusCode::FAILURE;
+    }
+    
     
     else {
       m_tuple = new TTree("test_CalXtalResponse","test_CalXtalResponse");
@@ -1062,7 +1064,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
     if (!curTest->noiseOn) {
       //--------- TEST MARGINS ---------------------------//
       if (curTest->posDiff > m_singleHitPosMrgn) {
-        msglog << MSG::WARNING << "TESTFAIL, BAD POS, "
+        msglog << MSG::WARNING << "BAD POS, "
                << curTest->posDiff << ", "
                << curTest->xtalPos << ", "
                << curTest->testDesc << endreq;
@@ -1070,7 +1072,7 @@ StatusCode test_CalXtalResponse::testSingleHit() {
       }
       
       if (eneDiff > m_singleHitEneMrgn) {
-        msglog << MSG::WARNING << "TESTFAIL, BAD ENE, "
+        msglog << MSG::WARNING << "BAD ENE, "
                << eneDiff << ", "
                << curTest->meV << ", "
                << curTest->testDesc << endreq;
@@ -1099,8 +1101,9 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi) {
                                      curTest->lacBits.end(), 
                                      true);
     if (anyLacTrue != (nRO != 0)) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ZERO SUPPRESS, "
+      msglog << MSG::ERROR << "BAD ZERO SUPPRESS, "
              << curTest->testDesc << endreq;
+      return StatusCode::FAILURE;
     }
 
     // quit early if we (rightly so) have no readouts
@@ -1112,7 +1115,7 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi) {
   const CalXtalId::CalTrigMode trigMode = calDigi.getMode();
   if ((trigMode == CalXtalId::BESTRANGE && nRO != 1) ||
       (trigMode == CalXtalId::ALLRANGE && nRO != 4)) {
-    msglog << MSG::ERROR << "TESTFAIL, BAD N READOUTS, "
+    msglog << MSG::ERROR << "BAD N READOUTS, "
            << nRO << ", , "
            << curTest->testDesc << endreq;
     return StatusCode::FAILURE;
@@ -1141,7 +1144,7 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi) {
                           curTest->lacBits[face],
                           curCalib.mevPerADC[xRng]) 
         ) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD LAC BIT, "
+      msglog << MSG::ERROR << "BAD LAC BIT, "
              << curTest->fsignl[xRng] << ", "
              << curCalib.lacMeV[face] << ", "
              << curTest->testDesc << endreq;
@@ -1155,7 +1158,7 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi) {
     //-- ULD test1: val should be < uld limit for current range
     // ULD test1: val should be < uld limit for selected range (w/in 1 ADC UNIT)
     if (!trig_test_margin(curTest->adcPed[xRng], curCalib.uldThresh[xRng], false, 1)) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ULD, "
+      msglog << MSG::ERROR << "BAD ULD, "
              << curTest->adcPed[xRng] << ", "
              << curCalib.uldThresh[xRng] << ", "
              << curTest->testDesc << endreq;
@@ -1170,7 +1173,7 @@ StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi) {
                               true, 
                               // xtra 1% margin for possible variation in faceSignal per channel
                               curCalib.mevPerADC[xRng] + .01*curTest->fsignl[xRng])) {
-          msglog << MSG::ERROR << "TESTFAIL, BAD ULD, "
+          msglog << MSG::ERROR << "BAD ULD, "
                  << curTest->fsignl[xRng] << ", "
                  << curCalib.uldMeV[XtalRng(face, RngNum(rng.val()-1))] << ", "
                  << curTest->testDesc << endreq;
@@ -1242,7 +1245,7 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
                             trigBits[XtalDiode(face,LRG_DIODE)], 
                             // xtra 1% margin for possible variation in faceSignal per channel
                             curCalib.mevPerADC[xRng]+.01*curTest->fsignl[xRng])) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD FLE BIT, "
+        msglog << MSG::ERROR << "BAD FLE BIT, "
                << curTest->fsignl[xRng] << ", "
                << curCalib.trigMeV[XtalDiode(face,LRG_DIODE)] << ", "
                << curTest->testDesc << endreq;
@@ -1260,7 +1263,7 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
                             trigBits[XtalDiode(face,SM_DIODE)], 
                             // xtra 1% margin for possible variation in faceSignal per channel
                             curCalib.mevPerADC[xRng]+.01*curTest->fsignl[xRng])) {
-        msglog << MSG::ERROR            << "TESTFAIL, BAD FHE BIT, "
+        msglog << MSG::WARNING            << "BAD FHE BIT, "
                << curTest->fsignl[xRng] << ", "
                << curCalib.trigMeV[XtalDiode(face,SM_DIODE)] << ", "
                << curTest->testDesc << endreq;
@@ -1271,7 +1274,7 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
       // test xtal FLE trigger
       if (trigBits[XtalDiode(face, LRG_DIODE)] !=
           glt->getCALLOtrigger(faceIdx.getCalXtalId())) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD GLT BIT, "
+        msglog << MSG::ERROR << "BAD GLT BIT, "
                << trigBits[XtalDiode(face, LRG_DIODE)] << ", "
                << glt->getCALLOtrigger(faceIdx.getCalXtalId()) << ", "
                << curTest->testDesc << endreq;
@@ -1281,7 +1284,7 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
       // test xtal FHE trigger
       if (trigBits[XtalDiode(face, SM_DIODE)] !=
           glt->getCALHItrigger(faceIdx.getCalXtalId())) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD GLT BIT, "
+        msglog << MSG::ERROR << "BAD GLT BIT, "
                << trigBits[XtalDiode(face, SM_DIODE)] << ", "
                << glt->getCALHItrigger(faceIdx.getCalXtalId()) << ", "
                << curTest->testDesc << endreq;
@@ -1295,7 +1298,7 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
     if ((trigBits[XtalDiode(POS_FACE, LRG_DIODE)] ||
          trigBits[XtalDiode(NEG_FACE, LRG_DIODE)]) !=
         glt->getCALLOtrigger()) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD GLT BIT, "
+      msglog << MSG::ERROR << "BAD GLT BIT, "
              << (trigBits[XtalDiode(POS_FACE, LRG_DIODE)] ||
                  trigBits[XtalDiode(NEG_FACE, LRG_DIODE)]) << ", "
              << glt->getCALLOtrigger() << ", "
@@ -1308,7 +1311,7 @@ StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
     if((trigBits[XtalDiode(POS_FACE, SM_DIODE)] ||
         trigBits[XtalDiode(NEG_FACE, SM_DIODE)]) != 
        glt->getCALHItrigger()) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD GLT BIT, "
+      msglog << MSG::ERROR << "BAD GLT BIT, "
              << (trigBits[XtalDiode(POS_FACE, SM_DIODE)] ||
                  trigBits[XtalDiode(NEG_FACE, SM_DIODE)]) << ", "
              << glt->getCALHItrigger() << ", "
@@ -1406,7 +1409,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
   const vector<float> *xvals = xpos->getVals();
   
   if (xvals->size()   <= 0) {
-    msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
+    msglog << MSG::ERROR << "BAD ASYM, "
            << curTest->testDesc << endreq;
     return StatusCode::FAILURE;
   }
@@ -1416,7 +1419,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
       float testAsym, testPos;
 
       if (asymVals[asymType]->size() != xvals->size()) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
+        msglog << MSG::ERROR << "BAD ASYM, "
                << curTest->testDesc << endreq;
         return StatusCode::FAILURE;
       }
@@ -1428,7 +1431,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
 
       if (rel_diff((*asymVals[asymType])[i].getVal(), testAsym) > .01 ||
           rel_diff((*xvals)[i], testPos) > .01) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD ASYM, "
+        msglog << MSG::ERROR << "BAD ASYM, "
                << curTest->testDesc << endreq;
         return StatusCode::FAILURE;
       }
@@ -1461,7 +1464,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
 
       if (cidacs->size() <= 0 || 
           adcs->size() > cidacs->size()) {
-        msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
+        msglog << MSG::ERROR << "BAD INL, "
                << curTest->testDesc << endreq;
         return StatusCode::FAILURE;
       }
@@ -1472,7 +1475,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
         if (sc.isFailure()) return sc;
 
         if (rel_diff(testCIDAC, (*cidacs)[i]) > .01 && abs(testCIDAC - (*cidacs)[i] > .01)) {
-          msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
+          msglog << MSG::ERROR << "BAD INL, "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
         }
@@ -1482,7 +1485,7 @@ StatusCode test_CalXtalResponse::testCalCalibSvc() {
         if (sc.isFailure()) return sc;
 
         if (rel_diff(testADC, (*adcs)[i]) > .01 && abs(testADC - (*adcs)[i] > .01)) {
-          msglog << MSG::ERROR << "TESTFAIL, BAD INL, "
+          msglog << MSG::ERROR << "BAD INL, "
                  << curTest->testDesc << endreq;
           return StatusCode::FAILURE;
         }
@@ -1738,7 +1741,7 @@ StatusCode test_CalXtalResponse::testNoise() {
     float diff = abs(adcRMS-curCalib.pedSig[xRng]);
 
     if (diff > 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits)) {
-      msglog << MSG::WARNING << "TESTFAIL, BAD NOISE SIGMA, "
+      msglog << MSG::WARNING << "BAD NOISE SIGMA, "
              << adcRMS                << ", " 
              << curCalib.pedSig[xRng] << ", "
              << curTest->testDesc 
@@ -1751,7 +1754,7 @@ StatusCode test_CalXtalResponse::testNoise() {
     const double thresh = 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits);
     diff =  abs(adcMean-adcNoNoise[xRng]);
     if ( diff > thresh) {
-      msglog << MSG::WARNING << "TESTFAIL, BAD NOISE MEAN, "
+      msglog << MSG::WARNING << "BAD NOISE MEAN, "
              << adcMean << ", "
              << adcNoNoise[xRng] << ", "
              << diff << ", "
@@ -1882,7 +1885,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
         
     //--------- TEST MARGINS ---------------------------//
     if (curTest->posDiff > m_singleHitPosMrgn) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD POS, "
+      msglog << MSG::WARNING << "BAD POS, "
              << curTest->posDiff << ", "
              << curTest->xtalPos << ", "
              << curTest->testDesc << endreq;
@@ -1890,7 +1893,7 @@ StatusCode test_CalXtalResponse::testMultiHit() {
     }
       
     if (eneDiff > m_singleHitEneMrgn) {
-      msglog << MSG::ERROR << "TESTFAIL, BAD ENE, "
+      msglog << MSG::WARNING << "BAD ENE, "
              << eneDiff << ", "
              << curTest->meV << ", "
              << curTest->testDesc << endreq;

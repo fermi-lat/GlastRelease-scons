@@ -5,7 +5,7 @@
 // LOCAL
 #include "CalXtalResponse/ICalTrigTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
-#include "../Calib/IPrecalcCalibTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 #include "CalXtalResponse/ICalSignalTool.h"
 
 // GLAST
