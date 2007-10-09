@@ -3,12 +3,13 @@
 // $Header$
 
 // LOCAL
+#include "AcdUtil/AcdCalib.h"
+#include "AcdCalibSvcBase.h"
 
 // GLAST
-#include "CalibData/RangeBase.h"
+#include "CalibData/Acd/AcdCalibObj.h"
 #include "CalibData/Acd/AcdCalibBase.h"
 #include "CalibSvc/ICalibPathSvc.h"
-
 
 // EXTLIB
 #include "GaudiKernel/IService.h"
@@ -31,21 +32,22 @@ class AcdCalibSvc;
 */
 class AcdCalibMgr {
 public:
-  //AcdCalibMgr(const std::string &calibTypePath)
-  //  :m_calibTypePath(calibTypePath),
-    AcdCalibMgr(ICalibPathSvc::CalibItem calibItem)
+  
+  AcdCalibMgr(ICalibPathSvc::CalibItem calibItem)
     :m_calibTypePath(""),
      m_calibItem(calibItem),
+     m_owner(0),
      m_ideal(false),
-     owner(0),     
      m_isValid(false),
      m_serNo(-1)
   {}
   
   virtual ~AcdCalibMgr() {};
+
+  virtual AcdCalibData::CALTYPE calibType() const = 0;
   
   StatusCode initialize(const std::string &flavor,
-                        const AcdCalibSvc &acs);
+			AcdCalibSvcBase &acs);
 
   /// data should be invalidated at beginning of each event.
   /// just in case there is a change in validity period
@@ -67,6 +69,16 @@ protected:
     return StatusCode::SUCCESS;
   }
 
+  inline CalibData::AcdCalibBase* calibBase() {
+    return m_calibBase;
+  }
+
+  inline bool ideal() const {
+    return m_ideal;
+  }
+
+ private:
+
   /// TDS path to calib data for my calib_type
   std::string                  m_calibTypePath;
 
@@ -77,27 +89,65 @@ protected:
   /// TDS location for root of my calib_type and path
   CalibData::AcdCalibBase     *m_calibBase;
 
-  /// Should we use the "ideal" calibration instead of the database
-  bool                         m_ideal;
-
-  /// ref to owner->CalCalibSvc object
-  const AcdCalibSvc           *owner;
-
-  /** retrieve spec'd rangeBase object, update if necessary
-      \return NULL if there is no data 
-  */
-  CalibData::RangeBase *getPmt(idents::AcdId id, unsigned pmt) {
-    return m_calibBase->getPmt(id,pmt);
-  }
-  
- private:
+  AcdCalibSvcBase*          m_owner;
 
   /// calib flavor
-  std::string       m_flavor;     
+  std::string               m_flavor;     
+  /// Should we use the "ideal" calibration instead of the database
+  bool                      m_ideal;
   /// validity state of AcdCalibMgr data
-  bool              m_isValid;    
+  bool                      m_isValid;    
   /// serial # for current calibration source
-  int               m_serNo;      
+  int                       m_serNo;      
 
 };
+
+template <class T>
+class AcdCalibMgrTmpl : public AcdCalibMgr {
+  
+public:
+
+  // the Type of object managed by this calibration manager
+  typedef typename T::ObjType CalibObjType;
+  
+public:
+  AcdCalibMgrTmpl():
+    AcdCalibMgr( AcdCalib::calibItem( T::calibType() ) ){;}
+
+  virtual ~AcdCalibMgrTmpl(){;}
+
+  /// Get a calibration
+  StatusCode getCalibration(idents::AcdId id, unsigned pmt, CalibObjType*& calib) {
+
+    if ( ideal() ) {
+      // get the ideal value
+      CalibData::AcdCalibObj* calibObj = AcdCalib::getIdeal(CalibObjType::calibType(), id, pmt);
+      calib = static_cast<CalibObjType*>(calibObj);
+      return StatusCode::SUCCESS;
+    }  
+    
+    StatusCode sc = updateCalib();
+    if (sc.isFailure()) {
+      // null and return failure code
+      calib = 0;
+      return sc;
+    }
+    
+    T* calibCol = static_cast<T*>(calibBase());
+    if ( calibCol == 0 ) {
+      return StatusCode::FAILURE;
+    }
+    
+    calib = calibCol->getPmt(id,pmt);
+    if ( calib == 0 ) return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;	
+  }
+  
+  virtual AcdCalibData::CALTYPE calibType() const {
+    return T::calibType();
+  }
+  
+};
+
+
 #endif

@@ -93,6 +93,8 @@ public:
 
   void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0) const;
 
+  void activeDistance(const HepPoint3D& localPoint, int iVol, double& activeX, double& activeY) const;
+
   const HepTransform3D& transform(int iVol) const {
     return m_transform[iVol];
   }

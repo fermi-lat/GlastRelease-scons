@@ -1,13 +1,12 @@
-#ifndef AcdCalibSvc_H
-#define AcdCalibSvc_H
+#ifndef AcdSimCalibSvc_H
+#define AcdSimCalibSvc_H
 // $Header$
 
 // LOCAL 
 #include "AcdCalibMgr.h"
-#include "AcdCalibSvcBase.h"
-#include "AcdUtil/IAcdCalibSvc.h"
 
 // GLAST 
+#include "AcdUtil/IAcdCalibSvc.h"
 #include "CalibSvc/ICalibPathSvc.h"
 
 
@@ -16,13 +15,11 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 
-class AcdCalibMgr;
-
 // STD
 
-/** @class AcdCalibSvc
+/** @class AcdSimCalibSvc
     @author Eric Charles (from Zachary Fewtrell's CalCalib stuff)
-    * \brief Instatiates IAcdCalibSvc interface, gets data from CalibDataSvc
+    * \brief Instatiates IAcdSimCalibSvc interface, gets data from CalibDataSvc
     *
     * handles:
     * - data storage/destruction
@@ -35,12 +32,12 @@ class AcdCalibMgr;
     *
     */
 
-class AcdCalibSvc : public Service, public AcdCalibSvcBase, virtual public AcdUtil::IAcdCalibSvc {
+class AcdSimCalibSvc : public Service, public AcdCalibSvcBase, virtual public AcdUtil::IAcdCalibSvc {
 
 public:
-
-  AcdCalibSvc(const std::string& name, ISvcLocator* pSvcLocator); 
-
+  
+  AcdSimCalibSvc(const std::string& name, ISvcLocator* pSvcLocator); 
+  
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize () {return StatusCode::SUCCESS;}
@@ -49,7 +46,7 @@ public:
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   /// return the service type
-  const InterfaceID&  AcdCalibSvc::type () const {return IID_IAcdCalibSvc;}
+  const InterfaceID&  AcdSimCalibSvc::type () const {return IID_IAcdCalibSvc;}
 
   virtual MsgStream makeMessageLog() const {
     return MsgStream(msgSvc(),name());
@@ -68,8 +65,7 @@ protected:
     return getCalibrationMgr(type, calibMgr);
   }
 
-  void addCalibration(AcdCalibMgr* calibMgr,const std::string& flavorName);
-
+  void addCalibration(AcdCalibMgr* calibMgr, const std::string& flavorName);
 
 private:
   ////////////////////////////////////////////////
@@ -94,10 +90,10 @@ private:
   IDataProviderSvc *m_dataProviderSvc;   
 
   //-- FRIEND CLASSES --//
-  // following classes all share many properties w/ AcdCalibSvc as they are
-  // sort of 'employees' of AcdCalibSvc.  easiest way to do it is to make them
+  // following classes all share many properties w/ AcdSimCalibSvc as they are
+  // sort of 'employees' of AcdSimCalibSvc.  easiest way to do it is to make them
   // friends
   friend class AcdCalibMgr;
 };
 
-#endif // AcdCalibSvc_H
+#endif // AcdSimCalibSvc_H

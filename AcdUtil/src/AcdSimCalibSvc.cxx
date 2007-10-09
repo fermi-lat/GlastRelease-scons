@@ -8,7 +8,7 @@
 // Author: Zachary Fewtrell
 
 // LOCAL
-#include "AcdCalibSvc.h"
+#include "AcdSimCalibSvc.h"
 
 // GLAST
 #include "CalibData/Acd/AcdCalib.h"
@@ -21,10 +21,10 @@
 
 // STD
 
-static SvcFactory< AcdCalibSvc > a_factory;
-const ISvcFactory& AcdCalibSvcFactory = a_factory; 
+static SvcFactory< AcdSimCalibSvc > a_factory;
+const ISvcFactory& AcdSimCalibSvcFactory = a_factory; 
 
-AcdCalibSvc::AcdCalibSvc(const std::string& name, ISvcLocator* Svc) 
+AcdSimCalibSvc::AcdSimCalibSvc(const std::string& name, ISvcLocator* Svc) 
   : Service(name,Svc),
     m_calibDataSvc(0),
     m_dataProviderSvc(0)    
@@ -34,18 +34,21 @@ AcdCalibSvc::AcdCalibSvc(const std::string& name, ISvcLocator* Svc)
   declareProperty("DefaultFlavor",   m_defaultFlavor    = "ideal");
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdPedCalib >,"FlavorPed");
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdGainCalib >,"FlavorGain");
+  addCalibration( new AcdCalibMgrTmpl< CalibData::AcdVetoCalib >,"FlavorVeto");
+  addCalibration( new AcdCalibMgrTmpl< CalibData::AcdCnoCalib >,"FlavorCno");
+  addCalibration( new AcdCalibMgrTmpl< CalibData::AcdRangeCalib >,"FlavorRange");
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdHighRangeCalib >,"FlavorHighRange");
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdCoherentNoiseCalib >,"FlavorCoherentNoise");
 }
 
-StatusCode  AcdCalibSvc::queryInterface (const InterfaceID& riid, void **ppvIF) {
+StatusCode  AcdSimCalibSvc::queryInterface (const InterfaceID& riid, void **ppvIF) {
   if (IID_IAcdCalibSvc == riid) {
     *ppvIF = (IAcdCalibSvc*)(this);
     return StatusCode::SUCCESS;
   } else return Service::queryInterface (riid, ppvIF);
 }
 
-StatusCode AcdCalibSvc::initialize () 
+StatusCode AcdSimCalibSvc::initialize () 
 {
   // Call super-class
   Service::initialize ();
@@ -62,8 +65,8 @@ StatusCode AcdCalibSvc::initialize ()
   }
 
   msglog << MSG::DEBUG << "Initializing..."     << endreq;
-  msglog << MSG::DEBUG << "  CalibDavaSvc         : " << m_calibDataSvcName  << endreq;
-  msglog << MSG::DEBUG << "  DefaultFlavor        : " << m_defaultFlavor     << endreq;
+  msglog << MSG::DEBUG << "  CalibDavaSvc   : " << m_calibDataSvcName  << endreq;
+  msglog << MSG::DEBUG << "  DefaultFlavor  : " << m_defaultFlavor     << endreq;
 
   // Grab pointer to CalibDataSvc
   sc = service(m_calibDataSvcName, m_calibDataSvc, true);
@@ -110,13 +113,15 @@ StatusCode AcdCalibSvc::initialize ()
   return StatusCode::SUCCESS;
 }
 
-const std::string AcdCalibSvc::getCalibPath(const ICalibPathSvc::CalibItem item, const std::string& flavor) const {
-  return m_calibPathSvc->getCalibPath(item, flavor);
+const std::string AcdSimCalibSvc::getCalibPath(const ICalibPathSvc::CalibItem item, const std::string& flavor) const {
+    return m_calibPathSvc->getCalibPath(item, flavor);
 }
 
-void AcdCalibSvc::addCalibration(AcdCalibMgr* calibMgr,const std::string& flavorName) {
+
+void AcdSimCalibSvc::addCalibration(AcdCalibMgr* calibMgr, const std::string& flavorName) {
   AcdCalibData::CALTYPE calibType = calibMgr->calibType();
   StringProperty* property = new StringProperty(flavorName,"");
   declareProperty(flavorName,*property);
   addMgr(calibType, calibMgr, property);
 }
+

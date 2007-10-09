@@ -3,10 +3,9 @@
 //  $Header$
 
 // LOCAL INCLUDES
+#include "AcdUtil/AcdCalib.h"
 
 // GLAST INCLUDES
-#include "CalibData/Acd/AcdPed.h" 
-#include "CalibData/Acd/AcdGain.h"
 #include "idents/AcdId.h" 
 
 // EXTLIB INCLUDES
@@ -15,9 +14,23 @@
 // STD INCLUDES
 //#include <vector>
 
+// Forward declares
+namespace CalibData {
+  class AcdPed;
+  class AcdGain;
+  class AcdVeto;
+  class AcdCno;
+  class AcdRange;
+  class AcdHighRange;
+  class AcdCoherentNoise;
+}
+
+class AcdCalibMgr;
+
+
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
-static const InterfaceID IID_IAcdCalibSvc("IAcdCalibSvc", 1, 0);
+static const InterfaceID IID_IAcdCalibSvc("IAcdCalibSvc", 2, 0);
 
 /*! @class IAcdCalibSvc
  * \brief Abstract interface for provision of GLAST LAT ACD calibration constants
@@ -33,6 +46,14 @@ namespace AcdUtil {
   class IAcdCalibSvc : virtual public IInterface {
   public:
     static const InterfaceID& interfaceID() { return IID_IAcdCalibSvc; }
+
+     /** \brief get a calibration for a given channel
+	\param id  the tile or ribbon id
+	\param pmt A(0) or B(1) pmt
+	\param calib a pointer to the relevent calibration data
+    */
+    virtual StatusCode getCalibMgr(AcdCalibData::CALTYPE type,
+				   AcdCalibMgr*& calib) = 0;
     
 
     /** \brief get pedestals for given channel
@@ -41,7 +62,7 @@ namespace AcdUtil {
 	\param pedestal a pointer to the relevent pedestal data
     */
     virtual StatusCode getPedestal(idents::AcdId id, unsigned pmt,
-				   CalibData::AcdPed*& pedestal) = 0;
+				   CalibData::AcdPed*& pedestal);
 			      
     /** \brief get mip peak for a given channel
 	\param id  the tile or ribbon id
@@ -49,7 +70,47 @@ namespace AcdUtil {
 	\param pedestal a pointer to the relevent gain data
     */
     virtual StatusCode getMipPeak(idents::AcdId id, unsigned pmt,
-				  CalibData::AcdGain*& mipPeak) = 0;
+				  CalibData::AcdGain*& mipPeak);
+
+    /** \brief get veto threshold for a given channel
+	\param id  the tile or ribbon id
+	\param pmt A(0) or B(1) pmt
+	\param veto a pointer to the relevent threshold data
+    */
+    virtual StatusCode getVeto(idents::AcdId id, unsigned pmt,
+		     CalibData::AcdVeto*& veto);
+
+    /** \brief get cno threshold for a given channel
+	\param id  the tile or ribbon id
+	\param pmt A(0) or B(1) pmt
+	\param cno a pointer to the relevent threshold data
+    */
+    virtual StatusCode getCno(idents::AcdId id, unsigned pmt,
+			      CalibData::AcdCno*& cno);
+    
+    /** \brief get range crossover for a given channel
+	\param id  the tile or ribbon id
+	\param pmt A(0) or B(1) pmt
+	\param range a pointer to the relevent data
+    */
+    virtual StatusCode getRange(idents::AcdId id, unsigned pmt,
+				CalibData::AcdRange*& range);
+
+    /** \brief get high range calibration for a given channel
+	\param id  the tile or ribbon id
+	\param pmt A(0) or B(1) pmt
+	\param highRange a pointer to the relevent high range data
+    */
+    virtual StatusCode getHighRange(idents::AcdId id, unsigned pmt,
+				   CalibData::AcdHighRange*& highRange);
+    
+    /** \brief get coherent noise calibration for a given channel
+	\param id  the tile or ribbon id
+	\param pmt A(0) or B(1) pmt
+	\param calib a pointer to the relevent high range data
+    */
+    virtual StatusCode getCoherentNoise(idents::AcdId id, unsigned pmt,
+					CalibData::AcdCoherentNoise*& noiseCalib);
 
   };
 };

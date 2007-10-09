@@ -5,9 +5,9 @@
 // LOCAL
 #include "AcdCalibMgr.h"
 #include "AcdCalibSvc.h"
+#include "AcdSimCalibSvc.h"
 
 // GLAST
-
 
 // EXTLIB
 
@@ -18,21 +18,18 @@
 
 using namespace std;
 
-StatusCode AcdCalibMgr::initialize(const std::string &flavor, const AcdCalibSvc &acs) {
-  
-  owner = &acs;
+StatusCode AcdCalibMgr::initialize(const std::string &flavor, AcdCalibSvcBase &acs) {
   
   m_flavor = flavor;
+  m_owner = &acs;
 
-  //m_calibPath = m_calibTypePath + '/' + flavor;
-   m_calibPath =  owner->getCalibPath(m_calibItem, m_flavor);
-
+  m_calibPath =  acs.getCalibPath(m_calibItem, m_flavor);
 
   static std::string idealName("ideal");
   if ( flavor == idealName ) {
-    MsgStream msglog(owner->msgSvc(), owner->name());     
+    MsgStream msglog = m_owner->makeMessageLog();
     // else return error (can't find calib)
-    msglog << MSG::WARNING << "Overriding calibration to 'ideal' from"
+    msglog << MSG::WARNING << "Overriding calibration to 'ideal' from "
            << m_calibPath << ".  Calib db will not be used" << endreq;
     m_ideal = true;
   }
@@ -61,12 +58,12 @@ StatusCode AcdCalibMgr::updateCalib() {
   // if it fails then we have no valid calib data
   // for the current event.
   DataObject *pObject(0);
-  sc = owner->m_dataProviderSvc->retrieveObject(m_calibPath, pObject);
+  sc = m_owner->retrieveObject(m_calibPath, pObject);
   if (!sc.isFailure())
     m_calibBase = (CalibData::AcdCalibBase *)(pObject);
   else {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog= m_owner->makeMessageLog();
     
     // else return error (can't find calib)
     msglog << MSG::ERROR << "can't get " 
@@ -82,7 +79,7 @@ StatusCode AcdCalibMgr::updateCalib() {
   int curSerNo = m_calibBase->getSerNo();
   if (curSerNo != m_serNo) {
     // create MsgStream only when needed (for performance)
-    MsgStream msglog(owner->msgSvc(), owner->name()); 
+    MsgStream msglog = m_owner->makeMessageLog();
     msglog << MSG::INFO << "Updating " << m_calibPath << endreq;
     m_serNo = curSerNo;
         
@@ -96,3 +93,5 @@ StatusCode AcdCalibMgr::updateCalib() {
 
   return StatusCode::SUCCESS;
 }
+
+

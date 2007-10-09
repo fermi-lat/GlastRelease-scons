@@ -3,6 +3,11 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v2       10-Oct-2007 EAC Rework AcdCalibSvc.
+                          Split in AcdCalibSvc and AcdSimCalibSvc.
+                          Use new calibration managers w/ templated code in CalibData/ CalibSvc
+                          Add activeDistance calculation to AcdTileDim so that same function gets
+                          used in sim and in recon
  v1r11    21-Sep-2007 EAC Fix problem with ribbon numbering and switch to using 
 	                  data statments to define ribbon segment types
  v1r10p1  13-Sep-2007 HMK patch use of enums
