@@ -110,7 +110,7 @@ StatusCode CalCalibSvc::initialize ()
   IIncidentSvc* incSvc;
   sc = service("IncidentSvc", incSvc, true);
   if (sc.isSuccess() ) {
-    int priority = 50;  // this should be lower priority (higher #?) than CalibDataSvc
+    const int priority = 50;  // this should be lower priority (higher #?) than CalibDataSvc
     incSvc->addListener(this, "BeginEvent", priority);
   } else {
     msglog << MSG::ERROR << "can't find IncidentSvc" << endreq;
@@ -133,7 +133,7 @@ void CalCalibSvc::handle ( const Incident& inc ) {
   return; 
 }
 
-StatusCode CalCalibSvc::evalFaceSignal(RngIdx rngIdx, float adcPed, float &ene) {
+StatusCode CalCalibSvc::evalFaceSignal(const RngIdx rngIdx, const float adcPed, float &ene) {
   StatusCode sc;
 
   // adc -> cidac

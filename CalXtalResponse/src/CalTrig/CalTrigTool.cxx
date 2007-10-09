@@ -3,21 +3,30 @@
 // Include files
 /** @file
     @author Zach Fewtrell
- */
+*/
 
 // LOCAL
 #include "CalTrigTool.h"
+#include "CalXtalResponse/ICalSignalTool.h"
 
 // GLAST
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/EventModel.h"
+#include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/Digi/GltDigi.h"
+#include "Event/Digi/CalDigi.h"
+#include "CalUtil/CalArray.h"
+#include "CalUtil/CalDefs.h"
+#include "CalUtil/CalGeom.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // EXTLIB
 #include "GaudiKernel/ToolFactory.h"
-
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // STD
+#include <algorithm>
 
 using namespace CalUtil;
 using namespace Event;
@@ -32,12 +41,17 @@ CalTrigTool::CalTrigTool( const string& type,
                           const string& name,
                           const IInterface* parent)
   : AlgTool(type,name,parent),
-    m_calCalibSvc(0)
+    m_calCalibSvc(0),
+    m_evtSvc(0),
+    m_calSignalTool(0),
+    m_detSvc(0)
 {
   declareInterface<ICalTrigTool>(this);
 
   declareProperty("CalCalibSvc",      m_calCalibSvcName = "CalCalibSvc");
   declareProperty("PrecalcCalibTool", m_precalcCalibName = "PrecalcCalibTool");
+  declareProperty("CalSignalToolName", m_calSignalToolName = "CalSignalTool");
+
 }
 
 StatusCode CalTrigTool::initialize() {
@@ -60,11 +74,41 @@ StatusCode CalTrigTool::initialize() {
   }
 
   // this tool may also be shared by CalTrigTool, global ownership
-  sc = toolSvc()->retrieveTool("PrecalcCalibTool", m_precalcCalibName, m_precalcCalibTool);
+  sc = toolSvc()->retrieveTool("PrecalcCalibTool", 
+                               m_precalcCalibName, 
+                               m_precalcCalibTool,
+                               0); // shared
   if (sc.isFailure() ) {
     msglog << MSG::ERROR << "  Unable to create " << m_precalcCalibName << endreq;
     return sc;
   }
+
+  sc = toolSvc()->retrieveTool(m_calSignalToolName,
+                               m_calSignalTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create " << m_calSignalToolName << endreq;
+    return sc;
+  }
+
+  // now try to find the GlastDetSvc service
+  sc = service("GlastDetSvc", m_detSvc);
+  if (sc.isFailure() ) {
+    MsgStream msglog(msgSvc(), name());
+    msglog << MSG::ERROR << "  Unable to get GlastDetSvc " << endreq;
+    return sc;
+  }
+
+  //-- find out which tems are installed.
+  m_twrList = CalUtil::findActiveTowers(*m_detSvc);
+
+  //-- Retreive EventDataSvc
+  sc = serviceLocator()->service( "EventDataSvc", m_evtSvc, true );
+  if(sc.isFailure()){
+    msglog << MSG::ERROR << "Could not find EventDataSvc" << endreq;
+    return sc;
+  }
+
 
   return StatusCode::SUCCESS;
 }
@@ -84,7 +128,7 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
                                      ) {
   StatusCode sc;
 
-  trigBits.fill(false);
+  fill(trigBits.begin(), trigBits.end(), false);
   
   for (FaceNum face; face.isValid(); face++) {
     FaceIdx faceIdx(xtalIdx, face);
@@ -99,15 +143,15 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     if (sc.isFailure()) return sc;
 
     //-- CONVERT ADC READOUT TO MeV --//
-    RngNum rng(ro.getRange(face));
-    short adc = ro.getAdc(face);
+    const RngNum rng(ro.getRange(face));
+    const short adc = ro.getAdc(face);
     float ene;
     //-- retrieve pedestals 
-    RngIdx rngIdx(xtalIdx,
-                  face, rng);
-    const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+    const RngIdx rngIdx(xtalIdx,
+                        face, rng);
+    Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
     if (!ped) return StatusCode::FAILURE;
-    float adcPed = adc - ped->getAvr();
+    const float adcPed = adc - ped->getAvr();
 
     //-- eval faceSignal 
     sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, ene);
@@ -152,7 +196,7 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
                                      ) {
   StatusCode sc;
 
-  trigBits.fill(false);
+  fill(trigBits.begin(), trigBits.end(), false);
 
   //-- RETRIEVE CALIB --//
   for (FaceNum face; face.isValid(); face++) {
@@ -161,7 +205,7 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     XtalDiode xDiodeSm(face,  SM_DIODE);
 
     // FLE //
-	DiodeIdx diodeIdx(faceIdx, LRG_DIODE);
+    DiodeIdx diodeIdx(faceIdx, LRG_DIODE);
     float fleADC;
     RngNum fleRng;
     sc = m_precalcCalibTool->getTrigRngADC(diodeIdx, fleRng, fleADC);
@@ -176,7 +220,7 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     }
 
     // FHE //
-	diodeIdx = DiodeIdx(faceIdx, SM_DIODE);
+    diodeIdx = DiodeIdx(faceIdx, SM_DIODE);
     float fheADC;
     RngNum fheRng;
     sc = m_precalcCalibTool->getTrigRngADC(diodeIdx, fheRng, fheADC);
@@ -195,7 +239,7 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
 }
 
 /**
-   The purpose of this function is to callthrough to overloaded routines of the same 
+   The purpose of this function is to call through to overloaded routines of the same 
    name which specialize in either 1, or 4 range readout for the GLAST Cal.
 */
 StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
@@ -222,7 +266,7 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
     //-- store ped subtracted adc vals --//
     CalArray<XtalRng, float> adcPed;
     // "-1" indicates no data for given readout range
-    adcPed.fill(0);
+    fill(adcPed.begin(), adcPed.end(), 0);
 
     //-- copy over CalDigi data from all available ranges --//
   
@@ -231,13 +275,13 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
              calDigi.getReadoutCol().begin();
            ro != calDigi.getReadoutCol().end();
            ro++) {
-        RngNum rng((*ro).getRange(face));
+        const RngNum rng((*ro).getRange(face));
       
         //-- retrieve pedestals --//
         RngIdx rngIdx(xtalIdx,
                       face, rng);
 
-        const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+        Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
         if (!ped) return StatusCode::FAILURE;
         
         adcPed[XtalRng(face, rng)]  = 
@@ -248,14 +292,14 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
   }
 }
 
-StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
-                                     const CalArray<XtalDiode, float> &cidac,
+StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
+                                     const ICalSignalTool::XtalSignalMap &cidac,
                                      CalArray<XtalDiode, bool> &trigBits,
                                      Event::GltDigi *glt
                                      ) {
   StatusCode sc;
 
-  trigBits.fill(false);
+  fill(trigBits.begin(), trigBits.end(), false);
 
   // get threholds
   for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
@@ -277,20 +321,33 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
   
   return StatusCode::SUCCESS;
 }
-									 
-/**
-   Loop through digiCol & call calcXtalTrig() on each digi readout.
-   Save to optional GltDigi if glt input param is non-null.
-
+                                                                         
+/** Either calc trigger from mc hits or rather from digi
 */
+StatusCode CalTrigTool::calcGlobalTrig(CalArray<DiodeNum, bool> &trigBits,
+                                       Event::GltDigi *glt) {
+  // 1st check for presense of mc
+  SmartDataPtr<Event::McIntegratingHitVector> mcHits(m_evtSvc, EventModel::MC::McIntegratingHitCol);
+  if (mcHits != 0)
+    return calcGlobalTrigSignalTool(trigBits,
+                                    glt);
+  
+  // else calc with cal digis
+  SmartDataPtr<Event::CalDigiCol> calDigis(m_evtSvc, EventModel::Digi::CalDigiCol);
+  return calcGlobalTrig(calDigis, trigBits, glt);
+}
 
-StatusCode CalTrigTool::calcGlobalTrig(const CalDigiCol& calDigiCol,
-                                       CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
+
+/** Loop through digiCol & call calcXtalTrig() on each digi readout.
+   Save to optional GltDigi if glt input param is non-null.
+*/
+StatusCode CalTrigTool::calcGlobalTrig(const Event::CalDigiCol &calDigiCol,
+                                       CalArray<DiodeNum, bool> &trigBits,
                                        Event::GltDigi *glt) {
   StatusCode sc;
 
   //-- init --//
-  trigBits.fill(false);
+  fill(trigBits.begin(), trigBits.end(), false);
 
   CalArray<XtalDiode, bool> xtalTrigBits;
   
@@ -302,7 +359,7 @@ StatusCode CalTrigTool::calcGlobalTrig(const CalDigiCol& calDigiCol,
 
     //-- set global trigger if any xtal trigger is high.
     for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
-      DiodeNum diode = xDiode.getDiode();
+      const DiodeNum diode = xDiode.getDiode();
       
       trigBits[diode] |= xtalTrigBits[xDiode];
     }
@@ -312,21 +369,21 @@ StatusCode CalTrigTool::calcGlobalTrig(const CalDigiCol& calDigiCol,
 }
 
 
-GltDigi* CalTrigTool::setupGltDigi(IDataProviderSvc *eventSvc) {
+GltDigi* CalTrigTool::setupGltDigi() {
   StatusCode sc;
 
   // search for GltDigi in TDS
   static const string gltPath( EventModel::Digi::Event+"/GltDigi");
   DataObject* pnode = 0;
-  sc = eventSvc->findObject(gltPath, pnode);
-
   auto_ptr<GltDigi> glt;
+
+  sc = m_evtSvc->findObject(gltPath, pnode);
   // if the required entry doens't exit - create it
   if (sc.isFailure()) {
     glt.reset(new GltDigi());
     // always register glt data, even if there is no caldigi data.
     // sometimes we can trigger w/ no LACs.
-    sc = eventSvc->registerObject(gltPath, glt.get());
+    sc = m_evtSvc->registerObject(gltPath, glt.get());
     if (sc.isFailure()) {
       // if cannot create entry - error msg
       MsgStream msglog(msgSvc(), name());
@@ -337,6 +394,45 @@ GltDigi* CalTrigTool::setupGltDigi(IDataProviderSvc *eventSvc) {
   else glt.reset(dynamic_cast<GltDigi*>(pnode));
 
   return glt.release();
+}
+
+
+/// loop through all crystals in installed towers, get signal level for each from CalSignalTool, calc trig resonse one by one
+StatusCode CalTrigTool::calcGlobalTrigSignalTool(CalArray<DiodeNum, bool> &trigBits,
+                                                 Event::GltDigi *glt) {
+  fill(trigBits.begin(), trigBits.end(), false);
+
+  /// Loop through (installed) towers and crystals; 
+  for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
+    // get bay id of nth live tower
+    const TwrNum twr(m_twrList[twrSeq]);
+    for (LyrNum lyr; lyr.isValid(); lyr++)
+      for (ColNum col; col.isValid(); col++) {
+        
+        // assemble current calXtalId
+        const XtalIdx xtalIdx(twr.val(),
+                              lyr.val(),
+                              col.val());
+        ICalSignalTool::XtalSignalMap xtalSignalMap;
+        StatusCode sc = m_calSignalTool->getXtalSignalMap(xtalIdx, xtalSignalMap);
+        if (sc.isFailure())
+          return sc;
+        
+        CalArray<XtalDiode, bool> xtalTrigBits;
+        sc = calcXtalTrig(xtalIdx, xtalSignalMap, xtalTrigBits, glt);
+        if (sc.isFailure())
+          return sc;
+
+        //-- set global trigger if any xtal trigger bit is high.
+        for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
+          const DiodeNum diode = xDiode.getDiode();
+          
+          trigBits[diode] |= xtalTrigBits[xDiode];
+        }
+      } // xtal loop
+  } // twr loop
+
+  return StatusCode::SUCCESS;
 }
 
 

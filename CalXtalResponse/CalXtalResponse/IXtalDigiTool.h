@@ -11,11 +11,10 @@
  *
  */
 
+// LOCAL INCLUDES
+#include "ICalSignalTool.h"
+
 // GLAST INCLUDES
-#include "Event/MonteCarlo/McIntegratingHit.h"
-#include "Event/TopLevel/Event.h"
-#include "Event/Digi/CalDigi.h"
-#include "Event/Digi/GltDigi.h"
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
 
@@ -23,32 +22,32 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // STD INCLUDES
-#include <vector>
 
-static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 1);
+namespace Event {
+  class CalDigi;
+}
+
+static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 2);
 
 class IXtalDigiTool : virtual public IAlgTool {
  public:
 
   static const InterfaceID& interfaceID() { return IID_IXtalDigiTool; }
 
+  /// represent all 4 diode signals in single xtal.
+  typedef CalUtil::CalArray<CalUtil::XtalDiode, float> XtalSignalMap;
+
   /** \brief calculate Adc response for one cal xtalIdx.  also select best rng.
 
-  \param hitList input vector of energy depositions.  
-  \param evtHdr optional pointer to current event header (used for runid & evtid)
+  \param cidac   input electronic signal level for each diode in crystal
   \param calDigi output empty CalDigi object to be populated (xtalId & rangeMode expected populated)
   \param lacBits output boolean for log accept on each xtal face
-  \param trigBits output booleans for triggers for each xtal diode.
-  \param glt optional output GltDigi class.  Will populate if (glt != 0).
-  \param zeroSuppress.  if zero suppression is on, i can make many optimizations by not fully evaluating xtals which will not be recorded.
+  \param zeroSuppress.  if zero suppression is on, i can optimize by not fully evaluating xtals which will not be recorded.
 
   */
-  virtual StatusCode calculate(const vector<const Event::McIntegratingHit*> &hitList,
-                               const Event::EventHeader *evtHdr,            
+  virtual StatusCode calculate(const XtalSignalMap &cidac,
                                Event::CalDigi &calDigi,
                                CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits,
-                               CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
-                               Event::GltDigi *glt,
                                bool zeroSuppress
                                ) = 0;
 

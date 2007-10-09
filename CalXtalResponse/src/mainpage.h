@@ -67,39 +67,35 @@
     The CalReponseTools are a collection of tools which provide a
     consistent interface to calorimeter response calculations.  
     
-    CalResponseTools consists of 3 interfaces.
-    -  IXtalRecTool  reconstructs energy deposit intensity & centroid
-    from digi information
-    
+    CalResponseTools consists of 5 interfaces.
+    - ICalSignalTool - calculate diode signal response (in charge injection dac (CIDAC) units) 
+    for each crystal in Cal using TDS McIntegratingHitCol and IXtalSignalTool
+
+    - IXtalSignalTool - calculate signal response for single crystal / McIntegrating hit pair.
+
     -  IXtalDigiTool allows for the calculation of the digital response
-    of one cal crystal given a list of enery depositions for that
-    crystal. Includes trigger response.
-    
+    of one cal crystal from diode signal levels.
+
     - ICalTrigTool generate FLE & FHE trigger response from digi info.
     also populates GLtDigi TDS class & can run in either 1-range or 4-range
     mode.  Can be called either per xtal or for entire Cal.
+
+    -  IXtalRecTool  reconstructs energy deposit intensity & centroid
+    from digi information
+    
+    
     
     Currently there is only one concrete implementation of each of the
-    CalResponseTools:  XtalRecTool, XtalDigiTool, CalTrigTool
+    CalResponseTools:  CalSignalTool, XtalSignalTool, XtalDigiTool, CalTrigTool, XtalRecTool
     
     @subsection jobOptions jobOptions
     
     once again, suitable defaults exist for all parameters, all params
-    are optional.
-    
-    
-    @param XtalEnergyTool.CalCalibSvc
-    where to retrieve calib data (defatul="CalCalibSvc")
-    @param XtalDigiTool.CalCalibSvc
-    where to retrieve calib data (defatult="CalCalibSvc")
-    @param CalTrigTool.CalCalibSvc
-    where to retrieve calib data (default="CalCalibSVc")
-    @param XtalDigiTool.NoRandomNoise
-    disable calculation of random poissonic fluctuation & electronic noise
+    are optional. see individual tools doxygen page for jobOptions
     
     @section CalXtalRecAlg CalXtalRecAlg
     CalXtalRecAlg takes the digitized calorimeter information from CalDigiCol
-    as input, calculates the energy and position in each hitted crystal
+    as input, calculates the energy and position in each hit crystal
     and stores this data into CalXtalRecCol.  CalXtalResponse package is 
     used for the estimation of energy & position from digi info.  See
     documentation in CalXtalResponse for details.
@@ -187,16 +183,5 @@
     
     - Samples from throughout the energy range of the instrument is checked and
     crystals are checked at several positions along their length.
-
-	 * @section CalFailureModeSvc CalFailureModeSvc
- * CalFailureModeSvc creates a list of large-scale failures in the CAL, 
- * and utilities
- * to search the lists to allow digi and recon algorithms to ignore hits based
- * on those lists.
- *
- * It can take lists of towers, (tower,AFEE) or (tower, Controller) pairs
- * to create the lists of dead objects. It provides a method to see if a 
- * given CalXtalId is contained in the lists.
-    
     
 */

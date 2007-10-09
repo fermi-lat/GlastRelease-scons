@@ -2,7 +2,7 @@
 #define CalFailureModeSvc_H 1
 
 // Include files
-#include "CalXtalResponse/ICalFailureModeSvc.h"
+#include "ICalFailureModeSvc.h"
 #include "GaudiKernel/Service.h"
 
 /** @class CalFailureModeSvc

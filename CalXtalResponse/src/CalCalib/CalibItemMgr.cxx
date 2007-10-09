@@ -21,6 +21,7 @@ using namespace CalUtil;
 
 using namespace std;
 ///////////////// GENERIC UTILITIES //////////////////////////////////
+
 /**
    functional class deletes a pointer
    fun to use w/ for_each template

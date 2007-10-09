@@ -22,8 +22,7 @@
 ////////////////////// DEBUGGING //////////////////////////////////////////////
 //-- OPTIONAL - uncomment lines below for more detailed logging
 //CalDigiAlg.XtalDigiTool.OutputLevel   = 1;
-//CalXtalRecAlg.XtalEneTool.OutputLevel = 1;
-//CalXtalRecAlg.XtalPosTool.OutputLevel = 1;
+//CalXtalRecAlg.XtalRecTool.OutputLevel = 1;
 //CalCalibSvc.OutputLevel               = 1;
 
 
@@ -35,9 +34,8 @@
 
 
 /////////////////////// CALTUPLE ////////////////////////////////////////////////
-//CalTupleAlg.tupleName = "CalTuple"; // enable CalTuple
 //CalTupleAlg.tupleFilename = "CalTuple.root"; // optional filename
-//CalTupleAlg.fourRangeMode = true; // enable 4 range readout in CalTuple
+//CalTupleAlg.tupleName = "CalTuple"; // tuple name in root file
 
 ///////////////////////// CAL FAILUREMODE /////////////////////////////////////////
 ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
@@ -49,4 +47,4 @@ CalFailureModeSvc.towerControllerList= {"4_2"};
 
 /////////////////////// MISC OPTIONS //////////////////////////////////////////
 //-- OPTIONAL - turn off randomly gererated noise in digi (default = true)
-//CalDigiAlg.XtalDigiTool.NoRandomNoise = false;
+//ToolSvc.CalSignalTool.enableNoise = false;

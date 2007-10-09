@@ -36,6 +36,12 @@ using namespace idents;
     - m_calXtalAdcPed     - pedestal subtracted adc values.  (BEASTRANGE)
     - m_calXtalAdcPedAllRange - ped subtraced adc values (all available ranges, indexed by rangeId)
 
+    jobOptions:
+    - CalCalibSvc           - Cal calibration source (default="CalCalibSvc")
+    - tupleName             - TTree object name (default="CalTuple")
+    - tupleFilename         - Optional tuple filename (default is combined with other RootTupleSvc output)
+    - NeighborXtalkToolName - (optional) used to correct for bias caused by neighboring crystal electronic crosstalk. (default="" - disabled)
+
     @author Zach Fewtrell
 */
 class CalTupleAlg : public Algorithm {
@@ -74,7 +80,7 @@ private:
 
     /// \brief ped subtracted adcs
     /// 
-    /// stored as a pointer b/c array size changes based on fourRngMode
+    /// stored as a pointer b/c array size changes based on 
     float m_calXtalAdcPed[16][8][12][2];
     float m_calXtalAdcPedAllRange[16][8][12][2][4];
 
@@ -210,7 +216,9 @@ StatusCode CalTupleAlg::initialize() {
 
   //-- Neighbor Xtalk Tool --//
   if (!m_xtalkToolName.value().empty()) {
-    sc = toolSvc()->retrieveTool(m_xtalkToolName, m_xtalkTool, this);
+    sc = toolSvc()->retrieveTool(m_xtalkToolName, 
+                                 m_xtalkTool,
+                                 0); // shared by other code
     if (sc.isFailure() ) {
       msglog << MSG::ERROR << "  Unable to create " << m_xtalkToolName << endreq;
       return sc;
@@ -220,6 +228,13 @@ StatusCode CalTupleAlg::initialize() {
   return StatusCode::SUCCESS;
 }
 
+/** Loop through each digi
+    - store adc for each digi in tuple
+    - store adc range in tuple
+    - calculate faceSiganl (from CalCalibSvc) 
+    - optionally apply crosstalk
+    - store face signal in tuple
+ */
 StatusCode CalTupleAlg::execute() {
   StatusCode sc;
 
@@ -264,12 +279,12 @@ StatusCode CalTupleAlg::execute() {
          digiIter != calDigiCol->end(); digiIter++) {
 
       // get CalXtalId
-      CalXtalId xtalId = (*digiIter)->getPackedId();  
+      const CalXtalId xtalId = (*digiIter)->getPackedId();  
       // get CalUtil::XtalIdx
-      XtalIdx xtalIdx(xtalId);
-      TwrNum twr = xtalIdx.getTwr();
-      LyrNum lyr = xtalIdx.getLyr();
-      ColNum col = xtalIdx.getCol();
+      const XtalIdx xtalIdx(xtalId);
+      const TwrNum twr = xtalIdx.getTwr();
+      const LyrNum lyr = xtalIdx.getLyr();
+      const ColNum col = xtalIdx.getCol();
 
       // usually using only 1st readout
       CalDigi::CalXtalReadoutCol::const_iterator ro = 
@@ -278,21 +293,21 @@ StatusCode CalTupleAlg::execute() {
       // PER FACE LOOP
       for (FaceNum face; face.isValid();  face++) {
         // get adc range
-        RngNum rng((*ro).getRange(face)); 
+        const RngNum rng((*ro).getRange(face)); 
         // get adc values 
-        float adc = (*ro).getAdc(face);   
-        RngIdx rngIdx(xtalIdx, face, rng);
+        const float adc = (*ro).getAdc(face);   
+        const RngIdx rngIdx(xtalIdx, face, rng);
 
         // adc range
         m_tupleEntry.m_calXtalAdcRng[twr.val()][lyr.val()][col.val()][face.val()] = rng.val();
 
         // get pedestals
         // pedestals
-        const Ped* ped= m_calCalibSvc->getPed(rngIdx);
+        Ped const*const ped= m_calCalibSvc->getPed(rngIdx);
         if (!ped) return StatusCode::FAILURE;
 
         // ped subtracted ADC
-        float adcPed = adc - ped->getAvr();
+        const float adcPed = adc - ped->getAvr();
 
         //-- face signal --//
         if (adcPed > 0) {
@@ -326,17 +341,17 @@ StatusCode CalTupleAlg::execute() {
           const CalDigi::CalXtalReadout *ro = (*digiIter)->getXtalReadout(nRO);
           if (!ro) continue;
 
-          RngNum rng(ro->getRange(face));
-          short adc = ro->getAdc(face);
+          const RngNum rng(ro->getRange(face));
+          const short adc = ro->getAdc(face);
             
           // get pedestals
           // pedestals
-          RngIdx rngIdx(xtalIdx, face, rng);
-          const Ped *ped = m_calCalibSvc->getPed(rngIdx);
+          const RngIdx rngIdx(xtalIdx, face, rng);
+          Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
           if (!ped) return StatusCode::FAILURE;
             
           // ped subtracted ADC
-          float adcPed = adc - ped->getAvr();
+          const float adcPed = adc - ped->getAvr();
             
           m_tupleEntry.m_calXtalAdcPedAllRange[twr.val()][lyr.val()][col.val()][face.val()][rng.val()] = adcPed;
 

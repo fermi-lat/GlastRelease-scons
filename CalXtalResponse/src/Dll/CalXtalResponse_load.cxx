@@ -27,6 +27,8 @@ DECLARE_FACTORY_ENTRIES(CalXtalResponse) {
   DLL_DECL_TOOL( CalTrigTool );
   DLL_DECL_TOOL( PrecalcCalibTool );
   DLL_DECL_TOOL( NeighborXtalkTool );
+  DLL_DECL_TOOL( CalSignalTool );
+  DLL_DECL_TOOL( XtalSignalTool );
   
   DLL_DECL_TOOL( CalXtalRespRandom );
 } 

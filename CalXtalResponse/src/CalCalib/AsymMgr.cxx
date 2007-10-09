@@ -11,6 +11,7 @@
 // EXTLIB INCLUDES
 
 // STD
+#include <algorithm>
 
 using namespace std;
 using namespace CalUtil;
@@ -34,7 +35,7 @@ AsymMgr::AsymMgr(CalCalibShared &ccsShared) :
 
   /// initialize asymCtr array
   for (AsymType asymType; asymType.isValid(); asymType++)
-    m_asymCtr[asymType].fill(BAD_FLOAT);
+    fill(m_asymCtr[asymType].begin(), m_asymCtr[asymType].end(), BAD_FLOAT);
 }
 
 /// get Asymmetry calibration information for one xtal

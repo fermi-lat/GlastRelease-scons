@@ -8,6 +8,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 
 // STD INCLUDES
+#include <algorithm>
 
 using namespace CalUtil;
 using namespace std;
@@ -35,12 +36,25 @@ PrecalcCalibTool::PrecalcCalibTool( const string& type,
   declareProperty("CalCalibSvc", m_calCalibSvcName = "CalCalibSvc");
 
   // initialize internal arrays
-  m_trigCIDAC.fill(BAD_FLOAT);
-  m_trigADC.fill(BAD_FLOAT);
-  m_trigMeV.fill(BAD_FLOAT);
-  m_trigRng.fill(CalUtil::LEX8);
-  m_lacCIDAC.fill(BAD_FLOAT);
-  m_pedSigCIDAC.fill(BAD_FLOAT);
+  using namespace std;
+  fill(m_trigCIDAC.begin(),
+       m_trigCIDAC.end(),
+       BAD_FLOAT);
+  fill(m_trigADC.begin(),
+        m_trigADC.end(),
+        BAD_FLOAT);
+  fill(m_trigMeV.begin(),
+       m_trigMeV.end(),
+       BAD_FLOAT);
+  fill(m_trigRng.begin(),
+       m_trigRng.end(),
+       LEX8);
+  fill(m_lacCIDAC.begin(),
+       m_lacCIDAC.end(),
+       BAD_FLOAT);
+  fill(m_pedSigCIDAC.begin(),
+       m_pedSigCIDAC.end(),
+       BAD_FLOAT);
 }
 
 StatusCode PrecalcCalibTool::initialize() {
@@ -117,7 +131,7 @@ StatusCode PrecalcCalibTool::genLocalStore() {
   for (CalUtil::FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
 
     //-- TholdCI --//
-    const CalibData::CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
+    CalibData::CalTholdCI const*const tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
     // allow for missing tholdci data, 1st time only (all towers may not be populated)
     if (!tholdCI) continue;
 
@@ -193,9 +207,9 @@ StatusCode PrecalcCalibTool::genLocalStore() {
 
     //-- (per range) Ped, ULDCI & PEDCI --//
     for (RngNum rng; rng.isValid(); rng++) {
-      RngIdx rngIdx(faceIdx, rng);
+      const RngIdx rngIdx(faceIdx, rng);
 
-      const CalibData::Ped *ped = m_calCalibSvc->getPed(rngIdx);
+      CalibData::Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
       
       float sigDAC;
 
@@ -287,11 +301,11 @@ StatusCode PrecalcCalibTool::lex8_to_lex1(const FaceIdx faceIdx,
   StatusCode sc;
 
   //-- TholdCI --//
-  const CalibData::CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
+  CalibData::CalTholdCI const*const tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
   if (!tholdCI) return StatusCode::SUCCESS;
   
   // use this point to generate LEX8/LEX1 ratio
-  float x8tmp = tholdCI->getULD(LEX8.val())->getVal();
+  const float x8tmp = tholdCI->getULD(LEX8.val())->getVal();
 
   // 1st convert to cidac
   sc = m_calCalibSvc->evalCIDAC(RngIdx(faceIdx, LEX8),
@@ -304,7 +318,7 @@ StatusCode PrecalcCalibTool::lex8_to_lex1(const FaceIdx faceIdx,
                               tmpCIDAC, x1tmp);
   if (sc.isFailure()) return sc;
       
-  float rat = x1tmp/x8tmp;
+  const float rat = x1tmp/x8tmp;
 
   l1adc = l8adc*rat;
 
@@ -320,11 +334,11 @@ StatusCode PrecalcCalibTool::hex8_to_hex1(const FaceIdx faceIdx,
   StatusCode sc;
 
   //-- TholdCI --//
-  const CalibData::CalTholdCI *tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
+  CalibData::CalTholdCI const*const tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
   if (!tholdCI) return StatusCode::SUCCESS;
 
   // use this point to generate HEX8/HEX1 ratio
-  float x8tmp = tholdCI->getULD(HEX8.val())->getVal();
+  const float x8tmp = tholdCI->getULD(HEX8.val())->getVal();
 
   // 1st convert to cidac
   sc = m_calCalibSvc->evalCIDAC(RngIdx(faceIdx, HEX8),
@@ -337,7 +351,7 @@ StatusCode PrecalcCalibTool::hex8_to_hex1(const FaceIdx faceIdx,
                               tmpCIDAC, x1tmp);
   if (sc.isFailure()) return sc;
       
-  float rat = x1tmp/x8tmp;
+  const float rat = x1tmp/x8tmp;
 
   h1adc = h8adc*rat;
 

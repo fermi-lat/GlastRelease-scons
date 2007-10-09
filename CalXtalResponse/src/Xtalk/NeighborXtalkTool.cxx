@@ -27,6 +27,7 @@
 #include <string>
 #include <map>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 using namespace CalUtil;
@@ -34,10 +35,17 @@ using namespace Event;
 using namespace idents;
 using namespace facilities;
 
+/// used to indicate empty channel
+static const short INVALID_ADC = -5000;
+
 
 /** \brief Simple implementation of INeighborXtalkTool
     \note currently reads xtalk curves from txt file & not from calib db.
     \note currently only deals w/ cross-talk listed as he_diode->he_diode
+
+    jobOptions:
+    - txtFile - (default="$(CALXTALRESPONSEROOT)/src/Xtalk/CU06_Neighbor_xtalk.txt") input xtalk coefficients
+    - CalCalibSvc - (default="CalCalibSvc") - source for Cal Calibrations
 */
 class NeighborXtalkTool : public AlgTool, 
                           virtual public INeighborXtalkTool {
@@ -50,7 +58,7 @@ public:
   /// gets needed parameters and pointers to required services
   StatusCode initialize();
 
-  StatusCode finalize();
+  StatusCode finalize() {return StatusCode::SUCCESS;}
 
 
   StatusCode calcXtalkCIDAC(CalUtil::DiodeIdx diodeIdx, float &xtalkCIDAC) const ;
@@ -89,8 +97,6 @@ private:
   ///  signal stored in he_dac units
   CalVec<FaceIdx, float> m_signalMap;
 
-  /// used to indicate empty channel
-  static const short INVALID_ADC = -5000;
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty m_calCalibSvcName;                         
@@ -151,13 +157,13 @@ StatusCode NeighborXtalkTool::calcXtalkCIDAC(CalUtil::DiodeIdx diodeIdx, float &
   xtalkCIDAC = 0;
   /// currently only simulating crosstalk w/ HE diode destination channe,l
   if (diodeIdx.getDiode() != SM_DIODE)
-	 return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 
   XtalkMap::const_iterator xtalkIt = m_xtalkMap.find(diodeIdx.getFaceIdx());
 
   // return 0 if there are no neighboring source channels w/ registered xtalk
   if (xtalkIt == m_xtalkMap.end())
-	 return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 
   // find all source curves for given destination channel
   for (ChannelSplineMap::const_iterator chanIt =
@@ -167,8 +173,8 @@ StatusCode NeighborXtalkTool::calcXtalkCIDAC(CalUtil::DiodeIdx diodeIdx, float &
     FaceIdx srcIdx(chanIt->first);
     float srcDac = m_signalMap[srcIdx];
 
-	if (srcDac <= 0)
-		continue;
+    if (srcDac <= 0)
+      continue;
 
     xtalkCIDAC += evalSingleChannelXtalk(srcDac, chanIt->second);
   }
@@ -254,7 +260,7 @@ void NeighborXtalkTool::insertXtalkCurve(FaceIdx srcIdx,
 
 StatusCode NeighborXtalkTool::buildSignalMap(const Event::CalDigiCol &digiCol) {
   // re-initialize signalMap
-  m_signalMap.fill(INVALID_ADC);
+  fill(m_signalMap.begin(), m_signalMap.end(), INVALID_ADC);
 
   // loop over all calorimeter digis in CalDigiCol
   for (CalDigiCol::const_iterator digiIter = digiCol.begin(); 
@@ -275,19 +281,19 @@ StatusCode NeighborXtalkTool::buildSignalMap(const Event::CalDigiCol &digiCol) {
       RngNum rng(ro->getRange(face));
       if (rng.getDiode() == LRG_DIODE)
         continue;
-      float adc(ro->getAdc(face));
+      const float adc(ro->getAdc(face));
 
-      FaceIdx faceIdx(xtalIdx,face);
-      RngIdx rngIdx(faceIdx,rng);
+      const FaceIdx faceIdx(xtalIdx,face);
+      const RngIdx rngIdx(faceIdx,rng);
 
       // pedestal subtract
-      const CalibData::Ped *ped = m_calCalibSvc->getPed(rngIdx);
+      CalibData::Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
       if (!ped) {
         MsgStream msglog(msgSvc(), name());
         msglog << MSG::ERROR << "can't find cal ped for given digi channel: " << rngIdx.toStr() << endreq;
         return StatusCode::FAILURE;
       }
-      float adcPed = adc - ped->getAvr();
+      const float adcPed = adc - ped->getAvr();
           
       // evaluate CIDAC signal
       float cidac = 0;
@@ -310,28 +316,24 @@ float NeighborXtalkTool::evalSingleChannelXtalk(float srcDac, const XtalkEntry &
   return (srcDac - xtalk.x_intercept)*xtalk.slope;
 }
 
-StatusCode NeighborXtalkTool::finalize() {
-  return StatusCode::SUCCESS;
-}
-
 StatusCode NeighborXtalkTool::calcXtalkMeV(CalUtil::DiodeIdx diodeIdx, float &xtalkMev) const {
-	xtalkMev = 0;
-    StatusCode sc;
-	
-	float xtalkCIDAC;
-	sc = calcXtalkCIDAC(diodeIdx, xtalkCIDAC);
-	if (sc.isFailure()) return sc;
+  xtalkMev = 0;
+  StatusCode sc;
+        
+  float xtalkCIDAC;
+  sc = calcXtalkCIDAC(diodeIdx, xtalkCIDAC);
+  if (sc.isFailure()) return sc;
 
-	// quick exit.
-	if (xtalkCIDAC == 0)
-		return StatusCode::SUCCESS;
+  // quick exit.
+  if (xtalkCIDAC == 0)
+    return StatusCode::SUCCESS;
 
-	float mpdDiode;
-	sc = m_calCalibSvc->getMPDDiode(diodeIdx, mpdDiode);
-	if (sc.isFailure()) return sc;
+  float mpdDiode;
+  sc = m_calCalibSvc->getMPDDiode(diodeIdx, mpdDiode);
+  if (sc.isFailure()) return sc;
 
-	/// mev = (mev/cidac)*cidac
-	xtalkMev = xtalkCIDAC*mpdDiode;
+  /// mev = (mev/cidac)*cidac
+  xtalkMev = xtalkCIDAC*mpdDiode;
 
-	return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }

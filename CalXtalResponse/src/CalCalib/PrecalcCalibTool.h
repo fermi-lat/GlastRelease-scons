@@ -16,11 +16,13 @@
 
 // STD INCLUDES
 
-/// \brief save time w/ certain pre-calculated values.
-/// \note have to keep in sync w/ CalibDataSvc.
-/// \note modeled after CalibItemMgr class
-///  \note IIncidentListener allows me to check current validity for cached pre-calculated
-///  calibration values.
+/** \brief save computational time w/ certain pre-calculated values.
+    \note have to keep in sync w/ CalibDataSvc, so I am modeled after CalibItemMgr class
+    \note IIncidentListener allows me to check current validity for cached pre-calculated calibration values.
+
+    jobOptions:
+    - CalCalibSvc (default="CalCalibSvc") - base Cal Calibration source.
+*/
 
 class PrecalcCalibTool : public AlgTool,
                          virtual public IIncidentListener,

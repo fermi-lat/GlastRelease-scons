@@ -19,18 +19,22 @@
 
 // GLAST INCLUDES
 #include "Event/TopLevel/Event.h"
+#include "Event/Digi/CalDigi.h"
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
-#include "Event/Digi/CalDigi.h"
-#include "Event/Digi/GltDigi.h"
+#include "ICalSignalTool.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
 // STD INCLUDES
+namespace Event {
+  class GltDigi;
+}
 
-static const InterfaceID IID_ICalTrigTool("ICalTrigTool", 1, 1);
+
+static const InterfaceID IID_ICalTrigTool("ICalTrigTool", 1, 2);
 
 class ICalTrigTool : virtual public IAlgTool {
  public:
@@ -94,31 +98,28 @@ class ICalTrigTool : virtual public IAlgTool {
 
   */
   virtual StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
-                                  const CalUtil::CalArray<CalUtil::XtalDiode, float> &cidac,
+                                  const ICalSignalTool::XtalSignalMap &cidac,
                                   CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
                                   Event::GltDigi *glt
                                   ) = 0;
 
-  /** \brief global calc CAL FLE & FHE trigger response based current
-      Event Digi info
+  /** \brief global calc CAL FLE & FHE trigger response based either on current
+      Event McIntegratingHits or fall back on CalDigi
 
-      \param calDigiCol input collection of CalDigi objects
       \param glt optional output GltDigi class.  Will populate if (glt != 0).
-      \param fle output Cal global FLE trigger bit
-      \param fhe output Cal global FHE trigger bit
+      \param trigBits destination trigger results for FLE & FHE
 
       \note Incomplete/single range digi readouts will prevent simulation of 
       certain rare - direct diode deposit related results such as a high FHE 
       trigger on a crystal w/ low range ULD readout.
   */
-  virtual StatusCode calcGlobalTrig(const Event::CalDigiCol& calDigiCol,
-                                    CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
+  virtual StatusCode calcGlobalTrig(CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
                                     Event::GltDigi *glt
                                     ) = 0;
 
   /** \brief search for GltDigi class in TDS & create a new one if needed.
    */
-  virtual Event::GltDigi* setupGltDigi(IDataProviderSvc *eventSvc) = 0;
+  virtual Event::GltDigi* setupGltDigi() = 0;
 
 
 };
