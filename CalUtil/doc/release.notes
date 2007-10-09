@@ -3,6 +3,7 @@
 @verbatim
  $Id$	
  * Package CalUtil
+ * v3r5p1     09-Oct-2007 ZF added CalGeom utility
  * v3r5       05-Oct-2007 ZF took out fill() and find() methods (STL provided methods will work fine)
  * v3r4       02-Oct-2007 ZF made some constructors explicit, reduce some cast operators (was causing bugs)
                              added 'const' qualifier in many places - shouldn't affect outside code. 
