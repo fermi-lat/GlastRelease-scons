@@ -176,34 +176,7 @@ namespace AcdRecon {
 			       HepPoint3D& localPoint, double& activeX, double& activeY) {
 
     tile.toLocal(globalPoint,localPoint,iVol);
-    const std::vector<double>& dim = tile.dim(iVol);
-
-    activeX = (dim[0]/2.) - fabs(localPoint.x());
-    activeY = (dim[1]/2.) - fabs(localPoint.y());
-
-    if ( tile.nVol() == 2 ) {
-      int face = tile.acdId().face();
-      if ( face == 0 ) {
-	// top, check for hitting near bent tile
-	if ( iVol == 0 ) {
-	  if ( tile.sharedEdge(0) == 1 &&  localPoint.x() > 0 ) {
-	    activeY += fabs(tile.sharedWidth(0));
-	  } else if (  tile.sharedEdge(0) == 3 &&  localPoint.y() <  0 ) {
-	    activeY += fabs(tile.sharedWidth(0));
-	  }  
-	} else if ( iVol == 1 ) {
-	  if ( tile.sharedEdge(1) == 1 && localPoint.y() > 0 ) {
-	    // is a shared piece.  but this is a short side, so take the distance to the
-	    // other side of this volume
-	    activeY =  dim[1] - activeY;
-	  } else if ( tile.sharedEdge(1) == 3 && localPoint.y() < 0 ) {
-	    // is a shared piece.  but this is a short side, so take the distance to the
-	    // other side of this volume
-	    activeY =  dim[1] - activeY;
-	  }
-	} 
-      } 
-    }
+    tile.activeDistance(localPoint,iVol,activeX,activeY);
   }
 
 
