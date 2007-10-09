@@ -105,5 +105,5 @@ CalFailureModeSvc.towerControllerList= {"4_2"};
 //
 //##############################################################
 //test_CalXtalResponse.skipNoiseTests = true;
-test_CalXtalResponse.tupleFilename = "test_CalXtalResponse.root";
+//test_CalXtalResponse.tupleFilename = "test_CalXtalResponse.root"; // optional tuple for debugging purposes
 
