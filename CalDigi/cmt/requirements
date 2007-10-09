@@ -2,6 +2,8 @@ package CalDigi
 
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
+author Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
+
 # $Id$
 branches src mgr doc
 
@@ -11,6 +13,8 @@ use CalXtalResponse
 use GlastSvc
 use CalUtil
 use Event
+use Trigger
+use configData
 
 
 apply_pattern packageShr

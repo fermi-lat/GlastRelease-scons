@@ -15,6 +15,8 @@
 /** 
     Algorithm to test CalDigi package.
 
+    I don't know much about this - Z. Fewtrell
+
   
 */
 class test_CalDigi : public Algorithm {
