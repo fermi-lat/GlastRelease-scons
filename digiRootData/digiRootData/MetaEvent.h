@@ -177,7 +177,13 @@ public:
   inline const LpaKeys* lpaKeys() const { return m_lpaKeys; }
   inline const LciKeys* lciKeys() const { return m_lciKeys; }
 
-  inline enums::Lsf::KeysType keyType() const { return m_ktype; }
+  inline enums::Lsf::KeysType keyType() const { 
+      if ((m_ktype == enums::Lsf::NoKeysType) && (m_lpaKeys || m_lciKeys)) {
+          if (m_lpaKeys)  return enums::Lsf::LpaKeys;
+          else return enums::Lsf::LciKeys;
+      }
+      return m_ktype; 
+  }
 
   /// set everything at once except Configuration
   inline void initialize(const RunInfo& run, const DatagramInfo& datagram, 
