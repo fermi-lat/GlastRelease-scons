@@ -7,6 +7,12 @@
 #include "Event/Recon/AcdRecon/AcdHit.h"
 #include "Event/Digi/AcdDigi.h"
 
+#include "CalibData/Acd/AcdPed.h"
+#include "CalibData/Acd/AcdGain.h"
+#include "CalibData/Acd/AcdHighRange.h"
+
+#include "AcdUtil/AcdCalibFuncs.h"
+
 #include "idents/AcdId.h"
 
 DECLARE_TOOL_FACTORY(AcdPha2MipTool)
@@ -90,10 +96,10 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
 }
 
 StatusCode AcdPha2MipTool::makeAcdHit ( const Event::AcdDigi& digi,
-					bool periodicEvent, 
+					bool /* periodicEvent */, 
 					Event::AcdHit*& hit) {
-  float mipsPmtA(0.);
-  float mipsPmtB(0.);
+  double mipsPmtA(0.);
+  double mipsPmtB(0.);
   bool acceptDigi(false);
   bool ok = getCalibratedValues(digi,mipsPmtA,mipsPmtB,acceptDigi);
   if ( !ok ) return StatusCode::FAILURE;
@@ -105,97 +111,80 @@ StatusCode AcdPha2MipTool::makeAcdHit ( const Event::AcdDigi& digi,
   return StatusCode::SUCCESS;
 }
 
-bool acceptAcdDigi ( const Event::AcdDigi& digi, bool periodicEvent );
 
-
-bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB, bool& acceptDigi) const {
-
-  static const unsigned short FullScale = 4095;
+bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, double& mipsPmtA, double& mipsPmtB, bool& acceptDigi) const {
 
   // get calibration consts
-  float pedValA(0.), pedValB(0.);
-  float mipValA(0.), mipValB(0.);
-				 
   acceptDigi = false;
-
-  if ( ! getPeds(digi.getId(),pedValA,pedValB) ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << "Failed to get pedestals." << endreq;
-    return false;
-  }
-  if ( ! getMips(digi.getId(),mipValA,mipValB) ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << "Failed to get gains." << endreq;
-    return false;
-  }
+  double pedSubA(0.);
+  double pedSubB(0.);
 
   // do PMT A
   bool hasHitA = digi.getAcceptMapBit(Event::AcdDigi::A);
-  Event::AcdDigi::Range rangeA = digi.getRange(Event::AcdDigi::A);  
-  unsigned short phaA = hasHitA ? ( rangeA == Event::AcdDigi::LOW ? digi.getPulseHeight(Event::AcdDigi::A) : FullScale ) : 0;
-  if ( phaA == 0 ) {
-    mipsPmtA = 0.;
-  } else {
-    float pedSubtracted_A = phaA -  pedValA;    
-    mipsPmtA = pedSubtracted_A / mipValA;
-    acceptDigi |= accept(digi.getId(),pedSubtracted_A,mipsPmtA);
+  if ( hasHitA ) {
+    Event::AcdDigi::Range rangeA = digi.getRange(Event::AcdDigi::A);  
+    bool ok = rangeA == Event::AcdDigi::LOW ? 
+      getValues_lowRange(digi.getId(),Event::AcdDigi::A,digi.getPulseHeight(Event::AcdDigi::A),pedSubA,mipsPmtA) :
+      getValues_highRange(digi.getId(),Event::AcdDigi::A,digi.getPulseHeight(Event::AcdDigi::A),pedSubA,mipsPmtA);
+    if ( !ok ) return false;
+    acceptDigi |= rangeA == Event::AcdDigi::HIGH ? true : accept(digi.getId(),pedSubA,mipsPmtA);
   }
 
   // do PMT B
   bool hasHitB = digi.getAcceptMapBit(Event::AcdDigi::B);
-  Event::AcdDigi::Range rangeB = digi.getRange(Event::AcdDigi::B);  
-  unsigned short phaB = hasHitB ? ( rangeB == Event::AcdDigi::LOW ? digi.getPulseHeight(Event::AcdDigi::B) : FullScale ) : 0;
-  if ( phaB == 0 ) {
-    mipsPmtB = 0.;
-  } else {
-    float pedSubtracted_B = phaB -  pedValB;
-    mipsPmtB = pedSubtracted_B / mipValB;
-    acceptDigi |= accept(digi.getId(),pedSubtracted_B,mipsPmtB);
-  } 
+  if ( hasHitB ) {
+    Event::AcdDigi::Range rangeB = digi.getRange(Event::AcdDigi::B);  
+    bool ok = rangeB == Event::AcdDigi::LOW ? 
+      getValues_lowRange(digi.getId(),Event::AcdDigi::B,digi.getPulseHeight(Event::AcdDigi::B),pedSubB,mipsPmtB) :
+      getValues_highRange(digi.getId(),Event::AcdDigi::B,digi.getPulseHeight(Event::AcdDigi::B),pedSubB,mipsPmtB);
+    if ( !ok ) return false;
+    acceptDigi |= rangeB == Event::AcdDigi::HIGH ? true : accept(digi.getId(),pedSubB,mipsPmtB);
+  }
 
   return true;
 }
 
-
-bool AcdPha2MipTool::getPeds(const idents::AcdId& id, float& valA, float& valB) const {
+bool AcdPha2MipTool::getValues_lowRange(const idents::AcdId& id, Event::AcdDigi::PmtId pmt, unsigned short pha, 
+					double& pedSub, double& mips) const {
+  
   if ( m_calibSvc == 0 ) return false;  
   CalibData::AcdPed* ped(0);
-
-  StatusCode sc = m_calibSvc->getPedestal(id,Event::AcdDigi::A,ped);
-  if ( sc.isFailure() ) {
-    return false;
-  }
-  valA = ped->getMean();
-
-  sc = m_calibSvc->getPedestal(id,Event::AcdDigi::B,ped);
-  if ( sc.isFailure() ) {
-    return false;
-  }
-  valB = ped->getMean();
   
-  return true;
-}
-
-
-
-bool AcdPha2MipTool::getMips(const idents::AcdId& id, float& valA, float& valB) const {
-  if ( m_calibSvc == 0 ) return false;
+  StatusCode sc = m_calibSvc->getPedestal(id,pmt,ped);
+  if ( sc.isFailure() ) {
+    return false;
+  }
+  double pedestal = ped->getMean();
 
   CalibData::AcdGain* gain(0);
+  sc = m_calibSvc->getMipPeak(id,pmt,gain);
+  if ( sc.isFailure() ) {
+    return false;
+  }
+  double mipPeak = gain->getPeak();
 
-  StatusCode sc = m_calibSvc->getMipPeak(id,Event::AcdDigi::A,gain);
+  pedSub = (double)pha - pedestal;
+  sc = AcdCalib::mipEquivalent_lowRange(pha,pedestal,mipPeak,mips);
+  return sc.isFailure() ? false : true;
+
+}
+
+bool AcdPha2MipTool::getValues_highRange(const idents::AcdId& id, Event::AcdDigi::PmtId pmt, unsigned short pha, 
+					 double& pedSub, double& mips) const {
+
+  if ( m_calibSvc == 0 ) return false;  
+  CalibData::AcdHighRange* highRange(0);
+  StatusCode sc = m_calibSvc->getHighRange(id,pmt,highRange);
   if ( sc.isFailure() ) {
     return false;
   }
-  valA = gain->getPeak();
-  
-  sc = m_calibSvc->getMipPeak(id,Event::AcdDigi::B,gain);
-  if ( sc.isFailure() ) {
-    return false;
-  }
-  valB = gain->getPeak();
-  
-  return true;
+  double pedestal(0.);
+  double slope = highRange->getSlope();
+  double saturation = highRange->getSaturation();
+  pedSub = (double)pha - pedestal;
+  sc = AcdCalib::mipEquivalent_highRange(pha,pedestal,slope,saturation,mips);
+  return sc.isFailure() ? false : true;
+
 }
 
 bool AcdPha2MipTool::accept(const idents::AcdId& id, float pedSubtracted, float mips) const {

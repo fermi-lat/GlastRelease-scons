@@ -48,10 +48,13 @@ public:
 
 protected:
   
-  bool getCalibratedValues(const Event::AcdDigi& digi, float& mipsPmtA, float& mipsPmtB, bool& acceptDigi) const;
+  bool getCalibratedValues(const Event::AcdDigi& digi, double& mipsPmtA, double& mipsPmtB, bool& acceptDigi) const;
 
-  bool getPeds(const idents::AcdId& id, float& valA, float& valB) const;
-  bool getMips(const idents::AcdId& id, float& valA, float& valB) const;
+
+  bool getValues_lowRange(const idents::AcdId& id, Event::AcdDigi::PmtId pmt, unsigned short pha, 
+			  double& pedSub, double& mips) const;
+  bool getValues_highRange(const idents::AcdId& id, Event::AcdDigi::PmtId pmt, unsigned short pha, 
+			   double& pedSub, double& mips) const;  
 
   bool accept(const idents::AcdId& id, float pedSubtracted, float mips) const;
 
