@@ -18,4 +18,3 @@ library CalUtil *.cxx ${CalUtil_headers}
 
 private
 application test_CalUtil test/test_CalUtil.cxx
-
