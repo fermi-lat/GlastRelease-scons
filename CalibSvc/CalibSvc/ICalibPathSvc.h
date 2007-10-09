@@ -55,6 +55,9 @@ public:
     Calib_ACD_ThreshVeto,
     Calib_ACD_Ped,
     Calib_ACD_ElecGain,
+    Calib_ACD_Range,
+    Calib_ACD_HighRange,
+    Calib_ACD_CoherentNoise,
                
     Calib_CalibTest1,
     

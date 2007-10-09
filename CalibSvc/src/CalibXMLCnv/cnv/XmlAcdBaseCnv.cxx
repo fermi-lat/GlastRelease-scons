@@ -103,5 +103,7 @@ DOMElement* XmlAcdBaseCnv::findNextPmt(const DOMElement* pmtElt) {
       throw ex2;
     }
   }
+
   return elt;
 }
+

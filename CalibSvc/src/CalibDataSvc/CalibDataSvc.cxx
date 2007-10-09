@@ -234,6 +234,9 @@ void CalibDataSvc::initPathArrays() {
   m_calibCLIDs[Calib_ACD_ThreshVeto] = CLID_Calib_ACD_ThreshVeto;
   m_calibCLIDs[Calib_ACD_Ped] = CLID_Calib_ACD_Ped;
   m_calibCLIDs[Calib_ACD_ElecGain] = CLID_Calib_ACD_ElecGain;
+  m_calibCLIDs[Calib_ACD_Range] = CLID_Calib_ACD_Range;
+  m_calibCLIDs[Calib_ACD_HighRange] = CLID_Calib_ACD_HighRange;
+  m_calibCLIDs[Calib_ACD_CoherentNoise] = CLID_Calib_ACD_CoherentNoise;
   m_calibCLIDs[Calib_CalibTest1] = CLID_Calib_CalibTest1;
   m_calibCLIDs[Calib_NAS_TowerCfg] = CLID_Calib_NAS_TowerCfg;
   m_calibCLIDs[Calib_NAS_SAABoundary] = CLID_Calib_NAS_SAABoundary;
