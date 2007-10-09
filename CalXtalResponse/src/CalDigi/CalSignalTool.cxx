@@ -10,7 +10,7 @@
 // LOCAL
 #include "CalSignalTool.h"
 #include "IXtalSignalTool.h"
-#include "../Calib/IPrecalcCalibTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
 
 // GLAST

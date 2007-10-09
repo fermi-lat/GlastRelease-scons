@@ -10,7 +10,7 @@
 #include "CalXtalResponse/ICalSignalTool.h"
 #include "CalXtalResponse/ICalTrigTool.h"
 #include "../CalFailureMode/ICalFailureModeSvc.h"
-#include "../Calib/IPrecalcCalibTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "geometry/Point.h"

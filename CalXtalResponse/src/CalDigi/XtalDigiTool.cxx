@@ -11,7 +11,7 @@
 #include "XtalDigiTool.h"
 #include "../CalFailureMode/CalFailureModeSvc.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
-#include "../Calib/IPrecalcCalibTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
