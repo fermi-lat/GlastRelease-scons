@@ -117,7 +117,7 @@ namespace calibGenCAL {
                                const float dac,
                                const float adc) {
     // find all cross talk entries for given 'destination' channel
-    const XtalkMap::iterator xtalkIt = m_xtalkMap.find(dest);
+    XtalkMap::iterator xtalkIt = m_xtalkMap.find(dest);
 
 
     // create new destination map if needed
@@ -125,7 +125,7 @@ namespace calibGenCAL {
       xtalkIt = m_xtalkMap.insert(XtalkMap::value_type(dest, ChannelSplineMap())).first;
 
     // find curve for given source, destination pair.
-    const ChannelSplineMap::iterator chanIt =
+    ChannelSplineMap::iterator chanIt =
       xtalkIt->second.find(source);
 
     // create new spline curve if needed
