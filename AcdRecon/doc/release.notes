@@ -4,6 +4,9 @@ package manager:H.Kelly
 
 @verbatim
 
+v4        10-Oct-2007 EAC Handle high range values correctly.
+                          Move conversion from local coord -> active distance to AcdTimeDim in AcdUtil so that
+                          same calc is used in sim and recon.
 v3r10p4   25-Sep-2007 EAC Protect against not knowing which volume to use for error projection
 v3r10p3   07-Sep-2007 HMK Patch for windows
 v3r10p2   04-Sep-2007 EAC Fix up some comments  
