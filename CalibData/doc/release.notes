@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r18p2 10-Oct-2007  jrb  Fix for Windows compile
    v0r18p1 10-Oct-2007  jrb  cvs remove files no longer used
                              Bug fix for Windows in AcdCalibObj.cxx
    v0r18   09-Sep-2007  eac  Added AcdHighRange, AcdRange, AcdCoherentNoise calibrations
