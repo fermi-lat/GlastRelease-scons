@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r29p1 9-Oct-2007   hmk  patch for compilation
    v0r29   9-Oct-2007   eac  Added AcdRange, AcdHighRange, AcdCoherentNoise calibrations 
                               and switched to using templated code to read acd calibrations xml
    v0r28p2 8-Oct-2007   jrb  Revert test jo input file to one Windows can find  

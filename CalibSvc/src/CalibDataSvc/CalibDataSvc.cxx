@@ -3,7 +3,7 @@
 // Include files
 #include <algorithm>
 #include "CalibDataSvc.h"
-#include "../MootSvc/MootSvc.h"
+#include "../src/MootSvc/MootSvc.h"
 #include "CalibCLIDNode.h"
 #include "CalibData/CalibTime.h"
 #include "GaudiKernel/IAddressCreator.h"
