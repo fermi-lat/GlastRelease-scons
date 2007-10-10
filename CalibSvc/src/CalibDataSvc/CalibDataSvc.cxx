@@ -19,6 +19,7 @@
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/MCEvent.h"
+#include "Event/TopLevel/DigiEvent.h"
 #include "Event/TopLevel/Event.h"
 #include "LdfEvent/LsfMetaEvent.h" //includes everything we need for fsw keys
 
@@ -568,9 +569,11 @@ StatusCode  CalibDataSvc::updateFswKeys() {
 
   SmartDataPtr<LsfEvent::MetaEvent> metaEvt(m_eventSvc, "/Event/MetaEvent");
 
-  unsigned int newMasterKey;
+  //  unsigned int newMasterKey = metaEvt->keys()->LATC_master();
 
+  unsigned newMasterKey;
   switch (metaEvt->keyType()) {
+
   case Lsf::LpaKeys: {
     const lsfData::LpaKeys *lpaKeysTds = metaEvt->keys()->castToLpaKeys();
     newMasterKey = lpaKeysTds->LATC_master();
@@ -586,6 +589,7 @@ StatusCode  CalibDataSvc::updateFswKeys() {
    // tilt!
     return StatusCode::FAILURE;
   }
+
   if (newMasterKey)     m_LATCMaster = newMasterKey;
   return StatusCode::SUCCESS;
    
