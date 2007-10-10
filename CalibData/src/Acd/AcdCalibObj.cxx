@@ -1,7 +1,7 @@
 #define AcdCalibResult_cxx
 
 #include "CalibData/Acd/AcdCalibObj.h"
-
+#include <cassert>
 namespace CalibData {
 
   std::vector< std::vector<const AcdCalibDescription*> > AcdCalibDescription::s_descs(AcdCalibData::NDESC);
