@@ -50,7 +50,7 @@ public:
 
     ///@name access methods
     /// Set up a filter specified by its name
-    int  setupFilter(const std::string& filterName, int priority, unsigned vetoMask, bool clearVetoBits);
+    int  setupFilter(const std::string& filterName, int priority, unsigned vetoMask, bool modifyVetoMask);
 
     /// Set up the specific passthrough filter
     bool setupPassThrough(void* prm);

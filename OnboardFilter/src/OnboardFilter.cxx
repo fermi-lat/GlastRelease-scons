@@ -173,7 +173,8 @@ StatusCode OnboardFilter::initialize()
     {
         unsigned vetoMask = m_passThrough ? 0 : ~m_gamBitsToIgnore & GFC_STATUS_M_VETOES;
 
-        int filterId = m_obfInterface->setupFilter("GammaFilter", priority++, vetoMask, m_passThrough);
+//        int filterId = m_obfInterface->setupFilter("GammaFilter", priority++, vetoMask, m_passThrough);
+        int filterId = m_obfInterface->setupFilter("GammaFilter", priority++, vetoMask, true);
 
         if (filterId == -100)
         {
