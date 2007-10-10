@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r29p2 10-Oct-2007  jrb  More tedious repairs. Still a problem in test prog.
    v0r29p1 9-Oct-2007   hmk  patch for compilation
    v0r29   9-Oct-2007   eac  Added AcdRange, AcdHighRange, AcdCoherentNoise calibrations 
                               and switched to using templated code to read acd calibrations xml
