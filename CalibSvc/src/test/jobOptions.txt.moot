@@ -20,7 +20,14 @@ ApplicationMgr.Runable= "RootIoSvc";
 //  UseBadStrips, UseGains,...
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
 // digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
-digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-v12r4/digi_077015344.root";
+// Heather's suggested file
+digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-keys/digi.root";
+
+
+// From Martin
+digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u40/Integration/rootData/077015643/v8r1109p12/digi/digitization-licos-v3r9p15_077015643_digi_DIGI.root";
+// Need to specify something other than digiRootReaderAlg for an evt file
+//digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u42/ISOC/Downlinks/071001001/r0252672900/r0252672900-e00000000000068423209.evt
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -55,7 +62,8 @@ DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"MootSvc"};
 
-MootSvc.MootArchive = "/afs/slac/g/glast/moot/srcArchive-test/";
+// MootSvc.MootArchive = "/afs/slac/g/glast/moot/srcArchive-test/";
+MootSvc.MootArchive = "/afs/slac/g/glast/moot/archive-mood";
 
 
 CalibDataSvc.UseEventKeys = "true";
