@@ -7,8 +7,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibSvc/ICalibPathSvc.h"
-#include "CalibData/Acd/AcdCalibGain.h"
-#include "CalibData/Acd/AcdCalibPed.h"
+#include "CalibData/Acd/AcdCalibEnum.h"
+#include "CalibData/Acd/AcdCalibObj.h"
+#include "CalibData/Acd/AcdCalib.h"
 #include "idents/AcdId.h"
 
 /**
@@ -38,9 +39,9 @@ public:
 
 private:
   /// Helper functions called by execute
-  void processNew(CalibData::AcdCalibGain* pNewGain, 
+  void processNew(CalibData::AcdGainCalib* pNewGain, 
                   const std::string& pathGain,
-                  CalibData::AcdCalibPed* pNewPed, 
+                  CalibData::AcdPedCalib* pNewPed, 
                   const std::string& pathPed);
 
   IDataProviderSvc* m_pCalibDataSvc;
@@ -119,17 +120,17 @@ StatusCode UseAcd::execute( ) {
   m_pCalibDataSvc->retrieveObject(m_gainPath, pObjectGain);
   m_pCalibDataSvc->retrieveObject(m_pedPath, pObjectPed);
 
-  CalibData::AcdCalibGain* pGains = 0;
-  CalibData::AcdCalibPed* pPeds = 0;
-  pGains = dynamic_cast<CalibData::AcdCalibGain *> (pObjectGain);
+  CalibData::AcdGainCalib* pGains = 0;
+  CalibData::AcdPedCalib* pPeds = 0;
+  pGains = dynamic_cast<CalibData::AcdGainCalib *> (pObjectGain);
   if (!pGains) {
-    log << MSG::ERROR << "Dynamic cast to AcdCalibGain failed" << endreq;
+    log << MSG::ERROR << "Dynamic cast to AcdGainCalib failed" << endreq;
     return StatusCode::FAILURE;
   }
 
-  pPeds = dynamic_cast<CalibData::AcdCalibPed *> (pObjectPed);
+  pPeds = dynamic_cast<CalibData::AcdPedCalib *> (pObjectPed);
   if (!pPeds) {
-    log << MSG::ERROR << "Dynamic cast to AcdCalibPed failed" << endreq;
+    log << MSG::ERROR << "Dynamic cast to AcdPedCalib failed" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -150,12 +151,12 @@ StatusCode UseAcd::execute( ) {
   pGains = 0;
   pPeds = 0;
   try {
-    pGains = dynamic_cast<CalibData::AcdCalibGain *> (pObjectGain);
-    pPeds = dynamic_cast<CalibData::AcdCalibPed *> (pObjectPed);
+    pGains = dynamic_cast<CalibData::AcdGainCalib *> (pObjectGain);
+    pPeds = dynamic_cast<CalibData::AcdPedCalib *> (pObjectPed);
   }
   catch (...) {
     log << MSG::ERROR 
-        << "Dynamic cast to AcdCalibGain or AcdCalibPed after update failed" 
+        << "Dynamic cast to AcdGainCalib or AcdPedCalib after update failed" 
         << endreq;
     return StatusCode::FAILURE;
   }
@@ -174,9 +175,9 @@ StatusCode UseAcd::execute( ) {
 }
 
 
-void UseAcd::processNew(CalibData::AcdCalibGain* pNewGain, 
+void UseAcd::processNew(CalibData::AcdGainCalib* pNewGain, 
                         const std::string& pathGain,
-                        CalibData::AcdCalibPed* pNewPed,
+                        CalibData::AcdPedCalib* pNewPed,
                         const std::string& pathPed) {
   using CalibData::AcdGain;
   using CalibData::AcdPed;
@@ -203,11 +204,13 @@ void UseAcd::processNew(CalibData::AcdCalibGain* pNewGain,
     // First arg is na (0 if real tile or ribbon; 1 if unconnected)
     idents::AcdId id(0, iFace, iRow, iCol);
     
-    CalibData::RangeBase* pPmtGain = pNewGain->getPmt(id, pmt);
-    CalibData::RangeBase* pPmtPed = pNewPed->getPmt(id, pmt);
+    //    CalibData::CalibObjType* pPmtGain = pNewGain->getPmt(id, pmt);
+    //    CalibData::CalibObjType* pPmtPed = pNewPed->getPmt(id, pmt);
+    AcdGain* pGain = pNewGain->getPmt(id, pmt);
+    AcdPed* pPed = pNewPed->getPmt(id, pmt);
     
-    AcdGain* pGain = dynamic_cast<AcdGain * >(pPmtGain);
-    AcdPed* pPed = dynamic_cast<AcdPed * >(pPmtPed);
+    //    AcdGain* pGain = dynamic_cast<AcdGain * >(pPmtGain);
+    //    AcdPed* pPed = dynamic_cast<AcdPed * >(pPmtPed);
     log << MSG::INFO << "For face = " << iFace << " row = " << iRow
         << " column = " << iCol << endreq;
     log << MSG::INFO << " pmt = " << pmt  << endreq;
@@ -223,11 +226,11 @@ void UseAcd::processNew(CalibData::AcdCalibGain* pNewGain,
 
     idents::AcdId idf1(0, iFace, iRow, iCol);
     
-    pPmtGain = pNewGain->getPmt(idf1, pmt);
-    pPmtPed = pNewPed->getPmt(idf1, pmt);
+    pGain = pNewGain->getPmt(idf1, pmt);
+    pPed = pNewPed->getPmt(idf1, pmt);
     
-    pGain = dynamic_cast<AcdGain * >(pPmtGain);
-    pPed = dynamic_cast<AcdPed * >(pPmtPed);
+    //    pGain = dynamic_cast<AcdGain * >(pPmtGain);
+    //    pPed = dynamic_cast<AcdPed * >(pPmtPed);
     log << MSG::INFO << "For face = " << iFace << " row = " << iRow
         << " column = " << iCol << endreq;
     log << MSG::INFO << " pmt = " << pmt 
@@ -244,11 +247,11 @@ void UseAcd::processNew(CalibData::AcdCalibGain* pNewGain,
     // get a non-attached channel
     iFace=0; iRow=0, iCol=9;
     idents::AcdId idNA(1, iFace, iRow, iCol);
-    pPmtGain = pNewGain->getPmt(idNA, pmt);
-    pPmtPed = pNewPed->getPmt(idNA, pmt);
+    pGain = pNewGain->getPmt(idNA, pmt);
+    pPed = pNewPed->getPmt(idNA, pmt);
 
-    pGain = dynamic_cast<AcdGain * >(pPmtGain);
-    pPed = dynamic_cast<AcdPed * >(pPmtPed);
+    //    pGain = dynamic_cast<AcdGain * >(pPmtGain);
+    //    pPed = dynamic_cast<AcdPed * >(pPmtPed);
 
     log << MSG::INFO << "For NA channel " << iCol << " and pmt = " 
         << pmt << endreq;
