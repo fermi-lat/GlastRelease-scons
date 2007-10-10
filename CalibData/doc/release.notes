@@ -4,6 +4,8 @@
 
                     EOH
 
+   v0r18p1 10-Oct-2007  jrb  cvs remove files no longer used
+                             Bug fix for Windows in AcdCalibObj.cxx
    v0r18   09-Sep-2007  eac  Added AcdHighRange, AcdRange, AcdCoherentNoise calibrations
                              Reorganized acd stuff to avoid code duplication
    v0r17   29-Aug-2007  jrb  (for Markus) Add SAA boundary calibration 
