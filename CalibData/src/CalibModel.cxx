@@ -64,7 +64,7 @@ public:
     CalibData::ACD_Ped = CalibData::acd +"_Ped";
     CalibData::ACD_ElecGain = CalibData::acd +"_ElecGain";
     CalibData::ACD_Range = CalibData::acd +"_Range";
-    CalibData::ACD_HighRange = CalibData::acd +"_Range";
+    CalibData::ACD_HighRange = CalibData::acd +"_HighRange";
     CalibData::ACD_CoherentNoise = CalibData::acd +"_CoherentNoise";
 
     CalibData::TKR_BadChan = CalibData::tkr + "_BadChan";
