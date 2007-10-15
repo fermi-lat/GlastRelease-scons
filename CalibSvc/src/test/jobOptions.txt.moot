@@ -52,21 +52,24 @@ ApplicationMgr.EvtMax = 10;
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+ApplicationMgr.ExtSvc += {"MootSvc"};
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
 ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
-ApplicationMgr.ExtSvc += {"MootSvc"};
 
+
+DetectorPersistencySvc.CnvServices += {"MootSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
-DetectorPersistencySvc.CnvServices += {"MootSvc"};
+
 
 // MootSvc.MootArchive = "/afs/slac/g/glast/moot/srcArchive-test/";
 MootSvc.MootArchive = "/afs/slac/g/glast/moot/archive-mood";
 
 
 CalibDataSvc.UseEventKeys = "true";
+CalibDataSvc.UseMoot = "1";
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
