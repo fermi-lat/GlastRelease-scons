@@ -15,6 +15,7 @@
 #include "CalUtil/CalVec.h"
 
 // EXTLIB INCLUDES
+#include "TObjArray.h"
 
 // STD INCLUDES
 

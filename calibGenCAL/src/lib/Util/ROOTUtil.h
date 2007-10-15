@@ -9,22 +9,20 @@
     @brief collection of utilities for working w/ CERN ROOT library objects
 */
 
-// STD INCLUDES
-#include <string>
-#include <vector>
-
 // EXTLIB INCLUDES
 #include "TKey.h"
 #include "TDirectory.h"
 #include "TClass.h"
 #include "TF1.h"
+#include "TROOT.h"
 
 // LOCAL INCLUDES
 #include "stl_util.h"
 
 // STD INCLUDES
 #include <cassert>
-
+#include <string>
+#include <vector>
 
 namespace calibGenCAL {
   /// use this method to retrieve a histogram of given
