@@ -62,6 +62,10 @@ MootSvc::~MootSvc(){ }
 StatusCode MootSvc::initialize()
 {
   // Initialize base class
+  if (m_log) {    // already attempted initialization
+    return (m_q) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  }
+
   StatusCode sc = ConversionSvc::initialize();
   if ( !sc.isSuccess() ) return sc;
 
@@ -247,7 +251,7 @@ unsigned MootSvc::getLatcParmMaxCnt() {
 }
 
 StatusCode MootSvc::getPrecincts() {
-  
+
   m_latcParmMap = new HashMap();
 
   m_prNames.resize(PR_count);
@@ -280,6 +284,7 @@ StatusCode MootSvc::getPrecincts() {
   m_prNames[PR_TKR_LCI] = std::string("TKR_LCI");
 
   std::vector<std::string> dbPrecincts;
+
   m_q->getPrecincts(dbPrecincts);
   std::vector<std::string> pclasses;
   pclasses.reserve(20);   // plenty for what we need
@@ -319,6 +324,8 @@ StatusCode MootSvc::queryInterface(const InterfaceID& riid,
 }
 
 StatusCode MootSvc::makeMootNodes(const std::string& parent) {
+
+  if (!m_log) initialize();
 
   // Set up some local data structures 
   StatusCode sc = getPrecincts();

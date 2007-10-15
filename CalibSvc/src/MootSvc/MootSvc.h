@@ -123,8 +123,6 @@ typedef hash_map<const char*, int> HashMap;
   // other than 'generic'
   StatusCode makeMootNodes(const std::string& parent);
 
-  
-
  private:
 
   StatusCode getPrecincts();  // fills m_prNames
