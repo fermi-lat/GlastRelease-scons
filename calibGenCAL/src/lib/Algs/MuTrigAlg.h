@@ -13,6 +13,7 @@
 #include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
+#include "TH1.h"
 
 // STD INCLUDES
 

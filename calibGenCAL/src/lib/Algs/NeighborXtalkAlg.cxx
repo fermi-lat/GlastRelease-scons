@@ -18,6 +18,7 @@
 #include "digiRootData/DigiEvent.h"
 
 // EXTLIB INCLUDES
+#include "TH1.h"
 
 // STD INCLUDES
 #include <sstream>

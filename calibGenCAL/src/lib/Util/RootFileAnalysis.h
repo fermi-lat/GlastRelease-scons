@@ -15,6 +15,7 @@
 
 // STD INCLUDES
 #include <iostream>
+#include <vector>
 
 class McEvent;
 class DigiEvent;

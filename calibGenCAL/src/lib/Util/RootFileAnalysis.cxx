@@ -16,6 +16,7 @@
 
 // EXTLIB INCLUDES
 #include "TChainElement.h"
+#include "TStreamerInfo.h"
 
 // STD INCLUDES
 #include <vector>

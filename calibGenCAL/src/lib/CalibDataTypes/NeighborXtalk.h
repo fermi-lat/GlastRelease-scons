@@ -16,6 +16,7 @@
 // EXTLIB INCLUDES
 
 // STD INCLUDES
+#include <map>
 
 namespace calibGenCAL {
 
