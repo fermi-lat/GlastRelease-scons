@@ -89,9 +89,9 @@ Int_t CelEventComponent::makeBranches( TTree & fileTree, TTree & eventTree, Int_
   return n_e + n_f ;
  }
 
-Int_t CelEventComponent::attachToTree( TTree & fileTree, TTree & eventTree )
+Int_t CelEventComponent::attachToTree( TTree & entryTree, TTree & fileTree )
  {
-  Int_t n_e = _currentEntryIndex.attachToTree(eventTree,_componentName.Data()) ;
+  Int_t n_e = _currentEntryIndex.attachToTree(entryTree,_componentName.Data()) ;
   if ( n_e < 0 ) return n_e ;
   Int_t n_f = _currentSet.attachToTree(fileTree,_componentName.Data()) ;
   if ( n_f < 0 ) return n_f ;

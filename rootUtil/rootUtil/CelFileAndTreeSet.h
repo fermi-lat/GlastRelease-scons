@@ -61,19 +61,13 @@ class CelFileAndTreeSet  : public BranchGroup
     // Methods and functions
     // Reset this object and clear caches
     void reset() ;
-
     
-  // Add a tree to the list refered to by this object
-  UShort_t addTree( TTree & tree) ;
-  // Get the persistent KEY for a given tree
-  UShort_t getKey( TTree * tree) const ;
-  // Get a given tree using persistent KEY
-  TTree * getTree( UShort_t key ) const ;
-  // Get the Event offset using persistent KEY
-  Long64_t getOffset( UShort_t key ) const ;
+    // Data Access
+    UShort_t addTree( TTree & tree) ;
+    UShort_t getKey( TTree * tree) const ;
+    TTree * getTree( UShort_t key ) const ;
+    Long64_t getOffset( UShort_t key ) const ;
 
-  
-  
     // reading interface
     Bool_t addToChain( TChain * & chain ) ;  
   
@@ -94,7 +88,7 @@ class CelFileAndTreeSet  : public BranchGroup
 
   private :
 
-    //disable copying and assignment
+    // disable copying and assignment
     CelFileAndTreeSet( const CelFileAndTreeSet & ) ;
     CelFileAndTreeSet & operator=( const CelFileAndTreeSet & ) ;
 

@@ -52,8 +52,8 @@ class CelEventComponent
   TTree* getTree() const ;
   
     // Cel Tree Manipulation
-    Int_t makeBranches( TTree & fileTree, TTree & eventTree, Int_t bufsize =32000 ) const ;
-    Int_t attachToTree( TTree & fileTree, TTree & eventTree ) ;
+    Int_t makeBranches( TTree & entryTree, TTree & fileTree, Int_t bufsize =32000 ) const ;
+    Int_t attachToTree( TTree & entryTree, TTree & fileTree ) ;
   
     /// READING INTERFACE
     // Building a TChain

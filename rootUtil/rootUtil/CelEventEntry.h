@@ -20,17 +20,10 @@
 class CelFileAndTreeSet ;
 
 //
-// CelEventEntry stores information needed to point to a part of an event
-// that is located in another TTree.
-//
-// CelEventEntry uses CelFileAndTreeSet to associated TTrees with UShort_t keys.
-//
-// CelEventEntry stores two pieces of information for each event.
-//
-//  _entryIndex (goes to branch XXX_EntryIndex)  is the index of the event component in the TTree
-//  _treeIndex (goes to branch XXX_TreeIndex) is the index of the TTree in the associated CelFileAndTreeSet
-//
-
+// CelEventEntry stores information needed to point to an event component,
+// which is an entry located in another tree. It includes the entry index,
+// and the index of the tree in the current set of files and trees.
+// 
 
 class CelEventEntry : public BranchGroup
  {

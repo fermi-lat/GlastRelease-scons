@@ -51,43 +51,53 @@ BranchGroup::~BranchGroup(){
 }
 
 
-Int_t BranchGroup::makeBranches(TTree& tree, const char* prefix, Int_t bufsize) const {
-  // Builds branches with names 'prefix''branchName' on 'tree'
-  // returns the number of newly build branches, or -1 for failure
-  Int_t nb(0);
-  for ( std::list<std::string>::const_iterator itr = _branchNameList.begin();
-	itr != _branchNameList.end(); itr++ ) {
+// Builds branches with names 'prefix_'branchName' on 'tree'
+// returns the number of newly build branches, or -1 for failure
+Int_t BranchGroup::makeBranches( TTree & tree, const char * prefix, Int_t bufsize ) const
+ {
+  std::string prefixName ;
+  if ( prefix != 0 )
+   { prefixName = prefix ; prefixName  += "_" ; }
+  
+  Int_t nb(0) ;
+  std::string fullName ;
+  std::list<std::string>::const_iterator itr ;
+  for ( itr = _branchNameList.begin() ;	itr != _branchNameList.end() ; itr++ )
+   {
+    BgDataHandleBase* branch = _branchMap.find(*itr)->second;
+    assert( 0 != branch ) ;
+    fullName = prefixName + *itr ;
+    if ( branch->makeBranch(tree,fullName.c_str(),bufsize) )
+     { nb += 1 ; }
+    else
+     { return -1 ; }
+   }
+  return nb ;
+ }
+
+// Attaches to branches with names 'prefix''branchName' on 'tree'
+// returns the number of newly attached branches, or -1 for failure
+Int_t BranchGroup::attachToTree(TTree& tree, const char* prefix) const
+ {
+  std::string prefixName ;
+  if ( prefix != 0 )
+   { prefixName = prefix ; prefixName  += "_" ; }
+
+  Int_t nb(0) ;
+  std::string fullName ;
+  std::list<std::string>::const_iterator itr ;
+  for ( itr = _branchNameList.begin() ;	itr != _branchNameList.end() ; itr++ )
+   {
     BgDataHandleBase* branch = _branchMap.find(*itr)->second;
     assert( 0 != branch );
-    std::string fullName;
-    if ( prefix != 0 ) fullName += prefix;
-    fullName += *itr;
-    if ( branch->makeBranch(tree,fullName.c_str(),bufsize) ) { nb += 1; }
-    else { return -1; }
+    fullName = prefixName + *itr ;
+    if ( branch->attachToTree(tree,fullName.c_str()) )
+     { nb += 1; }
+    else
+     { return -1 ;  }
   }
-  return nb;
-}
-
-Int_t BranchGroup::attachToTree(TTree& tree, const char* prefix) const {
-  // Attaches to branches with names 'prefix''branchName' on 'tree'
-  // returns the number of newly attached branches, or -1 for failure
-  Int_t nb(0);
-  for ( std::list<std::string>::const_iterator itr = _branchNameList.begin();
-	itr != _branchNameList.end(); itr++ ) {
-    BgDataHandleBase* branch = _branchMap.find(*itr)->second;
-    assert( 0 != branch );
-    std::string fullName;
-    if ( prefix != 0 ) fullName += prefix;
-    fullName += *itr;
-    if ( branch->attachToTree(tree,fullName.c_str()) ) { nb += 1; }
-    else { 
-      return -1; 
-    }
-  }
-  return nb; 
-}
-
-
+  return nb ; 
+ }
 
 Bool_t BranchGroup::addBranch(const char* name, BgDataHandleBase& branch) {
   // Add a branch to this group.  The branch will be stored under the 'name'

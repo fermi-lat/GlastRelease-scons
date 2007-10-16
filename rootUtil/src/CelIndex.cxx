@@ -47,7 +47,7 @@ Int_t CelIndex::GetEntryNumberFriend( const TTree * celCompositeEvents )
   _cel->shallowRead(celCompositeEvents->GetReadEntry()) ;
   Long64_t evtIdx = _cel->fileSetOffset() ;
   evtIdx += _component->indexInCurrentSet() ;
-  // std::cout << "CelIndex::GetEntryNumberFriend(" << _cel->currentEventIndex() << ':' << evtIdx << ')' << std::endl;
+  // std::cout << "CelIndex::GetEntryNumberFriend(" << _cel->currentEventIndex() << '|' << evtIdx << ')' << std::endl;
   return evtIdx ;  
  }
 

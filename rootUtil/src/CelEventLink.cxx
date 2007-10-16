@@ -21,8 +21,8 @@ ClassImp(CelEventLink) ;
 CelEventLink::CelEventLink()
  : BranchGroup(),
    _eventIndex(-1,*this,"Event_Index"),
-   _fileSetIndex(0,*this,"Event_SetIndex"),
-   _fileSetOffset(0,*this,"Event_SetOffset")
+   _fileSetIndex(-1,*this,"Event_SetIndex"),
+   _fileSetOffset(-1,*this,"Event_SetOffset")
  { BgDataHandleInstance::init() ; }
 
 CelEventLink::CelEventLink( const CelEventLink & other )
@@ -30,7 +30,7 @@ CelEventLink::CelEventLink( const CelEventLink & other )
    _eventIndex(other._eventIndex,*this,"Event_Index"),
    _fileSetIndex(other._fileSetIndex,*this,"Event_SetIndex"),
    _fileSetOffset(other._fileSetOffset,*this,"Event_SetOffset")
- { BgDataHandleInstance::init() ; }	      
+ {}	      
 
 CelEventLink::~CelEventLink()
  {}
@@ -48,7 +48,7 @@ void CelEventLink::printInfo( const char * /* options */ ) const
  {
   std::cout
     << _eventIndex
-    << ':' << _fileSetIndex
-    << ':' << _fileSetOffset ;
+    << '|' << _fileSetIndex
+    << '|' << _fileSetOffset ;
  }
 

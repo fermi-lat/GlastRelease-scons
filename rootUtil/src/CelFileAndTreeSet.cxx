@@ -36,8 +36,8 @@ ClassImp(CelFileAndTreeSet);
 
 CelFileAndTreeSet::CelFileAndTreeSet()
  : _componentName(),
-   _setSize(0,*this,"SetSize"),
-   _treesSize(0,*this,"TreesSize")
+   _setSize(0,*this,"Set_Size"),
+   _treesSize(0,*this,"Set_Entries")
  {
   _treeNames = new TObjArray ;
   _fileNames = new TObjArray ;  
@@ -46,8 +46,8 @@ CelFileAndTreeSet::CelFileAndTreeSet()
 
 CelFileAndTreeSet::CelFileAndTreeSet(const TString & componentName )
  : _componentName(componentName),
-   _setSize(0,*this,"SetSize"),
-   _treesSize(0,*this,"TreesSize")
+   _setSize(0,*this,"Set_Size"),
+   _treesSize(0,*this,"Set_Entries")
  {
   _fileNames = new TObjArray ;  
   _treeNames = new TObjArray ;
@@ -145,74 +145,68 @@ Long64_t CelFileAndTreeSet::getOffset(UShort_t key) const {
 //======================================================================================
 
 
-Int_t CelFileAndTreeSet::makeBranches(TTree& tree, const char* prefix, Int_t bufsize) const {
-  // Builds branches on 'tree'
-  //
-  // The branches will be:
-  //   <prefix>size  -> Number of TTree used by this component
-  //   <prefix>Tree  -> TObjArray of TObjString with the names of the TTrees
-  //   <prefix>File  -> TObjArray of TObjString with the names files where the TTrees live
-
+Int_t CelFileAndTreeSet::makeBranches( TTree & tree, const char * prefix, Int_t bufsize ) const
+ {
   // First the base class
-  Int_t bVal = BranchGroup::makeBranches(tree,prefix,bufsize);
-  if ( bVal < 0 ) return bVal;
+  Int_t bVal = BranchGroup::makeBranches(tree,prefix,bufsize) ;
+  if ( bVal < 0 ) return bVal ;
+  
+  std::string prefixName = "" ;
+  if ( prefix != 0 )
+   { prefixName = prefix ; prefixName  += "_" ; }
+  
   // The list of trees
-  std::string tbName; if ( prefix != 0 ) tbName += prefix;
-  tbName += "TreeNames";
+  std::string tbName = prefixName + "Set_TreeNames";
   TBranch* bTree = tree.Bronch(tbName.c_str(),_treeNames->ClassName(),(void*)(&_treeNames),bufsize,0);
   if ( 0 == bTree ) return -1;
   bVal++;
+  
   // The list of files
-  std::string fbName; if ( prefix != 0 ) fbName += prefix;
-  fbName += "FileNames";
+  std::string fbName = prefixName + "Set_FileNames";
   TBranch* bFile = tree.Bronch(fbName.c_str(),_fileNames->ClassName(),(void*)(&_fileNames),bufsize,0);
   if ( 0 == bFile ) return -1;
   bVal++;
+  
   // The tree sizes
-  std::string sbName; if ( prefix != 0 ) sbName += prefix;
-  sbName += "TreeOffsets";
+  std::string sbName = prefixName + "Set_TreeOffsets";
   TBranch* bSize = tree.Bronch(sbName.c_str(),_treeOffsets->Class_Name(),(void*)(&_treeOffsets),bufsize,0);
   if ( 0 == bSize ) return -1;
   bVal++;
   return bVal;
 }
 
-Int_t CelFileAndTreeSet::attachToTree(TTree& tree, const char* prefix) {
-  // Attachs to branches on 'tree'
-  //
-  // The branches will be:
-  //   <prefix>size  -> Number of TTree used by this component
-  //   <prefix>TreeNames  -> TObjArray of TObjString with the names of the TTrees
-  //   <prefix>FileNames  -> TObjArray of TObjString with the names files where the TTrees live
-
-  // get rid of old stuff
+Int_t CelFileAndTreeSet::attachToTree( TTree & tree, const char * prefix )
+ {
   reset() ;
-  // First the base class
-  Int_t bVal = BranchGroup::attachToTree(tree,prefix);
-  if ( bVal < 0 ) return bVal;  
+  Int_t bVal = BranchGroup::attachToTree(tree,prefix) ;
+  if ( bVal < 0 ) return bVal ;  
+  std::string prefixName = "" ;
+  if ( prefix != 0 )
+   { prefixName = prefix ; prefixName  += "_" ; }
+  
   // The list of trees
-  std::string tbName; if ( prefix != 0 ) tbName += prefix;
-  tbName += "TreeNames";
-  TBranch* bTree = tree.GetBranch(tbName.c_str());
-  if ( 0 == bTree ) return -1;
-  bTree->SetAddress((void*)(&_treeNames));
-  bVal++;
+  std::string tbName = prefixName + "Set_TreeNames" ;
+  TBranch* bTree = tree.GetBranch(tbName.c_str()) ;
+  if ( 0 == bTree ) return -1 ;
+  bTree->SetAddress((void*)(&_treeNames)) ;
+  bVal++ ;
+  
   // The list of files
-  std::string fbName; if ( prefix != 0 ) fbName += prefix;
-  fbName += "FileNames";
+  std::string fbName = prefixName + "Set_FileNames";
   TBranch* bFile = tree.GetBranch(fbName.c_str());
-  if ( 0 == bFile ) return -1;
-  bFile->SetAddress((void*)(&_fileNames));  
-  bVal++;
-  // The tree sizes
-  std::string sbName; if ( prefix != 0 ) sbName += prefix;
-  sbName += "TreeOffsets";
-  TBranch* bSize = tree.GetBranch(sbName.c_str());
-  if ( 0 == bSize ) return -1;
-  bSize->SetAddress((void*)(&_treeOffsets));  
-  bVal++;
-  return bVal;
-}
+  if ( 0 == bFile ) return -1 ;
+  bFile->SetAddress((void*)(&_fileNames)) ;  
+  bVal++ ;
+  
+  // The tree offsets
+  std::string obName = prefixName + "Set_TreeOffsets";
+  TBranch* bSize = tree.GetBranch(obName.c_str()) ;
+  if ( 0 == bSize ) return -1 ;
+  bSize->SetAddress((void*)(&_treeOffsets)) ;  
+  bVal++ ;
+  
+  return bVal ;
+ }
 
 
 

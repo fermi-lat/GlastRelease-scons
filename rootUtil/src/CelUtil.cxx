@@ -82,13 +82,14 @@ CompositeEventList* CelUtil::mergeCompositeEventLists
   }
 
   // The Event Tree has to be re-done
+  /// REWRITE THIS WITH CelEventLink
   Long64_t* eventIndex = new Long64_t(-1);
   Long64_t* fileSetIndexOut  = new Long64_t(-1);
   Long64_t* fileSetOffset = new Long64_t(0);
-  TTree* eventTreeOut = new TTree("CompositeEvents","CompositeEvents");
-  eventTreeOut->Branch("Event_Index",(void*)eventIndex,"Event_Index/L");
-  eventTreeOut->Branch("Event_FileSetIndex",(void*)fileSetIndexOut,"Event_FileSetIndex/L");
-  eventTreeOut->Branch("Event_FileSetOffset",(void*)fileSetOffset,"Event_FileSetOffset/L");
+  TTree* linkTreeOut = new TTree("EventLinks","EventLinks");
+  linkTreeOut->Branch("Event_Index",(void*)eventIndex,"Event_Index/L");
+  linkTreeOut->Branch("Event_SetIndex",(void*)fileSetIndexOut,"Event_SetIndex/L");
+  linkTreeOut->Branch("Event_SetOffset",(void*)fileSetOffset,"Event_SetOffset/L");
 
   // Loop on cels
   TIterator* itr = cels.MakeIterator();
@@ -106,13 +107,13 @@ CompositeEventList* CelUtil::mergeCompositeEventLists
 
     Long64_t fileSetIndexIn(0);
     Long64_t fileSetIndexSave(-1);
-    TTree* eventTree = aCel->linkTree();
-    eventTree->SetBranchAddress("Event_FileSetIndex",&fileSetIndexIn);
+    TTree* linkTree = aCel->linkTree();
+    linkTree->SetBranchAddress("Event_SetIndex",&fileSetIndexIn);
 
     // Redo the data in the Event tree
-    Long64_t nEvtCurrent = eventTree->GetEntries();
+    Long64_t nEvtCurrent = linkTree->GetEntries();
     for ( Long64_t iEvt(0); iEvt < nEvtCurrent; iEvt++ ) {
-      Int_t nB = eventTree->GetEntry(iEvt);
+      Int_t nB = linkTree->GetEntry(iEvt);
       if ( nB < 0 ) {
 	// There was a problem, clean up
 	std::cerr << "Failed to read entry in input link tree " << std::endl;
@@ -124,7 +125,7 @@ CompositeEventList* CelUtil::mergeCompositeEventLists
 	delete fileSetIndexOut;
 	delete fileSetOffset;
 	delete itr;
-	delete eventTree;
+	delete linkTree;
 	return 0;
       }
       // Event Counter goes up by one
@@ -136,7 +137,7 @@ CompositeEventList* CelUtil::mergeCompositeEventLists
 	*fileSetOffset = *eventIndex;
       }
       // Fill this entry in the link tree
-      eventTreeOut->Fill();
+      linkTreeOut->Fill();
     }
 
   }
@@ -150,7 +151,7 @@ CompositeEventList* CelUtil::mergeCompositeEventLists
   TTree* fileTree = TTree::MergeTrees(&fileTreeList);
 
   // Build the Pointer Skim Object
-  CompositeEventList * theCel = new CompositeEventList(*eventTreeOut,*fileTree,*entryTree) ;
+  CompositeEventList * theCel = new CompositeEventList(*entryTree,*linkTreeOut,*fileTree) ;
 
   // Write the Merged File, if requested
   if ( outFile != 0 )

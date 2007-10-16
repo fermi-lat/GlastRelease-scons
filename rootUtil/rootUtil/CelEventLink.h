@@ -17,16 +17,11 @@
 
 #include "BranchGroup.h"
 #include "BgDataHandle.h"
-#include <TObject.h>
 
 //
-// CelEventLink associates a given composite event with
-// a given entry in the tree of file names, and also store the
-// corresponding offset. The branches are :
-// 
-// Event_Index  -> Absolute index of current composite event
-// Event_SetIndex   -> Index of the associated entry in the file-tree-names Tree
-// Event_SetOffset  -> Offset in events for this entry in the file-tree-names Tree
+// CelEventLink associates the current composite event with
+// a given set of file names, and also store the
+// corresponding offset.
 // 
 
 class CelEventLink : public BranchGroup
@@ -38,8 +33,6 @@ class CelEventLink : public BranchGroup
     CelEventLink() ; 
     CelEventLink( const CelEventLink & ) ;
     ~CelEventLink() ;
-
-    // Operators
     CelEventLink & operator=( const CelEventLink & ) ;
     
     // Accessors
@@ -51,7 +44,7 @@ class CelEventLink : public BranchGroup
     void incrementEventIndex()
      { _eventIndex = _eventIndex+1 ; }
     void incrementFileSetIndex()
-     { _fileSetOffset = _eventIndex ; _fileSetIndex= _fileSetIndex+1 ; }
+     { _fileSetOffset = _eventIndex ; _fileSetIndex = _fileSetIndex+1 ; }
 
     // print the info about the current event
     void printInfo( const char * options ) const ;  

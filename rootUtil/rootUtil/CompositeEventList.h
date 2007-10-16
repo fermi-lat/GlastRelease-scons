@@ -45,25 +45,27 @@ class TObjArray ;
 // way to read/write events as was done by former RootIo writers
 // and readers.
 //
-// The information is stored on 3 trees
+// The information is stored on 5 trees
 // 
-//   CompositeEvents: 5 branches plus 1 per component, 1 entry per event
-//      Event_Index/L     -> Index of the current composite event
-//      Event_RunId/L     -> Unique? id of the corresponding run
-//      Event_EventId/L   -> Unique? id of the corresponding event
-//      Event_FileSetIndex/L  -> Index of the associated set of files and trees
-//      Event_FileSetOffset/L -> Number of events in previous sets
+//   TO BE DONE : EventIDs: 3 branches, 1 entry per event
+//      Event_ProductionID (char *)
+//      Event_RunID        (Long64_t)
+//      Event_EventID      (Long64_t)
+// 
+//   EventEntries: 2 Branches per component, 1 entry per event
+//      <Comp>_Event_EntryIndex (Long64_t) : Index of the entry in the tree it lives on
+//      <Comp>_Event_TreeIndex  (Short_t)  : Index of the tree in the associated set of files and trees
+//
+//   EventLinks: 2 branches, 1 entry per event
+//      Event_SetIndex  (Long64_t) : Index of the associated set of files and trees
+//      Event_SetOffset (Long64_t) : Number of events in previous sets
 // 
 //   FileAndTreeSets: 5 Branches per component, 1 entry per set
-//      <Comp>_SetSize/s    -> Number of Files and Trees in the current set
-//      <Comp>_FileNames    -> TClonesArray<TObjString> with the file names
-//      <Comp>_TreeNames    -> TClonesArray<TObjString> with the tree names (should all be the same ?)
-//      <Comp>_TreesSize/L  -> Total number of entries in all trees from the current set
-//      <Comp>_TreeOffsets  -> TArrayL64 with the offsets for each Tree in the current set
-//
-//   ComponentEntries:  2 Branches per component, 1 entry per event
-//      <Comp>_EntryIndex/L  -> Index of the entry in the tree it lives on
-//      <Comp>_TreeIndex/s -> Index of the tree in the associated set of files and trees
+//      <Comp>_Set_Size        -> Number of Files and Trees in the current set
+//      <Comp>_Set_FileNames   -> TClonesArray<TObjString> with the file names
+//      <Comp>_Set_TreeNames   -> TClonesArray<TObjString> with the tree names (should all be the same ?)
+//      <Comp>_Set_TreeOffsets -> TArrayL64 with the offsets for each Tree in the current set
+//      <Comp>_Set_Entries     -> Total number of entries in all trees from the current set
 //
 // Note : the couple (run_id/event_id) is expected to be unique for GLAST real data. For
 // what concerns the simulation data, the triplet {task_name,run_id,event_id} should be
@@ -77,7 +79,7 @@ class CompositeEventList : public TObject
 
     // constructors
     CompositeEventList() ; 
-    CompositeEventList( TTree & eventTree, TTree & fileTree, TTree & entryTree ) ;
+    CompositeEventList( TTree & eventTree, TTree & fileTree, TTree & entryTree ) ; // for CelUtil :s
     virtual ~CompositeEventList() ;
 
     // Add a component by name.  This is only mandatory when writing.
@@ -101,17 +103,16 @@ class CompositeEventList : public TObject
     // USED ? Build all the Chains for all the components
     TChain * buildAllChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
 
- 
-  // Grab the status of a set of TTrees
-  Long64_t fillEvent( TObjArray & trees ) ;
-  Long64_t fillEvent( std::vector<TTree*> & trees) ;
-  Long64_t fillFileAndTreeSet() ;
+    // WRITING interface
+    Long64_t fillEvent( TObjArray & trees ) ;
+    Long64_t fillEvent( std::vector<TTree*> & trees) ;
+    Long64_t fillFileAndTreeSet() ;
 
     // Access
     // Number of events in this cel
     Long64_t numEvents() const;
     // Get the index of the current event
-    Long64_t currentEventIndex() const { return _currentEvent.eventIndex() ; }
+    Long64_t currentEventIndex() const { return _currentLink.eventIndex() ; }
     
     
     /// PRINTING
@@ -124,12 +125,12 @@ class CompositeEventList : public TObject
 
     /// FOR CelUtil
     TTree * entryTree() { return _entryTree ; }
-    TTree * linkTree() { return _eventTree ; }
+    TTree * linkTree() { return _linkTree ; }
     TTree * fileTree() { return _fileTree ; }
     
 	/// FOR CelIndex
     CelEventComponent * getComponent( const TString & name ) const ;
-    Long64_t fileSetOffset() const { return _currentEvent.fileSetOffset() ; }
+    Long64_t fileSetOffset() const { return _currentLink.fileSetOffset() ; }
   
     
   private :
@@ -155,16 +156,17 @@ class CompositeEventList : public TObject
     // Manipulation of cel internal trees
     void deleteCelTrees() ;
     Bool_t checkCelTrees() ;
-    Int_t makeCelBranches( TTree & eventTree, TTree & fileTree, TTree & eventTree, Int_t bufsize = 32000) const;
-    Int_t attachToTree( TTree & eventTree, TTree & fileTree, TTree & eventTree ) ;
+    Bool_t checkCelTree( TTree *, const std::string & name ) ;
+    Int_t makeCelBranches( TTree & entryTree, TTree & linkTree, TTree & fileTree, Int_t bufsize = 32000) const;
+    Int_t attachToTree( TTree & entryTree, TTree & linkTree, TTree & fileTree ) ;
 
     // cel data
-    TTree * _eventTree ; 
-    TTree * _fileTree ; 
     TTree * _entryTree ; 
+    TTree * _linkTree ; 
+    TTree * _fileTree ; 
     
     // current event info
-    CelEventLink _currentEvent ;
+    CelEventLink _currentLink ;
 
     // components stuff
     CelTreesAndComponents _compList ;   //! vector of components and associated TTrees

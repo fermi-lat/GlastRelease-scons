@@ -35,7 +35,7 @@ class TTree;
 //
 // Specifically, BgDataHandle<T> implements the casting operator and assignement operators
 //  BgDataHandle<T>::operator T()
-//  BgDataHandle<T>
+//  BgDataHandle<T>::operator=( const T & )
 //
 // Any class that uses BgDataHandle to interact with TTree should inherit 
 // from BranchGroup
@@ -56,45 +56,42 @@ class BgDataHandle : public BgDataHandleBase {
 public:
   
   // c'tors & d'tor
-  // Default c'tor.  Needed for ROOT
-  BgDataHandle():BgDataHandleBase(){;}
+  BgDataHandle() : BgDataHandleBase() {;} // Needed for ROOT
   // Standard c'tor.  Used to add this to a BranchGroup
-  BgDataHandle(const T& val, BranchGroup& group, const char* name):BgDataHandleBase(),_value(val){
-    Bool_t ok = group.addBranch(name,*this);
+  BgDataHandle( const T & val, BranchGroup & group, const char * name )
+   : BgDataHandleBase(),_value(val)
+   {
+    Bool_t ok = group.addBranch(name,*this) ;
     assert(ok);
-  }
-  // D'tor
-  virtual ~BgDataHandle();
+   }
+  virtual ~BgDataHandle() ;
   
   // Operators
-  // Assignment from T
-  BgDataHandle<T>& operator=(const T& other) { _value = other; return *this; }
-  
-  // Cast to T
-  //operator const T() const { return _value; }
-  operator T() const { return _value; }
+  BgDataHandle<T> & operator=( const T & other)
+   { _value = other ; return *this ; }
+  operator T() const { return _value ; }
   
   // Access and setting
   // Type of branch to make.  Returns a Char_t that root uses in TTree::Branch()
-  virtual Char_t branchType() const;
+  virtual Char_t branchType() const ;
 
 protected:
 
   // Return address of data
-  const T* const_ptr() const { return &_value; }
-  T* ptr() { return &_value; }
-  virtual void* void_ptr() const { return (void*)&_value; }
+  const T * const_ptr() const { return &_value ; }
+  T * ptr() { return &_value ; }
+  virtual void * void_ptr() const { return (void*)&_value ; }
 
 private:
 
-  //disable copying
-  BgDataHandle(const BgDataHandle<T>& other);
+  // disable copy construction
+  BgDataHandle( const BgDataHandle<T> & other) ;
 
   // Data 
-  T _value;                  // The Datum being managed
+  T _value ;                  // The Datum being managed
 
   ClassDefT(BgDataHandle<T>,0) // Type-safe template for handling simple types
-};
+} ;
 
 // Even more special ROOT declarations for template classes:
 ClassDefT2(BgDataHandle,T) ;

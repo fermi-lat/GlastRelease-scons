@@ -51,7 +51,7 @@ void CelEventIDs::printInfo( const char * /* options */ ) const
  {
   std::cout
     << _productionID
-    << ':' << _runID
-    << ':' << _eventID ;
+    << '|' << _runID
+    << '|' << _eventID ;
  }
 

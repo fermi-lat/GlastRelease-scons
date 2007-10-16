@@ -11,10 +11,10 @@
 *
 */
 
-#include "rootUtil/CelEventEntry.h"
-#include "rootUtil/FileUtil.h"
-#include "rootUtil/BgDataHandle.h"
-#include "rootUtil/CelFileAndTreeSet.h"
+#include <rootUtil/CelEventEntry.h>
+#include <rootUtil/FileUtil.h>
+#include <rootUtil/BgDataHandle.h>
+#include <rootUtil/CelFileAndTreeSet.h>
 
 #include <TTree.h>
 #include <Riostream.h>
@@ -22,7 +22,19 @@
 
 
 //====================================================================
-// 
+// Construction and assignment
+// One of the use-case is that one could want to manipulate
+// two CELs at the same time, on efor reading and one for
+// writing. In this context, it could make sense to construct
+// first the reading CEL, and duplicate it so to get a
+// write one with same structure. This is why we have copy
+// constructors which are copyig the BgDataHandle values
+// but relinking them to the new BranchGroup. Also, the assignment
+// is assigning only the value, not the link between handles and group,
+// so that ultimately we could do writeCel = readCel which would
+// duplicate values of the current Event.
+// As a summary : copy construction is duplicating the structure,
+// and assigment only concerns the current event values.
 //====================================================================
 
 
@@ -30,32 +42,30 @@ ClassImp(CelEventEntry) ;
 
 CelEventEntry::CelEventEntry()
  : _componentName(),
-   _entryIndex(-1,*this,"EntryIndex"),  
-   _treeIndex(FileUtil::NOKEY,*this,"TreeIndex")
+   _entryIndex(-1,*this,"Event_EntryIndex"),  
+   _treeIndex(FileUtil::NOKEY,*this,"Event_TreeIndex")
  { BgDataHandleInstance::init() ; }
 	      
 CelEventEntry::CelEventEntry( const TString & componentName )
  : _componentName(componentName),
-   _entryIndex(-1,*this,"EntryIndex"),  
-   _treeIndex(FileUtil::NOKEY,*this,"TreeIndex")
+   _entryIndex(-1,*this,"Event_EntryIndex"),  
+   _treeIndex(FileUtil::NOKEY,*this,"Event_TreeIndex")
  { BgDataHandleInstance::init() ; }	      
 	      
-CelEventEntry::CelEventEntry( const CelEventEntry & other)
+CelEventEntry::CelEventEntry( const CelEventEntry & other )
  : BranchGroup(),
    _componentName(other._componentName),
-   _entryIndex(other._entryIndex,*this,"EntryIndex"),  
-   _treeIndex(other._treeIndex,*this,"TreeIndex")
- { BgDataHandleInstance::init() ; }	      
+   _entryIndex(other._entryIndex,*this,"Event_EntryIndex"),  
+   _treeIndex(other._treeIndex,*this,"Event_TreeIndex")
+ {}	      
 
-// D'tor is a no-op
 CelEventEntry::~CelEventEntry()
  {}
 
-// Assignment operator
 CelEventEntry & CelEventEntry::operator=( const CelEventEntry & other )
  {
   if ( this == &other ) return *this ;
-  _componentName = other.componentName() ;
+  _componentName = other.componentName() ; // why not assert it is the same ?
   _entryIndex  = other.entryIndex() ;
   _treeIndex = other.treeIndex() ;
   return *this ;
@@ -64,7 +74,7 @@ CelEventEntry & CelEventEntry::operator=( const CelEventEntry & other )
 
 
 //====================================================================
-// 
+// Connection with trees
 //====================================================================
 
 
@@ -102,9 +112,9 @@ TTree * CelEventEntry::getTree( const CelFileAndTreeSet & handle ) const
 
 // Print the information about the current event to cout
 // 
-// The print format is treeIndex:entryIndex
+// The print format is treeIndex|entryIndex
 void CelEventEntry::printEventInfo( const char * /* options */ ) const
  {
-  std::cout << _treeIndex << ':' << _entryIndex ;
+  std::cout << _treeIndex << '|' << _entryIndex ;
  }
 
