@@ -78,6 +78,7 @@ const CLID CLID_Calib_CalibTest1       = 6500;
 
 const CLID CLID_Calib_NAS_TowerCfg     = 6600;
 const CLID CLID_Calib_NAS_SAABoundary  = 6610;
+const CLID CLID_Calib_NAS_LATAlignment = 6611;
 
 const CLID CLID_Calib_ANC_TaggerPed    = 6700;
 const CLID CLID_Calib_ANC_TaggerGain   = 6701;
@@ -159,6 +160,7 @@ const CLID CLID_Calib_ANC_QdcPed       = 6702;
       // cross-subsystem types
       _EXTERN_ std::string   NAS_TowerCfg;
       _EXTERN_ std::string   NAS_SAABoundary;
+      _EXTERN_ std::string   NAS_LATAlignment;
 
 
       typedef  std::vector<std::pair <std::string, CLID> > CalibPairCol;

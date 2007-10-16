@@ -1,6 +1,6 @@
 // $Header$
-#ifndef CalibData_CalibTest1_h
-#define CalibData_CalibTest1_h
+#ifndef CalibData_CalibSAABoundary_h
+#define CalibData_CalibSAABoundary_h
 
 /** @class CalibTest1  
 
@@ -14,7 +14,7 @@
 #include "CalibData/CalibModel.h"
 #include <vector>
 
-// extern const CLID& CLID_Calib_SAABoundary;
+// extern const CLID& CLID_Calib_NAS_SAABoundary;
 
 
 namespace CalibData {

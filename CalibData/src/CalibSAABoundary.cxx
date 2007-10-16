@@ -28,7 +28,7 @@ namespace CalibData {
   }
 
   CalibSAABoundary::CalibSAABoundary(const CalibSAABoundary& other) : 
-         CalibBase(other), m_lat(other.m_lat), m_lon(other.m_lon) {
+         IValidity(),CalibBase(other), m_lat(other.m_lat), m_lon(other.m_lon) {
   }
 
   bool CalibSAABoundary::getFirstVertex(std::pair<double,double>& vertex){
