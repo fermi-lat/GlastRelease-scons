@@ -18,7 +18,7 @@ ApplicationMgr.Runable= "RootIoSvc";
 
 // There are several other possibilities for test algroithm, including
 //  UseBadStrips, UseGains,...
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseSAABoundary" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseLATAlignment" };
 digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
 
 
