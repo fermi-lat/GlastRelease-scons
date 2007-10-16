@@ -57,8 +57,9 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
 {
 
   // Declare the properties that may be set in the job options file
-  declareProperty("XtalDigiToolName",    m_xtalDigiToolName = "XtalDigiTool");
   declareProperty("CalSignalToolName",   m_calSignalToolName = "CalSignalTool");
+  declareProperty("XtalDigiToolName",    m_xtalDigiToolName = "XtalDigiTool");
+  declareProperty("TrgConfigSvcName",    m_trgConfigSvcName = "TrgConfigSvc");
   declareProperty("DefaultZeroSuppress", m_defaultZeroSuppress = true);
   declareProperty("DefaultAllRange",     m_defaultAllRange = false);
 }
@@ -113,9 +114,12 @@ StatusCode CalDigiAlg::initialize() {
   //-- find out which tems are installed.
   m_twrList = CalUtil::findActiveTowers(*m_detSvc);
 
-  sc = service("TrgConfigSvc", m_trgConfigSvc, true); 
-  if (sc.isFailure())
-    m_trgConfigSvc = 0; //
+  /// locate optional TrgConfigSvc
+  if (m_trgConfigSvcName.length() != 0) {
+    sc = service("TrgConfigSvc", m_trgConfigSvc, true); 
+    if (sc.isFailure())
+      m_trgConfigSvc = 0; //
+  }
 
   return StatusCode::SUCCESS;
 }
