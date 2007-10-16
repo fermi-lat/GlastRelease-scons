@@ -30,6 +30,7 @@
 
 // STD
 #include <map>
+#include <cmath>
 
 using namespace CalUtil;
 using namespace Event;
