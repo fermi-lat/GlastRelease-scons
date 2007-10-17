@@ -112,12 +112,12 @@ protected:
 
   /// Find first range element.  Derived classes which need it
   /// must define their own implementation.
-  DOMElement* findFirstRange(const DOMElement* docElt) {
+  DOMElement* findFirstRange(const DOMElement* /* docElt */) {
     return 0;}
 
 
   /// Still another one to navigate XML file and find next set of range data
-  DOMElement* findNextRange(const DOMElement* rangeElt) {
+  DOMElement* findNextRange(const DOMElement* /* rangeElt */) {
     return 0;}
 
   /// Another one to find first dac collection element
