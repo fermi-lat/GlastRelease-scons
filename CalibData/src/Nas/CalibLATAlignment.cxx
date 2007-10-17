@@ -4,7 +4,7 @@
  *    Implementation of a calibration class for the LAT-to-spacecraft alignment
  */
 
-#include "CalibData/CalibLATAlignment.h"
+#include "CalibData/Nas/CalibLATAlignment.h"
 #include "GaudiKernel/MsgStream.h"
 
 namespace CalibData {

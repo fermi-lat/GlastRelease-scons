@@ -1,10 +1,10 @@
 // $Header$
 
-/** @class CalibTest1
- *    Implementation of near-simplest-possible calibration TCDS class
+/** @class CalibSAABoundary
+ *    Implementation of a calibration class for SAA boundary descirption
  */
 
-#include "CalibData/CalibSAABoundary.h"
+#include "CalibData/Nas/CalibSAABoundary.h"
 #include "GaudiKernel/MsgStream.h"
 
 namespace CalibData {
