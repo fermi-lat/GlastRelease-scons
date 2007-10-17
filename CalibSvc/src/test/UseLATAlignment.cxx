@@ -6,8 +6,8 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CalibData/CalibLATAlignment.h"
-#include "CalibData/CalibModel.h"
+#include "CalibData/Nas/CalibLATAlignment.h"
+#include "CalibSvc/ICalibPathSvc.h"
 
 /// Simple algorithm to test functioning of "the other" TDS
 class UseLATAlignment : public Algorithm {
@@ -23,6 +23,8 @@ public:
 
 private:
   IDataProviderSvc* m_pCalibDataSvc;
+  ICalibPathSvc*    m_pCalibPathSvc;
+  std::string       m_path;
   // Maybe something to say which kind of data to look up?
 
 };
@@ -63,6 +65,19 @@ StatusCode UseLATAlignment::initialize() {
 	<< endreq;
   }
 
+  sc = service("CalibDataSvc", m_pCalibPathSvc, true);
+
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not get ICalibPathSvc interface of CalibDataSvc" 
+	<< endreq;
+    return sc;
+  }
+
+  m_path = 
+    m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_NAS_LATAlignment,
+                                  std::string("vanilla") );
+
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   return StatusCode::SUCCESS;
@@ -74,9 +89,7 @@ StatusCode UseLATAlignment::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
-  std::string fullPath = "/Calib/NAS_LATAlignment/vanilla";
-
-  SmartDataPtr<CalibData::CalibLATAlignment> test1Copy(m_pCalibDataSvc, fullPath);
+  SmartDataPtr<CalibData::CalibLATAlignment> test1Copy(m_pCalibDataSvc, m_path);
 
   if (!test1Copy) {
     log << MSG::ERROR << "Failed access to CalibLATAlignment via smart ptr" << endreq;

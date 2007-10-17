@@ -13,7 +13,7 @@
 #include "CalibSvc/ICalibXmlSvc.h"
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 
-#include "CalibData/CalibLATAlignment.h"
+#include "CalibData/Nas/CalibLATAlignment.h"
 #include "CalibData/CalibTime.h"
 #include "xmlBase/Dom.h"
 

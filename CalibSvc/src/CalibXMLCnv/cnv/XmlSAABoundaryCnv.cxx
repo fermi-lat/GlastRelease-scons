@@ -16,7 +16,7 @@
 #include "CalibSvc/ICalibXmlSvc.h"
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 
-#include "CalibData/CalibSAABoundary.h"
+#include "CalibData/Nas/CalibSAABoundary.h"
 #include "CalibData/CalibTime.h"
 #include "xmlBase/Dom.h"
 
