@@ -15,6 +15,7 @@ use GaudiInterface * IExternal
 use CLHEP * IExternal
 use facilities *
 use astro *
+use extFiles v* IExternal
 
 # for livetime
 use Trigger *
@@ -31,8 +32,8 @@ set GENERICSOURCES_XML $(genericSources_root)/xml
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
 #  $(FlUXSVCROOT)/cdf/particleproperty.cdf
-set LHCBDBASE       "${FLUXSVCROOT}"
-set PARAMFILESROOT  "${FLUXSVCROOT}"
+set LHCBDBASE       "${EXTFILESSYS}/gaudi"
+set PARAMFILESROOT  "${EXTFILESSYS}/gaudi"
 
 
 # _____________________________________________________________

@@ -4,6 +4,8 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   17-oct-07  v6r30   HMK  intro use of IExternal/extFiles to set env var
+                           for finding ParticleTable.txt
    04-oct-07  v6r49p1 THB  tag the dragon update to add a timestamp to FluxSvc
    24-sep-07  v6r49   THB  Create new service to manage orbit information: OrbitSvc
    13-sep-07  v6r48p1 THB  Fix to accept a particle name "neutron"
