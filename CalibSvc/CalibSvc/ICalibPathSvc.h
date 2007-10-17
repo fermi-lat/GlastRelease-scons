@@ -63,6 +63,7 @@ public:
     
     Calib_NAS_TowerCfg,
     Calib_NAS_SAABoundary,
+    Calib_NAS_LATAlignment,
 
     Calib_ANC_TaggerPed,
     Calib_ANC_TaggerGain,
