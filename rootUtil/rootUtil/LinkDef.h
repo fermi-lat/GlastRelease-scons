@@ -30,6 +30,7 @@
 #pragma link C++ class CelEventLink ;
 #pragma link C++ class CelEventEntry ;
 #pragma link C++ class CelFileAndTreeSet ;
+#pragma link C++ class CelFileAndTreeOffset ;
 #pragma link C++ class CelIndex ;
 #pragma link C++ class CelEventComponent ;
 #pragma link C++ class CompositeEventList ;

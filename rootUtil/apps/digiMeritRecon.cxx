@@ -132,7 +132,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Digi_");
+    p.addComponent("Digi");
   }
   if ( reconFiles.size() > 0 ) {
     TFile* f = TFile::Open(reconFiles[0].c_str(),"READ");
@@ -140,7 +140,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Recon_");
+    p.addComponent("Recon");
   }
   if ( svacFiles.size() > 0 ) {
     TFile* f = TFile::Open(svacFiles[0].c_str(),"READ");
@@ -148,7 +148,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Svac_");
+    p.addComponent("Svac");
   }
   if ( meritFiles.size() > 0 ) {
     TFile* f = TFile::Open(meritFiles[0].c_str(),"READ");
@@ -156,7 +156,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Merit_");
+    p.addComponent("Merit");
   }
   
   if ( outFile.length() < 2 ) {

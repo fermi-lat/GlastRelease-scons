@@ -79,7 +79,6 @@ class CompositeEventList : public TObject
 
     // constructors
     CompositeEventList() ; 
-    CompositeEventList( TTree & eventTree, TTree & fileTree, TTree & entryTree ) ; // for CelUtil :s
     virtual ~CompositeEventList() ;
 
     // Add a component by name.  This is only mandatory when writing.
@@ -89,6 +88,9 @@ class CompositeEventList : public TObject
     // WRITING interface
     // Make a new CEL ROOT file and its trees
     TFile * makeCelFile( const TString & celFileName, const Char_t * options ) ;
+    Long64_t fillEvent( TObjArray & trees ) ;
+    Long64_t fillEvent( std::vector<TTree*> & trees) ;
+    Long64_t fillFileAndTreeSet() ;
     
     // READING interface
     // Open an existing CEL ROOT file
@@ -98,15 +100,10 @@ class CompositeEventList : public TObject
     // UNUSED ? read the event information and data (data trees made on the fly ??)
     Int_t deepRead( Long64_t eventIndex ) ;   
     // UNUSED ? Get a Tree that is being read by a deepRead
-    TTree * getTree(UInt_t index) const
+    TTree * getTree( UInt_t index) const
      { return (index < _compList.size()) ? _compList[index].first : 0 ;  }
     // USED ? Build all the Chains for all the components
     TChain * buildAllChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
-
-    // WRITING interface
-    Long64_t fillEvent( TObjArray & trees ) ;
-    Long64_t fillEvent( std::vector<TTree*> & trees) ;
-    Long64_t fillFileAndTreeSet() ;
 
     // Access
     // Number of events in this cel
@@ -127,10 +124,11 @@ class CompositeEventList : public TObject
     TTree * entryTree() { return _entryTree ; }
     TTree * linkTree() { return _linkTree ; }
     TTree * fileTree() { return _fileTree ; }
+    TTree * offsetTree() { return _offsetTree ; }
+    CompositeEventList( TTree * eventTree, TTree * fileTree, TTree * entryTree ) ;
     
 	/// FOR CelIndex
     CelEventComponent * getComponent( const TString & name ) const ;
-    Long64_t fileSetOffset() const { return _currentLink.fileSetOffset() ; }
   
     
   private :
@@ -149,21 +147,19 @@ class CompositeEventList : public TObject
 
     // Build the TChain for a single component. 
     TChain * buildChain( UInt_t componentIndex ) ;
-
-    // ?? Latch the values in a set of TTree
-    Bool_t set(std::vector<TTree*>& dataTrees) ;
- 
+    
     // Manipulation of cel internal trees
     void deleteCelTrees() ;
     Bool_t checkCelTrees() ;
-    Bool_t checkCelTree( TTree *, const std::string & name ) ;
-    Int_t makeCelBranches( TTree & entryTree, TTree & linkTree, TTree & fileTree, Int_t bufsize = 32000) const;
-    Int_t attachToTree( TTree & entryTree, TTree & linkTree, TTree & fileTree ) ;
+    Bool_t checkCelTree( TTree *, const std::string & name, Bool_t error ) ;
+    Int_t makeCelBranches( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize = 32000) const;
+    Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) ;
 
     // cel data
     TTree * _entryTree ; 
     TTree * _linkTree ; 
     TTree * _fileTree ; 
+    TTree * _offsetTree ; 
     
     // current event info
     CelEventLink _currentLink ;

@@ -57,15 +57,25 @@ CelEventComponent::~CelEventComponent()
 
 
 //====================================================================
-// 
+// WRITING
 //====================================================================
 
 
-void CelEventComponent::set( TTree & tree)
+void CelEventComponent::registerEntry( TTree & tree )
+ { _currentEntryIndex.set(tree,_currentSet) ; }
+
+void CelEventComponent::nextSet()
  {
-  // set the current event
-  _currentEntryIndex.set(tree,_currentSet) ;
+  _currentOffset.increment(_currentSet.entries()) ;
+  _currentSet.reset() ;
  }
+
+
+
+//====================================================================
+// READING
+//====================================================================
+
 
 Int_t CelEventComponent::read()
  {
@@ -80,33 +90,64 @@ TTree * CelEventComponent::getTree() const
  }
 
 
-Int_t CelEventComponent::makeBranches( TTree & fileTree, TTree & eventTree, Int_t bufsize) const
+Int_t CelEventComponent::makeBranches( TTree * entryTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize) const
  {
-  Int_t n_e = _currentEntryIndex.makeBranches(eventTree,_componentName.Data(),bufsize);
-  if ( n_e < 0 ) return n_e ;
-  Int_t n_f = _currentSet.makeBranches(fileTree,_componentName.Data(),bufsize);
-  if ( n_f < 0 ) return n_f ;
-  return n_e + n_f ;
+  Int_t n, nTot = 0 ;
+  if (entryTree!=0)
+   {
+    n = _currentEntryIndex.makeBranches(*entryTree,_componentName.Data(),bufsize) ;
+    if (n<0) return n ;
+    nTot += n ;
+   }
+  if (fileTree!=0)
+   {
+	n = _currentSet.makeBranches(*fileTree,_componentName.Data(),bufsize) ;
+	if (n<0) return n ;
+	nTot += n ;
+   }
+  if (offsetTree!=0)
+   {
+	n = _currentOffset.makeBranches(*offsetTree,_componentName.Data(),bufsize) ;
+	if (n<0) return n ;
+	nTot += n ;
+   }
+  return nTot ; 
  }
 
-Int_t CelEventComponent::attachToTree( TTree & entryTree, TTree & fileTree )
+Int_t CelEventComponent::attachToTree( TTree * entryTree, TTree * fileTree, TTree * offsetTree )
  {
-  Int_t n_e = _currentEntryIndex.attachToTree(entryTree,_componentName.Data()) ;
-  if ( n_e < 0 ) return n_e ;
-  Int_t n_f = _currentSet.attachToTree(fileTree,_componentName.Data()) ;
-  if ( n_f < 0 ) return n_f ;
-  return n_e + n_f; 
+  Int_t n, nTot = 0 ;
+  if (entryTree!=0)
+   {
+	n = _currentEntryIndex.attachToTree(*entryTree,_componentName.Data()) ;
+	if (n<0) return n ;
+	nTot += n ;
+   }
+  if (fileTree!=0)
+   {
+	n = _currentSet.attachToTree(*fileTree,_componentName.Data()) ;
+	if (n<0) return n ;
+	nTot += n ;
+   }
+  if (offsetTree!=0)
+   {
+	n = _currentOffset.attachToTree(*offsetTree,_componentName.Data()) ;
+	if (n<0) return n ;
+	nTot += n ;
+   }
+  return nTot ; 
  }
 
 // Building a TChain
 Bool_t CelEventComponent::addToChain( TChain * & chain )
  { return _currentSet.addToChain(chain) ; }
 
-Long64_t CelEventComponent::indexInCurrentSet() const
+Long64_t CelEventComponent::currentIndexInChain() const
  {
   UShort_t treeIndex = _currentEntryIndex.treeIndex() ;
   Long64_t previousTreesOffset = _currentSet.getOffset(treeIndex) ;
-  Long64_t evtIndex = previousTreesOffset + _currentEntryIndex.entryIndex() ;
+  Long64_t previousSetsOffset = _currentOffset.getOffset() ;
+  Long64_t evtIndex = previousTreesOffset + previousSetsOffset + _currentEntryIndex.entryIndex() ;
   return evtIndex ;
  }
 
