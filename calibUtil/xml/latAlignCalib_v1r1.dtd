@@ -1,0 +1,39 @@
+<!--
+   $Header$
+   
+   /**  @file       latAlignCalib.dtd
+        @authors    M. Ackermann
+
+        dtd for LAT alignment calibration data types
+	
+	LAT alignment calibration contains only 3 values for roll, pitch and yaw
+
+    */
+
+ -->
+
+
+<!ELEMENT LATAlignment (generic, angle) >
+
+<!ELEMENT  generic (inputSample*) >
+<!ATTLIST generic  
+   instrument  (LAT) #REQUIRED
+   timestamp   CDATA #REQUIRED
+   calibType  (NAS_LATAlignment) #REQUIRED              
+   algorithm   CDATA #REQUIRED
+   DTDVersion  NMTOKEN "v1r1"       
+   fmtVersion  NMTOKEN #REQUIRED>
+   
+<!ELEMENT inputSample (#PCDATA) >
+<!ATTLIST inputSample  startTime CDATA #REQUIRED
+                       stopTime  CDATA #REQUIRED
+                       triggers  CDATA #REQUIRED 
+                       source    CDATA #REQUIRED
+                       mode      NMTOKEN  #REQUIRED>
+
+<!ELEMENT angle EMPTY >
+<!ATTLIST angle roll NMTOKEN "0"
+                pitch NMTOKEN "0"
+	        yaw NMTOKEN "0">
+
+

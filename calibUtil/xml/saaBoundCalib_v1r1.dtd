@@ -1,0 +1,42 @@
+<!--
+   $Header$
+   
+   /**  @file       saaBoundCalib.dtd
+        @authors    M. Ackermann
+
+        dtd for SAA boundary calibration data types
+	
+	SAA boundary calibration contains one polygon element 
+	with 12 vertex sub-elements defining the outline of the veto-zone polygon
+	in geographical latitude and longitude
+    */
+
+ -->
+
+
+<!ELEMENT SAABoundary (generic, polygon) >
+
+<!ELEMENT  generic (inputSample*) >
+<!ATTLIST generic  
+   instrument  (LAT) #REQUIRED
+   timestamp   CDATA #REQUIRED
+   calibType  (NAS_SAABoundary) #REQUIRED              
+   algorithm   CDATA #REQUIRED
+   DTDVersion  NMTOKEN "v1r1"       
+   fmtVersion  NMTOKEN #REQUIRED>
+   
+<!ELEMENT inputSample (#PCDATA) >
+<!ATTLIST inputSample  startTime CDATA #REQUIRED
+                       stopTime  CDATA #REQUIRED
+                       triggers  CDATA #REQUIRED 
+                       source    CDATA #REQUIRED
+                       mode      NMTOKEN  #REQUIRED>
+
+<!ELEMENT polygon (vertex*) >
+
+<!ELEMENT vertex EMPTY >
+<!ATTLIST vertex 
+          lat NMTOKEN #REQUIRED
+          lon NMTOKEN #REQUIRED >
+
+
