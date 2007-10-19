@@ -83,10 +83,12 @@ This it the dimension of the tile in local coords, not its
 of side tiles from CAD model. (Aug 07) </prim>
 
   <prim name="sideTileR1_a" value="3.825658" uType="count">Approx. angle of
-  slant of side row 1, measured by SolidView CAD model. (Aug. 07) 
+  slant of side row 1 relative to vertical, measured by 
+  SolidView CAD model. (Aug. 07) 
 </prim>
   <prim name="sideTileR2_a" value="3.8266" uType="count">Approx. angle of
-  slant of side row 2, measured by SolidView CAD model. (Aug. 07) 
+  slant of side row 2 relative to vertical, measured by SolidView CAD model. 
+  (Aug. 07) 
 </prim>
   <prim name="sideOverlap" value="30.0">Distance side tiles
 extend above topACD tile surface --- used for positioning.

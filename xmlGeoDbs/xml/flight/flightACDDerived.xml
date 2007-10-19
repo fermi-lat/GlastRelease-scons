@@ -247,6 +247,15 @@
     </uminus>
   </const>
 
+  <const name="sideTileR1Horiz_a" uType="count">
+    <notes>Slant angle used for side tiles in row 1 relative to initial 
+           horizontal orientation</notes>
+    <add>
+      <refer refTo="sideTileR1_a" /> 
+      <const uType="count" value="90" />
+    </add>
+  </const>
+    
   <const name="sideTileR1_an" uType="count" >
     <notes>Slant angle used for side tiles in row 1 in neg faces.
     </notes>
@@ -254,6 +263,16 @@
       <refer refTo="sideTileR1_a" />
     </uminus>
   </const>
+
+  <const name="sideTileR2Horiz_a" uType="count">
+    <notes>Slant angle used for side tiles in row 2 relative to initial 
+           horizontal orientation</notes>
+    <add>
+      <refer refTo="sideTileR2_a" /> 
+      <const uType="count" value="90" />
+    </add>
+  </const>
+
 
   <const name="sideTileR2_an" uType="count">
     <notes>Slant angle used for side tiles in row 2 in neg faces.
