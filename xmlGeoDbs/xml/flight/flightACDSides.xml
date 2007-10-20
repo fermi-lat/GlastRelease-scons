@@ -7,18 +7,7 @@
 
       <!-- Pos Y face is face 4 -->
       <!-- face 4, row 0 -->
-<!--
-      <posXYZ volume="sideTileRow0Face4"
-              XREF="ACDSideDovetail_dn"
-              YREF="tileSideR0_dt"
-              ZREF="tileSideR0_dz" >
-        <idField name="fLATObjects" valueREF="eLATACD" />
-        <idField name="fACDFace" valueREF="eACDYPosFace" />
-        <idField name="fACDCmp" valueREF="eACDTile" />
-        <idField name="fRow" value="0" />
-      </posXYZ>
-    -->     
-      <posXYZ volume="sideTileRow0Face41Horiz"
+      <posXYZ volume="sideTileRow0Face41"
               xrot="90"
               zrot="180"
               XREF="ACDSideDovetail_dn"
@@ -32,19 +21,7 @@
 
 
       <!-- face 4, row 1. -->
-<!--
-      <posXYZ volume="sideTileRow1Face4"
-              xrotREF="sideTileR1_an"
-              XREF="ACDSideDovetail_dn"        
-              YREF="tileSideR1_dt"
-              ZREF="tileSideR1_dz" >
-        <idField name="fLATObjects" valueREF="eLATACD" />
-        <idField name="fACDFace" valueREF="eACDYPosFace" />
-        <idField name="fACDCmp" valueREF="eACDTile" />
-        <idField name="fRow" value="1" />
-      </posXYZ>
--->
-      <posXYZ volume="sideTileRow1Face41Horiz"
+      <posXYZ volume="sideTileRow1Face41"
               xrotREF="sideTileR1Horiz_a"
               zrot="180"
               XREF="ACDSideDovetail_dn"        
@@ -58,19 +35,7 @@
 
 
       <!-- face 4, row 2 -->
-<!--
-      <posXYZ volume="sideTileRow2Face4"
-              xrotREF="sideTileR2_an"
-              XREF="ACDSideDovetail_dn"
-              YREF="tileSideR2_dt"
-              ZREF="tileSideR2_dz" >
-        <idField name="fLATObjects" valueREF="eLATACD" />
-        <idField name="fACDFace" valueREF="eACDYPosFace" />
-        <idField name="fACDCmp" valueREF="eACDTile" />
-        <idField name="fRow" value="2" />
-      </posXYZ>
-    -->     
-      <posXYZ volume="sideTileRow2Face41Horiz"
+      <posXYZ volume="sideTileRow2Face41"
               xrotREF="sideTileR2Horiz_a"
               zrot="180"
               XREF="ACDSideDovetail_dn"
@@ -85,7 +50,7 @@
 
       <!-- face 4, row 3. -->
 
-      <posXYZ volume="sideTileRowR3Horiz"
+      <posXYZ volume="sideTileRowR3"
               xrot="90"
               XREF="ACDSideDovetail_dn"        
               YREF="tileSideR3_dt"
@@ -99,7 +64,7 @@
       <!-- Neg Y face is face 2 -->
     <!-- face 2, row 0 -->
 
-      <posXYZ volume="sideTileRow0Face23Horiz"
+      <posXYZ volume="sideTileRow0Face23"
               XREF="ACDSideDovetail_d"
               YREF="tileSideR0_dtn"
               ZREF="tileSideR0_dz" 
@@ -114,7 +79,7 @@
 
       <!-- face 2, row 1 -->
 
-      <posXYZ volume="sideTileRow1Face23Horiz"
+      <posXYZ volume="sideTileRow1Face23"
               xrotREF="sideTileR1Horiz_a"
               XREF="ACDSideDovetail_d"
               YREF="tileSideR1_dtn"
@@ -126,7 +91,7 @@
       </posXYZ>
 
       <!-- face 2, row 2 -->
-      <posXYZ volume="sideTileRow2Face23Horiz"
+      <posXYZ volume="sideTileRow2Face23"
               xrotREF="sideTileR2Horiz_a"
               XREF="ACDSideDovetail_d"
               YREF="tileSideR2_dtn"
@@ -138,7 +103,7 @@
       </posXYZ>
 
       <!-- face 2, row 3 -->
-      <posXYZ volume="sideTileRowR3Horiz"
+      <posXYZ volume="sideTileRowR3"
               xrot="90"
               XREF="ACDSideDovetail_d"        
               YREF="tileSideR3_dtn"
@@ -152,7 +117,7 @@
       <!-- Pos X face is face 3. -->
 
       <!-- face 3, row 0 -->
-      <posXYZ volume="sideTileRow0Face23Horiz"
+      <posXYZ volume="sideTileRow0Face23"
               XREF="tileSideR0_dt"
               YREF="ACDSideDovetail_d"
               ZREF="tileSideR0_dz"
@@ -168,7 +133,7 @@
 
       <!-- face 3, row 1 -->
 
-      <posXYZ volume="sideTileRow1Face23Horiz"
+      <posXYZ volume="sideTileRow1Face23"
               xrotREF="sideTileR1Horiz_a"
               zrot="90"
               XREF="tileSideR1_dt"
@@ -181,7 +146,7 @@
       </posXYZ>
 
       <!-- face 3, row 2 -->
-      <posXYZ volume="sideTileRow2Face23Horiz"
+      <posXYZ volume="sideTileRow2Face23"
               xrotREF="sideTileR2Horiz_a"
               zrot="90"
               XREF="tileSideR2_dt"
@@ -194,7 +159,7 @@
       </posXYZ>
 
       <!-- face 3, row 3 -->
-      <posXYZ volume="sideTileRowR3Horiz"
+      <posXYZ volume="sideTileRowR3"
               xrot="90"
               zrot="90"
               XREF="tileSideR3_dt"
@@ -209,7 +174,7 @@
 
       <!-- Neg X face is face 1 -->
       <!-- face 1, row 0 -->
-      <posXYZ volume="sideTileRow0Face41Horiz"
+      <posXYZ volume="sideTileRow0Face41"
               xrot="90"
               zrot="-90"
               XREF="tileSideR0_dtn"
@@ -223,7 +188,7 @@
          
       <!-- face 1, row 1. -->
 
-      <posXYZ volume="sideTileRow1Face41Horiz"
+      <posXYZ volume="sideTileRow1Face41"
               xrotREF="sideTileR1Horiz_a"
               zrot="-90"
               XREF="tileSideR1_dtn"
@@ -236,7 +201,7 @@
       </posXYZ>
 
       <!-- face 1, row 2 -->
-      <posXYZ volume="sideTileRow2Face41Horiz"
+      <posXYZ volume="sideTileRow2Face41"
               xrotREF="sideTileR2Horiz_a"
               zrot="-90"
               XREF="tileSideR2_dtn"
@@ -249,7 +214,7 @@
       </posXYZ>
          
       <!-- face 1, row 3. -->
-      <posXYZ volume="sideTileRowR3Horiz"
+      <posXYZ volume="sideTileRowR3"
               xrot="90"
               zrot="-90"
               XREF="tileSideR3_dtn"
