@@ -19,6 +19,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "SVC='DbEvtSelector'";
 EventSelector.PrintFreq = -1;
 
+ApplicationMgr.DLLs += {"TkrUtil","G4Propagator", "G4Generator", "CalibSvc"};
 
 //
 // Top sequence:
