@@ -1,5 +1,5 @@
 package mcRootData
-version v2r21p1
+version v2r21p2
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
 # $Id$
@@ -18,5 +18,6 @@ apply_pattern root_package headers="\
  ../mcRootData/McEvent.h\
  ../mcRootData/McTrajectory.h"\
  includes="-I${COMMONROOTDATAROOT}"\
+ libs="libcommonRootData"\
  test_source="test/testMcClasses.cxx"
 
