@@ -622,7 +622,7 @@
 
 
 
-<!ELEMENT  section  ( box | tubs | sphere | cons |
+<!ELEMENT  section  ( box | tubs | sphere | cons | trap |
                       composition | choice |
                       stackX | stackY | stackZ |
                       parameters )+>
@@ -686,6 +686,29 @@
            ZREF      IDREF  #IMPLIED
            PhiBegREF IDREF  #IMPLIED
            PhiEndREF IDREF  #IMPLIED
+           %solidProperties;
+           %units;>
+
+<!-- Somewhat restricted trapezoidal solid.  Has 2 congruent parallel 
+     trapezoidal faces.  Other faces are all perp. to these. Canonical
+     orientation is with trapezoidal faces perp. to Z-axis.  Parallel
+     edges of trapezoids are parallel to X-axis.  Y-dimension is height;
+     X1 is length of bottom edge of trapezoid; X2 is length along top.
+     Z-dimension is thickness.  XDiff is c2 - c1 where c2 (resp. c1) 
+     is x-coordinate for midpoint of trapezoid top (resp. bottom) edge 
+ -->
+<!ELEMENT trap EMPTY>
+<!ATTLIST trap
+          X1        NMTOKEN "0"
+          X2        NMTOKEN  "0"
+          XDiff     NMTOKEN  "0"
+          Y         NMTOKEN "0"
+          Z         NMTOKEN "0"
+          X1REF IDREF  #IMPLIED
+          X2REF    IDREF  #IMPLIED
+          XDiffREF  IDREF  #IMPLIED
+          ZREF      IDREF  #IMPLIED
+          YREF      IDREF  #IMPLIED
            %solidProperties;
            %units;>
 
