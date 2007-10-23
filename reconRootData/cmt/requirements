@@ -1,5 +1,5 @@
 package reconRootData
-version v9r17p2
+version v9r17p3
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -42,6 +42,7 @@ apply_pattern root_package headers="\
  ../reconRootData/GcrXtal.h\
  ../reconRootData/GcrTrack.h"\
  includes="-I$(COMMONROOTDATAROOT)"\
+ libs="libcommonRootData libMatrix libRIO"\
  test_source="test/testReconClasses.cxx"
 
 private

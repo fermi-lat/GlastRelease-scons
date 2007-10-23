@@ -1,5 +1,5 @@
 package digiRootData
-version v9r19p5
+version v9r19p6
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -39,4 +39,5 @@ apply_pattern root_package headers="\
  ../digiRootData/AdfDigi.h\
  ../digiRootData/EventSummaryData.h"\
  includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
+ libs="libcommonRootData"\
  test_source="test/testDigiClasses.cxx"

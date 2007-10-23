@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r17p3   23-Oct-07  : HMK rootmap generation
 v9r17p2   14-Oct-07  : HMK include cmath
 v9r17p1   28-Sep-07  : HMK additional includes now moving to ROOT v5.16.00
 v9r17     20-Sep-07  : HMK Turn off TkrTruncationData for now
