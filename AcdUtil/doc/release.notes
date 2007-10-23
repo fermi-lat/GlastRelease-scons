@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v2r1     22-Oct-2007 JRB Change referenceFrame utility to be in accord with
+                          xmlGeoDbs v1r4 (side tiles defined with Z=thickness)
  v2       10-Oct-2007 EAC Rework AcdCalibSvc.
                           Split in AcdCalibSvc and AcdSimCalibSvc.
                           Use new calibration managers w/ templated code in CalibData/ CalibSvc
