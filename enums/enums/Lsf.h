@@ -11,7 +11,11 @@
 */
 
 /// These are sentinel values that show that various LsfMetaEvent quantities are uninitialized
+#ifdef WIN32
 #define LSF_INVALID_ULONG 0xFFFFFFFFFFFFFFFF
+#else
+#define LSF_INVALID_ULONG 0xFFFFFFFFFFFFFFFFULL
+#endif
 #define LSF_INVALID_UINT 0xFFFFFFFF
 #define LSF_INVALID_UCHAR 0xFF
 #define LSF_INVALID_USHORT 0xFFFF
