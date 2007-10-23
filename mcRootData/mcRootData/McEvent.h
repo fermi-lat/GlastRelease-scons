@@ -29,6 +29,66 @@
 *  $Header$
 */
 
+
+/** @page mcRootData_doc
+    @section McEvent McEvent Documentation
+    Notes
+
+<table>
+<tr><th> Method <th> Return Type <th> Description <th>
+
+<tr><td> getEventId
+<td>UInt_t<td> Returns the event identifier
+<tr><td> getRunId
+<td>UInt_t<td> Returns the run identifier
+<tr><td> getTimeStamp
+<td>Double_t<td> Returns the time stamp
+<tr><td> getSourceId
+<td>I<td> Returns the Source Id
+<tr><td> getSequence
+<td>UInt_t<td> Returns the sequence
+<tr><td> getSourceName
+<td>char*<td> Returns the actual name of the source for generation
+<tr><td> getSourceNameAsTString
+<td>TString&<td> Returns source name in a TString&
+
+<tr><td> getMcParticleCount
+<td>UInt_t<td> Reports the number of McParticles stored in the collection
+<tr><td> getMcParticle(UInt_t index)
+<td>McParticle*<td> Retrieves an McParticle pointer from the collection, using the index
+<tr><td> getMcParticleCol
+<td>TObjArray<td> Returns the full TObjArray containing all McParticles
+<tr><td> getMcPositionHit(UInt_t index)
+<td>McPositionHit*<td> Returns a McPositionHit pointer corresponding to the index
+
+<tr><td> getMcPositionHintCount
+<td>UInt_t<td> Returns the number of McPositionHits stored in the collection
+<tr><td> getMcPositionHitCol
+<td>TObjArray*<td> Returns the full TObjArray containing all McPositionHits
+<tr><td> getMcTkrStrip(UInt_t index)
+<td><McTkrStrip*<td> Returns a McTkrStrip pointer corresponding to the index
+<tr><td> getMcTkrStripCount
+<td>UInt_t<td> Returns the number of McTkrStrips in the collection
+<tr><td> getMcTkrStripCol
+<td>TObjArray*<td> Returns the full TObjArray collection of McTkrStrips
+
+<tr><td> getMcIntegratingHit(UInt_t index)
+<td>McIntegratingHit*<td> Returns the McIntegratingHit pointer corresponding to the index
+<tr><td>getIntegratingHitCount
+<td>UInt_t<td> Returns the number of McIntegratingHits in the collection
+<tr><td> getMcIntegrationHitCol
+<td><TObjArray*<td> Returns the TObjArray* collection containing McIntegratingHits
+
+<tr><td> getMcTracjectory(UInt_t index)
+<td>McTrajectory*<td> Returns the McTrajectory pointer corresponding to index
+<tr><td> getMcTrajectoryCount
+<td>UInt_t<td> Returns the number of McTrajectories in the collection
+<tr><td> getMcTrajectoryCol
+<td>TObjArray*<td> Returns the TObjArray* collection of McTrajectories
+
+</table>
+*/
+
 class McEvent : public TObject  
 {
 public:

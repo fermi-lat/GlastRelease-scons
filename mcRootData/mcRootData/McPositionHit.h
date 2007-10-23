@@ -28,6 +28,46 @@
 * $Header$
 */
 
+/** @page mcRootData_doc
+    @section McPositionHit McPositinHit Documentation
+    Notes
+
+<table>
+<tr><th> Method <th> Return Type <th> Description <th>
+
+<tr><td> getVolumeId
+<td>const VolumeIdentifier&<td> Returns the volume identifier
+<tr><td> getMcParticleId
+<td>Int_t<td> Returns the id of the McParticle associated with the hit 
+<tr><td> getGlobalEntryPosition
+<td>const TVector3&<td> Entry position in global coordinates 
+<tr><td> getGlobalExitPosition
+<td>const TVector3&<td> Exit position in global coordinates
+<tr><td> getEntryPosition
+<td>const TVector3&<td> Entry position in local coordinates
+<tr><td> getExitPosition
+<td>const TVector3&<td> Exit position in local coordinates 
+<tr><td> getDepositedEnergy
+<td>Double_t<td> Energy deposited
+<tr><td> getParticleEnergy
+<td>Double_t<td> Energy of the particle
+<tr><td> getParticleMomentum
+<td>TVector3<td> particle momentum
+<tr><td> getParticle4Momentum
+<td>TLorentzVector<td>
+<tr><td> getTimeOfFlight
+<td>Double_t<td> Time of Flight
+<tr><td> getDirectionCosine
+<td>Double_t<td> direction cosine
+<tr><td> getMcParticle
+<td>const McParticle*<td>Returns pointer to the McParticle that made the hit
+<tr><td> getOriginMcParticle
+<td>const McParticle*<td> Returns the origin McParticle pointer
+
+</table>
+*/
+
+
 class McPositionHit : public TObject {
     
 public:

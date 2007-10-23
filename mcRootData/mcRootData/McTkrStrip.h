@@ -18,6 +18,23 @@
 *  Intermediate class for TkrDigi process.
 */
 
+
+<table>
+<tr><th> Method <th> Return Type <th> Description <th>
+
+<tr><td> getVolumeId
+<td>const VolumeIdentifier<td> Returns the volume identifier
+<tr><td> getTotalEnergy
+<td>Double_t<td> Returns the total energy deposited in a volume
+<tr><td> getMoment1
+<td>const TVector3<td> Returns the first moment
+<tr><td> getMoment2
+<td>const TVector3<td> Returns the second moment
+<tr><td> getMcParticleEnergy( Particle p )
+<td>Double_t<td> Returns energy associated with PRIMARY, ELECTRON or POSITRON
+
+</table>
+
 class McTkrStrip : public TObject
 {   
 public:

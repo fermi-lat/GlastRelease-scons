@@ -50,6 +50,30 @@ using namespace std;
 *  
 * $Header$
 */
+
+
+/** @page mcRootData_doc
+    @section McIntegratingHit McIntegratingHit Documentation
+    Notes
+
+<table>
+<tr><th> Method <th> Return Type <th> Description <th>
+
+<tr><td> getVolumeId
+<td>const VolumeIdentifier<td> Returns the volume identifier
+<tr><td> getTotalEnergy
+<td>Double_t<td> Returns the total energy deposited in a volume
+<tr><td> getMoment1
+<td>const TVector3<td> Returns the first moment 
+<tr><td> getMoment2
+<td>const TVector3<td> Returns the second moment
+<tr><td> getMcParticleEnergy( Particle p )
+<td>Double_t<td> Returns energy associated with PRIMARY, ELECTRON or POSITRON
+
+</table>
+*/
+
+
 class McIntegratingHit: public TObject {
     
 public:
@@ -91,7 +115,7 @@ public:
     /// Returns the size of the list of McParticle, energy pairs
     UInt_t itemizedEnergySize() const { return m_mcPartArr.GetEntries(); };
 
-    /// Retrieve energy associated with PRIMARY, ELECTRON or POSITRON
+    /// RetriEve energy associated with PRIMARY, ELECTRON or POSITRON
     Double_t getMcParticleEnergy(Particle p) const;
 
     /// Retrieve the energy-weighted first moments of the position

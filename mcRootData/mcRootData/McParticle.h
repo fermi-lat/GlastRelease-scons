@@ -26,6 +26,47 @@
 *  
 * $Header$
 */
+
+
+
+/** @page mcRootData_doc
+    @section McParticle McParticle Documentation
+    Notes
+
+<table>
+<tr><th> Method <th> Return Type <th> Description <th>
+
+<tr><td> getParticleId
+<td>Int_t<td> Returns the particle identifier
+<tr><td> getParticleProperty
+<td>Int_t<td> Returns the status flags
+<tr><td> getStatusFlags
+<td>Int_t><td> Returns the status flags
+<tr><td> primaryParticle 
+<td>Bool_t<td> Returns flag denoting if this is a primary particle (true) or not (false)
+<tr><td> getProcess
+<td>std::string&<td> Returns the name of the process that produced this McParticle 
+<tr><td> getInitialPosition
+<td>const TVector3&<td> Returns the initial position
+<tr><td> getFinalPosition
+<td>const TVector3&<td> Returns the final position
+<tr><td> getInitialFourMomentum
+<td>const TLorentzVector&<td> Initial momentum
+<tr><td> getFinalFourMomentum
+<td>const TLorentzVector&<td> Final momentum
+<tr><td> getMother
+<td>const McParticle*<td> Returns pointer to the mother McParticle
+<tr><td> getDaughter(UInt_t index)
+<td>const McParticle*<td> Returns a pointer to the daughter McParticle identified by index
+<tr><td> getDaugtherList
+<td>const TRefArray&<td> Returns the full array of daughter particles
+
+</table>
+*/
+
+
+
+
 class McParticle: public TObject {
     
 public:

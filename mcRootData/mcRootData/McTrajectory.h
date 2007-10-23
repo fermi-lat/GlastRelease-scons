@@ -18,6 +18,25 @@
 * - A TVector with the position
 *  
 */
+
+
+/** @page mcRootData_doc
+    @section McTrajectoryPoint McTrajectoryPoint Documentation
+    Notes
+
+<table>
+<tr><th> Method <th> Return Type <th> Description <th>
+
+<tr><td> getVolumeID
+<td>VolumeIdentifier<td> Returns the volume identifier
+<tr><td> getEnergy
+<td>Float_t<td> Returns the energy at this  point 
+<tr><td> getPoint
+<td>TVector3<td> Returns the hit point 
+
+</table>
+*/
+
 class McTrajectoryPoint : public TObject
 {
 public:
