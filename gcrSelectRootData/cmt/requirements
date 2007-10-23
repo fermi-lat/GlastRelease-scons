@@ -1,5 +1,5 @@
 package gcrSelectRootData
-version v2r1
+version v2r1p1
 author Claudia Lavalley 
 # $Id$
 
@@ -15,6 +15,7 @@ apply_pattern root_package headers="\
   ../gcrSelectRootData/GcrSelectEvent.h\
   ../gcrSelectRootData/GcrSelectVals.h"\
  includes="-I$(COMMONROOTDATAROOT) "\
+ libs="libcommonRootData"\
  test_source="test/testGcrClasses.cxx"
 
 
