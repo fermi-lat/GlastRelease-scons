@@ -2,7 +2,7 @@ package ntupleWriterSvc
 version v3r17
 #$Id$
 author H. Kelly <heather@slac.stanford.edu>
-branches src mgr doc
+branches src doc
 
 use GlastPolicy v*
 use facilities v2r*
@@ -31,5 +31,3 @@ macro WinJobOptions  "" VisualC "test/jobOptions.txt"
 # build this for non-shareable testing
 set JOBOPTIONS  "${NTUPLEWRITERSVCROOT}/src/test/jobOptions.txt"
 application test_ntupleWriterSvc  ${GlastMain} test/writeJunkAlg.cxx $(WinJobOptions)  
-
-#application test_checkSum  test/testCheckSum.cxx checkSum.cxx
