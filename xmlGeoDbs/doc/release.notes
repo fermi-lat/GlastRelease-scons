@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r46   22-Oct-2007 jrb  Change defn of side tiles so they all start with
+                            thickness in Z; rotate into place
    v1r45p2  5-Sep-2007 jrb  Fix cut-and-paste errors in ribbon ids
    v1r45p1 22-Aug-2007 jrb  Shrink angled ribbons by sin(thickness)
    v1r45   22-Aug-2007 jrb  Shingled sides and ribbons to match
