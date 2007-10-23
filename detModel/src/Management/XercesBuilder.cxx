@@ -18,6 +18,7 @@
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -428,7 +429,8 @@ namespace detModel{
 
       if (tagName == "box") s->addVolume(buildBox(children[i]));
       else if (tagName == "tubs") s->addVolume(buildTube(children[i]));
-      else if (tagName == "sphere") s->addVolume(buildSphere(children[i]));      
+      else if (tagName == "sphere") s->addVolume(buildSphere(children[i]));
+      else if (tagName == "trap") s->addVolume(buildTrap(children[i]));
       else if (tagName == "choice") s->addVolume(buildChoice(children[i]));
       else if (tagName == "composition") {
         s->addVolume(buildComposition(children[i]));
@@ -562,6 +564,43 @@ namespace detModel{
     else t->setSensitive(0);
     return t;
   }
+
+  Trap* XercesBuilder::buildTrap(DOMElement* e)
+  {
+    using xmlBase::Dom;
+
+    Trap* t = new Trap(Dom::getAttribute(e, "name"));
+
+
+    try {
+      double attVal = Dom::getDoubleAttribute(e, "X1");
+      if (attVal != 0) t->setX1(attVal);
+      attVal = Dom::getDoubleAttribute(e, "X2");
+      if (attVal != 0) t->setX2(attVal);
+      attVal = Dom::getDoubleAttribute(e, "XDiff");
+      if (attVal != 0) t->setXDiff(attVal);
+
+      attVal = Dom::getDoubleAttribute(e, "Y");
+      if (attVal != 0) t->setY(attVal);
+      attVal = Dom::getDoubleAttribute(e, "Z");
+      if (attVal != 0) t->setZ(attVal);
+    }
+    catch (xmlBase::DomException ex) {
+      std::cerr << "From detModel::XercesBuilder::buildTrap" << std::endl
+                << ex.getMsg() << std::endl;
+      throw ex;
+    }
+
+    t->setMaterial(Dom::getAttribute(e, "material"));
+
+    std::string sensAtt = Dom::getAttribute(e, "sensitive");
+    if (sensAtt == "posHit") t->setSensitive(1);
+    else if (sensAtt == "intHit") t->setSensitive(2);
+    else t->setSensitive(0);
+    return t;
+  }
+
+
 
   Sphere* XercesBuilder::buildSphere(DOMElement* e)
   {

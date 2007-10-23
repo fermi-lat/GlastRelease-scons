@@ -6,6 +6,7 @@
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -88,6 +89,17 @@ namespace detModel{
     std::cout << "\t\t whose dimensions are   RIn: " 
 	      << tube->getRin() << "  ROut: " << tube->getRout() 
 	      << "  Z: " << tube->getZ() << std::endl;  
+    std::cout << "\t\t --------------------------------------------------------" << std::endl;
+  }
+
+  void  PrinterSectionsVisitor::visitTrap(Trap* trap)
+  {
+    std::cout << "\t\t Visiting the trap " << trap->getName() << std::endl;  
+    std::cout << "\t\t whose material is " << trap->getMaterial() << std::endl;  
+    std::cout << "\t\t whose dimensions are   X1: " 
+	      << trap->getX1() << "  X2: " << trap->getX2() << " XDiff "
+	      << trap->getXDiff() << "  Y: " << trap->getY() << " Z "
+	      << trap->getZ() << std::endl;  
     std::cout << "\t\t --------------------------------------------------------" << std::endl;
   }
 

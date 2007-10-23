@@ -8,6 +8,7 @@ namespace detModel{
   class Section;
   class Box;
   class Tube;
+  class Trap;
   class Sphere;
   class Ensemble;
   class PosXYZ;
@@ -43,7 +44,11 @@ namespace detModel{
      */
     virtual void visitTube(Tube*) = 0;
     /**
-     * This is the visitor for the Tube 
+     * This is the visitor for the Trap (trapezoidal solid) 
+     */
+    virtual void visitTrap(Trap*) = 0;
+    /**
+     * This is the visitor for the Sphere 
      */
     virtual void visitSphere(Sphere*) = 0;
     /**

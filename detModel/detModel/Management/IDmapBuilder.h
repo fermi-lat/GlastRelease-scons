@@ -42,6 +42,7 @@ namespace detModel{
     virtual void visitEnsemble(Ensemble*);
     virtual void visitBox(Box*);
     virtual void visitTube(Tube*);
+    virtual void visitTrap(Trap*);
     virtual void visitSphere(Sphere*);
     virtual void visitPosXYZ(PosXYZ*);
     virtual void visitAxisMPos(AxisMPos*);

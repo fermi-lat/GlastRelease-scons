@@ -11,6 +11,7 @@
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
@@ -208,6 +209,23 @@ namespace detModel{
     out << "   }" << std::endl;
     numVol++;
   }
+
+  // Approximate with a box; it's *so* much easier
+  void  VrmlSectionsVisitor::visitTrap(Trap* trap)
+  {
+    double x = 0.5 * (trap->getX1() + trap->getX2());
+
+    out << "Shape {   #" << trap->getName() << std::endl;
+    out << "appearance USE " << trap->getMaterial() << std::endl;
+    out << "  geometry Box { " << std::endl;
+    out << "                     size " 
+	<< x << " " << trap->getY() << " " << trap->getZ() << std::endl; 
+    out << "   }" << std::endl;
+    out << "] " << std::endl; 
+    out << "} " << std::endl;
+    numVol++;
+  }
+
 
   void  VrmlSectionsVisitor::visitTube(Tube* tube)
   {

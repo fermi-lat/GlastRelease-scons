@@ -13,6 +13,7 @@
 #include "detModel/Sections/Choice.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -126,6 +127,10 @@ namespace detModel{
   }
 
   void  IDmapBuilder::visitTube(Tube*)
+  {
+  }
+
+  void  IDmapBuilder::visitTrap(Trap*)
   {
   }
 
@@ -377,6 +382,15 @@ namespace detModel{
         params->push_back(tube->getZ());
         params->push_back(tube->getRin());
         params->push_back(tube->getRout());
+      }
+      else if (Trap* trap = dynamic_cast<Trap*>(volume) )
+      {
+        *s="trap";
+        params->push_back(trap->getX1());    // get all X-related params first
+        params->push_back(trap->getX2());
+        params->push_back(trap->getXDiff());
+        params->push_back(trap->getY());
+        params->push_back(trap->getZ());
       }
       else if (Sphere* sphere = dynamic_cast<Sphere*>(volume) )
       {

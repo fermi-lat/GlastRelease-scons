@@ -7,6 +7,7 @@
 #include "detModel/Sections/Section.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
@@ -106,6 +107,11 @@ namespace detModel{
   }
   
   void CountMaterial::visitTube(Tube* t)
+  {
+    m_matNumber[t->getMaterial()]++;
+  }
+
+  void CountMaterial::visitTrap(Trap* t)
   {
     m_matNumber[t->getMaterial()]++;
   }

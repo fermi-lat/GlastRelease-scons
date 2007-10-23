@@ -12,6 +12,7 @@ namespace detModel{
   class Section;
   class Box;
   class Tube;
+  class Trap;
   class Sphere;
   class Composition;
   class Position;
@@ -117,6 +118,10 @@ namespace detModel{
      * This method build a Tube object and return a pointer to it
      */
     Tube* buildTube(DOMElement* e);
+    /**
+     * This method builds a Trap object and return a pointer to it
+     */
+    Trap* buildTrap(DOMElement* e);
     /**
      * This method build a Sphere object and return a pointer to it
      */

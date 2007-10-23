@@ -49,9 +49,14 @@ namespace detModel{
     virtual void visitBox(Box*);
 
     /**
-     * This is the visitor for the Box 
+     * This is the visitor for the Tube
      */
     virtual void visitTube(Tube*);
+
+    /**
+     * This is the visitor for the Trap
+     */
+    virtual void visitTrap(Trap*);
 
     /** 
      * This is the visitor for the Sphere
