@@ -32,7 +32,6 @@
  The properties are listed in the following table:
 
  @param filename [RootTupleSvc.root]  The ROOT filename	
- @param checksumfilename [""]
  @param treename	[1] Default tree name to use if the "tupleName" argument is empty
  @param title	["Glast tuple"] Title for all TTree's
  @param defaultStoreFlag [false] Store the row at the end of an event loop cycle. If false, client must execute storeRowFlag(true) to save all trres in  the current event. Or, the client can execute storeRowFlag(treename, true) to save the specific tree.	false
@@ -45,10 +44,6 @@
  * @param RootTupleSvc.filename 
  * Default RootTupleSvc.root
  * Name of the output ROOT file that will contain the ROOT ntuple
- * @param RootTupleSvc.checksumfilename
- * Default empty string
- * Name of an output file to contain the checkSum data associated with this 
- * ntuple
  * @param RootTupleSvc.treename
  * Default "1"
  * Logical name of the ROOT TTree that will contain the ntuple data
