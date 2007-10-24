@@ -125,7 +125,7 @@
               zrot="90"
       >
         <idField name="fLATObjects" valueREF="eLATACD" />
-        <idField name="fACDFace" valueREF="eACDYNegFace" />
+        <idField name="fACDFace" valueREF="eACDXPosFace" />
         <idField name="fACDCmp" valueREF="eACDTile" />
         <idField name="fRow" value="0" />
       </posXYZ>
