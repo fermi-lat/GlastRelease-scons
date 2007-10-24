@@ -63,8 +63,7 @@
          (name, alg, step, instr) as preferred (or not)
         </comment>
     </col>
-<!--   This column is in the dbs, but unused by code.  No need to
-        make it accessible
+
     <col name="vote_fk" >
       <src null="true" >
         <from agent="enduser" />
@@ -77,7 +76,7 @@
       <fk tableName="Votes" keyCol="vote_key" />
       <comment>Refers to row in Votes describing intent of this Config</comment>
     </col>
--->
+
     <col name="mode" >
       <src null="false">
         <from agent="enduser" />
