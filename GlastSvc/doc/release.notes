@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ v9r23p1  24-Oct-2007  mk   fix code for random number seed based on run
  v9r23    18-Sep-2007  hmk  Add GlastHistorySvc which requires Gaudi's 
                             HistorySvc
  v9r22    10-Aug-2007  jrb  Add IGlastDetSvc::getNamedId 
