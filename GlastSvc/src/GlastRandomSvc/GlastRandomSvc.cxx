@@ -283,8 +283,9 @@ StatusCode GlastRandomSvc::initialize ()
     }
     // now initialize seeds to be unique for each run 
 
-    applySeeds(m_RunNumber,0);
-
+    log << MSG::DEBUG << "initialize(): calling applySeeds(" << m_RunNumber
+        << ", " << m_InitialSequenceNumber << ')' <<endreq;
+    applySeeds(m_RunNumber, m_InitialSequenceNumber);
 
     return StatusCode::SUCCESS;
 }
@@ -302,7 +303,7 @@ void GlastRandomSvc::handle(const Incident &inc)
 
     MsgStream log( msgSvc(), name() );
 
-    if( inc.type()=="BeginEvent" && m_autoSeed) {
+    if( inc.type()=="BeginEvent" ) {
 
         // See if MCEvent was set up properly
         SmartDataPtr<Event::MCEvent> mcevt(m_eventSvc, EventModel::MC::Event);
@@ -330,10 +331,15 @@ void GlastRandomSvc::handle(const Incident &inc)
             return;
         }    
 
+        // fill header with run number and event id
         header->setRun(runNo);
         header->setEvent(seqNo);
 
-        applySeeds(runNo, seqNo);
+        if ( m_autoSeed ) {
+            log << MSG::DEBUG << "handle(): calling applySeeds(" << runNo
+                << ", " << seqNo << ')' << endreq;
+            applySeeds(runNo, seqNo);
+        }
 
     }
 
