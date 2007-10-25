@@ -1385,11 +1385,43 @@ namespace MOOT {
 
     if (res) delete res;
   }
-  bool MootQuery::voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* pk) {
+
+  bool MootQuery::voteExists(unsigned voteKey, bool goodStatus) {
+    std::string voteKeyStr;
+    facilities::Util::utoa(voteKey, voteKeyStr);
+    return voteExists(voteKey, goodStatus);
+  }
+
+  bool MootQuery::voteExists(const std::string& voteKeyStr, bool goodStatus) {
+
+    std::string voteStatus;
+    try {
+      voteStatus = 
+        DbUtil::getColumnValue(m_rdb, "Votes", "status", "vote_key", 
+                               voteKeyStr); 
+    }
+    catch (DbUtilNoDataException ex) {
+      std::cerr << "MootQuery::voteExists:  " << voteKeyStr 
+                << " is not the key of a valid registered vote" << std::endl;
+      return false;
+    }
+    if (goodStatus) {  // status must be "CREATED"
+      if (voteStatus != std::string("CREATED") ) {
+        std::cerr << "MootQuery::voteIsContainer:  " << voteKeyStr 
+                  << " is not the key of a valid registered vote" << std::endl;
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool MootQuery::voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* pk,
+                                 bool* isCtn) {
+
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
 
-    return voteIsUpToDate(voteKeyStr, pk);
+    return voteIsUpToDate(voteKeyStr, pk, isCtn);
   }
 
   /**
@@ -1413,25 +1445,16 @@ namespace MOOT {
              parameter files (one per class) associated with the vote.
    */
   bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr,
-                                 std::vector<unsigned>* pk) {
+                                 std::vector<unsigned>* pk, bool* isCtn) {
 
     // First be sure vote is registered and valid
-    std::string voteStatus;
-    try {
-      voteStatus = 
-        DbUtil::getColumnValue(m_rdb, "Votes", "status", "vote_key", 
-                               voteKeyStr); 
-    }
-    catch (DbUtilNoDataException ex) {
+    bool isContainer;
+    if (!voteExists(voteKeyStr, &isContainer) ) {
       std::cerr << "MootQuery::voteIsUpToDate:  " << voteKeyStr 
                 << " is not the key of a valid registered vote" << std::endl;
       return false;
     }
-    if (voteStatus != std::string("CREATED") ) {
-      std::cerr << "MootQuery::voteIsUpToDate:  " << voteKeyStr 
-                << " is not the key of a valid registered vote" << std::endl;
-      return false;
-    }
+
     if (pk) pk->clear();
 
     // First find out whether we're dealing with a container or not
@@ -1441,6 +1464,8 @@ namespace MOOT {
     unsigned nContained = 
       DbUtil::getKeys(precinctKeys, m_rdb, "Container_Precinct",
                       "precinct_fk", where);
+    if (isCtn) *isCtn = (nContained > 0);   // inform caller 
+
     if (nContained) {
       std::vector<std::string> innerKeys;
       std::vector<unsigned> parmKeys;
