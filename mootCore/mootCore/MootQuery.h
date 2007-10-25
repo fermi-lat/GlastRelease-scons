@@ -300,11 +300,22 @@ namespace MOOT {
     unsigned resolveVoteAlias(const std::string& alias,
                               const std::string& precinct);
 
+    /**
+       Return false if
+          - voteKey doesn't exist in db
+          - voteKey does exist, but @arg goodStatus was true and 
+            vote did not have status "CREATED"
+    */
+    bool voteExists(unsigned voteKey, bool goodStatus=true);
+
     /// The "vote" referred to may concern a single precinct or may
     /// be container file, referring to several individual precinct files.
-    /// If optional arg. is supplied and vote is up to date, return
-    /// parm keys associated with the vote
-    bool voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* parmKeys=0);
+    /// If optional arg. is supplied and vote is up to date return
+    /// parm keys associated with the vote.
+    /// If isCtn is non-zero, inform caller whether or not vote was container
+
+    bool voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* parmKeys=0,
+                        bool* isCtn=0);
 
   private:
     /*
@@ -338,10 +349,21 @@ namespace MOOT {
     /// for use of getParmsFromInput
     void updateParmClassCache(); 
 
-    bool voteIsUpToDate(const std::string& voteKeyStr, 
-                        std::vector<unsigned>* pk=0);
+    /**
+       Return false if
+          - voteKeyStr doesn't refer to vote in db
+          - voteKey does exist, but @arg goodStatus was true and 
+            vote did not have status "CREATED"
+     */
+    bool voteExists(const std::string& voteKeyStr, bool goodStatus=true);
 
-    bool containerIsUpToDate(const std::string& voteKeyStr);
+
+    bool voteIsUpToDate(const std::string& voteKeyStr, 
+                        std::vector<unsigned>* pk=0, bool* isCtn=0);
+
+
+    // Following doesn't seem to be implemented anywhere
+    //    bool containerIsUpToDate(const std::string& voteKeyStr);
 
     rdbModel::Rdb* m_rdb;
     MoodConnection* m_mood;

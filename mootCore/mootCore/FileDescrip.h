@@ -109,6 +109,10 @@ namespace MOOT {
     std::string getKey() const {return m_key;}
     std::string getMode() const {return m_mode;}
     std::string getCreationTime() const {return m_creationTime;}
+    void clear() {
+      m_key = m_name = m_alg = m_step = m_descrip = m_status = m_active 
+        = m_mode = m_creationTime = std::string("");
+    }
   private:
     std::string m_key;
     std::string m_name;
