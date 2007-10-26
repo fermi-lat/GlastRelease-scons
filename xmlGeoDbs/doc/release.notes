@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r46p2 25-Oct-2007 jrb  Put side tiles on faces 1 and 4 in the correct order
    v1r46p1 23-Oct-2007 jrb  Fix a couple typos
    v1r46   22-Oct-2007 jrb  Change defn of side tiles so they all start with
                             thickness in Z; rotate into place
