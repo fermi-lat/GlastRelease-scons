@@ -1190,7 +1190,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      Side 4 rotated +90 about Z is isomorphic to side 1. -->
 
 <stackX name="sideTileRow0Face41" >
-  <axisPos volume="sideTileR0EdgeGreater">
+  <axisPos volume="sideTileR0EdgeLesser">
     <idField name="fCol" value="4" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
@@ -1206,14 +1206,14 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
     <idField name="fCol" value="1" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
-  <axisPos volume="sideTileR0EdgeLesser" gapREF="sideHorizontalGap" >
+  <axisPos volume="sideTileR0EdgeGreater" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="0" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
 </stackX>
 
 <stackX name="sideTileRow1Face41" >
-  <axisPos volume="sideTileR1EdgeGreater">
+  <axisPos volume="sideTileR1EdgeLesser">
     <idField name="fCol" value="4" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
@@ -1229,7 +1229,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
     <idField name="fCol" value="1" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
-  <axisPos volume="sideTileR1EdgeLesser" gapREF="sideHorizontalGap" >
+  <axisPos volume="sideTileR1EdgeGreater" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="0" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
@@ -1237,7 +1237,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 
 <stackX name="sideTileRow2Face41" >
-  <axisPos volume="sideTileR2EdgeGreater">
+  <axisPos volume="sideTileR2EdgeLesser">
     <idField name="fCol" value="4" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
@@ -1253,7 +1253,7 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
     <idField name="fCol" value="1" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
-  <axisPos volume="sideTileR2EdgeLesser" gapREF="sideHorizontalGap" >
+  <axisPos volume="sideTileR2EdgeGreater" gapREF="sideHorizontalGap" >
     <idField name="fCol" value="0" />
     <idField name="fTileSeg" value="0" />
   </axisPos>
