@@ -16,7 +16,7 @@
 * \brief Represent energy deposited (or charge) per Si Strip
 *
 *  Intermediate class for TkrDigi process.
-*/
+
 
 
 <table>
@@ -34,6 +34,7 @@
 <td>Double_t<td> Returns energy associated with PRIMARY, ELECTRON or POSITRON
 
 </table>
+*/
 
 class McTkrStrip : public TObject
 {   
