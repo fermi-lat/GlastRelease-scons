@@ -922,17 +922,17 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
-
-<!--  will become     XREF="sideTileR1TransLesserOp"   -->
 <!-- 3 boxes for side row 1 -->
-
-<box name="sideTileR1EdgeLesser" 
-     XREF="sideTileR1TransLesserOp"
+<trap name="sideTileR1EdgeLesser" 
+     X1REF="sideTileR1TransBotLesserOp"
+     X2REF="sideTileR1TransTopLesserOp"
+     XDiffREF="sideTileR1XDiffLesserOp"
      YREF="sideTileHeight1Op"
      ZREF="tileThicknessOp"
      materialREF="tileMat"
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
+
 
 <box name="sideTileR1Mid" 
      XREF="sideTileTransMidOp"
@@ -942,8 +942,10 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
-<box name="sideTileR1EdgeGreater" 
-     XREF="sideTileR1TransGreaterOp"
+<trap name="sideTileR1EdgeGreater" 
+     X1REF="sideTileR1TransBotGreaterOp"
+     X2REF="sideTileR1TransTopGreaterOp"
+     XDiffREF="sideTileR1XDiffGreaterOp"
      YREF="sideTileHeight1Op"
      ZREF="tileThicknessOp"
      materialREF="tileMat"
@@ -952,9 +954,10 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 
 <!--       side row 2 -->
-
-<box name="sideTileR2EdgeLesser" 
-     XREF="sideTileR2TransLesserOp"
+<trap name="sideTileR2EdgeLesser" 
+     X1REF="sideTileR2TransBotLesserOp"
+     X2REF="sideTileR2TransTopLesserOp"
+     XDiffREF="sideTileR2XDiffLesserOp"
      YREF="sideTileHeight2Op"
      ZREF="tileThicknessOp"
      materialREF="tileMat"
@@ -969,8 +972,10 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
      sensitive="posHit" 
      detectorTypeREF="eDTypeACDTile"/>
 
-<box name="sideTileR2EdgeGreater" 
-     XREF="sideTileR2TransGreaterOp"
+<trap name="sideTileR2EdgeGreater" 
+     X1REF="sideTileR2TransBotGreaterOp"
+     X2REF="sideTileR2TransTopGreaterOp"
+     XDiffREF="sideTileR2XDiffGreaterOp"
      YREF="sideTileHeight2Op"
      ZREF="tileThicknessOp"
      materialREF="tileMat"

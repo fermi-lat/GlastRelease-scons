@@ -112,27 +112,46 @@ good for checking for overlaps</prim>
 -->
 
 <!-- Dimensions across X (or Y) of leftmost and rightmost 
-     tiles in rows 1 and 2.  In reality these tiles are not boxes; they
-     have a trapezoidal face.  Use smallest dimension (bottom edge) to
-     make a box for now 
+     tiles in rows 1 and 2. Faces are trapezoids: top length is 
+     greater than bottom
 -->
-<prim name="sideTileR1TransGreater" value="342.306">Transverse dimension
+
+<prim name="sideTileR1TransBotGreater" value="342.306">Bottom transverse 
+  dimension of one edge side tile per side in Row 1, the rightmost one 
+  as viewed  from outside the LAT: column 0 for -X and +Y faces
+  (faces 1 and 4); column 4 for the others.</prim>
+
+<prim name="sideTileR1TransTopGreater" value="356.928">Top transverse dimension
   of one edge side tile per side in Row 1, the rightmost one as viewed
   from outside the LAT: column 0 for -X and +Y faces
   (faces 1 and 4); column 4 for the others.</prim>
 
-<prim name="sideTileR2TransGreater" value="344.433">Transverse dimension
-  of one edge side tile per side in Row 1, the rightmost one as viewed
+<prim name="sideTileR2TransBotGreater" value="344.883">Bottom transverse 
+  dimension  of one edge side tile per side in Row 2, the rightmost one 
+  as viewed  from outside the LAT: column 0 for -X and +Y faces
+  (faces 1 and 4); column 4 for the others.</prim>
+
+<prim name="sideTileR2TransTopGreater" value="356.234">Top transverse dimension
+  of one edge side tile per side in Row 2, the rightmost one as viewed
   from outside the LAT: column 0 for -X and +Y faces
   (faces 1 and 4); column 4 for the others.</prim>
 
+<prim name="sideTileR1TransBotLesser" value="329.316">Transverse bottom
+  dimension  of one edge side tile per side in Row 1, the leftmost one 
+  as viewed from outside the LAT: column 4 for -X and +Y faces
+  (faces 1 and 4); column 0 for the others.</prim>
 
-<prim name="sideTileR1TransLesser" value="329.316">Transverse dimension
+<prim name="sideTileR1TransTopLesser" value="343.938">Top transverse dimension
   of one edge side tile per side in Row 1, the leftmost one as viewed
   from outside the LAT: column 4 for -X and +Y faces
   (faces 1 and 4); column 0 for the others.</prim>
 
-<prim name="sideTileR2TransLesser" value="331.894">Transverse dimension
+<prim name="sideTileR2TransBotLesser" value="331.894">Bottom transverse
+  dimension of one edge side tile per side in Row 2, the leftmost one as
+  viewed from outside the LAT: column 4 for -X and +Y faces
+  (faces 1 and 4); column 0 for the others.</prim>
+
+<prim name="sideTileR2TransTopLesser" value="343.245">Top transverse dimension
   of one edge side tile per side in Row 2, the leftmost one as viewed
   from outside the LAT: column 4 for -X and +Y faces
   (faces 1 and 4); column 0 for the others.</prim>

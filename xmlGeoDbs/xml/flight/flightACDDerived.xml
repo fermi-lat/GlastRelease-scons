@@ -128,53 +128,7 @@
   </const>
 
 
-  <const name="ACDTotalR1TransSide" >
-    <notes>transverse length of collection of ACD side tiles,
-        e.g those alone -X side of instrument.
-         Compute as sum of tranverse
-        dimensions of tiles in R1, columns 0-5, plus gaps</notes>
-    <add>
-      <refer refTo="sideTileR1TransLesser" />
-      <refer refTo="sideTileR1TransGreater" />
-      <refer refTo="sideTileTransMid" />
-      <refer refTo="sideTileTransMid" />
-      <refer refTo="sideTileTransMid" />
-      <mul>
-        <const value="4" uType="count" />
-        <refer refTo="sideHorizontalGap" />
-      </mul>
-    </add>
-  </const>
-
-  <const name="ACDTotalR2TransSide" >
-    <notes>transverse length of collection of ACD side tiles,
-        e.g those alone -X side of instrument.
-         Compute as sum of tranverse
-        dimensions of tiles in R1, columns 0-5, plus gaps</notes>
-    <add>
-      <refer refTo="sideTileR2TransLesser" />
-      <refer refTo="sideTileR2TransGreater" />
-      <refer refTo="sideTileTransMid" />
-      <refer refTo="sideTileTransMid" />
-      <refer refTo="sideTileTransMid" />
-      <mul>
-        <const value="4" uType="count" />
-        <refer refTo="sideHorizontalGap" />
-      </mul>
-    </add>
-  </const>
-
-
-<!-- Scaled versions  for operating temp. -->
-  <const name="ACDTotalR0TransSideOp">
-    <notes>Scaled for operating temperature 
-    </notes>
-    <mul>
-      <refer refTo="ACDTotalR0TransSide" />
-      <refer refTo="ACDTileScale" />
-    </mul>
-  </const>
-
+<!-- Scaled version  for operating temp. -->
 
   <const name="sideTileR3TransOp">
     <notes>Scaled for operating temperature 
@@ -424,23 +378,68 @@
     </mul>
   </const>
 
-  <const name="sideTileR1TransLesserOp">
+  <const name="sideTileR1TransBotLesserOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="sideTileR1TransLesser" />
+      <refer refTo="sideTileR1TransBotLesser" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
 
-  <const name="sideTileR2TransLesserOp">
+  <const name="sideTileR1TransTopLesserOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="sideTileR2TransLesser" />
+      <refer refTo="sideTileR1TransTopLesser" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
+
+  <const name="sideTileR1XDiffLesserOp" >
+    <notes>Compute difference: x-coord of center of top edge - same for bot,
+           scaled by operating temperature.  For lesser tile, right
+           edge is straight, left (outer) edge slants like this: \ 
+           so diff is negative</notes>
+    <half>
+      <minus>
+        <refer refTo="sideTileR1TransBotLesserOp" /> 
+        <refer refTo="sideTileR1TransTopLesserOp" /> 
+      </minus>
+    </half>
+  </const>     
+
+  <const name="sideTileR2TransBotLesserOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR2TransBotLesser" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+
+  <const name="sideTileR2TransTopLesserOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR2TransTopLesser" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+  <const name="sideTileR2XDiffLesserOp" >
+    <notes>Compute difference: x-coord of center of top edge - same for bot,
+           scaled by operating temperature.  For lesser tile, right
+           edge is straight, left (outer) edge slants like this: \ 
+            so diff is negative</notes>
+    <half>
+      <minus>
+        <refer refTo="sideTileR2TransBotLesserOp" /> 
+        <refer refTo="sideTileR2TransTopLesserOp" /> 
+      </minus>
+    </half>
+  </const>     
 
   <const name="sideTileR0TransGreaterOp">
     <notes>Scaled for operating temperature 
@@ -451,24 +450,68 @@
     </mul>
   </const>
 
-  <const name="sideTileR1TransGreaterOp">
+  <const name="sideTileR1TransBotGreaterOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="sideTileR1TransGreater" />
+      <refer refTo="sideTileR1TransBotGreater" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
 
-  <const name="sideTileR2TransGreaterOp">
+  <const name="sideTileR1TransTopGreaterOp">
     <notes>Scaled for operating temperature 
     </notes>
     <mul>
-      <refer refTo="sideTileR2TransGreater" />
+      <refer refTo="sideTileR1TransTopGreater" />
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
 
+  <const name="sideTileR1XDiffGreaterOp" >
+    <notes>Compute difference: x-coord of center of top edge - same for bot,
+           scaled by operating temperature.  For greaterer tile, left
+           edge is straight, right (outer) edge slants like this: /
+           so diff is positive </notes>
+    <half>
+      <minus>
+        <refer refTo="sideTileR1TransTopGreaterOp" /> 
+        <refer refTo="sideTileR1TransBotGreaterOp" /> 
+      </minus>
+    </half>
+  </const>     
+
+  <const name="sideTileR2TransBotGreaterOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR2TransBotGreater" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+  <const name="sideTileR2TransTopGreaterOp">
+    <notes>Scaled for operating temperature 
+    </notes>
+    <mul>
+      <refer refTo="sideTileR2TransTopGreater" />
+      <refer refTo="ACDTileScale" />
+    </mul>
+  </const>
+
+
+  <const name="sideTileR2XDiffGreaterOp" >
+    <notes>Compute difference: x-coord of center of top edge - same for bot,
+           scaled by operating temperature.  For greaterer tile, left
+           edge is straight, right (outer) edge slants like this: /
+           so diff is positive </notes>
+    <half>
+      <minus>
+        <refer refTo="sideTileR2TransTopGreaterOp" /> 
+        <refer refTo="sideTileR2TransBotGreaterOp" /> 
+      </minus>
+    </half>
+  </const>     
 
   <const name="sideTileTransMidOp">
     <notes>Scaled for operating temperature 
