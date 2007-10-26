@@ -39,6 +39,17 @@ namespace AcdFrameUtil {
     corner[3] = center + xVector - yVector;
   }
 
+  void getCornersTrap(const HepPoint3D &center, const HepVector3D& x1Vector, const HepVector3D& x2Vector,
+		      const HepVector3D& yVector,  HepPoint3D *corner) {    
+    // The corners are returned in order (-,-), (-,+), (+,+), (+,-)
+    // a.k.a.   clockwise starting from (-,-) corner
+    corner[0] = center - x2Vector - yVector;
+    corner[1] = center - x1Vector + yVector;
+    corner[2] = center + x1Vector + yVector;
+    corner[3] = center + x2Vector - yVector;
+  }
+  
+
   void transformDimensionVector(AcdReferenceFrame type,
 				const std::vector<double>& inGeant,
 				std::vector<double>& inLocal) {
@@ -50,6 +61,25 @@ namespace AcdFrameUtil {
     inLocal.push_back(fabs(vOut.x()));
     inLocal.push_back(fabs(vOut.y()));
     inLocal.push_back(fabs(vOut.z()));    
+  }
+
+  // Convert the dimension vector from the way it is expressed in GEANT frame
+  // into the LOCAL frame
+  void transformDimensionVectorTrap(AcdReferenceFrame type, 
+				    const std::vector<double>& inGeant, 
+				    std::vector<double>& inLocal) {
+    // Convert the dimension vector from the way it is expressed in GEANT frame
+    // into the LOCAL frame
+    const HepGeom::Transform3D& r = getRotationToLocal(type);
+
+    inLocal.resize(5);
+    // Order is X1, X2, X_diff, Y, Z
+    inLocal[0] = (r.xx() * inGeant[0]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[3]);
+    inLocal[1] = (r.xx() * inGeant[1]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[3]);
+    inLocal[2] = (r.xx() * inGeant[2]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[3]);
+    inLocal[3] = (r.yx() * inGeant[0]) + (r.yy() * inGeant[3]) + (r.yz() * inGeant[3]);
+    inLocal[4] = (r.zx() * inGeant[0]) + (r.zy() * inGeant[3]) + (r.zz() * inGeant[3]);
+  
   }
 
   // Get the mid point between two points

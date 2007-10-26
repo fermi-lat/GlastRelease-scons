@@ -70,11 +70,25 @@ namespace AcdFrameUtil {
   void getCornersSquare(const HepPoint3D &center, const HepVector3D& xVector, const HepVector3D& yVector,
 			HepPoint3D *corner);
 
+  // Return the corners in GLOBAL frame
+  // given vectors along the local X and Y axes, expressed in GLOBAL frame
+  // Order is (-,-),(-,+),(+,+),(+,-) 
+  // a.k.a.   clockwise starting from (-,-) corner  
+  void getCornersTrap(const HepPoint3D &center, const HepVector3D& x1Vector, const HepVector3D& x2Vector,
+		      const HepVector3D& yVector,  HepPoint3D *corner);
+
   // Convert the dimension vector from the way it is expressed in GEANT frame
   // into the LOCAL frame
   void transformDimensionVector(AcdReferenceFrame type, 
 				const std::vector<double>& inGeant, 
 				std::vector<double>& inLocal);
+
+  // Convert the dimension vector from the way it is expressed in GEANT frame
+  // into the LOCAL frame
+  void transformDimensionVectorTrap(AcdReferenceFrame type, 
+				    const std::vector<double>& inGeant, 
+				    std::vector<double>& inLocal);
+
 
   // Get the mid point between two points
   void getMidpoint(const HepPoint3D &p1, const HepPoint3D& p2, HepPoint3D& mid);

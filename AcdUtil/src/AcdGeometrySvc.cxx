@@ -609,10 +609,12 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   bool bent = iVol==1 ? true : false;
   const idents::VolumeIdentifier volId = ncid.volId(bent);
 
-  HepVector3D xVectorGlobal;
+  HepVector3D x1VectorGlobal;
+  HepVector3D x2VectorGlobal;
   HepVector3D yVectorGlobal;
   
-  StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,yVectorGlobal);  
+  StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,
+					      x1VectorGlobal,x2VectorGlobal,yVectorGlobal);  
 
   if ( sc.isFailure() ) {        
     log << MSG::ERROR << "Failed to handle transformations for tile volume: " 
@@ -620,7 +622,11 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
     return sc;
   } 
 
-  AcdFrameUtil::getCornersSquare(center,xVectorGlobal,yVectorGlobal,corner);
+  if ( dim.size() == 3 ) {
+    AcdFrameUtil::getCornersSquare(center,x1VectorGlobal,yVectorGlobal,corner);
+  } else {
+    AcdFrameUtil::getCornersTrap(center,x1VectorGlobal,x2VectorGlobal,yVectorGlobal,corner);
+  }
   return true;
 }
 
@@ -739,7 +745,8 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
 						       std::vector<double>& dim,
 						       HepGeom::Transform3D& transformToLocal,
 						       HepPoint3D& center,
-						       HepVector3D& xVectorGlobal,
+						       HepVector3D& x1VectorGlobal,
+						       HepVector3D& x2VectorGlobal,
 						       HepVector3D& yVectorGlobal) const {
 
   MsgStream  log( msgSvc(), name() );
@@ -767,7 +774,11 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   }
 
   // Make the dimension vector in the local frame;
-  AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
+  if ( dim.size() == 3 ) {
+    AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
+  } else {
+    AcdFrameUtil::transformDimensionVectorTrap(frameId,globalDim,dim);
+  }
 
   // Get the transform from GEANT frame to the GLOBAL frame.  
   // Note that this includes the translation and is expressed in the global frame   
@@ -799,11 +810,21 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   // This is just here as a sanity check should be identity
   //HepGeom::Transform3D check = transformToLocal * transformToGlobal;
 
-  // Make the half-vectors (center to edge of volume)
-  const HepVector3D xVectorLocal(dim[0]/2.,0.,0.);
-  const HepVector3D yVectorLocal(0.,dim[1]/2.,0.);
-  xVectorGlobal = transformToGlobal* xVectorLocal;
+  // Make the half-vectors (center to edge of volume)  
+  double yHalfLength = dim[1]/2;
+  double xOffsetY = dim.size() == 3 ? 0. : dim[2]/2.;
+  double xHalfLength = dim[0];
+  
+  const HepVector3D x1VectorLocal(xHalfLength,0.,0.);
+  x1VectorGlobal = transformToGlobal* x1VectorLocal;
+
+  const HepVector3D yVectorLocal(xOffsetY,yHalfLength,0.);
   yVectorGlobal = transformToGlobal* yVectorLocal;
+
+  if ( dim.size() > 3 ) {
+    const HepVector3D x2VectorLocal(dim[1]/2,0.,0.);
+    x2VectorGlobal = transformToGlobal* x2VectorLocal;
+  }
 
   // done, return
   return sc;

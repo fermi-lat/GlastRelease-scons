@@ -51,6 +51,18 @@ StatusCode AcdTileDim::getVals() {
   isOk = m_acdGeomSvc.fillTileSharedEdgeData(m_acdId,m_dim[0],m_dim[1],
 					     m_shared[0],m_shared[1],m_sharedWidth[0],m_sharedWidth[1]);
   if ( ! isOk ) return StatusCode::FAILURE;
+
+  if ( m_dim[0].size() == 5 ) {
+    m_trapezoid = true;
+    m_xmean = m_dim[0][0] + m_dim[0][1];
+    m_xmean /= 2.;
+    m_xdiff = m_dim[0][0] - m_dim[0][1];
+  } else {
+    m_trapezoid = false;
+    m_xmean = 0.;
+    m_xdiff = 0.;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -61,10 +73,19 @@ StatusCode AcdTileDim::toLocalCoords(const AcdTileDim& /* dim */,
   return StatusCode::SUCCESS;
 }
 
+
+double AcdTileDim::widthAtLocalY(int iVol, double localY) const {
+  if ( m_trapezoid ) {
+    return m_xmean + m_xdiff * ( localY / m_dim[iVol][1] );
+  } 
+  return m_dim[iVol][0];
+}
+
+
 void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& activeX, double& activeY) const {
 
   
-  activeX = (dim(iVol)[0]/2.) - fabs(localPoint.x());
+  activeX = (widthAtLocalY(iVol,localPoint.y())/2.) - fabs(localPoint.x()); 
   activeY = (dim(iVol)[1]/2.) - fabs(localPoint.y());
 
   if ( nVol() == 2 ) {

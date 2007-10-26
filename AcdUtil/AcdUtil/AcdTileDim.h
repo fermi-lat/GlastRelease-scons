@@ -91,6 +91,8 @@ public:
     return m_screwHoles;
   }
 
+  double widthAtLocalY(int iVol, double localY) const;
+
   void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0) const;
 
   void activeDistance(const HepPoint3D& localPoint, int iVol, double& activeX, double& activeY) const;
@@ -118,6 +120,11 @@ private:
   /// The number of volumes in this tile
   int                       m_nVol;
   
+  /// Is this tile a trapezoid
+  bool                      m_trapezoid;
+  double                    m_xmean;
+  double                    m_xdiff;
+
   /// the tile dimensions
   std::vector<double>       m_dim[2];
 

@@ -129,7 +129,8 @@ protected:
 					   std::vector<double>& dim,
 					   HepGeom::Transform3D& transform,
 					   HepPoint3D& center,
-					   HepVector3D& xVectorGlobal,
+					   HepVector3D& x1VectorGlobal,
+					   HepVector3D& x2VectorGlobal,
 					   HepVector3D& yVectorGlobal) const;
 			    
 
