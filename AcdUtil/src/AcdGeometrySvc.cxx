@@ -261,6 +261,7 @@ StatusCode AcdGeometrySvc::getDimensions(
 }
 
 
+
 const Ray AcdGeometrySvc::getCornerGapRay(unsigned int index) const {
     if (index > 4) {
         MsgStream  log( msgSvc(), name() );
@@ -495,16 +496,10 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
       HepGeom::Transform3D transformToLocal;
       HepPoint3D center;
       HepVector3D xVectorGlobal;
-      HepVector3D xDummy;
+      HepVector3D xVectorDummy;
       HepVector3D yVectorGlobal;
-<<<<<<< AcdGeometrySvc.cxx
-
-      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,
-                                                  xVectorGlobal, xDummy, yVectorGlobal);
-=======
       
-      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,xDummy,yVectorGlobal);
->>>>>>> 1.21
+      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,xVectorDummy, yVectorGlobal);
 
       if ( sc.isFailure() ) {        
 	log << MSG::ERROR << "Failed to handle transformations for ribbon volume: " 
