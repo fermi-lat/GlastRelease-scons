@@ -16,6 +16,7 @@
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Ensemble.h"
@@ -134,6 +135,28 @@ void  GeometryVisitor::visitTube(detModel::Tube* t)
   m_params.clear();
   m_idvec.clear();
 }
+
+void  GeometryVisitor::visitTrap(detModel::Trap* t)
+{
+  IGeometry::VolumeType type = IGeometry::Simple;
+  IGeometry::SenseType sense;
+  m_params.push_back(t->getX1());
+  m_params.push_back(t->getX2());
+  m_params.push_back(t->getXDiff());
+  m_params.push_back(t->getY());
+  m_params.push_back(t->getZ());
+  if (t->getSensitive() == 0) sense = IGeometry::Nonsensitive;
+  else if (t->getSensitive() == 1) sense = IGeometry::posSensitive;
+  else sense = IGeometry::intSensitive;
+  // No possibility of subtree here so can ignore return
+  IGeometry::VisitorRet vRet =
+    m_geom.pushShape(IGeometry::Trap, m_idvec, t->getName(), t->getMaterial(),
+                     m_params, type, sense);
+  m_params.clear();
+  m_idvec.clear();
+}
+
+
 
 void  GeometryVisitor::visitSphere(detModel::Sphere* s)
 {
