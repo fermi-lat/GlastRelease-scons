@@ -515,9 +515,10 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
       HepGeom::Transform3D transformToLocal;
       HepPoint3D center;
       HepVector3D xVectorGlobal;
+      HepVector3D xDummy;
       HepVector3D yVectorGlobal;
       
-      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,yVectorGlobal);
+      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,xDummy,yVectorGlobal);
 
       if ( sc.isFailure() ) {        
 	log << MSG::ERROR << "Failed to handle transformations for ribbon volume: " 
