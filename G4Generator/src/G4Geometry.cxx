@@ -20,6 +20,7 @@
 #include "G4VSolid.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4Trap.hh"
 #include "G4Sphere.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
@@ -37,11 +38,11 @@
 #include "LocalMagneticFieldDes.h"
 
 // for the display
-#include "gui/GuiMgr.h"
-#include "gui/DisplayControl.h"
-#include "gui/DisplayRep.h"
-#include "geomrep/TubeRep.h"
-#include "geomrep/BoxRep.h"
+//#include "gui/GuiMgr.h"
+//#include "gui/DisplayControl.h"
+//#include "gui/DisplayRep.h"
+//#include "geomrep/TubeRep.h"
+//#include "geomrep/BoxRep.h"
 #include <iomanip>
 #include <cassert>
 
@@ -59,7 +60,7 @@ G4Geometry::~G4Geometry()
 IGeometry::VisitorRet 
 G4Geometry::pushShape(ShapeType s, const UintVector& idvec, 
                       std::string name, std::string material, 
-                      const DoubleVector& params, VolumeType type,
+                      const DoubleVector& params, VolumeType /* type */,
                       SenseType sense)
 {
   // Purpose and Method: this method push a new volume in the stack of volumes
@@ -86,7 +87,7 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
       if (!ptMaterial) ptMaterial = G4Material::GetMaterial("Vacuum");
     
       // Build a box or a tube
-      if( s==Box) {
+      if (s==Box) {
         double dx=params[6], dy=params[7], dz=params[8];
         // if there is no actualMother, it means this is the world volume
         // we use at the moment a box of 60m*60m*60m
@@ -96,14 +97,14 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
                           dx*mm/2,
                           dy*mm/2,
                           dz*mm/2);    
-      }else if(s==Tube) {
+      } else if (s==Tube) {
         double dz=params[6], rmin=params[7], rmax=params[8];
         shape = new G4Tubs(name,
                            rmin*mm,
                            rmax*mm,
                            dz*mm*0.5,
                            0,2*M_PI);
-      }else if(s==Sphere) {
+      } else if (s==Sphere) {
         double rmin=params[6], rmax=params[7], phimin=params[8], phimax=params[9],
                thetamin=params[10], thetamax=params[11];
         shape = new G4Sphere(name,
@@ -111,6 +112,22 @@ G4Geometry::pushShape(ShapeType s, const UintVector& idvec,
                              rmax*mm,
                              phimin, phimax,
                              thetamin, thetamax);
+      } else if (s==Trap) {
+        // See doc. of G4Trap
+        // Note our trap. solids always have congruent trapezoidal faces
+        // whose centers are aligned in X and Y
+        double pTheta = 0.0; double pPhi = 0;
+        double pDx1 = 0.5 * params[6];   // [6] = X1 = bottom edge of trap
+        double pDx2 = 0.5 * params[7];   // [7] = X2 = top edge of trap
+        double pDy1 = 0.5 * params[9];   // [9] = Y = height of trap
+        double pDz = 0.5 * params[10];   // [10] = Z = thickness
+
+        // pAlp1 is angle w.r.t.  y-axis of line drawn from center of
+        // top to center of bottom. params[8] is diff in x between centers.
+        double pAlp1 = atan(params[8]/params[9]);
+        shape = new G4Trap(name, pDz, pTheta, pPhi, 
+                           pDy1, pDx1, pDx2, pAlp1,
+                           pDy1, pDx1, pDx2, pAlp1);
       }
       
       // put the logical in the m_logicals vector

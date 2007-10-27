@@ -14,14 +14,14 @@
 
 // geant4 include files
 #include "G4Material.hh"
-#include "G4Box.hh"
-#include "G4Tubs.hh"
-#include "G4Sphere.hh"
-#include "G4LogicalVolume.hh"
+// #include "G4Box.hh"
+// #include "G4Tubs.hh"
+// #include "G4Sphere.hh"
+// #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
-#include "G4PVPlacement.hh"
+// #include "G4PVPlacement.hh"
 #include "globals.hh"
-#include "G4SDManager.hh"
+// #include "G4SDManager.hh"
 
 // sensitive detectors managers
 #include "PosDetectorManager.h"
