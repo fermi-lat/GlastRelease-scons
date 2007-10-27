@@ -261,26 +261,6 @@ StatusCode AcdGeometrySvc::getDimensions(
 }
 
 
-StatusCode AcdGeometrySvc::getDetectorDimensions(
-                           const idents::VolumeIdentifier &volId,
-                           std::vector<double> &dims, HepPoint3D &xT) const {
-    // Purpose and Method: Retrieve the dimensions - and take note of rotation
-    //  of the side tiles, and return X, Y, Z as we would expect
-
-    StatusCode sc;
-    sc = getDimensions(volId, dims, xT);
-    if (sc.isFailure()) return sc;
-    idents::AcdId id(volId);
-    double dX = dims[0];
-    double dY = dims[1];
-    if (id.face() == 1 || id.face() == 3) {
-        dims[0] = dY;
-        dims[1] = dX;
-    }
-    return sc;
-}
-
-
 const Ray AcdGeometrySvc::getCornerGapRay(unsigned int index) const {
     if (index > 4) {
         MsgStream  log( msgSvc(), name() );
@@ -517,8 +497,14 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
       HepVector3D xVectorGlobal;
       HepVector3D xDummy;
       HepVector3D yVectorGlobal;
+<<<<<<< AcdGeometrySvc.cxx
+
+      StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,
+                                                  xVectorGlobal, xDummy, yVectorGlobal);
+=======
       
       StatusCode sc = getTransformAndLocalVectors(volId,dim,transformToLocal,center,xVectorGlobal,xDummy,yVectorGlobal);
+>>>>>>> 1.21
 
       if ( sc.isFailure() ) {        
 	log << MSG::ERROR << "Failed to handle transformations for ribbon volume: " 

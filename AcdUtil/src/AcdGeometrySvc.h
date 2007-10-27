@@ -121,10 +121,6 @@ protected:
 			     std::vector<double> &dims, 
 			     HepPoint3D &xT) const;
   
-    StatusCode getDetectorDimensions(const idents::VolumeIdentifier &volIId, 
-				     std::vector<double> &dims, 
-				     HepPoint3D &xT) const;
-  
     StatusCode getTransformAndLocalVectors(const idents::VolumeIdentifier &volIId,
 					   std::vector<double>& dim,
 					   HepGeom::Transform3D& transform,
