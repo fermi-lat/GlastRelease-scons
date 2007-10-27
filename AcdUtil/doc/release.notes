@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v2r2p2   27-Oct-2007 JRB Fix the fix 
  v2r2p1   26-Oct-2007 EAC Fix a compilation problem in AcdGeometrySvc::fillRibbonData
  v2r2     26-Oct-2007 EAC Allow for trapezoidal tiles
  v2r1     22-Oct-2007 JRB Change referenceFrame utility to be in accord with
