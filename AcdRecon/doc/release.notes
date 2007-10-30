@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v4r1      30-Oct-2007 HMK Use gr_app
 v4        10-Oct-2007 EAC Handle high range values correctly.
                           Move conversion from local coord -> active distance to AcdTimeDim in AcdUtil so that
                           same calc is used in sim and recon.

@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v2r3     30-Oct-2007 HMK use gr_app
+ v2r2p3   30-Oct-2007 HMK Patch to include AcdSimCalibSvc in load
  v2r2p2   27-Oct-2007 JRB Fix the fix 
  v2r2p1   26-Oct-2007 EAC Fix a compilation problem in AcdGeometrySvc::fillRibbonData
  v2r2     26-Oct-2007 EAC Allow for trapezoidal tiles

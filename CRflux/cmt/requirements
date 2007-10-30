@@ -1,6 +1,6 @@
 package CRflux
 
-version v1r14p1
+version v1r15
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
@@ -20,6 +20,7 @@ use flux  *
 use cfitsio v* IExternal
 use XMLEXT v* IExternal
 use xmlBase v*
+use gr_app v*
 
 # get flags to build shared library
 apply_pattern package_Cshlibflags

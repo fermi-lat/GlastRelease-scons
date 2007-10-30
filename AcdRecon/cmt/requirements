@@ -1,5 +1,5 @@
 package AcdRecon
-version v4
+version v4r1
 
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
@@ -23,6 +23,7 @@ apply_pattern component_library library=AcdRecon
 
 #=============================================================
 private
+use gr_app v*
 use RootIo  v*
 
 public

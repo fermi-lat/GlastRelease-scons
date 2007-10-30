@@ -1,5 +1,5 @@
 package AcdUtil
-version v2r2p3
+version v2r3
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
 # $Id$
@@ -25,6 +25,8 @@ apply_pattern library_Llinkopts library=AcdUtilCommon
 
 #=============================================================
 private
+
+use gr_app v*
 
 #apply_pattern use_CalibData_symbols
 
