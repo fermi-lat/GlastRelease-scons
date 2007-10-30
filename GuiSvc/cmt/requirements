@@ -1,5 +1,5 @@
 package GuiSvc
-version v3r8
+version v3r8p1
 author T.Burnett <tburnett@u.washington.edu>
 
 branches GuiSvc cmt doc src
@@ -22,12 +22,14 @@ macro GuiSvc_lib " -L ${GuiSvc_cmtpath}/lib -lGuiSvc "\
 # *No* linkopts.
 
 # Gui main is the same as non-gui: this for backwards compatibility
+use gr_app
+# Not sure this is still necessary - need to ask Toby
 macro GuiMain "$(GlastMain)"
 
 
 private
 
-use gr_app
+#use gr_app
 
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 
