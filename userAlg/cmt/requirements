@@ -1,5 +1,5 @@
 package userAlg
-version v6r5
+version v6r6
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 
@@ -13,6 +13,7 @@ use Gleam *
 # except, apparently, these:
 use ntupleWriterSvc *
 use astro *
+use gr_app *
 
 set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
 

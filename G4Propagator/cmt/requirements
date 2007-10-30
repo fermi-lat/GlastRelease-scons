@@ -1,5 +1,5 @@
 package G4Propagator
-version v2r2p7
+version v2r3
 author Tracy Usher   <usher@slac.stanford.edu>
 
 #$Id$
@@ -16,6 +16,8 @@ private
 
 #this is private to avoid passing on build info to clients
 use Geant4   v3r* IExternal
+
+use gr_app v*
 
 # get flags to build shared library
 

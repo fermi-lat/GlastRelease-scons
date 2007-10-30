@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r24
+version v9r25
 
 branches src cmt doc
 #$Id$
@@ -23,6 +23,8 @@ use xmlGeoDbs  v1r* -no_auto_imports
 use CLHEP v3* IExternal -no_auto_imports
 
 use xmlUtil * -no_auto_imports
+
+use gr_app *
 
 macro headers "" WIN32 "*.h"
 macro_append includes ' $(ppcmd)"$(xmlBase_root)"'

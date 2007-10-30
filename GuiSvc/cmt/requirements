@@ -1,5 +1,5 @@
 package GuiSvc
-version v3r7
+version v3r8
 author T.Burnett <tburnett@u.washington.edu>
 
 branches GuiSvc cmt doc src
@@ -27,6 +27,7 @@ macro GuiMain "$(GlastMain)"
 
 private
 
+use gr_app
 
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 

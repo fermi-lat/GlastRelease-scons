@@ -4,7 +4,7 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r29p4
+version v0r30
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -44,6 +44,7 @@ use RootIo v* -no_auto_imports
 use Event v11r* -no_auto_imports
 use rootTestData v* -no_auto_imports
 
+use gr_app v*
 
 apply_pattern package_headers
 

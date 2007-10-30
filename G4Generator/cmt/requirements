@@ -1,5 +1,5 @@
 package G4Generator
-version v5r20
+version v5r21
 
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
@@ -37,6 +37,8 @@ use FluxSvc v*
 use cfitsio  * IExternal
 # this seems to be needed by FluxSvc
 use flux *  
+
+use gr_app *
 
 # get flags to build shared library
 

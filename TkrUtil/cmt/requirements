@@ -1,6 +1,6 @@
 package TkrUtil
 
-version v3r12p1
+version v3r13
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -28,6 +28,8 @@ private
 # this is added to get the 'set ROOTSYS' from it, but TkrRecon
 #for instance seems to do without it.... to be investigated further
 use ROOT * IExternal
+
+use gr_app v*
 
 apply_pattern package_Cshlibflags 
 

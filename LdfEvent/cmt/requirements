@@ -1,5 +1,5 @@
 package LdfEvent
-version v4r0 
+version v4r1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use GaudiInterface * IExternal
@@ -16,6 +16,8 @@ use Event v*
 apply_pattern shared_library
 
 private
+
+use gr_app v*
 
 apply_pattern package_headers
 

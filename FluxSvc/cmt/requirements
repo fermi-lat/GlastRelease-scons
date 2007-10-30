@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r49p1
+version v6r51
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
@@ -45,6 +45,7 @@ use GlastSvc    v*
 use ntupleWriterSvc v*
 use XMLEXT * IExternal
 
+use gr_app v*
 
 macro_append includes ' $(ppcmd)"$(flux_root)" '
 macro_append includes ' $(ppcmd)"$(celestialSources_root)" ' 

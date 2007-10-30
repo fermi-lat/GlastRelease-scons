@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   30-oct-07  v6r51   HMK  use gr_app
    17-oct-07  v6r50   HMK  intro use of IExternal/extFiles to set env var
                            for finding ParticleTable.txt
    04-oct-07  v6r49p1 THB  tag the dragon update to add a timestamp to FluxSvc

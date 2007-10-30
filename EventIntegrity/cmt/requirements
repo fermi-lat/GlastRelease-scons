@@ -1,5 +1,5 @@
 package EventIntegrity 
-version v0r5
+version v0r6
 
 author H. Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
@@ -22,6 +22,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
+use gr_app *
 
 # get flags to build shared library
 

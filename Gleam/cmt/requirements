@@ -1,6 +1,6 @@
  package Gleam
 
-version v6r31
+version v6r32
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -74,6 +74,7 @@ application Gleam $(GlastMain) $(Win32Resource) $(jobOpts)
 macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
       WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 private
+use gr_app v*
 # define a standard test executable, if desired
 apply_pattern package_test
 

@@ -1,5 +1,5 @@
 package CalRecon
-version v6r4p9
+version v6r5
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -22,6 +22,7 @@ apply_pattern packageShr
 private
 
 use RootIo 
+use gr_app
 
 macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
                  VisualC " ${ROOT_PATH}/lib/libMinuit.lib " 

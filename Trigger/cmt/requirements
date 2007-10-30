@@ -1,5 +1,5 @@
 package Trigger
-version v5r5p1
+version v5r6
 
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
@@ -28,6 +28,7 @@ use CalibSvc *
 use Event *
 use GlastSvc *
 use LdfEvent *
+use gr_app *
 
 # get flags to build shared library
 

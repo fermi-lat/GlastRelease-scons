@@ -3,6 +3,7 @@
  *    * EOH *
  *
  @verbatim
+ * v3r18   30-oct-2007  HMK: use gr_app
  * v3r17   22-jul-2007  THB: protect against inadvertent use of file
  * v3r16p3 31-mar-2007  JRB: Bug fix for RHEL4
  * v3r16p2 25-dec-2006  THB: Add support for a "jobinfo" TTree, with fields settable from the JO; add Count algorithm to exercise it

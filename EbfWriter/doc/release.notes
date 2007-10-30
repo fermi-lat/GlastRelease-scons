@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r4   30-Oct-2007 HMK use gr_app
  * v1r3   24-Sep-2007 HMK Patch to check for /Event/Filter/Ebf on the TDS
  *        in case we run EbfWriter twice in the same job.  This allows one
  *        to set the GEM sequence number appropriately for the second output

@@ -17,4 +17,6 @@ apply_pattern shared_library
 library CalUtil *.cxx ${CalUtil_headers}
 
 private
+ues gr_app
+
 application test_CalUtil test/test_CalUtil.cxx

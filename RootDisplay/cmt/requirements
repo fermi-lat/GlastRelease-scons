@@ -1,5 +1,5 @@
 package RootDisplay
-version v0r2p3
+version v0r3
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -19,6 +19,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
+use gr_app v*
 
 # get flags to build shared library
 

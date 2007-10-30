@@ -36,6 +36,7 @@ private
 
 #needed only for the test app
 use CalibSvc
+use gr_app
 
 apply_pattern package_Cshlibflags 
 
