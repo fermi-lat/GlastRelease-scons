@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v11r23   30-Oct-07 ZGF Add getCALTriggerVector() methods for HE & LE per tower trigger bits
  * v11r22   18-Sep-07 HMK Move intVector and floatVector in TkrTruncatedPlane
  *                        into namespace
  * v11r21p1 05-Sep-07 LSR Up the CLID for EventHeader and add an enum to TkrVertex.h
