@@ -67,6 +67,8 @@ class CelIndex : public TVirtualIndex
      { MayNotUse("GetMajorName") ; return 0 ; }
     virtual const char * GetMinorName() const
      { MayNotUse("GetMinorName") ; return 0 ; }
+    virtual void Append(const TVirtualIndex* /*ind*/ , Bool_t /*delaySort*/) 
+      { MayNotUse("Append"); }
 
   private :
   

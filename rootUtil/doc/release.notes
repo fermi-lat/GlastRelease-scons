@@ -3,6 +3,8 @@
 @verbatim
 Coordinator:H.Kelly
 
+v1r0        30-Oct-2007 HMK Might be worth bumping the version
+                           patches for Windows
 v0r1        13-Sep-2007 DC import metaRootData.
 v0r0        10-Mar-2003 Fix requirements file and document.
 v0          10-Mar-2003 HMK initial import

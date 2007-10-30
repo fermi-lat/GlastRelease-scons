@@ -17,6 +17,9 @@
 #include <Riostream.h>
 #include <cassert>
 #include <cstring>
+#ifdef WIN32
+#define strdup _strdup
+#endif
 
 ClassImp(CelEventIDs) ;
 
