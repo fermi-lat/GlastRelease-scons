@@ -1,7 +1,8 @@
 /** @file release.notes
     @brief package G4Generator 
 @verbatim
-
+ v5r21p1 31-Oct-07 JRB Compose multiple rotations applied to a single volume
+                       in the correct order
  v5r21   30-Oct-07 HMK use gr_app
  v5r20   24-Oct-07 JRB Support trapezoidal prisms
  v5r19p1 01-Oct-07 LSR Print out densities and radiation lengths of materials
