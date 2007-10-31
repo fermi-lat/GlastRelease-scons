@@ -16,6 +16,8 @@
 #include <time.h>
 #include <stdio.h>
 
+#include "facilities/commonUtilities.h"
+
 //------------------------------------------------------------------------------
 //
 //  Package    : GlastPolicy
@@ -52,6 +54,8 @@ void current_time(std::ostream& out=std::cout)
 
 
 int main( int argn, char** argc) {
+
+    facilities::commonUtilities::setupEnvironment();
     
     std::string joboptions_file="src/jobOptions.txt"; // default
     
