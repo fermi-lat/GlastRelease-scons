@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v0r9    30-Oct-2007 RBL Relocated LSFReader object to lsfData to break a dependency cycle in CHS/eventFile.
 v0r8p1  07-Oct-2007 HMK Insert fillStream routines to use Gaudi log printing
 v0r8    18-Apr-2007 RBL Renamed LpaKeys.LPA_DB to CDM_keys to better reflect actual content.
 v0r7    18-Apr-2007 RBL Add LsfKeys structure for translated file keys.

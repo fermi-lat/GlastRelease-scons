@@ -1,5 +1,5 @@
 package lsfData 
-version v0r8p1
+version v0r9
 
 author Heather Kelly <heather@lheapop@gsfc.nasa.gov>
 
@@ -7,15 +7,21 @@ use GlastPolicy v*
 
 #use facilities  v*
 use enums v*
+use eventFile v* CHS
 
 apply_pattern package_include
 apply_pattern package_linkopts
 apply_pattern package_headers
-
+apply_pattern package_stamps
+apply_pattern shared_library
+apply_pattern ld_library_path
 
 private
-library lsfData -no_share *.cxx ${lsfData_headers} 
 
+library lsfData *.cxx ${lsfData_headers} 
 
 application test_lsfData test/test_lsfData.cxx
 
+application test_LSFReader test/test_LSFReader.cxx
+
+application dumpEvent test/dumpEvent.cxx test/LDFdump.cxx
