@@ -202,7 +202,7 @@ void McTrajectoryManager::saveMcTrajectory()
     }
 }
 
-void McTrajectoryManager::dropMcTrajectory(const G4Track* track)
+void McTrajectoryManager::dropMcTrajectory(const G4Track* /* track */)
 {
     // Make sure we have something to get rid of
     if (m_mcTrajectory)

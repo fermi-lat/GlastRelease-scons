@@ -65,7 +65,6 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     // Inputs: dz is an optional z offset of the particle, to match LAT offset
         
     // Count the number of particles input
-    int numParts = pcol->size();
 
     // First particle is the "generator" particle... 
     // This particle defines the event vertex
@@ -99,8 +98,6 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     const SmartRefVector<Event::McParticle>& daughterVec = primary->daughterList();
     
     SmartRefVector<Event::McParticle>::const_iterator dIter = daughterVec.begin();
-
-    int numDaughters = daughterVec.size();
 
     m_secondaryVertexVec.clear();
 

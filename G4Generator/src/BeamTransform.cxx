@@ -174,9 +174,6 @@ StatusCode BeamTransform::initialize(){
             // move by the offset of the pivot along this line
             // it's where the central ray enters for no translation
             Point point1 = orthRay.position(m_pivot.x());
-            double angle = degToRad*(90. - m_angle);
-            double angle0 = degToRad*m_angle;
-
            
             Vector dirBeam(0.0, 0.0, 1.0);
             dirBeam = m_rot*dirBeam;
