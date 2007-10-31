@@ -1,5 +1,5 @@
 package RootIo
-version v18r5
+version v19r0
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -37,7 +37,7 @@ use GlastSvc v*
 use Trigger v*
 use AncillaryDataEvent v*
 
-macro_append includes ' $(ppcmd)"$(rootUtil_root)" '
+macro_append includes ' $(ppcmd)"$(rootUtil_root)" $(ppcmd)"$(metaRootData_root)" '
 
 # for building this DLL, need includes from the rootData packages
 # also need modification for the use of OnboardFilterTds for windows due to Endianness.h file
