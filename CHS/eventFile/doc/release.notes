@@ -4,6 +4,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v3r5   30-Oct-2007 RBL moved LSFReader class to lsfData package.
  * v3r4p4 01-Oct-2007 RBL add capability to override LATC master key to writeMerge.exe
  * v3r4p3 21-Sep-2007 RBL remove obsolete files from src/test/
  * v3r4p2 14-Sep-2007 RBL add compiler-alignment directive for WIN32
