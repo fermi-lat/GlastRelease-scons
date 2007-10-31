@@ -3,6 +3,7 @@
 @verbatim
  $Id$	
  * Package CalUtil
+ * v3r6p1     31-Oct-2007 ZF  correct spelling of use!
  * v3r6       30-Oct-2007 HMK use gr_app
  * v3r5p1     09-Oct-2007 ZF added CalGeom utility
  * v3r5       05-Oct-2007 ZF took out fill() and find() methods (STL provided methods will work fine)
