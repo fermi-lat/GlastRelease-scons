@@ -16,6 +16,8 @@
 #endif
 #include <time.h>
 
+#include "facilities/commonUtilities.h"
+
 //------------------------------------------------------------------------------
 //
 //  Package    : GlastPolicy
