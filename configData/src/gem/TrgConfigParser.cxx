@@ -53,8 +53,7 @@ int TrgConfigParser::parse(TrgConfig* tcf, const char* filename){
     doc =parser.parse( filename );
   }
   catch (ParseException ex) {
-    std::cerr << "caught exception with message " << std::endl;
-    std::cerr << ex.getMsg() << std::endl;
+    std::cerr << "TrgConfigParser error: GEM xml configuration file was either not found or it could not be parsed." << std::endl;
     assert(false);
   }
   // top level element
@@ -87,6 +86,9 @@ int TrgConfigParser::parse(TrgConfig* tcf){
   }
   std::vector<DOMElement*> children;
   std::string nm,ous;
+  const char *tagnames[]={"WIN","AOC","SCH","TAM","TIE","ROI"};
+  std::list<std::string> taglist;
+  for (int i=0;i<6;i++)taglist.push_back(tagnames[i]);
 
   Dom::getChildrenByTagName(m_topElt, "*", children);
   for (unsigned j=0; j < children.size(); j++) {
@@ -115,12 +117,14 @@ int TrgConfigParser::parse(TrgConfig* tcf){
       if (nm=="WIN"){
 	unsigned long win_width=content(currentElement,"window_width");
 	tcf->_twp.setWindowWidth(win_width);
+	taglist.remove("WIN");
       }
       if (nm=="AOC"){
 	unsigned long window_open_mask=content(currentElement,"window_open_mask");
 	tcf->_twp.setWindowMask(window_open_mask);
 	unsigned long periodic_limit=content(currentElement,"periodic_limit");
 	tcf->_tpt.setLimit(periodic_limit);
+	taglist.remove("AOC");
       }
       if (nm=="SCH"){
 	char condname[128];
@@ -129,6 +133,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  unsigned long condreg=content(currentElement,condname);
 	  tcf->_lut.setRegister(i,condreg);
 	}
+	taglist.remove("SCH");
       }
       if (nm=="TAM"){
 	char engname[128];
@@ -137,6 +142,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  unsigned long engine=content(currentElement,engname);
 	  tcf->_tev.setEngine(i,engine);
 	}
+	taglist.remove("TAM");
       }
       if (nm=="TIE"){
 	unsigned long reg;
@@ -185,6 +191,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	if(rList.size()==1) reg=content(currentElement,"external");	
 	else reg=content(currentElement,"external_trg");	
 	tcf->_tdv.setExternal(reg);
+	taglist.remove("TIE");
       }
       if (nm=="ROI"){
 	unsigned long reg;
@@ -220,8 +227,17 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  }
 	  tcf->_roi.setRoiRegister(i,reg);
 	}
+	taglist.remove("ROI");
       }
     }
+  }
+  if (!taglist.empty()&& !m_allowMissing){
+    std::cout<<"Missing tags in GEM xml file: ";
+    for (std::list<std::string>::const_iterator it=taglist.begin();it!=taglist.end();it++){
+      std::cout<<(*it)<<" ";
+    }
+    std::cout<<". Aborting."<<std::endl;
+    assert(0);
   }
   return 0;
 }
