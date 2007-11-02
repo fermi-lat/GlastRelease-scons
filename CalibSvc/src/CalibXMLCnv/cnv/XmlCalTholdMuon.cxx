@@ -184,6 +184,7 @@ StatusCode XmlCalTholdMuonCnv::i_createObj(const DOMElement* docElt,
     CalTholdMuon* pTholdMuon = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pTholdMuon);
+    delete pTholdMuon;
     rangeElt = findNextRange(rangeElt);
   }
 

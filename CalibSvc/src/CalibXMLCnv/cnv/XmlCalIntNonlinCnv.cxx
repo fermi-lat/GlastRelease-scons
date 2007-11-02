@@ -116,6 +116,7 @@ StatusCode XmlCalIntNonlinCnv::i_createObj(const DOMElement* docElt,
     if (pIntNonlin) {
       pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                      m_nFace, pIntNonlin);
+      delete pIntNonlin;
       rangeElt = findNextRange(rangeElt);
     }
     else {
@@ -137,6 +138,8 @@ StatusCode XmlCalIntNonlinCnv::i_createObj(const DOMElement* docElt,
     unsigned range;
     DacCol* pDacCol = processDacCol(dacColElt, &range);
     pObj->putDacCol(range, pDacCol);
+    delete pDacCol;
+
     dacColElt = findNextDacCol(dacColElt);
   }
   return StatusCode::SUCCESS;

@@ -105,6 +105,7 @@ StatusCode XmlCalMuSlopeCnv::i_createObj(const DOMElement* docElt,
     MuSlope* pMuSlope = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, m_nFace, 
                    pMuSlope);
+    delete pMuSlope;
     rangeElt = findNextRange(rangeElt);
   }
 

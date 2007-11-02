@@ -179,6 +179,7 @@ StatusCode XmlCalMevPerDacCnv::i_createObj(const DOMElement* docElt,
     CalMevPerDac* pMevPerDac = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pMevPerDac);
+    delete pMevPerDac;
     rangeElt = findNextRange(rangeElt);
   }
 

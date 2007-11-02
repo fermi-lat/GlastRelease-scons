@@ -99,6 +99,7 @@ StatusCode XmlCalLightAsymCnv::i_createObj(const DOMElement* docElt,
     LightAsym* pLightAsym = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pLightAsym);
+    delete pLightAsym;
     rangeElt = findNextRange(rangeElt);
   }
 

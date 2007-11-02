@@ -190,6 +190,7 @@ StatusCode XmlCalTholdCICnv::i_createObj(const DOMElement* docElt,
     CalTholdCI* pTholdCI = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pTholdCI);
+    delete pTholdCI;
     rangeElt = findNextRange(rangeElt);
   }
 

@@ -104,6 +104,7 @@ StatusCode XmlCalLightAttCnv::i_createObj(const DOMElement* docElt,
     LightAtt* pLightAtt = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pLightAtt);
+    delete pLightAtt;
     rangeElt = findNextRange(rangeElt);
   }
 

@@ -108,7 +108,10 @@ StatusCode XmlCalPedCnv::i_createObj(const DOMElement* docElt,
 
   while (rangeElt != 0 ) {
     Ped* ped = processRange(rangeElt);
-    pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, m_nFace, ped);
+    pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, 
+                     m_nRange, m_nFace, ped);
+    delete ped;
+
     rangeElt = findNextRange(rangeElt);
   }
 

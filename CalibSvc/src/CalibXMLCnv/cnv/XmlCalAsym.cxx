@@ -145,6 +145,7 @@ StatusCode XmlCalAsymCnv::i_createObj(const DOMElement* docElt,
     CalAsym* pAsym = processRange(rangeElt);
     pObj->putRange(m_nRow, m_nCol, m_nLayer, m_nXtal, m_nRange, 
                    m_nFace, pAsym);
+    delete pAsym;
     rangeElt = findNextRange(rangeElt);
   }
 
