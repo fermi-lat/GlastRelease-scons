@@ -306,14 +306,19 @@ namespace calibUtil {
     }
     catch (RdbException ex) {
       std::cout << ex.getMsg();
+      if (results) delete results;
       return RETMySQLError;
     }
     
     if (!results) return RETMySQLError;
-    if (!results->getNRows() ) return RETBadValue;
+    if (!results->getNRows() ) {
+      delete results;
+      return RETBadValue;
+    }
 
     std::vector<std::string> fields;
     results->getRow(fields);
+    delete results;
     dataFmt = fields[0];
     fmtVersion = fields[1];
     filename = fields[2];
@@ -359,6 +364,7 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     }
     catch (RdbException ex) {
       std::cout << ex.getMsg();
+      if (results) delete results;
       // return heap memory
       return RETMySQLError;
     }
@@ -369,6 +375,8 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
     std::vector<std::string> fields;
 
     results->getRow(fields);
+
+    delete results;
 
     since = new facilities::Timestamp(fields[0]);
     till =  new facilities::Timestamp(fields[1]);
@@ -472,6 +480,10 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
       catch (RdbException ex) {
         std::cout << ex.getMsg();
         // return heap memory
+        if (results) {
+          delete results;
+          results = 0;
+        }
         delete levelOp;  levelOp = 0;
       }
 
@@ -486,10 +498,13 @@ Metadata::eRet Metadata::getInterval(unsigned int serialNo,
           delete levelOp;
           levelOp = 0;
         }
+        delete results;
         continue;   // try next proc level
       }
       std::vector<std::string> fields;
       results->getRow(fields);
+      delete results;
+
       *ser = facilities::Util::stringToInt(fields[0]);
       return RETOk;
     }
