@@ -129,6 +129,14 @@ public:
     /// Allow client to set the na bit
     inline void na( unsigned int val );
 
+    static void convertToTilePmt(unsigned int  cable, unsigned int  channel, unsigned int& tile, unsigned int& pmt);
+    static void convertToGarcGafe(unsigned int tile, unsigned int pmt, unsigned int& garc, unsigned int& gafe);
+    static unsigned int           tileFromGemIndex(unsigned int gemIndex);
+    static unsigned int           gemIndexFromTile(unsigned int tile);
+    static unsigned int           tileFromIndex(unsigned int gemIndex);
+    static unsigned int           indexFromTile(unsigned int tile);
+
+
 private:
     void constructorGuts(const idents::VolumeIdentifier &volid);
     /// set layer

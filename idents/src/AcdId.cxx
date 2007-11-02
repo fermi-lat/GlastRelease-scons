@@ -10,6 +10,7 @@
 
 // Include files
 #include "idents/AcdId.h"
+#include "idents/AcdConv.h"
 #include "facilities/Util.h"
 #include <stdexcept>
 #include <iostream>
@@ -61,6 +62,28 @@ AcdId::AcdId(const std::string& base10) {
   }
 }
 
+void AcdId::convertToTilePmt(unsigned int  cable, unsigned int  channel, unsigned int& tile, unsigned int& pmt) {
+  AcdConv::convertToTilePmt(cable,channel,tile,pmt);
+}
+void AcdId::convertToGarcGafe(unsigned int tile, unsigned int pmt, unsigned int& garc, unsigned int& gafe) {
+  AcdConv::convertToGarcGafe(tile,pmt,garc,gafe);
+}
+
+unsigned int AcdId::tileFromGemIndex(unsigned int gemIndex) {
+  return AcdConv::tileFromGemIndex(gemIndex);
+}
+
+unsigned int AcdId::gemIndexFromTile(unsigned int tile) {
+  return AcdConv::gemIndexFromTile(tile);
+}
+
+unsigned int AcdId::tileFromIndex(unsigned int gemIndex) {
+  return AcdConv::tileFromIndex(gemIndex);
+}
+
+unsigned int AcdId::indexFromTile(unsigned int tile) {
+  return AcdConv::indexFromTile(tile);
+}
   
 
 
