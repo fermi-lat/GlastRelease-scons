@@ -40,7 +40,7 @@ public:
     UInt_t getTriggerWordTwo() const { return m_triggerWordTwo; };
 
     /// kTRUE indicates that ACD LOW occurred
-    bool getAcdLow() const { return (m_trigger & enums::b_ACDL)!=0;};
+    //bool getAcdLow() const { return (m_trigger & enums::b_ACDL)!=0;};
     /// kTRUE indicates that ACD HIGH occurred
     bool getAcdHigh() const { return (m_trigger & enums::b_ACDH)!=0;};
     /// kTRUE indicates that 3-in-a-row occurred in the TKR
@@ -50,7 +50,9 @@ public:
     /// kTRUE indicates that CAL HIGH occurred
     bool getCalHigh() const { return (m_trigger & enums::b_HI_CAL)!=0; };
     /// kTRUE when Ritz Throttle is satisfied
-    bool getThrottle() const { return (m_trigger & enums::b_THROTTLE)!=0; };
+    //bool getThrottle() const { return (m_trigger & enums::b_THROTTLE)!=0; };
+    /// kTRUE when ACD ROI is satisfied
+    bool getRoi() const { return (m_trigger & enums::b_ROI)!=0; };
 	/*@}*/
 
     /// Corresponds to the GltWord in merit - calculated from digis in TriggerAlg

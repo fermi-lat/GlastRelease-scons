@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r20     04-Nov-2007 HMK Remove use of b_ACDL
 v9r19p6   23-Oct-2007 HMK prepare for rootmap file generation
 v9r19p5   08-Oct-2007 HMK Check for key ptr before returns NoKeysType
 v9r19p4   07-Oct-2007 HMK Patch to actually save the LsfKeysType

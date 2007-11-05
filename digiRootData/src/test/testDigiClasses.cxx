@@ -127,7 +127,7 @@ int checkTkrDiagnostic(const TkrDiagnosticData *tkrDiag) {
 int checkL1T(const L1T &level1) {
 
     UInt_t l1Word = 0;
-    l1Word |= enums::b_ACDL;
+    l1Word |= enums::b_ROI;
     l1Word |= enums::b_Track;
     l1Word |= enums::b_ACDH;
 
@@ -137,8 +137,8 @@ int checkL1T(const L1T &level1) {
         return -1;
     }
 
-    if (level1.getAcdLow() != true) {
-        std::cout << "Acd Low is False when it should be True" << std::endl;
+    if (level1.getRoi() != true) {
+        std::cout << "Acd ROI is False when it should be True" << std::endl;
         return -1;
     }
 
@@ -574,7 +574,7 @@ int write(char* fileName, int numEvents) {
         UInt_t digiTriRowBits[16] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
         UInt_t trgReqTriRowBits[16] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
         UInt_t l1Word = 0;
-        l1Word |= enums::b_ACDL;
+        l1Word |= enums::b_ROI;
         l1Word |= enums::b_Track;
         l1Word |= enums::b_ACDH;
 
