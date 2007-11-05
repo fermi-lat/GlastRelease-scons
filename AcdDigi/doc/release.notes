@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r1p1  05-Nov-2007 EAC Fix memory leak in AcdSimCalibSvc 
  v3r1    30-Oct-2007 HMK use gr_app
  v3r0    09-Oct-2007 EAC Use AcdUtil::AcdCalibFuncs for conversion to ensure that 
                          sim and recon use same conversion functions.

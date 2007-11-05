@@ -379,18 +379,29 @@ StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mi
 
 StatusCode AcdDigiUtil::getCalibData(const idents::AcdId& id, AcdSimCalibData*& pmtACalib, AcdSimCalibData*& pmtBCalib) {
 
-  std::map< unsigned int, std::pair<AcdSimCalibData*,AcdSimCalibData*> >::const_iterator itrFind = m_calibMap.find(id);
+  std::map< unsigned int, std::pair<AcdSimCalibData*,AcdSimCalibData*> >::const_iterator itrFind = m_calibMap.find(id);  
+  bool upToDate(false);
   if ( itrFind != m_calibMap.end() ) {
-    // go it
+    // get it
     pmtACalib = itrFind->second.first;
     pmtBCalib = itrFind->second.second;
-    return StatusCode::SUCCESS;
+        // IN simulation there should really only be one version of the calibrations
+    upToDate = true;
+  } else {
+    pmtACalib = new AcdSimCalibData;
+    pmtBCalib = new AcdSimCalibData;
+    // put the pmt calib in the map
+    m_calibMap[id] = std::make_pair(pmtACalib,pmtBCalib);
+  }    
+
+  StatusCode sc = StatusCode::SUCCESS;
+  // possible reflush the data, though this should only happen the first time we get the data
+  if ( ! upToDate ) {
+    sc = fetchCalibData(id,Event::AcdDigi::A,pmtACalib);
+    if ( sc.isFailure() ) return sc;
+    sc = fetchCalibData(id,Event::AcdDigi::B,pmtBCalib);
   }
-  
-  // not in map, fetch from DB
-  StatusCode sc = fetchCalibData(id,Event::AcdDigi::A,pmtACalib);
-  if ( sc.isFailure() ) return sc;
-  sc = fetchCalibData(id,Event::AcdDigi::B,pmtBCalib);
+
   return sc;
 }
 
@@ -406,9 +417,7 @@ StatusCode AcdDigiUtil::fetchCalibData(const idents::AcdId& id, Event::AcdDigi::
   CalibData::AcdVeto* veto(0);
   CalibData::AcdCno* cno(0);
   CalibData::AcdCoherentNoise* coherentNoise(0);  
-  
-  pmtCalib = new AcdSimCalibData;
-    
+      
   // Check the XML file
   std::string idStr;
   facilities::Util::itoa(id.id(), idStr);
@@ -480,7 +489,7 @@ StatusCode AcdDigiUtil::fetchCalibData(const idents::AcdId& id, Event::AcdDigi::
 
   sc = m_calibSvc->getCoherentNoise(id,pmt,coherentNoise);
   if ( sc.isFailure() ) return sc;
-  pmtCalib->setCoherentNoise(*coherentNoise);  
+  pmtCalib->setCoherentNoise(*coherentNoise);    
 
   return sc;
 }
