@@ -38,7 +38,7 @@ DfiParser::DfiParser(const std::string &filename) {
     try {
        clear();
        m_file = NULL;
-       m_file = new eventFile::LSFReader(filename);
+       m_file = new lsfData::LSFReader(filename);
        std::cout << "Created eventFile" << std::endl;
        m_runId = m_file->runid();
        m_more = m_file->read(m_ccsds, m_meta, m_ebf);

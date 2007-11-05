@@ -7,7 +7,7 @@
 #include "EBFevent.h"
 //#include "../src/ccsds2lsf.h"
 
-#include "eventFile/LSFReader.h"
+#include "lsfData/LSFReader.h"
 #include "lsfData/LsfMetaEvent.h"
 #include "lsfData/LsfCcsds.h"
 #include "eventFile/EBF_Data.h"
@@ -71,7 +71,7 @@ namespace ldfReader {
 
         int readContextAndInfo();
 
-        eventFile::LSFReader *m_file;
+        lsfData::LSFReader *m_file;
 
         //long            m_evtCount;
 
