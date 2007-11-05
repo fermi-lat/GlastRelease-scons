@@ -26,12 +26,11 @@ int main()
         << std::endl << std::endl;
 
     std::cout << "Test Trigger Word Enum " << std::endl;
-    std::cout << "Test ACDL bit " << (m_triggerWord & enums::b_ACDL) << " "
-        << "Test 3-in-a-row-bit " << (m_triggerWord & enums::b_Track) << std::endl;
+    std::cout << "Test 3-in-a-row-bit " << (m_triggerWord & enums::b_Track) << std::endl;
     std::cout << "Test Low CAL bit " << (m_triggerWord & enums::b_LO_CAL) << " "
         << "Test Hi CAL bit " << (m_triggerWord & enums::b_HI_CAL) << std::endl;
     std::cout << "Test ACD CNO bit " << (m_triggerWord & enums::b_ACDH) << " "
-        << "Test Ritz Throttle bit " << (m_triggerWord & enums::b_THROTTLE) 
+        << "Test ROI bit " << (m_triggerWord & enums::b_ROI) 
         << std::endl << std::endl;
 
     std::cout << "Gem Condition Summary Bits" << std::endl;

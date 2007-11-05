@@ -5,6 +5,8 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v0r16p1 04-Nov-2007 HMK Patch unit test for removal of b_ACDL
+v0r16   02-Nov-2007 MK  
 v0r15p1 22-Oct-2007 HMK Patch for rhel4 to include ULL for long long constants
 v0r15   18-Sep-2007 TU  enums for new ObfFilterStatus
 v0r13   18-Apr-2007 RLB Add a new Lsf enum for translated-key type.
