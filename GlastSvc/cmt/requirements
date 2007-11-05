@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r25
+version v9r25p1
 
 branches src cmt doc
 #$Id$
@@ -27,7 +27,7 @@ use xmlUtil * -no_auto_imports
 use gr_app *
 
 macro headers "" WIN32 "*.h"
-macro_append includes ' $(ppcmd)"$(xmlBase_root)"'
+macro_append includes ' $(ppcmd)"$(xmlBase_root)" $(ppcmd)"$(detModel_root)" $(ppcmd)"$(xmlUtil_root)"'
 
 library GlastSvc  -import=detModel -import=CLHEP -import=xmlUtil \
      Dll/*.cpp \

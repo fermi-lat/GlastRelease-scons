@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ v9r25p1 04-Nov-2007 hmk  Patch to find includes on windows
  v9r25  30-Oct-2007  hmk  Use gr_app
  v9r24  26-Oct-2007  jrb  Add 'Trap' to repertoire of IGeometry shapes
  v9r23p1  24-Oct-2007  mk   fix code for random number seed based on run
