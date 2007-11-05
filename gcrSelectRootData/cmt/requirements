@@ -1,16 +1,17 @@
 package gcrSelectRootData
-version v2r1p1
+version v2r1p2
 author Claudia Lavalley 
 # $Id$
 
 use commonRootData v2r*
 use GlastPolicy *
 use RootcintPolicy v* GlastPolicy
-use idents v2r*
+#use idents v2r* 
 #use reconRootData v9*
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
+  ../gcrSelectRootData/GcrSelect.h\
   ../gcrSelectRootData/GcrSelectedXtal.h\
   ../gcrSelectRootData/GcrSelectEvent.h\
   ../gcrSelectRootData/GcrSelectVals.h"\

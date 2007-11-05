@@ -2,7 +2,7 @@
 package gcrSelectRootData  
 package manager:C.Lavalley 
 @verbatim
-
+v2r1p2   HMK remove use of idents which seems unnecessary
 v2r1p1   HMK rootmap generation
 v2r1     HMK store GcrSelectVals as a GcrSelectVals not a TObject
 v2r0     HMK use TClonesARray rather than TObjARray (not backward compatible)
