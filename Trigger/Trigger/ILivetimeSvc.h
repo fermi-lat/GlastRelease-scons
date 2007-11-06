@@ -42,6 +42,9 @@ public:
 
     virtual double livetime()=0; ///< return the accumulated livetime
 
+    /// set a new trigger rate, return the old value
+    virtual double setTriggerRate(double rate)=0;
+
     /// get number of GEM clock ticks
     virtual unsigned int ticks(double time) const=0;
 };
