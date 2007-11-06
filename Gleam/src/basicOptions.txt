@@ -89,14 +89,14 @@ Triggered.Members={
 
 ApplicationMgr.DLLs +={ "Trigger"};
 ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
-//LivetimeSvc.Deadtime=0;  // default is now to disable this
+//LivetimeSvc.InterleaveMode = false; // interleave mode kills events on a statistical basis 
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // The following is for the new Trigger Configuration Service
 TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
-//TriggerAlg.applyPrescales=true; //only use TrgConfigSvc to determine trigger engine
-//TriggerAlg.applyWindowMask=true; // only look at event if the window was opened
-//TriggerAlg.applyDeadtime=true; // throw away events when GEM is busy
+//TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
+//TriggerAlg.applyWindowMask=true; // only use event if the window was open
+//TriggerAlg.applyDeadtime=true; // throw away events if GEM is busy
 //TriggerAlg.useGltWordForData=true; //when prescaling data use Glt word instead of Gem word
 
 // Configure TrgConfigSvc if used
