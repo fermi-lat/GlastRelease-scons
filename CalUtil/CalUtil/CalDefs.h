@@ -1,6 +1,6 @@
-// $Header$
 #ifndef CalDefs_H
 #define CalDefs_H
+// $Header$
 
 // LOCAL
 
