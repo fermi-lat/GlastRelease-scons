@@ -70,6 +70,10 @@ StatusCode CalibItemMgr::initialize(const string &flavor) {
     sc = genLocalStore();
     if (sc.isFailure()) return sc;
 
+    // create MsgStream only when needed (for performance)
+    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+    msglog << MSG::INFO << m_calibPath << " Overriding CalibSvc with ideal calibrations." << endreq;
+
     m_serNo = SERNO_IDEAL;
   }
 

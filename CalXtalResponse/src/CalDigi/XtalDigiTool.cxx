@@ -301,7 +301,7 @@ StatusCode XtalDigiTool::rangeSelect() {
     RngNum rng;
     for (rng=LEX8; rng.isValid(); rng++) {
       // get ULD threshold
-      XtalRng xRng(face,rng);
+      const XtalRng xRng(face,rng);
       m_dat.uldTholdADC[xRng] = tholdCI->getULD(rng.val())->getVal();
 
       // case of HEX1 range 
@@ -334,7 +334,7 @@ StatusCode XtalDigiTool::rangeSelect() {
 StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
   
   //-- How many readouts ? --//
-  int roLimit;
+  unsigned short roLimit;
   const short rangeMode = calDigi.getMode();
   switch (rangeMode) {
   case CalXtalId::BESTRANGE:
@@ -352,7 +352,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
   // set up the digi
   CalArray<FaceNum, RngNum> roRange;
   CalArray<FaceNum, float> adc;
-  for (int nRo=0; nRo < roLimit; nRo++) {
+  for (unsigned short nRo=0; nRo < roLimit; nRo++) {
     for (FaceNum face; face.isValid(); face++) {
       // represents ranges used for current readout in loop
       roRange[face] = RngNum((m_dat.rng[face].val() + nRo) % RngNum::N_VALS); 

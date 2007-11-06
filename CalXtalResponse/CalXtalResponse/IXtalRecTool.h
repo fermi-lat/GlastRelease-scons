@@ -66,10 +66,9 @@ class IXtalRecTool : virtual public IAlgTool {
   */
   virtual StatusCode calculate(const Event::CalDigi &digi,
                                Event::CalXtalRecData &xtalRec,
-                               CalUtil::CalArray<CalUtil::FaceNum, bool> &belowThresh,
-                               bool &xtalBelowThresh,
+                               CalUtil::CalArray<CalUtil::FaceNum, bool> &belowNoise,
                                CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
-                               const INeighborXtalkTool *nbrXtalkTool
+                               INeighborXtalkTool const*const nbrXtalkTool
                                ) = 0;
 };
 

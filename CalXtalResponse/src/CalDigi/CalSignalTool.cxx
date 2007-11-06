@@ -67,8 +67,7 @@ CalSignalTool::CalSignalTool(const std::string& type,
 
 StatusCode CalSignalTool::initialize() {
   MsgStream msglog(msgSvc(), name());
-
-  msglog << MSG::INFO << "CalSignalTool is initializing" << endreq;
+  msglog << MSG::INFO << "initializing" << endreq;
 
   //-- jobOptions --//
   StatusCode sc;
@@ -279,8 +278,7 @@ StatusCode CalSignalTool::sumHit(const Event::McIntegratingHit &hit) {
   const XtalIdx xtalIdx(CalXtalId(hit.volumeID()));
 
   // destination for signal data from this hit
-  CalUtil::CalArray<CalUtil::XtalDiode, float> hitSignal;
-  fill(hitSignal.begin(), hitSignal.end(), 0);
+  CalUtil::CalArray<CalUtil::XtalDiode, float> hitSignal(0);
 
   // convert the hit into signal level
   StatusCode sc = m_xtalSignalTool->calculate(hit, 

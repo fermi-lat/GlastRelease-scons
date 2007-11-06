@@ -137,6 +137,7 @@ CalTupleAlg::CalTupleAlg(const string& name, ISvcLocator* pSvcLocator) :
 StatusCode CalTupleAlg::initialize() {
   StatusCode sc;
   MsgStream msglog(msgSvc(), name());
+  msglog << MSG::INFO << "initialize" << endreq;
         
   //-- JOB OPTIONS --//
   sc = setProperties();

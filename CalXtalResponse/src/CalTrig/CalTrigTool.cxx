@@ -264,9 +264,7 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
   //-- CASE 2: 4RANGE READOUT MODE --//
   else {
     //-- store ped subtracted adc vals --//
-    CalArray<XtalRng, float> adcPed;
-    // "-1" indicates no data for given readout range
-    fill(adcPed.begin(), adcPed.end(), 0);
+    CalArray<XtalRng, float> adcPed(0);
 
     //-- copy over CalDigi data from all available ranges --//
   

@@ -11,6 +11,7 @@
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalArray.h"
+#include "CalUtil/stl_util.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Digi/CalDigi.h"
 
@@ -47,6 +48,9 @@ StatusCode CalXtalRecAlg::initialize()
 {
   StatusCode sc;
   MsgStream msglog(msgSvc(), name());
+  msglog << MSG::INFO << "initialize" << endreq;
+
+
 
   //-- JOB OPTIONS --//
   sc = setProperties();
@@ -118,24 +122,20 @@ StatusCode CalXtalRecAlg::execute()
                                      
     // calculate energy in the crystal
     // used for current range only
-    CalArray<FaceNum, bool> belowThresh;
-    CalArray<FaceNum, bool> saturated;
-    fill(belowThresh.begin(), belowThresh.end(), false);
-    fill(saturated.begin(), saturated.end(), false);
-    bool xtalBelowThresh = false;
+    CalArray<FaceNum, bool> belowNoise(false);
+    CalArray<FaceNum, bool> saturated(false);
 
     // convert adc values into energy/pos
     sc = m_xtalRecTool->calculate(**digiIter,
                                   *recData,
-                                  belowThresh,
-                                  xtalBelowThresh,
+                                  belowNoise,
                                   saturated,
                                   m_xtalkTool);
     // single xtal may not be able to recon, is not failure condition.
     if (sc.isFailure()) continue;
 
-    // skip any xtal w/ at least one LEX8 range below threshold
-    if (xtalBelowThresh) continue;
+    // skip any xtal w/ at least one LEX8 range below noise thold
+    if (contains(belowNoise,true)) continue;
     
     // skip if recData contains no entries
     if (recData->getNReadouts() == 0) continue;

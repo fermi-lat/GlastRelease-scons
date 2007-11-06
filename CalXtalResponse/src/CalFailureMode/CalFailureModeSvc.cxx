@@ -69,7 +69,8 @@ StatusCode CalFailureModeSvc::initialize ()
   StatusCode  status = StatusCode::SUCCESS;
         
   // Open the message log
-  MsgStream log( msgSvc(), name() );
+  MsgStream msglog(msgSvc(), name());   
+  msglog << MSG::INFO << "initialize" << endreq;
     
         
   // Call super-class
@@ -77,7 +78,7 @@ StatusCode CalFailureModeSvc::initialize ()
         
   // Bind all of the properties for this service
   if ( (status = setProperties()).isFailure() ) {
-    log << MSG::ERROR << "Failed to set properties" << endreq;
+    msglog << MSG::ERROR << "Failed to set properties" << endreq;
   }
         
   m_failureModes = 0;
@@ -96,14 +97,14 @@ void CalFailureModeSvc::processTowerAfeeList() {
   // Purpose and Method: process the jobOptions input lists of (tower,layer) pairs
   //                     
         
-  MsgStream log(msgSvc(), name());
+  MsgStream msglog(msgSvc(), name());
         
   const std::vector<std::string>& theTowers = m_towerAfeeListProperty.value( );
   if (theTowers.size() == 0) return;
         
   m_failureModes = m_failureModes || 1 << TOWERAFEE;
         
-  log << MSG::INFO << "Towers and AFEEs to kill " << endreq;
+  msglog << MSG::INFO << "Towers and AFEEs to kill " << endreq;
         
         
   std::vector<std::string>::const_iterator it;
@@ -115,7 +116,7 @@ void CalFailureModeSvc::processTowerAfeeList() {
     int tower = atoi((*it).substr(0, delimPos).c_str());
     int layer = atoi((*it).substr(delimPos+1, len-delimPos-1).c_str());
                 
-    log << MSG::INFO << "Tower " << tower << " AFEE " << layer << endreq;
+    msglog << MSG::INFO << "Tower " << tower << " AFEE " << layer << endreq;
                 
     std::vector<int>& curList = m_towerAfeeList[tower];
     curList.push_back(layer);                
@@ -126,14 +127,14 @@ void CalFailureModeSvc::processTowerControllerList() {
   // Purpose and Method: process the jobOptions input lists of (tower,layer) pairs
   //                     
         
-  MsgStream log(msgSvc(), name());
+  MsgStream msglog(msgSvc(), name());
         
   const std::vector<std::string>& theTowers = m_towerControllerListProperty.value( );
   if (theTowers.size() == 0) return;
         
   m_failureModes = m_failureModes || 1 << TOWERCONTROL;
         
-  log << MSG::INFO << "Towers and Controllers to kill " << endreq;
+  msglog << MSG::INFO << "Towers and Controllers to kill " << endreq;
         
         
   std::vector<std::string>::const_iterator it;
@@ -145,7 +146,7 @@ void CalFailureModeSvc::processTowerControllerList() {
     int tower = atoi((*it).substr(0, delimPos).c_str());
     int layer = atoi((*it).substr(delimPos+1, len-delimPos-1).c_str());
                 
-    log << MSG::INFO << "Tower " << tower << " Controller " << layer << endreq;
+    msglog << MSG::INFO << "Tower " << tower << " Controller " << layer << endreq;
                 
     std::vector<int>& curList = m_towerControllerList[tower];
     curList.push_back(layer);                
@@ -160,13 +161,13 @@ void CalFailureModeSvc::processTowerList() {
   //                     
         
         
-  MsgStream log(msgSvc(), name());
+  MsgStream msglog(msgSvc(), name());
         
   const std::vector<std::string>& theTowers = m_towerListProperty.value( );
         
   if (theTowers.size() == 0) return;
         
-  log << MSG::INFO << "Towers to kill " << endreq;
+  msglog << MSG::INFO << "Towers to kill " << endreq;
         
   m_failureModes = m_failureModes || 1 << TOWER;
         
@@ -176,7 +177,7 @@ void CalFailureModeSvc::processTowerList() {
   for (it = theTowers.begin(); it != itend; it++) {
     int tower = atoi((*it).c_str());
                 
-    log << MSG::INFO << "Tower " << tower << endreq;
+    msglog << MSG::INFO << "Tower " << tower << endreq;
                 
     m_towerList.push_back(tower);
   }
