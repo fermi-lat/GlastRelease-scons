@@ -3,6 +3,7 @@
 @verbatim
  $Id$	
  * Package CalUtil
+ * v3r7       06-Nov-2007 ZF added stl_util.h header
  * v3r6p2     06-Nov-2007 ZF added explicit CalArray constructor with default initialization value parameter
  * v3r6p1     31-Oct-2007 ZF  correct spelling of use!
  * v3r6       30-Oct-2007 HMK use gr_app
