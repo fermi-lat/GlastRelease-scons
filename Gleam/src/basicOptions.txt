@@ -34,6 +34,7 @@ Event.Members = {
     "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
     "Sequencer/TriggerTest",   // can reject events, set TriggerAlg.mask = 0 to pass all
+    "Sequencer/CalDigitization",
     "Sequencer/Triggered" 
 };
 
@@ -64,13 +65,13 @@ CalibrationUpdate.Members={
 ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
     "TkrDigiAlg", 
-    "CalDigiAlg", 
     "AcdDigiAlg"
     };
 
 // this sequence contains the trigger test
 TriggerTest.Members = {"TriggerAlg", "Count/trigger" };
 
+CalDigitization.Members = { "CalDigiAlg" };
 
 // this sequence runs if the event passes the trigger
 
@@ -89,12 +90,12 @@ Triggered.Members={
 
 ApplicationMgr.DLLs +={ "Trigger"};
 ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
-//LivetimeSvc.InterleaveMode = false; // interleave mode kills events on a statistical basis 
+LivetimeSvc.InterleaveMode = false; // interleave mode kills events on a statistical basis 
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // The following is for the new Trigger Configuration Service
 TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
-//TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
+TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
 //TriggerAlg.applyWindowMask=true; // only use event if the window was open
 //TriggerAlg.applyDeadtime=true; // throw away events if GEM is busy
 //TriggerAlg.useGltWordForData=true; //when prescaling data use Glt word instead of Gem word

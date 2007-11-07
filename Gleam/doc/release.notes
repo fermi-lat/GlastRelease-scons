@@ -4,6 +4,9 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r33p2  HMK 06-Nov-07 Pick up JO mods in basicOptions for updated Trigger
+*              from Martin.
+
 * v6r32    HMK 30-OCT-07 Use gr_app
 * v6r31    AWB 22-OCT-07 Updated pipeline FRED JO.
 * v6r30    HMK 03-Oct-07 Added use GCRCalib to get it to build when building
