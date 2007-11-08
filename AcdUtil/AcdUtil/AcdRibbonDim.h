@@ -58,6 +58,8 @@ public:
 
   void toLocal(const HepPoint3D& global, int segment, HepPoint3D& local) const;
 
+  const HepTransform3D& transform(int iVol) const;
+
 protected:
 
   /// this function access the detector service to get the geometry information

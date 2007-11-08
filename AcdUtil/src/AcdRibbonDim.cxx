@@ -92,6 +92,19 @@ bool AcdRibbonDim::setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) 
   return true;
 }
 
+const HepTransform3D& AcdRibbonDim::transform(int iVol) const {
+  switch ( iVol ) {
+  case 0:
+    return m_minusSideTransform;
+  case 1:
+    return m_topTransform;
+  case 2:
+    return m_plusSideTransform;
+  }
+  static const HepTransform3D nullTrans;
+  return nullTrans;
+}
+
 
 double AcdRibbonDim::calcRibbonLength() {
    double len(0);

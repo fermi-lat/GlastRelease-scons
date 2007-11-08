@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
 
+ v2r4     08-Nov-2007 EAC added access to transfrom for each side of ribbons
  v2r3     30-Oct-2007 HMK use gr_app
  v2r2p3   30-Oct-2007 HMK Patch to include AcdSimCalibSvc in load
  v2r2p2   27-Oct-2007 JRB Fix the fix 
