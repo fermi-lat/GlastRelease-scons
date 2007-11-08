@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v4r2      08-Nov-2007 EAC Bug fix in Ribbon arclength and plane intersection calculation
 v4r1      30-Oct-2007 HMK Use gr_app
 v4        10-Oct-2007 EAC Handle high range values correctly.
                           Move conversion from local coord -> active distance to AcdTimeDim in AcdUtil so that

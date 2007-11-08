@@ -146,7 +146,7 @@ namespace AcdRecon {
     // loop over volumes of tile
     for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {      
       
-      double testArcLength(-1.);     
+      double testArcLength(-1.);
       AcdRecon::crossesPlane(track,tile.transform(iVol),testArcLength, testHitPoint);      
 
       // If arcLength is negative... had to go backwards to hit plane... 
@@ -293,50 +293,26 @@ namespace AcdRecon {
     // FIXME, use the transformations instead
 
     // get the ribbon id
-    const idents::AcdId& acdId = ribbon.acdId();  
+    // const idents::AcdId& acdId = ribbon.acdId();  
     
     // this is the value we want to beat
     double best_dist = -maxDocaValue;
+    
+    HepPoint3D testHitPoint, testLocal;
 
     // loop over segments
     for ( int segment = 0; segment < 3; segment++ ) {
 
-      HepPoint3D sideCenter;
-      const HepPoint3D origin;
-      ribbon.toLocal(origin,segment,sideCenter);
-
-      // check orientation to determine which segment corresponds to which face
-      int face(-1);      
-      switch ( segment ) {
-      case 1: face = 0; break;
-      case 0: face = acdId.ribbonOrientation() == ribbonX ? 1 : 2; break;
-      case 2: face = acdId.ribbonOrientation() == ribbonX ? 3 : 4; break;
-      }
-      
-      // where does this track cross the plane of the tile 
-      HepPoint3D x_isec;
-      HepPoint3D ribbonStartPos;
-      HepVector3D ribbonVec;
-      double test_arc(-1.);
-
-      AcdRecon::crossesPlane(aTrack,sideCenter,face,test_arc,x_isec);
+      double testArcLength(-1.);
+      const HepTransform3D& toFacePlane = ribbon.transform(segment);
+      AcdRecon::crossesPlane(aTrack, toFacePlane, testArcLength, testHitPoint);      
 	
-      if (test_arc < 0) continue;
-    
-      bool isOk = ribbon.setEdgeRay(segment,ribbonStartPos,ribbonVec);
-      if ( !isOk ) continue;
-      
-      // Form vector between the beginning of the ribbon and the point where the
-      // track intersects the plane of the ribbon
-      HepVector3D delta = x_isec - ribbonStartPos;
-      // Form a vector for the ribbon
-      double prod = delta * ribbonVec.unit();
-      // check that the projection of the point to the ribbon occurs within the
-      // length of the ribbon segment
-      if ((prod < 0) || (prod > ribbonVec.mag())) continue;
-    
-      double test_dist = sqrt(delta.mag2() - prod*prod);
+      if (testArcLength < 0) continue;
 
+      testLocal = toFacePlane * testHitPoint;
+    
+      double test_dist = fabs(testLocal.x());
+      
       // Make this an Active Distance calculation 
       test_dist = ribbon.halfWidth() - test_dist;
 
@@ -344,8 +320,8 @@ namespace AcdRecon {
       if ( test_dist > best_dist ) {
 	data.m_active2D = test_dist;
 	best_dist = test_dist;
-	data.m_arcLengthPlane = test_arc;
-	data.m_hitsPlane.set(x_isec.x(),x_isec.y(),x_isec.z());
+	data.m_arcLengthPlane = testArcLength;
+	data.m_hitsPlane.set(testHitPoint.x(),testHitPoint.y(),testHitPoint.z());
 	data.m_volume = segment;
       }
     }
