@@ -585,6 +585,8 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
 {
 
   MsgStream  log( msgSvc(), name() );
+  
+  log << MSG::DEBUG << "Filling data from tile " << id.id() << ':' << iVol << endreq;
 
   // Build the VolumeIdentifier for this tile section
   idents::AcdId& ncid = const_cast<idents::AcdId&>(id);
@@ -609,6 +611,15 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   } else {
     AcdFrameUtil::getCornersTrap(center,x1VectorGlobal,x2VectorGlobal,yVectorGlobal,corner);
   }
+  
+  log << MSG::DEBUG << volId.name() << ' ' 
+      << "cen: " << center << ", " << std::endl
+      << "dim: " << dim[0] << ", " << dim[1] << ", " << dim[2] << std::endl
+      << "x1v: " << x1VectorGlobal << std::endl
+      << "x2v: " << x2VectorGlobal << std::endl
+      << "yv: "  << yVectorGlobal << std::endl
+      << "corner: (" << corner[0] << ',' << corner[1] << ',' << corner[2] << ',' <<  corner[3] << ',' << ")" << endreq;      
+
   return true;
 }
 

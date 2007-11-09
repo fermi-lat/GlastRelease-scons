@@ -93,7 +93,7 @@ void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& 
     if ( face == 0 ) {
       // top, check for hitting near bent tile
       if ( iVol == 0 ) {
-	if ( sharedEdge(0) == 1 &&  localPoint.x() > 0 ) {
+	if ( sharedEdge(0) == 1 &&  localPoint.y() > 0 ) {
 	  activeY += fabs(sharedWidth(0));
 	} else if (  sharedEdge(0) == 3 &&  localPoint.y() <  0 ) {
 	  activeY += fabs(sharedWidth(0));
