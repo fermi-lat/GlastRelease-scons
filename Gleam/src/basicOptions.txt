@@ -34,7 +34,6 @@ Event.Members = {
     "Sequencer/CalibrationUpdate",
     "Sequencer/Digitization",
     "Sequencer/TriggerTest",   // can reject events, set TriggerAlg.mask = 0 to pass all
-    "Sequencer/CalDigitization",
     "Sequencer/Triggered" 
 };
 
@@ -65,13 +64,15 @@ CalibrationUpdate.Members={
 ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
     "TkrDigiAlg", 
+    "CalDigiAlg",
     "AcdDigiAlg"
     };
 
 // this sequence contains the trigger test
 TriggerTest.Members = {"TriggerAlg", "Count/trigger" };
 
-CalDigitization.Members = { "CalDigiAlg" };
+// We'll reactivate this later once EbfWriter is updated a bit for 4 ranges
+//CalDigitization.Members = { "CalDigiAlg" };
 
 // this sequence runs if the event passes the trigger
 

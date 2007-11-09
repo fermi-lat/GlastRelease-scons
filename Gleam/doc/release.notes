@@ -4,6 +4,9 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r33p3  HMK 09-Nov-07 Go back to running CalDigiAlg before TriggerAlg
+                         until we sort out what may go wrong with EbfWriter
+                         and 4 range readout in some cases
 * v6r33p2  HMK 06-Nov-07 Pick up JO mods in basicOptions for updated Trigger
 *              from Martin.
 
