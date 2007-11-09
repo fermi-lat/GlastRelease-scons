@@ -6,8 +6,7 @@ $Header$
 
 */
 #include "SampledBackground.h"
-
-#include "InterleaveAlg.h" // for static rate to use
+#include "BackgroundManager.h"
 
 #include "flux/EventSource.h"
 
@@ -16,14 +15,14 @@ $Header$
 SampledBackground::SampledBackground(const std::string& params)
 : m_tupleVar(params)
 {
-    InterleaveAlg::defineSource(params);
+    BackgroundManager::instance()->defineSource(params);
 }
 
 // Gives back energy
 double SampledBackground::energy(double /*time*/)
 { 
     // tell the InterleaveAlg that we were the one to generate this event
-    InterleaveAlg::currentSource(m_tupleVar);
+//    InterleaveAlg::currentSource(m_tupleVar);
     return 0.;
 }
 
@@ -36,7 +35,7 @@ std::pair<double,double> SampledBackground::dir(double /*energy*/)
 // Gives back the total flux into the standard area (limited to downlink here)
 double SampledBackground::flux(double /*time*/) const // calculate the flux [c/s/m^2/sr]
 { 
-    return  InterleaveAlg::downlinkRate(m_tupleVar)/(EventSource::totalArea() * solidAngle());
+    return  BackgroundManager::instance()->downlinkRate(m_tupleVar)/(EventSource::totalArea() * solidAngle());
 }
 
 

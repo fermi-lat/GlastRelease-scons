@@ -10,6 +10,7 @@
 
 DECLARE_FACTORY_ENTRIES(Interleave) {
     DECLARE_TOOL( RegisterSampledBackground );
+    DECLARE_TOOL( BkgndTupleSelectTool );
     DECLARE_ALGORITHM( InterleaveAlg);
     DECLARE_ALGORITHM( FilterFailAlg);
 } 
