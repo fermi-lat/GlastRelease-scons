@@ -61,8 +61,8 @@ namespace AcdCalib {
     double top = PHApedReduced * saturation;
     double bot = ( saturation - PHApedReduced ) * slope;
     if ( bot <= 0 ) {
-      mips = 0;
-      return StatusCode::FAILURE;
+      mips = 1000;
+      return StatusCode::SUCCESS;
     }
     mips = top/bot;
     return StatusCode::SUCCESS;
