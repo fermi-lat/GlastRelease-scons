@@ -77,7 +77,7 @@ namespace Event {
     inline void set(float arcLength, float doca, float docaErr, 
 		    const Point& poca, const Vector& pocaVector);
     
-    inline void set(const AcdPocaData& other);
+    void set(const AcdPocaData& other);
     
     /// set individaul values
     inline void setArcLength(float val) { m_arcLength = val; }
