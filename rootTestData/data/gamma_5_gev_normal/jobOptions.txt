@@ -15,11 +15,12 @@ FluxSvc.source_lib += { "$(ROOTTESTDATAROOT)/data/gamma_5_gev_normal/source_libr
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 
 //// set root output from merit with following
-MeritAlg.EventTreeName="MeritTuple";
+AnalysisNtupleAlg.tupleName = "MeritTuple";
 //DC: obsolete ?
 //MeritAlg.PointingTreeName="Exposure";
 
 TriggerAlg.mask = 0; // accept events even if they don't trigger
+TriggerAlg.applyPrescales=false;
 
 mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/mc.root";
 relationRootWriterAlg.rootFile   = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/relations.root";

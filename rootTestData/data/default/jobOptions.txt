@@ -15,7 +15,7 @@ FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 FluxAlg.source_name="muon_pencil_angle";
 
 // set root output from merit with following
-MeritAlg.EventTreeName="MeritTuple";
+AnalysisNtupleAlg.tupleName = "MeritTuple";
 //MeritAlg.PointingTreeName="Exposure";
 
 mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/default/mc.root";
@@ -25,7 +25,9 @@ reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/default/recon.root";
 RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/default/merit.root";
 RootTupleSvc.rejectIfBad = false;
 
+
 TriggerAlg.mask = 0; // accept events even if they don't trigger
+TriggerAlg.applyPrescales=false;
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
