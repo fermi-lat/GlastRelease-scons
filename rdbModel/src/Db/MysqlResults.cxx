@@ -4,7 +4,7 @@
 #endif
 
 #include "rdbModel/Db/MysqlResults.h"
-#include "mysql.h"
+#include "mysql/mysql.h"
 
 namespace rdbModel {
 
