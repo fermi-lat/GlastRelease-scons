@@ -22,6 +22,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstdio>
+#include <ctime>
 #include "facilities/Util.h"
 namespace {
 
