@@ -17,9 +17,9 @@
     <!ENTITY globalDimPrim   SYSTEM "../flight/flightGlobalDimPrim.xml">
     <!ENTITY extraPrim       SYSTEM "cu06Primary.xml">
 
-    <!ENTITY CALMatPrim     SYSTEM "../flight/flightCALMatPrim.xml">
+    <!ENTITY CALMatPrim     SYSTEM "../cu06/cu06CALMatPrim.xml">
     <!ENTITY CALCountPrim   SYSTEM "../flight/flightCALCountPrim.xml">
-    <!ENTITY CALDimPrim     SYSTEM "../flight/flightCALDimPrim.xml">
+    <!ENTITY CALDimPrim     SYSTEM "../cu06/cu06CALDimPrim.xml">
     <!ENTITY CALResponse    SYSTEM "../flight/flightCALResponse.xml">
     <!ENTITY CALOneCal      SYSTEM "../flight/flightCALOneCal.xml">
     <!ENTITY CALCsI         SYSTEM "../flight/flightCsISegmented.xml">
