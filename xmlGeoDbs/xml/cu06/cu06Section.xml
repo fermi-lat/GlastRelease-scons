@@ -58,7 +58,8 @@
     <composition name="LATInner" envelope="LATenv" >
 
     <!--  old contents of allTowers -->
-      <posXYZ volume="oneNoTKR" XREF="outerTowers_dtn" ZREF="oneNoTKRAbs_dz">
+      <posXYZ volume="oneSkeletonAirTower" 
+               XREF="outerTowers_dtn" ZREF="oneNoTKRAbs_dz">
         <idField name="fLATObjects" valueREF="eLATTowers" />
         <idField name="fTowerY" value="0" />
         <idField name="fTowerX" value="0" />
