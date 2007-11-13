@@ -34,8 +34,9 @@
     Notes
 
 <table>
-<tr><th> Method <th> Return Type <th> Description <th>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
 
+<small>
 <tr><td> getParticleId
 <td>Int_t<td> Returns the particle identifier
 <tr><td> getParticleProperty
@@ -61,6 +62,7 @@
 <tr><td> getDaugtherList
 <td>const TRefArray&<td> Returns the full array of daughter particles
 
+</small>
 </table>
 */
 

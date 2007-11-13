@@ -20,8 +20,9 @@
 
 
 <table>
-<tr><th> Method <th> Return Type <th> Description <th>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
 
+<small>
 <tr><td> getVolumeId
 <td>const VolumeIdentifier<td> Returns the volume identifier
 <tr><td> getTotalEnergy
@@ -32,7 +33,7 @@
 <td>const TVector3<td> Returns the second moment
 <tr><td> getMcParticleEnergy( Particle p )
 <td>Double_t<td> Returns energy associated with PRIMARY, ELECTRON or POSITRON
-
+</small>
 </table>
 */
 

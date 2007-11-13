@@ -33,8 +33,9 @@
     Notes
 
 <table>
-<tr><th> Method <th> Return Type <th> Description <th>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
 
+<small>
 <tr><td> getVolumeId
 <td>const VolumeIdentifier&<td> Returns the volume identifier
 <tr><td> getMcParticleId
@@ -63,7 +64,7 @@
 <td>const McParticle*<td>Returns pointer to the McParticle that made the hit
 <tr><td> getOriginMcParticle
 <td>const McParticle*<td> Returns the origin McParticle pointer
-
+</small>
 </table>
 */
 

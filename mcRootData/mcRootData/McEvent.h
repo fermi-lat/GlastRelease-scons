@@ -32,11 +32,13 @@
 
 /** @page mcRootData_doc
     @section McEvent McEvent Documentation
-    Notes
+    \image html mcTree.gif
+    Notes 
 
 <table>
-<tr><th> Method <th> Return Type <th> Description <th>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
 
+<small>
 <tr><td> getEventId
 <td>UInt_t<td> Returns the event identifier
 <tr><td> getRunId
@@ -66,7 +68,7 @@
 <tr><td> getMcPositionHitCol
 <td>TObjArray*<td> Returns the full TObjArray containing all McPositionHits
 <tr><td> getMcTkrStrip(UInt_t index)
-<td><McTkrStrip*<td> Returns a McTkrStrip pointer corresponding to the index
+<td>McTkrStrip*<td> Returns a McTkrStrip pointer corresponding to the index
 <tr><td> getMcTkrStripCount
 <td>UInt_t<td> Returns the number of McTkrStrips in the collection
 <tr><td> getMcTkrStripCol
@@ -77,7 +79,7 @@
 <tr><td>getIntegratingHitCount
 <td>UInt_t<td> Returns the number of McIntegratingHits in the collection
 <tr><td> getMcIntegrationHitCol
-<td><TObjArray*<td> Returns the TObjArray* collection containing McIntegratingHits
+<td>TObjArray*<td> Returns the TObjArray* collection containing McIntegratingHits
 
 <tr><td> getMcTracjectory(UInt_t index)
 <td>McTrajectory*<td> Returns the McTrajectory pointer corresponding to index
@@ -86,6 +88,7 @@
 <tr><td> getMcTrajectoryCol
 <td>TObjArray*<td> Returns the TObjArray* collection of McTrajectories
 
+</small>
 </table>
 */
 

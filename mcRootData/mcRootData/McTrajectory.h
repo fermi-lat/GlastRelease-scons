@@ -25,15 +25,16 @@
     Notes
 
 <table>
-<tr><th> Method <th> Return Type <th> Description <th>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
 
+<small>
 <tr><td> getVolumeID
 <td>VolumeIdentifier<td> Returns the volume identifier
 <tr><td> getEnergy
 <td>Float_t<td> Returns the energy at this  point 
 <tr><td> getPoint
 <td>TVector3<td> Returns the hit point 
-
+</small>
 </table>
 */
 
