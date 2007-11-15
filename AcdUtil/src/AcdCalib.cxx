@@ -15,44 +15,56 @@ namespace AcdCalib {
 
     static CalibData::AcdCalibObj::STATUS ok = CalibData::AcdCalibObj::OK;
 
-    static CalibData::AcdPed idealPed(0.,0.,ok); // all pedestals are null
+    static CalibData::AcdPed* idealPed = 
+      new CalibData::AcdPed(0.,0.,ok); // all pedestals are null
 
     // four kinds of channels for Gain
-    static CalibData::AcdGain ribbonGain(56.875,25.4,ok);   // ribbons
-    static CalibData::AcdGain tileGain(204.75,50.,ok);      // most tiles
-    static CalibData::AcdGain tile_12mmGain(245.7,50.,ok);  // 12mm thick tiles
-    static CalibData::AcdGain naGain(-1.,0.,ok);            // NA channels
+    static CalibData::AcdGain* ribbonGain =
+      new CalibData::AcdGain(56.875,25.4,ok);   // ribbons
+    static CalibData::AcdGain* tileGain =
+      new CalibData::AcdGain(204.75,50.,ok);      // most tiles
+    static CalibData::AcdGain* tile_12mmGain =
+      new CalibData::AcdGain(245.7,50.,ok);  // 12mm thick tiles
+    static CalibData::AcdGain* naGain = 
+      new CalibData::AcdGain(-1.,0.,ok);            // NA channels
 
-    static CalibData::AcdVeto idealVeto(50.,0.,ok);          // veto fires at 50 counts PHA
-    static CalibData::AcdCno  idealCno(50.,0.,ok);           // cno pedestals are ideal
+    static CalibData::AcdVeto* idealVeto =
+      new CalibData::AcdVeto(50.,0.,ok);        // veto fires at 50 counts PHA
+    static CalibData::AcdCno*  idealCno = 
+      new CalibData::AcdCno(50.,0.,ok);           // cno pedestals are ideal
 
-    static CalibData::AcdRange idealRange(4000.,40.,ok);             // Switch occurs at 4000 in low range = 0 in High Range
-    static CalibData::AcdHighRange idealHighRange(0.,2.04,4000.,ok); // Pedestal = 0, slope = 2.4 PHA/mip, saturates at 4000 PHA
+    static CalibData::AcdRange* idealRange =
+      new CalibData::AcdRange(4000.,40.,ok);             // Switch occurs at 4000 in low range = 0 in High Range
+    static CalibData::AcdHighRange* idealHighRange =
+      new CalibData::AcdHighRange(0.,2.04,4000.,ok); // Pedestal = 0, 
+    //slope = 2.4 PHA/mip, saturates at 4000 PHA
 
-    static CalibData::AcdCoherentNoise idealCoherentNoise(0.,0.,0.,0.,ok); // Amplitude is 0, no oscillation
+    static CalibData::AcdCoherentNoise* idealCoherentNoise =
+      new CalibData::AcdCoherentNoise(0.,0.,0.,0.,ok); // Amplitude is 0, 
+    //  no oscillation
 
     switch ( cType ) {
-    case AcdCalibData::PEDESTAL: return &idealPed;
+    case AcdCalibData::PEDESTAL: return idealPed;
     case AcdCalibData::GAIN: break;
-    case AcdCalibData::VETO: return &idealVeto ;
-    case AcdCalibData::CNO: return  &idealCno;
-    case AcdCalibData::RANGE: return  &idealRange;
-    case AcdCalibData::HIGH_RANGE: return &idealHighRange ;
-    case AcdCalibData::COHERENT_NOISE: return &idealCoherentNoise ;  
+    case AcdCalibData::VETO: return idealVeto ;
+    case AcdCalibData::CNO: return  idealCno;
+    case AcdCalibData::RANGE: return  idealRange;
+    case AcdCalibData::HIGH_RANGE: return idealHighRange ;
+    case AcdCalibData::COHERENT_NOISE: return idealCoherentNoise ;  
     default:
       return 0;
     }
 
     if ( id.ribbon() ) {
-      return &ribbonGain;
+      return ribbonGain;
     } else if ( id.tile() ) {
       if ( id.face() == 0 && id.row() == 2 ) {
-	return &tile_12mmGain;
+	return tile_12mmGain;
       } else {
-	return &tileGain;
+	return tileGain;
       }
     } 
-    return &naGain;
+    return naGain;
   }
 
   ICalibPathSvc::CalibItem calibItem(AcdCalibData::CALTYPE cType) {
