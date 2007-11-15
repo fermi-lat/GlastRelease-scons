@@ -18,11 +18,11 @@
 
 void usage() {
 
-  using std::cout;
-  using std::cerr;
-  using std::endl;
+  using std::cout ;
+  using std::cerr ;
+  using std::endl ;
 
-  std::string m_theApp("digiMeritRecon.exe");
+  std::string m_theApp("digiMeritRecon.exe") ;
 
   cout << endl
        << "digiMeritRecon.exe" << endl
@@ -33,10 +33,10 @@ void usage() {
        << "\t" << m_theApp << " [options] [input] -o <output>" << endl 
        << endl
        << "\tINPUT" << endl
-       << "\t   -r <reconFile>    : recon ROOT files" << endl
-       << "\t   -d <digiFile>     : digi ROOT files" << endl
-       << "\t   -S <svacFile>     : svac ROOT files" << endl
-       << "\t   -m <meritFile>    : merit ROOT files" << endl 
+       << "\t   -r <reconFile>    : recon ROOT file" << endl
+       << "\t   -d <digiFile>     : digi ROOT file" << endl
+       << "\t   -S <svacFile>     : svac ROOT file" << endl
+       << "\t   -m <meritFile>    : merit ROOT file" << endl 
        << endl
        << "\t   -o <output>       : output file" << endl
        << endl

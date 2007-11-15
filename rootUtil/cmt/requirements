@@ -17,7 +17,8 @@ apply_pattern root_package headers="\
   ../rootUtil/CelEventIDs.h\
   ../rootUtil/CelEventLink.h\
   ../rootUtil/CelIndex.h\
-  ../rootUtil/CelUtil.h"
+  ../rootUtil/CelUtil.h\
+  ../rootUtil/TestData.h"
 
 private
 
@@ -25,8 +26,12 @@ macro_append ROOT_libs " -lHist " WIN32 " libHist.lib "
 application testRootInterface ../apps/testRootInterface.cxx
 
 macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "
+
 application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
 application printSkim ../apps/printSkim.cxx $(getoptSource)
 application mergeSkim ../apps/mergeSkim.cxx $(getoptSource)
+
+application testWrite ../apps/testWrite.cxx $(getoptSource)
+application testRead ../apps/testRead.cxx $(getoptSource)
 
 
