@@ -4,6 +4,7 @@ Win32*
 sun4x_*
 i386_linux*
 rh9*
+rhel*
 setup.*
 *.mak*
 *.root
