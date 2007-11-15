@@ -51,23 +51,23 @@ namespace CalibData {
   }  
     
   void AcdCalibObj::setVals(float v1, float v2, STATUS stat) {
-    (*this)[0] = v1;
-    (*this)[1] = v2;
+    m_vals[0] = v1;
+    m_vals[1] = v2;
     setStatus(stat);
   }
   
   void AcdCalibObj::setVals(float v1, float v2, float v3, STATUS stat){
-    (*this)[0] = v1;
-    (*this)[1] = v2;
-    (*this)[2] = v3;
+    m_vals[0] = v1;
+    m_vals[1] = v2;
+    m_vals[2] = v3;
     setStatus(stat);
   }
   
   void AcdCalibObj::setVals(float v1, float v2, float v3, float v4, STATUS stat){
-    (*this)[0] = v1;
-    (*this)[1] = v2;
-    (*this)[2] = v3;
-    (*this)[3] = v4;
+    m_vals[0] = v1;
+    m_vals[1] = v2;
+    m_vals[2] = v3;
+    m_vals[3] = v4;
     setStatus(stat);
   }
   

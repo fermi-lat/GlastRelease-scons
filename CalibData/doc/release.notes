@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r19p1 15-Nov-2007  hmk  Replace (*this)[] in AcdCalibObj::setVals routines
    v0r19   17-Oct-2007  jrb  Moved some files to new Nas subdirectory
    v0r18p4 12-Oct-2007  jrb  Fix type affecting ACD_Range, ACD_HighRange
    v0r18p3 10-Oct-2007  jrb  Include something that really exists
