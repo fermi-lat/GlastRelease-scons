@@ -20,6 +20,7 @@
 
 #include "BackgroundManager.h"
 #include "XmlFetchEvents.h"
+#include "IInterleaveMap.h"
 
 #include "TFile.h"
 #include "TTree.h"
@@ -113,22 +114,17 @@ private:
     std::string          m_tupVarName;
 
     IFetchEvents*        m_fetch; ///< abstract guy that processes the xml file
-    double               m_value; ///< current value
     double               m_downlinkRate;
     double               m_triggerRate;
 
-    int                  m_run;
-    int                  m_curEvent;   ///< current run, event
-    int                  m_irun;
-    int                  m_ievent; ///< interleaved run, event
-    char                 m_type[40];    ///< background type
+    // For dealing with the interleave <-> output ntuple mapping
+    IInterleaveMap*      m_interleaveMap;
 
     /// Pointer to the Gaudi data provider service
     IDataProviderSvc*    m_dataSvc;
 
     StringProperty       m_treeName;    ///< name of the tree to process
     StringArrayProperty  m_disableList;
-    StringProperty       m_mapName;     ///< name of the map tree
 };
 
 static ToolFactory<BkgndTupleSelectTool> s_factory;
@@ -148,7 +144,6 @@ BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type,
                                  , m_outputTree(0)
                                  , m_inputFile(0)
                                  , m_fetch(0)
-                                 , m_value(0)
                                  , m_downlinkRate(0)
                                  , m_triggerRate(0)
 {
@@ -158,14 +153,6 @@ BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type,
     // declare properties with setProperties calls
     declareProperty("TreeName",       m_treeName="MeritTuple");
     declareProperty("DisableList",    m_disableList);
-    declareProperty("MapName",        m_mapName="interleave_map");
-
-    // initialize the disable list, which can be added to, or replaced in the JO
-    std::vector<std::string> tlist;
-    tlist.push_back("EvtElapsedTime");
-    tlist.push_back("EvtLiveTime");
-    tlist.push_back("Pt*");   // use current position, etc.
-    tlist.push_back("FT1*");  // will recalculate
 
     std::string varName = this->name();
     int dotPos = varName.find(".");
@@ -193,6 +180,15 @@ StatusCode BkgndTupleSelectTool::initialize()
         return sc;
     }
 
+    // Get the interleave map tool
+    IAlgTool* toolPtr = 0;
+    if ( (sc = toolSvc()->retrieveTool("InterleaveMapTool", toolPtr)).isFailure())
+    {
+        log << MSG::ERROR << "failed to retrieve InterleaveMapTool for " + name() << endreq;
+        return sc;
+    }
+    else m_interleaveMap = dynamic_cast<IInterleaveMap*>(toolPtr);
+
     // Retrieve tuple info an set up
     // get a pointer to RootTupleSvc
     sc = service("RootTupleSvc", m_rootTupleSvc);       
@@ -212,8 +208,8 @@ StatusCode BkgndTupleSelectTool::initialize()
     }
     m_outputTree = static_cast<TTree*>(ptr);
 
-    std::string filePath;
-    SimplePropertyRef<std::string> filePathProperty("FilePath", filePath);
+    std::string  filePath;
+//    StringProperty filePathProperty("FilePath", filePath);
 
     // Retrieve the file path from the parent algorithm (which can be tricky)
     // The try-catch is for the services (e.g. FluxSvc) which instantiate all
@@ -222,7 +218,9 @@ StatusCode BkgndTupleSelectTool::initialize()
     {
         if (IProperty* parentProp = dynamic_cast<IProperty*>(const_cast<IInterface*>(parent())))
         {
+            SimplePropertyRef<std::string> filePathProperty("FilePath", filePath);
             StatusCode sc = parentProp->getProperty(&filePathProperty);
+            sc = parentProp->getProperty(&m_disableList);
         }
     }
     catch(...) 
@@ -277,14 +275,6 @@ StatusCode BkgndTupleSelectTool::initialize()
 
         setCurrentTree(mean);
     }
-
-    // Setup a mapping tree between interleave input and output
-    m_rootTupleSvc->addItem(m_mapName.value(), "run",    &m_run);
-    m_rootTupleSvc->addItem(m_mapName.value(), "event",  &m_curEvent);
-    m_rootTupleSvc->addItem(m_mapName.value(), "irun",   &m_irun);
-    m_rootTupleSvc->addItem(m_mapName.value(), "ievent", &m_ievent);
-    m_rootTupleSvc->addItem(m_mapName.value(), "itype",  m_type);
-    m_rootTupleSvc->addItem(m_mapName.value(), "value",  &m_value);
 
     return sc;
 }
@@ -472,12 +462,13 @@ void BkgndTupleSelectTool::copyEventInfo()
     float  EvtLiveTime    = header->livetime();
 
     // load the map entries to relate the interleaved row back to its original source
-    m_run      =  header->run();
-    m_curEvent =  header->event();
-    m_irun     =  static_cast<int>(m_runLeaf->GetValue());
-    m_ievent   =  static_cast<int>( m_eventLeaf->GetValue());
-    m_value    =  value();
-    strncpy(m_type, m_tupVarName.c_str(), sizeof(m_type));
+    m_interleaveMap->getInterleaveMap()->run      =  header->run();
+    m_interleaveMap->getInterleaveMap()->curEvent =  header->event();
+    m_interleaveMap->getInterleaveMap()->irun     =  static_cast<int>(m_runLeaf->GetValue());
+    m_interleaveMap->getInterleaveMap()->ievent   =  static_cast<int>( m_eventLeaf->GetValue());
+    m_interleaveMap->getInterleaveMap()->value    =  value();
+    strncpy(m_interleaveMap->getInterleaveMap()->type, m_tupVarName.c_str(), 
+        sizeof(m_interleaveMap->getInterleaveMap()->type));
 
     // Update this event's info 
     setLeafValue(m_runLeaf,   EvtRun);
@@ -490,6 +481,7 @@ void BkgndTupleSelectTool::copyEventInfo()
     setLeafValue(m_mcidLeaf, sourceId);
 
     // Save this row
-    m_rootTupleSvc->saveRow(m_mapName.value());
+    m_rootTupleSvc->saveRow(m_treeName.value());
+    m_interleaveMap->saveInterleaveMapRow();
 }
 
