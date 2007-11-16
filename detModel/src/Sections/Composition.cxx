@@ -5,8 +5,6 @@
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/BoundingBox.h"
 
-#include <math.h>
-
 namespace detModel{
 
   Composition::~Composition(){

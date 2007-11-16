@@ -1,5 +1,5 @@
 #include "detModel/Utilities/Vector.h"
-#include <math.h>
+#include <cmath>
 
 namespace detModel{
   
