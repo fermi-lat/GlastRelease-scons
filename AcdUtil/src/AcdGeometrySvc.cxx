@@ -749,6 +749,7 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   // Note that this is expressed in the "GEANT" frame, 
   // which has only minimal rotations about X or Y axis for the side tiles
   StatusCode sc = m_glastDetSvc->getShapeByID(volId, &str, &globalDim);
+
   if ( sc.isFailure() ) {        
     log << MSG::ERROR << "Failed to retrieve shape by Id: " 
 	<< volId.name() << endreq;
@@ -764,7 +765,7 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   }
 
   // Make the dimension vector in the local frame;
-  if ( dim.size() == 3 ) {
+  if ( globalDim.size() == 3 ) {
     AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
   } else {
     AcdFrameUtil::transformDimensionVectorTrap(frameId,globalDim,dim);

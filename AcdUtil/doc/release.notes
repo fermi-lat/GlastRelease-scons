@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  @verbatim
                EOH
+ v2r5p1   21-Nov-2007 EAC Fix AcdGeometrySvc::getTransformAndLocalVectors
  v2r5     21-Nov-2007 EAC Change referenceFrame utility to be in accord with side tiles defined the X,Y=thickness
  v2r4p4   15-Nov-2007 JRB ..and don't introduce new memory leak 
  v2r4p3   15-Nov-2007 JRB Change statics in AcdCalib to ptrs,avoid memory problems
