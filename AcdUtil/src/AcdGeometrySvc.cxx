@@ -681,13 +681,10 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) const {
 
     if (tile) {  // simple except for bent pieces
       // Everything but the top just depends on the face
-      //  if (face ==  m_eACDXNegFace) return AcdFrameUtil::FRAME_MINUSX;
-      //  else if (face == m_eACDYNegFace) return AcdFrameUtil::FRAME_MINUSY;
-      //  else if (face == m_eACDXPosFace) return AcdFrameUtil::FRAME_PLUSX;
-      //  else if (face ==  m_eACDYPosFace) return AcdFrameUtil::FRAME_PLUSY;
-      if ((face == m_eACDXNegFace) || (face == m_eACDYNegFace) || 
-          (face == m_eACDXPosFace) || (face == m_eACDYPosFace)) 
-        return AcdFrameUtil::FRAME_TOP;
+      if (face ==  m_eACDXNegFace) return AcdFrameUtil::FRAME_MINUSX;
+      else if (face == m_eACDYNegFace) return AcdFrameUtil::FRAME_MINUSY;
+      else if (face == m_eACDXPosFace) return AcdFrameUtil::FRAME_PLUSX;
+      else if (face ==  m_eACDYPosFace) return AcdFrameUtil::FRAME_PLUSY;
       // For the to check to see if it is a bent piece
       else if (face == m_eACDTopFace) {
 	if (!findFieldVal(nid, "fTileSeg", val)) return AcdFrameUtil::FRAME_NONE;
