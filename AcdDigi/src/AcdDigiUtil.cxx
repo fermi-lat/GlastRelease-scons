@@ -315,10 +315,13 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& 
   idents::AcdId tileId(volId);
   
   // In local coordinates the box should be centered at (0,0,0)
-  const HepPoint3D local_x0 = hit->entryPoint();
-  
+  const HepPoint3D geant_x0 = hit->entryPoint();
+
   const AcdTileDim* tileDim = m_geomSvc->geomMap().getTile(tileId,*m_geomSvc);
   if ( tileDim == 0 ) return StatusCode::FAILURE;
+  AcdFrameUtil::AcdReferenceFrame refFrame = tileDim->acdGeomSvc().getReferenceFrame(volId);
+  const HepGeom::Transform3D& rotToLoca = AcdFrameUtil::getRotationToLocal(refFrame);
+  const HepPoint3D local_x0 = rotToLoca*geant_x0;
   
   double activeX(0.);
   double activeY(0.);
