@@ -6,27 +6,29 @@ namespace AcdFrameUtil {
     
   //const double PI_OVER_2 = 1.57079632679489656;
 
-  std::vector<HepGeom::Transform3D> _toLocal;
-  std::vector<HepGeom::Transform3D> _toGeant;
+  std::vector<HepGeom::Transform3D>* _pToLocal = 0;
+  std::vector<HepGeom::Transform3D>* _pToGeant = 0;
 
   const HepGeom::Transform3D& getRotationToLocal(AcdReferenceFrame type) {
     // return the rotation from the GLOBAL frame to the LOCAL frame
     // This is just a matter of renaming the axes
+    if (!_pToLocal) _pToLocal = new std::vector<HepGeom::Transform3D>;
     if ( type == FRAME_NONE ) { return _identity; }
-    if ( _toLocal.size() == 0 ) {
+    if ( _pToLocal->size() == 0 ) {
       buildRotations();
     }
-    return _toLocal[type];
+    return (*_pToLocal)[type];
   }
 
   const HepGeom::Transform3D& getRotationToGeant(AcdReferenceFrame type) {
     // return the rotation from the LOCAL frame to the GLOBAL frame
     // This is just a matter of renaming the axes 
     if ( type == FRAME_NONE ) { return _identity; }
-    if ( _toGeant.size() == 0 ) {
+    if (!_pToGeant) _pToGeant = new std::vector<HepGeom::Transform3D>;
+    if ( _pToGeant->size() == 0 ) {
       buildRotations();
     }
-    return _toGeant[type];
+    return (*_pToGeant)[type];
   }
 
   void getCornersSquare(const HepPoint3D &center, const HepVector3D& xVector, const HepVector3D& yVector,
@@ -102,58 +104,60 @@ namespace AcdFrameUtil {
 
   void buildRotations() {
 
-    _toLocal.clear();
-    _toLocal.resize(12);
-    _toGeant.clear();
-    _toGeant.resize(12);
+    if (!_pToLocal) _pToLocal = new std::vector<HepGeom::Transform3D>;
+    if (!_pToGeant) _pToGeant = new std::vector<HepGeom::Transform3D>;
+    _pToLocal->clear();
+    _pToLocal->resize(12);
+    _pToGeant->clear();
+    _pToGeant->resize(12);
 
     // 0 is identity
     //_toLocal[0];
     //_toGeant[0];
     
     // 1 is -X face
-    _toLocal[1] = _ry_pi_over_2* _rx_3pi_over_2;    
-    _toGeant[1] = _rx_pi_over_2* _ry_3pi_over_2;     
+    (*_pToLocal)[1] = _ry_pi_over_2* _rx_3pi_over_2;    
+    (*_pToGeant)[1] = _rx_pi_over_2* _ry_3pi_over_2;     
     
     // 2 is -Y face
-    _toLocal[2] = _rx_3pi_over_2;    
-    _toGeant[2] = _rx_pi_over_2;    
+    (*_pToLocal)[2] = _rx_3pi_over_2;    
+    (*_pToGeant)[2] = _rx_pi_over_2;    
 
     // 3 is +X face
-    _toLocal[3] = _ry_3pi_over_2*_rx_3pi_over_2;    
-    _toGeant[3] = _rx_pi_over_2*_ry_pi_over_2;
+    (*_pToLocal)[3] = _ry_3pi_over_2*_rx_3pi_over_2;    
+    (*_pToGeant)[3] = _rx_pi_over_2*_ry_pi_over_2;
 
     // 4 is +Y face
-    _toLocal[4] = _ry_pi*_rx_3pi_over_2;  
-    _toGeant[4] = _rx_pi_over_2*_ry_pi;
+    (*_pToLocal)[4] = _ry_pi*_rx_3pi_over_2;  
+    (*_pToGeant)[4] = _rx_pi_over_2*_ry_pi;
 
     // 5 is -X face, rotated by 180 so that y goes down
-    _toLocal[5] = _rz_pi*_toLocal[1];
-    _toGeant[5] = _toGeant[1]*_rz_pi;
+    (*_pToLocal)[5] = _rz_pi*(*_pToLocal)[1];
+    (*_pToGeant)[5] = (*_pToGeant)[1]*_rz_pi;
    
     // 5 is -Y face, rotated by 180 so that y goes down
-    _toLocal[6] = _rz_pi*_toLocal[2];
-    _toGeant[6] = _toGeant[2]*_rz_pi;
+    (*_pToLocal)[6] = _rz_pi*(*_pToLocal)[2];
+    (*_pToGeant)[6] = (*_pToGeant)[2]*_rz_pi;
     
     // 7 is -X face, rotated by 180 so that y goes down
-    _toLocal[7] = _rz_pi*_toLocal[3];
-    _toGeant[7] = _toGeant[3]*_rz_pi;
+    (*_pToLocal)[7] = _rz_pi*(*_pToLocal)[3];
+    (*_pToGeant)[7] = (*_pToGeant)[3]*_rz_pi;
     
     // 8 is -Y face, rotated by 180 so that y goes down
-    _toLocal[8] = _rz_pi*_toLocal[4];
-    _toGeant[8] = _toGeant[4]*_rz_pi;
+    (*_pToLocal)[8] = _rz_pi*(*_pToLocal)[4];
+    (*_pToGeant)[8] = (*_pToGeant)[4]*_rz_pi;
         
     // 9 is top. rotated by 90 for Y-ribbons
-    _toLocal[9] = _rz_pi_over_2;    
-    _toGeant[9] = _rz_3pi_over_2;
+    (*_pToLocal)[9] = _rz_pi_over_2;    
+    (*_pToGeant)[9] = _rz_3pi_over_2;
 
     // 10 is top. rotated by -90 for Y-ribbons in opposite direction (not used)
-    _toLocal[10] = _rz_3pi_over_2;
-    _toGeant[10] = _rz_pi_over_2;
+    (*_pToLocal)[10] = _rz_3pi_over_2;
+    (*_pToGeant)[10] = _rz_pi_over_2;
    
     // 11 is top. rotated by 180 for X-ribbons in opposite direction (not used)
-    _toLocal[11] = _rz_pi;
-    _toGeant[11] = _rz_pi;
+    (*_pToLocal)[11] = _rz_pi;
+    (*_pToGeant)[11] = _rz_pi;
     
     /*
     //for ( int i(0); i < 12; i++ ) {
