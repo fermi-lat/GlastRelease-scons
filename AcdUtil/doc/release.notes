@@ -4,6 +4,7 @@
  @verbatim
                EOH
 
+ v2r6p2   23-Nov-2007 EAC Fix tile edges in AcdGeometeySvc.
  v2r6p1   21-Nov-2007 JRB Static variable fix for AcdFrameUtil
  v2r6     21-Nov-2007 JRB Back to Z-thickness tiles, but keep Eric's fixes
  v2r5p1   21-Nov-2007 (JRB for EAC) fixes mostly for X, Y thickness tiles

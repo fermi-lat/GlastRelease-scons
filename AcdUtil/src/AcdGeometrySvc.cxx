@@ -807,7 +807,7 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   // Make the half-vectors (center to edge of volume)  
   double yHalfLength = dim[1]/2;
   double xOffsetY = dim.size() == 3 ? 0. : dim[2]/2.;
-  double xHalfLength = dim[0];
+  double xHalfLength = dim[0]/2;
   
   const HepVector3D x1VectorLocal(xHalfLength,0.,0.);
   x1VectorGlobal = transformToGlobal* x1VectorLocal;
