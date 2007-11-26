@@ -4,6 +4,8 @@
  *
  *                    **EOH**
 
+   v1r47p1 26-Nov-2007 jrb  cu06 changes: 1) change CsI density, dimensions
+                                          2) replace 4th CAL with air
    v1r47   29-Oct-2007 jrb  Trapezoidal side tiles (they go in rows 1&2, col 0&4)
    v1r46p2 25-Oct-2007 jrb  Put side tiles on faces 1 and 4 in the correct order
    v1r46p1 23-Oct-2007 jrb  Fix a couple typos
