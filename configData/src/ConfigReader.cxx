@@ -28,13 +28,14 @@ Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& 
     std::cout << ex.getMsg() << std::endl;
     return kFALSE;
   }
+
   DOMElement* topElt = doc->getDocumentElement();
   std::vector<DOMElement*> eltList;
 
   std::vector<std::string> bcastFiles;
   std::vector<std::string> latcFiles;
 
-  Dom::getDescendantsByTagName( topElt, "latcFile", eltList );
+  Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
 
   std::vector<DOMElement*> latcNodeList;
   Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);
@@ -57,12 +58,10 @@ Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& 
   for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {      
     std::string latcFileBase = Dom::getTextContent(*itr);
     std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += latcFileBase;
-    if ( latcFileBase.find("bcast") == 0 ) {
+    if ( latcFileBase.find("DFT") !=  latcFileBase.npos ) {
       bcastFiles.push_back(latcFileFull);
-    } else if ( latcFileBase.find("latc") == 0 ) {
-      latcFiles.push_back(latcFileFull);
     } else {
-      std::cout << "What is " << latcFileFull << std::endl;
+      latcFiles.push_back(latcFileFull);
     }
   }
     
