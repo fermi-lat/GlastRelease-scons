@@ -118,7 +118,7 @@ typedef TestData<TestReconLabel> TestRecon ;
 
 
 template <class Label>
-int testWrite( char * baseName, Long64_t runId, Long64_t numEvents, TRandom & random )
+int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t lastEvent, TRandom & random )
  {   
   Int_t buffer = 64000 ;
   Int_t splitLevel = 1 ;
@@ -127,6 +127,10 @@ int testWrite( char * baseName, Long64_t runId, Long64_t numEvents, TRandom & ra
   fileName += TestComponent<Label>::name() ;
   fileName += "." ;
   fileName += runId ;
+  fileName += "." ;
+  fileName += firstEvent ;
+  fileName += "-" ;
+  fileName += lastEvent ;
   fileName += ".root" ;
 
   std::cout
@@ -137,15 +141,15 @@ int testWrite( char * baseName, Long64_t runId, Long64_t numEvents, TRandom & ra
   TTree * t = new TTree(TestComponent<Label>::treeName(),TestComponent<Label>::treeName()) ;
     
   std::cout << "[testWrite] Creating branches" << std::endl ;
-  TestData<Label> * componentEntry = new TestData<Label>(runId) ;
+  TestData<Label> * componentEntry = new TestData<Label>(runId,firstEvent) ;
   t->Branch(TestComponent<Label>::branchName(),TestComponent<Label>::dataTypeName(),&componentEntry,buffer,splitLevel) ;
   
   std::cout
     <<"[testWrite] Filling "
     <<TestComponent<Label>::treeName()<<" tree" << std::endl ;
   
-  Long64_t ievent = 0, eventID ;
-  while ( ievent < numEvents )
+  Long64_t ievent = firstEvent, eventID  ;
+  while ( ievent <= lastEvent )
    {
 	if (random.Uniform()>0.5)
 	 {
@@ -163,7 +167,7 @@ int testWrite( char * baseName, Long64_t runId, Long64_t numEvents, TRandom & ra
       ievent++ ;
 	 }
    }
-  std::cout << "[testWrite] file filled with " << numEvents << " events" << std::endl ;
+  std::cout << "[testWrite] file filled with " << (lastEvent-firstEvent+1) << " events" << std::endl ;
   delete componentEntry ;
 
   std::cout << "[testWrite] Writing and closing file" << std::endl ;
@@ -186,12 +190,24 @@ class TestReader
 	  
 	TestReader() {}
     void add( const char * baseName, TestAbstractComponent * component ) ;
-    void showByComponent() ;
+    
+    void showByComponent() const ;
     void showByEvent() ;
+    
+    void resetEvent() ;
+    bool nextEvent() ;
+    void showEvent() const ;
+    
+    typedef std::vector<TChain*> RootForest ;
+    const RootForest & getForest() const
+     { return forest_ ; }
 
   private :
 	  
 	TObjArray readers_ ;
+	RootForest forest_ ;
+	Long64_t currentEvent_ ;
+	
 	
 	struct BranchReader : public TObject
      {

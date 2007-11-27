@@ -34,13 +34,21 @@ ClassImp(TestRecon)
 
 
 std::ostream & operator<<( std::ostream & os, const TestAbstractData & data )
- { return (os<<data.getComponentName()<<" "<<data.getRunID()<<"|"<<data.getEventID()) ; }
+ {
+  return
+   (
+    os
+      <<data.getComponentName()<<" "
+      <<setw(2)<<std::right<<data.getRunID()<<"|"
+      <<setw(2)<<std::left<<data.getEventID()
+   ) ;
+ }
 
 
 
-//============================================================
-// Simple Reader : we want to read several components together
-//============================================================
+//==========================================
+// Simple Reader : déclaration of components
+//==========================================
 
 
 void TestReader::add( const char * baseName, TestAbstractComponent * component )
@@ -65,64 +73,119 @@ void TestReader::add( const char * baseName, TestAbstractComponent * component )
 //   { std::cout<<"[TestReader::add] inconsistent chain sizes"<<std::endl ; }
 
   readers_.Add(reader) ;
+  forest_.push_back(reader->chain_) ;
  }
 	
-void TestReader::showByComponent()
+
+
+//==============================================================
+// Simple Reader : show what is within each separate component
+//==============================================================
+
+
+void TestReader::showByComponent() const
  {
-  std::cout<<"[TestReader] start looping on components"<<std::endl ;
+  std::cout<<"[TestReader] Looping on components" ;
   TIter next(&readers_) ;
   BranchReader * reader = 0 ;
   while ((reader=(BranchReader *)next()))
    {
-    std::cout<<"[TestReader] Component "<<reader->component_->getName() ;
-    TString separator(" : ") ;
+    TString prefix("\n[TestReader] Component ") ;
+    prefix += reader->component_->getName() ;
+    prefix += " : " ;
+    TString separator ;
+    
     UInt_t nbEvents = reader->chain_->GetEntries() ;
     UInt_t ievent ;
     for ( ievent=0 ; ievent<nbEvents ; ++ievent )
      {
+      if (ievent%8)
+       { separator = ", " ; }
+      else
+       { separator = prefix ; }
       reader->chain_->GetEntry(ievent) ;
-      std::cout
-        <<separator<<reader->data_->getRunID()
-        <<'|'<<reader->data_->getEventID() ;
-      separator = ", " ;
+      if ((reader->data_->getRunID()==-1)&&(reader->data_->getEventID()==-1))
+       { std::cout<<separator<<" *|* " ; }
+      else
+       {
+        std::cout
+          <<separator<<setw(2)<<std::right<<reader->data_->getRunID()
+          <<'|'<<setw(2)<<std::left<<reader->data_->getEventID() ;
+       }
      }
-    std::cout<<std::endl ;
    }
+  std::cout<<std::endl ;
  }
 
-void TestReader::showByEvent()
+
+
+//==========================================
+// Simple Reader : access events one by one
+//==========================================
+
+
+void TestReader::resetEvent()
  {
-  // reset entries
+  currentEvent_ = 0 ;
   TIter next(&readers_) ;
   BranchReader * reader = 0 ;
   while ((reader=(BranchReader *)next()))
    { reader->nextEntry_ = 0 ; }
+  currentEvent_ = -1 ;
+ }
 
-  // loop, ignoring -1 values
-  std::cout<<"[TestReader] start looping on events"<<std::endl ;
-  bool finished = false ;
-  UInt_t ievent = 0 ;
-  while ( ! finished )
+bool TestReader::nextEvent()
+ {
+  // search next component entries, ignoring -1 values
+  bool result = true ;
+  TIter next(&readers_) ;
+  BranchReader * reader = 0 ;
+  while ((reader=(BranchReader *)next()))
    {
-    std::cout<<"[TestReader] Event "<<ievent ;
-    TString separator(" : ") ;
-    TIter next(&readers_) ;
-    BranchReader * reader = 0 ;
-    while ((reader=(BranchReader *)next()))
+    if (reader->nextEntry_==reader->chain_->GetEntries())
+     { result = false ; }
+    else
      {
       while (reader->nextEntry_<reader->chain_->GetEntries())
        {
         reader->chain_->GetEntry(reader->nextEntry_++) ;
-        if (reader->data_->getRunID()!=-1)
+        if ((reader->data_->getRunID()!=-1)&&
+    	    (reader->data_->getEventID()!=-1))
          { break ; }
        }
-      std::cout<<separator<<*(reader->data_) ;
-      separator = ", " ;
-      if (reader->nextEntry_==reader->chain_->GetEntries())
-       { finished = true ; }
+      if ((reader->data_->getRunID()==-1)||(reader->data_->getEventID()==-1))
+       { result = false ; }
      }
-    ++ievent ;
-    std::cout<<std::endl ;
    }
+  if ( result == true )
+   { currentEvent_++ ; }
+  else
+   { currentEvent_ = -1 ; }
+  return result ;
+ }
+
+void TestReader::showEvent() const
+ {
+  assert(currentEvent_!=-1) ; 
+  
+  std::cout<<"[TestReader] Event "<<setw(2)<<std::right<<currentEvent_ ;
+  TString separator(" : ") ;
+    
+  TIter next(&readers_) ;
+  BranchReader * reader = 0 ;
+  while ((reader=(BranchReader *)next()))
+   {
+    std::cout<<separator<<*(reader->data_) ;
+    separator = ", " ;
+   }
+  std::cout<<std::endl ;
+ }
+
+void TestReader::showByEvent()
+ {
+  resetEvent() ;
+  std::cout<<"[TestReader] Looping on events"<<std::endl ;
+  while ( nextEvent() )
+   { showEvent() ; }
  }
 

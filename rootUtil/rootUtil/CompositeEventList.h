@@ -77,24 +77,25 @@ class CompositeEventList : public TObject
 
   public :
 
-    // constructors
-    CompositeEventList() ; 
+    // constructors/destructors
+    CompositeEventList() ;
     virtual ~CompositeEventList() ;
 
     // Add a component by name.  This is only mandatory when writing.
     // On read these are discovered if not predeclared.
     UInt_t addComponent( const TString & name) ;
     
+    // Common open/close methods
+    Bool_t openCelFile( const TString & celFileName, const Char_t * options ="READ"  ) ;
+    void closeCelFile() ;
+    
     // WRITING interface
-    // Make a new CEL ROOT file and its trees
-    TFile * makeCelFile( const TString & celFileName, const Char_t * options ) ;
     Long64_t fillEvent( TObjArray & trees ) ;
-    Long64_t fillEvent( std::vector<TTree*> & trees) ;
+    Long64_t fillEvent( const std::vector<TTree*> & ) ;
+    Long64_t fillEvent( const std::vector<TChain*> & ) ;
     Long64_t fillFileAndTreeSet() ;
     
     // READING interface
-    // Open an existing CEL ROOT file
-    TFile * openCelFile( const TString & celFileName ) ;
     // read the event information
     Int_t shallowRead( Long64_t eventIndex ) ;
     // UNUSED ? read the event information and data (data trees made on the fly ??)
@@ -107,16 +108,20 @@ class CompositeEventList : public TObject
 
     // Access
     // Number of events in this cel
-    Long64_t numEvents() const;
+    Long64_t numEvents() const ;
     // Get the index of the current event
     Long64_t currentEventIndex() const { return _currentLink.eventIndex() ; }
+    // Number of events in this cel
+    Long64_t numFileAndTreeSets() const ;
+    // Get the index of the current set
+    Long64_t currentSetIndex() const { return _currentLink.setIndex() ; }
     
     
     /// PRINTING
     // Dump a set of event component pointers and the list of TTree where they live
-    void printout( const char * options, UInt_t nEvent=10, UInt_t startEvent=0) ;
+    void printout( const char * options ="", UInt_t nEvent=0, UInt_t startEvent=0) ;
     // Dump a single event
-    void dumpEvent( const char * options) ;
+    void dumpEvent( const char * options ="" ) ;
     // Dump the list of TTree where our events live
     void listTrees( const char * options ) ;
 
@@ -130,6 +135,9 @@ class CompositeEventList : public TObject
 	/// FOR CelIndex
     CelEventComponent * getComponent( const TString & name ) const ;
   
+    /// FOR debug
+    void displayFile() const ;
+    
     
   private :
 	  
@@ -140,6 +148,10 @@ class CompositeEventList : public TObject
     CompositeEventList( const CompositeEventList & ) ;
     CompositeEventList & operator=( const CompositeEventList & ) ;
 
+    // specific opening methods
+    Bool_t prepareRead() ;
+    Bool_t prepareRecreate() ;
+
     // Uses the input tree to discover the list of components
     UInt_t buildComponents( TTree & entryTree ) ;
     UInt_t numComponents() const { return _compList.size() ; }
@@ -149,13 +161,15 @@ class CompositeEventList : public TObject
     TChain * buildChain( UInt_t componentIndex ) ;
     
     // Manipulation of cel internal trees
-    void deleteCelTrees() ;
+    void deleteCurrentFile() ;
     Bool_t checkCelTrees() ;
     Bool_t checkCelTree( TTree *, const std::string & name, Bool_t error ) ;
     Int_t makeCelBranches( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize = 32000) const;
     Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) ;
 
     // cel data
+    TString _openingOptions ;
+    TFile * _currentFile ;
     TTree * _entryTree ; 
     TTree * _linkTree ; 
     TTree * _fileTree ; 

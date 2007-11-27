@@ -26,8 +26,8 @@
 
 CelManager::CelManager( Bool_t verbose )
  : m_verbose(verbose), 
-   m_fileNameWrite(""), m_fileWrite(0), m_eventCounter(0),
-   m_fileNameRead(""),  m_fileRead(0), m_compChainCol(0), m_masterChain(0)  
+   m_fileNameWrite(""), m_initWriteDone(kFALSE), /*m_fileWrite(0),*/  m_eventCounter(0),
+   m_fileNameRead(""),  /*m_fileRead(0),*/ m_compChainCol(0), m_masterChain(0)  
  {}
 
 CelManager::~CelManager() 
@@ -60,18 +60,23 @@ Bool_t CelManager::delayedInitWrite()
  {
   // the creation of the output file has been delayed until
   // we are sure all the components have been declared.
-  Bool_t stat = kTRUE ;
-  m_fileWrite = m_celWrite.makeCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
-  if (m_fileWrite==0)
+	
+  if (m_initWriteDone==kTRUE)
+   { return m_initWriteDone ; }
+  
+  m_initWriteDone = m_celWrite.openCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
+  if (m_initWriteDone==kFALSE)
+//  m_fileWrite = m_celWrite.makeCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
+//  if (m_fileWrite==0)
    {
     std::cerr
      << "[CelManager::delayedInitWrite] "
      << "Error while making "
      << m_fileNameWrite << std::endl ;
-    stat = kFALSE ;
-    return stat ;
+    return m_initWriteDone ;
    }
-  return stat ;
+  
+  return m_initWriteDone ;
  }
 
 
@@ -87,19 +92,22 @@ Bool_t CelManager::fillEvent()
   Bool_t stat = kTRUE ;
   try
    {
-    TDirectory * saveDir = gDirectory ;
+    // [David] presumably useless
+    //TDirectory * saveDir = gDirectory ;
+	  
     // Need to call CompositeEventList::makeFile after the AddComponent calls
-    if ((!m_fileWrite)&&(!delayedInitWrite()))
+    if ((m_initWriteDone==kFALSE)&&(delayedInitWrite()==kFALSE))
      { throw ; }
-    if (m_fileWrite->TestBits(TFile::kWriteError))
-     { throw ; }
-    m_fileWrite->cd() ;
+    // [David] presumably useless
+    //m_fileWrite->cd() ;
     std::vector<TTree*>::iterator treeItr ;
     Long64_t numBytes ;
     for ( treeItr=m_treeCol.begin() ; treeItr != m_treeCol.end() ; treeItr++ )
      { numBytes = (*treeItr)->LoadTree(m_eventCounter) ; }
     m_celWrite.fillEvent(m_treeCol) ;
-    saveDir->cd() ;
+    
+    // [David] presumably useless
+    //saveDir->cd() ;
     ++m_eventCounter ;
    }
   catch(...)
@@ -117,10 +125,12 @@ Bool_t CelManager::fillFileAndTreeSet()
   try
    {
     TDirectory * saveDir = gDirectory ;
-    m_fileWrite->cd() ;
+    // [David] I guess this cd() is useless ?
+    //m_fileWrite->cd() ;
     m_celWrite.fillFileAndTreeSet() ;
-    m_fileWrite->Write(0,TObject::kWriteDelete) ;
-    m_fileWrite->Close() ;
+    m_celWrite.closeCelFile() ;
+    //m_fileWrite->Write(0,TObject::kWriteDelete) ;
+    //m_fileWrite->Close() ;
     saveDir->cd() ;
    }
   catch(...)
@@ -147,14 +157,13 @@ Bool_t CelManager::initRead( const TString & celFileName )
   
   // opening
   m_fileNameRead = celFileName ;
-  m_fileRead = m_celRead.openCelFile(m_fileNameRead) ;
-  if (m_fileRead==0)
+  stat = m_celRead.openCelFile(m_fileNameRead) ;
+  if (stat==kFALSE)
    {
     std::cerr
      << "[CelManager::initRead] "
      << "Error while opening "
      << m_fileNameRead << std::endl ;
-    stat = kFALSE ;
     return stat ;
    }
 

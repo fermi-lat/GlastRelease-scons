@@ -31,7 +31,8 @@ application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
 application printSkim ../apps/printSkim.cxx $(getoptSource)
 application mergeSkim ../apps/mergeSkim.cxx $(getoptSource)
 
-application testWrite ../apps/testWrite.cxx $(getoptSource)
-application testRead ../apps/testRead.cxx $(getoptSource)
+application testGenerateData ../apps/testGenerateData.cxx $(getoptSource)
+application testMakeCel ../apps/testMakeCel.cxx $(getoptSource)
+application testReadCel ../apps/testReadCel.cxx $(getoptSource)
 
 

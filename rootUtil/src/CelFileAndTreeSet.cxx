@@ -112,7 +112,7 @@ TTree* CelFileAndTreeSet::getTree(UShort_t key) const {
   return tree;
 }
 
-UShort_t CelFileAndTreeSet::getKey( TTree * tree) const
+UShort_t CelFileAndTreeSet::getKey( TTree * tree ) const
  {
   // Get the persistent KEY for a given tree
   // Return FileUtil::NOKEY if 'tree' is NULL

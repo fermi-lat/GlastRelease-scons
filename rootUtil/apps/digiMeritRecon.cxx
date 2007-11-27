@@ -163,7 +163,7 @@ int main(int argn, char** argc) {
     usage();
     return 2;
   }
-  TFile* fout = p.makeCelFile(outFile.c_str(),"RECREATE");
+  Bool_t res = p.openCelFile(outFile.c_str(),"RECREATE") ;
   TRandom r;
 
   for ( Long64_t iEvt(0); iEvt < nEvt; iEvt++ ) {
@@ -177,8 +177,8 @@ int main(int argn, char** argc) {
     }
     p.fillEvent(trees);
   }
-  p.fillFileAndTreeSet();
-  fout->Write();
+  p.fillFileAndTreeSet() ;
+  p.closeCelFile() ;
 
   return 0;
 }

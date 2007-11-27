@@ -1,5 +1,6 @@
 
 #include <rootUtil/TestData.h>
+#include <rootUtil/CompositeEventList.h>
 #include "Riostream.h"
 
 int main( int argc, char ** argv )
@@ -12,11 +13,20 @@ int main( int argc, char ** argv )
   int sc = 0 ;
   try 
    {
+	  
     TestReader reader ;
     reader.add(baseName,new TestDigiComponent) ;
     reader.add(baseName,new TestReconComponent) ;
     reader.showByComponent() ;
     reader.showByEvent() ;
+    
+    CompositeEventList cel ;
+    TString fileName = baseName ;
+    fileName += ".cel.root" ;
+    cel.openCelFile(fileName) ;
+    cel.printout() ;
+    cel.closeCelFile() ;
+    
    }
   catch (...)
    {

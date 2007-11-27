@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+clear
+
+cd ../cmt
+make binclean
+find .. -name *rootcint*.h -exec rm \{\} \;
+find .. -name *rootcint*.cxx -exec rm \{\} \;
+
+
+
+
+

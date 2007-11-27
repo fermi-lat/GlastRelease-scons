@@ -58,14 +58,15 @@ class CelManager
 	/// writing data
 	TString m_fileNameWrite ;
 	TString m_outputOptions ;
-    TFile * m_fileWrite ;
+	Bool_t m_initWriteDone ;
+    //TFile * m_fileWrite ;
     CompositeEventList m_celWrite ;
     Long64_t m_eventCounter ;  // Count number of events filled to the TTree so far
     std::vector<TTree*> m_treeCol ;
 
     /// reading data
 	TString m_fileNameRead ;
-	TFile * m_fileRead ;
+	//TFile * m_fileRead ;
     CompositeEventList m_celRead ;
     TObjArray * m_compChainCol ; // List of component TChains for reading
     TChain * m_masterChain ;  // Master TChain for reading

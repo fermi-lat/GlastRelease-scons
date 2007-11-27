@@ -46,8 +46,8 @@ CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* f
 
     // Open the skim
     CompositeEventList* nextSkim = new CompositeEventList;
-    TFile* check = nextSkim->openCelFile(aFile->GetName());
-    if ( check == 0 ) {
+    Bool_t check = nextSkim->openCelFile(aFile->GetName());
+    if ( check == kFALSE ) {
       std::cerr << "Failed to open skim file " << aFile->GetName() << std::endl;
       return 0;
     }
