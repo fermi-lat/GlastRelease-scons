@@ -14,16 +14,16 @@
 // values, because it is reused for TTree:Branch(), which
 // does not know about typedefs.
 
-TString TestDigiComponent::componentName__ = "Digi" ;
-TString TestDigiComponent::treeName__ = "TestDigiTree" ;
-TString TestDigiComponent::branchName__ = "TestDigiBranch" ;
-TString TestDigiComponent::dataTypeName__ = "TestData<TestDigiLabel>" ;
+template <> TString TestDigiComponent::componentName__ = "Digi" ;
+template <> TString TestDigiComponent::treeName__ = "TestDigiTree" ;
+template <> TString TestDigiComponent::branchName__ = "TestDigiBranch" ;
+template <> TString TestDigiComponent::dataTypeName__ = "TestData<TestDigiLabel>" ;
 ClassImp(TestDigi)
 
-TString TestReconComponent::componentName__ = "Recon" ;
-TString TestReconComponent::treeName__ = "TestReconTree" ;
-TString TestReconComponent::branchName__ = "TestReconBranch" ;
-TString TestReconComponent::dataTypeName__ = "TestData<TestReconLabel>" ;
+template <> TString TestReconComponent::componentName__ = "Recon" ;
+template <> TString TestReconComponent::treeName__ = "TestReconTree" ;
+template <> TString TestReconComponent::branchName__ = "TestReconBranch" ;
+template <> TString TestReconComponent::dataTypeName__ = "TestData<TestReconLabel>" ;
 ClassImp(TestRecon)
 
 
