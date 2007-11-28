@@ -36,6 +36,7 @@ private
 use GlastSvc v*
 use Trigger v*
 use AncillaryDataEvent v*
+use gr_app v*
 
 macro_append includes ' $(ppcmd)"$(rootUtil_root)" $(ppcmd)"$(metaRootData_root)" '
 
