@@ -716,7 +716,7 @@ Long64_t CompositeEventList::numFileAndTreeSets() const {
 
 
 // Dump a set of event component pointers and the list of TTree where they live
-void CompositeEventList::printout
+void CompositeEventList::printInfo
  ( const char * options, UInt_t nEvent, UInt_t startEvent )
  {
   if (nEvent==0)
@@ -727,14 +727,23 @@ void CompositeEventList::printout
   for ( iEvt = startEvent ; iEvt < lastEvt ; iEvt++ )
    {
     shallowRead(iEvt) ;
-    dumpEvent(options) ;
+    printEventInfo(options) ;
    }
-  std::cout << "Printing Trees: " << std::endl ;
-  listTrees(options) ;
+  std::cout << "Printing Sets: " << std::endl ;
+  Long64_t iSet = -1 ;
+  for ( iEvt = startEvent ; iEvt < lastEvt ; iEvt++ )
+   {
+    shallowRead(iEvt) ;
+    if (currentSetIndex()!=iSet)
+     {
+      iSet = currentSetIndex() ;
+      printSetsInfo(options) ;
+     }
+   }
  }
 
 // Dump a single event on one line
-void CompositeEventList::dumpEvent( const char * options )
+void CompositeEventList::printEventInfo( const char * options )
  {
   Long64_t nEvents = numEvents() ;
   Long64_t nSets = numFileAndTreeSets() ;
@@ -753,13 +762,13 @@ void CompositeEventList::dumpEvent( const char * options )
     if ( comp == 0 ) return ; // ??
     std::cout << ", ";
     std::cout << comp->componentName() << ' ';
-    comp->dumpEvent(options) ;
+    comp->printEventInfo(options) ;
    } 
   std::cout << std::endl ;
  }
 
 // Dump the list of TTree where our events live
-void CompositeEventList::listTrees( const char * options )
+void CompositeEventList::printSetsInfo( const char * options )
  {
   CelTreesAndComponents::const_iterator itr ;
   for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
@@ -767,7 +776,7 @@ void CompositeEventList::listTrees( const char * options )
     const CelEventComponent * comp = itr->second ;
     if ( comp == 0 ) return ; // ??
     std::cout << comp->componentName() << std::endl ;
-    comp->listTrees(options) ;
+    comp->printSetInfo(options) ;
   }   
 }
 

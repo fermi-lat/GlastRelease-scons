@@ -69,9 +69,9 @@ class CelEventComponent
 
     // Printing Functions
     // print a single event
-    void dumpEvent(const char* options) const;
+    void printEventInfo(const char* options) const;
     // print all the trees used by this Components
-    void listTrees(const char* options) const;
+    void printSetInfo(const char* options) const;
 
    private :
   

@@ -100,7 +100,7 @@ int main(int argn, char** argc) {
       cerr << "Can't open file " << fileName << endl;
       return 4;
     }
-    p.printout(printFlags.c_str(),optval_n,optval_s);
+    p.printInfo(printFlags.c_str(),optval_n,optval_s);
     p.closeCelFile() ;
   }
   

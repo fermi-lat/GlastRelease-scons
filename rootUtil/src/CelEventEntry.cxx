@@ -113,8 +113,11 @@ TTree * CelEventEntry::getTree( const CelFileAndTreeSet & handle ) const
 // Print the information about the current event to cout
 // 
 // The print format is treeIndex|entryIndex
-void CelEventEntry::printEventInfo( const char * /* options */ ) const
+void CelEventEntry::printInfo() const
  {
-  std::cout << _treeIndex << '|' << _entryIndex ;
+  std::cout
+    <<setw(2)<<std::right<< _treeIndex
+    <<'|'
+    <<setw(2)<<std::left<< _entryIndex ;
  }
 

@@ -151,14 +151,14 @@ Long64_t CelEventComponent::currentIndexInChain() const
   return evtIndex ;
  }
 
-void CelEventComponent::dumpEvent( const char * options ) const
+void CelEventComponent::printEventInfo( const char * options ) const
  {
   if ( OptUtil::has_option(options,'v') )
    { _currentSet.printTreeInfo(_currentEntryIndex.treeIndex(),options) ; }  
-  _currentEntryIndex.printEventInfo(options) ;
+  _currentEntryIndex.printInfo(options) ;
  }
 
-void CelEventComponent::listTrees( const char * options ) const
- { _currentSet.show(options) ; }
+void CelEventComponent::printSetInfo( const char * options ) const
+ { _currentSet.printTreesInfo(options) ; }
 
 

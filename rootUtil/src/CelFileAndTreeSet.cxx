@@ -241,7 +241,7 @@ Bool_t CelFileAndTreeSet::addToChain( TChain * & chain )
 
 
 // Print the list of trees, one per line
-void CelFileAndTreeSet::show(const char* options) const
+void CelFileAndTreeSet::printTreesInfo( const char * options, const char * prefix ) const
  {
   UShort_t i ;
   for ( i=0 ; i<_setSize; i++ )
@@ -256,7 +256,7 @@ void CelFileAndTreeSet::show(const char* options) const
 // if "options" includes 'f' this will print the file name
 // if "options" includes 't' this will print the tree name
 // if "options" includes 'o' this will print the offset in events
-void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options ) const
+void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options, const char * prefix ) const
  {  
   if (OptUtil::has_option(options,'f'))
    { std::cout <<  _fileNames->UncheckedAt(treeIndex)->GetName() << ' '; }

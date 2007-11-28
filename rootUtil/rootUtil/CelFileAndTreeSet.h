@@ -82,9 +82,9 @@ class CelFileAndTreeSet  : public BranchGroup
 
     // Printing
     // Print the list of trees
-    void show(const char* options = "tf") const ;
+    void printTreesInfo( const char * options ="tf", const char * prefix ="" ) const ;
     // Print information about a single tree
-    void printTreeInfo( UShort_t key, const char * options = "tf" ) const ;
+    void printTreeInfo( UShort_t key, const char * options ="tf", const char * prefix =""  ) const ;
 
   private :
 

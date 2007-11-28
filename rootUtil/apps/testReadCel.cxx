@@ -24,7 +24,7 @@ int main( int argc, char ** argv )
     TString fileName = baseName ;
     fileName += ".cel.root" ;
     cel.openCelFile(fileName) ;
-    cel.printout() ;
+    cel.printInfo() ;
     cel.closeCelFile() ;
     
    }

@@ -50,8 +50,8 @@ class CelEventEntry : public BranchGroup
     // get the tree that is being read
     TTree * getTree( const CelFileAndTreeSet & handle ) const ;
 
-    // print the info about the current event
-    void printEventInfo( const char * options ) const ;  
+    // print the info about the entry
+    void printInfo() const ;  
 
   private :
   

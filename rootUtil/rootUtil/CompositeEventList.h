@@ -119,11 +119,11 @@ class CompositeEventList : public TObject
     
     /// PRINTING
     // Dump a set of event component pointers and the list of TTree where they live
-    void printout( const char * options ="", UInt_t nEvent=0, UInt_t startEvent=0) ;
+    void printInfo( const char * options ="", UInt_t nEvent=0, UInt_t startEvent=0) ;
     // Dump a single event
-    void dumpEvent( const char * options ="" ) ;
+    void printEventInfo( const char * options ="" ) ;
     // Dump the list of TTree where our events live
-    void listTrees( const char * options ) ;
+    void printSetsInfo( const char * options ) ;
 
     /// FOR CelUtil
     TTree * entryTree() { return _entryTree ; }
