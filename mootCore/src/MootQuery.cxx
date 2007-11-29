@@ -15,6 +15,26 @@
 #include "facilities/Util.h"
 #include "mootCore/DbUtilException.h"
 
+namespace {
+  unsigned getAncsFromParms(const std::vector<unsigned>& parms,
+                            rdbModel::Rdb* rdb,
+                            std::vector<unsigned>& ancs) {
+
+    unsigned cnt;
+    for (unsigned parmIx = 0; parmIx < parms.size(); parmIx++) {
+      std::string parmKeyStr;
+      facilities::Util::utoa(parms[parmIx], parmKeyStr);
+      std::string where(" WHERE Parameter_fk='");
+      where += parmKeyStr + std::string("'");
+      // Get all anc keys for this parameter in ascending order
+      cnt += MOOT::DbUtil::getKeys(ancs, rdb, "Parameters_to_Ancillary", 
+                                   "Ancillary_fk", where, 0, true);
+    }
+    return cnt;
+  }
+
+}
+
 namespace MOOT {
   MootQuery::MootQuery(MoodConnection* mood) : m_rdb(0), m_mood(mood), 
                                                m_ownConnection(false),
@@ -189,6 +209,24 @@ namespace MOOT {
     return new AncInfo(keyStr, ancClassName, fields[0], fields[1],
                        fields[2],fields[3],fields[4], fields[5],
                        fields[6],fields[7], fields[8],fields[9]);
+  }
+
+  bool MootQuery::getConfigAncsRequest(unsigned configKey,
+                                       std::vector<unsigned>& ancKeys) {
+    std::vector<unsigned> parmKeys;
+    bool ok = getConfigParmsRequest(configKey, parmKeys);
+    if (!ok) return ok;
+    getAncsFromParms(parmKeys, m_rdb, ancKeys);
+    return true;
+  }
+
+  bool MootQuery::getConfigAncsUsed(unsigned configKey,
+                                    std::vector<unsigned>& ancKeys) {
+    std::vector<unsigned> parmKeys;
+    bool ok = getConfigParmsUsed(configKey, parmKeys);
+    if (!ok) return ok;
+    getAncsFromParms(parmKeys, m_rdb, ancKeys);
+    return true;
   }
 
   bool MootQuery::getConfigFmxPaths(unsigned configKey,
