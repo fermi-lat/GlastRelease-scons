@@ -63,6 +63,9 @@ int main(int argn, char** argc) {
   }
   for ( int idx = optind; idx != argn; idx++ ) {
     std::string baseName = argc[idx];
+    if ( baseName.find(appDir) == 0 ) {
+      baseName.erase(0,appDir.size()+1);
+    }
     std::string outBase = baseName; outBase.replace(outBase.find(".xml"),5,std::string(".root"));
     std::string inName = appDir; inName += "/"; inName += baseName;
     std::string outName = outputPrefix; outName += outBase;

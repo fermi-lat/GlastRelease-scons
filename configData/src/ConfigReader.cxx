@@ -1,4 +1,6 @@
 
+#include "facilities/Util.h"
+
 #include "configData/ConfigReader.h"
 
 #include "configData/base/ConfigTuple.h"
@@ -35,7 +37,27 @@ Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& 
   std::vector<std::string> bcastFiles;
   std::vector<std::string> latcFiles;
 
-  Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
+  std::vector<DOMElement*> everythingList;
+
+  Dom::getDescendantsByTagName( topElt, "everything", everythingList );
+  for ( std::vector<DOMElement*>::iterator itrEv = everythingList.begin();
+	itrEv != everythingList.end(); ++itrEv ) {
+    std::vector<std::string> fileNames;
+    std::string everything = Dom::getTextContent(*itrEv);    
+    facilities::Util::stringTokenize(everything,",",fileNames);
+    for ( std::vector<std::string>::const_iterator itrFileName = fileNames.begin(); itrFileName != fileNames.end(); itrFileName++ ) {
+      std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += (*itrFileName);
+      if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
+	bcastFiles.push_back(latcFileFull);
+      } else {
+	latcFiles.push_back(latcFileFull);
+      }
+    }
+  }
+
+  if ( everythingList.size() == 0 ) {
+    Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
+  }
 
   std::vector<DOMElement*> latcNodeList;
   Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);

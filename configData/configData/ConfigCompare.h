@@ -24,7 +24,7 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-   virtual Bool_t   compare(ConfigCompare& other, Long64_t entry = 0);
+   virtual Bool_t   compare(ConfigCompare& other, Long64_t entry = 0, Bool_t shortCompare=kFALSE, Bool_t onlyOne=kTRUE);
 
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -93,13 +93,13 @@ protected:
   Bool_t compareSingleton(const char* name, ULong64_t val1, ULong64_t val2);
   Bool_t compareSingleton(const char* name, UInt_t val1, UInt_t val2);
   Bool_t compareSingleton(const char* name, Char_t val1, Char_t val2);
-  Bool_t compareV1(const char* name, UInt_t* val1, UInt_t* val2, int size);
-  Bool_t compareV1(const char* name, UShort_t* val1, UShort_t* val2, int size);
-  Bool_t compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2);
-  Bool_t compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2);
-  Bool_t compareV3(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3);
-  Bool_t compareV3(const char* name, ULong64_t* val1, ULong64_t* val2, int size1, int size2, int size3);
-  Bool_t compareV4(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, int size4);
+  Bool_t compareV1(const char* name, UInt_t* val1, UInt_t* val2, int size, Bool_t onlyOne=kTRUE);
+  Bool_t compareV1(const char* name, UShort_t* val1, UShort_t* val2, int size, Bool_t onlyOne=kTRUE);
+  Bool_t compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, Bool_t onlyOne=kTRUE);
+  Bool_t compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2, Bool_t onlyOne=kTRUE);
+  Bool_t compareV3(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, Bool_t onlyOne=kTRUE);
+  Bool_t compareV3(const char* name, ULong64_t* val1, ULong64_t* val2, int size1, int size2, int size3, Bool_t onlyOne=kTRUE);
+  Bool_t compareV4(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, int size4, Bool_t onlyOne=kTRUE);
   
 private:
 

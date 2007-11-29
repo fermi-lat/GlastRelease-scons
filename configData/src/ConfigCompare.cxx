@@ -45,7 +45,7 @@ void ConfigCompare::Loop()
 }
 
 Bool_t 
-ConfigCompare::compare(ConfigCompare& other, Long64_t entry) {
+ConfigCompare::compare(ConfigCompare& other, Long64_t entry, Bool_t fullCompare, Bool_t onlyOne) {
   
   LoadTree(entry); GetEntry(entry);
   other.LoadTree(entry); other.GetEntry(entry);
@@ -68,67 +68,75 @@ ConfigCompare::compare(ConfigCompare& other, Long64_t entry) {
 
   // simple vectors
   //compareV1("hold_delay",hold_delay,other.hold_delay,12);
-  latch &= compareV1("hitmap_delay",hitmap_delay,other.hitmap_delay,12);  
-  latch &= compareV1("hitmap_width",hitmap_width,other.hitmap_width,12);
-  latch &= compareV1("veto_delay",veto_delay,other.veto_delay,12);
-  latch &= compareV1("veto_width",veto_width,other.veto_width,12);
+  latch &= compareV1("hitmap_delay",hitmap_delay,other.hitmap_delay,12,onlyOne);  
+  latch &= compareV1("hitmap_width",hitmap_width,other.hitmap_width,12,onlyOne);
+  latch &= compareV1("veto_delay",veto_delay,other.veto_delay,12,onlyOne);
+  latch &= compareV1("veto_width",veto_width,other.veto_width,12,onlyOne);
 
-  latch &= compareV1("data_masks",data_masks,other.data_masks,16);
-  latch &= compareV1("tkr_trgseq",tkr_trgseq,other.tkr_trgseq,16);
-  latch &= compareV1("cal_trgseq",cal_trgseq,other.cal_trgseq,16);
+  latch &= compareV1("data_masks",data_masks,other.data_masks,16,onlyOne);
+  latch &= compareV1("tkr_trgseq",tkr_trgseq,other.tkr_trgseq,16,onlyOne);
+  latch &= compareV1("cal_trgseq",cal_trgseq,other.cal_trgseq,16,onlyOne);
  
-  latch &= compareV1("conditions",conditions,other.conditions,32);
-  latch &= compareV1("engine",engine,other.engine,16);
-  latch &= compareV1("towers",towers,other.towers,4);
-  latch &= compareV1("tiles",tiles,other.tiles,12);
-  latch &= compareV1("r",r,other.r,54);
+  latch &= compareV1("conditions",conditions,other.conditions,32,onlyOne);
+  latch &= compareV1("engine",engine,other.engine,16,onlyOne);
+  latch &= compareV1("towers",towers,other.towers,4,onlyOne);
+  latch &= compareV1("tiles",tiles,other.tiles,12,onlyOne);
+  latch &= compareV1("r",r,other.r,54,onlyOne);
 
   // arrays
-  latch &= compareV2("pha_threshold",(UShort_t*)pha_threshold,(UShort_t*)other.pha_threshold,12,18);
-  latch &= compareV2("tci_dac",(UShort_t*)tci_dac,(UShort_t*)other.tci_dac,12,18);
-  latch &= compareV2("bias_dac",(UShort_t*)bias_dac,(UShort_t*)other.bias_dac,12,18);
-  latch &= compareV2("hld_dac",(UShort_t*)hld_dac,(UShort_t*)other.hld_dac,12,18);
-  latch &= compareV2("veto_dac",(UShort_t*)veto_dac,(UShort_t*)other.veto_dac,12,18);   
-  latch &= compareV2("veto_vernier",(UShort_t*)veto_vernier,(UShort_t*)other.veto_vernier,12,18);
+  latch &= compareV2("tci_dac",(UShort_t*)tci_dac,(UShort_t*)other.tci_dac,12,18,onlyOne);
 
-  latch &= compareV2("low",(UInt_t*)low,(UInt_t*)other.low,16,36);   
-  latch &= compareV2("high",(UInt_t*)high,(UInt_t*)other.high,16,36); 
+  if ( fullCompare ) {
+    latch &= compareV2("pha_threshold",(UShort_t*)pha_threshold,(UShort_t*)other.pha_threshold,12,18,onlyOne);
+    latch &= compareV2("bias_dac",(UShort_t*)bias_dac,(UShort_t*)other.bias_dac,12,18,onlyOne);
+    latch &= compareV2("hld_dac",(UShort_t*)hld_dac,(UShort_t*)other.hld_dac,12,18,onlyOne);
+    latch &= compareV2("veto_dac",(UShort_t*)veto_dac,(UShort_t*)other.veto_dac,12,18,onlyOne);   
+    latch &= compareV2("veto_vernier",(UShort_t*)veto_vernier,(UShort_t*)other.veto_vernier,12,18,onlyOne);
+  }
+
+  latch &= compareV2("low",(UInt_t*)low,(UInt_t*)other.low,16,36,onlyOne);   
+  latch &= compareV2("high",(UInt_t*)high,(UInt_t*)other.high,16,36,onlyOne); 
   
-  latch &= compareV2("tcc_trg_align",(UInt_t*)tcc_trg_align,(UInt_t*)other.tcc_trg_align,16,8);   
-  latch &= compareV2("tcc_configuration",(UInt_t*)tcc_configuration,(UInt_t*)other.tcc_configuration,16,8);   
-  latch &= compareV2("input_mask",(UInt_t*)input_mask,(UInt_t*)other.input_mask,16,8);  
+  latch &= compareV2("tcc_trg_align",(UInt_t*)tcc_trg_align,(UInt_t*)other.tcc_trg_align,16,8,onlyOne);   
+  latch &= compareV2("tcc_configuration",(UInt_t*)tcc_configuration,(UInt_t*)other.tcc_configuration,16,8,onlyOne);   
+  latch &= compareV2("input_mask",(UInt_t*)input_mask,(UInt_t*)other.input_mask,16,8,onlyOne);  
  
-  latch &= compareV2("ccc_trg_alignment",(UInt_t*)ccc_trg_alignment,(UInt_t*)other.ccc_trg_alignment,16,4);   
-  latch &= compareV2("ccc_configuration",(UInt_t*)ccc_configuration,(UInt_t*)other.ccc_configuration,16,4);   
-  latch &= compareV2("layer_mask_0",(UInt_t*)layer_mask_0,(UInt_t*)other.layer_mask_0,16,4);   
-  latch &= compareV2("layer_mask_1",(UInt_t*)layer_mask_1,(UInt_t*)other.layer_mask_1,16,4);   
+  latch &= compareV2("ccc_trg_alignment",(UInt_t*)ccc_trg_alignment,(UInt_t*)other.ccc_trg_alignment,16,4,onlyOne);   
+  latch &= compareV2("ccc_configuration",(UInt_t*)ccc_configuration,(UInt_t*)other.ccc_configuration,16,4,onlyOne);   
+  latch &= compareV2("layer_mask_0",(UInt_t*)layer_mask_0,(UInt_t*)other.layer_mask_0,16,4,onlyOne);   
+  latch &= compareV2("layer_mask_1",(UInt_t*)layer_mask_1,(UInt_t*)other.layer_mask_1,16,4,onlyOne);   
 
-  latch &= compareV2("crc_dac",(UInt_t*)crc_dac,(UInt_t*)other.crc_dac,16,4);   
-  latch &= compareV2("delay_1",(UInt_t*)delay_1,(UInt_t*)other.delay_1,16,4);   
-  latch &= compareV2("delay_2",(UInt_t*)delay_2,(UInt_t*)other.delay_2,16,4);   
-  latch &= compareV2("delay_3",(UInt_t*)delay_3,(UInt_t*)other.delay_3,16,4);   
+  latch &= compareV2("crc_dac",(UInt_t*)crc_dac,(UInt_t*)other.crc_dac,16,4,onlyOne);   
+  latch &= compareV2("delay_1",(UInt_t*)delay_1,(UInt_t*)other.delay_1,16,4,onlyOne);   
+  latch &= compareV2("delay_2",(UInt_t*)delay_2,(UInt_t*)other.delay_2,16,4,onlyOne);   
+  latch &= compareV2("delay_3",(UInt_t*)delay_3,(UInt_t*)other.delay_3,16,4,onlyOne);   
   
-  latch &= compareV3("trig_enable",(ULong64_t*)trig_enable,(ULong64_t*)other.trig_enable,16,36,24);
-  latch &= compareV3("data_mask",(ULong64_t*)data_mask,(ULong64_t*)other.data_mask,16,36,24);
-  latch &= compareV3("calib_mask",(ULong64_t*)calib_mask,(ULong64_t*)other.calib_mask,16,36,24);
-  latch &= compareV3("threshold",(UInt_t*)threshold,(UInt_t*)other.threshold,16,36,24);
-  latch &= compareV3("injection",(UInt_t*)injection,(UInt_t*)other.injection,16,36,24);
+  latch &= compareV3("trig_enable",(ULong64_t*)trig_enable,(ULong64_t*)other.trig_enable,16,36,24,onlyOne);
+  latch &= compareV3("injection",(UInt_t*)injection,(UInt_t*)other.injection,16,36,24,onlyOne);
+  
+  if ( fullCompare ) {  
+    latch &= compareV3("data_mask",(ULong64_t*)data_mask,(ULong64_t*)other.data_mask,16,36,24,onlyOne);
+    latch &= compareV3("calib_mask",(ULong64_t*)calib_mask,(ULong64_t*)other.calib_mask,16,36,24,onlyOne);
+    latch &= compareV3("threshold",(UInt_t*)threshold,(UInt_t*)other.threshold,16,36,24,onlyOne);
+  }
 
-  latch &= compareV3("trc_csr",(UInt_t*)trc_csr,(UInt_t*)other.trc_csr,16,8,9);
+  latch &= compareV3("trc_csr",(UInt_t*)trc_csr,(UInt_t*)other.trc_csr,16,8,9,onlyOne);
   
-  latch &= compareV4("config_0",(UInt_t*)config_0,(UInt_t*)other.config_0,16,4,4,12);
-  latch &= compareV4("config_1",(UInt_t*)config_1,(UInt_t*)other.config_1,16,4,4,12);
-  latch &= compareV4("ref_dac",(UInt_t*)ref_dac,(UInt_t*)other.ref_dac,16,4,4,12);
-  latch &= compareV4("log_acpt",(UInt_t*)log_acpt,(UInt_t*)other.log_acpt,16,4,4,12);
-  latch &= compareV4("fle_dac",(UInt_t*)fle_dac,(UInt_t*)other.fle_dac,16,4,4,12);
-  latch &= compareV4("fhe_dac",(UInt_t*)fhe_dac,(UInt_t*)other.fhe_dac,16,4,4,12);
-  latch &= compareV4("rng_uld_dac",(UInt_t*)rng_uld_dac,(UInt_t*)other.rng_uld_dac,16,4,4,12);
+  latch &= compareV4("config_0",(UInt_t*)config_0,(UInt_t*)other.config_0,16,4,4,12,onlyOne);
+  latch &= compareV4("config_1",(UInt_t*)config_1,(UInt_t*)other.config_1,16,4,4,12,onlyOne);
+  latch &= compareV4("ref_dac",(UInt_t*)ref_dac,(UInt_t*)other.ref_dac,16,4,4,12,onlyOne);
   
+  if ( fullCompare ) {  
+    latch &= compareV4("log_acpt",(UInt_t*)log_acpt,(UInt_t*)other.log_acpt,16,4,4,12,onlyOne);
+    latch &= compareV4("fle_dac",(UInt_t*)fle_dac,(UInt_t*)other.fle_dac,16,4,4,12,onlyOne);
+    latch &= compareV4("fhe_dac",(UInt_t*)fhe_dac,(UInt_t*)other.fhe_dac,16,4,4,12,onlyOne);
+    latch &= compareV4("rng_uld_dac",(UInt_t*)rng_uld_dac,(UInt_t*)other.rng_uld_dac,16,4,4,12,onlyOne);
+  }
   return latch;
 } 
   
 Bool_t ConfigCompare::compareSingleton(const char* name, ULong64_t val1, ULong64_t val2) {
-  static const ULong64_t intMask(0x00000000FFFFFFFF);
+  //static const ULong64_t intMask(0x00000000FFFFFFFF);
   if ( val1 != val2 ) {
     printf("%s ",name);
     std::cout << std::hex << val1 << ' ' << val2 << std::dec << std::endl;
@@ -152,60 +160,60 @@ Bool_t ConfigCompare::compareSingleton(const char* name,  Char_t val1, Char_t va
   return kTRUE;
 }
 
-Bool_t ConfigCompare::compareV1(const char* name, UInt_t* val1, UInt_t* val2, int size) {
+Bool_t ConfigCompare::compareV1(const char* name, UInt_t* val1, UInt_t* val2, int size, Bool_t onlyOne) {
   for (int i(0); i < size; i++ ) {
     if ( val1[i] != val2[i] ) {
       printf("%s[%i] 0x%0x 0x%0x\n",name,i,val1[i],val2[i]);
-      return kFALSE;
+      if (onlyOne) return kFALSE;
     }
   }
   return kTRUE;
 };
 
-Bool_t ConfigCompare::compareV1(const char* name, UShort_t* val1, UShort_t* val2, int size) {
+Bool_t ConfigCompare::compareV1(const char* name, UShort_t* val1, UShort_t* val2, int size, Bool_t onlyOne) {
   for (int i(0); i < size; i++ ) {
     if ( val1[i] != val2[i] ) {
       printf("%s[%i] 0x%0x 0x%0x\n",name,i,val1[i],val2[i]);
-      return kFALSE;
+     if (onlyOne)  return kFALSE;
     }
   }
   return kTRUE;
 }
 
-Bool_t ConfigCompare::compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2) {
+Bool_t ConfigCompare::compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, Bool_t onlyOne) {
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
       int idx = i*size2 + j;
       if ( val1[idx] != val2[idx] ) {
 	printf("%s[%i,%i] 0x%0x 0x%0x\n",name,i,j,val1[idx],val2[idx]);
-	return kFALSE;
+	if (onlyOne) return kFALSE;
       }
     }
   }
   return kTRUE;
 }
 
-Bool_t ConfigCompare::compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2){
+Bool_t ConfigCompare::compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2, Bool_t onlyOne){
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
       int idx = i*size2 + j;
       if ( val1[idx] != val2[idx] ) {
 	printf("%s[%i,%i] 0x%0x 0x%0x\n",name,i,j,val1[idx],val2[idx]);
-	return kFALSE;
+	if (onlyOne) return kFALSE;
       }
     }
   }
   return kTRUE;
 }
 
-Bool_t ConfigCompare::compareV3(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3){
+Bool_t ConfigCompare::compareV3(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, Bool_t onlyOne){
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
       for (int k(0); k < size3; k++ ) {
 	int idx = i*size2*size3 + j*size3 +k;
 	if ( val1[idx] != val2[idx] ) {
 	  printf("%s[%i,%i,%i] 0x%0x 0x%0x\n",name,i,j,k,val1[idx],val2[idx]);
-	  return kFALSE;
+	  if (onlyOne) return kFALSE;
 	}
       }
     }
@@ -213,8 +221,8 @@ Bool_t ConfigCompare::compareV3(const char* name, UInt_t* val1, UInt_t* val2, in
   return kTRUE;
 }
 
-Bool_t ConfigCompare::compareV3(const char* name, ULong64_t* val1, ULong64_t* val2, int size1, int size2, int size3){
-  static const UInt_t intMask(0x00000000FFFFFFFF);
+Bool_t ConfigCompare::compareV3(const char* name, ULong64_t* val1, ULong64_t* val2, int size1, int size2, int size3, Bool_t onlyOne){
+  //static const UInt_t intMask(0x00000000FFFFFFFF);
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
       for (int k(0); k < size3; k++ ) {
@@ -222,7 +230,7 @@ Bool_t ConfigCompare::compareV3(const char* name, ULong64_t* val1, ULong64_t* va
 	if ( val1[idx] != val2[idx] ) {
 	  printf("%s[%i,%i,%i] ",name,i,j,k);
 	  std::cout << std::hex << val1[idx] << ' ' << val2[idx] << std::dec << std::endl;
-	  return kFALSE;
+	  if (onlyOne) return kFALSE;
 	}
       }
     }
@@ -230,7 +238,7 @@ Bool_t ConfigCompare::compareV3(const char* name, ULong64_t* val1, ULong64_t* va
   return kTRUE;
 }
 
-Bool_t ConfigCompare::compareV4(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, int size4){
+Bool_t ConfigCompare::compareV4(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, int size4, Bool_t onlyOne){
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
       for (int k(0); k < size3; k++ ) {
@@ -238,7 +246,7 @@ Bool_t ConfigCompare::compareV4(const char* name, UInt_t* val1, UInt_t* val2, in
 	  int idx = i*size2*size3*size4 + j*size3*size4 + k*size4 + l;
 	  if ( val1[idx] != val2[idx] ) {
 	    printf("%s[%i,%i,%i,%i] 0x%0x 0x%0x\n",name,i,j,k,l,val1[idx],val2[idx]);
-	    return kFALSE;
+	    if (onlyOne) return kFALSE;
 	  }
 	}
       }
