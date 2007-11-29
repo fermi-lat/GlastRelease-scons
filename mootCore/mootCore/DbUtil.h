@@ -63,6 +63,7 @@ namespace MOOT {
        rows satisfying condition in where.  By default return in descending
        order, so newest is always returned. May specify ascending, 
        however.
+       @a keys is not cleared initially; keys are appended 
        @return number of keys satisfying the condition
      */
     static unsigned getKeys(std::vector<unsigned>& keys,

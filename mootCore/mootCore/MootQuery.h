@@ -67,9 +67,18 @@ namespace MOOT {
      */
     AncInfo* getAncInfo(unsigned key);
 
-    // **TODO**
-
-
+    /**
+       Return keys of ancillary files which were input to parameter entries 
+       supplied when config was created.
+     */
+    bool getConfigAncsRequest(unsigned configKey,
+                              std::vector<unsigned>& ancKeys);
+   /**
+      Return keys of ancillary files which were input to parameter entries
+      which were in turn input for binaries belonging to the config.
+   */
+    bool getConfigAncsUsed(unsigned configKey,
+                           std::vector<unsigned>& ancKeys);
     /**
        Given a config key, return associated list of fmx relative
        file paths.  Such a file path is what fmx upload expects
@@ -171,6 +180,7 @@ namespace MOOT {
      */
     bool getConfigParmsRequest(unsigned configKey, 
                                std::vector<unsigned>& parameterKeys);
+
     /**
        Return keys of parameter entries used to build FSW inputs
        for this config
