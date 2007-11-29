@@ -162,7 +162,7 @@ h2.SetStats(False) # turn off statistics box in plot
 
 # build diff histogram
 hdiff_name = dacType+"_diff"
-hdiff = ROOT.TH1S(hdiff_name, hdiff_name, 128,0,128)
+hdiff = ROOT.TH1S(hdiff_name, hdiff_name, 256,0,0)
 
 
 # fill histograms
