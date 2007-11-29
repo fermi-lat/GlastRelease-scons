@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r8   29-Nov-2007 jrb  1. (Jim P. )Changes to intent.xsd
+                           2. Refactoring, clean-up to support MOOT::buildFromVote 
    v1r7p3  1-Oct-2007 jrb  Define and use a couple more specific DbUtil 
                            exception types
    v1r7p2 28-Sep-2007 jrb  Bug fixes in MoodConnection, MootQuery
