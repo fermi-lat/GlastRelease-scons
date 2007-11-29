@@ -183,6 +183,18 @@
     return my_info;
   }
 
+  std::vector<unsigned>    configAncsUsed(unsigned configKey) {
+    std::vector<unsigned> ancKeys;
+    self->getConfigAncsUsed(configKey, ancKeys);
+    return ancKeys;
+  }
+
+  std::vector<unsigned>    configAncsRequest(unsigned configKey) {
+    std::vector<unsigned> ancKeys;
+    self->getConfigAncsRequest(configKey, ancKeys);
+    return ancKeys;
+  }
+
   std::vector<unsigned> configKeys(const std::string& status="CREATED",
                                    const std::string& instr="LAT") {
 
