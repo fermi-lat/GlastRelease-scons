@@ -306,7 +306,7 @@ private:
    
     AdfDigi m_adfDigi;
 
-    ClassDef(DigiEvent,18) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,19) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif
