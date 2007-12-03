@@ -33,11 +33,12 @@ int main(int argn, char** argc) {
   std::string paramDir = "params";
   std::string appDir = "params";
   std::list<std::pair<std::string,std::string> > inAndOut;
+  bool bcast(false);
 
 #ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "ho:p:a:")) != EOF ) {
+  while ( (opt = facilities::getopt(argn, argc, "ho:p:a:b")) != EOF ) {
 #else
-  while ( (opt = getopt(argn, argc, "ho:p:a:")) != EOF ) {
+  while ( (opt = getopt(argn, argc, "ho:p:a:b")) != EOF ) {
 #endif
     switch (opt) {
     case 'h':   // help      
@@ -51,6 +52,9 @@ int main(int argn, char** argc) {
       break;
     case 'a':   // 
       appDir = std::string(optarg);
+      break;
+    case 'b':
+      bcast = true;
       break;
     case '?':
       usage();
@@ -83,7 +87,7 @@ int main(int argn, char** argc) {
     TFile fOut(itrIO->second.c_str(),"RECREATE");
     TTree* t = config.makeTree(nullString);  
 
-    reader.readTopLvl(itrIO->first.c_str(),paramDir);
+    reader.readTopLvl(itrIO->first.c_str(),paramDir,bcast);
     config.latch();
     
     t->Write();

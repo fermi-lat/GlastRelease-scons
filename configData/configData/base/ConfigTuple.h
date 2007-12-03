@@ -49,6 +49,10 @@ public :
   inline Int_t index2() const { return m_2; }  
   inline Int_t index3() const { return m_3; }
 
+  inline Bool_t singleton() const {
+    return ( m_0 == 1 && m_1 == 1 && m_2 == 1 && m_3 == 1 );
+  }
+
   // return true if any incides set to BCAST
   inline Bool_t hasBCAST() const {
     return (m_0 == BCAST || m_1 == BCAST || m_2 == BCAST || m_3 == BCAST );
@@ -159,6 +163,7 @@ private:
 
   // The name of this register
   T* m_vals;
+  T  m_bcast;
 
 };
 

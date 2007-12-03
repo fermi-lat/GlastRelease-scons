@@ -19,7 +19,7 @@ namespace{
     char ** nullPtr = 0;
 }
 
-Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& latcPath ) {
+Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& latcPath, bool bcast) {
   XmlParser parser( true );
   DOMDocument* doc(0);
   try {
@@ -93,12 +93,13 @@ Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& 
       std::cout << "Failed to read " << *itrF << std::endl;
     }
   }
-  for (  itrF = latcFiles.begin(); itrF != latcFiles.end(); itrF++ ) {
-    if ( ! read(*itrF) ) {
-      std::cout << "Failed to read " << *itrF << std::endl;
+  if ( !bcast ) {
+    for (  itrF = latcFiles.begin(); itrF != latcFiles.end(); itrF++ ) {
+      if ( ! read(*itrF) ) {
+	std::cout << "Failed to read " << *itrF << std::endl;
+      }
     }
   }
-    
   return kTRUE;
 
 }

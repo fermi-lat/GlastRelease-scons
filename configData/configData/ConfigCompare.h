@@ -12,6 +12,8 @@
 #include <TChain.h>
 #include <TFile.h>
 
+#include <iostream>
+
 class ConfigCompare {
 public :
 
@@ -26,51 +28,94 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual Bool_t   compare(ConfigCompare& other, Long64_t entry = 0, Bool_t shortCompare=kFALSE, Bool_t onlyOne=kTRUE);
 
+   virtual void     report(TList& l, Option_t* options="", std::ostream& os = std::cout);
+
+
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
    // Declaration of leave types
    UInt_t          aem_configuration;
    UInt_t          trgseq;
+   UShort_t        hold_delay_bcast;
    UShort_t        hold_delay[12];
+   UShort_t        hitmap_delay_bcast;
    UShort_t        hitmap_delay[12];
+   UShort_t        hitmap_width_bcast;
    UShort_t        hitmap_width[12];
+   UShort_t        veto_delay_bcast;
    UShort_t        veto_delay[12];
+   UShort_t        veto_width_bcast;
    UShort_t        veto_width[12];
+   UShort_t        pha_threshold_bcast;
    UShort_t        pha_threshold[12][18];
+   UShort_t        tci_dac_bcast;
    UShort_t        tci_dac[12][18];
+   UShort_t        bias_dac_bcast;
    UShort_t        bias_dac[12][18];
+   UShort_t        hld_dac_bcast;
    UShort_t        hld_dac[12][18];
+   UShort_t        veto_dac_bcast;
    UShort_t        veto_dac[12][18];
+   UShort_t        veto_vernier_bcast;
    UShort_t        veto_vernier[12][18];
+   UInt_t          data_masks_bcast;
    UInt_t          data_masks[16];
+   UInt_t          tkr_trgseq_bcast;
    UInt_t          tkr_trgseq[16];
+   UInt_t          cal_trgseq_bcast;
    UInt_t          cal_trgseq[16];
+   UInt_t          low_bcast;
    UInt_t          low[16][36];
+   UInt_t          high_bcast;
    UInt_t          high[16][36];
+   ULong64_t       trig_enable_bcast;
    ULong64_t       trig_enable[16][36][24];
+   ULong64_t       data_mask_bcast;
    ULong64_t       data_mask[16][36][24];
+   ULong64_t       calib_mask_bcast;
    ULong64_t       calib_mask[16][36][24];
+   UInt_t          threshold_bcast;
    UInt_t          threshold[16][36][24];
+   UInt_t          injection_bcast;
    UInt_t          injection[16][36][24];
+   UInt_t          tcc_trg_align_bcast;
    UInt_t          tcc_trg_align[16][9];
+   UInt_t          tcc_configuration_bcast;
    UInt_t          tcc_configuration[16][9];
+   UInt_t          input_mask_bcast;
    UInt_t          input_mask[16][9];
+   UInt_t          trc_csr_bcast;
    UInt_t          trc_csr[16][9][8];
+   UInt_t          ccc_trg_alignment_bcast;
    UInt_t          ccc_trg_alignment[16][4];
+   UInt_t          ccc_configuration_bcast;
    UInt_t          ccc_configuration[16][4];
+   UInt_t          layer_mask_0_bcast;
    UInt_t          layer_mask_0[16][4];
+   UInt_t          layer_mask_1_bcast;
    UInt_t          layer_mask_1[16][4];
+   UInt_t          crc_dac_bcast;
    UInt_t          crc_dac[16][4];
+   UInt_t          delay_1_bcast;
    UInt_t          delay_1[16][4];
+   UInt_t          delay_2_bcast;
    UInt_t          delay_2[16][4];
+   UInt_t          delay_3_bcast;
    UInt_t          delay_3[16][4];
+   UInt_t          config_0_bcast;
    UInt_t          config_0[16][4][4][12];
+   UInt_t          config_1_bcast;
    UInt_t          config_1[16][4][4][12];
+   UInt_t          ref_dac_bcast;
    UInt_t          ref_dac[16][4][4][12];
+   UInt_t          log_acpt_bcast;
    UInt_t          log_acpt[16][4][4][12];
+   UInt_t          fle_dac_bcast;
    UInt_t          fle_dac[16][4][4][12];
+   UInt_t          fhe_dac_bcast;
    UInt_t          fhe_dac[16][4][4][12];
+   UInt_t          rng_uld_dac_bcast;
    UInt_t          rng_uld_dac[16][4][4][12];
    UInt_t          window_width;
    Char_t          window_open_mask;
@@ -90,22 +135,86 @@ public :
 
 protected:
   
-  Bool_t compareSingleton(const char* name, ULong64_t val1, ULong64_t val2);
-  Bool_t compareSingleton(const char* name, UInt_t val1, UInt_t val2);
-  Bool_t compareSingleton(const char* name, Char_t val1, Char_t val2);
-  Bool_t compareV1(const char* name, UInt_t* val1, UInt_t* val2, int size, Bool_t onlyOne=kTRUE);
-  Bool_t compareV1(const char* name, UShort_t* val1, UShort_t* val2, int size, Bool_t onlyOne=kTRUE);
-  Bool_t compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, Bool_t onlyOne=kTRUE);
-  Bool_t compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2, Bool_t onlyOne=kTRUE);
-  Bool_t compareV3(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, Bool_t onlyOne=kTRUE);
-  Bool_t compareV3(const char* name, ULong64_t* val1, ULong64_t* val2, int size1, int size2, int size3, Bool_t onlyOne=kTRUE);
-  Bool_t compareV4(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, int size4, Bool_t onlyOne=kTRUE);
+   void reportSingleton(const char* name, ULong64_t val, std::ostream& os = std::cout);   
+   void reportSingleton(const char* name, UInt_t val, std::ostream& os = std::cout);
+   void reportSingleton(const char* name, Char_t val, std::ostream& os = std::cout);
+   
+   void reportV1(const char* name, UInt_t bcast, UInt_t* val, int size, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+   void reportV1(const char* name, UShort_t bcast, UShort_t* val, int size, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+   void reportV2(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+   void reportV2(const char* name, UShort_t bcast, UShort_t* val, int size1, int size2, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+   void reportVeto(const char* name, UShort_t* veto, UShort_t* vernier,
+		   std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+   void reportV3(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+   void reportV3(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);  
+   void reportV4(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, int size4, 
+		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+
+   Bool_t compareSingleton(const char* name, ULong64_t val1, ULong64_t val2);
+   Bool_t compareSingleton(const char* name, UInt_t val1, UInt_t val2);
+   Bool_t compareSingleton(const char* name, Char_t val1, Char_t val2);
+   Bool_t compareV1(const char* name, UInt_t* val1, UInt_t* val2, int size, Bool_t onlyOne=kTRUE);
+   Bool_t compareV1(const char* name, UShort_t* val1, UShort_t* val2, int size, Bool_t onlyOne=kTRUE);
+   Bool_t compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, Bool_t onlyOne=kTRUE);
+   Bool_t compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2, Bool_t onlyOne=kTRUE);
+   Bool_t compareV3(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, Bool_t onlyOne=kTRUE);
+   Bool_t compareV3(const char* name, ULong64_t* val1, ULong64_t* val2, int size1, int size2, int size3, Bool_t onlyOne=kTRUE);
+   Bool_t compareV4(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, int size3, int size4, Bool_t onlyOne=kTRUE);
   
 private:
 
    // List of branches
    TBranch        *b_aem_configuration;   //!
    TBranch        *b_trgseq;   //!
+
+   TBranch        *b_hold_delay_bcast;   //!
+   TBranch        *b_hitmap_delay_bcast;   //!
+   TBranch        *b_hitmap_width_bcast;   //!
+   TBranch        *b_veto_delay_bcast;   //!
+   TBranch        *b_veto_width_bcast;   //!
+   TBranch        *b_pha_threshold_bcast;   //!
+   TBranch        *b_tci_dac_bcast;   //!
+   TBranch        *b_bias_dac_bcast;   //!
+   TBranch        *b_hld_dac_bcast;   //!
+   TBranch        *b_veto_dac_bcast;   //!
+   TBranch        *b_veto_vernier_bcast;   //!
+   TBranch        *b_data_masks_bcast;   //!
+   TBranch        *b_tkr_trgseq_bcast;   //!
+   TBranch        *b_cal_trgseq_bcast;   //!
+   TBranch        *b_low_bcast;   //!
+   TBranch        *b_high_bcast;   //!
+   TBranch        *b_trig_enable_bcast;   //!
+   TBranch        *b_data_mask_bcast;   //!
+   TBranch        *b_calib_mask_bcast;   //!
+   TBranch        *b_threshold_bcast;   //!
+   TBranch        *b_injection_bcast;   //!
+   TBranch        *b_tcc_trg_align_bcast;   //!
+   TBranch        *b_tcc_configuration_bcast;   //!
+   TBranch        *b_input_mask_bcast;   //!
+   TBranch        *b_trc_csr_bcast;   //!
+   TBranch        *b_ccc_trg_alignment_bcast;   //!
+   TBranch        *b_ccc_configuration_bcast;   //!
+   TBranch        *b_layer_mask_0_bcast;   //!
+   TBranch        *b_layer_mask_1_bcast;   //!
+   TBranch        *b_crc_dac_bcast;   //!
+   TBranch        *b_delay_1_bcast;   //!
+   TBranch        *b_delay_2_bcast;   //!
+   TBranch        *b_delay_3_bcast;   //!
+   TBranch        *b_config_0_bcast;   //!
+   TBranch        *b_config_1_bcast;   //!
+   TBranch        *b_ref_dac_bcast;   //!
+   TBranch        *b_log_acpt_bcast;   //!
+   TBranch        *b_fle_dac_bcast;   //!
+   TBranch        *b_fhe_dac_bcast;   //!
+   TBranch        *b_rng_uld_dac_bcast;   //!
+
+
    TBranch        *b_hold_delay;   //!
    TBranch        *b_hitmap_delay;   //!
    TBranch        *b_hitmap_width;   //!
@@ -151,8 +260,8 @@ private:
    TBranch        *b_periodic_prescale;   //!
    TBranch        *b_periodic_limit;   //!
    TBranch        *b_periodic_free;   //!
-   TBranch        *b_periodic_onepps;   //!
    TBranch        *b_conditions;   //!
+   TBranch        *b_periodic_onepps;   //!
    TBranch        *b_engine;   //!
    TBranch        *b_towers;   //!
    TBranch        *b_tiles;   //!
@@ -161,7 +270,6 @@ private:
    TBranch        *b_external;   //!
    TBranch        *b_configuration;   //!
    TBranch        *b_r;   //!
-
 
 };
 
@@ -273,6 +381,48 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("external",&external);
    fChain->SetBranchAddress("configuration",&configuration);
    fChain->SetBranchAddress("r",r);
+
+   fChain->SetBranchAddress("hold_delay_bcast",&hold_delay_bcast);
+   fChain->SetBranchAddress("hitmap_delay_bcast",&hitmap_delay_bcast);
+   fChain->SetBranchAddress("hitmap_width_bcast",&hitmap_width_bcast);
+   fChain->SetBranchAddress("veto_delay_bcast",&veto_delay_bcast);
+   fChain->SetBranchAddress("veto_width_bcast",&veto_width_bcast);
+   fChain->SetBranchAddress("pha_threshold_bcast",&pha_threshold_bcast);
+   fChain->SetBranchAddress("tci_dac_bcast",&tci_dac_bcast);
+   fChain->SetBranchAddress("bias_dac_bcast",&bias_dac_bcast);
+   fChain->SetBranchAddress("hld_dac_bcast",&hld_dac_bcast);
+   fChain->SetBranchAddress("veto_dac_bcast",&veto_dac_bcast);
+   fChain->SetBranchAddress("veto_vernier_bcast",&veto_vernier_bcast);
+   fChain->SetBranchAddress("data_masks_bcast",&data_masks_bcast);
+   fChain->SetBranchAddress("tkr_trgseq_bcast",&tkr_trgseq_bcast);
+   fChain->SetBranchAddress("cal_trgseq_bcast",&cal_trgseq_bcast);
+   fChain->SetBranchAddress("low_bcast",&low_bcast);
+   fChain->SetBranchAddress("high_bcast",&high_bcast);
+   fChain->SetBranchAddress("trig_enable_bcast",&trig_enable_bcast);
+   fChain->SetBranchAddress("data_mask_bcast",&data_mask_bcast);
+   fChain->SetBranchAddress("calib_mask_bcast",&calib_mask_bcast);
+   fChain->SetBranchAddress("threshold_bcast",&threshold_bcast);
+   fChain->SetBranchAddress("injection_bcast",&injection_bcast);
+   fChain->SetBranchAddress("tcc_trg_align_bcast",&tcc_trg_align_bcast);
+   fChain->SetBranchAddress("tcc_configuration_bcast",&tcc_configuration_bcast);
+   fChain->SetBranchAddress("input_mask_bcast",&input_mask_bcast);
+   fChain->SetBranchAddress("trc_csr_bcast",&trc_csr_bcast);
+   fChain->SetBranchAddress("ccc_trg_alignment_bcast",&ccc_trg_alignment_bcast);
+   fChain->SetBranchAddress("ccc_configuration_bcast",&ccc_configuration_bcast);
+   fChain->SetBranchAddress("layer_mask_0_bcast",&layer_mask_0_bcast);
+   fChain->SetBranchAddress("layer_mask_1_bcast",&layer_mask_1_bcast);
+   fChain->SetBranchAddress("crc_dac_bcast",&crc_dac_bcast);
+   fChain->SetBranchAddress("delay_1_bcast",&delay_1_bcast);
+   fChain->SetBranchAddress("delay_2_bcast",&delay_2_bcast);
+   fChain->SetBranchAddress("delay_3_bcast",&delay_3_bcast);
+   fChain->SetBranchAddress("config_0_bcast",&config_0_bcast);
+   fChain->SetBranchAddress("config_1_bcast",&config_1_bcast);
+   fChain->SetBranchAddress("ref_dac_bcast",&ref_dac_bcast);
+   fChain->SetBranchAddress("log_acpt_bcast",&log_acpt_bcast);
+   fChain->SetBranchAddress("fle_dac_bcast",&fle_dac_bcast);
+   fChain->SetBranchAddress("fhe_dac_bcast",&fhe_dac_bcast);
+   fChain->SetBranchAddress("rng_uld_dac_bcast",&rng_uld_dac_bcast);
+
    Notify();
 }
 
@@ -343,6 +493,47 @@ Bool_t ConfigCompare::Notify()
    b_external = fChain->GetBranch("external");
    b_configuration = fChain->GetBranch("configuration");
    b_r = fChain->GetBranch("r");
+
+   b_hold_delay_bcast = fChain->GetBranch("hold_delay_bcast");
+   b_hitmap_delay_bcast = fChain->GetBranch("hitmap_delay_bcast");
+   b_hitmap_width_bcast = fChain->GetBranch("hitmap_width_bcast");
+   b_veto_delay_bcast = fChain->GetBranch("veto_delay_bcast");
+   b_veto_width_bcast = fChain->GetBranch("veto_width_bcast");
+   b_pha_threshold_bcast = fChain->GetBranch("pha_threshold_bcast");
+   b_tci_dac_bcast = fChain->GetBranch("tci_dac_bcast");
+   b_bias_dac_bcast = fChain->GetBranch("bias_dac_bcast");
+   b_hld_dac_bcast = fChain->GetBranch("hld_dac_bcast");
+   b_veto_dac_bcast = fChain->GetBranch("veto_dac_bcast");
+   b_veto_vernier_bcast = fChain->GetBranch("veto_vernier_bcast");
+   b_data_masks_bcast = fChain->GetBranch("data_masks_bcast");
+   b_tkr_trgseq_bcast = fChain->GetBranch("tkr_trgseq_bcast");
+   b_cal_trgseq_bcast = fChain->GetBranch("cal_trgseq_bcast");
+   b_low_bcast = fChain->GetBranch("low_bcast");
+   b_high_bcast = fChain->GetBranch("high_bcast");
+   b_trig_enable_bcast = fChain->GetBranch("trig_enable_bcast");
+   b_data_mask_bcast = fChain->GetBranch("data_mask_bcast");
+   b_calib_mask_bcast = fChain->GetBranch("calib_mask_bcast");
+   b_threshold_bcast = fChain->GetBranch("threshold_bcast");
+   b_injection_bcast = fChain->GetBranch("injection_bcast");
+   b_tcc_trg_align_bcast = fChain->GetBranch("tcc_trg_align_bcast");
+   b_tcc_configuration_bcast = fChain->GetBranch("tcc_configuration_bcast");
+   b_input_mask_bcast = fChain->GetBranch("input_mask_bcast");
+   b_trc_csr_bcast = fChain->GetBranch("trc_csr_bcast");
+   b_ccc_trg_alignment_bcast = fChain->GetBranch("ccc_trg_alignment_bcast");
+   b_ccc_configuration_bcast = fChain->GetBranch("ccc_configuration_bcast");
+   b_layer_mask_0_bcast = fChain->GetBranch("layer_mask_0_bcast");
+   b_layer_mask_1_bcast = fChain->GetBranch("layer_mask_1_bcast");
+   b_crc_dac_bcast = fChain->GetBranch("crc_dac_bcast");
+   b_delay_1_bcast = fChain->GetBranch("delay_1_bcast");
+   b_delay_2_bcast = fChain->GetBranch("delay_2_bcast");
+   b_delay_3_bcast = fChain->GetBranch("delay_3_bcast");
+   b_config_0_bcast = fChain->GetBranch("config_0_bcast");
+   b_config_1_bcast = fChain->GetBranch("config_1_bcast");
+   b_ref_dac_bcast = fChain->GetBranch("ref_dac_bcast");
+   b_log_acpt_bcast = fChain->GetBranch("log_acpt_bcast");
+   b_fle_dac_bcast = fChain->GetBranch("fle_dac_bcast");
+   b_fhe_dac_bcast = fChain->GetBranch("fhe_dac_bcast");
+   b_rng_uld_dac_bcast = fChain->GetBranch("rng_uld_dac_bcast");
 
    return kTRUE;
 }

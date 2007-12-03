@@ -38,6 +38,7 @@ void ConfigBranchImpl<T>::getVal(const ChannelKey& key, T& val) const {
 template <typename T>
 void ConfigBranchImpl<T>::setAll(T val) {
   Int_t idx = 0;
+  m_bcast = val;
   for ( Int_t i(0); i < branchSize().index0(); i++ ) {    
     for ( Int_t j(0); j < branchSize().index1(); j++ ) {
       for ( Int_t k(0); k < branchSize().index2(); k++ ) {
@@ -54,6 +55,9 @@ template <typename T>
 void ConfigBranchImpl<T>::attach(TTree& tree, const std::string& prefix) const {
   std::string branchName = prefix; branchName += name();
   tree.SetBranchAddress(branchName.c_str(),(void*)(m_vals));
+  if ( branchSize().singleton() ) return;
+  std::string branchName_bcast = branchName;   branchName_bcast += "_bcast";
+  tree.SetBranchAddress(branchName_bcast.c_str(),(void*)(&m_bcast));
 }
 
 template <typename T>
@@ -62,6 +66,12 @@ void ConfigBranchImpl<T>::makeBranch(TTree& tree, const std::string& prefix) con
   std::string leafName = branchName;
   setLeafSuffix(leafName);
   tree.Branch(branchName.c_str(),(void*)(m_vals),leafName.c_str());
+  if ( branchSize().singleton() ) return;
+  std::string branchName_bcast = branchName;   branchName_bcast += "_bcast";
+  std::string leafName_bcast = branchName_bcast;
+  leafName_bcast += '/'; leafName_bcast += type();
+  tree.Branch(branchName_bcast.c_str(),(void*)(&m_bcast),leafName_bcast.c_str());
+  
 }
 
 
