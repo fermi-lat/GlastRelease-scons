@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 TChain* chainTrees(int numFiles, char* list[], char* treePath, bool verbose=false) {
 

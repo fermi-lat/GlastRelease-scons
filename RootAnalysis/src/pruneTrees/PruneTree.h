@@ -54,6 +54,7 @@
 #include "TChain.h"
 #include "TMath.h"
 #include "TH1.h"
+#include "THashList.h"
 #include "TStyle.h"
 #include "TCollection.h"  // Declares TIter
 #include "digiRootData/DigiEvent.h"

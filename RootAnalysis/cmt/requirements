@@ -1,5 +1,5 @@
 package RootAnalysis
-version v8r8p5
+version v8r9
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # This package contains useful Root scripts.
 
@@ -45,25 +45,6 @@ private
 # includes="-I${COMMONROOTDATAROOT} -I${DIGIROOTDATAROOT} -I${MCROOTDATAROOT} -I${RECONROOTDATAROOT} -I${ROOTANALYSISROOT}"
 #macro root_linkdef "${ROOTANALYSISROOT}/src/SelectorAnalysis/digi/LinkDef.h" 
 
-apply_pattern root_library headers="\
-../src/LeaningTower/Event.h \
-../src/LeaningTower/Recon.h \
-../src/LeaningTower/Tracker.h \
-../src/LeaningTower/Residual.h \
-../src/LeaningTower/Efficiency.h \
-../src/LeaningTower/TriggerEfficiency.h \
-../src/LeaningTower/EventDisplay.h \
-../src/LeaningTower/Layer.h" \
-source="LeaningTower/Event.cxx \
-LeaningTower/Recon.cxx \
-LeaningTower/TriggerEfficiency.cxx \
-LeaningTower/Tracker.cxx \
-LeaningTower/EventDisplay.cxx \
-LeaningTower/Layer.cxx \
-LeaningTower/Efficiency.cxx \
-LeaningTower/Residual.cxx" \
-sourceDir="LeaningTower"
-
 
 macro_append ROOT_libs " -lHist -lTreePlayer " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "
@@ -71,12 +52,10 @@ macro_append ROOT_libs " -lHist -lTreePlayer " \
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"\
              WIN32         " ${ROOT_GUI_libs} "
 
-application runTreeMaker LeaningTower/runTreeMaker.cxx \
-            LeaningTower/TreeMaker.cxx
-
 application pruneTrees pruneTrees/PruneTree.cxx pruneTrees/runTreeAnalysisChain.cxx 
 
 application peelTrees pruneTrees/PruneRunEvent.cxx pruneTrees/runEventPeeler.cxx 
+
 application mergeRootFiles utilityMacros/mergeRootFiles.cxx
 
 # Define a test program that will run RootTreeAnalysis in batch mode
