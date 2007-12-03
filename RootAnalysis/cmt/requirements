@@ -1,5 +1,5 @@
 package RootAnalysis
-version v8r9
+version v8r9p1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # This package contains useful Root scripts.
 
@@ -50,7 +50,7 @@ macro_append ROOT_libs " -lHist -lTreePlayer " \
              WIN32 " ${ROOT_PATH}/lib/libHist.lib "
 
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"\
-             WIN32         " ${ROOT_GUI_libs} "
+             WIN32         " $(ROOT_GUI_libs) "
 
 application pruneTrees pruneTrees/PruneTree.cxx pruneTrees/runTreeAnalysisChain.cxx 
 

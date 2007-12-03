@@ -19,6 +19,7 @@ int main(int argn, char** argc) {
 
 #ifdef WIN32
     gSystem->Load("libTree.dll");
+    gSystem->Load("libTreePlayer.dll");
     gSystem->Load("reconRootData.dll");
 #endif
     Long64_t numEvents = 25;
