@@ -64,6 +64,7 @@ namespace CalibData {
   }
   
   void AcdCalibObj::setVals(float v1, float v2, float v3, float v4, STATUS stat){
+      sizeVals(4);
     m_vals[0] = v1;
     m_vals[1] = v2;
     m_vals[2] = v3;
