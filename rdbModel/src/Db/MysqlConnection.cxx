@@ -527,6 +527,7 @@ namespace rdbModel {
       std::string msg = 
         "rdbModel::MysqlConnection::select. ";
       msg += getMysqlError(m_mysql, &errcode);
+      msg += "  Original SQL: " + sqlString;
       (*m_err) << std::endl << msg << std::endl;
       m_err->flush();
       throw RdbException(msg, mysqlRet);
