@@ -52,7 +52,7 @@ namespace Event
       PMT_ACCEPT_BIT = 0,              // channel is above zero suppresion threshold (applied to digital data)
       PMT_VETO_BIT = 1,                // channel fired veto discriminator (applied to analog data)
       PMT_RANGE_BIT = 2,               // channel was read out in high range
-      PMT_RESERVED_BIT = 3,            // just a trick to split the errors into the higher byte
+      PMT_CNO_BIT = 3,                 // could be any channel on that GARC
       PMT_ODD_PARITY_ERROR_BIT = 4,    // PHA data transmission had parity error
       PMT_HEADER_PARITY_ERROR_BIT = 5, // header data transmission had parity error 
       PMT_DEAD_BIT = 6,                // PMT was flagged as dead by offline calibration
@@ -64,7 +64,7 @@ namespace Event
       PMT_VETO_MASK = 0x1,                // channel is above zero suppresion threshold (applied to digital data)
       PMT_ACCEPT_MASK = 0x2,              // channel fired veto discriminator (applied to analog data)
       PMT_RANGE_MASK = 0x4,               // just a trick to split the errors into the higher byte
-      PMT_RESERVED_MASK = 0x8,            // just a trick to split the errors into the higher byte
+      PMT_CNO_MASK = 0x8,                 // could be any channel on that GARC
       PMT_ODD_PARITY_ERROR_MASK = 0x10,   // PHA data transmission had parity error
       PMT_HEADER_PARITY_ERROR_MASK = 0x20,// header data transmission had parity error 
       PMT_DEAD_MASK = 0x40,               // PMT was flagged as dead by offline calibration

@@ -95,6 +95,21 @@ void AcdHit::setFlags(const Event::AcdDigi& digi)
   m_flags[A] |= digi.getAcceptMapBit(Event::AcdDigi::A) << PMT_ACCEPT_BIT;
   m_flags[B] |= digi.getAcceptMapBit(Event::AcdDigi::B) << PMT_ACCEPT_BIT;
 
+  m_flags[A] |= digi.getHitMapBit(Event::AcdDigi::A) << PMT_VETO_BIT;
+  m_flags[B] |= digi.getHitMapBit(Event::AcdDigi::B) << PMT_VETO_BIT;
+
+  m_flags[A] |= (digi.getRange(Event::AcdDigi::A)==Event::AcdDigi::HIGH) << PMT_RANGE_BIT;
+  m_flags[B] |= (digi.getRange(Event::AcdDigi::B)==Event::AcdDigi::HIGH) << PMT_RANGE_BIT;
+
+  m_flags[A] |= digi.getCno(Event::AcdDigi::A) << PMT_CNO_BIT;
+  m_flags[B] |= digi.getCno(Event::AcdDigi::B) << PMT_CNO_BIT;
+
+  m_flags[A] |= (digi.getOddParityError(Event::AcdDigi::A)==Event::AcdDigi::ERROR) << PMT_ODD_PARITY_ERROR_BIT;
+  m_flags[B] |= (digi.getOddParityError(Event::AcdDigi::B)==Event::AcdDigi::ERROR) << PMT_ODD_PARITY_ERROR_BIT;
+
+  m_flags[A] |= (digi.getHeaderParityError(Event::AcdDigi::A)==Event::AcdDigi::ERROR) << PMT_HEADER_PARITY_ERROR_BIT;
+  m_flags[B] |= (digi.getHeaderParityError(Event::AcdDigi::B)==Event::AcdDigi::ERROR) << PMT_HEADER_PARITY_ERROR_BIT;
+  
 }
 
 AcdHitCol::AcdHitCol(const std::vector<AcdHit*>& acdhits) {
