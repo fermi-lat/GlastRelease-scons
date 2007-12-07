@@ -440,7 +440,7 @@ namespace MOOT {
     facilities::Util::utoa(key, keystr);
     where += keystr + "'";
     
-    getCols.reserve(9);
+    getCols.reserve(10);
     getCols.push_back("config_key");
     getCols.push_back("name");
     getCols.push_back("algorithm");
@@ -450,7 +450,7 @@ namespace MOOT {
     getCols.push_back("active_state");
     getCols.push_back("mode");
     getCols.push_back("creation_request_time");
-
+    getCols.push_back("vote_fk");
     rdbModel::ResultHandle* res = 0;
     try {
       res = m_rdb->getConnection()->select("Configs", getCols, orderCols,
@@ -474,7 +474,7 @@ namespace MOOT {
     ConfigInfo* c = 
       new ConfigInfo(selFields[0], selFields[1], selFields[2], selFields[3],
                      selFields[4], selFields[5], selFields[6], selFields[7],
-                     selFields[8]);
+                     selFields[8], selFields[9]);
     delete res;
     return c;
   }
@@ -508,7 +508,7 @@ namespace MOOT {
     rdbModel::StringVector orderCols;
 
     orderCols.push_back("config_key");
-    getCols.reserve(9);
+    getCols.reserve(10);
     getCols.push_back("config_key");
     getCols.push_back("name");
     getCols.push_back("algorithm");
@@ -518,6 +518,7 @@ namespace MOOT {
     getCols.push_back("active_state");
     getCols.push_back("mode");
     getCols.push_back("creation_request_time");
+    getCols.push_back("vote_fk");
 
     rdbModel::ResultHandle* res = 0;
     try {
@@ -540,7 +541,7 @@ namespace MOOT {
       res->getRow(selFields, i);
       ConfigInfo info1(selFields[0], selFields[1], selFields[2], selFields[3],
                        selFields[4], selFields[5], selFields[6], selFields[7],
-                       selFields[8]);
+                       selFields[8], selFields[9]);
       info.push_back(info1);
     }
     return n;
