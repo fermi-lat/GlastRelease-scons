@@ -120,7 +120,7 @@ typedef TestData<TestReconLabel> TestRecon ;
 
 
 template <class Label>
-int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t lastEvent, TRandom & random )
+int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t lastEvent, TRandom * random )
  {   
   Int_t buffer = 64000 ;
   Int_t splitLevel = 1 ;
@@ -130,8 +130,12 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
   fileName += "." ;
   fileName += runId ;
   fileName += "." ;
+  if (firstEvent<10)
+   { fileName += "0" ; }
   fileName += firstEvent ;
   fileName += "-" ;
+  if (lastEvent<10)
+   { fileName += "0" ; }
   fileName += lastEvent ;
   fileName += ".root" ;
 
@@ -142,7 +146,7 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
   TFile * f = new TFile(fileName,"RECREATE") ;
   TTree * t = new TTree(TestComponent<Label>::treeName(),TestComponent<Label>::treeName()) ;
     
-  std::cout << "[testWrite] Creating branches" << std::endl ;
+  std::cout<<"[testWrite] Creating branches"<<std::endl ;
   TestData<Label> * componentEntry = new TestData<Label>(runId,firstEvent) ;
   t->Branch(TestComponent<Label>::branchName(),TestComponent<Label>::dataTypeName(),&componentEntry,buffer,splitLevel) ;
   
@@ -153,7 +157,7 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
   Long64_t ievent = firstEvent, eventID  ;
   while ( ievent <= lastEvent )
    {
-	if (random.Uniform()>0.5)
+	if (random&&random->Uniform()>0.5)
 	 {
 	  eventID = componentEntry->getEventID() ;
 	  componentEntry->setRunID(-1) ;

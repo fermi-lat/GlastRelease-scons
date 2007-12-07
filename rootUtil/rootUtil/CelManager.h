@@ -43,7 +43,7 @@ class CelManager
     /// Reading
     Bool_t initRead( const TString & celFileName ="cel.root" ) ;
     Long64_t getNumEvents() ;
-    Long64_t getEventIndex( const TString & treeName, Long64_t index ) ;
+    Long64_t getEventIndexInTree( const TString & treeName, Long64_t index ) ;
     TChain * getChainByType( const TString & treeName ) ;
     int setIndex() ;
 

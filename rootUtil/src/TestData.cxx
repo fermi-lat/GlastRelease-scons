@@ -126,7 +126,6 @@ void TestReader::showByComponent() const
 
 void TestReader::resetEvent()
  {
-  currentEvent_ = 0 ;
   TIter next(&readers_) ;
   BranchReader * reader = 0 ;
   while ((reader=(BranchReader *)next()))
@@ -160,7 +159,7 @@ bool TestReader::nextEvent()
   if ( result == true )
    { currentEvent_++ ; }
   else
-   { currentEvent_ = -1 ; }
+   { resetEvent() ; }
   return result ;
  }
 

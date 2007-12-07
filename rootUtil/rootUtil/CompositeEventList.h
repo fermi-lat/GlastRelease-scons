@@ -83,7 +83,7 @@ class CompositeEventList : public TObject
 
     // Add a component by name.  This is only mandatory when writing.
     // On read these are discovered if not predeclared.
-    UInt_t addComponent( const TString & name) ;
+    UInt_t addComponent( const TString & name ) ;
     
     // Common open/close methods
     Bool_t openCelFile( const TString & celFileName, const Char_t * options ="READ"  ) ;
@@ -96,17 +96,27 @@ class CompositeEventList : public TObject
     Long64_t fillFileAndTreeSet() ;
     
     // READING interface
-    // read the event information
+    // read only the event information
     Int_t shallowRead( Long64_t eventIndex ) ;
+//    // declare the address where to store the data
+//    void setDataAddress
+//     ( const TString & componentName,
+//       const TString & branchName,
+//       void** address ) ;
     // UNUSED ? read the event information and data (data trees made on the fly ??)
     Int_t deepRead( Long64_t eventIndex ) ;   
     // UNUSED ? Get a Tree that is being read by a deepRead
-    TTree * getTree( UInt_t index) const
-     { return (index < _compList.size()) ? _compList[index].first : 0 ;  }
+    TTree * getTree( UInt_t componentIndex ) const ;
+    TTree * getTree( const TString & componentName ) const ;
     // USED ? Build all the Chains for all the components
     TChain * buildAllChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
 
     // Access
+    // Number of components in this cel
+    UInt_t numComponents() const { return _compList.size() ; }
+    // Name of a given component
+    const TString & getComponentName( UInt_t componentIndex ) const
+     { return _compNames[componentIndex] ; }
     // Number of events in this cel
     Long64_t numEvents() const ;
     // Get the index of the current event
@@ -141,8 +151,8 @@ class CompositeEventList : public TObject
     
   private :
 	  
-    typedef std::pair<TTree*,CelEventComponent*> CelTreeAndComponent ;
-	typedef std::vector<CelTreeAndComponent> CelTreesAndComponents ;
+//    typedef std::pair<TTree*,CelEventComponent*> CelTreeAndComponent ;
+//	  typedef std::vector<CelTreeAndComponent> CelTreesAndComponents ;
 
     // disable copying and assignment
     CompositeEventList( const CompositeEventList & ) ;
@@ -154,7 +164,6 @@ class CompositeEventList : public TObject
 
     // Uses the input tree to discover the list of components
     UInt_t buildComponents( TTree & entryTree ) ;
-    UInt_t numComponents() const { return _compList.size() ; }
     CelEventComponent * getComponent( UInt_t index ) const ;
 
     // Build the TChain for a single component. 
@@ -179,9 +188,9 @@ class CompositeEventList : public TObject
     CelEventLink _currentLink ;
 
     // components stuff
-    CelTreesAndComponents _compList ;   //! vector of components and associated TTrees
+    std::vector<CelEventComponent*> _compList ;  //! vector of components
     std::vector<TString> _compNames ;   //! names of components
-    std::map<TString,UInt_t> _compMap ;  //! components lookup map to get the index in the list above from the name
+    std::map<TString,UInt_t> _compMap ; //! components lookup map to get the index in the list above from the name
 
     ClassDef(CompositeEventList,0)
 

@@ -107,7 +107,7 @@ class CelFileAndTreeSet  : public BranchGroup
 
     // Cache for fast lookup
     mutable std::map<UShort_t,TTree*> _cache ;  //! Maps key -> tree
-    mutable std::map<TTree*,UShort_t> _lookup ; //! Reverse map, for making sure we don't screw up
+    mutable std::map<TString,UShort_t> _lookup ; //! Reverse map, for making sure we don't screw up
 
     ClassDef(CelFileAndTreeSet,0) // For handling referenece to trees
  } ;

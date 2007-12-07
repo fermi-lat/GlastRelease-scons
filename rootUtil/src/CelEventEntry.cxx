@@ -85,9 +85,20 @@ CelEventEntry & CelEventEntry::operator=( const CelEventEntry & other )
 void CelEventEntry::set( TTree & tree, CelFileAndTreeSet & handle )
  {
   _entryIndex = tree.GetReadEntry() ;
+//  std::cout
+//    <<"[CelEventEntry::set] setting entry " <<_entryIndex
+//    <<" for tree "<<tree.GetDirectory()->GetUUID().AsString()<<"/"<<tree.GetName()
+//    <<" at "<<&tree
+//    <<std::endl ;
   UShort_t tIdx = handle.getKey(&tree) ;
   if ( tIdx == FileUtil::NOKEY )
-   { tIdx = handle.addTree(tree) ; }
+   {
+	tIdx = handle.addTree(tree) ;
+//    std::cout
+//      <<"[CelEventEntry::set] new tree "<<&tree
+//      <<" has received index "<<tIdx
+//      <<std::endl ;
+   }
   _treeIndex = tIdx ;
  }
 

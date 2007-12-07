@@ -15,23 +15,23 @@ int main(int argc, char **argv)
   try 
    {
     TRandom random ;
-    unsigned int numRuns = 2 ;
-    unsigned int numFilesByRun = 3 ;
-    unsigned int numEventsByFile = 4 ;
+    unsigned int numRuns = 2 ;         // default 2
+    unsigned int numFilesByRun = 3 ;   // default 3
+    unsigned int numEventsByFile = 4 ; // default 4
     Long64_t runID, fileIndex, firstEvent ;
     for ( runID = 0 ; runID<numRuns ; ++runID  )
      {
       for ( fileIndex = 0, firstEvent = 0 ;
             fileIndex<numFilesByRun ;
             ++fileIndex, firstEvent += numEventsByFile )
-       { sc = testWrite<TestDigiLabel>(baseName,runID,firstEvent,firstEvent+numEventsByFile-1,random) ; }
+       { sc = testWrite<TestDigiLabel>(baseName,runID,firstEvent,firstEvent+numEventsByFile-1,&random) ; }
      }
     for ( runID = 0 ; runID<numRuns ; ++runID )
      {
       for ( fileIndex = 0, firstEvent = 0 ;
             fileIndex<numFilesByRun ;
             ++fileIndex, firstEvent += numEventsByFile )
-       { sc = testWrite<TestReconLabel>(baseName,runID,firstEvent,firstEvent+numEventsByFile-1,random) ; }
+       { sc = testWrite<TestReconLabel>(baseName,runID,firstEvent,firstEvent+numEventsByFile-1,&random) ; }
      }
    }
   catch (...)

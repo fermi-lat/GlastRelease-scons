@@ -68,6 +68,8 @@ void CelFileAndTreeSet::reset()
   _setSize = 0 ;
   _fileNames->Clear() ;
   _treeNames->Clear() ;
+  _treesSize = 0 ;
+  _treeOffsets->Reset() ;
   _cache.clear() ;
   _lookup.clear() ;
 }
@@ -92,12 +94,19 @@ UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
   _treeOffsets->Set(_setSize);
   _treeOffsets->AddAt(_treesSize,retVal);
   _treesSize = _treesSize + tree.GetEntries();
-  _cache[retVal] = &tree;
-  _lookup[&tree] = retVal;
+  //[David] the adress could be reused. it is dangerous to store it.
+  //_cache[retVal] = &tree;
+  _cache[retVal] = 0;
+  
+  TString treePath(fName) ;
+  treePath += '/' ;
+  treePath += tName ;
+  _lookup[treePath] = retVal;
+  
   return retVal;
 }
 
-TTree* CelFileAndTreeSet::getTree(UShort_t key) const {
+TTree* CelFileAndTreeSet::getTree( UShort_t key ) const {
   // Get a given tree using persistent KEY
   //
   // Return NULL silently if key == FileUtil::NOKEY
@@ -117,17 +126,23 @@ UShort_t CelFileAndTreeSet::getKey( TTree * tree ) const
   // Get the persistent KEY for a given tree
   // Return FileUtil::NOKEY if 'tree' is NULL
   // Warns and returns FileUtil::NOKEY if tree is not found in lookup table
+
+  // [David] We cannot garanty that several trees will not have the
+  // same adresse (it happens when reading a TChain).
+	
   if ( 0 == tree ) return FileUtil::NOKEY;
-  std::map<TTree*,UShort_t>::iterator itrFind = _lookup.find(tree) ; 
+  TString treePath(tree->GetDirectory()->GetName()) ;
+  treePath += '/' ;
+  treePath += tree->GetName() ;
+	
+  std::map<TString,UShort_t>::iterator itrFind = _lookup.find(treePath) ; 
   if ( itrFind == _lookup.end() )
-   {
-    // No found, warn?
-    return FileUtil::NOKEY ;
-   }
+   { return FileUtil::NOKEY ; }
   return itrFind->second ;
  }
 
-Long64_t CelFileAndTreeSet::getOffset(UShort_t key) const {
+Long64_t CelFileAndTreeSet::getOffset( UShort_t key ) const
+ {
   // Get the Event offset using persistent KEY
   //
   // Return 0 if "key" is FileUtil::NOKEY
@@ -135,7 +150,7 @@ Long64_t CelFileAndTreeSet::getOffset(UShort_t key) const {
   if ( key == FileUtil::NOKEY ) return 0;
   if ( key >= _setSize ) return -1;
   return _treeOffsets->At(key);
-}
+ }
 
 
 //======================================================================================
@@ -246,7 +261,7 @@ void CelFileAndTreeSet::printTreesInfo( const char * options, const char * prefi
   UShort_t i ;
   for ( i=0 ; i<_setSize; i++ )
    {
-    std::cout << "Tree " << i << ":\t" ;
+    std::cout << prefix << "Tree " << i << ": " ;
     printTreeInfo(i,options) ;    
     std::cout << std::endl ;    
    }
@@ -258,6 +273,7 @@ void CelFileAndTreeSet::printTreesInfo( const char * options, const char * prefi
 // if "options" includes 'o' this will print the offset in events
 void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options, const char * prefix ) const
  {  
+  std::cout << prefix ;
   if (OptUtil::has_option(options,'f'))
    { std::cout <<  _fileNames->UncheckedAt(treeIndex)->GetName() << ' '; }
   if (OptUtil::has_option(options,'t'))
@@ -282,7 +298,15 @@ void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options,
 TTree * CelFileAndTreeSet::fetchTree( UShort_t treeIndex ) const
  {
   if ( treeIndex == FileUtil::NOKEY ) return 0 ;
-  assert( treeIndex < _setSize ) ;
+  if ( treeIndex >= _setSize )
+   {
+    std::cerr
+      << "[CelFileAndTreeSet::fetchTree] "
+      << "inconsistent indexes :"
+      << " ask for tree " << treeIndex
+      << " while there are " << _setSize
+      << std::endl ;
+   }
   
   // open file
   const char * fName = _fileNames->UncheckedAt(treeIndex)->GetName() ;
@@ -307,8 +331,13 @@ TTree * CelFileAndTreeSet::fetchTree( UShort_t treeIndex ) const
     return 0 ;
    }
 
-  _lookup[tree] = treeIndex ;
+  TString treePath(fName) ;
+  treePath += '/' ;
+  treePath += tName ;
+  _lookup[treePath] = treeIndex ;
+  
   _cache[treeIndex] = tree ;
+  
   return tree ;
  }
 

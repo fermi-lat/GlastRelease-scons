@@ -65,13 +65,13 @@ class CelEventComponent
     const CelEventEntry & currentEntryIndex() const { return _currentEntryIndex ; }
     const CelFileAndTreeSet & currentFileSet() const { return _currentSet ; }
     CelFileAndTreeOffset & currentFileOffset() { return _currentOffset ; }
-    inline const TString & componentName() const { return _componentName ; }
+    const TString & componentName() const { return _componentName ; }
 
     // Printing Functions
     // print a single event
-    void printEventInfo(const char* options) const;
+    void printEventInfo(const char* options ) const;
     // print all the trees used by this Components
-    void printSetInfo(const char* options) const;
+    void printSetInfo(const char* options, const char * prefix ="" ) const;
 
    private :
   
@@ -84,6 +84,11 @@ class CelEventComponent
      CelEventEntry _currentEntryIndex ;
      CelFileAndTreeSet _currentSet ;
      CelFileAndTreeOffset _currentOffset ;
+     
+     // data for deep read
+	 TTree * _tree ;
+	 TString _mainBranchName ;
+	 void**  _data ;
 
      ClassDef(CelEventComponent,0)
 

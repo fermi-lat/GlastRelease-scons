@@ -37,10 +37,12 @@ int main( int argc, char ** argv )
       reader.resetEvent() ;
       std::cout<<"[TestReader] Looping on events"<<std::endl ;
       TRandom random ;
-      while ( reader.nextEvent() )
+      ULong64_t iEvent = 0 ;
+      while (reader.nextEvent())
        {
         reader.showEvent() ;
         cel.fillEvent(reader.getForest()) ;
+        //if (!(++iEvent%8))
         if (random.Uniform()<0.2)
          { cel.fillFileAndTreeSet() ; }
        }

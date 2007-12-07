@@ -183,7 +183,7 @@ Bool_t CelManager::initRead( const TString & celFileName )
 Long64_t CelManager::getNumEvents()
  { return (m_celRead.numEvents()) ; }
 
-Long64_t CelManager::getEventIndex( const TString & treeName, Long64_t index)
+Long64_t CelManager::getEventIndexInTree( const TString & treeName, Long64_t index)
  {
   // make sure the cel index is the active TVirtualIndex
   setIndex() ;
@@ -191,7 +191,9 @@ Long64_t CelManager::getEventIndex( const TString & treeName, Long64_t index)
   if (retVal<0) return retVal ;
   TChain * compChain = getChainByType(treeName) ;
   if (!compChain) return -1 ;
-  return (compChain->GetReadEntry()) ;
+  // [David] before 5.16, there is a bug on TChain::GetReadEntry()
+  // That'why I am working on trees
+  return (compChain->GetTree()->GetReadEntry()) ;
  }
 
 int CelManager::setIndex()

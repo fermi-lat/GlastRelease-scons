@@ -44,7 +44,8 @@
 ClassImp(CelEventComponent) ;
 
 CelEventComponent::CelEventComponent()
- : _componentName("NULL"), _currentEntryIndex(), _currentSet()
+ : _componentName("NULL"), _currentEntryIndex(), _currentSet(),
+   _tree(0), _data(0)
  {}
 	      
 CelEventComponent::CelEventComponent( const TString & componentName )
@@ -147,7 +148,8 @@ Long64_t CelEventComponent::currentIndexInChain() const
   UShort_t treeIndex = _currentEntryIndex.treeIndex() ;
   Long64_t previousTreesOffset = _currentSet.getOffset(treeIndex) ;
   Long64_t previousSetsOffset = _currentOffset.getOffset() ;
-  Long64_t evtIndex = previousTreesOffset + previousSetsOffset + _currentEntryIndex.entryIndex() ;
+  Long64_t evtIndex = previousSetsOffset + previousTreesOffset + _currentEntryIndex.entryIndex() ;
+  //std::cout<<"("<<previousSetsOffset<<"+"<<previousTreesOffset<<"+"<<_currentEntryIndex.entryIndex()<<") "<<std::flush ;
   return evtIndex ;
  }
 
@@ -155,10 +157,10 @@ void CelEventComponent::printEventInfo( const char * options ) const
  {
   if ( OptUtil::has_option(options,'v') )
    { _currentSet.printTreeInfo(_currentEntryIndex.treeIndex(),options) ; }  
-  _currentEntryIndex.printInfo(options) ;
+  _currentEntryIndex.printInfo() ;
  }
 
-void CelEventComponent::printSetInfo( const char * options ) const
- { _currentSet.printTreesInfo(options) ; }
+void CelEventComponent::printSetInfo( const char * options, const char * prefix ) const
+ { _currentSet.printTreesInfo("tf",prefix) ; }
 
 
