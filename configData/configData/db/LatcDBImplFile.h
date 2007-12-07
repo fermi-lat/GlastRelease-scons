@@ -19,6 +19,8 @@ class LatcDBImplFile:public LatcDB{
   LatcDBImplFile();
   /// function to retrieve filename of type type given key key.
   const std::string getFilename(const char* type, unsigned key);
+  /// function to retrieve the list of filenames
+  const std::vector<std::string> getFilenameList(unsigned key);
   /// function to set the filename
   void setFilename(const std::string filename);
  private:

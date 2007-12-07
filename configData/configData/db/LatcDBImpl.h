@@ -21,6 +21,8 @@ class LatcDBImpl:public LatcDB{
   LatcDBImpl();
   /// function to retrieve filename of type type given key key.
   const std::string getFilename(const char* type, unsigned key);
+  /// function to retrieve the list of filenames
+  const std::vector<std::string> getFilenameList(unsigned key);
  private:
   MootQuery* m_mq;
 };

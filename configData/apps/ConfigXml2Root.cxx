@@ -66,13 +66,22 @@ int main(int argn, char** argc) {
     }
   }
   for ( int idx = optind; idx != argn; idx++ ) {
-    std::string baseName = argc[idx];
-    if ( baseName.find(appDir) == 0 ) {
-      baseName.erase(0,appDir.size()+1);
+    char *endptr;
+    strtoul(argc[idx],&endptr,0);
+    std::string outName;
+    std::string inName;
+    if (endptr[0]=='\0'){ // user typed in a latc key
+      inName=argc[idx];
+      outName=outputPrefix+"MootConfig_"+inName+".root";
+    }else{
+      std::string baseName = argc[idx];
+      if ( baseName.find(appDir) == 0 ) {
+	baseName.erase(0,appDir.size()+1);
+      }
+      std::string outBase = baseName; outBase.replace(outBase.find(".xml"),5,std::string(".root"));
+      inName = appDir; inName += "/"; inName += baseName;
+      outName = outputPrefix; outName += outBase;
     }
-    std::string outBase = baseName; outBase.replace(outBase.find(".xml"),5,std::string(".root"));
-    std::string inName = appDir; inName += "/"; inName += baseName;
-    std::string outName = outputPrefix; outName += outBase;
     inAndOut.push_back(std::pair<std::string,std::string>(inName,outName));
   }
   
@@ -86,7 +95,6 @@ int main(int argn, char** argc) {
 
     TFile fOut(itrIO->second.c_str(),"RECREATE");
     TTree* t = config.makeTree(nullString);  
-
     reader.readTopLvl(itrIO->first.c_str(),paramDir,bcast);
     config.latch();
     

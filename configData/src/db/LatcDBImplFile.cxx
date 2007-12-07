@@ -14,4 +14,8 @@ const std::string LatcDBImplFile::getFilename(const char* type, unsigned key){
 void LatcDBImplFile::setFilename(const std::string filename){
   m_filename=filename;
 }
-
+const std::vector<std::string> LatcDBImplFile::getFilenameList(unsigned key){
+  std::vector<std::string> rv;
+  if (m_filename!="")rv.push_back(m_filename);
+  return rv;
+}

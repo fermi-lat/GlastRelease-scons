@@ -24,3 +24,15 @@ const std::string LatcDBImplOld::getFilename(const char* type, unsigned key){
   //std::cout<<rs<<std::endl;
   return rs;
 }
+const std::vector<std::string> LatcDBImplOld::getFilenameList(unsigned key){
+  std::vector<FileDescrip> info;
+  std::string rs;
+  std::vector<std::string> rv;
+  m_mq->getLatcSrc(key,info);
+  for (unsigned i=0;i<info.size();i++){
+    rs= info[i].getPath();
+    rv.push_back(rs);
+  }
+  //std::cout<<rs<<std::endl;
+  return rv;
+}  

@@ -5,6 +5,7 @@
 
 #include "configData/base/ConfigTuple.h"
 #include "configData/gem/TrgConfigParser.h"
+#include "configData/db/LatcDBImpl.h"
 
 #include "xmlBase/Dom.h"
 #include "xmlBase/XmlParser.h"
@@ -20,70 +21,87 @@ namespace{
 }
 
 Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& latcPath, bool bcast) {
-  XmlParser parser( true );
-  DOMDocument* doc(0);
-  try {
-    doc = parser.parse( fileName.c_str() );
-  } 
-  catch (ParseException ex) {
-    std::cout << "caught exception with message " << std::endl;
-    std::cout << ex.getMsg() << std::endl;
-    return kFALSE;
-  }
-
-  DOMElement* topElt = doc->getDocumentElement();
-  std::vector<DOMElement*> eltList;
-
   std::vector<std::string> bcastFiles;
   std::vector<std::string> latcFiles;
-
-  std::vector<DOMElement*> everythingList;
-
-  Dom::getDescendantsByTagName( topElt, "everything", everythingList );
-  for ( std::vector<DOMElement*>::iterator itrEv = everythingList.begin();
-	itrEv != everythingList.end(); ++itrEv ) {
-    std::vector<std::string> fileNames;
-    std::string everything = Dom::getTextContent(*itrEv);    
-    facilities::Util::stringTokenize(everything,",",fileNames);
-    for ( std::vector<std::string>::const_iterator itrFileName = fileNames.begin(); itrFileName != fileNames.end(); itrFileName++ ) {
-      std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += (*itrFileName);
+  char *endptr;
+  unsigned key=strtoul(fileName.c_str(),&endptr,0);
+  if (endptr[0]=='\0'){ // This is a database key
+    std::vector<std::string> filelist;
+    LatcDBImpl moot;
+    filelist=moot.getFilenameList(key);
+    for ( std::vector<std::string>::iterator it=filelist.begin();it!=filelist.end();it++){
+      std::string latcFileFull=*it;
       if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
 	bcastFiles.push_back(latcFileFull);
       } else {
 	latcFiles.push_back(latcFileFull);
       }
     }
-  }
+  }else{
+ 
+    XmlParser parser( true );
+    DOMDocument* doc(0);
+    try {
+      doc = parser.parse( fileName.c_str() );
+    } 
+    catch (ParseException ex) {
+      std::cout << "caught exception with message " << std::endl;
+      std::cout << ex.getMsg() << std::endl;
+      return kFALSE;
+    }
+    
+    DOMElement* topElt = doc->getDocumentElement();
+    std::vector<DOMElement*> eltList;
+    
+    
+    std::vector<DOMElement*> everythingList;
+    
+    Dom::getDescendantsByTagName( topElt, "everything", everythingList );
+    for ( std::vector<DOMElement*>::iterator itrEv = everythingList.begin();
+	  itrEv != everythingList.end(); ++itrEv ) {
+      std::vector<std::string> fileNames;
+      std::string everything = Dom::getTextContent(*itrEv);    
+      facilities::Util::stringTokenize(everything,",",fileNames);
+      for ( std::vector<std::string>::const_iterator itrFileName = fileNames.begin(); itrFileName != fileNames.end(); itrFileName++ ) {
+	std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += (*itrFileName);
+	if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
+	  bcastFiles.push_back(latcFileFull);
+	} else {
+	  latcFiles.push_back(latcFileFull);
+	}
+      }
+    }
+    
+    if ( everythingList.size() == 0 ) {
+      Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
+    }
+    
+    std::vector<DOMElement*> latcNodeList;
+    Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);
+    
+    for ( std::vector<DOMElement*>::iterator itrLatc = latcNodeList.begin();
+	  itrLatc != latcNodeList.end(); ++itrLatc ) {
+      Dom::getDescendantsByTagName(*itrLatc,"latcFile", eltList , false);
+      Dom::getDescendantsByTagName(*itrLatc,"TFE",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"TDC",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"TEM",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"CFE",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"AFE",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"ARC",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"SPT",eltList,false);
+      Dom::getDescendantsByTagName(*itrLatc,"bcast",eltList,false);    
+    }
+    
+    std::vector<DOMElement*>::iterator itr = eltList.begin();  
 
-  if ( everythingList.size() == 0 ) {
-    Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
-  }
-
-  std::vector<DOMElement*> latcNodeList;
-  Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);
-
-  for ( std::vector<DOMElement*>::iterator itrLatc = latcNodeList.begin();
-	itrLatc != latcNodeList.end(); ++itrLatc ) {
-    Dom::getDescendantsByTagName(*itrLatc,"latcFile", eltList , false);
-    Dom::getDescendantsByTagName(*itrLatc,"TFE",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"TDC",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"TEM",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"CFE",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"AFE",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"ARC",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"SPT",eltList,false);
-    Dom::getDescendantsByTagName(*itrLatc,"bcast",eltList,false);    
-  }
-
-  std::vector<DOMElement*>::iterator itr = eltList.begin();  
-
-  for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {      
-    std::string latcFileBase = Dom::getTextContent(*itr);
-    std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += latcFileBase;
-    if ( latcFileBase.find("DFT") !=  latcFileBase.npos ) {
-      bcastFiles.push_back(latcFileFull);
-    } else {
-      latcFiles.push_back(latcFileFull);
+    for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {      
+      std::string latcFileBase = Dom::getTextContent(*itr);
+      std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += latcFileBase;
+      if ( latcFileBase.find("DFT") !=  latcFileBase.npos ) {
+	bcastFiles.push_back(latcFileFull);
+      } else {
+	latcFiles.push_back(latcFileFull);
+      }
     }
   }
     
@@ -91,12 +109,16 @@ Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& 
   for (  itrF = bcastFiles.begin(); itrF != bcastFiles.end(); itrF++ ) {
     if ( ! read(*itrF) ) {
       std::cout << "Failed to read " << *itrF << std::endl;
+    }else{
+      //      std::cout << "Read bcast file " << *itrF << std::endl;
     }
   }
   if ( !bcast ) {
     for (  itrF = latcFiles.begin(); itrF != latcFiles.end(); itrF++ ) {
       if ( ! read(*itrF) ) {
 	std::cout << "Failed to read " << *itrF << std::endl;
+      }else{
+	      //std::cout << "Read file" << *itrF << std::endl;
       }
     }
   }
@@ -291,7 +313,12 @@ Bool_t ConfigReader::read_SPT(DOMElement& elem){
 };
 
 Bool_t ConfigReader::read_TFE(DOMElement& elem){
-  if ( ! ConfigReader::getId(elem,_iTFE) ) return kFALSE;
+  std::string spt = Dom::getAttribute(&elem,"ID");
+  if(spt.find("x")!=spt.npos && spt.find("y")!=spt.npos){
+    if ( ! ConfigReader::getId(elem,_iTFE) ) return kFALSE;
+  }else{
+    if ( ! ConfigReader::getSptId(elem,_iTFE) ) return kFALSE;
+  }
   ChannelKey key(_iTEM,_iSPT,_iTFE);  
   const std::string TDC("TDC");  
   std::vector<DOMElement*> eltList;
@@ -367,7 +394,8 @@ Bool_t ConfigReader::getId(DOMElement& elem, Int_t& id) {
   id = ChannelKey::UNDEF;
   std::string ID("ID");
   std::string BCAST("BCAST");
-  if ( Dom::getAttribute(&elem,ID) == BCAST ) {
+  std::string bcast("bcast");
+  if ( Dom::getAttribute(&elem,ID) == BCAST || Dom::getAttribute(&elem,ID) == bcast ) {
     id = ChannelKey::BCAST;
     return kTRUE;    
   }
@@ -376,21 +404,42 @@ Bool_t ConfigReader::getId(DOMElement& elem, Int_t& id) {
 }
 
 Bool_t ConfigReader::getUShort(DOMElement& elem, UShort_t& val) {
-  std::string str = Dom::getTextContent( &elem );
+  std::vector<DOMElement*> rList;
+  Dom::getChildrenByTagName( &elem, "register", rList );
+  std::string str;
+  if(rList.empty()){  
+    str = Dom::getTextContent( &elem );
+  }else{
+    str=Dom::getTextContent(rList[0]);
+  }
   // should add check
   val = (UShort_t)(strtoul(str.c_str(),nullPtr,0));
   return kTRUE;
 }
 
 Bool_t ConfigReader::getUInt(DOMElement& elem, UInt_t& val) {
-  std::string str = Dom::getTextContent(&elem);
+  std::vector<DOMElement*> rList;
+  Dom::getChildrenByTagName( &elem, "register", rList );
+  std::string str;
+  if(rList.empty()){  
+    str= Dom::getTextContent(&elem);
+  }else{
+    str=Dom::getTextContent(rList[0]);
+  }
   // should add check
   val = (UInt_t)strtoul(str.c_str(),nullPtr,0);
   return kTRUE;
 }
 
 Bool_t ConfigReader::getULong(DOMElement& elem, ULong64_t& val) {
-  std::string str = Dom::getTextContent(&elem);
+  std::vector<DOMElement*> rList;
+  Dom::getChildrenByTagName( &elem, "register", rList );
+  std::string str;
+  if(rList.empty()){  
+    str = Dom::getTextContent(&elem);
+  }else{
+    str=Dom::getTextContent(rList[0]);
+  }
   // should add check
   val = (ULong64_t)strtoul(str.c_str(),nullPtr,0);
   return kTRUE;
@@ -471,7 +520,8 @@ Bool_t ConfigReader::getSptId(DOMElement& elem, Int_t& id) {
   std::string ID("ID");
   std::string spt = Dom::getAttribute(&elem,ID);
   std::string BCAST("BCAST");
-  if ( spt == BCAST ) { 
+  std::string bcast("bcast");
+  if ( spt == BCAST || spt == bcast) { 
     id = ChannelKey::BCAST;
     return kTRUE;    
   }
