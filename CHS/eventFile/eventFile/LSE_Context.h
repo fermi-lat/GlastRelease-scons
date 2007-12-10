@@ -34,7 +34,7 @@ namespace eventFile {
     bool missingCpuPps;
     bool missingLatPps;
     bool earlyEvent;
-    bool missingGps;
+    bool sourceGps;
   };
 
   struct FromScalers {

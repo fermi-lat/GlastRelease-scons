@@ -72,11 +72,13 @@ namespace eventFile {
 
   struct LCI_CalTrigger {
     LCI_CalTrigger() {};
-    LCI_CalTrigger( unsigned short l, unsigned short h ) :
-      le(l), he(h) {};
+    LCI_CalTrigger( unsigned short l, unsigned short lTE, unsigned short h, unsigned short hTE ) :
+      le(l), lowTrgEna(lTE), he(h),  highTrgEna(hTE) {};
     void dump( const char* pre, const char* post ) const;
     unsigned short le;
+    unsigned short lowTrgEna;
     unsigned short he;
+    unsigned short highTrgEna;
   };
 
   struct LCI_ACD_Info : public LCI_Info {
@@ -86,6 +88,8 @@ namespace eventFile {
     unsigned short threshold;
     unsigned short biasDac;
     unsigned short holdDelay;
+    unsigned short hitmapDelay;
+    unsigned short range;
     LCI_AcdTrigger     trigger;
     LCI_Channel        channel;
   };
@@ -96,7 +100,15 @@ namespace eventFile {
     unsigned short uld;
     unsigned short injected;
     unsigned short delay;
+    unsigned short firstRange;
     unsigned short threshold;
+    unsigned short calibGain;
+    unsigned short highCalEna;
+    unsigned short highRngEna;
+    unsigned short highGain;
+    unsigned short lowCalEna;
+    unsigned short lowRngEna;
+    unsigned short lowGain;
     LCI_CalTrigger     trigger;
     LCI_Channel        channel;
   };
@@ -107,6 +119,8 @@ namespace eventFile {
     unsigned short injected;
     unsigned short delay;
     unsigned short threshold;
+    unsigned short splitLow;
+    unsigned short splitHigh;
     LCI_Channel        channel;
   };
 

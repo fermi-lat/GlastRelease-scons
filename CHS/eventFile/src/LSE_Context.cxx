@@ -21,7 +21,7 @@ namespace eventFile {
     printf( "%smissingCpuPps   = %s%s", pre, (missingCpuPps)   ? "True" : "False", post );
     printf( "%smissingLatPps   = %s%s", pre, (missingLatPps)   ? "True" : "False", post );
     printf( "%searlyEvent      = %s%s", pre, (earlyEvent)      ? "True" : "False", post );
-    printf( "%smissingGps      = %s%s", pre, (missingGps)      ? "True" : "False", post );
+    printf( "%ssourceGps       = %s%s", pre, (sourceGps)       ? "True" : "False", post );
     timeHack.dump( "   ", "\n" );
   }
 
