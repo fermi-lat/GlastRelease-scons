@@ -19,9 +19,15 @@ class TrgConfigDB:public TrgConfig{
   virtual ~TrgConfigDB(){}
   /// Check if we need to parse a new object, parse it if necessary
   bool updateKey(const unsigned int key);
+  /// Allow partial configurations to be used
+  void allowMissing(bool allow);
+  /// Allowing partial configs?
+  bool allowingMissing(){return m_allowMissing;}
+  
  protected:
   LatcDB* m_lc;
   unsigned m_key;
+  bool m_allowMissing;
 };
     
   

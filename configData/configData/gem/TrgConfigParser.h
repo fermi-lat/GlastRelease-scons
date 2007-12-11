@@ -19,9 +19,9 @@ using namespace xmlBase;
 class TrgConfigParser{
  public:
   /// Default constructor
-  TrgConfigParser();
+  TrgConfigParser(bool allowMissing=false);
   /// Constructor which takes the latc file name as a parameter
-  TrgConfigParser(const char* filename);
+  TrgConfigParser(const char* filename, bool allowMissing=false);
   /// Constructor which takes the top DOMElement as a parameter
   TrgConfigParser(DOMElement* topElt,bool allowMissing=false);
   /// Function to fill TrgConfig object *tcf

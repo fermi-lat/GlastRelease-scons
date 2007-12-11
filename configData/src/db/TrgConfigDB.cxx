@@ -3,7 +3,7 @@
 #include "configData/gem/TrgConfigParser.h"
 #include <cassert>
 
-TrgConfigDB::TrgConfigDB(LatcDB* lc):m_lc(lc),m_key(0){}
+TrgConfigDB::TrgConfigDB(LatcDB* lc):m_lc(lc),m_key(0),m_allowMissing(false){}
 
 bool TrgConfigDB::updateKey(const unsigned int key){
   int retval=false;
@@ -11,10 +11,14 @@ bool TrgConfigDB::updateKey(const unsigned int key){
     retval=true;
     std::string bcast=m_lc->getFilename("latc_DFT",key);
     std::cout<<bcast<<std::endl;
-    TrgConfigParser p;
+    TrgConfigParser p(m_allowMissing);
     int error=p.parse(this,bcast.c_str());
     assert(error==0);
     m_key=key;
   }
   return retval;
+}
+
+void TrgConfigDB::allowMissing(bool allow){
+  m_allowMissing=allow;
 }

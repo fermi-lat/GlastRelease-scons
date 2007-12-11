@@ -24,11 +24,11 @@
 
 #include "configData/gem/TrgConfigParser.h"
 
-TrgConfigParser::TrgConfigParser()
-  :m_topElt(0),m_allowMissing(false){}
+TrgConfigParser::TrgConfigParser(bool allow)
+  :m_topElt(0),m_allowMissing(allow){}
 
-TrgConfigParser::TrgConfigParser(const char* filename)
-  :m_allowMissing(false){
+TrgConfigParser::TrgConfigParser(const char* filename,bool allowMissing)
+  :m_allowMissing(allowMissing){
   XmlParser parser(true);
   DOMDocument* doc;
   try {

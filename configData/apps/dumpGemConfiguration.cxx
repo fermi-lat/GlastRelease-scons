@@ -16,18 +16,27 @@ using namespace MOOT;
 
 int main(int argc, char **argv){
   bool fullconfig=false;
+  bool allowMissing=false;
   int opt;
   int argn=1;
 #ifdef WIN32
-  if ( (opt = facilities::getopt(argc, argv, "f")) != EOF ) {
+  while ( (opt = facilities::getopt(argc, argv, "fm")) != EOF ) {
 #else
-  if ( (opt = getopt(argc, argv, "f")) != EOF ) {
+  while ( (opt = getopt(argc, argv, "fm")) != EOF ) {
 #endif
-    fullconfig=true;
     argn++;
+    switch(opt){
+    case 'f':
+      fullconfig=true;
+      break;
+    case 'm':
+      allowMissing=true;
+      std::cout<<"Warning: Allowing partial configuration"<<std::endl;
+      break;
+    }
   }
-  if ((argc!=2 && !fullconfig )||(argc!=3&&fullconfig)){
-    std::cout<<"Usage: dumpGemConfiguration -f [full config] latc_key or xml_file"<<std::endl;
+  if (argc!=argn+1  ){
+    std::cout<<"Usage: dumpGemConfiguration -f [full config] -m [allow partial config] latc_key or xml_file"<<std::endl;
     exit(0);
   }
   char *endptr;
@@ -39,6 +48,7 @@ int main(int argc, char **argv){
     std::cout<<"=================================="<<std::endl<<std::endl;
     LatcDBImpl lc;
     TrgConfigDB tcf(&lc);
+    tcf.allowMissing(allowMissing);
     tcf.updateKey(key);
     if (!fullconfig)tcf.printContrigurator(std::cout);
     else std::cout<<tcf<<std::endl;
@@ -49,6 +59,7 @@ int main(int argc, char **argv){
     LatcDBImplFile lc;
     lc.setFilename(std::string(argv[argn]));
     TrgConfigDB tcf(&lc);
+    tcf.allowMissing(allowMissing);
     tcf.updateKey(1);
     if (!fullconfig)tcf.printContrigurator(std::cout);
     else std::cout<<tcf<<std::endl;
