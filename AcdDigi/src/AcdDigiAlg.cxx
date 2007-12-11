@@ -301,7 +301,7 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
     if ( makeDigi ) {
       Event::AcdDigi* aDigi = new Event::AcdDigi(acdId, volId,
 						 m_energyDepMap[acdId], phaArr, 
-						 phaThreshArr, vetoArr, highArr);
+						 vetoArr, phaThreshArr, highArr);
       aDigi->setRanges(rangeArr);
       digiCol.push_back( aDigi );
       log << MSG::DEBUG << "PMT: " << acdId.id()
