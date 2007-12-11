@@ -6,6 +6,7 @@
 #include "CalibSvc/ICalibMetaCnvSvc.h"
 #include "CalibSvc/IInstrumentName.h"
 #include "GaudiKernel/ConversionSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "facilities/Timestamp.h"
 
 /// Forward and external declarations
@@ -27,6 +28,7 @@ class IOpaqueAddress;
 *///--------------------------------------------------------------------------
 
 class CalibMySQLCnvSvc : public ConversionSvc, 
+                         virtual public IIncidentListener,
                          virtual public ICalibMetaCnvSvc
 {
   /// Only factories can access protected constructors
@@ -125,11 +127,14 @@ class CalibMySQLCnvSvc : public ConversionSvc,
 
   // virtual void setCalibEnterTime(const ITime&  time, unsigned int interval);
 
+  /// Routine which willbe called when a new incident has occurred
+  virtual void handle(const Incident&);
 
  private:
 
   /// Handle for metadata access
   calibUtil::Metadata*    m_meta;
+  bool                    m_metaConnected;  // is connection open?
 
   /// MySQL host, a job options parameter.
   std::string             m_host;  

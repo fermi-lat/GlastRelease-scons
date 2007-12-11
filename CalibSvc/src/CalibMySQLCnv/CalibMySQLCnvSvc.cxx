@@ -16,6 +16,7 @@
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IValidity.h"
@@ -207,6 +208,20 @@ StatusCode CalibMySQLCnvSvc::initialize()
     log << MSG::ERROR << "Could not open connection to metadata dbs" << endreq;
     return MSG::ERROR;
   }
+
+  // Arrange to be woken up once per event
+  IIncidentSvc* incSvc;
+  sc = service("IncidentSvc", incSvc, true);
+  if (sc.isSuccess() ) {
+    int priority = 100;
+    incSvc->addListener(this, "EndEvent", priority);
+  }
+  else {
+    log << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
+    return sc;
+  }
+
+
   // Probably should get this value from job options. 
   // Now we do.  See m_qualityMask, m_qualityList
   //  m_calibLevelMask = calibUtil::Metadata::LEVELProd + 
@@ -495,6 +510,8 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
   }
 
   unsigned int ser;
+  m_metaConnected = true;  // one way or another, will be making connection
+
   calibUtil::Metadata::eRet ret;
   if (m_useEventTime) {
     ret = m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
@@ -658,6 +675,9 @@ StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
   // should be calling common utility since much of what they do is identical.
   unsigned int ser;
   calibUtil::Metadata::eRet ret;
+  // Need to access db, so need connection
+  m_metaConnected = true;
+
   if (m_useEventTime) {
     ret = m_meta->findBest(&ser, cType, CalibData::CalibTime(time),
                            m_qualityMask, instr, flavor);
@@ -786,6 +806,7 @@ StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
   facilities::Timestamp* since;
   facilities::Timestamp* till;
   Metadata::eRet ret = m_meta->getInterval(serNo, since, till);
+  m_metaConnected = true;
 
   StatusCode status = StatusCode::FAILURE;
 
@@ -798,6 +819,24 @@ StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
   delete since;
   delete till;
   return status;
+}
+
+/// At EndEvent check if MySQL connection is open periodically.  
+/// If so, close it.
+void CalibMySQLCnvSvc::handle(const Incident& inc) {
+  static unsigned nEvent = 0;
+  static unsigned freq = 5; 
+
+  if (inc.type() != "EndEvent" ) return;
+
+  nEvent++;
+  if (m_metaConnected) {
+    if  ((nEvent % freq) == 0) {
+      m_meta->disconnectRead();
+      m_metaConnected = false;
+    }
+  }
+
 }
 
 //void CalibMySQLCnvSvc::setCalibEnterTime(const ITime&  time, 
