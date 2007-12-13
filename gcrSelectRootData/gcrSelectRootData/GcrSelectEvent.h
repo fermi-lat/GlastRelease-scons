@@ -15,6 +15,39 @@
  * $Header$
 */
 
+/** @page gcrSelectRootData_doc
+    @section GcrSelectEvent GcrSelectEvent Documentation
+    Notes 
+
+<table>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
+
+<small>
+<tr><td> getEventId
+<td>UInt_t<td> Returns the event identifier
+<tr><td> getRunId
+<td>UInt_t<td> Returns the run identifier
+<tr><td> getGcrSelect
+<td>const GcrSelect*<td> Returns const pointer to GcrSelect object 
+<tr><td> getGcrSelect
+<td>GcrSelect*<td> Returns non-const pointer to GcrSelect object 
+<tr><td> getEventFlags
+<td>UInt_t<td> Returns the event flags 
+<tr><td> goodEvent 
+<td>Bool_t<td> Returns true/false after checking event flags, if zero this
+is a good event 
+<tr><td> badEvent 
+<td>Bool_t<td> Returns true/false after checking event flags is non-zero
+<tr><td> badEventSeq
+<td>Bool_t<td> Returns true/false after checking event flags to see if bad
+event sequence number bit is up 
+
+</small>
+</table>
+*/
+
+
+
 class GcrSelectEvent : public TObject
 {
 

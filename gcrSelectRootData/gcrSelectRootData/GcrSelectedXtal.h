@@ -6,6 +6,37 @@
 
 #include <commonRootData/idents/CalXtalId.h>
 
+/** @page gcrSelectRootData_doc
+    @section GcrSelectedXtal GcrSelectedXtal Documentation
+    Notes 
+
+<table>
+<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
+
+<small>
+<tr><td> getXtalId
+<td>CalXtalId<td> Returns the CalXtalId object
+<tr><td> getRawEnergy
+<td>Double_t<td> Returns the raw energy
+<tr><td> getPathLength
+<td>Double_t<td> Returns the path length
+<tr><td> getCorrEnergy
+<td>Double_t<td> 
+<tr><td> getSelectGrade
+<td>Int_t<td> Returns 
+<tr><td> getClosestFaceDist
+<td>Double_t<td> Returns 
+<tr><td> getCrossedFaces
+<td>Int_t<td> Returns 
+<tr><td> getEntryPoint
+<td>TVector3<td> Returns 
+<tr><td> getExitPoint
+<td>TVector3<td> Returns 
+
+</small>
+</table>
+*/
+
 
 //-----------------------------------------------------------------------------------------------------------------
 
