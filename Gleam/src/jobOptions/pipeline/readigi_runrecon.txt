@@ -147,7 +147,8 @@ TkrIter.Members = {"TkrReconAlg/Iteration"};
 //
 ApplicationMgr.DLLs += {"GCRCalib"};
 
-GcrReconAlg.UseMcDir = false;
+GcrReconAlg.UseMcDir           = false;
+GcrReconAlg.HFC_Or_TriggerEng4 = "HFC";
 
 
 //
@@ -161,16 +162,6 @@ second.OutputLevel = 5;
 //
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members          = {"AcdReconAlg"};
-
-
-//
-// OBF: Do we still need this?
-//
-//ApplicationMgr.DLLs += {"EbfWriter", "OnboardFilter"};
-//
-//OnboardFilter.mask = 0; // all bits off by default: no rejection
-//
-//Reconstruction.Members += {"FilterTracks", "FilterAlg" }; //study performance
 
 
 //

@@ -44,17 +44,24 @@ TkrBadStripsSvc.OutputLevel = 2;
 
 
 // Start up an AcdCalibSvc:
-ApplicationMgr.DLLs += {"AcdUtil"};
+ApplicationMgr.DLLs   += {"AcdUtil"};
 ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 
 // For real data:
-AcdCalibSvc.DefaultFlavor = "vanilla";
+AcdCalibSvc.DefaultFlavor       = "vanilla";
+AcdCalibSvc.FlavorHighRange     = "ideal";
+AcdCalibSvc.FlavorCoherentNoise = "ideal";
+
+//
+// To get some output about the ideal calibs for the ACD:
+//
+AcdCalibSvc.OutputLevel = 1;
 
 
 //
 // General calibration flavor list:
 //
-CalibDataSvc.CalibFlavorList = {"vanilla"};
+CalibDataSvc.CalibFlavorList = {"vanilla","ideal"};
 
 //
 // Only PROD! Default is PROD and DEV!
