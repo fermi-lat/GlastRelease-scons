@@ -107,7 +107,7 @@ namespace lsfData {
     flags |= ( ctx.current.missingLatPps )   ? TimeTone::MISSING_LAT_MASK      : 0x0;
     flags |= ( ctx.current.missingCpuPps )   ? TimeTone::MISSING_CPU_MASK      : 0x0;
     flags |= ( ctx.current.earlyEvent )      ? TimeTone::EARLY_EVENT_MASK      : 0x0;
-    flags |= ( ctx.current.missingGps )      ? TimeTone::MISSING_GPS_MASK      : 0x0;
+    flags |= ( ctx.current.sourceGps )      ? TimeTone::MISSING_GPS_MASK      : 0x0;
     TimeTone curr( ctx.current.incomplete, ctx.current.timeSecs, 
 			    ctx.current.flywheeling, flags,
 			    GemTime( ctx.current.timeHack.hacks, ctx.current.timeHack.tics )
@@ -119,7 +119,7 @@ namespace lsfData {
     flags |= ( ctx.previous.missingLatPps )   ? TimeTone::MISSING_LAT_MASK      : 0x0;
     flags |= ( ctx.previous.missingCpuPps )   ? TimeTone::MISSING_CPU_MASK      : 0x0;
     flags |= ( ctx.previous.earlyEvent )      ? TimeTone::EARLY_EVENT_MASK      : 0x0;
-    flags |= ( ctx.previous.missingGps )      ? TimeTone::MISSING_GPS_MASK      : 0x0;
+    flags |= ( ctx.previous.sourceGps )      ? TimeTone::MISSING_GPS_MASK      : 0x0;
     TimeTone prev( ctx.previous.incomplete, ctx.previous.timeSecs, 
 			    ctx.previous.flywheeling, flags,
 			    GemTime( ctx.previous.timeHack.hacks, ctx.previous.timeHack.tics )
