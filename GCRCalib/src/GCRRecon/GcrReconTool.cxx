@@ -326,18 +326,18 @@ StatusCode GcrReconTool::readGlastDet()
 }
 
 bool GcrReconTool::TriggerEngine4ON(){
-    // GltWord:
-    // b_ACDL =    0x01  ///>  set if cover or side veto, low threshold
-    // b_Track=    0x02  ///>  3 consecutive x-y layers hit
-    // b_LO_CAL=   0x04  ///>  single log above low threshold
-    // b_HI_CAL=   0x08  ///>  single log above high threshold
-    // b_ACDH =    0x10  ///>  cover or side veto, high threshold ("CNO")
-    // b_THROTTLE= 0x20  ///>  Ritz throttle
+    //New definition of GltWord (GRv13r5p5):
+    //  b_ROI =      1,  ///>  throttle
+    //  b_Track=     2,  ///>  3 consecutive x-y layers hit
+    //  b_LO_CAL=    4,  ///>  single log above low threshold
+    //  b_HI_CAL=    8,  ///>  single log above high threshold
+    //  b_ACDH =    16,  ///>  cover or side veto, high threshold ("CNO")
+    //  b_ACDL =    64,  ///>  set if cover or side veto, low threshold
 
     // Trigger engine 4 (CNOTrigger here): 
     // Track, LoCal, ACDH("CNO"), THROTTLE ("ROI")
-   
-    //    IDataProviderSvc* m_pEventSvc;
+    
+    IDataProviderSvc* m_pEventSvc;
 
     // Recover EventHeader Pointer
     SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
@@ -346,12 +346,12 @@ bool GcrReconTool::TriggerEngine4ON(){
     // GltWord only 6 bits
     unsigned int Trig_word = word & enums::GEM_mask;  //merit tuple: addItem("GltWord",&Trig_word);
     
-    bool gltWord_bit2 = (Trig_word & (1<<1))>0;
-    bool gltWord_bit3 = (Trig_word & (1<<2))>0;
-    bool gltWord_bit5 = (Trig_word & (1<<4))>0;
-    bool gltWord_bit6 = (Trig_word & (1<<5))>0;
+    bool gltWord_bit1 = (Trig_word & (1<<0))>0; // ROI
+    bool gltWord_bit2 = (Trig_word & (1<<1))>0; // Track
+    bool gltWord_bit3 = (Trig_word & (1<<2))>0; // LoCal
+    bool gltWord_bit5 = (Trig_word & (1<<4))>0; // ACDH
     
-    bool engine4ON = gltWord_bit2 && gltWord_bit3 && gltWord_bit5 && gltWord_bit6;
+    bool engine4ON = gltWord_bit1 && gltWord_bit2 && gltWord_bit3 && gltWord_bit5;
     m_log << MSG::INFO << "engine4ON= " << engine4ON << endreq;
     
     return engine4ON;
