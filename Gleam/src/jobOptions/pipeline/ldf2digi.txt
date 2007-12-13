@@ -163,5 +163,10 @@ digiRootWriterAlg.digiRootFile = "digi.root";
 
 
 //
+// Get trigger configuration from Moot:
+//
+TrgConfigSvc.configureFrom = "Moot";
+
+//
 // The Doors .....
 //
