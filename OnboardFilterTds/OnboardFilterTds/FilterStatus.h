@@ -247,7 +247,8 @@ public:
     ///Returns the 16 least signifcat bits of the filter code
     inline unsigned int getLow() const;
     ///Returns the value stored in CalEnergy
-    inline float getCalEnergy() const;
+//    inline float getCalEnergy() const;
+    float getCalEnergy() const;
     inline const int getNumLogsHit() const;
     inline const LogInfo* getLogInfo() const;
     int getEbfSize() const;
@@ -567,9 +568,9 @@ private:
 //    return &m_tkr;
     return m_tkr;
   }
-  inline float FilterStatus::getCalEnergy() const{
-    return (float)((m_stageEnergy & GFC_STAGE_M_ENERGY)/4.0);
-  }
+  //inline float FilterStatus::getCalEnergy() const{
+  //  return (float)((m_stageEnergy & GFC_STAGE_M_ENERGY)/4.0);
+  //}
   inline int FilterStatus::getStageEnergy() const{
     return m_stageEnergy;
   }
