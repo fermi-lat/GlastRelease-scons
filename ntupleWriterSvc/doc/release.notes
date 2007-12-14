@@ -3,6 +3,8 @@
  *    * EOH *
  *
  @verbatim
+ * v3r19   14-dec-2007  HMK: allow basket size to be set and adjust default
+ *         size to 1000000 bytes
  * v3r18   30-oct-2007  HMK: use gr_app
  * v3r17   22-jul-2007  THB: protect against inadvertent use of file
  * v3r16p3 31-mar-2007  JRB: Bug fix for RHEL4

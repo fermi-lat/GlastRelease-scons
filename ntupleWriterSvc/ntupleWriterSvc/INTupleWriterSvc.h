@@ -91,6 +91,13 @@ public:
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName)=0; 
 
+
+    //! Allow clients to set basket size on a per branch basis, or for
+    /// all branches by setting branchName="*" or branchName="xxx*"
+   /// see TTree::SetBasketSize
+    virtual void setBufferSize(const std::string& tupleName, int bufferSize, 
+                         const std::string& branchName=std::string("*")) = 0;
+
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_INTupleWriterSvc; }
 

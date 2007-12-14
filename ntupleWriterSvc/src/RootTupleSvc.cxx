@@ -156,6 +156,11 @@ public:
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName);
 
+    /// allow clients to set TTree buffer size on a per branch basis or
+    /// for whole TTree by setting bname="*"
+    virtual void setBufferSize(const std::string& tupleName, int bufSize, 
+                               const std::string& bname=std::string("*"));
+
 private:
     /// Allow only SvcFactory to instantiate the service.
     friend class SvcFactory<RootTupleSvc>;
@@ -202,6 +207,9 @@ private:
     std::map<std::string, int> m_badMap; ///< map of counts for individual values
     BooleanProperty m_rejectIfBad; ///< set true to reject the tuple entry if bad values
 
+    /// JO parameter to set the default buffer size for all TTrees
+    int m_bufferSize;
+
     Char_t test; // to see what this is
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,6 +231,7 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("RejectIfBad", m_rejectIfBad=true); 
     declareProperty("JobInfoTreeName", m_jobInfoTreeName="jobinfo");
     declareProperty("JobInfo", m_jobInfo=""); // string, if present, will write out single TTree entry
+    declareProperty("BufferSize",m_bufferSize=1000000);
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -306,7 +315,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     }
     // note have to cast away the const here!
-    m_tree[treename]->Branch(itemName.c_str(), const_cast<void*>(pval), (itemName+type).c_str());
+    m_tree[treename]->Branch(itemName.c_str(), const_cast<void*>(pval), (itemName+type).c_str(),m_bufferSize);
     saveDir->cd();
     return status;
 }
@@ -600,3 +609,25 @@ void RootTupleSvc::saveRow(const std::string& tupleName)
     t->Fill();
     m_storeTree[treeit->first]=false;
 }
+
+void RootTupleSvc::setBufferSize(const std::string& tupleName, int bufSize,
+                                 const std::string& bname) {
+
+    std::map<std::string, TTree*>::iterator treeit=m_tree.find(tupleName);
+    if( treeit==m_tree.end()){
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Did not find tree " << tupleName << endreq;
+        throw std::invalid_argument("RootTupleSvc::setBufferSize: did not find tupleName");
+    }
+
+    TTree* t= treeit->second;
+    if (t)
+        t->SetBasketSize(bname.c_str(), bufSize);
+    else {
+        MsgStream log(msgSvc(),name());
+        log << MSG::WARNING << "Could not obtain tree, " << tupleName
+                            << " Not setting buffer size" << endreq;
+     }
+
+}
+
