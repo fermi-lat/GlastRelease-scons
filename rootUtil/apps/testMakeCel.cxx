@@ -1,6 +1,7 @@
 
 #include <rootUtil/TestData.h>
 #include <rootUtil/CompositeEventList.h>
+#include "TObjString.h"
 #include "Riostream.h"
 
 int main( int argc, char ** argv )
@@ -16,15 +17,15 @@ int main( int argc, char ** argv )
     TestReader reader ;
     reader.add(baseName,new TestDigiComponent) ;
     reader.add(baseName,new TestReconComponent) ;
-    
-    CompositeEventList cel ;
-    cel.addComponent(TestDigiComponent::name()) ;
-    cel.addComponent(TestReconComponent::name()) ;
+       
     TString fileName = baseName ;
     fileName += ".cel.root" ;
-    Bool_t res = cel.openCelFile(fileName.Data(),"RECREATE") ;
-
-    if (res==kFALSE)
+    TObjArray componentNames ;
+    componentNames.Add(new TObjString(TestDigiComponent::name())) ;
+    componentNames.Add(new TObjString(TestReconComponent::name())) ;
+    
+    CompositeEventList cel(fileName,"RECREATE",&componentNames) ;
+    if (cel.isOk()==kFALSE)
      {
       std::cerr
         <<"[TestReader] failed to create file "
@@ -37,17 +38,15 @@ int main( int argc, char ** argv )
       reader.resetEvent() ;
       std::cout<<"[TestReader] Looping on events"<<std::endl ;
       TRandom random ;
-      ULong64_t iEvent = 0 ;
       while (reader.nextEvent())
        {
         reader.showEvent() ;
         cel.fillEvent(reader.getForest()) ;
-        //if (!(++iEvent%8))
         if (random.Uniform()<0.2)
          { cel.fillFileAndTreeSet() ; }
        }
       cel.fillFileAndTreeSet() ;
-      cel.closeCelFile() ;
+      cel.writeAndClose() ;
      }
    }
   catch (...)

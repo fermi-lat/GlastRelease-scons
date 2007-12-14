@@ -27,6 +27,7 @@ class TChain ;
 class TVirtualIndex ;
 class TCollection ;
 class TObjArray ;
+class TObjString ;
 
 #include <map>
 #include <vector>
@@ -36,8 +37,6 @@ class TObjArray ;
 // a list of composite events, where each event is described as
 // a set of entries in several separate trees. Each tree contains
 // a different kind of data, and is also called a "component".
-// Unlike using friend trees, this can describe sparse
-// collections without requiring you to build a lookup index.
 //
 // An instance of CompositeEventList can be read from and/or
 // written to a ROOT file. We should also consider the construction
@@ -67,9 +66,9 @@ class TObjArray ;
 //      <Comp>_Set_TreeOffsets -> TArrayL64 with the offsets for each Tree in the current set
 //      <Comp>_Set_Entries     -> Total number of entries in all trees from the current set
 //
-// Note : the couple (run_id/event_id) is expected to be unique for GLAST real data. For
-// what concerns the simulation data, the triplet {task_name,run_id,event_id} should be
-// unique.
+// Note : the pair (RunID/EventID) is expected to be unique for GLAST real data. For
+// what concerns the simulation data, the triplet (ProductionID/RunID/EventID) should
+// be unique.
 //   
 
 class CompositeEventList : public TObject
@@ -77,25 +76,22 @@ class CompositeEventList : public TObject
 
   public :
 
-    // constructors/destructors
-    CompositeEventList() ;
-    virtual ~CompositeEventList() ;
+    // Construction, components, state
+    explicit CompositeEventList
+     ( const TString & celFileName = "",
+       const TString & options = "READ",
+       const TObjArray * componentNames = 0 ) ;
+    Bool_t isOk() ;
+    ~CompositeEventList() ;
 
-    // Add a component by name.  This is only mandatory when writing.
-    // On read these are discovered if not predeclared.
-    UInt_t addComponent( const TString & name ) ;
-    
-    // Common open/close methods
-    Bool_t openCelFile( const TString & celFileName, const Char_t * options ="READ"  ) ;
-    void closeCelFile() ;
-    
-    // WRITING interface
-    Long64_t fillEvent( TObjArray & trees ) ;
+    // Writing interface
+    Long64_t fillEvent( const TObjArray & trees ) ;
     Long64_t fillEvent( const std::vector<TTree*> & ) ;
     Long64_t fillEvent( const std::vector<TChain*> & ) ;
     Long64_t fillFileAndTreeSet() ;
+    void writeAndClose() ;
     
-    // READING interface
+    // Reading interface
     // read only the event information
     Int_t shallowRead( Long64_t eventIndex ) ;
 //    // declare the address where to store the data
@@ -105,26 +101,18 @@ class CompositeEventList : public TObject
 //       void** address ) ;
     // UNUSED ? read the event information and data (data trees made on the fly ??)
     Int_t deepRead( Long64_t eventIndex ) ;   
-    // UNUSED ? Get a Tree that is being read by a deepRead
-    TTree * getTree( UInt_t componentIndex ) const ;
-    TTree * getTree( const TString & componentName ) const ;
     // USED ? Build all the Chains for all the components
-    TChain * buildAllChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
+    TChain * newChain( UInt_t componentIndex ) ;
+    TChain * newChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
 
-    // Access
-    // Number of components in this cel
-    UInt_t numComponents() const { return _compList.size() ; }
-    // Name of a given component
-    const TString & getComponentName( UInt_t componentIndex ) const
-     { return _compNames[componentIndex] ; }
-    // Number of events in this cel
+    // Accessors
+    UInt_t numComponents() const ;
     Long64_t numEvents() const ;
-    // Get the index of the current event
-    Long64_t currentEventIndex() const { return _currentLink.eventIndex() ; }
-    // Number of events in this cel
     Long64_t numFileAndTreeSets() const ;
-    // Get the index of the current set
-    Long64_t currentSetIndex() const { return _currentLink.setIndex() ; }
+    const TString & fileName() const ;
+    const TString & componentName( UInt_t componentIndex ) const ;
+    Long64_t currentEventIndex() const ;
+    Long64_t currentSetIndex() const ;
     
     
     /// PRINTING
@@ -145,30 +133,16 @@ class CompositeEventList : public TObject
 	/// FOR CelIndex
     CelEventComponent * getComponent( const TString & name ) const ;
   
-    /// FOR debug
-    void displayFile() const ;
-    
-    
+     
   private :
 	  
 //    typedef std::pair<TTree*,CelEventComponent*> CelTreeAndComponent ;
 //	  typedef std::vector<CelTreeAndComponent> CelTreesAndComponents ;
 
-    // disable copying and assignment
+    // Disable copying and assignment
     CompositeEventList( const CompositeEventList & ) ;
     CompositeEventList & operator=( const CompositeEventList & ) ;
 
-    // specific opening methods
-    Bool_t prepareRead() ;
-    Bool_t prepareRecreate() ;
-
-    // Uses the input tree to discover the list of components
-    UInt_t buildComponents( TTree & entryTree ) ;
-    CelEventComponent * getComponent( UInt_t index ) const ;
-
-    // Build the TChain for a single component. 
-    TChain * buildChain( UInt_t componentIndex ) ;
-    
     // Manipulation of cel internal trees
     void deleteCurrentFile() ;
     Bool_t checkCelTrees() ;
@@ -176,7 +150,22 @@ class CompositeEventList : public TObject
     Int_t makeCelBranches( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize = 32000) const;
     Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) ;
 
+    // Components utilities
+    UInt_t CompositeEventList::declareComponent( const TString & name ) ;
+    UInt_t CompositeEventList::declareComponents( const TObjArray * componentNames ) ;
+    UInt_t discoverComponents() ;
+    CelEventComponent * getComponent( UInt_t index ) const ;
+    // UNUSED ? Get a Tree that is being read by a deepRead
+    TTree * getTree( UInt_t componentIndex ) const ;
+    TTree * getTree( const TString & componentName ) const ;
+
+    // specific construction methods
+    void prepareRead() ;
+    void prepareRecreate() ;
+    
     // cel data
+    Bool_t  _isOk ;
+    TString _fileName ;
     TString _openingOptions ;
     TFile * _currentFile ;
     TTree * _entryTree ; 

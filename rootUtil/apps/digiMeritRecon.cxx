@@ -2,7 +2,9 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TRandom.h>
-#include "TSystem.h"
+#include <TSystem.h>
+#include <TObjArray.h>
+#include <TObjString.h>
 
 
 #include <stdlib.h>
@@ -122,8 +124,7 @@ int main(int argn, char** argc) {
 
   // First file only
   std::vector<TTree*> trees;
-
-  CompositeEventList p;
+  TObjArray componentNames ;
 
   Long64_t nEvt(0);
   if ( digiFiles.size() > 0 ) {
@@ -132,7 +133,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Digi");
+    componentNames.Add(new TObjString("Digi"));
   }
   if ( reconFiles.size() > 0 ) {
     TFile* f = TFile::Open(reconFiles[0].c_str(),"READ");
@@ -140,7 +141,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Recon");
+    componentNames.Add(new TObjString("Recon"));
   }
   if ( svacFiles.size() > 0 ) {
     TFile* f = TFile::Open(svacFiles[0].c_str(),"READ");
@@ -148,7 +149,7 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Svac");
+    componentNames.Add(new TObjString("Svac"));
   }
   if ( meritFiles.size() > 0 ) {
     TFile* f = TFile::Open(meritFiles[0].c_str(),"READ");
@@ -156,14 +157,14 @@ int main(int argn, char** argc) {
     nEvt = t->GetEntries();
     t->SetBranchStatus("*",0);
     trees.push_back(t);
-    p.addComponent("Merit");
+    componentNames.Add(new TObjString("Merit"));
   }
-  
+    
   if ( outFile.length() < 2 ) {
     usage();
     return 2;
   }
-  Bool_t res = p.openCelFile(outFile.c_str(),"RECREATE") ;
+  CompositeEventList p(outFile.c_str(),"RECREATE",&componentNames) ;
   TRandom r;
 
   for ( Long64_t iEvt(0); iEvt < nEvt; iEvt++ ) {
@@ -178,7 +179,7 @@ int main(int argn, char** argc) {
     p.fillEvent(trees);
   }
   p.fillFileAndTreeSet() ;
-  p.closeCelFile() ;
+  p.writeAndClose() ;
 
   return 0;
 }

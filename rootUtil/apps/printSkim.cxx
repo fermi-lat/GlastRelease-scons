@@ -94,14 +94,14 @@ int main(int argn, char** argc) {
 
   for ( int idx = optind; idx < argn; idx++ ) {
     const char* fileName = argc[idx];
-    cout << fileName << endl;
-    Bool_t res = p.openCelFile(fileName);
-    if ( res==kFALSE ) {
+    cout << fileName << endl ;
+    CompositeEventList p(fileName);
+    if ( p.isOk()==kFALSE ) {
       cerr << "Can't open file " << fileName << endl;
       return 4;
     }
     p.printInfo(printFlags.c_str(),optval_n,optval_s);
-    p.closeCelFile() ;
+    p.writeAndClose() ;
   }
   
 

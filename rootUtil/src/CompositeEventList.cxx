@@ -2,12 +2,10 @@
 /*
 * Project: GLAST
 * Package: rootUtil
-*    File: $Id$
+* File: CompositeEventList.cxx
 * Authors:
-*   EC, Eric Charles,    SLAC              echarles@slac.stanford.edu
-*
-* Copyright (c) 2007
-*                   Regents of Stanford University. All rights reserved.
+*   DC, David Chamont, LLR,  chamont@llr.in2p3.fr
+*   EC, Eric Charles,  SLAC, echarles@slac.stanford.edu
 *
 */
 
@@ -20,6 +18,7 @@
 #include <TChain.h>
 #include <TFile.h>
 #include <TObjArray.h>
+#include <TObjString.h>
 #include <TSystem.h>
 #include <Riostream.h>
 
@@ -28,7 +27,7 @@
 
 
 //====================================================================
-//
+// globals and low level utilities
 //====================================================================
 
 
@@ -39,15 +38,17 @@ static std::string __linkTreeName("EventLinks") ;
 static std::string __fileTreeName("FileAndTreeSets") ;
 static std::string __offsetTreeName("FileAndTreeOffsets") ;
 
-void CompositeEventList::displayFile() const
- { std::cout<<"FILE: "<<_currentFile<<std::endl ; }
-     
-CompositeEventList::CompositeEventList()
- : _currentFile(0), _entryTree(0), _linkTree(0), _fileTree(0), _offsetTree(0)
- {}
-	    
-CompositeEventList::~CompositeEventList()
- { closeCelFile() ; }
+class AutoCd
+ {
+  public :
+    explicit AutoCd( TDirectory * newDir =0 ) : _oldDir(gDirectory)
+     { if (newDir!=0) newDir->cd() ; }
+    ~AutoCd() { if (_oldDir!=0) _oldDir->cd() ; }
+  private :
+    AutoCd( const AutoCd & ) ;
+    AutoCd & operator=( const AutoCd & ) ;
+	TDirectory * _oldDir ;  
+ } ;
 
 Bool_t CompositeEventList::checkCelTree
  ( TTree * tree, const std::string & name, Bool_t error )
@@ -60,7 +61,7 @@ Bool_t CompositeEventList::checkCelTree
 	    <<"[CompositeEventList::checkCelTree] "
 	    <<"lacking tree "<<name
 	    <<std::endl ;
-	  return kFALSE ;
+	  _isOk = kFALSE ;
 	 }
 	else
 	 {
@@ -78,6 +79,7 @@ Bool_t CompositeEventList::checkCelTree
 	  << "a tree is called "<<tree->GetName()
 	  << " instead of "<<name
 	  << std::endl ;
+	_isOk = kFALSE ;
 	return kFALSE ;
    }
   return kTRUE ;
@@ -85,6 +87,11 @@ Bool_t CompositeEventList::checkCelTree
 
 Bool_t CompositeEventList::checkCelTrees()
  {
+  if (_currentFile==0)
+   {
+	_isOk = kFALSE ;
+	return kFALSE ;
+   }
   if (checkCelTree(_entryTree,__entryTreeName,kTRUE)==kFALSE) return kFALSE ;
   if (checkCelTree(_linkTree,__linkTreeName,kTRUE)==kFALSE) return kFALSE ;
   if (checkCelTree(_fileTree,__fileTreeName,kTRUE)==kFALSE) return kFALSE ;
@@ -93,13 +100,165 @@ Bool_t CompositeEventList::checkCelTrees()
  }
 
 
+ 
+//====================================================================
+// construction
+//====================================================================
+
+
+CompositeEventList::CompositeEventList
+ ( const TString & celFileName,
+   const TString & options,
+   const TObjArray * componentNames )
+ : _isOk(kTRUE), _fileName(celFileName), _openingOptions(options),
+   _currentFile(0), _entryTree(0), _linkTree(0), _fileTree(0), _offsetTree(0)
+ {
+  // transient not implemented
+  if (celFileName=="")
+   {
+	std::cerr
+	  <<"[CompositeEventList::CompositeEventList] "
+	  <<"transient CELs not yet implemented "
+	  <<std::endl ;
+	_isOk = kFALSE ;
+   }
+  
+  // check option
+  if ( (_openingOptions != "RECREATE") &&
+	   (_openingOptions != "READ") )
+   {
+    _openingOptions = "" ;
+    std::cerr
+      << "[CompositeEventList::CompositeEventList] the option "
+      << options << " is not yet implemented"
+      << std::endl ;
+    _isOk = kFALSE ;
+   }
+  
+  // check RECREATE
+  if ((_openingOptions=="RECREATE")&&(componentNames==0))
+   {
+    std::cerr
+      << "[CompositeEventList::CompositeEventList] "
+      << "With option RECREATE, component names are mandatory."
+      << std::endl ;
+    _isOk = kFALSE ;
+   }
+  
+  // expand file name
+  TString fileName = celFileName ;
+  if (gSystem->ExpandPathName(fileName)==kTRUE)
+   {
+    std::cerr
+      << "[CompositeEventList::CompositeEventList] "
+      << "Failed to expand some variable in filename "
+      << celFileName
+      << std::endl ;
+    _isOk = kFALSE ;
+   }
+  
+  // open file
+  AutoCd cd ;
+  _currentFile = TFile::Open(fileName,options) ;
+  if ((_currentFile==0)||(!_currentFile->IsOpen()))
+   {
+	std::cerr
+	  << "[CompositeEventList ::CompositeEventList] "
+      << "Failed to open file "<< fileName
+      << " in "<< _openingOptions << " mode"
+      << std::endl ;
+	delete _currentFile ;
+	_currentFile = 0 ;
+	_isOk = kFALSE ; ;
+   } 
+  
+  // options dependant part
+  if (_openingOptions=="RECREATE")
+   {
+	declareComponents(componentNames) ;
+	prepareRecreate() ;
+   } 
+  else if (_openingOptions=="READ")
+   {
+	if (componentNames!=0)
+	 { declareComponents(componentNames) ; }
+	prepareRead() ;
+   }
+  else
+   {
+	std::cerr
+	  << "[CompositeEventList ::CompositeEventList] "
+      << "Unknown option "<< _openingOptions
+      << std::endl ;
+	delete _currentFile ;
+	_currentFile = 0 ;
+	_isOk = kFALSE ;
+   }
+ }
+	    
+void CompositeEventList::deleteCurrentFile()
+ {
+  delete _currentFile ;
+  _currentFile = 0 ;
+  _entryTree = 0  ;
+  _linkTree = 0   ;
+  _fileTree = 0   ;
+  _offsetTree = 0 ;
+  _openingOptions = "" ;
+ }
+
+Bool_t CompositeEventList::isOk()
+ { return _isOk ; }
+
+CompositeEventList::~CompositeEventList()
+ {
+  // no file open
+  if (_currentFile==0)
+   { return ; }
+  
+  // eventually needs writing
+  if (_openingOptions!="READ")
+   { writeAndClose() ; }
+  else
+   { deleteCurrentFile() ; }
+ }
+
+
+
+//====================================================================
+// Accessors
+//====================================================================
+
+
+UInt_t CompositeEventList::numComponents() const
+ { return _compList.size() ; }
+
+Long64_t CompositeEventList::numEvents() const
+ { return (_linkTree!=0?_linkTree->GetEntries():0) ; }
+
+Long64_t CompositeEventList::numFileAndTreeSets() const
+ { return (_fileTree!=0?_fileTree->GetEntries():0) ; }
+
+const TString & CompositeEventList::fileName() const
+ { return _fileName ; }
+
+const TString & CompositeEventList::componentName( UInt_t componentIndex ) const
+ { return _compNames[componentIndex] ; }
+
+Long64_t CompositeEventList::currentEventIndex() const
+ { return _currentLink.eventIndex() ; }
+
+Long64_t CompositeEventList::currentSetIndex() const
+ { return _currentLink.setIndex() ; }
+
+
 
 //====================================================================
 // components setup
 //====================================================================
 
 
-UInt_t CompositeEventList::addComponent( const TString & name )
+UInt_t CompositeEventList::declareComponent( const TString & name )
  {
   // Add a component by name.  This is only need when writing.
   // On read these are discovered.
@@ -111,19 +270,30 @@ UInt_t CompositeEventList::addComponent( const TString & name )
   return retValue ;
  }
 
-// Uses the input event tree to discover the list of components
-UInt_t CompositeEventList::buildComponents( TTree & entryTree )
+UInt_t CompositeEventList::declareComponents( const TObjArray * names )
  {
-  TObjArray * array = entryTree.GetListOfBranches() ;
+  Int_t i ;
+  for ( i=0 ; i < names->GetEntries(); i++ )
+   {
+    TObjString * s = static_cast<TObjString*>(names->UncheckedAt(i)) ;
+    declareComponent(s->GetString()) ;
+   }
+  return numComponents() ;
+ }
+
+// Uses the input file tree to discover the list of components
+UInt_t CompositeEventList::discoverComponents()
+ {
+  TObjArray * array = _fileTree->GetListOfBranches() ;
   Int_t i ;
   for ( i = 0 ; i < array->GetEntries() ; i++ )
    {
     TObject * obj = array->UncheckedAt(i) ;
     TString name = obj->GetName() ;
-    Ssiz_t find = name.Index("_Event_EntryIndex") ;
+    Ssiz_t find = name.Index("_Set_Size") ;
     if (find==kNPOS) continue ;
     name.Remove(find) ;
-    addComponent(name) ; 
+    declareComponent(name) ; 
     //std::string name(obj->GetName()) ;    
     //std::string::size_type find =  name.find("EntryIndex") ;    
     //if ( find == name.npos ) continue ;   
@@ -131,7 +301,7 @@ UInt_t CompositeEventList::buildComponents( TTree & entryTree )
     //addComponent(compName) ;
    }
   return numComponents() ;
-}
+ }
 
 CelEventComponent * CompositeEventList::getComponent( UInt_t index ) const
  { return (index < _compList.size()) ? _compList[index] : 0 ; }
@@ -154,113 +324,34 @@ TTree * CompositeEventList::getTree( const TString & name ) const
 
 
 //====================================================================
-// common read/write interface
-//====================================================================
-
-
-class AutoCd
- {
-  public :
-    explicit AutoCd( TDirectory * newDir =0 ) : _oldDir(gDirectory)
-     { if (newDir!=0) newDir->cd() ; }
-    ~AutoCd() { if (_oldDir!=0) _oldDir->cd() ; }
-  private :
-    AutoCd( const AutoCd & ) ;
-    AutoCd & operator=( const AutoCd & ) ;
-	TDirectory * _oldDir ;  
- } ;
-
-Bool_t CompositeEventList::openCelFile
- ( const TString & celFileName, const Char_t * options )
- {
-  // check option
-  _openingOptions = options ;
-  if ( (_openingOptions != "RECREATE") &&
-	   (_openingOptions != "READ") )
-   {
-    _openingOptions = "" ;
-    std::cerr
-      << "[CompositeEventList::openCelFile] the option "
-      << options << " is not yet implemented"
-      << std::endl ;
-    return kFALSE ;
-   }
-  
-  // expand file name
-  TString fileName = celFileName ;
-  if (gSystem->ExpandPathName(fileName)==kTRUE)
-   {
-    std::cerr
-      << "[CompositeEventList::openCelFile] "
-      << "Failed to expand some variable in filename : "
-      << celFileName
-      << std::endl ;
-    return kFALSE ;
-   }
-  
-  // open file
-  AutoCd cd ;
-  _currentFile = TFile::Open(fileName,options) ;
-  if ((_currentFile==0)||(!_currentFile->IsOpen()))
-   {
-	std::cerr
-	  << "[CompositeEventList ::openCelFile] "
-      << "Failed to open file "<< fileName
-      << " in "<< _openingOptions << " mode"
-      << std::endl ;
-	delete _currentFile ;
-	_currentFile = 0 ;
-	return kFALSE ;
-   } 
-  
-  // options dependant part
-  if (_openingOptions=="RECREATE")
-   { return prepareRecreate() ; }
-  else if (_openingOptions=="READ")
-   { return prepareRead() ; }
-  else
-   { throw "I should not be here !" ; }
- }
-
-void CompositeEventList::deleteCurrentFile()
- {
-  delete _currentFile ;
-  _entryTree = 0  ;
-  _linkTree = 0   ;
-  _fileTree = 0   ;
-  _offsetTree = 0 ;
-  _currentFile = 0 ;
-  _openingOptions = "" ;
- }
-
-void CompositeEventList::closeCelFile()
- {
-  // already closed
-  if (_currentFile==0)
-   { return ; }
-  
-  // eventually needs writing
-  if (_openingOptions!="READ")
-   { _currentFile->Write() ; }
-  
-  // actual closing
-  deleteCurrentFile() ;
- }
-
-
-
-//====================================================================
 // write use-case
 //====================================================================
 
 
-Bool_t CompositeEventList::prepareRecreate()
+void CompositeEventList::prepareRecreate()
  {
+  // check opening mode
+  if (_openingOptions!="RECREATE")
+   {
+	std::cerr
+	  << "[CompositeEventList::prepareRecreate] "
+      << "inconsistent with openingOptions "<< _openingOptions
+      << std::endl ;
+    deleteCurrentFile() ;
+    _isOk = kFALSE ;
+   }
+	
   // make trees
+  AutoCd cd(_currentFile) ;
   _entryTree = new TTree(__entryTreeName.c_str(),__entryTreeName.c_str()) ;
   _linkTree = new TTree(__linkTreeName.c_str(),__linkTreeName.c_str()) ;
   _fileTree = new TTree(__fileTreeName.c_str(),__fileTreeName.c_str()) ;
   _offsetTree = new TTree(__offsetTreeName.c_str(),__offsetTreeName.c_str()) ;
+  if (checkCelTrees()==kFALSE)
+   {
+    deleteCurrentFile() ;
+    _isOk = kFALSE ;
+   }
   
   // make branches
   Int_t check = makeCelBranches(_entryTree,_linkTree,_fileTree,_offsetTree,32000) ;
@@ -269,11 +360,8 @@ Bool_t CompositeEventList::prepareRecreate()
     // Failed to make branches for some reason.  
     // Already warned.  clean up and return NULL
     deleteCurrentFile() ;
-    return kFALSE ;
+    _isOk = kFALSE ;
    }
-  
-  // finally ok
-  return kTRUE ;
  }
 
 Int_t CompositeEventList::makeCelBranches
@@ -298,6 +386,119 @@ Int_t CompositeEventList::makeCelBranches
   return total ;
  }
 
+Long64_t CompositeEventList::fillEvent( const TObjArray & trees )
+ {
+  std::vector<TTree*> v;
+  for ( Int_t i(0); i < trees.GetEntries(); i++ )
+   {
+    TTree* t = static_cast<TTree*>(trees.UncheckedAt(i));
+    v.push_back(t);
+  }
+  return fillEvent(v);
+ }
+
+Long64_t CompositeEventList::fillEvent( const std::vector<TChain *> & chains )
+ {
+  std::vector<TTree *> v ;
+  std::vector<TTree *>::size_type i ;
+  for ( i = 0 ; i < chains.size() ; i++ )
+   { v.push_back(chains[i]->GetTree()) ; }
+  return fillEvent(v) ;
+ }
+
+// Insert an event in the CEL. Grab the status of a set of TTrees
+// Returns the entry number of the event that has just been written  
+// Returns -1 if it failed to fill the event
+// This is here since CINT screws up with std::vector<TTree*> 
+Long64_t CompositeEventList::fillEvent( const std::vector<TTree *> & trees )
+ {
+  if (_isOk==kFALSE)
+   {
+    std::cerr
+      << "[CompositeEventList::fillEvent] not OK"
+      << std::endl ;
+    return -1 ;
+   }
+	
+  if ( ! checkCelTrees() ) return -1 ;
+  
+  if (_currentFile->TestBits(TFile::kWriteError))
+   {
+    std::cerr
+      << "[CompositeEventList::fillEvent] kWriteError"
+      << std::endl ;
+    return -1 ;
+   }
+	
+  if (trees.size() != _compList.size())
+   {
+    std::cerr
+      << "Do not know how to match " << _compList.size() << " components "
+      << "with " << trees.size() << " trees."
+      << std::endl ;
+    return -1 ;
+   }
+  
+  // TODO : check tree and component names ?
+  UInt_t idx(0) ;
+  std::vector< TTree* >::const_iterator itr ;
+  for ( itr = trees.begin(), idx = 0 ; itr != trees.end() ; itr++, idx++ )
+   {  
+    CelEventComponent * comp = getComponent(idx) ;
+    assert ( 0 != comp ) ;
+    comp->registerEntry(**itr) ;
+   }
+  
+  _currentLink.incrementEventIndex() ;
+  _entryTree->Fill() ;
+  _linkTree->Fill() ;
+  return _currentLink.eventIndex() ;
+}
+
+// Store up the List of TTrees that have been used so far
+// Returns the entry number of the entry that has just been written    
+Long64_t CompositeEventList::fillFileAndTreeSet()
+ {
+  if ( ! checkCelTrees() ) return -1 ;
+  _fileTree->Fill() ;
+  _offsetTree->Fill() ;
+
+  Long64_t retValue = _currentLink.setIndex() ;
+  _currentLink.incrementFileSetIndex() ;
+  
+  std::vector<CelEventComponent*>::iterator itr ;
+  for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
+   {
+    CelEventComponent * comp = *itr ;
+    if ( comp == 0 ) return -1 ;
+    comp->nextSet() ;
+   }
+  
+  return retValue ;
+}
+
+void CompositeEventList::writeAndClose()
+ {
+  if (_openingOptions=="READ")
+   {
+	std::cerr
+	  << "[CompositeEventList::writeAndClose] "
+      << "Why ask to write a read file ??"
+      << std::endl ;
+   }
+  
+  if (_currentFile==0)
+   {
+	std::cerr
+	  << "[CompositeEventList::writeAndClose] "
+      << "Probaly already closed"
+      << std::endl ;
+   }
+  
+  _currentFile->Write() ;
+  deleteCurrentFile() ;
+  _isOk = kTRUE ;
+ }
 
 
 //====================================================================
@@ -310,7 +511,7 @@ CompositeEventList::CompositeEventList
  : _currentFile(0), _entryTree(entryTree), _linkTree(linkTree), _fileTree(fileTree)
  {
   // prepare components
-  buildComponents(*entryTree) ;
+  discoverComponents() ;
   
   // prepare and connect new offset tree
   _offsetTree = new TTree(__offsetTreeName.c_str(),__offsetTreeName.c_str()) ;
@@ -363,39 +564,45 @@ CompositeEventList::CompositeEventList
 //====================================================================
 
 
-Bool_t CompositeEventList::prepareRead()
+void CompositeEventList::prepareRead()
  {
+  // check opening mode
+  if (_openingOptions!="READ")
+   {
+	std::cerr
+	  << "[CompositeEventList::prepareRead] "
+      << "inconsistent with openingOptions "<< _openingOptions
+      << std::endl ;
+    deleteCurrentFile() ;
+    _isOk = kFALSE ;
+   }
+  
   // explore
   _entryTree = dynamic_cast<TTree*>(_currentFile->Get(__entryTreeName.c_str())) ;
   _linkTree = dynamic_cast<TTree*>(_currentFile->Get(__linkTreeName.c_str())) ;
   _fileTree = dynamic_cast<TTree*>(_currentFile->Get(__fileTreeName.c_str())) ;
   _offsetTree = dynamic_cast<TTree*>(_currentFile->Get(__offsetTreeName.c_str())) ;
-  if  ( _entryTree==0 || _linkTree==0 || _fileTree==0 || _offsetTree==0 )
+  if (checkCelTrees()==kFALSE)
    {
-    std::cerr
-	  << "[CompositeEventList::openFile] "
-      << "Lacking cel tree(s)"
-      << std::endl ;
     deleteCurrentFile() ;
-    return kFALSE ;
+    _isOk = kFALSE ;
    }
   
-  // attach
+  // components
   if (_compList.size()==0)
-   { buildComponents(*_entryTree) ; } 
+	 { discoverComponents() ; }
+	
+  // attach
   Int_t check = attachToTree(_entryTree,_linkTree,_fileTree,_offsetTree) ;
   if (check<0)
    {
     std::cerr
-	  << "[CompositeEventList::openFile] "
+	  << "[CompositeEventList::prepareRead] "
       << "File is not a valid composite event list"
       << std::endl ;
     deleteCurrentFile() ;
-    return kFALSE ;
+    _isOk = kFALSE ;
    }
-  
-  // everything finally OK
-  return kTRUE ;
  }
 
 Int_t CompositeEventList::attachToTree( TTree * entryTree, TTree * linkTree,  TTree * fileTree,  TTree * offsetTree )
@@ -509,7 +716,7 @@ Int_t CompositeEventList::deepRead( Long64_t eventIndex )
  }
 
 // Build the TChain for a component. 
-TChain * CompositeEventList::buildChain( UInt_t componentIndex )
+TChain * CompositeEventList::newChain( UInt_t componentIndex )
  {
   // get component
   if (!checkCelTrees()) { return 0 ; }
@@ -552,7 +759,7 @@ TChain * CompositeEventList::buildChain( UInt_t componentIndex )
  }
 
 // Build event and data chains
-TChain * CompositeEventList::buildAllChains( TObjArray * chainList, Bool_t setFriends )
+TChain * CompositeEventList::newChains( TObjArray * chainList, Bool_t setFriends )
  {
   // preconditions
   if (!checkCelTrees()) { return 0 ; }
@@ -573,7 +780,7 @@ TChain * CompositeEventList::buildAllChains( TObjArray * chainList, Bool_t setFr
   for ( i=0 ; i<numComponents() ; i++ )
    {
     std::cout<<"Building chain for "<<_compNames[i]<<std::endl ;
-    TChain * c = buildChain(i) ;
+    TChain * c = newChain(i) ;
     if (c==0) { return 0 ; }
     c->SetBranchStatus("*",0) ; // ???
     TVirtualIndex * vIdx = new CelIndex(*this,_compNames[i],c) ;
@@ -593,101 +800,6 @@ TChain * CompositeEventList::buildAllChains( TObjArray * chainList, Bool_t setFr
 //====================================================================
 //
 //====================================================================
-
-
-Long64_t CompositeEventList::fillEvent( TObjArray & trees )
- {
-  std::vector<TTree*> v;
-  for ( Int_t i(0); i < trees.GetEntries(); i++ )
-   {
-    TTree* t = static_cast<TTree*>(trees.UncheckedAt(i));
-    v.push_back(t);
-  }
-  return fillEvent(v);
- }
-
-Long64_t CompositeEventList::fillEvent( const std::vector<TChain *> & chains )
- {
-  std::vector<TTree *> v ;
-  std::vector<TTree *>::size_type i ;
-  for ( i = 0 ; i < chains.size() ; i++ )
-   { v.push_back(chains[i]->GetTree()) ; }
-  return fillEvent(v) ;
- }
-
-// Insert an event in the CEL. Grab the status of a set of TTrees
-// Returns the entry number of the event that has just been written  
-// Returns -1 if it failed to fill the event
-// This is here since CINT screws up with std::vector<TTree*> 
-Long64_t CompositeEventList::fillEvent( const std::vector<TTree *> & trees )
- {
-  if ( ! checkCelTrees() ) return -1 ;
-  
-  if (_currentFile->TestBits(TFile::kWriteError))
-   {
-    std::cerr
-      << "[CompositeEventList::fillEvent] kWriteError"
-      << std::endl ;
-    return -1 ;
-   }
-	
-  if (trees.size() != _compList.size())
-   {
-    std::cerr
-      << "Do not know how to match " << _compList.size() << " components "
-      << "with " << trees.size() << " trees."
-      << std::endl ;
-    return -1 ;
-   }
-  
-  // TODO : check tree and component names ?
-  UInt_t idx(0) ;
-  std::vector< TTree* >::const_iterator itr ;
-  for ( itr = trees.begin(), idx = 0 ; itr != trees.end() ; itr++, idx++ )
-   {  
-    CelEventComponent * comp = getComponent(idx) ;
-    assert ( 0 != comp ) ;
-    comp->registerEntry(**itr) ;
-   }
-  
-  _currentLink.incrementEventIndex() ;
-  _entryTree->Fill() ;
-  _linkTree->Fill() ;
-  return _currentLink.eventIndex() ;
-}
-
-// Store up the List of TTrees that have been used so far
-// Returns the entry number of the entry that has just been written    
-Long64_t CompositeEventList::fillFileAndTreeSet()
- {
-  if ( ! checkCelTrees() ) return -1 ;
-  _fileTree->Fill() ;
-  _offsetTree->Fill() ;
-
-  Long64_t retValue = _currentLink.setIndex() ;
-  _currentLink.incrementFileSetIndex() ;
-  
-  std::vector<CelEventComponent*>::iterator itr ;
-  for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
-   {
-    CelEventComponent * comp = *itr ;
-    if ( comp == 0 ) return -1 ;
-    comp->nextSet() ;
-   }
-  
-  return retValue ;
-}
-
-
-Long64_t CompositeEventList::numEvents() const { 
-  // return the number of entries
-  return _linkTree != 0 ? _linkTree->GetEntries() : 0 ;
-}
-
-Long64_t CompositeEventList::numFileAndTreeSets() const { 
-  // return the number of entries
-  return _fileTree != 0 ? _fileTree->GetEntries() : 0 ;
-}
 
 
 

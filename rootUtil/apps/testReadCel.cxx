@@ -21,14 +21,12 @@ int main( int argc, char ** argv )
     reader.showByComponent() ;
     reader.showByEvent() ;
     
-    CompositeEventList cel ;
     TString fileName = baseName ;
     fileName += ".cel.root" ;
+    CompositeEventList cel(fileName) ;
     
     // internal cel print
-    cel.openCelFile(fileName) ;
     cel.printInfo() ;
-    cel.closeCelFile() ;
     
 	// usual loop variables
     Long64_t nEvents, iEvent ;
@@ -39,7 +37,6 @@ int main( int argc, char ** argv )
     delete digiData ;
     delete reconData ;
     digiData = reconData = 0 ;
-    cel.openCelFile(fileName) ;
 //    TTree * digiTree = cel.getTree(TestDigiComponent::name()) ;
 //    digiTree->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
 //    TTree * reconTree = cel.getTree(TestReconComponent::name()) ;
@@ -55,16 +52,17 @@ int main( int argc, char ** argv )
 //        <<", "<<TestReconComponent::name()<<" "<<*reconData
 //        <<std::endl ;
 //     }
-    cel.closeCelFile() ;
     
     // print thanks to cel chains
-    std::cout << "Printing events thanks to chains: " << std::endl ;
+    std::cout
+      << "=================================\n"
+      << "Printing events thanks to chains:\n"
+      << std::flush ;
     delete digiData ;
     delete reconData ;
     digiData = reconData = 0 ;
-    cel.openCelFile(fileName) ;
     TObjArray * dataChains = new TObjArray ;
-    TChain * celChain = cel.buildAllChains(dataChains) ;
+    TChain * celChain = cel.newChains(dataChains) ;
     TIter itrChain(dataChains) ;
     TChain * curChain ;
     while ( (curChain = (TChain*)itrChain.Next()) )
@@ -90,10 +88,12 @@ int main( int argc, char ** argv )
         <<", "<<*reconData
         <<std::endl ;
      }
-    cel.closeCelFile() ;
     
     // print thanks to cel manager
-    std::cout << "Printing events thanks to CelManager: " << std::endl ;
+    std::cout
+      << "=====================================\n"
+      << "Printing events thanks to CelManager:\n"
+      << std::flush ;
     delete digiData ;
     delete reconData ;
     digiData = reconData = 0 ;
@@ -123,9 +123,7 @@ int main( int argc, char ** argv )
        { std::cout<<*digiData<<", "<<*reconData<<std::endl ; }
       else
        { std::cout<<"Digi and/or Recon data not read"<<std::endl ; }
-     }
-    cel.closeCelFile() ;
-    
+     }    
    }
   catch (...)
    {

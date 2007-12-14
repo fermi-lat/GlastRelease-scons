@@ -13,6 +13,7 @@
 #include <rootUtil/CelEventComponent.h>
 #include <TSystem.h>
 #include <Riostream.h>
+#include <TObjString.h>
 
 
 
@@ -26,8 +27,8 @@
 
 CelManager::CelManager( Bool_t verbose )
  : m_verbose(verbose), 
-   m_fileNameWrite(""), m_initWriteDone(kFALSE), /*m_fileWrite(0),*/  m_eventCounter(0),
-   m_fileNameRead(""),  /*m_fileRead(0),*/ m_compChainCol(0), m_masterChain(0)  
+   m_fileNameWrite(""), m_initWriteDone(kFALSE), /*m_fileWrite(0),*/ m_celWrite(0), m_eventCounter(0),
+   m_fileNameRead(""),  /*m_fileRead(0),*/ m_celRead(0), m_compChainCol(0), m_masterChain(0)  
  {}
 
 CelManager::~CelManager() 
@@ -35,6 +36,8 @@ CelManager::~CelManager()
   m_treeCol.clear() ;
   if (m_compChainCol) m_compChainCol->Delete() ;
   if (m_masterChain) delete m_masterChain ;
+  delete m_celWrite ;
+  delete m_celRead ;
  }
 
 
@@ -64,9 +67,9 @@ Bool_t CelManager::delayedInitWrite()
   if (m_initWriteDone==kTRUE)
    { return m_initWriteDone ; }
   
-  m_initWriteDone = m_celWrite.openCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
-  if (m_initWriteDone==kFALSE)
-//  m_fileWrite = m_celWrite.makeCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
+  m_celWrite = new CompositeEventList(m_fileNameWrite,m_outputOptions,&m_componentNamesCol) ;
+  if (m_celWrite->isOk()==kFALSE)
+//  m_fileWrite = m_celWrite->makeCelFile(m_fileNameWrite,m_outputOptions.Data()) ;
 //  if (m_fileWrite==0)
    {
     std::cerr
@@ -80,11 +83,11 @@ Bool_t CelManager::delayedInitWrite()
  }
 
 
-UInt_t CelManager::addComponent( const TString & compName, TTree * t )
+Bool_t CelManager::addComponent( const TString & compName, TTree * t )
  {
-  unsigned int ret = m_celWrite.addComponent(compName) ;
+  m_componentNamesCol.Add(new TObjString(compName)) ;
   m_treeCol.push_back(t) ;
-  return ret ;
+  return kTRUE ;
  }
 
 Bool_t CelManager::fillEvent()
@@ -104,7 +107,7 @@ Bool_t CelManager::fillEvent()
     Long64_t numBytes ;
     for ( treeItr=m_treeCol.begin() ; treeItr != m_treeCol.end() ; treeItr++ )
      { numBytes = (*treeItr)->LoadTree(m_eventCounter) ; }
-    m_celWrite.fillEvent(m_treeCol) ;
+    m_celWrite->fillEvent(m_treeCol) ;
     
     // [David] presumably useless
     //saveDir->cd() ;
@@ -127,10 +130,10 @@ Bool_t CelManager::fillFileAndTreeSet()
     TDirectory * saveDir = gDirectory ;
     // [David] I guess this cd() is useless ?
     //m_fileWrite->cd() ;
-    m_celWrite.fillFileAndTreeSet() ;
-    m_celWrite.closeCelFile() ;
-    //m_fileWrite->Write(0,TObject::kWriteDelete) ;
-    //m_fileWrite->Close() ;
+    m_celWrite->fillFileAndTreeSet() ;
+    m_celWrite->writeAndClose() ;
+    delete m_celWrite ;
+    m_celWrite = 0 ;
     saveDir->cd() ;
    }
   catch(...)
@@ -157,8 +160,8 @@ Bool_t CelManager::initRead( const TString & celFileName )
   
   // opening
   m_fileNameRead = celFileName ;
-  stat = m_celRead.openCelFile(m_fileNameRead) ;
-  if (stat==kFALSE)
+  m_celRead = new CompositeEventList(m_fileNameRead) ;
+  if (m_celRead->isOk()==kFALSE)
    {
     std::cerr
      << "[CelManager::initRead] "
@@ -169,7 +172,7 @@ Bool_t CelManager::initRead( const TString & celFileName )
 
   // Set up our master TChain and the component TChains
   if (!m_compChainCol) m_compChainCol = new TObjArray() ;
-  m_masterChain = m_celRead.buildAllChains(m_compChainCol) ;
+  m_masterChain = m_celRead->newChains(m_compChainCol) ;
   TIter itr(m_compChainCol) ;
   TChain * curChain ;
   while ( (curChain = (TChain*)itr.Next()) )
@@ -181,7 +184,7 @@ Bool_t CelManager::initRead( const TString & celFileName )
  }
 
 Long64_t CelManager::getNumEvents()
- { return (m_celRead.numEvents()) ; }
+ { return (m_celRead->numEvents()) ; }
 
 Long64_t CelManager::getEventIndexInTree( const TString & treeName, Long64_t index)
  {
