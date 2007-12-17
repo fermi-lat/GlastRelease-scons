@@ -49,16 +49,20 @@ class CelEventComponent
     Int_t makeBranches( TTree * entryTree, TTree * fileTree, TTree * offsetTree =0, Int_t bufsize =32000 ) const ;
     Int_t attachToTree( TTree * entryTree, TTree * fileTree, TTree * offsetTree =0 ) ;
   
-    // WRITING INTERFACE
+    // Write
     void registerEntry( TTree & tree ) ;
     void nextSet() ;
   
-    /// READING INTERFACE
-    // Building a TChain
-    Bool_t addToChain( TChain * & chain ) ; 
+    /// Shallow read
+    Bool_t addSetToChain( TChain * & chain ) ; 
     Long64_t currentIndexInChain() const ;
-    // With deep read
-    Int_t read() ;
+
+    /// Deep read
+//    void setDataAddress
+//     ( const TString & componentName,
+//       const TString & branchName,
+//       void** address ) ;
+    Int_t deepRead() ;
     TTree * getTree() const ;
 
     // USEFUL ? Access

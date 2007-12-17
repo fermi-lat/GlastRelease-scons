@@ -27,6 +27,7 @@
 #include <rootUtil/OptUtil.h>
 #include <rootUtil/BgDataHandle.h>
 #include <rootUtil/CelFileAndTreeSet.h>
+#include <rootUtil/FileUtil.h>
 
 #include <TTree.h>
 #include <TFile.h>
@@ -63,7 +64,18 @@ CelEventComponent::~CelEventComponent()
 
 
 void CelEventComponent::registerEntry( TTree & tree )
- { _currentEntryIndex.set(tree,_currentSet) ; }
+ {
+  UShort_t tIdx = _currentSet.getKey(&tree) ;
+  if ( tIdx == FileUtil::NOKEY )
+   {
+	tIdx = _currentSet.addTree(tree) ;
+//    std::cout
+//      <<"[CelEventEntry::set] new tree "<<&tree
+//      <<" has received index "<<tIdx
+//      <<std::endl ;
+   }
+  _currentEntryIndex.set(tIdx,tree.GetReadEntry()) ;
+ }
 
 void CelEventComponent::nextSet()
  {
@@ -78,18 +90,15 @@ void CelEventComponent::nextSet()
 //====================================================================
 
 
-Int_t CelEventComponent::read()
- {
-  // read an event
-  return _currentEntryIndex.read(_currentSet) ;
- }
-
 TTree * CelEventComponent::getTree() const
- {
-  // Get the Tree that is being read
-  return _currentEntryIndex.getTree(_currentSet) ;
- }
+ { return _currentSet.getTree(_currentEntryIndex.treeIndex()) ; }
 
+Int_t CelEventComponent::deepRead()
+ {
+  TTree * t = getTree() ;
+  if ( 0 == t ) return -1 ;
+  return t->LoadTree(_currentEntryIndex.entryIndex()) ;
+ }
 
 Int_t CelEventComponent::makeBranches( TTree * entryTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize) const
  {
@@ -140,7 +149,7 @@ Int_t CelEventComponent::attachToTree( TTree * entryTree, TTree * fileTree, TTre
  }
 
 // Building a TChain
-Bool_t CelEventComponent::addToChain( TChain * & chain )
+Bool_t CelEventComponent::addSetToChain( TChain * & chain )
  { return _currentSet.addToChain(chain) ; }
 
 Long64_t CelEventComponent::currentIndexInChain() const
@@ -160,7 +169,7 @@ void CelEventComponent::printEventInfo( const char * options ) const
   _currentEntryIndex.printInfo() ;
  }
 
-void CelEventComponent::printSetInfo( const char * options, const char * prefix ) const
+void CelEventComponent::printSetInfo( const char * /*options*/, const char * prefix ) const
  { _currentSet.printTreesInfo("tf",prefix) ; }
 
 

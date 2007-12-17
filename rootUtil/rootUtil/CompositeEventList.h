@@ -35,16 +35,16 @@ class TObjString ;
 //
 // The class CompositeEventList permits to represent in memory
 // a list of composite events, where each event is described as
-// a set of entries in several separate trees. Each tree contains
-// a different kind of data, and is also called a "component".
+// a set of entries in several separate data trees. Each data tree
+// contains a different kind of data, and is also called a "component".
 //
 // An instance of CompositeEventList can be read from and/or
-// written to a ROOT file. We should also consider the construction
+// written to a ROOT file. We will also implement later the construction
 // of a CompositeEventList on-the-fly, so to support the good old
 // way to read/write events as was done by former RootIo writers
 // and readers.
 //
-// The information is stored on 5 trees
+// The information is stored within 5 internal trees
 // 
 //   TO BE DONE : EventIDs: 3 branches, 1 entry per event
 //      Event_ProductionID (char *)
@@ -76,7 +76,7 @@ class CompositeEventList : public TObject
 
   public :
 
-    // Construction, components, state
+    // Construction and components
     explicit CompositeEventList
      ( const TString & celFileName = "",
        const TString & options = "READ",
@@ -84,36 +84,38 @@ class CompositeEventList : public TObject
     Bool_t isOk() ;
     ~CompositeEventList() ;
 
-    // Writing interface
+    // Writing
     Long64_t fillEvent( const TObjArray & trees ) ;
     Long64_t fillEvent( const std::vector<TTree*> & ) ;
     Long64_t fillEvent( const std::vector<TChain*> & ) ;
     Long64_t fillFileAndTreeSet() ;
     void writeAndClose() ;
     
-    // Reading interface
-    // read only the event information
+    // Shallow reading
+    static const UInt_t COMPONENT_UNDEFINED ;
+    UInt_t componentIndex( const TString &  componentName ) const ;
+    TChain * newChain( UInt_t componentIndex ) const ;
     Int_t shallowRead( Long64_t eventIndex ) ;
-//    // declare the address where to store the data
+    Long64_t entryIndex( UInt_t componentIndex ) const ;
+    
+    // Deep reading
 //    void setDataAddress
 //     ( const TString & componentName,
 //       const TString & branchName,
 //       void** address ) ;
-    // UNUSED ? read the event information and data (data trees made on the fly ??)
     Int_t deepRead( Long64_t eventIndex ) ;   
-    // USED ? Build all the Chains for all the components
-    TChain * newChain( UInt_t componentIndex ) ;
-    TChain * newChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
-
-    // Accessors
-    UInt_t numComponents() const ;
-    Long64_t numEvents() const ;
-    Long64_t numFileAndTreeSets() const ;
-    const TString & fileName() const ;
-    const TString & componentName( UInt_t componentIndex ) const ;
-    Long64_t currentEventIndex() const ;
-    Long64_t currentSetIndex() const ;
     
+    // Reading through friend chains
+    TChain * newChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
+    
+    // Various Accessors
+    const TString & fileName() const ;
+    UInt_t numComponents() const ;
+    const TString & componentName( UInt_t componentIndex ) const ;
+    Long64_t numEvents() const ;
+    Long64_t currentEventIndex() const ;
+    Long64_t numFileAndTreeSets() const ;
+    Long64_t currentSetIndex() const ;
     
     /// PRINTING
     // Dump a set of event component pointers and the list of TTree where they live
@@ -145,8 +147,8 @@ class CompositeEventList : public TObject
 
     // Manipulation of cel internal trees
     void deleteCurrentFile() ;
-    Bool_t checkCelTrees() ;
-    Bool_t checkCelTree( TTree *, const std::string & name, Bool_t error ) ;
+    Bool_t checkCelTrees() const ;
+    Bool_t checkCelTree( TTree *, const std::string & name, Bool_t error ) const ;
     Int_t makeCelBranches( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize = 32000) const;
     Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) ;
 
@@ -164,7 +166,7 @@ class CompositeEventList : public TObject
     void prepareRecreate() ;
     
     // cel data
-    Bool_t  _isOk ;
+    mutable Bool_t  _isOk ;
     TString _fileName ;
     TString _openingOptions ;
     TFile * _currentFile ;

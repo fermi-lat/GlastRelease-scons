@@ -37,28 +37,21 @@ class CelEventEntry : public BranchGroup
     CelEventEntry & operator=( const CelEventEntry & ) ;
     ~CelEventEntry() ;
 
-    // Access
+    // Accessors & modifiers
     inline const TString & componentName() const { return _componentName ; }
-    inline Long64_t entryIndex() const { return _entryIndex ; }
     inline UShort_t treeIndex() const { return _treeIndex ; }
+    inline Long64_t entryIndex() const { return _entryIndex ; }
+    void set( UShort_t treeIndex, Long64_t entryIndex ) ;
 
-    // Methods and functions
-    // set the current event
-    void set( TTree & tree, CelFileAndTreeSet & handle) ;
-    // read an event
-    Int_t read( const CelFileAndTreeSet & handle ) ;
-    // get the tree that is being read
-    TTree * getTree( const CelFileAndTreeSet & handle ) const ;
-
-    // print the info about the entry
+    // Print the info about the entry
     void printInfo() const ;  
 
   private :
   
     // Data
 	TString _componentName ;
-    BgDataHandle<Long64_t> _entryIndex ; //! Index of the current entry in the current data TTree
     BgDataHandle<UShort_t> _treeIndex ;  //! Index of the current data TTree in the associated CelFileAndTreeSet
+    BgDataHandle<Long64_t> _entryIndex ; //! Index of the current entry in the current data TTree
   
     ClassDef(CelEventEntry,0)
 

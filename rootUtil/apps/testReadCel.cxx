@@ -15,6 +15,10 @@ int main( int argc, char ** argv )
   try 
    {
 	// direct reader access
+    std::cout
+      << "=================================\n"
+      << "DIRECT READ\n"
+      << std::flush ;
     TestReader reader ;
     reader.add(baseName,new TestDigiComponent) ;
     reader.add(baseName,new TestReconComponent) ;
@@ -26,17 +30,86 @@ int main( int argc, char ** argv )
     CompositeEventList cel(fileName) ;
     
     // internal cel print
+    std::cout
+      << "=================================\n"
+      << "CEL Internal meta info\n"
+      << std::flush ;
     cel.printInfo() ;
     
-	// usual loop variables
+	// usual read variables
     Long64_t nEvents, iEvent ;
     TestAbstractData * digiData =0 ;
     TestAbstractData * reconData =0 ;
+    TChain * digiChain =0 ;
+    TChain * reconChain =0 ;
 
-    // external cel print
+    // use of CompositeEventList::shallowRead()
+    std::cout
+      << "=================================\n"
+      << "SHALLOW READ\n"
+      << std::flush ;
+    UInt_t digiIndex = cel.componentIndex(TestDigiComponent::name()) ;
+    digiChain = cel.newChain(digiIndex) ;
+    digiChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
+    UInt_t reconIndex = cel.componentIndex(TestReconComponent::name()) ;
+    reconChain = cel.newChain(reconIndex) ;
+    reconChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
+    nEvents = cel.numEvents() ;
+    for ( iEvent = 0 ; iEvent < nEvents ; iEvent++ )
+     {
+      std::cout
+        <<"Event "<<setw(2)<<std::right<<iEvent
+        <<" : "<<std::flush ;    	  
+      cel.shallowRead(iEvent) ;
+      digiChain->GetEntry(cel.entryIndex(digiIndex)) ;
+      reconChain->GetEntry(cel.entryIndex(reconIndex)) ;
+      if ((digiData!=0)&&(reconData!=0))
+       { std::cout<<*digiData<<", "<<*reconData<<std::endl ; }
+      else
+       { std::cout<<"Digi and/or Recon data not read"<<std::endl ; }
+     }
+    delete digiChain ;
+    delete reconChain ;
+    digiChain = reconChain = 0 ;
     delete digiData ;
     delete reconData ;
     digiData = reconData = 0 ;
+    
+    
+    // use of CompositeEventList::deepRead()
+    std::cout
+      << "=================================\n"
+      << "DEEP READ\n"
+      << std::flush ;
+//    UInt_t digiIndex = cel.componentIndex(TestDigiComponent::name()) ;
+//    digiChain = cel.newChain(digiIndex) ;
+//    digiChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
+//    UInt_t reconIndex = cel.componentIndex(TestReconComponent::name()) ;
+//    reconChain = cel.newChain(reconIndex) ;
+//    reconChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
+//    nEvents = cel.numEvents() ;
+//    for ( iEvent = 0 ; iEvent < nEvents ; iEvent++ )
+//     {
+//      std::cout
+//        <<"Event "<<setw(2)<<std::right<<iEvent
+//        <<" : "<<std::flush ;    	  
+//      cel.shallowRead(iEvent) ;
+//      digiChain->GetEntry(cel.entryIndex(digiIndex)) ;
+//      reconChain->GetEntry(cel.entryIndex(reconIndex)) ;
+//      if ((digiData!=0)&&(reconData!=0))
+//       { std::cout<<*digiData<<", "<<*reconData<<std::endl ; }
+//      else
+//       { std::cout<<"Digi and/or Recon data not read"<<std::endl ; }
+//     }
+//    delete digiChain ;
+//    delete reconChain ;
+//    digiChain = reconChain = 0 ;
+//    delete digiData ;
+//    delete reconData ;
+//    digiData = reconData = 0 ;
+    
+    
+    // external cel print
 //    TTree * digiTree = cel.getTree(TestDigiComponent::name()) ;
 //    digiTree->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
 //    TTree * reconTree = cel.getTree(TestReconComponent::name()) ;
@@ -52,6 +125,9 @@ int main( int argc, char ** argv )
 //        <<", "<<TestReconComponent::name()<<" "<<*reconData
 //        <<std::endl ;
 //     }
+    delete digiData ;
+    delete reconData ;
+    digiData = reconData = 0 ;
     
     // print thanks to cel chains
     std::cout
@@ -88,24 +164,20 @@ int main( int argc, char ** argv )
         <<", "<<*reconData
         <<std::endl ;
      }
+    delete digiData ;
+    delete reconData ;
+    digiData = reconData = 0 ;
     
     // print thanks to cel manager
     std::cout
       << "=====================================\n"
       << "Printing events thanks to CelManager:\n"
       << std::flush ;
-    delete digiData ;
-    delete reconData ;
-    digiData = reconData = 0 ;
     CelManager mgr(true) ;
     mgr.initRead(fileName) ;
-    delete digiData ;
-    digiData = 0 ;
-    TChain * digiChain = mgr.getChainByType(TestDigiComponent::treeName()) ;
+    digiChain = mgr.getChainByType(TestDigiComponent::treeName()) ;
     digiChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
-    delete reconData ;
-    reconData = 0 ;
-    TChain * reconChain = mgr.getChainByType(TestReconComponent::treeName()) ;
+    reconChain = mgr.getChainByType(TestReconComponent::treeName()) ;
     reconChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
     Long64_t iDigi, iRecon ;
     nEvents = mgr.getNumEvents() ;
@@ -124,6 +196,12 @@ int main( int argc, char ** argv )
       else
        { std::cout<<"Digi and/or Recon data not read"<<std::endl ; }
      }    
+    digiChain = reconChain = 0 ;
+    delete digiData ;
+    delete reconData ;
+    digiData = reconData = 0 ;
+    
+    
    }
   catch (...)
    {
