@@ -4,9 +4,37 @@
 #include <cassert>
 namespace CalibData {
 
-  std::vector< std::vector<const AcdCalibDescription*> > AcdCalibDescription::s_descs(AcdCalibData::NDESC);
+    class AcdCalibDescriptionData
+    {
+    public:
+        static AcdCalibDescriptionData* instance()
+        {
+            if (m_instance == 0)
+            {
+                m_instance = new AcdCalibDescriptionData();
+            }
+            return m_instance;
+        }
+        std::vector< std::vector<const AcdCalibDescription*> > s_descs;
+    private:
+        AcdCalibDescriptionData() {s_descs.resize(AcdCalibData::NDESC);}
+
+        static AcdCalibDescriptionData* m_instance;
+    };
+
+    AcdCalibDescriptionData* AcdCalibDescriptionData::m_instance = 0;
+
+  //std::vector< std::vector<const AcdCalibDescription*> > AcdCalibDescription::s_descs(AcdCalibData::NDESC);
+
+  /// get the description for a particular calibration
+  const AcdCalibDescription* AcdCalibDescription::getDesc(AcdCalibData::CALTYPE calType, int version) {
+//      const std::vector< const AcdCalibDescription* >& descs =  s_descs[calType];
+      const std::vector< const AcdCalibDescription* >& descs = AcdCalibDescriptionData::instance()->s_descs[calType];
+      return version < 0 ? descs.back() : descs[version];
+  }
   
   int AcdCalibDescription::addDesc(AcdCalibData::CALTYPE calType, const AcdCalibDescription* desc) {
+    std::vector< std::vector<const AcdCalibDescription*> >& s_descs = AcdCalibDescriptionData::instance()->s_descs;
     if ( s_descs.size() == 0 ) {
       s_descs.resize(AcdCalibData::NDESC);
     }

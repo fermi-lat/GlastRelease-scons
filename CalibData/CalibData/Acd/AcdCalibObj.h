@@ -14,7 +14,6 @@
 
 // forward declares
 
-
 namespace CalibData {
 
 
@@ -22,25 +21,20 @@ namespace CalibData {
   public:
     
     /// get the description for a particular calibration
-    static const AcdCalibDescription* getDesc(AcdCalibData::CALTYPE calType, int version=-1) {
-      const std::vector< const AcdCalibDescription* >& descs =  s_descs[calType];
-      return version < 0 ? descs.back() : descs[version];
-    }
+    static const AcdCalibDescription* getDesc(AcdCalibData::CALTYPE calType, 
+                                              int version=-1);
   protected:
     
     /// add the description for a particular calibration type
     /// returns the version number of this particular calibration description
-    static int addDesc(AcdCalibData::CALTYPE calType, const AcdCalibDescription* desc);
-    
-  private:
-    
-    /// all of the descriptions
-    static std::vector< std::vector<const AcdCalibDescription*> > s_descs;
+    static int addDesc(AcdCalibData::CALTYPE calType, 
+                       const AcdCalibDescription* desc);
     
   public:
     
     /// Make a description
-    AcdCalibDescription(AcdCalibData::CALTYPE calibType, std::string calibTypeName);
+    AcdCalibDescription(AcdCalibData::CALTYPE calibType, 
+                        std::string calibTypeName);
     virtual ~AcdCalibDescription() {;}
     
     inline const std::string& calibTypeName() const {
@@ -86,12 +80,14 @@ namespace CalibData {
     
   public:
     
-    AcdCalibObj(STATUS status, const std::vector<float>& val, const AcdCalibDescription& desc);
+    AcdCalibObj(STATUS status, const std::vector<float>& val, 
+                const AcdCalibDescription& desc);
     AcdCalibObj(STATUS status, const AcdCalibDescription& desc);
    
     virtual ~AcdCalibObj(){;}
     
-    void printTxtLine(std::ostream&  os, const AcdCalibDescription& desc) const;
+    void printTxtLine(std::ostream&  os, 
+                      const AcdCalibDescription& desc) const;
     bool readTxt(std::istream& is, const AcdCalibDescription& desc);
     
     inline float& operator[](int i) { return m_vals[i]; }
