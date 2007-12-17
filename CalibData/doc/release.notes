@@ -4,6 +4,8 @@
 
                     EOH
 
+   v0r19p3 17-Dec-2007  jrb  Hide statics needed for Acd calibrations to make
+                             Windows happy (thanks, Tracy)
    v0r19p2  4-Dec-2007  jrb  (for Toby) Bug fix in AcdCalibObj
    v0r19p1 15-Nov-2007  hmk  Replace (*this)[] in AcdCalibObj::setVals routines
    v0r19   17-Oct-2007  jrb  Moved some files to new Nas subdirectory
