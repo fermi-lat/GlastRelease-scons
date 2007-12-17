@@ -103,7 +103,7 @@ namespace CalibData {
 
   bool TkrScaleUni::putObj(const TkrScaleObj& obj) {
     int id = obj.getId();
-    if ( (id < 0) || (id >= m_nObjs) ) return false;
+    if ( (id < 0) || (id >= (int) m_nObjs) ) return false;
 
     m_objs[id].copy(obj);
     return true;

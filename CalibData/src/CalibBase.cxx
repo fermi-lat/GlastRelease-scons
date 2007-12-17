@@ -20,7 +20,7 @@ namespace CalibData {
   }
 
   CalibBase::CalibBase(const CalibBase& other) : 
-    DataObject( (DataObject&) other) {
+    IValidity( (IValidity&) other), DataObject( (DataObject&) other)  {
     m_validSince = other.m_validSince;
     m_validTill = other.m_validTill;
     m_serNo     = other.m_serNo;

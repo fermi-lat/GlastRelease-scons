@@ -67,7 +67,7 @@ namespace CalibData {
 
   bool TkrTotUni::putStrip(const TkrTotStrip& strip) {
     int iStrip = strip.getStripId();
-    if ( (iStrip < 0) || (iStrip >= m_nStrips) ) return false;
+    if ( (iStrip < 0) || (iStrip >= (int) m_nStrips) ) return false;
 
     m_strips[iStrip].copy(strip);
     return true;

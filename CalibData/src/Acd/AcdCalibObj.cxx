@@ -68,7 +68,7 @@ namespace CalibData {
   
   AcdCalibObj::AcdCalibObj(STATUS status, const std::vector<float>& vals, const AcdCalibDescription& desc) 
     :m_status(status){
-    assert(vals.size() <= desc.nVar());
+    assert((int) vals.size() <= desc.nVar());
     sizeVals(desc.nVar());   
     setVals(vals,status);
   }

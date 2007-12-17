@@ -15,19 +15,27 @@ namespace CalibData {
     // careful, order matters within a calibration type
 
     // pedestals
-    const AcdPedestalFitDesc& ped = AcdPedestalFitDesc::instance();
+    //    const AcdPedestalFitDesc& ped = AcdPedestalFitDesc::instance();
+    AcdPedestalFitDesc::instance();
     // gains (aka mip peaks)
-    const AcdGainFitDesc& gain = AcdGainFitDesc::instance();
+    //    const AcdGainFitDesc& gain = AcdGainFitDesc::instance();
+    AcdGainFitDesc::instance();
     // veto set points 
-    const AcdVetoFitDesc& veto = AcdVetoFitDesc::instance();
+    //    const AcdVetoFitDesc& veto = AcdVetoFitDesc::instance();
+    AcdVetoFitDesc::instance();
     // cno set points
-    const AcdCnoFitDesc& cno = AcdCnoFitDesc::instance();
+    //    const AcdCnoFitDesc& cno = AcdCnoFitDesc::instance();
+    AcdCnoFitDesc::instance();
     // range crossover
-    const AcdRangeFitDesc& range = AcdRangeFitDesc::instance();
+    //    const AcdRangeFitDesc& range = AcdRangeFitDesc::instance();
+    AcdRangeFitDesc::instance();
     // high range calibration
-    const AcdHighRangeFitDesc& highRange = AcdHighRangeFitDesc::instance();
+    //  const AcdHighRangeFitDesc& highRange = AcdHighRangeFitDesc::instance();
+    AcdHighRangeFitDesc::instance();
     // coherent noise 
-    const AcdCoherentNoiseFitDesc& coherentNois = AcdCoherentNoiseFitDesc::instance();    
+    //    const AcdCoherentNoiseFitDesc& coherentNois = 
+    //            AcdCoherentNoiseFitDesc::instance();    
+    AcdCoherentNoiseFitDesc::instance();    
     return 0;
   }
     
