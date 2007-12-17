@@ -5,9 +5,17 @@
  package manager:T.Burnett
            EOH
 
+ v9r26  16-Dec-2007 hmk Merge in GlastReleasev13r5 branch
  v9r25p1 04-Nov-2007 hmk  Patch to find includes on windows
  v9r25  30-Oct-2007  hmk  Use gr_app
  v9r24  26-Oct-2007  jrb  Add 'Trap' to repertoire of IGeometry shapes
+== End GlastReleasev13r5 branch
+ v9r23p1gr4 30-Nov-2007 hmk another try, using Michael Kuss' equation
+ v9r23p1gr3 29-Nov-2007 hmk Adjust applySeed for m_autoSeed == false, to 
+            eliminate multiplier and allow for 1 million run numbers
+ v9r23p1gr2 29-Nov-2007 jrb Remember to update requirements, this file when tagging!
+ v9r23p1gr1 29-Nov-2007 jrb Adjust applySeed according to Richard's instructions in case 1 seed/run
+== Start GlastReleasev13r5 branch
  v9r23p1  24-Oct-2007  mk   fix code for random number seed based on run
  v9r23    18-Sep-2007  hmk  Add GlastHistorySvc which requires Gaudi's 
                             HistorySvc

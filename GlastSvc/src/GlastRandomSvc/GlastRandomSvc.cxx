@@ -370,7 +370,16 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo)
         int dummy = 0; // for 2nd argument to setSeed
         EngineMap::const_iterator dllEngine;
         for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
-            long theSeed = multiplier * 100000 * ((runNo+1) % 20000) + 2*seqNo+1;
+            long theSeed;
+            if (m_autoSeed) {
+                theSeed = multiplier * 100000 * ((runNo+1) % 20000) + 2*seqNo+1;
+            }
+            else {
+                long bigEnough = 1000000;
+                // From Michael Kuss Nov 30, 2007
+                theSeed = 2 * ( (runNo+1) % bigEnough + multiplier * bigEnough * (seqNo+1) ) + 1;
+            }
+                
 
             log << MSG::DEBUG;
             if(log.isActive() ){
