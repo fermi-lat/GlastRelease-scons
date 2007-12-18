@@ -8,10 +8,13 @@ use FluxSvc v*
 
 use CLHEP v* IExternal
 use ntupleWriterSvc *
+use rootUtil *
 use Trigger *
 
 
 apply_pattern packageShr
+
+set INTERLEAVEPATH "$(INTERLEAVEROOT)/xml"
 
 #=============================================================
 

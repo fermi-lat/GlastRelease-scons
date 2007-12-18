@@ -31,12 +31,14 @@
 
 // access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
+#include "rootUtil/CelManager.h"
 
 #include <stdexcept>
 #include <cassert>
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <list>
 
 /** @class BackgroundSelection
     @brief manage the selection of background events to merge with signal events
@@ -60,6 +62,9 @@ public:
 
     /// @brief Intialization of the tool
     StatusCode initialize();
+
+    /// @brief Finalize method for the tool
+    StatusCode finalize();
 
     ///! The current value of the quantity that we are selecting on
     double value()const;
@@ -123,6 +128,10 @@ private:
     /// Pointer to the Gaudi data provider service
     IDataProviderSvc*    m_dataSvc;
 
+    /// CEL management
+    CelManager           m_celManager;
+    std::list<double>    m_binList;
+
     StringProperty       m_treeName;    ///< name of the tree to process
     StringArrayProperty  m_disableList;
 };
@@ -155,8 +164,9 @@ BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type,
     declareProperty("DisableList",    m_disableList);
 
     std::string varName = this->name();
-    int dotPos = varName.find(".");
+    int         dotPos  = varName.find(".");
     m_tupVarName = varName.substr(dotPos+1,varName.size());
+    m_binList.clear();
 }
 //------------------------------------------------------------------------
 BkgndTupleSelectTool::~BkgndTupleSelectTool()
@@ -208,8 +218,15 @@ StatusCode BkgndTupleSelectTool::initialize()
     }
     m_outputTree = static_cast<TTree*>(ptr);
 
+    // Initialize the CEL manager
+    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
+    m_celManager.initWrite(celFileName, "RECREATE");
+
+    m_celManager.addComponent(m_treeName.value(), m_outputTree);
+
     std::string  filePath;
-//    StringProperty filePathProperty("FilePath", filePath);
+
+    //    StringProperty filePathProperty("FilePath", filePath);
 
     // Retrieve the file path from the parent algorithm (which can be tricky)
     // The try-catch is for the services (e.g. FluxSvc) which instantiate all
@@ -277,6 +294,14 @@ StatusCode BkgndTupleSelectTool::initialize()
     }
 
     return sc;
+}
+
+StatusCode BkgndTupleSelectTool::finalize ()
+{
+    StatusCode  status = StatusCode::SUCCESS;
+    m_celManager.fillFileAndTreeSet();
+    
+    return status;
 }
 
 const std::string& BkgndTupleSelectTool::sourceName() const 
@@ -383,6 +408,15 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     int ret = m_inputTree->GetEntry(0);
     if( ret<0 ) throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: could not read");
 
+    double minBin = m_fetch->minVal();
+
+    std::list<double>::iterator binIter = std::find(m_binList.begin(),m_binList.end(),minBin);
+    if (binIter != m_binList.end())
+    {
+        m_binList.push_back(minBin);
+        m_celManager.addComponent(m_treeName.value(), m_inputTree);
+    }
+
     return;
 }
 //------------------------------------------------------------------------
@@ -483,5 +517,8 @@ void BkgndTupleSelectTool::copyEventInfo()
     // Save this row
     m_rootTupleSvc->saveRow(m_treeName.value());
     m_interleaveMap->saveInterleaveMapRow();
+
+    // Tell the CEL Manager about this...
+    m_celManager.fillEvent();       
 }
 
