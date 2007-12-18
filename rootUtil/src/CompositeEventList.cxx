@@ -91,8 +91,8 @@ Bool_t CompositeEventList::checkCelTrees() const
  {
   if (_currentFile==0)
    {
-	_isOk = kFALSE ;
-	return kFALSE ;
+    _isOk = kFALSE ;
+    return kFALSE ;
    }
   if (checkCelTree(_entryTree,__entryTreeName,kTRUE)==kFALSE) return kFALSE ;
   if (checkCelTree(_linkTree,__linkTreeName,kTRUE)==kFALSE) return kFALSE ;
@@ -696,6 +696,20 @@ Long64_t CompositeEventList::entryIndex( UInt_t componentIndex ) const
   return comp->currentIndexInChain() ;
  }
 
+void CompositeEventList::setDataAddress
+ ( const TString & componentName,
+   const TString & branchName,
+   void * address )
+ {
+  UInt_t index = componentIndex(componentName) ;
+  if (index==COMPONENT_UNDEFINED)
+   {
+    std::cerr<<"[CompositeEventList::setDataAddress] undefined component"<<std::endl ;
+   }
+  CelEventComponent * comp = getComponent(index) ;
+  return comp->setDataAddress(branchName,address) ;
+ }
+
 // If successful, returns the number of bytes read
 // Failure codes:
 //   -1 to -4 -> see shallowRead()
@@ -703,9 +717,19 @@ Long64_t CompositeEventList::entryIndex( UInt_t componentIndex ) const
 //   -6 -> Can't read a component input tree
 Int_t CompositeEventList::deepRead( Long64_t eventIndex )
  {
+  // if there is a change of set during the shallow read
+  // we must reset all the caches
+  Long64_t oldSetIndex = _currentLink.setIndex() ;
   Int_t total = shallowRead(eventIndex) ;
+  if (oldSetIndex!=_currentLink.setIndex())
+   {
+    std::vector<CelEventComponent *>::iterator itr ;
+    for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
+     { (*itr)->resetSet() ; }
+   }
+  
   if ( total < 0 ) return total ;
-  std::vector< CelEventComponent  *>::iterator itr ;
+  std::vector<CelEventComponent *>::iterator itr ;
   for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
    {
     CelEventComponent * comp = *itr ;

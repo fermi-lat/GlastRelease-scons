@@ -58,14 +58,14 @@ class CelEventComponent
     Long64_t currentIndexInChain() const ;
 
     /// Deep read
-//    void setDataAddress
-//     ( const TString & componentName,
-//       const TString & branchName,
-//       void** address ) ;
+    void setDataAddress
+     ( const TString & branchName,
+       void * address ) ;
+    void resetSet() ;
     Int_t deepRead() ;
-    TTree * getTree() const ;
 
-    // USEFUL ? Access
+    // USEFUL ?
+    TTree * getTree() const ;
     const CelEventEntry & currentEntryIndex() const { return _currentEntryIndex ; }
     const CelFileAndTreeSet & currentFileSet() const { return _currentSet ; }
     CelFileAndTreeOffset & currentFileOffset() { return _currentOffset ; }
@@ -79,20 +79,22 @@ class CelEventComponent
 
    private :
   
+     // utilities
+
      // disable copying and assignment
      CelEventComponent( const CelEventComponent & ) ;
      CelEventComponent & operator=( const CelEventComponent & ) ;
   
-     // data
+     // data for shallow read
      TString _componentName ;
      CelEventEntry _currentEntryIndex ;
      CelFileAndTreeSet _currentSet ;
      CelFileAndTreeOffset _currentOffset ;
      
-     // data for deep read
-	 TTree * _tree ;
-	 TString _mainBranchName ;
-	 void**  _data ;
+     // additionnal data for deep read
+     TString _mainBranchName ;
+     void *  _data ;
+     TTree * _tree ;
 
      ClassDef(CelEventComponent,0)
 

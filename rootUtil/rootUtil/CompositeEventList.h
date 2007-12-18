@@ -7,8 +7,8 @@
 * Package: rootUtil
 * File: $Id$
 * Authors:
-*   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
 *   DC, David Chamont, LLR, chamont@llr.in2p3.fr
+*   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
 *
 * Copyright (c) 2007
 *                   Regents of Stanford University. All rights reserved.
@@ -84,28 +84,28 @@ class CompositeEventList : public TObject
     Bool_t isOk() ;
     ~CompositeEventList() ;
 
-    // Writing
+    // OK! Write
     Long64_t fillEvent( const TObjArray & trees ) ;
     Long64_t fillEvent( const std::vector<TTree*> & ) ;
     Long64_t fillEvent( const std::vector<TChain*> & ) ;
     Long64_t fillFileAndTreeSet() ;
     void writeAndClose() ;
     
-    // Shallow reading
+    // OK! Shallow read (do not handle the user data trees)
     static const UInt_t COMPONENT_UNDEFINED ;
     UInt_t componentIndex( const TString &  componentName ) const ;
     TChain * newChain( UInt_t componentIndex ) const ;
     Int_t shallowRead( Long64_t eventIndex ) ;
     Long64_t entryIndex( UInt_t componentIndex ) const ;
     
-    // Deep reading
-//    void setDataAddress
-//     ( const TString & componentName,
-//       const TString & branchName,
-//       void** address ) ;
+    // OK! Deep read (handle the user data trees)
+    void setDataAddress
+     ( const TString & componentName,
+       const TString & branchName,
+       void * address ) ;
     Int_t deepRead( Long64_t eventIndex ) ;   
     
-    // Reading through friend chains
+    // NOT OK! Read through friend chains
     TChain * newChains( TObjArray * chainList = 0, Bool_t setFriends = kTRUE ) ;
     
     // Various Accessors

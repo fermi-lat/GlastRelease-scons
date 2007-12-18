@@ -60,7 +60,8 @@ class CelFileAndTreeSet  : public BranchGroup
 
     // Methods and functions
     // Reset this object and clear caches
-    void reset() ;
+    void resetAll() ;
+    void resetCache() ;
     
     // Data Access
     UShort_t addTree( TTree & tree) ;

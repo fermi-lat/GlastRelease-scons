@@ -46,11 +46,12 @@ ClassImp(CelEventComponent) ;
 
 CelEventComponent::CelEventComponent()
  : _componentName("NULL"), _currentEntryIndex(), _currentSet(),
-   _tree(0), _data(0)
+   _data(0), _tree(0)
  {}
 	      
 CelEventComponent::CelEventComponent( const TString & componentName )
- : _componentName(componentName), _currentEntryIndex(componentName), _currentSet(componentName)
+ : _componentName(componentName), _currentEntryIndex(componentName), _currentSet(componentName),
+   _data(0), _tree(0)
  {}	      
 
 CelEventComponent::~CelEventComponent()
@@ -80,7 +81,7 @@ void CelEventComponent::registerEntry( TTree & tree )
 void CelEventComponent::nextSet()
  {
   _currentOffset.increment(_currentSet.entries()) ;
-  _currentSet.reset() ;
+  _currentSet.resetAll() ;
  }
 
 
@@ -89,15 +90,34 @@ void CelEventComponent::nextSet()
 // READING
 //====================================================================
 
-
+//??
 TTree * CelEventComponent::getTree() const
  { return _currentSet.getTree(_currentEntryIndex.treeIndex()) ; }
 
+void CelEventComponent::setDataAddress
+ ( const TString & branchName, void * address )
+ {
+  _mainBranchName = branchName ;
+  _data = address ;
+  _tree = 0 ;
+ }
+
+void CelEventComponent::resetSet()
+ {
+  _tree = 0 ;
+  _currentSet.resetCache() ;
+ }
+
 Int_t CelEventComponent::deepRead()
  {
-  TTree * t = getTree() ;
-  if ( 0 == t ) return -1 ;
-  return t->LoadTree(_currentEntryIndex.entryIndex()) ;
+  TTree * tree = getTree() ;
+  if ( tree == 0 ) return -1 ;
+  if ( tree != _tree )
+   {
+    _tree = tree ;
+    _tree->SetBranchAddress(_mainBranchName,_data) ;
+   }
+  return _tree->GetEntry(_currentEntryIndex.entryIndex()) ;
  }
 
 Int_t CelEventComponent::makeBranches( TTree * entryTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize) const

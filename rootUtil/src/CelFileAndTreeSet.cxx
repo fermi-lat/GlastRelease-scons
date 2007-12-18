@@ -61,7 +61,7 @@ CelFileAndTreeSet::~CelFileAndTreeSet()
   delete _treeOffsets ;
  }
 
-void CelFileAndTreeSet::reset()
+void CelFileAndTreeSet::resetAll()
  {
   // Clear the lists
   // Should be called when switch to new input collection
@@ -70,9 +70,14 @@ void CelFileAndTreeSet::reset()
   _treeNames->Clear() ;
   _treesSize = 0 ;
   _treeOffsets->Reset() ;
+  resetCache() ;
+}
+
+void CelFileAndTreeSet::resetCache()
+ {
   _cache.clear() ;
   _lookup.clear() ;
-}
+ }
 
 UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
   // Add a new tree to the set of trees this object is looking after
@@ -192,7 +197,7 @@ Int_t CelFileAndTreeSet::makeBranches( TTree & tree, const char * prefix, Int_t 
 
 Int_t CelFileAndTreeSet::attachToTree( TTree & tree, const char * prefix )
  {
-  reset() ;
+  resetAll() ;
   Int_t bVal = BranchGroup::attachToTree(tree,prefix) ;
   if ( bVal < 0 ) return bVal ;  
   std::string prefixName = "" ;
