@@ -87,6 +87,12 @@
     self->listAncKeys(my_keys, aClass, status, quality, instr);
     return my_keys;
   }
+
+  std::vector<unsigned> ancsFromParms(const std::vector<unsigned>& parms) {
+    std::vector<unsigned> my_ancs;
+    self->getAncsFromParms(parms, my_ancs);
+    return my_ancs;
+  }
     
   std::vector<std::string> configInputs(unsigned i) {
     std::vector<std::string> my_values;

@@ -16,10 +16,9 @@
 #include "mootCore/DbUtilException.h"
 
 namespace {
-  unsigned getAncsFromParms(const std::vector<unsigned>& parms,
-                            rdbModel::Rdb* rdb,
-                            std::vector<unsigned>& ancs) {
-
+  unsigned getAncsFromP(const std::vector<unsigned>& parms,
+                        rdbModel::Rdb* rdb,
+                        std::vector<unsigned>& ancs) {
     unsigned cnt;
     for (unsigned parmIx = 0; parmIx < parms.size(); parmIx++) {
       std::string parmKeyStr;
@@ -211,12 +210,17 @@ namespace MOOT {
                        fields[6],fields[7], fields[8],fields[9]);
   }
 
+  unsigned MootQuery::getAncsFromParms(const std::vector<unsigned>& parms,
+                                       std::vector<unsigned>& ancs) {
+    return getAncsFromP(parms, m_rdb, ancs);
+  }
+
   bool MootQuery::getConfigAncsRequest(unsigned configKey,
                                        std::vector<unsigned>& ancKeys) {
     std::vector<unsigned> parmKeys;
     bool ok = getConfigParmsRequest(configKey, parmKeys);
     if (!ok) return ok;
-    getAncsFromParms(parmKeys, m_rdb, ancKeys);
+    getAncsFromP(parmKeys, m_rdb, ancKeys);
     return true;
   }
 
@@ -225,7 +229,7 @@ namespace MOOT {
     std::vector<unsigned> parmKeys;
     bool ok = getConfigParmsUsed(configKey, parmKeys);
     if (!ok) return ok;
-    getAncsFromParms(parmKeys, m_rdb, ancKeys);
+    getAncsFromP(parmKeys, m_rdb, ancKeys);
     return true;
   }
 

@@ -67,6 +67,13 @@ namespace MOOT {
      */
     AncInfo* getAncInfo(unsigned key);
 
+    /** Return list of keys of anc. files associated with one or more
+        of the input parameter file keys.  Return count (may include
+        duplicates).
+     */
+    unsigned getAncsFromParms(const std::vector<unsigned>& parms,
+                              std::vector<unsigned>& ancs);
+
     /**
        Return keys of ancillary files which were input to parameter entries 
        supplied when config was created.
