@@ -2,6 +2,7 @@
 
 #include <rootUtil/TestData.h>
 #include <Riostream.h>
+#include <cassert>
 
 
 
