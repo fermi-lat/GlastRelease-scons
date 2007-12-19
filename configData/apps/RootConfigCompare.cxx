@@ -34,12 +34,13 @@ int main(int argn, char** argc) {
   Bool_t onlyOne(kFALSE);
   Bool_t fullCompare(kFALSE);
   Bool_t report(kFALSE);
+  Bool_t noDiff(kFALSE);
 
   int opt;
 #ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "hf1r")) != EOF ) {
+  while ( (opt = facilities::getopt(argn, argc, "hf1rn")) != EOF ) {
 #else
-  while ( (opt = getopt(argn, argc, "hf1r")) != EOF ) {
+  while ( (opt = getopt(argn, argc, "hf1rn")) != EOF ) {
 #endif
     switch (opt) {
     case 'h':   // help      
@@ -55,6 +56,9 @@ int main(int argn, char** argc) {
       fullCompare = kTRUE;
       onlyOne = kTRUE;
       break;
+   case 'n':
+      noDiff = kTRUE;
+      break;
     default:
       std::cout << opt << " not parsable..." << std::endl;
       usage();
@@ -62,17 +66,19 @@ int main(int argn, char** argc) {
     }
   }
   std::string fn1 = argc[optind];  
-  std::string fn2 = argc[optind+1];
 
   TFile* f1 = TFile::Open(fn1.c_str());
-  TFile* f2 = TFile::Open(fn2.c_str());
   TTree* t1 = (TTree*)f1->Get("Config");
-  TTree* t2 = (TTree*)f2->Get("Config");
 
   ConfigCompare c1(t1);
-  ConfigCompare c2(t2);
   
-  c1.compare(c2,0,fullCompare,onlyOne);
+  if ( ! noDiff ) {
+    std::string fn2 = argc[optind+1];
+    TFile* f2 = TFile::Open(fn2.c_str());
+    TTree* t2 = (TTree*)f2->Get("Config");
+    ConfigCompare c2(t2);
+    c1.compare(c2,0,fullCompare,onlyOne);
+  }
 
   if ( report ) {
     TList l;

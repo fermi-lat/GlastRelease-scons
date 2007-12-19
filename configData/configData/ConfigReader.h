@@ -59,6 +59,7 @@ protected:
   Bool_t read_AFE(DOMElement& elem);
   Bool_t read_ARC(DOMElement& elem);
   Bool_t read_TEM(DOMElement& elem);
+  Bool_t read_TIC(DOMElement& elem);
   Bool_t read_CCC(DOMElement& elem);
   Bool_t read_CRC(DOMElement& elem);
   Bool_t read_CFE(DOMElement& elem);
@@ -81,6 +82,9 @@ protected:
 
   Int_t getIndex(DOMElement& elem, const std::string& rootName);
   Bool_t getSptId(DOMElement& elem, Int_t& id);
+
+  void loadAcdIds();
+  
 private:
 
   

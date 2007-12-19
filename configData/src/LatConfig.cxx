@@ -36,7 +36,6 @@ void LatConfig::initConfig() {
   ChannelKey cccSize(16,4,1,1);
   ChannelKey crcSize(16,4,4,1);
   ChannelKey cfeSize(16,4,4,12);
-   
 
   // AEM
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("aem_configuration",'i',singleton)));
@@ -46,25 +45,35 @@ void LatConfig::initConfig() {
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("hold_delay",'s',arcSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("hitmap_delay",'s',arcSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("hitmap_width",'s',arcSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("hitmap_deadtime",'s',arcSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("veto_delay",'s',arcSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("veto_width",'s',arcSize)));    
+  m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("adc_tacq",'s',arcSize)));    
   // ARC Special
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("pha_threshold",'s',afeSize)));
 
 
   // AFE
-  //m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("config",'s',afeSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("config_reg",'s',afeSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("tci_dac",'s',afeSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("bias_dac",'s',afeSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("hld_dac",'s',afeSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("veto_dac",'s',afeSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("veto_vernier",'s',afeSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UShort_t>("acd_id",'s',afeSize)));
 
   // TEM
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("data_masks",'i',temSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("tkr_trgseq",'i',temSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("cal_trgseq",'i',temSize)));
   
+  // TIC
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("cal_in_mask",'i',temSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("tkr_layer_enable_0",'i',temSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("tkr_layer_enable_1",'i',temSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("tkr_out_mask",'i',temSize)));
+  
+
   // SPT
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("low",'i',sptSize)));
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("high",'i',sptSize)));
@@ -91,11 +100,11 @@ void LatConfig::initConfig() {
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("layer_mask_1",'i',cccSize)));
 
   // CRC
-  //m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("config",'i',crcSize)));
-  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("crc_dac",'i',cccSize)));
-  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("delay_1",'i',cccSize)));
-  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("delay_2",'i',cccSize)));
-  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("delay_3",'i',cccSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("config",'i',crcSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("crc_dac",'i',crcSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("delay_1",'i',crcSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("delay_2",'i',crcSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("delay_3",'i',crcSize)));
  
   // CFE
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("config_0",'i',cfeSize)));

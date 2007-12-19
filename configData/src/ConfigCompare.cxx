@@ -50,6 +50,9 @@ void ConfigCompare::Loop()
 
 void     
 ConfigCompare::report(TList& l, Option_t* options, std::ostream& os) {
+
+  LoadTree(0); GetEntry(0);
+
   reportSingleton("aem_configuration",aem_configuration,os);
   reportSingleton("trgseq",trgseq,os);
   reportSingleton("window_width",window_width,os);
@@ -176,7 +179,7 @@ ConfigCompare::compare(ConfigCompare& other, Long64_t entry, Bool_t fullCompare,
   latch &= compareSingleton("configuration",configuration,other.configuration);
 
   // simple vectors
-  //compareV1("hold_delay",hold_delay,other.hold_delay,12);
+  latch &= compareV1("hold_delay",hold_delay,other.hold_delay,12);
   latch &= compareV1("hitmap_delay",hitmap_delay,other.hitmap_delay,12,onlyOne);  
   latch &= compareV1("hitmap_width",hitmap_width,other.hitmap_width,12,onlyOne);
   latch &= compareV1("veto_delay",veto_delay,other.veto_delay,12,onlyOne);
@@ -246,20 +249,20 @@ ConfigCompare::compare(ConfigCompare& other, Long64_t entry, Bool_t fullCompare,
   
 
 void ConfigCompare::reportSingleton(const char* name, ULong64_t val, std::ostream& os) {
-  os << "\t" << name << " : " << std::hex << val << std::endl;
+  os << "\t" << name << " : 0x" << std::hex << val << std::endl;
 }
 
 void ConfigCompare::reportSingleton(const char* name, UInt_t val, std::ostream& os) {
-  os << "\t" << name << " : " << std::hex << val << std::endl;
+  os << "\t" << name << " : 0x" << std::hex << val << std::endl;
 }
 
 void ConfigCompare::reportSingleton(const char* name, Char_t val, std::ostream& os) {
-  os << "\t" << name << " : " << std::hex << val << std::endl;
+  os << "\t" << name << " : 0x" << std::hex << (UShort_t)val << std::endl;
 }
 
 void ConfigCompare::reportV1(const char* name, UInt_t bcast, UInt_t* val, int size, 
 			     std::ostream& os, TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   for (int i(0); i < size; i++ ) {
     if ( h == 0 ) {
       if ( val[i] != bcast ) {
@@ -274,7 +277,7 @@ void ConfigCompare::reportV1(const char* name, UInt_t bcast, UInt_t* val, int si
 
 void ConfigCompare::reportV1(const char* name, UShort_t bcast, UShort_t* val, int size, 
 			     std::ostream& os, TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   for (int i(0); i < size; i++ ) {
     if ( h == 0 ) {
       if ( val[i] != bcast ) {
@@ -289,7 +292,7 @@ void ConfigCompare::reportV1(const char* name, UShort_t bcast, UShort_t* val, in
 
 void ConfigCompare::reportV2(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, 
 			     std::ostream& os,  TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
@@ -308,7 +311,7 @@ void ConfigCompare::reportV2(const char* name, UInt_t bcast, UInt_t* val, int si
 
 void ConfigCompare::reportV2(const char* name, UShort_t bcast, UShort_t* val, int size1, int size2, 
 			     std::ostream& os, TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
@@ -340,7 +343,7 @@ void ConfigCompare::reportVeto(const char* name, UShort_t* veto, UShort_t* verni
 
 void ConfigCompare::reportV3(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, 
 			     std::ostream& os, TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
@@ -361,7 +364,7 @@ void ConfigCompare::reportV3(const char* name, UInt_t bcast, UInt_t* val, int si
 
 void ConfigCompare::reportV3(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
 			     std::ostream& os, TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
@@ -382,7 +385,7 @@ void ConfigCompare::reportV3(const char* name, ULong64_t bcast, ULong64_t* val, 
 
 void ConfigCompare::reportV4(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, int size4, 
 			     std::ostream& os, TH1* h, TH1* hv) {
-  os << "\t" << name << " BCAST: " << std::hex << bcast << std::endl;
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);
   for (int i(0); i < size1; i++ ) {
     for (int j(0); j < size2; j++ ) {
@@ -423,7 +426,7 @@ Bool_t ConfigCompare::compareSingleton(const char* name, UInt_t val1, UInt_t val
 
 Bool_t ConfigCompare::compareSingleton(const char* name,  Char_t val1, Char_t val2) {
   if ( val1 != val2 ) {
-    printf("%s 0x%0x 0x%0x\n",name,val1,val2);
+    printf("%s 0x%0x 0x%0x\n",name,(UShort_t)val1,(UShort_t)val2);
     return kFALSE;
   }
   return kTRUE;

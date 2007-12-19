@@ -7,6 +7,7 @@
 #include "configData/gem/TrgConfigParser.h"
 #include "configData/db/LatcDBImpl.h"
 
+#include "commonRootData/AcdMap.h"
 #include "xmlBase/Dom.h"
 #include "xmlBase/XmlParser.h"
 #include <xercesc/dom/DOMNode.hpp>
@@ -122,6 +123,8 @@ Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& 
       }
     }
   }
+  loadAcdIds();
+
   return kTRUE;
 
 }
@@ -230,7 +233,7 @@ Bool_t ConfigReader::read_TEM(DOMElement& elem){
     if ( Dom::checkTagName(*itr,SPT) ) {
       if ( read_SPT(**itr) == kFALSE ) return kFALSE;    
     } else if  ( Dom::checkTagName(*itr,TIC) ) {
-      continue;
+      if ( read_TIC(**itr) == kFALSE ) return kFALSE; 
     } else if  ( Dom::checkTagName(*itr,TCC) ) {
       if ( read_TCC(**itr) == kFALSE ) return kFALSE; 
     } else if  ( Dom::checkTagName(*itr,CCC) ) {
@@ -243,6 +246,18 @@ Bool_t ConfigReader::read_TEM(DOMElement& elem){
   }
   return kTRUE;
 }
+
+Bool_t ConfigReader::read_TIC(DOMElement& elem){
+  ChannelKey key(_iTEM);
+  std::vector<DOMElement*> eltList;
+  Dom::getChildrenByTagName( &elem, "*", eltList );
+  for ( std::vector<DOMElement*>::iterator itr = eltList.begin(); itr != eltList.end(); itr++ ) {
+    if ( ! readUInt(**itr,key) ) {
+      continue;
+    }
+  }
+}
+
 
 Bool_t ConfigReader::read_CCC(DOMElement& elem){
   if ( ! ConfigReader::getId(elem,_iCCC) ) return kFALSE;
@@ -315,9 +330,15 @@ Bool_t ConfigReader::read_SPT(DOMElement& elem){
 Bool_t ConfigReader::read_TFE(DOMElement& elem){
   std::string spt = Dom::getAttribute(&elem,"ID");
   if(spt.find("x")!=spt.npos && spt.find("y")!=spt.npos){
-    if ( ! ConfigReader::getId(elem,_iTFE) ) return kFALSE;
+    if ( ! ConfigReader::getId(elem,_iTFE) ) {
+      std::cerr << "couldn't find ID for tfe " << _iTFE << std::endl;
+      return kFALSE;
+    }
   }else{
-    if ( ! ConfigReader::getSptId(elem,_iTFE) ) return kFALSE;
+    if ( ! ConfigReader::getSptId(elem,_iTFE) ) {
+      std::cerr << "couldn't find SPT ID for tfe " << _iTFE << std::endl;
+      return kFALSE;
+    }
   }
   ChannelKey key(_iTEM,_iSPT,_iTFE);  
   const std::string TDC("TDC");  
@@ -326,9 +347,13 @@ Bool_t ConfigReader::read_TFE(DOMElement& elem){
   //std::cout << Dom::getTagName(&elem) << std::endl;
   for ( std::vector<DOMElement*>::iterator itr = eltList.begin(); itr != eltList.end(); itr++ ) {
     if ( Dom::checkTagName(*itr,TDC) ) {
-      if ( read_TDC(**itr) == kFALSE ) return kFALSE;    
+      if ( read_TDC(**itr) == kFALSE ) {
+	std::cerr << "failed to read tdc " << _iTFE << std::endl;
+	return kFALSE;    
+      }
     } else {
       if ( ! readULong(**itr,key) ) {
+	std::cerr << "failed to long for " <<  _iTFE << std::endl;
 	continue;
       }
     }
@@ -539,4 +564,22 @@ Bool_t ConfigReader::getSptId(DOMElement& elem, Int_t& id) {
   }
   id = sptMap[spt]; 
   return kTRUE;
+}
+
+
+
+void ConfigReader::loadAcdIds() {
+
+  ConfigBranchImpl<UShort_t>* reg = static_cast<ConfigBranchImpl<UShort_t>*>(m_config->branch("acd_id"));
+  UShort_t val(0);
+  UInt_t tile(0); UInt_t pmt(0);
+  for ( Int_t garc(0); garc < 12; garc++ ) {
+    for ( Int_t gafe(0); gafe < 18; gafe++ ) {
+      AcdMap::convertToTilePmt(garc,gafe,tile,pmt);
+      val = AcdMap::gemIndexFromTile(tile);
+      if ( pmt != 0 ) val += 128;
+      ChannelKey key(garc,gafe);  
+      reg->setVal(key,val);
+    }
+  }
 }
