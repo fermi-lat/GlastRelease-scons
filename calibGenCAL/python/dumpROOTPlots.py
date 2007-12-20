@@ -40,7 +40,7 @@ def print_canvas(cvs):
 
 # setup logger
 logging.basicConfig()
-log = logging.getLogger('charVal')
+log = logging.getLogger('dumpROOTPlots')
 log.setLevel(logging.INFO)
 
 

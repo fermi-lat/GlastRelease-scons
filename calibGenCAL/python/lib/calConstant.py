@@ -96,10 +96,18 @@ NUM_RNG = 4
 # Number of calorimeter diode sizes
 NUM_DIODE = 2
 
+# Number of cal cable controllers
+NUM_GCCC = 4
+
+# Number of cal row controllers
+NUM_GCRC = 4
+
 # Symbolic names for the towers/tems as modules
 
 CMOD = ('FM104', 'FM103', 'FM117', 'FM118', 'FM105', 'FM102', 'FM115', 'FM116',
         'FM107', 'FM106', 'FM111', 'FM112', 'FM110', 'FM108', 'FM113', 'FM114')
+
+
          
 
 
