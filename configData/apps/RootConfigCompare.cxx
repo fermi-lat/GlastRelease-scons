@@ -14,13 +14,16 @@
 #include "TTree.h"
 
 // local
+#include "configData/ConfigBase.h"
 #include "configData/ConfigCompare.h"
+#include "configData/ConfigReport.h"
 
 void usage() {
   std::cout << "RootConfigComapre.exe [options] file1.root file2.root" << std::endl
 	    << "\tcompares two configuration files" << std::endl
 	    << "\t\tOptions:" << std::endl
 	    << "\t-r\tPrint config report" << std::endl
+	    << "\t-n\tNo comparison" << std::endl
 	    << "\t-1\tOnly print one difference per register type" << std::endl
 	    << "\t-f\tFull comparison, include threshold registers, implies -1" << std::endl;    
 }
@@ -70,19 +73,23 @@ int main(int argn, char** argc) {
   TFile* f1 = TFile::Open(fn1.c_str());
   TTree* t1 = (TTree*)f1->Get("Config");
 
-  ConfigCompare c1(t1);
-  
+  ConfigBase c1(t1);
+  c1.GetEntry(0); c1.LoadTree(0); 
+
   if ( ! noDiff ) {
     std::string fn2 = argc[optind+1];
     TFile* f2 = TFile::Open(fn2.c_str());
     TTree* t2 = (TTree*)f2->Get("Config");
-    ConfigCompare c2(t2);
-    c1.compare(c2,0,fullCompare,onlyOne);
+    ConfigBase c2(t2);
+    c2.GetEntry(0); c2.LoadTree(0); 
+    ConfigCompare comp;
+    comp.compare(c1,c2,fullCompare,onlyOne);
   }
 
   if ( report ) {
     TList l;
-    c1.report(l);
+    ConfigReport rep;
+    rep.report(c1,l,"",std::cout);
     TFile f("report.root","RECREATE");
     l.Write();
     f.Close();
