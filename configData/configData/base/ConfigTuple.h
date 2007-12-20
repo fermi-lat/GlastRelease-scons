@@ -124,13 +124,7 @@ public :
   
   // Standard c'tor, needs a name, this is where the data end up
   // on the output tree
-  ConfigBranchImpl(const char* name, const Char_t type, const ChannelKey& size)
-    :ConfigBranch(name,type,size),m_vals(0){
-    build();
-    static ChannelKey nullKey(0); static T dummy;
-    getVal(nullKey,dummy);
-    setVal(nullKey,dummy);
-  }
+  ConfigBranchImpl(const char* name, const Char_t type, const ChannelKey& size);
 
   // D'tor, no-op
   virtual ~ConfigBranchImpl(){

@@ -6,10 +6,22 @@
 
 Int_t ConfigBranch::index(const ChannelKey& channel) const {
   Int_t idx = 0;
-  if ( m_size.index3() > 1 ) { idx += channel.index3(); }
-  if ( m_size.index2() > 1 ) { idx += (channel.index2() * m_size.index3()); }
-  if ( m_size.index1() > 1 ) { idx += (channel.index1() * m_size.index2() * m_size.index3()); }
-  if ( m_size.index0() > 1 ) { idx += (channel.index0() * m_size.index1() * m_size.index2() * m_size.index3()); }
+  Int_t factor = 1;
+  if ( m_size.index3() > 1 ) {
+    if ( channel.index3() >= 0 ) idx += channel.index3(); 
+    factor *= m_size.index3();
+  }
+  if ( m_size.index2() > 1 ) { 
+    if ( channel.index2() >= 0 ) idx += (channel.index2() * factor); 
+    factor *= m_size.index2(); 
+  }
+  if ( m_size.index1() > 1 ) { 
+    if ( channel.index1() >= 0 ) idx += (channel.index1() * factor); 
+    factor *= m_size.index1(); 
+  }
+  if ( m_size.index0() > 1 ) { 
+    if ( channel.index0() >= 0 ) idx += (channel.index0() * factor); 
+  }
   return idx;
 }
 
@@ -22,6 +34,15 @@ void ConfigBranch::setLeafSuffix(std::string& leafName) const {
   leafName += "/"; leafName += m_type;
 }
 
+
+template <typename T>
+ConfigBranchImpl<T>::ConfigBranchImpl(const char* name, const Char_t type, const ChannelKey& size)
+  :ConfigBranch(name,type,size),m_vals(0){
+  build();
+  static ChannelKey nullKey(0); static T dummy;
+  getVal(nullKey,dummy);
+  setVal(nullKey,dummy);
+}
 
 template <typename T>
 void ConfigBranchImpl<T>::setVal(const ChannelKey& key, T val) {

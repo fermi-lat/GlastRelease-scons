@@ -1,5 +1,6 @@
 
 #include "facilities/Util.h"
+#include <sstream>
 
 #include "configData/ConfigReader.h"
 
@@ -329,7 +330,7 @@ Bool_t ConfigReader::read_SPT(DOMElement& elem){
 
 Bool_t ConfigReader::read_TFE(DOMElement& elem){
   std::string spt = Dom::getAttribute(&elem,"ID");
-  if(spt.find("x")!=spt.npos && spt.find("y")!=spt.npos){
+  if(spt.find("x") == spt.npos && spt.find("y") == spt.npos){
     if ( ! ConfigReader::getId(elem,_iTFE) ) {
       std::cerr << "couldn't find ID for tfe " << _iTFE << std::endl;
       return kFALSE;
@@ -466,7 +467,7 @@ Bool_t ConfigReader::getULong(DOMElement& elem, ULong64_t& val) {
     str=Dom::getTextContent(rList[0]);
   }
   // should add check
-  val = (ULong64_t)strtoul(str.c_str(),nullPtr,0);
+  val = (ULong64_t)strtoull(str.c_str(),nullPtr,0);
   return kTRUE;
 }
 
@@ -562,7 +563,9 @@ Bool_t ConfigReader::getSptId(DOMElement& elem, Int_t& id) {
     sptMap["+x7"] = 7; sptMap["+y7"] = 16; sptMap["-y7"] = 25; sptMap["-x7"] = 34;
     sptMap["+x8"] = 8; sptMap["+y8"] = 17; sptMap["-y8"] = 26; sptMap["-x8"] = 35;
   }
-  id = sptMap[spt]; 
+  std::map<std::string,int>::const_iterator itr = sptMap.find(spt);
+  if ( itr == sptMap.end() ) return kFALSE;
+  id = itr->second;
   return kTRUE;
 }
 
