@@ -4,6 +4,7 @@
  * package manager:M. Kocian
  *
  *
+ * v1r5p1 19-Dec-07 EAC Fixed up ConfigCompare
  * v1r5   19-Dec-07 EAC Fixed up stuff for config report, tag includes Martin's stuff for MOOT
  * v1r4   03-Dec-07 EAC Added broadcast settings.
  * v1r3   28-Nov-07 EAC Fix up comparison tools

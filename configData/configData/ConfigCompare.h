@@ -43,12 +43,18 @@ public :
    UShort_t        hitmap_delay[12];
    UShort_t        hitmap_width_bcast;
    UShort_t        hitmap_width[12];
+   UShort_t        hitmap_deadtime_bcast;
+   UShort_t        hitmap_deadtime[12];
    UShort_t        veto_delay_bcast;
    UShort_t        veto_delay[12];
    UShort_t        veto_width_bcast;
    UShort_t        veto_width[12];
+   UShort_t        adc_tacq_bcast;
+   UShort_t        adc_tacq[12];
    UShort_t        pha_threshold_bcast;
    UShort_t        pha_threshold[12][18];
+   UShort_t        config_reg_bcast;
+   UShort_t        config_reg[12][18];
    UShort_t        tci_dac_bcast;
    UShort_t        tci_dac[12][18];
    UShort_t        bias_dac_bcast;
@@ -64,7 +70,15 @@ public :
    UInt_t          tkr_trgseq_bcast;
    UInt_t          tkr_trgseq[16];
    UInt_t          cal_trgseq_bcast;
-   UInt_t          cal_trgseq[16];
+   UInt_t          cal_trgseq[16];   
+   UInt_t          cal_in_mask_bcast;
+   UInt_t          cal_in_mask[16];
+   UInt_t          tkr_layer_enable_0_bcast;
+   UInt_t          tkr_layer_enable_0[16];
+   UInt_t          tkr_layer_enable_1_bcast;
+   UInt_t          tkr_layer_enable_1[16];
+   UInt_t          tkr_out_mask_bcast;
+   UInt_t          tkr_out_mask[16];
    UInt_t          low_bcast;
    UInt_t          low[16][36];
    UInt_t          high_bcast;
@@ -95,6 +109,8 @@ public :
    UInt_t          layer_mask_0[16][4];
    UInt_t          layer_mask_1_bcast;
    UInt_t          layer_mask_1[16][4];
+   UInt_t          config_bcast;
+   UInt_t          config[16][4][4];
    UInt_t          crc_dac_bcast;
    UInt_t          crc_dac[16][4][4];
    UInt_t          delay_1_bcast;
@@ -151,8 +167,8 @@ protected:
 		   std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
    void reportV3(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, 
 		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
-   void reportV3(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
-		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);  
+   void reportMask(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
+		   std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);  
    void reportV4(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, int size4, 
 		 std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
 
@@ -176,9 +192,12 @@ private:
    TBranch        *b_hold_delay_bcast;   //!
    TBranch        *b_hitmap_delay_bcast;   //!
    TBranch        *b_hitmap_width_bcast;   //!
+   TBranch        *b_hitmap_deadtime_bcast;   //!
    TBranch        *b_veto_delay_bcast;   //!
    TBranch        *b_veto_width_bcast;   //!
+   TBranch        *b_adc_tacq_bcast;   //!
    TBranch        *b_pha_threshold_bcast;   //!
+   TBranch        *b_config_reg_bcast;   //!
    TBranch        *b_tci_dac_bcast;   //!
    TBranch        *b_bias_dac_bcast;   //!
    TBranch        *b_hld_dac_bcast;   //!
@@ -187,6 +206,10 @@ private:
    TBranch        *b_data_masks_bcast;   //!
    TBranch        *b_tkr_trgseq_bcast;   //!
    TBranch        *b_cal_trgseq_bcast;   //!
+   TBranch        *b_cal_in_mask_bcast;   //!
+   TBranch        *b_tkr_layer_enable_0_bcast;   //!
+   TBranch        *b_tkr_layer_enable_1_bcast;   //!
+   TBranch        *b_tkr_out_mask_bcast;   //!
    TBranch        *b_low_bcast;   //!
    TBranch        *b_high_bcast;   //!
    TBranch        *b_trig_enable_bcast;   //!
@@ -202,6 +225,7 @@ private:
    TBranch        *b_ccc_configuration_bcast;   //!
    TBranch        *b_layer_mask_0_bcast;   //!
    TBranch        *b_layer_mask_1_bcast;   //!
+   TBranch        *b_config_bcast;   //!
    TBranch        *b_crc_dac_bcast;   //!
    TBranch        *b_delay_1_bcast;   //!
    TBranch        *b_delay_2_bcast;   //!
@@ -218,9 +242,12 @@ private:
    TBranch        *b_hold_delay;   //!
    TBranch        *b_hitmap_delay;   //!
    TBranch        *b_hitmap_width;   //!
+   TBranch        *b_hitmap_deadtime;   //!
    TBranch        *b_veto_delay;   //!
    TBranch        *b_veto_width;   //!
+   TBranch        *b_adc_tacq;   //!
    TBranch        *b_pha_threshold;   //!
+   TBranch        *b_config_reg;   //!
    TBranch        *b_tci_dac;   //!
    TBranch        *b_bias_dac;   //!
    TBranch        *b_hld_dac;   //!
@@ -229,6 +256,10 @@ private:
    TBranch        *b_data_masks;   //!
    TBranch        *b_tkr_trgseq;   //!
    TBranch        *b_cal_trgseq;   //!
+   TBranch        *b_cal_in_mask;   //!
+   TBranch        *b_tkr_layer_enable_0;   //!
+   TBranch        *b_tkr_layer_enable_1;   //!
+   TBranch        *b_tkr_out_mask;   //!
    TBranch        *b_low;   //!
    TBranch        *b_high;   //!
    TBranch        *b_trig_enable;   //!
@@ -245,6 +276,7 @@ private:
    TBranch        *b_layer_mask_0;   //!
    TBranch        *b_layer_mask_1;   //!
    TBranch        *b_crc_dac;   //!
+   TBranch        *b_config;   //!
    TBranch        *b_delay_1;   //!
    TBranch        *b_delay_2;   //!
    TBranch        *b_delay_3;   //!
@@ -329,9 +361,12 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("hold_delay",hold_delay);
    fChain->SetBranchAddress("hitmap_delay",hitmap_delay);
    fChain->SetBranchAddress("hitmap_width",hitmap_width);
+   fChain->SetBranchAddress("hitmap_deadtime",hitmap_deadtime);
    fChain->SetBranchAddress("veto_delay",veto_delay);
    fChain->SetBranchAddress("veto_width",veto_width);
+   fChain->SetBranchAddress("adc_tacq",adc_tacq);
    fChain->SetBranchAddress("pha_threshold",pha_threshold);
+   fChain->SetBranchAddress("config_reg",config_reg);
    fChain->SetBranchAddress("tci_dac",tci_dac);
    fChain->SetBranchAddress("bias_dac",bias_dac);
    fChain->SetBranchAddress("hld_dac",hld_dac);
@@ -340,6 +375,10 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("data_masks",data_masks);
    fChain->SetBranchAddress("tkr_trgseq",tkr_trgseq);
    fChain->SetBranchAddress("cal_trgseq",cal_trgseq);
+   fChain->SetBranchAddress("cal_in_mask",cal_in_mask);
+   fChain->SetBranchAddress("tkr_layer_enable_0",tkr_layer_enable_0);
+   fChain->SetBranchAddress("tkr_layer_enable_1",tkr_layer_enable_1);
+   fChain->SetBranchAddress("tkr_out_mask",tkr_out_mask);
    fChain->SetBranchAddress("low",low);
    fChain->SetBranchAddress("high",high);
    fChain->SetBranchAddress("trig_enable",trig_enable);
@@ -356,6 +395,7 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("layer_mask_0",layer_mask_0);
    fChain->SetBranchAddress("layer_mask_1",layer_mask_1);
    fChain->SetBranchAddress("crc_dac",crc_dac);
+   fChain->SetBranchAddress("config",config);
    fChain->SetBranchAddress("delay_1",delay_1);
    fChain->SetBranchAddress("delay_2",delay_2);
    fChain->SetBranchAddress("delay_3",delay_3);
@@ -385,9 +425,12 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("hold_delay_bcast",&hold_delay_bcast);
    fChain->SetBranchAddress("hitmap_delay_bcast",&hitmap_delay_bcast);
    fChain->SetBranchAddress("hitmap_width_bcast",&hitmap_width_bcast);
+   fChain->SetBranchAddress("hitmap_deadtime_bcast",&hitmap_deadtime_bcast);
    fChain->SetBranchAddress("veto_delay_bcast",&veto_delay_bcast);
    fChain->SetBranchAddress("veto_width_bcast",&veto_width_bcast);
+   fChain->SetBranchAddress("adc_tacq_bcast",&adc_tacq_bcast);
    fChain->SetBranchAddress("pha_threshold_bcast",&pha_threshold_bcast);
+   fChain->SetBranchAddress("config_reg_bcast",&config_reg_bcast);
    fChain->SetBranchAddress("tci_dac_bcast",&tci_dac_bcast);
    fChain->SetBranchAddress("bias_dac_bcast",&bias_dac_bcast);
    fChain->SetBranchAddress("hld_dac_bcast",&hld_dac_bcast);
@@ -396,6 +439,10 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("data_masks_bcast",&data_masks_bcast);
    fChain->SetBranchAddress("tkr_trgseq_bcast",&tkr_trgseq_bcast);
    fChain->SetBranchAddress("cal_trgseq_bcast",&cal_trgseq_bcast);
+   fChain->SetBranchAddress("cal_in_mask_bcast",&cal_in_mask_bcast);
+   fChain->SetBranchAddress("tkr_layer_enable_0_bcast",&tkr_layer_enable_0_bcast);
+   fChain->SetBranchAddress("tkr_layer_enable_1_bcast",&tkr_layer_enable_1_bcast);
+   fChain->SetBranchAddress("tkr_out_mask_bcast",&tkr_out_mask_bcast);
    fChain->SetBranchAddress("low_bcast",&low_bcast);
    fChain->SetBranchAddress("high_bcast",&high_bcast);
    fChain->SetBranchAddress("trig_enable_bcast",&trig_enable_bcast);
@@ -411,6 +458,7 @@ void ConfigCompare::Init(TTree *tree)
    fChain->SetBranchAddress("ccc_configuration_bcast",&ccc_configuration_bcast);
    fChain->SetBranchAddress("layer_mask_0_bcast",&layer_mask_0_bcast);
    fChain->SetBranchAddress("layer_mask_1_bcast",&layer_mask_1_bcast);
+   fChain->SetBranchAddress("config_bcast",&config_bcast);
    fChain->SetBranchAddress("crc_dac_bcast",&crc_dac_bcast);
    fChain->SetBranchAddress("delay_1_bcast",&delay_1_bcast);
    fChain->SetBranchAddress("delay_2_bcast",&delay_2_bcast);
@@ -441,9 +489,12 @@ Bool_t ConfigCompare::Notify()
    b_hold_delay = fChain->GetBranch("hold_delay");
    b_hitmap_delay = fChain->GetBranch("hitmap_delay");
    b_hitmap_width = fChain->GetBranch("hitmap_width");
+   b_hitmap_deadtime = fChain->GetBranch("hitmap_deadtime");
    b_veto_delay = fChain->GetBranch("veto_delay");
    b_veto_width = fChain->GetBranch("veto_width");
+   b_adc_tacq = fChain->GetBranch("adc_tacq");
    b_pha_threshold = fChain->GetBranch("pha_threshold");
+   b_config_reg = fChain->GetBranch("config_reg");
    b_tci_dac = fChain->GetBranch("tci_dac");
    b_bias_dac = fChain->GetBranch("bias_dac");
    b_hld_dac = fChain->GetBranch("hld_dac");
@@ -452,6 +503,10 @@ Bool_t ConfigCompare::Notify()
    b_data_masks = fChain->GetBranch("data_masks");
    b_tkr_trgseq = fChain->GetBranch("tkr_trgseq");
    b_cal_trgseq = fChain->GetBranch("cal_trgseq");
+   b_cal_in_mask = fChain->GetBranch("cal_in_mask");
+   b_tkr_layer_enable_0 = fChain->GetBranch("tkr_layer_enable_0");
+   b_tkr_layer_enable_1 = fChain->GetBranch("tkr_layer_enable_1");
+   b_tkr_out_mask = fChain->GetBranch("tkr_out_mask");
    b_low = fChain->GetBranch("low");
    b_high = fChain->GetBranch("high");
    b_trig_enable = fChain->GetBranch("trig_enable");
@@ -468,6 +523,7 @@ Bool_t ConfigCompare::Notify()
    b_layer_mask_0 = fChain->GetBranch("layer_mask_0");
    b_layer_mask_1 = fChain->GetBranch("layer_mask_1");
    b_crc_dac = fChain->GetBranch("crc_dac");
+   b_config = fChain->GetBranch("config");
    b_delay_1 = fChain->GetBranch("delay_1");
    b_delay_2 = fChain->GetBranch("delay_2");
    b_delay_3 = fChain->GetBranch("delay_3");
@@ -497,9 +553,12 @@ Bool_t ConfigCompare::Notify()
    b_hold_delay_bcast = fChain->GetBranch("hold_delay_bcast");
    b_hitmap_delay_bcast = fChain->GetBranch("hitmap_delay_bcast");
    b_hitmap_width_bcast = fChain->GetBranch("hitmap_width_bcast");
+   b_hitmap_deadtime_bcast = fChain->GetBranch("hitmap_deadtime_bcast");
    b_veto_delay_bcast = fChain->GetBranch("veto_delay_bcast");
    b_veto_width_bcast = fChain->GetBranch("veto_width_bcast");
+   b_adc_tacq_bcast = fChain->GetBranch("adc_tacq_bcast");
    b_pha_threshold_bcast = fChain->GetBranch("pha_threshold_bcast");
+   b_config_reg_bcast = fChain->GetBranch("config_reg_bcast");
    b_tci_dac_bcast = fChain->GetBranch("tci_dac_bcast");
    b_bias_dac_bcast = fChain->GetBranch("bias_dac_bcast");
    b_hld_dac_bcast = fChain->GetBranch("hld_dac_bcast");
@@ -508,6 +567,10 @@ Bool_t ConfigCompare::Notify()
    b_data_masks_bcast = fChain->GetBranch("data_masks_bcast");
    b_tkr_trgseq_bcast = fChain->GetBranch("tkr_trgseq_bcast");
    b_cal_trgseq_bcast = fChain->GetBranch("cal_trgseq_bcast");
+   b_cal_in_mask_bcast = fChain->GetBranch("cal_in_mask_bcast");
+   b_tkr_layer_enable_0_bcast = fChain->GetBranch("tkr_layer_enable_0_bcast");
+   b_tkr_layer_enable_1_bcast = fChain->GetBranch("tkr_layer_enable_1_bcast");
+   b_tkr_out_mask_bcast = fChain->GetBranch("tkr_out_mask_bcast");
    b_low_bcast = fChain->GetBranch("low_bcast");
    b_high_bcast = fChain->GetBranch("high_bcast");
    b_trig_enable_bcast = fChain->GetBranch("trig_enable_bcast");
@@ -524,6 +587,7 @@ Bool_t ConfigCompare::Notify()
    b_layer_mask_0_bcast = fChain->GetBranch("layer_mask_0_bcast");
    b_layer_mask_1_bcast = fChain->GetBranch("layer_mask_1_bcast");
    b_crc_dac_bcast = fChain->GetBranch("crc_dac_bcast");
+   b_config_bcast = fChain->GetBranch("config_bcast");
    b_delay_1_bcast = fChain->GetBranch("delay_1_bcast");
    b_delay_2_bcast = fChain->GetBranch("delay_2_bcast");
    b_delay_3_bcast = fChain->GetBranch("delay_3_bcast");

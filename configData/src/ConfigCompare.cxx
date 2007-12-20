@@ -68,11 +68,19 @@ ConfigCompare::report(TList& l, Option_t* options, std::ostream& os) {
 
   reportV1("hitmap_delay",hitmap_delay_bcast,hitmap_delay,12,os);  
   reportV1("hitmap_width",hitmap_width_bcast,hitmap_width,12,os);
+  reportV1("hitmap_deadtime",hitmap_deadtime_bcast,hitmap_deadtime,12,os);
   reportV1("veto_delay",veto_delay_bcast,veto_delay,12,os);
   reportV1("veto_width",veto_width_bcast,veto_width,12,os);
+  reportV1("adc_tacq",adc_tacq_bcast,adc_tacq,12,os);
   reportV1("data_masks",data_masks_bcast,data_masks,16,os);
   reportV1("tkr_trgseq",tkr_trgseq_bcast,tkr_trgseq,16,os);
   reportV1("cal_trgseq",cal_trgseq_bcast,cal_trgseq,16,os); 
+
+  reportV1("cal_in_mask",cal_in_mask_bcast,cal_in_mask,16,os); 
+  reportV1("tkr_layer_enable_0",tkr_layer_enable_0_bcast,tkr_layer_enable_0,16,os); 
+  reportV1("tkr_layer_enable_1",tkr_layer_enable_1_bcast,tkr_layer_enable_1,16,os); 
+  reportV1("tkr_out_mask",tkr_out_mask_bcast,tkr_out_mask,16,os); 
+
   //reportV1("conditions",conditions_bcast,conditions,32,os);
   //reportV1("engine",engine_bcast,engine,16,os);
   //reportV1("towers",towers_bcast,towers,4,os);
@@ -80,6 +88,7 @@ ConfigCompare::report(TList& l, Option_t* options, std::ostream& os) {
   //reportV1("r",r_bcast,r,54,os);
 
   reportV2("tci_dac",tci_dac_bcast,(UShort_t*)tci_dac,12,18,os);
+  reportV2("config_reg",config_reg_bcast,(UShort_t*)config_reg,12,18,os);
 
   TH1* h_pha = new TH1I("pha_threshold","pha_threshold",4096,-0.5,4095.5);
   TH1* hv_pha = new TH1S("pha_threshold_v","pha_threshold_v",216,-0.5,215.5);
@@ -115,16 +124,22 @@ ConfigCompare::report(TList& l, Option_t* options, std::ostream& os) {
   reportV2("layer_mask_1",layer_mask_1_bcast,(UInt_t*)layer_mask_1,16,4,os);   
 
   reportV2("crc_dac",crc_dac_bcast,(UInt_t*)crc_dac,16,4,os);   
+  reportV2("config",config_bcast,(UInt_t*)config,16,4,os);   
   reportV2("delay_1",delay_1_bcast,(UInt_t*)delay_1,16,4,os);   
   reportV2("delay_2",delay_2_bcast,(UInt_t*)delay_2,16,4,os);   
   reportV2("delay_3",delay_3_bcast,(UInt_t*)delay_3,16,4,os);   
-  
-  reportV3("trig_enable",trig_enable_bcast,(ULong64_t*)trig_enable,16,36,24,os);
+
+  TH1* h_trig_enable = new TH1I("trig_enable","trig_enable",64,-0.5,64.5);
+  TH1* hv_trig_enable = new TH1S("trig_enable_v","trig_enable_v",13824,-0.5,13823.5);  
+  TH1* h_data_mask = new TH1I("data_mask","data_mask",64,-0.5,64.5);
+  TH1* hv_data_mask = new TH1S("data_mask_v","data_mask_v",13824,-0.5,13823.5);  
+  reportMask("trig_enable",trig_enable_bcast,(ULong64_t*)trig_enable,16,36,24,os,h_trig_enable,hv_trig_enable);
+  reportMask("data_mask",data_mask_bcast,(ULong64_t*)data_mask,16,36,24,os,h_data_mask,hv_data_mask);
+  reportMask("calib_mask",calib_mask_bcast,(ULong64_t*)calib_mask,16,36,24,os);
+  l.Add(h_trig_enable); l.Add(hv_trig_enable); 
+  l.Add(h_data_mask); l.Add(hv_data_mask);   
+
   reportV3("injection",injection_bcast,(UInt_t*)injection,16,36,24,os);
-
-  reportV3("data_mask",data_mask_bcast,(ULong64_t*)data_mask,16,36,24,os);
-  reportV3("calib_mask",calib_mask_bcast,(ULong64_t*)calib_mask,16,36,24,os);
-
   TH1* h_thresh = new TH1I("threshold","threshold",128,-0.5,127.5);
   TH1* hv_thresh = new TH1S("threshold_v","threshold_v",13824,-0.5,13823.5);
   l.Add(h_thresh); l.Add(hv_thresh); 
@@ -362,8 +377,8 @@ void ConfigCompare::reportV3(const char* name, UInt_t bcast, UInt_t* val, int si
   }
 }
 
-void ConfigCompare::reportV3(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
-			     std::ostream& os, TH1* h, TH1* hv) {
+void ConfigCompare::reportMask(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
+			       std::ostream& os, TH1* h, TH1* hv) {
   os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);
   for (int i(0); i < size1; i++ ) {
@@ -371,11 +386,19 @@ void ConfigCompare::reportV3(const char* name, ULong64_t bcast, ULong64_t* val, 
       for (int k(0); k < size3; k++ ) {      
 	if ( h == 0 ) {
 	  if ( val[idx] != bcast ) {
-	    printf("%s[%i,%i,%i] 0x%0x\n",name,i,j,k,val[idx]);
+	    os << name << '[' << i << ',' << j << ',' << k << ']' << std::hex << val[idx] << std::endl;
 	  }
 	} else {
-	  h->Fill(val[idx]);
-	  hv->SetBinContent(idx+1,val[idx]);
+	  Int_t nDiff(0);
+	  Long64_t theMask(0x1);
+	  for ( int bit(0); bit < 64; bit++ ) {
+	    if ( ( bcast & theMask ) != ( val[idx] & theMask ) ) {
+	      nDiff++;
+	    }
+	    theMask = theMask << 1;
+	  }
+	  h->Fill(nDiff);
+	  hv->SetBinContent(idx+1,nDiff);
 	}
 	idx++;
       }
