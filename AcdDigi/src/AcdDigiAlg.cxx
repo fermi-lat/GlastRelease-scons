@@ -295,7 +295,7 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
       if ( sc.isFailure() ) return sc;	
     }
 
-    sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,m_apply_noise,makeDigi,phaThreshArr,vetoArr,highArr);
+    sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,makeDigi,phaThreshArr,vetoArr,highArr);
     if ( sc.isFailure() ) return sc;
     
     if ( makeDigi ) {
