@@ -639,20 +639,25 @@ bool AcdGeometrySvc::fillTileSharedEdgeData(const idents::AcdId& id,
 					    float& sharedWidth1, float& sharedWidth2)
 {
   
+  // edges are in order (-x, +y, +x, -y)
   sharedEdge1 = sharedEdge2 = -1;
   sharedWidth1 = sharedWidth2 = 0.;
   switch (id.id()) {
   case 0: case 1: case 2: case 3: case 4:
-    sharedEdge1 = 3;
-    sharedEdge2 = 1;
-    sharedWidth1 = dim2[2];
-    sharedWidth2 = dim1[1];
+    // top -Y side tiles
+    // bent piece orientation is (+x,+z,-y)
+    sharedEdge1 = 3;   // top piece shares local -y edge (-y)
+    sharedEdge2 = 1;   // bent piece shares local +y edge (+z)
+    sharedWidth1 = dim2[1];  // extra width is local y  
+    sharedWidth2 = dim1[1];  // extra width is local y
     break;
   case 40: case 41: case 42: case 43: case 44:
-    sharedEdge1 = 1;
-    sharedEdge2 = 1;
-    sharedWidth1 = dim2[2];
-    sharedWidth2 = dim1[1];
+    // top +Y side tiles
+    // bent piece orientation is (+x,-z,+y)
+    sharedEdge1 = 1;   // top piece shares local +y edge (+y)
+    sharedEdge2 = 3;   // bent pieces shares local -y edge(+z)
+    sharedWidth1 = dim2[1];  // extra width is local y
+    sharedWidth2 = dim1[1];  // extra width is local y
     break; 
  default:
     ;
@@ -695,9 +700,9 @@ AcdGeometrySvc::getReferenceFrame(const idents::VolumeIdentifier &volId) const {
 	if (val == 0) return AcdFrameUtil::FRAME_TOP;   
 	// It is the bent piece, return the frame that is an extension of the rest of the tile
 	if (!findFieldVal(nid, "fRow", val)) return AcdFrameUtil::FRAME_NONE;
-	// Row 0 has X going up the side
+	// Row 0 has Y going up the side
 	if (val == 0) return AcdFrameUtil::FRAME_MINUSY;
-	// Row 4 has X going down the side
+	// Row 4 has Y going down the side
 	else if (val == 4) return AcdFrameUtil::FRAME_PLUSY_YDWN;
 	else return AcdFrameUtil::FRAME_NONE;
       }

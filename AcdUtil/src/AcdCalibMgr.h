@@ -116,6 +116,7 @@ public:
 
   virtual ~AcdCalibMgrTmpl(){;}
 
+
   /// Get a calibration
   StatusCode getCalibration(idents::AcdId id, unsigned pmt, CalibObjType*& calib) {
 
