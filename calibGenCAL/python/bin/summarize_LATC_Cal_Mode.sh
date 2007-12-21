@@ -3,4 +3,4 @@
 export -n DISPLAY
 
 
-python ${CALIBGENCALROOT}/python/summarize_LATC_Cal_Mode.py "$@"D
+python ${CALIBGENCALROOT}/python/summarize_LATC_CAL_Mode.py "$@"

@@ -26,6 +26,10 @@ import getopt
 
 from ROOT import TFile, TCanvas, TH1, gROOT
 
+# setup logger
+logging.basicConfig()
+log = logging.getLogger('dumpROOTPlots')
+log.setLevel(logging.INFO)
 
 ### SUBROUTINES ###
 def print_canvas(cvs):
@@ -36,12 +40,9 @@ def print_canvas(cvs):
         cvs.Draw()
 
     plotname = rootFile.GetName() + "." + cvs.GetName() + "." + imgType
+    log.info("Writing %s"%plotname)
     cvs.Print(plotname)
 
-# setup logger
-logging.basicConfig()
-log = logging.getLogger('dumpROOTPlots')
-log.setLevel(logging.INFO)
 
 
 ### COMMANDLINE ARGS ####
