@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v11r23p6 21-Dec-07 EAC Fix AcdDigi::m_error init on MC
  * v11r23p5 06-Dec-07 EAC Fix AcdHit::getFlags() bits
  * v11r23p4 11-Nov-07 HMK One more inline
  * v11r23p3 11-Nov-07 HMK Remove inline in AcdPocaData that gcc 3.4.6 opt

@@ -71,6 +71,7 @@ namespace Event {
             m_high[0] = highThresh[0]; m_high[1] = highThresh[1];
             m_range[0] = LOW; m_range[1] = LOW;
             m_error[0] = NOERROR; m_error[1] = NOERROR;
+	    m_error[2] = NOERROR; m_error[3] = NOERROR;
         };
         
         virtual ~AcdDigi() { };
