@@ -350,7 +350,7 @@ StatusCode AcdDigiUtil::ribbonAttenuationEffect(const Event::McPositionHit *hit,
 
 /// Checks all the various thresholds
 StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mipEquiv[2],
-					const unsigned short phaArr[2], const bool rangeArr[2], bool applyNoise, 
+					const unsigned short phaArr[2], const Event::AcdDigi::Range rangeArr[2], bool applyNoise, 
 					bool& makeDigi, 
 					bool phaThreshArr[2], bool vetoArr[2],  bool highArr[2]) {
   
@@ -363,7 +363,7 @@ StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mi
   makeDigi = false;  
   for ( unsigned i(0); i < 2; i++ ) {
     const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
-    phaThreshArr[i] = rangeArr[i] ? true : (phaArr[i] >= calibData->threshold_pha());
+    phaThreshArr[i] = rangeArr[i] == Event::AcdDigi::HIGH ? true : (phaArr[i] >= calibData->threshold_pha());
     double mipVeto = mipEquiv[i];
     double cnoVeto = mipEquiv[i];
     if ( applyNoise ) { 
