@@ -120,7 +120,7 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, double& mip
   double pedSubB(0.);
 
   // do PMT A
-  bool hasHitA = digi.getAcceptMapBit(Event::AcdDigi::A);
+  bool hasHitA = digi.getAcceptMapBit(Event::AcdDigi::A) || digi.getVeto(Event::AcdDigi::A);
   if ( hasHitA ) {
     Event::AcdDigi::Range rangeA = digi.getRange(Event::AcdDigi::A);  
     bool ok = rangeA == Event::AcdDigi::LOW ? 
@@ -131,7 +131,7 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, double& mip
   }
 
   // do PMT B
-  bool hasHitB = digi.getAcceptMapBit(Event::AcdDigi::B);
+  bool hasHitB = digi.getAcceptMapBit(Event::AcdDigi::B) || digi.getVeto(Event::AcdDigi::A);
   if ( hasHitB ) {
     Event::AcdDigi::Range rangeB = digi.getRange(Event::AcdDigi::B);  
     bool ok = rangeB == Event::AcdDigi::LOW ? 
