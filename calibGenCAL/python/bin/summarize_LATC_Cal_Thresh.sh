@@ -3,4 +3,4 @@
 export -n DISPLAY
 
 
-python ${CALIBGENCALROOT}/python/summarize_LATC_CAL_Thresh.py "$@"
+python ${CALIBGENCALROOT}/python/summarize_LATC_Cal_Thresh.py "$@"
