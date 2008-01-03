@@ -81,6 +81,11 @@ std::ostream& operator <<(std::ostream &os, const TrgWindowParams& tl){
     if ((1<<i)&tl.windowMask())os<<TrgConditions::condName((TrgConditions::conditions)i)<<" ";
   }
   os<<std::endl;
+  os<<"Complement of the window open mask: ";
+  for (int i=0;i<NCOND;i++){
+    if (!((1<<i)&tl.windowMask()))os<<TrgConditions::condName((TrgConditions::conditions)i)<<" ";
+  }
+  os<<std::endl;
   os<<"Window width: "<<tl.windowWidth()<<std::endl;
   return os;
 }

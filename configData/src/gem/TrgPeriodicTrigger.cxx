@@ -104,7 +104,9 @@ void TrgPeriodicTrigger::attach(TTree& tree, const std::string& prefix) const {
 
 std::ostream& operator <<(std::ostream &os, const TrgPeriodicTrigger& tl){
 
-  os<<"Periodic prescale: "<<tl.prescale()<<std::endl;
+  os<<"Periodic prescale: "<<tl.prescale();
+  if (tl.onePPS())os<<" ("<<1./tl.prescale()<<" Hz)"<<std::endl;
+  else  os<<" ("<<20.e6/tl.prescale()<<" Hz)"<<std::endl;
   os<<"1PPS: ";
   if (tl.onePPS())os<<"True"<<std::endl;
   else os<<"False"<<std::endl;
