@@ -257,6 +257,7 @@ Bool_t ConfigReader::read_TIC(DOMElement& elem){
       continue;
     }
   }
+  return kTRUE;
 }
 
 
