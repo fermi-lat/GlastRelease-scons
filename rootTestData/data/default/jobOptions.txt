@@ -29,6 +29,7 @@ RootTupleSvc.rejectIfBad = false;
 TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false;
 
+
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
 
