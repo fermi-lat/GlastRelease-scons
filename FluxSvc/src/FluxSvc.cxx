@@ -10,6 +10,7 @@
 
 #include "facilities/Timestamp.h"
 #include "facilities/Observer.h"
+#include "facilities/Util.h"
 
 #include "celestialSources/SpectrumFactoryLoader.h"
 
@@ -293,6 +294,7 @@ private:
 
     DoubleArrayProperty m_SAA_poly_lat;
     DoubleArrayProperty m_SAA_poly_lon;
+    StringProperty m_xmlFiles;
 
 
 };
@@ -328,6 +330,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
 
     declareProperty("SAApolyLat"  , m_SAA_poly_lat);
     declareProperty("SAApolyLon"  , m_SAA_poly_lon);
+    declareProperty("xmlListFile"    , m_xmlFiles="");
 
 }
 
@@ -380,6 +383,22 @@ StatusCode FluxSvc::initialize ()
 
 
     status = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
+
+    // parse file with source library entries (consistent with obssim)
+    if( !m_xmlFiles.value().empty() ) {
+
+        std::string xmlFiles(m_xmlFiles.value() );
+        facilities::Util::expandEnvVar(&xmlFiles);
+        std::ifstream xmls(xmlFiles.c_str());
+        if( !xmls.is_open() ){
+            throw std::invalid_argument("File not found: " + xmlFiles);
+        }
+        while( ! xmls.eof()){
+            std::string line; std::getline(xmls, line);
+            if( line.empty() || line[0]=='#' ) continue; 
+            m_source_lib.push_back(line);
+        }
+    }
 
     // If source library was not set, put in default
     if( m_source_lib.empty() ){

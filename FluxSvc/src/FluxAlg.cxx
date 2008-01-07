@@ -136,6 +136,7 @@ private:
     DoubleProperty m_backoff; ///< backoff distance
     DoubleProperty m_zenithTheta; ///< set for zenith
     DoubleArrayProperty m_filterCone; ///< set parameters of a cone
+    StringProperty(m_sourceListFile); ///< file name for list of sources (obssim compatible)
 
 
 };
@@ -174,6 +175,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("pointingDirection", m_pointingDirection);
     declareProperty("zenithTheta", m_zenithTheta=-99);
     declareProperty("FilterCone",  m_filterCone);
+    declareProperty("sourceListFile", m_sourceListFile="");
 
 }
 //------------------------------------------------------------------------
@@ -243,9 +245,31 @@ StatusCode FluxAlg::initialize(){
         }
     }
     double current_time = gps->time(); // preserve time to protect against Pulsar, etc.
-    if( !m_source_list.value().empty()){
+
+    // -------------- source name processing ------------------
+    std::vector<std::string> sources(m_source_list.value()); // list from job options
+
+    // parse file with source library entries (consistent with obssim)
+    if( !m_sourceListFile.value().empty() ) {
+
+        std::string fname(m_sourceListFile.value().c_str() );
+        facilities::Util::expandEnvVar(&fname);
+        std::ifstream file(fname.c_str());
+        if( !file.is_open() ){
+            throw std::invalid_argument("File not found: " + fname);
+        }
+
+        while( ! file.eof()){
+            std::string line; std::getline(file, line);
+            if( line.empty() || line[0]=='#' ) continue; 
+            sources.push_back(line);
+        }
+    }
+
+    // now, are there any in the list?
+
+    if( !sources.empty()){
         log << MSG::INFO << "loading sources " << endreq;
-        std::vector<std::string> sources=m_source_list.value();
         for(std::vector<std::string>::const_iterator it= sources.begin(); it!=sources.end(); ++it){
             log << MSG::INFO << "\t" << (*it) << endreq;
         }
@@ -257,6 +281,8 @@ StatusCode FluxAlg::initialize(){
 
 
     }else{
+        // no, try a single source for compatibility
+
         log << MSG::INFO << "loading source " << m_source_name << endreq;
 
         sc =  m_fluxSvc->source(m_source_name, m_flux);
