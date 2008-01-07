@@ -103,6 +103,9 @@ void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& 
 	  activeY += fabs(sharedWidth(0));
 	}  
       } else if ( iVol == 1 ) {
+	// first make sure that it actually hit the tile piece
+	if ( activeY < 0. ) return; 
+	// Ok, it hit the tile.  Correct for the fact that it bends around
 	if ( sharedEdge(1) == 1 && localPoint.y() > 0 ) {
 	  // hit upper part of BENT piece on -Y side ( local Y goes UP ) 
 	  // is a shared piece.  but this is a short side, so take the distance to the
