@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r33p8  AWB 07-JAN-08 Updated I&T mc.txt with trigger config.
 * v6r33p7  AWB 13-Dec-07 Updated some more.
 * v6r33p6  AWB 13-Dec-07 Updated JO for pipeline.
 * v6r33p3  HMK 09-Nov-07 Go back to running CalDigiAlg before TriggerAlg

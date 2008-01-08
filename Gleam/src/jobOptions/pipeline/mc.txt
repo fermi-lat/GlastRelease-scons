@@ -107,6 +107,13 @@ LivetimeSvc.Deadtime = 0;  // Default is now to disable this.
 TriggerAlg.mask      = -1; // All bits on by default: reject if none set (e.g., missed)
 
 
+//
+// Trigger mask: Martin's stuff
+//
+TriggerAlg.engine          = "TrgConfigSvc";
+TriggerAlg.applyWindowMask = true;  // To reject events with no trigger.
+
+
 // 
 // Onboard filter:
 //
@@ -443,13 +450,6 @@ GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
 // Particle source:
 //
 FluxAlg.source_name = "surface_muons";
-
-
-//
-// Trigger mask: All bits on by default,
-//               reject if none set (e.g., missed)!
-//
-TriggerAlg.mask = -1; 
 
 
 //
