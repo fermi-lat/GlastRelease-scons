@@ -91,8 +91,11 @@ void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& 
   if ( nVol() == 2 ) {
     int face = acdId().face();
     if ( face == 0 ) {
-      // top, check for hitting near bent tile
+      // first make sure that it actually hit the tile piece
+      if ( activeY < 0. ) return;
+      // Ok, it hit the tile.  Correct for the fact that it bends around
       if ( iVol == 0 ) {
+	// top, check for hitting near bent tile
 	if ( sharedEdge(0) == 1 &&  localPoint.y() > 0 ) {
 	  // hit +Y side of TOP tile near +Y edge,
 	  // add the extra size of the bent piece
@@ -102,10 +105,8 @@ void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& 
 	  // add the extra size of the bent piece
 	  activeY += fabs(sharedWidth(0));
 	}  
-      } else if ( iVol == 1 ) {
-	// first make sure that it actually hit the tile piece
-	if ( activeY < 0. ) return; 
-	// Ok, it hit the tile.  Correct for the fact that it bends around
+      } else if ( iVol == 1 ) {	
+	// side, check for hitting near top tile
 	if ( sharedEdge(1) == 1 && localPoint.y() > 0 ) {
 	  // hit upper part of BENT piece on -Y side ( local Y goes UP ) 
 	  // is a shared piece.  but this is a short side, so take the distance to the
