@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r9   8-Jan-2008  jrb  New query; add vote key field to ConfigInfo; make
+                           latc ignore more of a full-fledged parameter 
    v1r8   29-Nov-2007 jrb  1. (Jim P. )Changes to intent.xsd
                            2. Refactoring, clean-up to support MOOT::buildFromVote 
    v1r7p3  1-Oct-2007 jrb  Define and use a couple more specific DbUtil 
