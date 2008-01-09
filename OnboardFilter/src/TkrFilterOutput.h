@@ -17,6 +17,7 @@
 #include "OutputRtn.h"
 
 class trackProj;
+class GrbFindTrack;
 
 class TkrFilterOutput : virtual public OutputRtn
 {
@@ -35,7 +36,8 @@ private:
     void extractBestTrackInfo(OnboardFilterTds::FilterStatus* filterStatus, EDS_fwIxb *ixb);
     void extractTkrTwrHitInfo(OnboardFilterTds::TowerHits* towerHits, EDS_fwIxb *ixb);
 
-    trackProj* m_trackProj;
+    trackProj*    m_trackProj;
+    GrbFindTrack* m_grbTrack;
 };
 
 #endif // __ObfInterface_H

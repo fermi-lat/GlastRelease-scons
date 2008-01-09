@@ -199,7 +199,13 @@ StatusCode FilterAlgTuple::execute() {
 	double slopeYZ = 0.0;
 	double intXZ = 0.0;
 	double intYZ = 0.0;
-	filterStatus->getBestTrack(m_xHits,m_yHits,slopeXZ,slopeYZ,intXZ,intYZ);
+
+    int    nGrbHitsX;
+    int    nGrbHitsY;
+    double grbSlpX;
+    double grbSlpY;
+
+	filterStatus->getBestTrack(m_xHits,m_yHits,slopeXZ,slopeYZ,intXZ,intYZ,nGrbHitsX,nGrbHitsY,grbSlpX,grbSlpY);
 	if(m_xHits>0&&m_yHits>0){
         float alpha = atan2(slopeYZ,slopeXZ);
 	  if(alpha < 0) {
