@@ -218,7 +218,9 @@ void convert( OnboardFilterTds::FilterStatus& tdsObj,
     
     int xHits, yHits;
     double slopeXZ,slopeYZ,intXZ,intYZ;
-    tdsObj.getBestTrack(xHits,yHits,slopeXZ,slopeYZ,intXZ,intYZ);
+    int nGrbHitsX,nGrbHitsY;
+    double grbSlpX,grbSlpY;
+    tdsObj.getBestTrack(xHits,yHits,slopeXZ,slopeYZ,intXZ,intYZ,nGrbHitsX,nGrbHitsY,grbSlpX,grbSlpY);
     rootObj.initBestTrack(xHits,yHits,slopeXZ,slopeYZ,intXZ,intYZ);
 
     TObjArray trackRootCol;
@@ -256,7 +258,7 @@ void convert( const FilterStatus& rootObj,
     tdsObj.setGemSent(rootObj.getGemSent());
     tdsObj.setBestTrack(rootObj.getXhitsBestTrack(),rootObj.getYhitsBestTrack(),
         rootObj.getSlopeXzBestTrack(), rootObj.getSlopeYzBestTrack(),rootObj.getIntXzBestTrack(),
-        rootObj.getIntYzBestTrack());
+        rootObj.getIntYzBestTrack(),0,0,0.,0.);
 
     Int_t xz, yz, xy;
     rootObj.getAcdMap(xz,yz,xy);
