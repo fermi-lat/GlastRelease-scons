@@ -5,7 +5,7 @@
 
 namespace rdbModel {
 
-  class RdbException : std::exception {
+  class RdbException : public std::exception {
   public:
     RdbException(const std::string& extraInfo = "", int code=0) : 
       std::exception(),
