@@ -289,25 +289,37 @@ public:
 
     inline void setBestTrack( int xHits,int yHits,
                               double slopeXZ,double slopeYZ,
-                              double intXZ,double intYZ){
-        m_xHits    = xHits;
-        m_yHits    = yHits;
-        m_slopeXZ  = slopeXZ;
-        m_slopeYZ  = slopeYZ;
-        m_intXZ    = intXZ;
-        m_intYZ    = intYZ;
+                              double intXZ,double intYZ,
+                              int nGrbHitsX, int nGrbHitsY,
+                              double grbSlpX, double grbSlpY){
+        m_xHits     = xHits;
+        m_yHits     = yHits;
+        m_slopeXZ   = slopeXZ;
+        m_slopeYZ   = slopeYZ;
+        m_intXZ     = intXZ;
+        m_intYZ     = intYZ;
+        m_nGrbHitsX = nGrbHitsX;
+        m_nGrbHitsY = nGrbHitsY;
+        m_grbSlpX   = grbSlpX;
+        m_grbSlpY   = grbSlpY;
       }
 
     inline void FilterStatus::getBestTrack(
                                   int &xHits,int &yHits,
                                   double &slopeXZ,double &slopeYZ,
-                                  double &intXZ,double &intYZ){
-        xHits    = m_xHits;
-        yHits    = m_yHits;
-        slopeXZ  = m_slopeXZ;
-        slopeYZ  = m_slopeYZ;
-        intXZ    = m_intXZ;
-        intYZ    = m_intYZ;
+                                  double &intXZ,double &intYZ,
+                                  int &nGrbHitsX, int &nGrbHitsY,
+                                  double &grbSlpX, double &grbSlpY){
+        xHits     = m_xHits;
+        yHits     = m_yHits;
+        slopeXZ   = m_slopeXZ;
+        slopeYZ   = m_slopeYZ;
+        intXZ     = m_intXZ;
+        intYZ     = m_intYZ;
+        nGrbHitsX = m_nGrbHitsX;
+        nGrbHitsY = m_nGrbHitsY;
+        grbSlpX   = m_grbSlpX;
+        grbSlpY   = m_grbSlpY;
       }
 
     inline virtual std::ostream& fillStream(std::ostream &s) const;
@@ -452,6 +464,10 @@ private:
    double m_intXZ;
    double m_intYZ;
 
+   int    m_nGrbHitsX;
+   int    m_nGrbHitsY;
+   double m_grbSlpX;
+   double m_grbSlpY;
 
     int m_numLogsHit;
     ///ACD hit map
