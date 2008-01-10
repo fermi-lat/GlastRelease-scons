@@ -4,6 +4,8 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+
+   09-jan-08  v6r52p1 THB  Add catch clause for flux, jobinfo parameter to force abort
    06-jan-08  v6r52   THB  Introduce jobinfo parameters to read gtobssim source description files
    30-oct-07  v6r51   HMK  use gr_app
    17-oct-07  v6r50   HMK  intro use of IExternal/extFiles to set env var

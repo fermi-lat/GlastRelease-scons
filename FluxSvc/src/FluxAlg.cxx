@@ -47,6 +47,7 @@ $Header$
 #include <vector>
 #include <iomanip>
 #include <fstream>
+#include <stdexcept>
 
 
 // Include files
@@ -137,6 +138,7 @@ private:
     DoubleProperty m_zenithTheta; ///< set for zenith
     DoubleArrayProperty m_filterCone; ///< set parameters of a cone
     StringProperty(m_sourceListFile); ///< file name for list of sources (obssim compatible)
+    BooleanProperty m_abort_on_exception; ///< what to do if an exception
 
 
 };
@@ -176,6 +178,7 @@ FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("zenithTheta", m_zenithTheta=-99);
     declareProperty("FilterCone",  m_filterCone);
     declareProperty("sourceListFile", m_sourceListFile="");
+    declareProperty("abortOnException", m_abort_on_exception=false);
 
 }
 //------------------------------------------------------------------------
@@ -384,10 +387,22 @@ StatusCode FluxAlg::execute()
     int count = m_prescale;
     do{ // loop if we are rejecting particles generated during SAA
         // also do prescale here
-        bool valid =m_flux->generate();
-        if( !valid) {
-            log << MSG::ERROR << "Ran out of valid sources, aborting" << endreq;
-            return StatusCode::FAILURE;
+        try {
+            bool valid =m_flux->generate();
+            if( !valid) {
+                log << MSG::ERROR << "Ran out of valid sources, aborting" << endreq;
+                return StatusCode::FAILURE;
+            }
+        } catch( const std::exception & e) {
+            std::cout << "FluxAlg caught exception, aborting this event " << e.what() 
+                << "\n\tprocessing source " << m_flux->particleName() 
+                << "\n\tcurrent time: " <<GPS::instance()->time() << std::endl;
+            if( m_abort_on_exception ){
+                return StatusCode::FAILURE;
+            }
+            setFilterPassed( false); // should go to clocks.
+            return StatusCode::SUCCESS;
+            
         }
         particleName = m_flux->particleName();
 
