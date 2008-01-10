@@ -976,9 +976,10 @@ namespace rdbModel {
         for (unsigned i = 0; i < choices.size(); i++) {
           if (sqlSize < choices[i].size() ) {
             m_matchReturn = MATCHfail;
-            break;
+            break;      // just gets us out of this loop; not out of switch
           }
         }
+        if (m_matchReturn == MATCHfail) break; // if varchar size was too small
         m_matchReturn = MATCHcompatible;
         return true;
       } else {
@@ -1107,7 +1108,7 @@ namespace rdbModel {
     }     // end switch
     if (m_matchReturn == MATCHfail) {
       (*m_err) << std::endl << "Datatype match for base " 
-                  << base <<  "failed " << std::endl;
+                  << base <<  " failed " << std::endl;
       m_err->flush();
       return false;
     }
