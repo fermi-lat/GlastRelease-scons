@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r28p2 11-Jan-2008  TU Add hanlding for id, status byte info in obf output
  v1r28p1  9-Jan-2008  TU Temporary fix so OnboardFilterConvert will compile - proper fix soon!
  v1r28   20-Sep-2007 HMK Turn off TkrTruncationData for now
  v1r27p1 19-Sep-2007 HMK Warning patches
