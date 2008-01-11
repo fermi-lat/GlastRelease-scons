@@ -21,11 +21,14 @@ public:
     virtual void Print(Option_t *option="") const = 0;
 
     /// OBF functions
-    virtual UInt_t getStatusHi() const = 0;
-    virtual UInt_t getStatusLo() const = 0;
-    virtual UInt_t getStatus32() const = 0;
-    virtual UInt_t getVetoMask() const = 0;
-    virtual UInt_t getVetoBit()  const = 0;
+    virtual UInt_t  getStatusHi() const = 0;
+    virtual UInt_t  getStatusLo() const = 0;
+    virtual UInt_t  getStatus32() const = 0;
+    virtual UInt_t  getVetoMask() const = 0;
+    virtual UInt_t  getVetoBit()  const = 0;
+
+    virtual UChar_t getFilterId() const = 0;
+    virtual UChar_t getFiltersb() const = 0;
 };
 
 /** @class ObfFilterStatus
@@ -80,24 +83,30 @@ private:
 class ObfGammaStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfGammaStatus()              : m_status(0)      {}
-    ObfGammaStatus(UInt_t status) : m_status(status) {}
+    ObfGammaStatus() : m_id(0), m_status(0), m_sb(0) {}
+    ObfGammaStatus(UChar_t id, UInt_t status, UChar_t sb) : 
+                   m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfGammaStatus() {}
 
     // This for backward compatibility...
-    UInt_t getStatusHi() const; 
-    UInt_t getStatusLo() const;
+    UInt_t  getStatusHi() const; 
+    UInt_t  getStatusLo() const;
     // If msb is set below then event is to be vetoed
-    UInt_t getStatus32() const;
+    UInt_t  getStatus32() const;
 
-    UInt_t getVetoMask() const;
-    UInt_t getVetoBit()  const;
+    UInt_t  getVetoMask() const;
+    UInt_t  getVetoBit()  const;
+
+    UChar_t getFilterId() const {return m_id;}
+    UChar_t getFiltersb() const {return m_sb;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:
-    UInt_t m_status;
+    UInt_t  m_status;
+    UChar_t m_id;
+    UChar_t m_sb;
 
     ClassDef(ObfGammaStatus,1) // Gamma Filter output
 };
@@ -105,24 +114,30 @@ private:
 class ObfHFCStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfHFCStatus()              : m_status(0)      {}
-    ObfHFCStatus(UInt_t status) : m_status(status) {}
+    ObfHFCStatus() : m_id(0), m_status(0), m_sb(0) {}
+    ObfHFCStatus(UChar_t id, UInt_t status, UChar_t sb) : 
+                   m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfHFCStatus() {}
 
     // This for backward compatibility...
-    UInt_t getStatusHi() const; 
-    UInt_t getStatusLo() const;
+    UInt_t  getStatusHi() const; 
+    UInt_t  getStatusLo() const;
     // If msb is set below then event is to be vetoed
-    UInt_t getStatus32() const;
+    UInt_t  getStatus32() const;
 
-    UInt_t getVetoMask() const;
-    UInt_t getVetoBit()  const;
+    UInt_t  getVetoMask() const;
+    UInt_t  getVetoBit()  const;
+
+    UChar_t getFilterId() const {return m_id;}
+    UChar_t getFiltersb() const {return m_sb;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:
-    UInt_t m_status;
+    UInt_t  m_status;
+    UChar_t m_id;
+    UChar_t m_sb;
 
     ClassDef(ObfHFCStatus,1) // HFC output
 };
@@ -130,24 +145,30 @@ private:
 class ObfMipStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfMipStatus()              : m_status(0)      {}
-    ObfMipStatus(UInt_t status) : m_status(status) {}
+    ObfMipStatus(): m_id(0), m_status(0), m_sb(0) {}
+    ObfMipStatus(UChar_t id, UInt_t status, UChar_t sb) : 
+                   m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfMipStatus() {}
 
     // This for backward compatibility...
-    UInt_t getStatusHi() const; 
-    UInt_t getStatusLo() const;
+    UInt_t  getStatusHi() const; 
+    UInt_t  getStatusLo() const;
     // If msb is set below then event is to be vetoed
-    UInt_t getStatus32() const;
+    UInt_t  getStatus32() const;
 
-    UInt_t getVetoMask() const;
-    UInt_t getVetoBit()  const;
+    UInt_t  getVetoMask() const;
+    UInt_t  getVetoBit()  const;
+
+    UChar_t getFilterId() const {return m_id;}
+    UChar_t getFiltersb() const {return m_sb;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:
-    UInt_t m_status;
+    UInt_t  m_status;
+    UChar_t m_id;
+    UChar_t m_sb;
 
     ClassDef(ObfMipStatus,1) // MIP filter output
 };
@@ -155,24 +176,30 @@ private:
 class ObfDFCStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfDFCStatus()              : m_status(0)      {}
-    ObfDFCStatus(UInt_t status) : m_status(status) {}
+    ObfDFCStatus() : m_id(0), m_status(0), m_sb(0) {}
+    ObfDFCStatus(UChar_t id, UInt_t status, UChar_t sb) : 
+                   m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfDFCStatus() {}
 
     // This for backward compatibility...
-    UInt_t getStatusHi() const; 
-    UInt_t getStatusLo() const;
+    UInt_t  getStatusHi() const; 
+    UInt_t  getStatusLo() const;
     // If msb is set below then event is to be vetoed
-    UInt_t getStatus32() const;
+    UInt_t  getStatus32() const;
 
-    UInt_t getVetoMask() const;
-    UInt_t getVetoBit()  const;
+    UInt_t  getVetoMask() const;
+    UInt_t  getVetoBit()  const;
+
+    UChar_t getFilterId() const {return m_id;}
+    UChar_t getFiltersb() const {return m_sb;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
 
 private:
-    UInt_t m_status;
+    UInt_t  m_status;
+    UChar_t m_id;
+    UChar_t m_sb;
 
     ClassDef(ObfDFCStatus,1) // DFC output
 };

@@ -8,7 +8,6 @@
 
 #include "digiRootData/ObfFilterStatus.h"
 #include "Riostream.h"
-//#include <commonRootData/RootDataUtil.h>
 
 ClassImp(ObfFilterStatus)
 
