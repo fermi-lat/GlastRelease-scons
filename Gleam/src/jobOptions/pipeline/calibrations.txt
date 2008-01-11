@@ -38,9 +38,9 @@ CalCalibSvc.DefaultFlavor = "vanilla";
 TkrCalibAlg.calibFlavor = "vanilla";
 
 //
-// Write out bad and hot strips to the log file:
+// Write out bad and hot strips to the log file: Not!
 //
-TkrBadStripsSvc.OutputLevel = 2;
+TkrBadStripsSvc.OutputLevel = 4;
 
 
 // Start up an AcdCalibSvc:
