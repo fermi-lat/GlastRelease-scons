@@ -340,28 +340,28 @@ void convert( const ObfFilterStatus& rootObj, OnboardFilterTds::ObfFilterStatus&
 
     if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::GammaFilter))
     {
-        OnboardFilterTds::ObfGammaStatus* tdsStatus = new OnboardFilterTds::ObfGammaStatus(0);
+        OnboardFilterTds::ObfGammaStatus* tdsStatus = new OnboardFilterTds::ObfGammaStatus(0,0,0);
         convert(*rootStatus, *tdsStatus);
         tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter, tdsStatus);
     }
 
     if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::HFCFilter))
     {
-        OnboardFilterTds::ObfHFCStatus* tdsStatus = new OnboardFilterTds::ObfHFCStatus(0);
+        OnboardFilterTds::ObfHFCStatus* tdsStatus = new OnboardFilterTds::ObfHFCStatus(0,0,0);
         convert(*rootStatus, *tdsStatus);
         tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter, tdsStatus);
     }
 
     if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::MipFilter))
     {
-        OnboardFilterTds::ObfMipStatus* tdsStatus = new OnboardFilterTds::ObfMipStatus(0);
+        OnboardFilterTds::ObfMipStatus* tdsStatus = new OnboardFilterTds::ObfMipStatus(0,0,0);
         convert(*rootStatus, *tdsStatus);
         tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter, tdsStatus);
     }
 
     if (rootStatus = rootObj.getFilterStatus(ObfFilterStatus::DFCFilter))
     {
-        OnboardFilterTds::ObfDFCStatus* tdsStatus = new OnboardFilterTds::ObfDFCStatus(0);
+        OnboardFilterTds::ObfDFCStatus* tdsStatus = new OnboardFilterTds::ObfDFCStatus(0,0,0);
         convert(*rootStatus, *tdsStatus);
         tdsObj.addFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter, tdsStatus);
     }
@@ -372,7 +372,7 @@ void convert( const ObfFilterStatus& rootObj, OnboardFilterTds::ObfFilterStatus&
 /// Fill persistent verison of ObfGammaStatus 
 void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfGammaStatus& rootObj )
 {
-    rootObj = ObfGammaStatus(tdsObj.getStatus32());
+    rootObj = ObfGammaStatus(tdsObj.getFilterId(), tdsObj.getStatus32(), tdsObj.getFiltersb());
 
     return;
 }
@@ -380,7 +380,7 @@ void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfGammaStatus& rootOb
 /// Fill transient verison of ObfGammaStatus 
 void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfGammaStatus& tdsObj) 
 {
-    tdsObj = OnboardFilterTds::ObfGammaStatus(rootObj.getStatus32());
+    tdsObj = OnboardFilterTds::ObfGammaStatus(rootObj.getFilterId(), rootObj.getStatus32(), rootObj.getFiltersb());
 
     return;
 }
@@ -388,7 +388,7 @@ void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfGammaStatus& tdsOb
 /// Fill persistent verison of ObfHFCStatus 
 void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfHFCStatus& rootObj)
 {
-    rootObj = ObfHFCStatus(tdsObj.getStatus32());
+    rootObj = ObfHFCStatus(tdsObj.getFilterId(), tdsObj.getStatus32(), tdsObj.getFiltersb());
 
     return;
 }
@@ -396,7 +396,7 @@ void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfHFCStatus& rootObj)
 /// Fill transient verison of ObfHFCStatus 
 void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfHFCStatus& tdsObj) 
 {
-    tdsObj = OnboardFilterTds::ObfHFCStatus(rootObj.getStatus32());
+    tdsObj = OnboardFilterTds::ObfHFCStatus(rootObj.getFilterId(), rootObj.getStatus32(), rootObj.getFiltersb());
 
     return;
 }
@@ -404,7 +404,7 @@ void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfHFCStatus& tdsObj)
 /// Fill persistent verison of ObfMipStatus 
 void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfMipStatus& rootObj)
 {
-    rootObj = ObfMipStatus(tdsObj.getStatus32());
+    rootObj = ObfMipStatus(tdsObj.getFilterId(), tdsObj.getStatus32(), tdsObj.getFiltersb());
 
     return;
 }
@@ -412,7 +412,7 @@ void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfMipStatus& rootObj)
 /// Fill transient verison of ObfMipStatus 
 void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfMipStatus& tdsObj) 
 {
-    tdsObj = OnboardFilterTds::ObfMipStatus(rootObj.getStatus32());
+    tdsObj = OnboardFilterTds::ObfMipStatus(rootObj.getFilterId(), rootObj.getStatus32(), rootObj.getFiltersb());
 
     return;
 }
@@ -420,7 +420,7 @@ void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfMipStatus& tdsObj)
 /// Fill persistent verison of ObfDFCStatus 
 void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfDFCStatus& rootObj)
 {
-    rootObj = ObfDFCStatus(tdsObj.getStatus32());
+    rootObj = ObfDFCStatus(tdsObj.getFilterId(), tdsObj.getStatus32(), tdsObj.getFiltersb());
 
     return;
 }
@@ -428,7 +428,7 @@ void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfDFCStatus& rootObj)
 /// Fill transient verison of ObfDFCStatus 
 void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfDFCStatus& tdsObj) 
 {
-    tdsObj = OnboardFilterTds::ObfDFCStatus(rootObj.getStatus32());
+    tdsObj = OnboardFilterTds::ObfDFCStatus(rootObj.getFilterId(), rootObj.getStatus32(), rootObj.getFiltersb());
 
     return;
 }
