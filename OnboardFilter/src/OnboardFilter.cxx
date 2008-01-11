@@ -340,7 +340,7 @@ StatusCode OnboardFilter::execute()
     // Check to see if we are vetoing events at this stage
     if (m_rejectEvents)
     {
-        unsigned int combStatus = 0xFFFFFFFF;
+        bool rejectEvent = true;
 
         // Loop through the list of filters to apply
         for(FilterList::iterator listItr = m_filterList.begin(); listItr != m_filterList.end(); listItr++)
@@ -355,12 +355,22 @@ StatusCode OnboardFilter::execute()
             // Make sure the filter ran
             if (!filterStat) continue;
 
-            // And result into previous results
-            combStatus &= filterStat->getStatus32() & 0x80000000;
+            // Look at sb to determine how to handle the event
+            unsigned char sb = filterStat->getFiltersb();
+
+            // Two cases: event was accepted and no prescale or event was rejected and prescale
+            sb = (sb & (EDS_RSD_SB_M_VETOED | EDS_RSD_SB_M_PRESCALE_OUT)) >> EDS_RSD_SB_V_PRESCALE_OUT;
+
+            if (  (sb == 0)   // Event accepted and prescale does not flip the decision
+               || (sb == 3) ) // Event rejected and prescale flips the decision (making it accepted)
+            {
+                rejectEvent = false;
+                break;
+            }
         }
 
         // High order bit set means we reject events, at this point combStatus would be non-zero
-        if (combStatus)
+        if (rejectEvent)
         {
             this->setFilterPassed(false);
             m_rejected++;
