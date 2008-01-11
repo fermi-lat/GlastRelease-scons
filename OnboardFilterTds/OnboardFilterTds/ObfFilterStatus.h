@@ -21,6 +21,7 @@
 #include "XFC/HFC_status.h"
 #include "XFC/MFC_status.h"
 #include "XFC/DFC_status.h"
+#include "EDS/EDS_rsd.h"
 
 static const CLID& CLID_ObfStatus = InterfaceID("ObfStatus", 1, 0);
 
@@ -42,11 +43,15 @@ public:
     virtual ~IObfStatus() {}
 
     // Retrieving the status word is common to all filters
-    virtual unsigned int getStatusHi()                const = 0;
-    virtual unsigned int getStatusLo()                const = 0;
-    virtual unsigned int getStatus32()                const = 0;
-    virtual unsigned int getVetoMask()                const = 0;
-    virtual unsigned int getVetoBit()                 const = 0;
+    virtual unsigned int  getStatusHi()               const = 0;
+    virtual unsigned int  getStatusLo()               const = 0;
+    virtual unsigned int  getStatus32()               const = 0;
+    virtual unsigned int  getVetoMask()               const = 0;
+    virtual unsigned int  getVetoBit()                const = 0;
+
+    // As is retrieving the id and status byte
+    virtual unsigned char getFilterId()               const = 0;
+    virtual unsigned char getFiltersb()               const = 0;
 
     // Output for to diagnostic stream 
     virtual std::ostream& fillStream(std::ostream& s) const = 0;
@@ -100,17 +105,21 @@ private:
 class ObfGammaStatus : virtual public IObfStatus
 {
 public:
-    ObfGammaStatus(unsigned int status) : m_status(status) {}
+    ObfGammaStatus(unsigned char id, unsigned int status, unsigned char sb) : 
+      m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfGammaStatus() {}
 
     // This for backward compatibility...
-    unsigned int getStatusHi() const {return m_status >> GFC_STATUS_V_TKR_LT_2_ELO;}
-    unsigned int getStatusLo() const {return m_status & 0xFFFF;}
+    unsigned int  getStatusHi() const {return m_status >> GFC_STATUS_V_TKR_LT_2_ELO;}
+    unsigned int  getStatusLo() const {return m_status & 0xFFFF;}
     // If msb is set below then event is to be vetoed
-    unsigned int getStatus32() const {return m_status;}
+    unsigned int  getStatus32() const {return m_status;}
 
-    unsigned int getVetoMask() const {return GFC_STATUS_M_VETOES;}
-    unsigned int getVetoBit()  const {return GFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask() const {return GFC_STATUS_M_VETOES;}
+    unsigned int  getVetoBit()  const {return GFC_STATUS_M_VETOED;}
+
+    unsigned char getFilterId() const {return m_id;}
+    unsigned char getFiltersb() const {return m_sb;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -118,22 +127,28 @@ public:
         return s;
     }
 private:
-    unsigned int m_status;
+    unsigned int  m_status;
+    unsigned char m_id;
+    unsigned char m_sb;
 };
 
 class ObfHFCStatus : virtual public IObfStatus
 {
 public:
-    ObfHFCStatus(unsigned int status) : m_status(status) {}
+    ObfHFCStatus(unsigned char id, unsigned int status, unsigned char sb) : 
+      m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfHFCStatus() {}
 
-    unsigned int getStatusHi() const {return m_status >> 16;}
-    unsigned int getStatusLo() const {return m_status & 0xFFFF;}
+    unsigned int  getStatusHi() const {return m_status >> 16;}
+    unsigned int  getStatusLo() const {return m_status & 0xFFFF;}
     // If msb of below is set then event is to be vetoed
-    unsigned int getStatus32() const {return m_status;}
+    unsigned int  getStatus32() const {return m_status;}
 
-    unsigned int getVetoMask() const {return HFC_STATUS_M_VETO_DEF;}
-    unsigned int getVetoBit()  const {return HFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask() const {return HFC_STATUS_M_VETO_DEF;}
+    unsigned int  getVetoBit()  const {return HFC_STATUS_M_VETOED;}
+
+    unsigned char getFilterId() const {return m_id;}
+    unsigned char getFiltersb() const {return m_sb;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -141,21 +156,27 @@ public:
         return s;
     }
 private:
-    unsigned int m_status;
+    unsigned int  m_status;
+    unsigned char m_id;
+    unsigned char m_sb;
 };
 
 class ObfMipStatus : virtual public IObfStatus
 {
 public:
-    ObfMipStatus(unsigned int status) : m_status(status) {}
+    ObfMipStatus(unsigned char id, unsigned int status, unsigned char sb) : 
+      m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfMipStatus() {}
 
-    unsigned int getStatusHi() const {return m_status >> 16;}
-    unsigned int getStatusLo() const {return m_status & 0xFFFF;}
-    unsigned int getStatus32() const {return m_status;}
+    unsigned int  getStatusHi() const {return m_status >> 16;}
+    unsigned int  getStatusLo() const {return m_status & 0xFFFF;}
+    unsigned int  getStatus32() const {return m_status;}
 
-    unsigned int getVetoMask() const {return MFC_STATUS_M_VETO_DEF;}
-    unsigned int getVetoBit()  const {return MFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask() const {return MFC_STATUS_M_VETO_DEF;}
+    unsigned int  getVetoBit()  const {return MFC_STATUS_M_VETOED;}
+
+    unsigned char getFilterId() const {return m_id;}
+    unsigned char getFiltersb() const {return m_sb;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -163,22 +184,28 @@ public:
         return s;
     }
 private:
-    unsigned int m_status;
+    unsigned int  m_status;
+    unsigned char m_id;
+    unsigned char m_sb;
 };
 
 class ObfDFCStatus : virtual public IObfStatus
 {
 public:
-    ObfDFCStatus(unsigned int status) : m_status(status) {}
+    ObfDFCStatus(unsigned char id, unsigned int status, unsigned char sb) : 
+      m_id(id), m_status(status), m_sb(sb) {}
     virtual ~ObfDFCStatus() {}
 
-    unsigned int getStatusHi() const {return m_status >> 16;}
-    unsigned int getStatusLo() const {return m_status & 0xFFFF;}
+    unsigned int  getStatusHi() const {return m_status >> 16;}
+    unsigned int  getStatusLo() const {return m_status & 0xFFFF;}
     // If msb of below is set then event is to be vetoed
-    unsigned int getStatus32() const {return m_status;}
+    unsigned int  getStatus32() const {return m_status;}
 
-    unsigned int getVetoMask() const {return DFC_STATUS_M_VETO_DEF;}
-    unsigned int getVetoBit()  const {return DFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask() const {return DFC_STATUS_M_VETO_DEF;}
+    unsigned int  getVetoBit()  const {return DFC_STATUS_M_VETOED;}
+
+    unsigned char getFilterId() const {return m_id;}
+    unsigned char getFiltersb() const {return m_sb;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -186,7 +213,9 @@ public:
         return s;
     }
 private:
-    unsigned int m_status;
+    unsigned int  m_status;
+    unsigned char m_id;
+    unsigned char m_sb;
 };
 
 } // end namespace
