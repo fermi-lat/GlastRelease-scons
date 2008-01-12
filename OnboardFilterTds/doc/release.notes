@@ -3,6 +3,7 @@
  Coordinator:R.Hughes
  @verbatim
 
+ v0r5p3 11-Jan-2008  TU Add filter id, status byte info to obf output
  v0r5p1  9-Dec-2007  TU Add GRB related variables to FilterStatus
  v0r5   13-Dec-2007  TU Fix FilterStatus' getCalEnergy method to preserve sign bit
  v0r4p4 19-Sep-2007 HMK Patch copy ctor to init base class
