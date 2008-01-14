@@ -340,21 +340,17 @@ bool GcrReconTool::TriggerEngine4ON(){
     IDataProviderSvc* m_pEventSvc;
 
     // Recover EventHeader Pointer
-    SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
-    unsigned int word = ( pEvent==0? 0 : pEvent->trigger());
+    
+    SmartDataPtr<Event::EventHeader> pEvent(m_pEventSvc, EventModel::EventHeader);
+    unsigned int word2 = pEvent->triggerWordTwo();
 
-    // GltWord only 6 bits
-    unsigned int Trig_word = word & enums::GEM_mask;  //merit tuple: addItem("GltWord",&Trig_word);
+    unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
     
-    bool gltWord_bit1 = (Trig_word & (1<<0))>0; // ROI
-    bool gltWord_bit2 = (Trig_word & (1<<1))>0; // Track
-    bool gltWord_bit3 = (Trig_word & (1<<2))>0; // LoCal
-    bool gltWord_bit5 = (Trig_word & (1<<4))>0; // ACDH
+    bool engine4ON2 = (Trig_gemengine==4);
+
+    //m_log << MSG::INFO << "engine4ON2= " << engine4ON2 << endreq;
     
-    bool engine4ON = gltWord_bit1 && gltWord_bit2 && gltWord_bit3 && gltWord_bit5;
-    m_log << MSG::INFO << "engine4ON= " << engine4ON << endreq;
-    
-    return engine4ON;
+    return engine4ON2;
 }
 
 
