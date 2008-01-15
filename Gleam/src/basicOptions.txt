@@ -75,12 +75,12 @@ TriggerTest.Members = {"TriggerAlg", "Count/trigger" };
 //CalDigitization.Members = { "CalDigiAlg" };
 
 // this sequence runs if the event passes the trigger
-
 Triggered.Members={
     "Sequencer/Filter", // can also cause rejection
     "Sequencer/ReconCalibrationUpdate",
     "Sequencer/Reconstruction",
     "Sequencer/FilterPerformance",
+    "Sequencer/User",
     "Sequencer/EventDisplay",
     "Sequencer/Output",
     "Sequencer/NtupleMaker"
@@ -148,6 +148,10 @@ Reconstruction.Members={
 //FilterPerformance.Members = {"FilterTracks", "FilterAlg"}; // for study of performance
 FilterPerformance.Members = {};
 
+// PlaceHolder for User routine, for example UserAlg
+//User.Members = {"UserAlg"};
+User.Members = {};
+
 // Members are set in guiOptions, if enabled
 // the display routines have a null execute() method, but
 // need to be in the Gaudi sequence so it will initialize
@@ -180,6 +184,8 @@ relationRootWriterAlg.rootFile   = "$(GLEAMROOT)/data/relations.root";
 // ntuple generation 
 
 ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
+AuditorSvc.Auditors = {"EventAuditor"}; // For event-by-event timing
+
 NtupleMaker.Members = {
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
     "ClassifyAlg",       // Atwood's Insightful Miner analysis
