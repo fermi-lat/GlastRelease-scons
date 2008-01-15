@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r33p11 LSR 15-Jan-08 Another little fix to jobOptions.txt
 * v6r33p10 LSR 15-Jan-08 Add EventAuditor to basicOptions
                          Add placeholder for UserAlg: Sequencer/User
 * v6r33p9  AWB 11-JAN-08 Updated I&T mc.txt with correct ACD calibrations.
