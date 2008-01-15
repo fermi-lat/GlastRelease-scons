@@ -121,6 +121,9 @@ ApplicationMgr.DLLs  += {"EbfWriter","OnboardFilter"};
 Filter.Members       += {"EbfWriter","OnboardFilter","Count/downlink"};  // This guy can cause rejection.
 OnboardFilter.mask    = 0; // All bits off by default: no rejection.
 
+// Reject events if not passed by the filter(s):
+OnboardFilter.RejectEvents = true;
+
 // Real calibrations for the gamma-filter:
 OnboardFilter.FileNamePeds  = "cal_db_pedestals_flight";
 OnboardFilter.FileNameGains = "cal_db_gains_flight";
