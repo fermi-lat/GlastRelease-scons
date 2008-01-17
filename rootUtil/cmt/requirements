@@ -1,5 +1,5 @@
 package rootUtil
-version v1r0
+version v1r1p1
 author David Chamont <chamont@poly.in2p3.fr>
 
 use GlastPolicy v*
@@ -27,12 +27,14 @@ application testRootInterface ../apps/testRootInterface.cxx
 
 macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "
 
+macro testSource "" WIN32 " TestData.cxx "
+
 application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
 application printSkim ../apps/printSkim.cxx $(getoptSource)
 application mergeSkim ../apps/mergeSkim.cxx $(getoptSource)
 
-application testGenerateData ../apps/testGenerateData.cxx $(getoptSource)
-application testMakeCel ../apps/testMakeCel.cxx $(getoptSource)
-application testReadCel ../apps/testReadCel.cxx $(getoptSource)
+application testGenerateData ../apps/testGenerateData.cxx $(testSource) $(getoptSource)
+application testMakeCel ../apps/testMakeCel.cxx $(testSource) $(getoptSource)
+application testReadCel ../apps/testReadCel.cxx $(testSource) $(getoptSource)
 
 

@@ -3,6 +3,9 @@
 @verbatim
 Coordinator:H.Kelly
 
+v1r1p1      17 Jan 2008 HMK Patch to include TestData.cxx in apps to avoid
+            issue with static data members and shared libraries.  We should
+            find a more permanent work around
 v1r1        19-Dec-2007 HMK Many fixes and upgrades from David
             introduces "deep read"
 v1r0        28-Nov-2007 HMK Might be worth bumping the version
