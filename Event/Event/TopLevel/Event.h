@@ -21,6 +21,9 @@ static const CLID& CLID_Event = 110;
 * - event number
 * - time stamp
 * - trigger word
+* - trigger engines
+* - trigger prescales
+* - flag if the prescale expired
 *
 * $Header$
 */
@@ -32,7 +35,8 @@ public:
     /// default constructor: flag all fields invalic
     EventHeader()
         : DataObject(), m_event(0), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1),
-        m_triggerWordTwo((unsigned int)-1) { }
+        m_triggerWordTwo((unsigned int)-1), m_gemPrescale((unsigned int)-1), 
+        m_gltPrescale((unsigned int)-1), m_prescaleExpired((unsigned int)-1){ }
     
     virtual ~EventHeader() { }
     
@@ -65,7 +69,21 @@ public:
     /// update second trigger word
     void setTriggerWordTwo(unsigned int value)                  { m_triggerWordTwo = value; }
     
+    /// Retrieve the GEM prescale
+    unsigned int gemPrescale() const                         {return m_gemPrescale; }
+    /// update the GEM prescale
+    void setGemPrescale(unsigned int value)                  { m_gemPrescale = value; }
  
+    /// Retrieve the GLT prescale
+    unsigned int gltPrescale() const                         {return m_gltPrescale; }
+    /// update second trigger word
+    void setGltPrescale(unsigned int value)                  { m_gltPrescale = value; }
+ 
+    /// Retrieve prescale expired flag
+    unsigned int prescaleExpired() const                         {return m_prescaleExpired; }
+    /// update second trigger word
+    void setPrescaleExpired(unsigned int value)                  { m_prescaleExpired = value; }
+    
     /// Retrieve live time
     double livetime()const                                { return m_livetime;}
     /// update live time
@@ -97,6 +115,12 @@ private:
 
     /// live time
     double              m_livetime;
+    /// GEM trigger prescale
+    unsigned int        m_gemPrescale;
+    /// GLT trigger prescale
+    unsigned int        m_gltPrescale;
+    /// flag if prescale counter expired on this event
+    unsigned int        m_prescaleExpired;
 };
 
 
@@ -139,7 +163,10 @@ inline std::ostream& EventHeader::fillStream( std::ostream& s ) const           
         << m_run
         << "\n    Time         = " << m_time
         << std::setbase(16) << "\n    Trigger      = " << m_trigger
-        << "\n    TriggerWordTwo      = " << m_triggerWordTwo;
+        << "\n    TriggerWordTwo      = " << m_triggerWordTwo
+        << std::setbase(10) << "\n    GEM prescale = " << m_gemPrescale
+        << "\n    GLT prescale = " << m_gltPrescale
+        << "\n    Prescale expired    = " << m_prescaleExpired;
 }
 } // namespace Event
 #endif    // Event_EVENT_H

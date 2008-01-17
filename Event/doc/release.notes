@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v11r24   16-Jan-08 MLK Added trigger prescale info to event header
  * v11r23p6 21-Dec-07 EAC Fix AcdDigi::m_error init on MC
  * v11r23p5 06-Dec-07 EAC Fix AcdHit::getFlags() bits
  * v11r23p4 11-Nov-07 HMK One more inline
