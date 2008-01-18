@@ -468,7 +468,8 @@ Bool_t ConfigReader::getULong(DOMElement& elem, ULong64_t& val) {
     str=Dom::getTextContent(rList[0]);
   }
   // should add check
-  val = (ULong64_t)strtoull(str.c_str(),nullPtr,0);
+//  val = (ULong64_t)strtoull(str.c_str(),nullPtr,0);
+  val = (ULong64_t)facilities::Util::stringToUll(str);
   return kTRUE;
 }
 
