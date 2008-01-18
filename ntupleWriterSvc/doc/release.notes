@@ -3,6 +3,8 @@
  *    * EOH *
  *
  @verbatim
+ * v3r19p1 18-jan-2008  HMK: handle exception if thrown for stringToDouble
+ *         call if processing the jobinfo string
  * v3r19   14-dec-2007  HMK: allow basket size to be set and adjust default
  *         size to 1000000 bytes
  * v3r18   30-oct-2007  HMK: use gr_app

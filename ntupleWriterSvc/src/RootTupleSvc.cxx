@@ -484,11 +484,17 @@ StatusCode RootTupleSvc::finalize ()
         std::map<std::string, std::string > parmap;
         facilities::Util::keyValueTokenize(m_jobInfo.value(), ",", parmap);
         for(  std::map<std::string, std::string >::const_iterator mip = parmap.begin(); mip!=parmap.end(); ++mip){
+            try {
             std::string key (mip->first), value(mip->second);
             // assume all numbers
             values.push_back( facilities::Util::stringToDouble(value) );
             float* fval = &values.back(); 
             addItem(m_jobInfoTreeName, key, fval);
+            } catch(...) {
+               log << MSG::WARNING << "RootTupleSvc exception caught "
+                   << "processing jobinfo " << m_jobInfo.value()  
+                   << "Check string is in form: a=1,b=2,c=3" <<endreq; 
+            }
         }
         // process this row
         saveRow(m_jobInfoTreeName); 
