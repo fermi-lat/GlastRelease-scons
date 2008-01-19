@@ -133,13 +133,13 @@ i.e. 0 = central tower, 1 = side tower, 2 = edge edge tower,
 <td>F<td>   Do not use 
 <tr><td> GltEngine 
 <td>I<td>   The engine number corresponding to GltWord  
-<td><td> GltGemEngine
+<tr><td> GltGemEngine
 <td>I<td>   The engine number corresponding to the GltGemSummary
-<td><td> GltEnginePrescale
+<tr><td> GltEnginePrescale
 <td>I<td>   The GLT prescale factor for the event
-<td><td> GltGemEnginePrescale
+<tr><td> GltGemEnginePrescale
 <td>I<td>   The GEM prescale factor for the event
-<td><td> GltPrescaleExpired
+<tr><td> GltPrescaleExpired
 <td>I<td>   true if the prescale counter expired for this event
 </table>
 */
