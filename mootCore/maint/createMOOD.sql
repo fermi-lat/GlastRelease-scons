@@ -92,4 +92,7 @@ source createVote_aliases.sql;
 ## sui generis
 source createInstrument.sql;
 
+## Acq summary: keys seen and Config believed to be in use
+source createAcq_summary.sql;
+source createAcq_mode.sql;
 

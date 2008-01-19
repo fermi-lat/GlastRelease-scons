@@ -11,6 +11,8 @@ create table Configs
   active_state           ENUM('ACTIVE', 'INACTIVE', 'MULTI') NOT NULL
                            DEFAULT 'INACTIVE' 
   COMMENT 'App  preference for Config of particular name, alg,step,instr',
+  verify_state           VARCHAR(32) NOT NULL DEFAULT 'NOT_VERIFIED'
+    COMMENT 'typical values are NOT_VERIFIED, LAT_VERIFIED, GND_VERIFIED',
   vote_fk INT UNSIGNED 
     COMMENT 'refers to container Vote file describing intent (optional)',
 
