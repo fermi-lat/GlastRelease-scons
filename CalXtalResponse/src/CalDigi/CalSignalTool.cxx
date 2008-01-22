@@ -1,11 +1,7 @@
 // $Header $
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
-// @file
-//
-//
-// Author: Zachary Fewtrell
 
 // LOCAL
 #include "CalSignalTool.h"
@@ -18,7 +14,7 @@
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 #include "CalUtil/CalGeom.h"
 
 // EXTLIB
@@ -44,7 +40,6 @@ CalSignalTool::CalSignalTool(const std::string& type,
                              const std::string& name,
                              const IInterface* parent) 
   : AlgTool(type,name,parent),
-    m_calSignalMap(CalUtil::DiodeIdx::N_VALS),
     m_isValid(false),
     m_evtSvc(0),
     m_eTowerCAL(0),
@@ -113,7 +108,7 @@ StatusCode CalSignalTool::initialize() {
   IIncidentSvc* incSvc;
   sc = service("IncidentSvc", incSvc, true);
   if (sc.isSuccess() ) {
-    incSvc->addListener(this, "BeginEvent");
+    incSvc->addListener(this, "BeginEvent"); // priority not important
   } else {
     msglog << MSG::ERROR << "can't find IncidentSvc" << endreq;
     return sc;
@@ -167,7 +162,7 @@ StatusCode CalSignalTool::retrieveConstants() {
   return StatusCode::SUCCESS;
 }
 
-
+/// zero all internal tables, set m_isValid -> false
 void CalSignalTool::newEvent() {
 
   fill(m_calSignalMap.begin(),
@@ -180,16 +175,6 @@ void CalSignalTool::newEvent() {
 }
 
 
-const ICalSignalTool::CalSignalMap *CalSignalTool::getCalSignalMap() {
-  /// check that all internal data is up2date
-  StatusCode sc = syncData();
-  if (sc.isFailure())
-    return 0;
-
-  return &m_calSignalMap;
-
-}
-
 const ICalSignalTool::CalRelationMap *CalSignalTool::getCalRelationMap() {
   /// check that all internal data is up2date
   StatusCode sc = syncData();
@@ -200,8 +185,10 @@ const ICalSignalTool::CalRelationMap *CalSignalTool::getCalRelationMap() {
 }
 
 /// apply McIntegratingHits to diode signal levels and simulate noise
+/// (only calculate once per event)
 StatusCode CalSignalTool::syncData() {
-  /// return early if we've already calcuated everything for this event
+  /// return early if we've already calcuated everything for this
+  /// event
   if (m_isValid)
     return StatusCode::SUCCESS;
 
@@ -278,7 +265,7 @@ StatusCode CalSignalTool::sumHit(const Event::McIntegratingHit &hit) {
   const XtalIdx xtalIdx(CalXtalId(hit.volumeID()));
 
   // destination for signal data from this hit
-  CalUtil::CalArray<CalUtil::XtalDiode, float> hitSignal(0);
+  CalUtil::CalVec<CalUtil::XtalDiode, float> hitSignal;
 
   // convert the hit into signal level
   StatusCode sc = m_xtalSignalTool->calculate(hit, 
@@ -307,15 +294,6 @@ StatusCode CalSignalTool::registerHitRel(Event::McIntegratingHit &hit) {
 
   return StatusCode::SUCCESS;
 }
-
-/// Inform that a new incident has occured
-void CalSignalTool::handle ( const Incident& inc ) { 
-  if ((inc.type() == "BeginEvent"))
-    newEvent();
-
-  return; 
-}
-
 
 /// apply electronic noise calcuation to entire cal
 StatusCode CalSignalTool::calcNoise() {
@@ -384,7 +362,7 @@ StatusCode CalSignalTool::calcPoissonicNoiseXtal(const CalUtil::XtalIdx xtalIdx)
   if (!calibMPD) return StatusCode::FAILURE;
 
   // store actual mevPerDAC values in usable array.
-  CalArray<DiodeNum, float> mpd;
+  CalVec<DiodeNum, float> mpd;
   mpd[CalUtil::LRG_DIODE] = calibMPD->getBig()->getVal();
   mpd[CalUtil::SM_DIODE]  = calibMPD->getSmall()->getVal();
 
@@ -415,18 +393,22 @@ StatusCode CalSignalTool::calcPoissonicNoiseXtal(const CalUtil::XtalIdx xtalIdx)
 }
 
 
-StatusCode CalSignalTool::getXtalSignalMap(const CalUtil::XtalIdx xtalIdx,
-                                           XtalSignalMap &xtalSignalMap) {
+StatusCode CalSignalTool::getDiodeSignal(const CalUtil::DiodeIdx diodeIdx, float &signal)
+{
   /// check that all internal data is up2date
   StatusCode sc = syncData();
   if (sc.isFailure())
     return 0;
 
-  /// load up xtal array from full cal
-  for (CalUtil::XtalDiode xtalDiode;
-       xtalDiode.isValid();
-       xtalDiode++)
-    xtalSignalMap[xtalDiode] = m_calSignalMap[CalUtil::DiodeIdx(xtalIdx, xtalDiode)];
+  signal = m_calSignalMap[diodeIdx];
   
   return StatusCode::SUCCESS;
+}
+
+/// Inform that a new incident has occured
+void CalSignalTool::handle ( const Incident& inc ) { 
+  if ((inc.type() == "BeginEvent"))
+    newEvent();
+
+  return; 
 }

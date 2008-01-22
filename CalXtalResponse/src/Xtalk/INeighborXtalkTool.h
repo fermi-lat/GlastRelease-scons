@@ -2,6 +2,11 @@
 #define INeighborXtalkTool_h
 //  $Header$
 
+/** @file
+    @author Z.Fewtrell
+*/
+
+
 // LOCAL INCLUDES
 
 // GLAST INCLUDES
@@ -18,13 +23,13 @@ static const InterfaceID IID_INeighborXtalkTool("INeighborXtalkTool", 1, 2);
 
 
 /** 
-    \author Zach Fewtrell
+    \author Z.Fewtrell
 
     \brief Abstract interface class for calculation of electronic crosstalk
     in GLAST Cal originating from neighboring CsI crystal detector element electronics.
 
-	Generally speaking, cross-talk @ any point will depend on a static crosstalk coefficient table & a per-event signal map for the whole cal.
-	Tool implementation will then model crosstalk measured @ any particular channel based on these tables.
+    Generally speaking, cross-talk @ any point will depend on a static crosstalk coefficient table & a per-event signal map for the whole cal.
+    Tool implementation will then model crosstalk measured @ any particular channel based on these tables.
 */
 class INeighborXtalkTool : virtual public IAlgTool {
  public:

@@ -1,26 +1,36 @@
 //  $Header$
+/** @file
+    @author Z.Fewtrell
+*/
+
 #ifndef CalTrigTool_h
 #define CalTrigTool_h
+
+#include "Event/Digi/CalDigi.h"
+#include "GaudiKernel/AlgTool.h"
+
 
 // LOCAL
 #include "CalXtalResponse/ICalTrigTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
-#include "../CalCalib/IPrecalcCalibTool.h"
 #include "CalXtalResponse/ICalSignalTool.h"
+
 
 // GLAST
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
-
+#include "CalUtil/CalVec.h"
+#include "Event/Digi/GltDigi.h"
 
 // EXTLIB
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/IIncidentListener.h"
+
 
 // STD
-#include <cstring>
 
-class ICalSignalTool;
 class IGlastDetSvc;
+class IPrecalcCalibTool;
+class IDataProviderSvc;
+
 
 namespace Event {
   class GltDigi;
@@ -28,11 +38,11 @@ namespace Event {
 
 
 /*! \class CalTrigTool
-  \author Zachary Fewtrell
+  \author Z.Fewtrell
   \brief Default implementation of ICalTrigTool.  Simulates GLAST Cal trigger
-  response based on Cal xtal digi response or signal level
+  response based on either Cal xtal digi response or simulated signal
+  level (from MC)
 
-  provides multiple methods of calculating Cal or single crystal Trigger response.
 
   jobOptions:
   - CalCalibSvc       - cal calibration data source (default="CalCalibSvc")
@@ -42,11 +52,15 @@ namespace Event {
 
 */
 
-class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
- public:
+class CalTrigTool : 
+  public AlgTool, 
+  virtual public ICalTrigTool,
+  virtual public IIncidentListener
+{
+public:
   /// default ctor, declares jobOptions
-  CalTrigTool( const string& type, 
-               const string& name, 
+  CalTrigTool( const std::string& type, 
+               const std::string& name, 
                const IInterface* parent);
 
   /// gets needed parameters and pointers to required services
@@ -54,47 +68,63 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
 
   StatusCode finalize() {return StatusCode::SUCCESS;}
 
-  StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
-                          const CalUtil::CalArray<CalUtil::XtalRng, float> &adcPed,
-                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
-                          Event::GltDigi *glt);
+  /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
+  StatusCode getCALTriggerVector(idents::CalXtalId::DiodeType diode, Event::GltDigi::CalTriggerVec &vec);
 
-  StatusCode calcXtalTrig(const Event::CalDigi& calDigi,
-                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
-                          Event::GltDigi *glt);
+  /// return trigger response for given channel (specify xtal, face & diode)
+  StatusCode getTriggerBit(CalUtil::DiodeIdx diodeIdx, bool &trigBit);
 
+  /// hook the BeginEvent so that we can check our validity once per event.
+  void handle ( const Incident& inc );
 
-  StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
-                          const Event::CalDigi::CalXtalReadout &ro,
-                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
-                          Event::GltDigi *glt);
+private:
 
-  /// calculate trigger response for single crystal from CIDAC diode levels
-  StatusCode calcXtalTrig(CalUtil::XtalIdx xtalIdx,
-                          const ICalSignalTool::XtalSignalMap &cidac,
-                          CalUtil::CalArray<CalUtil::XtalDiode, bool> &trigBits,
-                          Event::GltDigi *glt
-                          );
+  /// update all Cal Trigger bits w/ current TDS data (either MC or
+  /// Digi)
+  StatusCode calcGlobalTrig();
 
+  /// update all Cal Trigger bits w/ current TDS MC data (via CalSignalTool)
+  StatusCode CalTrigTool::calcGlobalTrigSignalTool();
 
-  StatusCode calcGlobalTrig(CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
-                            Event::GltDigi *glt);
+  /// update all Cal Trigger bits w/ current TDS data from CalDigi
+  StatusCode CalTrigTool::calcGlobalTrigDigi(const Event::CalDigiCol &calDigiCol);
 
+  /// call to clear all trigger bits (like @ beginning of event)
+  void newEvent();
 
-  /// register GltDigi object in TDS if it has not been registered already.
-  Event::GltDigi* setupGltDigi();
+  /// set single Cal trigger channel to high, set all corresponding
+  /// records simultaneously.
+  void setSingleBit(const CalUtil::DiodeIdx diodeIdx);
 
- private:
+  /// calculate single xtal trigger response from cal Digi object.
+  /// 
+  /// store results in internal private tables
+  StatusCode calcXtalTrig(const Event::CalDigi& calDigi);
 
-  /// calc full cal trigger response based on CalDigi
-  StatusCode calcGlobalTrig(Event::CalDigiCol const &calDigiCol,
-                            CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
-                            Event::GltDigi *glt);
+  /// calculate trigger response for single crystal from CIDAC diode
+  /// levels
+  /// 
+  /// store results in internal private tables
+  StatusCode calcXtalTrigSignalTool(const CalUtil::XtalIdx xtalIdx);
 
-  /// calc full cal trigger response based on McHits, using CalSignalTool
-  StatusCode calcGlobalTrigSignalTool(CalUtil::CalArray<CalUtil::DiodeNum, bool> &trigBits,
-                                      Event::GltDigi *glt);
+  /// calculate trigger response from single crystal readout
+  StatusCode calcXtalTrig(const CalUtil::XtalIdx xtalIdx,
+                          const Event::CalDigi::CalXtalReadout &ro);
 
+  /// calculate trigger response from pedestal subtracted adc values
+  /// for all 8 adc channels
+  StatusCode calcXtalTrig(const CalUtil::XtalIdx xtalIdx,
+                          const CalUtil::CalVec<CalUtil::XtalRng, float> &adcPed);
+
+  /// store trigger values for each channel in Cal
+  typedef CalUtil::CalVec<CalUtil::DiodeIdx, bool> CalTriggerMap;
+
+  /// store trigger values for each channel in Cal
+  CalTriggerMap m_calTriggerMap;
+
+  /// store FLE trigger vector for each tower in cal
+  CalUtil::CalVec<CalUtil::DiodeNum,
+                  Event::GltDigi::CalTriggerVec> m_calTriggerVec;
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      
@@ -120,6 +150,9 @@ class CalTrigTool : public AlgTool, virtual public ICalTrigTool {
 
   /// list of active tower bays, populated at run time
   std::vector<CalUtil::TwrNum> m_twrList;
+
+  /// if current private data store is valid
+  bool m_isValid;
 
 };
 

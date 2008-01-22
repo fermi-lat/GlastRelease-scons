@@ -1,13 +1,16 @@
 #ifndef XtalRecTool_h
 #define XtalRecTool_h
 // $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 
 // LOCAL
 #include "CalXtalResponse/IXtalRecTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Digi/CalDigi.h"
 
@@ -15,10 +18,9 @@
 #include "GaudiKernel/AlgTool.h"
 
 // STD
-#include <cstring>
 
 /*! @class XtalRecTool
-  \author Zachary Fewtrell
+  \author Z.Fewtrell
   \brief Simple implementation of IXtalRecTool.  
 
   Calculate crystal energy level and centroid from single CalDigi object.
@@ -49,10 +51,11 @@ public:
 
   StatusCode finalize() {return StatusCode::SUCCESS;}
 
+  /// generate hit reconstruction for single Cal Crystal
   StatusCode calculate(const Event::CalDigi &digi,
                        Event::CalXtalRecData &xtalRec,
-                       CalUtil::CalArray<CalUtil::FaceNum, bool> &belowNoise,
-                       CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
+                       CalUtil::CalVec<CalUtil::FaceNum, bool> &belowNoise,
+                       CalUtil::CalVec<CalUtil::FaceNum, bool> &saturated,
                        INeighborXtalkTool const*const xtalkTool=0);
 
 
@@ -63,8 +66,8 @@ private:
   /// \return 0 on failure. pointer to new object on success (caller is responsible for deallocation of returned CalRangeRecData object.
   Event::CalXtalRecData::CalRangeRecData *createRangeRecon(const CalUtil::XtalIdx xtalIdx,
                                                            const Event::CalDigi::CalXtalReadout &ro,
-                                                           CalUtil::CalArray<CalUtil::FaceNum, bool> &belowNoise,
-                                                           CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
+                                                           CalUtil::CalVec<CalUtil::FaceNum, bool> &belowNoise,
+                                                           CalUtil::CalVec<CalUtil::FaceNum, bool> &saturated,
                                                            INeighborXtalkTool const*const xtalkTool) const;
 
   /** \brief convert large diode CIDAC scale to small diode CIDAC scale

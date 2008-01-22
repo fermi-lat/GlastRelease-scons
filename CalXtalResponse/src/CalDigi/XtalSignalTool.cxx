@@ -1,7 +1,7 @@
 //    $Header$
 
 /** @file implement XtalSignalTool.h
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 
 // Include files
@@ -52,14 +52,11 @@ XtalSignalTool::XtalSignalTool( const std::string& type,
     m_eDiodeMSm(0),
     m_eDiodePSm(0),
     m_eDiodeMLarge(0),
-    m_eDiodePLarge(0),
-    m_tuple(0),
-    m_evtSvc(0)    
+    m_eDiodePLarge(0)
 {
   declareInterface<IXtalSignalTool>(this);
 
   declareProperty("CalCalibSvc",        m_calCalibSvcName    = "CalCalibSvc");
-  declareProperty("tupleFilename",      m_tupleFilename      = "");
 }
 
 StatusCode XtalSignalTool::initialize() {
@@ -139,55 +136,12 @@ StatusCode XtalSignalTool::retrieveConstants() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode XtalSignalTool::initTuple() {
-  // open optional tuple file
-  if (m_tupleFilename.value().length() > 0 ) {
-    m_tupleFile.reset(new TFile(m_tupleFilename.value().c_str(),"RECREATE","XtalSignalTuple"));
-    if (!m_tupleFile.get()) {
-      // allow to continue w/out tuple file as it is not a _real_ failure
-      MsgStream msglog(msgSvc(), name());   
-      msglog << MSG::ERROR << "Unable to create TTree object: " << m_tupleFilename << endreq;
-    
-    } else {
-      m_tuple = new TTree("XtalSignalTuple","XtalSignalTuple");
-      if (!m_tuple) {
-        MsgStream msglog(msgSvc(), name());   
-        msglog << MSG::ERROR << "Unable to create tuple" << endreq;
-        return StatusCode::FAILURE;
-      }
-
-      //-- Add Branches to tree --//
-      if (!m_tuple->Branch("RunID",          &m_dat.RunID,             "RunID/i")            ||
-          !m_tuple->Branch("EventID",        &m_dat.EventID,           "EventID/i")          ||
-          !m_tuple->Branch("XtalIdx",        &m_dat.xtalIdx,            "xtalIdx/i")          ||
-          !m_tuple->Branch("mpd",            m_dat.mpd.begin(),        "mpd[2]/F")           ||
-          !m_tuple->Branch("diodeCIDAC",      m_dat.diodeCIDAC.begin(),"diodeCIDAC[2][2]/F")) {
-        MsgStream msglog(msgSvc(), name());   
-        msglog << MSG::ERROR << "Couldn't create tuple branch" << endreq;
-        return StatusCode::FAILURE;
-      }
-    }
- 
-    //-- Retreive EventDataSvc (used by tuple)
-    StatusCode sc = serviceLocator()->service( "EventDataSvc", m_evtSvc, true );
-    if(sc.isFailure()) {
-      MsgStream msglog(msgSvc(), name());   
-      msglog << MSG::ERROR << "Could not find EventDataSvc" << endreq;
-      return sc;
-    }
-
-
-  } // optional tuple
-
-  return StatusCode::SUCCESS;
-}
-
 /**
    convert energy deposit to diode signal levels in CIDAC (charge injection DAC) units.
    Use asymmetry and MeVPerDAC calibrations to calculate signal level for each diode.
  */
 StatusCode XtalSignalTool::calculate(const Event::McIntegratingHit &hit,
-                                     CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray) {
+                                     CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray) {
   StatusCode sc;
 
   m_dat.Clear();
@@ -206,7 +160,7 @@ StatusCode XtalSignalTool::calculate(const Event::McIntegratingHit &hit,
   m_dat.mpd[CalUtil::SM_DIODE]  = mpd->getSmall()->getVal();
       
   // get volume identifier.
-  idents::VolumeIdentifier volId((idents::VolumeIdentifier)hit.volumeID());
+  const idents::VolumeIdentifier volId((idents::VolumeIdentifier)hit.volumeID());
       
   // make sure the hits are cal hits
   if (!volId.isCal()) {
@@ -214,14 +168,7 @@ StatusCode XtalSignalTool::calculate(const Event::McIntegratingHit &hit,
      msglog << MSG::WARNING << "mcHit is not Cal." << endreq ;
      return StatusCode::SUCCESS;
   }
-      
-  // make sure volumeid matches CalXtalId
-  const idents::CalXtalId volXtalId(volId);
-  if (volXtalId != xtalId) {
-     MsgStream msglog( msgSvc(), name() );
-     msglog << MSG::WARNING << "volume id does not match xtalId.  Programmer error." << endreq ;
-     return StatusCode::FAILURE;
-  }
+
     
   //--XTAL DEPOSIT--//
   if((int)volId[CalUtil::fCellCmp] ==  m_eXtal ) {
@@ -234,33 +181,16 @@ StatusCode XtalSignalTool::calculate(const Event::McIntegratingHit &hit,
     if (sc.isFailure()) return sc;
   }
   
-  //-- Populate XtalSignalTuple vars (optional)
-  // following steps only needed if tuple output is selected
-  if (m_tuple) {
-    // get pointer to EventHeader (has runId, evtId, etc...)
-    Event::EventHeader *evtHdr = 0;
-    if (m_evtSvc) {
-      evtHdr = SmartDataPtr<Event::EventHeader>(m_evtSvc, EventModel::EventHeader) ;
-      if (!evtHdr) {
-        MsgStream msglog( msgSvc(), name() );
-        msglog<<MSG::ERROR<<"Event header not found !"<<endreq ;
-      }
-      
-      m_dat.RunID   = evtHdr->run();
-      m_dat.EventID = evtHdr->event();
-
-      std::copy(cidacArray.begin(), cidacArray.end(), m_dat.diodeCIDAC.begin());
-    }
-
-    // instruct tuple to fill
-    m_tuple->Fill();
-  }
-
   return StatusCode::SUCCESS;
 }
 
+/**
+   Algorithm has following steps:
+   - determine mean cidac signal using mevPerDAC calibrations
+   - sum indivual diode signal levels in propotion to light asymmetry calibration
+ */
 StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
-                                     CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray) {
+                                     CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray) {
 
   StatusCode sc;
 
@@ -277,6 +207,7 @@ StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
   sc = m_calCalibSvc->evalAsym(m_dat.xtalIdx, CalUtil::ASYM_SS, realpos, asymS);
   if (sc.isFailure()) return sc;
 
+  //-- DETERMINE MEAN CIDAC SIGNAL LEVEL --//
   const float meanCIDACS = ene/m_dat.mpd[CalUtil::SM_DIODE];
   const float meanCIDACL = ene/m_dat.mpd[CalUtil::LRG_DIODE];
 
@@ -287,12 +218,23 @@ StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
   //   p=exp(asym/2)*mean
   //   n=exp(-asym/2)*mean
 
-  // sum energy to each diode
+  //-- SUM ENERGY TO EACH DIODE --//
   using namespace CalUtil;
   cidacArray[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * meanCIDACL;
   cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * meanCIDACL;
   cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * meanCIDACS;
   cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * meanCIDACS;
+
+#if 0 // debug printing
+  cout << "XtalSignalTool::sumCsIHit(): " << m_dat.xtalIdx.toStr() 
+	   << " " << ene
+	   << " " << realpos
+	   << " " << asymL
+	   << " " << asymS
+       << endl;
+  for (XtalDiode xDiode;xDiode.isValid(); xDiode++)
+	  cout << " " << xDiode.val() << " " << cidacArray[xDiode] << endl;
+#endif
 
   return StatusCode::SUCCESS;
 }
@@ -317,7 +259,7 @@ float XtalSignalTool::hit2pos(const Event::McIntegratingHit &hit) {
 }
 
 StatusCode XtalSignalTool::sumDiodeHit(const Event::McIntegratingHit &hit,
-                                       CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray) {
+                                       CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray) {
 
   StatusCode sc;
         
@@ -368,11 +310,6 @@ StatusCode XtalSignalTool::sumDiodeHit(const Event::McIntegratingHit &hit,
 }
 
 StatusCode XtalSignalTool::finalize() {
-  // make sure optional tuple is closed out                                                        
-  if (m_tupleFile.get()) {
-    m_tupleFile->Write();
-    m_tupleFile->Close(); // trees deleted                                                         
-  }
 
   return StatusCode::SUCCESS;
 }

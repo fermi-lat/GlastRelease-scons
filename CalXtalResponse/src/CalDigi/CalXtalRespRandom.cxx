@@ -1,4 +1,7 @@
 // $Header$
+/** @file 
+    @author Z.Fewtrell
+*/
 
 #include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
 #include "GlastSvc/GlastRandomSvc/RandomAccess.h"

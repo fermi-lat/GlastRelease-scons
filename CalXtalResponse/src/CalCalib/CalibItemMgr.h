@@ -1,6 +1,9 @@
 #ifndef CalibItemMgr_H
 #define CalibItemMgr_H
-// $Header $
+// $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 
 // LOCAL
 #include "IdealCalCalib.h"
@@ -10,7 +13,6 @@
 #include "CalibData/RangeBase.h"
 #include "CalibData/Cal/CalCalibBase.h"
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
 #include "CalUtil/CalVec.h"
 
 // EXTLIB
@@ -20,12 +22,12 @@
 
 // STD
 #include <string>
-#include <algorithm>
+#include <vector>
 
 class CalCalibSvc;
 
 /** @class CalibItemMgr
-    @author Zach Fewtrell
+    @author Z.Fewtrell
     \brief abstract class for handling a single Cal calibration data type.
 
     provides the following services: 
@@ -36,16 +38,25 @@ class CalCalibSvc;
 */
 class CalibItemMgr {
 public:
+  /// \param calibItem TDS path to calibration data to be managed
+  /// \param ccsShared CalCalibSvc shared resources
+  /// \param indexSize number of channels to manage (array size)
+  /// \param nSplineTypes number of splines per channel
   CalibItemMgr(const ICalibPathSvc::CalibItem calibItem,
-               CalCalibShared &ccsShared,
-               const int nSplineTypes=0) : 
+               const CalCalibShared &ccsShared,
+               const size_t indexSize,
+               const size_t nSplineTypes=0) : 
     m_calibItem(calibItem),
     m_calibBase(0),
     m_ccsShared(ccsShared),
     m_idealMode(false),
-    m_splineLists(nSplineTypes),
-    m_splineXMin(nSplineTypes),
-    m_splineXMax(nSplineTypes),
+    /// size of inner array is known only by base class
+    m_splineLists(nSplineTypes,CalUtil::CalVec<CalUtil::LATWideIndex, TSpline3*>(indexSize)), 
+    m_splineXMin(nSplineTypes,CalUtil::CalVec<CalUtil::LATWideIndex, float>(indexSize)),
+    m_splineXMax(nSplineTypes,CalUtil::CalVec<CalUtil::LATWideIndex, float>(indexSize)),
+    m_splineYMin(nSplineTypes,CalUtil::CalVec<CalUtil::LATWideIndex, float>(indexSize)),
+    m_splineYMax(nSplineTypes,CalUtil::CalVec<CalUtil::LATWideIndex, float>(indexSize)),
+    m_rngBases(indexSize),
     m_isValid(false),
     m_serNo(SERNO_NODATA)
   {}
@@ -104,7 +115,7 @@ protected:
   CalibData::CalCalibBase *m_calibBase;
 
   /// ref to data shared by all classes used by CalibDataSvc
-  CalCalibShared &m_ccsShared;
+  const CalCalibShared &m_ccsShared;
 
   /// boolean if we're in ideal 'fake' mode
   bool m_idealMode;
@@ -115,14 +126,18 @@ protected:
   std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, float> >         m_splineXMin;
   /// max X val for each (optional) spline in local data store
   std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, float> >         m_splineXMax;
+  /// min Y val for each (optional) spline in local data store
+  std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, float> >         m_splineYMin;
+  /// max Y val for each (optional) spline in local data store
+  std::vector<CalUtil::CalVec<CalUtil::LATWideIndex, float> >         m_splineYMax;
 
   /// pointers to each data member for my calib_type                                                                                                                                                       
-  CalUtil::CalVec<CalUtil::LATWideIndex, CalibData::RangeBase* > m_rngBases;
+  CalUtil::CalVec<CalUtil::LATWideIndex, const CalibData::RangeBase* > m_rngBases;
 
   /** retrieve spec'd rangeBase object, update if necessary
       \return NULL if there is no data 
   */
-  CalibData::RangeBase *getRangeBase(idents::CalXtalId xtalId) {
+  const CalibData::RangeBase *getRangeBase(const idents::CalXtalId xtalId) {
     return m_calibBase->getRange(xtalId);
   }
     
@@ -134,6 +149,7 @@ protected:
 private:
   /// wipe out locally stored data (e.g. splines)
   void clearLocalStore();      
+
   /// calib flavor
   std::string            m_flavor;     
   /// validity state of CalibItemMgr data

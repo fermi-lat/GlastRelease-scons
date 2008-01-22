@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 // LOCAL
 #include "IntNonlinMgr.h"
@@ -19,14 +19,9 @@ using namespace idents;
 IntNonlinMgr::IntNonlinMgr(CalCalibShared &ccsShared) : 
   CalibItemMgr(ICalibPathSvc::Calib_CAL_IntNonlin, 
                ccsShared,
+               CalUtil::RngIdx::N_VALS,
                N_SPLINE_TYPES)
 {
-  // set size of spline lists (1 per range)
-  for (unsigned i = 0; i < m_splineLists.size(); i++) {
-    m_splineLists[i].resize(RngIdx::N_VALS, 0);
-    m_splineXMin[i].resize (RngIdx::N_VALS, 0);
-    m_splineXMax[i].resize (RngIdx::N_VALS, 0);
-  }
 }
 
 const vector<float> *IntNonlinMgr::getInlAdc(const CalUtil::RngIdx rngIdx) {
@@ -35,7 +30,7 @@ const vector<float> *IntNonlinMgr::getInlAdc(const CalUtil::RngIdx rngIdx) {
   sc = updateCalib();
   if (sc.isFailure()) return NULL;
 
-  const CalibData::IntNonlin *inl = (CalibData::IntNonlin*)m_rngBases[rngIdx];
+  CalibData::IntNonlin const*const inl = (CalibData::IntNonlin*)m_rngBases[rngIdx];
 
   if (!inl) return NULL;
 
@@ -43,11 +38,15 @@ const vector<float> *IntNonlinMgr::getInlAdc(const CalUtil::RngIdx rngIdx) {
 
 }
 
-const vector<float> *IntNonlinMgr::getInlCIDAC(CalUtil::RngIdx rngIdx) {
+const vector<float> *IntNonlinMgr::getInlCIDAC(const CalUtil::RngIdx rngIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
   if (sc.isFailure()) return NULL;
+
+  // return 0 if array is empty
+  if (m_CIDACs[rngIdx].size() == 0)
+	  return NULL;
 
   return &(m_CIDACs[rngIdx]);
 }
@@ -62,12 +61,9 @@ inline Ty extrap(Ty x1, Ty x2, Ty x3, Ty y1, Ty y2) {
 
 
 StatusCode IntNonlinMgr::genLocalStore() {
-
-  m_rngBases.resize(RngIdx::N_VALS, 0);
-
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
     const vector<float> *adc;
-    RngNum rng = rngIdx.getRng();
+    const RngNum rng = rngIdx.getRng();
 
     //-- IDEAL MODE --//
     if (m_idealMode) {
@@ -84,7 +80,7 @@ StatusCode IntNonlinMgr::genLocalStore() {
     
     //-- NORMAL (NON-IDEAL) MODE -//
     else {
-      CalibData::IntNonlin *intNonlin 
+      CalibData::IntNonlin const*const intNonlin 
         = (CalibData::IntNonlin *)getRangeBase(rngIdx.getCalXtalId());
       // support partial LAT
       if (!intNonlin) continue;
@@ -109,7 +105,7 @@ StatusCode IntNonlinMgr::genLocalStore() {
       //-- 2nd choise, fall back to global 'DacCol' info
       else {
         //get collection of associated DAC vals
-        CalibData::DacCol *intNonlinDacCol = 
+        CalibData::DacCol const*const intNonlinDacCol = 
           m_calibBase->getDacCol((CalXtalId::AdcRange)rng);
         
         const vector<unsigned> *globalCIDACs;
@@ -179,7 +175,7 @@ StatusCode IntNonlinMgr::genLocalStore() {
 }
 
 StatusCode IntNonlinMgr::loadIdealVals() {
-  const int maxADC = 4095;
+  const unsigned short maxADC = 4095;
 
   //-- SANITY CHECKS --//
   if (m_ccsShared.m_idealCalib.inlADCPerCIDAC.size() != RngNum::N_VALS) {
@@ -195,12 +191,20 @@ StatusCode IntNonlinMgr::loadIdealVals() {
   vector<float> idealADCs(2);
   vector<float> idealCIDACs(2);
   for (RngNum rng; rng.isValid(); rng++) {
+    // inl spline is pedestal subtracted.
+    const float pedestal = m_ccsShared.m_idealCalib.pedVals[rng.val()];
+    float maxADCPed = maxADC - pedestal;
+
+    // optionally clip MAX ADC in HEX1 range to ULD value supplied by tholdci
+    if (rng == HEX1)
+      maxADCPed = min<float>(maxADCPed, m_ccsShared.m_idealCalib.ciULD[HEX1.val()]);
+
     idealADCs[0] = 0;
-    idealADCs[1] = maxADC;
+    idealADCs[1] = maxADCPed;
 
     idealCIDACs[0] = 0;
     idealCIDACs[1] = 
-      (unsigned int)(maxADC / m_ccsShared.m_idealCalib.inlADCPerCIDAC[rng.val()]);
+      maxADCPed / m_ccsShared.m_idealCalib.inlADCPerCIDAC[rng.val()];
 
     m_idealINL[rng].reset(new CalibData::IntNonlin(&idealADCs, 0, &idealCIDACs));
   }
@@ -209,7 +213,7 @@ StatusCode IntNonlinMgr::loadIdealVals() {
 }
 
 
-bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
+bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin const*const intNonlin) {
   if (!intNonlin) return false;
 
   //get vector of vals
@@ -218,4 +222,25 @@ bool IntNonlinMgr::validateRangeBase(CalibData::IntNonlin *intNonlin) {
     return false;
 
   return true;
+}
+
+
+StatusCode IntNonlinMgr::evalCIDAC(const CalUtil::RngIdx rngIdx, const float adc, float &cidac) {
+    if (evalSpline(INL_SPLINE, rngIdx, adc, cidac).isFailure())
+        return StatusCode::FAILURE;
+
+    // ceiling check
+    cidac = min(m_splineYMax[INL_SPLINE][rngIdx],cidac);
+
+    return StatusCode::SUCCESS;
+  }
+  
+StatusCode IntNonlinMgr::evalADC(const CalUtil::RngIdx rngIdx, const float cidac, float &adc) {
+    if (evalSpline(INV_INL_SPLINE, rngIdx, cidac, adc).isFailure())
+        return StatusCode::FAILURE;
+
+    // ceiling check
+    adc = min(m_splineYMax[INV_INL_SPLINE][rngIdx],adc);
+
+    return StatusCode::SUCCESS;
 }

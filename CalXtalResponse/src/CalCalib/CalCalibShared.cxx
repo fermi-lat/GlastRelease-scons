@@ -1,3 +1,7 @@
+// $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 
 // LOCAL INCLUDES
 #include "CalCalibShared.h"
@@ -9,6 +13,7 @@
 
 // STD INCLUDES
 
+/// intialize / retrieve all Gaudi based member values
 StatusCode CalCalibShared::initialize(Service &service) {
   StatusCode sc;
 

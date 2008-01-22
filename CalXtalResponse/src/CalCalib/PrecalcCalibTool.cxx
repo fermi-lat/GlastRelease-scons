@@ -1,5 +1,12 @@
+// $Header$
+/** @file
+    @author Z.Fewtrell
+*/
+
+
 // LOCAL INCLUDES
 #include "PrecalcCalibTool.h"
+#include "CalCalibSvc.h"
 
 // GLAST INCLUDES
 
@@ -57,6 +64,7 @@ PrecalcCalibTool::PrecalcCalibTool( const string& type,
        BAD_FLOAT);
 }
 
+/// intialize / retrieve all needed Gaudi based objects
 StatusCode PrecalcCalibTool::initialize() {
   MsgStream msglog(msgSvc(), name());   
   msglog << MSG::INFO << "initialize" << endreq;
@@ -76,12 +84,11 @@ StatusCode PrecalcCalibTool::initialize() {
     return sc;
   }
 
-
   // Get ready to listen for BeginEvent
   IIncidentSvc* incSvc;
   sc = service("IncidentSvc", incSvc, true);
   if (sc.isSuccess() ) {
-    int priority = 50;  // this should be lower priority (higher #?) than CalibDataSvc
+    int priority = CalCalibSvc::INCIDENT_PRIORITY+1;  // this should be lower priority (higher #?) than CalCalibSvc
     incSvc->addListener(this, "BeginEvent", priority);
   } else {
     msglog << MSG::ERROR << "can't find IncidentSvc" << endreq;

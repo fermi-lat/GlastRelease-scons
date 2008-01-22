@@ -1,5 +1,9 @@
 #ifndef CalCalibShared_h
 #define CalCalibShared_h
+// $Header$
+/** @file 
+    @author Z.Fewtrell
+*/
 
 // LOCAL INCLUDES
 #include "IdealCalCalib.h"

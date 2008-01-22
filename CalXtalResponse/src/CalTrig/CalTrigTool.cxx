@@ -1,21 +1,23 @@
 // $Header$
 
 // Include files
+
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
+
 
 // LOCAL
 #include "CalTrigTool.h"
 #include "CalXtalResponse/ICalSignalTool.h"
+#include "../CalCalib/IPrecalcCalibTool.h"
 
 // GLAST
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
-#include "Event/Digi/GltDigi.h"
 #include "Event/Digi/CalDigi.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalGeom.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -24,6 +26,9 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // STD
 #include <algorithm>
@@ -37,14 +42,15 @@ using namespace idents;
 static ToolFactory<CalTrigTool> s_factory;
 const IToolFactory& CalTrigToolFactory = s_factory;
 
-CalTrigTool::CalTrigTool( const string& type,
-                          const string& name,
+CalTrigTool::CalTrigTool( const std::string& type,
+                          const std::string& name,
                           const IInterface* parent)
   : AlgTool(type,name,parent),
     m_calCalibSvc(0),
     m_evtSvc(0),
     m_calSignalTool(0),
-    m_detSvc(0)
+    m_detSvc(0),
+    m_isValid(false)
 {
   declareInterface<ICalTrigTool>(this);
 
@@ -83,7 +89,8 @@ StatusCode CalTrigTool::initialize() {
     return sc;
   }
 
-  sc = toolSvc()->retrieveTool(m_calSignalToolName,
+  sc = toolSvc()->retrieveTool("CalSignalTool",
+                               m_calSignalToolName,
                                m_calSignalTool,
                                0); // intended to be shared
   if (sc.isFailure() ) {
@@ -100,7 +107,7 @@ StatusCode CalTrigTool::initialize() {
   }
 
   //-- find out which tems are installed.
-  m_twrList = CalUtil::findActiveTowers(*m_detSvc);
+  m_twrList = findActiveTowers(*m_detSvc);
 
   //-- Retreive EventDataSvc
   sc = serviceLocator()->service( "EventDataSvc", m_evtSvc, true );
@@ -109,9 +116,196 @@ StatusCode CalTrigTool::initialize() {
     return sc;
   }
 
+  // Get ready to listen for BeginEvent
+  IIncidentSvc* incSvc;
+  sc = service("IncidentSvc", incSvc, true);
+  if (sc.isSuccess() ) {
+    incSvc->addListener(this, "BeginEvent"); // priority not important
+  } else {
+    msglog << MSG::ERROR << "can't find IncidentSvc" << endreq;
+    return sc;
+  }
 
   return StatusCode::SUCCESS;
 }
+
+StatusCode CalTrigTool::calcGlobalTrig() {
+  // return success if data is valid for current event
+  if (m_isValid)
+    return StatusCode::SUCCESS;
+
+  // 1st check for presense of mc
+  SmartDataPtr<Event::McIntegratingHitVector> mcHits(m_evtSvc, EventModel::MC::McIntegratingHitCol);
+  if (mcHits != 0) {
+    if (calcGlobalTrigSignalTool().isFailure())
+      return StatusCode::FAILURE;
+  }
+  
+  // else calc with cal digis
+  else {
+    SmartDataPtr<Event::CalDigiCol> calDigiCol(m_evtSvc, EventModel::Digi::CalDigiCol);
+    if (calDigiCol == 0) {
+      MsgStream msglog(msgSvc(), name());   
+      msglog << MSG::WARNING << "Unable to retrieve cal digis (or MC) for cal trigger processing" << endreq;
+
+      return StatusCode::FAILURE;
+    }
+
+    if (calcGlobalTrigDigi(calDigiCol).isFailure())
+      return StatusCode::FAILURE;
+  }
+  m_isValid = true;
+
+  return StatusCode::SUCCESS;
+}
+
+
+/** Loop through digiCol & call calcXtalTrig() on each digi readout. */
+StatusCode CalTrigTool::calcGlobalTrigDigi(const Event::CalDigiCol &calDigiCol) {
+  StatusCode sc;
+
+  // loop over all calorimeter digis in CalDigiCol
+  for (CalDigiCol::const_iterator digiIter = calDigiCol.begin(); 
+       digiIter != calDigiCol.end(); digiIter++) {
+    sc = calcXtalTrig(**digiIter);
+    if (sc.isFailure()) return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+
+/// loop through all crystals in installed towers, get signal level for each from CalSignalTool, calc trig resonse one by one
+StatusCode CalTrigTool::calcGlobalTrigSignalTool() {
+  /// Loop through (installed) towers and crystals; 
+  for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
+    // get bay id of nth live tower
+    const TwrNum twr(m_twrList[twrSeq]);
+    for (LyrNum lyr; lyr.isValid(); lyr++)
+      for (ColNum col; col.isValid(); col++) {
+        
+        // assemble current calXtalId
+        const XtalIdx xtalIdx(twr.val(),
+                              lyr.val(),
+                              col.val());
+
+        StatusCode sc = calcXtalTrigSignalTool(xtalIdx);
+        if (sc.isFailure())
+          return sc;
+      } // xtal loop
+  } // twr loop
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CalTrigTool::calcXtalTrigSignalTool(const XtalIdx xtalIdx) {
+  StatusCode sc;
+
+  // get threholds
+  for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
+    const DiodeIdx diodeIdx(xtalIdx, xDiode);
+
+    /// get threshold
+    float thresh;
+    sc = m_precalcCalibTool->getTrigCIDAC(diodeIdx, thresh);
+    if (sc.isFailure()) return sc;
+
+    /// get signal level
+    float signal;
+    sc = m_calSignalTool->getDiodeSignal(diodeIdx, signal);
+    if (sc.isFailure()) return sc;
+
+    if (signal >= thresh)
+      setSingleBit(diodeIdx);
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+/**
+   The purpose of this function is to call through to overloaded routines of the same 
+   name which specialize in either 1, or 4 range readout for the GLAST Cal.
+*/
+StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi) {
+  const XtalIdx xtalIdx(calDigi.getPackedId());
+
+  //-- CASE 1: SINGLE READOUT MODE --//
+  // if anything but 4 range mode, simply process 0th readout
+  if (calDigi.getMode() != CalXtalId::ALLRANGE) {
+    Event::CalDigi::CalXtalReadout const*const ro = calDigi.getXtalReadout(0);
+    if (!ro) {
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::ERROR << "Empty CalDigi (no '0' readout)" << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    return calcXtalTrig(xtalIdx, *ro);
+  }
+
+  //-- CASE 2: 4RANGE READOUT MODE --//
+  else {
+    //-- store ped subtracted adc vals --//
+    CalVec<XtalRng, float> adcPed;
+
+    //-- copy over CalDigi data from all available ranges --//
+  
+    for (FaceNum face; face.isValid(); face++)
+      for (CalDigi::CalXtalReadoutCol::const_iterator ro = 
+             calDigi.getReadoutCol().begin();
+           ro != calDigi.getReadoutCol().end();
+           ro++) {
+        const RngNum rng((*ro).getRange(face));
+      
+        //-- retrieve pedestals --//
+        const RngIdx rngIdx(xtalIdx,
+                            face, rng);
+
+        Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
+        if (!ped) return StatusCode::FAILURE;
+        
+        adcPed[XtalRng(face, rng)]  = 
+          (*ro).getAdc(face) - ped->getAvr();
+      }
+
+    return calcXtalTrig(xtalIdx, adcPed);
+  }
+}
+
+/// set all appropriate internal trigger bits
+void CalTrigTool::setSingleBit(const CalUtil::DiodeIdx diodeIdx) {
+  /// full trigger map
+  m_calTriggerMap[diodeIdx] = true;
+  
+  /// cal trigger vectors
+  const DiodeNum diode(diodeIdx.getDiode());
+  const TwrNum twr(diodeIdx.getTwr());
+  m_calTriggerVec[diode] |= (1 << twr.val());
+
+}
+
+
+StatusCode CalTrigTool::getCALTriggerVector(const idents::CalXtalId::DiodeType diode, Event::GltDigi::CalTriggerVec &vec) {
+  /// update internal tables
+  StatusCode sc(calcGlobalTrig());
+  if (sc.isFailure())
+    return sc;
+
+  vec = m_calTriggerVec[DiodeNum(diode)];
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CalTrigTool::getTriggerBit(const CalUtil::DiodeIdx diodeIdx, bool &trigBit) {
+  /// update internal tables
+  StatusCode sc(calcGlobalTrig());
+  if (sc.isFailure())
+    return sc;
+
+  trigBit = m_calTriggerMap[diodeIdx];
+
+  return StatusCode::SUCCESS;
+}
+
 
 /** 
     b/c we only have 1 range readout per face as input, the most consistent
@@ -120,20 +314,14 @@ StatusCode CalTrigTool::initialize() {
     comparing the same units.  MeV readout -vs- MeV theshold regardless of 
     which adc range was recorded.
 */
-
-StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
-                                     const CalDigi::CalXtalReadout &ro,
-                                     CalArray<XtalDiode, bool> &trigBits,
-                                     Event::GltDigi *glt
-                                     ) {
+StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
+                                     const CalDigi::CalXtalReadout &ro) {
   StatusCode sc;
 
-  fill(trigBits.begin(), trigBits.end(), false);
-  
   for (FaceNum face; face.isValid(); face++) {
-    FaceIdx faceIdx(xtalIdx, face);
-    XtalDiode xDiodeLrg(face, LRG_DIODE);
-    XtalDiode xDiodeSm(face,  SM_DIODE);
+    const FaceIdx faceIdx(xtalIdx, face);
+    const XtalDiode xDiodeLrg(face, LRG_DIODE);
+    const XtalDiode xDiodeSm(face,  SM_DIODE);
 
     // FLE //
     //-- RETRIEVE THESHOLD CALIB (per-face) --//
@@ -158,12 +346,8 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     if (sc.isFailure()) return sc;
 
     // set trigger bit
-    if (ene >= fleMeV) {
-      trigBits[xDiodeLrg] = true;
-      // optionally populate GltDigi
-      if (glt)
-        glt->setCALLOtrigger(faceIdx.getCalXtalId());
-    }
+    if (ene >= fleMeV)
+      setSingleBit(diodeIdx);
 
     // FHE //
     //-- RETRIEVE THESHOLD CALIB (per-face) --//
@@ -173,36 +357,27 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     if (sc.isFailure()) return sc;
 
     // set trigger bit
-    if (ene >= fheMeV) {
-      trigBits[xDiodeSm] = true;
-      // optionally populate GltDigi
-      if (glt)
-        glt->setCALHItrigger(faceIdx.getCalXtalId());
-    }
+    if (ene >= fheMeV)
+      setSingleBit(diodeIdx);
   } // face loop
   
   return StatusCode::SUCCESS;
 }
 
-
 /**
    b/c we have all 4 adc range readouts, the stategy of this function is simple...
    for each threshold, simply check the appropriate adc readout for comparison.
 */
-StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
-                                     const CalArray<XtalRng, float> &adcPed,
-                                     CalArray<XtalDiode, bool> &trigBits,
-                                     Event::GltDigi *glt
+StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
+                                     const CalVec<XtalRng, float> &adcPed
                                      ) {
   StatusCode sc;
 
-  fill(trigBits.begin(), trigBits.end(), false);
-
   //-- RETRIEVE CALIB --//
   for (FaceNum face; face.isValid(); face++) {
-    FaceIdx faceIdx(xtalIdx,face);
-    XtalDiode xDiodeLrg(face, LRG_DIODE);
-    XtalDiode xDiodeSm(face,  SM_DIODE);
+    const FaceIdx faceIdx(xtalIdx,face);
+    const XtalDiode xDiodeLrg(face, LRG_DIODE);
+    const XtalDiode xDiodeSm(face,  SM_DIODE);
 
     // FLE //
     DiodeIdx diodeIdx(faceIdx, LRG_DIODE);
@@ -212,12 +387,8 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     if (sc.isFailure()) return sc;
 
     // set trigger bit
-    if (adcPed[XtalRng(face,fleRng)] >= fleADC) {
-      trigBits[xDiodeLrg] = true;
-      // optionally populate GltDigi
-      if (glt)
-        glt->setCALLOtrigger(faceIdx.getCalXtalId());
-    }
+    if (adcPed[XtalRng(face,fleRng)] >= fleADC)
+      setSingleBit(diodeIdx);
 
     // FHE //
     diodeIdx = DiodeIdx(faceIdx, SM_DIODE);
@@ -227,210 +398,30 @@ StatusCode CalTrigTool::calcXtalTrig(XtalIdx xtalIdx,
     if (sc.isFailure()) return sc;
 
     // set trigger bit
-    if (adcPed[XtalRng(face,fheRng)] >= fheADC) {
-      trigBits[xDiodeSm] = true;
-      // optionally populate GltDigi
-      if (glt)
-        glt->setCALHItrigger(faceIdx.getCalXtalId());
-    }
+    if (adcPed[XtalRng(face,fheRng)] >= fheADC)
+      setSingleBit(diodeIdx);
   }
 
   return StatusCode::SUCCESS;
 }
 
-/**
-   The purpose of this function is to call through to overloaded routines of the same 
-   name which specialize in either 1, or 4 range readout for the GLAST Cal.
-*/
-StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi,
-                                     CalArray<XtalDiode, bool> &trigBits,
-                                     Event::GltDigi *glt
-                                     ) {
-  XtalIdx xtalIdx(calDigi.getPackedId());
+/// Inform that a new incident has occured
+void CalTrigTool::handle ( const Incident& inc ) { 
+  if ((inc.type() == "BeginEvent"))
+    newEvent();
 
-  //-- CASE 1: SINGLE READOUT MODE --//
-  // if anything but 4 range mode, simply process 0th readout
-  if (calDigi.getMode() != CalXtalId::ALLRANGE) {
-    const Event::CalDigi::CalXtalReadout *ro = calDigi.getXtalReadout(0);
-    if (!ro) {
-      MsgStream msglog(msgSvc(), name());
-      msglog << MSG::ERROR << "Empty CalDigi (no '0' readout)" << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    return calcXtalTrig(xtalIdx, *ro, trigBits, glt);
-  }
-
-  //-- CASE 2: 4RANGE READOUT MODE --//
-  else {
-    //-- store ped subtracted adc vals --//
-    CalArray<XtalRng, float> adcPed(0);
-
-    //-- copy over CalDigi data from all available ranges --//
-  
-    for (FaceNum face; face.isValid(); face++)
-      for (CalDigi::CalXtalReadoutCol::const_iterator ro = 
-             calDigi.getReadoutCol().begin();
-           ro != calDigi.getReadoutCol().end();
-           ro++) {
-        const RngNum rng((*ro).getRange(face));
-      
-        //-- retrieve pedestals --//
-        RngIdx rngIdx(xtalIdx,
-                      face, rng);
-
-        Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
-        if (!ped) return StatusCode::FAILURE;
-        
-        adcPed[XtalRng(face, rng)]  = 
-          (*ro).getAdc(face) - ped->getAvr();
-      }
-
-    return calcXtalTrig(xtalIdx, adcPed, trigBits, glt);
-  }
+  return; 
 }
 
-StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
-                                     const ICalSignalTool::XtalSignalMap &cidac,
-                                     CalArray<XtalDiode, bool> &trigBits,
-                                     Event::GltDigi *glt
-                                     ) {
-  StatusCode sc;
+void CalTrigTool::newEvent() {
+  fill(m_calTriggerMap.begin(),
+       m_calTriggerMap.end(),
+       false);
 
-  fill(trigBits.begin(), trigBits.end(), false);
+  fill(m_calTriggerVec.begin(),
+       m_calTriggerVec.end(),
+       0);
 
-  // get threholds
-  for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
-    float thresh;
-    sc = m_precalcCalibTool->getTrigCIDAC(DiodeIdx(xtalIdx, xDiode), thresh);
-    if (sc.isFailure()) return sc;
-
-    if (cidac[xDiode] >= thresh) {
-      trigBits[xDiode] = true;
-      
-      // set glt digi info (optional)
-      if (glt)
-        if (xDiode.getDiode() == LRG_DIODE)
-          glt->setCALLOtrigger(FaceIdx(xtalIdx, xDiode.getFace()).getCalXtalId());
-        else
-          glt->setCALHItrigger(FaceIdx(xtalIdx, xDiode.getFace()).getCalXtalId());
-    }
-  }
-  
-  return StatusCode::SUCCESS;
+  m_isValid = false;
 }
-                                                                         
-/** Either calc trigger from mc hits or rather from digi
-*/
-StatusCode CalTrigTool::calcGlobalTrig(CalArray<DiodeNum, bool> &trigBits,
-                                       Event::GltDigi *glt) {
-  // 1st check for presense of mc
-  SmartDataPtr<Event::McIntegratingHitVector> mcHits(m_evtSvc, EventModel::MC::McIntegratingHitCol);
-  if (mcHits != 0)
-    return calcGlobalTrigSignalTool(trigBits,
-                                    glt);
-  
-  // else calc with cal digis
-  SmartDataPtr<Event::CalDigiCol> calDigis(m_evtSvc, EventModel::Digi::CalDigiCol);
-  return calcGlobalTrig(calDigis, trigBits, glt);
-}
-
-
-/** Loop through digiCol & call calcXtalTrig() on each digi readout.
-   Save to optional GltDigi if glt input param is non-null.
-*/
-StatusCode CalTrigTool::calcGlobalTrig(const Event::CalDigiCol &calDigiCol,
-                                       CalArray<DiodeNum, bool> &trigBits,
-                                       Event::GltDigi *glt) {
-  StatusCode sc;
-
-  //-- init --//
-  fill(trigBits.begin(), trigBits.end(), false);
-
-  CalArray<XtalDiode, bool> xtalTrigBits;
-  
-  // loop over all calorimeter digis in CalDigiCol
-  for (CalDigiCol::const_iterator digiIter = calDigiCol.begin(); 
-       digiIter != calDigiCol.end(); digiIter++) {
-    sc = calcXtalTrig(**digiIter, xtalTrigBits, glt);
-    if (sc.isFailure()) return sc;
-
-    //-- set global trigger if any xtal trigger is high.
-    for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
-      const DiodeNum diode = xDiode.getDiode();
-      
-      trigBits[diode] |= xtalTrigBits[xDiode];
-    }
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-
-GltDigi* CalTrigTool::setupGltDigi() {
-  StatusCode sc;
-
-  // search for GltDigi in TDS
-  static const string gltPath( EventModel::Digi::Event+"/GltDigi");
-  DataObject* pnode = 0;
-  auto_ptr<GltDigi> glt;
-
-  sc = m_evtSvc->findObject(gltPath, pnode);
-  // if the required entry doens't exit - create it
-  if (sc.isFailure()) {
-    glt.reset(new GltDigi());
-    // always register glt data, even if there is no caldigi data.
-    // sometimes we can trigger w/ no LACs.
-    sc = m_evtSvc->registerObject(gltPath, glt.get());
-    if (sc.isFailure()) {
-      // if cannot create entry - error msg
-      MsgStream msglog(msgSvc(), name());
-      msglog << MSG::WARNING << " Could not create GltDigi entry" << endreq;
-      return NULL;
-    }
-  }
-  else glt.reset(dynamic_cast<GltDigi*>(pnode));
-
-  return glt.release();
-}
-
-
-/// loop through all crystals in installed towers, get signal level for each from CalSignalTool, calc trig resonse one by one
-StatusCode CalTrigTool::calcGlobalTrigSignalTool(CalArray<DiodeNum, bool> &trigBits,
-                                                 Event::GltDigi *glt) {
-  fill(trigBits.begin(), trigBits.end(), false);
-
-  /// Loop through (installed) towers and crystals; 
-  for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
-    // get bay id of nth live tower
-    const TwrNum twr(m_twrList[twrSeq]);
-    for (LyrNum lyr; lyr.isValid(); lyr++)
-      for (ColNum col; col.isValid(); col++) {
-        
-        // assemble current calXtalId
-        const XtalIdx xtalIdx(twr.val(),
-                              lyr.val(),
-                              col.val());
-        ICalSignalTool::XtalSignalMap xtalSignalMap;
-        StatusCode sc = m_calSignalTool->getXtalSignalMap(xtalIdx, xtalSignalMap);
-        if (sc.isFailure())
-          return sc;
-        
-        CalArray<XtalDiode, bool> xtalTrigBits;
-        sc = calcXtalTrig(xtalIdx, xtalSignalMap, xtalTrigBits, glt);
-        if (sc.isFailure())
-          return sc;
-
-        //-- set global trigger if any xtal trigger bit is high.
-        for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
-          const DiodeNum diode = xDiode.getDiode();
-          
-          trigBits[diode] |= xtalTrigBits[xDiode];
-        }
-      } // xtal loop
-  } // twr loop
-
-  return StatusCode::SUCCESS;
-}
-
 

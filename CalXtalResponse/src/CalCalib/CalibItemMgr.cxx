@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 // LOCAL
 #include "CalibItemMgr.h"
@@ -145,11 +145,11 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
 
   // check that we have a spline for this particular xtal
   // (i.e. when LAT is not fully populated)
-  TSpline3 *spline = m_splineLists[calibType][idx];
+  TSpline3 const*const spline = m_splineLists[calibType][idx];
   if (!spline) {
     ostringstream msg;
     MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
-    msglog << MSG::INFO 
+    msglog << MSG::VERBOSE 
            << "No spline data found for " << m_calibPath 
            << " xtal=" << idx.val()
            << endreq;
@@ -189,16 +189,16 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
   int n = min(x.size(),y.size());
 
   // create tmp arrays for TSpline ctor
-  double *xp = new double[n];
-  double *yp = new double[n];
+  double *const xp = new double[n];
+  double *const yp = new double[n];
 
   // copy vector data into temp arrays
   copy(x.begin(),x.begin()+n,xp);
   copy(y.begin(),y.begin()+n,yp);
 
 
-  TSpline3 *mySpline = new TSpline3(name.c_str(),
-                                    xp,yp,n);
+  auto_ptr<TSpline3> mySpline(new TSpline3(name.c_str(),
+                                           xp,yp,n));
   mySpline->SetName(name.c_str());
 
 #if 0
@@ -219,10 +219,14 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 
   
   // put spline in list
-  m_splineLists[calibType][idx] = mySpline;
+  m_splineLists[calibType][idx] = mySpline.release();
   // populate x-axis boundaries
   m_splineXMin[calibType][idx] = xp[0];
   m_splineXMax[calibType][idx] = xp[n-1];
+  // populate y-axis boundaries
+  m_splineYMin[calibType][idx] = yp[0];
+  m_splineYMax[calibType][idx] = yp[n-1];
+
 
   // clear heap variables
   delete [] xp;
@@ -233,11 +237,11 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 
 /// Template function fills any STL type container with zero values
 template <class T> static void fill_zero(T &container) {
-  fill(container.begin(), container.end(), 0);
+  fill(container.begin(), container.end(),0);
 }
 
 void CalibItemMgr::clearLocalStore() {   
-  m_rngBases.clear();
+  fill(m_rngBases.begin(), m_rngBases.end(), static_cast<CalibData::RangeBase*>(0));
 
   // m_splineLists is the 'owner' of the splines, so i need to delete
   // the objects themselves as well as the pointers.
@@ -245,6 +249,8 @@ void CalibItemMgr::clearLocalStore() {
     del_all_ptrs(m_splineLists[i]);
     fill_zero(m_splineXMin[i]);
     fill_zero(m_splineXMax[i]);
+    fill_zero(m_splineYMin[i]);
+    fill_zero(m_splineYMax[i]);
   }
 }
 

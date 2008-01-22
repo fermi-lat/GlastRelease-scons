@@ -1,6 +1,10 @@
 #ifndef CalSignalTool_H
 #define CalSignalTool_H
 // $Header$
+/** @file     
+    @author Z.Fewtrell
+
+*/
 
 // LOCAL 
 
@@ -30,7 +34,7 @@ class ICalCalibSvc;
 
 
 /** @class CalSignalTool
- * \author  Zachary Fewtrell
+ * \author  Z.Fewtrell
  * 
  * 
  * - Convert McIntegratingHitCol into diode signal levels (CIDAC) for each crystal diode.
@@ -56,30 +60,20 @@ public:
                  const IInterface* parent);
   
   StatusCode initialize();
-  StatusCode execute();
   StatusCode finalize () {return StatusCode::SUCCESS;}
 
-  /// return crystal signal level for given crystal, refer to McHits as needed (once per event)
-  const CalSignalMap *getCalSignalMap();
-
-  /// return crystal signal level for given crystal, refer to McHits as needed (once per event)
-  StatusCode getXtalSignalMap(CalUtil::XtalIdx xtalIdx,
-                              XtalSignalMap &xtalSignalMap);
-
-
+  /// get signal level for given cal diode.
+  StatusCode getDiodeSignal(CalUtil::DiodeIdx diodeIdx, float &signal);
+ 
+  /// get map bewteen McIntegrating hits and crystals
   const CalRelationMap *getCalRelationMap();
-
 
   /// hook the BeginEvent so that we can check our validity once per event.
   void handle ( const Incident& inc );
 
-
 private:
-  /// clear internal tables (used by test app, unneeded during normal operations
+  /// clear internal tables
   void newEvent();
-
-  /// mark internal data state invalid & clear any existing data
-  void invalidate();
 
   /// ensure that internal data is either sync'd with current event or empty
   StatusCode syncData();
@@ -108,6 +102,10 @@ private:
   /////////////////////////
   //-- PRIVATE MEMBERS --//
   /////////////////////////
+
+  
+  /// map diodes to electronic signal levels
+  typedef CalUtil::CalVec<CalUtil::DiodeIdx, float> CalSignalMap;
 
   /// map diodes to electronic signal levels
   CalSignalMap m_calSignalMap;

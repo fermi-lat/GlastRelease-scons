@@ -1,6 +1,9 @@
 #ifndef ICalCalibSvc_H
 #define ICalCalibSvc_H
 //  $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 
 // LOCAL INCLUDES
 
@@ -13,7 +16,7 @@
 #include "CalibData/Cal/CalMevPerDac.h"
 #include "CalibData/Cal/CalTholdCI.h"
 #include "CalibData/Cal/Xpos.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IInterface.h"
@@ -25,16 +28,16 @@
 static const InterfaceID IID_ICalCalibSvc("ICalCalibSvc", 2, 1);
 
 /*! @class ICalCalibSvc
- * \brief Abstract interface for provision of GLAST LAT calorimeter calib consts
- * \author Zach Fewtrell
+ * \brief Abstract interface for provision of GLAST LAT calorimeter calib constants
+ * \author Z.Fewtrell
  *
- * \note functions are provided for each calibration type.  
- calib consts are passed back by reference.
  *
  */
 class ICalCalibSvc : virtual public IInterface {
  public:
   static const InterfaceID& interfaceID() { return IID_ICalCalibSvc; }
+
+  virtual ~ICalCalibSvc() {};
 
 
   /** \brief get MeVPerDac ratios for given xtal
@@ -123,7 +126,8 @@ class ICalCalibSvc : virtual public IInterface {
   \param adcPed input ADC readout (pedestal subtracted)
   \param MeV output energy readout (in MeV
   */
-  virtual StatusCode evalFaceSignal(CalUtil::RngIdx rngIdx, float adc, 
+  virtual StatusCode evalFaceSignal(CalUtil::RngIdx rngIdx, 
+                                    float adc, 
                                     float &ene) = 0;
 
   /** \brief get ratio of MeV/CIDAC for given diode where MeV is energy deposited @ center of xtal

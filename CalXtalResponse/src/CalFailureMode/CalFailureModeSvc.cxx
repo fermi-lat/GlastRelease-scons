@@ -5,6 +5,10 @@
 // $Header$
 //
 // Author: Richard Dubois
+/** @file     
+    @author Z.Fewtrell
+
+*/
 
 
 #include "CalFailureModeSvc.h"

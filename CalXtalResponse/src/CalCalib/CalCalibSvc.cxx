@@ -1,12 +1,7 @@
 // $Header $
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
  */
-// @file
-//
-//
-// Author: Zachary Fewtrell
-
 // LOCAL
 #include "CalCalibSvc.h"
 
@@ -56,6 +51,7 @@ StatusCode  CalCalibSvc::queryInterface (const InterfaceID& riid, void **ppvIF) 
   } else return Service::queryInterface (riid, ppvIF);
 }
 
+/// intialize / retrieve all needed Gaudi based objects
 StatusCode CalCalibSvc::initialize () 
 {
   // Call super-class
@@ -110,18 +106,16 @@ StatusCode CalCalibSvc::initialize ()
   IIncidentSvc* incSvc;
   sc = service("IncidentSvc", incSvc, true);
   if (sc.isSuccess() ) {
-    const int priority = 50;  // this should be lower priority (higher #?) than CalibDataSvc
-    incSvc->addListener(this, "BeginEvent", priority);
+    incSvc->addListener(this, "BeginEvent", INCIDENT_PRIORITY);
   } else {
     msglog << MSG::ERROR << "can't find IncidentSvc" << endreq;
     return sc;
   }
 
-
   return StatusCode::SUCCESS;
 }
 
-/// Inform that a new incident has occured
+/// Inform child objects that a new event has occured
 void CalCalibSvc::handle ( const Incident& inc ) { 
   if ((inc.type() == "BeginEvent")) {
     m_mpdMgr.invalidate();
@@ -145,9 +139,8 @@ StatusCode CalCalibSvc::evalFaceSignal(const RngIdx rngIdx, const float adcPed, 
   XtalIdx xtalIdx(rngIdx.getXtalIdx());
 
   // MeVPerDAC
-  const CalibData::CalMevPerDac *calMPD;
   // need to create tmp rngIdx w/ only twr/lyr/col info
-  calMPD = getMPD(xtalIdx);
+  CalibData::CalMevPerDac const*const calMPD = getMPD(xtalIdx);
   if (!calMPD) return StatusCode::FAILURE;
 
   CalUtil::RngNum rng(rngIdx.getRng());
@@ -166,9 +159,8 @@ StatusCode CalCalibSvc::getMPDDiode(const CalUtil::DiodeIdx diodeIdx, float &mpd
   XtalIdx xtalIdx(diodeIdx.getXtalIdx());
 
   // MeVPerDAC
-  const CalibData::CalMevPerDac *calMPD;
   // need to create tmp rngIdx w/ only twr/lyr/col info
-  calMPD = getMPD(xtalIdx);
+  CalibData::CalMevPerDac const*const calMPD = getMPD(xtalIdx);
   if (!calMPD) return StatusCode::FAILURE;
 
   float mpd;

@@ -5,15 +5,16 @@
 
 // primary DLLs
 
-ApplicationMgr.DLLs+= {"CalibSvc","CalXtalResponse"};
+ApplicationMgr.DLLs+= {"CalibSvc",
+    "CalXtalResponse",
+    "CalDigi"};
 
 // ----------------------------
 // setup basic event loop stuff
 //
 ApplicationMgr.ExtSvc = { 
-//    "GlastEventSelector/EventSelector" , 
-    "EventCnvSvc"
-    };
+  "EventCnvSvc"
+};                    
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
@@ -22,8 +23,8 @@ EventSelector.Input = "NONE";
 //  topalg
 //
 ApplicationMgr.TopAlg = {
-	"test_CalXtalResponse"
-    };
+  "test_CalXtalResponse"
+};        
 
 
 // ----------------------------
@@ -32,7 +33,10 @@ ApplicationMgr.TopAlg = {
 ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+// purposely pick  8 tower lat to check cases where towers aren't
+// present (needed to process older data)
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/latAssembly/lat8TowerSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // Start up a CalibDataSvc 
@@ -56,47 +60,41 @@ CalibDataSvc.CalibFlavorList     = {"ideal","CalXtalResponse_test"};
 ///////////////////////////////////////////////
 ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvc"};
 CalCalibSvc.DefaultFlavor  = "CalXtalResponse_test";
+CalDigiAlg.TrgConfigSvcName = "";
+// disable noise
+ToolSvc.CalSignalTool.enableNoise = false;
+
+test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonPeds.digitization-licos-v3r6p9_077007133_digi_DIGI.FLIGHT_GAIN.txt";
+test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cidac2adc.digitization-licos-v3r6p6_077006635_digi_DIGI.FLIGHT_GAIN.txt";
+test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonMPD.digitization-licos-v3r6p5_077006531_digi_DIGI.FLIGHT_GAIN.txt";
+test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.digitization-licos-v3r6p5_077006531_digi_DIGI.FLIGHT_GAIN.txt";
+test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/tholdci_jul06.FLIGHT_GAIN.txt";
+
+
 
 /////////////////////////////////////
 //-- tests w/ ideal calibrations --//
 /////////////////////////////////////
 ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvcIdeal"};
-
 CalCalibSvcIdeal.DefaultFlavor = "ideal"; // default for all calib types
 
-ToolSvc.PrecalcCalibToolIdeal.CalCalibSvc = "CalCalibSvcIdeal";
+test_CalXtalResponse.pedTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/muonPeds.ideal.txt";
+test_CalXtalResponse.cidac2adcTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/cidac2adc.ideal.txt";
+test_CalXtalResponse.mpdTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/mpd.ideal.txt";
+test_CalXtalResponse.asymTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.ideal.txt";
+test_CalXtalResponse.tholdCITXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/tholdci.ideal.txt";
 
-ToolSvc.CalSignalToolIdeal.XtalSignalToolName = "XtalSignalToolIdeal";
-ToolSvc.CalSignalToolIdeal.enableNoise = false; // default to no random noise
-ToolSvc.CalSignalToolIdeal.PrecalcCalibTool = "PrecalcCalibToolIdeal";
-
-ToolSvc.CalSignalToolIdeal.XtalSignalToolIdeal.CalCalibSvc  = "CalCalibSvcIdeal";
-
-
-test_CalXtalResponse.XtalDigiToolIdeal.CalCalibSvc  = "CalCalibSvcIdeal";
-test_CalXtalResponse.XtalDigiToolIdeal.PrecalcCalibTool = "PrecalcCalibToolIdeal";
-test_CalXtalResponse.XtalRecToolIdeal.CalCalibSvc   = "CalCalibSvcIdeal";
-
-test_CalXtalResponse.CalTrigToolIdeal.PrecalcCalibTool = "PrecalcCalibToolIdeal";
-test_CalXtalResponse.CalTrigToolIdeal.CalCalibSvc = "CalCalibSvcIdeal";
-
-
-//- xtaldigi w/ noise
-ToolSvc.CalSignalToolIdealNoise.XtalSignalToolName = "XtalSignalToolIdealNoise";
-ToolSvc.CalSignalToolIdealNoise.PrecalcCalibTool = "PrecalcCalibToolIdeal";
-
-ToolSvc.CalSignalToolIdealNoise.XtalSignalToolIdealNoise.CalCalibSvc  = "CalCalibSvcIdeal";
-
-ToolSvc.CalSignalTool.enableNoise = false; // default to no random noise
-
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel = 4;
-ApplicationMgr.EvtMax  = 1;
-
+////////////////////////////////
+//-- CalFailureModeSvc test --//
+////////////////////////////////
 ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
 CalFailureModeSvc.towerAfeeList= {"10_2"}; 
 CalFailureModeSvc.towerList= {"11"}; 
 CalFailureModeSvc.towerControllerList= {"4_2"}; 
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+ApplicationMgr.EvtMax  = 100;
 
 
 //==============================================================
@@ -104,6 +102,17 @@ CalFailureModeSvc.towerControllerList= {"4_2"};
 // End of job options file
 //
 //##############################################################
-//test_CalXtalResponse.skipNoiseTests = true;
-//test_CalXtalResponse.tupleFilename = "test_CalXtalResponse.root"; // optional tuple for debugging purposes
 
+///////////////////////////////////////////
+// IDEAL CALIB ONLY TEST (NO INET/MySQL) //
+///////////////////////////////////////////
+// CalCalibSvc.DefaultFlavor = "ideal";
+// test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonPeds.ideal.txt";
+// test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cidac2adc.ideal.txt";
+// test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/mpd.ideal.txt";
+// test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.ideal.txt";
+// test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/tholdci.ideal.txt";
+// GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+
+MessageSvc.OutputLevel = 3;
+ApplicationMgr.EvtMax  = 100;

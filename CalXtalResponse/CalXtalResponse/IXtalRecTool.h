@@ -1,9 +1,12 @@
 #ifndef IXtalRecTool_H
 #define IXtalRecTool_H
 // $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 /*! @class IXtalRecTool
  *
- * \author Zach Fewtrell
+ * \author Z.Fewtrell
  *
  * \brief Abstract interface class for calculation of total deposited energy 
  & centroid position for a single calorimeter crystal.
@@ -14,7 +17,7 @@
 // LOCAL INCLUDES
 
 // GLAST INCLUDES
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 #include "CalUtil/CalDefs.h"
 
 // EXTLIB INCLUDES
@@ -66,8 +69,8 @@ class IXtalRecTool : virtual public IAlgTool {
   */
   virtual StatusCode calculate(const Event::CalDigi &digi,
                                Event::CalXtalRecData &xtalRec,
-                               CalUtil::CalArray<CalUtil::FaceNum, bool> &belowNoise,
-                               CalUtil::CalArray<CalUtil::FaceNum, bool> &saturated,
+                               CalUtil::CalVec<CalUtil::FaceNum, bool> &belowNoise,
+                               CalUtil::CalVec<CalUtil::FaceNum, bool> &saturated,
                                INeighborXtalkTool const*const nbrXtalkTool
                                ) = 0;
 };

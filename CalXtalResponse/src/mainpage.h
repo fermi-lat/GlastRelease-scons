@@ -1,6 +1,6 @@
 /** @file
     Mainpage for doxygen
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 // $Header$
 

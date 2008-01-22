@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 // LOCAL
 #include "MPDMgr.h"
@@ -29,11 +29,11 @@ const CalMevPerDac *MPDMgr::getMPD(XtalIdx xtalIdx) {
 }
 
 StatusCode MPDMgr::loadIdealVals() {
-  ValSig mpdLrg(m_ccsShared.m_idealCalib.mpdLrg,
+  const ValSig mpdLrg(m_ccsShared.m_idealCalib.mpdLrg,
                 m_ccsShared.m_idealCalib.mpdLrg * 
                 m_ccsShared.m_idealCalib.mpdSigPct);
 
-  ValSig mpdSm(m_ccsShared.m_idealCalib.mpdSm,
+  const ValSig mpdSm(m_ccsShared.m_idealCalib.mpdSm,
                m_ccsShared.m_idealCalib.mpdSm * 
                m_ccsShared.m_idealCalib.mpdSigPct);
 
@@ -44,11 +44,9 @@ StatusCode MPDMgr::loadIdealVals() {
 
 
 StatusCode MPDMgr::genLocalStore() {
-  m_rngBases.resize(XtalIdx::N_VALS,0);
-
   for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
     if (!m_idealMode) {
-      CalibData::CalMevPerDac *mpd = (CalMevPerDac*)getRangeBase(xtalIdx.getCalXtalId());
+      CalibData::CalMevPerDac const*const mpd = (CalMevPerDac*)getRangeBase(xtalIdx.getCalXtalId());
       if (!mpd) continue;
       if (!validateRangeBase(mpd)) continue;
       

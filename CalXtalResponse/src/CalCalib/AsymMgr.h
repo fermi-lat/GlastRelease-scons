@@ -1,6 +1,9 @@
 #ifndef AsymMgr_H
 #define AsymMgr_H
 // $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 // LOCAL
 #include "CalibItemMgr.h"
 
@@ -18,53 +21,68 @@
 class CalCalibSvc;
 
 /** @class AsymMgr
-    @author Zachary Fewtrell
+    @author Z.Fewtrell
     
     \brief Manage GLAST Cal asymmetry calibration data
 */
 
 class AsymMgr : public CalibItemMgr {
- public:
+public:
   AsymMgr(CalCalibShared &ccsShared);
 
   StatusCode initialize(const string &flavor);
 
   /// get Asymmetry calibration information for one xtal
-  CalibData::CalAsym *getAsym(CalUtil::XtalIdx xtalIdx);
+  const CalibData::CalAsym *getAsym(const CalUtil::XtalIdx xtalIdx);
 
-  CalibData::Xpos *getXpos();
+  /// get positions in mm from crystal center of each asymmetry data point
+  const CalibData::Xpos *getXpos();
 
-  StatusCode evalAsym(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType,
-                      float Xpos, float &asym){
+  /// find light asymmetry value associated with given crystal and
+  /// longitudinal position
+  StatusCode evalAsym(const CalUtil::XtalIdx xtalIdx, 
+                      const CalUtil::AsymType asymType,
+                      const float Xpos, 
+                      float &asym) {
     return evalSpline(splineIdx(asymType, POS2ASYM), xtalIdx, Xpos, asym);
   }
 
-  StatusCode evalPos(CalUtil::XtalIdx xtalIdx, CalUtil::AsymType asymType,
-                     float asym, float &Xpos) {
+  /// find crystal longitudinal position (mm from xtal center) associated with given signal asymmetry
+  StatusCode evalPos(const CalUtil::XtalIdx xtalIdx, 
+                     const CalUtil::AsymType asymType,
+                     const float asym, 
+                     float &Xpos) {
     return evalSpline(splineIdx(asymType, ASYM2POS), xtalIdx, asym, Xpos);
   }
 
-  StatusCode getAsymCtr(CalUtil::XtalIdx xtalIdx, 
-                        CalUtil::AsymType asymType, 
+  /// get signal asymmetry at crystal center.
+  StatusCode getAsymCtr(const CalUtil::XtalIdx xtalIdx, 
+                        const CalUtil::AsymType asymType, 
                         float &asymCtr);
 
 
- private:
-    typedef enum {
-      POS2ASYM,
-      ASYM2POS,
-      N_ASYM_DIR
-    } ASYM_DIR;
+private:
 
-    static const unsigned short N_SPLINE_TYPES = N_ASYM_DIR*CalUtil::AsymType::N_VALS;
+  /// conversion directions between asymmetry & position.
+  typedef enum {
+    POS2ASYM,
+    ASYM2POS,
+    N_ASYM_DIR
+  } ASYM_DIR;
 
-    unsigned short splineIdx(CalUtil::AsymType asymType, ASYM_DIR asymDir) {
-      return asymType.val()*N_ASYM_DIR + asymDir;
-    }
+  static const unsigned short N_SPLINE_TYPES = N_ASYM_DIR*CalUtil::AsymType::N_VALS;
 
+  /// calculate spline index for given spline type
+  unsigned short splineIdx(const CalUtil::AsymType asymType, 
+                           const ASYM_DIR asymDir) {
+    return asymType.val()*N_ASYM_DIR + asymDir;
+  }
 
+  /// populate all private data fields
   StatusCode genLocalStore();
 
+  /// load ideal calibration constants from local data (avoid
+  /// calibration database)
   StatusCode loadIdealVals();
 
   /// store ideal asymmetry splines (same for every xtal)
@@ -75,10 +93,10 @@ class AsymMgr : public CalibItemMgr {
 
   /// store precalcuated asymmetry for deposits @ ctr of xtal.
   /// measures 'overall' optical asymmetry
-  CalUtil::CalArray<CalUtil::AsymType, CalUtil::CalArray<CalUtil::XtalIdx, float> > m_asymCtr;
+  CalUtil::CalVec<CalUtil::AsymType, CalUtil::CalVec<CalUtil::XtalIdx, float> > m_asymCtr;
   
   /// validate data ptr from TDS
-  bool validateRangeBase(CalibData::CalAsym *asym);
+  bool validateRangeBase(CalibData::CalAsym const*const asym);
 
   /// geometry constant
   float m_csiLength;

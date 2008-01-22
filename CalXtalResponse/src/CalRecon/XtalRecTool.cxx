@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 
 // LOCAL
@@ -11,8 +11,8 @@
 // GLAST
 #include "idents/VolumeIdentifier.h"
 #include "geometry/Point.h"
-#include "CalUtil/CalArray.h"
 #include "CalUtil/CalVec.h"
+#include "CalUtil/CalArray.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "Event/Digi/CalDigi.h"
@@ -57,6 +57,7 @@ XtalRecTool::XtalRecTool( const string& type,
   declareProperty("CalCalibSvc", m_calCalibSvcName="CalCalibSvc");
 }
 
+/// init / retrieve all needed Gaudi objects
 StatusCode XtalRecTool::initialize() {
   MsgStream msglog(msgSvc(), name());
   msglog << MSG::INFO << "initialize" << endreq;
@@ -123,8 +124,8 @@ StatusCode XtalRecTool::initialize() {
 */
 StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
                                   Event::CalXtalRecData &xtalRec,
-                                  CalArray<FaceNum, bool> &belowNoise,
-                                  CalArray<FaceNum, bool> &saturated,
+                                  CalVec<FaceNum, bool> &belowNoise,
+                                  CalVec<FaceNum, bool> &saturated,
                                   INeighborXtalkTool const*const xtalkTool) {
   StatusCode sc;
 
@@ -133,18 +134,17 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
   fill(saturated.begin(), saturated.end(), false);
   
   // used for global access routines.
-  const XtalIdx xtalIdx = XtalIdx(digi.getPackedId());
+  const XtalIdx xtalIdx(digi.getPackedId());
 
   // check for empty digi
   if (digi.getReadoutCol().size() <= 0)
     return StatusCode::SUCCESS;
 
-  // currently always using 1st readout
   for (CalDigi::CalXtalReadoutCol::const_iterator ro =  digi.getReadoutCol().begin();
        ro != digi.getReadoutCol().end();
        ro++) {
     /// check if current range is below noise threshold
-    CalArray<FaceNum, bool> rngBelowNoise(false);
+    CalVec<FaceNum, bool> rngBelowNoise;
 
     // using auto_ptr, bc I am responsible for this pointer.
     auto_ptr<Event::CalXtalRecData::CalRangeRecData> rngRec(createRangeRecon(xtalIdx,
@@ -168,18 +168,31 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
   return StatusCode::SUCCESS;
 }
 
+/**
+   Algorithm is as follows:
+   - subtract pedestals from ADC readouts
+   - check if either face is below 1/2 LAC signal level
+   - convert ADC readouts to CIDAC scale
+   - detect saturated HEX1 range
+   - (optional) neighboring crytal cross-talk correction
+   - use asymmetry ratio of both cidac signal to evaluate longitudinal
+   deposit centroid.
+   - use geometric mean of both cidac signals to evaluate deposit
+   energy.
+   - create CalRangeRecData TDS object
+ */
 Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalUtil::XtalIdx xtalIdx,
                                                                       const Event::CalDigi::CalXtalReadout &ro,
-                                                                      CalArray<FaceNum, bool> &belowNoise,
-                                                                      CalArray<FaceNum, bool> &saturated,
+                                                                      CalVec<FaceNum, bool> &belowNoise,
+                                                                      CalVec<FaceNum, bool> &saturated,
                                                                       INeighborXtalkTool const*const xtalkTool
                                                                       ) const {
   StatusCode sc;
 
-  CalArray<FaceNum, DiodeNum> diode(LRG_DIODE);
-  CalArray<FaceNum, float> cidac(0);
-  CalArray<FaceNum, RngNum> rng(LEX8);
-  
+  CalArray<FaceNum, DiodeNum> diode;
+  CalArray<FaceNum, float> cidac;
+  CalArray<FaceNum, RngNum> rng;
+  CalArray<FaceNum, float> adcPed;
   
   //////////////////////////////////////
   //-- STEP 1: PEDESTAL SUBTRACTION --//
@@ -198,7 +211,7 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
     const float pedSig = pedCalib->getSig();
 
     // ped subtracted ADC
-    const float adcPed = adc - ped;
+    adcPed[face] = adc - ped;
   
     /////////////////////////////////
     //-- STEP 2: NOISE REDUCTION --//
@@ -212,18 +225,18 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
     
       // LEX8 range is compared against 0.5 * lac threshold
       // we throw out entire xtal if adc is too low 
-      if (adcPed < lacThresh*0.5)
+      if (adcPed[face] < lacThresh*0.5)
         belowNoise[face] = true;
     } else {
       // other ranges are compared against 5 sigma energy 
-      if (adcPed < pedSig*5.0)
+      if (adcPed[face] < pedSig*5.0)
         belowNoise[face] = true;
     }
 
     /////////////////////////////////////////////
     //-- STEP 3: CONVERT ADCs -> CIDAC SCALE --//
     /////////////////////////////////////////////
-    sc = m_calCalibSvc->evalCIDAC(rngIdx, adcPed, cidac[face]);
+    sc = m_calCalibSvc->evalCIDAC(rngIdx, adcPed[face], cidac[face]);
     if (sc.isFailure()) return 0;
         
     // check for invalid cidac vals (i need to take the sqrt AND the log)
@@ -298,7 +311,7 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
   
   //-- convert diodes to same size (if needed)
   DiodeNum mpdDiode(diode[POS_FACE]); // diode size to use for MeVPerDAC conversion
-  CalArray<FaceNum,float> mpdCIDAC;
+  CalVec<FaceNum,float> mpdCIDAC;
   mpdCIDAC[POS_FACE]  = cidac[POS_FACE];   // cidac value to use for MeVPerCIDAC conversion
   mpdCIDAC[NEG_FACE]  = cidac[NEG_FACE];   // cidac value to use for MeVPerCIDAC conversion
 
@@ -325,7 +338,7 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
   //-- RETRIEVE MEV PER DAC--// 
   CalMevPerDac const*const mpdCalib = m_calCalibSvc->getMPD(xtalIdx);
   if (!mpdCalib) return 0;
-  CalArray<DiodeNum, float> mpd(0);
+  CalVec<DiodeNum, float> mpd;
   mpd[LRG_DIODE] = mpdCalib->getBig()->getVal();
   mpd[SM_DIODE]  = mpdCalib->getSmall()->getVal();
 

@@ -1,9 +1,12 @@
 #ifndef IXtalSignalTool_H
 #define IXtalSignalTool_H
 // $Header$
+/** @file 
+    @author Z.Fewtrell
+*/
 /*! @class IXtalSignalTool
  *
- * \author Zach Fewtrell
+ * \author Z.Fewtrell
  *
  * \brief Abstract interface class for calculcation of Cal crystal diode signal levels from a single energy deposit
  * 
@@ -12,7 +15,7 @@
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -37,7 +40,7 @@ class IXtalSignalTool : virtual public IAlgTool {
   \param cidacArray resulting signal levels (in CIDAC units) for each diode in crystal
   */
   virtual StatusCode calculate(const Event::McIntegratingHit &hit,
-                               CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray) = 0;
+                               CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray) = 0;
 
 };
 

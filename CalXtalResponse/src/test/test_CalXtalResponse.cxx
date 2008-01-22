@@ -1,294 +1,190 @@
 // $Header$
 
-// Include files
-// Gaudi system includes
+/** @file
+    @author Z.Fewtrell
+    
+    @brief  CalXtalRepsonse unit test app - attempt to test as much as possible
+    
+*/
 
 // LOCAL
+#include "TestCfg.h"
+#include "test_CalCalibSvc.h"
+#include "test_CalSignalTool.h"
+#include "test_CalDigi.h"
+#include "test_CalXtalRecAlg.h"
+#include "test_CalTrigTool.h"
+#include "test_PrecalcCalibTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
-#include "CalXtalResponse/IXtalRecTool.h"
-#include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalSignalTool.h"
 #include "CalXtalResponse/ICalTrigTool.h"
-#include "../CalFailureMode/ICalFailureModeSvc.h"
 #include "../CalCalib/IPrecalcCalibTool.h"
+#include "test_util.h"
 
 // GLAST
-#include "geometry/Point.h"
-#include "idents/VolumeIdentifier.h"
-#include "Event/TopLevel/EventModel.h"
-#include "Event/MonteCarlo/McIntegratingHit.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
-#include "CalUtil/stl_util.h"
-#include "Event/Digi/GltDigi.h"
+#include "CalUtil/CalVec.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "facilities/Util.h" // expandEnvVar()
+#include "CalUtil/CalGeom.h" // findActiveTowers()
+#include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/TopLevel/EventModel.h"
+#include "Event/Digi/CalDigi.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
 
 // EXTLIB
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
-
-#include "TFile.h"
-#include "TTree.h"
-
-#include "CLHEP/Geometry/Transform3D.h"
-
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // STD
-#include <vector>
-#include <string>
-#include <cmath>
-#include <algorithm>
-#include <sstream>
-#include <iomanip>
-#include <set>
-#include <cassert>
 #include <map>
 #include <memory>
 
-using namespace CalUtil;
-using namespace std;
-using namespace CalibData;
-using namespace idents;
 
-//-- UTILITY METHODS --//
+class ICalTrigTool;
+class IPrecalcCalibTool;
+class ICalSignalTool;  
+class ICalCalibSvc;
 
-/// return relative diff (abs) between 2 floats avoid divide-by-zero errros
-float rel_diff(const float a, const float b) {
-  // safe to divide by a
-  if (a!=0) return abs((a-b)/a);
-
-  // fall back to divide by b
-  if (b!=0) return abs((a-b)/b);
-
-  // only possibility a==b==0
-  // zero pct diff
-  return 0;
-}
-
-/// \brief ensure that a threshold test is correct (given a certain margin for error)
-/// \param test threshold level
-/// \param input signal
-/// \param measured test result
-/// \param margin threhold to ignore if signal is close to margin. (in same units as threshold)
-
-bool trig_test_margin(const float signal, const float thresh, const bool result, const double margin) {
-  // return false if the trigger should have gone high, but it didn't
-  if (signal >= thresh + margin && !result) return false;
-  // return true if it should have gone low but fired anyway
-  if (signal < thresh - margin && result) return false;
-
-  // otherwise return true
-  return true;
-}
-
-/// return true if C++ container contains given valueD
-template <typename Iterator, typename Value>
-bool contains(Iterator begin,
-              Iterator end,
-              const Value &val) {
-  return std::find(begin, end, val) != end;
-}
-              
-              
-
-// Define the class here instead of in a header file: not needed anywhere but here!
-//------------------------------------------------------------------------------
-/** \class test_CalXtalRepsonse
-    \brief Algorithm for unit_testing CalXtalResponse pkg functionality
-
-    see execute() doc for test details
+/** unit test for CalXtalResponse package
     
-    \author Zach Fewtrell
+    Structure:
+    Individual unit test classes created for most major classes in
+    CalXtalResponse.
 
+    Algorithm:
+    - A sequence of events goes through full MC->Digi->Recon process.
+    - Each event has randomly selected energy deposits and jobOptions.
+    - After each step, the appropriate sub-test is called for that
+    particular tool.
+
+    Variation of input parameters:
+    - energy range from .1 MeV -> 100 GeV (logarithmic distribution to
+    allow for equal # of hits in each energy range and more hits near
+    'interesting' points like LAC/FLE/FHE/ULD thresholds
+    - randomly selected deposit position along crystal length
+    - multiple deposits per crystal
+    - zero deposits per crystal
+    - randomly selected crystals
+    - multiple crystals
+    - zeroSuppression on / off
+    - BESTRANGE / ALLRANGE
+    - ideal calibrations , real calibrations
+    - partial LAT configurations (code still works with missing tower
+    modules)
+
+    Component Tests:
+    - CalCalibSvc
+    - PrecalcCalibSvc
+    - CalSignalTool (incl XtalSignalTool)
+    - CalDigiAlg (incl XtalDigiTool)
+    - CalTrigTool (from MC)
+    - CalTrigTool (from Digi)
+    - CalXtalRecAlg (incl (XtalRecTool)
+
+    @ todo
+    - direct diode deposits
+    - CalTupleAlg - not sure how to arrange this without creating
+    unwanted output file.
+    - noise simulation test
+    - missing TDS collections (not just empty)
+    - using TrigConfigSvc for cal readout mode selection
 */
-
 class test_CalXtalResponse : 
   public Algorithm {
 public:
-  test_CalXtalResponse(const string& name, ISvcLocator* pSvcLocator);
+  test_CalXtalResponse(const std::string& name, ISvcLocator* pSvcLocator);
+
   StatusCode initialize();
+
   StatusCode execute();
-  StatusCode finalize();
 
-private: 
-  void pos2Point(const XtalIdx xtalIdx, const float xtalPos, Point &pXtal);
+  StatusCode finalize(); 
 
-  /// create single Mc hit & run it through full digi & recon
-  /// check for expected output & accurate recon.
-  StatusCode testSingleHit();
+private:
+  StatusCode retrieveConstants(IGlastDetSvc &detSvc);
 
-  /// for testing the outputs from a single xtal digi
-  StatusCode verifyXtalDigi(const Event::CalDigi &calDigi);
+  /// apply current configuration to child tools & algorithms.
+  StatusCode applyNewCfg(const CalXtalResponse::TestCfg &testCfg);
 
-  /// for testing the outputs from a single xtal recon
-  StatusCode verifyXtalRecon(const Event::CalXtalRecData &recData);
+  /// create MC data consistent with current configuration.
+  StatusCode fillMC(const CalXtalResponse::TestCfg &testCfg,
+                    const CalXtalResponse::TwrSet &twrSet);
 
-  /// generate face signal & adc ped values from single xtal digi
-  StatusCode preprocXtalDigi(const Event::CalDigi &calDigi);
-
-  /// derive values from calib which are shared by several tests
-  StatusCode preprocCalCalib();
-
-  /// for verifying just FLE & FHE triggers from single xtal digi
-  /// \param optional Glt object to check along w/ trigBits
-  /// \param trigBits all trigger bits from one xtal to check
-  StatusCode verifyXtalTrig(const Event::CalDigi &calDigi, 
-                            CalArray<XtalDiode, bool> &trigBits,
-                            Event::GltDigi const * const glt);
-
-  /// \brief test calCalibSvc for current xtal & calib_src
-  ///
-  /// also load up calib values for use in analyzing higher level tests.
-  StatusCode testCalCalibSvc();
-
-  /// test all ULD, LAC, FLE/FHE threshold levels w/ series of hits
-  StatusCode testTholds();
-
-  /// test pedestal noise distrubution by reconning numerous identical deposits & checking the width.
-  StatusCode testNoise();
-
-  /// test HEX1 ADC channel saturation point
-  StatusCode testSaturation();
-
-  /// test sum of multiple
-  StatusCode testMultiHit();
-
+  /// verify CalCalibSvc
+  StatusCode verifyCalCalibSvc(const CalXtalResponse::TestCfg &testCfg);
 
   /// fill mcIntegrating hit w/ given xtal position & energy
-  void fillMcHit(const XtalIdx xtalIdx,
+  /// \param xtalPos in mm along xtal length. from 0 - 326
+  void fillMcHit(const CalUtil::XtalIdx xtalIdx,
                  const float xtalPos,
                  const float meV,
                  Event::McIntegratingHit &hit);
 
-  /// test CalFailureModeSvc
-  StatusCode testCalFailureModeSvc();
-
-  /// register McIntegratingHit col with event service.  remove & delete any existing hit col
+  /// register McIntegratingHit col with event service.  remove &
+  /// delete any existing hit col
   StatusCode registerMcHitCol(Event::McIntegratingHitCol *hitCol);
 
-  /// zero out before each new test
-  void newTest();
+  /// remove MCHits from TDS.
+  StatusCode clearMC();
 
-  /// store parameters for current test 
-  /// so that i don't have to pass them from function to function
-  class CurrentTest {
-  public:
-    CurrentTest(test_CalXtalResponse &test_cxr);
+  /// need to be able to set properties on the fly for this alg
+  /// must make it a child alg of current alg
+  Algorithm *m_calDigiAlg;
 
-    /// zero out all values for new series of related tests
-    void newTestSeq();
+  /// need to be able to set properties on the fly for this alg
+  /// must make it a child alg of current alg
+  Algorithm *m_calXtalRecAlg;
 
-    /// currently tested xtal
-    XtalIdx xtalIdx;
-    /// current test energy
-    float meV;
-    /// current test deposit position in mm along crystal
-    float xtalPos;
-    /// current test number of hits.
-    int nHits;
 
-    /// string description of current test
-    string testDesc;
+  ICalCalibSvc *m_calCalibSvc;
 
-    /// cal trig mode (BESTRNAGE / ALLRANGE) for current test
-    CalXtalId::CalTrigMode trigMode;
+  /// CalCalibSvc w/ 'ideal mode' option enabled.
+  ICalCalibSvc *m_calCalibSvcIdeal;
 
-    /// noise enabled for current test
-    unsigned char noiseOn;
-    /// zero suppression for current test
-    unsigned char zeroSuppress;
+  ICalSignalTool *m_calSignalTool;
 
-    /// output lac threshold bits
-    CalArray<FaceNum, bool> lacBits;
-    /// output FLE/FHE trigger bits
-    CalArray<XtalDiode, bool> trigBits;
-    /// output ped subtracted adc values
-    CalArray<XtalRng, float> adcPed;
-    /// output estimated 'face signal' values
-    CalArray<XtalRng, float> fsignl;
-	/// best range for each face
-	CalArray<FaceNum, RngNum> bestRng;
+  /// used to calculate Cal Trig response from MC (default)
+  ICalTrigTool *m_calTrigTool;
 
-    /// output reconstructed energy
-    float recEne;
-    /// output reconstructed xtal position error
-    float posDiff;
+  /// used to calculate Cal Trig response from Digi
+  ICalTrigTool *m_calTrigToolDigi;
 
-    /// current test calibration data source.
-    enum CalibSrc {
-      REAL_CALIB,
-      IDEAL,
-      N_CALIB_SRC
-    };
-    CalibSrc calibSrc;
+  IPrecalcCalibTool *m_precalcCalibTool;
 
-    /// set calibration data source for current test
-    void setCalibSrc(const CalibSrc src);
+  /// list of active tower bays, populated at run time
+  CalXtalResponse::TwrSet m_twrSet;
 
-    /// get calibration data source for current test
-    CalibSrc getCalibSrc() const {return calibSrc;}
+  /// list of all towers (used by ideal mode calib)
+  static const CalXtalResponse::TwrSet m_fullTwrSet;
 
-    /// get current CalCalibSvc
-    ICalCalibSvc  *getCalCalibSvc() const {return calCalibSvc;}
-    /// get current XtalDigiTool
-    IXtalDigiTool *getDigiTool() const {return digiTool;}
-    /// get current CalSignalTool
-    ICalSignalTool *getCalSignalTool() const {return (noiseOn) ? 
-        signalToolNoise : signalTool;}
-    /// get curren XtalRecTool
-    IXtalRecTool  *getRecTool() const {return recTool;}
-    /// get current CalTrigTool
-    ICalTrigTool  *getTrigTool() const {return trigTool;}
-    /// get current PrecalcCalibTool
-    IPrecalcCalibTool *getPrecalcCalib() const {return precalcCalibTool;}
+  /// current test case spec
+  CalXtalResponse::TestCfg m_testCfg;
 
-  private:    
-    /// \brief used by constructor && reset f()'s
-    ///
-    /// clears out non-pointer primitives.
-    /// \note does not set calibSrc
-    void clear();
+  /// read in calibrations from TXT file to validate against system
+  /// provided values
+  test_CalCalibSvc::TestCalibSet m_testCalibSet;
 
-    /// cuyrrent CalCalibSvc
-    ICalCalibSvc  *calCalibSvc;
-    /// current XtalDigiTool (noise disabled)
-    IXtalDigiTool *digiTool;
-    /// current calsignal 
-    ICalSignalTool *signalTool;
-    ICalSignalTool *signalToolNoise;
-    IXtalRecTool  *recTool;
-    ICalTrigTool  *trigTool;
-    IPrecalcCalibTool *precalcCalibTool;
+  /// read in ideal calibrations from TXT file to validate against system
+  /// provided values
+  test_CalCalibSvc::TestCalibSet m_testCalibSetIdeal;
 
-    // use for reference to parent members.
-    test_CalXtalResponse &parent;
-  }; // CurrentTest
+  test_CalCalibSvc m_testCalCalibSvc;
 
-  /// point to current test info
-  auto_ptr<CurrentTest> curTest;
+  test_PrecalcCalibTool m_testPrecalcCalibTool;
 
-  struct CurrentCalib {
-    CurrentCalib() {clear();}
+  test_CalSignalTool m_testCalSignalTool;
 
-    // zero out all data members.
-    void clear();
+  test_CalDigi m_testCalDigi;
 
-    CalArray<XtalRng, float>   ped;
-    CalArray<XtalRng, float>   pedSig;
-    CalArray<FaceNum, float>   lacThresh;
-    CalArray<XtalRng, float>   uldThresh;
+  test_CalTrigTool m_testCalTrigTool;
 
-    CalArray<XtalDiode, float> trigMeV;
-    CalArray<FaceNum, float> lacMeV;
-    CalArray<XtalRng, float> uldMeV;
-    /// mev value of 1 adc unit for each adc range.
-    CalArray<XtalRng, float> mevPerADC;
-  } curCalib;
+  test_CalXtalRecAlg m_testCalXtalRecAlg;
 
-  /// len of one Cal xtal
+
+  /// length of cal crystal in mm
   float m_csiLength;
 
   /// the value of fLATObjects field, defining LAT towers 
@@ -301,220 +197,206 @@ private:
   /// number of geometric segments per Xtal
   int m_nCsISeg; 
 
-  /// used for constants & conversion routines.
-  IGlastDetSvc* m_detSvc;
+  /// path to txt table of calibration test values
+  StringProperty m_pedTXTPath;
+  /// path to txt table of calibration test values
+  StringProperty m_cidac2adcTXTPath;
+  /// path to txt table of calibration test values
+  StringProperty m_mpdTXTPath;
+  /// path to txt table of calibration test values
+  StringProperty m_asymTXTPath;
+  /// path to txt table of calibration test values
+  StringProperty m_tholdCITXTPath;
 
-  /// position estimation margin for single hit test (in mm) 
-  /// (array is for best range & next best range)
-  static const float m_singleHitPosMrgn[2];
+  /// path to txt table of calibration test values
+  StringProperty m_pedTXTPathIdeal;
+  /// path to txt table of calibration test values
+  StringProperty m_cidac2adcTXTPathIdeal;
+  /// path to txt table of calibration test values
+  StringProperty m_mpdTXTPathIdeal;
+  /// path to txt table of calibration test values
+  StringProperty m_asymTXTPathIdeal;
+  /// path to txt table of calibration test values
+  StringProperty m_tholdCITXTPathIdeal;
 
-  /// energy estimation margin for single hit test (in % of input ene)
-  /// (array is for best range & next best range)
-  static const float m_singleHitEneMrgn[2];
-
-  /// filename of output tuple.  No file created if set to default=""
-  StringProperty m_tupleFilename;
-  /// pointer to output tuple (TTree actually).  tuple is ignored
-  /// if pointer is NULL
-  TTree *m_tuple;
-  /// pointer to tuple file.
-  auto_ptr<TFile> m_tupleFile;
-
-  /// by default, we only test a subset of xtals 
-  /// by testing them all you can characterize a particular 
-  /// calibration set.
-  BooleanProperty m_testAllXtals;
-
-  /// skip any tests w/ random generators, so we get same results every time.
-  BooleanProperty m_skipNoise;
-
-  /// 1000 per test would be perfect, but 100 per test is probably more practical.
-  IntegerProperty m_nNoiseHits;
-
-  set<TwrNum> m_testTwrs;
-  set<LyrNum> m_testLyrs;
-  set<ColNum> m_testCols;
-
-  /// test ideal calibrations
-  ICalCalibSvc *m_calCalibSvcIdeal;
-  /// test ideal calibrations
-  IXtalDigiTool *m_digiToolIdeal;
-  /// test ideal calibrations
-  IXtalDigiTool *m_digiToolIdealNoise;
-
-  /// test ideal calibrations
-  ICalSignalTool *m_signalToolIdeal;
-  /// test ideal calibrations
-  ICalSignalTool *m_signalToolIdealNoise;
-
-  /// test ideal calibrations
-  IXtalRecTool *m_recToolIdeal;
-  /// test ideal calibrations
-  ICalTrigTool *m_trigToolIdeal;
-  /// test ideal calibrations
-  IPrecalcCalibTool *m_precalcCalibToolIdeal;
-
-  /// test  calibrations
-  ICalCalibSvc *m_calCalibSvc;
-  /// test  calibrations
-  IXtalDigiTool *m_digiTool;
-  /// test  calibrations
-  ICalSignalTool *m_signalTool;
-  /// test  calibrations
-  ICalSignalTool *m_signalToolNoise;
-  /// test  calibrations
-  IXtalRecTool *m_recTool;
-  /// test  calibrations
-  ICalTrigTool *m_trigTool;
-  /// test  calibrations
-  IPrecalcCalibTool *m_precalcCalibTool;
-
-  /// pointer to failure mode service
-  ICalFailureModeSvc* m_calFailureModeSvc;
-};
-
-const float test_CalXtalResponse::m_singleHitEneMrgn[2] = {(float).01, (float).03}; /// percent of input ene (bestrng, 2nd best rng)
-const float test_CalXtalResponse::m_singleHitPosMrgn[2] = {3,9}; /// (mm) (bestrng, 2nd best rng)
-
-void test_CalXtalResponse::CurrentCalib::clear() {
-  fill(ped.begin(), ped.end(), 0);
-  fill(pedSig.begin(), pedSig.end(), 0);
-  fill(lacThresh.begin(), lacThresh.end(), 0);
-  fill(uldThresh.begin(), uldThresh.end(), 0);
-
-  fill(trigMeV.begin(), trigMeV.end(), 0);
-  fill(lacMeV.begin(), lacMeV.end(), 0);
-  fill(uldMeV.begin(), uldMeV.end(), 0);
-  fill(mevPerADC.begin(), mevPerADC.end(), 0);
-}
-
-
-test_CalXtalResponse::CurrentTest::CurrentTest(test_CalXtalResponse &cxr) :
-  calCalibSvc(0),
-  digiTool(0),
-  signalTool(0),
-  signalToolNoise(0),
-  recTool(0),
-  trigTool(0),
-  precalcCalibTool(0),
-  parent(cxr)
-{
-  clear();
-}
-
-void test_CalXtalResponse::CurrentTest::clear() {
-  xtalIdx     = XtalIdx(0);
-  meV         = 0;
-  xtalPos     = 0;
-  nHits       = 1;
-
-  testDesc     = "";
-  trigMode     = CalXtalId::BESTRANGE;
-  noiseOn      = false;
-  zeroSuppress = false;
-
-  fill(lacBits.begin(), lacBits.end(), false);
-  fill(trigBits.begin(), trigBits.end(), false);
-  fill(adcPed.begin(), adcPed.end(), 0);
-  fill(bestRng.begin(), bestRng.end(), LEX8);
-  fill(fsignl.begin(), fsignl.end(), 0);
-
-  recEne = 0;
-  posDiff = 0;
-}
-
-void test_CalXtalResponse::CurrentTest::newTestSeq() {
-  clear();
-
-  setCalibSrc(REAL_CALIB);
-}
-
-void test_CalXtalResponse::newTest() {
-  curTest->getCalSignalTool()->newEvent();
-  curTest->getCalSignalTool()->newEvent();
-}
-
-void test_CalXtalResponse::CurrentTest::setCalibSrc(const CalibSrc src) {
-  calibSrc = src;
-  switch (src) {
-  case REAL_CALIB:
-    calCalibSvc   = parent.m_calCalibSvc;
-    digiTool      = parent.m_digiTool;
-    signalTool      = parent.m_signalTool;
-    signalToolNoise = parent.m_signalToolNoise;
-    recTool       = parent.m_recTool;
-    trigTool      = parent.m_trigTool;
-    precalcCalibTool = parent.m_precalcCalibTool;
-    break;
-  case IDEAL:
-    calCalibSvc   = parent.m_calCalibSvcIdeal;
-    digiTool      = parent.m_digiToolIdeal;
-    signalTool      = parent.m_signalToolIdeal;
-    signalToolNoise = parent.m_signalToolIdealNoise;
-    recTool       = parent.m_recToolIdeal;
-    trigTool      = parent.m_trigToolIdeal;
-    precalcCalibTool = parent.m_precalcCalibToolIdeal;
-    break;
-  default:
-    assert(src >= 0 && src < N_CALIB_SRC);
-  };
-}
-
-//------------------------------------------------------------------------
-
-// necessary to define a Factory for this algorithm
-// expect that the xxx_load.cxx file contains a call     
-//     DLL_DECL_ALGORITHM( test_CalXtalResponse );
+  /// keep count of events
+  unsigned m_eventId;
+  
+}; // class test_CalXtalResponse
 
 static const AlgFactory<test_CalXtalResponse>  Factory;
 const IAlgFactory& test_CalXtalResponseFactory = Factory;
 
-//------------------------------------------------------------------------
-//! ctor
-test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvcLocator)
-  : Algorithm(name, pSvcLocator),
-    m_detSvc(0),
-    m_tuple(0),
-    m_calCalibSvcIdeal(0),
-    m_digiToolIdeal(0),
-    m_digiToolIdealNoise(0),
-    m_signalToolIdeal(0),
-    m_signalToolIdealNoise(0),
-    m_recToolIdeal(0),
-    m_trigToolIdeal(0),
-    m_precalcCalibToolIdeal(0),
-    m_calCalibSvc(0),
-    m_digiTool(0),
-    m_signalTool(0),
-    m_signalToolNoise(0),
-    m_recTool(0),
-    m_trigTool(0),
-    m_precalcCalibTool(0)
+namespace {
+  static const CalUtil::TwrNum _fullTwrSet[] = {0, 1, 2, 3, 
+                                                4, 5, 6, 7, 
+                                                8, 9, 10,11,
+                                                12,13,14,15};
+  
+  /// expand environment variables in string without modifying
+  /// original string
+  std::string expandEnvVarConst(const std::string &input) {
+    std::string copy(input);
+    
+    facilities::Util::expandEnvVar(&copy);
 
-{
-  declareProperty("tupleFilename",      m_tupleFilename      = "");
-  declareProperty("testAllXtals",       m_testAllXtals       = false);
-  declareProperty("nNoiseHits",         m_nNoiseHits         = 50);
-  declareProperty("skipNoiseTests",     m_skipNoise          = false);
-
-  curTest.reset(new CurrentTest(*this));
+    return copy;
+  }
+  
 }
 
-//------------------------------------------------------------------------
-//! set parameters and attach to various perhaps useful services.
-StatusCode test_CalXtalResponse::initialize(){
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-  msglog << MSG::INFO << "initialize" << endreq;
+using namespace CalXtalResponse;
+using namespace std;
+using namespace idents;
+using namespace CalUtil;
 
-  //-- RETRIEVE CONSTANTS --//
+const CalXtalResponse::TwrSet test_CalXtalResponse::m_fullTwrSet(_fullTwrSet,
+                                                                 _fullTwrSet+16);
+
+test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvcLocator) :
+  Algorithm(name, pSvcLocator),
+  m_calDigiAlg(0),
+  m_calXtalRecAlg(0),
+  m_calCalibSvc(0),
+  m_calCalibSvcIdeal(0),
+  m_calSignalTool(0),
+  m_calTrigTool(0),
+  m_calTrigToolDigi(0),
+  m_precalcCalibTool(0),
+  m_csiLength(0),
+  m_eventId(0)
+{
+  declareProperty("pedTXTPath", m_pedTXTPath="");
+  declareProperty("cidac2adcTXTPath", m_cidac2adcTXTPath="");
+  declareProperty("mpdTXTPath", m_mpdTXTPath="");
+  declareProperty("asymTXTPath", m_asymTXTPath="");
+  declareProperty("tholdCITXTPath", m_tholdCITXTPath="");
+ 
+  declareProperty("pedTXTPathIdeal", m_pedTXTPathIdeal="");
+  declareProperty("cidac2adcTXTPathIdeal", m_cidac2adcTXTPathIdeal="");
+  declareProperty("mpdTXTPathIdeal", m_mpdTXTPathIdeal="");
+  declareProperty("asymTXTPathIdeal", m_asymTXTPathIdeal="");
+  declareProperty("tholdCITXTPathIdeal", m_tholdCITXTPathIdeal="");
+
+}
+
+StatusCode test_CalXtalResponse::initialize() {
+  StatusCode sc;
+  MsgStream msglog(msgSvc(), name());   
+
+  sc = createSubAlgorithm("CalDigiAlg", "CalDigiAlg", m_calDigiAlg);
+  if (sc.isFailure())
+    return sc;
+
+  sc = createSubAlgorithm("CalXtalRecAlg", "CalXtalRecAlg", m_calXtalRecAlg);
+  if (sc.isFailure())
+    return sc;
+
+
+  // obtain CalCalibSvc
+  sc = service("CalCalibSvc", "CalCalibSvc", m_calCalibSvc);
+  if (sc.isFailure()) {
+    msglog << MSG::ERROR << "can't get CalCalibSvc" << endreq;
+    return sc;
+  }
+
+  sc = service("CalCalibSvc", "CalCalibSvcIdeal", m_calCalibSvcIdeal);
+  if (sc.isFailure()) {
+    msglog << MSG::ERROR << "can't get CalCalibSvcIdeal" << endreq;
+    return sc;
+  }
+
+  sc = toolSvc()->retrieveTool("CalSignalTool",
+                               "CalSignalTool",
+                               m_calSignalTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create CalSignalTool" << endreq;
+    return sc;
+  }
+
+  sc = toolSvc()->retrieveTool("CalTrigTool",
+                               "CalTrigTool",
+                               m_calTrigTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create CalTrigTool" << endreq;
+    return sc;
+  }
+
+  sc = toolSvc()->retrieveTool("CalTrigTool",
+                               "CalTrigToolDigi",
+                               m_calTrigToolDigi,
+                               this); // not intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create CalTrigTool" << endreq;
+    return sc;
+  }
+
+  sc = toolSvc()->retrieveTool("PrecalcCalibTool",
+                               "PrecalcCalibTool",
+                               m_precalcCalibTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create PrecalcCalibTool" << endreq;
+    return sc;
+  }
+
   // try to find the GlastDetSvc service
-  sc = service("GlastDetSvc", m_detSvc);
+  IGlastDetSvc *detSvc = 0;
+  sc = service("GlastDetSvc", detSvc);
   if (sc.isFailure() ) {
     msglog << MSG::ERROR << "  can't get GlastDetSvc " << endreq;
     return sc;
   }
 
+  //-- find out which tems are installed.
+  CalUtil::TwrList twrList = CalUtil::findActiveTowers(*detSvc);
+  m_twrSet.insert(twrList.begin(), twrList.end());
+  
+
+  // initialize test_CalCalibSvc
+  if (m_testCalCalibSvc.initialize(msgSvc()).isFailure())
+    return StatusCode::FAILURE;
+
+  if (m_testPrecalcCalibTool.initialize(msgSvc()).isFailure())
+    return StatusCode::FAILURE;
+
+  if (m_testCalSignalTool.initialize(msgSvc()).isFailure())
+    return StatusCode::FAILURE;
+
+  if (m_testCalDigi.initialize(msgSvc()).isFailure())
+    return StatusCode::FAILURE;
+
+  if (m_testCalTrigTool.initialize(msgSvc()).isFailure())
+    return StatusCode::FAILURE;
+
+  if (m_testCalXtalRecAlg.initialize(msgSvc(), detSvc).isFailure())
+    return StatusCode::FAILURE;
+
+  sc = retrieveConstants(*detSvc);
+  if (sc.isFailure())
+    return sc;
+
+  /// load calibration 'answers' from txt file
+  m_testCalibSet.m_calPed.readTXT(expandEnvVarConst(m_pedTXTPath));
+  m_testCalibSet.m_cidac2adc.readTXT(expandEnvVarConst(m_cidac2adcTXTPath));
+  m_testCalibSet.m_calAsym.readTXT(expandEnvVarConst(m_asymTXTPath));
+  m_testCalibSet.m_calMPD.readTXT(expandEnvVarConst(m_mpdTXTPath));
+  m_testCalibSet.m_calTholdCI.readTXT(expandEnvVarConst(m_tholdCITXTPath));
+
+  m_testCalibSetIdeal.m_calPed.readTXT(expandEnvVarConst(m_pedTXTPathIdeal));
+  m_testCalibSetIdeal.m_cidac2adc.readTXT(expandEnvVarConst(m_cidac2adcTXTPathIdeal));
+  m_testCalibSetIdeal.m_calAsym.readTXT(expandEnvVarConst(m_asymTXTPathIdeal));
+  m_testCalibSetIdeal.m_calMPD.readTXT(expandEnvVarConst(m_mpdTXTPathIdeal));
+  m_testCalibSetIdeal.m_calTholdCI.readTXT(expandEnvVarConst(m_tholdCITXTPathIdeal));
+
+  
+  return StatusCode::SUCCESS;
+}
+
+/// retrieve instrument constants from database
+StatusCode test_CalXtalResponse::retrieveConstants(IGlastDetSvc &detSvc) {
   double tmp;
   // map containing pointers to integer constants to be read
   // with their symbolic names from xml file used as a key 
@@ -531,7 +413,7 @@ StatusCode test_CalXtalResponse::initialize(){
   // loop over all constants information contained in the map
   for(PARAMAP::iterator iter=param.begin(); iter!=param.end();iter++){
     //  retrieve constant
-    if(!m_detSvc->getNumericConstByName((*iter).second, &tmp)) {
+    if(!detSvc.getNumericConstByName((*iter).second, &tmp)) {
       MsgStream msglog(msgSvc(), name());
       msglog << MSG::ERROR << " constant " <<(*iter).second
              << " not defined" << endreq;
@@ -540,1139 +422,232 @@ StatusCode test_CalXtalResponse::initialize(){
   }
 
   // DOUBLE CONSTANTS
-  sc = m_detSvc->getNumericConstByName("CsILength", &tmp);
+  StatusCode sc;
+  sc = detSvc.getNumericConstByName("CsILength", &tmp);
   m_csiLength = tmp;
   if (sc.isFailure()) {
+    MsgStream msglog(msgSvc(), name());
     msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
     return sc;
   }
 
-
-  //-- RETRIEVE TEST SERVICES --//
-  sc = service("CalCalibSvcIdeal", m_calCalibSvcIdeal);
-  if (sc.isFailure()) {
-    msglog << MSG::ERROR << "can't get CalCalibSvcIdeal." << endreq;
-    return sc;
-  }
-
-  sc = service("CalCalibSvc", m_calCalibSvc);
-  if (sc.isFailure()) {
-    msglog << MSG::ERROR << "can't get CalCalibSvc." << endreq;
-    return sc;
-  }
-
-  //-- RETRIEVE TEST TOOLS --//
-  sc = toolSvc()->retrieveTool("XtalDigiTool", 
-                               "XtalDigiToolIdeal",
-                               m_digiToolIdeal,
-                               this);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalDigiToolIdeal" << endreq;
-    return sc;
-  }
-  sc = toolSvc()->retrieveTool("CalSignalTool", 
-                               "CalSignalToolIdeal",
-                               m_signalToolIdeal,
-                               0); // intended to be shared
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalSignalToolIdeal" << endreq;
-    return sc;
-  }
-  sc = toolSvc()->retrieveTool("CalSignalTool", 
-                               "CalSignalToolIdealNoise",
-                               m_signalToolIdealNoise,
-                               0); // intended to be shared
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalSignalToolIdeal" << endreq;
-    return sc;
-  }
-  sc = toolSvc()->retrieveTool("XtalRecTool", 
-                               "XtalRecToolIdeal",
-                               m_recToolIdeal,
-                               this);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalRecToolIdeal" << endreq;
-    return sc;
-  }
-  
-  sc = toolSvc()->retrieveTool("CalTrigTool", 
-                               "CalTrigToolIdeal",
-                               m_trigToolIdeal,
-                               this);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalTrigToolIdeal" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("PrecalcCalibTool", 
-                               "PrecalcCalibToolIdeal",
-                               m_precalcCalibToolIdeal,
-                               0); // this tool is intended to be share by multiple users
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "PrecalcCalibToolIdeal" << endreq;
-    return sc;
-  }
- 
-
-
-  sc = toolSvc()->retrieveTool("CalTrigTool", 
-                               "CalTrigTool",
-                               m_trigTool,
-                               this);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalTrigTool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("PrecalcCalibTool", 
-                               "PrecalcCalibTool",
-                               m_precalcCalibTool,
-                               0); // shared w/ other code
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "PrecalcCalibTool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("XtalDigiTool", 
-                               "XtalDigiTool",
-                               m_digiTool,
-                               this);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalDigiTool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("CalSignalTool", 
-                               "CalSignalTool",
-                               m_signalTool,
-                               0); // intended to be shared
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalSignalTool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("CalSignalTool", 
-                               "CalSignalToolNoise",
-                               m_signalToolNoise,
-                               0); // intended to be shared
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "CalSignalTool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("XtalRecTool", 
-                               "XtalRecTool",
-                               m_recTool,
-                               this);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  can't create " << "XtalRecTool" << endreq;
-    return sc;
-  }
-
-
-  // open optional tuple file
-  if (m_tupleFilename.value().length() > 0 ) {
-    m_tupleFile.reset(new TFile(m_tupleFilename.value().c_str(),"RECREATE","test_CalXtalResponse"));
-    if (!m_tupleFile.get()) {
-      msglog << MSG::ERROR << "Unable to create TTree object: " << m_tupleFilename << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-    
-    else {
-      m_tuple = new TTree("test_CalXtalResponse","test_CalXtalResponse");
-      if (!m_tuple) {
-        msglog << MSG::ERROR << "Unable to create tuple" << endreq;
-        return StatusCode::FAILURE;
-      }
-
-      //-- Add Branches to tree --//
-      if (!m_tuple->Branch("xtalIdx", &curTest->xtalIdx, "xtalIdx/i") ||
-          !m_tuple->Branch("meV", &curTest->meV, "meV/F") ||
-          !m_tuple->Branch("xtalPos", &curTest->xtalPos, "xtalPos/F") ||
-          !m_tuple->Branch("trigMode", &curTest->trigMode, "trigMode/b") ||
-          !m_tuple->Branch("zeroSuppress", &curTest->zeroSuppress, "zeroSuppress/b") ||
-          !m_tuple->Branch("noiseOn", &curTest->noiseOn, "noiseOn/b") ||
-          !m_tuple->Branch("recEne", &curTest->recEne, "recEne/F") ||
-          !m_tuple->Branch("posDiff", &curTest->posDiff, "posDiff/F") ||
-          !m_tuple->Branch("calibSrc", &curTest->calibSrc, "calibSrc/b")
-          ) {
-        msglog << MSG::ERROR << "Couldn't create tuple branch" << endreq;
-        return StatusCode::FAILURE;
-      }
-    }
-  } // optional tuple
-
-  //-- TEST XTAL SET (unless testAllXtals == true) --//
-  // -- loop every test on each of these towers.
-  m_testTwrs.insert(0);  // 1st
-  m_testTwrs.insert(8);  // somewhere in middle, part of 8 tower partial lat.
-  m_testTwrs.insert(15); // last
-
-  // -- loop every test on each of these layers
-  m_testLyrs.insert(LyrNum(0));  // 1st
-  m_testLyrs.insert(LyrNum(4));  // somewhere in middle
-  m_testLyrs.insert(LyrNum(7)); // las
-
-  // -- loop every test on each of these columns
-  m_testCols.insert(0);  // 1st
-  m_testCols.insert(4);  // somewhere in middle
-  m_testCols.insert(11);  // last
-
-  sc = service("CalFailureModeSvc", m_calFailureModeSvc);
-  if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to find CalFailureMode service" << endreq;
-    return sc;
-  }
-  
   return StatusCode::SUCCESS;
 }
 
-/** \brief Perform all CalXtalResponse tests in one enormous event
-
-    First run calFailureModeSvc
-
-    Now for the exhaustive test: 
-    - basically go through all of phase space, mc -> digi -> recon at each point & check recon results against mc deposit)
-    - noise is disabled in most tests to allow for precise recon / mc match.
-
-    Outer Loop - loop throuh set of select crystals spread out over different towers, layers and columns
-    Inner Loop 1 - loop through calibration data sources (current ideal and real)
-    - test CalCalibSvc for current crystal
-    Inner Loop 2 - loop through full dynamic range of xtal (1,10,100,1000,10000 mev single xtal deposits
-    Inner Loop 3 - loop through xtal longitudinal positions
-    - test 4range readout
-    - test bestrange
-    - test zero suppression
-    - enable noise (disabled in most tests)
-    end loop 3
-    - test noise widths by reconning numerous identical deposits.
-    - test multiple hits along crystal.
-    - test trigger / lac / uld thresholds
-    - test for xtal saturation
-
+/**
+   Alogrithm:
+   For each new event:
+   - generate random test case configuration
+   - apply new cfg to any Gaudi child algorithms & tools (alter their
+   jobOptions)
+   - verify CalCalibSvc
+   - verify precalcCalibTool
+   - generate simulated MCInteratingHit deposit records from TestCfg
+   - verify CalSignalTool (CalSignalTool should  process all the new
+   MC data on the first query of the event.
+   - execute CalDigiAlg
+   - verify CalDigiCol (output of CalDigiAlg)
+   - verify CalTrigTool (it should calculate from MC data since it is
+   present in TDS
+   - remove MC data from TDS (force CalTrigTool to use CalDigis)
+   - verify CalTrigTool again (this time with CalDigi data instead of
+   MC)
+   - run CalXtalRecAlg
+   - verify CalXtalRecCOl (output of CalXtalRecAlg)
+   
 */
-StatusCode test_CalXtalResponse::execute()
-{
-  MsgStream msglog(msgSvc(), name());
+StatusCode test_CalXtalResponse::execute() {
   StatusCode sc;
-  
-  //-- CalFailureModeSvc --//
-  sc = testCalFailureModeSvc();
-  if (sc.isFailure()) return sc;
+  MsgStream msglog(msgSvc(), name());  
 
-  // -- test out following # of points evenly spaced along xtal
-  const int nXtalPos(5); // -- gets absolute ends, 1 in ctr & 2 others
-  
-  // -- test out following energy levels (in a single deposit
-  vector<float> testMeV;
-  testMeV.push_back(0);
-  testMeV.push_back(1); // below lac
-  testMeV.push_back(1e1); // near muon peak
-  testMeV.push_back(1e2); // near fle thresh
-  testMeV.push_back(1e3);  // near fhe thresh, lex8 / hex1
-  testMeV.push_back(1e4);
+  m_eventId++;
 
-  for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
-    //-- check if xtal is on test list --//
-    if (!m_testAllXtals) {
-      if (m_testTwrs.find(xtalIdx.getTwr()) == m_testTwrs.end()) continue;
-      if (m_testLyrs.find(xtalIdx.getLyr()) == m_testLyrs.end()) continue;
-      if (m_testCols.find(xtalIdx.getCol()) == m_testCols.end()) continue;
-    }
+  /// generate new random test event.
+  m_testCfg.randomFill();
+  msglog << MSG::INFO << "event=" << m_eventId << " " << m_testCfg << endreq;
 
-    for (short calibSrc = 0; calibSrc < CurrentTest::N_CALIB_SRC; calibSrc++) {
-      //////////////////////////
-      //-- TEST CalCalibSvc --//
-      //////////////////////////
-      curTest->newTestSeq();
-      curTest->xtalIdx = xtalIdx;
-      curTest->setCalibSrc((CurrentTest::CalibSrc)calibSrc);
-      sc = testCalCalibSvc();
-      if (sc.isFailure()) return sc;
-      
+  /// apply new random configuration to Gaudi child algorithms & tools
+  sc = applyNewCfg(m_testCfg);
+  if (sc.isFailure()) 
+    return sc;
 
+  /// check calibrations
+  msglog << MSG::DEBUG << "verifyCalCalibSvc" << endreq;
+  sc = verifyCalCalibSvc(m_testCfg);
+  if (sc.isFailure())
+    return sc;
 
-      //-- derive needed values from current xtal calib
-      sc = preprocCalCalib();
-      if (sc.isFailure()) return sc;
+  /// check dreived calibrations
+  msglog << MSG::DEBUG << "verify precalcCalibTool" << endreq;
+  if (m_testPrecalcCalibTool.verify(*m_precalcCalibTool, 
+                                    *m_calCalibSvc,
+                                    m_testCfg, 
+                                    m_twrSet).isFailure())
+    return StatusCode::FAILURE;
 
-      for (vector<float>::const_iterator mevIt = testMeV.begin(); mevIt != testMeV.end(); mevIt++) {
-        const float meV = *mevIt;
-        for (int posIdx = 0; posIdx < nXtalPos; posIdx++) {
+  /// fill MC
+  sc = fillMC(m_testCfg, m_twrSet);
+  if (sc.isFailure())
+    return sc;
 
-          //-- SHARED SETUP --//
-          curTest->newTestSeq();
-          curTest->xtalIdx = xtalIdx;
-          curTest->meV     = meV;
-          curTest->setCalibSrc((CurrentTest::CalibSrc)calibSrc);
-          // longitudinal distance from ctr of xtal in mm
-          curTest->xtalPos = m_csiLength*posIdx/(nXtalPos-1) - m_csiLength/2;
+  // check CalSignalTool
+  msglog << MSG::DEBUG << "test CalSignalTool" << endreq;
+  sc = m_testCalSignalTool.verify(*m_calSignalTool,
+                                  *m_calCalibSvc,
+                                  m_testCfg,
+                                  m_twrSet);
+  if (sc.isFailure())
+    return sc;
+                                 
 
+  // execute CalDigiAlg
+  sc = m_calDigiAlg->execute();
+  if (sc.isFailure())
+    return sc;
 
-          ////////////////////////
-          //-- 4RANGE READOUT --//
-          ////////////////////////
-          curTest->trigMode = CalXtalId::ALLRANGE;
-          sc = testSingleHit();
-          if (sc.isFailure()) return sc;
-                  
-          ///////////////////
-          //-- BESTRANGE --//
-          ///////////////////
-          curTest->trigMode = CalXtalId::BESTRANGE;
-          sc = testSingleHit();
-          if (sc.isFailure()) return sc;     
-
-          ///////////////////////
-          //-- ZERO SUPPRESS --//
-          ///////////////////////
-          curTest->zeroSuppress = true;
-          sc = testSingleHit();
-          if (sc.isFailure()) return sc;
-          curTest->zeroSuppress = false;
-          
-          if (!m_skipNoise) {
-            //////////////////
-            //-- NOISE ON --//
-            //////////////////
-            curTest->noiseOn = true;
-            sc = testSingleHit();
-            if (sc.isFailure()) return sc;
-            curTest->noiseOn = false;
-          }
-
-        } // xtalPos loop
-
-        if (!m_skipNoise) {
-          //-- NOISE TEST --//
-          sc = testNoise();
-          if (sc.isFailure()) return sc;
-        }
-
-        //-- MULTI-HIT SUMMING TESTS --//
-        sc = testMultiHit();
-        if (sc.isFailure()) return sc;
-          
-      } // mev loop
-
-      //-- TRIGGER THRESHOLD TESTS --//
-      sc = testTholds();
-      if (sc.isFailure()) return sc;
-
-      sc = testSaturation();
-      if (sc.isFailure()) return sc;
-
-    } // calibSrc loop
-  } // xtal loop  
-  
-  //-- TODO --//
-  // EMPTY MC & DIGI TEST
-  // DIODE DEPOSIT TEST
-  // ALG TESTS
-  // ZERO SUPPRESS TEST
-  return StatusCode::SUCCESS;
-}
-
-//------------------------------------------------------------------------
-//! clean up, summarize
-StatusCode test_CalXtalResponse::finalize(){
-  MsgStream msglog(msgSvc(), name());
-
-  // make sure optional tuple is closed out                                                        
-  if (m_tupleFile.get()) {
-    m_tupleFile->Write();
-    m_tupleFile->Close(); // trees deleted                                                         
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-/** \brief convert longitudinal xtalPos along cal xtal to 3d point in LAT geometry space
-
-    \param pXtal ouput position vector
-    \param xtalPos input longitudinal position in mm from center of xtal
-*/
-void test_CalXtalResponse::pos2Point(const XtalIdx xtalIdx, float xtalPos, Point &pXtal) {
-  //-- CONSTRUCT GEOMETRY VECTORS FOR XTAL --//
-
-  // create Volume Identifier for segments 0 & 11 of this crystal
-  
-  // volId info snagged from 
-  // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
-  idents::VolumeIdentifier segm0Id, segm11Id;
-
-  const TwrNum twr = xtalIdx.getTwr();
-  const LyrNum lyr = xtalIdx.getLyr();
-  const ColNum col = xtalIdx.getCol();
-  
-  // init seg0 w/ info shared by both.
-  segm0Id.append(m_eLATTowers);
-  segm0Id.append(twr.getRow());
-  segm0Id.append(twr.getCol());
-  segm0Id.append(m_eTowerCAL);
-  segm0Id.append(lyr.val());
-  segm0Id.append(lyr.getDir().val()); 
-  segm0Id.append(col.val());
-  segm0Id.append(m_eXtal);
-
-  // copy over shared info
-  segm11Id = segm0Id;
-  
-  // init segment specific info.
-  segm0Id.append(0); // segment Id
-  segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
-  
-  HepTransform3D transf;
-
-  //get 3D transformation for segment 0 of this crystal
-  m_detSvc->getTransform3DByID(segm0Id,&transf);
-  //get position of the center of the segment 0
-  Vector vect0 = transf.getTranslation();
-
-  //get 3D transformation for the last segment of this crystal
-  m_detSvc->getTransform3DByID(segm11Id,&transf);
-  //get position of the center of the last segment
-  Vector vect11 = transf.getTranslation();
-
-  Point p0(0.,0.,0.);           
-  // position of the crystal center
-  Point pCenter = p0+(vect0+vect11)*0.5; 
-  //normalized vector of the crystal direction 
-  Vector dirXtal = (vect11-vect0)*m_nCsISeg/(m_nCsISeg-1);  
-
-  // put 1D position info into 3D vector
-  // 'xtalPos' is in units of xtal Length, convert to rel units (-1->1)
-  xtalPos /= m_csiLength; 
-  pXtal = pCenter+dirXtal*xtalPos;
-
-}
-
-/** \brief used in most tests.  full mc->digi->recon chain for single deposit
- */
-StatusCode test_CalXtalResponse::testSingleHit() {
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  /// keep track of all test cases during debugging.  
-  static unsigned nTest = 0;
-  nTest++;
-
-  //-- init new test
-  newTest();
-
-  /////////////////////////////////////////////////
-  // SECTION 0: GENERATE TEST DESCRIPTION STRING //
-  /////////////////////////////////////////////////
-  {
-    ostringstream tmpStream;
-    tmpStream << "TEST_SINGLE_HIT, "
-              << curTest->xtalIdx.val() << ", "
-              << curTest->meV           << ", "
-              << curTest->xtalPos       << ", ";
-
-    if (curTest->trigMode == CalXtalId::BESTRANGE)
-      tmpStream << "BESTRANGE, ";
-    else tmpStream << "ALLRANGE, ";
-
-    if (curTest->zeroSuppress)
-      tmpStream << "ZEROSUPPRESS, ";
-    else tmpStream << "NOSUPPRESS, ";
-
-    if (curTest->noiseOn) 
-      tmpStream << "NOISEON, " ;
-    else tmpStream << "NOISEOFF, ";
-
-    switch (curTest->getCalibSrc()) {
-    case CurrentTest::REAL_CALIB:
-      tmpStream << "REAL_CALIB, ";
-      break;
-    case CurrentTest::IDEAL:
-      tmpStream << "IDEAL_CALIB, ";
-      break;
-    default:
-      short src = curTest->getCalibSrc();
-      assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
-    }
-
-    curTest->testDesc = tmpStream.str();
-  }
-
-  //cout << "DEBUG: " << curTest->testDesc << endl;
-
-  ////////////////////////////////////////////
-  // SECTION 1: GENERATE MC INTEGRATING HIT //
-  ////////////////////////////////////////////
-
-  Event::McIntegratingHit *hit = new Event::McIntegratingHit();
-  fillMcHit(curTest->xtalIdx, 
-            curTest->xtalPos, 
-            curTest->meV,
-            *hit);
-
-  //////////////////////////////
-  //-- SECTION 2: XTAL DIGI --//
-  //////////////////////////////
-  // sum hit
-  Event::McIntegratingHitCol *hitCol = new Event::McIntegratingHitCol();
-  hitCol->push_back(hit);
-  sc = registerMcHitCol(hitCol);
-  if (sc.isFailure()) return sc;
-
-  ICalSignalTool::XtalSignalMap xtalSignal;
-  sc = curTest->getCalSignalTool()->getXtalSignalMap(curTest->xtalIdx, xtalSignal);
-  if (sc.isFailure()) return sc;
-
-
-  // digi outputs
-  Event::CalDigi calDigi(curTest->trigMode, curTest->xtalIdx.getCalXtalId()); 
-  sc = curTest->getDigiTool()->calculate(xtalSignal,
-                                         calDigi,
-                                         curTest->lacBits,
-                                         curTest->zeroSuppress != 0);
-  if (sc.isFailure()) return sc;
-  
-  
-  //-- VERIFY XTAL DIGI OUTPUT --//
-  sc = verifyXtalDigi(calDigi);
-  if (sc.isFailure()) return sc;
-
-  
-  // recon outputs
-  Event::CalXtalRecData recData(curTest->trigMode, curTest->xtalIdx.getCalXtalId());
-  CalArray<FaceNum, bool> belowNoise;
-  CalArray<FaceNum, bool> saturated;
-
-  ///////////////////////////////////
-  //-- SECTION 3: RUN XTAL RECON --//
-  ///////////////////////////////////
-  // do not test recon if there are no readouts, i already know that LAC bits match the n readouts from previous tests.
-  if (curTest->zeroSuppress && !contains(curTest->lacBits,true))
-    return StatusCode::SUCCESS;
-
-  sc = curTest->getRecTool()->calculate(calDigi,
-                                        recData,
-                                        belowNoise,
-                                        saturated,
-                                        0);
-  if (sc.isFailure()) return sc;
-
-  // check that below noise test is correct
-  const bool xtalBelowNoise = contains(belowNoise,true);
-  if (xtalBelowNoise && !contains(curTest->lacBits, false)) {
+  // retrieve caldigicol
+  // get a pointer to the input TDS data collection
+  SmartDataPtr<Event::CalDigiCol> calDigiCol = SmartDataPtr<Event::CalDigiCol>(eventSvc(),
+                                                                               EventModel::Digi::CalDigiCol);
+  if (!calDigiCol) {
     MsgStream msglog(msgSvc(), name());
-    msglog << MSG::ERROR << "Crystal registered falsely below noise threshold!" << endreq;
+    msglog << MSG::VERBOSE << "No CalDigi data found"
+           << endreq;
     return StatusCode::FAILURE;
   }
 
-  //-- VERIFY XTAL RECON OUTPUT --//
-  if (!xtalBelowNoise) {
-    sc = verifyXtalRecon(recData);
-    if (sc.isFailure()) return sc;
-  }
+  msglog << MSG::DEBUG << "verify CalDigi" << endreq;
+  if (m_testCalDigi.verify(*m_calSignalTool,
+                           *m_calCalibSvc,
+                           m_testCfg,
+                           m_twrSet,
+                           calDigiCol).isFailure())
+    return StatusCode::FAILURE;
 
-  //-- FILL TUPLE --//
-  if (m_tuple) 
-    m_tuple->Fill();
+  msglog << MSG::DEBUG << "verify CalTrigTool (MC)" << endreq;
+  /// use tight tolerance as these answers should be pretty much perfect
+  if (m_testCalTrigTool.verify(*m_calSignalTool,
+                               m_twrSet,
+                               *m_calTrigTool,
+                               *m_precalcCalibTool,
+                               MAX_RECON_DIFF).isFailure())
+    return StatusCode::FAILURE;
 
-  return StatusCode::SUCCESS;
-}
+  /// clear out MC so CalTrigToolDigi will work from Digi's instead
+  if (clearMC().isFailure())
+    return StatusCode::FAILURE;
 
-StatusCode test_CalXtalResponse::verifyXtalRecon(const Event::CalXtalRecData &recData) {
-  const unsigned short nReadouts = recData.getNReadouts();
+  msglog << MSG::DEBUG << "verify CalTrigTool (Digi)" << endreq;
+  /// use loose tolerance as we are comparing ADC from one diode to
+  /// trigger output of another diode
+  if (m_testCalTrigTool.verify(*m_calSignalTool,
+                               m_twrSet,
+                               *m_calTrigToolDigi,
+                               *m_precalcCalibTool,
+                               MAX_ASYM_DIFF).isFailure())
+    return StatusCode::FAILURE;
+                
 
-  // confirm we have successful recon, we should get one for every xtal over (say 4 mev)
-  if (nReadouts == 0) {
+  // execute CalXtalRecAlg
+  sc = m_calXtalRecAlg->execute();
+  if (sc.isFailure())
+    return sc;
+
+  // retrieve CalXtalRecCol
+  // get a pointer to the input TDS data collection
+  SmartDataPtr<Event::CalXtalRecCol> calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(eventSvc(),
+                                                                                        EventModel::CalRecon::CalXtalRecCol);
+  if (!calXtalRecCol) {
     MsgStream msglog(msgSvc(), name());
-    msglog << MSG::ERROR << "No Xtal Readout in Recon!" << endreq;
-    return StatusCode::FAILURE;
-  }
-    
-  //-- check N readouts --//
-  if ((curTest->trigMode == CalXtalId::BESTRANGE && nReadouts != 1) ||
-      (curTest->trigMode == CalXtalId::ALLRANGE && nReadouts != 4)) {
-    MsgStream msglog(msgSvc(), name());
-    msglog << MSG::ERROR << "BAD N READOUTS, "
-           << nReadouts << ", , "
-           << curTest->testDesc << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  // readout loop
-  for (unsigned short ro = 0;
-       ro < nReadouts;
-       ro++) {
-    const Event::CalXtalRecData::CalRangeRecData *rngRec = recData.getRangeRecData(ro);
-    if (rngRec == 0) {
-      MsgStream msglog(msgSvc(), name());
-      msglog << MSG::ERROR << "BAD N READOUTS, "
-	     << nReadouts << ", , "
-	     << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;   
-    }
-
-    Point testPoint;          // 3D point of test xtalPos
-    pos2Point(curTest->xtalIdx, curTest->xtalPos, testPoint);
-    curTest->posDiff = Vector(testPoint - rngRec->getPosition()).magnitude();
-    curTest->recEne  = rngRec->getEnergy();
-    const float eneDiff = rel_diff(curTest->meV, curTest->recEne); // diff / val
-
-    //--------- REPORT RESULT --------------------------//
-    ostringstream tmp;
-    tmp << ro << ", "
-        << setfill(' ') << setw(7) << setprecision(2) << curTest->posDiff << ", "
-        << setfill(' ') << setw(7) << fixed << setprecision(2) << eneDiff*100 << "%, ";
-    const string recResults(tmp.str());
-    
-	MsgStream msglog(msgSvc(), name()); 
-    msglog << MSG::INFO << curTest->testDesc << recResults << endreq;
-
-    if (!curTest->noiseOn  //-- skip this particular test if noise is on. b/c answers will vary too much
-		&& ro < 2          //-- also only check 2 ranges as answer in 3rd & 4th ranges is likely to suck.
-		&& curTest->bestRng[POS_FACE] + ro < 4 //-- this guarantees that the current range is not saturated (b/c we have not wrapped back to LEX8 after HEX1)
-		&& curTest->bestRng[POS_FACE] + ro < 4) { //-- this guarantees that the current range is not saturated (b/c we have not wrapped back to LEX8 after HEX1)
-      //--------- TEST MARGINS ---------------------------//
-      if (curTest->posDiff > m_singleHitPosMrgn[ro]) {
-        msglog << MSG::WARNING << "BAD POS, "
-               << curTest->posDiff << ", "
-               << curTest->xtalPos << ", "
-               << curTest->testDesc 
-			   << recResults << endreq;
-        //return StatusCode::FAILURE;
-      }
-          
-      if (eneDiff > m_singleHitEneMrgn[ro]) {
-        msglog << MSG::WARNING << "BAD ENE, "
-               << eneDiff << ", "
-               << curTest->meV << ", "
-               << curTest->testDesc 
-			   << recResults << endreq;
-        //return StatusCode::FAILURE;
-      }
-    }
-  } // for (nReadouts)
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode test_CalXtalResponse::verifyXtalDigi(const Event::CalDigi &calDigi) {
-  StatusCode sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-      
-  //-- DIGI VERIFICTION: N READOUTS --//
-  const unsigned short nReadouts = calDigi.getReadoutCol().size();
-
-  //-- QUICK CHECK FOR ZERO SUPPRESSION (Exit early if need be) --//
-  if (curTest->zeroSuppress) {
-    // test that readout is only present if lacBits are true
-    const bool anyLacTrue = contains(curTest->lacBits.begin(), 
-                                     curTest->lacBits.end(), 
-                                     true);
-    if (anyLacTrue != (nReadouts > 0)) {
-      msglog << MSG::ERROR << "BAD ZERO SUPPRESS, "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    // quit early if we (rightly so) have no readouts
-    // as there is nothing left to test - we know we are correct b/c of previous test.
-    if (nReadouts == 0) 
-      return StatusCode::SUCCESS;
-  }
-
-  if ((curTest->trigMode == CalXtalId::BESTRANGE && nReadouts != 1) ||
-      (curTest->trigMode == CalXtalId::ALLRANGE && nReadouts != 4)) {
-    msglog << MSG::ERROR << "BAD N READOUTS, "
-           << nReadouts << ", , "
-           << curTest->testDesc << endreq;
+    msglog << MSG::VERBOSE << "No CalXtalRecData found"
+           << endreq;
     return StatusCode::FAILURE;
   }
 
-  //-- PRE-PROCESS XTAL DIGI --//
-  // generate ped subtracted adc & face Signal
-  sc = preprocXtalDigi(calDigi);
-  if (sc.isFailure()) return sc;
-
-  // currently allways using 1st readout
-  Event::CalDigi::CalXtalReadoutCol::const_iterator ro = 
-    calDigi.getReadoutCol().begin();
-
-
-  //-- DIGI VERIFICATION: --//
-  for (FaceNum face; face.isValid(); face++) {
-    const RngNum rng(ro->getRange(face));
-    const XtalRng xRng(face,rng);
-
-    //////////////
-    // LAC test //
-    //////////////
-    if (!trig_test_margin(curTest->fsignl[xRng], 
-                          curCalib.lacMeV[face], 
-                          curTest->lacBits[face],
-                          curCalib.mevPerADC[xRng]) 
-        ) {
-      msglog << MSG::ERROR << "BAD LAC BIT, "
-             << curTest->fsignl[xRng] << ", "
-             << curCalib.lacMeV[face] << ", "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-
-    //////////////
-    // ULD test //
-    //////////////
-    //-- ULD test1: val should be < uld limit for current range
-    // ULD test1: val should be < uld limit for selected range (w/in 1 ADC UNIT)
-    if (!trig_test_margin(curTest->adcPed[xRng], curCalib.uldThresh[xRng], false, 1)) {
-      msglog << MSG::ERROR << "BAD ULD, "
-             << curTest->adcPed[xRng] << ", "
-             << curCalib.uldThresh[xRng] << ", "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
- 
-    // ULD test2: val should be > uld limit for next range down
-    if (rng > LEX8) {
-      if (!curTest->noiseOn) //noise can mess up this test b/c it differs per channel
-        if (!trig_test_margin(curTest->fsignl[xRng], 
-                              curCalib.uldMeV[XtalRng(face, RngNum(rng.val()-1))], 
-                              true, 
-                              // xtra 1% margin for possible variation in faceSignal per channel
-                              curCalib.mevPerADC[xRng] + .01*curTest->fsignl[xRng])) {
-          msglog << MSG::ERROR << "BAD ULD, "
-                 << curTest->fsignl[xRng] << ", "
-                 << curCalib.uldMeV[XtalRng(face, RngNum(rng.val()-1))] << ", "
-                 << curTest->testDesc << endreq;
-          return StatusCode::FAILURE;
-        }
-    }
-  } // face loop
-
-    //-- CalTrigTool test --//
-  CalArray<XtalDiode, bool> trigBitsTest;
-  //-- clatrigtool pass 1: calDigi object, GLT off
-  sc = curTest->getTrigTool()->calcXtalTrig(calDigi,
-                                            trigBitsTest,
-                                            NULL);
-  if (sc.isFailure()) return sc;
-  sc = verifyXtalTrig(calDigi, trigBitsTest, NULL);
-  if (sc.isFailure()) return sc;
-
-  //-- clatrigtool pass 2: GLT on
-  Event::GltDigi glt;
-  sc = curTest->getTrigTool()->calcXtalTrig(calDigi,
-                                            trigBitsTest,
-                                            &glt);
-  if (sc.isFailure()) return sc;
-  sc = verifyXtalTrig(calDigi, trigBitsTest, &glt);
-  if (sc.isFailure()) return sc;
-
-  //-- caltrigtool pass 3: this time w/ readout object & not calDigi object, GLT off --//
-  fill(trigBitsTest.begin(), trigBitsTest.end(), false);
-  sc = curTest->getTrigTool()->calcXtalTrig(curTest->xtalIdx,
-                                            *ro,
-                                            trigBitsTest,
-                                            NULL);
-  if (sc.isFailure()) return sc;
-  sc = verifyXtalTrig(calDigi, trigBitsTest, NULL);
-  if (sc.isFailure()) return sc;
-                                           
-
+  msglog << MSG::DEBUG << "verify CalXtalRecAlg (MC)" << endreq;
+  if (m_testCalXtalRecAlg.verify(*m_calSignalTool,
+                                 *m_calCalibSvc,
+                                 *m_precalcCalibTool,
+                                 m_testCfg,
+                                 m_twrSet,
+                                 calDigiCol,
+                                 calXtalRecCol).isFailure())
+    return StatusCode::FAILURE;
+                                 
   return StatusCode::SUCCESS;
 }
 
-/// check that trigger response matches energy deposits for single xtal.
-StatusCode test_CalXtalResponse::verifyXtalTrig(const Event::CalDigi &calDigi,
-                                                CalArray<XtalDiode, bool> &trigBits,
-                                                Event::GltDigi const * const glt) {
-  MsgStream msglog(msgSvc(), name()); 
-
-  // currently allways using 1st readout
-  Event::CalDigi::CalXtalReadoutCol::const_iterator ro = 
-    calDigi.getReadoutCol().begin();
-
-
-  for (FaceNum face; face.isValid(); face++) {
-    const FaceIdx faceIdx(curTest->xtalIdx, face);
-
-    const RngNum rng(ro->getRange(face));
-    const XtalRng xRng(face,rng);
-          
-                                    
-    //////////////
-    // FLE test.//
-    //////////////
-
-    //-- any test based on estimated faceSignal can suffer due to noise since
-    //   noise varies from channel to channel
-    if (!curTest->noiseOn)
-      if (!trig_test_margin(curTest->fsignl[xRng], 
-                            curCalib.trigMeV[XtalDiode(face,LRG_DIODE)], 
-                            trigBits[XtalDiode(face,LRG_DIODE)], 
-                            // xtra 1% margin for possible variation in faceSignal per channel
-                            curCalib.mevPerADC[xRng]+.01*curTest->fsignl[xRng])) {
-        msglog << MSG::ERROR << "BAD FLE BIT, "
-               << curTest->fsignl[xRng] << ", "
-               << curCalib.trigMeV[XtalDiode(face,LRG_DIODE)] << ", "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
-        
-    //////////////
-    // FHE test.//
-    //////////////
-    //-- any test based on estimated faceSignal can suffer due to noise since
-    //   noise varies from channel to channel
-    if (!curTest->noiseOn)
-      if (!trig_test_margin(curTest->fsignl[xRng], 
-                            curCalib.trigMeV[XtalDiode(face,SM_DIODE)], 
-                            trigBits[XtalDiode(face,SM_DIODE)], 
-                            // xtra 1% margin for possible variation in faceSignal per channel
-                            curCalib.mevPerADC[xRng]+.01*curTest->fsignl[xRng])) {
-        msglog << MSG::WARNING            << "BAD FHE BIT, "
-               << curTest->fsignl[xRng] << ", "
-               << curCalib.trigMeV[XtalDiode(face,SM_DIODE)] << ", "
-               << curTest->testDesc << endreq;
-        //return StatusCode::FAILURE;
-      }
-
-    if (glt) {
-      // test xtal FLE trigger
-      if (trigBits[XtalDiode(face, LRG_DIODE)] !=
-          glt->getCALLOtrigger(faceIdx.getCalXtalId())) {
-        msglog << MSG::ERROR << "BAD GLT BIT, "
-               << trigBits[XtalDiode(face, LRG_DIODE)] << ", "
-               << glt->getCALLOtrigger(faceIdx.getCalXtalId()) << ", "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
-      
-      // test xtal FHE trigger
-      if (trigBits[XtalDiode(face, SM_DIODE)] !=
-          glt->getCALHItrigger(faceIdx.getCalXtalId())) {
-        msglog << MSG::ERROR << "BAD GLT BIT, "
-               << trigBits[XtalDiode(face, SM_DIODE)] << ", "
-               << glt->getCALHItrigger(faceIdx.getCalXtalId()) << ", "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
-    }
-  }
-
-  if (glt) {
-    // test global FLE trigger
-    if ((trigBits[XtalDiode(POS_FACE, LRG_DIODE)] ||
-         trigBits[XtalDiode(NEG_FACE, LRG_DIODE)]) !=
-        glt->getCALLOtrigger()) {
-      msglog << MSG::ERROR << "BAD GLT BIT, "
-             << (trigBits[XtalDiode(POS_FACE, LRG_DIODE)] ||
-                 trigBits[XtalDiode(NEG_FACE, LRG_DIODE)]) << ", "
-             << glt->getCALLOtrigger() << ", "
-             << curTest->testDesc 
-             << glt->getCALLOtrigger() << ", " << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    // test global FHE trigger
-    if((trigBits[XtalDiode(POS_FACE, SM_DIODE)] ||
-        trigBits[XtalDiode(NEG_FACE, SM_DIODE)]) != 
-       glt->getCALHItrigger()) {
-      msglog << MSG::ERROR << "BAD GLT BIT, "
-             << (trigBits[XtalDiode(POS_FACE, SM_DIODE)] ||
-                 trigBits[XtalDiode(NEG_FACE, SM_DIODE)]) << ", "
-             << glt->getCALHItrigger() << ", "
-             << curTest->testDesc << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
-
+StatusCode test_CalXtalResponse::finalize() {
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode test_CalXtalResponse::preprocXtalDigi(const Event::CalDigi &calDigi) {
-  MsgStream msglog(msgSvc(), name());
+StatusCode test_CalXtalResponse::applyNewCfg(const TestCfg &testCfg) {
   StatusCode sc;
 
-  const int nReadouts = (curTest->trigMode == CalXtalId::BESTRANGE) ? 1 : 4;
+  // trigMode
+  sc = m_calDigiAlg->setProperty("DefaultAllRange", testCfg.trigMode == CalXtalId::ALLRANGE ? "1" : "0");
+  if (sc.isFailure())
+    return sc;
 
+  // zeroSuppress
+  sc = m_calDigiAlg->setProperty("DefaultZeroSuppress", testCfg.zeroSuppress ? "1" : "0");
+  if (sc.isFailure())
+    return sc;
 
-  for (int nReadout = 0; nReadout < nReadouts; nReadout++) {
-    for (FaceNum face; face.isValid(); face++) {
-      const float adc = calDigi.getAdc(nReadout, face);
-      const RngNum rng(calDigi.getRange(nReadout, face));
-      const RngIdx rngIdx(curTest->xtalIdx, face, rng);
-      const XtalRng xRng(face,rng);
-      
-      curTest->adcPed[xRng] = adc - curCalib.ped[xRng];
-
-
-      // calculate face signal from adc values
-      sc = curTest->getCalCalibSvc()->evalFaceSignal(rngIdx, curTest->adcPed[xRng],
-                                                     curTest->fsignl[xRng]);
-      if (sc.isFailure()) return sc;          
-
-	  // fill bestRng
-	  if (nReadout == 0)
-		  curTest->bestRng[face] = rng;
-    }
-  }
 
   return StatusCode::SUCCESS;
 }
 
+/// create mc hit for each hit on each crystal in testCfg
+StatusCode test_CalXtalResponse::fillMC(const TestCfg &testCfg, const TwrSet &twrSet) {
+  auto_ptr<Event::McIntegratingHitCol> hitCol(new Event::McIntegratingHitCol());
 
-/// ensure that calibrations are all present and consistent for current crystal.
-StatusCode test_CalXtalResponse::testCalCalibSvc() {
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
+  // xtal loop
+  for (TestCfg::XtalList::const_iterator xtalIt(testCfg.testXtals.begin());
+       xtalIt != testCfg.testXtals.end();
+       xtalIt++) {
 
-  // get ready for new xtal's calibration
-  curCalib.clear();
+    /// don't create mc for crystals not in geometry.
+    if (twrSet.find(xtalIt->getTwr()) == twrSet.end())
+      continue;
 
-  /////////////////////////////////////////////////
-  // SECTION 0: GENERATE TEST DESCRIPTION STRING //
-  /////////////////////////////////////////////////
-  {
-    ostringstream tmpStream;
-    tmpStream << "TEST_CALCALIBSVC, ";
-    tmpStream << curTest->xtalIdx.val() << ", ";
+    // hit loop
+    for (TestCfg::HitList::const_iterator hitIt(testCfg.xtalHits.begin());
+         hitIt != testCfg.xtalHits.end();
+         hitIt++) {
+      auto_ptr<Event::McIntegratingHit> hit(new Event::McIntegratingHit());
 
-    switch (curTest->getCalibSrc()) {
-    case CurrentTest::REAL_CALIB:
-      tmpStream << "REAL_CALIB, ";
-      break;
-    case CurrentTest::IDEAL:
-      tmpStream << "IDEAL_CALIB, ";
-      break;
-    default:
-      short src = curTest->getCalibSrc();
-      assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
+      const float xtalMM = hitIt->xtalPos*m_csiLength;
+
+      fillMcHit(*xtalIt,
+                xtalMM,
+                hitIt->meV,
+                *hit);
+
+      hitCol->push_back(hit.release());
     }
-
-    curTest->testDesc = tmpStream.str();
   }
 
+  StatusCode sc = registerMcHitCol(hitCol.release());
+  if (sc.isFailure())
+    return sc;
 
-  //-- MPD --//
-  const CalMevPerDac *mpd;
-  mpd = curTest->getCalCalibSvc()->getMPD(curTest->xtalIdx);
-  if (!mpd) return StatusCode::FAILURE;
-
-  //-- ASYM --//
-  const CalAsym *asym;
-  asym = curTest->getCalCalibSvc()->getAsym(curTest->xtalIdx);
-  if (!asym) return StatusCode::FAILURE;
-
-  CalArray<AsymType, const vector<ValSig> *> asymVals;
-
-  asymVals[ASYM_LL] = asym->getBig();
-  asymVals[ASYM_LS] = asym->getNSmallPBig();
-  asymVals[ASYM_SL] = asym->getPSmallNBig();
-  asymVals[ASYM_SS] = asym->getSmall();
-
-  Xpos const*const xpos = curTest->getCalCalibSvc()->getAsymXpos();
-  if (!xpos) return StatusCode::FAILURE;
-
-  const vector<float> *xvals = xpos->getVals();
-  
-  if (xvals->size()   <= 0) {
-    msglog << MSG::ERROR << "BAD ASYM, "
-           << curTest->testDesc << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  for (unsigned i = 0; i < xvals->size(); i++) {
-    for (AsymType asymType; asymType.isValid(); asymType++) {
-      float testAsym, testPos;
-
-      if (asymVals[asymType]->size() != xvals->size()) {
-        msglog << MSG::ERROR << "BAD ASYM, "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
-
-      sc = curTest->getCalCalibSvc()->evalPos(curTest->xtalIdx, asymType, (*asymVals[asymType])[i].getVal(), testPos);
-      if (sc.isFailure()) return sc;
-      sc = curTest->getCalCalibSvc()->evalAsym(curTest->xtalIdx, asymType, (*xvals)[i], testAsym);
-      if (sc.isFailure()) return sc;
-
-      if (rel_diff((*asymVals[asymType])[i].getVal(), testAsym) > .01 ||
-          rel_diff((*xvals)[i], testPos) > .01) {
-        msglog << MSG::ERROR << "BAD ASYM, "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
-    
-    } // asymtype
-  }  // xVals
-
-  //-- INTNONLIN && THOLDCI--//
-  for (FaceNum face; face.isValid(); face++) {
-    const FaceIdx faceIdx(curTest->xtalIdx, face);
-
-    CalTholdCI const*const tholdCI = curTest->getCalCalibSvc()->getTholdCI(faceIdx);
-    if (!tholdCI) return StatusCode::FAILURE;
-
-    // load up new current calibrations
-    curCalib.lacThresh[face]  = tholdCI->getLAC()->getVal();
-        
-    
-    for (RngNum rng; rng.isValid(); rng++) {
-      const XtalRng xRng(face,rng);
-      const RngIdx rngIdx(curTest->xtalIdx, xRng);
-
-      // load up new calibs
-      curCalib.uldThresh[xRng] = tholdCI->getULD(rng.val())->getVal();
-      
-      const vector<float> *adcs = curTest->getCalCalibSvc()->getInlAdc(rngIdx);
-      if (!adcs) return StatusCode::FAILURE;
-      const vector<float> *cidacs = curTest->getCalCalibSvc()->getInlCIDAC(rngIdx);
-      if (!cidacs) return StatusCode::FAILURE;
-
-      if (cidacs->size() <= 0 || 
-          adcs->size() > cidacs->size()) {
-        msglog << MSG::ERROR << "BAD INL, "
-               << curTest->testDesc << endreq;
-        return StatusCode::FAILURE;
-      }
-
-      for (unsigned i = 0; i < adcs->size(); i++) {
-        float testCIDAC;
-        sc = curTest->getCalCalibSvc()->evalCIDAC(rngIdx, (*adcs)[i], testCIDAC);
-        if (sc.isFailure()) return sc;
-
-        if (rel_diff(testCIDAC, (*cidacs)[i]) > .01 && abs(testCIDAC - (*cidacs)[i] > .01)) {
-          msglog << MSG::ERROR << "BAD INL, "
-                 << curTest->testDesc << endreq;
-          return StatusCode::FAILURE;
-        }
-
-        float testADC;
-        sc = curTest->getCalCalibSvc()->evalADC(rngIdx, (*cidacs)[i], testADC);
-        if (sc.isFailure()) return sc;
-
-        if (rel_diff(testADC, (*adcs)[i]) > .01 && abs(testADC - (*adcs)[i] > .01)) {
-          msglog << MSG::ERROR << "BAD INL, "
-                 << curTest->testDesc << endreq;
-          return StatusCode::FAILURE;
-        }
-
-      } // inl points
-
-      Ped const*const ped = curTest->getCalCalibSvc()->getPed(rngIdx);
-      if (!ped) return StatusCode::FAILURE;
-
-      // load up new calibs
-      curCalib.ped[xRng]    = ped->getAvr();
-      curCalib.pedSig[xRng] = ped->getSig();
-    }
-  } // xRng
-    
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode test_CalXtalResponse::preprocCalCalib() {
+StatusCode test_CalXtalResponse::verifyCalCalibSvc(const TestCfg &testCfg) {
   StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-  
-  for (FaceNum face; face.isValid(); face++) {
-    // lacMeV
-    const FaceIdx faceIdx(curTest->xtalIdx, face);
-    sc = curTest->getCalCalibSvc()->evalFaceSignal(RngIdx(faceIdx,LEX8),
-                                                   curCalib.lacThresh[face],
-                                                   curCalib.lacMeV[face]);
-    if (sc.isFailure()) return sc;
 
-    // FLE & FHE MeV
-    for (DiodeNum diode; diode.isValid(); diode++) {
-      const XtalDiode xDiode(face, diode);
-      const DiodeIdx diodeIdx(faceIdx, diode);
-                                                   
-      sc = curTest->getPrecalcCalib()->getTrigMeV(diodeIdx,
-                                                  curCalib.trigMeV[xDiode]);
-      if (sc.isFailure()) return sc;
-    }
-                                                  
-    for (RngNum rng; rng.isValid(); rng++) {
-      const RngIdx rngIdx(faceIdx,rng);
-      const XtalRng xRng(face, rng);
-      
-      sc = curTest->getCalCalibSvc()->evalFaceSignal(rngIdx,
-                                                     curCalib.uldThresh[xRng],
-                                                     curCalib.uldMeV[xRng]);
-      if (sc.isFailure()) return sc;
-      
-      // adcpermev - use last point in adc range
-      curCalib.mevPerADC[xRng] = curCalib.uldMeV[xRng] / 
-        curCalib.uldThresh[xRng];
+  /// test 'real' calibrations (currently using partial LAT config to
+  /// test proper handling of empty tower bays
+  sc = m_testCalCalibSvc.verify(*m_calCalibSvc, m_testCalibSet, testCfg, m_twrSet);
+  if (sc.isFailure())
+    return sc;
 
-    }
-  }
-  return StatusCode::SUCCESS;
-}
-
-
-/// simply run standard single hit tests at levels that will test each thold for on & off
-/// testSingleHit() will check that all digital output in consistant including all triggers
-/// & thresholds. (it does this by calling verifyXtalDigi()
-StatusCode test_CalXtalResponse::testTholds() {
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  //-- all tests based on faceSignal, so use the center of
-  //-- the xtal
-  curTest->xtalPos = 0;
-
-  //-- HEX1 SATURATION --//
-  // run meV up to 95% of saturation for lowest saturating face
-  // should work fine.
-  curTest->meV = min(curCalib.uldMeV[XtalRng(POS_FACE,HEX1)],
-                     curCalib.uldMeV[XtalRng(NEG_FACE,HEX1)])*.95;
-  sc = testSingleHit();
-  if (sc.isFailure()) return sc;
-  
-
-  for (FaceNum face; face.isValid(); face++) {
-    //-- LAC --//
-    curTest->meV = curCalib.lacMeV[face]*.95;
-    sc = testSingleHit();
-    if (sc.isFailure()) return sc;
-
-    curTest->meV = curCalib.lacMeV[face]*1.05;
-    sc = testSingleHit();
-    if (sc.isFailure()) return sc;
-
-    for (DiodeNum diode; diode.isValid(); diode++) {
-      const XtalDiode xDiode(face,diode);
-      //-- FLE/FHE --//
-      curTest->meV = curCalib.trigMeV[xDiode]*.95;
-      sc = testSingleHit();
-      if (sc.isFailure()) return sc;
-
-      curTest->meV = curCalib.trigMeV[xDiode]*1.05;
-      sc = testSingleHit();
-      if (sc.isFailure()) return sc;
-      
-    }
-
-    //- HEX1 ULD is not a ULD, it's a saturation point.
-    for (RngNum rng; rng < HEX1; rng++) {
-      const XtalRng xRng(face,rng);
-      //-- ULD --//
-      curTest->meV = curCalib.uldMeV[xRng]*.95;
-      sc = testSingleHit();
-      if (sc.isFailure()) return sc;
-
-      curTest->meV = curCalib.uldMeV[xRng]*1.05;
-      sc = testSingleHit();
-      if (sc.isFailure()) return sc;
-      
-    }
-  }
+  /// test ideal calibrations which use alternate code path
+  sc = m_testCalCalibSvc.verify(*m_calCalibSvcIdeal, m_testCalibSetIdeal, testCfg, m_fullTwrSet);
+  if (sc.isFailure())
+    return sc;
 
   return StatusCode::SUCCESS;
 }
@@ -1697,9 +672,9 @@ void test_CalXtalResponse::fillMcHit(const XtalIdx xtalIdx,
   segmId.append(m_eXtal);
 
   //-- calculate xtal segment #
-  short nSeg = (short)floor(((xtalPos + m_csiLength/2)  // range 0->CsILen(mm)
-                             / m_csiLength)             // range 0->1
-                            * m_nCsISeg);               // range 0->nCsISeg
+  short nSeg = (short)floor((xtalPos / m_csiLength)             // range 0->1
+                            * m_nCsISeg);               // range
+                                                        // 0->nCsISeg
             
   //-- make sure we clip the edges to segments 0 && (nSeg - 1)
   nSeg = max<short>(nSeg,0);
@@ -1716,7 +691,7 @@ void test_CalXtalResponse::fillMcHit(const XtalIdx xtalIdx,
     * m_csiLength;   // range 0 -> csiLen
             
   // distance of hit from segment center
-  const float xDiff = xtalPos + m_csiLength/2 - segCtr;
+  const float xDiff = xtalPos - segCtr;
 
   const HepPoint3D mom1(xDiff,0,0);
 
@@ -1726,372 +701,6 @@ void test_CalXtalResponse::fillMcHit(const XtalIdx xtalIdx,
   // of segment.
   hit.addEnergyItem(meV, NULL, mom1);
 
-}
-
-
-StatusCode test_CalXtalResponse::testNoise() {
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  // test all ranges simultaneously
-  curTest->trigMode = CalXtalId::ALLRANGE;
-  curTest->nHits    = m_nNoiseHits;
-  curTest->xtalPos  = 0;
-  
-  Event::McIntegratingHit hit;
-  fillMcHit(curTest->xtalIdx, 
-            curTest->xtalPos, 
-            curTest->meV,
-            hit);
-
-  // -- first get 'noiseless' answer for comparison--//
-  curTest->noiseOn = false;
-  sc = testSingleHit();
-  if (sc.isFailure()) return sc;
-  CalArray<XtalRng, float> adcNoNoise;
-  copy(curTest->adcPed.begin(), curTest->adcPed.end(),
-       adcNoNoise.begin());
-  
-  //-- now run noise test --//
-  curTest->noiseOn = true;
-  
-  // for calculating stdev & mean
-  CalArray<XtalRng, double> adcSum(0);
-  CalArray<XtalRng, double> adcSumSq(0);
-
-  for (int nHit = 0; nHit < curTest->nHits; nHit++) {
-    sc = testSingleHit();
-    if (sc.isFailure()) return sc;
-    for (XtalRng xRng; xRng.isValid(); xRng++) {
-      //-- for each range, sum up adc values
-      adcSum[xRng] += curTest->adcPed[xRng];
-      adcSumSq[xRng] += pow(curTest->adcPed[xRng],2);      
-    }
-  }
-
-  /////////////////////////////////////////////////
-  // SECTION 0: GENERATE TEST DESCRIPTION STRING //
-  /////////////////////////////////////////////////
-  {
-    ostringstream tmpStream;
-    tmpStream << "TEST_NOISE, "
-              << curTest->xtalIdx.val() << ", "
-              << curTest->meV           << ", ";
-
-    switch (curTest->getCalibSrc()) {
-    case CurrentTest::REAL_CALIB:
-      tmpStream << "REAL_CALIB, ";
-      break;
-    case CurrentTest::IDEAL:
-      tmpStream << "IDEAL_CALIB, ";
-      break;
-    default:
-      short src = curTest->getCalibSrc();
-      assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
-    }
-
-    curTest->testDesc = tmpStream.str();
-  }
-
-
-  // calc & check 
-  for (XtalRng xRng; xRng.isValid(); xRng++) {
-    // do not look at ranges for which the ene level is too high
-    // as saturation my bias results
-    if (adcNoNoise[xRng] > curCalib.uldThresh[xRng]*.90) continue;
-    // nor too low, as clipping may bias results
-    if (adcNoNoise[xRng] < curCalib.pedSig[xRng]*3) continue;
-    
-    const float adcMean = adcSum[xRng]/curTest->nHits;
-    const double meanSq  = adcSumSq[xRng]/curTest->nHits;
-    const float adcRMS  = sqrt(meanSq - pow(adcMean,2));
-    float diff = abs(adcRMS-curCalib.pedSig[xRng]);
-
-    if (diff > 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits)) {
-      msglog << MSG::WARNING << "BAD NOISE SIGMA, "
-             << adcRMS                << ", " 
-             << curCalib.pedSig[xRng] << ", "
-             << curTest->testDesc 
-             << xRng.getFace().val() << ", "
-             << xRng.getRng().val()  << ", " 
-             << endreq;
-      //return StatusCode::FAILURE;
-    }
-
-    const double thresh = 4*curCalib.pedSig[xRng]/sqrt((float)curTest->nHits);
-    diff =  abs(adcMean-adcNoNoise[xRng]);
-    if ( diff > thresh) {
-      msglog << MSG::WARNING << "BAD NOISE MEAN, "
-             << adcMean << ", "
-             << adcNoNoise[xRng] << ", "
-             << diff << ", "
-             << thresh << ", "
-             << curTest->testDesc 
-             << xRng.getFace().val() << ", "
-             << xRng.getRng().val()  << ", " 
-             << endreq;
-      //return StatusCode::FAILURE;
-    }
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-/// sum multiple mc hits across crystal -> digitize -> recon and check that recon matches.
-StatusCode test_CalXtalResponse::testMultiHit() {
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  newTest();
-
-  curTest->nHits   = 10;
-  curTest->noiseOn = false;
-  curTest->trigMode = CalXtalId::BESTRANGE;
-
-  ////////////////////////
-  // TEST B: ALONG XTAL //
-  ////////////////////////
-  // test several hits spread out along xtal
-  curTest->xtalPos = 0; // average position will allways be at ctr 
-
-
-  // to hold actual mc hits
-  Event::McIntegratingHitCol *hitCol = new Event::McIntegratingHitCol();
-
-  // create individual hits
-  for (int nHit = 0; nHit < curTest->nHits; nHit++) {
-    const float xtalPos = m_csiLength*nHit/(curTest->nHits-1) - m_csiLength/2;
-    Event::McIntegratingHit *hit = new Event::McIntegratingHit();
-    fillMcHit(curTest->xtalIdx, 
-              xtalPos, 
-              curTest->meV/curTest->nHits,
-              *hit);
-    hitCol->push_back(hit);    
-  }
-
-  /////////////////////////////////////////////////
-  // SECTION 0: GENERATE TEST DESCRIPTION STRING //
-  /////////////////////////////////////////////////
-  {
-    ostringstream tmpStream;
-    tmpStream << "TEST_MULTIHIT_MULTIPOS, "
-              << curTest->xtalIdx.val() << ", "
-              << curTest->meV           << ", ";
-
-    switch (curTest->getCalibSrc()) {
-    case CurrentTest::REAL_CALIB:
-      tmpStream << "REAL_CALIB, ";
-      break;
-    case CurrentTest::IDEAL:
-      tmpStream << "IDEAL_CALIB, ";
-      break;
-    default:
-      short src = curTest->getCalibSrc();
-      assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
-    }
-
-    curTest->testDesc = tmpStream.str();
-  }
-
-  //-- XTAL DIGI --//
-  
-  // list of ptrs is needed for function call
-  // build mc hit col
-  sc = registerMcHitCol(hitCol);
-  if (sc.isFailure())
-    return sc;
-
-  // retrieve signal values for given xtal
-  ICalSignalTool::XtalSignalMap xtalSignal;
-  sc = curTest->getCalSignalTool()->getXtalSignalMap(curTest->xtalIdx, xtalSignal);
-  if (sc.isFailure()) return sc;
-
-  Event::CalDigi calDigi(curTest->trigMode, curTest->xtalIdx.getCalXtalId()); 
-  sc = curTest->getDigiTool()->calculate(xtalSignal,
-                                         calDigi,
-                                         curTest->lacBits,
-                                         curTest->zeroSuppress != 0);
-  if (sc.isFailure()) return sc;
-
-  //-- VERIFY XTAL DIGI OUTPUT --//
-  sc = verifyXtalDigi(calDigi);
-  if (sc.isFailure()) return sc;
-
-  // recon outputs
-  Event::CalXtalRecData recData(CalXtalId::BESTRANGE, curTest->xtalIdx.getCalXtalId());
-  CalArray<FaceNum, bool> belowNoise;
-  CalArray<FaceNum, bool> saturated;
-
-  ///////////////////////////////////
-  //-- SECTION 3: RUN XTAL RECON --//
-  ///////////////////////////////////
-  sc = curTest->getRecTool()->calculate(calDigi,
-                                        recData,
-                                        belowNoise,
-                                        saturated,
-                                        0);
-  if (sc.isFailure()) return sc;
-
-  // only process if ptr is non-null
-  const bool xtalBelowNoise = contains(belowNoise,true);
-  if (recData.getNReadouts() && !xtalBelowNoise) {
-    Point testPoint;          // 3D point of test xtalPos
-    pos2Point(curTest->xtalIdx, curTest->xtalPos, testPoint);
-    curTest->posDiff = Vector(testPoint - recData.getPosition()).magnitude();
-    curTest->recEne  = recData.getEnergy();
-    const float eneDiff = rel_diff(curTest->meV, curTest->recEne);
-        
-    //--------- REPORT RESULT --------------------------//
-    ostringstream tmp;
-    tmp << curTest->testDesc 
-        << setfill(' ') << setw(7) << setprecision(2) << curTest->posDiff << ", "
-        << setfill(' ') << setw(7) << fixed << setprecision(2) << eneDiff*100 << "%, ";
-    curTest->testDesc = tmp.str();
-    msglog << MSG::INFO << curTest->testDesc << endreq;
-        
-    //--------- TEST MARGINS ---------------------------//
-    if (curTest->posDiff > m_singleHitPosMrgn[0]) {
-      msglog << MSG::WARNING << "BAD POS, "
-             << curTest->posDiff << ", "
-             << curTest->xtalPos << ", "
-             << curTest->testDesc << endreq;
-      //return StatusCode::FAILURE;
-    }
-      
-    if (eneDiff > m_singleHitEneMrgn[0]) {
-      msglog << MSG::WARNING << "BAD ENE, "
-             << eneDiff << ", "
-             << curTest->meV << ", "
-             << curTest->testDesc << endreq;
-      //return StatusCode::FAILURE;
-    }
-  }
-
-
-  return StatusCode::SUCCESS;
-}
-
-/// simply put in too much energy for the xtal & the verifyXtalDigi() function
-/// will ensure that the HEX1 adc values do not run too high.  Recon estimates
-/// will be wron of course, so we'll just skip that part o the test.
-StatusCode test_CalXtalResponse::testSaturation() {
-  StatusCode  sc;
-  MsgStream msglog(msgSvc(), name()); 
-
-  //-- init for each trial
-  newTest();
-
-  /// inject 5% more energy than highest HEX1 saturation point for both faces.
-  curTest->meV = 1.05*max(curCalib.uldMeV[XtalRng(POS_FACE, HEX1)],
-                          curCalib.uldMeV[XtalRng(NEG_FACE, HEX1)]);
-  // face signals are measured at center of xtal, so that's what we have to use.
-  curTest->xtalPos = 0; 
-  curTest->nHits = 1;
-  curTest->noiseOn = false;
-  
-
-  /////////////////////////////////////////////////
-  // SECTION 0: GENERATE TEST DESCRIPTION STRING //
-  /////////////////////////////////////////////////
-  {
-    ostringstream tmpStream;
-    tmpStream << "TEST_HEX1_SATURATION, ";
-    tmpStream << curTest->xtalIdx.val() << ", ";
-    tmpStream << curTest->meV << ", ";
-
-    switch (curTest->getCalibSrc()) {
-    case CurrentTest::REAL_CALIB:
-      tmpStream << "REAL_CALIB, ";
-      break;
-    case CurrentTest::IDEAL:
-      tmpStream << "IDEAL_CALIB, ";
-      break;
-    default:
-      short src = curTest->getCalibSrc();
-      assert(src >= 0 && src < CurrentTest::N_CALIB_SRC);
-    }
-    curTest->testDesc = tmpStream.str();
-  }
-
-  Event::McIntegratingHit *hit = new Event::McIntegratingHit();
-  fillMcHit(curTest->xtalIdx, 
-            curTest->xtalPos, 
-            curTest->meV,
-            *hit);
-
-
-  //////////////////////////////
-  //-- SECTION 2: XTAL DIGI --//
-  //////////////////////////////
-  // sum hit
-  Event::McIntegratingHitCol *hitCol = new Event::McIntegratingHitCol();
-  hitCol->push_back(hit);
-  sc = registerMcHitCol(hitCol);
-  if (sc.isFailure()) return sc;
-
-  ICalSignalTool::XtalSignalMap xtalSignal;
-  sc = curTest->getCalSignalTool()->getXtalSignalMap(curTest->xtalIdx, xtalSignal);
-  if (sc.isFailure()) return sc;
-
-  // digi outputs
-  Event::CalDigi calDigi(curTest->trigMode, curTest->xtalIdx.getCalXtalId()); 
-  sc = curTest->getDigiTool()->calculate(xtalSignal,
-                                         calDigi,
-                                         curTest->lacBits,
-                                         curTest->zeroSuppress != 0);
-  if (sc.isFailure()) return sc;
-  
-  
-  //-- VERIFY XTAL DIGI OUTPUT --//
-  sc = verifyXtalDigi(calDigi);
-  if (sc.isFailure()) return sc;
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode test_CalXtalResponse::testCalFailureModeSvc() {
-  MsgStream log(msgSvc(), name());
-
-  log << MSG::INFO << "testCalFailureModeSvc" << endreq;
-  idents::CalXtalId id1(10,2,2);  // tower 10, layer 3(y)
-  idents::CalXtalId id2(11,1,2);  // tower 11, layer 1(y)
-  idents::CalXtalId id3(3,5,3);   // tower 3, layer 5(y)
-  idents::CalXtalId id4(4,6,3);   // tower 4, layer 6(x)
-  idents::CalXtalId id5(4,1,3);   // tower 4, layer 1(y)
-
-  if (m_calFailureModeSvc == 0) return StatusCode::FAILURE;
-  if (m_calFailureModeSvc->matchChannel(id1,idents::CalXtalId::NEG)) {
-    log << MSG::INFO << "removed channel (10,2,2) NEG" << endreq;
-  } else {
-    log << MSG::ERROR << "failed to remove channel (10,2,2) NEG" << endreq;
-    return StatusCode::FAILURE;
-  }
-  if (m_calFailureModeSvc->matchChannel(id2,idents::CalXtalId::NEG)) {
-    log << MSG::INFO << "removed channel (11,1,2) NEG" << endreq;
-  } else {
-    log << MSG::ERROR << "failed to remove channel (11,1,2) NEG" << endreq;
-    return StatusCode::FAILURE;
-  }
-  if (!m_calFailureModeSvc->matchChannel(id3,idents::CalXtalId::NEG)) {
-    log << MSG::INFO << "left channel (3,5,3) NEG" << endreq;
-  } else {
-    log << MSG::ERROR << "erroneously removed channel (3,5,3) NEG" << endreq;
-    return StatusCode::FAILURE;
-  }
-  if (m_calFailureModeSvc->matchChannel(id4,idents::CalXtalId::NEG)) {
-    log << MSG::INFO << "removed channel (4,6,3) NEG" << endreq;
-  } else {
-    log << MSG::ERROR << "erroneously left channel (4,6,3) NEG" << endreq;
-    return StatusCode::FAILURE;
-  }
-  if (!m_calFailureModeSvc->matchChannel(id5,idents::CalXtalId::NEG)) {
-    log << MSG::INFO << "left channel (4,1,3) NEG" << endreq;
-  } else {
-    log << MSG::ERROR << "erroneously removed channel (4,1,3) NEG" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  return StatusCode::SUCCESS;
 }
 
 /// used to feed McHits to CalSignalSvc via TDS
@@ -2115,6 +724,24 @@ StatusCode test_CalXtalResponse::registerMcHitCol(Event::McIntegratingHitCol *hi
     MsgStream msglog(msgSvc(), name()); 
     msglog << "Failed to register McIntegratingHit" << endreq;
     return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode test_CalXtalResponse::clearMC() {
+  // check if object already exists
+  DataObject *oldHitCol;
+  StatusCode sc = eventSvc()->findObject(EventModel::MC::McIntegratingHitCol, oldHitCol);
+      
+  // unregister and destroy object if it currently resides in TDS
+  if (oldHitCol != 0) {
+    sc = eventSvc()->unregisterObject(EventModel::MC::McIntegratingHitCol);
+    if (sc.isFailure())
+      return sc;
+            
+    delete oldHitCol;
   }
 
   return StatusCode::SUCCESS;

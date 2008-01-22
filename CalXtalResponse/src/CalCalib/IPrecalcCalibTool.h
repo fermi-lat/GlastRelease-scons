@@ -1,5 +1,9 @@
 #ifndef IPrecalcCalibTool_h
 #define IPrecalcCalibTool_h
+// $Header$
+/** @file 
+    @author Z.Fewtrell
+*/
 
 // LOCAL INCLUDES
 
@@ -13,12 +17,14 @@
 static const InterfaceID IID_IPrecalcCalibTool("IPrecalcCalibTool", 1, 0);
 
 
-/** \brief Interface for tool which store precacalculated calibration constants for GLAST Cal
+/** \brief Interface for tool which stores precacalculated calibration constants for GLAST Cal
 */
 class IPrecalcCalibTool : virtual public IAlgTool {
  public:
 
   static const InterfaceID& interfaceID() { return IID_IPrecalcCalibTool; }
+
+  virtual ~IPrecalcCalibTool() {}
 
   /// return pedestal sigma converted to CIDAC scale
   virtual StatusCode getPedSigCIDAC(CalUtil::RngIdx rngIdx, float &pedSigCIDAC) = 0;

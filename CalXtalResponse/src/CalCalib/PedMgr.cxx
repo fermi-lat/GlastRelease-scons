@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
  */
 // LOCAL
 #include "PedMgr.h"
@@ -14,7 +14,7 @@ using namespace idents;
 using namespace CalibData;
 
 /// get pedestal vals for given xtal/face/rng
-const Ped *PedMgr::getPed(RngIdx rngIdx) {
+const Ped *PedMgr::getPed(const RngIdx rngIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
@@ -56,8 +56,6 @@ StatusCode PedMgr::loadIdealVals() {
 }
 
 StatusCode PedMgr::genLocalStore() {
-  m_rngBases.resize(RngIdx::N_VALS,0);
-
   for (RngIdx rngIdx; rngIdx.isValid(); rngIdx++) {
     if (!m_idealMode) {
       Ped *ped = (Ped*)getRangeBase(rngIdx.getCalXtalId());
@@ -71,7 +69,7 @@ StatusCode PedMgr::genLocalStore() {
   return StatusCode::SUCCESS;
 }
 
-bool PedMgr::validateRangeBase(Ped *ped) {
+bool PedMgr::validateRangeBase(Ped const*const ped) {
   if (!ped) return false;
   if (ped->getAvr() <= 0) return false;
   return true;

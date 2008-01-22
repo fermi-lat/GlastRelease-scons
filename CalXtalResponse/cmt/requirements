@@ -20,23 +20,25 @@ apply_pattern packageShr
 apply_pattern package_include
 apply_pattern package_headers
 
-library CalXtalResponse *.cxx *.h   \
-        ${CalXtalResponse_headers}  \
-        CalCalib/*.cxx CalCalib/*.h       \
-        CalDigi/*.cxx CalDigi/*.h         \
-        CalRecon/*.cxx CalRecon/*.h       \
-        CalTuple/*.cxx CalTuple/*.h \        
+library CalXtalResponse *.cxx *.h               \
+        ${CalXtalResponse_headers}              \
+        CalCalib/*.cxx CalCalib/*.h             \
+        CalDigi/*.cxx CalDigi/*.h               \
+        CalRecon/*.cxx CalRecon/*.h             \
+        CalTuple/*.cxx CalTuple/*.h             \        
         CalFailureMode/*.cxx CalFailureMode/*.h \
-        Xtalk/*.cxx Xtalk/*.h       \
-        CalTrig/*.cxx CalTrig/*.h         \
-        Dll/*.cxx Dll/*.h
+        Xtalk/*.cxx Xtalk/*.h                   \
+        CalTrig/*.cxx CalTrig/*.h               \
+        Dll/*.cxx Dll/*.h 
 
 #=============================================================
 private
 
 #needed only for the test app
 use CalibSvc
+use CalDigi
 use gr_app
+use obf * IExternal
 
 apply_pattern package_Cshlibflags 
 

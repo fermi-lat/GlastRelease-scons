@@ -1,7 +1,7 @@
 //    $Header$
 
-/** @file     implement XtalDigiTool.h
-    @author Zach Fewtrell
+/** @file     
+    @author Z.Fewtrell
 
 */
 
@@ -23,7 +23,6 @@
 
 // EXTLIB
 #include "GaudiKernel/ToolFactory.h"
-#include "TTree.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -49,17 +48,16 @@ XtalDigiTool::XtalDigiTool( const string& type,
   : AlgTool(type,name,parent),
     m_calCalibSvc(0),
     m_maxAdc(-1),
-    m_tuple(0),
     m_calFailureModeSvc(0),
-    m_evtSvc(0),
-    m_precalcCalib(0)
+    m_precalcCalib(0),
+    m_calSignalTool(0)
 {
   declareInterface<IXtalDigiTool>(this);
 
   declareProperty("CalCalibSvc",        m_calCalibSvcName    = "CalCalibSvc");
   declareProperty("PrecalcCalibTool",   m_precalcCalibName   = "PrecalcCalibTool");
-  declareProperty("tupleFilename",      m_tupleFilename      = "");
-  declareProperty("tupleLACOnly",       m_tupleLACOnly       = true);
+  declareProperty("CalSignalToolName",   m_calSignalToolName = "CalSignalTool");
+
 
 }
 
@@ -104,47 +102,6 @@ StatusCode XtalDigiTool::initialize() {
     return sc;
   }
 
-  // open optional tuple file
-  if (m_tupleFilename.value().length() > 0 ) {
-    m_tupleFile.reset(new TFile(m_tupleFilename.value().c_str(),"RECREATE","XtalDigiTuple"));
-    if (!m_tupleFile.get())
-      // allow to continue w/out tuple file as it is not a _real_ failure
-      msglog << MSG::ERROR << "Unable to create TTree object: " << m_tupleFilename << endreq;
-    
-    else {
-      m_tuple = new TTree("XtalDigiTuple","XtalDigiTuple");
-      if (!m_tuple) {
-        msglog << MSG::ERROR << "Unable to create tuple" << endreq;
-        return StatusCode::FAILURE;
-      }
-
-      //-- Add Branches to tree --//
-      if (!m_tuple->Branch("RunID",          &m_dat.RunID,             "RunID/i")            ||
-          !m_tuple->Branch("EventID",        &m_dat.EventID,           "EventID/i")          ||
-          !m_tuple->Branch("XtalIdx",        &m_dat.xtalIdx,            "xtalIdx/i")          ||
-          !m_tuple->Branch("adcPed",         m_dat.adcPed.begin(),     "adcPed[2][4]/F")     ||
-          !m_tuple->Branch("diodeCIDAC",      m_dat.diodeCIDAC.begin(),"diodeCIDAC[2][2]/F") ||
-          !m_tuple->Branch("ped",            m_dat.ped.begin(),        "ped[2][4]/F")        ||
-          !m_tuple->Branch("lacThreshCIDAC", m_dat.lacThreshCIDAC.begin(),  "lacThreshCIDAC[2]/F")     ||
-          !m_tuple->Branch("uldTholdADC",    m_dat.uldTholdADC.begin(),   "uldTholdADC[2][4]/F")   ||
-          !m_tuple->Branch("rng",            m_dat.rng.begin(),        "rng[2]/b")           ||
-          !m_tuple->Branch("lac",            m_dat.lac.begin(),        "lac[2]/b")           ||
-          !m_tuple->Branch("saturated",      m_dat.saturated.begin(),  "saturated[2]/b")) {
-        msglog << MSG::ERROR << "Couldn't create tuple branch" << endreq;
-        return StatusCode::FAILURE;
-      }
-    }
- 
-    //-- Retreive EventDataSvc (used by tuple)
-    sc = serviceLocator()->service( "EventDataSvc", m_evtSvc, true );
-    if(sc.isFailure()){
-      msglog << MSG::ERROR << "Could not find EventDataSvc" << endreq;
-      return sc;
-    }
-
-
-  } // optional tuple
-
   ///////////////////////////////////////
   //-- RETRIEVE HELPER TOOLS & SVCS  --//
   ///////////////////////////////////////
@@ -167,43 +124,59 @@ StatusCode XtalDigiTool::initialize() {
     return sc;
   }
 
+  sc = toolSvc()->retrieveTool("CalSignalTool",
+                               m_calSignalToolName,
+                               m_calSignalTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create " << m_calSignalToolName << endreq;
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
 }
 
 /** \brief calculate single cystal CalDigi object from diode signal levels
 
-  Basic Algorithm:
-  - test LAC thresholds, quit early if zeroSuppression is enabled
-  - check channel failure status from CalFailureMode
-  - convert cidac->adc units for each channel
-  - select 'best range' or lowest non-saturated range
-  - generate CalDigi object
-  - optionally fill debugging tuple.
+    Basic Algorithm:
+    - test LAC thresholds, quit early if zeroSuppression is enabled
+    - check channel failure status from CalFailureMode
+    - convert cidac->adc units for each channel
+    - select 'best range' or lowest non-saturated range
+    - generate CalDigi object
   
 */
-StatusCode XtalDigiTool::calculate(const ICalSignalTool::XtalSignalMap &cidac,
-                                   Event::CalDigi &calDigi,
-                                   CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits,
+StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
+                                   CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
                                    const bool zeroSuppress) {
   StatusCode sc;
 
-  m_dat.Clear();
-
   const CalXtalId xtalId = calDigi.getPackedId();
-  m_dat.xtalIdx = XtalIdx(xtalId);
+  const XtalIdx xtalIdx(xtalId);
+
+  ////////////////////////////////////////////////////////
+  //-- Stage 0: retrieve signal levels for each diode --//
+  ////////////////////////////////////////////////////////
+  CalArray<XtalDiode, float> cidac;
+  for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
+    sc = m_calSignalTool->getDiodeSignal(DiodeIdx(xtalIdx, xDiode), cidac[xDiode]);
+    if (sc.isFailure())
+      return sc;
+  }
   
   ////////////////////////
   // Stage 1: LAC TESTS //
   ////////////////////////
-    
+  
   for (FaceNum face; face.isValid(); face++) {
-    const FaceIdx faceIdx(m_dat.xtalIdx, face);
-    sc = m_precalcCalib->getLacCIDAC(faceIdx, m_dat.lacThreshCIDAC[face]);
+    const FaceIdx faceIdx(xtalIdx, face);
+    float lacThreshCIDAC;
+    sc = m_precalcCalib->getLacCIDAC(faceIdx, lacThreshCIDAC);
     if (sc.isFailure()) return sc;
     
     // set log-accept flags
     lacBits[face] = cidac[XtalDiode(face, LRG_DIODE)] >= 
-      m_dat.lacThreshCIDAC[face];
+      lacThreshCIDAC;
   }
 
   //-- Quick Exit --//
@@ -216,84 +189,49 @@ StatusCode XtalDigiTool::calculate(const ICalSignalTool::XtalSignalMap &cidac,
   /////////////////////////////////////////
   // Stage 2: Optional failure mode test //
   /////////////////////////////////////////
-  sc = getFailureStatus(lacBits);
+  unsigned short failureStatus;
+  sc = getFailureStatus(xtalId, lacBits, failureStatus);
   if (sc.isFailure()) return sc;
   
   ///////////////////////////////
   // Stage 3: convert cidac->adc //
   ///////////////////////////////
+  CalArray<XtalRng, float> adcPed;
   for (XtalRng xRng; xRng.isValid(); xRng++) {
     const XtalDiode xDiode(xRng.getFace(), xRng.getRng().getDiode());
     // calcuate adc val from cidac
-    sc = m_calCalibSvc->evalADC(RngIdx(m_dat.xtalIdx, xRng), 
+    sc = m_calCalibSvc->evalADC(RngIdx(xtalIdx, xRng), 
                                 cidac[xDiode],
-                                m_dat.adcPed[xRng]);
+                                adcPed[xRng]);
     if (sc.isFailure()) return sc;   
   } // xRng
   
   //////////////////////////////
   // Stage 4: Range Selection //
   //////////////////////////////
-  sc = rangeSelect();
+  CalVec<FaceNum, RngNum> bestRng;
+  sc = rangeSelect(xtalIdx, adcPed, bestRng);
   if (sc.isFailure()) return sc;
     
   ///////////////////////////////////////
   //-- STEP 5: Populate Return Vars --//
   ///////////////////////////////////////
   // generate xtalDigReadouts.
-  sc = fillDigi(calDigi);
+  sc = fillDigi(calDigi, adcPed, bestRng, failureStatus);
   if (sc.isFailure()) return sc;
-
-  /////////////////////////////////////////////////////////
-  //-- STEP 6: Populate XtalDigiTuple vars (optional) --//
-  /////////////////////////////////////////////////////////
-  
-  // following steps only needed if tuple output is selected
-  if (m_tuple) {
-    // if lac_only, then only continue if one of 2 lac flags is high
-    if ((m_tupleLACOnly && (lacBits[NEG_FACE] || 
-                            lacBits[POS_FACE])) ||
-        !m_tupleLACOnly) {
-
-      // get pointer to EventHeader (has runId, evtId, etc...)
-      Event::EventHeader *evtHdr = 0;
-      if (m_evtSvc) {
-        evtHdr = SmartDataPtr<Event::EventHeader>(m_evtSvc, EventModel::EventHeader) ;
-        if (!evtHdr) {
-          MsgStream msglog( msgSvc(), name() );
-          msglog << MSG::ERROR << "Event header not found !" << endreq ;
-        }
-
-        m_dat.RunID   = evtHdr->run();
-        m_dat.EventID = evtHdr->event();
-      }
-      
-      // populate cidac fields
-      copy(cidac.begin(),
-           cidac.end(),
-           m_dat.diodeCIDAC.begin());
-      
-      // populate lac bits
-      // wack MSVC warning doesn't like me cast bool to int.
-      m_dat.lac[POS_FACE] = lacBits[POS_FACE] != 0;
-      m_dat.lac[NEG_FACE] = lacBits[NEG_FACE] != 0;
-
-      // instruct tuple to fill
-      m_tuple->Fill();
-    }
-    
-  }
 
   return StatusCode::SUCCESS;
 }
 
 /// select lowest non-saturated ADC range on each crystal face
-StatusCode XtalDigiTool::rangeSelect() {
+StatusCode XtalDigiTool::rangeSelect(const CalUtil::XtalIdx xtalIdx,
+                                     CalArray<XtalRng, float> &adcPed,
+                                     CalVec<FaceNum, RngNum> &bestRng) {
   for (FaceNum face; face.isValid(); face++) {
     // retrieve calibration
 
     //-- TholdCI --//
-    const FaceIdx faceIdx(m_dat.xtalIdx, face);
+    const FaceIdx faceIdx(xtalIdx, face);
     CalTholdCI const*const tholdCI = m_calCalibSvc->getTholdCI(faceIdx);
     if (!tholdCI) return StatusCode::FAILURE;;
 
@@ -302,40 +240,40 @@ StatusCode XtalDigiTool::rangeSelect() {
     for (rng=LEX8; rng.isValid(); rng++) {
       // get ULD threshold
       const XtalRng xRng(face,rng);
-      m_dat.uldTholdADC[xRng] = tholdCI->getULD(rng.val())->getVal();
+      const float uldTholdADC = tholdCI->getULD(rng.val())->getVal();
 
       // case of HEX1 range 
       // adc vals have a ceiling in HEX1
       if (rng == HEX1) {
-        if (m_dat.adcPed[xRng] >= m_dat.uldTholdADC[xRng]) {
-          // set ADC to max val
-          m_dat.adcPed[xRng] =  m_dat.uldTholdADC[xRng];
-          
-          // set 'pegged' flag
-          m_dat.saturated[face] = true;
-        }
+        if (adcPed[xRng] >= uldTholdADC)
+          adcPed[xRng] =  uldTholdADC;      // set ADC to max val
         
         // break before rng is incremented out-of-bounds
         break; 
-      } else { // 1st 3 ranges
+
+      } else  // non-HEX1 case
         // break on 1st energy rng that is < threshold
-        if (m_dat.adcPed[xRng] <= m_dat.uldTholdADC[xRng]) break;
-      }
+        if (adcPed[xRng] <= uldTholdADC) break;
+
     }
     
     // assign range selection
-    m_dat.rng[face] = rng;
+    bestRng[face] = rng;
   }  // per face, range selection
 
   return StatusCode::SUCCESS;
 }
 
 // fill digi with adc values
-StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
+StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi,
+                                  const CalArray<XtalRng, float> &adcPed,
+                                  const CalVec<FaceNum, RngNum> &bestRng,
+                                  unsigned short failureStatus
+                                  ) {
   
   //-- How many readouts ? --//
   unsigned short roLimit;
-  const short rangeMode = calDigi.getMode();
+  const unsigned short rangeMode = calDigi.getMode();
   switch (rangeMode) {
   case CalXtalId::BESTRANGE:
     roLimit = 1;
@@ -350,18 +288,20 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
   }
 
   // set up the digi
-  CalArray<FaceNum, RngNum> roRange;
-  CalArray<FaceNum, float> adc;
+  CalVec<FaceNum, RngNum> roRange;
+  CalVec<FaceNum, float> adc;
   for (unsigned short nRo=0; nRo < roLimit; nRo++) {
     for (FaceNum face; face.isValid(); face++) {
       // represents ranges used for current readout in loop
-      roRange[face] = RngNum((m_dat.rng[face].val() + nRo) % RngNum::N_VALS); 
+      roRange[face] = RngNum((bestRng[face].val() + nRo) % RngNum::N_VALS); 
 
+      const CalXtalId xtalId(calDigi.getPackedId());
       const XtalRng xRng(face,roRange[face]);
-      const RngIdx rngIdx(m_dat.xtalIdx, face, roRange[face]);
-      CalibData::Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
-      if (!ped) return StatusCode::FAILURE;
-      m_dat.ped[xRng] = ped->getAvr();
+      const XtalIdx xtalIdx(xtalId);
+      const RngIdx rngIdx(xtalIdx, face, roRange[face]);
+      CalibData::Ped const*const pedCalib = m_calCalibSvc->getPed(rngIdx);
+      if (!pedCalib) return StatusCode::FAILURE;
+      const float ped = pedCalib->getAvr();
   
       ////////////////////////////////////////
       // Stage 5: ADD PEDS, CHECK ADC RANGE //
@@ -371,7 +311,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
   
       // must be after rangeSelect()  b/c rangeSelect()
       // may clip HEX1 to HEX1 saturation point
-      adc[face] = max<float>(0, m_dat.adcPed[xRng] + m_dat.ped[xRng]);
+      adc[face] = max<float>(0, adcPed[xRng] + ped);
       adc[face] = round_int(min<float>(m_maxAdc, adc[face]));
     }
       
@@ -379,7 +319,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
                                                          (short)adc[POS_FACE], 
                                                          roRange[NEG_FACE].val(), 
                                                          (short)adc[NEG_FACE], 
-                                                         m_dat.failureStatus);
+                                                         failureStatus);
     calDigi.addReadout(ro);
   }
   
@@ -388,35 +328,30 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi) {
 }
 
 StatusCode XtalDigiTool::finalize() {
-  // make sure optional tuple is closed out                                                        
-  if (m_tupleFile.get()) {
-    m_tupleFile->Write();
-    m_tupleFile->Close(); // trees deleted                                                         
-  }
-
   return StatusCode::SUCCESS;
 }
   
-StatusCode XtalDigiTool::getFailureStatus(const CalArray<FaceNum, bool> &lacBits) {
+StatusCode XtalDigiTool::getFailureStatus(const idents::CalXtalId xtalId,
+                                          const CalVec<FaceNum, bool> &lacBits,
+                                          unsigned short &failureStatus
+                                          ) {
   /// quick exit if option not enabled
   if (m_calFailureModeSvc == 0)
     return StatusCode::SUCCESS;
   
-  const CalXtalId xtalId(m_dat.xtalIdx.getCalXtalId());
-
   if (m_calFailureModeSvc->matchChannel(xtalId,
                                         (CalXtalId::POS))) {
     
-    if (lacBits[POS_FACE]) (m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::DEAD_P);
+    if (lacBits[POS_FACE]) (failureStatus |= Event::CalDigi::CalXtalReadout::DEAD_P);
   }
   if (m_calFailureModeSvc->matchChannel(xtalId,
                                         (CalXtalId::NEG))) {
-    if (lacBits[NEG_FACE]) (m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::DEAD_N);
+    if (lacBits[NEG_FACE]) (failureStatus |= Event::CalDigi::CalXtalReadout::DEAD_N);
     
   }
 
-  if ((m_dat.failureStatus & 0x00FF) == 0) m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::OK_P;
-  if ((m_dat.failureStatus & 0xFF00) == 0) m_dat.failureStatus |= Event::CalDigi::CalXtalReadout::OK_N;
+  if ((failureStatus & 0x00FF) == 0) failureStatus |= Event::CalDigi::CalXtalReadout::OK_P;
+  if ((failureStatus & 0xFF00) == 0) failureStatus |= Event::CalDigi::CalXtalReadout::OK_N;
 
   return StatusCode::SUCCESS;
 }

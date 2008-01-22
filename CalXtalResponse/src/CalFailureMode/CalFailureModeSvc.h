@@ -1,5 +1,10 @@
 #ifndef CalFailureModeSvc_H
 #define CalFailureModeSvc_H 1
+// $Header$
+/** @file
+    @author R.Dubois
+
+*/
 
 // Include files
 #include "ICalFailureModeSvc.h"
@@ -20,7 +25,6 @@ class CalFailureModeSvc : public Service, virtual public ICalFailureModeSvc {
   CalFailureModeSvc(const std::string& name, ISvcLocator* pSvcLocator); 
 
   StatusCode initialize();
-  StatusCode execute();
   StatusCode finalize();
 
   /// get the list of enabled failure mode conditions

@@ -1,18 +1,19 @@
 #ifndef XtalSignalTool_h
 #define XtalSignalTool_h
 //  $Header$
+/** @file 
+    @author Z.Fewtrell
+*/
 
 // LOCAL
 #include "IXtalSignalTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
-
+#include "CalUtil/CalVec.h"
 
 // EXTLIB
 #include "GaudiKernel/AlgTool.h"
-#include "TFile.h"
 
 // STD
 #include <cstring>
@@ -23,14 +24,13 @@ class TTree;
 class IDataProviderSvc;
 
 /*! \class XtalSignalTool
-  \author Zachary Fewtrell
+  \author Z.Fewtrell
   \brief Default implementation of IXtalSignalTool.  
 
   convert McIntegratingHit into diode signal for single xtal and hit
 
   jobOptions:
   - CalCalibSvc (default="CalCalibSvc") - calibration data source
-  - tupleFile name (default="" - disabled) - generate debugging tuple file when string is non-zero length 
   
 */
 
@@ -49,27 +49,26 @@ public:
 
   StatusCode finalize();
 
+  /// calculate signal level on all diodes in single crystal from a
+  /// group of McIntegratingHit energy deposits.
   StatusCode calculate(const Event::McIntegratingHit &hitList,
-                       CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray);
+                       CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray);
 
 
 private:
   /// take CsI MC integrated hit & sum deposited energy to all xtal diodes
   StatusCode sumCsIHit(const Event::McIntegratingHit &hit,
-                       CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray);
+                       CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray);
 
   /// calculate signal level from direct diode deposit 
   StatusCode sumDiodeHit(const Event::McIntegratingHit &hit,
-                         CalUtil::CalArray<CalUtil::XtalDiode, float> &cidacArray);
+                         CalUtil::CalVec<CalUtil::XtalDiode, float> &cidacArray);
   
   /// convert mcHit to longitudinal mm from xtal center
   float hit2pos(const Event::McIntegratingHit &hit);
 
   /// retrieve constants from Db
   StatusCode retrieveConstants();
-
-  /// initialize optional tuple
-  StatusCode initTuple();
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      
@@ -101,41 +100,29 @@ private:
 
   /// gain for diode hits
   
-  /// filename of XtalSignalToolTuple.  No file created if set to default=""
-  StringProperty m_tupleFilename;
-  /// pointer to XtalSignalToolTuple (TTree actually).  tuple is ignored
-  /// if pointer is NULL
-  TTree *m_tuple;
-  /// pointer to XtalSignalToolTuple file.
-  auto_ptr<TFile> m_tupleFile;
-
   /** \brief holds local vars for current iteration of algorithm
 
   also used to populate debuggin tuple
   */
   struct AlgData {
-    void Clear() {memset(this,0,sizeof(AlgData));}
+    void Clear() {
+		fill(diodeCIDAC.begin(), diodeCIDAC.end(),0);
+		xtalIdx = CalUtil::XtalIdx(0);
+		fill(mpd.begin(), mpd.end(),0);
+	}
 
-    unsigned   RunID;
-    unsigned   EventID;
-
-    /// cidac values for each adc range
-    CalUtil::CalArray<CalUtil::XtalDiode, float> diodeCIDAC;
+    /// cidac values for each adc range 
+    CalUtil::CalVec<CalUtil::XtalDiode, float> diodeCIDAC;
 
     /// current xtal
     CalUtil::XtalIdx xtalIdx;
 
     /// calibration constant
-    CalUtil::CalArray<CalUtil::DiodeNum, float> mpd;
+    CalUtil::CalVec<CalUtil::DiodeNum, float> mpd;
 
   };
 
   AlgData m_dat;
-
-  /// ptr to event svc
-  IDataProviderSvc* m_evtSvc;
-
-
 
 };
 

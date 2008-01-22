@@ -1,21 +1,25 @@
 #ifndef XtalDigiTool_h
 #define XtalDigiTool_h
 //  $Header$
+// @file
+//
+//
+// Author: Z.Fewtrell
 
 // LOCAL
 #include "CalXtalResponse/IXtalDigiTool.h"
+#include "CalXtalResponse/ICalSignalTool.h"
 
 // GLAST
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/CalVec.h"
 #include "CalUtil/CalArray.h"
 
 
 // EXTLIB
 #include "GaudiKernel/AlgTool.h"
-#include "TFile.h"
 
 // STD
-#include <cstring> /// memset
 
 // forward declarations
 class ICalCalibSvc;
@@ -25,7 +29,7 @@ class IDataProviderSvc;
 class IPrecalcCalibTool;
 
 /*! \class XtalDigiTool
-  \author Zachary Fewtrell
+  \author Z.Fewtrell
   \brief Default implementation of IXtalDigiTool.  
 
   Convert Diode signals to CalDigi object for one Cal crystal.
@@ -33,16 +37,14 @@ class IPrecalcCalibTool;
   jobOptions:
   - CalCalibSvc (default="CalCalibSvc") - Cal calibration data source
   - PrecalcCalibTool (deefault="PrecalcCalibTool") - Derived Cal calibration data source.
-  - tupleFilename (default="" (disabled)) - optional debugging tuple file (leave set to "" for disabled)
-  - tupleLACOnly (default=true) - disable tuple output for crystals below LAC threshold
-  
+  - CalSignalTool (default="CalSignalTool") - used to convert McIntegratingHits to diode signals
   
 */
 
 class XtalDigiTool : public AlgTool, 
-             virtual public IXtalDigiTool
+                     virtual public IXtalDigiTool
 {
- public:
+public:
   /// default ctor, declares jobOptions
   XtalDigiTool( const std::string& type, 
                 const std::string& name, 
@@ -53,21 +55,29 @@ class XtalDigiTool : public AlgTool,
 
   StatusCode finalize();
 
-  StatusCode calculate(const ICalSignalTool::XtalSignalMap &cidac,
-                       Event::CalDigi &calDigi,
-                       CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits,
+  StatusCode calculate(Event::CalDigi &calDigi,
+                       CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
                        bool zeroSuppress
                        );
- private:
+private:
   
   /// select best adc range for both faces
-  StatusCode rangeSelect();
+  StatusCode XtalDigiTool::rangeSelect(const CalUtil::XtalIdx xtalIdx,
+                                       CalUtil::CalArray<CalUtil::XtalRng, float> &adcPed,
+                                       CalUtil::CalVec<CalUtil::FaceNum, CalUtil::RngNum> &bestRng);
 
   /// get failureMode bits
-  StatusCode getFailureStatus(const CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits);
+  StatusCode getFailureStatus(const idents::CalXtalId xtalId,
+                              const CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
+                              unsigned short &failureStatus
+                              );
 
   /// populate Digi TDS class
-  StatusCode fillDigi(Event::CalDigi &calDigi);
+  StatusCode fillDigi(Event::CalDigi &calDigi,
+                      const CalUtil::CalArray<CalUtil::XtalRng, float> &adcPed,
+                      const CalUtil::CalVec<CalUtil::FaceNum, CalUtil::RngNum> &bestRng,
+                      unsigned short failureStatus
+                      );
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      
@@ -77,72 +87,23 @@ class XtalDigiTool : public AlgTool,
 
   /// max val for ADC
   int m_maxAdc;  
-  
-  /// filename of XtalDigiToolTuple.  No file created if set to default=""
-  StringProperty m_tupleFilename;
-
-  /// If true, only output tuple row if LAC=true (saves much disk
-  /// space, default = true)
-  BooleanProperty m_tupleLACOnly;
-
-  /// pointer to XtalDigiToolTuple (TTree actually).  tuple is ignored
-  /// if pointer is NULL
-  TTree *m_tuple;
-
-  /// pointer to XtalDigiToolTuple file.
-  auto_ptr<TFile> m_tupleFile;
-
-  /** \brief holds local vars for current iteration of algorithm
-
-  also used to populate hitTuple
-  */
-  struct AlgData {
-    void Clear() {memset(this,0,sizeof(AlgData));}
-
-    unsigned   RunID;
-    unsigned   EventID;
-
-    /// ped subtracted adc.
-    CalUtil::CalArray<CalUtil::XtalRng, float> adcPed;
-    
-    /// cidac values for each adc range
-    CalUtil::CalArray<CalUtil::XtalDiode, float> diodeCIDAC;
-    
-    /// calibration constant
-    CalUtil::CalArray<CalUtil::XtalRng, float> ped;
-    
-    /// calibration constant
-    CalUtil::CalArray<CalUtil::FaceNum, float> lacThreshCIDAC;
-
-    /// calibration constant
-    CalUtil::CalArray<CalUtil::XtalRng, float> uldTholdADC;
-
-    CalUtil::CalArray<CalUtil::FaceNum, CalUtil::RngNum> rng;
-
-    /// lac threshold flag
-    CalUtil::CalArray<CalUtil::FaceNum, unsigned char> lac;
-    
-    /// HEX1 range in xtal is saturated
-    CalUtil::CalArray<CalUtil::FaceNum, unsigned char> saturated;
-
-    CalUtil::XtalIdx xtalIdx;
-    
-    unsigned short failureStatus;
-  };
-
-  AlgData m_dat;
 
   /// pointer to optional CalFailureMode
   ICalFailureModeSvc *m_calFailureModeSvc;
-
-  /// ptr to event svc
-  IDataProviderSvc* m_evtSvc;
 
   /// name of precalc calib tool
   StringProperty m_precalcCalibName;
   
   /// pointer to precalcCalibTool
   IPrecalcCalibTool *m_precalcCalib;
+
+  /// name of CalSignalTool tool, used for calculating diode signal levels from McIntegratingHits
+  StringProperty m_calSignalToolName;
+
+  /// ptr to CalSignalTool tool
+  ICalSignalTool  *m_calSignalTool;
+
+
 };
 
 

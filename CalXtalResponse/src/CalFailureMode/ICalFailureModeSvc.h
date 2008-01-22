@@ -1,5 +1,10 @@
 #ifndef ICalFailureModeSvc_H
 #define ICalFailureModeSvc_H
+// $Header$
+/** @file
+    @author Z.Fewtrell
+
+*/
 
 // Include files
 #include "GaudiKernel/IInterface.h"

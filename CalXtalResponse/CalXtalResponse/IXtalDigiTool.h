@@ -1,9 +1,12 @@
 #ifndef IXtalDigiTool_H
 #define IXtalDigiTool_H
 // $Header$
+/** @file
+    @author Z.Fewtrell
+*/
 /*! @class IXtalDigiTool
  *
- * \author Zach Fewtrell
+ * \author Z.Fewtrell
  *
  * \brief Abstract interface class for estimation of the digital response of 
  one calorimeter crystal to a set of energy depositions.
@@ -16,7 +19,7 @@
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -35,7 +38,7 @@ class IXtalDigiTool : virtual public IAlgTool {
   static const InterfaceID& interfaceID() { return IID_IXtalDigiTool; }
 
   /// represent all 4 diode signals in single xtal.
-  typedef CalUtil::CalArray<CalUtil::XtalDiode, float> XtalSignalMap;
+  typedef CalUtil::CalVec<CalUtil::XtalDiode, float> XtalSignalMap;
 
   /** \brief calculate Adc response for one cal xtalIdx.  also select best rng.
 
@@ -45,9 +48,8 @@ class IXtalDigiTool : virtual public IAlgTool {
   \param zeroSuppress.  if zero suppression is on, i can optimize by not fully evaluating xtals which will not be recorded.
 
   */
-  virtual StatusCode calculate(const XtalSignalMap &cidac,
-                               Event::CalDigi &calDigi,
-                               CalUtil::CalArray<CalUtil::FaceNum, bool> &lacBits,
+  virtual StatusCode calculate(Event::CalDigi &calDigi,
+                               CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
                                bool zeroSuppress
                                ) = 0;
 

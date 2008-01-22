@@ -1,22 +1,20 @@
 #ifndef CalXtalRecAlg_h
 #define CalXtalRecAlg_h 
 //    $Header$
-
+/** @file
+    @author Z.Fewtrell
+*/
 
 // LOCAL INCLUDES
-
 
 // GLAST INCLUDES
 #include "Event/Digi/CalDigi.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 
-
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
 
-
 // STD INCLUDES
-
 
 class INeighborXtalkTool;
 class IXtalRecTool;
@@ -28,7 +26,7 @@ class IXtalRecTool;
     See CalXtalResponse/XtalRecTool
 
     @author           A.Chekhtman
-    @author           Zach Fetwrell
+    @author           Z.Fewtrell
 
     jobOptions:
     - XtalRecToolName (default="XtalRecTool") - tool for generating individual CalXtalRecData objects from CalDigi objects
@@ -47,7 +45,9 @@ class CalXtalRecAlg : public Algorithm
   StatusCode execute();
 
   /// required by Gaudi Algorithm class
-  StatusCode finalize();
+  StatusCode finalize() {
+    return StatusCode::SUCCESS;
+  }
 
  private:
   ///  function for setting pointers to the input and output data in Gaudi TDS

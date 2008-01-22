@@ -1,6 +1,6 @@
 //   $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 
 // LOCAL INCLUDES
@@ -10,7 +10,7 @@
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
-#include "CalUtil/CalArray.h"
+#include "CalUtil/CalVec.h"
 #include "CalUtil/stl_util.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Digi/CalDigi.h"
@@ -44,13 +44,12 @@ CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   declareProperty("NeighborXtalkToolName", m_xtalkToolName="");
 }
 
+/// initialize / retrieve all needed Gaudi objects
 StatusCode CalXtalRecAlg::initialize()
 {
   StatusCode sc;
   MsgStream msglog(msgSvc(), name());
   msglog << MSG::INFO << "initialize" << endreq;
-
-
 
   //-- JOB OPTIONS --//
   sc = setProperties();
@@ -60,7 +59,8 @@ StatusCode CalXtalRecAlg::initialize()
   }
 
   //-- Xtal Recon Tool --//
-  sc = toolSvc()->retrieveTool(m_recToolName, 
+  sc = toolSvc()->retrieveTool("XtalRecTool",
+                               m_recToolName, 
                                m_xtalRecTool,
                                this);
   if (sc.isFailure() ) {
@@ -70,7 +70,8 @@ StatusCode CalXtalRecAlg::initialize()
 
   //-- Neighbor Xtalk Tool --//
   if (!m_xtalkToolName.value().empty()) {
-    sc = toolSvc()->retrieveTool(m_xtalkToolName, 
+    sc = toolSvc()->retrieveTool("NeighborXtalkTool",
+                                 m_xtalkToolName, 
                                  m_xtalkTool, 
                                  0); // shared by other code
     if (sc.isFailure() ) {
@@ -122,8 +123,8 @@ StatusCode CalXtalRecAlg::execute()
                                      
     // calculate energy in the crystal
     // used for current range only
-    CalArray<FaceNum, bool> belowNoise(false);
-    CalArray<FaceNum, bool> saturated(false);
+    CalVec<FaceNum, bool> belowNoise;
+    CalVec<FaceNum, bool> saturated;
 
     // convert adc values into energy/pos
     sc = m_xtalRecTool->calculate(**digiIter,
@@ -200,16 +201,12 @@ StatusCode CalXtalRecAlg::retrieve()
   //register output data collection as a TDS object
   sc = eventSvc()->registerObject(EventModel::CalRecon::CalXtalRecCol,
                                   m_calXtalRecCol);
-  if (sc.isFailure()) return sc;
-
+  if (sc.isFailure()) {
+    delete m_calXtalRecCol;
+	return sc;
+  }
   
   return StatusCode::SUCCESS;
 }
 
 
-StatusCode CalXtalRecAlg::finalize() {    
-  if (m_xtalRecTool)
-    m_xtalRecTool->finalize();
-
-  return StatusCode::SUCCESS;
-}

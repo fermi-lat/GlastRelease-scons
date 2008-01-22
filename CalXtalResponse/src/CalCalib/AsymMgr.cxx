@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 // LOCAL INCLUDES
 #include "AsymMgr.h"
@@ -24,22 +24,16 @@ const float BAD_FLOAT = -99999.9F;
 AsymMgr::AsymMgr(CalCalibShared &ccsShared) : 
   CalibItemMgr(ICalibPathSvc::Calib_CAL_Asym,
                ccsShared,
+               CalUtil::XtalIdx::N_VALS,
                N_SPLINE_TYPES) 
 {
-  // set size of spline lists (1 per xtal)
-  for (unsigned i = 0; i < m_splineLists.size(); i++) {
-    m_splineLists[i].resize(XtalIdx::N_VALS, 0);
-    m_splineXMin[i].resize(XtalIdx::N_VALS,  0);
-    m_splineXMax[i].resize(XtalIdx::N_VALS,  0);
-  }
-
   /// initialize asymCtr array
   for (AsymType asymType; asymType.isValid(); asymType++)
     fill(m_asymCtr[asymType].begin(), m_asymCtr[asymType].end(), BAD_FLOAT);
 }
 
 /// get Asymmetry calibration information for one xtal
-CalAsym *AsymMgr::getAsym(XtalIdx xtalIdx) {
+const CalAsym *AsymMgr::getAsym(const XtalIdx xtalIdx) {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
@@ -48,7 +42,7 @@ CalAsym *AsymMgr::getAsym(XtalIdx xtalIdx) {
   return (CalAsym*)m_rngBases[xtalIdx];
 }
 
-Xpos *AsymMgr::getXpos() {
+const Xpos *AsymMgr::getXpos() {
   // make sure we have valid calib data for this event.
   StatusCode sc;
   sc = updateCalib();
@@ -66,18 +60,16 @@ inline Ty extrap(Ty p1, Ty p2) {
 }
 
 StatusCode AsymMgr::genLocalStore() {
-  m_rngBases.resize(XtalIdx::N_VALS,0);
-
   StatusCode sc;
 
   // pointer to asym arrays in calib db
-  CalArray<AsymType, const vector<ValSig> *> db_asym;
+  CalVec<AsymType, const vector<ValSig> *> db_asym;
   // vector<float> arrays for input into each genSpline
-  CalArray<AsymType, vector<float> > tmp_asym;
+  CalVec<AsymType, vector<float> > tmp_asym;
   vector<float> tmp_xvals;
 
   // used for description strings
-  CalArray<AsymType, string> asymSuffix;
+  CalVec<AsymType, string> asymSuffix;
   asymSuffix[ASYM_LL] = "LL";
   asymSuffix[ASYM_LS] = "LS";
   asymSuffix[ASYM_SL] = "SL";
@@ -176,33 +168,28 @@ StatusCode AsymMgr::loadIdealVals() {
   vector<ValSig> nspb(2);
   vector<ValSig> psnb(2);
 
+  const float error = m_ccsShared.m_idealCalib.asymLrgPos * m_ccsShared.m_idealCalib.asymSigPct;
+
   big[0].m_val = m_ccsShared.m_idealCalib.asymLrgNeg;
-  big[0].m_sig = m_ccsShared.m_idealCalib.asymLrgNeg * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  big[0].m_sig = error;
   big[1].m_val = m_ccsShared.m_idealCalib.asymLrgPos;
-  big[1].m_sig = m_ccsShared.m_idealCalib.asymLrgPos * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  big[1].m_sig = error;
 
   small[0].m_val = m_ccsShared.m_idealCalib.asymSmNeg;
-  small[0].m_sig = m_ccsShared.m_idealCalib.asymSmNeg * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  small[0].m_sig = error;
   small[1].m_val = m_ccsShared.m_idealCalib.asymSmPos;
-  small[1].m_sig = m_ccsShared.m_idealCalib.asymSmPos * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  small[1].m_sig = error;
+  
 
   psnb[0].m_val = m_ccsShared.m_idealCalib.asymPSNBNeg;
-  psnb[0].m_sig = m_ccsShared.m_idealCalib.asymPSNBNeg * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  psnb[0].m_sig = error;
   psnb[1].m_val = m_ccsShared.m_idealCalib.asymPSNBPos;
-  psnb[1].m_sig = m_ccsShared.m_idealCalib.asymPSNBPos * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  psnb[1].m_sig = error;
 
   nspb[0].m_val = m_ccsShared.m_idealCalib.asymNSPBNeg;
-  nspb[0].m_sig = m_ccsShared.m_idealCalib.asymNSPBNeg * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  nspb[0].m_sig = error;
   nspb[1].m_val = m_ccsShared.m_idealCalib.asymNSPBPos;
-  nspb[1].m_sig = m_ccsShared.m_idealCalib.asymNSPBPos * 
-    m_ccsShared.m_idealCalib.asymSigPct;
+  nspb[1].m_sig = error;
 
   m_idealAsym.reset(new CalAsym(&big, &small, &nspb, &psnb));
 
@@ -218,7 +205,7 @@ StatusCode AsymMgr::loadIdealVals() {
   return StatusCode::SUCCESS;
 }
 
-bool AsymMgr::validateRangeBase(CalAsym *asym) {
+bool AsymMgr::validateRangeBase(CalAsym const*const asym) {
   if (!asym) return false;
 
   const vector<ValSig> *asym_ll;
@@ -289,6 +276,10 @@ StatusCode AsymMgr::getAsymCtr(XtalIdx xtalIdx, AsymType asymType, float &asymCt
   StatusCode sc;
   sc = updateCalib();
   if (sc.isFailure()) return sc;
+
+  /// return failure if we don't have data for that channel.
+  if (m_rngBases[xtalIdx] == 0)
+	  return StatusCode::FAILURE;
 
   asymCtr = m_asymCtr[asymType][xtalIdx];
 

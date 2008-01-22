@@ -1,6 +1,6 @@
 // $Header$
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
  */
 // LOCAL INCLUDES
 #include "TholdCIMgr.h"
@@ -70,7 +70,7 @@ StatusCode TholdCIMgr::loadIdealVals() {
   return StatusCode::SUCCESS;
 }
 
-bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
+bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI const*const tholdCI) {
   if (!tholdCI) return false;
 
   if (!tholdCI->getFLE()) {
@@ -110,11 +110,9 @@ bool TholdCIMgr::validateRangeBase(CalibData::CalTholdCI *tholdCI) {
 }
 
 StatusCode  TholdCIMgr::genLocalStore() {
-  m_rngBases.resize(FaceIdx::N_VALS,0);
-
   for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
     if (!m_idealMode) {
-      CalibData::CalTholdCI *tholdCI = (CalibData::CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
+      CalibData::CalTholdCI const *const  tholdCI = (CalibData::CalTholdCI*)getRangeBase(faceIdx.getCalXtalId());
       if (!tholdCI) continue;
       if (!validateRangeBase(tholdCI)) continue;
       

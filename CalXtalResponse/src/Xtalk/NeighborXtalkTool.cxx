@@ -1,7 +1,7 @@
 //    $Header$
 
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
 */
 
 // Include files
@@ -308,7 +308,7 @@ StatusCode NeighborXtalkTool::buildSignalMap(const Event::CalDigiCol &digiCol) {
 }
 
 
-float NeighborXtalkTool::evalSingleChannelXtalk(float srcDac, const XtalkEntry &xtalk)  const {
+float NeighborXtalkTool::evalSingleChannelXtalk(const float srcDac, const XtalkEntry &xtalk)  const {
   if (srcDac <= xtalk.x_intercept)
     return 0;
   
@@ -316,7 +316,7 @@ float NeighborXtalkTool::evalSingleChannelXtalk(float srcDac, const XtalkEntry &
   return (srcDac - xtalk.x_intercept)*xtalk.slope;
 }
 
-StatusCode NeighborXtalkTool::calcXtalkMeV(CalUtil::DiodeIdx diodeIdx, float &xtalkMev) const {
+StatusCode NeighborXtalkTool::calcXtalkMeV(const CalUtil::DiodeIdx diodeIdx, float &xtalkMev) const {
   xtalkMev = 0;
   StatusCode sc;
         

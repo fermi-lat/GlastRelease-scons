@@ -1,7 +1,7 @@
 // $Header$
 
 /** @file
-    @author Zach Fewtrell
+    @author Z.Fewtrell
  */
 
 // LOCAL INCLUDES
@@ -30,7 +30,6 @@ using namespace std;
 const string IdealCalCalib::PEDS("PEDESTALS");
 const string IdealCalCalib::ASYM("ASYMMETRY");
 const string IdealCalCalib::THOLD_CI("THOLD_CI");
-const string IdealCalCalib::THOLD_MUON("THOLD_MUON");
 const string IdealCalCalib::INL("INT_NONLIN");
 const string IdealCalCalib::MPD("MEV_PER_DAC");
 
@@ -45,9 +44,6 @@ IdealCalCalib::IdealCalCalib() :
   mpdLrg(0),
   mpdSm(0),
   mpdSigPct(0),
-  muonFLE(0),
-  muonFHE(0),
-  muonSigPct(0),
   inlSigPct(0) {}
 
 StatusCode IdealCalCalib::readCfgFile(const string &path) {
@@ -77,11 +73,6 @@ StatusCode IdealCalCalib::readCfgFile(const string &path) {
   ciULD         = ifile.getDoubleVector(THOLD_CI.c_str(), "ULD");
   ciSigPct      = ifile.getDouble(THOLD_CI.c_str(), "SIG_PCT");
   ciPeds        = ifile.getDoubleVector(THOLD_CI.c_str(), "PEDS");
-
-  muonFLE       = ifile.getDouble(THOLD_MUON.c_str(), "FLE");
-  muonFHE       = ifile.getDouble(THOLD_MUON.c_str(), "FHE");
-  muonSigPct    = ifile.getDouble(THOLD_MUON.c_str(), "SIG_PCT");
-  muonPeds      = ifile.getDoubleVector(THOLD_MUON.c_str(), "PEDS");
 
   inlADCPerCIDAC  = ifile.getDoubleVector(INL.c_str(), "ADC_PER_CIDAC");
   inlSigPct     = ifile.getDouble(INL.c_str(), "SIG_PCT");
