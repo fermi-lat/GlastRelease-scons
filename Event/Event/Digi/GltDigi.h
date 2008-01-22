@@ -12,7 +12,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IInterface.h"
 #include <vector>
-#include <set>
 
 /*!
  * \class GltDigi
@@ -30,7 +29,10 @@ namespace Event {
   class GltDigi : virtual public DataObject {
    
   public:
-    GltDigi(){;}
+    GltDigi():
+      m_CALLOTriggerVec(0),
+      m_CALHITriggerVec(0)
+    {;}
 
     virtual ~GltDigi() {;}  
 
@@ -40,53 +42,39 @@ namespace Event {
       {m_TKR_threeinRow = value;}
 
     /// return true if any Cal FLE trigger bit was set
-    bool getCALLOtrigger() const {return (m_CAL_LO.size() > 0);}
+    bool getCALLOtrigger() const {return (m_CALLOTriggerVec != 0);}
     /// return true if any Cal FHE trigger bit was set
-    bool getCALHItrigger() const {return (m_CAL_HI.size() > 0);}
-
-    /** \brief return true if specified Cal FLE trigger bit was set
-        \param xtalFaceId CalXtalId should include optional face information
-     */
-    bool getCALLOtrigger(const idents::CalXtalId xtalFaceId) const {
-      return (m_CAL_LO.find(xtalFaceId) != m_CAL_LO.end());
-    }
-
-    /** \brief return true if specified Cal FHE trigger bit was set
-        \param xtalFaceId CalXtalId should include optional face information
-     */
-    bool getCALHItrigger(const idents::CalXtalId xtalFaceId) const {
-      return (m_CAL_HI.find(xtalFaceId) != m_CAL_HI.end());
-    }
+    bool getCALHItrigger() const {return (m_CALHITriggerVec != 0);}
 
 
+    /// store one bit for trigger in each of 16 cal modules (bits in
+    /// tower number order)
+    typedef unsigned short CalTriggerVec;
+    
     /** \brief set specified Cal FLE trigger bit
         \param xtalFaceId CalXtalId should include optional face information
      */
-    void setCALLOtrigger(const idents::CalXtalId xtalFaceId) {m_CAL_LO.insert(xtalFaceId);}
+    void setCALLOTriggerVec(const CalTriggerVec trigVec) {m_CALLOTriggerVec = trigVec;}
 
     /** \brief set specifiec Cal FHE trigger bit
         \param xtalFaceId CalXtalId should include optional face information
      */
-    void setCALHItrigger(const idents::CalXtalId xtalFaceId) {m_CAL_HI.insert(xtalFaceId);}
+    void setCALHITriggerVec(const CalTriggerVec trigVec) {m_CALHITriggerVec = trigVec;}
 
     /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
-    unsigned short getCALLETriggerVector() const;
+	CalTriggerVec getCALLOTriggerVec() const {return m_CALLOTriggerVec;}
 
     /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
-    unsigned short getCALHETriggerVector() const;
+	CalTriggerVec getCALHITriggerVec() const {return m_CALHITriggerVec;}
 
   private:
 
     std::vector<bool> m_TKR_threeinRow;
-    
-    /** \brief contains set of all xtal faces with trigger = true
-        \note CalXtalId should include optional face information
-    */
-    typedef std::set<idents::CalXtalId> CalTriggerSet;
+
     /// store all crystals with FLE trigger raised.
-    CalTriggerSet m_CAL_LO;
+    CalTriggerVec m_CALLOTriggerVec;
     /// store all crystals with FHE trigger raised.
-    CalTriggerSet m_CAL_HI;
+    CalTriggerVec m_CALHITriggerVec;
   };
   
 } //Namespace Event

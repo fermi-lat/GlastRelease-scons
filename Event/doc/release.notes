@@ -3,6 +3,12 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v11r25   22-Jan-08 ZGF 
+   - GltDigi class now only stores the Cal Trigger Vectors (one bit per tower)
+          o this now matches the hardware properly
+          o I have confirmed that no clients in latest GR are broken by this change.
+   - per - crystal trigger info now available via CalXtalResponse::CalTrigTool
+
  * v11r24   16-Jan-08 MLK Added trigger prescale info to event header
  * v11r23p6 21-Dec-07 EAC Fix AcdDigi::m_error init on MC
  * v11r23p5 06-Dec-07 EAC Fix AcdHit::getFlags() bits
