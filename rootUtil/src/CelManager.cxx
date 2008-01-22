@@ -77,6 +77,10 @@ Bool_t CelManager::delayedInitWrite()
      << "Error while making "
      << m_fileNameWrite << std::endl ;
     return m_initWriteDone ;
+   } else {
+   // HMK Should set to true if m_celWrite is ok, avoid throwing exception
+   // in fillEvent
+       m_initWriteDone=kTRUE;
    }
   
   return m_initWriteDone ;
