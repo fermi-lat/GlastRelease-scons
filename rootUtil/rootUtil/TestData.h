@@ -46,25 +46,25 @@ class TestComponent : public TestAbstractComponent
  {
   public :
 	  
-	static  const TString & name() { return componentName__ ; }
-	static  const TString & treeName() { return treeName__ ; }
-	static  const TString & branchName() { return branchName__ ; }
-	static  const TString & dataTypeName() { return dataTypeName__ ; }
+	static const TString & name() ;//{ return componentName__ ; }
+	static const TString & treeName() ;//{ return treeName__ ; }
+	static const TString & branchName() ;//{ return branchName__ ; }
+	static const TString & dataTypeName() ;//{ return dataTypeName__ ; }
 	
-	virtual const TString & getName() { return componentName__ ; }
-	virtual const TString & getTreeName() { return treeName__ ; }
-	virtual const TString & getBranchName() { return branchName__ ; }
-	virtual const TString & getDataTypeName() { return dataTypeName__ ; }
+	virtual const TString & getName() { return name() ; }
+	virtual const TString & getTreeName() { return treeName() ; }
+	virtual const TString & getBranchName() { return branchName() ; }
+	virtual const TString & getDataTypeName() { return dataTypeName() ; }
 	
 	//virtual TestAbstractData * newData( Long64_t runID =0, Long64_t eventID =0 )
 	// { return new TestData<Label>(runID,eventID) ; }
 	
-  private :
-	  
-	static TString componentName__ ;
-	static TString treeName__ ;
-	static TString branchName__ ;
-	static TString dataTypeName__ ;
+//  private :
+//	  
+//	static TString componentName__ ;
+//	static TString treeName__ ;
+//	static TString branchName__ ;
+//	static TString dataTypeName__ ;
  } ;
  
 typedef TestComponent<TestDigiLabel> TestDigiComponent ;

@@ -49,7 +49,7 @@ class AutoCd
   private :
     AutoCd( const AutoCd & ) ;
     AutoCd & operator=( const AutoCd & ) ;
-	TDirectory * _oldDir ;  
+        TDirectory * _oldDir ;  
  } ;
 
 Bool_t CompositeEventList::checkCelTree

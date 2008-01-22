@@ -2,7 +2,7 @@
 #include <rootUtil/TestData.h>
 #include <rootUtil/CompositeEventList.h>
 #include <rootUtil/CelManager.h>
-#include "Riostream.h"
+#include <Riostream.h>
 
 int main( int argc, char ** argv )
  {

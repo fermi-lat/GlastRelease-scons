@@ -1,8 +1,8 @@
 
 #include <rootUtil/TestData.h>
 #include <rootUtil/CompositeEventList.h>
-#include "TObjString.h"
-#include "Riostream.h"
+#include <TObjString.h>
+#include <Riostream.h>
 
 int main( int argc, char ** argv )
  {

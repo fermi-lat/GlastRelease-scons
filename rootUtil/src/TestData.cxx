@@ -15,16 +15,24 @@
 // values, because it is reused for TTree:Branch(), which
 // does not know about typedefs.
 
-template <> TString TestDigiComponent::componentName__ = "Digi" ;
-template <> TString TestDigiComponent::treeName__ = "TestDigiTree" ;
-template <> TString TestDigiComponent::branchName__ = "TestDigiBranch" ;
-template <> TString TestDigiComponent::dataTypeName__ = "TestData<TestDigiLabel>" ;
+template <> const TString & TestDigiComponent::name()
+ { static TString text = "Digi" ; return text ; }
+template <> const TString & TestDigiComponent::treeName()
+ { static TString text = "TestDigiTree" ; return text ; }
+template <> const TString & TestDigiComponent::branchName()
+ { static TString text = "TestDigiBranch" ; return text ; }
+template <> const TString & TestDigiComponent::dataTypeName()
+ { static TString text = "TestData<TestDigiLabel>" ; return text ; }
 ClassImp(TestDigi)
 
-template <> TString TestReconComponent::componentName__ = "Recon" ;
-template <> TString TestReconComponent::treeName__ = "TestReconTree" ;
-template <> TString TestReconComponent::branchName__ = "TestReconBranch" ;
-template <> TString TestReconComponent::dataTypeName__ = "TestData<TestReconLabel>" ;
+template <> const TString & TestReconComponent::name()
+ { static TString text = "Recon" ; return text ; }
+template <> const TString & TestReconComponent::treeName()
+ { static TString text = "TestReconTree" ; return text ; }
+template <> const TString & TestReconComponent::branchName()
+ { static TString text = "TestReconBranch" ; return text ; }
+template <> const TString & TestReconComponent::dataTypeName()
+ { static TString text = "TestData<TestReconLabel>" ; return text ; }
 ClassImp(TestRecon)
 
 
