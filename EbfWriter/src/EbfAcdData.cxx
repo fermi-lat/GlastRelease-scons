@@ -737,32 +737,6 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
 }
 
 
-void EbfAcdData::parseInput(unsigned int *contrib, unsigned int lcbWords)
-{
-
-// Initialize
-   initialize();
-
-
-   unsigned int *data = contrib;
-   bool debug = false;
-   if(debug) {
-      printf("ACD Contribution:\n");
-      for(int i=0; i<lcbWords; i++) {
-         for(int j=0; j<4; j++) {
-             printf(" 0x%8.8x ",*data++);
-         }
-         printf("\n");
-      }
-      printf("\n");
-   // reset pointer
-      data = contrib;
-   }
-   
-   return;
-}
-
-
 /**
  *
  *  @fn     void print () const

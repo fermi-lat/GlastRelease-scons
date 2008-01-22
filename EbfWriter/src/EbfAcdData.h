@@ -86,7 +86,6 @@ class EbfAcdData
     void          fill       (const Event::AcdDigiCol &tiles);
     unsigned int *format     (unsigned int *dst)      const;
     void          print      ()                       const;
-    void          parseInput (unsigned int *contrib, unsigned int lcbWords);
 
     inline unsigned int  cno           () const { return m_gem.cno;         }
 

@@ -75,7 +75,6 @@ class EbfTkrData
     void                       fillEncode (int encodeFlag, int event);    
     unsigned int            *format (unsigned int *dst)              const;
     unsigned int            *format (unsigned int *dst, int towerId) const;
-    void                 parseInput (unsigned int *contrib, unsigned int tower, unsigned int lcbWords);
 
     void print                      ();
 

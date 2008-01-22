@@ -2,6 +2,17 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r5   17-Jan-2007 ZGF
+    * EbfWriter now works with mixed readout mode Cal data
+    * EbfWriter now uses latest & greatest cal calibrations & response code (like CalXtalResponse/CalTrigTool)
+    * EbfWriter no longer uses outdated 'response' constants in the xmlGeoDbs (these may now be removed?)
+    * EbfCalData::fillPedestals() method removed & real 4-range CalDigi data read from TDS
+    * EbfCalData::fill() now uses CalXtalResponse::CalTrigTool instead of obsolete method for estimating cal trigger response.
+    * remove parseInput methods() from several classes
+          o dropped at suggestion of Brian Winer
+    * EbfCalData::fillEncode() simplified to remove reliance on out of date response constants.
+    * EbfCalData.cxx
+
  * v1r4   30-Oct-2007 HMK use gr_app
  * v1r3   24-Sep-2007 HMK Patch to check for /Event/Filter/Ebf on the TDS
  *        in case we run EbfWriter twice in the same job.  This allows one

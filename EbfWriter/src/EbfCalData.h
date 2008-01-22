@@ -7,55 +7,11 @@
 // but now they are passed by reference. This means
 // that one can no longer forward reference CalDigiCol
 //
-#include "GaudiKernel/MsgStream.h"
 #include "Event/Digi/CalDigi.h"
-#include "Event/Digi/GltDigi.h"
-#include "CalXtalResponse/ICalCalibSvc.h"
-#include "CalUtil/CalDefs.h"
+
+#include "CalXtalResponse/ICalTrigTool.h"
 
 class IGlastDetSvc;
-
-
-
-/**
- *  @class  EbfCalContants
- *  @brief  Contains the constants and methods to convert an CAL
- *          ADC value to an energy in MEV. Also contains the
- *          discriminator thresholds for CAL HI and CAL LO trigger
- *          primitives.
-**/
-class EbfCalConstants
-{
-  public:
-     
-    StatusCode initialize (IGlastDetSvc *detSvc, MsgStream &log);
-
-    /**
-     *
-     *  @fn      double convertToMev (int range, unsigned int adc) const
-     *  @brief   Converts an ADC value to the an energy in MeEV
-     *
-     *  @param   range The gain range to use in performing the conversion
-     *  @param     adc The ADC to convert
-     *  @return        The equivalent energy in MEV
-     *
-    **/
-    inline double convertToMev (int range, unsigned int adc) const
-    {
-        return m_adcToMev[range] * (adc - m_pedestal);
-    };
-
-    
-    double m_pedestal;       /*!< ADC pedestal value                 */
-    double m_maxAdc;         /*!< Cross-over point for range switch  */
-    double m_maxEnergy[4];   /*!< Maximum enery in each gain range   */
-    double m_loThreshold;    /*!< CAL LO trigger primitive threshold */
-    double m_hiThreshold;    /*!< CAL HI trigger primitive threshold */
-    double m_adcToMev[4];    /*!< Effective gain for each range      */
-};
-
-
-
 
 
 /**
@@ -135,18 +91,28 @@ class EbfCalData
     
     
     void      initialize ();
-    void            fill (const Event::CalDigiCol &calDigiCol,
-                          const Event::GltDigi &glt,
-                          ICalCalibSvc   *calCalibSvc,
-                          const EbfCalConstants   &constants);
-    void            fillEncode (int encodeFlag, const EbfCalConstants   &constants, int event);
-    void            parseInput (unsigned int *contrib, unsigned int tower, unsigned int lcbWords, const EbfCalConstants *calCon);
-    
+
+    /// fill internal data arrays from CalDigi information, prepare
+    /// for format() to EBF output.
+    StatusCode            fill (const Event::CalDigiCol &calDigiCol,
+                                ICalTrigTool &calTrigTool);
+
+    /// \brief Fill internal data arrays with special bit pattern fro
+    /// FET testing.
+    /// 
+    /// All events should to trigger, so default is to set
+    /// all Cal trigger bits true
+    void            fillEncode (const int encodeFlag, 
+                                const int event,
+                                const bool leTriggerBit=true,
+                                const bool heTriggerBit=true
+                                );
+    /// create EBF file format output from internal flat arrays for
+    /// whole cal
     unsigned int *format (unsigned int  *dst)              const;       
+    /// create EBF file format output from internal flat arrays for
+    /// single tower
     unsigned int *format (unsigned int  *dst, int towerId) const;
-    StatusCode EbfCalData::fillWithPedestals(ICalCalibSvc   *calCalibSvc);
-//    StatusCode retrieveCalib(ICalCalibSvc   *calCalibSvc,
-//                             unsigned int twr, int lyr, unsigned int col); 
 
     void          print  ();
 
@@ -200,10 +166,6 @@ class EbfCalData
     {
         return m_calStrobe;
     }        
-    inline double getTotalEnergy() const
-    {
-        return m_TotalEnergy;
-    }
     
   private:
     unsigned short int             m_lo; /*!< Mask of towers with CAL LO  */
@@ -212,12 +174,6 @@ class EbfCalData
     EbfCalTowerData m_towers[NumTowers]; /*!< The data for all the towers */ 
     bool                       m_range4; /*!< TRUE=4 range readout enabled*/
     bool                    m_calStrobe; /*!< calStrobe set */
-    double                m_TotalEnergy; /*!< Total Energy deposited in cal */                            
- 
-    float  m_ped[2][4];
-    float  m_fleThresh[2][4];
-    float  m_fheThresh[2][4];
-
 
 };
 

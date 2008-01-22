@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+#include "CalXtalResponse/ICalTrigTool.h"
+
 
 class EbfAcdData;
 class EbfTkrData;
@@ -75,7 +77,7 @@ FESOutput::FESOutput() :
    int          open   (const char    *fileName, const char *desc);
 
    unsigned int dumpTKR (const EbfTkrData *tkr, int nDeltaTime);
-   unsigned int dumpCAL (const EbfCalData *cal, const Event::GltDigi &glt,int nDeltaTime);
+  unsigned int dumpCAL (const EbfCalData *cal, ICalTrigTool &calTrigTool, int nDeltaTime);
    unsigned int dumpACD (const EbfAcdData *acd, int nDeltaTime);
 
    void         print  ()  const;

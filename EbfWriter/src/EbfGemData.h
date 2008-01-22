@@ -73,7 +73,6 @@ class EbfGemData
                                      const EbfCalData       *cal);
     
     unsigned int       *format      (unsigned int *dst) const;
-    void                 parseInput (unsigned int *contrib, unsigned int lcbWords) const;
     
     void                print       () const;
 

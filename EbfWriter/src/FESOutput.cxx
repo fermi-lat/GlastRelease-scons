@@ -7,6 +7,8 @@
 #include "EbfGemData.h"
 #include "FESOutput.h"
 
+#include "CalUtil/CalArray.h"
+
 #undef DEBUG
 #ifdef DEBUG
 #define _DBG(statement) statement
@@ -782,7 +784,7 @@ void FESOutput::completeTKR(int nDeltaTime){
  *  @return     ???
  *
  */
-unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt, int nDeltaTime){
+unsigned int FESOutput::dumpCAL(const EbfCalData *cal, ICalTrigTool &calTrigTool, int nDeltaTime){
 
 
 // Before dealing with this event complete the time stamp on the
@@ -966,6 +968,19 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt
 
 /* Do we need to add something for the 4 range read out? */            
 
+                 /// all 4 cal trigger bits for single crystal
+                 using namespace CalUtil;
+                 CalArray<XtalDiode, bool> calTriggerBits;
+                 const XtalIdx xtalIdx(tower, layer, nlog);
+                 for (XtalDiode xDiode;
+                      xDiode.isValid();
+                      xDiode++) {
+                   const DiodeIdx diodeIdx(xtalIdx, xDiode);
+                   
+                   if (calTrigTool.getTriggerBit(diodeIdx, calTriggerBits[xDiode]).isFailure())
+                     return StatusCode::FAILURE;
+                 }
+
 /* Keep track of dav, acc, and rng bits */
 //                 debug = tower==7 ? true : false;
                  if(adcP != 0 || encode) {
@@ -976,11 +991,13 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt
                     if (debug) printf("Hits Found: Layer %i Log %i FESCable %i FESLayer %i RangeP %i ADCP 0x%8.8x RangeN %i ADCN 0x%8.8x MSB 0x%8.8x LSB 0x%8.8x\n",layer,log,FESCable,FESlayer,rangeP,adcP,rangeN,adcN,rngMsb[FESCable][FESlayer],rngLsb[FESCable][FESlayer]);
 
 // Check trigger thresholds
-                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,0)))  {
+                    if(calTriggerBits[XtalDiode(POS_FACE,
+                                                LRG_DIODE)])  {
                        treq[FESCable] |= (1 << FESlayer);
                        m_eventTrigger |= (1 << 2);
                     }
-                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,0)))  { 
+                    if(calTriggerBits[XtalDiode(POS_FACE,
+                                               SM_DIODE)])  { 
                        treq[FESCable] |= (1 << (FESlayer+4));
                        m_eventTrigger |= (1 << 3);
                     }  
@@ -993,11 +1010,13 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, const Event::GltDigi &glt
                     if (debug && adcP == 0) printf("Hits Found: Layer %i Log %i FESCable %i FESLayer %i RangeP %i ADCP 0x%8.8x RangeN %i ADCN 0x%8.8x MSB 0x%8.8x LSB 0x%8.8x \n",layer,log,FESCable,FESlayer,rangeP,adcP,rangeN,adcN,rngMsb[FESCable][FESlayer],rngLsb[FESCable][FESlayer]);
 
 // Check trigger thresholds
-                    if(glt.getCALLOtrigger(idents::CalXtalId(tower,layer,log,1)))  {
-                       treq[FESCable] |= (1 << FESlayer);
-                       m_eventTrigger |= (1 << 2);
+                    if(calTriggerBits[XtalDiode(NEG_FACE,
+                                                LRG_DIODE)])  {
+                      treq[FESCable] |= (1 << FESlayer);
+                      m_eventTrigger |= (1 << 2);
                     }
-                    if(glt.getCALHItrigger(idents::CalXtalId(tower,layer,log,1)))  { 
+                    if(calTriggerBits[XtalDiode(NEG_FACE,
+                                                SM_DIODE)])  { 
                        treq[FESCable] |= (1 << (FESlayer+4));
                        m_eventTrigger |= (1 << 3);
                     }  
