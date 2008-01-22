@@ -76,18 +76,18 @@ public:
     }
 
     /// return true iff VolumeIdentifier fields say "tracker"
-    bool isTkr() {return ( (m_size > (int) fTowerObj) &&
+    bool isTkr() const {return ( (m_size > (int) fTowerObj) &&
                            ( (*this)[fLATObj] == eLATTowers) &&
                            ( (*this)[fTowerObj] == eTowerTKR)  ); }
 
 
     /// return true iff VolumeIdentifier fields say "calorimeter"
-    bool isCal() {return ( (m_size > (int) fTowerObj) &&
+    bool isCal() const {return ( (m_size > (int) fTowerObj) &&
                            ( (*this)[fLATObj] == eLATTowers) &&
                            ( (*this)[fTowerObj] == eTowerCAL)  ); }
 
     /// return true iff VolumeIdentifier fields say "ACD"
-    bool isAcd() {return ((m_size > (int) fLATObj) && 
+    bool isAcd() const {return ((m_size > (int) fLATObj) && 
                           ((*this)[fLATObj] == eLATACD)); }
 
     /// Max allowed value for a single field

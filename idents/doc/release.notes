@@ -1,7 +1,9 @@
 /*
 package manager:T.Burnett 
  *         EOH
-
+ * v2r20p1 17-Jan-2008  zgf added some const qualifiers to some get()  
+ *                          methods in VolumeIdentifier (should make zero difference, 
+ *                          but allows me to use safer const pointers and references)
  * v2r19p1 23-Aug-2007  hmk Avoid VolId construction for NA ACDs, it will
  *                       throw an exception
  * v2r19   15-Jun-2007  jrb VolumeIdentifier clean up & add one method returning
