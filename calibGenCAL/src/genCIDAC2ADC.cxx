@@ -6,13 +6,13 @@
 
 // LOCAL INCLUDES
 #include "lib/Algs/IntNonlinAlg.h"
-#include "lib/CalibDataTypes/CIDAC2ADC.h"
 #include "lib/Util/CfgMgr.h"
 #include "lib/Util/CGCUtil.h"
 #include "lib/Util/string_util.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/SimpleCalCalib/CIDAC2ADC.h"
 
 // EXTLIB INCLUDES
 

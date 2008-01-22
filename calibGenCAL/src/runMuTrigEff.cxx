@@ -5,12 +5,12 @@
 */
 
 // LOCAL INCLUDES
-#include "lib/CalibDataTypes/CalPed.h"
 #include "lib/Algs/MuTrigAlg.h"
-#include "lib/CalibDataTypes/CIDAC2ADC.h"
 #include "lib/Util/SimpleIniFile.h"
 
 // GLAST INCLUDES
+#include "CalUtil/SimpleCalCalib/CalPed.h"
+#include "CalUtil/SimpleCalCalib/CIDAC2ADC.h"
 
 // EXTLIB INCLUDES
 

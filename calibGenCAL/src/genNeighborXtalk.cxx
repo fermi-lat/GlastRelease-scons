@@ -5,13 +5,13 @@
 */
 
 // LOCAL INCLUDES
-#include "lib/CalibDataTypes/NeighborXtalk.h"
 #include "lib/Algs/NeighborXtalkAlg.h"
 #include "lib/Util/CfgMgr.h"
 #include "lib/Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/SimpleCalCalib/NeighborXtalk.h"
 
 // EXTLIB INCLUDES
 

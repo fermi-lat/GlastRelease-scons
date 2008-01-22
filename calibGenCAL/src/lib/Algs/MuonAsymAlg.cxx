@@ -8,12 +8,12 @@
 #include "MuonAsymAlg.h"
 #include "../Util/RootFileAnalysis.h"
 #include "../Util/TwrHodoscope.h"
-#include "../CalibDataTypes/CalAsym.h"
 #include "../Hists/AsymHists.h"
 #include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "digiRootData/DigiEvent.h"
+#include "CalUtil/SimpleCalCalib/CalAsym.h"
 
 // EXTLIB INCLUDES
 #include "TH2S.h"

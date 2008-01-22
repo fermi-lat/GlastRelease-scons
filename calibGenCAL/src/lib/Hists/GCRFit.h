@@ -18,9 +18,12 @@
 
 class TDirectory;
 
+namespace CalUtil {
+  class CalMPD;
+}
+
 namespace calibGenCAL {
   class GCRHists;
-  class CalMPD;
 
   /** \brief Collection of tools for fitting GCR calib histograms
    */
@@ -30,7 +33,7 @@ namespace calibGenCAL {
     /// \parm writeFile location for output fit results tuple
     /// \parm tupleName output tuple fit results name
     void gcrFitGaus(GCRHists &histCol,
-                    CalMPD &calMPD,
+			CalUtil::CalMPD &calMPD,
                     TDirectory *const writeFile,
                     const std::string &tupleName="GCRFitGauss"
                     );

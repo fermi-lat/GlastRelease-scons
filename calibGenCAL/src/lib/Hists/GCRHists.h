@@ -15,7 +15,6 @@
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
-#include "CalUtil/CalArray.h"
 
 // EXTLIB INCLUDES
 #include "TProfile.h"
@@ -27,8 +26,11 @@
 
 class TDirectory;
 
-namespace calibGenCAL {
+namespace CalUtil {
   class CalMPD;
+}
+
+namespace calibGenCAL {
 
   /** \brief Represents GLAST Cal Optical gain calibration constants
       (MeV <-> CIDAC)

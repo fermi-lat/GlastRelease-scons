@@ -19,10 +19,13 @@
 
 class TH1S;
 
-namespace calibGenCAL {
-
+namespace CalUtil {
 
   class CalPed;
+}
+
+namespace calibGenCAL {
+
 
   /** \brief Represents GLAST Cal trigger efficiency calibrations
 
@@ -54,7 +57,7 @@ namespace calibGenCAL {
     void fillMuonHists(const TRIG_CFG trigCfg,
                        const std::string &filename,
                        unsigned nEvents,
-                       const CalPed &peds,
+					   const CalUtil::CalPed &peds,
                        const bool calLOEnabled = false
                        );
 
@@ -64,7 +67,7 @@ namespace calibGenCAL {
     void fillCIHists(const std::string &filename);
 
     /// fit muon and CI efficiency data
-    void fitData(const CalPed &ped);
+    void fitData(const CalUtil::CalPed &ped);
 
     /// write output to txt
     void writeTXT(const std::string &filename) const;

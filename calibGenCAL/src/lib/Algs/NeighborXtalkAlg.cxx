@@ -7,22 +7,21 @@
 // LOCAL INCLUDES
 #include "NeighborXtalkAlg.h"
 #include "../Util/RootFileAnalysis.h"
-#include "../CalibDataTypes/NeighborXtalk.h"
-#include "../CalibDataTypes/CalPed.h"
 #include "../Specs/singlex16.h"
-#include "../Util/SplineUtil.h"
+#include "CalUtil/SimpleCalCalib/SplineUtil.h"
 #include "../Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalVec.h"
 #include "digiRootData/DigiEvent.h"
+#include "CalUtil/SimpleCalCalib/NeighborXtalk.h"
+#include "CalUtil/SimpleCalCalib/CalPed.h"
 
 // EXTLIB INCLUDES
 #include "TH1.h"
 
 // STD INCLUDES
 #include <sstream>
-#include <cstdlib>
 
 namespace calibGenCAL {
 

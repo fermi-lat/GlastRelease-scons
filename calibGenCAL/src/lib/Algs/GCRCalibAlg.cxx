@@ -7,8 +7,6 @@
 // LOCAL INCLUDES
 #include "../Algs/GCRCalibAlg.h"
 #include "../Hists/GCRHists.h"
-#include "../CalibDataTypes/CalPed.h"
-#include "../CalibDataTypes/CIDAC2ADC.h"
 #include "../Specs/CalGeom.h"
 #include "../Util/RootFileAnalysis.h"
 #include "../Util/SimpleIniFile.h"
@@ -18,6 +16,8 @@
 #include "gcrSelectRootData/GcrSelectEvent.h"
 #include "digiRootData/DigiEvent.h"
 #include "facilities/Util.h"
+#include "CalUtil/SimpleCalCalib/CalPed.h"
+#include "CalUtil/SimpleCalCalib/CIDAC2ADC.h"
 
 // EXTLIB INCLUDES
 
@@ -325,7 +325,7 @@ namespace calibGenCAL {
       //-- BEST RANGE? --//
       // get 'best' range for each face
       // we only deal with ranges >= best range
-      CalArray<FaceNum, RngNum> bestRng;
+      CalVec<FaceNum, RngNum> bestRng;
       for (FaceNum face; face.isValid(); face++)
         bestRng[face] = RngNum(calDigi.getRange(0, (CalXtalId::XtalFace)face.val()));
 
@@ -336,9 +336,9 @@ namespace calibGenCAL {
 
       //-- RETRIEVE MEAN SIGNAL LEVELS : LOOP THROUGH ALL CHANNELS --//
       /// pedestal subtracted ADC values, per ADC channel
-      CalArray<XtalRng, float> adcPed;
-      CalArray<DiodeNum, float> meanDAC;
-      CalArray<XtalDiode, float> dac;
+      CalVec<XtalRng, float> adcPed;
+      CalVec<DiodeNum, float> meanDAC;
+      CalVec<XtalDiode, float> dac;
       fill(adcPed.begin(), adcPed.end(), CIDAC2ADC::INVALID_ADC);
       fill(meanDAC.begin(), meanDAC.end(), CIDAC2ADC::INVALID_ADC);
       fill(dac.begin(), dac.end(), CIDAC2ADC::INVALID_ADC);

@@ -9,11 +9,11 @@
 // LOCAL INCLUDES
 #include "lib/Util/CfgMgr.h"
 #include "lib/Util/CGCUtil.h"
-#include "lib/CalibDataTypes/CalMPD.h"
 #include "lib/Hists/GCRHists.h"
 #include "lib/Hists/GCRFit.h"
 
 // GLAST INCLUDES
+#include "CalUtil/SimpleCalCalib/CalMPD.h"
 
 // EXTLIB INCLUDES
 #include "TFile.h"
@@ -25,6 +25,7 @@
 using namespace std;
 using namespace calibGenCAL;
 using namespace CfgMgr;
+using namespace CalUtil;
 
 class AppCfg {
 public:

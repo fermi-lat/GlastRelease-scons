@@ -54,7 +54,6 @@ namespace calibGenCAL {
             const double loBinLimit=0,
             const double hiBinLimit=0
             ) :
-      m_vec(IdxType::N_VALS),
       m_histBasename(histBasename),
       m_nBins(nBins),
       m_loBinLimit(loBinLimit),

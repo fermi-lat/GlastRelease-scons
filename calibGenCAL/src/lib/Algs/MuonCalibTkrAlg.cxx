@@ -7,11 +7,7 @@
 // LOCAL INCLUDES
 #include "MuonCalibTkrAlg.h"
 #include "../Util/RootFileAnalysis.h"
-#include "../CalibDataTypes/CIDAC2ADC.h"
 #include "../Specs/CalGeom.h"
-#include "../CalibDataTypes/CalPed.h"
-#include "../CalibDataTypes/CalAsym.h"
-#include "../CalibDataTypes/CalMPD.h"
 #include "../Util/SimpleIniFile.h"
 #include "../Util/CalHodoscope.h"
 #include "../Hists/AsymHists.h"
@@ -21,6 +17,10 @@
 // GLAST INCLUDES
 #include "digiRootData/DigiEvent.h"
 #include "facilities/Util.h"
+#include "CalUtil/SimpleCalCalib/CIDAC2ADC.h"
+#include "CalUtil/SimpleCalCalib/CalPed.h"
+#include "CalUtil/SimpleCalCalib/CalAsym.h"
+#include "CalUtil/SimpleCalCalib/CalMPD.h"
 
 // EXTLIB INCLUDES
 #include "CLHEP/Geometry/Vector3D.h"
@@ -294,9 +294,9 @@ namespace calibGenCAL {
       algData.passXtalMulti++;
 
       // retrieve dac values from hscope
-      CalArray<XtalDiode, float> dac;
-      CalArray<XtalDiode, float> adc_ped;
-      CalArray<XtalDiode, bool> dacValid;
+      CalVec<XtalDiode, float> dac;
+      CalVec<XtalDiode, float> adc_ped;
+      CalVec<XtalDiode, bool> dacValid;
       for (XtalDiode xDiode; xDiode.isValid(); xDiode++) {
         const DiodeIdx diodeIdx(xtalIdx,
                                 xDiode);
@@ -314,8 +314,8 @@ namespace calibGenCAL {
         //-- MEV PER DAC --//
         /////////////////////
         // calculate mean dac (from both faces)
-        CalArray<DiodeNum, float> meanDAC;
-        CalArray<DiodeNum, float> meanADC;
+        CalVec<DiodeNum, float> meanDAC;
+        CalVec<DiodeNum, float> meanADC;
         for (DiodeNum diode; diode.isValid(); diode++) {
           const float cosTheta = cos(eventData.theta);
 

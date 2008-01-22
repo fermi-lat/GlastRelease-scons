@@ -6,12 +6,12 @@
 
 // LOCAL INCLUDES
 #include "TwrHodoscope.h"
-#include "../CalibDataTypes/CalPed.h"
-#include "../CalibDataTypes/CIDAC2ADC.h"
 #include "stl_util.h"
 
 // GLAST INCLUDES
 #include "digiRootData/CalDigi.h"
+#include "CalUtil/SimpleCalCalib/CalPed.h"
+#include "CalUtil/SimpleCalCalib/CIDAC2ADC.h"
 
 // EXTLIB INCLUDES
 
