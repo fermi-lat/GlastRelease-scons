@@ -8,11 +8,12 @@
 #include "FluxSvc/IRegisterSource.h"
 #include "FluxSvc/ISpectrumFactory.h"
 #include "FluxSvc/IFluxSvc.h"
+#include "flux/Spectrum.h"
 
 /** @class UserSource
-@brief a test particle source: must inherit from ISpectrum
+@brief a test particle source: must inherit from ISpectrum or Spectrum
 */
-class UserSource :  public ISpectrum {
+class UserSource :  public Spectrum {
 public:
     UserSource(const std::string& params, HepRandomEngine* engine=0){};
 
@@ -39,7 +40,6 @@ public:
     virtual double    flux (double /*time*/ ) const{
         return 0;
     }
-
 
 
 private:
