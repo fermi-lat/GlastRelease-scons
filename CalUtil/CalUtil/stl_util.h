@@ -7,6 +7,10 @@
     @author zachary.fewtrell@nrl.navy.mil
  */
 
+// STD includes
+#include <set>
+
+
 namespace CalUtil {
   
   /// return true if container contains a match for val
@@ -14,6 +18,7 @@ namespace CalUtil {
   bool contains(const col_type &col, typename col_type::const_reference val) {
     return std::find(col.begin(), col.end(), val) != col.end();
   }
+
 }
 
 

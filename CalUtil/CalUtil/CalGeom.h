@@ -12,14 +12,17 @@
 // STD INCLUDES
 #include <vector>
 
+class IGlastDetSvc;
+
 /** @file
     Geometry related utilities 
     @author Zach Fewtrell
 */
 
 namespace CalUtil {
+  typedef std::vector<CalUtil::TwrNum> TwrList;
   /** generate list of active TEM modules in LAT */
-  std::vector<CalUtil::TwrNum> findActiveTowers(IGlastDetSvc &detSvc);
+  TwrList findActiveTowers(IGlastDetSvc &detSvc);
 };
 
 #endif // CalGeom_h

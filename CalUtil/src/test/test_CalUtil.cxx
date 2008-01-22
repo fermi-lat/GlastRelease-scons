@@ -33,8 +33,6 @@ bool testCalVec(){
   // enought to test functionality
   CalVec<XtalRng, unsigned> testVec;
 
-  testVec.resize(XtalRng::N_VALS);
-  
   if (testVec.size() != (unsigned)XtalRng::N_VALS)
     return false;
 

@@ -692,6 +692,11 @@ namespace CalUtil {
     
     XtalIdx(const TwrNum twr, const LyrNum lyr, const ColNum col) :
       LATWideIndex(calc(twr,lyr,col)) {}
+
+    XtalIdx(const TwrNum twr,
+		const tXtalIdx twrXtalIdx) :
+	LATWideIndex(calc(twr,twrXtalIdx.getLyr(), twrXtalIdx.getCol())) {}
+		    
     
     XtalIdx() : LATWideIndex() {}
 

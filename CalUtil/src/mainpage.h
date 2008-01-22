@@ -47,6 +47,12 @@
 
  * @subsection unit_test
    - thoroughly tests the CalVec, CalArray & CalDefs classes.
+
+ * @subsection SimpleCalCalib
+   - represent offline cal calibration data in simple array format
+   - provide readTXT() & writeTXT() methods
+   - not used by main Gleam calib pipelin, rather by test apps &
+ calibGenCAL apps which do not have full Gleam toolset available
    
  *
  *
