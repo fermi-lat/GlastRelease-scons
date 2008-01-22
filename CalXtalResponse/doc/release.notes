@@ -1,3 +1,4 @@
+v-r18   01/22/08 fewtrell - CalTrigTool interface simpler now (better suited to EbfWriter client), complete rewrite of unit_test
 v0r17   11/06/07 fewtrell - CalXtalRecAlg now generates 4 range CalXtalRecData if  CalDigi is 4 range
 v0r16   10/30/07 hmk      - use gr_app
 v0r15p1 10/16/07 fewtrell - added missing include file
