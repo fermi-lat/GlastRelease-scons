@@ -42,23 +42,23 @@ class PrecalcCalibTool : public AlgTool,
   StatusCode finalize() {return StatusCode::SUCCESS;}
 
   /// return pedestal sigma converted to CIDAC scale
-  StatusCode getPedSigCIDAC(const CalUtil::RngIdx rngIdx, float &cidac);
+  StatusCode getPedSigCIDAC( CalUtil::RngIdx rngIdx, float &cidac);
 
   /// return trigger threshold in CIDAC scale
-  StatusCode getTrigCIDAC(const CalUtil::DiodeIdx diodeIdx, float &cidac);
+  StatusCode getTrigCIDAC( CalUtil::DiodeIdx diodeIdx, float &cidac);
 
   /// return trigger threshold in faceSignal (MeV) scale
-  StatusCode getTrigMeV(const CalUtil::DiodeIdx diodeIdx, float &mev);
+  StatusCode getTrigMeV( CalUtil::DiodeIdx diodeIdx, float &mev);
 
   /// \brief return trigger threshold in proper adc range w/ associated range 
   /// & adc value
   ///
   /// this is needed bc trigger thresholds are often measured past the 
   /// saturation point of x8 range
-  StatusCode getTrigRngADC(const CalUtil::DiodeIdx diodeIdx, CalUtil::RngNum &rng, float &adc);
+  StatusCode getTrigRngADC( CalUtil::DiodeIdx diodeIdx, CalUtil::RngNum &rng, float &adc);
   
   /// return lac threshold in CIDAC scale
-  StatusCode getLacCIDAC(const CalUtil::FaceIdx faceIdx, float &lacCIDAC);
+  StatusCode getLacCIDAC( CalUtil::FaceIdx faceIdx, float &lacCIDAC);
 
   /// hook the BeginEvent so that we can check validity of XtalDigiPrecalc.
   void handle ( const Incident& inc ) {
