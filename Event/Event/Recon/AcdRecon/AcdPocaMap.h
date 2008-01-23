@@ -17,10 +17,26 @@ class MsgStream;
 static const CLID& CLID_AcdPocaMap = InterfaceID("AcdPocaMap", 1, 0);
 
 /**
-*  @class AcdPocaMap
-*
+*  @class Event::AcdPocaMap
 *
 *  @brief This class stores the relations between TkrTracks, AcdIds and AcdTkrHitPocas.
+*
+*  Associations are stored two ways:
+*  - A map from track index to sets of AcdTkrHitPoca sorted by doca value (largest active distance first)
+*  - A map from AcdId to sets of AcdTkrHitPoca sorted by doca value (largest active distance first)
+*
+*  The main various functions are:
+*  - const Event::AcdPocaSet& getPocas( const idents::AcdId& acdId )
+*    - get all the pocas associated with a single tile
+*  - const Event::AcdTkrHitPoca* getBestPoca(const idents::AcdId& acdId) 
+*    - get the best poca associated with a single tile (can return null)
+*  - const Event::AcdPocaSet& getPocas(int track)
+*    - get all the pocas associated with a single track
+*  - const Event::AcdTkrHitPoca* getBestPoca(int track) 
+*    - get the best poca associated with a single track (can return null)
+*  - const Event::AcdTkrHitPoca* getPoca(const idents::AcdId& acdId, int track)
+*    - get the poca between a track and a tile (can return null)
+*
 *  
 *  \author Eric Charles
 *

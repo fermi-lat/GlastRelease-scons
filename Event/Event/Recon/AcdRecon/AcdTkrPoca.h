@@ -19,13 +19,10 @@ class MsgStream;
 static const CLID& CLID_AcdTkrPocaCol = InterfaceID("AcdTkrPocaCol", 1, 0);
 
 /**
-*  @class AcdTkrPoca
+*  @class Event::AcdTkrPoca
 *
+*  @brief Deprecated!!
 *
-*  @brief This class stores information about the Point of Closest Approach (POCA) between an extrapolated track
-*  and a hit Acd element (tile or ribbon).  This POCA is calculated in 3D.  The doca is defined to be positive 
-*  if the track goes inside the active distance and negative otherwise
-*  
 *  \author Eric Charles
 *
 * $Header$
@@ -152,7 +149,7 @@ namespace Event
   /*! 
    * @class AcdTkrPocaCol
    *
-   *  @brief TDS class  to store the results of the reconstruction performed
+   *  @brief TDS class a collection of AcdTkrPoca objects
    *  
    * It inherits from DataObject
    * (to be a part of Gaudi TDS) and from std::vector of pointers
@@ -163,7 +160,7 @@ namespace Event
    * @author Eric Charles
    *
    * @todo replace this class by typedef to ObjectVector, make corresponding
-   *       changes in AcdTrkIntersectionAlg
+   *       changes in AcdReconAlg
    */
     
 

@@ -8,31 +8,55 @@
  *
  * @section AcdReconAlg AcdReconAlg
  * A Gaudi algorithm that uses the Event::AcdDigi collection on the TDS, which
- * contains the ACD detector information.  AcdReconAlg is based on the original VetoRecon 
- * algorithm available within glastsim.
+ * contains the raw ACD event data as well as the geometrical representation of the ACD.
  *
- * The primary output from the ACD reconstruction is the EventModel::AcdRecon object
- * stored on the TDS.  AcdReconAlg computes the following:
- * - Total energy deposited in the ACD detectors (counting only those above 
- * veto threshold)
- * - Total number of ACD tiles above veto threshold
- * - Minimum Distance of Closest Approach (DOCA) 
- * - A list of DOCA values containing the minimum DOCA for the top and side rows
- * - Minimum Active Distance
- * - A list of Active Distance values containing the minimum values for the 
- * top and side rows
- * The DOCA and Active Distance quantities are computed using the ACD detector hits
- * and the TkrRecon reconstructed track collection.  DOCA is calculated by finding
- * the minimum distance between the center of hit ACD tiles and all found tracks.
- * Active Distance is calculated by finding the minimum distance between the edge
- * of hit ACD tiles and all found tracks.
- * 
+ * TDS Inputs:
+ *  - Event::AcdDigiCol: all the AcdDigi objects
+ *  - Event::McParticleCol: MC tracks, obviously for MC only
+ *
+ * TDS Outputs:
+ *  - Event::AcdRecon object, which contains
+ *    - Event::AcdTkrIntersectionCol: all the intersections with GEANT model 
+ *    - Event::AcdTkrHitPocaCol all the POCA calculations
+ *    - Event::AcdTkrGapPocaCol: POCA w.r.t. gaps and ribbons in the GEANT model 
+ *    - Event::AcdTkrPointCol: Data about where the tracks exits the ACD volume
+ *    - Event::AcdSplashVarsCol: NOT Filled!! (Data about backsplash from tracks)
+ *    - Some numbers we extracted during the recon process
+ *      - Number of hit tiles
+ *      - Number of hit ribbons
+ *      - Max active distance over all tiles, ID of tile w/ max active distance
+ *      - Max active distance over all ribbons, ID of ribbon w/ max active distance
+ *      - Max active distance for all rows of tiles of ACD
+ *      - Minimum distance to a corner ray
+ *    - Some MC quantaties
+ *      - Total tile energy (MC)
+ *      - Total ribbon energy (MC)
+ *      - twin vectors of AcdID and MC energy
+ *    - Some useless crap
+ *      - Gamma DOCA (Deprecated!!)
+ *      - Min DOCA over all tracks, ID of tile w/ min DOCA (Deprecated!!)
+ *
  * @section jobOptions jobOptions
- * No jobOptions are currently utilized in the AcdRecon package.
  * 
- <hr>
- * @section jobOptions jobOptions
- * NONE
+ * @subsection AcdPha2MipTool_JO AcdPha2MipTool
+ *  - AcdCalibSvc ["AcdCalibSvc"]  : Name of Acd Calibration SVC to use
+ *  - PHATileCut [0.]              : Ignore all tiles with pedestal subtracted PHA below this value
+ *  - MIPSTileCut [0.]             : Ignore all tiles with MIP equivalent below this value
+ *  - PHARibbonCut [0.]            : Ignore all ribbons with pedestal subtracted PHA below this valu
+ *  - MIPSRibbonCut [0.]           : Ignore all ribbons with MIP equivalent below this value 
+ *
+ * @subsection AcdPocaTool_JO AcdPocaTool
+ *  - distanceCut [1999.]   : Filter out POCA when doca is > this value
+ *  - sigmaCut [5.]         : Unused!!  (Filter out POCA when doca/docaError) is > this value
+ *
+ * @subsection AcdReconAlg _JO AcdReconAlg
+ *  - Tool names:
+ *    -  intersectionToolName["AcdTkrIntersectTool"]
+ *    -  hitToolName["AcdPha2MipTool"]
+ *    -  pocaToolName["AcdPocaTool"]
+ *    -  propToolName["G4PropagationTool"]
+ *  - doBackSplash[false] : do turn on backsplash calculations (caveat emptor)
+ *
  *
  * @section Tests Tests
  * There is one test routine available:  test_AcdRecon.

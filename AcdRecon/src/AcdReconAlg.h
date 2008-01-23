@@ -45,21 +45,97 @@ typedef HepGeom::Vector3D<double> HepVector3D;
 /** @class AcdReconAlg
  * @brief ACD reconstruction using the AcdDigi collection from the TDS.
  *
- * Computes a number of quantities that are then stored in the AcdRecon object
- * and put on the TDS.  Those quantities that are computed includes:
- * - Minimum Distance of Closest Approach (DOCA)
- * - List of DOCA values containing the min DOCA for each row and top ACD tiles.
- * - Minimum Active Distance quantity for all hit ACD tiles
- * - List of Active Distance values containing min. Active Distance for each 
- * row and the top tiles.
+ * 
  *
- * The DOCA and Active Distance quantities are computed using the ACD detector hits
- * and the TkrRecon reconstructed track collection.  DOCA is calculated by finding
- * the minimum distance between the center of hit ACD tiles and all found tracks.
- * Active Distance is calculated by finding the minimum distance between the edge
- * of hit ACD tiles and all found tracks.
+ * TDS Inputs:
+ *  - Event::AcdDigiCol: all the AcdDigi objects
+ *  - Event::McParticleCol: MC tracks, obviously for MC only
+ *
+ * TDS Outputs:
+ *  - Event::AcdRecon object, which contains
+ *    - Event::AcdTkrIntersectionCol: all the intersections with GEANT model 
+ *    - Event::AcdTkrHitPocaCol all the POCA calculations
+ *    - Event::AcdTkrGapPocaCol: POCA w.r.t. gaps and ribbons in the GEANT model 
+ *    - Event::AcdTkrPointCol: Data about where the tracks exits the ACD volume
+ *    - Event::AcdSplashVarsCol: NOT Filled!! (Data about backsplash from tracks)
+ *    - Some numbers we extracted during the recon process
+ *      - Number of hit tiles
+ *      - Number of hit ribbons
+ *      - Max active distance over all tiles, ID of tile w/ max active distance
+ *      - Max active distance over all ribbons, ID of ribbon w/ max active distance
+ *      - Max active distance for all rows of tiles of ACD
+ *      - Minimum distance to a corner ray
+ *    - Some MC quantaties
+ *      - Total tile energy (MC)
+ *      - Total ribbon energy (MC)
+ *      - twin vectors of AcdID and MC energy
+ *    - Some useless crap
+ *      - Gamma DOCA (Deprecated!!)
+ *      - Min DOCA over all tracks, ID of tile w/ min DOCA (Deprecated!!)
+ *      - Min DOCA and ID for all rows of ACD (Deprecated!!)
+ *
+ *
+ * Note: In some collections the objects may differ in substantial ways.
+ *
+ *  - Track extensions can go in either direction:
+ *     - arcLength > 0 -> up
+ *     - arcLength < 0 -> down
+ *  - Objects have index of underlying track:
+ *     - track_index >= 0 -> track
+ *     - track_index = -1 -> vertex
+ * 
+ * 
+ * Algorithm::
+ *  - For all data:
+ *    -# Use AcdPha2MipTool to make fill the Event::AcdHitCol object
+ *    -# Fill MC energy and tile ID vectors
+ *    -# Calculate all the track related distances in trackDistances()
+ *      - Loop on tracks
+ *        - Extend tracks in both directions, find LAT exit point using AcdRecon::exitsLat()
+ *        - Use AcdPocaTool to calculate POCA w.r.t. all hits in Event::AcdHitCol in both directions
+ *        - Loop on POCA objects, latch largest active distances in tileActDist() and hitRibbonDist()
+ *          - do tiles in both directions, ribbons downwards only
+ *        - Use AcdPocaTool to filter POCA by activeDistance
+ *        - Use AcdTkrIntersectionTool to extrapolate track in both directions, fills:
+ *          - Event::AcdTkrIntersectionCol
+ *          - Event::AcdPocaSet
+ *          - Event::AcdTkrGapPocaCol
+ *          - Event::AcdTkrPointCol
+ *          
+ *    -# Calculate all the vertex related distances
+ *      - Extend vertex fit in both directions, find LAT exit point using AcdRecon::exitsLat()
+ *      - Use AcdPocaTool to calculate POCA w.r.t. all hits in Event::AcdHitCol in both directions
+ *      - Use AcdPocaTool to filter POCA by activeDistance
+ *      - Use AcdTkrIntersectionTool to extrapolate vertex in both directions, fills:
+ *        - Event::AcdPocaSet
+ *        - Event::AcdTkrPointCol
+ *
+ *    -# Sort all the AcdRecon::PocaData objects ( largest active distance first )
+ *    -# Use AcdPocaTool to make Event::AcdTkrPocaData objects
+ *    -# Calculate backsplash variable (NO-OP)
+ *    -# Put data on TDS under Event/AcdRecon
+ *
+ *  - For MC only:
+ *    -# Calculate all the MC track related distances
+ *      - Extend MC track through LAT
+ *      - Use AcdPocaTool to calculate POCA w.r.t. all hits in Event::AcdHitCol in both directions
+ *      - Use AcdPocaTool to filter POCA by activeDistance
+ *      - Use AcdTkrIntersectionTool to extrapolate vertex upward to MC entry point
+ *    -# Sort all the MC related AcdRecon::PocaData objects ( largest active distance first )
+ *    -# Use AcdPocaTool to make Event::AcdTkrPocaData objects
+ *    -# Put data on TDS under Event/MC/McAcdTkrHitPocaCol Event/MC/McAcdTkrPointCol
+ *
+ * 
+ * This Algorithm has 5 JO paramters:  
+ *  - Tool names:
+ *    -  intersectionToolName["AcdTkrIntersectTool"]
+ *    -  hitToolName["AcdPha2MipTool"]
+ *    -  pocaToolName["AcdPocaTool"]
+ *    -  propToolName["G4PropagationTool"]
+ *  - doBackSplash[false] : do turn on backsplash calculations (caveat emptor)
  *
  * @author Heather Kelly
+ * @author Eric Charles
  *
  * $Header$
  */
@@ -84,7 +160,7 @@ class AcdReconAlg : public Algorithm
       /// routine called by execute that performs the reconstruction 
       StatusCode reconstruct (const Event::AcdDigiCol& digiCol);
 
-      /// routine called by execute that performs the on the MC side
+      /// routine called by execute that performs reconstruction on MC side
       StatusCode doMC(const Event::AcdHitCol& acdHits);
 
       /// retrieves MC particles and calls the DOCA and Active Distance routines

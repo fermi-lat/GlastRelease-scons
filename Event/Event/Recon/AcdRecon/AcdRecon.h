@@ -22,7 +22,7 @@
 
 static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 2, 0);
 
-/** @class AcdRecon        
+/** @class Event::AcdRecon        
 * @brief Reconstruction data for ACD
 *
 * The reconstruction data consists of:
@@ -37,7 +37,13 @@ static const CLID& CLID_AcdRecon = InterfaceID("AcdRecon", 2, 0);
 * - Active Distance quantity for ribbons (2)
 * - Total MC Energy (MeV) deposited in the whole ACD system.
 * - Total MC Energy (MeV) deposited in the ribbons.
-
+*
+* - Collection of calibrated ACD signals seen in each tile
+* - Collection of all track extrapolations into ACD geant model elements
+* - Collection of all track extrapolations to ACD elements with signals
+* - Collection of all track extrapolations to nominal location of ACD
+* - Collection of all backsplash estiamtes from track extrapolations to CAL
+*
 *                                 
 * @author Heather Kelly
 * $Header$          
@@ -218,7 +224,7 @@ namespace Event {
         inline const std::vector<double>& getRowActDist3DCol() const { return m_rowActDist3DCol; };
         inline const std::vector<double>& getRowActDist3DCol_Up() const { return m_rowActDist3DCol; };
         inline const std::vector<double>& getRowActDist3DCol_Down() const { return m_rowActDist3DCol_down; };
-       inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
+	inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
         inline const std::vector<double>& getEnergyCol()     const { return m_energyCol; };
 	inline const AcdTkrIntersectionCol& getAcdTkrIntersectionCol() const { return m_acdTkrIntersections; };
 	inline const AcdTkrPocaCol& getAcdTkrPocaCol() const { return m_acdTkrPocas; };
@@ -299,7 +305,7 @@ namespace Event {
 	/// the vector of track poca w/ the acd
 	AcdTkrPocaCol m_acdTkrPocas;	
 
-	/// the vector of track poca w/ the acd
+	/// the vector of calibrated ACD hits
 	AcdHitCol m_acdHits;	
 
         /// Bill's variable to measure DOCA to rays along corner side gaps

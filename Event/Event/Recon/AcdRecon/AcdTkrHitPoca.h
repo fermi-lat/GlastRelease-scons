@@ -5,13 +5,18 @@
 #include "AcdPocaData.h"
 
 /** 
- * @class AcdTkrHitPoca
+ * @class Event::AcdTkrHitPoca
  * @brief TDS object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and a hit Acd element (tile or ribbon).  This POCA is calculated in 3D.  The doca is defined to be positive 
- *  if the track goes inside the active distance and negative otherwise
+ *  and a hit Acd element (tile or ribbon).  
  *  
- * This class should be a duplicate of reconRootData/AcdTkrHitPoca
+ * Most of the structure of the object comes from the base classes AcdTkrLocalCoords and AcdPocaData
  * 
+ * The class adds only enough information to define the involved in the POCA.
+ *    - const idents::AcdId& getId()  
+ *      - which returns the ID of the hit element
+ *    - const int getTrackIndex()  
+ *      - which returns the index of the track which did the hitting
+ *
  * @author Eric Charles
  *
  * $Header$
@@ -79,7 +84,7 @@ namespace Event {
   /*! 
    * @class AcdTkrHitPocaCol
    *
-   *  @brief TDS class  to store the results of the reconstruction performed
+   *  @brief TDS class a collection of AcdTkrHitPoca objects
    *  
    * It inherits from DataObject
    * (to be a part of Gaudi TDS) and from std::vector of pointers
@@ -90,7 +95,7 @@ namespace Event {
    * @author Eric Charles
    *
    * @todo replace this class by typedef to ObjectVector, make corresponding
-   *       changes in AcdTrkIntersectionAlg
+   *       changes in AcdReconAlg
    */
     
 

@@ -10,11 +10,42 @@
 
 /** 
  * @class AcdTkrIntersection
- * @brief Root object containing information about the expected intersection of a track with the ACD
- * 
- * This class should be a duplicate of Event::AcdTkrIntersection
- * 
- * @author Eric Charles
+ *
+ *  @brief The class stores information about where a track extrapolation crosses an element
+ *  of the GEANT detector mode.  
+ *
+ *  This class is mainly useful for measuring ACD instrument performance since it doesn't 
+ *  depend on the ACD so much as on the tracking.  Ie. AcdTkrIntersections are made even
+ *  if the ACD doesn't fire.
+ *
+ *  The main access functions are:
+ *    - const AcdId& getTileId()  
+ *      - which returns the ID of the hit element
+ *    - const int getTrackIndex()  
+ *      - which returns the index of the track which did the hitting
+ *    - TVector3& getGlobalPosition() 
+ *      - which return the location of the hit in global coordinates
+ *    - double getLocalX(),double getLocalY()  
+ *      - which return the location of the hit in local cooridanates
+ *    - double getLocalXXCov() , double getLocalXYCov() , double getLocalYYCov()
+ *      - which return the terms of the covarience matrix projected into the place of the ACD element
+ *    - double getArcLengthToIntersection()
+ *      - which returns the arc-length along the track at which the hit occurs. 
+ *        Postive values are given for intersections above the first track hit
+ *    - double getPathLengthInTile()
+ *      - which returns the pathlength of track in detector element
+ *    - double getCosTheta()
+ *      - which returns the angle of the track relative to detector plane
+ *    - unsigned char tileHit()
+ *      - which returns a mask to say if the tile was hit
+ *        -AcceptMap_pmtA = 0x01
+ *        -AcceptMap_pmtB = 0x01
+ *        -Veto_pmtA      = 0x04
+ *        -Veto_pmtB      = 0x08
+ *        -CNO_pmtA       = 0x10
+ *        -CNO_pmtB       = 0x20
+ *  
+ *  \author Eric Charles
  *
  * $Header$
  */

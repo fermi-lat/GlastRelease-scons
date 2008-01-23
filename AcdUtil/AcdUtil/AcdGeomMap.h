@@ -12,10 +12,15 @@
 class IGlastDetSvc;
 
 /**   
-* @class AcdGeomMap
+*  @class AcdGeomMap
 *
+*  @brief  This class holds the geometrical information about the ACD elements.
 *
-* $ $
+*  The main function are getRibbon(...) and getTile(...) which return 
+*  AcdRibbonDim and AcdTileDim object that encapsulate geometry information
+*
+* $Header$
+*
 */
 
 
@@ -23,9 +28,11 @@ class AcdGeomMap {
 	
 public:
   
+  /// Null c'tor
   AcdGeomMap()
     :m_acdGeomSvc(0){;}
   
+  /// D'tor is just a simple cleanup
   virtual ~AcdGeomMap(){
     for ( std::map<idents::AcdId,AcdRibbonDim*>::iterator itrR = m_ribbonMap.begin();
 	  itrR != m_ribbonMap.end(); itrR++ ) { delete itrR->second; }

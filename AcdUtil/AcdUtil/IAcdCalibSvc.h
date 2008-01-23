@@ -32,12 +32,25 @@ class AcdCalibMgr;
 // minor version)
 static const InterfaceID IID_IAcdCalibSvc("IAcdCalibSvc", 2, 0);
 
-/*! @class IAcdCalibSvc
- * \brief Abstract interface for provision of GLAST LAT ACD calibration constants
- * \author Eric Charles (from Zach Fewtrell's CalCalibSvc)
+/** 
+ * @class AcdUtil::IAcdCalibSvc
+ * 
+ * @brief Abstract interface for provision of GLAST LAT ACD calibration constants
  *
- * \note functions are provided for each calibration type.  
- *       calib objects are passed back by reference to pointer
+ * Functions are provided to access every type of ACD calibration 
+ * by Channel and PMT:
+ *   - CalibData::AcdPed           Pedestal (in PHA counts)
+ *   - CalibData::AcdGain          Gain (aka MIP peak in PHA above pedestal)
+ *   - CalibData::AcdVeto          Veto threshold (in PHA counts)
+ *   - CalibData::AcdCno           CNO threshold (in PHA counts)
+ *   - CalibData::AcdRange         Range crossover (in PHA counts)
+ *   - CalibData::AcdHighRange     High-Range PHA -> MIPs calibration (pedestal, slope, saturation)
+ *   - CalibData::AcdCoherentNoise Coherent Noise effect ( [0] * exp([1]*x) * sin( [2]*x + [3] )
+ *   
+ * All functions return Success or Failure and fill the provided parameter.
+ * Type checking is included.
+ *
+ * @author Eric Charles (from Zach Fewtrell's CalCalibSvc)
  *
  */
 

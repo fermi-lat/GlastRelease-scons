@@ -19,13 +19,24 @@ class MsgStream;
 static const CLID& CLID_AcdTkrPointCol = InterfaceID("AcdTkrPointCol", 1, 0);
 
 /**
-*  @class AcdTkrPoint
+*  @class Event::AcdTkrPoint
 *
+*  @brief TDS object which stores information where an extrapolated track exits the nominal ACD volume.  
 *
-*  @brief This class stores information about the Point of Closest Approach (POINT) between an extrapolated track
-*  and a hit Acd element (tile or ribbon).  This POINT is calculated in 3D.  The doca is defined to be positive 
-*  if the track goes inside the active distance and negative otherwise
+*  This Point is calculated in 3D.  We include information the track paramterization at the point.
 *  
+*  The main access functions are:
+*    - float getArcLength()
+*      - which returns the arc-length along the track at which the point occurs.  
+*        Postive values are given for intersections above the first track hit.
+*    - const Point& point()
+*      - which returns the intersection point in global coordinates
+*    - int face() 
+*      - which return the side of the ACD did we exited (0=Top, 1=-X, 2=-Y, 3=+X, 4=+Y, 5=Bottom)
+*    - const Event::TkrTrackParams& paramsAtPoint()
+*      - which returns the kalman propagated track parameters at the POINT
+*  
+*
 *  \author Eric Charles
 *
 * $Header$
@@ -55,11 +66,12 @@ namespace Event
       return m_arcLength;
     }
 
-    /// Return the POINT (in global coordinates)
+    /// Return the point (in global coordinates)
     const Point& point() const {
       return m_point;
     }
 
+    /// Which side of the ACD did we exited (0=Top, 1=-X, 2=-Y, 3=+X, 4=+Y, 5=Bottom)
     inline int face() const {
       return m_face;
     }
@@ -107,7 +119,7 @@ namespace Event
   /*! 
    * @class AcdTkrPointCol
    *
-   *  @brief TDS class  to store the results of the reconstruction performed
+   *  @brief TDS class a collection of AcdTkrPoint objects
    *  
    * It inherits from DataObject
    * (to be a part of Gaudi TDS) and from std::vector of pointers
@@ -118,7 +130,7 @@ namespace Event
    * @author Eric Charles
    *
    * @todo replace this class by typedef to ObjectVector, make corresponding
-   *       changes in AcdTrkIntersectionAlg
+   *       changes in AcdReconAlg
    */
 
   class AcdTkrPointCol : public DataObject, public std::vector<AcdTkrPoint*> 

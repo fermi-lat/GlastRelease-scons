@@ -19,12 +19,41 @@ class HepMatrix;
 static const CLID& CLID_AcdTkrIntersectionCol = InterfaceID("AcdTkrIntersectionCol", 1, 0);
 
 /**
-*  @class AcdTkrIntersection
+*  @class Event::AcdTkrIntersection
 *
+*  @brief The class stores information about where a track extrapolation crosses an element
+*  of the GEANT detector mode.  
 *
-*  @brief This class stores the results of the reconstruction performed
-*  in AcdTkrIntersectAlg. It contains the reconstructed data for one
-*  expected intersection of a track with the calorimeter. 
+*  This class is mainly useful for measuring ACD instrument performance since it doesn't 
+*  depend on the ACD so much as on the tracking.  Ie. AcdTkrIntersections are made even
+*  if the ACD doesn't fire.
+*
+*  The main access functions are:
+*    - const idents::AcdId& getTileId()  
+*      - which returns the ID of the hit element
+*    - const int getTrackIndex()  
+*      - which returns the index of the track which did the hitting
+*    - Point& getGlobalPosition() 
+*      - which return the location of the hit in global coordinates
+*    - double getLocalX(),double getLocalY()  
+*      - which return the location of the hit in local cooridanates
+*    - double getLocalXXCov() , double getLocalXYCov() , double getLocalYYCov()
+*      - which return the terms of the covarience matrix projected into the place of the ACD element
+*    - double getArcLengthToIntersection()
+*      - which returns the arc-length along the track at which the hit occurs. 
+*        Postive values are given for intersections above the first track hit
+*    - double getPathLengthInTile()
+*      - which returns the pathlength of track in detector element
+*    - double getCosTheta()
+*      - which returns the angle of the track relative to detector plane
+*    - unsigned char tileHit()
+*      - which returns a mask to say if the tile was hit
+*        -AcceptMap_pmtA = 0x01
+*        -AcceptMap_pmtB = 0x01
+*        -Veto_pmtA      = 0x04
+*        -Veto_pmtB      = 0x08
+*        -CNO_pmtA       = 0x10
+*        -CNO_pmtB       = 0x20
 *  
 *  \author Eric Charles
 *
@@ -128,8 +157,7 @@ namespace Event
   /*! 
    * @class AcdTkrIntersectionCol
    *
-   *  @brief TDS class  to store the results of the reconstruction performed
-   *  in AcdTkrIntersectAlg
+   *  @brief TDS class a collection of AcdTkrIntersection objects
    *  
    * It inherits from DataObject
    * (to be a part of Gaudi TDS) and from std::vector of pointers
@@ -140,16 +168,18 @@ namespace Event
    * @author Eric Charles
    *
    * @todo replace this class by typedef to ObjectVector, make corresponding
-   *       changes in AcdTrkIntersectionAlg
+   *       changes in AcdReconAlg
    */
     
     
   class AcdTkrIntersectionCol : public DataObject, public std::vector<AcdTkrIntersection*> 
   {
   public:
-    
+
+    /// Fill from a vector of intersections, essentially a copy c'tor
     AcdTkrIntersectionCol(const std::vector<AcdTkrIntersection*>& acdTkrIntersections);
 
+    /// Null c'tor
     AcdTkrIntersectionCol() { clear();}
     
     /// destructor - deleting the clusters pointed

@@ -7,16 +7,21 @@
 
 /** 
  * @class AcdTkrGapPoca
- * @brief Root object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and a Gap Acd element (tile or ribbon).  This POCA is calculated in 3D.  The doca is defined to be positive 
- *  if the track goes inside the active distance and negative otherwise
+ * @brief ROOT object which stores information about the Point of Closest Approach (POCA) between 
+ * an extrapolated track and a Gap in the ACD
  *  
- * This class should be a duplicate of Event::AcdTkrGapPoca
+ * Most of the structure of the object comes from the base classes AcdTkrLocalCoords and AcdPocaData
+ * 
+ * The class adds only enough information to define the involved in the POCA.
+ *    - const AcdGapId& getId()  
+ *      - which returns the ID of the gap
+ *    - const int getTrackIndex()  
+ *      - which returns the index of the track which did the hitting
+ *
  * 
  * @author Eric Charles
  *
- * $Header$
- */
+  */
 
 #include "commonRootData/idents/AcdGapId.h"
 

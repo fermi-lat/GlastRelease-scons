@@ -9,8 +9,26 @@
 /**
 *  @class AcdTkrLocalCoords
 *
+*  @brief ROOT object which stores information about where a track crossed the plane of an ACD element.
 *
-*  @brief This class stores the data about the intersection of a track with an Acd Element in the local frame of that element
+*  This information is given in 2D.  The active distances are reported in the ACD element frame.
+*  Both AcdTkrHitPoca and AcdTkrGapPoca inherit from this class.
+*
+*  The main access functions are:
+*    - float getActiveX() , float  getActiveY()
+*      - which return the active distance int the local frame of the ACD element
+*        Positive values mean the track went into the volume in question, 
+*        Negative values mean it missed the volume.
+*        This magnitude is the distance to the edge of the volume.
+*    - float getLocalXXCov() , float getLocalXYCov() , float getLocalYYCov()
+*      - which return the terms of the covarience matrix projected into the place of the ACD element.
+*    - float getCosTheta()
+*      - which returns the angle of the track relative to detector plane
+*    - float getPathLength()
+*      - which returns the pathlength of track in detector element
+*    - int getRegion()
+*      - which returns a code telling which region of the tile was hit
+*
 *  
 *  \author Eric Charles
 *

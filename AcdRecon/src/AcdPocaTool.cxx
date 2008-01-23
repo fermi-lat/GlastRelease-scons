@@ -19,7 +19,6 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 #include "geometry/Ray.h"
-#include "../AcdRecon/RayDoca.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 

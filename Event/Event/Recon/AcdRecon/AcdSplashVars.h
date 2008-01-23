@@ -13,12 +13,28 @@
 class MsgStream;
 
 /** 
- * @class AcdSplashVars
- * @brief Root object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and a hit Acd element (tile or ribbon).  This POCA is calculated in 3D.  The doca is defined to be positive 
- *  if the track goes inside the active distance and negative otherwise
- *  
- * This class should be a duplicate of Event::AcdSplashVars
+ * @class Event::AcdSplashVars
+ * @brief  TDS object which stores information about the geometry of potential backsplash into the ACD
+ *
+ * The data in this class are calculated by extrapolating a track to the CAL entry point
+ * and then looking at the solid angle occupied by a tile w.r.t. that point.
+ *
+ *
+ *  The main access functions are:
+ *    - const idents::AcdId& getId()  
+ *      - which returns the ID of the hit element
+ *    - const int getTrackIndex()  
+ *      - which returns the index of the track which did the hitting
+ *    - const Point& calEntryPoint() 
+ *      - which returns the point the track enters the calorimeter
+ *    - const Vector& calEntryVector() 
+ *      - which returns the track vector at the point the track enters the calorimeter
+ *    - float tileSolidAngle
+ *      - which returns the total solid angle of the tile, seen from the track entry point
+ *    - float weightedTrackAngle
+ *      - which returns the average of the angle between the track vector and the vector from the CAL to the tile
+ *    - float weightedPathlength
+ *      - which returns the average of the pathlength inside the tile along the path from the CAL to the tile
  * 
  * @author Eric Charles
  *
@@ -60,7 +76,7 @@ namespace Event {
       return m_trackIndex;
     }
 
-    /// return the Vector from the point the track enters the calorimeter to the tile center
+    /// return the point the track enters the calorimeter
     inline const Point& calEntryPoint() const { return m_calEntryPoint; }
     
     /// return the track vector at the point the track enters the calorimeter
@@ -119,6 +135,26 @@ namespace Event {
     float m_weightedPathlength;
   
   };
+
+
+  /*! 
+   * @class AcdSplashVarsCol
+   *
+   *  @brief TDS class a collection of AcdSplashVars objects
+   *  
+   * It inherits from DataObject
+   * (to be a part of Gaudi TDS) and from std::vector of pointers
+   * to AcdSplashVars objects. Some methods just rename the std::vector
+   * methods with the same functionality for backward compartibility.
+   *
+   *
+   * @author Eric Charles
+   *
+   * @todo replace this class by typedef to ObjectVector, make corresponding
+   *       changes in AcdReconAlg
+   */
+    
+
 
   class AcdSplashVarsCol : public DataObject, public std::vector<AcdSplashVars*> 
   {

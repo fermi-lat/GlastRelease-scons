@@ -1,5 +1,5 @@
 /** @file IAcdGeometrySvc.h
- @brief Abstract interface to TkrGeometrySvc (q.v.)
+ @brief Abstract interface to AcdGeometrySvc (q.v.)
 
   $Header$
 */
@@ -32,7 +32,18 @@ class AcdGeomMap;
 /** 
  * @class IAcdGeometrySvc
  *
- * @brief Abstract interface to AcdGeometrySvc 
+ * @brief Interface to ACD geometry.
+ *
+ * Most clients just use the AcdGeomMap to get the descriptions of individual elements.
+ * However there are also some other useful functions:
+ * - Used in filling the AcdGeomMap
+ *   - getting the number of elements, and a list of all the elements
+ *   - getting the number of volumes that make up a particular elements
+ *   - functions to fill the AcdTileDim, and AcdRibbonDim data members
+ *   - determining the intermediate reference frame of a particular volume of an ACD element
+ * - Used in reconstruction
+ *   - getting the rays associated with the corner gaps of the ACD
+ *   - deciding if an idents::VolumeIdentifier is an ACD detector element or not
  * 
  * @author Heather Kelly 
  */
@@ -57,19 +68,19 @@ public:
 
     // Lists and Maps of detector elements
 
-    // All the elements
+    /// All the elements
     virtual const AcdUtil::AcdDetectorList& getDetectorList() const = 0;
 
-    // How many sub-elements for a given AcdId
+    /// How many sub-elements for a given AcdId
     virtual const std::map<idents::AcdId, int>& getAcdIdVolCountCol() const = 0;
 
-    // Does a volume ID correspond to a known detector elemnt
+    /// Does a volume ID correspond to a known detector elemnt
     virtual bool findDetector(const idents::VolumeIdentifier &volId) const = 0;
     
-    // A map from AcdID to the represenations used in AcdRecon
+    /// A map from AcdID to the represenations used in AcdRecon
     virtual AcdGeomMap& geomMap() = 0;
 
-    // Get a particular corner Ray
+    /// Get a particular corner Ray
     virtual const Ray getCornerGapRay(unsigned int i) const = 0;
 
 
@@ -101,6 +112,7 @@ public:
 					int& sharedEdge1, int& sharedEdge2,
 					float& sharedWidth1, float& sharedWidth2) = 0;
 
+    /// Given a VolumeIdentifier, provide the intermediate reference frame
     virtual AcdFrameUtil::AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier &volId) const = 0;
 
     virtual StatusCode findCornerGaps() = 0;

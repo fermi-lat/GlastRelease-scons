@@ -14,6 +14,7 @@
 
 /** @class ReadDigi.cxx
  * @brief AcdDigi Test algorithm
+ *
  * $Header$
  */
 

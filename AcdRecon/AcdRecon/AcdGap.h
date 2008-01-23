@@ -3,8 +3,8 @@
 
 namespace AcdRecon {
 
-  typedef enum { None=0, 
-		 X_RibbonSide=1,
+  typedef enum { None=0,             
+		 X_RibbonSide=1,     
 		 Y_RibbonSide=2, 
 		 Y_RibbonTop=3,
 		 SideCornerEdge=4,

@@ -11,6 +11,18 @@ namespace CalibData {
   class AcdCalibDescription;
 }
 
+
+/** @class XmlAcdCnv<T>
+ *
+ *  @brief template to read a particular type of ACD calibrations
+ *
+ *  This class uses the various CalibData::AcdCalibDescription sub-classes
+ *  to figure out how to read the XML.
+ *
+ *  @author E. Charles
+ *
+ **/
+
 template <class T>
 class XmlAcdCnv : public XmlAcdBaseCnv {
 
@@ -27,6 +39,7 @@ public:
 
 protected:
 
+  /// Should only be built by factory
   XmlAcdCnv(ISvcLocator* svc)
     :XmlAcdBaseCnv(svc,T::calibCLID()){
   }
@@ -34,15 +47,16 @@ protected:
 public:
   virtual ~XmlAcdCnv() {}       // most likely nothing to do 
 
+  /// Local utility which knows how to get the information out of a
+  /// <acdXXX> element and make a CalibData::AcdXXX with it  
   T* processPmt(DOMElement* pmtElt, const CalibData::AcdCalibDescription& desc) {
-    /// Local utility which knows how to get the information out of a
-    /// <acdXXX> element and make a CalibData::AcdXXX with it
+
     using xmlBase::Dom;
     
     // Element we're interested in is child of <pmt>
     DOMElement* calibElt = xmlBase::Dom::getFirstChildElement(pmtElt);
 
-    // Could check here to make sure it really is an <acdPed>
+    // Could check here to make sure it really is an <T>
     int status;
     std::vector<float> vals;
     try {    
@@ -60,6 +74,7 @@ public:
     return new T(desc,vals,(CalibData::AcdCalibObj::STATUS)status);
   }
   
+  /// Build the holder object, and fill it with calibrations
   virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject) {
     

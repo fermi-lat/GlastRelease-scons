@@ -4,29 +4,31 @@
 
 #include "geometry/Ray.h"
 
-//
-//------------------------------------------------------------------------
-//
-// RayDoca
-//
-// A utility for calculating the distance of closest approach between two
-// (assumed straight) tracks and the point on each line where this occurs.
-//
-// The method is taken from "Distance between Lines and Segments with their
-// Closest Point of Approach" found at 
-//      http://geometryalgorithms.com/Archive/algorithm_0106/algorithm_0106.htm
-//
-//
-// Tracy Usher 03/05/02
-//
-//------------------------------------------------------------------------
-//
+/**
+ *
+ *
+ * @class AcdUtil::RayDoca
+ *
+ * @brief A utility for calculating the distance of closest approach between two
+ * (assumed straight) tracks and the point on each line where this occurs.
+ *
+ * The method is taken from "Distance between Lines and Segments with their
+ * Closest Point of Approach" found at 
+ *      http: //geometryalgorithms.com/Archive/algorithm_0106/algorithm_0106.htm
+ *
+ *
+ * @author Tracy Usher 03/05/02
+ *
+ * $Header$
+ **/
 
 namespace AcdUtil { 
 
 class RayDoca
 {
 public:
+
+    RayDoca(){;}
     RayDoca(const Ray& ray1, const Ray& ray2);
    ~RayDoca() {}
 
@@ -37,6 +39,8 @@ public:
     double docaRay1Point2();
     Point  docaPointRay1();
     Point  docaPointRay2();
+
+    void recompute(const Ray& ray1, const Ray& ray2);
 
 private:
     Point  P;

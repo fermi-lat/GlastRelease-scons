@@ -6,8 +6,33 @@
 
 #include <vector>
 
+/**
+ * @brief Some definitions and functions used in handling ACD coordinate frames
+ *
+ * We have to keep track of 3 frames for each ACD detector element
+ * 
+ * 1) The global frame, ie, the LAT based frame.  
+ *     X, Y run across the towers, Z runs up the towers. 
+ *     X, Y = 0 at the center of the LAT, Z = 0 at the TKR-CAL interface
+ *
+ * 2) The local frame, ie, tile or ribbon frame.
+ *     X, Y run across tiles. Z runs out of the tile.
+ *     X, Y = 0 at the center of the tile.
+ *     for ribbons x runs across ribbon, y runs along ribbon, 
+ *                 z out of ribbon plane
+ *     X, Y = 0 at the center of the ribbon
+ *
+ * 3) The intermediate or GEANT frame.
+ *    This is the same as the local frame except for any possible tilting of the 
+ *    element
+ * 
+ */
 
 namespace AcdFrameUtil {
+
+  /**
+   * @brief Define the various rotations used to describe the ACD
+   */
 
   typedef enum {
     FRAME_NONE = 100000,   // can't find anything suitable
@@ -35,68 +60,117 @@ namespace AcdFrameUtil {
     FRAME_XMEAS_ZROT180 = 11   // FRAME_XMEAS rotated 180 deg. about Z
   } AcdReferenceFrame;
   
-  // pi/2 to lots of accuracy
+  /// pi/2 to lots of accuracy
   const double PI_OVER_2(1.57079632679489656);
 
-  const HepGeom::Transform3D _identity;
+  /// No Rotation at all
+  const HepGeom::Transform3D s_identity;
 
-  // Rotations about X 
-  const HepGeom::RotateX3D _rx_pi_over_2(PI_OVER_2);
-  const HepGeom::RotateX3D _rx_pi(2*PI_OVER_2);
-  const HepGeom::RotateX3D _rx_3pi_over_2(3*PI_OVER_2);
+  /// Rotations about X 
+  const HepGeom::RotateX3D s_rx_pi_over_2(PI_OVER_2);
+  const HepGeom::RotateX3D s_rx_pi(2*PI_OVER_2);
+  const HepGeom::RotateX3D s_rx_3pi_over_2(3*PI_OVER_2);
   
-  // Rotations about Y
-  const HepGeom::RotateY3D _ry_pi_over_2(PI_OVER_2);
-  const HepGeom::RotateY3D _ry_pi(2*PI_OVER_2);
-  const HepGeom::RotateY3D _ry_3pi_over_2(3*PI_OVER_2);
+  /// Rotations about Y
+  const HepGeom::RotateY3D s_ry_pi_over_2(PI_OVER_2);
+  const HepGeom::RotateY3D s_ry_pi(2*PI_OVER_2);
+  const HepGeom::RotateY3D s_ry_3pi_over_2(3*PI_OVER_2);
 
-  // Rotations about Z
-  const HepGeom::RotateZ3D _rz_pi_over_2(PI_OVER_2);
-  const HepGeom::RotateZ3D _rz_pi(2*PI_OVER_2);
-  const HepGeom::RotateZ3D _rz_3pi_over_2(3*PI_OVER_2);
+  /// Rotations about Z
+  const HepGeom::RotateZ3D s_rz_pi_over_2(PI_OVER_2);
+  const HepGeom::RotateZ3D s_rz_pi(2*PI_OVER_2);
+  const HepGeom::RotateZ3D s_rz_3pi_over_2(3*PI_OVER_2);
   
-  // return the rotation from the GEANT frame to the LOCAL frame
-  // This is just a matter of renaming the axes
+  /**
+   * @return the rotation from the GEANT frame to the LOCAL frame
+   *
+   * This is just a matter of renaming the axes
+   */
   const HepGeom::Transform3D& getRotationToLocal(AcdReferenceFrame type);  
 
-  // return the rotation from the LOCAL frame to the GEANT frame
-  // This is just a matter of renaming the axes 
+  /**
+   * @return the rotation from the LOCAL frame to the GEANT frame
+   *
+   * This is just a matter of renaming the axes
+   */
   const HepGeom::Transform3D& getRotationToGeant(AcdReferenceFrame type);
 
-  // Return the corners in GLOBAL frame
-  // given vectors along the local X and Y axes, expressed in GLOBAL frame
-  // Order is (-,-),(-,+),(+,+),(+,-) 
-  // a.k.a.   clockwise starting from (-,-) corner  
+  /**
+   * @brief get the the corners in GLOBAL frame
+   *
+   * @param xVector vector along local X axis, expressed in GLOBAL frame
+   * @param yVector vector along local Y axis, expressed in GLOBAL frame
+   * @param corner is filled with the locations of the 4 corners.
+   *
+   * Order is (-,-),(-,+),(+,+),(+,-) 
+   *  a.k.a.   clockwise starting from (-,-) corner 
+   *
+   */  
   void getCornersSquare(const HepPoint3D &center, const HepVector3D& xVector, const HepVector3D& yVector,
 			HepPoint3D *corner);
-
-  // Return the corners in GLOBAL frame
-  // given vectors along the local X and Y axes, expressed in GLOBAL frame
-  // Order is (-,-),(-,+),(+,+),(+,-) 
-  // a.k.a.   clockwise starting from (-,-) corner  
+  /**
+   * @brief get the the corners in GLOBAL frame
+   *
+   * @param xVector vector along local X axis at top of tile, expressed in GLOBAL frame
+   * @param xVector vector along local X axis at bottom of tile, expressed in GLOBAL frame
+   * @param yVector vector along local Y axis, expressed in GLOBAL frame
+   * @param corner is filled with the locations of the 4 corners.
+   *
+   * Order is (-,-),(-,+),(+,+),(+,-) 
+   *  a.k.a.   clockwise starting from (-,-) corner 
+   *
+   */  
   void getCornersTrap(const HepPoint3D &center, const HepVector3D& x1Vector, const HepVector3D& x2Vector,
 		      const HepVector3D& yVector,  HepPoint3D *corner);
 
   // Convert the dimension vector from the way it is expressed in GEANT frame
   // into the LOCAL frame
+
+  /**
+   * @brief Convert the dimension vector from the way it is expressed in GEANT frame
+   *        into the LOCAL frame
+   *
+   * @param inGeant dimension vector in GEANT frame
+   * @param inLocal dimension vector in LOCAL frame
+   */    
   void transformDimensionVector(AcdReferenceFrame type, 
 				const std::vector<double>& inGeant, 
 				std::vector<double>& inLocal);
-
-  // Convert the dimension vector from the way it is expressed in GEANT frame
-  // into the LOCAL frame
+  /**
+   * @brief Convert the dimension vector from the way it is expressed in GEANT frame
+   *        into the LOCAL frame
+   *
+   * @param inGeant dimension vector in GEANT frame
+   * @param inLocal dimension vector in LOCAL frame
+   */    
   void transformDimensionVectorTrap(AcdReferenceFrame type, 
 				    const std::vector<double>& inGeant, 
 				    std::vector<double>& inLocal);
 
 
-  // Get the mid point between two points
+  /**
+   * @brief Get the midpoint between two points
+   *
+   * @param p1 first point
+   * @param p2 second point
+   * @param mid filled with value of midpoint   
+   */    
   void getMidpoint(const HepPoint3D &p1, const HepPoint3D& p2, HepPoint3D& mid);
 
+  /**
+   * @brief Build a transform from GEANT to LOCAL frame
+   *
+   * @param type enum giving orientation of axes
+   * @param center of the detector element
+   * @param out filled with resulting transform
+   */      
   void buildTransform(AcdReferenceFrame type, const HepPoint3D& center,
 		      HepGeom::Transform3D& out);
   
-
+  /**
+   * @brief Build the composite rotations.  Called once in initialization
+   *
+   */
   void buildRotations();
 
 }

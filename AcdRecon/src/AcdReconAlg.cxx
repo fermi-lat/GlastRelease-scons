@@ -37,11 +37,11 @@
 #include "CLHEP/Geometry/Transform3D.h"
 
 #include "AcdUtil/AcdDetectorList.h"
+#include "AcdUtil/RayDoca.h"
 
 #include "geometry/Ray.h"
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
-#include "../AcdRecon/RayDoca.h"
 #include "../AcdRecon/AcdReconFuncs.h"
 #include "../AcdRecon/AcdTkrParams.h"
 
@@ -1280,7 +1280,7 @@ StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &
     for (iCorner=0; iCorner<4; iCorner++) {
         const Ray gapRay = m_acdGeoSvc->getCornerGapRay(iCorner);
         // Compute DOCA between the track and gap ray 
-        RayDoca doca = RayDoca(track, gapRay);
+        AcdUtil::RayDoca doca = AcdUtil::RayDoca(track, gapRay);
 
         // Check if x,y,z along corner gap ray falls within limits of LAT.
         // where the top is defined as the top ACD tiles and bottom is the

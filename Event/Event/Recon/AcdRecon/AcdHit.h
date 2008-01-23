@@ -16,16 +16,43 @@ class MsgStream;
 static const CLID& CLID_AcdHitCol = InterfaceID("AcdHitCol", 1, 0);
 
 /**
-*  @class AcdHit
-*
-*
-*  @brief This class stores the calibrated Acd information.  There is a 1-1 correspondance between AcdHits
-*  and AcdDigis.  The hits also add the pulse height information expressed in terms of MIPs.  
-*  
-*  \author Eric Charles
-*
-* $Header$
-*/
+ *  @class Event::AcdHit
+ *
+ *  @brief This ROOT object stores the calibrated Acd information.  
+ *
+ *  There is a 1-1 correspondance between AcdHits and AcdDigis.  The hits also 
+ *  add the pulse height information expressed in terms of MIPs.  To preserve the
+ *  correspondance with AcdDigi no correlation is made with tracking.  This means 
+ *  we don't correct for pathlength through the element.
+ *  
+ *  The main access functions are:
+ *  - Functions equivalent to AcdDigi
+ *    - const idents::AcdId& getAcdId()  
+ *      - which returns the ID of the hit element
+ *    - unsigned short getPha(PmtId id) 
+ *      - which returns the raw PHA value for either PMT
+ *    - unsigned short getFlags(PmtId id)
+ *      - which returns a mask with the status bits associated with either PMT
+ *         Those status bits are:
+ *         -      PMT_ACCEPT_BIT = 0,              // channel is above zero suppresion threshold (applied to digital data)
+ *         -      PMT_VETO_BIT = 1,                // channel fired veto discriminator (applied to analog data)
+ *         -      PMT_RANGE_BIT = 2,               // channel was read out in high range
+ *         -      PMT_CNO_BIT = 3,                 // could be any channel on that GARC
+ *         -      PMT_ODD_PARITY_ERROR_BIT = 4,    // PHA data transmission had parity error
+ *         -      PMT_HEADER_PARITY_ERROR_BIT = 5, // header data transmission had parity error 
+ *         -      PMT_DEAD_BIT = 6,                // PMT was flagged as dead by offline calibration
+ *         -      PMT_HOT_BIT = 7                  // PMT was flagged as hot by offline calibration
+ *
+ *  - Functions with calibrated data
+ *    - float(PmtId id) const
+ *      - which returns the calibrated pulse height expressed in terms of MIPS of either PMT
+ *    - float mips( ) 
+ *      - which returns the average calibrated pulse height expressed in terms of MIPS of both PMTs
+ *
+ *  \author Eric Charles
+ *
+ * $Header$
+ **/
 
 namespace Event
 {
@@ -93,7 +120,7 @@ namespace Event
     
     /// Direct access to parameters
 
-    /// set everything at oncer
+    /// set everything at once
     void set(const idents::AcdId&, unsigned short flagsA, unsigned short flagsB, 
 	     unsigned short phaA, unsigned short phaB,
 	     float mipsPmtA, float mipsPmtB);

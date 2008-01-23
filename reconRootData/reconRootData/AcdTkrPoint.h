@@ -10,10 +10,20 @@
 /**
 *  @class AcdTkrPoint
 *
+*  @brief ROOT object which stores information where an extrapolated track exits the nominal ACD volume.  
 *
-*  @brief This class stores information about the Point of Closest Approach (POINT) between an extrapolated track
-*  and a hit Acd element (tile or ribbon).  This POINT is calculated in 3D.  The doca is defined to be positive 
-*  if the track goes inside the active distance and negative otherwise
+*  This Point is calculated in 3D.  We include information the track paramterization at the point.
+*  
+*  The main access functions are:
+*    - float getArcLength()
+*      - which returns the arc-length along the track at which the point occurs.  
+*        Postive values are given for intersections above the first track hit.
+*    - const TVector3& point()
+*      - which returns the intersection point in global coordinates
+*    - int face() 
+*      - which return the side of the ACD did we exited (0=Top, 1=-X, 2=-Y, 3=+X, 4=+Y, 5=Bottom)
+*    - const Event::TkrTrackParams& paramsAtPoint()
+*      - which returns the kalman propagated track parameters at the POINT
 *  
 *  \author Eric Charles
 *

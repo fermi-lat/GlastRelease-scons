@@ -33,20 +33,26 @@ using namespace std;
 * @brief Root container for the reconstructed ACD information 
 * 
 * This class contains:
-* -# Minimum DOCA (Distance of Closest Approach) computed using all tracks and
+* - Minimum DOCA (Distance of Closest Approach) computed using all tracks and
 *    ACD detectors.  DOCA is computed using the center of the ACD tiles.
-* -# AcdId of the tile associated with the minimum DOCA.
-* -# Minimum Active Distance computed using all tracks and ACD detectors.
+* - AcdId of the tile associated with the minimum DOCA.
+* - Minimum Active Distance computed using all tracks and ACD detectors.
 *    Computed using the edge of ACD tiles.
-* -# AcdId of the tile associated with the maximum Active Distance
-* -# Tile Count the number of ACD tiles which were above veto threshold.
-* -# Collection of minimum DOCA values organized by geometry:  top, side rows
-* -# Collection of minimum Active Distance values organized by geometry:  top
-*    and side rows.
-* -# Total reconstructed energy detected in ACD detector elements.
-* -# MC Energy in MeV deposited in the ribbons
-* -# Ribbon Count
-* -# Corner DOCA
+* - AcdId of the tile associated with the maximum Active Distance
+* - Tile Count the number of ACD tiles which were above veto threshold.
+* - Collection of minimum DOCA values organized by geometry:  top, side rows
+* - Collection of minimum Active Distance values organized by geometry:  top
+*   and side rows.
+* - Total reconstructed energy detected in ACD detector elements.
+* - MC Energy in MeV deposited in the ribbons
+* - Ribbon Count
+* - Corner DOCA
+*
+* - Collection of calibrated ACD signals seen in each tile
+* - Collection of all track extrapolations into ACD geant model elements
+* - Collection of all track extrapolations to ACD elements with signals
+* - Collection of all track extrapolations to nominal location of ACD
+* - Collection of all backsplash estiamtes from track extrapolations to CAL
 *
 * @author Heather Kelly
 *

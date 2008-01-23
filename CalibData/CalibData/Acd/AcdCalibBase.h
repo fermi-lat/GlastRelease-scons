@@ -16,48 +16,60 @@ namespace CalibData {
   class AcdCalibDescription;
 
   /**
-       Base class for ACD calibration data, at least for those
-       types with a fixed amount of data per tile-pmt-range
+   * @class AcdCalibBase
+   * 
+   * @brief Base class for ACD calibration data sets.
+   * 
+   * This class keeps a (pointer to a) vector of pointers to the
+   * individual channel calibrations and a pointer to a helper class,
+   * AcdFinder, which knows how to compute indices.
+   *
+   **/
 
-       This class keeps a (pointer to a) vector of pointers to the
-       individual per-range datasets and a pointer to a helper class,
-       AcdFinder, which knows how to compute indices.
-  */
   class AcdCalibBase : public CalibBase {
 
   public:
+    /// Build space for the whole ACD
     AcdCalibBase(const AcdCalibDescription& desc,
 		 unsigned nFace=5, unsigned nRow=5, unsigned nCol=5, 
                  unsigned nNA=11, unsigned nPmt=2);
 
+    /// Cleanup
     virtual ~AcdCalibBase();
 
-    virtual const CLID& clID() const = 0;     // must be overridden
-    static const CLID& classID();   // shouldn't get called
+    virtual const CLID& clID() const = 0;   // must be overridden  
+    static const CLID& classID();           // shouldn't get called
 
-    // Maybe won't need to be virtual after all
+    /// Update all the values
     StatusCode update(CalibBase& other, MsgStream* log);
     
   protected:
 
-    /** 
-        Pick out calibration data associated with a particular tile, pmt
-     */
+    /// Pick out calibration data associated with a particular tile, pmt
     AcdCalibObj* get(idents::AcdId id,unsigned pmt);    
+
+    /// Put in  alibration data associated with a particular tile, pmt
     bool put(idents::AcdId id,unsigned pmt, AcdCalibObj& pmtCalib);
+
+    /// Allocate space for calibration data for one channel
     virtual AcdCalibObj* makeNew() const = 0;
 
+    /// return the descrption of the calibration this object manages
     const AcdCalibDescription* desc() const { return m_desc; }
 
   private:
 
     static const CLID noCLID;
 
+    /// This guy knows how to compute indices.
     AcdFinder* m_finder;
 
-    std::vector<AcdCalibObj* > m_pmts;  // tiles and ribbons
-    std::vector<AcdCalibObj* > m_NAs;   // no detector
+    /// tiles and ribbons
+    std::vector<AcdCalibObj* > m_pmts;
+    /// unattached channels
+    std::vector<AcdCalibObj* > m_NAs;
 
+    /// the descrption of the calibration this object manages
     const AcdCalibDescription* m_desc;
 
     /** Due to bug in gcc, gdb can't find symbols in constructors.  This

@@ -15,11 +15,17 @@ class AcdTileDim;
 class AcdRibbonDim;
 
 /**   
-* @class AcdIPocaTool
-*
-* Base class for clustering tools
-*
-* $Header$
+ * @class AcdIPocaTool
+ *
+ * @brief Gaudi interface for Tool that calculates Point of Closest Approach (POCA) between 
+ * ACD elements and track projections.
+ *
+ * The actual calculations live in AcdRecon::AcdReconFuncs
+ * This code just loops over the objects and calls the relavent calculations
+ *
+ * @author Eric Charles
+ *
+ * $Header$
 */
 
 static const InterfaceID IID_AcdIPocaTool("AcdIPocaTool",1,0) ;
@@ -28,32 +34,57 @@ class AcdIPocaTool : virtual public IAlgTool {
 
 public:
   
-  // retrieve Gaudi interface ID
+  /// retrieve Gaudi interface ID
   static const InterfaceID& interfaceID()
     { return IID_AcdIPocaTool; }
   
   AcdIPocaTool() {}
   virtual ~AcdIPocaTool() {}
     
-  // @brief calculate the distance of closest approach between the track and the tile
-  //   This includes the distance of closest approach to the center of the tile
-  //   and both the 2d and 3d distances to the closest edge or corner
+  /** @brief calculate the distance of closest approach between the track and the tile
+   *
+   *   This includes the distance of closest approach to the center of the tile
+   *   and both the 2d and 3d distances to the closest edge or corner
+   *
+   *  @param tile geometrical description of the tile
+   *  @param aTrack track projection data
+   *  @param data object to cache output of calculations
+   *  @return Success or Failure
+   **/
   virtual StatusCode tileDistances (const AcdTileDim& tile,
 				    const AcdRecon::TrackData& aTrack, 
 				    AcdRecon::PocaData& data) = 0;
   
-  // @brief calculate the distance of closest approach between the track and the ribbon
-  //   This includes both the 2d and 3d distances to the ray defining the ribbon segement
+  /** @brief calculate the distance of closest approach between the track and the ribbon
+   *
+   *   This includes both the 2d and 3d distances to the ray defining the ribbon segement
+   *
+   *  @param ribbon geometrical description of the ribbon
+   *  @param aTrack track projection data
+   *  @param data object to cache output of calculations
+   *  @return Success or Failure
+   **/
   virtual StatusCode ribbonDistances(const AcdRibbonDim& ribbon,
 				     const AcdRecon::TrackData& aTrack, 
 				     AcdRecon::PocaData& data) = 0;
 
-  // @brief Make an AcdTrkPoca object, given the PocaData 
+  /** @brief Make an Event::AcdTrkHitPoca object, given the PocaData
+   *
+   *  @param aTrack track projection data
+   *  @param data cached output of calculations
+   *  @param poca newly made TDS object
+   *  @return Success or Failure
+   **/
   virtual StatusCode makePoca(const AcdRecon::TrackData& aTrack, 
 			      const AcdRecon::PocaData& data,			      
 			      Event::AcdTkrHitPoca*& poca) = 0;
 
-  // @brief put the pocas onto a list, subject to filtering cuts
+   /** @brief put the pocas into the output map, subject to filtering cuts
+   *
+   *  @param in all the caculated POCA
+   *  @param only selected POCA objects
+   *  @return Success or Failure
+   **/ 
   virtual StatusCode filter(const AcdRecon::PocaDataMap& in, AcdRecon::PocaDataPtrMap& out) = 0;
 
 } ;

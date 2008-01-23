@@ -58,8 +58,8 @@ namespace AcdCalib {
   // Determine the MIP equivaltent value of a particular high range PHA value
   StatusCode mipEquivalent_highRange(unsigned short PHA, const double& pedestal, const double& slope, const double& saturation, double& mips) {
     double PHApedReduced = (double)PHA - pedestal;
-    double top = PHApedReduced * saturation;
-    double bot = ( saturation - PHApedReduced ) * slope;
+    double top = PHApedReduced * saturation * slope;
+    double bot = ( saturation + ( slope * PHApedReduced ) );
     if ( bot <= 0 ) {
       mips = 1000;
       return StatusCode::SUCCESS;

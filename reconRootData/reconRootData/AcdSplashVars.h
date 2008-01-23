@@ -5,11 +5,27 @@
 
 /** 
  * @class AcdSplashVars
- * @brief Root object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and a hit Acd element (tile or ribbon).  This POCA is calculated in 3D.  The doca is defined to be positive 
- *  if the track goes inside the active distance and negative otherwise
- *  
- * This class should be a duplicate of Event::AcdSplashVars
+ * @brief A ROOT object which stores information about the geometry of potential backsplash into the ACD
+ *
+ * The data in this class are calculated by extrapolating a track to the CAL entry point
+ * and then looking at the solid angle occupied by a tile w.r.t. that point.
+ *
+ *
+ *  The main access functions are:
+ *    - const idents::AcdId& getId()  
+ *      - which returns the ID of the hit element
+ *    - const int getTrackIndex()  
+ *      - which returns the index of the track which did the hitting
+ *    - const TVector3& calEntryPoint() 
+ *      - which returns the point the track enters the calorimeter
+ *    - const TVector3& calEntryVector() 
+ *      - which returns the track vector at the point the track enters the calorimeter
+ *    - float tileSolidAngle
+ *      - which returns the total solid angle of the tile, seen from the track entry point
+ *    - float weightedTrackAngle
+ *      - which returns the average of the angle between the track vector and the vector from the CAL to the tile
+ *    - float weightedPathlength
+ *      - which returns the average of the pathlength inside the tile along the path from the CAL to the tile
  * 
  * @author Eric Charles
  *

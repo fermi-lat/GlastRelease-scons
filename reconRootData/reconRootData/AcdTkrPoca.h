@@ -4,11 +4,8 @@
 #include "TObject.h"
 /** 
  * @class AcdTkrPoca
- * @brief Root object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and a hit Acd element (tile or ribbon).  This POCA is calculated in 3D.  The doca is defined to be positive 
- *  if the track goes inside the active distance and negative otherwise
- *  
- * This class should be a duplicate of Event::AcdTkrPoca
+ *
+ * @brief Deprecated!!
  * 
  * @author Eric Charles
  *

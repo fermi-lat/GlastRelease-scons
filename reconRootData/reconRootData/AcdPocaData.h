@@ -4,13 +4,27 @@
 #include "TObject.h"
 /** 
  * @class AcdPocaData
- * @brief Root object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and the Acd (either a detector element or a gap).  This POCA is calculated in 3D.  
- *  The doca is defined to be positive if the track goes inside the active distance or gap
- *  and negative otherwise
  *
- * This class should be a duplicate of Event::AcdPocaData
- * 
+ * @brief ROOT object information about the Point of Closest Approach (POCA) between an extrapolated track
+ *  and the Acd (either a detector element or a gap).  
+ *
+ *  This POCA is calculated in 3D.  The doca is defined to be positive if the track goes inside the active distance 
+ *  or gap and negative otherwise.  Both AcdTkrHitPoca and AcdTkrGapPoca inherit from this class.
+ *
+ *  The main access functions are:
+ *    - float getArcLength()
+ *      - which returns the arc-length along the track at which the POCA occurs.  
+ *        Postive values are given for intersections above the first track hit.
+ *    - float getDoca(), float getDocaErr()
+ *      - which returns the distance of closest approach.  This is usually expressed as an active distance
+ *        Positive values mean the track went into the volume in question, 
+ *        Negative values mean it missed the volume.
+ *        This magnitude is the distance to the edge of the volume.
+ *    - const TVector3& getPoca()
+ *      - which returns the Point of Closest Approach (POCA) in global coordinates
+ *    - const TVector3& getPocaVector()
+ *      - which returns the  vector between the POCA and the closest edge of the volume in question
+ *
  * @author Eric Charles
  *
  * $Header$

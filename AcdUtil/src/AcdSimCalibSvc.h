@@ -17,20 +17,34 @@
 
 // STD
 
-/** @class AcdSimCalibSvc
-    @author Eric Charles (from Zachary Fewtrell's CalCalib stuff)
-    * \brief Instatiates IAcdSimCalibSvc interface, gets data from CalibDataSvc
-    *
-    * handles:
-    * - data storage/destruction
-    * - communication with Gleam lower level services
-    * - checking of data validity period  
-    * - extraction of acd-specific constants out of generic data objects
-    * - creation/caching of local meta-data objects where needed
-    *
-    * \author  Eric Charles (from Zachary Fewtrell's CalCalib stuff)
-    *
-    */
+/**
+ * @class AcdSimCalibSvc
+ *
+ * \brief Instatiates AcdUtil::IAcdCalibSvc interface for calibrations used in simulation
+ *
+ * This service is used by the simulation code.  In particular, AcdDigi/AcdDigiAlg.
+ *
+ * handles:
+ * - data storage/destruction
+ * - communication with Gleam lower level services
+ * - checking of data validity period  
+ * - extraction of acd-specific constants out of generic data objects
+ * - creation/caching of local meta-data objects where needed
+ *
+ * Job Options:
+ * - CalibDataSvc        ["CalibDataSvc"] Name of the gaudi svc used to access calib DB.
+ * - DefaultFlavor       ["ideal"]        Flavor of calibration to use.
+ * - FlavorPed           [""]             To override pedestal flavor.
+ * - FlavorGain          [""]             To override gain (aka MIP peak) flavor.
+ * - FlavorVeto          [""]             To override veto threshold flavor.
+ * - FlavorCno           [""]             To override CNO threshold flavor.
+ * - FlavorRange         [""]             To override range crossover flavor.
+ * - FlavorHighRange     [""]             To override high range calibration flavor.
+ * - FlavorCoherentNoise [""]             To override coherent noise calibration flavor.
+ *
+ * \author  Eric Charles (from Zachary Fewtrell's CalCalib stuff)
+ *
+ **/
 
 class AcdSimCalibSvc : public Service, public AcdCalibSvcBase, virtual public AcdUtil::IAcdCalibSvc {
 

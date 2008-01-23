@@ -12,7 +12,7 @@
 
 #include "Event/TopLevel/Definitions.h"
 
-/** @class AcdDigi        
+/** @class Event::AcdDigi        
 * @brief AcdDigi represents the digitization output from one ACD entity.  
 *
 * An entity could be an ACD tile or a fiber.  Each of which would contain 

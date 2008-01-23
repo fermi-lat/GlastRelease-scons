@@ -15,7 +15,14 @@
 *   -# AcdDigi Collection
 *   -# CalDigi Collection
 *   -# TkrDigi Collection
-* - AcdRecon
+* - Event::AcdRecon
+*   -# Event::AcdHit Collection
+*   -# Event::AcdTkrIntersection Collection
+*   -# Event::AcdTkrPoca Collection    Deprecated!!
+*   -# Event::AcdTkrHitPoca Collection
+*   -# Event::AcdTkrGapPoca Collection
+*   -# Event::AcdTkrPoint Collection
+*   -# Event::AcdSplashVars Collection  Not-Filled!!
 * - CalRecon
 *   -# CalXtalRecData Collection
 *   -# CalCluster Collection
@@ -67,6 +74,13 @@
 * The reconstruction data is available on the TDS.  This data appears under a 
 * variety of headings depending upon the subsystem:
 * - /Event/AcdRecon
+*    -# Event::AcdHit Collection
+*    -# Event::AcdTkrIntersection Collection
+*    -# Event::AcdTkrPoca Collection    Deprecated!!
+*    -# Event::AcdTkrHitPoca Collection
+*    -# Event::AcdTkrGapPoca Collection
+*    -# Event::AcdTkrPoint Collection
+*    -# Event::AcdSplashVars Collection  Not-Filled!!
 * - /Event/CalRecon
 *    -# CalXtalRecData Collection
 *    -# CalCluster Collection

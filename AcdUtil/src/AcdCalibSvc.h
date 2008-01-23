@@ -20,20 +20,31 @@ class AcdCalibMgr;
 
 // STD
 
-/** @class AcdCalibSvc
-    @author Eric Charles (from Zachary Fewtrell's CalCalib stuff)
-    * \brief Instatiates IAcdCalibSvc interface, gets data from CalibDataSvc
-    *
-    * handles:
-    * - data storage/destruction
-    * - communication with Gleam lower level services
-    * - checking of data validity period  
-    * - extraction of acd-specific constants out of generic data objects
-    * - creation/caching of local meta-data objects where needed
-    *
-    * \author  Eric Charles (from Zachary Fewtrell's CalCalib stuff)
-    *
-    */
+/**
+ * @class AcdCalibSvc
+ *
+ * \brief Instatiates AcdUtil::IAcdCalibSvc interface for calibrations used in reconstruction
+ *
+ * This service is used by the reconstruction code.  In particular, AcdRecon/AcdPha2MipTool.
+ *
+ * handles:
+ * - data storage/destruction
+ * - communication with Gleam lower level services
+ * - checking of data validity period  
+ * - extraction of acd-specific constants out of generic data objects
+ * - creation/caching of local meta-data objects where needed
+ *
+ * Job Options:
+ * - CalibDataSvc        ["CalibDataSvc"] Name of the gaudi svc used to access calib DB.
+ * - DefaultFlavor       ["ideal"]        Flavor of calibration to use.
+ * - FlavorPed           [""]             To override pedestal flavor.
+ * - FlavorGain          [""]             To override gain (aka MIP peak) flavor.
+ * - FlavorHighRange     [""]             To override high range calibration flavor.
+ * - FlavorCoherentNoise [""]             To override coherent noise calibration flavor.
+ *
+ * \author  Eric Charles (from Zachary Fewtrell's CalCalib stuff)
+ *
+ **/
 
 class AcdCalibSvc : public Service, public AcdCalibSvcBase, virtual public AcdUtil::IAcdCalibSvc {
 

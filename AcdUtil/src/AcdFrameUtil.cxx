@@ -6,29 +6,29 @@ namespace AcdFrameUtil {
     
   //const double PI_OVER_2 = 1.57079632679489656;
 
-  std::vector<HepGeom::Transform3D>* _pToLocal = 0;
-  std::vector<HepGeom::Transform3D>* _pToGeant = 0;
+  std::vector<HepGeom::Transform3D>* s_pToLocal = 0;
+  std::vector<HepGeom::Transform3D>* s_pToGeant = 0;
 
   const HepGeom::Transform3D& getRotationToLocal(AcdReferenceFrame type) {
     // return the rotation from the GLOBAL frame to the LOCAL frame
     // This is just a matter of renaming the axes
-    if (!_pToLocal) _pToLocal = new std::vector<HepGeom::Transform3D>;
-    if ( type == FRAME_NONE ) { return _identity; }
-    if ( _pToLocal->size() == 0 ) {
+    if (!s_pToLocal) s_pToLocal = new std::vector<HepGeom::Transform3D>;
+    if ( type == FRAME_NONE ) { return s_identity; }
+    if ( s_pToLocal->size() == 0 ) {
       buildRotations();
     }
-    return (*_pToLocal)[type];
+    return (*s_pToLocal)[type];
   }
 
   const HepGeom::Transform3D& getRotationToGeant(AcdReferenceFrame type) {
     // return the rotation from the LOCAL frame to the GLOBAL frame
     // This is just a matter of renaming the axes 
-    if ( type == FRAME_NONE ) { return _identity; }
-    if (!_pToGeant) _pToGeant = new std::vector<HepGeom::Transform3D>;
-    if ( _pToGeant->size() == 0 ) {
+    if ( type == FRAME_NONE ) { return s_identity; }
+    if (!s_pToGeant) s_pToGeant = new std::vector<HepGeom::Transform3D>;
+    if ( s_pToGeant->size() == 0 ) {
       buildRotations();
     }
-    return (*_pToGeant)[type];
+    return (*s_pToGeant)[type];
   }
 
   void getCornersSquare(const HepPoint3D &center, const HepVector3D& xVector, const HepVector3D& yVector,
@@ -104,60 +104,60 @@ namespace AcdFrameUtil {
 
   void buildRotations() {
 
-    if (!_pToLocal) _pToLocal = new std::vector<HepGeom::Transform3D>;
-    if (!_pToGeant) _pToGeant = new std::vector<HepGeom::Transform3D>;
-    _pToLocal->clear();
-    _pToLocal->resize(12);
-    _pToGeant->clear();
-    _pToGeant->resize(12);
+    if (!s_pToLocal) s_pToLocal = new std::vector<HepGeom::Transform3D>;
+    if (!s_pToGeant) s_pToGeant = new std::vector<HepGeom::Transform3D>;
+    s_pToLocal->clear();
+    s_pToLocal->resize(12);
+    s_pToGeant->clear();
+    s_pToGeant->resize(12);
 
     // 0 is identity
     //_toLocal[0];
     //_toGeant[0];
     
     // 1 is -X face
-    (*_pToLocal)[1] = _ry_pi_over_2* _rx_3pi_over_2;    
-    (*_pToGeant)[1] = _rx_pi_over_2* _ry_3pi_over_2;     
+    (*s_pToLocal)[1] = s_ry_pi_over_2* s_rx_3pi_over_2;    
+    (*s_pToGeant)[1] = s_rx_pi_over_2* s_ry_3pi_over_2;     
     
     // 2 is -Y face
-    (*_pToLocal)[2] = _rx_3pi_over_2;    
-    (*_pToGeant)[2] = _rx_pi_over_2;    
+    (*s_pToLocal)[2] = s_rx_3pi_over_2;    
+    (*s_pToGeant)[2] = s_rx_pi_over_2;    
 
     // 3 is +X face
-    (*_pToLocal)[3] = _ry_3pi_over_2*_rx_3pi_over_2;    
-    (*_pToGeant)[3] = _rx_pi_over_2*_ry_pi_over_2;
+    (*s_pToLocal)[3] = s_ry_3pi_over_2*s_rx_3pi_over_2;    
+    (*s_pToGeant)[3] = s_rx_pi_over_2*s_ry_pi_over_2;
 
     // 4 is +Y face
-    (*_pToLocal)[4] = _ry_pi*_rx_3pi_over_2;  
-    (*_pToGeant)[4] = _rx_pi_over_2*_ry_pi;
+    (*s_pToLocal)[4] = s_ry_pi*s_rx_3pi_over_2;  
+    (*s_pToGeant)[4] = s_rx_pi_over_2*s_ry_pi;
 
     // 5 is -X face, rotated by 180 so that y goes down
-    (*_pToLocal)[5] = _rz_pi*(*_pToLocal)[1];
-    (*_pToGeant)[5] = (*_pToGeant)[1]*_rz_pi;
+    (*s_pToLocal)[5] = s_rz_pi*(*s_pToLocal)[1];
+    (*s_pToGeant)[5] = (*s_pToGeant)[1]*s_rz_pi;
    
     // 5 is -Y face, rotated by 180 so that y goes down
-    (*_pToLocal)[6] = _rz_pi*(*_pToLocal)[2];
-    (*_pToGeant)[6] = (*_pToGeant)[2]*_rz_pi;
+    (*s_pToLocal)[6] = s_rz_pi*(*s_pToLocal)[2];
+    (*s_pToGeant)[6] = (*s_pToGeant)[2]*s_rz_pi;
     
     // 7 is -X face, rotated by 180 so that y goes down
-    (*_pToLocal)[7] = _rz_pi*(*_pToLocal)[3];
-    (*_pToGeant)[7] = (*_pToGeant)[3]*_rz_pi;
+    (*s_pToLocal)[7] = s_rz_pi*(*s_pToLocal)[3];
+    (*s_pToGeant)[7] = (*s_pToGeant)[3]*s_rz_pi;
     
     // 8 is -Y face, rotated by 180 so that y goes down
-    (*_pToLocal)[8] = _rz_pi*(*_pToLocal)[4];
-    (*_pToGeant)[8] = (*_pToGeant)[4]*_rz_pi;
+    (*s_pToLocal)[8] = s_rz_pi*(*s_pToLocal)[4];
+    (*s_pToGeant)[8] = (*s_pToGeant)[4]*s_rz_pi;
         
     // 9 is top. rotated by 90 for Y-ribbons
-    (*_pToLocal)[9] = _rz_pi_over_2;    
-    (*_pToGeant)[9] = _rz_3pi_over_2;
+    (*s_pToLocal)[9] = s_rz_pi_over_2;    
+    (*s_pToGeant)[9] = s_rz_3pi_over_2;
 
     // 10 is top. rotated by -90 for Y-ribbons in opposite direction (not used)
-    (*_pToLocal)[10] = _rz_3pi_over_2;
-    (*_pToGeant)[10] = _rz_pi_over_2;
+    (*s_pToLocal)[10] = s_rz_3pi_over_2;
+    (*s_pToGeant)[10] = s_rz_pi_over_2;
    
     // 11 is top. rotated by 180 for X-ribbons in opposite direction (not used)
-    (*_pToLocal)[11] = _rz_pi;
-    (*_pToGeant)[11] = _rz_pi;
+    (*s_pToLocal)[11] = s_rz_pi;
+    (*s_pToGeant)[11] = s_rz_pi;
     
     /*
     //for ( int i(0); i < 12; i++ ) {

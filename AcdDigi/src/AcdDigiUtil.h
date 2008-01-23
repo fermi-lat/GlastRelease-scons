@@ -38,22 +38,42 @@ namespace Event {
   class McPositionHit;
 };
 
-/** @class AcdDigiUtil
-* @brief Utility class that defines the methods used for ACD digitization.
-* 
-* @author Heather Kelly
-* $Header$
-*/
-
-
+/** 
+ * @class AcdSimCalibData
+ *
+ * @brief Utility class that bundles all calibrations constants associated with a single ACD channel.
+ * 
+ * @author Eric Charles
+ * $Header$
+ */
 
 class AcdSimCalibData {
 public: 
 
+  /// Trivial c'tor
   AcdSimCalibData();
     
+  /// Trivial d'tor
   virtual ~AcdSimCalibData(){;}
+
+  /// photo-electrons per mip
+  inline double pe_per_mip() const { return m_pe_per_mip; } 
+  /// mip-equivalent light yield by MeV
+  inline double mip_per_MeV() const { return m_mip_per_MeV; }
+  /// photo-electrons by MeV
+  inline double pe_per_MeV() const { return m_pe_per_MeV; }
+  /// pedestals
+  inline unsigned short threshold_pha() const { return m_threshold_pha; }
+  /// veto threshold  
+  inline double veto_threshold_mips() const { return m_veto_threshold_mips; }
+  inline double veto_width_mips() const { return m_veto_width_mips; }
+  /// range crossover
+  inline double xover_mips() const { return m_xover_mips; }
+  /// cno threshold
+  inline double cno_threshold_mips() const { return m_cno_threshold_mips; }
+  inline double cno_width_mips() const { return m_cno_width_mips; }
     
+  // Lots of access functions for setting calibration objects
   inline void setPedestal(CalibData::AcdPed& ped) { m_ped = &ped; };
   inline void setMipPeak(CalibData::AcdGain& gain) { m_gain = &gain; };
   inline void setHighRange(CalibData::AcdHighRange& highRange) { m_highRange = &highRange; };
@@ -62,6 +82,7 @@ public:
   inline void setCnoThresh(CalibData::AcdCno& cno) { m_cno = &cno; };
   inline void setCoherentNoise(CalibData::AcdCoherentNoise& coherentNoise) { m_coherentNoise = &coherentNoise; };
   
+  // Lots of access functions for setting other quantities
   inline void setPe_per_mip(double val) {  m_pe_per_mip = val; };
   inline void setMip_per_MeV(double val) {  m_mip_per_MeV = val; };
   inline void setPhaThreshold(unsigned short val) {  m_threshold_pha = val; };
@@ -71,13 +92,7 @@ public:
   inline void setCnoWidthMips(double width) { m_cno_width_mips = width; };
   inline void setXOverMips(double val) {  m_xover_mips = val; };
 
-  StatusCode latchPePerMeV();
-  StatusCode latchPhaThreshold(double countsAbovePed);
-  StatusCode latchVetoThreshold();  
-  StatusCode latchCnoThreshold();  
-  StatusCode latchXOverMips();    
-
-  // calibrations
+  // Access to calibrations
   inline CalibData::AcdPed* ped_calib() const { return m_ped; }
   inline CalibData::AcdGain* gain_calib() const { return m_gain; }
   inline CalibData::AcdHighRange* highRange_calib() const { return m_highRange; }
@@ -86,22 +101,12 @@ public:
   inline CalibData::AcdCno* cno_calib() const { return m_cno; }
   inline CalibData::AcdCoherentNoise* coherentNoise_calib() const { return m_coherentNoise; }
 
-  // photo-electrons per mip
-  inline double pe_per_mip() const { return m_pe_per_mip; } 
-  // mip-equivalent light yield by MeV
-  inline double mip_per_MeV() const { return m_mip_per_MeV; }
-  // photo-electrons by MeV
-  inline double pe_per_MeV() const { return m_pe_per_MeV; }
-  // pedestals
-  inline unsigned short threshold_pha() const { return m_threshold_pha; }
-  // veto threshold  
-  inline double veto_threshold_mips() const { return m_veto_threshold_mips; }
-  inline double veto_width_mips() const { return m_veto_width_mips; }
-  // range crossover
-  inline double xover_mips() const { return m_xover_mips; }
-  // cno threshold
-  inline double cno_threshold_mips() const { return m_cno_threshold_mips; }
-  inline double cno_width_mips() const { return m_cno_width_mips; }
+  // Grap combined constants as needed
+  StatusCode latchPePerMeV();
+  StatusCode latchPhaThreshold(double countsAbovePed);
+  StatusCode latchVetoThreshold();  
+  StatusCode latchCnoThreshold();  
+  StatusCode latchXOverMips();    
 
 private:  
 
@@ -114,36 +119,42 @@ private:
   CalibData::AcdCno* m_cno;
   CalibData::AcdCoherentNoise* m_coherentNoise;  
 
+
   // Derived/ set values
 
-  // photo-electrons per mip
+  /// photo-electrons per mip
   double m_pe_per_mip;  
-  // mip-equivalent light yield by MeV
+  /// mip-equivalent light yield by MeV
   double m_mip_per_MeV;  
-  // photo-electrons per MeV
+  /// photo-electrons per MeV
   double m_pe_per_MeV;
-  // Zero suppresion threshold
+  /// Zero suppresion threshold
   unsigned short m_threshold_pha;       
-  // veto threshold  
+  /// veto threshold  
   double m_veto_threshold_mips;
   double m_veto_width_mips;
-  // range crossover
+  /// range crossover
   double m_xover_mips;
-  // cno threshold
+  /// cno threshold
   double m_cno_threshold_mips;
   double m_cno_width_mips;
-  // high range calibraion
+  /// high range calibraion
   double m_pedestal_highRange;
 
 };
 
+/** @class AcdDigiUtil
+* @brief Utility class that defines the methods used for ACD digitization.
+* 
+* @author Heather Kelly
+* $Header$
+*/
 
 class AcdDigiUtil  {
 
 public:
 
   /// Returns the number of pe seen in a tube
-  /// 
   static double simulateDynodeChain(double pe_meanValue);
   
   /// Returns a value sampled from a Poisson distribution

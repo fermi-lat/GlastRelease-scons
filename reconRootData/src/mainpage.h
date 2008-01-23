@@ -19,7 +19,8 @@
 * - Event Flags - current a single bit packed UInt_t
 *
 * @section AcdRecon AcdRecon
-* The AcdRecon object provides access to some simple ACD reconstructed quantities.
+* The AcdRecon object provides access to some simple ACD reconstructed quantities, 
+* and a variety of collections.
 * -# Total Reconstructed Energy detected
 * -# Number of ACD tiles found to be above veto threshold
 * -# Minimum DOCA (Distance of Closest Approach)
@@ -27,7 +28,14 @@
 * -# Collection of minimum DOCA values for top and side rows.
 * -# Collection of minimum Active Distance values for top and side rows.
 * -# Gamma DOCA which is computed using all ACD tiles and the reconstructed gamma
-*
+* - Collection of AcdHit objects
+* - Collection of AcdTkrIntersection objects
+* - Collection of AcdTkrPoca objects    Deprecated!!
+* - Collection of AcdTkrHitPoca objects
+* - Collection of AcdTkrGapPoca objects
+* - Collection of AcdTkrPoint objects
+* - Collection of AcdSplashVars objects  Not-Filled!!
+
 * @section CalRecon CalRecon
 * The CalRecon object provides access to two collections:
 * -# CalXtalRecData which are reconstructed CAL crystals

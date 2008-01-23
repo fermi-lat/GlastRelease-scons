@@ -1,22 +1,32 @@
 #ifndef ACDRIBBONDIM_H
 #define ACDRIBBONDIM_H
 
+// stl headers
 #include <vector>
 
+// Gaudi, facilities, interfaces
 #include "GaudiKernel/StatusCode.h"
+#include "AcdUtil/IAcdGeometrySvc.h"
+
+// Detector & geometry 
 #include "idents/AcdId.h"
 #include "CLHEP/Geometry/Transform3D.h"
-
-#include "AcdUtil/IAcdGeometrySvc.h"
 #include "geometry/Ray.h"
 
 
 /**
 *  @class AcdRibbonDim
 *
-*
 *  @brief  This class holds the dimension information about Acd Ribbons for use in the ACD reconstruction algorithms
-*  In these algorithms the ribbons are treated 3 lines.  Therefore only the line start and end point are used. 
+*
+*  In these algorithms the ribbons are as a series of rays.  Only the rays that actually cover gaps are used.  
+*  This means that the small sections of ribbon that run perpendicular to the main ribbon direction in the
+*  shingling region are ignored.
+*
+*  The ribbon width is taken as a constant everywhere.
+*
+*  In some cases we care about the total length along the ribbon.  That is measured from the center of the ribbon
+*  values towards +X or +Y global are positive, towards -X or -Y global are negative
 *  
 *  \author Eric Charles
 *
@@ -54,10 +64,24 @@ public:
   inline const std::vector<Ray>& topRays() const { return m_topRays; }      
   inline const std::vector<Ray>& plusSideRays() const { return m_plusSideRays; }        
 
+  
   bool setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) const;
 
+  /**
+   * @brief Convert a point for global to local coords
+   *
+   * @param global point in global frame
+   * @param segment which ribbon segment
+   * @param local point in local (ie segment) frame
+   */
   void toLocal(const HepPoint3D& global, int segment, HepPoint3D& local) const;
 
+  /**
+   * @brief get the transformation from global to local coords
+   *
+   * @param iVol which ribbon segment
+   * @return the transformation
+   */
   const HepTransform3D& transform(int iVol) const;
 
 protected:

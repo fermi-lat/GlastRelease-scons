@@ -7,7 +7,8 @@
  *
  * @brief Supplies the geometry constants and calculations for ACD 
  *
- * The constants all flow from GlastDetSvc.
+ * The constants all flow from GlastDetSvc.  Description of the data providid is given in 
+ * IAcdGeometrySvc.
  * 
  * @author Heather Kelly 
  *

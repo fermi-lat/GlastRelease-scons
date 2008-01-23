@@ -21,12 +21,86 @@ class Point;
 class Vector;
 
 /**   
-* @class AcdPocaTool
-*
-* Class for calculation the distances between tracks and hit acd tiles and ribbons
-*
-* $ $
-*/
+ * @class AcdPocaTool
+ *
+ * @brief Gaudi tool that calculates Point of Closest Approach (POCA) between 
+ * ACD elements and track projections.
+ *
+ * The actual calculations live in AcdRecon::AcdReconFuncs
+ * This code just loops over the objects and calls the relavent calculations
+ *
+ * Inputs:
+ *  - For every track X tile/ribbon combination
+ *    - AcdRecon::TrackData: track projection data
+ *    - AcdTileDim or AcdRibbonDim: detector geometry data
+ *
+ * Intermediate Outputs:
+ *  - AcdRecon::PocaDataMap: Poca Data from every track X tile/ribbon combination
+ *  - AcdRecon::PocaDataPtrMap: Poca Data subjected to cuts 
+ *
+ * TDS Outputs:
+ *  - Event::AcdTkrHitPoca object for every accepted track X tile/ribbon combination 
+ *    - Stored in Event/AcdRecon/AcdTkrHitPocaCol collection
+ *
+ * Algorithm:
+ *  - Phase I: Called for every track X tile/ribbon combination to calculate poca
+ *    - For tiles call is to tileDistances()
+ *      - Project track to tile plane using AcdRecon::tilePlane().  
+ *        If intersection is in backward direction, stop and return.
+ *        Otherwise this fills:
+ *        - AcdRecon::PocaData::m_activeX
+ *        - AcdRecon::PocaData::m_activeY
+ *        - AcdRecon::PocaData::m_active2D
+ *        - AcdRecon::PocaData::m_arcLengthPlane
+ *        - AcdRecon::PocaData::m_hitsPlane
+ *        - AcdRecon::PocaData::m_volume
+ *      - Get 3D Poca to tile edge. This fills:
+ *        - AcdRecon::PocaData::m_arcLength
+ *        - AcdRecon::PocaData::m_active3D
+ *        - AcdRecon::PocaData::m_poca
+ *        - AcdRecon::PocaData::m_pocaVector
+ *        - AcdRecon::PocaData::m_region
+ *          - This uses AcdRecon::tileEdgePoca() if inside tile (m_active2D > 0) 
+ *          - Or AcdRecon::tileEdgeCornerPoca() if outside tile
+ *      
+ *    - For ribbons call is to ribbonDistances():
+ *      - Project track to ribbon plane (side or top of ACD) using AcdRecon::ribbonPlane().
+ *        If intersection is in backward direction, stop and return.
+ *        Otherwise this fills:
+ *        - AcdRecon::PocaData::m_active2D
+ *        - AcdRecon::PocaData::m_arcLengthPlane
+ *        - AcdRecon::PocaData::m_hitsPlane
+ *        - AcdRecon::PocaData::m_volume
+ *      - Get 3D Poca to ribbon. This fills:
+ *        - AcdRecon::PocaData::m_arcLength
+ *        - AcdRecon::PocaData::m_ribbonLength
+ *        - AcdRecon::PocaData::m_active3D
+ *        - AcdRecon::PocaData::m_poca
+ *        - AcdRecon::PocaData::m_pocaVector
+ *        - AcdRecon::PocaData::m_region
+ *
+ *  - Phase II, Handed AcdRecon::PocaDataMap containing every AcdRecon::PocaData object.
+ *    - Filters out all POCA with m_active3D < m_distanceCut.
+ *
+ *  - Phase III, Called for remaining AcdRecon::PocaData objects to make Event::AcdTkrHitPoca TDS objects
+ *    - Set arcLength negative for downgoing intersections
+ *    - For tiles:
+ *      - Use PocaData::m_activeX, PocaData::m_activeY for local frame distances
+ *      - For doca use PocaData::m_active2D if inside tile, PocaData::m_active3D otherwise
+ *    - For ribbons:
+ *      - Use PocaData::m_active2D, PocaData::m_ribbonLength for local frame distances
+ *      - For doca use PocaData::m_active3D
+ *    
+ *
+ * This tool has 2 JO paramters:  
+ *  - distanceCut [1999.]   : Filter out POCA when doca is > this value
+ *  - sigmaCut [5.]         : Unused!!  (Filter out POCA when doca/docaError) is > this value
+ *
+ *
+ * @author Eric Charles
+ *
+ * $Header$
+ **/
 
 
 class AcdPocaTool : public AcdIPocaTool,  public AlgTool {
@@ -52,7 +126,7 @@ public:
   // @brief calculate the distance of closest approach between the track and the tile
   //   This includes the distance of closest approach to the center of the tile
   //   and both the 2d and 3d distances to the closest edge or corner
-  virtual StatusCode tileDistances (const AcdTileDim& tile,
+  virtual StatusCode  tileDistances(const AcdTileDim& tile,
 				    const AcdRecon::TrackData& aTrack, 
 				    AcdRecon::PocaData& data);
   

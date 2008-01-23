@@ -19,12 +19,9 @@ class MsgStream;
 static const CLID& CLID_AcdTkrPocaGapCol = InterfaceID("AcdTkrPocaGapCol", 1, 0);
 
 /**
-*  @class AcdTkrPocaGap
+*  @class Event::AcdTkrPocaGap
 *
-*
-*  @brief This class stores information about the Point of Closest Approach (POCAGAP) between an extrapolated track
-*  and a hit Acd element (tile or ribbon).  This POCAGAP is calculated in 3D.  The doca is defined to be positive 
-*  if the track goes inside the active distance and negative otherwise
+*  @brief Deprecated!!
 *  
 *  \author Eric Charles
 *

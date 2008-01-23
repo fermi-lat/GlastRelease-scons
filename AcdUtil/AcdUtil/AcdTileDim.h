@@ -1,15 +1,18 @@
 #ifndef ACDTILEDIM_H
 #define ACDTILEDIM_H
 
+// stl headers
+#include <vector>
 #include <assert.h>
 
-#include <vector>
-
+// Gaudi, facilities, interfaces
 #include "GaudiKernel/StatusCode.h"
-#include "CLHEP/Geometry/Point3D.h"
+#include "AcdUtil/IAcdGeometrySvc.h"
+
+// Detector & geometry 
 #include "idents/AcdId.h"
 #include "idents/VolumeIdentifier.h"
-#include "AcdUtil/IAcdGeometrySvc.h"
+#include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Matrix/Matrix.h"
 
@@ -17,8 +20,12 @@
 *  @class AcdTileDim
 *
 *  @brief This class holds the dimension information about Acd Tiles for use in the ACD reconstruction algorithms
+*  
 *  In these algorithms the tiles are treated as thin, flat planes.  Therefore only the tile center and the four 
 *  corners are used. 
+*
+*  Most of the tiles are a single piece, however 10 tiles, (0-4 and 40-44) are made from two pieces, one on the top
+*  of the ACD and one that runs down the side.  This makes things quite a bit more complicated.
 *  
 *  \author Eric Charles
 *
@@ -82,21 +89,46 @@ public:
     return m_sharedWidth[idx]; 
   }
 
-  //inline int face(int idx) const {
-  //  assert(idx < m_nVol);
-  //  return m_face[idx];    
-  //}
-
   inline const std::vector< HepPoint3D > screwHoles() const {
     return m_screwHoles;
   }
 
+  
+  /**
+   * @brief get the width at a particular Y.  This is need b/c some of the tiles are trapezoids
+   *
+   * @param iVol which tile segment
+   * @param localY the local Y coordinate where we care about the width
+   * @return width (ie extent in localX) at that localY
+   */
   double widthAtLocalY(int iVol, double localY) const;
 
+
+  /**
+   * @brief Convert a point for global to local coords
+   *
+   * @param global point in global frame
+   * @param idx which tile segment
+   * @param local point in local (ie segment) frame
+   */
   void toLocal(const HepPoint3D& global, HepPoint3D& local, int idx = 0) const;
 
+  /**
+   * @brief Convert a point in local coordinates into active distances
+   *
+   * @param localPoint is the point in local coords
+   * @param iVol which tile segment
+   * @param activeX is the distance to the closest edge in localX (positive -> inside, negative -> outside)
+   * @param activeY is the distance to the closest edge in localY (positive -> inside, negative -> outside)
+   */
   void activeDistance(const HepPoint3D& localPoint, int iVol, double& activeX, double& activeY) const;
 
+  /**
+   * @brief get the transformation from global to local coords
+   *
+   * @param iVol which ribbon segment
+   * @return the transformation
+   */
   const HepTransform3D& transform(int iVol) const {
     return m_transform[iVol];
   }

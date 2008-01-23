@@ -13,12 +13,18 @@
 static const CLID& CLID_AcdTkrGapPocaCol = InterfaceID("AcdTkrGapPocaCol", 1, 0);
 
 /** 
- * @class AcdTkrGapPoca
- * @brief TDS object information about the Point of Closest Approach (POCA) between an extrapolated track
- *  and a Gap.  This POCA is calculated in 3D.  The doca is defined to be positive 
- *  if the track goes inside the active distance and negative otherwise
+ * @class Event::AcdTkrGapPoca
+ * @brief TDS object which stores information about the Point of Closest Approach (POCA) between 
+ * an extrapolated track and a Gap in the ACD
  *  
- * This class should be a duplicate of reconRootData/AcdTkrGapPoca
+ * Most of the structure of the object comes from the base classes AcdTkrLocalCoords and AcdPocaData
+ * 
+ * The class adds only enough information to define the involved in the POCA.
+ *    - const idents::AcdGapId& getId()  
+ *      - which returns the ID of the gap
+ *    - const int getTrackIndex()  
+ *      - which returns the index of the track which did the hitting
+ *
  * 
  * @author Eric Charles
  *
@@ -80,6 +86,24 @@ namespace Event {
     
   };
  
+
+  /*! 
+   * @class AcdTkrGapPocaCol
+   *
+   *  @brief TDS class a collection of AcdTkrGapPoca objects
+   *  
+   * It inherits from DataObject
+   * (to be a part of Gaudi TDS) and from std::vector of pointers
+   * to AcdTkrGapPoca objects. Some methods just rename the std::vector
+   * methods with the same functionality for backward compartibility.
+   *
+   *
+   * @author Eric Charles
+   *
+   * @todo replace this class by typedef to ObjectVector, make corresponding
+   *       changes in AcdReconAlg
+   */
+    
   class AcdTkrGapPocaCol : public DataObject, public std::vector<AcdTkrGapPoca*> {
     
   public:

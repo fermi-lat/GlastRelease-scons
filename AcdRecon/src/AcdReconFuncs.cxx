@@ -4,6 +4,7 @@
 #include "CLHEP/Matrix/Matrix.h"
 #include "AcdUtil/AcdTileDim.h"
 #include "AcdUtil/AcdRibbonDim.h"
+#include "AcdUtil/RayDoca.h"
 #include "GlastSvc/Reco/IPropagator.h" 
 
 namespace AcdRecon {
@@ -75,7 +76,7 @@ namespace AcdRecon {
   }
 
   void rayDoca(const AcdRecon::TrackData& aTrack, const HepPoint3D&  c1, const HepPoint3D& c2,
-	       RayDoca& rayDoca, double& edgeLen) {
+	       AcdUtil::RayDoca& rayDoca, double& edgeLen) {
 
     // Doca between rays (defined by track and two points) done in global frame.
     // Does not account for finite length of ray defined by two points
@@ -104,7 +105,7 @@ namespace AcdRecon {
     Point trackPos(x0.x(), x0.y(), x0.z());
     Vector trackDir(t0.x(), t0.y(), t0.z());
     Ray trackRay(trackPos, trackDir);
-    RayDoca raydoca(trackRay,ray);
+    AcdUtil::RayDoca raydoca(trackRay,ray);
     double alongRay = raydoca.arcLenRay2();
     if ( alongRay < 0 ) {
       HepPoint3D corner(ray.position().x(),ray.position().y(),ray.position().z());
@@ -211,7 +212,7 @@ namespace AcdRecon {
 	double edge_length(0.);
 	
 	// Compute DOCA and DOCA location between the track and edge
-	RayDoca raydoca;
+	AcdUtil::RayDoca raydoca;
 	AcdRecon::rayDoca(aTrack,c1,c2,raydoca,edge_length);
 
 	// Make sure that we are going forward
