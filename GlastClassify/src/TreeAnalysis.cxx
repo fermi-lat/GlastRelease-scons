@@ -245,7 +245,7 @@ void TreeAnalysis::print(std::ostream& out) const
     int depth = 0;
 
     // Begin with the head node and output the nodes in their order:
-    if (m_headNode) m_headNode->print(out, depth);
+ //   if (m_headNode) m_headNode->print(out, depth);
 
     return;
 }

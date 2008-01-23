@@ -25,7 +25,7 @@ using namespace GlastClassify;
 
 //_________________________________________________________________________
 
-AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string imfile)
+AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string imfile, bool printTreeInfo)
                        : m_log(log)
 {
     // these are used for preliminary cuts to select the tree to use
@@ -159,9 +159,12 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     log << "\n\t\tloaded " << treeFactory.nodeCount() <<" nodes";
 
     //Testing...
-    //std::ofstream outFile("IMsheetTest.txt");
-    //m_treeAnalysis->print(outFile);
-    //outFile.close();
+    if (printTreeInfo)
+    {
+        //std::ofstream outFile("IMsheetTest.txt");
+        m_treeAnalysis->print(log);
+        //outFile.close();
+    }
 
     return;
 }

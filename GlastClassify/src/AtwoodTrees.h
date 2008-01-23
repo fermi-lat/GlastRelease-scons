@@ -30,7 +30,7 @@ public:
 
     Uses the tuple object to access current tuple items, and to create new ones.
     */
-    AtwoodTrees( ITupleInterface& tuple, std::ostream& log=std::cout, std::string imfile  ="");
+    AtwoodTrees( ITupleInterface& tuple, std::ostream& log=std::cout, std::string imfile  ="", bool printTreeInfo=false);
 
     /** run the prediction nodes on the current tuple instance
     */
