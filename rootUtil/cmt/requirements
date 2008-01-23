@@ -1,5 +1,5 @@
 package rootUtil
-version v1r1p2
+version v1r1p3
 author David Chamont <chamont@llr.in2p3.fr>
 
 use GlastPolicy v*
@@ -27,7 +27,7 @@ application testRootInterface ../apps/testRootInterface.cxx
 
 macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "
 
-macro testSource "" WIN32 " ../apps/TestData.cxx "
+macro testSource "" WIN32 " TestData.cxx "
 
 application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
 application printSkim ../apps/printSkim.cxx $(getoptSource)
