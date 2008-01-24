@@ -81,6 +81,7 @@ class CompositeEventList : public TObject
      ( const TString & celFileName = "",
        const TString & options = "READ",
        const TObjArray * componentNames = 0 ) ;
+    UInt_t declareComponent( const TString & name ) ;
     Bool_t isOk() ;
     ~CompositeEventList() ;
 
@@ -147,13 +148,14 @@ class CompositeEventList : public TObject
 
     // Manipulation of cel internal trees
     void deleteCurrentFile() ;
-    Bool_t checkCelTrees() const ;
-    Bool_t checkCelTree( TTree *, const std::string & name, Bool_t error ) const ;
+    Bool_t checkCelOk( const TString & caller ="CompositeEventList::?" ) const ;
+    Bool_t checkCelPrepared( const TString & caller ="CompositeEventList::?" ) ;
+    Bool_t checkCelTrees( const TString & caller ="CompositeEventList::?" ) const ;
+    Bool_t checkCelTree( const TString & caller, TTree *, const TString & name, Bool_t error ) const ;
     Int_t makeCelBranches( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize = 32000) const;
     Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) ;
 
     // Components utilities
-    UInt_t CompositeEventList::declareComponent( const TString & name ) ;
     UInt_t CompositeEventList::declareComponents( const TObjArray * componentNames ) ;
     UInt_t discoverComponents() ;
     CelEventComponent * getComponent( UInt_t index ) const ;
@@ -162,11 +164,13 @@ class CompositeEventList : public TObject
     TTree * getTree( const TString & componentName ) const ;
 
     // specific construction methods
+    void prepare() ;
     void prepareRead() ;
     void prepareRecreate() ;
     
     // cel data
     mutable Bool_t  _isOk ;
+    mutable Bool_t  _isPrepared ;
     TString _fileName ;
     TString _openingOptions ;
     TFile * _currentFile ;

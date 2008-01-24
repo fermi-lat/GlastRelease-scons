@@ -8,7 +8,7 @@
 *
 * Originally made to connect the CEL world to the needs of RootIoSvc.
 * Meant to disappear, once we have understood what is lacking in CompositeEventList,
-* and what shoudl return to RootIoSvc.
+* and what should return to RootIoSvc.
 * 
 * File: $Header$
 * Authors:
@@ -36,7 +36,7 @@ class CelManager
     Bool_t initWrite
      ( const TString & celFileName ="cel.root",
        const TString & options ="RECREATE" ) ;
-    Bool_t addComponent( const TString & compName, TTree * t ) ;
+    Bool_t addComponent( const TString & compName, TTree * t =0 ) ;
     Bool_t fillEvent() ; 
     Bool_t fillFileAndTreeSet() ;
 
@@ -50,15 +50,16 @@ class CelManager
 
   private :
 
-	Bool_t delayedInitWrite() ;
+    Bool_t delayedInitWrite() ;
 
-	/// utility data
-	Bool_t m_verbose ;  /// set the chattiness for debug statements
+    /// utility data
+    Bool_t m_verbose ;  /// set the chattiness for debug statements
 	  
-	/// writing data
-	TString m_fileNameWrite ;
-	TString m_outputOptions ;
-	Bool_t m_initWriteDone ;
+    /// writing data
+    TString m_fileNameWrite ;
+    TString m_outputOptions ;
+    Bool_t m_initWriteDone ;
+    
     //TFile * m_fileWrite ;
     CompositeEventList * m_celWrite ;
     Long64_t m_eventCounter ;  // Count number of events filled to the TTree so far

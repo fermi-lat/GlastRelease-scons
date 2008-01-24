@@ -194,7 +194,7 @@ class TestReader
  {
   public :
 	  
-	TestReader() {}
+    TestReader() {}
     void add( const char * baseName, TestAbstractComponent * component ) ;
     
     void showByComponent() const ;
@@ -210,12 +210,11 @@ class TestReader
 
   private :
 	  
-	TObjArray readers_ ;
-	RootForest forest_ ;
-	Long64_t currentEvent_ ;
+    TObjArray readers_ ;
+    RootForest forest_ ;
+    Long64_t currentEvent_ ;
 	
-	
-	struct BranchReader : public TObject
+    struct BranchReader : public TObject
      {
       TestAbstractComponent * component_ ;
       TChain * chain_ ;
