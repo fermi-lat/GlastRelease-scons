@@ -337,12 +337,9 @@ bool GcrReconTool::TriggerEngine4ON(){
     // Trigger engine 4 (CNOTrigger here): 
     // Track, LoCal, ACDH("CNO"), THROTTLE ("ROI")
     
-    IDataProviderSvc* m_pEventSvc;
-
     // Recover EventHeader Pointer
-    
-    SmartDataPtr<Event::EventHeader> pEvent(m_pEventSvc, EventModel::EventHeader);
-    unsigned int word2 = pEvent->triggerWordTwo();
+    SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
+    unsigned int word2 =  ( pEvent==0? 0 : pEvent->triggerWordTwo());
 
     unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
     
