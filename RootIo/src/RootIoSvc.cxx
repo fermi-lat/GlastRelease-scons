@@ -304,7 +304,7 @@ StatusCode RootIoSvc::initialize ()
 
     if (!m_celFileNameWrite.empty()) 
       {
-       //m_celManager.initWrite(m_celFileNameWrite, "RECREATE");
+       m_celManager.initWrite(m_celFileNameWrite, "RECREATE");
       }
     
     if (!m_celFileNameRead.empty()) {
