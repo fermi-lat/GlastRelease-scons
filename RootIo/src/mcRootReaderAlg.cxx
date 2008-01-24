@@ -161,7 +161,7 @@ StatusCode mcRootReaderAlg::initialize()
 
     // Set up new school system...
     // Use the name of this TTree (default "Mc") as key type 
-    m_rootIoSvc->prepareRootInput(m_treeName, m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput("mc", m_treeName, m_branchName, m_fileList);
      
     return sc;
     
@@ -183,7 +183,7 @@ StatusCode mcRootReaderAlg::execute()
 
     // Try reading the event this way... 
     // use name of TTree as key type
-    m_mcEvt = dynamic_cast<McEvent*>(m_rootIoSvc->getNextEvent(m_treeName));
+    m_mcEvt = dynamic_cast<McEvent*>(m_rootIoSvc->getNextEvent("mc"));
 
     if (!m_mcEvt) return StatusCode::FAILURE;
 

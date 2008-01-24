@@ -28,7 +28,7 @@ class RootOutputDesc
 
     bool closeFile();
 
-    bool setupBranch(const std::string& name, const std::string &classname, void* branchAddr, 
+    bool setupBranch(const std::string& branchName, const std::string &classname, void* branchAddr, 
         int bufSize=64000, int splitLevel=1);
 
 

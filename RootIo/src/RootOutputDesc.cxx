@@ -64,10 +64,10 @@ bool RootOutputDesc::openFile() {
     return stat;
 }
 
-bool RootOutputDesc::setupBranch(const std::string& name, const std::string &classname, void* branchAddr, 
+bool RootOutputDesc::setupBranch(const std::string& branchName, const std::string &classname, void* branchAddr, 
                                  int bufSize, int splitLevel) {
     
-    TBranch *br = m_tree->Branch(name.c_str(),classname.c_str(), branchAddr, bufSize, splitLevel);
+    TBranch *br = m_tree->Branch(branchName.c_str(),classname.c_str(), branchAddr, bufSize, splitLevel);
     if (0 == br) {
         return false;
     }

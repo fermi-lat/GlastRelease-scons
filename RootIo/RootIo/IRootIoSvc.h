@@ -104,9 +104,10 @@ class  IRootIoSvc : virtual public IInterface
        int compressionLevel,
        const std::string & treeTitle ) = 0 ;
 
-    virtual TTree * getTree( const std::string & type ) = 0 ;
+    //[David] hidden to check if it is used or not
+    //virtual TTree * getTree( const std::string & type ) = 0 ;
 
-    virtual StatusCode setupBranch( const std::string & type, const std::string & name, 
+    virtual StatusCode setupBranch( const std::string & type, const std::string & branchName, 
         const std::string & classname, void * branchAddr, int bufSize=64000, int splitLevel =1 ) = 0 ;
 
     virtual StatusCode fillTree( const std::string & type ) = 0;

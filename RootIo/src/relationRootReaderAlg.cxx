@@ -186,7 +186,7 @@ StatusCode relationRootReaderAlg::initialize()
 
     // Set up new school system...
     // Use treeName as key type
-    m_rootIoSvc->prepareRootInput(m_treeName, m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput("rel", m_treeName, m_branchName, m_fileList);
 
     return sc;
     
@@ -207,7 +207,7 @@ StatusCode relationRootReaderAlg::execute()
 
     // Try reading the event this way... 
     // use treeName as key type
-    m_relTab = dynamic_cast<RelTable*>(m_rootIoSvc->getNextEvent(m_treeName));
+    m_relTab = dynamic_cast<RelTable*>(m_rootIoSvc->getNextEvent("rel"));
 
     if (!m_relTab) return StatusCode::FAILURE;
 

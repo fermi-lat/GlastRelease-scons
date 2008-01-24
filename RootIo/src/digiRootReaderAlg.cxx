@@ -197,7 +197,7 @@ StatusCode digiRootReaderAlg::initialize()
 
     // Set up new school system...
     // Use the TTree name as the key type 
-    m_rootIoSvc->prepareRootInput(m_treeName, m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput("digi", m_treeName, m_branchName, m_fileList);
 
     return sc;
     
@@ -217,7 +217,7 @@ StatusCode digiRootReaderAlg::execute()
 
     // Try reading the event this way... 
     // using treename as the key
-    m_digiEvt = dynamic_cast<DigiEvent*>(m_rootIoSvc->getNextEvent(m_treeName));
+    m_digiEvt = dynamic_cast<DigiEvent*>(m_rootIoSvc->getNextEvent("digi"));
 
     if (!m_digiEvt) return StatusCode::FAILURE;
 

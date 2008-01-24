@@ -193,11 +193,11 @@ StatusCode digiRootWriterAlg::initialize()
     } 
 
     // Use the RootIoSvc to setup our output ROOT files
-    m_digiTree = m_rootIoSvc->prepareRootOutput(m_treeName, m_fileName, m_treeName, 
+    m_digiTree = m_rootIoSvc->prepareRootOutput("digi", m_fileName, m_treeName, 
         m_compressionLevel, "GLAST Digitization Data");
     m_digiEvt = new DigiEvent();
     m_common.m_digiEvt = m_digiEvt;
-    m_rootIoSvc->setupBranch(m_treeName, "DigiEvent", "DigiEvent", &m_digiEvt, m_bufSize, m_splitMode);
+    m_rootIoSvc->setupBranch("digi", "DigiEvent", "DigiEvent", &m_digiEvt, m_bufSize, m_splitMode);
 
     return sc;
     
@@ -714,7 +714,7 @@ void digiRootWriterAlg::writeEvent()
     // Purpose and Method:  Stores the DigiEvent data for this event in the ROOT
     //    tree. 
     
-    m_rootIoSvc->fillTree(m_treeName);
+    m_rootIoSvc->fillTree("digi");
 
     return;
 }
@@ -728,7 +728,7 @@ void digiRootWriterAlg::close()
     //    is filled.  Writing would create 2 copies of the same tree to be
     //    stored in the ROOT file, if we did not specify kOverwrite.
 
-    m_rootIoSvc->closeFile(m_treeName);
+    m_rootIoSvc->closeFile("digi");
 
     return;
 }

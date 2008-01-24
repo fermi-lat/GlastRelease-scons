@@ -201,7 +201,7 @@ StatusCode reconRootReaderAlg::initialize()
 
     // Set up new school system...
     // Use treeName as key type
-    m_rootIoSvc->prepareRootInput(m_treeName, m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput("recon", m_treeName, m_branchName, m_fileList);
 
     return sc;
     
@@ -224,7 +224,7 @@ StatusCode reconRootReaderAlg::execute()
 
     // Try reading the event this way... 
     // Use treeName as key type
-    m_reconEvt = dynamic_cast<ReconEvent*>(m_rootIoSvc->getNextEvent(m_treeName)) ;
+    m_reconEvt = dynamic_cast<ReconEvent*>(m_rootIoSvc->getNextEvent("recon")) ;
 
     if (!m_reconEvt) return StatusCode::FAILURE;
 
