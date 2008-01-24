@@ -69,10 +69,10 @@ StatusCode GcrSelectAlg::initialize()
     StatusCode sc = StatusCode::SUCCESS;
 
     // Basic initialization first
-    log << MSG::INFO << "GcrSelectAlg Initialization" << endreq;
+    log << MSG::DEBUG << "GcrSelectAlg Initialization" << endreq;
     if( (sc = setProperties()).isFailure()) 
     {
-        log << " GcrSelectAlg Initialization: didn't work!" << endreq;
+      log << MSG::ERROR<<" GcrSelectAlg Initialization: didn't work!" << endreq;
         return sc;
     }
     log << endreq;
@@ -101,13 +101,13 @@ StatusCode GcrSelectAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    log << MSG::INFO << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
-    log<<MSG::INFO<<"GcrSelectAlg::execute Begin"<<endreq ;
+    log << MSG::DEBUG << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
+    log<<MSG::DEBUG<<"GcrSelectAlg::execute Begin"<<endreq ;
 
    m_gcrSelectTool->selectGcrXtals();
   
 
-    log<<MSG::INFO<<"GcrSelectAlg::execute End"<<endreq ;
+    log<<MSG::DEBUG<<"GcrSelectAlg::execute End"<<endreq ;
     return sc;
 }
 
@@ -115,8 +115,8 @@ StatusCode GcrSelectAlg::finalize()
 { 
 
     MsgStream log(msgSvc(), name());
-    log<<MSG::INFO<<"GcrSelectAlg::finalize Begin"<<endreq ;
-    log<<MSG::INFO<<"GcrSelectAlg::finalize End"<<endreq ;
+    log<<MSG::DEBUG<<"GcrSelectAlg::finalize Begin"<<endreq ;
+    log<<MSG::DEBUG<<"GcrSelectAlg::finalize End"<<endreq ;
    
     return StatusCode::SUCCESS ; 
     

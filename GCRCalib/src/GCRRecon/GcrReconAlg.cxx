@@ -75,10 +75,10 @@ StatusCode GcrReconAlg::initialize()
     StatusCode sc = StatusCode::SUCCESS;
 
     // Basic initialization first
-    log << MSG::INFO << "GcrReconAlg Initialization" << endreq;
+    log << MSG::DEBUG << "GcrReconAlg Initialization" << endreq;
     if( (sc = setProperties()).isFailure()) 
     {
-        log << " GcrReconAlg Initialization: didn't work!" << endreq;
+      log <<MSG::ERROR<< " GcrReconAlg Initialization: didn't work!" << endreq;
         return sc;
     }
     log << endreq;
@@ -107,40 +107,40 @@ StatusCode GcrReconAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    log << MSG::INFO << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
-    log<<MSG::INFO<<"GcrReconAlg::execute Begin"<<endreq ;
+    log << MSG::DEBUG << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
+    log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
 
     
     // Apply filter(TRIGGER Engine 4 "CNO Trigger" or HFC OnboardFilter), then find GCRs
        
    if(m_HfcOrCnoTrig == "TriggerEng4"){
-      log<<MSG::INFO<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
+      log<<MSG::DEBUG<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
       if(m_gcrReconTool->TriggerEngine4ON()){
 	 m_gcrReconTool->findGcrXtals(m_useMcDir);
       }
       else{
-	 log<<MSG::INFO<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;
+	 log<<MSG::DEBUG<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;
       }    
    }
    else{
-       log<<MSG::INFO<<"@@@@@@@@ Using HFC OBF"<<endreq ;
+       log<<MSG::DEBUG<<"@@@@@@@@ Using HFC OBF"<<endreq ;
        if(!m_gcrReconTool->OBF_HFCVetoExist()){
 	 m_gcrReconTool->findGcrXtals(m_useMcDir);
        }
        else{
-	log<<MSG::INFO<<"@@@@@@@@ Vetoed Event"<<endreq ;
+	log<<MSG::DEBUG<<"@@@@@@@@ Vetoed Event"<<endreq ;
        }
    }
 
-    log<<MSG::INFO<<"GcrReconAlg::execute End"<<endreq ;
+    log<<MSG::DEBUG<<"GcrReconAlg::execute End"<<endreq ;
     return sc;
 }
 
 StatusCode GcrReconAlg::finalize()
 { 
     MsgStream log(msgSvc(), name());
-    log<<MSG::INFO<<"GcrReconAlg::finalize Begin"<<endreq ;
-    log<<MSG::INFO<<"GcrReconAlg::finalize End"<<endreq ;
+    log<<MSG::DEBUG<<"GcrReconAlg::finalize Begin"<<endreq ;
+    log<<MSG::DEBUG<<"GcrReconAlg::finalize End"<<endreq ;
     return StatusCode::SUCCESS ; 
     
 }
