@@ -337,8 +337,8 @@ Bool_t ConfigReader::read_TFE(DOMElement& elem){
       return kFALSE;
     }
   }else{
-    if ( ! ConfigReader::getSptId(elem,_iTFE) ) {
-      std::cerr << "couldn't find SPT ID for tfe " << _iTFE << std::endl;
+    if ( ! ConfigReader::getTfeId(elem,_iTFE) ) {
+      std::cerr << "couldn't find text ID for tfe " << _iTFE << std::endl;
       return kFALSE;
     }
   }
@@ -571,6 +571,30 @@ Bool_t ConfigReader::getSptId(DOMElement& elem, Int_t& id) {
   return kTRUE;
 }
 
+Bool_t ConfigReader::getTfeId(DOMElement& elem, Int_t& id) {
+  id = ChannelKey::UNDEF;
+  std::string ID("ID");
+  std::string tfe = Dom::getAttribute(&elem,ID);
+  std::string BCAST("BCAST");
+  std::string bcast("bcast");
+  if ( tfe == BCAST || tfe == bcast) { 
+    id = ChannelKey::BCAST;
+    return kTRUE;    
+  }
+  static std::map<std::string,int> tfeMap;
+  if ( tfeMap.size() == 0) {
+    tfeMap["+x0"] = 0; tfeMap["+y0"] = 1; tfeMap["-y0"] = 2; tfeMap["-x0"] = 3;
+    tfeMap["+x1"] = 4; tfeMap["+y1"] = 5; tfeMap["-y1"] = 6; tfeMap["-x1"] = 7;
+    tfeMap["+x2"] = 8; tfeMap["+y2"] = 9; tfeMap["-y2"] = 10; tfeMap["-x2"] = 11;
+    tfeMap["+x3"] = 12; tfeMap["+y3"] = 13; tfeMap["-y3"] = 14; tfeMap["-x3"] = 15;
+    tfeMap["+x4"] = 16; tfeMap["+y4"] = 17; tfeMap["-y4"] = 18; tfeMap["-x4"] = 19;
+    tfeMap["+x5"] = 20; tfeMap["+y5"] = 21; tfeMap["-y5"] = 22; tfeMap["-x5"] = 23;
+  }
+  std::map<std::string,int>::const_iterator itr = tfeMap.find(tfe);
+  if ( itr == tfeMap.end() ) return kFALSE;
+  id = itr->second;
+  return kTRUE;
+}
 
 
 void ConfigReader::loadAcdIds() {

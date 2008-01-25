@@ -4,7 +4,7 @@
  * package manager:M. Kocian
  *
  *
- *
+ * v1r6p2 25-Jan-08 panetta Fix parsing of TFE elements to allow '+x0' type IDs
  * v1r6p1 18-Jan-08 HMK Move to use facilities::Util::stringToUll
  * v1r6   19-Dec-07 EAC Broke up ConfigCompare into ConfigBase, ConfigCompare and ConfigReport
  * v1r5p1 19-Dec-07 EAC Fixed up ConfigCompare

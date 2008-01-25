@@ -81,7 +81,9 @@ protected:
   Bool_t readULong(DOMElement& elem, const ChannelKey& key, const char* bName = 0);
 
   Int_t getIndex(DOMElement& elem, const std::string& rootName);
+  // There's a special syntax for splits and tfe:  +x0  -y5, etc.
   Bool_t getSptId(DOMElement& elem, Int_t& id);
+  Bool_t getTfeId(DOMElement& elem, Int_t& id);
 
   void loadAcdIds();
   
