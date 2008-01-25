@@ -1,7 +1,7 @@
-#include "rootUtil/CompositeEventList.h"
+#include <rootUtil/CompositeEventList.h>
 #include <TFile.h>
 #include <TTree.h>
-#include "TSystem.h"
+#include <TSystem.h>
 
 
 #include <stdlib.h>
@@ -15,18 +15,19 @@
 #include "apps/winutil/XGetopt.h"
 #endif
 
-void usage() {
+using std::cout ;
+using std::cerr ;
+using std::endl ;
+using std::string ;
 
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-
-  std::string m_theApp("printSkim.exe");
+void usage()
+ {
+  std::string m_theApp("inspectCel.exe") ;
 
   cout << endl
        << m_theApp << endl
-       << "Prints information about a ROOT composite event list" << endl
-       << endl;
+       << "Prints information about a Composite Event List" << endl
+       << endl ;
   
   cout << "Usage:" << endl
        << "\t" << m_theApp << " [options] inputFiles" << endl 
@@ -37,21 +38,15 @@ void usage() {
        << "\t   -p <flags>        : what to print"      << endl
        << "\t   -n <nEvents>      : run over <nEvents>" << endl
        << "\t   -s <startEvent>   : start with event <startEvent>" << endl
-       << endl;
-}
+       << endl ;
+ }
   
 
-int main(int argn, char** argc) {
-#ifdef WIN32
+int main(int argn, char** argc)
+ {
+# ifdef WIN32
     gSystem->Load("libTreePlayer.dll");
-#endif
-
-
-  using std::cout;
-  using std::cerr;
-  using std::endl;
-  using std::string;
-
+# endif
 
   std::string printFlags;
   UInt_t optval_s(0);
@@ -60,8 +55,10 @@ int main(int argn, char** argc) {
   // parse options
   char* endPtr;  
   int opt;
-  while ( (opt = getopt(argn, argc, "hp:n:s:")) != EOF ) {
-    switch (opt) {
+  while ( (opt = getopt(argn, argc, "hp:n:s:")) != EOF )
+   {
+    switch (opt)
+     {
     case 'h':   // help      
       usage();
       return 1;
@@ -79,31 +76,30 @@ int main(int argn, char** argc) {
       return 2;
     default:
       cerr << opt << " not parsable..." << endl;
-      cerr << "Try " << "digiMeritRecon.exe" << " -h" << endl;
       return 2;      
-    }
-  }
+     }
+   }
 
-  if ( argn - optind == 0 ) {
-    cerr << "printSkim.exe" << " requires some input files" << endl
-	 << "Try " << "printSkim.exe" << " -h" << endl;
-    return 3;
-  }
+  if ( argn - optind == 0 )
+   {
+    cerr << "inspectCel.exe" << " requires some input files" << endl
+	 << "Try " << "inspectCel.exe" << " -h" << endl ;
+    return 3 ;
+   }
 
-  CompositeEventList p;
-
-  for ( int idx = optind; idx < argn; idx++ ) {
-    const char* fileName = argc[idx];
-    cout << fileName << endl ;
-    CompositeEventList p(fileName);
-    if ( p.isOk()==kFALSE ) {
+  for ( int idx = optind ; idx < argn ; idx++ )
+   {
+    const char * fileName = argc[idx] ;
+    CompositeEventList cel(fileName) ;
+    if ( cel.isOk()==kFALSE )
+     {
       cerr << "Can't open file " << fileName << endl;
       return 4;
-    }
-    p.printInfo(printFlags.c_str(),optval_n,optval_s);
-    p.writeAndClose() ;
-  }
-  
+     }
+    //cel.printInfo(printFlags.c_str(),optval_n,optval_s);
+    std::cout << "===== " << fileName << std::endl ;
+    cel.printInfo() ;
+   }
 
-  return 0;
-}
+  return 0 ;
+ }

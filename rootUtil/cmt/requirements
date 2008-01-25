@@ -30,7 +30,7 @@ macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "
 macro testSource "" WIN32 " TestData.cxx "
 
 application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
-application printSkim ../apps/printSkim.cxx $(getoptSource)
+application inspectCel ../apps/inspectCel.cxx $(getoptSource)
 application mergeSkim ../apps/mergeSkim.cxx $(getoptSource)
 
 application testGenerateData ../apps/testGenerateData.cxx $(testSource) $(getoptSource)
