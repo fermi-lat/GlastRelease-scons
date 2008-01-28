@@ -1,5 +1,5 @@
 package rootUtil
-version v1r1p3
+version v1r2
 author David Chamont <chamont@llr.in2p3.fr>
 
 use GlastPolicy v*
