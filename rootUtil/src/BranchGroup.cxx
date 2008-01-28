@@ -77,7 +77,7 @@ Int_t BranchGroup::makeBranches( TTree & tree, const char * prefix, Int_t bufsiz
 
 // Attaches to branches with names 'prefix''branchName' on 'tree'
 // returns the number of newly attached branches, or -1 for failure
-Int_t BranchGroup::attachToTree(TTree& tree, const char* prefix) const
+Int_t BranchGroup::attachToTree( TTree & tree, const char * prefix ) const
  {
   std::string prefixName ;
   if ( prefix != 0 )

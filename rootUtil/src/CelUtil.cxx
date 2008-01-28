@@ -28,7 +28,7 @@
 // Other headers from this package
 #include "rootUtil/CelEventComponent.h"
 #include "rootUtil/CompositeEventList.h"
-#include "rootUtil/FileUtil.h"
+#include "rootUtil/RuUtil.h"
 
 
 CompositeEventList* CelUtil::mergeCelFiles(TCollection& skimFiles, const char* fileName, const char* option) {

@@ -66,10 +66,18 @@ class TObjString ;
 //      <Comp>_Set_TreeOffsets -> TArrayL64 with the offsets for each Tree in the current set
 //      <Comp>_Set_Entries     -> Total number of entries in all trees from the current set
 //
+// Note : the components can be given when creating the CEL objet,
+// and/or afterwards with declareComponent() method.
+//
 // Note : the pair (RunID/EventID) is expected to be unique for GLAST real data. For
 // what concerns the simulation data, the triplet (ProductionID/RunID/EventID) should
 // be unique.
-//   
+//
+// CAUTION : the fillEvent() method rely on TTree::GetReadEntry() to know
+// which is the current entry in each TTree. If you should just filled it,
+// TTree::GetReadEntry() could not return the last filled entry index, and
+// you should call tree->TTree::LoadTree(tree->GetEntries()-1) on each tree
+// before calling CompositeEventList::fillEvent().
 
 class CompositeEventList : public TObject
  {
@@ -149,11 +157,12 @@ class CompositeEventList : public TObject
     // Manipulation of cel internal trees
     void deleteCurrentFile() ;
     Bool_t checkCelOk( const TString & caller ="CompositeEventList::?" ) const ;
+    Bool_t checkCelPrepared( const TString & caller ="CompositeEventList::?" ) const ;
     Bool_t checkCelPrepared( const TString & caller ="CompositeEventList::?" ) ;
-    Bool_t checkCelTrees( const TString & caller ="CompositeEventList::?" ) const ;
-    Bool_t checkCelTree( const TString & caller, TTree *, const TString & name, Bool_t error ) const ;
+    Bool_t checkCelTrees( const TString & caller ="CompositeEventList::?" ) ;
+    Bool_t checkCelTree( const TString & caller, TTree *, const TString & name, Bool_t error ) ;
     Int_t makeCelBranches( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree, Int_t bufsize = 32000) const;
-    Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) ;
+    Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) const ;
 
     // Components utilities
     UInt_t CompositeEventList::declareComponents( const TObjArray * componentNames ) ;
@@ -164,8 +173,7 @@ class CompositeEventList : public TObject
     TTree * getTree( const TString & componentName ) const ;
 
     // specific construction methods
-    void prepare() ;
-    void prepareRead() ;
+    void prepareRead() const ;
     void prepareRecreate() ;
     
     // cel data

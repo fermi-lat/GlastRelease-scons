@@ -27,9 +27,9 @@
 #include <TArrayL64.h>
 
 // Other headers from this package
-#include "rootUtil/FileUtil.h"
+#include "rootUtil/RuUtil.h"
 #include "rootUtil/BgDataHandle.h"
-#include "rootUtil/OptUtil.h"
+#include "rootUtil/RuUtil.h"
 
 
 ClassImp(CelFileAndTreeSet);
@@ -83,10 +83,10 @@ UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
   // Add a new tree to the set of trees this object is looking after
   // 
   const char* tName = tree.GetName();
-  TFile* f = FileUtil::getFile(tree);
+  TFile* f = rootUtil::getFile(tree);
   if ( 0 == f ) {
-    // Already warned.  Just return FileUtil::NOKEY
-    return FileUtil::NOKEY;
+    // Already warned.  Just return rootUtil::NOKEY
+    return rootUtil::NOKEY;
   }
   const char* fName = f->GetName();
   TObjString* fNameSt = new TObjString(fName);
@@ -114,9 +114,9 @@ UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
 TTree* CelFileAndTreeSet::getTree( UShort_t key ) const {
   // Get a given tree using persistent KEY
   //
-  // Return NULL silently if key == FileUtil::NOKEY
+  // Return NULL silently if key == rootUtil::NOKEY
   // Warns and returns NULL if tree is not found
-  if ( key == FileUtil::NOKEY ) return 0;
+  if ( key == rootUtil::NOKEY ) return 0;
   std::map<UShort_t,TTree*>::iterator itrFind = _cache.find(key);
   TTree* tree = itrFind == _cache.end() ? fetchTree(key) : itrFind->second;
   if ( 0 == tree ) {
@@ -129,20 +129,20 @@ TTree* CelFileAndTreeSet::getTree( UShort_t key ) const {
 UShort_t CelFileAndTreeSet::getKey( TTree * tree ) const
  {
   // Get the persistent KEY for a given tree
-  // Return FileUtil::NOKEY if 'tree' is NULL
-  // Warns and returns FileUtil::NOKEY if tree is not found in lookup table
+  // Return rootUtil::NOKEY if 'tree' is NULL
+  // Warns and returns rootUtil::NOKEY if tree is not found in lookup table
 
   // [David] We cannot garanty that several trees will not have the
   // same adresse (it happens when reading a TChain).
 	
-  if ( 0 == tree ) return FileUtil::NOKEY;
+  if ( 0 == tree ) return rootUtil::NOKEY;
   TString treePath(tree->GetDirectory()->GetName()) ;
   treePath += '/' ;
   treePath += tree->GetName() ;
 	
   std::map<TString,UShort_t>::iterator itrFind = _lookup.find(treePath) ; 
   if ( itrFind == _lookup.end() )
-   { return FileUtil::NOKEY ; }
+   { return rootUtil::NOKEY ; }
   return itrFind->second ;
  }
 
@@ -150,9 +150,9 @@ Long64_t CelFileAndTreeSet::getOffset( UShort_t key ) const
  {
   // Get the Event offset using persistent KEY
   //
-  // Return 0 if "key" is FileUtil::NOKEY
+  // Return 0 if "key" is rootUtil::NOKEY
   // Returns -1 if key is not found
-  if ( key == FileUtil::NOKEY ) return 0;
+  if ( key == rootUtil::NOKEY ) return 0;
   if ( key >= _setSize ) return -1;
   return _treeOffsets->At(key);
  }
@@ -279,12 +279,12 @@ void CelFileAndTreeSet::printTreesInfo( const char * options, const char * prefi
 void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options, const char * prefix ) const
  {  
   std::cout << prefix ;
-  if (OptUtil::has_option(options,'f'))
+  if (rootUtil::has_option(options,'f'))
    { std::cout <<  _fileNames->UncheckedAt(treeIndex)->GetName() << ' '; }
-  if (OptUtil::has_option(options,'t'))
+  if (rootUtil::has_option(options,'t'))
    { std::cout << _treeNames->UncheckedAt(treeIndex)->GetName() << ' '; }
   // why not "Unchecked" below ??
-  if (OptUtil::has_option(options,'o'))
+  if (rootUtil::has_option(options,'o'))
    { std::cout << _treeOffsets->At(treeIndex) << ' '; }
  }
 
@@ -298,11 +298,11 @@ void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options,
 
 
 // Utility function to actually go and get a tree out of a file
-// Return 0 silently if treeIndex == FileUtil::NOKEY
+// Return 0 silently if treeIndex == rootUtil::NOKEY
 // Warns and returns 0 if tree is not found
 TTree * CelFileAndTreeSet::fetchTree( UShort_t treeIndex ) const
  {
-  if ( treeIndex == FileUtil::NOKEY ) return 0 ;
+  if ( treeIndex == rootUtil::NOKEY ) return 0 ;
   if ( treeIndex >= _setSize )
    {
     std::cerr
@@ -315,7 +315,7 @@ TTree * CelFileAndTreeSet::fetchTree( UShort_t treeIndex ) const
   
   // open file
   const char * fName = _fileNames->UncheckedAt(treeIndex)->GetName() ;
-  TFile * f = FileUtil::openFile(fName) ;
+  TFile * f = rootUtil::openFile(fName) ;
   if ( 0 == f )
    { 
     // ROOT has already warned.  Just exit.

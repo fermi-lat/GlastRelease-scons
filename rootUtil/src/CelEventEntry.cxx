@@ -12,7 +12,7 @@
 */
 
 #include <rootUtil/CelEventEntry.h>
-#include <rootUtil/FileUtil.h>
+#include <rootUtil/RuUtil.h>
 #include <rootUtil/BgDataHandle.h>
 #include <rootUtil/CelFileAndTreeSet.h>
 
@@ -42,13 +42,13 @@ ClassImp(CelEventEntry) ;
 
 CelEventEntry::CelEventEntry()
  : _componentName(),
-   _treeIndex(FileUtil::NOKEY,*this,"Event_TreeIndex"),
+   _treeIndex(rootUtil::NOKEY,*this,"Event_TreeIndex"),
    _entryIndex(-1,*this,"Event_EntryIndex")
  { BgDataHandleInstance::init() ; }
 	      
 CelEventEntry::CelEventEntry( const TString & componentName )
  : _componentName(componentName),
-   _treeIndex(FileUtil::NOKEY,*this,"Event_TreeIndex"),
+   _treeIndex(rootUtil::NOKEY,*this,"Event_TreeIndex"),
    _entryIndex(-1,*this,"Event_EntryIndex")
  { BgDataHandleInstance::init() ; }	      
 	      

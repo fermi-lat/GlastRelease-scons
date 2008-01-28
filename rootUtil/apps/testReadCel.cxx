@@ -110,17 +110,22 @@ int main( int argc, char ** argv )
     digiData = reconData = 0 ;
     TObjArray * dataChains = new TObjArray ;
     TChain * celChain = cel.newChains(dataChains) ;
+    TVirtualIndex * digiTreeIndex, * reconTreeIndex ;
     TIter itrChain(dataChains) ;
     TChain * curChain ;
     while ( (curChain = (TChain*)itrChain.Next()) )
      {
       if (curChain->GetName()==TestDigiComponent::treeName())
        {
+        digiChain = curChain ;
+        digiTreeIndex = digiChain->GetTreeIndex() ;
     	curChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
         std::cout<<"Set address for Digi"<<std::endl ;
        }
       if (curChain->GetName()==TestReconComponent::treeName())
        {
+        reconChain = curChain ;
+        reconTreeIndex = reconChain->GetTreeIndex() ;
     	curChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
         std::cout<<"Set address for Recon"<<std::endl ;
        }
@@ -128,6 +133,8 @@ int main( int argc, char ** argv )
     nEvents = celChain->GetEntries() ;
     for ( iEvent = 0 ; iEvent < nEvents ; iEvent++ )
      {
+      digiChain->SetTreeIndex(digiTreeIndex) ;
+      reconChain->SetTreeIndex(reconTreeIndex) ;
       celChain->LoadTree(iEvent) ;
       std::cout
         <<"[main] Event "<<setw(2)<<std::right<<iEvent
