@@ -33,7 +33,7 @@ use LdfEvent v*
 macro_append ROOT_libs " -lHist -lGraf -lGraf3d -lTreePlayer "\
                  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libTreePlayer.lib "
 
-macro_prepend includes " -I .. " WIN32 " /I .. "
+#macro_prepend includes " -I .. " WIN32 " /I .. "
 
 private
 
@@ -42,7 +42,7 @@ use Trigger v*
 use AncillaryDataEvent v*
 use gr_app v*
 
-macro_append includes ' $(ppcmd)"$(rootUtil_root)" $(ppcmd)"$(metaRootData_root)" '
+macro_append includes ' $(ppcmd)"$(rootUtil_root)" '
 
 # for building this DLL, need includes from the rootData packages
 # also need modification for the use of OnboardFilterTds for windows due to Endianness.h file
