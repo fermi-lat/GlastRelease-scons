@@ -4,14 +4,30 @@
 ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 
 // add new flavors to default
-CalibDataSvc.CalibFlavorList = {"ideal","MC-data-spring-2007"};
+CalibDataSvc.CalibFlavorList = {"ideal"};
+CalibDataSvc.CalibFlavorList += {"MC_OktoberFest07"};
 
 // for MSQL connection
 CalibMySQLCnvSvc.DbName      = "calib"; 
-CalibMySQLCnvSvc.QualityList = {"PROD", "DEV" }; 
+CalibMySQLCnvSvc.QualityList = {"PROD"}; 
 
-// acd, cal, tkr flavors
-AcdCalibSvc.DefaultFlavor    = "ideal";
-CalCalibSvc.DefaultFlavor    = "MC-data-spring-2007";
-TkrCalibAlg.calibFlavor      = "MC-data-spring-2007";
+//  CAL
+CalCalibSvc.DefaultFlavor    = "MC_OktoberFest07";
+
+// TKR
+TkrCalibAlg.calibFlavor      = "MC_OktoberFest07";
+TkrCalibAlg.deadStripsCalibFlavor = "MC_OktoberFest07";
+
+// ACD data
+AcdCalibSvc.DefaultFlavor     = "MC_OktoberFest07";
+AcdCalibSvc.FlavorHighRange   = "ideal";
+AcdCalibSvc.FlavorCoherentNoise = "ideal";
+
+// ACD sim
+AcdSimCalibSvc.DefaultFlavor   = "MC_OktoberFest07";
+AcdSimCalibSvc.FlavorRange     = "ideal";
+AcdSimCalibSvc.FlavorHighRange = "ideal";
+AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
+AcdSimCalibSvc.FlavorVeto      = "MC_OktoberFest07";
+AcdSimCalibSvc.FlavorCno       = "ideal";
 
