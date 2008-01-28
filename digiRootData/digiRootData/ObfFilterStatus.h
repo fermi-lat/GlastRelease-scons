@@ -83,9 +83,9 @@ private:
 class ObfGammaStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfGammaStatus() : m_id(0), m_status(0), m_sb(0) {}
+    ObfGammaStatus() : m_status(0), m_id(0), m_sb(0) {}
     ObfGammaStatus(UChar_t id, UInt_t status, UChar_t sb) : 
-                   m_id(id), m_status(status), m_sb(sb) {}
+                   m_status(status), m_id(id), m_sb(sb) {}
     virtual ~ObfGammaStatus() {}
 
     // This for backward compatibility...
@@ -114,9 +114,9 @@ private:
 class ObfHFCStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfHFCStatus() : m_id(0), m_status(0), m_sb(0) {}
+    ObfHFCStatus() : m_status(0), m_id(0), m_sb(0) {}
     ObfHFCStatus(UChar_t id, UInt_t status, UChar_t sb) : 
-                   m_id(id), m_status(status), m_sb(sb) {}
+                   m_status(status), m_id(id), m_sb(sb) {}
     virtual ~ObfHFCStatus() {}
 
     // This for backward compatibility...
@@ -145,9 +145,9 @@ private:
 class ObfMipStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfMipStatus(): m_id(0), m_status(0), m_sb(0) {}
+    ObfMipStatus(): m_status(0), m_id(0), m_sb(0) {}
     ObfMipStatus(UChar_t id, UInt_t status, UChar_t sb) : 
-                   m_id(id), m_status(status), m_sb(sb) {}
+                   m_status(status), m_id(id), m_sb(sb) {}
     virtual ~ObfMipStatus() {}
 
     // This for backward compatibility...
