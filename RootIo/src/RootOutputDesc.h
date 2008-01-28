@@ -37,16 +37,16 @@ class RootOutputDesc
 
     TTree * getTree() { return m_tree ; }
 
-	TFile* getCurrentFile();
+    TFile* getCurrentFile() ;
 
     Long64_t getEventCounter() const { return m_eventCounter; };
 
     bool getUpdated() const { return m_updated; };
     void setUpdated(bool u) { m_updated = u; };
 
-	bool LoadTree(Long64_t ievent){ m_tree->LoadTree(ievent); };
+    bool LoadTree( Long64_t ievent ) { return (m_tree->LoadTree(ievent)<0?false:true) ; }
 
-	bool fillTree(int autoSaveInterval=1000); 
+    bool fillTree(int autoSaveInterval=1000); 
 
   private :
 
