@@ -176,9 +176,9 @@ private:
 class ObfDFCStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfDFCStatus() : m_id(0), m_status(0), m_sb(0) {}
-    ObfDFCStatus(UChar_t id, UInt_t status, UChar_t sb) : 
-                   m_id(id), m_status(status), m_sb(sb) {}
+    ObfDFCStatus() : m_status(0), m_id(0), m_sb(0) {}
+    ObfDFCStatus(UChar_t id, UInt_t status, UChar_t sb)
+     : m_status(status), m_id(id), m_sb(sb) {}
     virtual ~ObfDFCStatus() {}
 
     // This for backward compatibility...
