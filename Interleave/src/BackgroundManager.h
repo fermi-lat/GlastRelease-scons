@@ -1,6 +1,7 @@
 #ifndef BackgroundManager_h
 #define BackgroundManager_h 
 
+#include "rootUtil/CelManager.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -29,9 +30,12 @@ public:
     typedef std::vector<std::string>                      BkgndSrcNameVec;
     typedef std::map<std::string, IBkgndTupleSelectTool*> BkgndNameToSelMap;
 
-  /// Method to return pointer to the singleton object (and instantiate if not
-  /// already)
+    /// Method to return pointer to the singleton object (and instantiate if not
+    /// already)
     static  BackgroundManager* instance();
+
+    /// Return pointer to CelManager
+    CelManager* getCelManager() {return &m_celManager;}
 
     /// Methods for interfacing to the class
     ///! access rate according to section variable
@@ -55,6 +59,9 @@ private:
     /// Private data
     /// Pointer to the class to make it a singleton
     static BackgroundManager* m_instance;
+
+    /// Pointer to the CelManager for input sources to share
+    CelManager                m_celManager;
 
     double                    m_defaultRate;
 

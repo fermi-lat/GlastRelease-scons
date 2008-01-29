@@ -131,6 +131,10 @@ StatusCode InterleaveAlg::initialize()
         log << MSG::INFO << "Using xml file path " << filePath << " for interleave." << endreq;
     }
 
+    // Initialize the CEL manager
+    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
+    m_bkgndManager->getCelManager()->initWrite(celFileName,"RECREATE");
+
     // initialize the background selection
     try 
     {
@@ -248,6 +252,8 @@ StatusCode InterleaveAlg::finalize()
     MsgStream log(msgSvc(), name());
 
     log << MSG::INFO << "Inserted "<< m_count << " sampled background events." << endreq; 
+
+    m_bkgndManager->getCelManager()->fillFileAndTreeSet();
 
     return sc;
 }
