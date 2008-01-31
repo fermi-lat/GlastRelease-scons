@@ -6,6 +6,7 @@
 
 #include "configData/base/ConfigTuple.h"
 #include "configData/gem/TrgConfigParser.h"
+#include "configData/db/MootDBImpl.h"
 #include "configData/db/LatcDBImpl.h"
 
 #include "commonRootData/AcdMap.h"
@@ -22,89 +23,132 @@ namespace{
     char ** nullPtr = 0;
 }
 
-Bool_t ConfigReader::readTopLvl(const std::string& fileName, const std::string& latcPath, bool bcast) {
+// local function to return the bcast and non-bcast LATC fragments, given a MOOT key
+bool _latcFromMootKey(const unsigned configKey, 
+                      std::vector<std::string>& bcastFiles,
+                      std::vector<std::string>& latcFiles){
+  std::vector<std::string> filelist;
+  MootDBImpl moot;
+  filelist=moot.getFilenameList(configKey);
+  for ( std::vector<std::string>::iterator it=filelist.begin();it!=filelist.end();it++){
+    std::string latcFileFull=*it;
+    if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
+      bcastFiles.push_back(latcFileFull);
+    } else {
+      latcFiles.push_back(latcFileFull);
+    }
+  }
+  return kTRUE;
+}
+
+// local function to return the bcast and non-bcast LATC fragments, given a LATC master key
+bool _latcFromMaster(const unsigned masterKey, 
+                      std::vector<std::string>& bcastFiles,
+                      std::vector<std::string>& latcFiles){
+  std::vector<std::string> filelist;
+  LatcDBImpl latc;
+  filelist=latc.getFilenameList(masterKey);
+  for ( std::vector<std::string>::iterator it=filelist.begin();it!=filelist.end();it++){
+    std::string latcFileFull=*it;
+    if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
+      bcastFiles.push_back(latcFileFull);
+    } else {
+      latcFiles.push_back(latcFileFull);
+    }
+  }
+  return kTRUE;
+}
+
+// local function to return bcast and non-bcast LATC frags given an intSeApp style app XML
+bool _latcFromAppXML(const std::string& fileName,
+                     const std::string& latcPath,
+                     std::vector<std::string>& bcastFiles,
+                     std::vector<std::string>& latcFiles){
+  XmlParser parser( true );
+  DOMDocument* doc(0);
+  try {
+    doc = parser.parse( fileName.c_str() );
+  } 
+  catch (ParseException ex) {
+    std::cout << "caught exception with message " << std::endl;
+    std::cout << ex.getMsg() << std::endl;
+    return kFALSE;
+  }
+    
+  DOMElement* topElt = doc->getDocumentElement();
+  std::vector<DOMElement*> eltList;
+    
+    
+  std::vector<DOMElement*> everythingList;
+    
+  Dom::getDescendantsByTagName( topElt, "everything", everythingList );
+  for ( std::vector<DOMElement*>::iterator itrEv = everythingList.begin();
+        itrEv != everythingList.end(); ++itrEv ) {
+    std::vector<std::string> fileNames;
+    std::string everything = Dom::getTextContent(*itrEv);    
+    facilities::Util::stringTokenize(everything,",",fileNames);
+    for ( std::vector<std::string>::const_iterator itrFileName = fileNames.begin(); itrFileName != fileNames.end(); itrFileName++ ) {
+      std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += (*itrFileName);
+      if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
+        bcastFiles.push_back(latcFileFull);
+      } else {
+        latcFiles.push_back(latcFileFull);
+      }
+    }
+  }
+    
+  if ( everythingList.size() == 0 ) {
+    Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
+  }
+    
+  std::vector<DOMElement*> latcNodeList;
+  Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);
+    
+  for ( std::vector<DOMElement*>::iterator itrLatc = latcNodeList.begin();
+        itrLatc != latcNodeList.end(); ++itrLatc ) {
+    Dom::getDescendantsByTagName(*itrLatc,"latcFile", eltList , false);
+    Dom::getDescendantsByTagName(*itrLatc,"TFE",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"TDC",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"TEM",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"CFE",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"AFE",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"ARC",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"SPT",eltList,false);
+    Dom::getDescendantsByTagName(*itrLatc,"bcast",eltList,false);    
+  }
+    
+  std::vector<DOMElement*>::iterator itr = eltList.begin();  
+
+  for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {      
+    std::string latcFileBase = Dom::getTextContent(*itr);
+    std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += latcFileBase;
+    if ( latcFileBase.find("DFT") !=  latcFileBase.npos ) {
+      bcastFiles.push_back(latcFileFull);
+    } else {
+      latcFiles.push_back(latcFileFull);
+    }
+  }
+  return kTRUE;
+}
+
+Bool_t ConfigReader::readTopLvl(const std::string& fileName, 
+                                const std::string& latcPath, 
+                                bool bcast, bool useMootKey) {
   std::vector<std::string> bcastFiles;
   std::vector<std::string> latcFiles;
   char *endptr;
   unsigned key=strtoul(fileName.c_str(),&endptr,0);
   if (endptr[0]=='\0'){ // This is a database key
-    std::vector<std::string> filelist;
-    LatcDBImpl moot;
-    filelist=moot.getFilenameList(key);
-    for ( std::vector<std::string>::iterator it=filelist.begin();it!=filelist.end();it++){
-      std::string latcFileFull=*it;
-      if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
-	bcastFiles.push_back(latcFileFull);
-      } else {
-	latcFiles.push_back(latcFileFull);
-      }
+    if (useMootKey) {
+      if (! _latcFromMootKey(key, bcastFiles, latcFiles))
+        return kFALSE;
+    } else {
+      if (! _latcFromMaster(key, bcastFiles, latcFiles))
+        return kFALSE;
     }
   }else{
- 
-    XmlParser parser( true );
-    DOMDocument* doc(0);
-    try {
-      doc = parser.parse( fileName.c_str() );
-    } 
-    catch (ParseException ex) {
-      std::cout << "caught exception with message " << std::endl;
-      std::cout << ex.getMsg() << std::endl;
+    if (! _latcFromAppXML(fileName, latcPath, bcastFiles, latcFiles))
       return kFALSE;
-    }
-    
-    DOMElement* topElt = doc->getDocumentElement();
-    std::vector<DOMElement*> eltList;
-    
-    
-    std::vector<DOMElement*> everythingList;
-    
-    Dom::getDescendantsByTagName( topElt, "everything", everythingList );
-    for ( std::vector<DOMElement*>::iterator itrEv = everythingList.begin();
-	  itrEv != everythingList.end(); ++itrEv ) {
-      std::vector<std::string> fileNames;
-      std::string everything = Dom::getTextContent(*itrEv);    
-      facilities::Util::stringTokenize(everything,",",fileNames);
-      for ( std::vector<std::string>::const_iterator itrFileName = fileNames.begin(); itrFileName != fileNames.end(); itrFileName++ ) {
-	std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += (*itrFileName);
-	if ( latcFileFull.find("DFT") !=  latcFileFull.npos ) {
-	  bcastFiles.push_back(latcFileFull);
-	} else {
-	  latcFiles.push_back(latcFileFull);
-	}
-      }
-    }
-    
-    if ( everythingList.size() == 0 ) {
-      Dom::getDescendantsByTagName( topElt, "paramFile", eltList );
-    }
-    
-    std::vector<DOMElement*> latcNodeList;
-    Dom::getDescendantsByTagName( topElt, "latcFiles", latcNodeList);
-    
-    for ( std::vector<DOMElement*>::iterator itrLatc = latcNodeList.begin();
-	  itrLatc != latcNodeList.end(); ++itrLatc ) {
-      Dom::getDescendantsByTagName(*itrLatc,"latcFile", eltList , false);
-      Dom::getDescendantsByTagName(*itrLatc,"TFE",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"TDC",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"TEM",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"CFE",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"AFE",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"ARC",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"SPT",eltList,false);
-      Dom::getDescendantsByTagName(*itrLatc,"bcast",eltList,false);    
-    }
-    
-    std::vector<DOMElement*>::iterator itr = eltList.begin();  
-
-    for ( itr = eltList.begin(); itr != eltList.end(); itr++ ) {      
-      std::string latcFileBase = Dom::getTextContent(*itr);
-      std::string latcFileFull = latcPath; latcFileFull += '/'; latcFileFull += latcFileBase;
-      if ( latcFileBase.find("DFT") !=  latcFileBase.npos ) {
-	bcastFiles.push_back(latcFileFull);
-      } else {
-	latcFiles.push_back(latcFileFull);
-      }
-    }
   }
     
   std::vector<std::string>::const_iterator itrF = bcastFiles.begin();

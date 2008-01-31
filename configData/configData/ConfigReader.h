@@ -49,7 +49,10 @@ public :
   }
 
   
-  Bool_t readTopLvl(const std::string& fileName, const std::string& latcPath, bool bcast=false);
+  Bool_t readTopLvl(const std::string& fileName, 
+                    const std::string& latcPath, 
+                    bool bcast=false, 
+                    bool useMootKey=false);
 
   Bool_t read(const std::string& fileName);
 
