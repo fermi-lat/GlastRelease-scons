@@ -13,8 +13,25 @@ use commonRootData v*
 use xmlBase v*
 use mootCore v*
 use GlastPolicy v*
+use python * IExternal
+use ROOT * IExternal
 
 apply_pattern shared_library
+
+# Need to add a bunch of stuff to pythonpath
+# JHP: for root on WIN32, I have no idea...
+path_remove PYTHONPATH configData
+path_append PYTHONPATH "" Linux "$(CONFIGDATAROOT)/python"\
+                          WIN32 "$(CONFIGDATAROOT)\python"
+path_remove PYTHONPATH mootCore
+path_append PYTHONPATH "" Linux "$(MOOTCOREROOT)/$(BINDIR)"\
+                          WIN32 "$(MOOTCOREROOT)/$(BINDIR)"
+path_append PYTHONPATH "" Linux "$(MOOTCOREROOT)/../../lib" \
+                          WIN32 "$(CONFIGDATAROOT)\lib"
+path_append PYTHONPATH "" Linux "$(ROOT_PATH)/lib"\
+                          WIN32 ""
+
+
 
 private
 # takes care of undefined symbols while linking on Windows
