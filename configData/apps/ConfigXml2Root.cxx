@@ -1,4 +1,8 @@
-
+// Tool to read a MOOT configuration and convert it to ROOT for later processing
+//
+//
+//
+//
 //
 // stl
 #include <string>
@@ -19,13 +23,23 @@
 #include "configData/ConfigReader.h"
 
 void usage() {
+  std::cout << "ConfigXml2Root.exe [options] key1 ..." << std::endl
+            << "\tgenerated a ROOT tree containing MOOT configuration information" << std::endl
+            << "\t\tOptions"               << std::endl 
+            << "\t-h\thelp (this message)" << std::endl
+            << "\t-?\thelp (this message)" << std::endl
+            << "\t-o\toutput file prefix"  << std::endl
+            << "\t-M\tKey is for MOOT"     << std::endl
+            << "\t-p\tparameter directory" << std::endl
+            << "\t-a\tapp directory"       << std::endl
+            << "\t-b\tbroadcast"           << std::endl;
 }
 
 //
 int main(int argn, char** argc) {
   
   // parse options
- // char* endPtr;  
+  // char* endPtr;  
   int opt;
 
   std::string outputPrefix;
@@ -34,11 +48,12 @@ int main(int argn, char** argc) {
   std::string appDir = "params";
   std::list<std::pair<std::string,std::string> > inAndOut;
   bool bcast(false);
+  bool useMootKey=false;
 
 #ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "ho:p:a:b")) != EOF ) {
+  while ( (opt = facilities::getopt(argn, argc, "ho:Mp:a:b")) != EOF ) {
 #else
-  while ( (opt = getopt(argn, argc, "ho:p:a:b")) != EOF ) {
+  while ( (opt = getopt(argn, argc, "ho:Mp:a:b")) != EOF ) {
 #endif
     switch (opt) {
     case 'h':   // help      
@@ -46,6 +61,9 @@ int main(int argn, char** argc) {
       return 1;
     case 'o':   //  output
       outputPrefix = std::string(optarg);
+      break;
+    case 'M':   // mootKey
+      useMootKey=true;
       break;
     case 'p':   // 
       paramDir = std::string(optarg);
@@ -73,7 +91,8 @@ int main(int argn, char** argc) {
     if (endptr[0]=='\0'){ // user typed in a latc key
       inName=argc[idx];
       outName=outputPrefix+"MootConfig_"+inName+".root";
-    }else{
+    }
+    else {
       std::string baseName = argc[idx];
       if ( baseName.find(appDir) == 0 ) {
 	baseName.erase(0,appDir.size()+1);
@@ -95,7 +114,7 @@ int main(int argn, char** argc) {
 
     TFile fOut(itrIO->second.c_str(),"RECREATE");
     TTree* t = config.makeTree(nullString);  
-    reader.readTopLvl(itrIO->first.c_str(),paramDir,bcast);
+    reader.readTopLvl(itrIO->first.c_str(),paramDir,bcast,useMootKey);
     config.latch();
     
     t->Write();

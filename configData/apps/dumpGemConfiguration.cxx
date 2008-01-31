@@ -1,5 +1,6 @@
 
 #include "configData/db/LatcDBImpl.h"
+#include "configData/db/MootDBImpl.h"
 #include "configData/db/LatcDBImplOld.h"
 #include "configData/db/LatcDBImplFile.h"
 #include "configData/db/TrgConfigDB.h"
@@ -18,13 +19,14 @@ using namespace MOOT;
 int main(int argc, char **argv){
   bool fullconfig=false;
   bool allowMissing=false;
+  bool mootKey=false;
   int opt;
   int argn=1;
   std::ostream *out=&std::cout;
 #ifdef WIN32
-  while ( (opt = facilities::getopt(argc, argv, "fmo:")) != EOF ) {
+  while ( (opt = facilities::getopt(argc, argv, "fMmo:")) != EOF ) {
 #else
-  while ( (opt = getopt(argc, argv, "fmo:")) != EOF ) {
+  while ( (opt = getopt(argc, argv, "fMmo:")) != EOF ) {
 #endif
     argn++;
     switch(opt){
@@ -35,6 +37,9 @@ int main(int argc, char **argv){
       allowMissing=true;
       std::cout<<"Warning: Allowing partial configuration"<<std::endl;
       break;
+    case 'M': // mootKey
+      mootKey=true;
+      break;
     case 'o':
       out=new std::ofstream(optarg);
       argn++;
@@ -42,7 +47,8 @@ int main(int argc, char **argv){
     }
   }
   if (argc!=argn+1  ){
-    (*out)<<"Usage: dumpGemConfiguration -f [full config] -m [allow partial config] -o [filename] latc_key or xml_file"<<std::endl;
+    std::cout << "jhpdebug " << argc << std::endl;
+    (*out)<<"Usage: dumpGemConfiguration -f [full config] -m [allow partial config] -M [MOOT key] -o [filename] latc_key or xml_file"<<std::endl;
     exit(0);
   }
   char *endptr;
@@ -52,8 +58,15 @@ int main(int argc, char **argv){
     (*out)<<"=================================="<<std::endl;
     (*out)<<"GEM configuration for key "<<key<<std::endl;
     (*out)<<"=================================="<<std::endl<<std::endl;
-    LatcDBImpl lc;
-    TrgConfigDB tcf(&lc);
+    MootDBImpl dbM;
+    LatcDBImpl dbL;
+    LatcDB *db;
+    if (mootKey) {
+      db = dynamic_cast<LatcDB*>(&dbM);
+    } else {
+      db = dynamic_cast<LatcDB*>(&dbL);
+    }
+    TrgConfigDB tcf(db);
     tcf.allowMissing(allowMissing);
     tcf.updateKey(key);
     if (!fullconfig)tcf.printContrigurator((*out));
