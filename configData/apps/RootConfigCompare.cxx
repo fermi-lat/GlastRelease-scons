@@ -25,7 +25,8 @@ void usage() {
 	    << "\t-r\tPrint config report" << std::endl
 	    << "\t-n\tNo comparison" << std::endl
 	    << "\t-1\tOnly print one difference per register type" << std::endl
-	    << "\t-f\tFull comparison, include threshold registers, implies -1" << std::endl;    
+	    << "\t-f\tFull comparison, include threshold registers, implies -1" << std::endl
+	    << "\t-o\tOutput file name stub" << std::endl;    
 }
 
 //
@@ -38,12 +39,14 @@ int main(int argn, char** argc) {
   Bool_t fullCompare(kFALSE);
   Bool_t report(kFALSE);
   Bool_t noDiff(kFALSE);
+  std::string outputName;
+  std::string outputPrefix;
 
   int opt;
 #ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "hf1rn")) != EOF ) {
+  while ( (opt = facilities::getopt(argn, argc, "hf1rno:")) != EOF ) {
 #else
-  while ( (opt = getopt(argn, argc, "hf1rn")) != EOF ) {
+  while ( (opt = getopt(argn, argc, "hf1rno:")) != EOF ) {
 #endif
     switch (opt) {
     case 'h':   // help      
@@ -59,8 +62,11 @@ int main(int argn, char** argc) {
       fullCompare = kTRUE;
       onlyOne = kTRUE;
       break;
-   case 'n':
+    case 'n':
       noDiff = kTRUE;
+      break;
+    case 'o':   //  output
+      outputPrefix = std::string(optarg);
       break;
     default:
       std::cout << opt << " not parsable..." << std::endl;
@@ -69,6 +75,7 @@ int main(int argn, char** argc) {
     }
   }
   std::string fn1 = argc[optind];  
+  outputName = outputPrefix+"report.root";
 
   TFile* f1 = TFile::Open(fn1.c_str());
   TTree* t1 = (TTree*)f1->Get("Config");
@@ -90,7 +97,7 @@ int main(int argn, char** argc) {
     TList l;
     ConfigReport rep;
     rep.report(c1,l,"",std::cout);
-    TFile f("report.root","RECREATE");
+    TFile f(outputName.c_str(),"RECREATE");
     l.Write();
     f.Close();
   }
