@@ -1,3 +1,21 @@
+#!/bin/env python
+#
+#                               Copyright 2008
+#                                     by
+#                        The Board of Trustees of the
+#                     Leland Stanford Junior University.
+#                            All rights reserved.
+#
+
+__facility__ = "Online"
+__abstract__ = "utilities from Hiro"
+__author__   = "P.A.Hart <philiph@SLAC.Stanford.edu> SLAC - GLAST LAT I&T/Online"
+__date__     = "2008/01/25 00:00:00"
+__updated__  = "$Date$"
+__version__  = "$Revision$"
+__release__  = "$Name$"
+__credits__  = "SLAC"
+
 import os, glob, xml.dom.minidom, math, time, sys, cStringIO
 from xml.dom import xmlbuilder
 
