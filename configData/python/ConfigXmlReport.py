@@ -251,6 +251,7 @@ def optparse():
 if __name__ == '__main__':
     import sys
 
+    options, args = optparse()
     setLogging(options.verbose)    
     makePrecinctHandlers()
     holder = ConfigDataHolder(options.configKey,
