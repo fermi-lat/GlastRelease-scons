@@ -74,8 +74,12 @@ class BasicPlotChecker(object):
     for (precinct, plot, title, caption, option) in self.plotSelection:
       if self.__precinctName == precinct or self.__precinctName == 'all':
         if option == 'comp':
-          compRootFile.Get(plot).Draw()
-          self.savePng(plot+".png", title, caption)
+          histo = compRootFile.Get(plot)
+          if histo is not None:
+            compRootFile.Get(plot).Draw()
+            self.savePng(plot+".png", title, caption)
+          else:
+            raise RuntimeError, 'No plot named %s in %s' %(plot, self.__compareRootFile)
         else:
           if self.__configurationRootFile is None or self.__baseRootFile is None:
             print 'unable to plot base/conf overlay plot - no root file defined'
