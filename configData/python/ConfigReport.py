@@ -19,7 +19,7 @@ __credits__  = "SLAC"
 import logging
 import os, sys
 
-from py_mootCore import MootQuery
+from py_mootCore import MootQuery, VoteInfo
 
 _log = logging.getLogger()
 
@@ -78,7 +78,7 @@ class ConfigDataHolder(object):
         self.__baseRoot = ""
         self.__compRoot = ""
         self.__confBase = configDirBase
-        self.__confDir  = configDirBase + "%s/" % str(configKey)
+        self.__confDir  = os.path.join(configDirBase, "%s/" % str(configKey))
         if not os.path.isdir(self.__confDir):
             try:
                 os.mkdir(self.__confDir)
@@ -117,9 +117,11 @@ class ConfigDataHolder(object):
 
     @property
     def precinctInfo(self):
-        params = map(self.__mq.getParmInfo, self.__mq.configParmsUsed(self.config))
+        params = map(self.__mq.getParmInfo, self.__mq.configParmsRequest(self.config))
         vKeys = set([int(i.getVoteFk()) for i in params])
-        return [self.__mq.getVoteInfo(int(i)) for i in vKeys]
+        iList = [self.__mq.getVoteInfo(int(i)) for i in vKeys]
+        iList.sort(key=VoteInfo.getPrecinct) # sort in precinct alphabetical
+        return iList
 
     def configRootFileName(self, rebuild=False):
         "!@brief return the config ROOT file name.  rebuild if necessary."
