@@ -61,7 +61,7 @@ ConfigReport::report(ConfigBase& c, TList& l, Option_t* options, std::ostream& o
 
   TH1* h_hld = new TH1I("hld_dac","hld_dac",64,-0.5,63.5);
   TH1* hv_hld = new TH1S("hld_dac_v","hld_dac_v",216,-0.5,215.5);
-  l.Add(h_bias); l.Add(hv_bias); 
+  l.Add(h_hld); l.Add(hv_hld); 
 
   TH1* h_veto = new TH1I("veto_dac","veto_dac",1024,-0.5,63.5);
   TH1* hv_veto = new TH1F("veto_dac_v","veto_dac_v",216,-0.5,215.5);
