@@ -128,18 +128,12 @@ class PrecinctXmlReport(PrecinctReport):
                 setAttribute(n, ATTR_TEXT, line)
                 count += 1
 
-
-
     def writeReport(self):
-        fileName = os.path.join(self.data.configDir, '%s_report.xml'%self.info.getPrecinct() )
-        f = open(fileName, 'w')
+        fileName = '%s_report.xml'%self.info.getPrecinct()
+        f = open(os.path.join(self.data.configDir, fileName), 'w')
         PrettyPrint(self.__doc,f)
         f.close()
         return fileName
-
-
-
-    
 
 
 if __name__ == '__main__':
