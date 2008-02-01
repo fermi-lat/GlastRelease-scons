@@ -33,6 +33,10 @@ from ConfigReport import *
 _log = logging.getLogger('offline.configData')
 
 CONFIG_NAMESPACE = EMPTY_NAMESPACE
+CONFIG_DEST_PRODUCTION = "/nfs/farm/g/glast/u03/ConfigReports/"
+#CONFIG_DEST_JIMTEST = "/u/ec/panetta/public_html/glast/configReports/"
+
+CONFIG_XSL_TRANSFORM = os.path.expandvars("$CONFIGDATAROOT/python/configTransform.xsl")
 
 TAG_CFGRPT     = "ConfigReport"
 TAG_CINFO      = "ConfigInfo"
@@ -49,7 +53,7 @@ ATTR_USER      = "User"
 ATTR_DATE      = "Date"
 ATTR_KEY       = "Key"
 ATTR_CNAME     = "ConfigName"
-ATTR_STATUS    = "Status"2
+ATTR_STATUS    = "Status"
 ATTR_ACTIVE    = "Active"
 ATTR_DESC      = "Description"
 ATTR_NAME      = "Name"
@@ -129,7 +133,7 @@ class ConfigXmlReport(ConfigReport):
         f = open(fileName, 'w')
         PrettyPrint(self.__doc,f)
         f.close()
-        return fileName
+        return self.data.makeRelative(fileName)
 
 def transformToFile(xslFileName, xmlFileName, htmlFileName):
   """!\brief Based on the input template and output filename parameters
@@ -198,28 +202,67 @@ def makeTextChildNode(parentNode, value):
     return childNode
 
 
+def setLogging(verbosity=None):
+    """
+    """
+    import logging
+    if verbosity is None:
+        logging.basicConfig()
+    elif verbosity == 1:
+        logging.basicConfig(level=logging.WARNING)
+    elif verbosity == 2:
+        logging.basicConfig(level=logging.INFO)
+    elif verbosity >= 3:
+        logging.basicConfig(level=logging.DEBUG)
+    return
+
+def optparse():
+    from optparse import OptionParser, OptionGroup
+    version = __version__[__version__.find(': ')+2:-2]
+    parser = OptionParser(usage = "%prog [options]",
+                          version = "%prog" + " %s" % version )
+    required = OptionGroup(parser, "Required", "Required flags must be specified")
+    parser.add_option_group(required)
+    optional = OptionGroup(parser, "Optional")
+    parser.add_option_group(optional)
+    expert = OptionGroup(parser, "Expert", "Expert-only option flags")
+    parser.add_option_group(expert)
+    required.add_option("-k", "--mootKey", dest="configKey", action="store",
+                      type="int", help="MOOT configuration key")
+    optional.add_option("-b", "--baselineKey", dest="baselineKey", action="store",
+                      type="int", help="Baseline comparison key")
+    optional.add_option("-v", "--verbose", dest="verbose", action="count",
+                        help="verbosity level")
+    expert.add_option("--configDir", dest="configDir", action="store",
+                      type="string", help="Destination directory for config reports")
+    expert.add_option("--xslTransform", dest="xslTransform", action="store",
+                      type="string", help="Use a different transform file")
+    #parser.set_defaults(configDir=CONFIG_DEST_JIMTEST)
+    parser.set_defaults(configDir=CONFIG_DEST_PRODUCTION)
+    parser.set_defaults(xslTransform=CONFIG_XSL_TRANSFORM)
+    options,args = parser.parse_args(sys.argv[1:])
+    if not options.configKey:
+        logging.error("Option --mootKey (-k) must be specified")
+        print
+        parser.print_help()
+        sys.exit(-1)
+    return options, args
+
 if __name__ == '__main__':
+    import sys
 
+    setLogging(options.verbose)    
     makePrecinctHandlers()
-
-    baselineKey = 52
-    testKey = 42
-    rebuild = False
-
-    holder = ConfigDataHolder(testKey, baselineKey, configDirBase='/u/ec/panetta/public_html/glast/configReports/')
-
+    holder = ConfigDataHolder(options.configKey,
+                              options.baselineKey,
+                              configDirBase=options.configDir)
     cr = ConfigXmlReport(holder)
-
     cr.createReport()
     xmlName = cr.writeReport()
-
-    #print xmlName
-    transformToFile('./configTransform.xsl',
-                    xmlName,
+    transformToFile(options.xslTransform,
+                    os.path.join(holder.configDir, xmlName),
                     os.path.join(holder.configDir, xmlName[:-3]+"html"))
-
     for pR in cr.precinctXml():
-        #print pR
-        transformToFile('./configTransform.xsl',
+        transformToFile(options.xslTransform,
                         os.path.join(holder.configDir, pR),
                         os.path.join(holder.configDir, pR[:-3]+"html"))
