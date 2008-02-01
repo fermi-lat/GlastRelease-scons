@@ -34,7 +34,7 @@ _log = logging.getLogger('offline.configData')
 
 CONFIG_NAMESPACE = EMPTY_NAMESPACE
 CONFIG_DEST_PRODUCTION = "/nfs/farm/g/glast/u03/ConfigReports/"
-#CONFIG_DEST_JIMTEST = "/u/ec/panetta/public_html/glast/configReports/"
+CONFIG_DEST_JIMTEST = "/u/ec/panetta/public_html/glast/configReports/"
 
 CONFIG_XSL_TRANSFORM = os.path.expandvars("$CONFIGDATAROOT/python/configTransform.xsl")
 
@@ -157,11 +157,11 @@ def makePrecinctHandlers():
     from TrgGemXmlReport import TrgGemXmlReport
     PRECINCT_HANDLERS["TRG_GEM"] = TrgGemXmlReport
     # Tracker reports
-##    from TkrXmlReport import TkrModeXmlReport, TkrStripsXmlReport, TkrThreshXmlReport, TkrTimingXmlReport
-##    PRECINCT_HANDLERS["TKR_Mode"] = TkrModeXmlReport
-##    PRECINCT_HANDLERS["TKR_Strips"] = TkrStripsXmlReport
-##    PRECINCT_HANDLERS["TKR_Thresh"] = TkrThreshXmlReport
-##    PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
+    from TkrXmlReport import TkrModeXmlReport, TkrStripsXmlReport, TkrThreshXmlReport, TkrTimingXmlReport
+    PRECINCT_HANDLERS["TKR_Mode"] = TkrModeXmlReport
+    PRECINCT_HANDLERS["TKR_Strips"] = TkrStripsXmlReport
+    PRECINCT_HANDLERS["TKR_Thresh"] = TkrThreshXmlReport
+    PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
 
 
 
@@ -237,8 +237,8 @@ def optparse():
                       type="string", help="Destination directory for config reports")
     expert.add_option("--xslTransform", dest="xslTransform", action="store",
                       type="string", help="Use a different transform file")
-    #parser.set_defaults(configDir=CONFIG_DEST_JIMTEST)
     parser.set_defaults(configDir=CONFIG_DEST_PRODUCTION)
+    #parser.set_defaults(configDir=CONFIG_DEST_JIMTEST)
     parser.set_defaults(xslTransform=CONFIG_XSL_TRANSFORM)
     options,args = parser.parse_args(sys.argv[1:])
     if not options.configKey:
@@ -260,6 +260,7 @@ if __name__ == '__main__':
     cr = ConfigXmlReport(holder)
     cr.createReport()
     xmlName = cr.writeReport()
+    print xmlName
     transformToFile(options.xslTransform,
                     os.path.join(holder.configDir, xmlName),
                     os.path.join(holder.configDir, xmlName[:-3]+"html"))
