@@ -141,7 +141,7 @@ class ConfigDataHolder(object):
 
     def compareRootFileName(self, rebuild=False):
         "!@brief return the config/baseline comparison ROOT file name.  rebuild if necessary."
-        if self.__compRoot and not rebuild: return None
+        if self.__compRoot and not rebuild: return self.__compRoot
         if not self.configRootFileName(rebuild): return None
         if not self.baselineRootFileName(rebuild): return None
         from RootRptGenerator import compareLatcRoot
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     rebuild = False
 
     cr = ConfigDataHolder(testKey, baselineKey, './')
-    print cr.configRootFileName(srebuild)
+    print cr.configRootFileName(rebuild)
     print cr.baselineRootFileName(rebuild)
     print cr.compareRootFileName(rebuild)
 
