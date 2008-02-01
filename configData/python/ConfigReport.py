@@ -84,9 +84,10 @@ class ConfigDataHolder(object):
                 os.mkdir(self.__confDir)
             except OSError, e:
                 _log.error("ConfigReport failed in creating the configuration directory %s." % self.__confDir)
+                sys.exit(-1)
             except Exception, e:
                 _log.error("An unknown error: '%s' occurred ConfigReport.__init__" % e)
-            sys.exit(-1)
+                sys.exit(-1)
 
     @property
     def db(self):
