@@ -162,6 +162,13 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["TKR_Strips"] = TkrStripsXmlReport
     PRECINCT_HANDLERS["TKR_Thresh"] = TkrThreshXmlReport
     PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
+    from AcdXmlReport import AcdBiasXmlReport, AcdHldXmlReport, AcdModeXmlReport, AcdPHAXmlReport, AcdTimingXmlReport, AcdVetoXmlReport ## These are now trivial implementations and the base class would do below
+    PRECINCT_HANDLERS["ACD_Bias"] = AcdBiasXmlReport
+    PRECINCT_HANDLERS["ACD_Hld"] = AcdHldXmlReport
+    PRECINCT_HANDLERS["ACD_Mode"] = AcdModeXmlReport
+    PRECINCT_HANDLERS["ACD_PHA"] = AcdPHAXmlReport
+    PRECINCT_HANDLERS["ACD_Veto"] = AcdVetoXmlReport
+    PRECINCT_HANDLERS["ACD_Timing"] = AcdTimingXmlReport
 
 
 
