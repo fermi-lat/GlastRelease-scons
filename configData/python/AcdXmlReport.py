@@ -28,9 +28,9 @@ class AcdXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData):
         PrecinctXmlReport.__init__(self, precinctInfo, configData)
         self.__precinctName = precinctInfo.getPrecinct()
-        self.__compRootFile = 'foo/42/42vs52_report.root'#configData.compareRootFileName()
         self.__confRootFile = configData.configRootFileName()
         self.__baseRootFile = configData.baselineRootFileName()
+        self.__compRootFile = configData.compareRootFileName()
         self.__pngFileInfos = []
         
     def createReport(self):
@@ -61,10 +61,9 @@ class AcdBiasXmlReport(AcdXmlReport):
     def __init__(self, precinctInfo, configData):
         AcdXmlReport.__init__(self, precinctInfo, configData)
 
-##class AcdHldXmlReport(AcdXmlReport):
-##    def __init__(self, precinctInfo, configData):
-##        AcdXmlReport.__init__(self, precinctInfo, configData)
-## fix report.root
+class AcdHldXmlReport(AcdXmlReport):
+    def __init__(self, precinctInfo, configData):
+        AcdXmlReport.__init__(self, precinctInfo, configData)
         
 class AcdModeXmlReport(AcdXmlReport):
     def __init__(self, precinctInfo, configData):
