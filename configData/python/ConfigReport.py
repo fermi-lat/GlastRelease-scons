@@ -17,11 +17,11 @@ __release__  = "$Name$"
 __credits__  = "SLAC"
 
 import logging
-import os
+import os, sys
 
 from py_mootCore import MootQuery
 
-_log = logging.getLogger('offline.configData')
+_log = logging.getLogger()
 
 
 class ConfigReportError(Exception):
@@ -86,6 +86,7 @@ class ConfigDataHolder(object):
                 _log.error("ConfigReport failed in creating the configuration directory %s." % self.__confDir)
             except Exception, e:
                 _log.error("An unknown error: '%s' occurred ConfigReport.__init__" % e)
+            sys.exit(-1)
 
     @property
     def db(self):
