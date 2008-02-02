@@ -71,7 +71,7 @@ if __name__ == '__main__':
         for lyr in range(calConstant.NUM_LAYER):
             # calCalibXML uses 'row' indexing, not layer
             row = calCalibXML.layerToRow(lyr)
-            for col in range(calConstant.NUM_ROW):
+            for col in range(calConstant.NUM_FE):
                 for face in range(calConstant.NUM_END):
                     online_face = calConstant.offline_face_to_online[face]
                     print delim.join([
