@@ -157,18 +157,21 @@ def makePrecinctHandlers():
     from TrgGemXmlReport import TrgGemXmlReport
     PRECINCT_HANDLERS["TRG_GEM"] = TrgGemXmlReport
     # Tracker reports
-    from TkrXmlReport import TkrModeXmlReport, TkrStripsXmlReport, TkrThreshXmlReport, TkrTimingXmlReport
+    from TkrXmlReport import TkrModeXmlReport, TkrStripsXmlReport, TkrThreshXmlReport
     PRECINCT_HANDLERS["TKR_Mode"] = TkrModeXmlReport
     PRECINCT_HANDLERS["TKR_Strips"] = TkrStripsXmlReport
     PRECINCT_HANDLERS["TKR_Thresh"] = TkrThreshXmlReport
-    PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
-    from AcdXmlReport import AcdBiasXmlReport, AcdHldXmlReport, AcdModeXmlReport, AcdPHAXmlReport, AcdTimingXmlReport, AcdVetoXmlReport ## These are now trivial implementations and the base class would do below
+    from AcdXmlReport import AcdBiasXmlReport, AcdHldXmlReport, AcdModeXmlReport, AcdPHAXmlReport, AcdVetoXmlReport ## These are now trivial implementations and the base class would do below
     PRECINCT_HANDLERS["ACD_Bias"] = AcdBiasXmlReport
     PRECINCT_HANDLERS["ACD_Hld"] = AcdHldXmlReport
     PRECINCT_HANDLERS["ACD_Mode"] = AcdModeXmlReport
     PRECINCT_HANDLERS["ACD_PHA"] = AcdPHAXmlReport
     PRECINCT_HANDLERS["ACD_Veto"] = AcdVetoXmlReport
+    from TimingXmlReport import AcdTimingXmlReport, GnlTimingXmlReport, CalTimingXmlReport, TkrTimingXmlReport
     PRECINCT_HANDLERS["ACD_Timing"] = AcdTimingXmlReport
+    PRECINCT_HANDLERS["GNL_Timing"] = GnlTimingXmlReport
+    PRECINCT_HANDLERS["CAL_Timing"] = CalTimingXmlReport
+    PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
 
 
 
