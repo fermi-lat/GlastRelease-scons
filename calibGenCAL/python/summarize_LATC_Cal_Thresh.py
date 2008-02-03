@@ -225,13 +225,12 @@ def genCFESummary(path):
 
 
 if __name__ == '__main__':
-    usage = "summarize_LATC_Cal_Thresh.py xml output_basefilename"
 
     # check command line
     import sys
     args = sys.argv[1:]
     if len(args) != 2:
-        print usage
+        print __doc__
         sys.exit(1)
 
 

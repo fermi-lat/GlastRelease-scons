@@ -35,16 +35,13 @@ import cgc_util
 #######################################################################################
 if __name__ == '__main__':
 
-    # constants
-    usage      = "calibGainCoeff inl_calibGainOn.xml inl_calibGainOff.xml"
-
     # setup logger
     logging.basicConfig()
     log = logging.getLogger('calibGainCoeff')
     log.setLevel(logging.INFO)
 
     if (len(sys.argv[1:]) != 2):
-        log.error("Need 2 filenames: " + usage)
+        log.error("Need 2 filenames: " + __doc__)
         sys.exit(1)
 
     cgOnPath  = sys.argv[1]

@@ -32,8 +32,6 @@ import csv
 
 import cgc_util
 
-usage = "fitNeighborXtalk.py <neighborXtalk.txt> <outputROOTPath>"
-
 # setup logger
 logging.basicConfig()
 log = logging.getLogger('charVal')
@@ -44,12 +42,12 @@ log.setLevel(logging.INFO)
 try:
     opts, args = getopt.getopt(sys.argv[1:], "")
 except getopt.GetoptError:
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 # now check for req'd params
 if len(args) != 2:
-    log.error("bad n args: " + str(len(args)) + " " + usage)
+    log.error("bad n args: " + str(len(args)) + " " + __doc__)
     sys.exit(1)
 
 (xtalkPath, rootPath) = args

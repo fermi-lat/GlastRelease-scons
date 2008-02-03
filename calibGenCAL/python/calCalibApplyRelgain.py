@@ -37,7 +37,6 @@ import calCalibXML
 from calConstant import *
 
 if __name__ == '__main__':
-    usage = "calCalibApplyRelgain -V [-doptional.dtd] <relgain.xml> <le_gain_in> <le_gain_out> <he_gain_in> <he_gain_out> <input_calCalib.xml> <output_calCalib.xml>"
     dtdName    = "calCalib_v2r3.dtd" #default value
 
     # setup logger
@@ -57,7 +56,7 @@ if __name__ == '__main__':
     try:
         opts = getopt.getopt(sys.argv[1:], "-V")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     optList = opts[0]
@@ -71,7 +70,7 @@ if __name__ == '__main__':
 
     args = opts[1]
     if len(args) != 7:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     (relgain_filename,

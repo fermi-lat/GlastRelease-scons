@@ -187,8 +187,6 @@ def engValULD(dacData, engData, saturation):
 
 if __name__ == '__main__':
     
-    usage = \
-        "valDACsettings [-V] [-r] [-R <root_file>] [-L <log_file>] FLE|FHE|LAC|ULD <MeV | margin> <dac_slopes_file> <dac_xml_file>"
 
     rootOutput = False
     logName = None
@@ -205,7 +203,7 @@ if __name__ == '__main__':
     try:
         opts = getopt.getopt(sys.argv[1:], "-R:-L:-V-r")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     optList = opts[0]
@@ -224,7 +222,7 @@ if __name__ == '__main__':
         
     args = opts[1]
     if len(args) != 4:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     dacType = args[0]

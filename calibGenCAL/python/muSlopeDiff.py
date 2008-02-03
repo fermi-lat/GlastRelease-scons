@@ -36,7 +36,6 @@ import cgc_util
 OPTYPE_DIFF    = 0
 OPTYPE_PCTDIFF = 1
 
-usage = "Usage: python muSlopeDiff.py [-p] [-x xaxis_width] <muSlope_xml_file1> <muSlope_xml_file2> <output_root_file>"
 
 # setup logger
 
@@ -48,7 +47,7 @@ log.setLevel(logging.INFO)
 try:
     opts, args = getopt.getopt(sys.argv[1:], "px:")
 except getopt.GetoptError:
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 optype      = OPTYPE_DIFF
@@ -64,12 +63,12 @@ for o, a in opts:
         xaxismax = float(a)
         xaxismin = -1*xaxismax
     else:
-        log.error("Invalid option: %s. %s"%(l,usage))
+        log.error("Invalid option: %s. %s"%(l,__doc__))
         sys.exit(-1)
 
 # now check for req'd params
 if len(args) != 3:
-    log.error("bad n args: " + str(len(args)) + " " + usage)
+    log.error("bad n args: " + str(len(args)) + " " + __doc__)
     sys.exit(1)
 
 # get filenames

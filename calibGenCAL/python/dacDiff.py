@@ -34,9 +34,6 @@ import calConstant
 
 
 
-usage = "dacDiff FLE|FHE|LAC|ULD <dac_xml_file1> <dac_xml_file2> <output_root_file>"
-
-
 # setup logger
 
 logging.basicConfig()
@@ -48,7 +45,7 @@ log.setLevel(logging.INFO)
 try:
     opts = getopt.getopt(sys.argv[1:], "-V")
 except getopt.GetoptError:
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 optList = opts[0]
@@ -58,7 +55,7 @@ for o in optList:
 
 args = opts[1] 
 if len(args) != 4:
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 

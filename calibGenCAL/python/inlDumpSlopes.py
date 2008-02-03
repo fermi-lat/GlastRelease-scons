@@ -34,14 +34,13 @@ import calConstant
 import cgc_util
                   
 if __name__ == '__main__':
-    usage = "usage: python inlDumpSlopes.py [-d delim] <input_xml_file>"
 
     # check commandline
     delim = ' '
     try:
         (opts,args) = getopt.getopt(sys.argv[1:], "d:")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
     
     # opts has 2 parts, options (-abc ...) & remaining default params
@@ -51,7 +50,7 @@ if __name__ == '__main__':
 
     if len(args) < 1:
         # should just be the one input file.
-        print "no input file specified: ", usage
+        print "no input file specified: ", __doc__
         sys.exit(1)
 
     # retrieve commandline parms

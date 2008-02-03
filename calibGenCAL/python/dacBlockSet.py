@@ -40,8 +40,6 @@ import getopt
 import cgc_util
 import Numeric
 
-usage = "python dacBlockSet.py  [-t twr] [-l lyr] [-c col] [-f POS|NEG][-R pct] FLE|FHE|LAC|ULD <input_xml> <val_src> <output_xml>"
-
 # setup logger
 
 logging.basicConfig()
@@ -61,7 +59,7 @@ try:
     OptsArgs = getopt.getopt(sys.argv[1:], "t:l:c:f:R:")
 except getopt.GetoptError:
     log.error("getopt error")
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 
@@ -101,7 +99,7 @@ for oa in opts:
 #destination variables
 if len(args) != 4:
     log.error("bad n args: " + str(len(args)))
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
     
 # get arg values

@@ -53,7 +53,6 @@ dtdPath = os.path.join(calibUtilRoot, 'xml', dtdName)
 if __name__ == '__main__':
 
     # constants
-    usage      = "genADC2NRG cidac2adc.xml asym.xml mpd.xml adc2nrg.xml muSlope.xml"
     nTXTFields = 7
 
     # setup logger
@@ -74,11 +73,11 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], "d:")
     except getopt.GetoptError:
-        log.exception("getopt exception: "+usage)
+        log.exception("getopt exception: "+__doc__)
         sys.exit(-1)
 
     if (len(args) != 5):
-        log.error("Need 5 filenames: " + usage)
+        log.error("Need 5 filenames: " + __doc__)
         sys.exit(1)
 
     (inlPath, asymPath, mpdPath, adc2nrgPath, muSlopePath) = args

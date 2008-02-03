@@ -21,9 +21,6 @@ __version__     = "$Revision$, $Author$"
 __release__     = "$Name$"
 __credits__     = "NRL code 7650"
 
-usage = "python dacConvertNeighborXtalk.py <neighborXtalk.txt> <calibGain.txt> <inlCgOf.xml> <mevPerDAC.xml> <asym.xml>"
-
-
 ### IMPORTS ###
 import sys
 import logging
@@ -48,12 +45,12 @@ log.setLevel(logging.INFO)
 try:
     opts, args = getopt.getopt(sys.argv[1:], "")
 except getopt.GetoptError:
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 # now check for req'd params
 if len(args) != 5:
-    log.error("bad n args: " + str(len(args)) + " " + usage)
+    log.error("bad n args: " + str(len(args)) + " " + __doc__)
     sys.exit(1)
 
 # get filenames

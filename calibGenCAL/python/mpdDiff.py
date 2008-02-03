@@ -29,7 +29,6 @@ import calCalibXML
 import calConstant
 import cgc_util
 
-usage = "Usage: python mpdDiff.py <mpd_xml_file1> <mpd_xml_file2> <output_root_file>"
 
 # setup logger
 
@@ -40,7 +39,7 @@ log.setLevel(logging.INFO)
 # check command line
 if len(sys.argv) != 4:
     log.error("%d args found."%len(sys.argv))
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 

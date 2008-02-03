@@ -24,9 +24,6 @@ import ROOT
 
 if __name__ == '__main__':
 
-    # constants
-    usage      = "txt2tuple input.txt output.root"
-
     # setup logger
     logging.basicConfig()
     log = logging.getLogger('txt2tuple')
@@ -34,7 +31,7 @@ if __name__ == '__main__':
 
     # parse commandline
     if (len(sys.argv) != 3):
-        log.error("Need 2 filenames: " + usage)
+        log.error("Need 2 filenames: " + __doc__)
         sys.exit(1)
         
     inPath = sys.argv[1]

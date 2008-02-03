@@ -192,7 +192,6 @@ def plotULD(uldData):
 
 if __name__ == '__main__':
 
-    usage = "usage: dacSlopesPlot <xml_file> <root_file>"
 
     # setup logger
 
@@ -203,7 +202,7 @@ if __name__ == '__main__':
     # check command line
 
     if len(sys.argv) != 3:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)    
 
     xmlName = sys.argv[1]

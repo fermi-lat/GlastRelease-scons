@@ -249,13 +249,12 @@ def genCalModeReport(calMode):
 
 
 if __name__ == '__main__':
-    usage = 'summarize_LATC_CAL_Mode.py latc_rootfile'
 
     # check command line
     import sys
     args = sys.argv[1:]
     if len(args) != 1:
-        print usage
+        print __doc__
         sys.exit(1)
 
     # get filenames

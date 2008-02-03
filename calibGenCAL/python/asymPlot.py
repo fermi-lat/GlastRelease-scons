@@ -28,13 +28,11 @@ import array
 import Numeric
 
 if __name__ == '__main__':
-    usage = "usage: python asymXML2TXT.py <input_xml_file> <output_root_file>"
-
     # check commandline
     try:
         (opts,args) = getopt.getopt(sys.argv[1:], "")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     # opts has 2 parts, options (-abc ...) & remaining default params
@@ -42,7 +40,7 @@ if __name__ == '__main__':
 
     if len(args) != 2:
         # should just be the one input file.
-        print usage
+        print __doc__
         sys.exit(1)
 
     # retrieve commandline parms

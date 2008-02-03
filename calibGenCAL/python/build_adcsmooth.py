@@ -28,7 +28,6 @@ import glob
 import os.path
 from optparse import OptionParser
 
-usage = 'build_adcsmooth [-f fileroot | --file fileroot]'
 
 # finds files for gensettings and creates bat and sh files with adcsmooth commands to produce filtered files
 # NOTE:  folder must contain only one file for each module and type

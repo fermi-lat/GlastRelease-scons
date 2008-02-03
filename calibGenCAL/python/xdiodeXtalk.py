@@ -66,9 +66,6 @@ dtdPath = os.path.join(calibUtilRoot, 'xml', dtdName)
 #######################################################################################
 if __name__ == '__main__':
 
-    # constants
-    usage      = "xdiodeXtalk <FLIGHT_GAIN|MUON_GAIN> cidac2adc.xml xtalk.xml output.xml"
-
     # setup logger
     logging.basicConfig()
     log = logging.getLogger('xdiodeXtalk')
@@ -79,11 +76,11 @@ if __name__ == '__main__':
         # currently no args supported
         (optList,args) = getopt.getopt(sys.argv[1:],"")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     if len(args) != 4:
-        log.error("Wrong # of paramters: %s"%usage)
+        log.error("Wrong # of paramters: %s"%__doc__)
         sys.exit(1)
 
     (gain,inPath,xtalkPath,outPath) = args

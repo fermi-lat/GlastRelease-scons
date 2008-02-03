@@ -38,7 +38,6 @@ END_MAP = ('N', 'P')
 
 if __name__ == '__main__':
     
-    usage = "genFlightGain [-v] [-o] [-k <key>] <gain_xml_file>"
 
     # setup logger
 
@@ -54,7 +53,7 @@ if __name__ == '__main__':
     try:
         opts = getopt.getopt(sys.argv[1:], "-v-o-k:")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     optList = opts[0]
@@ -68,7 +67,7 @@ if __name__ == '__main__':
         
     args = opts[1]
     if len(args) != 1:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     inName = args[0]

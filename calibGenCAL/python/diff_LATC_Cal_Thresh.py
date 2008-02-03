@@ -42,7 +42,7 @@ def genCalDacTuple(data, title):
     import ROOT
     t = ROOT.TTree(title, title)
 
-    # create ttree target valeus (double arrays of length 1)
+    # create ttree target values (double arrays of length 1)
     import array
     _tem = array.array('H', [0])
     _ccc = array.array('H', [0])
@@ -275,13 +275,12 @@ def genCFEDiffSummary(refPath,
 
 
 if __name__ == '__main__':
-    usage = "diff_LATC_CFE.py xml_reference new_xml output_basefilename"
 
     # check command line
     import sys
     args = sys.argv[1:]
     if len(args) != 3:
-        print usage
+        print __doc__
         sys.exit(1)
 
 

@@ -17,11 +17,10 @@ __credits__     = "NRL code 7650"
 import sys,csv
 from ROOT import TFile, TCanvas, TH1, gROOT
 
-usage = "python roothist2csv.py <rootFile>"
 
 # check command line
 if len(sys.argv) != 2:
-    print usage
+    print __doc__
     sys.exit(1)
 
 # get filenames

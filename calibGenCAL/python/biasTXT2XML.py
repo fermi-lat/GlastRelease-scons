@@ -35,7 +35,6 @@ import cgc_util
 if __name__ == '__main__':
 
     # constants
-    usage      = "biasTXT2XML input.txt output.xml"
     nTXTFields = 14
 
     # setup logger
@@ -56,11 +55,11 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], "d:")
     except getopt.GetoptError:
-        log.exception("getopt exception: "+usage)
+        log.exception("getopt exception: "+__doc__)
         sys.exit(-1)
 
     if (len(args) != 2):
-        log.error("Need 2 filenames: " + usage)
+        log.error("Need 2 filenames: " + __doc__)
         sys.exit(1)
         
     inPath = args[0]

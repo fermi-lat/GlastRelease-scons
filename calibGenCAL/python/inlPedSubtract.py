@@ -24,7 +24,6 @@ import cgc_util
 import array
 import Numeric
 
-usage = "Usage: python inlPedSubtract.py <input_xml> <output_xml>"
 
 # setup logger
 logging.basicConfig()
@@ -43,7 +42,7 @@ dtdPath = os.path.join(calibUtilRoot, 'xml', dtdName)
 # check command line
 if len(sys.argv) != 3:
     log.error("%d args found."%len(sys.argv))
-    log.error(usage)
+    log.error(__doc__)
     sys.exit(1)
 
 # get filenames

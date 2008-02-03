@@ -44,8 +44,6 @@ DAC_MAP = {'FLE' : 'fle_dac', 'FHE' : 'fhe_dac', 'LAC' : 'log_acpt', 'ULD' : 'rn
 
 if __name__ == '__main__':
     
-    usage = \
-        "genDACsettings [-V] [-G <gain>] FLE|FHE|LAC|ULD <MeV | margin> <dac_slopes_xml_name> <out_xml_name>"
 
     # setup logger
 
@@ -60,7 +58,7 @@ if __name__ == '__main__':
     try:
         opts = getopt.getopt(sys.argv[1:], "-V-t:-G:")
     except getopt.GetoptError:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     gain = None
@@ -76,7 +74,7 @@ if __name__ == '__main__':
                 
     args = opts[1]
     if len(args) != 4:
-        log.error(usage)
+        log.error(__doc__)
         sys.exit(1)
 
     dacType = args[0]

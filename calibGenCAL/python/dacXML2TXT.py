@@ -24,12 +24,10 @@ import sys
 import calDacXML
 import calConstant
 
-usage = "python dacDiff.py FLE|FHE|LAC <dac_xml_file>"
-
 
 # check command line
 if len(sys.argv) != 3:
-    print usage
+    print __doc__
     sys.exit(1)
 
 

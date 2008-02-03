@@ -38,7 +38,6 @@ import cgc_util
 if __name__ == '__main__':
 
     #constants
-    usage      = "asymTXT2XML [-doptional.dtd] input.txt output.xml"
     dtdName    = "calCalib_v2r3.dtd" #default value
     xpos_pts   = (-122.25, -95.0833, -67.9167, -40.75, -13.5833, 13.5833, 40.75, 67.9167, 95.0833, 122.25)
 
@@ -60,7 +59,7 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], "d:")
     except getopt.GetoptError:
-        log.exception("getopt exception: " + usage)
+        log.exception("getopt exception: " + __doc__)
         sys.exit(-1)
 
     for o, a in opts:
@@ -70,7 +69,7 @@ if __name__ == '__main__':
     dtdPath = os.path.join(calibUtilRoot, 'xml', dtdName)
 
     if (len(args) != 2):
-        log.error("Need 2 filenames: " + usage)
+        log.error("Need 2 filenames: " + __doc__)
         sys.exit(1)
 
 
