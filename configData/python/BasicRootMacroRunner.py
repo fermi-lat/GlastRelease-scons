@@ -30,9 +30,9 @@ class BasicRootMacroRunner(object):
     
   def doChecks(self):
     if self.__outputFile:
-      cmd = "root  -b -q 'dumpPrecinct.C(\"%s\", \"%s\")' > %s" %(self.__configurationRootFile, self.__precinctName,self.__outputFile)
+      cmd = "root  -l -b -q 'dumpPrecinct.C(\"%s\", \"%s\")' > %s" %(self.__configurationRootFile, self.__precinctName,self.__outputFile)
     else:
-      cmd = "root  -b -q 'dumpPrecinct.C(\"%s\", \"%s\")'" %(self.__configurationRootFile, self.__precinctName)
+      cmd = "root  -l -b -q 'dumpPrecinct.C(\"%s\", \"%s\")'" %(self.__configurationRootFile, self.__precinctName)
     print cmd
     os.system(cmd) ## do something smarter
     
