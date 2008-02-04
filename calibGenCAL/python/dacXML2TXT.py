@@ -57,7 +57,7 @@ dacTwrs = dacFile.getTowers()
 dac = dacFile.read()
 
 #print header as comment
-print  ";twr row xtal online_face dac"
+print  ";twr row online_face column dac"
 
 for twr in dacTwrs:
     for row in range(calConstant.NUM_ROW):
