@@ -354,6 +354,9 @@ StatusCode digiRootReaderAlg::readDigiEvent() {
 
     evt->setTrigger(m_digiEvt->getL1T().getTriggerWord());
     evt->setTriggerWordTwo(m_digiEvt->getL1T().getTriggerWordTwo());
+    evt->setGemPrescale(m_digiEvt->getL1T().getGemPrescale());
+    evt->setGltPrescale(m_digiEvt->getL1T().getGltPrescale());
+    evt->setPrescaleExpired(m_digiEvt->getL1T().getPrescaleExpired());
 
     Event::DigiEvent* digiEventTds = 
         SmartDataPtr<Event::DigiEvent>(eventSvc(), EventModel::Digi::Event);

@@ -340,6 +340,7 @@ StatusCode digiRootWriterAlg::writeDigiEvent() {
 
     L1T levelOne(evtTds->trigger(), digiRowBits, trgReqRowBits);
     levelOne.setTriggerWordTwo(evtTds->triggerWordTwo());
+    levelOne.setPrescale(evtTds->gemPrescale(), evtTds->gltPrescale(), evtTds->prescaleExpired());
 
     m_digiEvt->initialize(evtId, runId, timeObj.time(), liveTime, levelOne, fromMc);
     
