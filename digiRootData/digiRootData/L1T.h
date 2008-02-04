@@ -25,6 +25,7 @@ public:
     void setDigiTriRowBits(UInt_t *triRowBits);
     void setTrgReqTriRowBits(UInt_t tower, UInt_t bits);
     void setTrgReqTriRowBits(UInt_t *triRowBits);
+    void setPrescale(UInt_t gem, UInt_t glt, UInt_t expired);
 
     void Clear(Option_t *option ="");
 
@@ -67,8 +68,17 @@ public:
     /// Returns kTrue if engine is unset
     bool getEngineUnsetStatus(Int_t engineNum) const { return (engineNum == enums::ENGINE_unset); }
 
-     UInt_t getDigiTriRowBits(const Int_t tower) const;
-     UInt_t getTrgReqTriRowBits(const Int_t tower) const;
+    /// Retrieve the GEM prescale
+    UInt_t getGemPrescale() const {return m_gemPrescale; }
+ 
+    /// Retrieve the GLT prescale
+    UInt_t getGltPrescale() const {return m_gltPrescale; }
+
+    /// Retrieve prescale expired flag
+    UInt_t getPrescaleExpired() const {return m_prescaleExpired; }
+
+    UInt_t getDigiTriRowBits(const Int_t tower) const;
+    UInt_t getTrgReqTriRowBits(const Int_t tower) const;
 
     /// for system tests
     static Int_t number_of_trigger_bits; //!
@@ -84,8 +94,14 @@ private:
     /// first 5 bits for glt, mask == 0x1f, second 5 bits for gem, mask == 0x3e00
     UInt_t m_triggerWordTwo;
 
+    /// GEM trigger prescale
+    UInt_t  m_gemPrescale;
+    /// GLT trigger prescale
+    UInt_t  m_gltPrescale;
+    /// flag if prescale counter expired on this event
+    UInt_t  m_prescaleExpired;
 
-    ClassDef(L1T,7) // Level 1 Trigger information
+    ClassDef(L1T,8) // Level 1 Trigger information
 };
 
 #endif

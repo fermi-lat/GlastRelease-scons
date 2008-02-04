@@ -68,6 +68,11 @@ void L1T::setDigiTriRowBits(UInt_t *bits) {
         setDigiTriRowBits(itower, bits[itower]);
 }
 
+void L1T::setPrescale(UInt_t gem, UInt_t glt, UInt_t expired) {
+    m_gemPrescale = gem;
+    m_gltPrescale = glt;
+    m_prescaleExpired = expired; 
+}
 
 void L1T::Clear(Option_t *option) {
     m_trigger = 0;
