@@ -3,8 +3,10 @@
 <!ENTITY nbsp "&#160;">
 ]>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-              version="1.0">
+<xsl:stylesheet 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:f="http://xmlns.4suite.org/ext"
+    version="1.0">
 
   <xsl:output method="html"/>
 
@@ -12,7 +14,6 @@
       <xsl:apply-templates select="ConfigReport"/>
       <xsl:apply-templates select="PrecinctReport"/>
   </xsl:template>
-
 
   <xsl:template match="ConfigReport">
     <HTML>
@@ -195,6 +196,22 @@
   <xsl:template match="Comment">
     <h5>Comment by <xsl:value-of select="@User"/> at <xsl:value-of select="@Date"/>:</h5>
     <blockquote><xsl:value-of select="."/></blockquote>
+  </xsl:template>
+
+  <xsl:template match="LinkTo">
+    <p><a>
+      <xsl:attribute name="href">
+        <xsl:choose>
+          <xsl:when test="@NoConvert='False'">
+            <xsl:value-of select="f:replace('.xml', '.html', @FileName)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@FileName"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:value-of select="@Description"/>
+    </a></p>
   </xsl:template>
 
   <xsl:template match="*">
