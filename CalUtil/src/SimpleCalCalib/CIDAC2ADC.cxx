@@ -56,7 +56,7 @@ namespace CalUtil {
     }
 
     // output header info as comment
-    outfile << "; twr lyr col face rng dac adc" << endl;
+    outfile << ";twr lyr col face rng dac adc" << endl;
 
     outfile.precision(2);
     outfile.setf(ios_base::fixed);

@@ -35,7 +35,7 @@ namespace CalUtil {
       throw runtime_error(string("Unable to open " + filename));
 
     // output header info as comment
-    outfile << "; twr lyr col diode mpd error" << endl;
+    outfile << ";twr lyr col diode mpd error" << endl;
 
     // PER XTAL LOOP
     for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++)

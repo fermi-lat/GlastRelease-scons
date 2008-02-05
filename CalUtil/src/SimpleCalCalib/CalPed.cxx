@@ -31,7 +31,7 @@ namespace CalUtil {
     ofstream outfile(filename.c_str());
 
     // output header info as comment
-    outfile << "; twr lyr col face rng ped sigma" << endl;
+    outfile << ";twr lyr col face rng ped sigma" << endl;
 
     if (!outfile.is_open())
       throw runtime_error(string("Unable to open " + filename));
