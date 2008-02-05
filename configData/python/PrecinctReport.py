@@ -93,6 +93,7 @@ class PrecinctXmlReport(PrecinctReport):
         setAttribute(pInfo, ATTR_STATUS, self.info.getStatus())
         setAttribute(pInfo, ATTR_DESC, self.info.getDescrip())
         setAttribute(pInfo, ATTR_FNAME, self.info.getSrc())
+        self.addLink(self.__root, "ConfigReport.xml", "Parent Report")
         
     def addSection(self, sectionName):
         sec = makeChildNode(self.__root, TAG_SECTION)
@@ -116,9 +117,18 @@ class PrecinctXmlReport(PrecinctReport):
         setAttribute(comment, ATTR_DATE, time.asctime())
         makeTextChildNode(comment, commentText)
 
-    def includeText(self, parent, includeFile, nLines=-1):
+    def addLink(self, parent, linkTarget, linkText, noConvert=False):
+        "!@brief add a link to another file.  Links are all relative to $(CWD)"
+        # noConvert:  Don't convert 'xml' to 'html' in links
+        link = makeChildNode(parent, TAG_LINKTO)
+        setAttribute(link, ATTR_FNAME, str(linkTarget))
+        setAttribute(link, ATTR_NOCONV, str(noConvert))
+        setAttribute(link, ATTR_DESC, str(linkText))
+
+    def includeText(self, parent, includeFile, nLines=-1, isHtml=False):
         tInc = makeChildNode(parent, TAG_INCTEXT)
         setAttribute(tInc, ATTR_FNAME, self.data.makeRelative(includeFile))
+        setAttribute(tInc, ATTR_NOCONV, str(!isHtml))
         if nLines>=0:
             setAttribute(tInc, ATTR_NLINES, nLines)
         count = 0
