@@ -29,13 +29,13 @@ FN_SHORTSUM = "%sTKR_%s_shortSum.txt"
 class TkrXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData, type):
         PrecinctXmlReport.__init__(self, precinctInfo, configData)
-        print 'in TkrXmlReport init - precinct type is %s' %(type)
+        #print 'in TkrXmlReport init - precinct type is %s' %(type)
         self.__type = type
 ##        self.__confRootFile = TMP_COMP_ROOT
 ##        self.__baseRootFile = TMP_BASE_ROOT
         self.__confRootFile = configData.configRootFileName()
         self.__baseRootFile = configData.baselineRootFileName()
-        print 'Analyze base file %s, conf file %s' %(self.__baseRootFile, self.__confRootFile)
+        #print 'Analyze base file %s, conf file %s' %(self.__baseRootFile, self.__confRootFile)
         self.__pngFileInfos = []
         
     def createReport(self):
@@ -50,9 +50,9 @@ class TkrXmlReport(PrecinctXmlReport):
             file = info.fileName
             caption = info.caption
             title = info.title
-            print 'add image: file, title, caption', file, title, caption
+            #print 'add image: file, title, caption', file, title, caption
             self.addImage(summary, file, title, caption)
-        print 'add comment'
+        #print 'add comment'
         self.addComment(summary, "empty comment")
 
     def shortSummary(self, outputStub="", rebuild=False):
