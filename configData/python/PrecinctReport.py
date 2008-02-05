@@ -128,7 +128,7 @@ class PrecinctXmlReport(PrecinctReport):
     def includeText(self, parent, includeFile, nLines=-1, isHtml=False):
         tInc = makeChildNode(parent, TAG_INCTEXT)
         setAttribute(tInc, ATTR_FNAME, self.data.makeRelative(includeFile))
-        setAttribute(tInc, ATTR_NOCONV, str(!isHtml))
+        setAttribute(tInc, ATTR_NOCONV, str(not isHtml))
         if nLines>=0:
             setAttribute(tInc, ATTR_NLINES, nLines)
         count = 0
