@@ -21,6 +21,7 @@ __credits__  = "SLAC"
 import sys, array, struct
 import ROOT, numarray
 import tkrUtils
+import logging
 
 ##rndm = ROOT.TRandom()
 
@@ -169,7 +170,7 @@ class TkrRegisterChecker(object):
             st = struct.pack( 'd', varray[i] ) # convert double to unsigned int64
             narray[i] = struct.unpack( 'Q', st )[0]
         else: narray = numarray.array( varray )
-        print name, len(narray), narray[0:4], narray[-4:]
+        #print name, len(narray), narray[0:4], narray[-4:]
         if values.has_key( name ):
           values[name].append( narray )
         else: values[name] = [ narray ]
@@ -282,7 +283,7 @@ class TkrRegisterChecker(object):
       self.dump(msgType)
 
   def makePngs(self, outputStub):
-    print 'make imagefiles for ', self.__precinctName
+    #print 'make imagefiles for ', self.__precinctName
     self.plotInfos = []
     self.__outputStub = outputStub
     if self.__precinctName == 'Strips':
@@ -468,18 +469,24 @@ class TkrRegisterChecker(object):
     if len(list)>0:
       typeStr = "# of %s: %d;" %(msgType, len(list))
       if len(list) > max:
-        self.write("%s: display first %d %s below." %(typeStr, max, msgType))
+        self.write("%s: display first %d %s below." %(typeStr, max, msgType), msgType)
       else:
-        self.write("%s: display all %s below" %(typeStr, msgType))
+        self.write("%s: display all %s below" %(typeStr, msgType), msgType)
       for msg in list[:10]:
-        self.write(msg)
+        self.write(msg, msgType)
 
 
-  def write(self, msg):
+  def write(self, msg, msgType='informations'):
     if self.__outputFile:
       self.__outputFile.write("%s\n" %(msg))
     else:
-      print msg
+      if msgType == 'errors':
+        logging.error(msg)
+      elif msgType == 'warnings':
+        logging.warning(msg)
+      elif msgType == 'informations':
+        logging.debug(msg)
+
 
   def savePng(self, name, title, caption):
     fileName = self.__outputStub + "TKR_" + self.__precinctName + "_" + name
