@@ -22,7 +22,7 @@ from PrecinctReport import *
 from RootRptGenerator import SystemCommand
 from AcdPlotChecker import *
 
-FN_SHORTSUM = "%sACD_%s_shortSum.txt"
+FN_SHORTSUM = "%s%s_shortSum.txt"
 
 class AcdXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData):
@@ -35,7 +35,7 @@ class AcdXmlReport(PrecinctXmlReport):
         
     def createReport(self):
         self.createHeader()
-        summary = self.addSection("ACD_%s_Summary" %(self.__precinctName))
+        summary = self.addSection("%s_Summary" %(self.__precinctName))
 
         self.addIntent(summary)  # blank intent node for later?
 
