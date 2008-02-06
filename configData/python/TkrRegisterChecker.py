@@ -144,7 +144,6 @@ class TkrRegisterChecker(object):
     self.__maxErrors = 10
     self.__maxWarns = 10
     self.__maxInfos = 10
-    print dir(ROOT)
     ROOT.gROOT.SetBatch(True)
     
   def __resetLogs(self):
