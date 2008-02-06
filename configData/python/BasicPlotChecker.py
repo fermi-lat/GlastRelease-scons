@@ -60,7 +60,8 @@ class BasicPlotChecker(object):
       
   def makePngs(self, outputStub):
     ## for the moment put all ROOT objects here because of garbage collection issue
-    compRootFile = ROOT.TFile(self.__compareRootFile) 
+    if self.__compareRootFile is not None:
+      compRootFile = ROOT.TFile(self.__compareRootFile) 
 ##    compRootFile.ls()
     if self.__configurationRootFile is not None:
       confRootFile = ROOT.TFile(self.__configurationRootFile)
@@ -73,7 +74,7 @@ class BasicPlotChecker(object):
     self.__outputStub = outputStub
     for (precinct, plot, title, caption, option) in self.plotSelection:
       if self.__precinctName == precinct or self.__precinctName == 'all':
-        if option == 'comp':
+        if option == 'comp' and self.__compareRootFile is not None:
           histo = compRootFile.Get(plot)
           if histo is not None:
             compRootFile.Get(plot).Draw()
@@ -85,7 +86,8 @@ class BasicPlotChecker(object):
             print 'unable to plot base/conf overlay plot - no root file defined'
           else:
             self.plotFromTree(baseRootFile, plot)
-            self.plotFromTree(compRootFile, plot, same=True)
+            if self.__compareRootFile is not None:
+              self.plotFromTree(compRootFile, plot, same=True)
             self.savePng(plot+".png", title, caption)
     return self.plotInfos
 

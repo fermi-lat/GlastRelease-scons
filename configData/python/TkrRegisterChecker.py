@@ -201,8 +201,10 @@ class TkrRegisterChecker(object):
       self.closeOutputFile()
       
   def ingestRoot(self, base, comp):
-    self.rFiles.append(ROOT.TFile(comp))
-    self.rFiles.append(ROOT.TFile(base))
+    if comp:
+      self.rFiles.append(ROOT.TFile(comp))
+    if base:
+      self.rFiles.append(ROOT.TFile(base))
     
   def checkValues(self, key, varray, registerMethod):## revisit to divide into compValues and CompVsRef
     self.__resetLogs() ## revisit - may not be the right idea
