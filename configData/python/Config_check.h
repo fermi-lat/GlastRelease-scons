@@ -54,17 +54,44 @@ class color
 
 inline ostream& operator<<(ostream& o, const color& c)
 {
-if(c.fore > lightgray) // bold color
-o << "\033[1;3" << c.fore - lightgray - 1 << "m";
-else
-o << "\033[0;3" << c.fore << "m";
+  //if(c.fore > lightgray) // bold color
+  //o << "\033[1;3" << c.fore - lightgray - 1 << "m";
+  //else
+  //o << "\033[0;3" << c.fore << "m";
 
-return o << "\033[4" << c.back << "m";
+  //return o << "\033[4" << c.back << "m";
+  o << "<font color='" << translateColor(c.fore) << "'>";
+  return o;
 }
 
+inline char* translateColor(const ColorName name){
+  switch (name): {
+  case (magenta):
+    return "magenta";
+  case (red):
+    return "red";
+  case (green):
+    return "green";
+  case (black):
+    return "black";
+  }
+}
+
+inline void startcolor(const ColorName name){
+  printf("<font color='%s'>", translateColor(name));
+}
+inline void endcolor() {
+  printf("</font>");
+}
 inline void switchcolor(const ColorName name){
-  printf("\033[0;3%dm", name);
+  printf("</font><font color='%s'>", translateColor(name));
+  //  printf("\033[0;3%dm", name);
 }
+
+inline void switchcolor(const *char colorName){
+  printf("<b style='color:%s'>", name);
+}
+
 struct gotoxy
 {
 gotoxy(int x_, int y_)

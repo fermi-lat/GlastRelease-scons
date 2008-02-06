@@ -37,7 +37,7 @@ class TimingXmlReport(PrecinctXmlReport):
         self.addIntent(summary)  # blank intent node for later?
 
         self.shortSummary(self.data.configDir, rebuild=True) ## rebuild for now
-        self.includeText(summary, self.__builtName, nLines=10)
+        self.includeText(summary, self.__builtName, nLines=20, isHtml=True)
         self.addComment(summary, "empty comment")
 
     def shortSummary(self, outputStub="", rebuild=False):

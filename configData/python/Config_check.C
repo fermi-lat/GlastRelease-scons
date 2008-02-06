@@ -13,6 +13,7 @@ void Config_check::TKR_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
+   startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
    std::cout<<"+             Config                 +"<<std::endl;
@@ -21,7 +22,7 @@ void Config_check::TKR_Timing()
    std::cout<<"TEM tcc_trg_align"<<std::endl;
    std::cout<<"----------------------"<<std::endl;
    switchcolor(magenta);
-   std::cout<<std::setw(3)<<"BC"<<hex<<setw(10)<<tcc_trg_align_bcast<<dec<<std::endl;
+   std::cout<<std::setw(3) <<"BC"<<hex<<setw(10)<<tcc_trg_align_bcast<<dec<<std::endl;
    for (int i=0;i<16;i++){
      for (int j=1;j<8;j++) assert(tcc_trg_align[i][j]==tcc_trg_align[i][0]);
      switchcolor(black);
@@ -39,6 +40,7 @@ void Config_check::TKR_Timing()
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   endcolor();
    std::cout<<std::endl;
 }
 void Config_check::ACD_Timing()
@@ -49,6 +51,7 @@ void Config_check::ACD_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
+   startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
    std::cout<<"+             ACD_Timing                 +"<<std::endl;
@@ -94,6 +97,7 @@ void Config_check::ACD_Timing()
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   endcolor();
    std::cout<<std::endl;
 }
 void Config_check::CAL_Timing()
@@ -104,6 +108,7 @@ void Config_check::CAL_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
+   startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
    std::cout<<"+             CAL_Timing                 +"<<std::endl;
@@ -146,6 +151,7 @@ void Config_check::CAL_Timing()
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   endcolor();
    std::cout<<std::endl;
 }
 void Config_check::GNL_Timing()
@@ -156,7 +162,7 @@ void Config_check::GNL_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
-   std::cout<<color(black);
+   startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
    std::cout<<"+             GNL_Timing                 +"<<std::endl;
@@ -190,6 +196,7 @@ void Config_check::GNL_Timing()
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   endcolor();
    std::cout<<std::endl;
       // if (Cut(ientry) < 0) continue;
 }
@@ -202,6 +209,7 @@ void Config_check::GNL_Mode()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
+   startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
    std::cout<<"+             GNL_Mode                   +"<<std::endl;
@@ -251,5 +259,6 @@ void Config_check::GNL_Mode()
    std::cout<<col<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
    col.fore=black;
    std::cout<<col;
+   endcolor();
    std::cout<<std::endl;
 }
