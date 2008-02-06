@@ -162,9 +162,18 @@
   </xsl:template>
 
   <xsl:template match="TextInclude">
-    <pre>
-      <xsl:apply-templates select="TextLine"/>
-    </pre>
+    <xsl:choose>
+      <xsl:when test="@NoConvert='True'">
+        <pre>
+          <xsl:apply-templates select="TextLine"/>
+        </pre>
+      </xsl:when>
+      <xsl:otherwise>
+        <p>
+          <xsl:apply-templates select="TextLine"/>
+        </p>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:if test="@NLines">
       <em><b>Note:</b>File truncated to <xsl:value-of select="@NLines"/> lines</em><br/>      
     </xsl:if>
@@ -175,7 +184,15 @@
   </xsl:template>
 
   <xsl:template match="TextLine">
-    <xsl:value-of select="@Text"/>
+    <xsl:choose>
+      <xsl:when test="@NoConvert='True'">
+        <xsl:value-of select="@Text"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@Text" disable-output-escaping='yes'/>
+      </xsl:otherwise>
+    </xsl:choose>
+
   </xsl:template>
 
   <xsl:template match="Image">
