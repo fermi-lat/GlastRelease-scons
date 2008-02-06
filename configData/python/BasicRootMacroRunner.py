@@ -44,15 +44,11 @@ class BasicRootMacroRunner(object):
       self.htmlize(out+err, self.__outputFile)
 
   def htmlize(self, lines, outFile):
-    #fp = open(inFile, 'r')
-    #lines = fp.readlines()
-    #fp.close()
     fp = open(outFile, 'w')
     for line in lines:
       formattedLine = re.sub(" ", "&nbsp;", line)
       formattedLine = re.sub("font&nbsp;", "font ", formattedLine)
-      formattedLine = re.sub("\n", "<br>", formattedLine)
-      fp.write('%s\n' %(formattedLine))
+      fp.write('%s<br>\n' %(formattedLine))
     fp.close()
     
   def write(self, msg):

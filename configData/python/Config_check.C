@@ -38,7 +38,9 @@ void Config_check::TKR_Timing()
    std::cout<<std::endl;
    std::cout<<"Legend: "<<std::endl;
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
+   endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
+   endcolor();
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
    endcolor();
    std::cout<<std::endl;
@@ -95,7 +97,9 @@ void Config_check::ACD_Timing()
    std::cout<<std::endl;
    std::cout<<"Legend: "<<std::endl;
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
+   endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
+   endcolor();
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
    endcolor();
    std::cout<<std::endl;
@@ -149,7 +153,9 @@ void Config_check::CAL_Timing()
    std::cout<<std::endl;
    std::cout<<"Legend: "<<std::endl;
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
+   endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
+   endcolor();
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
    endcolor();
    std::cout<<std::endl;
@@ -194,7 +200,9 @@ void Config_check::GNL_Timing()
    std::cout<<std::endl;
    std::cout<<"Legend: "<<std::endl;
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
+   endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
+   endcolor();
    std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
    endcolor();
    std::cout<<std::endl;
@@ -253,8 +261,10 @@ void Config_check::GNL_Mode()
    std::cout<<"Legend: "<<std::endl;
    col.fore=magenta;
    std::cout<<col<<"Magenta: Broadcast value"<<std::endl;
+   endcolor();
    col.fore=green;
    std::cout<<col<<"Green: Register value that is same as broadcast"<<std::endl;
+   endcolor();
    col.fore=red;
    std::cout<<col<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
    col.fore=black;
