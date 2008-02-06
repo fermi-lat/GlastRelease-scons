@@ -38,6 +38,8 @@
 #include "idents/VolumeIdentifier.h"
 #include "idents/CalXtalId.h"
 
+#include "TkrRecon/../src/Filter/ITkrFilterTool.h"
+#include "Event/Recon/TkrRecon/TkrEventParams.h"
 
 #include "geometry/Vector.h"
 #include "geometry/Ray.h"
@@ -71,7 +73,7 @@ public:
   virtual bool GcrReconTool::TriggerEngine4ON();
   virtual bool GcrReconTool::OBF_HFCVetoExist();
 
-  virtual StatusCode GcrReconTool::findGcrXtals(bool useMcDir);
+  virtual StatusCode GcrReconTool::findGcrXtals(std::string initDir);
   
   
 private:
@@ -194,11 +196,8 @@ private:
   int m_eXtal;  ///< the value of fCellCmp field defining CsI crystal
   int m_nCsISeg;  ///< number of geometric segments per Xtal
 
-  //allows display if debugging:
-  bool m_debugging;
-  
     //variable that indicates if we want to keep mcTrack direction or TrackReconTrack direction
-  bool m_useMcDir;
+  std::string m_propertyDir;
 
 
 } ;
@@ -227,7 +226,6 @@ StatusCode GcrReconTool::initialize()
   m_log.setLevel(outputLevel());
 
   //m_log << MSG::INFO << "GcrReconTool BEGIN initialize()" << endreq ;
-  m_debugging=false;
    
   //Locate and store a pointer to the data service
   IService* iService = 0;
@@ -353,7 +351,6 @@ bool GcrReconTool::TriggerEngine4ON(){
 
 bool GcrReconTool::OBF_HFCVetoExist(){
 
-    // bool debugging= true;
   //CL. 26/03/07:  Task #0: verify OBF status
  bool vetoExists=true;
  
@@ -395,16 +392,14 @@ bool GcrReconTool::OBF_HFCVetoExist(){
    This method builds the map of the Xtals that are theoretically touched by the original MCParticle.
    The map is obtained by propagating the first MCparticle initial trajectory.
 */
-StatusCode GcrReconTool::findGcrXtals(bool useMcDir){
+StatusCode GcrReconTool::findGcrXtals(std::string initDir){
 
-  bool debugging=true;
-  if(debugging) {
-      m_log << MSG::INFO << "BEGIN findGcrXtals in GcrReconTool" << endreq;
-      m_log << MSG::INFO << "useMcDir=" << useMcDir << endreq;
-  }
+      m_log << MSG::DEBUG << "BEGIN findGcrXtals in GcrReconTool" << endreq;
+      m_log << MSG::DEBUG << "initDir=" << initDir << endreq;
+
   StatusCode sc = StatusCode::SUCCESS;
   
-  m_useMcDir = useMcDir;  
+  m_propertyDir = initDir;  
   
 
   
@@ -472,10 +467,7 @@ void GcrReconTool::verifyGcrXtalsVec(){
 //-----------------------------------------------------------------------------------------------------------------
 void GcrReconTool::buildGcrXtalsVec(){
   
-  bool debugging = false;
-
-  if(debugging)
-     m_log << MSG::INFO << "BEGIN buildGcrXtalsVec in GcrReconTool" << endreq;
+  m_log << MSG::DEBUG << "BEGIN buildGcrXtalsVec in GcrReconTool" << endreq;
   
     
   /**m_log << MSG::INFO << " (m_calZBot,m_calZTop)= " << m_calZBot << "," << m_calZTop << endreq ;
@@ -500,7 +492,7 @@ void GcrReconTool::buildGcrXtalsVec(){
         m_mcDir = Vector(-1e9,-1e9,-1e9);
  
  
-  if(m_useMcDir){ // if taking MCTrack, get theoretical initial position and direction
+  if(m_propertyDir=="MC"){ // if taking MCTrack, get theoretical initial position and direction
 
      // ******the first McParticle initial position (when launched):
       const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
@@ -516,7 +508,7 @@ void GcrReconTool::buildGcrXtalsVec(){
   
   }
   
-  else{ // if taking MCTrack, get reconstructed initial position and direction
+  else if(m_propertyDir=="TKR"){ // if taking MCTrack, get reconstructed initial position and direction
   
 	SmartDataPtr<Event::TkrTrackCol>   pTracks(m_dataSvc,EventModel::TkrRecon::TkrTrackCol);
 
@@ -534,8 +526,36 @@ void GcrReconTool::buildGcrXtalsVec(){
 	    m_initDir = track_1->getInitialDirection().unit();
 
 	}
-	else
-            m_log << MSG::INFO << "no TkrTrackCol found" << endreq;
+	else 
+    {
+      m_log << MSG::INFO << "no TkrTrackCol found" << endreq;
+    }
+  } else if(m_propertyDir=="MOM")
+    {
+      MsgStream log(msgSvc(), name());
+      StatusCode sc = StatusCode::SUCCESS;
+      ITkrFilterTool* filterTool;
+      if ((sc = toolSvc()->retrieveTool("TkrFilterTool", filterTool)).isFailure())
+        {
+          log << MSG::ERROR << " could not find TkrFilterTool " << endreq;
+          return sc;
+        }
+      sc = filterTool->doFilterStep();
+      //ok now the results need to be retrieved from the TDS:
+      // Recover pointer to TkrEventParams
+      Event::TkrEventParams* tkrEventParams = 
+        SmartDataPtr<Event::TkrEventParams>(m_dataSvc, EventModel::TkrRecon::TkrEventParams);
+      // First pass means no TkrEventParams
+      if (tkrEventParams == 0)
+        {
+          log << MSG::ERROR << " could not find TkrEventParams in the TDS " << endreq;
+          return StatusCode::FAILURE;
+        }
+      m_initPos = tkrEventParams->getEventPosition();
+      m_initDir = -tkrEventParams->getEventAxis();    
+    } else{
+    m_log<<MSG::ERROR<<"Invalid property "<<m_propertyDir<<endreq;
+    return;
   }
   
   double x0 = m_initPos.x();
@@ -549,9 +569,9 @@ void GcrReconTool::buildGcrXtalsVec(){
 
 
     
-  //m_log << MSG::INFO << "initPos="<< '(' << x0 << ',' << y0 << ',' << z0 << ')'<<endreq;
+  m_log << MSG::DEBUG << "initPos="<< '(' << x0 << ',' << y0 << ',' << z0 << ')'<<endreq;
   
-  //m_log << MSG::INFO << "initDir=" << '(' << ux0 << ',' << uy0 << ',' << uz0 << ')'<<endreq ;
+  m_log << MSG::DEBUG << "initDir=" << '(' << ux0 << ',' << uy0 << ',' << uz0 << ')'<<endreq ;
   
   // ========================================================================================
 
@@ -605,13 +625,13 @@ void GcrReconTool::buildGcrXtalsVec(){
   totalTrack=m_calEntryPoint-m_calExitPoint;
 
   double totalLength = sqrt(totalTrack*totalTrack); 
-      //m_log << MSG::INFO << "totalLength=" << totalLength <<  " ,XtalHeigth, XtalLength=" << m_xtalHeight << ","<< m_xtalLength<<endreq;
+  m_log << MSG::DEBUG << "totalLength=" << totalLength <<  " ,XtalHeigth, XtalLength=" << m_xtalHeight << ","<< m_xtalLength<<endreq;
 
-  if((totalLength<m_xtalHeight) || (totalLength>4*m_xtalLength)){ 
-      //m_log << MSG::INFO << "totalLength condition not fullfilleGcrd " <<endreq;
-
+  if((totalLength<m_xtalHeight) || (totalLength>4*m_xtalLength))
+    {
+      m_log << MSG::DEBUG << "totalLength condition not fullfilled."<<endreq;
       return;
-  }
+    }
   
   m_G4PropTool->setStepStart(m_calEntryPoint,m_initDir);
     
@@ -622,7 +642,7 @@ void GcrReconTool::buildGcrXtalsVec(){
     
   int numSteps = m_G4PropTool->getNumberSteps();
     
-  //m_log << MSG::INFO << "number of Propagation Steps= " << numSteps <<endreq;
+  m_log << MSG::DEBUG << "number of Propagation Steps= " << numSteps <<endreq;
     
   idents::VolumeIdentifier volId;
   idents::VolumeIdentifier prefix=m_detSvc->getIDPrefix();
@@ -635,12 +655,12 @@ void GcrReconTool::buildGcrXtalsVec(){
  
   for(int istep=0; istep<numSteps; ++istep)
     {
-      //m_log << MSG::INFO << "G4 propagation step number= " << istep <<endreq;
+      m_log << MSG::DEBUG << "G4 propagation step number= " << istep <<endreq;
       volId=m_G4PropTool->getStepVolumeId(istep);
       //m_log << MSG::INFO << "volId= " << volId.name() <<endreq;
       
       volId.prepend(prefix);
-	
+      
       arcLen_step = m_G4PropTool->getStepArcLen(istep);
       
       //Comment from Tracy Usher: 
@@ -651,63 +671,54 @@ void GcrReconTool::buildGcrXtalsVec(){
       
       int crossedFaces;
       double minDist;
-
- 
-	
-      //********* build GcrXtalsMap and gcrXtalVec
+      
+      
+      
+      // ********* build GcrXtalsMap and gcrXtalVec
       if(volId.size()>7 && volId[0]==0 && volId[3]==0 && volId[7]==0)// in Xtal ? 
         {
-	  itow=4*volId[1]+volId[2];
-	  ilay=volId[4];
-	  icol=volId[6];
-	  
-	  Point xtalCentralPoint = m_xtalCentersTab[itow][ilay][icol];
-	 
-	//m_log << MSG::INFO << "(itow,ilay,icol)=(" << itow << "," << ilay << "," << icol << ")" << endreq; 
-	if(debugging){    
-        m_log << MSG::INFO << "(itow,ilay,icol)=(" << itow << "," << ilay << "," << icol << ")" << endreq;
-        m_log << MSG::INFO << "istep " << istep <<  ": entryPoint=" << entryPoint <<endreq;
-        
-        m_log << MSG::INFO << "istep " << istep <<  ": exitPoint= " << exitPoint << endreq;
-	
-        m_log << MSG::INFO << "arcLen_step, exitPoint - entryPoint " << arcLen_step << ","<<  sqrt((exitPoint - entryPoint) * (exitPoint - entryPoint)) << endreq;
-    }
-
-	  if(m_gcrXtalsMap[itow][ilay][icol]<0){ //if Xtal has not already been identified as part of the theoretical track
-	    //m_log << MSG::INFO << "new touched Xtal"<< endreq;
-
-	    Event::CalXtalRecData* xTalData = m_hitsMap[itow][ilay][icol];   // search for corresponding hits entry, if any
-	    
-	    if(xTalData){//add and update entry on grcXtalVec, only if a corresponding CalXtalRecData is found
-	    
-	            idents::CalXtalId xtalId = xTalData->getPackedId();
-
-	            m_gcrXtalsMap[itow][ilay][icol] = m_numGcrXtals++; // the entry of m_gcrXtalsMap corresponds to m_gcrXtalVec index
-		    m_gcrXtalVec.push_back(Event::GcrXtal());
-		    Event::GcrXtal& gcrXtal = m_gcrXtalVec.back();
-		    gcrXtal.setXtalId(xtalId);  
-		    gcrXtal.setPathLength(arcLen_step);	
-		    
-		    
-		    gcrXtal.setEntryPoint(entryPoint);
-		    gcrXtal.setExitPoint(exitPoint);
-		    getCrossedFaces(ilay,xtalCentralPoint,entryPoint,exitPoint,crossedFaces,minDist);
-		    gcrXtal.setCrossedFaces(crossedFaces);
-		    gcrXtal.setClosestFaceDist(minDist);
-		    
-		    //TEST:
-		    int n,m;
-		    gcrXtal.getReadableXedFaces(crossedFaces,n,m);
-		    
-		    if(debugging){
-		        m_log <<"crossedFaces,n,m="<< crossedFaces << "," << n << "," << m << endreq;
-			m_log <<"gcrXtalId,pathLength"<< gcrXtal.getXtalId() << "," << gcrXtal.getPathLength() << endreq;
-	             }
-
-		
-	    } 
-	    else  // track crosses crystal, but no corresponding CalXtal found
-	      m_gcrXtalsMap[itow][ilay][icol]=-2;  
+          itow=4*volId[1]+volId[2];
+          ilay=volId[4];
+          icol=volId[6];
+          
+          Point xtalCentralPoint = m_xtalCentersTab[itow][ilay][icol];
+          
+          m_log << MSG::DEBUG << "(itow,ilay,icol)=(" << itow << "," << ilay << "," << icol << ")" << endreq;
+          m_log << MSG::DEBUG << "istep " << istep <<  ": entryPoint=" << entryPoint <<endreq;
+          m_log << MSG::DEBUG << "istep " << istep <<  ": exitPoint= " << exitPoint << endreq;
+          m_log << MSG::DEBUG << "arcLen_step, exitPoint - entryPoint " << arcLen_step << ","<<  sqrt((exitPoint - entryPoint) * (exitPoint - entryPoint)) << endreq;
+          
+          
+          if(m_gcrXtalsMap[itow][ilay][icol]<0)
+            { //if Xtal has not already been identified as part of the theoretical track
+              //m_log << MSG::INFO << "new touched Xtal"<< endreq;
+              
+              Event::CalXtalRecData* xTalData = m_hitsMap[itow][ilay][icol];   // search for corresponding hits entry, if any
+              
+              if(xTalData)
+                {//add and update entry on grcXtalVec, only if a corresponding CalXtalRecData is found
+                  idents::CalXtalId xtalId = xTalData->getPackedId();
+                  m_gcrXtalsMap[itow][ilay][icol] = m_numGcrXtals++; // the entry of m_gcrXtalsMap corresponds to m_gcrXtalVec index
+                  m_gcrXtalVec.push_back(Event::GcrXtal());
+                  Event::GcrXtal& gcrXtal = m_gcrXtalVec.back();
+                  gcrXtal.setXtalId(xtalId);  
+                  gcrXtal.setPathLength(arcLen_step);	 
+                  gcrXtal.setEntryPoint(entryPoint);
+                  gcrXtal.setExitPoint(exitPoint);
+                  getCrossedFaces(ilay,xtalCentralPoint,entryPoint,exitPoint,crossedFaces,minDist);
+                  gcrXtal.setCrossedFaces(crossedFaces);
+                  gcrXtal.setClosestFaceDist(minDist);
+                  
+                  //TEST:
+                  int n,m;
+                  gcrXtal.getReadableXedFaces(crossedFaces,n,m);
+                  m_log <<MSG::DEBUG<<"crossedFaces,n,m="<< crossedFaces << "," << n << "," << m << endreq;
+                  m_log <<MSG::DEBUG<<"gcrXtalId,pathLength"<< gcrXtal.getXtalId() << "," << gcrXtal.getPathLength() << endreq;
+                } else 
+                { 
+                  m_log<<MSG::DEBUG<< "track crosses crystal, but no corresponding CalXtal found"<<endreq;
+                  m_gcrXtalsMap[itow][ilay][icol]=-2;  
+                }
 
 	   
 	   // else
@@ -715,53 +726,50 @@ void GcrReconTool::buildGcrXtalsVec(){
 		 
             //m_log << MSG::INFO << "m_gcrXtalVec.size()= "<< m_gcrXtalVec.size() << endreq; 
 	    
-	  }
-	  else{// if Xtal has already been identified as part of the theoretical track
-	    //m_log << MSG::INFO << "Xtal already touched"<< endreq;
-	    
-	    int gcrXtalVecIndex = m_gcrXtalsMap[itow][ilay][icol];  // we get the index of gcrXtalVec entry
-	    //m_log << MSG::INFO << "gcrXtalVecIndex =" << gcrXtalVecIndex << endreq;
-	    // m_log << MSG::INFO << "m_gcrXtalVec.size()= "<< m_gcrXtalVec.size() << endreq; 
-	    
-	    if(m_hitsMap[itow][ilay][icol]){  // if a corresponding CalXtalRecData is found
-		    
-		    Event::GcrXtal currentGcrXtal = m_gcrXtalVec.at(gcrXtalVecIndex); // find corresponding entry of gcrXtalVec
+	  } else
+            {// if Xtal has already been identified as part of the theoretical track
+              //m_log << MSG::INFO << "Xtal already touched"<< endreq;
+              
+              int gcrXtalVecIndex = m_gcrXtalsMap[itow][ilay][icol];  // we get the index of gcrXtalVec entry
+              //m_log << MSG::INFO << "gcrXtalVecIndex =" << gcrXtalVecIndex << endreq;
+              // m_log << MSG::INFO << "m_gcrXtalVec.size()= "<< m_gcrXtalVec.size() << endreq; 
+              
+              if(m_hitsMap[itow][ilay][icol]){  // if a corresponding CalXtalRecData is found
+                
+                Event::GcrXtal currentGcrXtal = m_gcrXtalVec.at(gcrXtalVecIndex); // find corresponding entry of gcrXtalVec
+                
+                currentGcrXtal.setPathLength(currentGcrXtal.getPathLength() + arcLen_step); // pathLength update
+                currentGcrXtal.setExitPoint(exitPoint);// exitPoint update
+                getCrossedFaces(ilay,xtalCentralPoint,entryPoint,exitPoint,crossedFaces,minDist);
+                currentGcrXtal.setCrossedFaces(crossedFaces);
+                currentGcrXtal.setClosestFaceDist(minDist);
+                
+                m_gcrXtalVec.at(gcrXtalVecIndex) = currentGcrXtal;
+                
+                
+                //TEST:
+                m_log << MSG::DEBUG << " Xtal has already been identified as part of the theoretical track"<< endreq; 
+                //int n,m;
+                //currentGcrXtal.getReadableXedFaces(crossedFaces,n,m);
+                m_log <<MSG::DEBUG<<"gcrXtalId,pathLength= "<< currentGcrXtal.getXtalId() << "," << currentGcrXtal.getPathLength() << endreq;
+                m_log <<MSG::DEBUG<<"m_gcrXtalVec.at(gcrXtalVecIndex), gcrXtalId,pathLength= "<< m_gcrXtalVec.at(gcrXtalVecIndex).getXtalId() << "," << m_gcrXtalVec.at(gcrXtalVecIndex).getPathLength() << endreq;
+                
+              }
+              //else     
+              //m_log << MSG::INFO << "Xtal already touched: no corresponding CalXtalRecData was found"<< endreq; 
+              
+            }
+          
 
-		    currentGcrXtal.setPathLength(currentGcrXtal.getPathLength() + arcLen_step); // pathLength update
-		    currentGcrXtal.setExitPoint(exitPoint);// exitPoint update
-		    getCrossedFaces(ilay,xtalCentralPoint,entryPoint,exitPoint,crossedFaces,minDist);
-                    currentGcrXtal.setCrossedFaces(crossedFaces);
-		    currentGcrXtal.setClosestFaceDist(minDist);
-		    
-		    m_gcrXtalVec.at(gcrXtalVecIndex) = currentGcrXtal;
-		    
-		    
-		    //TEST:
-		    if(debugging){
-			m_log << MSG::INFO << " Xtal has already been identified as part of the theoretical track"<< endreq; 
-			//int n,m;
-			//currentGcrXtal.getReadableXedFaces(crossedFaces,n,m);
-                	m_log <<"gcrXtalId,pathLength= "<< currentGcrXtal.getXtalId() << "," << currentGcrXtal.getPathLength() << endreq;
-                        m_log <<"m_gcrXtalVec.at(gcrXtalVecIndex), gcrXtalId,pathLength= "<< m_gcrXtalVec.at(gcrXtalVecIndex).getXtalId() << "," << m_gcrXtalVec.at(gcrXtalVecIndex).getPathLength() << endreq;
-		   }
-
-	    }
-	    //else     
-		    //m_log << MSG::INFO << "Xtal already touched: no corresponding CalXtalRecData was found"<< endreq; 
-	    
-	  }
-	   
-
-        }// end of: if in Xtal
-
+        }else // end of: if in Xtal
+        {
+          m_log <<MSG::DEBUG<<"Volume Id not in crystal"<<endreq;
+        }
     }// end of: for(int istep= ..)
-    
+  
   // ========================================================================================
 
-  if(debugging)
-      m_log << MSG::INFO << "END buildGcrXtalsVec in GcrReconTool"<< endreq;
-  
-
+  m_log << MSG::DEBUG << "END buildGcrXtalsVec in GcrReconTool"<< endreq;
 }
 
 
@@ -952,7 +960,6 @@ for (int itow=0; itow<NTOW; itow++)
  */
 StatusCode GcrReconTool::storeGcrXtals () {
   StatusCode sc = StatusCode::SUCCESS;
-  bool debugging = false;
 
   //m_log << MSG::INFO << "BEGIN storeGcrXtals in GcrReconAlg" << endreq;
 
@@ -978,8 +985,7 @@ StatusCode GcrReconTool::storeGcrXtals () {
       // Now copy to this new GcrXtal. This should properly copy all elements (including inherited vector)
       *newGcrXtal = gcrXtal;
        
-       if(debugging) 
-	   m_log << MSG::INFO << "in storeGcrXtals, gcrXtalId,pathLength= " << gcrXtal.getXtalId() << "," << gcrXtal.getPathLength() << endreq;
+	   m_log << MSG::DEBUG << "in storeGcrXtals, gcrXtalId,pathLength= " << gcrXtal.getXtalId() << "," << gcrXtal.getPathLength() << endreq;
 
       // Store in collection (and reliquish ownership of the object)
       m_gcrXtalCol->push_back(newGcrXtal); 
@@ -1003,8 +1009,6 @@ StatusCode GcrReconTool::storeGcrXtals () {
  */
 StatusCode GcrReconTool::storeGcrTrack () {
 
-  bool debugging= false;
-  
   StatusCode sc = StatusCode::SUCCESS;
  
   m_log << MSG::INFO << "BEGIN storeGcrTrack in GcrReconTool" << endreq;
@@ -1033,14 +1037,12 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
   m_gcrTrack->setCalExitPoint(m_calExitPoint);
   m_gcrTrack->setDirection(m_initDir);
   
-  if(m_useMcDir){// if keeping MC Track
-      //if(debugging)
+  if(m_propertyDir=="MC"){// if keeping MC Track
 	  m_log << MSG::INFO << "keeping MC Track" << endreq;	  
       m_gcrTrack->setDirError(Vector(0.0,0.0,0.0));
   }
   else{// if we are keeping the Tracker Track
     //SETTING RECONSTRUCTED TKR TRACK INFO:
-    //if(debugging)
 	m_log << MSG::INFO << "keeping Tracker Recon Track" << endreq;
 
 
@@ -1056,10 +1058,8 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
 
 	    const Event::TkrTrack* track_1 = *pTrack;
 
-            if(debugging){
-		m_log << MSG::INFO << "m_TkrTrackDir=" << track_1->getInitialDirection() << endreq;
-		m_log << MSG::INFO << "m_KalmanThetaMS=" << track_1->getKalThetaMS() << endreq;
-            }
+		m_log << MSG::DEBUG << "m_TkrTrackDir=" << track_1->getInitialDirection() << endreq;
+		m_log << MSG::DEBUG << "m_KalmanThetaMS=" << track_1->getKalThetaMS() << endreq;
 
 	    m_gcrTrack->setDirError(Vector(0.0,0.0,cos(track_1->getKalThetaMS())));
 
@@ -1078,50 +1078,39 @@ m_log << MSG::INFO << "m_calExitPoint=" << m_calExitPoint << endreq;
 }
 
 void GcrReconTool::getCrossedFaces(int ilay, Point xtalCentralPoint, Point entryPoint, Point exitPoint, int &crossedFaces, double &minDist){
-  bool debugging=false;
-  if(debugging)
-    m_log << MSG::INFO << "GcrReconTool::getCrossedFaces BEGIN" << endreq;
+  m_log << MSG::DEBUG << "GcrReconTool::getCrossedFaces BEGIN" << endreq;
   
   double d0,d1,dm; 
   
-  if(debugging)
-      m_log << MSG::INFO << "@@@@@ entryPoint: " << endreq;
+  m_log << MSG::DEBUG << "@@@@@ entryPoint: " << endreq;
 
   int face0 = getClosestFace(ilay,xtalCentralPoint,entryPoint,d0);
 
-  if(debugging)  
-      m_log << MSG::INFO << "@@@@@ exitPoint: " << endreq;
+  m_log << MSG::DEBUG << "@@@@@ exitPoint: " << endreq;
 
   int face1 = getClosestFace(ilay,xtalCentralPoint,exitPoint,d1);
 
-  if(debugging)
-      m_log << MSG::INFO << "@@@@@ middlePoint: " << endreq;
+  m_log << MSG::DEBUG << "@@@@@ middlePoint: " << endreq;
 
   Point middlePoint = Point(0.5*(entryPoint.x()+exitPoint.x()),0.5*(entryPoint.y()+exitPoint.y()),0.5*(entryPoint.z()+exitPoint.z()));
   /*int facem =*/ getClosestFace(ilay,xtalCentralPoint,middlePoint,dm);
   
-  if(debugging)
-      m_log << MSG::INFO << "face0,face1=" << face0 <<"," << face1 << endreq;
+  m_log << MSG::DEBUG << "face0,face1=" << face0 <<"," << face1 << endreq;
   
   //  crossedFaces = std::pow(2.,double(face0)) + std::pow(2.,double(face1));
   crossedFaces = static_cast<int>(std::pow(2.,face0) + std::pow(2.,face1));
 
-  if(debugging)
-      m_log << MSG::INFO << "crossedFaces=" << crossedFaces << endreq;
+  m_log << MSG::DEBUG << "crossedFaces=" << crossedFaces << endreq;
  
   minDist=dm;
  
-  if(debugging)
-      m_log << MSG::INFO << "GcrReconTool::getCrossedFaces END" << endreq;
+  m_log << MSG::DEBUG << "GcrReconTool::getCrossedFaces END" << endreq;
 
 }
 
 int GcrReconTool::getClosestFace(int ilay, Point xtalCentralPoint, Point point, double& minDist){
 
-bool debugging=false;
-
-if(debugging)
-    m_log << MSG::INFO << "GcrReconTool::getClosestFace BEGIN" << endreq;
+    m_log << MSG::DEBUG << "GcrReconTool::getClosestFace BEGIN" << endreq;
 
     enum{zTopFace,zBotFace,xLeftFace,xRightFace,yLeftFace,yRightFace};
     
@@ -1149,8 +1138,7 @@ if(debugging)
 	
     }
     
-    if(debugging)
-	m_log << MSG::INFO << "Point,zTop,zBot,xLeft,xRight,yLeft,yRight="<< point<<","<<zTop<<","<<zBot<<","<<xLeft<<","<<xRight<<","<<yLeft<<","<<yRight<< endreq;
+	m_log << MSG::DEBUG << "Point,zTop,zBot,xLeft,xRight,yLeft,yRight="<< point<<","<<zTop<<","<<zBot<<","<<xLeft<<","<<xRight<<","<<yLeft<<","<<yRight<< endreq;
     
     
     d_zTop = std::fabs(point.z()-zTop);
@@ -1160,8 +1148,7 @@ if(debugging)
     d_yLeft = std::fabs(point.y()-yLeft);
     d_yRight = std::fabs(point.y()-yRight);
 
-    if(debugging)
-	m_log << MSG::INFO << "d_zTop,d_zBot,d_xLeft,d_x_Right,d_yLeft,d_yRight="<<d_zTop<< ","<<d_zBot<<","<<d_xLeft<<","<<d_xRight<<","<<d_yLeft<<","<<d_yRight << endreq;
+	m_log << MSG::DEBUG << "d_zTop,d_zBot,d_xLeft,d_x_Right,d_yLeft,d_yRight="<<d_zTop<< ","<<d_zBot<<","<<d_xLeft<<","<<d_xRight<<","<<d_yLeft<<","<<d_yRight << endreq;
 
     
     minDist = std::min(std::min(std::min(std::min(std::min(d_zBot,d_zTop),d_xLeft),d_xRight),d_yLeft),d_yRight);
@@ -1183,8 +1170,7 @@ if(debugging)
 	        return yRightFace;
     else return -1000;
     
-    if(debugging)
-	m_log << MSG::INFO << "GcrReconTool::getClosestFace END" << endreq;
+	m_log << MSG::DEBUG << "GcrReconTool::getClosestFace END" << endreq;
 
 }
 

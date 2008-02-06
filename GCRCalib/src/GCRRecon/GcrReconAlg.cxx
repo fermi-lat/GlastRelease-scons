@@ -8,6 +8,19 @@
 #include "src/GCRRecon/IGcrReconTool.h"
 #include "src/Utilities/GcrReconException.h"
 
+//Needed by Engine4
+#include "Event/TopLevel/Event.h"
+#include "Event/TopLevel/EventModel.h"
+#include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/GaudiException.h" 
+#include "OnboardFilterTds/FilterStatus.h"
+#include "OnboardFilterTds/ObfFilterStatus.h"
+#include "OnboardFilterTds/FilterAlgTds.h"
+#include "enums/TriggerBits.h"
+
+#include "geometry/Point.h"
+#include "geometry/Vector.h"
+
 //#include <CalRecon/ICalReconSvc.h>
 
 /**   
@@ -35,6 +48,9 @@ public:
     StatusCode finalize() ;
 
 private:
+  //! Check if the event is a heavy ion candidate.
+  bool passTrigger();
+  void selectEventAxis(Vector&,Point&);
 
     //! correction tool names
     std::string      m_gcrReconToolName ;
@@ -42,10 +58,15 @@ private:
     //! correction tools
     IGcrReconTool* m_gcrReconTool ;
     
-    //variable that indicates if we want to keep mcTrack direction or TrackReconTrack direction, default value: true
-    bool m_useMcDir;
-    //variable that indicates if we want to set HCF or CNOTrigger(CNO&LoCal&Tkr&RIO), default value: CnoTrig
+  ///variable that indicates if we want to keep mcTrack 
+  ///direction or TrackReconTrack direction, default value: true
+    std::string m_initAxis;
+  ///variable that indicates if we want to set HCF or 
+  ///CNOTrigger(CNO&LoCal&Tkr&RIO), default value: CnoTrig
     std::string m_HfcOrCnoTrig;
+
+  /// Pointer to the Gaudi data provider service
+  DataSvc*           m_dataSvc;
     
 } ;
 
@@ -57,7 +78,7 @@ GcrReconAlg::GcrReconAlg( const std::string & name, ISvcLocator * pSvcLocator ) 
 {   
     // Declare the properties with these defaults
     declareProperty("GcrReconToolName", m_gcrReconToolName = "GcrReconTool");
-    declareProperty("UseMcDir", m_useMcDir = "true");
+    declareProperty("InitAxis", m_initAxis = "MC");
     declareProperty("HFC_Or_TriggerEng4", m_HfcOrCnoTrig = "TriggerEng4");
 
 }
@@ -83,6 +104,11 @@ StatusCode GcrReconAlg::initialize()
     }
     log << endreq;
         
+  //Locate and store a pointer to the data service
+  IService* iService = 0;
+  if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
+    throw GaudiException("Service [EventDataSvc] not found", name(), sc);
+  m_dataSvc = dynamic_cast<DataSvc*>(iService);
     
 
     if ((sc = toolSvc()->retrieveTool(m_gcrReconToolName, m_gcrReconTool)).isFailure())
@@ -109,28 +135,16 @@ StatusCode GcrReconAlg::execute()
     
     log << MSG::DEBUG << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
     log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
-
     
     // Apply filter(TRIGGER Engine 4 "CNO Trigger" or HFC OnboardFilter), then find GCRs
-       
-   if(m_HfcOrCnoTrig == "TriggerEng4"){
-      log<<MSG::DEBUG<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
-      if(m_gcrReconTool->TriggerEngine4ON()){
-	 m_gcrReconTool->findGcrXtals(m_useMcDir);
+    if(passTrigger())
+      {
+        Vector dir;
+        Point pos;
+        selectEventAxis(dir, pos);
+        //m_gcrReconTool->findGcrXtals(m_initAxis, dir, pos);
+        m_gcrReconTool->findGcrXtals(m_initAxis);
       }
-      else{
-	 log<<MSG::DEBUG<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;
-      }    
-   }
-   else{
-       log<<MSG::DEBUG<<"@@@@@@@@ Using HFC OBF"<<endreq ;
-       if(!m_gcrReconTool->OBF_HFCVetoExist()){
-	 m_gcrReconTool->findGcrXtals(m_useMcDir);
-       }
-       else{
-	log<<MSG::DEBUG<<"@@@@@@@@ Vetoed Event"<<endreq ;
-       }
-   }
 
     log<<MSG::DEBUG<<"GcrReconAlg::execute End"<<endreq ;
     return sc;
@@ -145,6 +159,51 @@ StatusCode GcrReconAlg::finalize()
     
 }
 
+bool GcrReconAlg::passTrigger()
+{
+  MsgStream log(msgSvc(), name());
+  if(m_HfcOrCnoTrig == "TriggerEng4"){
+    log<<MSG::DEBUG<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
+    SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
+    unsigned int word2 =  ( pEvent==0? 0 : pEvent->triggerWordTwo());
+    unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
+    bool engine4ON2 = (Trig_gemengine==4);
+    if(!engine4ON2){
+      log<<MSG::DEBUG<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;}
+    return engine4ON2;
+    //    return m_gcrReconTool->TriggerEngine4ON();
+  }
+  else{
+    log<<MSG::DEBUG<<"@@@@@@@@ Using HFC OBF"<<endreq ;
+    bool vetoExists=true;
+    
+    SmartDataPtr<OnboardFilterTds::ObfFilterStatus> 
+      obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
+    if (obfStatus)
+      {
+        // Pointer to our retrieved objects
+        const OnboardFilterTds::IObfStatus* obfResult = 0;
+        obfResult = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);
+        if(obfResult){
+          unsigned int statusHFC32 = obfResult->getStatus32();
+          unsigned int vetoHFC= obfResult->getVetoBit();
+          vetoExists = (statusHFC32 & vetoHFC)>0;   
+          log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoExists << endreq;
+        }     else{
+          log << MSG::INFO <<  "no obfResult" << endreq;}
+      }
+    else{
+      log << MSG::INFO << "no obfStatus"<< endreq;}
+    
+    return (!vetoExists);
+    
+    //	log<<MSG::DEBUG<<"@@@@@@@@ Vetoed Event"<<endreq ;
+  }
+}
 
+void GcrReconAlg::selectEventAxis(Vector &dir, Point &pos)
+{
+  return;
+}
 
 
