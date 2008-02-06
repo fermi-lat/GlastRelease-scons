@@ -20,13 +20,15 @@ int main(int argc, char **argv){
   bool fullconfig=false;
   bool allowMissing=false;
   bool mootKey=false;
+  bool roi=false;
+  bool gem=false;
   int opt;
   int argn=1;
   std::ostream *out=&std::cout;
 #ifdef WIN32
-  while ( (opt = facilities::getopt(argc, argv, "fMmo:")) != EOF ) {
+  while ( (opt = facilities::getopt(argc, argv, "fMmrgo:")) != EOF ) {
 #else
-  while ( (opt = getopt(argc, argv, "fMmo:")) != EOF ) {
+  while ( (opt = getopt(argc, argv, "fMmrgo:")) != EOF ) {
 #endif
     argn++;
     switch(opt){
@@ -39,6 +41,12 @@ int main(int argc, char **argv){
       break;
     case 'M': // mootKey
       mootKey=true;
+      break;
+    case 'r': // print ROI config only
+      roi=true;
+      break;
+    case 'g': // print GEM config only
+      gem=true;
       break;
     case 'o':
       out=new std::ofstream(optarg);
@@ -54,33 +62,42 @@ int main(int argc, char **argv){
   char *endptr;
   //unsigned key=(unsigned int)atoi(argv[1]);
   unsigned key=strtoul(argv[argn],&endptr,0);
+  TrgConfigDB *tcf;
   if (endptr[0]=='\0'){
     (*out)<<"=================================="<<std::endl;
     (*out)<<"GEM configuration for key "<<key<<std::endl;
     (*out)<<"=================================="<<std::endl<<std::endl;
-    MootDBImpl dbM;
-    LatcDBImpl dbL;
     LatcDB *db;
     if (mootKey) {
-      db = dynamic_cast<LatcDB*>(&dbM);
+      db = new MootDBImpl;
     } else {
-      db = dynamic_cast<LatcDB*>(&dbL);
+      db = new LatcDBImpl;
     }
-    TrgConfigDB tcf(db);
-    tcf.allowMissing(allowMissing);
-    tcf.updateKey(key);
-    if (!fullconfig)tcf.printContrigurator((*out));
-    else (*out)<<tcf<<std::endl;
+    tcf=new TrgConfigDB (db);
   }else{
     (*out)<<"=================================="<<std::endl;
     (*out)<<"GEM configuration for file "<<argv[argn]<<std::endl;
     (*out)<<"=================================="<<std::endl<<std::endl;
-    LatcDBImplFile lc;
-    lc.setFilename(std::string(argv[argn]));
-    TrgConfigDB tcf(&lc);
-    tcf.allowMissing(allowMissing);
-    tcf.updateKey(1);
-    if (!fullconfig)tcf.printContrigurator((*out));
-    else (*out)<<tcf<<std::endl;
+    LatcDBImplFile *lc=new LatcDBImplFile;
+    lc->setFilename(std::string(argv[argn]));
+    tcf=new TrgConfigDB(lc);
+    key=1;
+  }
+  tcf->allowMissing(allowMissing);
+  tcf->updateKey(key);
+  if (!fullconfig && !roi)tcf->printContrigurator((*out));
+  else if(fullconfig && ((!roi && !gem) || (roi&&gem)))(*out)<<(*tcf)<<std::endl;
+  else if (roi && !gem)(*out)<<(*tcf->roi())<<std::endl;
+  else if (gem && !roi){
+    (*out)<<"GEM configuration: "<<std::endl;
+    (*out)<<(*tcf->configuration())<<std::endl;
+    (*out)<<(*tcf->windowParams())<<std::endl;
+    (*out)<<(*tcf->periodicTrigger())<<std::endl;
+    (*out)<<(*tcf->lut())<<std::endl;
+    (*out)<<(*tcf->trgEngine())<<std::endl;
+    (*out)<<(*tcf->disabledChannels())<<std::endl;
+  }else{
+    std::cout<<"Bad combination of options -f, -r, -g"<<std::endl;
+    assert(0);
   }
 }

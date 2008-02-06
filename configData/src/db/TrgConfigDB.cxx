@@ -11,9 +11,10 @@ bool TrgConfigDB::updateKey(const unsigned int key){
   if (key!=m_key){
     retval=true;
     std::string bcast=m_lc->getFilename("latc_DFT",key);
-    if (bcast.length() == 0) // New style config 
+    if (bcast.length() == 0){ // New style config 
       bcast = m_lc->getFilename("latc_GEM_TRG_GEM", key);
-    newStyleConfig = true;
+      newStyleConfig = true;
+    }
     std::cout<<bcast<<std::endl;
     TrgConfigParser p(m_allowMissing);
     int error=p.parse(this,bcast.c_str());
