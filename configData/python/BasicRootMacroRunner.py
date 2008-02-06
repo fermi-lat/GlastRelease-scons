@@ -40,8 +40,6 @@ class BasicRootMacroRunner(object):
       cmd = "root  -l -b -q 'dumpPrecinct.C(\"%s\", \"%s\")'" %(self.__configurationRootFile, self.__precinctName)
     newCmd = SystemCommand(cmd)
     out, err = newCmd.handle()
-    for line in out+err:
-      print 'doChecks: ', line
     if self.__outputFile:
       self.htmlize(out+err, self.__outputFile)
 
