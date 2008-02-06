@@ -447,11 +447,13 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
 
             int subStrPos = inString.find(delimOp.first, startPos);
 
+            // Attempt to catch special case of unary + or - operator
+            if (subStrPos == 0 && checkUnary && (delimOp.first == "-" || delimOp.first == "+"))
+                subStrPos = inString.find(delimOp.first, startPos+1);
+
             // position in string > -1 if we have a match
             if (subStrPos > -1)
             {
-                // Attempt to catch special case of unary + or - operator
-                if (checkUnary && subStrPos == 0 && (delimOp.first == "-" || delimOp.first == "+")) continue;
 
                 // Ugliness to check for exponential notation
                 if (subStrPos > 0 && (delimOp.first == "-" || delimOp.first == "+"))

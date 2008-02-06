@@ -387,12 +387,22 @@ std::string xmlNewPredictEngineFactory::getPredicateExpression(DOMElement* xmlPr
 
         if (xmlPredicateVec.size() > 2)
         {
-            throw Exception("PredictEngineFactory found simple predicate vector > 2 elements");
+            // Can happen legitimately
+            int j = 0;
+            //throw Exception("PredictEngineFactory found simple predicate vector > 2 elements");
         }
 
-        expression = getPredicateExpression(xmlPredicateVec[0]) 
+        std::vector<DOMElement *>::iterator xmlPredicateVecIter = xmlPredicateVec.begin();
+
+        expression = getPredicateExpression(*xmlPredicateVecIter++) 
                    + compoundOperator  
-                   + getPredicateExpression(xmlPredicateVec[1]);
+                   + getPredicateExpression(*xmlPredicateVecIter++);
+
+        // Pick up any more expressions there might be
+        while (xmlPredicateVecIter != xmlPredicateVec.end())
+        {
+            expression += compoundOperator + getPredicateExpression(*xmlPredicateVecIter++);
+        }
     }
     else
     {
