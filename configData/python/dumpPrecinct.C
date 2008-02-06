@@ -1,7 +1,6 @@
-void dumpPrecinct(const char* filename, const char* precinct) 
+void dumpPrecinct(const char* filename, const char* myMacro, const char* precinct) 
 {
-  cout << precinct << endl;
-  gROOT->LoadMacro("Config_check.C");
+  gROOT->LoadMacro(myMacro);
   Config_check f(filename);
   switch (*precinct) {
   case 'GNL_Timing':

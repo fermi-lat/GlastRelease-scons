@@ -29,25 +29,26 @@ class BasicRootMacroRunner(object):
     self.__precinctName = precinctName
     self.__configurationRootFile = configurationRootFile
     self.__outputFile = outputFile
+    self.__macro = os.path.join(os.environ['CONFIGDATAROOT'], 'python', 'Config_check.C')
+    self.__exemacro = os.path.join(os.environ['CONFIGDATAROOT'], 'python', 'dumpPrecinct.C')
     
   def doChecks(self):
     tmpFile = "/tmp/rootOutput_%d.tmp" %(int(time.time()*1000000))
     if self.__outputFile:
-      fp = open(tmpFile, 'w')
-      cmd = "root  -l -b -q 'dumpPrecinct.C(\"%s\", \"%s\")' > %s" %(self.__configurationRootFile, self.__precinctName, tmpFile)
-      fp.close()
+       cmd = "root  -l -b '%s(\"%s\", \"%s\", \"%s\")'" % (self.__exemacro, self.__configurationRootFile, self.__macro, self.__precinctName)#, tmpFile)
     else:
       cmd = "root  -l -b -q 'dumpPrecinct.C(\"%s\", \"%s\")'" %(self.__configurationRootFile, self.__precinctName)
-##    print cmd
-##    SystemCommand(cmd)
-    os.system(cmd)
+    newCmd = SystemCommand(cmd)
+    out, err = newCmd.handle()
+    for line in out+err:
+      print 'doChecks: ', line
     if self.__outputFile:
-      self.htmlize(tmpFile, self.__outputFile)
+      self.htmlize(out+err, self.__outputFile)
 
-  def htmlize(self, inFile, outFile):
-    fp = open(inFile, 'r')
-    lines = fp.readlines()
-    fp.close()
+  def htmlize(self, lines, outFile):
+    #fp = open(inFile, 'r')
+    #lines = fp.readlines()
+    #fp.close()
     fp = open(outFile, 'w')
     for line in lines:
       formattedLine = re.sub(" ", "&nbsp;", line)
