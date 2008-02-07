@@ -18,6 +18,8 @@ $Header$
 #include <algorithm>
 #include <cassert>
 
+const int ValBase::s_badVal = -9999;
+
 ValBase::ValBase(const std::string& type, 
                          const std::string& name, 
                          const IInterface* parent)

@@ -60,7 +60,7 @@ public:
     typedef std::vector<valPair*> valMap;
     typedef valMap::iterator mapIter;
     typedef valMap::const_iterator constMapIter;
-    
+
     ValBase(const std::string& type, 
         const std::string& name, 
         const IInterface* parent);
@@ -151,6 +151,10 @@ protected:
 
     /// count calls to tools
     int m_calcCount;
+
+    /// Obvious "bad" value if an exception occurs whild computing output
+    /// variables
+    static const int s_badVal;
 
 
 };
