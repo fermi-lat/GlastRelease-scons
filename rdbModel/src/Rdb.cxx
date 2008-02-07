@@ -77,7 +77,7 @@ namespace rdbModel {
                       const std::string& where) const {
     Table* t = getTable(tName);
     if (!t) {
-      std::string msg("Rdb::insertRow unknown table ");
+      std::string msg("Rdb::updateRows unknown table ");
       msg = msg + tName;
       throw RdbException(msg);
     }
@@ -87,7 +87,7 @@ namespace rdbModel {
   int Rdb::updateRows(const std::string& tName, Row& row, Assertion* where) const {
     Table* t = getTable(tName);
     if (!t) {
-      std::string msg("Rdb::insertRow unknown table ");
+      std::string msg("Rdb::updateRows unknown table ");
       msg = msg + tName;
       throw RdbException(msg);
     }
