@@ -212,12 +212,13 @@ namespace MOOT {
                             const std::string& colName,
                             const std::string& value,
                              const std::string& where) {
-    //                            bool onlyOne) { what was this for?
-    std::vector<std::string> cols;
-    std::vector<std::string> vals;
-    cols.push_back(colName);
-    vals.push_back(value);
-    return rdb->getConnection()->update(table, cols, vals, where);
+    using rdbModel::FieldVal;
+    using rdbModel::Row;
+
+    std::vector<FieldVal> fields;
+    fields.push_back(FieldVal(colName, value, ""));
+    Row row(fields);
+    return rdb->updateRows(table, row, where);
   }
 
   int DbUtil::setColumnValue(rdbModel::Rdb* rdb,
