@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r10  7-Feb-2008  jrb  1.New intent schema 2.do updates using spiffier utility
    v1r9   8-Jan-2008  jrb  New query; add vote key field to ConfigInfo; make
                            latc ignore more of a full-fledged parameter 
    v1r8   29-Nov-2007 jrb  1. (Jim P. )Changes to intent.xsd
