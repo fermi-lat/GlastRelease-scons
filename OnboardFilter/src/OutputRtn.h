@@ -18,14 +18,19 @@
 #include "OnboardFilterTds/ObfFilterStatus.h"
 
 // Define a utility class for the callback routines 
-class FilterTdsPointers
+class ObfOutputCallBackParm
 {
 public:
+
+    typedef std::map<unsigned short int, void*> SchemaToCfgMap;
+
     OnboardFilterTds::FilterStatus*    m_filterStatus;
     OnboardFilterTds::ObfFilterStatus* m_obfFilterStatus;
     OnboardFilterTds::TowerHits*       m_towerHits;
-    FilterTdsPointers() : m_filterStatus(0), m_towerHits(0) {}
-    ~FilterTdsPointers() {}
+    SchemaToCfgMap                     m_schemaToCfgMap;
+
+    ObfOutputCallBackParm() : m_filterStatus(0), m_towerHits(0) {m_schemaToCfgMap.clear();}
+    ~ObfOutputCallBackParm() {}
 };
 
 // Forward declarations
