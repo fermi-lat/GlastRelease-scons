@@ -171,6 +171,11 @@ namespace rdbModel{
       @note: the values are EXPECTED to be valid, ie already escaped
       correctly and having a valid size. See Table::updateRow() or
       formatField() to do this.
+
+      @note: Should not normally be called by application code. See
+            instead Rdb::updateRows, which knows about fields which
+            should be handled automatically.
+
     */
     virtual unsigned int update(const std::string& tableName, 
                                 const StringVector& colNames, 
