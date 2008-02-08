@@ -10,6 +10,7 @@
 // root includes
 #include "TROOT.h"
 #include "TFile.h"
+#include "TChain.h"
 #include "TBranch.h"
 #include "TEventList.h"
 #include "TTree.h"
@@ -84,17 +85,29 @@ RootTuple::RootTuple( std::string file, std::string treeName)
     if( ret==1) TTree dummy;
 
 #endif
-    
+    // Use the following prescription for opening the input file 
+    // in order to make compatible with xrootd
+    //m_inChain = new TChain(treeName.c_str());
+
+    //int rc = m_inChain->Add(file.c_str(), -1);
+    //int en = m_inChain->LoadTree(0);
+    //int rn = m_inChain->GetEntry(0);
+
+    //int numEntries = m_inChain->GetEntries();
+
     // Open the file, and get at the  TTree containing the data
-    m_file =  new TFile(file.c_str(), "read");
+    //m_file =  new TFile(file.c_str(), "read");
+    m_file =  TFile::Open(file.c_str(), "read");
     if( m_file==0 ) {
         std::cerr << "file \""<< file << "\" not found." << std::endl;
         throw std::runtime_error("File not found");
     }
     m_tree =  (TTree*)m_file->Get(treeName.c_str());
+    //m_tree = m_inChain->GetTree();
+    //m_tree = (TTree*)m_inChain;
     if( m_tree ==0 ) {
         std::cerr << "tree \""<<treeName<< "\" not found." << std::endl;
-        m_file->ls();
+        //m_file->ls();
         throw std::invalid_argument("Tree not found");
     }
     m_numEvents = m_tree->GetEntries();
@@ -177,6 +190,7 @@ bool RootTuple::getEvent(int idx)
 void RootTuple::setOutputFile(const std::string & output_filename)
 {
     m_output_file =new TFile(output_filename.c_str(), "recreate");
+
     m_output_tree = tree()->CloneTree(0); // do not copy events
 }
 

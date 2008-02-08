@@ -8,6 +8,7 @@
 #include <string>
 
 class TFile;
+class TChain;
 class TTree;
 
 class RootTuple : public GlastClassify::ITupleInterface {
@@ -39,11 +40,12 @@ public:
     void fill();
 
 private:
-    TTree * tree(){return m_tree;}
-    TTree * m_tree;
-    TTree * m_output_tree;
-    TFile * m_file;
-    TFile * m_output_file;
+    TTree*  tree(){return m_tree;}
+    TTree*  m_tree;
+    TTree*  m_output_tree;
+    TFile*  m_file;
+    TChain* m_inChain;
+    TFile*  m_output_file;
 
     int m_numEvents;
     int m_event;
