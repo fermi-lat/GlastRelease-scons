@@ -13,7 +13,7 @@
 
 
 Bool_t 
-ConfigCompare::compare(ConfigBase& one, ConfigBase& other, 
+ConfigCompare::compare(ConfigBase& one, ConfigBase& other, TList& l, 
 		       Bool_t fullCompare, Bool_t onlyOne) {
   
   Bool_t latch = kTRUE;
@@ -61,10 +61,27 @@ ConfigCompare::compare(ConfigBase& one, ConfigBase& other,
   latch &= compareV2("tci_dac",(UShort_t*)one.tci_dac,(UShort_t*)other.tci_dac,12,18,onlyOne);
 
   if ( fullCompare ) {
-    latch &= compareV2("pha_threshold",(UShort_t*)one.pha_threshold,(UShort_t*)other.pha_threshold,12,18,onlyOne);
-    latch &= compareV2("bias_dac",(UShort_t*)one.bias_dac,(UShort_t*)other.bias_dac,12,18,onlyOne);
-    latch &= compareV2("hld_dac",(UShort_t*)one.hld_dac,(UShort_t*)other.hld_dac,12,18,onlyOne);
-    latch &= compareV2("veto_dac",(UShort_t*)one.veto_dac,(UShort_t*)other.veto_dac,12,18,onlyOne);   
+    std::cout << "Do acd stuff" << std::endl; // sad to make these histos here not in ConfigReport
+    TH1* h_pha = new TH1I("delta_pha_threshold","delta_pha_threshold",8192,-4096.,4096.);//binning naively doubled and rounded
+    TH1* hv_pha = new TH1S("delta_pha_threshold_v","delta_pha_threshold_v",216,-0.5,215.5);
+    l.Add(h_pha); l.Add(hv_pha); 
+
+    TH1* h_bias = new TH1I("delta_bias_dac","delta_bias_dac",16,-8.,8.);
+    TH1* hv_bias = new TH1S("delta_bias_dac_v","delta_bias_dac_v",216,-0.5,215.5);
+    l.Add(h_bias); l.Add(hv_bias); 
+
+    TH1* h_hld = new TH1I("delta_hld_dac","delta_hld_dac",128,-64.,64.);
+    TH1* hv_hld = new TH1S("delta_hld_dac_v","delta_hld_dac_v",512,-216.,216.);
+    l.Add(h_hld); l.Add(hv_hld); 
+
+    TH1* h_veto = new TH1I("delta_veto_dac","delta_veto_dac",1024,-0.5,63.5);
+    TH1* hv_veto = new TH1F("delta_veto_dac_v","delta_veto_dac_v",512,-216.,216.);
+    l.Add(h_veto); l.Add(hv_veto); 
+
+    latch &= compareV2("pha_threshold",(UShort_t*)one.pha_threshold,(UShort_t*)other.pha_threshold,12,18,h_pha, hv_pha, onlyOne);
+    latch &= compareV2("bias_dac",(UShort_t*)one.bias_dac,(UShort_t*)other.bias_dac,12,18,h_bias, hv_bias, onlyOne);
+    latch &= compareV2("hld_dac",(UShort_t*)one.hld_dac,(UShort_t*)other.hld_dac,12,18,h_hld, hv_hld, onlyOne);
+    latch &= compareV2("veto_dac",(UShort_t*)one.veto_dac,(UShort_t*)other.veto_dac,12, 18, h_veto, hv_veto,onlyOne);   
     latch &= compareV2("veto_vernier",(UShort_t*)one.veto_vernier,(UShort_t*)other.veto_vernier,12,18,onlyOne);
   }
 
@@ -176,6 +193,36 @@ Bool_t ConfigCompare::compareV2(const char* name, UShort_t* val1, UShort_t* val2
       if ( val1[idx] != val2[idx] ) {
 	printf("%s[%i,%i] 0x%0x 0x%0x\n",name,i,j,val1[idx],val2[idx]);
 	if (onlyOne) return kFALSE;
+      }
+    }
+  }
+  return kTRUE;
+}
+
+Bool_t ConfigCompare::compareV2(const char* name, UInt_t* val1, UInt_t* val2, int size1, int size2, TH1* h, TH1* hv, Bool_t onlyOne) {
+  for (int i(0); i < size1; i++ ) {
+    for (int j(0); j < size2; j++ ) {
+      int idx = i*size2 + j;
+      if ( val1[idx] != val2[idx] ) {
+	printf("%s[%i,%i] 0x%0x 0x%0x\n",name,i,j,val1[idx],val2[idx]);
+	//	if (onlyOne) return kFALSE;
+	h->Fill(val1[idx]-val2[idx]);
+	hv->SetBinContent(idx+1,val1[idx]-val2[idx]);
+      }
+    }
+  }
+  return kTRUE;
+}
+
+Bool_t ConfigCompare::compareV2(const char* name, UShort_t* val1, UShort_t* val2, int size1, int size2, TH1* h, TH1* hv, Bool_t onlyOne){
+  for (int i(0); i < size1; i++ ) {
+    for (int j(0); j < size2; j++ ) {
+      int idx = i*size2 + j;
+      if ( val1[idx] != val2[idx] ) {
+	printf("%s[%i,%i] 0x%0x 0x%0x\n",name,i,j,val1[idx],val2[idx]);
+       	//if (onlyOne) return kFALSE;
+	h->Fill(val1[idx]-val2[idx]);
+	hv->SetBinContent(idx+1,val1[idx]-val2[idx]);
       }
     }
   }

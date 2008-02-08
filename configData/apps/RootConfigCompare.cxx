@@ -84,20 +84,25 @@ int main(int argn, char** argc) {
   c1.GetEntry(0); c1.LoadTree(0); 
 
   if ( ! noDiff ) {
+    TList l;
     std::string fn2 = argc[optind+1];
     TFile* f2 = TFile::Open(fn2.c_str());
     TTree* t2 = (TTree*)f2->Get("Config");
     ConfigBase c2(t2);
     c2.GetEntry(0); c2.LoadTree(0); 
     ConfigCompare comp;
-    comp.compare(c1,c2,fullCompare,onlyOne);
+    comp.compare(c1, c2, l, fullCompare, onlyOne);
+    TFile f(outputName.c_str(),"RECREATE");
+    l.Write();
+    f.Close();
   }
 
   if ( report ) {
     TList l;
     ConfigReport rep;
     rep.report(c1,l,"",std::cout);
-    TFile f(outputName.c_str(),"RECREATE");
+    char* openOption = (! noDiff) ? "UPDATE" : "RECREATE";
+    TFile f(outputName.c_str(),openOption);
     l.Write();
     f.Close();
   }
