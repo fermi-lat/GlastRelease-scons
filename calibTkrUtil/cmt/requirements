@@ -21,17 +21,17 @@ apply_pattern package_include
 
 application genTkrNoiseRep ../src/TkrRep/genTkrNoiseRep.cxx ../src/TkrRep/TkrNoiseRep.cxx
 
-#private 
+private 
 
-#use commonRootData *
-#use digiRootData *
-#use reconRootData *
-#use facilities * 
+use commonRootData *
+use digiRootData *
+use reconRootData *
+use facilities * 
 
 
 #apply_pattern package_headers
-#macro_append calibTkrUtil_headers "" WIN32 "../calibTkrUtil/*.h"
+macro_append calibTkrUtil_headers "" WIN32 "../calibTkrUtil/*.h"
 
-#macro_prepend includes " -I../src/test/"
-#application test_calibTkrUtil ../src/test/*.cxx $(calibTkrUtil_srcs)
+macro_prepend includes " -I../src/test/ -I../"
+application test_calibTkrUtil ../src/test/*.cxx $(calibTkrUtil_srcs)
 
