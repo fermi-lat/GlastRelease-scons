@@ -132,8 +132,8 @@ StatusCode InterleaveAlg::initialize()
     }
 
     // Initialize the CEL manager
-    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
-    m_bkgndManager->getCelManager()->initWrite(celFileName,"RECREATE");
+////    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
+////    m_bkgndManager->getCelManager()->initWrite(celFileName,"RECREATE");
 
     // initialize the background selection
     try 
@@ -253,7 +253,7 @@ StatusCode InterleaveAlg::finalize()
 
     log << MSG::INFO << "Inserted "<< m_count << " sampled background events." << endreq; 
 
-    m_bkgndManager->getCelManager()->fillFileAndTreeSet();
+////    m_bkgndManager->getCelManager()->fillFileAndTreeSet();
 
     return sc;
 }

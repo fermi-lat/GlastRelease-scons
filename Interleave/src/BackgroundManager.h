@@ -1,7 +1,7 @@
 #ifndef BackgroundManager_h
 #define BackgroundManager_h 
 
-#include "rootUtil/CelManager.h"
+////#include "rootUtil/CelManager.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -35,7 +35,7 @@ public:
     static  BackgroundManager* instance();
 
     /// Return pointer to CelManager
-    CelManager* getCelManager() {return &m_celManager;}
+////    CelManager* getCelManager() {return &m_celManager;}
 
     /// Methods for interfacing to the class
     ///! access rate according to section variable
@@ -61,7 +61,7 @@ private:
     static BackgroundManager* m_instance;
 
     /// Pointer to the CelManager for input sources to share
-    CelManager                m_celManager;
+////    CelManager                m_celManager;
 
     double                    m_defaultRate;
 

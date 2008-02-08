@@ -31,7 +31,6 @@
 
 // access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
-//#include "rootUtil/CelManager.h"
 
 #include <stdexcept>
 #include <cassert>
@@ -128,8 +127,6 @@ private:
     /// Pointer to the Gaudi data provider service
     IDataProviderSvc*    m_dataSvc;
 
-    /// CEL management
-//    CelManager           m_celManager;
     std::list<double>    m_binList;
 
     StringProperty       m_treeName;    ///< name of the tree to process
@@ -218,11 +215,7 @@ StatusCode BkgndTupleSelectTool::initialize()
     }
     m_outputTree = static_cast<TTree*>(ptr);
 
-    // Initialize the CEL manager
-    //std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
-    //m_celManager.initWrite(celFileName, "RECREATE");
-
-    BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_outputTree);
+////    BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_outputTree);
 
     std::string  filePath;
 
@@ -287,10 +280,11 @@ StatusCode BkgndTupleSelectTool::initialize()
             return StatusCode::FAILURE;
         }
 
-        // prime the pump with the mean of the limits for initial downlink, trigger rates
-        double mean( (m_fetch->minValFullRange() + m_fetch->maxValFullRange())/2.);
+        // This is unnecessary and is being eliminated
+        //// prime the pump with the mean of the limits for initial downlink, trigger rates
+        //double mean( (m_fetch->minValFullRange() + m_fetch->maxValFullRange())/2.);
 
-        setCurrentTree(mean);
+        //setCurrentTree(mean);
     }
 
     return sc;
@@ -299,7 +293,6 @@ StatusCode BkgndTupleSelectTool::initialize()
 StatusCode BkgndTupleSelectTool::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
-//    m_celManager.fillFileAndTreeSet();
     
     return status;
 }
@@ -414,8 +407,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     if (binIter != m_binList.end())
     {
         m_binList.push_back(minBin);
-//        m_celManager.addComponent(m_treeName.value(), m_inputTree);
-        BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_inputTree);
+////        BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_inputTree);
     }
 
     return;
@@ -520,7 +512,6 @@ void BkgndTupleSelectTool::copyEventInfo()
     m_interleaveMap->saveInterleaveMapRow();
 
     // Tell the CEL Manager about this...
-    //m_celManager.fillEvent();       
-    BackgroundManager::instance()->getCelManager()->fillEvent();
+////    BackgroundManager::instance()->getCelManager()->fillEvent();
 }
 
