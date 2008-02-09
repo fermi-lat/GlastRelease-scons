@@ -27,13 +27,36 @@ _log = logging.getLogger()
 class ConfigReportError(Exception):
     pass
 
-class ConfigReport(object):
-    def __init__(self, configData):
-        self.__confData = configData
 
+class ReportBase(object):
+    def __init__(self, data):
+        self.__data = data
     @property
     def data(self):
-        return self.__confData
+        return self.__data
+
+    def createReport(self):
+        raise NotImplementedError
+
+    def createHeader(self):
+        raise NotImplementedError
+
+    def addConfigInfo(self):
+        raise NotImplementedError
+
+    def addBaselineInfo(self):
+        raise NotImplementedError
+
+    def addSection(self, sectionName, parent):
+        raise NotImplementedError
+
+    def writeReport(self, fileStub):
+        raise NotImplementedError
+
+
+class ConfigReport(ReportBase):
+    def __init__(self, configData):
+        ReportBase.__init__(self, configData)
 
     def createReport(self):
         self.createHeader()
@@ -41,24 +64,22 @@ class ConfigReport(object):
         self.addBaselineInfo()
         self.addPrecincts()
 
-    def createHeader(self):
-        pass
-
-    def addConfigInfo(self):
-        pass
-
-    def addBaselineInfo(self):
-        pass
-
     def addPrecincts(self):
-        pass
-
-    def writeReport(self):
         raise NotImplementedError
 
 
+class PrecinctReport(ReportBase):
+    def __init__(self, precinctInfo, configData):
+        ReportBase.__init__(self, configData)
+        self.__pInfo = precinctInfo
+    @property
+    def info(self):
+        return self.__pInfo
 
-
+    def createReport(self):
+        # implemented to create a base report object
+        self.createHeader()
+    
 
 class ConfigDataHolder(object):
     """ Holder for configuration data 
@@ -70,8 +91,7 @@ class ConfigDataHolder(object):
         # base and delta configInfo for comparison
         self.__base = None
         self.__conf = None
-        if configKey is not None:
-            self.setConfig(configKey)
+        self.setConfig(configKey)
         if baselineKey is not None:
             self.setBaseline(baselineKey)
         self.__confRoot = ""
@@ -83,11 +103,8 @@ class ConfigDataHolder(object):
             try:
                 os.mkdir(self.__confDir)
             except OSError, e:
-                _log.error("ConfigReport failed in creating the configuration directory %s." % self.__confDir)
-                sys.exit(-1)
-            except Exception, e:
-                _log.error("An unknown error: '%s' occurred ConfigReport.__init__" % e)
-                sys.exit(-1)
+                raise ConfigReportError("ConfigReport failed in creating the configuration directory %s." % self.__confDir)
+        self.__pInfo = None
 
     @property
     def db(self):
@@ -97,6 +114,11 @@ class ConfigDataHolder(object):
     def baselineInfo(self):
         return self.__base
     def setBaseline(self, baselineKey):
+        if not isinstance(baselineKey, int):
+            try:
+                baselineKey = int(baselineKey)
+            except TypeError:
+                raise ConfigReportError("Non-integer (or coercable to integer) config key %s is disallowed"%baselineKey)
         self.__base = self.__mq.getConfigInfo(baselineKey)
     def getBaseline(self):
         return int(self.baselineInfo.getKey()) if self.baselineInfo else -1
@@ -106,6 +128,11 @@ class ConfigDataHolder(object):
     def configInfo(self):
         return self.__conf
     def setConfig(self, configKey):
+        if not isinstance(configKey, int):
+            try:
+                configKey = int(configKey)
+            except TypeError:
+                raise ConfigReportError("Non-integer (or coercable to integer) config key %s is disallowed"%configKey)
         self.__conf = self.__mq.getConfigInfo(configKey)
     def getConfig(self):
         return int(self.configInfo.getKey()) if self.configInfo else -1
@@ -117,11 +144,12 @@ class ConfigDataHolder(object):
 
     @property
     def precinctInfo(self):
-        params = map(self.__mq.getParmInfo, self.__mq.configParmsRequest(self.config))
-        vKeys = set([int(i.getVoteFk()) for i in params])
-        iList = [self.__mq.getVoteInfo(int(i)) for i in vKeys]
-        iList.sort(key=VoteInfo.getPrecinct) # sort in precinct alphabetical
-        return iList
+        if not self.__pInfo:
+            params = map(self.__mq.getParmInfo, self.__mq.configParmsRequest(self.config))
+            vKeys = set([int(i.getVoteFk()) for i in params])
+            self.__pInfo = [self.__mq.getVoteInfo(int(i)) for i in vKeys]
+            self.__pInfo.sort(key=VoteInfo.getPrecinct) # sort in precinct alphabetical
+        return self.__pInfo
 
     def configRootFileName(self, rebuild=False):
         "!@brief return the config ROOT file name.  rebuild if necessary."
