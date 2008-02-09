@@ -175,7 +175,7 @@ class CalPrecinctReport(object):
 
     # optional baseline ROOT data
     if baselineRootPath == None:
-      self.__baselineRootPath == None
+      self.__baselineRootPath = None
     else:
       self.__baselineRootPath = baselineRootPath
       self._baselineRootData = PrecinctData(self.__baselineRootPath, precinctName)
