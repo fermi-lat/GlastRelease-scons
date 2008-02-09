@@ -108,7 +108,7 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfGammaStatus,1) // Gamma Filter output
+    ClassDef(ObfGammaStatus,2) // Gamma Filter output
 };
 
 class ObfHFCStatus : virtual public IObfStatus, public TObject
@@ -139,7 +139,7 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfHFCStatus,1) // HFC output
+    ClassDef(ObfHFCStatus,2) // HFC output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
@@ -170,7 +170,7 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfMipStatus,1) // MIP filter output
+    ClassDef(ObfMipStatus,2) // MIP filter output
 };
 
 class ObfDFCStatus : virtual public IObfStatus, public TObject
@@ -201,7 +201,7 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfDFCStatus,1) // DFC output
+    ClassDef(ObfDFCStatus,2) // DFC output
 };
 
 #endif

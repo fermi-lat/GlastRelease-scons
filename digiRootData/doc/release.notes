@@ -4,6 +4,9 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v9r30p1   07-Feb-2008 HMK Increment the Class versions for the changnes in
+          ObfFilterStatus
+v9r30
 v9r29p2   11-Jan-2008  TU Add id and status byte info to ObfFilterStatus
 v9r20p1   03-Dec-2007 HMK Increment version of DigiEvent due to intro of
           ObfFilterStatus - should have been done awhile ago
