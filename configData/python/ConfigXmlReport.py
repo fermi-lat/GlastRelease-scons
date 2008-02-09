@@ -173,7 +173,14 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["GNL_Timing"] = GnlTimingXmlReport
     PRECINCT_HANDLERS["CAL_Timing"] = CalTimingXmlReport
     PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
-
+    # Cal reports
+    from CalXmlReport import CalLacXmlReport, CalFleXmlReport, CalFheXmlReport, CalUldXmlReport, CalModeXmlReport
+    PRECINCT_HANDLERS["CAL_LAC"]    = CalLacXmlReport
+    PRECINCT_HANDLERS["CAL_FLE"]    = CalFleXmlReport
+    PRECINCT_HANDLERS["CAL_FHE"]    = CalFheXmlReport
+    PRECINCT_HANDLERS["CAL_ULD"]    = CalUldXmlReport
+    PRECINCT_HANDLERS["CAL_Mode"]   = CalModeXmlReport
+    
 
 
 def makeChildNode(parentNode, childName):
