@@ -18,7 +18,7 @@ __credits__  = "SLAC"
 
 import logging
 
-from PrecinctReport import *
+from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 from CalPrecinctReport import *
 

@@ -18,7 +18,7 @@ __credits__  = "SLAC"
 
 import logging
 
-from PrecinctReport import *
+from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 from TkrRegisterChecker import *
 TMP_BASE_ROOT = '/scratch/philiph/offline/offlineConfig/configData/v1r6p2/rhel4_gcc34/MootConfig_5881.root'
