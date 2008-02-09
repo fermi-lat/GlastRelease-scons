@@ -48,6 +48,8 @@ class BasicRootMacroRunner(object):
     for line in lines:
       formattedLine = re.sub(" ", "&nbsp;", line)
       formattedLine = re.sub("font&nbsp;", "font ", formattedLine)
+      formattedLine = re.sub("&nbsp;New", " New", formattedLine)
+      formattedLine = re.sub("&nbsp;color", " color", formattedLine)
       fp.write('%s<br>\n' %(formattedLine))
     fp.close()
     

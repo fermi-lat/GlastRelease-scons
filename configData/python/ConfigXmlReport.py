@@ -168,8 +168,9 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["ACD_Mode"] = AcdModeXmlReport
     PRECINCT_HANDLERS["ACD_PHA"] = AcdPHAXmlReport
     PRECINCT_HANDLERS["ACD_Veto"] = AcdVetoXmlReport
-    from TimingXmlReport import AcdTimingXmlReport, GnlTimingXmlReport, CalTimingXmlReport, TkrTimingXmlReport
+    from TimingXmlReport import AcdTimingXmlReport, GnlModeXmlReport, GnlTimingXmlReport, CalTimingXmlReport, TkrTimingXmlReport
     PRECINCT_HANDLERS["ACD_Timing"] = AcdTimingXmlReport
+    PRECINCT_HANDLERS["GNL_Mode"] = GnlModeXmlReport
     PRECINCT_HANDLERS["GNL_Timing"] = GnlTimingXmlReport
     PRECINCT_HANDLERS["CAL_Timing"] = CalTimingXmlReport
     PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport

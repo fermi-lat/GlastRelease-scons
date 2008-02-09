@@ -13,6 +13,7 @@ void Config_check::TKR_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
+   bool caughtAssert = kFalse;
    startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
@@ -24,17 +25,24 @@ void Config_check::TKR_Timing()
    switchcolor(magenta);
    std::cout<<std::setw(3) <<"BC"<<hex<<setw(10)<<tcc_trg_align_bcast<<dec<<std::endl;
    for (int i=0;i<16;i++){
-     for (int j=1;j<8;j++) assert(tcc_trg_align[i][j]==tcc_trg_align[i][0]);
+     for (int j=1;j<8;j++) caughtAssert |= niceAssert(tcc_trg_align[i][j], tcc_trg_align[i][0], 'tcc_trg_align');
      switchcolor(black);
      std::cout<<std::setw(3)<<i;
      if(tcc_trg_align[i][0]==tcc_trg_align_bcast)switchcolor(green);
      else switchcolor(red);
      std::cout<<hex<<setw(10)<<tcc_trg_align[i][0]<<dec<<std::endl;
-   }
+   }			      
    switchcolor(black);
    std::cout<<std::endl;
-   std::cout<<"It has been verified that all tcc_trg_align registers in a tower are identical."<<std::endl;
-      // if (Cut(ientry) < 0) continue;
+   if not caughtAssert {
+     std::cout<<"It has been verified that all tcc_trg_align registers in a tower are identical."<<std::endl;
+     // if (Cut(ientry) < 0) continue;
+   } else {
+     switchcolor(red);
+     std::cout<<"ERROR: not all tcc_trg_align registers in a tower are identical."<<std::endl;
+     switchcolor(black);
+   }
+
    std::cout<<std::endl;
    std::cout<<"Legend: "<<std::endl;
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;
@@ -112,6 +120,7 @@ void Config_check::CAL_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
+   bool caughtAssert = kFalse;
    startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
@@ -125,11 +134,11 @@ void Config_check::CAL_Timing()
    for (int i=0;i<16;i++){
      for (int j=0;j<4;j++){
        for (int k=1;k<4;k++){
-	 assert (delay_1[i][j][k]==delay_1[i][0][0]);
-	 assert (delay_2[i][j][k]==delay_2[i][0][0]);
-	 assert (delay_3[i][j][k]==delay_3[i][0][0]);
+	 caughtAssert |= niceAssert(delay_1[i][j][k], delay_1[i][0][0], 'delay_1');
+	 caughtAssert |= niceAssert(delay_2[i][j][k], delay_2[i][0][0], 'delay_2');
+	 caughtAssert |= niceAssert(delay_3[i][j][k], delay_3[i][0][0], 'delay_3');
        }
-       assert (ccc_trg_alignment[i][j]==ccc_trg_alignment[i][0]);
+       caughtAssert |= niceAssert(ccc_trg_alignment[i][j], ccc_trg_alignment[i][0], 'ccc_trg_alignment');
      }
      switchcolor(black);
      std::cout<<std::setw(3)<<i;
@@ -148,8 +157,14 @@ void Config_check::CAL_Timing()
    }
    switchcolor(black);
    std::cout<<std::endl;
-   std::cout<<"All registers of a type have the identical value within one TEM"<<std::endl;
-      // if (Cut(ientry) < 0) continue;
+   if not caughtAssert {
+     std::cout<<"All registers of a type have the identical value within one TEM"<<std::endl;
+     // if (Cut(ientry) < 0) continue;
+   } else {
+     switchcolor(red);
+     std::cout<<"ERROR: not all registers of a type have the identical value within one TEM"<<std::endl;
+     switchcolor(black);
+   }
    std::cout<<std::endl;
    std::cout<<"Legend: "<<std::endl;
    std::cout<<color(magenta)<<"Magenta: Broadcast value"<<std::endl;

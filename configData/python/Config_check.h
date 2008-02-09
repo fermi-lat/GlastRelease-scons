@@ -60,7 +60,7 @@ inline ostream& operator<<(ostream& o, const color& c)
   //o << "\033[0;3" << c.fore << "m";
 
   //return o << "\033[4" << c.back << "m";
-  o << "<font color='" << translateColor(c.fore) << "'>";
+  o << "<font face='Courier New' color='" << translateColor(c.fore) << "'>";
   return o;
 }
 
@@ -78,18 +78,24 @@ inline char* translateColor(const ColorName name){
 }
 
 inline void startcolor(const ColorName name){
-  printf("<font color='%s'>", translateColor(name));
+  printf("<font face='Courier New' color='%s'>", translateColor(name));
 }
 inline void endcolor() {
   printf("</font>");
 }
 inline void switchcolor(const ColorName name){
-  printf("</font><font color='%s'>", translateColor(name));
+  printf("</font><font face='Courier New' color='%s'>", translateColor(name));
   //  printf("\033[0;3%dm", name);
 }
 
 inline void switchcolor(const *char colorName){
   printf("<b style='color:%s'>", name);
+}
+
+inline void niceAssert(const int a, const int b, const *char name) {
+  if (a==b) return kFalse;
+  std::cout<<'checking '<< name << 'found inconsistent values ' << a << ' and ' << 'b' << std::endl;
+  return kTrue;
 }
 
 struct gotoxy

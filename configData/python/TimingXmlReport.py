@@ -37,7 +37,7 @@ class TimingXmlReport(PrecinctXmlReport):
         self.addIntent(summary)  # blank intent node for later?
 
         self.shortSummary(self.data.configDir, rebuild=True) ## rebuild for now
-        self.includeText(summary, self.__builtName, nLines=20, isHtml=True)
+        self.includeText(summary, self.__builtName, nLines=30, isHtml=True)
         self.addComment(summary, "empty comment")
 
     def shortSummary(self, outputStub="", rebuild=False):
@@ -47,6 +47,9 @@ class TimingXmlReport(PrecinctXmlReport):
             macroRunner.doChecks()
             
 class AcdTimingXmlReport(TimingXmlReport):
+    def __init__(self, precinctInfo, configData):
+        TimingXmlReport.__init__(self, precinctInfo, configData)
+class GnlModeXmlReport(TimingXmlReport):
     def __init__(self, precinctInfo, configData):
         TimingXmlReport.__init__(self, precinctInfo, configData)
 class GnlTimingXmlReport(TimingXmlReport):

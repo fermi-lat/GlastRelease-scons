@@ -3,6 +3,9 @@ void dumpPrecinct(const char* filename, const char* myMacro, const char* precinc
   gROOT->LoadMacro(myMacro);
   Config_check f(filename);
   switch (*precinct) {
+  case 'GNL_Mode':
+    f.GNL_Mode();
+    break;
   case 'GNL_Timing':
     f.GNL_Timing();
     break;
