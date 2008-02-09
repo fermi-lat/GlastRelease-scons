@@ -46,51 +46,70 @@ TAG_PRECINCT   = "PrecinctReportLink"
 TAG_COMMENT    = "Comment"
 TAG_INTENT     = "Intent"
 TAG_LINKTO     = "LinkTo"
+TAG_PRCRPT     = "PrecinctReport"
+TAG_PRCINFO    = "PrecinctInfo"
+TAG_SECTION    = "ReportSection"
+TAG_IMG        = "Image"
+TAG_INCTEXT    = "TextInclude"
+TAG_TEXTLINE   = "TextLine"
 
-ATTR_CKEY      = "ConfigKey"
-ATTR_BKEY      = "BaselineKey"
-ATTR_USER      = "User"
-ATTR_DATE      = "Date"
-ATTR_KEY       = "Key"
-ATTR_CNAME     = "ConfigName"
-ATTR_STATUS    = "Status"
 ATTR_ACTIVE    = "Active"
+ATTR_ALIAS     = "Alias"
+ATTR_BKEY      = "BaselineKey"
+ATTR_CKEY      = "ConfigKey"
+ATTR_CNAME     = "ConfigName"
+ATTR_DATE      = "Date"
 ATTR_DESC      = "Description"
-ATTR_NAME      = "Name"
 ATTR_FILELINK  = "FileLink"
-ATTR_VKEY      = "VoteKey"
 ATTR_FNAME     = "FileName"
+ATTR_KEY       = "Key"
+ATTR_NAME      = "Name"
+ATTR_NLINES    = "NLines"
 ATTR_NOCONV    = "NoConvert"
+ATTR_PKEY      = "Key"
+ATTR_PNAME     = "PrecinctName"
+ATTR_STATUS    = "Status"
+ATTR_TEXT      = "Text"
+ATTR_TITLE     = "Title"
+ATTR_USER      = "User"
+ATTR_VKEY      = "VoteKey"
 
 PRECINCT_HANDLERS = {}
 
-class ConfigXmlReport(ConfigReport):
-    def __init__(self, configData):
-        ConfigReport.__init__(self, configData)
-
+class XmlReport(object):
+    ROOT_TAG_TYPE = ""
+    def __init__(self):
         self.__doc = implementation.createDocument(CONFIG_NAMESPACE, None, None)
         self.__root = None
-        self.__precRpts = []
+
+    @property
+    def rootNode(self):
+        return self.__root
 
     def createHeader(self):
-        self.__root = makeChildNode(self.__doc, TAG_CFGRPT)
-        setAttribute(self.__root, ATTR_CKEY, self.data.config)
-        setAttribute(self.__root, ATTR_BKEY, self.data.baseline)
-        setAttribute(self.__root, ATTR_USER, getpass.getuser())
-        setAttribute(self.__root, ATTR_DATE, time.asctime())
-        self.data.configRootFileName()
-        self.data.baselineRootFileName()
-        self.data.compareRootFileName()
+        self.__root = makeChildNode(self.__doc, self.ROOT_TAG_TYPE)
+        setAttribute(self.rootNode, ATTR_CKEY, self.data.config)
+        setAttribute(self.rootNode, ATTR_BKEY, self.data.baseline)
+        setAttribute(self.rootNode, ATTR_USER, getpass.getuser())
+        setAttribute(self.rootNode, ATTR_DATE, time.asctime())
 
+    def writeReport(self, fileStub):
+        fileName = os.path.join(self.data.configDir, fileStub)
+        f = open(fileName, 'w')
+        PrettyPrint(self.__doc, f)
+        f.close()
+        return fileName
+        
     def addConfigInfo(self):
-        cInfoNode = makeChildNode(self.__root, TAG_CINFO)
+        cInfoNode = makeChildNode(self.rootNode, TAG_CINFO)
         self.__addCInfoTags(cInfoNode, self.data.configInfo)
 
     def addBaselineInfo(self):
-        bInfoNode = makeChildNode(self.__root, TAG_BINFO)
+        bInfoNode = makeChildNode(self.rootNode, TAG_BINFO)
         self.__addCInfoTags(bInfoNode, self.data.baselineInfo)
 
     def __addCInfoTags(self, node, info):
+        if not info: return
         setAttribute(node, ATTR_CNAME, info.getName())
         setAttribute(node, ATTR_KEY, info.getKey())
         setAttribute(node, ATTR_DATE, info.getCreationTime())
@@ -98,24 +117,16 @@ class ConfigXmlReport(ConfigReport):
         setAttribute(node, ATTR_ACTIVE, info.getActive())
         setAttribute(node, ATTR_DESC, info.getDescrip())
         if hasattr(info, 'getVoteKey'):
-          setAttribute(node, ATTR_VKEY, info.getVoteKey())
-          vInfo = self.data.db.getVoteInfo(info.getVoteKey())
-          setAttribute(node, ATTR_FNAME, vInfo.getSrc())
+            setAttribute(node, ATTR_VKEY, int(info.getVoteKey()))
+            vInfo = self.data.db.getVoteInfo(int(info.getVoteKey()))
+            setAttribute(node, ATTR_FNAME, vInfo.getSrc())
         
-    def addPrecincts(self):
-        precsNode = makeChildNode(self.__root, TAG_PRECINCTS)
-        for pInfo in self.data.precinctInfo:
-            if pInfo.getPrecinct() in PRECINCT_HANDLERS:
-                handler = PRECINCT_HANDLERS[pInfo.getPrecinct()]
-            else:
-                handler = PRECINCT_HANDLERS['DEFAULT']
-            pRpt = handler(pInfo, self.data)
-            pRpt.createReport()
-            rName = self.data.makeRelative(pRpt.writeReport())
-            pNode = makeChildNode(precsNode, TAG_PRECINCT)
-            setAttribute(pNode, ATTR_NAME, pInfo.getPrecinct())
-            setAttribute(pNode, ATTR_FILELINK, rName[:-4]) # chop '.xml' off end
-            self.__precRpts.append(rName)
+    def addSection(self, sectionName, parent=None):
+        if not parent:
+            parent = self.rootNode
+        sec = makeChildNode(parent, TAG_SECTION)
+        setAttribute(sec, ATTR_NAME, sectionName)
+        return sec
 
     def addComment(self, parent, commentText):
         comment = makeChildNode(parent, TAG_COMMENT)
@@ -123,36 +134,140 @@ class ConfigXmlReport(ConfigReport):
         setAttribute(comment, ATTR_DATE, time.asctime())
         makeTextChildNode(comment, commentText)
 
+    def addLink(self, parent, linkTarget, linkText, noConvert=False):
+        "!@brief add a link to another file.  Links will be made relative to the report directory"
+        # noConvert:  Don't convert 'xml' to 'html' in links
+        relTarget = self.data.makeRelative(linkTarget)
+        link = makeChildNode(parent, TAG_LINKTO)
+        setAttribute(link, ATTR_FNAME, str(relTarget))
+        setAttribute(link, ATTR_NOCONV, str(noConvert))
+        setAttribute(link, ATTR_DESC, str(linkText))
+
+    def addImage(self, parent, fileName, title, caption=""):
+        imgNode = makeChildNode(parent, TAG_IMG)
+        setAttribute(imgNode, ATTR_FNAME, self.data.makeRelative(fileName))
+        setAttribute(imgNode, ATTR_TITLE, title)
+        if caption:
+            makeTextChildNode(imgNode, caption)
+
+
+
+class ConfigXmlReport(XmlReport, ConfigReport):
+    def __init__(self, configData):
+        ConfigReport.__init__(self, configData)
+        XmlReport.__init__(self)
+        self.ROOT_TAG_TYPE = TAG_CFGRPT
+        self.__precRpts = []
+
+    def createHeader(self):
+        super(ConfigXmlReport, self).createHeader()
+        setAttribute(self.rootNode, ATTR_CNAME, self.data.configInfo.getName())
+        self.addDataFiles()
+
+    def addPrecincts(self):
+        self.__getAliases()
+        precsNode = makeChildNode(self.rootNode, TAG_PRECINCTS)
+        for pInfo in self.data.precinctInfo:
+            if pInfo.getPrecinct() in PRECINCT_HANDLERS:
+                handler = PRECINCT_HANDLERS[pInfo.getPrecinct()]
+            else:
+                handler = PRECINCT_HANDLERS['DEFAULT']
+            pRpt = handler(pInfo, self.data)
+            pRpt.createReport()
+            rptName = pRpt.writeReport()
+            rName = self.data.makeRelative(pRpt.writeReport())
+            self.addLink(precsNode, rptName, "Precinct: %s;  Alias: %s"%(pInfo.getPrecinct(), pInfo.alias))
+            self.__precRpts.append(rptName)
+
+    def __getAliases(self):
+        votePath = self.data.db.getVoteInfo(int(self.data.configInfo.getVoteKey())).getSrc()
+        confPath = os.path.join(os.environ['MOOT_ARCHIVE'], votePath)
+        tmp,confDoc = openXmlFileByName(confPath)
+        for pInfo in self.data.precinctInfo:
+            precinctNode = confDoc.xpath('/descendant::%s-vote'%pInfo.getPrecinct())[0]
+            precinctAlias = str(precinctNode.xpath('child::text()')[0].data)
+            pInfo.alias = precinctAlias
+        
+
     def addDataFiles(self):
-        pass
+        if self.data.configRootFileName():
+            self.addLink(self.rootNode, self.data.configRootFileName(), "Configuration ROOT data file")
+        if self.data.baselineRootFileName():
+            self.addLink(self.rootNode, self.data.baselineRootFileName(), "Baseline ROOT data file")
+        if self.data.compareRootFileName():
+            self.addLink(self.rootNode, self.data.compareRootFileName(), "Comparison ROOT data file")
 
     def precinctXml(self):
         return self.__precRpts
 
+    def writeReport(self, fileStub='ConfigReport.xml'):
+        return super(ConfigXmlReport, self).writeReport(fileStub)
+
+
+class PrecinctXmlReport(XmlReport, PrecinctReport):
+    def __init__(self, precinctInfo, configData):
+        PrecinctReport.__init__(self, precinctInfo, configData)
+        XmlReport.__init__(self)
+        self.ROOT_TAG_TYPE = TAG_PRCRPT
+
+    def createHeader(self):
+        super(PrecinctXmlReport, self).createHeader()
+        setAttribute(self.rootNode, ATTR_NAME, self.info.getPrecinct())
+        setAttribute(self.rootNode, ATTR_ALIAS, self.info.alias)
+        # precinct report info
+        pInfo = makeChildNode(self.rootNode, TAG_PRCINFO)
+        setAttribute(pInfo, ATTR_PNAME, self.info.getPrecinct())
+        setAttribute(pInfo, ATTR_PKEY, int(self.info.getKey()))
+        setAttribute(pInfo, ATTR_USER, self.info.getCreator())
+        setAttribute(pInfo, ATTR_DATE, self.info.getTs())
+        setAttribute(pInfo, ATTR_STATUS, self.info.getStatus())
+        setAttribute(pInfo, ATTR_DESC, self.info.getDescrip())
+        setAttribute(pInfo, ATTR_FNAME, self.info.getSrc())
+        setAttribute(pInfo, ATTR_ALIAS, self.info.alias)
+        self.addLink(self.rootNode, "ConfigReport.xml", "Parent Report")
+        
+    def addIntent(self, parent, intentText=""):
+        intent = makeChildNode(parent, TAG_INTENT)
+        makeTextChildNode(intent, intentText)
+
+    def includeText(self, parent, includeFile, nLines=-1, isHtml=False):
+        tInc = makeChildNode(parent, TAG_INCTEXT)
+        setAttribute(tInc, ATTR_FNAME, self.data.makeRelative(includeFile))
+        setAttribute(tInc, ATTR_NOCONV, str(not isHtml))
+        count = 0
+        for line in open(includeFile, 'r').readlines():
+            if count < nLines or nLines == -1:
+                n = makeChildNode(tInc, TAG_TEXTLINE)
+                setAttribute(n, ATTR_TEXT, line)
+                setAttribute(n, ATTR_NOCONV, str(not isHtml))
+            count += 1
+        if nLines>=0 and count > nLines:
+            setAttribute(tInc, ATTR_NLINES, nLines)
+
     def writeReport(self):
-        fileName = os.path.join(self.data.configDir, 'ConfigReport.xml')
-        f = open(fileName, 'w')
-        PrettyPrint(self.__doc,f)
-        f.close()
-        return self.data.makeRelative(fileName)
+        fileStub = '%s_report.xml' % self.info.getPrecinct()
+        return super(PrecinctXmlReport, self).writeReport(fileStub)
+
+
+
+
 
 def transformToFile(xslFileName, xmlFileName, htmlFileName):
-  """!\brief Based on the input template and output filename parameters
-  creates an HTML report.
-
-  \param xslFileName  Input XSLT template file name.
-  \param htmlFileName Output HTML filename.
-  """
-  htmlFile = file(htmlFileName, 'w+')
-  xslAsUri = OsPathToUri(xslFileName)
-  xmlStream = open(xmlFileName, 'r').read()
-  Transform(xmlStream, xslAsUri, output=htmlFile)
-  htmlFile.close()
+    """!\brief Based on the input template and output filename parameters
+    creates an HTML report.
+    
+    \param xslFileName  Input XSLT template file name.
+    \param htmlFileName Output HTML filename.
+    """
+    htmlFile = file(htmlFileName, 'w+')
+    xslAsUri = OsPathToUri(xslFileName)
+    xmlStream = open(xmlFileName, 'r').read()
+    Transform(xmlStream, xslAsUri, output=htmlFile)
+    htmlFile.close()
 
 
 
 def makePrecinctHandlers():
-    from PrecinctReport import PrecinctXmlReport
     PRECINCT_HANDLERS["DEFAULT"] = PrecinctXmlReport
     # Trigger reports
     from TrgGemXmlReport import TrgGemXmlReport
@@ -174,6 +289,10 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["GNL_Timing"] = GnlTimingXmlReport
     PRECINCT_HANDLERS["CAL_Timing"] = CalTimingXmlReport
     PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
+    from LciXmlReport import LciXmlReport
+    PRECINCT_HANDLERS["ACD_LCI"] = LciXmlReport
+    PRECINCT_HANDLERS["CAL_LCI"] = LciXmlReport
+    PRECINCT_HANDLERS["TKR_LCI"] = LciXmlReport
     # Cal reports
     from CalXmlReport import CalLacXmlReport, CalFleXmlReport, CalFheXmlReport, CalUldXmlReport, CalModeXmlReport
     PRECINCT_HANDLERS["CAL_LAC"]    = CalLacXmlReport
@@ -181,7 +300,6 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["CAL_FHE"]    = CalFheXmlReport
     PRECINCT_HANDLERS["CAL_ULD"]    = CalUldXmlReport
     PRECINCT_HANDLERS["CAL_Mode"]   = CalModeXmlReport
-    
 
 
 def makeChildNode(parentNode, childName):
@@ -220,6 +338,24 @@ def makeTextChildNode(parentNode, value):
     parentNode.appendChild(childNode)
     return childNode
 
+def openXmlFileByName(fileName):    
+    """ open an xml file for reading
+
+    \param fileName
+    \return (file,doc) the opened file object and the associated xml doc object
+
+    after the user is done with the file object the should remember to clean up by
+    calling file.close()
+    """
+    theFile = open(fileName,'r')
+    input = Uri.OsPathToUri(fileName, attemptAbsolute=1)
+    try:
+        doc = NonvalidatingReader.parseUri(input)
+    except:
+        theFile.close()
+        theFile = None
+        doc = None
+    return (theFile,doc)    
 
 def setLogging(verbosity=None):
     """
@@ -275,20 +411,29 @@ if __name__ == '__main__':
     import sys
 
     options, args = optparse()
-    setLogging(options.verbose)    
-    makePrecinctHandlers()
-    holder = ConfigDataHolder(options.configKey,
-                              options.baselineKey,
-                              configDirBase=options.configDir)
-    cr = ConfigXmlReport(holder)
-    cr.createReport()
-    xmlName = cr.writeReport()
+    setLogging(options.verbose)
 
-    transformToFile(options.xslTransform,
-                    os.path.join(holder.configDir, xmlName),
-                    os.path.join(holder.configDir, xmlName[:-3]+"html"))
-    for pR in cr.precinctXml():
-        print pR
+    try:
+        makePrecinctHandlers()
+        holder = ConfigDataHolder(options.configKey,
+                                  options.baselineKey,
+                                  configDirBase=options.configDir)
+        cr = ConfigXmlReport(holder)
+        cr.createReport()
+        xmlName = cr.writeReport()
+    
         transformToFile(options.xslTransform,
-                        os.path.join(holder.configDir, pR),
-                        os.path.join(holder.configDir, pR[:-3]+"html"))
+                        xmlName,
+                        xmlName[:-3]+"html")
+        for pR in cr.precinctXml():
+            print pR
+            transformToFile(options.xslTransform,
+                            pR,
+                            pR[:-3]+"html")
+    except ConfigReportError, e:
+        _log.error(e.message)
+        sys.exit(-1)
+    except Exception, e:
+        _log.error("Unexpected exception recieved:")
+        _log.error(e)
+        raise
