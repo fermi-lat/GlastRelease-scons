@@ -18,15 +18,18 @@
   <xsl:template match="ConfigReport">
     <HTML>
       <HEAD>
-        <TITLE>Configuration report for MOOT config key
-              <xsl:value-of select="@ConfigKey"/> 
+        <TITLE>Configuration report for MOOT config name 
+              <xsl:value-of select="@ConfigName"/> (Key =  
+              <xsl:value-of select="@ConfigKey"/>)
         </TITLE>
         <STYLE media ="print" type ="text/css">#toc {display:none}p {font: 12pt serif; page-break-inside:avoid}h1,h2 {page-break-before:always}</STYLE>
         <STYLE media ="screen" type ="text/css">h1,h2 {border-top-style:solid}</STYLE>
       </HEAD>
       <BODY>
-        <h1>Configuration report for MOOT config key
-                <xsl:value-of select="@ConfigKey"/></h1>
+        <h1>Configuration report for MOOT config name 
+              <xsl:value-of select="@ConfigName"/> (Key =  
+              <xsl:value-of select="@ConfigKey"/>)
+        </h1>
         <p>&nbsp;</p>
         <p>Configuration key <xsl:value-of select="@ConfigKey"/> was compared
            to the baseline configuration <xsl:value-of select="@BaselineKey"/>
@@ -43,14 +46,17 @@
     <HTML>
       <HEAD>
         <TITLE>Precinct report for <xsl:value-of select="@Name"/> from
-               MOOT config key <xsl:value-of select="@ConfigKey"/> 
+               MOOT config Alias <xsl:value-of select="@Alias"/>
+               (Vote key <xsl:value-of select="@ConfigKey"/>)
         </TITLE>
         <STYLE media ="print" type ="text/css">#toc {display:none}p {font: 12pt serif; page-break-inside:avoid}h1,h2 {page-break-before:always}</STYLE>
         <STYLE media ="screen" type ="text/css">h1,h2 {border-top-style:solid}</STYLE>
       </HEAD>
       <BODY>
-        <h1>Precinct report for  <xsl:value-of select="@Name"/>
-            from MOOT config key <xsl:value-of select="@ConfigKey"/></h1>
+        <h1>Precinct report for <xsl:value-of select="@Name"/> from
+               MOOT config Alias <xsl:value-of select="@Alias"/>
+               (Vote key <xsl:value-of select="@ConfigKey"/>)
+        </h1>
         <p>&nbsp;</p>
         <p>Precinct <xsl:value-of select="@Name"/> from MOOT configuration key
            <xsl:value-of select="@ConfigKey"/> was compared
@@ -66,10 +72,10 @@
   <xsl:template match="ConfigInfo">
     <h3>Configuration database information</h3>
     <table border='1'>
+      <tr><td align='left'>Name/Alias:</td>
+          <td align='left'><xsl:value-of select="@ConfigName"/></td></tr>
       <tr><td align='left'>DB Key:</td>
           <td align='left'><xsl:value-of select="@Key"/></td></tr>
-      <tr><td align='left'>Name:</td>
-          <td align='left'><xsl:value-of select="@ConfigName"/></td></tr>
       <tr><td align='left'>Creation Date:</td>
           <td align='left'><xsl:value-of select="@Date"/></td></tr>
       <tr><td align='left'>Active:</td>
@@ -92,10 +98,10 @@
   <xsl:template match="BaselineInfo">
     <h3>Baseline configuration database information</h3>
     <table border='1'>
+      <tr><td align='left'>Name/Alias:</td>
+          <td align='left'><xsl:value-of select="@ConfigName"/></td></tr>
       <tr><td align='left'>DB Key:</td>
           <td align='left'><xsl:value-of select="@Key"/></td></tr>
-      <tr><td align='left'>Name:</td>
-          <td align='left'><xsl:value-of select="@ConfigName"/></td></tr>
       <tr><td align='left'>Creation Date:</td>
           <td align='left'><xsl:value-of select="@Date"/></td></tr>
       <tr><td align='left'>Active:</td>
@@ -118,10 +124,12 @@
   <xsl:template match="PrecinctInfo">
     <h3>Vote database information</h3>
     <table border='1'>
-      <tr><td align='left'>Vote Key:</td>
-          <td align='left'><xsl:value-of select="@Key"/></td></tr>
       <tr><td align='left'>Precinct:</td>
           <td align='left'><xsl:value-of select="@PrecinctName"/></td></tr>
+      <tr><td align='left'>Alias:</td>
+          <td align='left'><xsl:value-of select="@Alias"/></td></tr>
+      <tr><td align='left'>Vote Key:</td>
+          <td align='left'><xsl:value-of select="@Key"/></td></tr>
       <tr><td align='left'>Creation Date:</td>
           <td align='left'><xsl:value-of select="@Date"/></td></tr>
       <tr><td align='left'>Creator:</td>
@@ -158,10 +166,11 @@
 
   <xsl:template match="Intent">
     <h5>Intent:</h5>
-    <p><xsl:value-of select="Intent"/></p>
+    <table><tr><td><xsl:value-of select="Intent"/></td></tr></table>
   </xsl:template>
 
   <xsl:template match="TextInclude">
+    <h6>Included File:&nbsp;&nbsp;<xsl:value-of select="@FileName"/></h6>
     <xsl:choose>
       <xsl:when test="@NoConvert='True'">
         <pre>
