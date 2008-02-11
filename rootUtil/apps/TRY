@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+clear
+
+cmd="cel$1.exe"
+
+cd ../cmt
+make || exit
+. setup.sh
+
+cd ../apps
+export PATH=../${CMTCONFIG}:${PATH}
+celInspect.exe test.cel.root
+echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+$cmd test.cel.root
+echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+celInspect.exe test.cel.root
+
+
+
+

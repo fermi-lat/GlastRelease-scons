@@ -500,7 +500,7 @@ Long64_t CompositeEventList::fillEvent( const std::vector<TTree *> & trees )
       << std::endl ;
     return -1 ;
    }
-	
+        
   if (trees.size() != _compList.size())
    {
     std::cerr
@@ -957,27 +957,49 @@ void CompositeEventList::printInfo
  {
   if (nEvent==0)
    { nEvent = numEvents() ; }
+  UInt_t lastEvt = startEvent+nEvent ;
         
   TString caller ("CompositeEventList::printInfo") ;
   if ( ! checkCelPrepared(caller) ) return ;
   
+  // init widths
+  _treeNumberWidth = 0 ;
+  _entryNumberWidth = 0 ;
+  UInt_t nEvents = lastEvt ;
+  _eventNumberWidth = 1 ; // width
+  while (nEvents>10)
+   { ++_eventNumberWidth ; nEvents /= 10 ; }
+  UInt_t nSets = numFileAndTreeSets() ;
+  _setNumberWidth = 1 ;
+  while (nSets>10)
+   { ++_setNumberWidth ; nSets /= 10 ; }
+      
+  // Components
   std::cout << "Printing Component Names:" ;
+  _componentNameWidth = 0 ;
+  TString componentName ;
   std::vector<CelEventComponent*>::const_iterator itr ;
   for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
    {
     const CelEventComponent * comp = *itr ;
     if ( comp == 0 ) throw "?!?" ;
-    std::cout << " "<< comp->componentName() ;
+    componentName = comp->componentName() ;
+    std::cout << " " << componentName ;
+    if (((unsigned int)componentName.Length())>_componentNameWidth)
+     { _componentNameWidth = componentName.Length() ; }
    } 
   std::cout << std::endl ;
         
+  // Events
   std::cout << "Printing Events Info: " << std::endl ;
-  UInt_t lastEvt = startEvent+nEvent, iEvt ;
+  UInt_t iEvt ;
   for ( iEvt = startEvent ; iEvt < lastEvt ; iEvt++ )
    {
     shallowRead(iEvt) ;
     printEventInfo(options) ;
    }
+  
+  // Sets
   std::cout << "Printing Sets Info: " << std::endl ;
   Long64_t iSet = -1 ;
   for ( iEvt = startEvent ; iEvt < lastEvt ; iEvt++ )
@@ -986,7 +1008,7 @@ void CompositeEventList::printInfo
     if (currentSetIndex()!=iSet)
      {
       iSet = currentSetIndex() ;
-      printSetsInfo(options) ;
+      printSetInfo(options) ;
      }
    }
  }
@@ -1004,8 +1026,8 @@ void CompositeEventList::printEventInfo( const char * options )
   
   // print info
   std::cout
-    << "Event " << setw(wEvents) << std::right << _currentLink.eventIndex() << " : "
-    << "Set " << setw(wSets) << std::right << _currentLink.setIndex() ;
+    << "Event " << setw(_eventNumberWidth) << std::right << _currentLink.eventIndex() << " : "
+    << "Set " << setw(_setNumberWidth) << std::right << _currentLink.setIndex() ;
   std::vector<CelEventComponent*>::const_iterator itr ;
   for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
    {
@@ -1019,16 +1041,21 @@ void CompositeEventList::printEventInfo( const char * options )
  }
 
 // Dump the list of TTree where our events live
-void CompositeEventList::printSetsInfo( const char * options )
+void CompositeEventList::printSetInfo( const char * options )
  {
-  TString setPrefix("Set "), prefix ;
+  TString setPrefix("Set ") ;
+  TString name ;
+  TString prefix ;
   setPrefix += currentSetIndex() ;
   std::vector<CelEventComponent*>::const_iterator itr ;
   for ( itr = _compList.begin() ; itr != _compList.end() ; itr++ )
    {
     const CelEventComponent * comp = *itr ;
     if ( comp == 0 ) return ; // ??
-    prefix = setPrefix + ", " + comp->componentName() + ", " ;
+    name = comp->componentName() ;
+    while (name.Length()<_componentNameWidth)
+     { name += ' ' ; }
+    prefix = setPrefix + ", " + name ;
     comp->printSetInfo(options,prefix) ;
   }   
 }

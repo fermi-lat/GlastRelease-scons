@@ -11,7 +11,8 @@ rm -f *.root
 export PATH=../${CMTCONFIG}:${PATH}
    testGenerateData.exe \
 && testMakeCel.exe \
-&& testReadCel.exe
+&& testReadCel.exe \
+&& celInspect.exe test.cel.root
 
 
 

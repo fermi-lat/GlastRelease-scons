@@ -1,8 +1,8 @@
+
 #include <rootUtil/CompositeEventList.h>
 #include <TFile.h>
 #include <TTree.h>
 #include <TSystem.h>
-
 
 #include <stdlib.h>
 #include <fstream>
@@ -22,23 +22,23 @@ using std::string ;
 
 void usage()
  {
-  std::string m_theApp("inspectCel.exe") ;
+  std::string m_theApp("celInspect.exe") ;
 
-  cout << endl
-       << m_theApp << endl
-       << "Prints information about a Composite Event List" << endl
-       << endl ;
+  std::cout << std::endl
+       << m_theApp << std::endl
+       << "Prints information about a Composite Event List" << std::endl
+       << std::endl ;
   
-  cout << "Usage:" << endl
-       << "\t" << m_theApp << " [options] inputFiles" << endl 
-       << endl
-       << endl
-       << "\tOPTIONS for all jobs" << endl
-       << "\t   -h                : print this message" << endl
-       << "\t   -p <flags>        : what to print"      << endl
-       << "\t   -n <nEvents>      : run over <nEvents>" << endl
-       << "\t   -s <startEvent>   : start with event <startEvent>" << endl
-       << endl ;
+  std::cout << "Usage:" << std::endl
+       << "\t" << m_theApp << " [options] CelFile" << std::endl 
+       << std::endl
+       << std::endl
+       << "\tOPTIONS for all jobs" << std::endl
+       << "\t   -h                : print this message" << std::endl
+       << "\t   -p <flags>        : what to print"      << std::endl
+       << "\t   -n <nEvents>      : run over <nEvents>" << std::endl
+       << "\t   -s <startEvent>   : start with event <startEvent>" << std::endl
+       << std::endl ;
  }
   
 
@@ -82,24 +82,26 @@ int main(int argn, char** argc)
 
   if ( argn - optind == 0 )
    {
-    cerr << "inspectCel.exe" << " requires some input files" << endl
-	 << "Try " << "inspectCel.exe" << " -h" << endl ;
+    cerr << "celInspect.exe" << " require an input file" << endl
+         << "Try " << "celInspect.exe" << " -h" << endl ;
     return 3 ;
    }
 
-  for ( int idx = optind ; idx < argn ; idx++ )
+  if ( argn - optind > 1 )
    {
-    const char * fileName = argc[idx] ;
-    CompositeEventList cel(fileName) ;
-    if ( cel.isOk()==kFALSE )
-     {
-      cerr << "Can't open file " << fileName << endl;
-      return 4;
-     }
-    //cel.printInfo(printFlags.c_str(),optval_n,optval_s);
-    std::cout << "===== " << fileName << std::endl ;
-    cel.printInfo() ;
+    cerr << "celInspect.exe" << " accept only one input file" << endl
+         << "Try " << "celInspect.exe" << " -h" << endl ;
+    return 4 ;
    }
+
+  const char * fileName = argc[optind] ;
+  CompositeEventList cel(fileName) ;
+  if ( cel.isOk()==kFALSE )
+   {
+    cerr << "Can't open file " << fileName << endl;
+    return 5 ;
+   }
+  cel.printInfo() ;
 
   return 0 ;
  }

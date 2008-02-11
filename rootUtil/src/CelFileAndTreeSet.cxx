@@ -263,10 +263,28 @@ Bool_t CelFileAndTreeSet::addToChain( TChain * & chain )
 // Print the list of trees, one per line
 void CelFileAndTreeSet::printTreesInfo( const char * options, const char * prefix ) const
  {
+  // check sizes
+  if ((_fileNames->GetEntries()!=_setSize)||
+      (_treeNames->GetEntries()!=_setSize)||
+      (_treeOffsets->GetSize()!=_setSize))
+   {
+    std::cerr
+      << "[CelFileAndTreeSet::printTreesInfo] "
+      << prefix<<": has inconsistent sizes"
+      << std::endl ;
+   }
+  
+  // global set info
+  std::cout<< prefix
+    << " : "<<_setSize<<" files/trees"
+    << " and "<<_treesSize<<" entries"
+    << std::endl ;    
+  
+  // print trees
   UShort_t i ;
   for ( i=0 ; i<_setSize; i++ )
    {
-    std::cout << prefix << "Tree " << i << ": " ;
+    std::cout << prefix << " :" ;
     printTreeInfo(i,options) ;    
     std::cout << std::endl ;    
    }
@@ -280,9 +298,9 @@ void CelFileAndTreeSet::printTreeInfo( UShort_t treeIndex, const char * options,
  {  
   std::cout << prefix ;
   if (rootUtil::has_option(options,'f'))
-   { std::cout <<  _fileNames->UncheckedAt(treeIndex)->GetName() << ' '; }
+   { std::cout<<' '<< _fileNames->UncheckedAt(treeIndex)->GetName() ; }
   if (rootUtil::has_option(options,'t'))
-   { std::cout << _treeNames->UncheckedAt(treeIndex)->GetName() << ' '; }
+   { std::cout<<'/'<<_treeNames->UncheckedAt(treeIndex)->GetName() ; }
   // why not "Unchecked" below ??
   if (rootUtil::has_option(options,'o'))
    { std::cout << _treeOffsets->At(treeIndex) << ' '; }
