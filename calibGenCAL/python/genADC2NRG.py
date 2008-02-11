@@ -23,7 +23,7 @@ __credits__   = "NRL code 7650"
 import sys, os
 import logging
 import getopt
-import Numeric
+import numarray
 import sets
 import array
 import math
@@ -115,19 +115,19 @@ if __name__ == '__main__':
 
 
     # define output array(s)
-    adc2nrgData = Numeric.zeros((calConstant.NUM_TEM,
+    adc2nrgData = numarray.zeros((calConstant.NUM_TEM,
                              calConstant.NUM_ROW,
                              calConstant.NUM_END,
                              calConstant.NUM_FE,
                              2),
-                            Numeric.Float32)
-    muSlopeData = Numeric.zeros((calConstant.NUM_TEM,
+                            numarray.Float32)
+    muSlopeData = numarray.zeros((calConstant.NUM_TEM,
                                  calConstant.NUM_ROW,
                                  calConstant.NUM_END,
                                  calConstant.NUM_FE,
                                  calConstant.NUM_RNG,
                                  2),
-                                Numeric.Float32)
+                                numarray.Float32)
     slopeIdx = 0 # index into adc2nrgData last field
     errIdx   = 1 # index into adc2nrgData last field
 

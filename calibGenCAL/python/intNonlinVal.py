@@ -28,7 +28,7 @@ import getopt
 import logging
 import array
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant
@@ -283,8 +283,8 @@ def deriv2(d, a):
 
 def calcError(lengthData, dacData, adcData):
 
-    errs = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE,
-                          calConstant.NUM_RNG), Numeric.PyObject)
+    errs = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE,
+                          calConstant.NUM_RNG), numarray.PyObject)
     status = 0
 
     for tem in towers:

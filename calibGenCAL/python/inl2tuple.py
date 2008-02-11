@@ -19,7 +19,7 @@ __credits__   = "NRL code 7650"
 import sys, os
 import logging
 import getopt
-import Numeric
+import numarray
 import ROOT
 
 import calCalibXML

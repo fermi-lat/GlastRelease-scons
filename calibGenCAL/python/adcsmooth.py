@@ -24,7 +24,7 @@ import os, sys
 import logging
 import getopt
 
-import Numeric
+import numarray
 
 import calADCFilter
 import calFitsXML

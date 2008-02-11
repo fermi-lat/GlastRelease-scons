@@ -30,7 +30,7 @@ import sys
 import logging
 import getopt
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calDacXML
@@ -114,8 +114,8 @@ if __name__ == '__main__':
         settings = calDacSettings.setRange(settings, rangeData[...,2]) 
     else:
         settings = calDacSettings.uldSettings(uldData[...,0], uldData[...,1], uldData[...,2], (MeV / 100)) 
-        settings = calDacSettings.setRange(settings, Numeric.ones((calConstant.NUM_TEM, calConstant.NUM_ROW,
-            calConstant.NUM_END, calConstant.NUM_FE), Numeric.Int8))       
+        settings = calDacSettings.setRange(settings, numarray.ones((calConstant.NUM_TEM, calConstant.NUM_ROW,
+            calConstant.NUM_END, calConstant.NUM_FE), numarray.Int8))       
     
     # create output DAC settings XML file
     

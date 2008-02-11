@@ -22,7 +22,7 @@ import sys, os, math
 import getopt
 import array
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant

@@ -28,7 +28,7 @@ import math
 import getopt
 import logging
 
-import Numeric
+import numarray
 import MLab
 
 import calCalibXML
@@ -281,7 +281,7 @@ def average(data, tems):
 
     av = 0
     for t in tems:
-        av += Numeric.average(data[t,...], axis = None)
+        av += numarray.average(data[t,...], axis = None)
     return (av / len(tems))
             
 
@@ -290,7 +290,7 @@ def stddev(data, tems):
 
     av = 0
     for t in tems:
-        sd = MLab.std(Numeric.ravel(data[t,...]))
+        sd = MLab.std(numarray.ravel(data[t,...]))
         av += (sd * sd)
         
     return math.sqrt(av / len(tems))

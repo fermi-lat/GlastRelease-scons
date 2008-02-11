@@ -24,7 +24,7 @@ import logging
 import array
 import getopt
 
-import Numeric
+import numarray
 
 import ROOT
 

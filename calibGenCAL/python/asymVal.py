@@ -28,7 +28,7 @@ import getopt
 import logging
 import array
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant
@@ -221,8 +221,8 @@ def deriv2(p, a):
 
 def calcError(xposData, asymData):
 
-    errs = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 4),
-                         Numeric.PyObject)
+    errs = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 4),
+                         numarray.PyObject)
     status = 0
 
     for tem in towers:

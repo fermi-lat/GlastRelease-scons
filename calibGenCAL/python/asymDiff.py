@@ -25,7 +25,7 @@ import calConstant
 import logging
 import cgc_util
 import array
-import Numeric
+import numarray
 
 # setup logger
 
@@ -72,7 +72,7 @@ if (xpos1 != xpos2):
 length = len(xpos1)
 xpos = array.array('f',xpos1)
 # just using zero for xerror as it is not measured
-xerror = array.array('f',Numeric.zeros(10,Numeric.Float32))
+xerror = array.array('f',numarray.zeros(10,numarray.Float32))
 
 # set up pyROOT
 import ROOT

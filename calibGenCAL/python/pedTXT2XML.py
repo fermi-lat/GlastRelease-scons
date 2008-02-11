@@ -22,7 +22,7 @@ __credits__   = "NRL code 7650"
 import sys, os
 import logging
 import getopt
-import Numeric
+import numarray
 import sets
 import array
 
@@ -78,8 +78,8 @@ if __name__ == '__main__':
     lines = inFile.readlines()
 
     # define output array
-    outData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE,
-                             calConstant.NUM_RNG, 3), Numeric.Float32)
+    outData = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE,
+                             calConstant.NUM_RNG, 3), numarray.Float32)
     valIdx = 0 # index into outData last field
     sigIdx = 1 # index into outData last field
 

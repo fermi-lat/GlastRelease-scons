@@ -28,7 +28,7 @@ import logging
 import getopt
 import ConfigParser
 
-import Numeric
+import numarray
 
 import calFitsXML
 import calDacXML

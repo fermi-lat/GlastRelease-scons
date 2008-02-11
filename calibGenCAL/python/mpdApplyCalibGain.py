@@ -25,7 +25,7 @@ import sys, os
 import logging
 import ConfigParser
 import getopt
-import Numeric
+import numarray
 import calCalibXML
 import calConstant
 import cgc_util
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     log.info("Reading calibGain TXT file: " +  calibGainPath)
     (calibGainRatio, twrSet) = cgc_util.read_perFace_txt(calibGainPath)
 
-    mean_ratio = Numeric.sqrt(calibGainRatio[:,:,0,:]*calibGainRatio[:,:,1,:])
+    mean_ratio = numarray.sqrt(calibGainRatio[:,:,0,:]*calibGainRatio[:,:,1,:])
 
     for twr in twrSet:
         # both arrays use same indexing scheme.

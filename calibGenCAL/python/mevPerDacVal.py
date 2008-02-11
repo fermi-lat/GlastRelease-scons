@@ -27,7 +27,7 @@ import sys, os
 import getopt
 import logging
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant
@@ -113,7 +113,7 @@ def rootHists(errData, fileName):
 
 def calcError(energyData):
 
-    errs = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 2), Numeric.PyObject)
+    errs = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 2), numarray.PyObject)
     status = 0
 
     for tem in towers:

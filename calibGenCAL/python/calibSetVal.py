@@ -29,7 +29,7 @@ import sys, os, math
 import getopt
 import logging
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant
@@ -194,10 +194,10 @@ for twr in pedTowers:
                 log.warning("MPD %s & Asym inter-diode ratio %s differ > 5 pct: channel=%s"%(mpd_diode_ratio, asym_diode_ratio, [twr,lyr,col]))
 
             # max one asym value in a curve should be 0
-            if len(Numeric.compress(asymLL==0,asymLL))>1 or \
-               len(Numeric.compress(asymLS==0,asymLS))>1 or \
-               len(Numeric.compress(asymSL==0,asymSL))>1 or \
-               len(Numeric.compress(asymSS==0,asymSS))>1:
+            if len(numarray.compress(asymLL==0,asymLL))>1 or \
+               len(numarray.compress(asymLS==0,asymLS))>1 or \
+               len(numarray.compress(asymSL==0,asymSL))>1 or \
+               len(numarray.compress(asymSS==0,asymSS))>1:
                 log.error("Asym data missing: channel=%s"%[twr,lyr,col])
                 nErrors +=1
 

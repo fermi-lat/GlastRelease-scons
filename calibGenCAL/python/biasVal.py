@@ -26,7 +26,7 @@ import sys, os
 import getopt
 import logging
 
-import Numeric
+import numarray
 
 import calDacXML
 import calConstant

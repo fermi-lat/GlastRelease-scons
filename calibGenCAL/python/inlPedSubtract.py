@@ -22,7 +22,7 @@ import calConstant
 import logging
 import cgc_util
 import array
-import Numeric
+import numarray
 
 
 # setup logger
@@ -61,7 +61,7 @@ inl = inlFile.read()
 (inlLen, inlDAC, inlADC) = inl
 
 # from calCalibXML doc
-# adcData -   A list of 4 elements, each a reference to a Numeric
+# adcData -   A list of 4 elements, each a reference to a numarray
 # array of ADC values. The shape of each array is
 # (16, 8, 2, 12, 256).  The last dimension contains the
 # ADC values.  The number of valid values is determined
@@ -71,7 +71,7 @@ inl = inlFile.read()
 # subtract 1st point from each ADC list
 newADC = []
 for rngData in inlADC:
-    rngData = rngData - Numeric.reshape(rngData[...,0],(16,8,2,12,1))
+    rngData = rngData - numarray.reshape(rngData[...,0],(16,8,2,12,1))
     newADC.append(rngData)
 
 # write new output file

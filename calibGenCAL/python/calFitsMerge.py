@@ -30,7 +30,7 @@ import logging
 import getopt
 import re
 
-import Numeric
+import numarray
 
 import calFitsXML
 import calConstant

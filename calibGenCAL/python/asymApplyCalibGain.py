@@ -25,7 +25,7 @@ import sys, os
 import logging
 import ConfigParser
 import getopt
-import Numeric
+import numarray
 import calCalibXML
 import calConstant
 import cgc_util
@@ -86,8 +86,8 @@ if __name__ == '__main__':
 
     for twr in twrSet:
         # use online face numbering
-        calibGainNFace = Numeric.log(calibGainRatio[twr,:,0,:])
-        calibGainPFace = Numeric.log(calibGainRatio[twr,:,1,:])
+        calibGainNFace = numarray.log(calibGainRatio[twr,:,0,:])
+        calibGainPFace = numarray.log(calibGainRatio[twr,:,1,:])
 
         # both arrays use same indexing scheme.
         # adjust HE value only
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         # cgNFace      = log(dacNegSmallCGOff/dacNegSmallCGOn)
         # muon_asym_LS + cgNFace = log(dacPosLage/dacNegSmallCgOn) = flight_asym_LS
         asymLS = asymData[twr,:,:,cgc_util.asymIdx[(0,1,False)],:]
-        asymLS += calibGainNFace[...,Numeric.NewAxis]
+        asymLS += calibGainNFace[...,numarray.NewAxis]
         
 
         # ASYM_SL
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         # muon_asym_SL - cgPFace = log(dacPosSmallCGOn/dacLarge) = flight_asym_SL
         # val
         asymSL = asymData[twr,:,:,cgc_util.asymIdx[(1,0,False)]]
-        asymSL -= calibGainPFace[...,Numeric.NewAxis]
+        asymSL -= calibGainPFace[...,numarray.NewAxis]
 
         # ASYM_SS
         # muon_asym_SS = log(dacPosSmallCGOff/dacNegSmallCGOff)
@@ -116,8 +116,8 @@ if __name__ == '__main__':
         # cgPFace      = log(dacPosSmallCGOff/dacPosSmallCGOn)
         # muon_asym_ss - cgPFace + cgNFace = log(dacPosSmallCGOn/dacNegSmallCGOn)
         asymSS = asymData[twr,:,:,cgc_util.asymIdx[(1,1,False)]]
-        asymSS += calibGainNFace[...,Numeric.NewAxis]
-        asymSS -= calibGainPFace[...,Numeric.NewAxis]
+        asymSS += calibGainNFace[...,numarray.NewAxis]
+        asymSS -= calibGainPFace[...,numarray.NewAxis]
 
     log.info("Writing asym XML file: " + outPath)
     outFile = calCalibXML.calAsymCalibXML(outPath, calCalibXML.MODE_CREATE)

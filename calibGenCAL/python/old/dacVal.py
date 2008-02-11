@@ -31,7 +31,7 @@ import logging
 import getopt
 import ConfigParser
 
-import Numeric
+import numarray
 import MLab
 
 import calFitsXML
@@ -96,13 +96,13 @@ def engVal(errData):
 
 def average(data):
 
-    return Numeric.average(data, axis = None)
+    return numarray.average(data, axis = None)
                 
 
 
 def stddev(data):
 
-    return MLab.std(Numeric.ravel(data))
+    return MLab.std(numarray.ravel(data))
      
 
 
@@ -383,7 +383,7 @@ if __name__ == '__main__':
 
     # lookup threshold ADC value from characterization table
     
-    adcs = Numeric.zeros((calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE), Numeric.Float32)
+    adcs = numarray.zeros((calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE), numarray.Float32)
     for row in range(calConstant.NUM_ROW):
         for end in range(calConstant.NUM_END):
             for fe in range(calConstant.NUM_FE):
@@ -398,8 +398,8 @@ if __name__ == '__main__':
     else:
         idx = 0
 	
-    nrgRangeMultiplier = Numeric.ones((calConstant.NUM_ROW,calConstant.NUM_END,calConstant.NUM_FE),
-          Numeric.Float)
+    nrgRangeMultiplier = numarray.ones((calConstant.NUM_ROW,calConstant.NUM_END,calConstant.NUM_FE),
+          numarray.Float)
 	  
     if engRange == 'LEX8':
       nrgIdx = calConstant.CRNG_LEX8

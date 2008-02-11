@@ -26,7 +26,7 @@ import sys, os, time
 import logging
 import getopt
 
-import Numeric
+import numarray
 
 import calDacXML
 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     # create config 0 register values
 
-    dacData = Numeric.zeros((16, 8, 2, 12), Numeric.Int16)
+    dacData = numarray.zeros((16, 8, 2, 12), numarray.Int16)
     reg = (leGain | (heGain << 3))
     log.debug('Using Config 0 register value %hx', reg)
     dacData = (dacData + reg);

@@ -25,7 +25,7 @@ import logging
 import getopt
 import ConfigParser
 
-import Numeric
+import numarray
 
 import calFitsXML
 import calDacXML
@@ -162,8 +162,8 @@ if __name__ == '__main__':
     # find saturation values    
 
     sat = [127, 127, 127]
-    dacData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE),
-                            Numeric.Int16)
+    dacData = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE),
+                            numarray.Int16)
 
     for row in range(calConstant.NUM_ROW):
         for end in range(calConstant.NUM_END):

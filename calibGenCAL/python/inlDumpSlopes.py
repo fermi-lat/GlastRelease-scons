@@ -26,7 +26,7 @@ import sys, os, math
 import getopt
 import array
 
-import Numeric
+import numarray
 import ROOT
 
 import calCalibXML

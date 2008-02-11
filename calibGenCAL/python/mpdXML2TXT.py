@@ -25,7 +25,7 @@ import sys, os, math
 import getopt
 import array
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant
@@ -72,7 +72,7 @@ if __name__ == '__main__':
             for col in range(calConstant.NUM_FE):
                 for diode in range(calConstant.NUM_DIODE):
                     # from calCalibXML doc, array layout is as follows
-                    #Returns: A Numeric array containing the energy conversion data
+                    #Returns: A numarray array containing the energy conversion data
                     #         of shape (16, 8, 12, 8) The last dimension contains
                     #         the following data for each crystal:
                     #             0 = bigVal value

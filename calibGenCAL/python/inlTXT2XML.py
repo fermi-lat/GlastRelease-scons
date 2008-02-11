@@ -22,7 +22,7 @@ __credits__   = "NRL code 7650"
 import sys, os
 import logging
 import getopt
-import Numeric
+import numarray
 import sets
 import array
 
@@ -85,26 +85,26 @@ if __name__ == '__main__':
     dacData = []
     adcData = []
     for rng in range(4):
-        lengthData.append(Numeric.zeros((calConstant.NUM_TEM,
+        lengthData.append(numarray.zeros((calConstant.NUM_TEM,
                                          calConstant.NUM_ROW,
                                          calConstant.NUM_END,
                                          calConstant.NUM_FE,
                                          1),
-                                        Numeric.Int32))
+                                        numarray.Int32))
 
-        dacData.append(Numeric.zeros((calConstant.NUM_TEM,
+        dacData.append(numarray.zeros((calConstant.NUM_TEM,
                                          calConstant.NUM_ROW,
                                          calConstant.NUM_END,
                                          calConstant.NUM_FE,
                                          cgc_util.N_DAC_PTS),
-                                        Numeric.Float32))
+                                        numarray.Float32))
 
-        adcData.append(Numeric.zeros((calConstant.NUM_TEM,
+        adcData.append(numarray.zeros((calConstant.NUM_TEM,
                                          calConstant.NUM_ROW,
                                          calConstant.NUM_END,
                                          calConstant.NUM_FE,
                                          cgc_util.N_DAC_PTS),
-                                        Numeric.Float32))
+                                        numarray.Float32))
 
 
     # keep track of active towers
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     # (dac = 0, adc = 0) instead of not points at all.  shouldn't break too much :(
     for rng in range(4):
         zero_channels = (lengthData[rng] == 0)
-        lengthData[rng] = Numeric.where(zero_channels, 1, lengthData[rng])
+        lengthData[rng] = numarray.where(zero_channels, 1, lengthData[rng])
 
     outFile = calCalibXML.calIntNonlinCalibXML(outPath, calCalibXML.MODE_CREATE)
     outFile.write(lengthData, dacData, adcData, tems = twrSet)

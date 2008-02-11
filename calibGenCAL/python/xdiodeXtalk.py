@@ -29,7 +29,7 @@ __credits__   = "NRL code 7650"
 import sys, os
 import logging
 import getopt
-import Numeric
+import numarray
 import sets
 import array
 import ROOT
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     avgXtalkSpline = dict()
     for rng  in range(2,4):
         nChannels = 0
-        avgXtalkADC[rng] = Numeric.zeros(len(avgXtalkDAC))
+        avgXtalkADC[rng] = numarray.zeros(len(avgXtalkDAC))
         for twr in inTwrSet:
             for lyr in range(calConstant.NUM_LAYER):
                 # calCalibXML uses 'row' indexing, not layer
@@ -225,7 +225,7 @@ if __name__ == '__main__':
                         online_face = calConstant.offline_face_to_online[face]
                         nChannels += 1
                         xtalkSpline = dac2adcXtalk[(twr,row,online_face,col,rng)]
-                        current_adc = Numeric.array([xtalkSpline.Eval(x) for x in avgXtalkDAC])
+                        current_adc = numarray.array([xtalkSpline.Eval(x) for x in avgXtalkDAC])
                         avgXtalkADC[rng] =  avgXtalkADC[rng] + current_adc
 
         # divide to find average

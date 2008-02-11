@@ -25,7 +25,7 @@ import logging
 import ConfigParser
 import getopt
 
-import Numeric
+import numarray
 
 import calCalibXML
 import calConstant
@@ -45,7 +45,7 @@ class inputFile:
         Param: destTwr The data destination tower number (0 - 15).
         Param: name The input file name
         Param: xposData A list of position value from the input file.
-        Param: asymData A Numeric asymmetry data array from the input file.
+        Param: asymData A numarray asymmetry data array from the input file.
         """
         
         self.srcTwr = srcTwr
@@ -182,8 +182,8 @@ if __name__ == '__main__':
     # merge tower asymmetry data
 
     xposLen = len(xposData)
-    outData = Numeric.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 8, xposLen),
-                            Numeric.Float32)
+    outData = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 8, xposLen),
+                            numarray.Float32)
 
     for f in inFiles:
         asymData = f.asymData

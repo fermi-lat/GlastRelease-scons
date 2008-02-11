@@ -25,7 +25,7 @@ import calCalibXML
 import ROOT
 import cgc_util
 import array
-import Numeric
+import numarray
 
 if __name__ == '__main__':
     # check commandline
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                         g = ROOT.TGraphErrors(len(xpos), 
                                               array.array('d',xpos), 
                                               array.array('d',asymData[twr][row][col][cgc_util.asymIdx[(pdiode,ndiode,False)]]), 
-                                              array.array('d',Numeric.zeros(len(xpos))), 
+                                              array.array('d',numarray.zeros(len(xpos))), 
                                               array.array('d',asymData[twr][row][col][cgc_util.asymIdx[(pdiode,ndiode,True)]]))
 
                         g.Draw("*")
