@@ -443,6 +443,7 @@ Bool_t ConfigReader::read_TCC(DOMElement& elem){
 };
 
 Bool_t ConfigReader::read_TRC(DOMElement& elem){
+  if ( ! ConfigReader::getId(elem,_iTRC) ) return kFALSE;
   ChannelKey key(_iTEM,_iTCC,_iTRC);  
   std::vector<DOMElement*> eltList;
   Dom::getChildrenByTagName( &elem, "*", eltList );
