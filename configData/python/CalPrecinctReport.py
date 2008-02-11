@@ -295,7 +295,7 @@ class CalPrecinctReport(object):
                      nVals*2, -1*nVals, nVals)
 
     hist.SetXTitle("GCCC")
-    hist.SetYTitle("%s diff (new - old)"%registerName)
+    hist.SetYTitle("%s diff (current - baseline)"%registerName)
     hist.SetMarkerStyle(ROOT.kFullTriangleUp)
     hist.SetMarkerSize(2)
 
