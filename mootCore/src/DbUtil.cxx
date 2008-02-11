@@ -216,7 +216,7 @@ namespace MOOT {
     using rdbModel::Row;
 
     std::vector<FieldVal> fields;
-    fields.push_back(FieldVal(colName, value, ""));
+    fields.push_back(FieldVal(colName, value));
     Row row(fields);
     return rdb->updateRows(table, row, where);
   }
