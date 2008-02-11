@@ -13,7 +13,7 @@ void Config_check::TKR_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
-   bool caughtAssert = kFalse;
+   Bool_t caughtAssert = kFALSE;
    startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
@@ -34,7 +34,7 @@ void Config_check::TKR_Timing()
    }			      
    switchcolor(black);
    std::cout<<std::endl;
-   if not caughtAssert {
+   if (!caughtAssert) {
      std::cout<<"It has been verified that all tcc_trg_align registers in a tower are identical."<<std::endl;
      // if (Cut(ientry) < 0) continue;
    } else {
@@ -120,7 +120,7 @@ void Config_check::CAL_Timing()
    assert(nentries==1);
    Long64_t ientry = LoadTree(0);
    fChain->GetEntry(0);
-   bool caughtAssert = kFalse;
+   Bool_t caughtAssert = kFALSE;
    startcolor(black);
    std::cout<<"File: "<<m_filename<<std::endl;
    std::cout<<"++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
@@ -157,7 +157,7 @@ void Config_check::CAL_Timing()
    }
    switchcolor(black);
    std::cout<<std::endl;
-   if not caughtAssert {
+   if (! caughtAssert) {
      std::cout<<"All registers of a type have the identical value within one TEM"<<std::endl;
      // if (Cut(ientry) < 0) continue;
    } else {

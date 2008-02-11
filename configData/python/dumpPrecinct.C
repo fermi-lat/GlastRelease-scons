@@ -2,23 +2,17 @@ void dumpPrecinct(const char* filename, const char* myMacro, const char* precinc
 {
   gROOT->LoadMacro(myMacro);
   Config_check f(filename);
-  switch (*precinct) {
-  case 'GNL_Mode':
+  cout << "Precinct: " << precinct << endl;
+  if (precinct == "GNL_Mode")
     f.GNL_Mode();
-    break;
-  case 'GNL_Timing':
+  else if (precinct == "GNL_Timing")
     f.GNL_Timing();
-    break;
-  case 'TKR_Timing':
+  else if (precinct == "TKR_Timing")
     f.TKR_Timing();
-    break;
-  case 'ACD_Timing':
+  else if (precinct == "ACD_Timing")
     f.ACD_Timing();
-    break;
-  case 'CAL_Timing':
+  else if (precinct == "CAL_Timing")
     f.CAL_Timing();
-    break;
-  default:
+  else
     cout << "couldn't understand " << precinct << endl;
-  }
 }

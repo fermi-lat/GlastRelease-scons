@@ -92,10 +92,10 @@ inline void switchcolor(const *char colorName){
   printf("<b style='color:%s'>", name);
 }
 
-inline void niceAssert(const int a, const int b, const *char name) {
-  if (a==b) return kFalse;
+inline Bool_t niceAssert(const int a, const int b, const *char name) {
+  if (a==b) return kFALSE;
   std::cout<<'checking '<< name << 'found inconsistent values ' << a << ' and ' << 'b' << std::endl;
-  return kTrue;
+  return kTRUE;
 }
 
 struct gotoxy

@@ -44,6 +44,12 @@ tfe_calib_maskArray = array.array( 'd', [0L]*g_nTowers*g_nUniPlanes*g_nTFE )
 spt_lowArray = array.array( 'I', [0]*g_nTowers*g_nUniPlanes )
 spt_highArray = array.array( 'I' , [0]*g_nTowers*g_nUniPlanes )
 
+altSPT = [0,24,0,24,0,24,0,24,12]
+altSize = [26,26,26,26,26,26,26,26,19]
+taperedSize = [19,19,19,10,10,10,10,10,10]
+
+VERBOSE = False ## revisit to make smarter
+
 #
 # load register values
 #
@@ -133,14 +139,17 @@ class TkrRegisterChecker(object):
                    ( 'Strips', "data_mask", tfe_data_maskArray, self.tfe_data_mask ),
                    ( 'Strips', "trig_enable", tfe_trg_maskArray, self.tfe_trg_mask ),
                    ( 'Strips', "calib_mask", tfe_calib_maskArray, self.tfe_calib_mask ),
-                   ( 'Mode', "low", spt_lowArray, self.spt_low ),
-                   ( 'Mode', "high", spt_highArray, self.spt_high )
+                   ( 'Mode', "low", spt_lowArray, self.tfe_spt_low ),
+                   ( 'Mode', "high", spt_highArray, self.tfe_spt_high )
                    ]
 
     self.rFiles = []
     self.ingestRoot(compareRootFile, baselineRootFile)
     self.__values = self.getValues(self.rFiles)
     
+    print compareRootFile
+    self.__alternatingSplits = "lternating" in compareRootFile
+    self.__taperedSize = "taper" in compareRootFile
     self.__maxErrors = 10
     self.__maxWarns = 10
     self.__maxInfos = 10
@@ -171,7 +180,8 @@ class TkrRegisterChecker(object):
             st = struct.pack( 'd', varray[i] ) # convert double to unsigned int64
             narray[i] = struct.unpack( 'Q', st )[0]
         else: narray = numarray.array( varray )
-        #print name, len(narray), narray[0:4], narray[-4:]
+        if VERBOSE:
+          print name, len(narray), narray[0:4], narray[-4:]
         if values.has_key( name ):
           values[name].append( narray )
         else: values[name] = [ narray ]
@@ -395,10 +405,26 @@ class TkrRegisterChecker(object):
     if TFE_CNT != 0:
       self.errors.append( "ERR: TFE_CNT of CSR in %s is not 0: %d (%X)" \
                           % (ID, TFE_CNT, value) )
-    if size != 13 and size != 20 and size != 27:
-      self.warns.append( "WARN: size of CSR in %s is not 13, 20 or 27: %d (%X)"\
+    if size != 13:# and size != 20 and size != 27:
+##      self.warns.append( "WARN: size of CSR in %s is not 13, 20 or 27: %d (%X)"\
+      self.warns.append( "WARN: size of CSR in %s is not 13: %d (%X)"\
                          % (ID, size, value) )
+    trc = index % g_nTRC
+    faltSize = size == altSize[trc]
+    if size != taperedSize[trc]: ftaperedSize = False
 
+    if self.__alternatingSplits:
+      if size != altSize[trc]:
+        self.errors.append( "INFO: TRC buffer is inconsistent with alternated splits: for trc %d, saw %%d, expected %d" %(trc, size,altSize[trc]))
+##      else:
+##        self.infos.append( "INFO: TRC buffer is consistent with alternated splits: for trc %d, saw %%d, expected %d" %(trc, size,altSize[trc]))
+      
+    if self.__taperedSize:
+      if size != taperedSize[trc]:
+        self.errors.append( "INFO: TRC buffer is inconsistent with tapered buffer size: for trc %d, saw %%d, expected %d" %(trc, size,taperedSize[trc]))
+##      else:
+##        self.infos.append( "INFO: TRC buffer is consistent with tapered buffer size: for trc %d, saw %%d, expected %d" %(trc, size,taperedSize[trc]))
+      
   def tfe_thrdac(self, name, value, index):
     self.hthrdac.Fill( value )
     if value<22 or value>44:
@@ -436,25 +462,32 @@ class TkrRegisterChecker(object):
       feid = getTFEid( index )
       self.warns.append( "WARN: %s is not 0 in %s: %d" % (name,value,feid) )
 
-  def spt_low(self, name, value, index):
+  def tfe_spt_low(self, name, value, index):
+    self.__tfe_spt(name, value, index)
+    
+  def tfe_spt_high(self, name, value, index):
+    self.__tfe_spt(name, value, index)
+    
+  def __tfe_spt(self, name, value, index):
+    vmax = 24
+    vmin = 0
+    vnom = 12
+    if name.endswith("low"): offset = -1
+    elif name.endswith("high"): offset = 0
+    else: raise RuntimeError, 'method %d does not exist' %(name)
+    
+    faltSPT = True
     st = struct.pack( 'i', value ) # convert int to unsigned short
     value = struct.unpack( 'hh', st )[0]
-    if value>23 or value<-1:
-      spt = getSPTid( index )
+    spt = getSPTid(index)
+    trc = index % g_nTRC
+    if value>vmax+offset or value<vmin+offset:
       self.errors.append( "ERR: %s is invalid in %s: %d" % (name,spt,value) )
-    elif value != 11:
-      spt = getSPTid( index )
-      self.warns.append( "WARN: %s is not 11 in %s: %d" % (name,spt,value) )
-
-  def spt_high(self, name, value, index):
-    st = struct.pack( 'i', value ) # convert int to unsigned short
-    value = struct.unpack( 'hh', st )[0]
-    if value>24 or value<0:
-      spt = getSPTid( index )
-      self.errors.append( "ERR: %s is invalid in %s: %d" % (name,spt,value) )
-    elif value != 12: 
-      spt = getSPTid( index )
-      self.warns.append( "WARN: %s is not 12 in %s: %d" % (name,spt,value) )
+    elif value != vnom+offset:
+      self.warns.append( "WARN: %s is not %d in %s: %d" \
+                         % (name,vnom+offset,spt,value) )
+    if self.__alternatingSplits and value != altSPT[trc]+offset:
+      self.errors.append( "INFO: SPT pattern is not consistent with alternated splits: found %d, expected %d at index %d" %(value, altSPT[trc]+offset, index))
 
   def dump(self, msgType):
     if msgType == 'errors':
