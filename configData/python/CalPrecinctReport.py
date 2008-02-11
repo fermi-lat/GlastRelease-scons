@@ -206,7 +206,7 @@ class CalPrecinctReport(object):
     return:
     final img path
     """
-    imgPath = outputDir + "_" + title + ".png"
+    imgPath = outputDir + "/" + title + ".png"
     
     hist.Draw()
     import ROOT
@@ -274,6 +274,55 @@ class CalPrecinctReport(object):
 
     return imgList
 
+  def _genCCCDiff(self, registerName, outputDir):
+    """
+    plot the difference (current - baseline) between two configs against GCCC id
+
+    return:
+    BasicPlotChecker.PlotInfo
+    """
+
+    regInfo = _registerInfo[registerName]
+
+    title = "%s_%s_diff_vs_GCCC"%(self.__precinctName, registerName)
+    caption = title
+
+    import ROOT
+    import calConstant
+    nVals = regInfo.maxVal+1
+    hist = ROOT.TH2S(title, title,
+                     calConstant.NUM_GCCC, 0, calConstant.NUM_GCCC,
+                     nVals*2, -1*nVals, nVals)
+
+    hist.SetXTitle("GCCC")
+    hist.SetYTitle("%s diff (new - old)"%registerName)
+    hist.SetMarkerStyle(ROOT.kFullTriangleUp)
+    hist.SetMarkerSize(2)
+
+    regData = self._currentRootData.getRegisterData(registerName)
+    baselineData = self._baselineRootData.getRegisterData(registerName)
+
+    # subtract 2 cfg sets
+    import array
+    diffData = [current - baseline for (current, baseline) in zip(regData, baselineData)]
+    #convert to array.array (double) datatype
+    diffData = array.array('d', diffData)
+
+    for idx in range(calConstant.GLOBAL_N_GCFE):
+      (tem,ccc,crc,cfe) = calConstant.getCFEId(idx)
+      hist.Fill(ccc, diffData[idx])
+
+    imgPath = self.__saveHistToFile(hist, title, outputDir)
+
+    # save record of image file
+    import BasicPlotChecker
+    plotInfo = BasicPlotChecker.PlotInfo()
+    plotInfo.save(imgPath, title, caption)
+
+    return plotInfo
+    
+
+
   def _genCCCPlot(self, registerName, outputDir):
     """
     Plot CFE data against CCC id - write to img file
@@ -312,6 +361,48 @@ class CalPrecinctReport(object):
 
     return plotInfo
 
+  def _genDiffHist(self, registerName, outputDir):
+    """
+    Generated 1D histogram of (new - old) difference between settings
+
+    return:
+    BasicPlotChecker.PlotInfo object
+    """
+
+    regInfo = _registerInfo[registerName]
+
+    title = "%s_%s_diff"%(self.__precinctName, registerName)
+    caption = title
+
+    import ROOT
+    nVals = regInfo.maxVal+1
+    hist = ROOT.TH1S(title, title,
+                     nVals*2, -1*nVals, nVals)
+
+    hist.SetXTitle("%s diff (current - baseline)"%registerName)
+
+    cfgData = self._currentRootData.getRegisterData(registerName)
+    baselineData = self._baselineRootData.getRegisterData(registerName)
+
+    # subtract 2 cfg sets
+    import array
+    diffData = [current - baseline for (current, baseline) in zip(cfgData, baselineData)]
+    #convert to array.array (double) datatype
+    diffData = array.array('d', diffData)
+
+    hist.FillN(len(cfgData),
+               diffData,
+               array.array('d',[1]*len(cfgData)))
+
+    imgPath = self.__saveHistToFile(hist, title, outputDir)
+
+    # save record of image file
+    import BasicPlotChecker
+    plotInfo = BasicPlotChecker.PlotInfo()
+    plotInfo.save(imgPath, title, caption)
+
+    return plotInfo
+
   def _genScatterPlot(self, registerName, outputDir):
     """
     Generate scatter plot between current and
@@ -336,7 +427,7 @@ class CalPrecinctReport(object):
     hist.SetMarkerSize(2)
 
     cfgData = self._currentRootData.getRegisterData(registerName)
-    baselineData = self._currentRootData.getRegisterData(registerName)
+    baselineData = self._baselineRootData.getRegisterData(registerName)
 
     import array
     hist.FillN(len(cfgData),
@@ -371,8 +462,11 @@ class CalLACReport(CalPrecinctReport):
 
     if self._baselineRootData is not None:
       imgList.append(self._genScatterPlot("log_acpt", outputDir))
+      imgList.append(self._genDiffHist("log_acpt", outputDir))
 
     imgList.append(self._genCCCPlot("log_acpt", outputDir))
+    imgList.append(self._genCCCDiff("log_acpt", outputDir))
+    
 
       
     return imgList
@@ -393,8 +487,10 @@ class CalFLEReport(CalPrecinctReport):
 
     if self._baselineRootData is not None:
       imgList.append(self._genScatterPlot("fle_dac", outputDir))
+      imgList.append(self._genDiffHist("fle_dac", outputDir))
 
     imgList.append(self._genCCCPlot("fle_dac", outputDir))
+    imgList.append(self._genCCCDiff("fle_dac", outputDir))
     return imgList
   
 
@@ -413,6 +509,7 @@ class CalFHEReport(CalPrecinctReport):
     imgList += self._genSummaryHists("fhe_dac", outputDir)
     if self._baselineRootData is not None:
       imgList.append(self._genScatterPlot("fhe_dac", outputDir))
+      imgList.append(self._genDiffHist("fhe_dac", outputDir))
     return imgList
 
 
@@ -431,6 +528,7 @@ class CalULDReport(CalPrecinctReport):
     imgList += self._genSummaryHists("rng_uld_dac", outputDir)
     if self._baselineRootData is not None:
       imgList.append(self._genScatterPlot("rng_uld_dac", outputDir))
+      imgList.append(self._genDiffHist("rng_uld_dac", outputDir))
     return imgList
 
 
