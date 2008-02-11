@@ -121,7 +121,7 @@ def decodeTRC_CSR( value ):
 # check register values
 #
 class TkrRegisterChecker(object):
-  def __init__(self, precinctName, compareRootFile, baselineRootFile=None, outputFile=None):
+  def __init__(self, precinctName, compareRootFile, baselineRootFile=None, outputFile=None, alias=None):
 ##    import gc
 ##    gc.disable()
     self.__precinctName = precinctName
@@ -133,7 +133,7 @@ class TkrRegisterChecker(object):
     self.names = [ ( 'Timing', "tkr_trgseq", tem_tkr_trgseqArray, self.tem_tkr_trgseq ),
                    ( 'Mode', "tcc_configuration", tcc_configurationArray, self.tcc_configuration ),
                    ( 'Timing', "tcc_trg_align", tcc_trg_alignmentArray, self.tcc_trg_alignment ),
-                   ( 'Strips', "trc_csr", trc_csrArray, self.trc_csr ),
+                   ( 'Mode', "trc_csr", trc_csrArray, self.trc_csr ),
                    ( 'Thresh', "threshold", tfe_thrdacArray, self.tfe_thrdac ),
                    ( 'Thresh', "injection", tfe_calibdacArray, self.tfe_calibdac ),
                    ( 'Strips', "data_mask", tfe_data_maskArray, self.tfe_data_mask ),
@@ -147,9 +147,8 @@ class TkrRegisterChecker(object):
     self.ingestRoot(compareRootFile, baselineRootFile)
     self.__values = self.getValues(self.rFiles)
     
-    print compareRootFile
-    self.__alternatingSplits = "lternating" in compareRootFile
-    self.__taperedSize = "taper" in compareRootFile
+    self.__alternatingSplits = "sptAlt" in alias
+    self.__taperedSize = "taper" in alias
     self.__maxErrors = 10
     self.__maxWarns = 10
     self.__maxInfos = 10
@@ -410,20 +409,18 @@ class TkrRegisterChecker(object):
       self.warns.append( "WARN: size of CSR in %s is not 13: %d (%X)"\
                          % (ID, size, value) )
     trc = index % g_nTRC
-    faltSize = size == altSize[trc]
-    if size != taperedSize[trc]: ftaperedSize = False
 
     if self.__alternatingSplits:
       if size != altSize[trc]:
-        self.errors.append( "INFO: TRC buffer is inconsistent with alternated splits: for trc %d, saw %%d, expected %d" %(trc, size,altSize[trc]))
-##      else:
-##        self.infos.append( "INFO: TRC buffer is consistent with alternated splits: for trc %d, saw %%d, expected %d" %(trc, size,altSize[trc]))
-      
+        self.errors.append( "ERROR: TRC buffer is inconsistent with alternated splits: for trc %d, saw %d, expected %d" %(trc, size,altSize[trc]))
+      elif VERBOSE:
+        self.infos.append( "INFO: TRC buffer is consistent with alternated splits: for trc %d, saw %d, expected %d" %(trc, size,altSize[trc]))
+
     if self.__taperedSize:
       if size != taperedSize[trc]:
-        self.errors.append( "INFO: TRC buffer is inconsistent with tapered buffer size: for trc %d, saw %%d, expected %d" %(trc, size,taperedSize[trc]))
-##      else:
-##        self.infos.append( "INFO: TRC buffer is consistent with tapered buffer size: for trc %d, saw %%d, expected %d" %(trc, size,taperedSize[trc]))
+        self.errors.append( "ERROR: TRC buffer is inconsistent with tapered buffer size: for trc %d, saw %d, expected %d" %(trc, size,taperedSize[trc]))
+      elif VERBOSE:
+        self.infos.append( "INFO: TRC buffer is consistent with tapered buffer size: for trc %d, saw %d, expected %d" %(trc, size,taperedSize[trc]))
       
   def tfe_thrdac(self, name, value, index):
     self.hthrdac.Fill( value )

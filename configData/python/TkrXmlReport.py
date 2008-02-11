@@ -58,7 +58,7 @@ class TkrXmlReport(PrecinctXmlReport):
     def shortSummary(self, outputStub="", rebuild=False):
         self.__builtName = FN_SHORTSUM % (outputStub, self.__type)
         if not os.path.exists(self.__builtName) or rebuild:
-            tkrRegisterChecker = TkrRegisterChecker(self.__type, self.__confRootFile, self.__baseRootFile, self.__builtName)
+            tkrRegisterChecker = TkrRegisterChecker(self.__type, self.__confRootFile, self.__baseRootFile, self.__builtName,self.info.alias)
             tkrRegisterChecker.doChecks()
             self.__pngFileInfos = tkrRegisterChecker.makePngs(outputStub)
             tkrRegisterChecker.cleanupRoot()
