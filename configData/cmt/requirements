@@ -26,8 +26,8 @@ path_append PYTHONPATH "" Linux "$(CONFIGDATAROOT)/python"\
 path_remove PYTHONPATH mootCore
 path_append PYTHONPATH "" Linux "$(MOOTCOREROOT)/$(BINDIR)"\
                           WIN32 "$(MOOTCOREROOT)/$(BINDIR)"
-path_append PYTHONPATH "" Linux "$(MOOTCOREROOT)/../../lib" \
-                          WIN32 "$(CONFIGDATAROOT)\lib"
+path_append PYTHONPATH "" Linux "$(RDBMODELROOT)/../../lib" \
+                          WIN32 "$(RDBMODELROOT)\..\..\lib"
 path_append PYTHONPATH "" Linux "$(ROOT_PATH)/lib"\
                           WIN32 ""
 
