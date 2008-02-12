@@ -176,6 +176,7 @@ class CalPrecinctReport(object):
     # optional baseline ROOT data
     if baselineRootPath == None:
       self.__baselineRootPath = None
+      self._baselineRootData = None
     else:
       self.__baselineRootPath = baselineRootPath
       self._baselineRootData = PrecinctData(self.__baselineRootPath, precinctName)
@@ -465,7 +466,8 @@ class CalLACReport(CalPrecinctReport):
       imgList.append(self._genDiffHist("log_acpt", outputDir))
 
     imgList.append(self._genCCCPlot("log_acpt", outputDir))
-    imgList.append(self._genCCCDiff("log_acpt", outputDir))
+    if self._baselineRootData is not None:
+      imgList.append(self._genCCCDiff("log_acpt", outputDir))
     
 
       
@@ -490,7 +492,9 @@ class CalFLEReport(CalPrecinctReport):
       imgList.append(self._genDiffHist("fle_dac", outputDir))
 
     imgList.append(self._genCCCPlot("fle_dac", outputDir))
-    imgList.append(self._genCCCDiff("fle_dac", outputDir))
+    if self._baselineRootData is not None:
+      imgList.append(self._genCCCDiff("fle_dac", outputDir))
+
     return imgList
   
 
