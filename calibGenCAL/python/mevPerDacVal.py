@@ -112,8 +112,10 @@ def rootHists(errData, fileName):
 
 
 def calcError(energyData):
-
-    errs = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 2), numarray.PyObject)
+    import numarray.objects
+    errs = numarray.objects.array(None,(calConstant.NUM_TEM,
+                                        calConstant.NUM_ROW,
+                                        calConstant.NUM_FE, 2))
     status = 0
 
     for tem in towers:

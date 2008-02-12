@@ -176,8 +176,8 @@ if owriteFace:
 
 # apply random mask
 if owriteRnd:
-    import MLab # included w/ numarray, provides rand() method
-    tmp_msk = MLab.rand(*dac.shape) < rnd_pct / 100
+    import numarray.mlab # included w/ numarray, provides rand() method
+    tmp_msk = mlab.rand(*dac.shape) < rnd_pct / 100
 
     # and tmp_msk with current msk
     msk &= tmp_msk

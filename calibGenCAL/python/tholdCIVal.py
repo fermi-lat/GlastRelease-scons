@@ -28,7 +28,7 @@ import getopt
 import logging
 
 import numarray
-import MLab
+import numarray.mlab
 
 import calCalibXML
 import calConstant
@@ -398,7 +398,7 @@ def stddev(data, tems):
 
     av = 0
     for t in tems:
-        sd = MLab.std(numarray.ravel(data[t,...]))
+        sd = mlab.std(numarray.ravel(data[t,...]))
         av += (sd * sd)
         
     return math.sqrt(av / len(tems))

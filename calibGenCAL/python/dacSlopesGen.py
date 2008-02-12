@@ -233,7 +233,6 @@ def fitDAC(fineThresholds, coarseThresholds, bias, adcs0, adcs1, limLow, limHigh
                                 calConstant.CPM[end], fe, e, d, a)
                         
                     # save fit parameters (or substitute)
-                         
                     mevs[tem,row,end,fe,0] = fit.params[0]
                     mevs[tem,row,end,fe,1] = fit.params[1] 
                     ranges[tem,row,end,fe] = rng

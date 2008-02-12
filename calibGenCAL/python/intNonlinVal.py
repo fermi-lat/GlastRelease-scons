@@ -282,9 +282,12 @@ def deriv2(d, a):
 
 
 def calcError(lengthData, dacData, adcData):
-
-    errs = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_END, calConstant.NUM_FE,
-                          calConstant.NUM_RNG), numarray.PyObject)
+    import numarray.objects
+    errs = numarray.objects.array(None,shape=(calConstant.NUM_TEM,
+                                              calConstant.NUM_ROW,
+                                              calConstant.NUM_END,
+                                              calConstant.NUM_FE,
+                                              calConstant.NUM_RNG))
     status = 0
 
     for tem in towers:

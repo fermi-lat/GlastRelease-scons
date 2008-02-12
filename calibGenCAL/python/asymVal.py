@@ -220,9 +220,8 @@ def deriv2(p, a):
 
 
 def calcError(xposData, asymData):
-
-    errs = numarray.zeros((calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 4),
-                         numarray.PyObject)
+    import numarray.objects
+    errs = numarray.objects.array(None,(calConstant.NUM_TEM, calConstant.NUM_ROW, calConstant.NUM_FE, 4))
     status = 0
 
     for tem in towers:

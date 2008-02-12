@@ -32,7 +32,7 @@ import getopt
 import ConfigParser
 
 import numarray
-import MLab
+import numarray.mlab
 
 import calFitsXML
 import calDacXML
@@ -102,7 +102,7 @@ def average(data):
 
 def stddev(data):
 
-    return MLab.std(numarray.ravel(data))
+    return mlab.std(numarray.ravel(data))
      
 
 
