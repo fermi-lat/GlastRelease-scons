@@ -171,14 +171,15 @@ void ObfCworker::evaluate()
     }
     // The GPS singleton has current time and orientation
     static astro::GPS* gps = fluxSvc->GPSinstance();
-    double time = gps->time();
+    //double time = gps->time();
 
     Vector filtDir(FilterXDir, FilterYDir, FilterZDir);
     if(filtDir.mag()==0) return;
 
-    CLHEP::HepRotation R ( gps->transformToGlast(time, astro::GPS::CELESTIAL) );
+    //CLHEP::HepRotation R ( gps->transformToGlast(time, astro::GPS::CELESTIAL) );
+    //astro::SkyDir skydir( (R.inverse() * filtDir ) );
 
-    astro::SkyDir skydir( (R.inverse() * filtDir ) );
+    astro::SkyDir skydir = gps->toSky( -filtDir );
     m_obfRa   = skydir.ra();
     m_obfDec  = skydir.dec();
     m_obfL = skydir.l();
