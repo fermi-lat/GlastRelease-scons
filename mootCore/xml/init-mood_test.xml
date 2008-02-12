@@ -950,6 +950,14 @@ used for container vote files which reference regular votes by alias" />
     </row> 
 
     <row>
+      <field col="name" val="latc_DFT_TRG_GEM" />
+      <field col="description" 
+             val="GEM registers which end up in DFT component, owned by  TRG_GEM precinct" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TRG_GEM" />
+    </row> 
+
+    <row>
       <field col="name" val="latc_GEM_TRG_GEM" />
       <field col="description" 
              val="GEM registers controlled by TRG GEM (non-ROI) " />
@@ -1603,6 +1611,14 @@ used for container vote files which reference regular votes by alias" />
     <row>
       <ref col="PClass_fk" table="Parameter_class" 
            refCol="name" refVal="latc_DFT_TKR_Strips" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_TRG_GEM" />
       <ref col="FClass_fk" table="FSW_class" 
            refCol="name" refVal="latc_DFT" />
       <field col="one_to_one" val="0" />

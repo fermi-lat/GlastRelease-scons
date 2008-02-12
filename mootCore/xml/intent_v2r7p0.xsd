@@ -1364,6 +1364,7 @@
   <xs:element name="TRG_GEM-param" >
     <xs:complexType>
       <xs:all minOccurs="1" >
+        <xs:element name="latc_DFT_TRG_GEM" type="paramFileType" />
         <xs:element name="latc_GEM_TRG_GEM" type="paramFileType" />
       </xs:all>  
       <xs:attributeGroup ref="outfileAttGroup" />
