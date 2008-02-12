@@ -10,7 +10,8 @@ ClassImp(L1T)
 
 Int_t L1T::number_of_trigger_bits = enums::number_of_trigger_bits;
 
-L1T::L1T() : m_trigger(0)
+L1T::L1T() : m_trigger(0), m_triggerWordTwo(0),
+             m_gemPrescale(0), m_gltPrescale(0), m_prescaleExpired(0)
 {
     Clear();
 }
@@ -82,6 +83,10 @@ void L1T::Clear(Option_t *option) {
         m_digiTriRowBits[iTower] = 0;
         m_trgReqTriRowBits[iTower] = 0;
       }
+    m_triggerWordTwo = 0;
+    m_gemPrescale = 0;
+    m_gltPrescale = 0;
+    m_prescaleExpired = 0;
 }
 
 void L1T::Print(Option_t *option) const {
@@ -89,6 +94,10 @@ void L1T::Print(Option_t *option) const {
     TObject::Print(option);
     cout.precision(2);
     cout << "Trigger Bits: " << m_trigger << endl;
+    cout << " TriggerWordTwo: " << m_triggerWordTwo << endl;
+    cout << " Gem Prescale: " << m_gemPrescale 
+         << " Glt Prescale: " << m_gltPrescale
+         << " Prescale Expired: " << m_prescaleExpired << endl;
     cout << "DigiTriRowBits {Tower 0 through 16} : " << endl;
     Int_t iTower;
     for (iTower = 0; iTower < 8; iTower++)
