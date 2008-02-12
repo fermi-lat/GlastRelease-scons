@@ -14,7 +14,7 @@
 // access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
-#include "../BackgroundSelection.h"
+//#include "../BackgroundSelection.h"
 // Gaudi system includes
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
