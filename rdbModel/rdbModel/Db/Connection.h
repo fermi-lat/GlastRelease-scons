@@ -256,6 +256,8 @@ namespace rdbModel{
     virtual bool compileAssertion(const Assertion* a, std::string& sqlString)
       const = 0;
 
+    virtual unsigned getLastError( ) const = 0;
+
   protected:
     std::ostream* m_out;
     std::ostream* m_err;

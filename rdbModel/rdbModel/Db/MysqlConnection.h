@@ -203,6 +203,8 @@ namespace rdbModel{
     virtual bool 
     compileAssertion(const Assertion* a, std::string& sqlString) const;
 
+    virtual unsigned  getLastError( ) const;
+
     /**
       Turn select and update into no-ops: output SQL string for
       debugging but don't change db 

@@ -333,6 +333,15 @@ namespace rdbModel {
   }
 
 
+  unsigned MysqlConnection::getLastError( ) const {
+    unsigned errcode;
+    if (m_mysql) {
+      
+      getMysqlError(m_mysql, &errcode);
+    }
+    return errcode;
+  }
+
   bool MysqlConnection::insertRow(const std::string& tableName, 
                                   const StringVector& colNames, 
                                   const StringVector& values,
