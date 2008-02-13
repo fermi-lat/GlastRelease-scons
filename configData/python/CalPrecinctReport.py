@@ -40,15 +40,15 @@ class CalPrecinctReport(object):
     self.__rootDataPath = rootDataPath
     # current LATC register data dictionary
     import LATCRootData
-    self._cfgRootData = LATCRootData.PrecinctData(self.__rootDataPath, self._precinctName)
+    self._cfgPrecinctData = LATCRootData.PrecinctData(self.__rootDataPath, self._precinctName)
 
     # optional baseline ROOT data
     if baselineRootPath == None:
       self.__baselineRootPath = None
-      self._baselineRootData = None
+      self._baselinePrecinctData = None
     else:
       self.__baselineRootPath = baselineRootPath
-      self._baselineRootData = LATCRootData.PrecinctData(self.__baselineRootPath, self._precinctName)
+      self._baselinePrecinctData = LATCRootData.PrecinctData(self.__baselineRootPath, self._precinctName)
 
   def createTXTReport(self, filename):
     """
@@ -73,12 +73,12 @@ class CalPrecinctReport(object):
     """
 
     import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
     title = "%s_%s_diff_vs_GCCC"%(self._precinctName, regName)
     caption = title
     
-    regData = self._cfgRootData.getRegisterData(regName)
-    baselineData = self._baselineRootData.getRegisterData(regName)
+    regData = self._cfgPrecinctData.getRegisterData(regName)
+    baselineData = self._baselinePrecinctData.getRegisterData(regName)
     diffData = [new - old for (new,old) in zip(regData,baselineData)]
     # extract GCCC index from global GCFE indeces
     import calConstant
@@ -107,11 +107,11 @@ class CalPrecinctReport(object):
     BasicPlotChecker.PlotInfo
     """
     import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
     title = "%s_%s_vs_GCCC"%(self._precinctName, regName)
     caption = title
 
-    regData = self._cfgRootData.getRegisterData(regName)
+    regData = self._cfgPrecinctData.getRegisterData(regName)
     # extract GCCC index from global GCFE indeces
     import calConstant
     cccData = [calConstant.getCFEId(idx)[1] for idx in range(calConstant.GLOBAL_N_GCFE)]
@@ -138,13 +138,13 @@ class CalPrecinctReport(object):
     """
 
     import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
 
     title = "%s_%s_diff"%(self._precinctName, regName)
     caption = title
 
-    cfgData = self._cfgRootData.getRegisterData(regName)
-    baselineData = self._baselineRootData.getRegisterData(regName)
+    cfgData = self._cfgPrecinctData.getRegisterData(regName)
+    baselineData = self._baselinePrecinctData.getRegisterData(regName)
     diffData = [cfg - baseline for (cfg, baseline) in zip(cfgData, baselineData)]
 
     import ROOTPlotUtils
@@ -167,13 +167,13 @@ class CalPrecinctReport(object):
     """
 
     import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
 
     title = "%s_%s_scatter"%(self._precinctName, regName)
     caption = title
 
-    cfgData = self._cfgRootData.getRegisterData(regName)
-    baselineData = self._baselineRootData.getRegisterData(regName)
+    cfgData = self._cfgPrecinctData.getRegisterData(regName)
+    baselineData = self._baselinePrecinctData.getRegisterData(regName)
 
     import ROOTPlotUtils
     return ROOTPlotUtils.make2DHist(baselineData,
@@ -208,21 +208,64 @@ class CalThreshReport(CalPrecinctReport):
 
     txtFile = open(filename,'w')
 
+    self.basicTXTReport(txtFile)
+
+    txtFile.close()
+
+  def basicTXTReport(self, outFile):
+    """
+    Write basic Cal Threshold report to given output file
+    """
     import calConstant
     regName = calConstant.THRESH_REG_NAME[self._precinctName]
-    txtFile.write("Nominal DAC slope: %f (%s)\n"%
+    outFile.write("Nominal DAC slope: %f (%s)\n"%
                   (calConstant.NOMINAL_THRESH_DAC_SLOPE[regName],
                    calConstant.THRESH_DAC_SLOPE_UNITS[regName]))
 
     bcast_regName = "%s_bcast"%regName
-    bcast_value = self._cfgRootData.getRegisterData(bcast_regName)[0]
-    txtFile.write("Broadcast value: %d\n"%bcast_value)
+    bcast_value = self._cfgPrecinctData.getRegisterData(bcast_regName)[0]
+    outFile.write("Broadcast value: %d\n"%bcast_value)
 
-    cfgData = self._cfgRootData.getRegisterData(regName)
+    cfgData = self._cfgPrecinctData.getRegisterData(regName)
     nBcast = cfgData.count(bcast_value)
-    txtFile.write("Num Broadcast channels: %d of %d\n"%(nBcast, len(cfgData)))
+    outFile.write("Num Broadcast channels: %d of %d\n"%(nBcast, len(cfgData)))
 
-    txtFile.close()
+
+  def makeImgs(self, outputDir):
+    """
+    Return list of BasicPlotChecker.PlotInfo objects
+    """
+    imgList = []
+
+    import calConstant
+    regName = calConstant.THRESH_REG_NAME[self._precinctName]
+
+    import LATCRootData
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
+    import ROOTPlotUtils
+    imgList.append(ROOTPlotUtils.make1DHist(self._cfgPrecinctData.getRegisterData(regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            regName,
+                                            "",
+                                            outputDir,
+                                            regInfo.maxVal+1,
+                                            regInfo.maxVal+1))
+
+    if self._baselinePrecinctData is not None:
+      imgList.append(ROOTPlotUtils.make1DHist(self._baselinePrecinctData.getRegisterData(regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              regName,
+                                              "",
+                                              outputDir,
+                                              regInfo.maxVal+1,
+                                              regInfo.maxVal+1))
+      imgList.append(self._genScatterPlot(regName, outputDir))
+      imgList.append(self._genDiffHist(regName, outputDir))
+
+    return imgList
+
   
 
 class CalLACReport(CalThreshReport):
@@ -235,41 +278,14 @@ class CalLACReport(CalThreshReport):
                              baselineRootPath)
     
   def makeImgs(self, outputDir):
-    imgList = []
+    imgList = CalThreshReport.makeImgs(self, outputDir)
+
     import calConstant
     regName = calConstant.THRESH_REG_NAME[self._precinctName]
-
-    import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
-    import ROOTPlotUtils
-    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            regName,
-                                            "",
-                                            outputDir,
-                                            regInfo.maxVal+1,
-                                            regInfo.maxVal+1))
-    
-                   
-                                            
-
-    if self._baselineRootData is not None:
-      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              regName,
-                                              "",
-                                              outputDir,
-                                              regInfo.maxVal+1,
-                                              regInfo.maxVal+1))
-      imgList.append(self._genScatterPlot(regName, outputDir))
-      imgList.append(self._genDiffHist(regName, outputDir))
-
     imgList.append(self._genCCCPlot(regName, outputDir))
-    if self._baselineRootData is not None:
-      imgList.append(self._genCCCDiff(regName, outputDir))
-    
+    if self._baselinePrecinctData is not None:
+      imgList.append(self._genCCCDiff(regName, outputDir))  
+  
 
       
     return imgList
@@ -284,37 +300,13 @@ class CalFLEReport(CalThreshReport):
                                baselineRootPath)
 
   def makeImgs(self, outputDir):
-    imgList = []
+    imgList = CalThreshReport.makeImgs(self, outputDir)
 
     import calConstant
     regName = calConstant.THRESH_REG_NAME[self._precinctName]
-    import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
-    import ROOTPlotUtils
-    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            regName,
-                                            "",
-                                            outputDir,
-                                            regInfo.maxVal+1,
-                                            regInfo.maxVal+1))
-
-    if self._baselineRootData is not None:
-      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              regName,
-                                              "",
-                                              outputDir,
-                                              regInfo.maxVal+1,
-                                              regInfo.maxVal+1))
-      imgList.append(self._genScatterPlot(regName, outputDir))
-      imgList.append(self._genDiffHist(regName, outputDir))
-
     imgList.append(self._genCCCPlot(regName, outputDir))
-    if self._baselineRootData is not None:
-      imgList.append(self._genCCCDiff(regName, outputDir))
+    if self._baselinePrecinctData is not None:
+      imgList.append(self._genCCCDiff(regName, outputDir))  
 
     return imgList
   
@@ -329,37 +321,6 @@ class CalFHEReport(CalThreshReport):
                              baselineRootPath)
     
     
-  def makeImgs(self, outputDir):
-    imgList = []
-
-    import calConstant
-    regName = calConstant.THRESH_REG_NAME[self._precinctName]
-
-    import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
-    import ROOTPlotUtils
-    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            regName,
-                                            "",
-                                            outputDir,
-                                            regInfo.maxVal+1,
-                                            regInfo.maxVal+1))
-
-    if self._baselineRootData is not None:
-      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              regName,
-                                              "",
-                                              outputDir,
-                                              regInfo.maxVal+1,
-                                              regInfo.maxVal+1))
-      imgList.append(self._genScatterPlot(regName, outputDir))
-      imgList.append(self._genDiffHist(regName, outputDir))
-
-    return imgList
 
 
 class CalULDReport(CalThreshReport):
@@ -371,40 +332,6 @@ class CalULDReport(CalThreshReport):
                                rootDataPath,
                                baselineRootPath)
 
-
-  def makeImgs(self, outputDir):
-    imgList = []
-
-    import calConstant
-    regName = calConstant.THRESH_REG_NAME[self._precinctName]
-
-    import LATCRootData
-    regInfo = LATCRootData.registerInfo[regName]
-    import ROOTPlotUtils
-    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            regName,
-                                            "",
-                                            outputDir,
-                                            regInfo.maxVal+1,
-                                            regInfo.maxVal+1))
-
-    if self._baselineRootData is not None:
-      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              regName,
-                                              "",
-                                              outputDir,
-                                              regInfo.maxVal+1,
-                                              regInfo.maxVal+1))
-      imgList.append(self._genScatterPlot(regName, outputDir))
-      imgList.append(self._genDiffHist(regName, outputDir))
-
-    return imgList
-
-
 class CalModeReport(CalPrecinctReport):
   def __init__(self,
                rootDataPath,
@@ -413,3 +340,82 @@ class CalModeReport(CalPrecinctReport):
                                "CAL_Mode",
                                rootDataPath,
                                baselineRootPath)
+
+  def createTXTReport(self, filename):
+    """
+    Write TXT report data to output file.
+    """
+    txtFile = open(filename,'w')
+
+    txtFile.write(self.calModeTXT(self._cfgPrecinctData))
+    
+    txtFile.close()
+
+  def calModeTXT(self, precinctData):
+    """
+    Create string report of cal mode configuration
+    """
+
+    txtRpt = ""
+
+    txtRpt += "precinct\t%s\tidx\t%s\t%s\t%s\tval\tfield_desc\n"%("register".ljust(20),
+                                                                  "reg_val".ljust(12),
+                                                                  "bcast_val".ljust(12),
+                                                                  "field".ljust(20))
+    # loop through all register groups in precinct
+    import LATCRootData
+    precinctInfo = LATCRootData.PRECINCT_INFO[self._precinctName]
+    for (regName,regInfo) in precinctInfo.iteritems():
+      regData = precinctData.getRegisterData(regName)
+      
+      
+      # find bcast register if it exists
+      # case 0: i am a 'bcast' register
+      isBcast = (regName.find("bcast") >= 0)
+      
+      if isBcast:
+        bcastRegName = regName
+      else:
+        # case 1: I will look for my bcast register
+        bcastRegName = "%s_bcast"%regName
+        
+      if bcastRegName in precinctInfo.keys():
+        bcastVal = precinctData.getRegisterData(bcastRegName)[0]
+      else:
+        bcastVal = None
+        
+      # loop through all registers in register group
+      for idx in range(regInfo.nInstances):
+        regVal = regData[idx]
+        
+        # only print individual registers that don't match the bcast
+        if not isBcast and regVal == bcastVal:
+          continue
+        
+        # handle case where no subfields defined
+        if len(regInfo.fieldDict) == 0:
+          txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
+                                                        regName.ljust(20),
+                                                        idx,
+                                                        ("0x%x"%regVal).ljust(12),
+                                                        ("0x%x"%bcastVal).ljust(12),
+                                                        "",
+                                                        "",
+                                                        "")
+          
+          # loop through all fields in register
+        else:
+          for (fieldName, fieldInfo) in regInfo.fieldDict.iteritems():
+            txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t0x%x\t%s\n"%(self._precinctName,
+                                                            regName.ljust(20),
+                                                            idx,
+                                                            ("0x%x"%regVal).ljust(12),
+                                                            ("0x%x"%bcastVal).ljust(12),
+                                                            fieldName.ljust(20),
+                                                            fieldInfo.extractVal(regVal),
+                                                            fieldInfo.desc)
+        # per register instance
+        txtRpt += "\n" 
+        
+    return txtRpt
+    

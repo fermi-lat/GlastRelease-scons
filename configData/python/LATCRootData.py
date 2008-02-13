@@ -21,6 +21,34 @@ import ROOT
 # set batch mode (avoid plotting)
 ROOT.gROOT.SetBatch(True)
 
+class RegisterFieldInfo:
+  """
+  Describe meaning of a register bit-set
+  """
+  def __init__(self,
+               minBit,
+               nBits,
+               desc):
+    """
+    fieldName - name of bitfield withing register
+    minBit - LSB of field (numbered from 0)
+    nBits - size of bit-field
+    desc - txt description
+    """
+    self.minBit = minBit
+    self.nBits = nBits
+    self.desc = desc
+
+  def extractVal(self, regVal):
+    """
+    Extract register field value (as integer) from full register value, shift LSB of field to bit 0.
+    """
+    reg_shift = regVal/2**self.minBit
+
+    reg_mod = reg_shift % 2**self.nBits
+
+    return reg_mod
+
 class RegisterInfo:
   """
   store data type & shape information for given LATC Register
@@ -29,56 +57,77 @@ class RegisterInfo:
   nInstances - number of register instances in LAT
   typeCode - ROOT.TBranch data type code character
   maxVal - maximum integer value for register
+  fieldDict - dictionary of field_name -> RegisterFieldInfo
   """
   def __init__(self,
-               registerName,
-               precinctName,
                nInstances,
                typeCode,
-               maxVal=-1):
-    self.name = registerName
-    self.precinctName = precinctName
+               maxVal=-1,
+               fieldDict=None):
     self.nInstances = nInstances
     self.typeCode = typeCode
     self.maxVal = maxVal
 
-# describe cal LATC registers
-registerInfo = {}
+    if fieldDict is not None:
+      self.fieldDict = fieldDict
+    else:
+      self.fieldDict = {}
+
+# describe cal LATC precincts
+PRECINCT_INFO = {}
 
 import calConstant
-# CAL_LAC
-registerInfo["log_acpt"] = RegisterInfo("log_acpt", "CAL_LAC", calConstant.GLOBAL_N_GCFE, 'i',127)
-registerInfo["log_acpt_bcast"] = RegisterInfo("log_acpt_bcast", "CAL_LAC",1, 'i',127)
+PRECINCT_INFO["CAL_LAC"] = {}
+PRECINCT_INFO["CAL_LAC"]["log_acpt"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i',127)
+PRECINCT_INFO["CAL_LAC"]["log_acpt_bcast"] = RegisterInfo(1, 'i',127)
 
-# CAL_FLE
-registerInfo["fle_dac"] = RegisterInfo("fle_dac", "CAL_FLE", calConstant.GLOBAL_N_GCFE, 'i',127)
-registerInfo["fle_dac_bcast"] = RegisterInfo("fle_dac_bcast", "CAL_FLE", 1, 'i',127)
+PRECINCT_INFO["CAL_FLE"] = {}
+PRECINCT_INFO["CAL_FLE"]["fle_dac"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i',127)
+PRECINCT_INFO["CAL_FLE"]["fle_dac_bcast"] = RegisterInfo(1, 'i',127)
 
-# CAL_FHE
-registerInfo["fhe_dac"] = RegisterInfo("fhe_dac", "CAL_FHE", calConstant.GLOBAL_N_GCFE, 'i',127)
-registerInfo["fhe_dac_bcast"] = RegisterInfo("fhe_dac_bcast", "CAL_FHE", 1, 'i',127)
+PRECINCT_INFO["CAL_FHE"] = {}
+PRECINCT_INFO["CAL_FHE"]["fhe_dac"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i',127)
+PRECINCT_INFO["CAL_FHE"]["fhe_dac_bcast"] = RegisterInfo(1, 'i',127)
 
-# CAL_ULD
-registerInfo["rng_uld_dac"] = RegisterInfo("rng_uld_dac", "CAL_ULD", calConstant.GLOBAL_N_GCFE, 'i',127)
-registerInfo["rng_uld_dac_bcast"] = RegisterInfo("rng_uld_dac_bcast", "CAL_ULD", 1, 'i',127)
+PRECINCT_INFO["CAL_ULD"] = {}
+PRECINCT_INFO["CAL_ULD"]["rng_uld_dac"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i',127)
+PRECINCT_INFO["CAL_ULD"]["rng_uld_dac_bcast"] = RegisterInfo(1, 'i',127)
 
-# CAL_Mode
-registerInfo["layer_mask_0"] = RegisterInfo("layer_mask_0", "CAL_Mode", calConstant.GLOBAL_N_GCCC, 'i')
-registerInfo["layer_mask_1"] = RegisterInfo("layer_mask_1", "CAL_Mode", calConstant.GLOBAL_N_GCCC, 'i')
-registerInfo["ccc_configuration"] = RegisterInfo("ccc_configuration", "CAL_Mode", calConstant.GLOBAL_N_GCCC, 'i')
-registerInfo["crc_dac"] = RegisterInfo("crc_dac", "CAL_Mode", calConstant.GLOBAL_N_GCRC, 'i')
-registerInfo["config"] = RegisterInfo("config", "CAL_Mode", calConstant.GLOBAL_N_GCRC, 'i')
-registerInfo["config_0"] = RegisterInfo("config_0", "CAL_Mode", calConstant.GLOBAL_N_GCFE, 'i')
-registerInfo["config_1"] = RegisterInfo("config_1", "CAL_Mode", calConstant.GLOBAL_N_GCFE, 'i')
-registerInfo["ref_dac"] = RegisterInfo("ref_dac", "CAL_Mode", calConstant.GLOBAL_N_GCFE, 'i')
-registerInfo["layer_mask_0_bcast"] = RegisterInfo("layer_mask_0_bcast", "CAL_Mode", 1, 'i')
-registerInfo["layer_mask_1_bcast"] = RegisterInfo("layer_mask_1_bcast", "CAL_Mode", 1, 'i')
-registerInfo["ccc_configuration_bcast"] = RegisterInfo("ccc_configuration_bcast", "CAL_Mode", 1, 'i')
-registerInfo["crc_dac_bcast"] = RegisterInfo("crc_dac_bcast", "CAL_Mode", 1, 'i')
-registerInfo["config_bcast"] = RegisterInfo("config_bcast", "CAL_Mode", 1, 'i')
-registerInfo["config_0_bcast"] = RegisterInfo("config_0_bcast", "CAL_Mode", 1, 'i')
-registerInfo["config_1_bcast"] = RegisterInfo("config_1_bcast", "CAL_Mode", 1, 'i')
-registerInfo["ref_dac_bcast"] = RegisterInfo("ref_dac_bcast", "CAL_Mode", 1, 'i')
+PRECINCT_INFO["CAL_Mode"] = {}
+PRECINCT_INFO["CAL_Mode"]["layer_mask_0"] = RegisterInfo(calConstant.GLOBAL_N_GCCC, 'i')
+PRECINCT_INFO["CAL_Mode"]["layer_mask_1"] = RegisterInfo(calConstant.GLOBAL_N_GCCC, 'i')
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration"] = RegisterInfo(calConstant.GLOBAL_N_GCCC, 'i')
+PRECINCT_INFO["CAL_Mode"]["crc_dac"] = RegisterInfo(calConstant.GLOBAL_N_GCRC, 'i')
+PRECINCT_INFO["CAL_Mode"]["config"] = RegisterInfo(calConstant.GLOBAL_N_GCRC, 'i')
+PRECINCT_INFO["CAL_Mode"]["config_0"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i')
+PRECINCT_INFO["CAL_Mode"]["config_1"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i')
+PRECINCT_INFO["CAL_Mode"]["ref_dac"] = RegisterInfo(calConstant.GLOBAL_N_GCFE, 'i')
+PRECINCT_INFO["CAL_Mode"]["layer_mask_0_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["layer_mask_1_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["crc_dac_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["config_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["config_0_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["config_1_bcast"] = RegisterInfo(1, 'i')
+PRECINCT_INFO["CAL_Mode"]["ref_dac_bcast"] = RegisterInfo(1, 'i')
+
+# describe LATC register fields
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["LE_GN_SEL"] = RegisterFieldInfo(0, 3, "Gain_Select mode for charge amplifier low-energy range")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["HE_GN_SEL"] = RegisterFieldInfo(3, 4, "Gain_Select mode for charge amplifier high-energy range")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["LE_RNG_ENA"] = RegisterFieldInfo(7, 1, "Range_Enable bit 0 for auto-range circuit (low-energy range enable)")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["HE_RNG_ENA"] = RegisterFieldInfo(8, 1, "Range_Enable bit 1 for auto-range circuit (high-energy range enable)")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["USE_FRST_RNG"] = RegisterFieldInfo(9, 1, "Use first range for range selection circuit, given by First_Range bits")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["FIRST_RNG"] = RegisterFieldInfo(10, 2, "First Range for range-selection circuit")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["FIRST_RNG"] = RegisterFieldInfo(12, 1, "Overwrite bit 1 for range-selection circuit")
+PRECINCT_INFO["CAL_Mode"]["config_0_bcast"].fieldDict = PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict
+
+PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["PREAMP_AUTO_RESET_ENA"] = RegisterFieldInfo(0, 1, "Enable bit for Preamp to automatically reset for large input pulses. Bit set to 1 enables automatic preamp reset.")
+PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["LE_TRG_ENA"] = RegisterFieldInfo(1, 1, "Trigger_Enable for LE trigger circuits")
+PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["HE_TRG_ENA"] = RegisterFieldInfo(2, 1, "Trigger_Enable for HE trigger circuits")
+PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["CALIB_GAIN"] = RegisterFieldInfo(3, 1, "Calibration_Gain bit (1) for calibration circuit . Bit set to 0 for autoranging test.")
+PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["CALIB_LE_EN"] = RegisterFieldInfo(4, 1, "Calibration_Enable for low-energy calibration circuit")
+PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["CALIB_HE_EN"] = RegisterFieldInfo(5, 1, "Calibration_Enable for high-energy calibration circuit")
+PRECINCT_INFO["CAL_Mode"]["config_1_bcast"].fieldDict = PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict
 
 
 # associate ROOT typecodes to python standard library array module typecodes
@@ -103,14 +152,14 @@ class LATCRootFile:
     self.__rootTree.GetEntry(0)
 
 
-  def getRegisterData(self, registerName):
+  def getRegisterData(self, precinctName, registerName):
     """
     retrieve single dimensional python array with data for specified register
     """
     leaf = self.__rootTree.GetLeaf(registerName)
 
     import array
-    regInfo = registerInfo[registerName]
+    regInfo = PRECINCT_INFO[precinctName][registerName]
     regData = array.array(ROOT_TYPECODE_2_ARRAY_TYPECODE[regInfo.typeCode],
                           [0]*regInfo.nInstances)
     # loop through each value
@@ -131,9 +180,8 @@ class PrecinctData:
     rootFile = LATCRootFile(filename)
     
     # find all registers for given precinct
-    for (name, regInfo) in registerInfo.iteritems():
-      if regInfo.precinctName == precinctName:
-        self._registerData[name] = rootFile.getRegisterData(name)
+    for (regName, regInfo) in PRECINCT_INFO[precinctName].iteritems():
+      self._registerData[regName] = rootFile.getRegisterData(precinctName, regName)
 
   def getRegisterData(self, registerName):
     """
@@ -141,3 +189,6 @@ class PrecinctData:
     """
     return self._registerData[registerName]
 
+
+
+  
