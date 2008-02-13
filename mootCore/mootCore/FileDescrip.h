@@ -95,10 +95,12 @@ namespace MOOT {
                const std::string& algorithm="", const std::string& step="", 
                const std::string& descrip="",const std::string& status="",
                const std::string& active="",
+               const std::string& verify="",
                const std::string& mode="", const std::string& cTime="",
                const std::string& voteKey="") : 
       m_key(key), m_name(name), m_alg(algorithm), m_step(step), 
       m_descrip(descrip), m_status(status), m_active(active),
+      m_verify(verify),
       m_mode(mode), m_creationTime(cTime), m_voteKey(voteKey) {};
 
     std::string getName() const {return m_name;}
@@ -107,13 +109,14 @@ namespace MOOT {
     std::string getDescrip() const {return m_descrip;}
     std::string getStatus() const {return m_status;}
     std::string getActive() const {return m_active;}
+    std::string getVerify() const {return m_verify;}
     std::string getKey() const {return m_key;}
     std::string getMode() const {return m_mode;}
     std::string getCreationTime() const {return m_creationTime;}
     std::string getVoteKey() const {return m_voteKey;}
     void clear() {
       m_key = m_name = m_alg = m_step = m_descrip = m_status = m_active 
-        = m_mode = m_creationTime = m_voteKey = std::string("");
+        = m_verify = m_mode = m_creationTime = m_voteKey = std::string("");
     }
   private:
     std::string m_key;
@@ -123,6 +126,7 @@ namespace MOOT {
     std::string m_descrip;
     std::string m_status;
     std::string m_active;
+    std::string m_verify;
     std::string m_mode;
     std::string m_creationTime;
     std::string m_voteKey;
