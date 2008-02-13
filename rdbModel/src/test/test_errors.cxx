@@ -267,6 +267,10 @@ int doBadInsert(rdbModel::Rdb* rdb) {
   Row row(fields);
 
   rdb->insertRow("metadata_v2r1", row, &serial);
+
+  unsigned errcode = rdb->getConnection()->getLastError();
+  std::cerr << "From doBadInsert.  Last error code was " << errcode 
+            << std::endl;
     
   return serial;
 }
@@ -294,6 +298,11 @@ int doBadUpdate(rdbModel::Rdb* rdb, int serial) {
   std::string table("metadata_v2r1");
 
   unsigned nChange = rdb->updateRows(table, row, where);
+
+  unsigned errcode = rdb->getConnection()->getLastError();
+  std::cerr << "From doBadUpdate.  Last error code was " << errcode 
+            << std::endl;
+
   return (int) nChange;
 }
 
