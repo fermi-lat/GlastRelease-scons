@@ -97,8 +97,13 @@ namespace MOOT {
   }
 
   void MoodConnection::close() {
-    delete m_rdb;
-    m_rdb = 0;
+    if (m_rdb) {
+      rdbModel::Connection* conn = m_rdb->getConnection();
+      conn->close();
+      delete conn;
+      delete m_rdb;
+      m_rdb = 0;
+    }
   }
 
   bool MoodConnection::open(const char* host, int port, 
