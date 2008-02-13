@@ -272,6 +272,8 @@ def makePrecinctHandlers():
     # Trigger reports
     from TrgGemXmlReport import TrgGemXmlReport
     PRECINCT_HANDLERS["TRG_GEM"] = TrgGemXmlReport
+    from TrgRoiXmlReport import TrgRoiXmlReport
+    PRECINCT_HANDLERS["TRG_ROI"] = TrgRoiXmlReport
     # Tracker reports
     from TkrXmlReport import TkrModeXmlReport, TkrStripsXmlReport, TkrThreshXmlReport
     PRECINCT_HANDLERS["TKR_Mode"] = TkrModeXmlReport
