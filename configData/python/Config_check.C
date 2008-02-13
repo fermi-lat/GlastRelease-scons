@@ -25,10 +25,12 @@ void Config_check::TKR_Timing()
    switchcolor(magenta);
    std::cout<<std::setw(3) <<"BC"<<hex<<setw(10)<<tcc_trg_align_bcast<<dec<<std::endl;
    for (int i=0;i<16;i++){
-     for (int j=1;j<8;j++) caughtAssert |= niceAssert(tcc_trg_align[i][j], tcc_trg_align[i][0], 'tcc_trg_align');
+     for (int j=1;j<8;j++) {
+       caughtAssert |= niceAssert(tcc_trg_align[i][j], tcc_trg_align[i][0], 'tcc_trg_align');
+     }
      switchcolor(black);
      std::cout<<std::setw(3)<<i;
-     if(tcc_trg_align[i][0]==tcc_trg_align_bcast)switchcolor(green);
+     if(tcc_trg_align[i][0]==tcc_trg_align_bcast) switchcolor(green);
      else switchcolor(red);
      std::cout<<hex<<setw(10)<<tcc_trg_align[i][0]<<dec<<std::endl;
    }			      
@@ -36,7 +38,6 @@ void Config_check::TKR_Timing()
    std::cout<<std::endl;
    if (!caughtAssert) {
      std::cout<<"It has been verified that all tcc_trg_align registers in a tower are identical."<<std::endl;
-     // if (Cut(ientry) < 0) continue;
    } else {
      switchcolor(red);
      std::cout<<"ERROR: not all tcc_trg_align registers in a tower are identical."<<std::endl;
@@ -49,7 +50,8 @@ void Config_check::TKR_Timing()
    endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    endcolor();
-   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<std::endl;
+   switchcolor(black);
    endcolor();
    std::cout<<std::endl;
 }
@@ -108,7 +110,8 @@ void Config_check::ACD_Timing()
    endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    endcolor();
-   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<std::endl;
+   switchcolor(black);
    endcolor();
    std::cout<<std::endl;
 }
@@ -134,11 +137,11 @@ void Config_check::CAL_Timing()
    for (int i=0;i<16;i++){
      for (int j=0;j<4;j++){
        for (int k=1;k<4;k++){
-	 caughtAssert |= niceAssert(delay_1[i][j][k], delay_1[i][0][0], 'delay_1');
-	 caughtAssert |= niceAssert(delay_2[i][j][k], delay_2[i][0][0], 'delay_2');
-	 caughtAssert |= niceAssert(delay_3[i][j][k], delay_3[i][0][0], 'delay_3');
+	 caughtAssert != niceAssert(delay_1[i][j][k], delay_1[i][0][0], 'delay_1');
+	 caughtAssert != niceAssert(delay_2[i][j][k], delay_2[i][0][0], 'delay_2');
+	 caughtAssert != niceAssert(delay_3[i][j][k], delay_3[i][0][0], 'delay_3');
        }
-       caughtAssert |= niceAssert(ccc_trg_alignment[i][j], ccc_trg_alignment[i][0], 'ccc_trg_alignment');
+       caughtAssert != niceAssert(ccc_trg_alignment[i][j], ccc_trg_alignment[i][0], 'ccc_trg_alignment');
      }
      switchcolor(black);
      std::cout<<std::setw(3)<<i;
@@ -171,7 +174,8 @@ void Config_check::CAL_Timing()
    endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    endcolor();
-   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<std::endl;
+   switchcolor(black);
    endcolor();
    std::cout<<std::endl;
 }
@@ -218,7 +222,8 @@ void Config_check::GNL_Timing()
    endcolor();
    std::cout<<color(green)<<"Green: Register value that is same as broadcast"<<std::endl;
    endcolor();
-   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   std::cout<<color(red)<<"Red: Register value that is different from broadcast"<<std::endl;
+   switchcolor(black);
    endcolor();
    std::cout<<std::endl;
       // if (Cut(ientry) < 0) continue;
@@ -281,9 +286,10 @@ void Config_check::GNL_Mode()
    std::cout<<col<<"Green: Register value that is same as broadcast"<<std::endl;
    endcolor();
    col.fore=red;
-   std::cout<<col<<"Red: Register value that is different from broadcast"<<color(black)<<std::endl;
+   std::cout<<col<<"Red: Register value that is different from broadcast"<<std::endl;
    col.fore=black;
    std::cout<<col;
+   switchcolor(black);
    endcolor();
    std::cout<<std::endl;
 }

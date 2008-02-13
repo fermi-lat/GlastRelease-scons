@@ -21,21 +21,15 @@ import logging
 from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 from TkrRegisterChecker import *
-TMP_BASE_ROOT = '/scratch/philiph/offline/offlineConfig/configData/v1r6p2/rhel4_gcc34/MootConfig_5881.root'
-TMP_COMP_ROOT = '/scratch/philiph/offline/offlineConfig/configData/v1r6p2/rhel4_gcc34/MootConfig_5691.root'
 
 FN_SHORTSUM = "%sTKR_%s_shortSum.txt"
 
 class TkrXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData, type):
         PrecinctXmlReport.__init__(self, precinctInfo, configData)
-        #print 'in TkrXmlReport init - precinct type is %s' %(type)
         self.__type = type
-##        self.__confRootFile = TMP_COMP_ROOT
-##        self.__baseRootFile = TMP_BASE_ROOT
         self.__confRootFile = configData.configRootFileName()
         self.__baseRootFile = configData.baselineRootFileName()
-        #print 'Analyze base file %s, conf file %s' %(self.__baseRootFile, self.__confRootFile)
         self.__pngFileInfos = []
         
     def createReport(self):

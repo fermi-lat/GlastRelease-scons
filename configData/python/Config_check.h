@@ -92,9 +92,9 @@ inline void switchcolor(const *char colorName){
   printf("<b style='color:%s'>", name);
 }
 
-inline Bool_t niceAssert(const int a, const int b, const *char name) {
+inline Bool_t niceAssert(const UInt_t a, const UInt_t b, const *char name) {
   if (a==b) return kFALSE;
-  std::cout<<'checking '<< name << 'found inconsistent values ' << a << ' and ' << 'b' << std::endl;
+  printf("checking %s found inconsistent values %d and %d", name, a, b);
   return kTRUE;
 }
 
