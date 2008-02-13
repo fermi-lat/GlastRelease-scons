@@ -208,7 +208,7 @@ class TkrRegisterChecker(object):
     if self.__outputFile:
       self.closeOutputFile()
       
-  def ingestRoot(self, base, comp):
+  def ingestRoot(self, comp, base):
     if comp:
       self.rFiles.append(ROOT.TFile(comp))
     if base:
@@ -555,7 +555,7 @@ if __name__ == '__main__':
   if len(sys.argv) == 2:
     fname = str( sys.argv[1] )
     print "open root file:", fname
-    trc = TkrRegisterChecker(precinctName, fname)
+    trc = TkrRegisterChecker(precinctName, fname, alias='sptAlt')
   elif len(sys.argv) == 3:
     fname = str( sys.argv[1] )
     print "open root file:", fname
