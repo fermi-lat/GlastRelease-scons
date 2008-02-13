@@ -16,144 +16,11 @@ __version__  = "$Revision$"
 __release__  = "$Name$"
 __credits__  = "SLAC"
 
-class RegisterInfo:
-  """
-  store data type & shape information for given LATC Register
 
-  args:
-  nInstances - number of register instances in LAT
-  typeCode - ROOT.TBranch data type code character
-  maxVal - maximum integer value for register
-  """
-  def __init__(self,
-               registerName,
-               precinctName,
-               nInstances,
-               typeCode,
-               maxVal=-1):
-    self.name = registerName
-    self.precinctName = precinctName
-    self.nInstances = nInstances
-    self.typeCode = typeCode
-    self.maxVal = maxVal
+import ROOT
+# set batch mode (avoid plotting)
+ROOT.gROOT.SetBatch(True)
 
-# describe cal LATC registers
-_registerInfo = {}
-
-import calConstant
-# CAL_LAC
-_registerInfo["log_acpt"] = RegisterInfo("log_acpt", "CAL_LAC", calConstant.GLOBAL_N_GCFE, 'i',127)
-_registerInfo["log_acpt_bcast"] = RegisterInfo("log_acpt_bcast", "CAL_LAC",1, 'i',127)
-
-# CAL_FLE
-_registerInfo["fle_dac"] = RegisterInfo("fle_dac", "CAL_FLE", calConstant.GLOBAL_N_GCFE, 'i',127)
-_registerInfo["fle_dac_bcast"] = RegisterInfo("fle_dac_bcast", "CAL_FLE", 1, 'i',127)
-
-# CAL_FHE
-_registerInfo["fhe_dac"] = RegisterInfo("fhe_dac", "CAL_FHE", calConstant.GLOBAL_N_GCFE, 'i',127)
-_registerInfo["fhe_dac_bcast"] = RegisterInfo("fhe_dac_bcast", "CAL_FHE", 1, 'i',127)
-
-# CAL_ULD
-_registerInfo["rng_uld_dac"] = RegisterInfo("rng_uld_dac", "CAL_ULD", calConstant.GLOBAL_N_GCFE, 'i',127)
-_registerInfo["rng_uld_dac_bcast"] = RegisterInfo("rng_uld_dac_bcast", "CAL_ULD", 1, 'i',127)
-
-# CAL_Mode
-_registerInfo["layer_mask_0"] = RegisterInfo("layer_mask_0", "CAL_Mode", calConstant.GLOBAL_N_GCCC, 'i')
-_registerInfo["layer_mask_1"] = RegisterInfo("layer_mask_1", "CAL_Mode", calConstant.GLOBAL_N_GCCC, 'i')
-_registerInfo["ccc_configuration"] = RegisterInfo("ccc_configuration", "CAL_Mode", calConstant.GLOBAL_N_GCCC, 'i')
-_registerInfo["crc_dac"] = RegisterInfo("crc_dac", "CAL_Mode", calConstant.GLOBAL_N_GCRC, 'i')
-_registerInfo["config"] = RegisterInfo("config", "CAL_Mode", calConstant.GLOBAL_N_GCRC, 'i')
-_registerInfo["config_0"] = RegisterInfo("config_0", "CAL_Mode", calConstant.GLOBAL_N_GCFE, 'i')
-_registerInfo["config_1"] = RegisterInfo("config_1", "CAL_Mode", calConstant.GLOBAL_N_GCFE, 'i')
-_registerInfo["ref_dac"] = RegisterInfo("ref_dac", "CAL_Mode", calConstant.GLOBAL_N_GCFE, 'i')
-_registerInfo["layer_mask_0_bcast"] = RegisterInfo("layer_mask_0_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["layer_mask_1_bcast"] = RegisterInfo("layer_mask_1_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["ccc_configuration_bcast"] = RegisterInfo("ccc_configuration_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["crc_dac_bcast"] = RegisterInfo("crc_dac_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["config_bcast"] = RegisterInfo("config_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["config_0_bcast"] = RegisterInfo("config_0_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["config_1_bcast"] = RegisterInfo("config_1_bcast", "CAL_Mode", 1, 'i')
-_registerInfo["ref_dac_bcast"] = RegisterInfo("ref_dac_bcast", "CAL_Mode", 1, 'i')
-
-
-# associate ROOT typecodes to python array typcodes
-ROOT_TYPECODE_2_ARRAY = {}
-ROOT_TYPECODE_2_ARRAY['i'] =  'L'
-
-class LATCRootFile:
-  """
-  Provide LATC ROOT file data in form of python arrays
-  """
-
-  def __init__(self, rootPath):
-    """
-    open ROOT File
-
-    args:
-    rootPath - path to input LATC ROOT file
-    """
-    import ROOT
-    ROOT.gROOT.SetBatch(True)
-    self.__rootFile = ROOT.TFile(rootPath)
-    self.__rootTree = self.__rootFile.Get("Config")
-    # all LATC root data is in first event
-    self.__rootTree.GetEntry(0)
-
-
-  def getRegisterData(self, registerName):
-    """
-    retrieve single dimensional python array with data for specified register
-    """
-    leaf = self.__rootTree.GetLeaf(registerName)
-
-    import array
-    regInfo = _registerInfo[registerName]
-    regData = array.array(ROOT_TYPECODE_2_ARRAY[regInfo.typeCode],
-                          [0]*regInfo.nInstances)
-    # loop through each value
-    for idx in range(regInfo.nInstances):
-      regData[idx] = int(leaf.GetValue(idx))
-
-    return regData
-
-class PrecinctData:
-  """
-  register_name -> register_value dictionary for all registers associated with given precinct.
-  """
-  def __init__(self, filename, precinctName):
-    # associate register names with value arrays
-    self._registerData = {}
-
-    # load rootFile
-    rootFile = LATCRootFile(filename)
-    
-    # find all registers for given precinct
-    for (name, regInfo) in _registerInfo.iteritems():
-      if regInfo.precinctName == precinctName:
-        self._registerData[name] = rootFile.getRegisterData(name)
-
-  def getRegisterData(self, registerName):
-    """
-    retrieve single dimensional python array with data for specified register
-    """
-    return self._registerData[registerName]
-
-
-def _array2hist(title, name, data, maxVal, minVal=0):
-  """
-  Return ROOT TH1S from python array data
-  """
-  
-  import ROOT
-  ROOT.gROOT.SetBatch(True)
-  hist = ROOT.TH1S(title,title,maxVal-minVal+1, minVal, maxVal)
-
-  import array
-  hist.FillN(len(data),
-             array.array('d',data),
-             array.array('d',[1]*len(data)))
-  
-  return hist
 
 class CalPrecinctReport(object):
   def __init__(self,
@@ -166,15 +33,14 @@ class CalPrecinctReport(object):
     """
     object.__init__(self)
     
-    self.__precinctName = precinctName
+    self._precinctName = precinctName
 
     # read in root files
-    import ROOT
-    ROOT.gROOT.SetBatch(True)
     # path to 'current' LATC ROOT File
     self.__rootDataPath = rootDataPath
     # current LATC register data dictionary
-    self._currentRootData = PrecinctData(self.__rootDataPath, precinctName)
+    import LATCRootData
+    self._cfgRootData = LATCRootData.PrecinctData(self.__rootDataPath, self._precinctName)
 
     # optional baseline ROOT data
     if baselineRootPath == None:
@@ -182,7 +48,7 @@ class CalPrecinctReport(object):
       self._baselineRootData = None
     else:
       self.__baselineRootPath = baselineRootPath
-      self._baselineRootData = PrecinctData(self.__baselineRootPath, precinctName)
+      self._baselineRootData = LATCRootData.PrecinctData(self.__baselineRootPath, self._precinctName)
 
   def createTXTReport(self, filename):
     """
@@ -198,176 +64,72 @@ class CalPrecinctReport(object):
     return []
 
 
-  def __saveHistToFile(self, hist, title, outputDir):
+  def _genCCCDiff(self, regName, outputDir):
     """
-    Save histogram to image (png) file.
-    filename is autogenerated from plot title, precinct options
-
-    args:
-    hist - ROOT histogram object
-    outputDir - output directory for image file
+    plot the difference (cfg - baseline) between two configs against GCCC id
     
-    return:
-    final img path
-    """
-    imgPath = outputDir + "/" + title + ".png"
-    
-    hist.Draw()
-    import ROOT
-    ROOT.gROOT.SetBatch(True)
-    ROOT.gPad.SaveAs(imgPath)
-
-    return imgPath
-    
-
-  def __genSummaryHist(self, registerName, rootData, outputDir, title, caption):
-    """
-    Generate summary histogram for alli nstances of given register in given rootData
-
-    args:
-    min, max = valid range of register values 
     return:
     BasicPlotChecker.PlotInfo
     """
 
-    regData = rootData.getRegisterData(registerName)
-    regInfo = _registerInfo[registerName]
-
-    hist = _array2hist(title, title, regData, regInfo.maxVal, 0)
-
-    imgPath = self.__saveHistToFile(hist, title, outputDir)
-
-    # save record of image file
-    import BasicPlotChecker
-    plotInfo = BasicPlotChecker.PlotInfo()
-    plotInfo.save(imgPath, title, caption)
-
-    return plotInfo
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
+    title = "%s_%s_diff_vs_GCCC"%(self._precinctName, regName)
+    caption = title
     
-
-  def _genSummaryHists(self, registerName, outputDir):
-    """
-    Generate summary histograms for all instances of given register type
-
-    args:
-
-    return:
-    list of BasicPlotChecker.PlotInfo objects
-    """
-
-    regInfo = _registerInfo[registerName]
-
-    imgList = []
-    # summarize current settings
-    title = "%s_%s_summary"%(self.__precinctName, registerName)
-    caption = title
-    imgList.append(self.__genSummaryHist(registerName,
-                                         self._currentRootData,
-                                         outputDir,
-                                         title,
-                                         caption))
-
-    if self._baselineRootData is not None:
-      title = "%s_%s_baseline"%(self.__precinctName, registerName)
-      caption = title
-      imgList.append(self.__genSummaryHist(registerName,
-                                           self._baselineRootData,
-                                           outputDir,
-                                           title,
-                                           caption))
-
-
-    return imgList
-
-  def _genCCCDiff(self, registerName, outputDir):
-    """
-    plot the difference (current - baseline) between two configs against GCCC id
-
-    return:
-    BasicPlotChecker.PlotInfo
-    """
-
-    regInfo = _registerInfo[registerName]
-
-    title = "%s_%s_diff_vs_GCCC"%(self.__precinctName, registerName)
-    caption = title
-
-    import ROOT
+    regData = self._cfgRootData.getRegisterData(regName)
+    baselineData = self._baselineRootData.getRegisterData(regName)
+    diffData = [new - old for (new,old) in zip(regData,baselineData)]
+    # extract GCCC index from global GCFE indeces
     import calConstant
-    nVals = regInfo.maxVal+1
-    hist = ROOT.TH2S(title, title,
-                     calConstant.NUM_GCCC, 0, calConstant.NUM_GCCC,
-                     nVals*2, -1*nVals, nVals)
-
-    hist.SetXTitle("GCCC")
-    hist.SetYTitle("%s diff (current - baseline)"%registerName)
-    hist.SetMarkerStyle(ROOT.kFullTriangleUp)
-    hist.SetMarkerSize(2)
-
-    regData = self._currentRootData.getRegisterData(registerName)
-    baselineData = self._baselineRootData.getRegisterData(registerName)
-
-    # subtract 2 cfg sets
-    import array
-    diffData = [current - baseline for (current, baseline) in zip(regData, baselineData)]
-    #convert to array.array (double) datatype
-    diffData = array.array('d', diffData)
-
-    for idx in range(calConstant.GLOBAL_N_GCFE):
-      (tem,ccc,crc,cfe) = calConstant.getCFEId(idx)
-      hist.Fill(ccc, diffData[idx])
-
-    imgPath = self.__saveHistToFile(hist, title, outputDir)
-
-    # save record of image file
-    import BasicPlotChecker
-    plotInfo = BasicPlotChecker.PlotInfo()
-    plotInfo.save(imgPath, title, caption)
-
-    return plotInfo
+    cccData = [calConstant.getCFEId(idx)[1] for idx in range(calConstant.GLOBAL_N_GCFE)]
     
+    import ROOTPlotUtils
+    return ROOTPlotUtils.make2DHist(cccData,
+                                    diffData,
+                                    title,
+                                    caption,
+                                    "GCCC",
+                                    "%s diff (cfg - baseline)"%regName,
+                                    outputDir,
+                                    calConstant.NUM_GCCC,
+                                    2*(regInfo.maxVal+1),
+                                    calConstant.NUM_GCCC,
+                                    regInfo.maxVal+1,
+                                    0,
+                                    -1*(regInfo.maxVal+1))
 
-
-  def _genCCCPlot(self, registerName, outputDir):
+  def _genCCCPlot(self, regName, outputDir):
     """
     Plot CFE data against CCC id - write to img file
 
     return:
     BasicPlotChecker.PlotInfo
     """
-    regInfo = _registerInfo[registerName]
-
-    title = "%s_%s_vs_GCCC"%(self.__precinctName, registerName)
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
+    title = "%s_%s_vs_GCCC"%(self._precinctName, regName)
     caption = title
 
-    import ROOT
-    ROOT.gROOT.SetBatch(True)
+    regData = self._cfgRootData.getRegisterData(regName)
+    # extract GCCC index from global GCFE indeces
     import calConstant
-    hist = ROOT.TH2S(title, title,
-                     calConstant.NUM_GCCC, 0, calConstant.NUM_GCCC,
-                     regInfo.maxVal+1, 0, regInfo.maxVal+1)
+    cccData = [calConstant.getCFEId(idx)[1] for idx in range(calConstant.GLOBAL_N_GCFE)]
 
-    hist.SetXTitle("GCCC")
-    hist.SetYTitle(registerName)
-    hist.SetMarkerStyle(ROOT.kFullTriangleUp)
-    hist.SetMarkerSize(2)
-
-    regData = self._currentRootData.getRegisterData(registerName)
-    import array
-    for idx in range(calConstant.GLOBAL_N_GCFE):
-      (tem,ccc,crc,cfe) = calConstant.getCFEId(idx)
-      hist.Fill(ccc, regData[idx])
-
-    imgPath = self.__saveHistToFile(hist, title, outputDir)
-
-    # save record of image file
-    import BasicPlotChecker
-    plotInfo = BasicPlotChecker.PlotInfo()
-    plotInfo.save(imgPath, title, caption)
-
-    return plotInfo
-
-  def _genDiffHist(self, registerName, outputDir):
+    import ROOTPlotUtils
+    return ROOTPlotUtils.make2DHist(cccData,
+                                    regData,
+                                    title,
+                                    caption,
+                                    "GCCC",
+                                    regName,
+                                    outputDir,
+                                    calConstant.NUM_GCCC,
+                                    regInfo.maxVal+1,
+                                    calConstant.NUM_GCCC,
+                                    regInfo.maxVal+1)
+                                    
+  def _genDiffHist(self, regName, outputDir):
     """
     Generated 1D histogram of (new - old) difference between settings
 
@@ -375,115 +137,148 @@ class CalPrecinctReport(object):
     BasicPlotChecker.PlotInfo object
     """
 
-    regInfo = _registerInfo[registerName]
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
 
-    title = "%s_%s_diff"%(self.__precinctName, registerName)
+    title = "%s_%s_diff"%(self._precinctName, regName)
     caption = title
 
-    import ROOT
-    nVals = regInfo.maxVal+1
-    hist = ROOT.TH1S(title, title,
-                     nVals*2, -1*nVals, nVals)
+    cfgData = self._cfgRootData.getRegisterData(regName)
+    baselineData = self._baselineRootData.getRegisterData(regName)
+    diffData = [cfg - baseline for (cfg, baseline) in zip(cfgData, baselineData)]
 
-    hist.SetXTitle("%s diff (current - baseline)"%registerName)
+    import ROOTPlotUtils
+    return ROOTPlotUtils.make1DHist(diffData,
+                                    title,
+                                    caption,
+                                    "%s diff (cfg - baseline)"%regName,
+                                    "",
+                                    outputDir,
+                                    (regInfo.maxVal+1)*2,
+                                    regInfo.maxVal+1,
+                                    -1*(regInfo.maxVal+1))
 
-    cfgData = self._currentRootData.getRegisterData(registerName)
-    baselineData = self._baselineRootData.getRegisterData(registerName)
-
-    # subtract 2 cfg sets
-    import array
-    diffData = [current - baseline for (current, baseline) in zip(cfgData, baselineData)]
-    #convert to array.array (double) datatype
-    diffData = array.array('d', diffData)
-
-    hist.FillN(len(cfgData),
-               diffData,
-               array.array('d',[1]*len(cfgData)))
-
-    imgPath = self.__saveHistToFile(hist, title, outputDir)
-
-    # save record of image file
-    import BasicPlotChecker
-    plotInfo = BasicPlotChecker.PlotInfo()
-    plotInfo.save(imgPath, title, caption)
-
-    return plotInfo
-
-  def _genScatterPlot(self, registerName, outputDir):
+  def _genScatterPlot(self, regName, outputDir):
     """
-    Generate scatter plot between current and
+    Generate scatter plot between cfg and baseline settings
 
     return:
     BasicPlotChecker.PlotInfo object
     """
 
-    regInfo = _registerInfo[registerName]
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
 
-    title = "%s_%s_scatter"%(self.__precinctName, registerName)
+    title = "%s_%s_scatter"%(self._precinctName, regName)
     caption = title
 
-    import ROOT
-    ROOT.gROOT.SetBatch(True)
-    hist = ROOT.TH2S(title, title,
-                     regInfo.maxVal+1, 0, regInfo.maxVal,
-                     regInfo.maxVal+1, 0, regInfo.maxVal)
+    cfgData = self._cfgRootData.getRegisterData(regName)
+    baselineData = self._baselineRootData.getRegisterData(regName)
 
-    hist.SetXTitle("BASELINE")
-    hist.SetYTitle("CURRENT_CFG")
-    hist.SetMarkerStyle(ROOT.kFullTriangleUp)
-    hist.SetMarkerSize(2)
+    import ROOTPlotUtils
+    return ROOTPlotUtils.make2DHist(baselineData,
+                                    cfgData,
+                                    title,
+                                    caption,
+                                    "BASELINE",
+                                    "CFG",
+                                    outputDir,
+                                    regInfo.maxVal+1,
+                                    regInfo.maxVal+1,
+                                    regInfo.maxVal+1,
+                                    regInfo.maxVal+1)
 
-    cfgData = self._currentRootData.getRegisterData(registerName)
-    baselineData = self._baselineRootData.getRegisterData(registerName)
-
-    import array
-    hist.FillN(len(cfgData),
-               array.array('d',baselineData),
-               array.array('d',cfgData),
-               array.array('d',[1]*len(cfgData))
-               )
-
-    imgPath = self.__saveHistToFile(hist, title, outputDir)
-
-    # save record of image file
-    import BasicPlotChecker
-    plotInfo = BasicPlotChecker.PlotInfo()
-    plotInfo.save(imgPath, title, caption)
-
-    return plotInfo
-    
-    
-
-class CalLACReport(CalPrecinctReport):
+class CalThreshReport(CalPrecinctReport):
+  """
+  Code shared by various Cal threhold precincts (LAC,FLE,FHE,ULD)
+  """
   def __init__(self,
+               precinctName,
                rootDataPath,
                baselineRootPath):
     CalPrecinctReport.__init__(self,
-                               "CAL_LAC",
+                               precinctName,
                                rootDataPath,
                                baselineRootPath)
 
+  def createTXTReport(self, filename):
+    """
+    Write TXT rpeort to otuput file
+    """
+
+    txtFile = open(filename,'w')
+
+    import calConstant
+    regName = calConstant.THRESH_REG_NAME[self._precinctName]
+    txtFile.write("Nominal DAC slope: %f (%s)\n"%
+                  (calConstant.NOMINAL_THRESH_DAC_SLOPE[regName],
+                   calConstant.THRESH_DAC_SLOPE_UNITS[regName]))
+
+    bcast_regName = "%s_bcast"%regName
+    bcast_value = self._cfgRootData.getRegisterData(bcast_regName)[0]
+    txtFile.write("Broadcast value: %d\n"%bcast_value)
+
+    cfgData = self._cfgRootData.getRegisterData(regName)
+    nBcast = cfgData.count(bcast_value)
+    txtFile.write("Num Broadcast channels: %d of %d\n"%(nBcast, len(cfgData)))
+
+    txtFile.close()
+  
+
+class CalLACReport(CalThreshReport):
+  def __init__(self,
+               rootDataPath,
+               baselineRootPath):
+    CalThreshReport.__init__(self,
+                             "CAL_LAC",
+                             rootDataPath,
+                             baselineRootPath)
+    
   def makeImgs(self, outputDir):
     imgList = []
-    imgList += self._genSummaryHists("log_acpt", outputDir)
+    import calConstant
+    regName = calConstant.THRESH_REG_NAME[self._precinctName]
+
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
+    import ROOTPlotUtils
+    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            regName,
+                                            "",
+                                            outputDir,
+                                            regInfo.maxVal+1,
+                                            regInfo.maxVal+1))
+    
+                   
+                                            
 
     if self._baselineRootData is not None:
-      imgList.append(self._genScatterPlot("log_acpt", outputDir))
-      imgList.append(self._genDiffHist("log_acpt", outputDir))
+      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              regName,
+                                              "",
+                                              outputDir,
+                                              regInfo.maxVal+1,
+                                              regInfo.maxVal+1))
+      imgList.append(self._genScatterPlot(regName, outputDir))
+      imgList.append(self._genDiffHist(regName, outputDir))
 
-    imgList.append(self._genCCCPlot("log_acpt", outputDir))
+    imgList.append(self._genCCCPlot(regName, outputDir))
     if self._baselineRootData is not None:
-      imgList.append(self._genCCCDiff("log_acpt", outputDir))
+      imgList.append(self._genCCCDiff(regName, outputDir))
     
 
       
     return imgList
 
-class CalFLEReport(CalPrecinctReport):
+class CalFLEReport(CalThreshReport):
   def __init__(self,
                rootDataPath,
                baselineRootPath):
-    CalPrecinctReport.__init__(self,
+    CalThreshReport.__init__(self,
                                "CAL_FLE",
                                rootDataPath,
                                baselineRootPath)
@@ -491,43 +286,87 @@ class CalFLEReport(CalPrecinctReport):
   def makeImgs(self, outputDir):
     imgList = []
 
-    imgList += self._genSummaryHists("fle_dac", outputDir)
+    import calConstant
+    regName = calConstant.THRESH_REG_NAME[self._precinctName]
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
+    import ROOTPlotUtils
+    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            regName,
+                                            "",
+                                            outputDir,
+                                            regInfo.maxVal+1,
+                                            regInfo.maxVal+1))
 
     if self._baselineRootData is not None:
-      imgList.append(self._genScatterPlot("fle_dac", outputDir))
-      imgList.append(self._genDiffHist("fle_dac", outputDir))
+      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              regName,
+                                              "",
+                                              outputDir,
+                                              regInfo.maxVal+1,
+                                              regInfo.maxVal+1))
+      imgList.append(self._genScatterPlot(regName, outputDir))
+      imgList.append(self._genDiffHist(regName, outputDir))
 
-    imgList.append(self._genCCCPlot("fle_dac", outputDir))
+    imgList.append(self._genCCCPlot(regName, outputDir))
     if self._baselineRootData is not None:
-      imgList.append(self._genCCCDiff("fle_dac", outputDir))
+      imgList.append(self._genCCCDiff(regName, outputDir))
 
     return imgList
   
 
-class CalFHEReport(CalPrecinctReport):
+class CalFHEReport(CalThreshReport):
   def __init__(self,
                rootDataPath,
                baselineRootPath):
-    CalPrecinctReport.__init__(self,
-                               "CAL_FHE",
-                               rootDataPath,
-                               baselineRootPath)
+    CalThreshReport.__init__(self,
+                             "CAL_FHE",
+                             rootDataPath,
+                             baselineRootPath)
     
     
   def makeImgs(self, outputDir):
     imgList = []
-    imgList += self._genSummaryHists("fhe_dac", outputDir)
+
+    import calConstant
+    regName = calConstant.THRESH_REG_NAME[self._precinctName]
+
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
+    import ROOTPlotUtils
+    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            regName,
+                                            "",
+                                            outputDir,
+                                            regInfo.maxVal+1,
+                                            regInfo.maxVal+1))
+
     if self._baselineRootData is not None:
-      imgList.append(self._genScatterPlot("fhe_dac", outputDir))
-      imgList.append(self._genDiffHist("fhe_dac", outputDir))
+      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              regName,
+                                              "",
+                                              outputDir,
+                                              regInfo.maxVal+1,
+                                              regInfo.maxVal+1))
+      imgList.append(self._genScatterPlot(regName, outputDir))
+      imgList.append(self._genDiffHist(regName, outputDir))
+
     return imgList
 
 
-class CalULDReport(CalPrecinctReport):
+class CalULDReport(CalThreshReport):
   def __init__(self,
                rootDataPath,
                baselineRootPath):
-    CalPrecinctReport.__init__(self,
+    CalThreshReport.__init__(self,
                                "CAL_ULD",
                                rootDataPath,
                                baselineRootPath)
@@ -535,10 +374,34 @@ class CalULDReport(CalPrecinctReport):
 
   def makeImgs(self, outputDir):
     imgList = []
-    imgList += self._genSummaryHists("rng_uld_dac", outputDir)
+
+    import calConstant
+    regName = calConstant.THRESH_REG_NAME[self._precinctName]
+
+    import LATCRootData
+    regInfo = LATCRootData.registerInfo[regName]
+    import ROOTPlotUtils
+    imgList.append(ROOTPlotUtils.make1DHist(self._cfgRootData.getRegisterData(regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            regName,
+                                            "",
+                                            outputDir,
+                                            regInfo.maxVal+1,
+                                            regInfo.maxVal+1))
+
     if self._baselineRootData is not None:
-      imgList.append(self._genScatterPlot("rng_uld_dac", outputDir))
-      imgList.append(self._genDiffHist("rng_uld_dac", outputDir))
+      imgList.append(ROOTPlotUtils.make1DHist(self._baselineRootData.getRegisterData(regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              regName,
+                                              "",
+                                              outputDir,
+                                              regInfo.maxVal+1,
+                                              regInfo.maxVal+1))
+      imgList.append(self._genScatterPlot(regName, outputDir))
+      imgList.append(self._genDiffHist(regName, outputDir))
+
     return imgList
 
 

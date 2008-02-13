@@ -36,6 +36,28 @@ GLOBAL_N_GCRC = GLOBAL_N_GCCC*NUM_GCRC
 # Total Number of GCFE's in Cal
 GLOBAL_N_GCFE = GLOBAL_N_GCRC*NUM_GCFE
 
+# nominal threhsold dac slopes
+NOMINAL_THRESH_DAC_SLOPE = {}
+NOMINAL_THRESH_DAC_SLOPE["log_acpt"]     = .33
+NOMINAL_THRESH_DAC_SLOPE["fle_dac"]      = 4
+NOMINAL_THRESH_DAC_SLOPE["fhe_dac"]      = 50
+NOMINAL_THRESH_DAC_SLOPE["rng_uld_dac"]  = 28
+
+# units for THRESH_DAC_SLOPE
+THRESH_DAC_SLOPE_UNITS = {}
+THRESH_DAC_SLOPE_UNITS["log_acpt"]    = "MeV/DAC"
+THRESH_DAC_SLOPE_UNITS["fle_dac"]     = "MeV/DAC"
+THRESH_DAC_SLOPE_UNITS["fhe_dac"]     = "MeV/DAC"
+THRESH_DAC_SLOPE_UNITS["rng_uld_dac"] = "ADC/DAC"
+
+
+# main register name associated with cal threshold precincts
+THRESH_REG_NAME = {}
+THRESH_REG_NAME["CAL_LAC"] = "log_acpt"
+THRESH_REG_NAME["CAL_FLE"] = "fle_dac"
+THRESH_REG_NAME["CAL_FHE"] = "fhe_dac"
+THRESH_REG_NAME["CAL_ULD"] = "rng_uld_dac"
+
 
 def getCCCId(index):
     """
