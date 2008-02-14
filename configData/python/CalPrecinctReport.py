@@ -429,75 +429,168 @@ class CalModeReport(CalPrecinctReport):
     """
     txtFile = open(filename,'w')
 
-    txtFile.write(self.calModeTXT(self._cfgPrecinctData))
+    txtFile.write(self._calModeTXT(self._cfgPrecinctData))
     
     txtFile.close()
 
-  def calModeTXT(self, precinctData):
+  def _calModeTXT(self, precinctData):
     """
     Create string report of cal mode configuration
+    """
+    txtRpt = ""
+
+    txtRpt += "CAL_Mode Broadcast Register Report:\n"
+    txtRpt += self._bcastRpt(precinctData)
+
+    txtRpt += "\nCAL_Mode Register Exception Report:\n"
+    txtRpt += self._nonBcastRpt(precinctData)
+
+    return txtRpt
+
+
+  def _bcastRpt(self, precinctData):
+    """
+    Return TXT report for all broadcast registers
+    """
+    txtRpt = "precinct\t%s\t%s\t%s\t%s\tfield_desc\n"%("register".ljust(20),
+                                                       "reg_val".ljust(12),
+                                                       "field".ljust(20),
+                                                       "field_val".ljust(12)
+                                                       )
+    # all register groups in precinct
+    import LATCRootData
+    precinctInfo = LATCRootData.PRECINCT_INFO[self._precinctName]
+
+    regList = precinctInfo.keys()
+    bcastRegList = [reg for reg in regList if reg.find("bcast") >= 0]
+    for regName in bcastRegList:
+      txtRpt += self._bcastRegRpt(precinctData, regName)
+      txtRpt += "\n"
+
+    return txtRpt
+
+  
+  def _nonBcastRpt(self, precinctData):
+    """
+    Return TXT report for all non-broadcast registers
+    """
+    txtRpt = "precinct\t%s\tindex\t%s\t%s\t%s\t%s\tbcast\tfield_desc\n"%("register".ljust(20),
+                                                                         "reg_val".ljust(12),
+                                                                         "bcast".ljust(12),
+                                                                         "field".ljust(20),
+                                                                         "field_val".ljust(12))
+    # all register groups in precinct
+    import LATCRootData
+    precinctInfo = LATCRootData.PRECINCT_INFO[self._precinctName]
+
+    regList = precinctInfo.keys()
+    nonBcastRegList = [reg for reg in regList if reg.find("bcast") < 0]
+    for regName in nonBcastRegList:
+      txtRpt += self._nonBcastRegRpt(precinctData, regName)
+      txtRpt += "\n"
+
+    return txtRpt
+
+  def _bcastRegRpt(self, precinctData, regName):
+    """
+    Return TXT report for a single broadcast register
     """
 
     txtRpt = ""
 
-    txtRpt += "precinct\t%s\tidx\t%s\t%s\t%s\tval\tfield_desc\n"%("register".ljust(20),
-                                                                  "reg_val".ljust(12),
-                                                                  "bcast_val".ljust(12),
-                                                                  "field".ljust(20))
-    # loop through all register groups in precinct
+    regVal = precinctData.getRegisterData(regName)[0]
+
+    # handle case where no subfields defined
+    import LATCRootData
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
+    if len(regInfo.fieldDict) == 0:
+      txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
+                                            regName.ljust(20),
+                                            ("0x%x"%regVal).ljust(12),
+                                            "",
+                                            "",
+                                            "")
+        
+      # loop through all fields in register
+    else:
+      for (fieldName, fieldInfo) in regInfo.fieldDict.iteritems():
+        txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
+                                                regName.ljust(20),
+                                                ("0x%x"%regVal).ljust(12),
+                                                fieldName.ljust(20),
+                                                ("0x%x"%fieldInfo.extractVal(regVal)).ljust(12),
+                                                fieldInfo.desc)
+
+      
+
+    return txtRpt
+
+
+  def _nonBcastRegRpt(self, precinctData, regName):
+    """
+    Return TXT report for a single non-broadcast register
+    """
+
+    txtRpt = ""
+
+    regData = precinctData.getRegisterData(regName)
+    
+    # look for my bcast register
+    bcastRegName = "%s_bcast"%regName
+    bcastVal = None
     import LATCRootData
     precinctInfo = LATCRootData.PRECINCT_INFO[self._precinctName]
-    for (regName,regInfo) in precinctInfo.iteritems():
-      regData = precinctData.getRegisterData(regName)
-      
-      
-      # find bcast register if it exists
-      # case 0: i am a 'bcast' register
-      isBcast = (regName.find("bcast") >= 0)
-      
-      if isBcast:
-        bcastRegName = regName
+    if bcastRegName in precinctInfo.keys():
+      bcastVal = precinctData.getRegisterData(bcastRegName)[0]
+
+    # loop through all registers in register group
+    import LATCRootData
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
+    for idx in range(regInfo.nInstances):
+      regVal = regData[idx]
+
+      # only print individual registers that don't match the bcast
+      if regVal == bcastVal and bcastVal is not None:
+        continue
+
+      # handle case where no subfields defined
+      if len(regInfo.fieldDict) == 0:
+        txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
+                                                      regName.ljust(20),
+                                                      idx,
+                                                      ("0x%x"%regVal).ljust(12),
+                                                      ("0x%x"%bcastVal).ljust(12),
+                                                      "",
+                                                      "",
+                                                      "")
+        
+        # loop through all fields in register
       else:
-        # case 1: I will look for my bcast register
-        bcastRegName = "%s_bcast"%regName
-        
-      if bcastRegName in precinctInfo.keys():
-        bcastVal = precinctData.getRegisterData(bcastRegName)[0]
-      else:
-        bcastVal = None
-        
-      # loop through all registers in register group
-      for idx in range(regInfo.nInstances):
-        regVal = regData[idx]
-        
-        # only print individual registers that don't match the bcast
-        if not isBcast and regVal == bcastVal:
-          continue
-        
-        # handle case where no subfields defined
-        if len(regInfo.fieldDict) == 0:
-          txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
-                                                        regName.ljust(20),
-                                                        idx,
-                                                        ("0x%x"%regVal).ljust(12),
-                                                        ("0x%x"%bcastVal).ljust(12),
-                                                        "",
-                                                        "",
-                                                        "")
+        for (fieldName, fieldInfo) in regInfo.fieldDict.iteritems():
+          fieldVal = fieldInfo.extractVal(regVal)
+          bcastFieldVal = fieldInfo.extractVal(bcastVal)
+
+          # skip bcast fields
+          if fieldVal == bcastFieldVal:
+            continue
           
-          # loop through all fields in register
-        else:
-          for (fieldName, fieldInfo) in regInfo.fieldDict.iteritems():
-            txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t0x%x\t%s\n"%(self._precinctName,
-                                                            regName.ljust(20),
-                                                            idx,
-                                                            ("0x%x"%regVal).ljust(12),
-                                                            ("0x%x"%bcastVal).ljust(12),
-                                                            fieldName.ljust(20),
-                                                            fieldInfo.extractVal(regVal),
-                                                            fieldInfo.desc)
-        # per register instance
-        txtRpt += "\n" 
-        
+          txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
+                                                                regName.ljust(20),
+                                                                idx,
+                                                                ("0x%x"%regVal).ljust(12),
+                                                                ("0x%x"%bcastVal).ljust(12),
+                                                                fieldName.ljust(20),
+                                                                ("0x%x"%fieldVal).ljust(12),
+                                                                ("0x%x"%bcastFieldVal).ljust(12),
+                                                                fieldInfo.desc)
+
+      txtRpt += "\n" # per -register instance
+
+            
     return txtRpt
+
+  
+
+
+    
     
