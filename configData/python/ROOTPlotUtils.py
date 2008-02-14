@@ -21,6 +21,7 @@ import ROOT
 ROOT.gROOT.SetBatch(True)
 
 def __saveHist(hist,
+               name,
                title,
                outputDir,
                caption):
@@ -31,7 +32,7 @@ def __saveHist(hist,
     """
 
     hist.Draw()
-    imgPath = outputDir + '/' + title + ".png"
+    imgPath = outputDir + '/' + name + ".png"
     ROOT.gPad.SaveAs(imgPath)
     
 
@@ -43,6 +44,7 @@ def __saveHist(hist,
     return plotInfo
 
 def make1DHist(data,
+               name,
                title,
                caption,
                xTitle,
@@ -56,7 +58,8 @@ def make1DHist(data,
 
     args:
     data - 1-D sequence of data
-    title - should be valid as part of a filename
+    name - should be valid as part of a filename
+    title - short title (can contain spaces)
     caption - can be longer & can contain any characters.
     xTitle - x axis title
     yTitle - y axis title
@@ -70,7 +73,8 @@ def make1DHist(data,
     """
 
     # create histogram object
-    hist = ROOT.TH1I(title, title,
+    hist = ROOT.TH1I(name,
+                     title,
                      nbins, xmin, xmax)
     hist.SetXTitle(xTitle)
     hist.SetYTitle(yTitle)
@@ -78,16 +82,17 @@ def make1DHist(data,
     # fill histogram
     import array
     hist.FillN(len(data),
-             array.array('d',data),
-             array.array('d',[1]*len(data)))
+               array.array('d',data),
+               array.array('d',[1]*len(data)))
 
-    return __saveHist(hist, title, outputDir, caption)
+    return __saveHist(hist, name, title, outputDir, caption)
 
     
     
     
 def make2DHist(xPts,
                yPts,
+               name,
                title,
                caption,
                xTitle,
@@ -105,7 +110,8 @@ def make2DHist(xPts,
     args:
     xData - 1-D sequence of x-values
     yData - 2-D sequence of y-values
-    title - should be valid as part of a filename
+    name - should be valid part of filename
+    title - short title (can contain spaces)
     caption - can be longer & can contain any characters.
     xTitle - x axis title
     yTitle - y axis title
@@ -119,7 +125,7 @@ def make2DHist(xPts,
     """
 
     # create histogram object
-    hist = ROOT.TH2I(title, title,
+    hist = ROOT.TH2I(name, title,
                      nBinsX, xMin, xMax,
                      nBinsY, yMin, yMax)
     hist.SetXTitle(xTitle)
@@ -135,7 +141,7 @@ def make2DHist(xPts,
                array.array('d', yPts),
                array.array('d',[1]*len(xPts)))
 
-    return __saveHist(hist, title, outputDir, caption)
+    return __saveHist(hist, name, title, outputDir, caption)
 
 
                             

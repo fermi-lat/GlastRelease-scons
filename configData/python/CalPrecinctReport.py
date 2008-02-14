@@ -64,9 +64,19 @@ class CalPrecinctReport(object):
     return []
 
 
-  def _genCCCDiff(self, regName, outputDir):
+  def _genCCCDiff(self,
+                  regName,
+                  name,
+                  title,
+                  caption,
+                  outputDir):
     """
     plot the difference (cfg - baseline) between two configs against GCCC id
+
+    args:
+    name - should be valid as part of a filename
+    title - short description (can contain spaces)
+    caption - can be longer & can contain any characters.
     
     return:
     BasicPlotChecker.PlotInfo
@@ -74,8 +84,6 @@ class CalPrecinctReport(object):
 
     import LATCRootData
     regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
-    title = "%s_%s_diff_vs_GCCC"%(self._precinctName, regName)
-    caption = title
     
     regData = self._cfgPrecinctData.getRegisterData(regName)
     baselineData = self._baselinePrecinctData.getRegisterData(regName)
@@ -87,6 +95,7 @@ class CalPrecinctReport(object):
     import ROOTPlotUtils
     return ROOTPlotUtils.make2DHist(cccData,
                                     diffData,
+                                    name,
                                     title,
                                     caption,
                                     "GCCC",
@@ -99,17 +108,25 @@ class CalPrecinctReport(object):
                                     0,
                                     -1*(regInfo.maxVal+1))
 
-  def _genCCCPlot(self, regName, outputDir):
+  def _genCCCPlot(self,
+                  regName,
+                  name,
+                  title,
+                  caption,
+                  outputDir):
     """
     Plot CFE data against CCC id - write to img file
+
+    args:
+    name - should be valid as part of a filename
+    title - short description string (can contain any characters)
+    caption - can be longer & can contain any characters.
 
     return:
     BasicPlotChecker.PlotInfo
     """
     import LATCRootData
     regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
-    title = "%s_%s_vs_GCCC"%(self._precinctName, regName)
-    caption = title
 
     regData = self._cfgPrecinctData.getRegisterData(regName)
     # extract GCCC index from global GCFE indeces
@@ -119,6 +136,7 @@ class CalPrecinctReport(object):
     import ROOTPlotUtils
     return ROOTPlotUtils.make2DHist(cccData,
                                     regData,
+                                    name,
                                     title,
                                     caption,
                                     "GCCC",
@@ -129,9 +147,19 @@ class CalPrecinctReport(object):
                                     calConstant.NUM_GCCC,
                                     regInfo.maxVal+1)
                                     
-  def _genDiffHist(self, regName, outputDir):
+  def _genDiffHist(self,
+                   regName,
+                   name,
+                   title,
+                   caption,
+                   outputDir):
     """
     Generated 1D histogram of (new - old) difference between settings
+
+    args:
+    name - should be valid as part of a filename
+    title - short description string (can contain any characters)
+    caption - can be longer & can contain any characters.
 
     return:
     BasicPlotChecker.PlotInfo object
@@ -140,15 +168,13 @@ class CalPrecinctReport(object):
     import LATCRootData
     regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
 
-    title = "%s_%s_diff"%(self._precinctName, regName)
-    caption = title
-
     cfgData = self._cfgPrecinctData.getRegisterData(regName)
     baselineData = self._baselinePrecinctData.getRegisterData(regName)
     diffData = [cfg - baseline for (cfg, baseline) in zip(cfgData, baselineData)]
 
     import ROOTPlotUtils
     return ROOTPlotUtils.make1DHist(diffData,
+                                    name,
                                     title,
                                     caption,
                                     "%s diff (cfg - baseline)"%regName,
@@ -158,9 +184,19 @@ class CalPrecinctReport(object):
                                     regInfo.maxVal+1,
                                     -1*(regInfo.maxVal+1))
 
-  def _genScatterPlot(self, regName, outputDir):
+  def _genScatterPlot(self,
+                      regName,
+                      name,
+                      title,
+                      caption,
+                      outputDir):
     """
     Generate scatter plot between cfg and baseline settings
+
+    args:
+    name - should be valid as part of a filename
+    title - short description string (can contain any characters)
+    caption - can be longer & can contain any characters.
 
     return:
     BasicPlotChecker.PlotInfo object
@@ -169,15 +205,13 @@ class CalPrecinctReport(object):
     import LATCRootData
     regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
 
-    title = "%s_%s_scatter"%(self._precinctName, regName)
-    caption = title
-
     cfgData = self._cfgPrecinctData.getRegisterData(regName)
     baselineData = self._baselinePrecinctData.getRegisterData(regName)
 
     import ROOTPlotUtils
     return ROOTPlotUtils.make2DHist(baselineData,
                                     cfgData,
+                                    name,
                                     title,
                                     caption,
                                     "BASELINE",
@@ -245,7 +279,8 @@ class CalThreshReport(CalPrecinctReport):
     import ROOTPlotUtils
     imgList.append(ROOTPlotUtils.make1DHist(self._cfgPrecinctData.getRegisterData(regName),
                                             "%s_%s_cfg_summary"%(self._precinctName,regName),
-                                            "%s_%s_cfg_summary"%(self._precinctName,regName),
+                                            "%s DAC settings for current config"%self._precinctName,
+                                            "%s DAC settings for current config"%self._precinctName,
                                             regName,
                                             "",
                                             outputDir,
@@ -255,14 +290,28 @@ class CalThreshReport(CalPrecinctReport):
     if self._baselinePrecinctData is not None:
       imgList.append(ROOTPlotUtils.make1DHist(self._baselinePrecinctData.getRegisterData(regName),
                                               "%s_%s_baseline_summary"%(self._precinctName,regName),
-                                              "%s_%s_baseline_summary"%(self._precinctName,regName),
+                                              "%s DAC settings for reference config"%self._precinctName,
+                                              "%s DAC settings for reference config"%self._precinctName,
                                               regName,
                                               "",
                                               outputDir,
                                               regInfo.maxVal+1,
                                               regInfo.maxVal+1))
-      imgList.append(self._genScatterPlot(regName, outputDir))
-      imgList.append(self._genDiffHist(regName, outputDir))
+      imgList.append(self._genScatterPlot(regName,
+                                          "%s_%s_scatter"%(self._precinctName, regName),
+                                          "%s DAC settings scatter current vs reference"%self._precinctName,
+                                          "%s DAC settings, X = reference config, Y = current config"%self._precinctName,
+                                          outputDir))
+
+      name = "%s_%s_diff"%(self._precinctName, regName)
+      title = "Difference in %s DC settings, Current - Baseline"%self._precinctName
+      caption =  title + "\n\nNominal DAC slope: %s (%s)"%(calConstant.NOMINAL_THRESH_DAC_SLOPE[regName],
+                                                          calConstant.THRESH_DAC_SLOPE_UNITS[regName])
+      imgList.append(self._genDiffHist(regName,
+                                       name,
+                                       title,
+                                       caption,
+                                       outputDir))
 
     return imgList
 
@@ -282,9 +331,26 @@ class CalLACReport(CalThreshReport):
 
     import calConstant
     regName = calConstant.THRESH_REG_NAME[self._precinctName]
-    imgList.append(self._genCCCPlot(regName, outputDir))
+
+    name = "%s_%s_vs_GCCC"%(self._precinctName, regName)
+    title = "Current %s DAC settings vs cable controler index (= AFEE board index)"%self._precinctName
+    caption = title + "\n\n(0,1,2,3) = (X+,Y+,X-,Y-)"
+    imgList.append(self._genCCCPlot(regName,
+                                    name,
+                                    title,
+                                    caption,
+                                    outputDir))
+
     if self._baselinePrecinctData is not None:
-      imgList.append(self._genCCCDiff(regName, outputDir))  
+      name = "%s_%s_diff_vs_GCCC"%(self._precinctName, regName)
+      title = "%s DAC Difference (Current - Baseline) vs cable controller index (= AFEE board index)"%self._precinctName
+      caption = title + "(0,1,2,3) = (X+,Y+,X-,Y-)"
+      
+      imgList.append(self._genCCCDiff(regName,
+                                      name,
+                                      title,
+                                      caption,
+                                      outputDir))  
   
 
       
@@ -295,18 +361,34 @@ class CalFLEReport(CalThreshReport):
                rootDataPath,
                baselineRootPath):
     CalThreshReport.__init__(self,
-                               "CAL_FLE",
-                               rootDataPath,
-                               baselineRootPath)
+                             "CAL_FLE",
+                             rootDataPath,
+                             baselineRootPath)
 
   def makeImgs(self, outputDir):
     imgList = CalThreshReport.makeImgs(self, outputDir)
 
     import calConstant
     regName = calConstant.THRESH_REG_NAME[self._precinctName]
-    imgList.append(self._genCCCPlot(regName, outputDir))
+
+    name = "%s_%s_vs_GCCC"%(self._precinctName, regName)
+    title = "Current %s DAC settings vs cable controler index (= AFEE board index)"%self._precinctName
+    caption = title + "\n\n(0,1,2,3) = (X+,Y+,X-,Y-)"
+    imgList.append(self._genCCCPlot(regName,
+                                    name,
+                                    title,
+                                    caption,
+                                    outputDir))
+
     if self._baselinePrecinctData is not None:
-      imgList.append(self._genCCCDiff(regName, outputDir))  
+      name = "%s_%s_diff_vs_GCCC"%(self._precinctName, regName)
+      title = "%s DAC Difference (Current - Baseline) vs cable controller index (= AFEE board index)"%self._precinctName
+      caption = title + "\n\n(0,1,2,3) = (X+,Y+,X-,Y-)"
+      imgList.append(self._genCCCDiff(regName,
+                                      name,
+                                      title,
+                                      caption,
+                                      outputDir))  
 
     return imgList
   

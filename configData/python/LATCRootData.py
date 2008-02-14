@@ -118,7 +118,7 @@ PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["LE_RNG_ENA"] = RegisterFieldInf
 PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["HE_RNG_ENA"] = RegisterFieldInfo(8, 1, "Range_Enable bit 1 for auto-range circuit (high-energy range enable)")
 PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["USE_FRST_RNG"] = RegisterFieldInfo(9, 1, "Use first range for range selection circuit, given by First_Range bits")
 PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["FIRST_RNG"] = RegisterFieldInfo(10, 2, "First Range for range-selection circuit")
-PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["FIRST_RNG"] = RegisterFieldInfo(12, 1, "Overwrite bit 1 for range-selection circuit")
+PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict["OVERWRITE"] = RegisterFieldInfo(12, 1, "Overwrite bit 1 for range-selection circuit")
 PRECINCT_INFO["CAL_Mode"]["config_0_bcast"].fieldDict = PRECINCT_INFO["CAL_Mode"]["config_0"].fieldDict
 
 PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["PREAMP_AUTO_RESET_ENA"] = RegisterFieldInfo(0, 1, "Enable bit for Preamp to automatically reset for large input pulses. Bit set to 1 enables automatic preamp reset.")
