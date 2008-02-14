@@ -513,7 +513,10 @@ class CalModeReport(CalPrecinctReport):
         
       # loop through all fields in register
     else:
-      for (fieldName, fieldInfo) in regInfo.fieldDict.iteritems():
+      # sort fields by bit order in register
+      fieldList = list(regInfo.fieldDict.iteritems())
+      fieldList.sort(cmp=lambda x, y :cmp(x[1].minBit, y[1].minBit))
+      for (fieldName,fieldInfo) in fieldList:
         txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
                                                 regName.ljust(20),
                                                 ("0x%x"%regVal).ljust(12),
@@ -566,7 +569,12 @@ class CalModeReport(CalPrecinctReport):
         
         # loop through all fields in register
       else:
-        for (fieldName, fieldInfo) in regInfo.fieldDict.iteritems():
+        # sort fields by bit order in register
+        fieldList = list(regInfo.fieldDict.iteritems())
+        fieldList.sort(cmp=lambda x, y :cmp(x[1].minBit, y[1].minBit))
+        for (fieldName,fieldInfo) in fieldList:
+          fieldInfo = regInfo.fieldDict[fieldName]
+
           fieldVal = fieldInfo.extractVal(regVal)
           bcastFieldVal = fieldInfo.extractVal(bcastVal)
 
