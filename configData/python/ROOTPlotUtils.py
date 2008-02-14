@@ -109,7 +109,7 @@ def make2DHist(xPts,
 
     args:
     xData - 1-D sequence of x-values
-    yData - 2-D sequence of y-values
+    yData - 1-D sequence of y-values
     name - should be valid part of filename
     title - short title (can contain spaces)
     caption - can be longer & can contain any characters.
@@ -143,7 +143,52 @@ def make2DHist(xPts,
 
     return __saveHist(hist, name, title, outputDir, caption)
 
+def makeProfile(xPts,
+                yPts,
+                name,
+                title,
+                caption,
+                xTitle,
+                yTitle,
+                outputDir,
+                nBins,
+                xMax,
+                xMin=0):
+    """
+    Create ROOT TProfile plot, save to file.
 
+    args:
+    xData - 1-D sequence of x-values
+    yData - 1-D sequence of y-values
+    name - should be valid part of filename
+    title - short title (can contain spaces)
+    caption - can be longer & can contain any characters.
+    xTitle - x axis title
+    yTitle - y axis title
+    outputDir - output directory for image file.
+    nbins - number of histogram bins on x axis
+    xMax, xMin - axis limits
+
+    return:
+    BasicPlotChecker.PlotInfo object
+    """
+    hist = ROOT.TProfile(name,
+                         title,
+                         nBins,
+                         xMin,
+                         xMax)
+    hist.SetXTitle(xTitle)
+    hist.SetYTitle(yTitle)
+
+    import array
+    hist.FillN(len(xPts),
+               array.array('d', xPts),
+               array.array('d', yPts),
+               array.array('d',[1]*len(xPts)))
+
+    return __saveHist(hist, name, title, outputDir, caption)
+
+    
                             
     
                

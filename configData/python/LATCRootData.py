@@ -129,6 +129,22 @@ PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["CALIB_LE_EN"] = RegisterFieldIn
 PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict["CALIB_HE_EN"] = RegisterFieldInfo(5, 1, "Calibration_Enable for high-energy calibration circuit")
 PRECINCT_INFO["CAL_Mode"]["config_1_bcast"].fieldDict = PRECINCT_INFO["CAL_Mode"]["config_1"].fieldDict
 
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration"].fieldDict["DATA_ALMOST_FULL"] = RegisterFieldInfo(0, 7, "FIFO full condition (data)")
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration"].fieldDict["ERROR_ALMOST_FULL"] = RegisterFieldInfo(8, 6, "FIFO full condition (error)")
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration"].fieldDict["DIAG_ALMOST_FULL"] = RegisterFieldInfo(16, 6, "FIFO full condition (summary/diagnostic)")
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration"].fieldDict["LISTEN_MSB"] = RegisterFieldInfo(27, 4, "listen MSB")
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration"].fieldDict["OUTPUT_ENA"] = RegisterFieldInfo(31, 1, "controller output enable")
+PRECINCT_INFO["CAL_Mode"]["ccc_configuration_bcast"].fieldDict = PRECINCT_INFO["CAL_Mode"]["ccc_configuration"].fieldDict
+
+PRECINCT_INFO["CAL_Mode"]["config"].fieldDict["GCRC_PARITY"] = RegisterFieldInfo(0,3, "GCRC Parity (3 bits)")
+PRECINCT_INFO["CAL_Mode"]["config"].fieldDict["GCRC_WRITE_FLAG"] = RegisterFieldInfo(8,8, "GCRC write flag")
+PRECINCT_INFO["CAL_Mode"]["config_bcast"].fieldDict = PRECINCT_INFO["CAL_Mode"]["config"].fieldDict
+
+
+
+
+
+
 
 # associate ROOT typecodes to python standard library array module typecodes
 ROOT_TYPECODE_2_ARRAY_TYPECODE = {}

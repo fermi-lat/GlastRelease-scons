@@ -583,19 +583,88 @@ class CalModeReport(CalPrecinctReport):
             continue
           
           txtRpt += "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"%(self._precinctName,
-                                                                regName.ljust(20),
-                                                                idx,
-                                                                ("0x%x"%regVal).ljust(12),
-                                                                ("0x%x"%bcastVal).ljust(12),
-                                                                fieldName.ljust(20),
-                                                                ("0x%x"%fieldVal).ljust(12),
-                                                                ("0x%x"%bcastFieldVal).ljust(12),
-                                                                fieldInfo.desc)
-
+                                                            regName.ljust(20),
+                                                            idx,
+                                                            ("0x%x"%regVal).ljust(12),
+                                                            ("0x%x"%bcastVal).ljust(12),
+                                                            fieldName.ljust(20),
+                                                            ("0x%x"%fieldVal).ljust(12),
+                                                            ("0x%x"%bcastFieldVal).ljust(12),
+                                                            fieldInfo.desc)
+          
       txtRpt += "\n" # per -register instance
 
             
     return txtRpt
+
+  def makeImgs(self, outputDir):
+    imgList = []
+
+    import calConstant
+    for crc in range(calConstant.NUM_GCRC):
+      name = "%s_config_1_CFE_CRC%d"%(self._precinctName, crc)
+      title = "%s_config_1 register - CRC=%d"%(self._precinctName,crc)
+      caption = "config_1 register values by CFE, CRC(row) = %d"%crc
+      imgList.append(self._genCfeCrcProfile("config_1",
+                                            name,
+                                            title,
+                                            caption,
+                                            outputDir,
+                                            crc))
+      
+    return imgList
+
+  def _genCfeCrcProfile(self,
+                        regName,
+                        name,
+                        title,
+                        caption,
+                        outputDir,
+                        crc_filter):
+    """
+    plot all CFE register values for a given GCRC ID
+
+    args:
+    name - should be valid as part of a filename
+    title - short description (can contain spaces)
+    caption - can be longer & can contain any characters.
+    crc_filter - only plot data for this GCRC id (0-3)
+    
+    return:
+    BasicPlotChecker.PlotInfo
+    """
+
+    # get register data
+    import LATCRootData
+    regInfo = LATCRootData.PRECINCT_INFO[self._precinctName][regName]
+    regData = self._cfgPrecinctData.getRegisterData(regName)
+
+    # loop through all CFEs
+    import calConstant
+    xData = []
+    yData = []
+    for idx in range(calConstant.GLOBAL_N_GCFE):
+      (tem,ccc,crc,cfe) = calConstant.getCFEId(idx)
+
+      if crc == crc_filter:
+        xData.append(cfe)
+        yData.append(regData[idx])
+
+    import ROOTPlotUtils
+    return ROOTPlotUtils.makeProfile(xData,
+                                     yData,
+                                     name,
+                                     title,
+                                     caption,
+                                     "CFE",
+                                     regName,
+                                     outputDir,
+                                     calConstant.NUM_GCFE,
+                                     calConstant.NUM_GCFE)
+                                     
+
+    
+                                            
 
   
 
