@@ -81,6 +81,7 @@ int main( int argc, char* argv[] )
   if ( argc >= 5 ) {
     maxEvents = atoi( argv[4] );
   }
+  int currMax = maxEvents;
 
   // add support for overriding translated LATC master key
   unsigned long overrideLATC = 0xffffffff;
@@ -204,11 +205,14 @@ int main( int argc, char* argv[] )
     }
 
     // check to see if the output file is full
-    if ( maxEvents > 0 && ++eventsOut >= maxEvents ) {
+    if ( currMax > 0 && ++eventsOut >= currMax ) {
       // close the current file and reset the event counter
       std::cout << "writeMerge: wrote " << pLSEW->evtcnt() << " events to " << pLSEW->name() << std::endl;
       delete pLSEW; pLSEW = NULL;
       eventsOut = 0;
+
+      // rescale the max-event count for the next file
+      currMax = ( currMax <= 0.75 * maxEvents ) ? maxEvents : 0.95 * currMax;
     }
   }
   std::for_each( mapLSER.begin(), mapLSER.end(), cleanup() );
