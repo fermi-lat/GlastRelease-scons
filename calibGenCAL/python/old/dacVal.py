@@ -102,7 +102,7 @@ def average(data):
 
 def stddev(data):
 
-    return mlab.std(numarray.ravel(data))
+    return numarray.mlab.std(numarray.ravel(data))
      
 
 

@@ -189,7 +189,7 @@ def genCFEPrecinctSummary(path,
 
     # mlab is part of numarray
     import numarray.mlab
-    rms = mlab.std(numarray.ravel(data))
+    rms = numarray.mlab.std(numarray.ravel(data))
 
     # print mean 
     print "\nDAC\tmean\trms (DAC units)"

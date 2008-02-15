@@ -237,7 +237,7 @@ def genCFEPrecinctDiffSummary(refPath,
 
     # mlab is part of numarray
     import numarray.mlab
-    meanRMS = mlab.std(numarray.ravel(diff))
+    meanRMS = numarray.mlab.std(numarray.ravel(diff))
 
     # print mean diff report
     print "\nDAC\tmeanDiff\trms (DAC units)"

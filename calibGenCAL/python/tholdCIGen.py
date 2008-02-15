@@ -603,8 +603,8 @@ if __name__ == '__main__':
     
     dacData = (uldDacData, lacDacData, fleDacData, fheDacData)
     adcData = (uldAdcData, lacAdcData, fleAdcData, fheAdcData)
-    calibFile.write(dacData, adcData, intNonlinAdcData[calConstant.CRNG_HEX1], intNonlinLengthData[calConstant.CRNG_HEX1],
-                    pedData, leGainData, heGainData, biasAdcData, tems = tlist)
+    calibFile.generate(dacData, adcData, intNonlinAdcData[calConstant.CRNG_HEX1], intNonlinLengthData[calConstant.CRNG_HEX1],
+                       pedData, leGainData, heGainData, biasAdcData, tems = tlist)
     calibFile.close()
 
 

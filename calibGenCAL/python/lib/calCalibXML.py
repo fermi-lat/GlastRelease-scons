@@ -253,10 +253,10 @@ class calTholdCICalibXML(calCalibXML):
     injection calibration data stored in XML format.
     """
 
-    def write(self, dacData, adcData, intNonlinData, intNonlinLength, pedData,
-              lrefGain, hrefGain, biasData, tems = (0,)):
+    def generate(self, dacData, adcData, intNonlinData, intNonlinLength, pedData,
+                 lrefGain, hrefGain, biasData, tems = (0,)):
         """
-        Write data to a CAL TholdCI XML file
+        Calculate threshold values in ADC units & write data to a CAL TholdCI XML file
 
         Param: dacData - A list of numarray arrays of DAC settings data
             (16, 8, 2, 12):
