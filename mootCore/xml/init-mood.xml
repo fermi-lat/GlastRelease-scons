@@ -199,6 +199,14 @@
     </row>
 
     <row>
+      <field col="name" val="GNL_Ignore" />
+      <field col="description" 
+       val="Responsible for LATC ignore input" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="GNL" />
+    </row>
+
+    <row>
       <field col="name" val="TRG_ROI" />
       <field col="description" 
        val="Controls ROI registers in GEM " />
@@ -636,6 +644,14 @@ used for container vote files which reference regular votes by alias" />
     </row>
 
     <row>
+      <field col="name" val="latc_IGN_GNL_Ignore" />
+      <field col="description" 
+         val="input to LATC_map" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="GNL_Ignore" />
+    </row>
+
+    <row>
       <field col="name" val="latc_AEM_ACD_Mode" />
       <field col="description" val="AEM registers controlled by ACD_Mode" />
       <ref col="precinct_fk" table="Precincts" refCol="name"
@@ -931,6 +947,14 @@ used for container vote files which reference regular votes by alias" />
              val="DFT registers controlled by TKR Strips" />
       <ref col="precinct_fk" table="Precincts" refCol="name"
        refVal="TKR_Strips" />
+    </row> 
+
+    <row>
+      <field col="name" val="latc_DFT_TRG_GEM" />
+      <field col="description" 
+             val="GEM registers which end up in DFT component, owned by  TRG_GEM precinct" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="TRG_GEM" />
     </row> 
 
     <row>
@@ -1250,6 +1274,14 @@ used for container vote files which reference regular votes by alias" />
     <row>
       <ref col="PClass_fk" table="Parameter_class" 
            refCol="name" refVal="latc_ignore" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_ignore" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_IGN_GNL_Ignore" />
       <ref col="FClass_fk" table="FSW_class" 
            refCol="name" refVal="latc_ignore" />
       <field col="one_to_one" val="1" />
@@ -1579,6 +1611,14 @@ used for container vote files which reference regular votes by alias" />
     <row>
       <ref col="PClass_fk" table="Parameter_class" 
            refCol="name" refVal="latc_DFT_TKR_Strips" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="latc_DFT" />
+      <field col="one_to_one" val="0" />
+    </row> 
+
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="latc_DFT_TRG_GEM" />
       <ref col="FClass_fk" table="FSW_class" 
            refCol="name" refVal="latc_DFT" />
       <field col="one_to_one" val="0" />
@@ -2050,6 +2090,15 @@ used for container vote files which reference regular votes by alias" />
        refVal="TKR" />
     </row>
 -->
+
+    <row>
+      <field col="name" val="GNL_IgnoreSettings" />
+      <field col="description" 
+             val="Input for (and identical to) LATC ignore param. file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="GNL" />
+    </row>
+
 
   </table>
 

@@ -64,6 +64,20 @@
         </comment>
     </col>
 
+    <col name="verify_state" >
+      <src null="false">
+        <default value="NOT_VERIFIED" />
+      </src>
+      <type typename="enum" >
+        <restriction>
+          <enum use="require" values="NOT_VERIFIED LAT_VERIFIED GND_VERIFIED" />
+        </restriction>
+      </type>
+      <comment>Place where app. can mark Config of particular
+         (name, alg, step, instr) as checked out to varying degrees
+        </comment>
+    </col>
+
     <col name="vote_fk" >
       <src null="true" >
         <from agent="enduser" />

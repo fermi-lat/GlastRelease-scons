@@ -703,6 +703,8 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="CAL_Timing-anc" type="emptyBaseType" />
+<!-- These are now obsolete
   <xs:element name="CAL_Timing-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
@@ -713,6 +715,7 @@
       </xs:all>
     </xs:complexType >
   </xs:element>
+-->
 
   <xs:element name="CAL_Timing-param" >
     <xs:complexType>
@@ -765,8 +768,8 @@
   <xs:element name="CAL_LAC-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
-        <xs:element name="CAL_Ped" type="ancFileType"
-                         minOccurs="0" />
+<!--        <xs:element name="CAL_Ped" type="ancFileType"
+                         minOccurs="0" />                   -->
         <xs:element name="CAL_LAC" type="ancFileType"
                          minOccurs="0" />
         <xs:element name="CAL_LAC_2_ADC" type="ancFileType"
@@ -1134,6 +1137,9 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="TKR_Timing-anc type="emptyBaseType" />
+
+<!--      No longer need any ancillary files for TKR_Timing
   <xs:element name="TKR_Timing-anc" >
     <xs:complexType >
       <xs:all minOccurs="0" >
@@ -1144,6 +1150,7 @@
       </xs:all>
     </xs:complexType >
   </xs:element>
+-->
 
   <xs:element name="TKR_Timing-param" >
     <xs:complexType>
