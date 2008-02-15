@@ -28,6 +28,9 @@ create table Parameters
                             NOT NULL DEFAULT 'STARTED'
 COMMENT 'refers to status of entry, in case file has to be copied',
 
+  inspect_state VARCHAR(32) NOT NULL DEFAULT 'NOT_INSPECTED' 
+     COMMENT 'typical values are NOT_INSPECTED, PASSED, FAILED..',
+
   creator               VARCHAR(32) NOT NULL,
 
   quality               ENUM('PROD', 'DEV', 'TEST', 'SUPSED', 'INVALID') 

@@ -35,6 +35,9 @@ create table Ancillary
                             NOT NULL DEFAULT 'STARTED'
 COMMENT 'refers to status of entry, in case file has to be copied',
 
+  inspect_state VARCHAR(32) NOT NULL DEFAULT 'NOT_INSPECTED' 
+      COMMENT 'typical values are NOT_INSPECTED, PASSED, FAILED..',
+
   INDEX(class_fk),
   FOREIGN KEY(class_fk) REFERENCES Ancillary_class (Ancillary_class_key)
   ON DELETE CASCADE
