@@ -83,6 +83,18 @@ int main( int argc, char* argv[] )
   }
   int currMax = maxEvents;
 
+  // make the output-file-size scaling externally tunable
+  double WRITEMERGE_CHUNKSCALE = 0.90;
+  char* envbuf = getenv( "WRITEMERGE_CHUNKSCALE" );
+  if ( envbuf ) {
+    WRITEMERGE_CHUNKSCALE = atof( envbuf );
+  }
+  double WRITEMERGE_CHUNKFLOOR = 0.50;
+  envbuf = getenv( "WRITEMERGE_CHUNKFLOOR" );
+  if ( envbuf ) {
+    WRITEMERGE_CHUNKFLOOR = atof( envbuf );
+  }
+
   // add support for overriding translated LATC master key
   unsigned long overrideLATC = 0xffffffff;
   if ( argc >= 6 ) {
@@ -212,7 +224,7 @@ int main( int argc, char* argv[] )
       eventsOut = 0;
 
       // rescale the max-event count for the next file
-      currMax = ( currMax <= 0.75 * maxEvents ) ? maxEvents : 0.95 * currMax;
+      currMax = ( currMax <= WRITEMERGE_CHUNKFLOOR * maxEvents ) ? maxEvents : WRITEMERGE_CHUNKSCALE * currMax;
     }
   }
   std::for_each( mapLSER.begin(), mapLSER.end(), cleanup() );
