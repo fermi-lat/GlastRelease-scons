@@ -1,6 +1,7 @@
 
 #include <rootUtil/TestData.h>
 #include <rootUtil/CompositeEventList.h>
+#include <rootUtil/ComponentsInfoGlast.h>
 #include <TObjString.h>
 #include <Riostream.h>
 
@@ -19,9 +20,14 @@ int main( int argc, char ** argv )
       << "MAKING CEL\n"
       << std::flush ;
     
+    // description of components
+    ComponentsInfoGlast infos ;
+    const ComponentInfo * digiInfo = infos.getInfo("tdigi") ;
+    const ComponentInfo * reconInfo = infos.getInfo("trecon") ;
+    
     TestReader reader ;
-    reader.add(baseName,new TestDigiComponent) ;
-    reader.add(baseName,new TestReconComponent) ;
+    reader.add(baseName,digiInfo) ;
+    reader.add(baseName,reconInfo) ;
        
     TString fileName = baseName ;
     fileName += ".cel.root" ;
@@ -31,10 +37,10 @@ int main( int argc, char ** argv )
     // below, so to quickly test both methods, I declare
     // one constructor to the constructor, and one afterwards.
     TObjArray componentNames ;
-    componentNames.Add(new TObjString(TestDigiComponent::name())) ;
-    //componentNames.Add(new TObjString(TestReconComponent::name())) ;
+    componentNames.Add(new TObjString(digiInfo->componentName)) ;
+    //componentNames.Add(new TObjString(reconInfo->componentName)) ;
     CompositeEventList cel(fileName,"RECREATE",&componentNames) ;
-    cel.declareComponent(TestReconComponent::name()) ;
+    cel.declareComponent(reconInfo->componentName) ;
     if (cel.isOk()==kFALSE)
      {
       std::cerr

@@ -1,7 +1,12 @@
 
 
 #include <rootUtil/TestData.h>
-#include <Riostream.h>
+#include <rootUtil/ComponentsInfoGlast.h>
+
+#if !defined(__CINT__) || defined(__MAKECINT__)
+#  include <Riostream.h>
+#endif
+
 #include <cassert>
 
 
@@ -11,29 +16,16 @@
 //==================================================
 
 
-// Below, one cannot use the typedefs for the dataTypeName__
-// values, because it is reused for TTree:Branch(), which
-// does not know about typedefs.
+const ComponentsInfo * TestAbstractComponent::allInfo()
+ { static ComponentsInfoGlast allTheInfo ; return &allTheInfo ; }
+        
+template <> const ComponentInfo * TestDigiComponent::info()
+ { static const ComponentInfo * myInfo = allInfo()->getInfo("tdigi") ; return myInfo ; }
+//ClassImp(TestDigi)
 
-template <> const TString & TestDigiComponent::name()
- { static TString text = "Digi" ; return text ; }
-template <> const TString & TestDigiComponent::treeName()
- { static TString text = "TestDigiTree" ; return text ; }
-template <> const TString & TestDigiComponent::branchName()
- { static TString text = "TestDigiBranch" ; return text ; }
-template <> const TString & TestDigiComponent::dataTypeName()
- { static TString text = "TestData<TestDigiLabel>" ; return text ; }
-ClassImp(TestDigi)
-
-template <> const TString & TestReconComponent::name()
- { static TString text = "Recon" ; return text ; }
-template <> const TString & TestReconComponent::treeName()
- { static TString text = "TestReconTree" ; return text ; }
-template <> const TString & TestReconComponent::branchName()
- { static TString text = "TestReconBranch" ; return text ; }
-template <> const TString & TestReconComponent::dataTypeName()
- { static TString text = "TestData<TestReconLabel>" ; return text ; }
-ClassImp(TestRecon)
+template <> const ComponentInfo * TestReconComponent::info()
+ { static const ComponentInfo * myInfo = allInfo()->getInfo("trecon") ; return myInfo ; }
+//ClassImp(TestRecon)
 
 
   
@@ -60,21 +52,21 @@ std::ostream & operator<<( std::ostream & os, const TestAbstractData & data )
 //==========================================
 
 
-void TestReader::add( const char * baseName, TestAbstractComponent * component )
+void TestReader::add( const char * baseName, const ComponentInfo * component )
  {
   BranchReader * reader = new BranchReader ;
   
   reader->component_ = component ;
-  reader->chain_ = new TChain(component->getTreeName()) ;
+  reader->chain_ = new TChain(component->treeName) ;
   
   TString fileNames = baseName ;
-  fileNames += component->getName() ;
+  fileNames += component->componentName ;
   fileNames += "*.root" ;
   reader->chain_->Add(fileNames) ;
   
   reader->data_ = 0 ;
   reader->chain_->SetBranchAddress
-   (component->getBranchName(),&(reader->data_)) ;
+   (component->topBranchName,&(reader->data_)) ;
   
 //  if (readers_.GetEntries()==0)
 //   { nbEvents_ = reader->chain_->GetEntries() ; }
@@ -100,7 +92,7 @@ void TestReader::showByComponent() const
   while ((reader=(BranchReader *)next()))
    {
     TString prefix("\n[TestReader] Component ") ;
-    prefix += reader->component_->getName() ;
+    prefix += reader->component_->componentName ;
     prefix += " : " ;
     TString separator ;
     

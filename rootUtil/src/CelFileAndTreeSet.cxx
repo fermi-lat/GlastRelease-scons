@@ -126,6 +126,13 @@ TTree* CelFileAndTreeSet::getTree( UShort_t key ) const {
   return tree;
 }
 
+const TObjString * CelFileAndTreeSet::getFileName( UShort_t key ) const
+ { return (const TObjString *)(_fileNames->UncheckedAt(key)) ; }
+
+
+const TObjString * CelFileAndTreeSet::getTreeName( UShort_t key ) const
+ { return (const TObjString *)(_treeNames->UncheckedAt(key)) ; }
+
 UShort_t CelFileAndTreeSet::getKey( TTree * tree ) const
  {
   // Get the persistent KEY for a given tree

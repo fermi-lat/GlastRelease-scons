@@ -2,6 +2,7 @@
 #include <rootUtil/TestData.h>
 #include <rootUtil/CompositeEventList.h>
 #include <rootUtil/CelManager.h>
+#include <rootUtil/ComponentsInfoGlast.h>
 #include <Riostream.h>
 
 int main( int argc, char ** argv )
@@ -14,14 +15,19 @@ int main( int argc, char ** argv )
   int sc = 0 ;
   try 
    {
+    // description of components
+    ComponentsInfoGlast infos ;
+    const ComponentInfo * digiInfo = infos.getInfo("tdigi") ;
+    const ComponentInfo * reconInfo = infos.getInfo("trecon") ;
+    
     // direct reader access
     std::cout
       << "=================================\n"
       << "DIRECT READ\n"
       << std::flush ;
     TestReader reader ;
-    reader.add(baseName,new TestDigiComponent) ;
-    reader.add(baseName,new TestReconComponent) ;
+    reader.add(baseName,digiInfo) ;
+    reader.add(baseName,reconInfo) ;
     reader.showByComponent() ;
     reader.showByEvent() ;
     
@@ -48,12 +54,12 @@ int main( int argc, char ** argv )
       << "=================================\n"
       << "SHALLOW READ\n"
       << std::flush ;
-    UInt_t digiIndex = cel.componentIndex(TestDigiComponent::name()) ;
+    UInt_t digiIndex = cel.componentIndex(digiInfo->componentName) ;
     digiChain = cel.newChain(digiIndex) ;
-    digiChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
-    UInt_t reconIndex = cel.componentIndex(TestReconComponent::name()) ;
+    digiChain->SetBranchAddress(digiInfo->topBranchName,&digiData) ;
+    UInt_t reconIndex = cel.componentIndex(reconInfo->componentName) ;
     reconChain = cel.newChain(reconIndex) ;
-    reconChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
+    reconChain->SetBranchAddress(reconInfo->topBranchName,&reconData) ;
     nEvents = cel.numEvents() ;
     for ( iEvent = 0 ; iEvent < nEvents ; iEvent++ )
      {
@@ -81,8 +87,8 @@ int main( int argc, char ** argv )
       << "=================================\n"
       << "DEEP READ\n"
       << std::flush ;
-    cel.setDataAddress(TestDigiComponent::name(),TestDigiComponent::branchName(),&digiData) ;
-    cel.setDataAddress(TestReconComponent::name(),TestReconComponent::branchName(),&reconData) ;
+    cel.setDataAddress(digiInfo->componentName,digiInfo->topBranchName,&digiData) ;
+    cel.setDataAddress(reconInfo->componentName,reconInfo->topBranchName,&reconData) ;
     nEvents = cel.numEvents() ;
     for ( iEvent = 0 ; iEvent < nEvents ; iEvent++ )
      {
@@ -115,18 +121,18 @@ int main( int argc, char ** argv )
     TChain * curChain ;
     while ( (curChain = (TChain*)itrChain.Next()) )
      {
-      if (curChain->GetName()==TestDigiComponent::treeName())
+      if (curChain->GetName()==digiInfo->treeName)
        {
         digiChain = curChain ;
         digiTreeIndex = digiChain->GetTreeIndex() ;
-    	curChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
+    	curChain->SetBranchAddress(digiInfo->topBranchName,&digiData) ;
         std::cout<<"Set address for Digi"<<std::endl ;
        }
-      if (curChain->GetName()==TestReconComponent::treeName())
+      if (curChain->GetName()==reconInfo->treeName)
        {
         reconChain = curChain ;
         reconTreeIndex = reconChain->GetTreeIndex() ;
-    	curChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
+    	curChain->SetBranchAddress(reconInfo->topBranchName,&reconData) ;
         std::cout<<"Set address for Recon"<<std::endl ;
        }
      }    
@@ -153,10 +159,10 @@ int main( int argc, char ** argv )
       << std::flush ;
     CelManager mgr(true) ;
     mgr.initRead(fileName) ;
-    digiChain = mgr.getChainByType(TestDigiComponent::treeName()) ;
-    digiChain->SetBranchAddress(TestDigiComponent::branchName(),&digiData) ;
-    reconChain = mgr.getChainByType(TestReconComponent::treeName()) ;
-    reconChain->SetBranchAddress(TestReconComponent::branchName(),&reconData) ;
+    digiChain = mgr.getChainByType(digiInfo->treeName) ;
+    digiChain->SetBranchAddress(digiInfo->topBranchName,&digiData) ;
+    reconChain = mgr.getChainByType(reconInfo->treeName) ;
+    reconChain->SetBranchAddress(reconInfo->topBranchName,&reconData) ;
     Long64_t iDigi, iRecon ;
     nEvents = mgr.getNumEvents() ;
     for ( iEvent = 0 ; iEvent < nEvents ; iEvent++ )
@@ -165,9 +171,9 @@ int main( int argc, char ** argv )
         <<"[main] Event "<<setw(2)<<std::right<<iEvent
         <<" : "
         <<std::flush ;    	  
-      iDigi = mgr.getEventIndexInTree(TestDigiComponent::treeName(),iEvent) ;
+      iDigi = mgr.getEventIndexInTree(digiInfo->treeName,iEvent) ;
       digiChain->GetTree()->GetEntry(iDigi) ;
-      iRecon = mgr.getEventIndexInTree(TestReconComponent::treeName(),iEvent) ;
+      iRecon = mgr.getEventIndexInTree(reconInfo->treeName,iEvent) ;
       reconChain->GetTree()->GetEntry(iRecon) ;
       if ((digiData!=0)&&(reconData!=0))
        { std::cout<<*digiData<<", "<<*reconData<<std::endl ; }

@@ -4,16 +4,19 @@
 #define TestData_h
 
 
-#include <TObject.h>
-#include <TString.h>
-#include <TFile.h>
-#include <TChain.h>
-#include <TObjArray.h>
-#include <TRandom.h>
-#include <Riosfwd.h>
-#include <Riostream.h>
-#include <vector>
+#include "ComponentsInfo.h"
 
+#if !defined(__CINT__) || defined(__MAKECINT__)
+#  include <TObject.h>
+#  include <TString.h>
+#  include <TFile.h>
+#  include <TChain.h>
+#  include <TObjArray.h>
+#  include <TRandom.h>
+#  include <Riosfwd.h>
+#  include <Riostream.h>
+#  include <vector>
+#endif
 
 
 //==================================================
@@ -34,37 +37,18 @@ class TestReconLabel {} ;
 class TestAbstractComponent
  {
   public :
-    virtual const TString & getName() =0 ;
-    virtual const TString & getTreeName() =0 ;
-    virtual const TString & getBranchName() =0 ;
-    virtual const TString & getDataTypeName() =0 ;
-    //virtual TestAbstractData * newData( Long64_t runID =0, Long64_t eventID =0 ) =0 ;
+    virtual const ComponentInfo * getInfo() const =0 ;
+  protected :
+    static const ComponentsInfo * allInfo() ;
  } ;
-	
+        
 template <class Label>
 class TestComponent : public TestAbstractComponent
  {
   public :
-	  
-	static const TString & name() ;//{ return componentName__ ; }
-	static const TString & treeName() ;//{ return treeName__ ; }
-	static const TString & branchName() ;//{ return branchName__ ; }
-	static const TString & dataTypeName() ;//{ return dataTypeName__ ; }
-	
-	virtual const TString & getName() { return name() ; }
-	virtual const TString & getTreeName() { return treeName() ; }
-	virtual const TString & getBranchName() { return branchName() ; }
-	virtual const TString & getDataTypeName() { return dataTypeName() ; }
-	
-	//virtual TestAbstractData * newData( Long64_t runID =0, Long64_t eventID =0 )
-	// { return new TestData<Label>(runID,eventID) ; }
-	
-//  private :
-//	  
-//	static TString componentName__ ;
-//	static TString treeName__ ;
-//	static TString branchName__ ;
-//	static TString dataTypeName__ ;
+    static const ComponentInfo * info() ;
+    virtual const ComponentInfo * getInfo() const
+     { return info() ; }	
  } ;
  
 typedef TestComponent<TestDigiLabel> TestDigiComponent ;
@@ -82,16 +66,16 @@ class TestAbstractData
   public :
     TestAbstractData( Long64_t runID =0, Long64_t eventID =0)
      : runID_(runID), eventID_(eventID) {}
-	Long64_t getRunID() const { return runID_ ; }
-	Long64_t getEventID() const { return eventID_ ; }
-	void setRunID( Long64_t runID ) { runID_ = runID ; }
-	void setEventID( Long64_t eventID ) { eventID_ = eventID ; }
-	void incrementRunID() { ++runID_ ; }
-	void incrementEventID() { ++eventID_ ; }
-	virtual const TString & getComponentName() const =0 ;
+    Long64_t getRunID() const { return runID_ ; }
+    Long64_t getEventID() const { return eventID_ ; }
+    void setRunID( Long64_t runID ) { runID_ = runID ; }
+    void setEventID( Long64_t eventID ) { eventID_ = eventID ; }
+    void incrementRunID() { ++runID_ ; }
+    void incrementEventID() { ++eventID_ ; }
+    virtual const TString & getComponentName() const =0 ;
   private :
-	Long64_t runID_ ;
-	Long64_t eventID_ ;
+    Long64_t runID_ ;
+    Long64_t eventID_ ;
     ClassDef(TestAbstractData,1)
  } ;
  
@@ -103,8 +87,8 @@ class TestData : public TestAbstractData
   public :
     TestData( Long64_t runID =0, Long64_t eventID =0 )
      : TestAbstractData(runID,eventID) {}
-	virtual const TString & getComponentName() const
-	 { return TestComponent<Label>::name() ; }
+    virtual const TString & getComponentName() const
+     { return TestComponent<Label>::info()->componentName ; }
   private :
     ClassDef(TestData,1)
  } ;
@@ -126,7 +110,7 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
   Int_t splitLevel = 1 ;
   
   TString fileName = baseName ;
-  fileName += TestComponent<Label>::name() ;
+  fileName += TestComponent<Label>::info()->componentName ;
   fileName += "." ;
   fileName += runId ;
   fileName += "." ;
@@ -144,15 +128,15 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
     <<std::endl ;
   
   TFile * f = new TFile(fileName,"RECREATE") ;
-  TTree * t = new TTree(TestComponent<Label>::treeName(),TestComponent<Label>::treeName()) ;
+  TTree * t = new TTree(TestComponent<Label>::info()->treeName,TestComponent<Label>::info()->treeName) ;
     
   std::cout<<"[testWrite] Creating branches"<<std::endl ;
   TestData<Label> * componentEntry = new TestData<Label>(runId,firstEvent) ;
-  t->Branch(TestComponent<Label>::branchName(),TestComponent<Label>::dataTypeName(),&componentEntry,buffer,splitLevel) ;
+  t->Branch(TestComponent<Label>::info()->topBranchName,TestComponent<Label>::info()->topBranchType,&componentEntry,buffer,splitLevel) ;
   
   std::cout
     <<"[testWrite] Filling "
-    <<TestComponent<Label>::treeName()<<" tree" << std::endl ;
+    <<TestComponent<Label>::info()->treeName<<" tree" << std::endl ;
   
   Long64_t ievent = firstEvent, eventID  ;
   while ( ievent <= lastEvent )
@@ -195,7 +179,7 @@ class TestReader
   public :
 	  
     TestReader() {}
-    void add( const char * baseName, TestAbstractComponent * component ) ;
+    void add( const char * baseName, const ComponentInfo * component ) ;
     
     void showByComponent() const ;
     void showByEvent() ;
@@ -216,7 +200,7 @@ class TestReader
 	
     struct BranchReader : public TObject
      {
-      TestAbstractComponent * component_ ;
+      const ComponentInfo * component_ ;
       TChain * chain_ ;
       Long64_t nextEntry_ ;
       TestAbstractData * data_ ;

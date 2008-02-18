@@ -18,6 +18,7 @@ apply_pattern root_package headers="\
   ../rootUtil/CelEventLink.h\
   ../rootUtil/CelIndex.h\
   ../rootUtil/CelUtil.h\
+  ../rootUtil/ComponentsInfo.h\
   ../rootUtil/TestData.h"
 
 private
@@ -29,8 +30,9 @@ macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "
 
 macro testSource "" WIN32 " TestData.cxx "
 
-application celInspect ../apps/celInspect.cxx $(getoptSource)
 application celRelocate ../apps/celRelocate.cxx $(getoptSource)
+application celConvert ../apps/celConvert.cxx $(getoptSource)
+application celInspect ../apps/celInspect.cxx $(getoptSource)
 
 application digiMeritRecon ../apps/digiMeritRecon.cxx $(getoptSource)
 application mergeSkim ../apps/mergeSkim.cxx $(getoptSource)

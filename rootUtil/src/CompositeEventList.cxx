@@ -774,17 +774,46 @@ Int_t CompositeEventList::shallowRead( Long64_t eventIndex )
 
 Long64_t CompositeEventList::entryIndex( UInt_t componentIndex ) const
  {
-  TString caller ("CompositeEventList::entryIndex") ;
+  TString caller ("[CompositeEventList::entryIndex]") ;
   if ( ! checkCelOk(caller) ) return -1 ;
   if ( ! checkCelPrepared(caller) ) return -1 ;
-    
   if (componentIndex==COMPONENT_UNDEFINED)
    {
-    std::cerr<<"[CompositeEventList::entryIndex] undefined component"<<std::endl ;
+    std::cerr<<caller<<" undefined component"<<std::endl ;
     return -1 ;
-   }
+   }  
   CelEventComponent * comp = getComponent(componentIndex) ;
   return comp->currentIndexInChain() ;
+ }
+
+const TObjString * CompositeEventList::fileName( UInt_t componentIndex ) const
+ {
+  TString caller ("[CompositeEventList::fileName]") ;
+  if ( ! checkCelOk(caller) ) return 0 ;
+  if ( ! checkCelPrepared(caller) ) return 0 ;
+  if (componentIndex==COMPONENT_UNDEFINED)
+   {
+    std::cerr<<caller<<" undefined component"<<std::endl ;
+    return 0 ;
+   }
+  CelEventComponent * comp = getComponent(componentIndex) ;
+  UShort_t treeIndex = comp->currentEntryIndex().treeIndex() ;
+  return comp->currentFileSet().getFileName(treeIndex) ;
+ }
+
+const TObjString * CompositeEventList::treeName( UInt_t componentIndex ) const
+ {
+  TString caller ("[CompositeEventList::fileName]") ;
+  if ( ! checkCelOk(caller) ) return 0 ;
+  if ( ! checkCelPrepared(caller) ) return 0 ;
+  if (componentIndex==COMPONENT_UNDEFINED)
+   {
+    std::cerr<<caller<<" undefined component"<<std::endl ;
+    return 0 ;
+   }
+  CelEventComponent * comp = getComponent(componentIndex) ;
+  UShort_t treeIndex = comp->currentEntryIndex().treeIndex() ;
+  return comp->currentFileSet().getTreeName(treeIndex) ;
  }
 
 void CompositeEventList::setDataAddress

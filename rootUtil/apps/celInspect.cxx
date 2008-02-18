@@ -35,9 +35,6 @@ void usage()
        << std::endl
        << "\tOPTIONS for all jobs" << std::endl
        << "\t   -h                : print this message" << std::endl
-       << "\t   -p <flags>        : what to print"      << std::endl
-       << "\t   -n <nEvents>      : run over <nEvents>" << std::endl
-       << "\t   -s <startEvent>   : start with event <startEvent>" << std::endl
        << std::endl ;
  }
   
@@ -62,15 +59,6 @@ int main(int argn, char** argc)
     case 'h':   // help      
       usage();
       return 1;
-    case 'p':   //  output
-      printFlags = string(optarg);
-      break;
-    case 'n':   // number of events
-      optval_n = strtoul( optarg, &endPtr, 0 );
-      break;
-    case 's':   // start event
-      optval_s = strtoul( optarg, &endPtr, 0 );
-      break;
     case '?':
       usage();
       return 2;
