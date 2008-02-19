@@ -86,8 +86,8 @@ def plotDAC(rawData, filterData, info, twrs, rawName, filterName):
                                                          yn,
                                                          (20,-200))
 
-                    a = fitParms[0]
-                    b = fitParms[1]
+                    a = fitParms[1]
+                    b = fitParms[0]
                     x = array.array('f')
                     y = array.array('f')
                     for dac in range(0, 64):
@@ -116,8 +116,8 @@ def plotDAC(rawData, filterData, info, twrs, rawName, filterName):
                                                          yn,
                                                          (20,-200))
 
-                    a = fitParms[0]
-                    b = fitParms[1]
+                    a = fitParms[1]
+                    b = fitParms[0]
                     x = array.array('f')
                     y = array.array('f')
                     for dac in range(0, 64):
@@ -236,8 +236,8 @@ def plotULD(rawData, filterData, info, twrs, rawName, filterName):
                                                              yn,
                                                              (40,-400))
 
-                        a = fitParms[0]
-                        b = fitParms[1]
+                        a = fitParms[1]
+                        b = fitParms[0]
                         x = array.array('f')
                         y = array.array('f')
                         for dac in range(0, 64):
