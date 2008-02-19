@@ -3,7 +3,8 @@
 @verbatim
  $Id$	
  * Package CalUtil
- * v3r8       17-Jan-2007 ZF annexed calibGenCAL/calibDataTypes  classes (renamed to CalUtil/SimpleCalCalib) as they will now be shared by calibGenCAL and CalXtalResponse
+ * v3r9       19-Feb-2008 AVM added CalFirstRng enumeration for specifying first range readout option in CalDigi
+ * v3r8       17-Jan-2008 ZF annexed calibGenCAL/calibDataTypes  classes (renamed to CalUtil/SimpleCalCalib) as they will now be shared by calibGenCAL and CalXtalResponse
  * v3r7       06-Nov-2007 ZF added stl_util.h header
  * v3r6p2     06-Nov-2007 ZF added explicit CalArray constructor with default initialization value parameter
  * v3r6p1     31-Oct-2007 ZF  correct spelling of use!

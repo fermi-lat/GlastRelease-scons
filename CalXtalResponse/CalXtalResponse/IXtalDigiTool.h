@@ -20,6 +20,7 @@
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
+#include "CalUtil/CalConfig.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -30,7 +31,7 @@ namespace Event {
   class CalDigi;
 }
 
-static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 2);
+static const InterfaceID IID_IXtalDigiTool("IXtalDigiTool", 1, 3);
 
 class IXtalDigiTool : virtual public IAlgTool {
  public:
@@ -48,9 +49,10 @@ class IXtalDigiTool : virtual public IAlgTool {
   \param zeroSuppress.  if zero suppression is on, i can optimize by not fully evaluating xtals which will not be recorded.
 
   */
+
   virtual StatusCode calculate(Event::CalDigi &calDigi,
                                CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
-                               bool zeroSuppress
+                               bool zeroSuppress, CalUtil::CalFirstRng calFirstRng= -1
                                ) = 0;
 
 };

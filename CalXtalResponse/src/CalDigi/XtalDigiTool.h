@@ -14,7 +14,7 @@
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
 #include "CalUtil/CalArray.h"
-
+#include "CalUtil/CalConfig.h"
 
 // EXTLIB
 #include "GaudiKernel/AlgTool.h"
@@ -57,7 +57,7 @@ public:
 
   StatusCode calculate(Event::CalDigi &calDigi,
                        CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
-                       bool zeroSuppress
+                       bool zeroSuppress, CalUtil::CalFirstRng calFirstRng
                        );
 private:
   

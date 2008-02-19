@@ -85,7 +85,8 @@ class ICalCalibSvc;
     - CalXtalRecAlg (incl (XtalRecTool)
 
     @ todo
-    - direct diode deposits
+    - test andrey's forced first range code (EZ)
+    - direct diode deposits 
     - CalTupleAlg - not sure how to arrange this without creating
     unwanted output file.
     - noise simulation test
