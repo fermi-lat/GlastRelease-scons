@@ -138,5 +138,23 @@ namespace AcdUtil {
     return typeMgr->getCalibration(id,pmt,noiseCalib);
   };
   
+  /** \brief get ribbon calibration for a given channel
+      \param id  the tile or ribbon id
+      \param pmt A(0) or B(1) pmt
+      \param calib a pointer to the relevent high range data
+  */
+  StatusCode IAcdCalibSvc::getRibbon(idents::AcdId id, unsigned pmt,
+				     CalibData::AcdRibbon*& ribbonCalib){
+
+    if ( ! id.ribbon() ) return StatusCode::FAILURE;
+    AcdCalibMgr* calibMgr(0);
+    StatusCode sc = getCalibMgr(AcdCalibData::RIBBON,calibMgr);
+    if ( sc.isFailure() ) {
+       ribbonCalib = 0;
+      return sc;
+    }
+    AcdCalibMgrTmpl< CalibData::AcdRibbonCalib >* typeMgr = static_cast< AcdCalibMgrTmpl< CalibData::AcdRibbonCalib >* >(calibMgr);
+    return typeMgr->getCalibration(id,pmt,ribbonCalib);
+  };
 
 }

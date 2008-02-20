@@ -128,7 +128,9 @@ bool AcdRibbonDim::getRibbonLengthAndBin(const idents::VolumeIdentifier &volId, 
   
   // sanity check
   idents::AcdId checkId(volId);
-  if ( m_acdId != checkId ) return false;
+  if ( m_acdId != checkId ) { 
+    return false;
+  }
 
   int orient = m_acdId.ribbonOrientation();
   int face = volId[1];  
@@ -157,10 +159,10 @@ bool AcdRibbonDim::getRibbonLengthAndBin(const idents::VolumeIdentifier &volId, 
   case 5307: // +x side, lower short
     ribbonBin = 6;
     break;
-
   case 6001: // top -y side
   case 6008: // top -y side short
     ribbonBin = 2;
+    break;
   case 6002: // top -y middle
     ribbonBin = point.y() < 0 ? 2 : 3;
     break;
@@ -176,27 +178,26 @@ bool AcdRibbonDim::getRibbonLengthAndBin(const idents::VolumeIdentifier &volId, 
   case 6005: // top +y side
     ribbonBin = 4;
     break;
-    break;
-  case 6109: // -y side, bend short
-  case 6105: // -y side, upper short
-  case 6101: // -y side, top
+  case 6209: // -y side, bend short
+  case 6205: // -y side, upper short
+  case 6201: // -y side, top
     ribbonBin = 1;
     break;
-  case 6106: // -y side, middle short
-  case 6102: // -y side, middle
-  case 6107: // -y side, lower short
-  case 6103: // -y side, bottom
+  case 6206: // -y side, middle short
+  case 6202: // -y side, middle
+  case 6207: // -y side, lower short
+  case 6203: // -y side, bottom
     ribbonBin = 0;
     break;
-  case 6309: // +y side, bend short
-  case 6305: // +y side, upper short    
-  case 6301: // +y side, top
+  case 6409: // +y side, bend short
+  case 6405: // +y side, upper short    
+  case 6401: // +y side, top
     ribbonBin = 5;
     break;
-  case 6306: // +y side, middle short
-  case 6302: // +y side, middle
-  case 6307: // +y side, lower short
-  case 6303: // +y side, bottom
+  case 6406: // +y side, middle short
+  case 6402: // +y side, middle
+  case 6407: // +y side, lower short
+  case 6403: // +y side, bottom
     ribbonBin = 6;
     break;
   default:
