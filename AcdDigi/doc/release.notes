@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r2    19-Feb-2008 EAC Added ribbon attenuation
  v3r1p5  21-Dec-2007 EAC Fix up previous tag
  v3r1p4  21-Dec-2007 EAC Set accept map bit for all high range readouts
  v3r1p3  11-Dec-2007 EAC Fix bug in call to Event::AcdDigi object c'tor that swapped veto and ZS bits
