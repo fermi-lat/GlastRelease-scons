@@ -18,6 +18,7 @@
 #include "CalibData/Acd/AcdVeto.h"
 #include "CalibData/Acd/AcdCno.h"
 #include "CalibData/Acd/AcdCoherentNoise.h"
+#include "CalibData/Acd/AcdRibbon.h"
 
 #include "AcdUtil/AcdCalibFuncs.h"
 #include "AcdUtil/AcdTileDim.h"
@@ -146,6 +147,23 @@ bool AcdDigiUtil::compareVolIds(const idents::VolumeIdentifier& tileId,
   return true;
 }
 
+bool AcdDigiUtil::getRibbonLengthAndBin(const Event::McPositionHit* hit,
+					IAcdGeometrySvc& geomSvc,
+					double& ribbonLength, int& ribbonBin) {
+
+  idents::VolumeIdentifier volId = hit->volumeID();
+  idents::AcdId ribId(volId);  
+
+  const AcdRibbonDim* ribbonDim = geomSvc.geomMap().getRibbon(ribId,geomSvc);
+  if ( ribbonDim == 0 ) return -10000.;
+
+  // In local coordinates the box should be centered at (0,0,0)
+  const HepPoint3D geant_x0 = hit->entryPoint();
+
+  return ribbonDim->getRibbonLengthAndBin(volId,geant_x0,ribbonLength,ribbonBin);
+}
+			  
+
 AcdDigiUtil::AcdDigiUtil()
   :m_ifile(0){;}
 
@@ -193,10 +211,9 @@ StatusCode AcdDigiUtil::initialize(AcdUtil::IAcdCalibSvc& calibSvc, IAcdGeometry
 
 }
 
-
 StatusCode AcdDigiUtil::photoElectronsFromEnergy(const idents::AcdId& id, double energy,
-						double& pe_pmtA, double& pe_pmtB) {
-
+						 double& pe_pmtA, double& pe_pmtB) {
+  
   StatusCode sc = StatusCode::SUCCESS;
 
   AcdSimCalibData* pmtACalib(0);
@@ -207,6 +224,85 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy(const idents::AcdId& id, double
   // check the map
   double pePerMeV_A = pmtACalib->pe_per_MeV();
   double pePerMeV_B = pmtBCalib->pe_per_MeV();
+
+  // OK, have the numbers, now just combine them
+  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
+  if ( sc.isFailure() ) return sc;
+
+  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_B,pe_pmtB);
+  if ( sc.isFailure() ) return sc;
+
+  return sc;
+}
+
+StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit *hit, bool edgeEffect,
+						      double& pe_pmtA, double& pe_pmtB) {
+
+  StatusCode sc = StatusCode::SUCCESS;
+
+  double energy = hit->depositedEnergy();
+  // check the edge effect
+  if ( edgeEffect ) {
+    sc = tileEdgeEffect(hit,energy);
+    if ( sc.isFailure() ) return sc;
+  }
+
+  idents::VolumeIdentifier volId = hit->volumeID();
+  idents::AcdId tileId(volId);
+
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+  sc = getCalibData(tileId,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+
+  // check the map
+  double pePerMeV_A = pmtACalib->pe_per_MeV();
+  double pePerMeV_B = pmtBCalib->pe_per_MeV();
+
+  // OK, have the numbers, now just combine them
+  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
+  if ( sc.isFailure() ) return sc;
+
+  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_B,pe_pmtB);
+  if ( sc.isFailure() ) return sc;
+
+  return sc;
+}
+
+StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionHit *hit,
+							double& pe_pmtA, double& pe_pmtB) {
+  
+  StatusCode sc = StatusCode::SUCCESS;
+
+  double energy = hit->depositedEnergy();
+  idents::VolumeIdentifier volId = hit->volumeID();
+  idents::AcdId ribId(volId);
+
+  double ribbonLength(0);
+  int ribbonBin(-1);
+  
+  AcdSimCalibData* pmtACalib(0);
+  AcdSimCalibData* pmtBCalib(0);
+  sc = getCalibData(ribId,pmtACalib,pmtBCalib);
+  if ( sc.isFailure() ) return sc;
+
+
+  bool ok = getRibbonLengthAndBin(hit,*m_geomSvc,ribbonLength,ribbonBin);
+  if ( !ok ) return StatusCode::FAILURE;
+
+  // check the map
+  double pePerMeV_A = pmtACalib->pe_per_MeV();
+  double pePerMeV_B = pmtBCalib->pe_per_MeV();
+
+  // fold in ribbon attenuation factors
+  if ( pmtACalib->ribbon_calib() == 0 ||
+       pmtBCalib->ribbon_calib() == 0 ) {
+    return StatusCode::FAILURE;
+  }
+  double factorA = pmtACalib->ribbon_calib()->operator[](ribbonBin);
+  double factorB = pmtBCalib->ribbon_calib()->operator[](ribbonBin);
+  pePerMeV_A *= factorA;
+  pePerMeV_B *= factorB;  
 
   // OK, have the numbers, now just combine them
   sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
@@ -319,7 +415,7 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& 
 
   const AcdTileDim* tileDim = m_geomSvc->geomMap().getTile(tileId,*m_geomSvc);
   if ( tileDim == 0 ) return StatusCode::FAILURE;
-  AcdFrameUtil::AcdReferenceFrame refFrame = tileDim->acdGeomSvc().getReferenceFrame(volId);
+  AcdFrameUtil::AcdReferenceFrame refFrame = m_geomSvc->getReferenceFrame(volId);
   const HepGeom::Transform3D& rotToLoca = AcdFrameUtil::getRotationToLocal(refFrame);
   const HepPoint3D local_x0 = rotToLoca*geant_x0;
   
@@ -342,8 +438,9 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& 
 
 /// Adjusts the deposited energy recorded in an ACD volume 
 /// based on the location of the hit
-StatusCode AcdDigiUtil::ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energy) {  
-  energy = hit->depositedEnergy();
+StatusCode AcdDigiUtil::ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energyA, double& energyB) {  
+  energyA = hit->depositedEnergy();
+  energyB = hit->depositedEnergy();  
   return StatusCode::SUCCESS;
 }
 

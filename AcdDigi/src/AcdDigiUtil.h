@@ -32,6 +32,7 @@ namespace CalibData {
   class AcdVeto;
   class AcdCno;
   class AcdCoherentNoise;
+  class AcdRibbon;
 };
 
 namespace Event {
@@ -81,6 +82,7 @@ public:
   inline void setVetoThresh(CalibData::AcdVeto& veto) { m_veto = &veto; };
   inline void setCnoThresh(CalibData::AcdCno& cno) { m_cno = &cno; };
   inline void setCoherentNoise(CalibData::AcdCoherentNoise& coherentNoise) { m_coherentNoise = &coherentNoise; };
+  inline void setRibbon(CalibData::AcdRibbon& ribbon) { m_ribbon = &ribbon; };
   
   // Lots of access functions for setting other quantities
   inline void setPe_per_mip(double val) {  m_pe_per_mip = val; };
@@ -100,6 +102,7 @@ public:
   inline CalibData::AcdVeto* veto_calib() const { return m_veto; }
   inline CalibData::AcdCno* cno_calib() const { return m_cno; }
   inline CalibData::AcdCoherentNoise* coherentNoise_calib() const { return m_coherentNoise; }
+  inline CalibData::AcdRibbon* ribbon_calib() const { return m_ribbon; }
 
   // Grap combined constants as needed
   StatusCode latchPePerMeV();
@@ -118,7 +121,7 @@ private:
   CalibData::AcdVeto* m_veto;
   CalibData::AcdCno* m_cno;
   CalibData::AcdCoherentNoise* m_coherentNoise;  
-
+  CalibData::AcdRibbon* m_ribbon;  
 
   // Derived/ set values
 
@@ -170,6 +173,19 @@ public:
 			    const idents::VolumeIdentifier& screwId);
   
 
+  /**
+   * @brief Return the localY of a ribbon from the MCPositionHit
+   * @param hit the MCPositionHit
+   * @param geomSvc the geometery service
+   * @param ribbonLength length along the ribbon (measured from the center)   
+   * @param ribbonBin which bin to use for attenuation
+   * @return true for success, false otherwise
+   **/
+  static bool getRibbonLengthAndBin(const Event::McPositionHit* hit,
+				    IAcdGeometrySvc& geomSvc,
+				    double& ribbonLength, int& ribbonBin);
+			  
+
 public:
     
   AcdDigiUtil(); 
@@ -180,10 +196,19 @@ public:
 			const std::string& xmlFileName);
 
   /// calulates the number of pe seen in each tube given the 
-  /// deposited energy
+  /// deposited energy  
   StatusCode photoElectronsFromEnergy(const idents::AcdId& id, double energy,
 				      double& pe_pmtA, double& pe_pmtB);
 
+  /// calulates the number of pe seen in each tube given the 
+  /// deposited energy
+  StatusCode photoElectronsFromEnergy_tile(const Event::McPositionHit *hit, bool edgeEffect,
+					   double& pe_pmtA, double& pe_pmtB);
+  
+  /// calulates the number of pe seen in each tube given the 
+  /// deposited energy
+  StatusCode photoElectronsFromEnergy_ribbon(const Event::McPositionHit *hit,
+					     double& pe_pmtA, double& pe_pmtB);   
   
   /// calulates the light yield expressed in mip equivalent from the number of observed PE 
   StatusCode mipEquivalentLightYeild(const idents::AcdId& id, double pe_pmtA, double pe_pmtB,
@@ -202,7 +227,7 @@ public:
 
   /// Adjusts the deposited energy recorded in an ACD volume 
   /// based on the location of the hit
-  StatusCode ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energy);
+  StatusCode ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energyA, double& energyB);
 
   /// Checks all the various thresholds
   StatusCode checkThresholds(const idents::AcdId& id, const double mipEquiv[2],

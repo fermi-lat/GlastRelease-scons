@@ -155,13 +155,13 @@ StatusCode AcdDigiAlg::execute() {
     // loop over hits, skip if hit is not in ACD
     // Accumulate the deposited energies, applying edge effects if requested
     if (allhits) {
-      sc = fillEnergyMap(*allhits,m_energyDepMap);
+      sc = fillEnergyAndPeMaps(*allhits,m_energyDepMap,m_peMap);
       if( sc.isFailure() ) {
-	log << MSG::ERROR << "Failed to fill energy deposit map" << endreq;
+	log << MSG::ERROR << "Failed to fill energy deposit and p.e. maps" << endreq;
 	return sc;
       }  
       
-      sc = convertEnergyToMips(m_energyDepMap,m_mipsMap);
+      sc = convertPeToMips(m_peMap,m_mipsMap);
       if( sc.isFailure() ) {
 	log << MSG::ERROR << "Failed to convert energy to mips" << endreq;
 	return sc;
@@ -177,11 +177,12 @@ StatusCode AcdDigiAlg::execute() {
 }
 
 
-StatusCode AcdDigiAlg::fillEnergyMap( const Event::McPositionHitCol& mcHits,
-				      std::map<idents::AcdId, double>& energyIdMap ) {
-
+StatusCode AcdDigiAlg::fillEnergyAndPeMaps( const Event::McPositionHitCol& mcHits,
+					    std::map<idents::AcdId, double>& energyIdMap,
+					    std::map<idents::AcdId, std::pair<double, double> >& peMap) {
+  
   MsgStream log( msgSvc(), name() );
-
+      
   for (Event::McPositionHitVector::const_iterator hit = mcHits.begin();
        hit != mcHits.end(); hit++) {
     
@@ -192,27 +193,40 @@ StatusCode AcdDigiAlg::fillEnergyMap( const Event::McPositionHitCol& mcHits,
     idents::AcdId id(volId);
     // No edge effects for ribbons, tiles only
 
-    double energy(0.);
+    // energy from GEANT
+    double energy = (*hit)->depositedEnergy();
+    // mean # of p.e. at each PMT
+    double pe_pmtA_mean(0.);
+    double pe_pmtB_mean(0.);
+
     if ( id.tile() ) {
-      if ( m_edge_effect ) {
-	StatusCode sc = m_util.tileEdgeEffect(*hit,energy);
-	if ( sc.isFailure() ) return sc;
-      } else {
-	energy = (*hit)->depositedEnergy();
-      }
+      // For tiles we check for edge effects
+      StatusCode sc = m_util.photoElectronsFromEnergy_tile((*hit),m_edge_effect,
+							   pe_pmtA_mean,pe_pmtB_mean);
+      if ( sc.isFailure() ) return sc;
     } else if ( id.ribbon() ) {
-      StatusCode sc = m_util.ribbonAttenuationEffect(*hit,energy);
+      // For ribbons don't bother with edge effects, but do care about attenuation effects
+      StatusCode sc = m_util.photoElectronsFromEnergy_ribbon((*hit),pe_pmtA_mean,pe_pmtB_mean);  
       if ( sc.isFailure() ) return sc;
     } else {
       log << MSG::ERROR << "Deposited energy in ACD from neither tile nor ribbon " << volId.name() << ' ' << energy << endreq;
       return StatusCode::FAILURE;
     }
 
+    // Add the deposited energy to the map
     if (energyIdMap.find(id) != energyIdMap.end()) {
       energyIdMap[id] += energy;
     } else {
       energyIdMap[id] = energy;
     }   
+    
+    // Add the p.e. expectation values to the map
+    if ( peMap.find(id) != peMap.end() ) {
+      peMap[id].first  += pe_pmtA_mean;
+      peMap[id].second += pe_pmtB_mean;
+    } else {
+      peMap[id] = std::make_pair(pe_pmtA_mean,pe_pmtB_mean);
+    }
 
   } // finished loop over MC hits
 
@@ -221,30 +235,33 @@ StatusCode AcdDigiAlg::fillEnergyMap( const Event::McPositionHitCol& mcHits,
 }
 
 
-StatusCode AcdDigiAlg::convertEnergyToMips( const std::map<idents::AcdId, double>& energyIdMap,
+StatusCode AcdDigiAlg::convertPeToMips( const std::map<idents::AcdId, std::pair<double, double> >& peMap,
 					    std::map<idents::AcdId, std::pair<double, double> >& mipsMap) {
 
   MsgStream log( msgSvc(), name() );
 
-  for ( std::map<idents::AcdId, double>::const_iterator itr = energyIdMap.begin(); itr != energyIdMap.end(); itr++ ) {
-    double pe_pmtA_mean(0.);
-    double pe_pmtB_mean(0.);
-    double energy = itr->second;
-    StatusCode sc = m_util.photoElectronsFromEnergy(itr->first,energy,pe_pmtA_mean,pe_pmtB_mean);
-    if ( sc.isFailure() ) return sc;
-    
+  for ( std::map<idents::AcdId, std::pair<double, double> >::const_iterator itr = peMap.begin(); 
+	itr != peMap.end(); itr++ ) {
+
+    // get the expectation values
+    double pe_pmtA_mean = itr->second.first;
+    double pe_pmtB_mean = itr->second.second;
+
+    // Throw the Poisson stats on the expected # of PE.
     double pe_pmtA = AcdDigiUtil::simulateDynodeChain(pe_pmtA_mean);
-    double pe_pmtB = AcdDigiUtil::simulateDynodeChain(pe_pmtB_mean);
+    double pe_pmtB = AcdDigiUtil::simulateDynodeChain(pe_pmtB_mean);    
 
     double mipA(0.); 
     double mipB(0.);
-    sc  = m_util.mipEquivalentLightYeild(itr->first,pe_pmtA,pe_pmtB,mipA,mipB);
+    // Convert from "measured" PE back to mips
+
+    StatusCode sc  = m_util.mipEquivalentLightYeild(itr->first,pe_pmtA,pe_pmtB,mipA,mipB);
     if ( sc.isFailure() ) return sc;
 
     mipsMap[itr->first] = std::make_pair(mipA,mipB);
 
     log << MSG::DEBUG << "PMT: " << itr->first.id() 
-	<< "  E: " << energy
+	<< "  E: " << m_energyDepMap[itr->first]
 	<< "  pe_mean: " << pe_pmtA_mean << ',' << pe_pmtB_mean
 	<< "  pe: " << pe_pmtA << ',' << pe_pmtB
 	<< "  mips: " << mipA << ',' << mipB << endreq;  
@@ -325,6 +342,7 @@ StatusCode AcdDigiAlg::finalize() {
 void AcdDigiAlg::clear() {
 
     m_energyDepMap.clear();
+    m_peMap.clear();
     m_mipsMap.clear();
 
 }

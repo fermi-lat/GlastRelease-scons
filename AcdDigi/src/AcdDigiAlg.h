@@ -34,11 +34,12 @@ public:
 
 protected:
 
-  StatusCode fillEnergyMap( const Event::McPositionHitCol& mcHits,
-			    std::map<idents::AcdId, double>& energyIdMap);
-
-  StatusCode convertEnergyToMips( const std::map<idents::AcdId, double>& energyIdMap,
-				  std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
+  StatusCode fillEnergyAndPeMaps( const Event::McPositionHitCol& mcHits,
+				 std::map<idents::AcdId, double>& energyIdMap,
+				 std::map<idents::AcdId, std::pair<double, double> >& peMap);
+  
+  StatusCode convertPeToMips( const std::map<idents::AcdId, std::pair<double, double> >& peMap,
+			      std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
   
   StatusCode makeDigis(const std::map<idents::AcdId, std::pair<double,double> >& mipsMap,
 		       Event::AcdDigiCol& digiCol);
@@ -75,7 +76,8 @@ private:
   /// A list of all the tiles and ribbons
   AcdTileList m_tiles;
     
-  std::map<idents::AcdId, double> m_energyDepMap;
+  std::map<idents::AcdId, double>                     m_energyDepMap;
+  std::map<idents::AcdId, std::pair<double, double> > m_peMap;
   std::map<idents::AcdId, std::pair<double, double> > m_mipsMap;
 
 };
