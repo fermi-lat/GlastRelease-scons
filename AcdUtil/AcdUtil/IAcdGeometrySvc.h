@@ -48,7 +48,7 @@ class AcdGeomMap;
  * @author Heather Kelly 
  */
 
-static const InterfaceID IID_IAcdGeometrySvc("IAcdGeometrySvc", 1, 4); 
+static const InterfaceID IID_IAcdGeometrySvc("IAcdGeometrySvc", 1, 5); 
 
 class IAcdGeometrySvc : public virtual IInterface
 {
@@ -82,7 +82,6 @@ public:
 
     /// Get a particular corner Ray
     virtual const Ray getCornerGapRay(unsigned int i) const = 0;
-
 
     /// Given an AcdId, provide three vectors of Rays.  Each vector pertains to one set of ribbon segments
     virtual bool fillRibbonData(const idents::AcdId& id,

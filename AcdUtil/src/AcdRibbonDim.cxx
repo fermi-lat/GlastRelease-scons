@@ -121,3 +121,86 @@ double AcdRibbonDim::calcRibbonLength() {
    }
    return len;  
 }
+
+
+bool AcdRibbonDim::getRibbonLengthAndBin(const idents::VolumeIdentifier &volId, const HepPoint3D& point,
+					 double& /* ribbonLength */, int& ribbonBin) const {
+  
+  // sanity check
+  idents::AcdId checkId(volId);
+  if ( m_acdId != checkId ) return false;
+
+  int orient = m_acdId.ribbonOrientation();
+  int face = volId[1];  
+  int segment = volId[5];
+  int code = (1000*orient) + (100* face) + segment;
+
+  switch ( code ) {
+  case 5001: // top
+    ribbonBin = 3;
+    break;
+  case 5101: // -x side, top
+  case 5106: // -x side, upper short
+    ribbonBin = 1;
+    break;
+  case 5102: // -x side, middle
+  case 5107: // -x side, lower short
+  case 5103: // -x side, bottom
+    ribbonBin = 0;
+    break;
+  case 5301: // +x side, top
+  case 5306: // +x side, upper short
+    ribbonBin = 5;
+    break;
+  case 5302: // +x side, middle
+  case 5303: // +x side, bottom
+  case 5307: // +x side, lower short
+    ribbonBin = 6;
+    break;
+
+  case 6001: // top -y side
+  case 6008: // top -y side short
+    ribbonBin = 2;
+  case 6002: // top -y middle
+    ribbonBin = point.y() < 0 ? 2 : 3;
+    break;
+  case 6009: // top -y middle short
+  case 6003: // top center
+  case 6010: // top +y middle short
+    ribbonBin = 3;
+    break;
+  case 6004: // top +y middle
+    ribbonBin = point.y() < 0 ? 3 : 4;
+    break;
+  case 6011: // top +y side short
+  case 6005: // top +y side
+    ribbonBin = 4;
+    break;
+    break;
+  case 6109: // -y side, bend short
+  case 6105: // -y side, upper short
+  case 6101: // -y side, top
+    ribbonBin = 1;
+    break;
+  case 6106: // -y side, middle short
+  case 6102: // -y side, middle
+  case 6107: // -y side, lower short
+  case 6103: // -y side, bottom
+    ribbonBin = 0;
+    break;
+  case 6309: // +y side, bend short
+  case 6305: // +y side, upper short    
+  case 6301: // +y side, top
+    ribbonBin = 5;
+    break;
+  case 6306: // +y side, middle short
+  case 6302: // +y side, middle
+  case 6307: // +y side, lower short
+  case 6303: // +y side, bottom
+    ribbonBin = 6;
+    break;
+  default:
+    return false;
+  }
+  return true;  
+}

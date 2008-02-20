@@ -64,7 +64,7 @@ public:
   inline const std::vector<Ray>& topRays() const { return m_topRays; }      
   inline const std::vector<Ray>& plusSideRays() const { return m_plusSideRays; }        
 
-  
+
   bool setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) const;
 
   /**
@@ -83,6 +83,19 @@ public:
    * @return the transformation
    */
   const HepTransform3D& transform(int iVol) const;
+
+
+  /**
+   * @brief Get the length along the ribbon given a volId and a local point
+   *
+   * @param volId which volume inside the ribbon
+   * @param point the point in the volume frame
+   * @param ribbonLength length along the ribbon (measured from the center)   
+   * @param ribbonBin which bin to use for attenuation
+   * @return true for success, false otherwise
+   */
+  bool getRibbonLengthAndBin(const idents::VolumeIdentifier &volId, const HepPoint3D& point,
+			     double& ribbonLength, int& ribbonBin) const;
 
 protected:
 
