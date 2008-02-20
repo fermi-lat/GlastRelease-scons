@@ -14,6 +14,7 @@ AcdSimCalibSvc.FlavorRange = "ideal";
 AcdSimCalibSvc.FlavorHighRange = "ideal";
 AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
 AcdSimCalibSvc.FlavorCno = "ideal";
+AcdSimCalibSvc.FlavorRibbon = "ideal";
 
 // If this isn't already included
 CalibDataSvc.CalibFlavorList += "ideal";
