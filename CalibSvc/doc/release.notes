@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r31   19-Feb-2008  eac  Added AcdRibbon calibration
    v0r30p2 10-Dec-2007  jrb  Disconnect from MySQL metadata dbs after use; 
                              reconnect as needed                         
    v0r30p1  2-Nov-2007  jrb  Fix per-calibration memory leaks in CAL converters
