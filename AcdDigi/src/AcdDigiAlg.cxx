@@ -201,13 +201,19 @@ StatusCode AcdDigiAlg::fillEnergyAndPeMaps( const Event::McPositionHitCol& mcHit
 
     if ( id.tile() ) {
       // For tiles we check for edge effects
-      StatusCode sc = m_util.photoElectronsFromEnergy_tile((*hit),m_edge_effect,
+      StatusCode sc = m_util.photoElectronsFromEnergy_tile((*hit),m_edge_effect,log,
 							   pe_pmtA_mean,pe_pmtB_mean);
-      if ( sc.isFailure() ) return sc;
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Couldn't get p.e. for tile " << volId.name() << ' ' << energy << endreq;
+	return sc;
+      }
     } else if ( id.ribbon() ) {
       // For ribbons don't bother with edge effects, but do care about attenuation effects
-      StatusCode sc = m_util.photoElectronsFromEnergy_ribbon((*hit),pe_pmtA_mean,pe_pmtB_mean);  
-      if ( sc.isFailure() ) return sc;
+      StatusCode sc = m_util.photoElectronsFromEnergy_ribbon((*hit),log,pe_pmtA_mean,pe_pmtB_mean);  
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Couldn't get p.e. for ribbon " << volId.name() << ' ' << energy << endreq;
+	return sc;
+      }
     } else {
       log << MSG::ERROR << "Deposited energy in ACD from neither tile nor ribbon " << volId.name() << ' ' << energy << endreq;
       return StatusCode::FAILURE;
@@ -255,7 +261,7 @@ StatusCode AcdDigiAlg::convertPeToMips( const std::map<idents::AcdId, std::pair<
     double mipB(0.);
     // Convert from "measured" PE back to mips
 
-    StatusCode sc  = m_util.mipEquivalentLightYeild(itr->first,pe_pmtA,pe_pmtB,mipA,mipB);
+    StatusCode sc  = m_util.mipEquivalentLightYeild(itr->first,pe_pmtA,pe_pmtB,log,mipA,mipB);
     if ( sc.isFailure() ) return sc;
 
     mipsMap[itr->first] = std::make_pair(mipA,mipB);
@@ -304,15 +310,15 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
     bool highArr[2] = { false, false };
     bool makeDigi(false);
 
-    StatusCode sc = m_util.phaCounts(acdId,mipsPmt,m_apply_noise,rangeArr,phaArr);
+    StatusCode sc = m_util.phaCounts(acdId,mipsPmt,m_apply_noise,log,rangeArr,phaArr);
     if ( sc.isFailure() ) return sc;
     
     if ( m_apply_coherent_noise ) {
-      sc = m_util.applyCoherentNoiseToPha(acdId,5000,phaArr);
+      sc = m_util.applyCoherentNoiseToPha(acdId,5000,log,phaArr);
       if ( sc.isFailure() ) return sc;	
     }
 
-    sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,makeDigi,phaThreshArr,vetoArr,highArr);
+    sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,log,makeDigi,phaThreshArr,vetoArr,highArr);
     if ( sc.isFailure() ) return sc;
     
     if ( makeDigi ) {

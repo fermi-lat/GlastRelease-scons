@@ -14,6 +14,7 @@
 
 
 class IAcdGeometrySvc;
+class MsgStream;
 
 // Forward Declartions
 namespace AcdUtil {
@@ -183,6 +184,7 @@ public:
    **/
   static bool getRibbonLengthAndBin(const Event::McPositionHit* hit,
 				    IAcdGeometrySvc& geomSvc,
+				    MsgStream& log,
 				    double& ribbonLength, int& ribbonBin);
 			  
 
@@ -202,36 +204,34 @@ public:
 
   /// calulates the number of pe seen in each tube given the 
   /// deposited energy
-  StatusCode photoElectronsFromEnergy_tile(const Event::McPositionHit *hit, bool edgeEffect,
+  StatusCode photoElectronsFromEnergy_tile(const Event::McPositionHit *hit, bool edgeEffect, MsgStream& log,
 					   double& pe_pmtA, double& pe_pmtB);
   
   /// calulates the number of pe seen in each tube given the 
   /// deposited energy
-  StatusCode photoElectronsFromEnergy_ribbon(const Event::McPositionHit *hit,
+  StatusCode photoElectronsFromEnergy_ribbon(const Event::McPositionHit *hit, MsgStream& log,
 					     double& pe_pmtA, double& pe_pmtB);   
   
   /// calulates the light yield expressed in mip equivalent from the number of observed PE 
-  StatusCode mipEquivalentLightYeild(const idents::AcdId& id, double pe_pmtA, double pe_pmtB,
+  StatusCode mipEquivalentLightYeild(const idents::AcdId& id, double pe_pmtA, double pe_pmtB, MsgStream& log,
 				     double& mipEquivA, double& mipEquivB);
 
   /// get the PHA counts from the mip equivalent light yield
-  StatusCode phaCounts(const idents::AcdId& id, const double mipEquiv[2], bool applyNoise,
+  StatusCode phaCounts(const idents::AcdId& id, const double mipEquiv[2], bool applyNoise, MsgStream& log,
 		       Event::AcdDigi::Range range[2], unsigned short pha[2]);
 
   /// get the PHA counts from the mip equivalent light yield
-  StatusCode applyCoherentNoiseToPha(const idents::AcdId& id, unsigned int deltaGemEventTime, unsigned short pha[2]);    
+  StatusCode applyCoherentNoiseToPha(const idents::AcdId& id, unsigned int deltaGemEventTime,  MsgStream& log,
+				     unsigned short pha[2]);    
 
   /// Adjusts the deposited energy recorded in an ACD volume 
   /// based on the location of the hit
-  StatusCode tileEdgeEffect(const Event::McPositionHit *hit, double& energy);
-
-  /// Adjusts the deposited energy recorded in an ACD volume 
-  /// based on the location of the hit
-  StatusCode ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energyA, double& energyB);
+  StatusCode tileEdgeEffect(const Event::McPositionHit *hit,  MsgStream& log, double& energy);
 
   /// Checks all the various thresholds
   StatusCode checkThresholds(const idents::AcdId& id, const double mipEquiv[2],
 			     const unsigned short phaArr[2], const Event::AcdDigi::Range rangeArr[2], bool applyNoise, 
+			     MsgStream& log,
 			     bool& makeDigi, 
 			     bool phaThreshArr[2], bool vetoArr[2], bool highArr[2]);  
   

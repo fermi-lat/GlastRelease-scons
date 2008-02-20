@@ -8,6 +8,8 @@
 
 #include "AcdDigiUtil.h"
 
+#include "GaudiKernel/MsgStream.h"
+
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandGauss.h"
 
@@ -46,6 +48,7 @@ AcdSimCalibData::AcdSimCalibData()
    m_veto(0),
    m_cno(0),
    m_coherentNoise(0),
+   m_ribbon(0),
    m_pe_per_mip(0.),
    m_mip_per_MeV(0.),
    m_threshold_pha(0),    
@@ -149,13 +152,17 @@ bool AcdDigiUtil::compareVolIds(const idents::VolumeIdentifier& tileId,
 
 bool AcdDigiUtil::getRibbonLengthAndBin(const Event::McPositionHit* hit,
 					IAcdGeometrySvc& geomSvc,
+					MsgStream& log,
 					double& ribbonLength, int& ribbonBin) {
 
   idents::VolumeIdentifier volId = hit->volumeID();
   idents::AcdId ribId(volId);  
 
   const AcdRibbonDim* ribbonDim = geomSvc.geomMap().getRibbon(ribId,geomSvc);
-  if ( ribbonDim == 0 ) return -10000.;
+  if ( ribbonDim == 0 ) {
+    log << MSG::ERROR << "no ribbon dim " << volId.name() << std::endl;
+    return false;
+  }
 
   // In local coordinates the box should be centered at (0,0,0)
   const HepPoint3D geant_x0 = hit->entryPoint();
@@ -235,7 +242,8 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy(const idents::AcdId& id, double
   return sc;
 }
 
-StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit *hit, bool edgeEffect,
+StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit *hit, bool edgeEffect, 
+						      MsgStream& log,
 						      double& pe_pmtA, double& pe_pmtB) {
 
   StatusCode sc = StatusCode::SUCCESS;
@@ -243,8 +251,11 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit
   double energy = hit->depositedEnergy();
   // check the edge effect
   if ( edgeEffect ) {
-    sc = tileEdgeEffect(hit,energy);
-    if ( sc.isFailure() ) return sc;
+    sc = tileEdgeEffect(hit,log,energy);
+    if ( sc.isFailure() ) {
+      log << MSG::ERROR << "Couldn't apply edge effect " << hit->volumeID().name() << ' ' << energy << endreq;
+      return sc;
+    }
   }
 
   idents::VolumeIdentifier volId = hit->volumeID();
@@ -253,7 +264,10 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit
   AcdSimCalibData* pmtACalib(0);
   AcdSimCalibData* pmtBCalib(0);
   sc = getCalibData(tileId,pmtACalib,pmtBCalib);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "Couldn't get calib data " << tileId.id() << ' ' << energy << endreq;
+    return sc;
+  }
 
   // check the map
   double pePerMeV_A = pmtACalib->pe_per_MeV();
@@ -261,15 +275,22 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit
 
   // OK, have the numbers, now just combine them
   sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT A " << tileId.id() << ' ' << energy << endreq;
+    return sc;
+  }
 
   sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_B,pe_pmtB);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT B " << tileId.id() << ' ' << energy << endreq;
+    return sc;
+  }
 
   return sc;
 }
 
 StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionHit *hit,
+							MsgStream& log,
 							double& pe_pmtA, double& pe_pmtB) {
   
   StatusCode sc = StatusCode::SUCCESS;
@@ -284,11 +305,17 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionH
   AcdSimCalibData* pmtACalib(0);
   AcdSimCalibData* pmtBCalib(0);
   sc = getCalibData(ribId,pmtACalib,pmtBCalib);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "Couldn't get calib data " << ribId.id() << ' ' << energy << endreq;
+    return sc;
+  }
 
 
-  bool ok = getRibbonLengthAndBin(hit,*m_geomSvc,ribbonLength,ribbonBin);
-  if ( !ok ) return StatusCode::FAILURE;
+  bool ok = getRibbonLengthAndBin(hit,*m_geomSvc,log,ribbonLength,ribbonBin);
+  if ( !ok ) {
+    log << MSG::ERROR << "getRibbonLengthAndBin failed " << ribId.id() << ' ' << energy << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // check the map
   double pePerMeV_A = pmtACalib->pe_per_MeV();
@@ -297,6 +324,7 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionH
   // fold in ribbon attenuation factors
   if ( pmtACalib->ribbon_calib() == 0 ||
        pmtBCalib->ribbon_calib() == 0 ) {
+    log << MSG::ERROR << "Missing a ribbon calibration " << ribId.id() << ' ' << energy << endreq;
     return StatusCode::FAILURE;
   }
   double factorA = pmtACalib->ribbon_calib()->operator[](ribbonBin);
@@ -306,10 +334,16 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionH
 
   // OK, have the numbers, now just combine them
   sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT A " << ribId.id() << ' ' << energy << endreq;
+    return sc;
+  }
 
   sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_B,pe_pmtB);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT B " << ribId.id() << ' ' << energy << endreq;
+    return sc;
+  }
 
   return sc;
 }
@@ -317,7 +351,8 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionH
 
 /// calulates the light yield expressed in mip equivalent from the number of observed PE 
 StatusCode AcdDigiUtil::mipEquivalentLightYeild(const idents::AcdId& id, double pe_pmtA, double pe_pmtB,
-					       double& mipEquivA, double& mipEquivB) {
+						MsgStream& log,
+						double& mipEquivA, double& mipEquivB) {
     
   double pePerMip_A(0.);
   double pePerMip_B(0.);
@@ -326,29 +361,42 @@ StatusCode AcdDigiUtil::mipEquivalentLightYeild(const idents::AcdId& id, double 
   AcdSimCalibData* pmtBCalib(0);
 
   StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "Couldn't get calib data " << id.id() << endreq;
+    return sc;
+  }
   pePerMip_A = pmtACalib->pe_per_mip();
   pePerMip_B = pmtBCalib->pe_per_mip();
   
   sc = AcdCalib::lightYeildMipEquivalent(pe_pmtA,pePerMip_A,mipEquivA);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "lightYeildMipEquivalent failed for PMT A " << id.id() << endreq;
+    return sc;
+  }
 
   sc = AcdCalib::lightYeildMipEquivalent(pe_pmtB,pePerMip_B,mipEquivB);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "lightYeildMipEquivalent failed for PMT B " << id.id() << endreq;
+    return sc;
+  }
 
   return sc;
 
 }
 
 /// get the PHA counts from the mip equivalent light yield
-StatusCode AcdDigiUtil::phaCounts(const idents::AcdId& id, const double mipEquiv[2], bool applyNoise,	       
+StatusCode AcdDigiUtil::phaCounts(const idents::AcdId& id, const double mipEquiv[2], bool applyNoise, 
+				  MsgStream& log,	       
 				 Event::AcdDigi::Range range[2], unsigned short pha[2]) {
   
   AcdSimCalibData* pmtACalib(0);
   AcdSimCalibData* pmtBCalib(0);
 
   StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "Couldn't get calib data " << id.id() << endreq;
+    return sc;
+  }
 
   for ( unsigned i(0); i < 2; i++ ) {
     const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
@@ -364,13 +412,19 @@ StatusCode AcdDigiUtil::phaCounts(const idents::AcdId& id, const double mipEquiv
 	short noise = (short)shootGaussian( calibData->ped_calib()->getWidth() );
 	pha[i] = ( -1 * noise < pha[i] ) ? pha[i] + noise : 0;
       }
-      if ( sc.isFailure() ) return sc;
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "Low range PHA conversion failed " << id.id() << endreq;
+	return sc;
+      }
     } else {
       double slope = calibData->highRange_calib()->getSlope();
       double pedestal = calibData->highRange_calib()->getPedestal();
       double saturation = calibData->highRange_calib()->getSaturation();
       sc = AcdCalib::PHA_highRange(mipEquiv[i],pedestal,slope,saturation,pha[i]);
-      if ( sc.isFailure() ) return sc;
+      if ( sc.isFailure() ) {
+	log << MSG::ERROR << "High range PHA conversion failed " << id.id() << endreq;
+	return sc;
+      }
     }
   }
   return StatusCode::SUCCESS;
@@ -378,7 +432,8 @@ StatusCode AcdDigiUtil::phaCounts(const idents::AcdId& id, const double mipEquiv
 
 
 /// get the PHA counts from the mip equivalent light yield
-StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigned int deltaGemEventTime, unsigned short pha[2]) {
+StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigned int deltaGemEventTime, MsgStream& log,
+						unsigned short pha[2]) {
 
   if ( deltaGemEventTime > 2500 ) return StatusCode::SUCCESS;
 
@@ -386,7 +441,10 @@ StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigne
   AcdSimCalibData* pmtBCalib(0);
 
   StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "Couldn't get calib data " << id.id() << endreq;
+    return sc;
+  }
 
   for ( unsigned i(0); i < 2; i++ ) {
     const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
@@ -404,7 +462,7 @@ StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigne
 
 /// Adjusts the deposited energy recorded in an ACD volume 
 /// based on the location of the hit
-StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& energy) {
+StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, MsgStream& log, double& energy) {
       
 
   idents::VolumeIdentifier volId = hit->volumeID();
@@ -414,7 +472,11 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& 
   const HepPoint3D geant_x0 = hit->entryPoint();
 
   const AcdTileDim* tileDim = m_geomSvc->geomMap().getTile(tileId,*m_geomSvc);
-  if ( tileDim == 0 ) return StatusCode::FAILURE;
+  if ( tileDim == 0 ) { 
+    log << MSG::ERROR << "Couldn't get tile geometry " << volId.name() << endreq;
+    return StatusCode::FAILURE;
+  }
+  
   AcdFrameUtil::AcdReferenceFrame refFrame = m_geomSvc->getReferenceFrame(volId);
   const HepGeom::Transform3D& rotToLoca = AcdFrameUtil::getRotationToLocal(refFrame);
   const HepPoint3D local_x0 = rotToLoca*geant_x0;
@@ -436,18 +498,10 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, double& 
 }
 
 
-/// Adjusts the deposited energy recorded in an ACD volume 
-/// based on the location of the hit
-StatusCode AcdDigiUtil::ribbonAttenuationEffect(const Event::McPositionHit *hit, double& energyA, double& energyB) {  
-  energyA = hit->depositedEnergy();
-  energyB = hit->depositedEnergy();  
-  return StatusCode::SUCCESS;
-}
-
-
 /// Checks all the various thresholds
 StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mipEquiv[2],
 					const unsigned short phaArr[2], const Event::AcdDigi::Range rangeArr[2], bool applyNoise, 
+					MsgStream& log,
 					bool& makeDigi, 
 					bool phaThreshArr[2], bool vetoArr[2],  bool highArr[2]) {
   
@@ -455,7 +509,10 @@ StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mi
   AcdSimCalibData* pmtBCalib(0);
 
   StatusCode sc = getCalibData(id,pmtACalib,pmtBCalib);
-  if ( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR << "Couldn't get calib data " << id.id() << endreq;
+    return sc;
+  }
 
   makeDigi = false;  
   for ( unsigned i(0); i < 2; i++ ) {
@@ -518,7 +575,9 @@ StatusCode AcdDigiUtil::fetchCalibData(const idents::AcdId& id, Event::AcdDigi::
   CalibData::AcdVeto* veto(0);
   CalibData::AcdCno* cno(0);
   CalibData::AcdCoherentNoise* coherentNoise(0);  
-      
+  CalibData::AcdRibbon* ribbon(0);  
+  
+
   // Check the XML file
   std::string idStr;
   facilities::Util::itoa(id.id(), idStr);
@@ -591,6 +650,12 @@ StatusCode AcdDigiUtil::fetchCalibData(const idents::AcdId& id, Event::AcdDigi::
   sc = m_calibSvc->getCoherentNoise(id,pmt,coherentNoise);
   if ( sc.isFailure() ) return sc;
   pmtCalib->setCoherentNoise(*coherentNoise);    
+
+  if ( id.ribbon() ) {
+    sc = m_calibSvc->getRibbon(id,pmt,ribbon);
+    if ( sc.isFailure() ) return sc;
+    pmtCalib->setRibbon(*ribbon);    
+  }
 
   return sc;
 }
