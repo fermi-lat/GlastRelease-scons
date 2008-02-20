@@ -19,11 +19,12 @@ namespace AcdCalibData {
 	       CNO=4,	          // CNO thresholds, stored in DB
 	       HIGH_RANGE=5,      // High Range calibration, stored in DB
 	       COHERENT_NOISE=6,  // Coherent Noise calibration, stored in DB
-	       TIME_PROF=7,       // Time profile plots, used in EMI testing
-	       UNPAIRED=8,        // Looking for channels w/ only 1 PMT
-	       HITMAP=9,          // Checking hitmap timing and latching
-	       MERITCALIB=10,     // Filling an ntuple with variables from merit file
-	       NDESC=11};  
+	       RIBBON=7,          // Ribbon light attenuation,
+	       TIME_PROF=8,       // Time profile plots, used in EMI testing
+	       UNPAIRED=9,        // Looking for channels w/ only 1 PMT
+	       HITMAP=10,          // Checking hitmap timing and latching
+	       MERITCALIB=11,     // Filling an ntuple with variables from merit file
+	       NDESC=12};  
  
 };
 

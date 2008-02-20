@@ -73,6 +73,7 @@ const CLID CLID_Calib_ACD_ElecGain   = 6305;
 const CLID CLID_Calib_ACD_Range          = 6306;
 const CLID CLID_Calib_ACD_HighRange      = 6307;
 const CLID CLID_Calib_ACD_CoherentNoise  = 6308;
+const CLID CLID_Calib_ACD_Ribbon         = 6309;
 
 const CLID CLID_Calib_CalibTest1       = 6500;
 
@@ -113,6 +114,7 @@ const CLID CLID_Calib_ANC_QdcPed       = 6702;
       _EXTERN_ std::string   ACD_Range;
       _EXTERN_ std::string   ACD_HighRange;
       _EXTERN_ std::string   ACD_CoherentNoise;
+      _EXTERN_ std::string   ACD_Ribbon;
 
       // TKR calib types
       _EXTERN_ std::string   TKR_BadChan;

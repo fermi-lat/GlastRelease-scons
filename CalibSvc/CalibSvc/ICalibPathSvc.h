@@ -58,6 +58,7 @@ public:
     Calib_ACD_Range,
     Calib_ACD_HighRange,
     Calib_ACD_CoherentNoise,
+    Calib_ACD_Ribbon,
                
     Calib_CalibTest1,
     

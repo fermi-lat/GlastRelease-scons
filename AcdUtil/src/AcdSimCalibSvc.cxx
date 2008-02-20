@@ -39,6 +39,7 @@ AcdSimCalibSvc::AcdSimCalibSvc(const std::string& name, ISvcLocator* Svc)
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdRangeCalib >,"FlavorRange");
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdHighRangeCalib >,"FlavorHighRange");
   addCalibration( new AcdCalibMgrTmpl< CalibData::AcdCoherentNoiseCalib >,"FlavorCoherentNoise");
+  addCalibration( new AcdCalibMgrTmpl< CalibData::AcdRibbonCalib >,"FlavorRibbon");
 }
 
 StatusCode  AcdSimCalibSvc::queryInterface (const InterfaceID& riid, void **ppvIF) {

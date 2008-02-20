@@ -41,6 +41,7 @@
  * - FlavorRange         [""]             To override range crossover flavor.
  * - FlavorHighRange     [""]             To override high range calibration flavor.
  * - FlavorCoherentNoise [""]             To override coherent noise calibration flavor.
+ * - FlavorRibbon        [""]             To override ribbon calibration flavor.
  *
  * \author  Eric Charles (from Zachary Fewtrell's CalCalib stuff)
  *

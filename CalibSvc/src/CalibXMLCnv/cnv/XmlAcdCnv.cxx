@@ -9,6 +9,7 @@
 #include "CalibData/Acd/AcdRange.h"
 #include "CalibData/Acd/AcdHighRange.h"
 #include "CalibData/Acd/AcdCoherentNoise.h"
+#include "CalibData/Acd/AcdRibbon.h"
 
 typedef XmlAcdCnv<CalibData::AcdPed> XmlAcdPedCnv;
 typedef XmlAcdCnv<CalibData::AcdGain> XmlAcdGainCnv;
@@ -17,6 +18,7 @@ typedef XmlAcdCnv<CalibData::AcdCno> XmlAcdCnoCnv;
 typedef XmlAcdCnv<CalibData::AcdRange> XmlAcdRangeCnv;
 typedef XmlAcdCnv<CalibData::AcdHighRange> XmlAcdHighRangeCnv;
 typedef XmlAcdCnv<CalibData::AcdCoherentNoise> XmlAcdCoherentNoiseCnv;
+typedef XmlAcdCnv<CalibData::AcdRibbon> XmlAcdRibbonCnv;
 
 static CnvFactory< XmlAcdPedCnv > s_PedFactory;
 const  ICnvFactory& XmlAcdPedCnvFactory = s_PedFactory;
@@ -36,6 +38,9 @@ const  ICnvFactory& XmlAcdRangeCnvFactory = s_RangeFactory;
 static CnvFactory< XmlAcdHighRangeCnv > s_HighRangeFactory;
 const  ICnvFactory& XmlAcdHighRangeCnvFactory = s_HighRangeFactory;
 
-static CnvFactory< XmlAcdCoherentNoiseCnv> s_CoherentNoiseFactory;
+static CnvFactory< XmlAcdCoherentNoiseCnv > s_CoherentNoiseFactory;
 const  ICnvFactory& XmlAcdCoherentNoiseCnvFactory = s_CoherentNoiseFactory;
+
+static CnvFactory< XmlAcdRibbonCnv > s_RibbonFactory;
+const  ICnvFactory& XmlRibbonCnvFactory = s_RibbonFactory;
 

@@ -8,6 +8,7 @@
 #include "CalibData/Acd/AcdRange.h"
 #include "CalibData/Acd/AcdHighRange.h"
 #include "CalibData/Acd/AcdCoherentNoise.h"
+#include "CalibData/Acd/AcdRibbon.h"
 
 namespace CalibData {
 
@@ -36,6 +37,8 @@ namespace CalibData {
     //    const AcdCoherentNoiseFitDesc& coherentNois = 
     //            AcdCoherentNoiseFitDesc::instance();    
     AcdCoherentNoiseFitDesc::instance();    
+    // ribbons
+    AcdRibbonFitDesc::instance();    
     return 0;
   }
     
