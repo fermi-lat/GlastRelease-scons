@@ -24,9 +24,12 @@ use SwigPolicy v*
 ## set MOOT_XML  $(MOOTCOREROOT)/xml
 
 ## Another environment variable that should be set somewhere else someday
+## Doubly test (mood_test, served by glastDB)
 ## set MOOT_ARCHIVE /afs/slac/g/glast/moot/srcArchive-test/
 ## To  use 'real' test archive - the one resident on glastlnx06,
 ## use alternate def. of MOOT_ARCHIVE below
+## set MOOT_ARCHIVE /afs/slac/g/glast/moot/archive-mood_test
+## For real production, use
 set MOOT_ARCHIVE /afs/slac/g/glast/moot/archive-mood
 
 private 
