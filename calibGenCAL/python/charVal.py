@@ -131,7 +131,7 @@ def charVal(data):
 
                     # fit FINE range data                    
                     
-                    z = numarray.nonzero(fineData)
+                    z = numarray.nonzero(fineData)[0]
                     y = numarray.take(fineData, z)
                     x = numarray.take(x0, z)
 
@@ -146,7 +146,7 @@ def charVal(data):
                         (fitParms, fitErrs, chisq) = ROOTFit.ROOTFit(ROOT.TF1("p1","pol1"),
                                                                      x,
                                                                      y,
-                                                                     (20.0, -200.0))
+                                                                     (-200.0, 20.0))
                         
                         dnorm = (chisq / len(x))
                         errData[0].append(dnorm)
@@ -164,7 +164,7 @@ def charVal(data):
 
                     # fit coarse range data
 
-                    z = numarray.nonzero(coarseData)
+                    z = numarray.nonzero(coarseData)[0]
                     y = numarray.take(coarseData, z)
                     x = numarray.take(x0, z)
                     
@@ -178,7 +178,7 @@ def charVal(data):
                         (fitParms, fitErrs, chisq) = ROOTFit.ROOTFit(ROOT.TF1("p1","pol1"),
                                                              x,
                                                              y,
-                                                             (40,-400))
+                                                             (-400.0, 40.0))
 
                         dnorm = (chisq / len(x))
                         errData[1].append(dnorm)
@@ -222,7 +222,7 @@ def uldVal(data):
                         # fit coarse range data
 
                         sat = coarseData[-1]
-                        z = numarray.nonzero(coarseData)
+                        z = numarray.nonzero(coarseData)[0]
                         y = numarray.take(coarseData, z)
                         x = numarray.take(x0, z)
                         s = numarray.less(y, sat)
@@ -239,7 +239,7 @@ def uldVal(data):
                             (fitParms, fitErrs, chisq) = ROOTFit.ROOTFit(ROOT.TF1("p1","pol1"),
                                                                          x,
                                                                          y,
-                                                                         (40, -400))
+                                                                         (-400.0, 40.0))
                             dnorm = (fit.chidq / len(x))
                             errData[1].append(dnorm)
                             log.debug("%d,%s%s,%d,%s,COARSE: %0.1f %0.1f %0.2f", tem, calConstant.CROW[row],

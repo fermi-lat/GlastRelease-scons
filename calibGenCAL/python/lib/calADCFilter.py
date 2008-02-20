@@ -96,7 +96,7 @@ class calADCFilter:
 
                         fillLAC = False
                         if self.__type == DAC_TYPE_LAC:
-                            z = numarray.nonzero(fineData)
+                            z = numarray.nonzero(fineData)[0]
                             if len(z) < 2:
                                 fillLAC = True                        
 

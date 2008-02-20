@@ -77,6 +77,9 @@ if __name__ == '__main__':
             print "Bad fitted parm %f, epxected %f"%(fit, intent)
             sys.exit(-1)
 
+    print "test f() is 3x^2 + 2"
+    print "intended parms:", intendedParms
+    print "fitted parms:", fitParms
     print "unit test successful"
     sys.exit(0)
 
