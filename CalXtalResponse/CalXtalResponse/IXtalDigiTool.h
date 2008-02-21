@@ -20,7 +20,6 @@
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
-#include "CalUtil/CalConfig.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
@@ -52,7 +51,7 @@ class IXtalDigiTool : virtual public IAlgTool {
 
   virtual StatusCode calculate(Event::CalDigi &calDigi,
                                CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
-                               bool zeroSuppress, CalUtil::CalFirstRng calFirstRng= -1
+                               bool zeroSuppress, string calFirstRng= "autoRng"
                                ) = 0;
 
 };

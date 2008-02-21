@@ -57,7 +57,7 @@ public:
 
   StatusCode calculate(Event::CalDigi &calDigi,
                        CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
-                       bool zeroSuppress, CalUtil::CalFirstRng calFirstRng
+                       bool zeroSuppress, string calFirstRng
                        );
 private:
   

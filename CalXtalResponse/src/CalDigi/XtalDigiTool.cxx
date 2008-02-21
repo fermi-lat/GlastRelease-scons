@@ -149,9 +149,10 @@ StatusCode XtalDigiTool::initialize() {
 
 StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
                                    CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
-                                   const bool zeroSuppress, CalUtil::CalFirstRng calFirstRng) {
+                                   const bool zeroSuppress, string calFirstRng) {
   StatusCode sc;
-
+  MsgStream msglog(msgSvc(), name());
+  
   const CalXtalId xtalId = calDigi.getPackedId();
   const XtalIdx xtalIdx(xtalId);
 
@@ -211,26 +212,60 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
   // Stage 4: Range Selection //
   //////////////////////////////
 
-  CalVec<FaceNum, RngNum> bestRng;
-
   ///////////////////////////////////////
   //-- STEP 5: Populate Return Vars --//
   ///////////////////////////////////////
+  
   // generate xtalDigReadouts.
 
-  if(calFirstRng== AUTO)  // default (best range) R/O mode
+  if(calFirstRng== "autoRng")  // default (best range) R/O mode
   {
+      CalVec<FaceNum, RngNum> bestRng;
+      
       sc= rangeSelect(xtalIdx, adcPed, bestRng);
       if(sc.isFailure()) return sc;
 
       sc= fillDigi(calDigi, adcPed, bestRng, failureStatus);
+      std::cout << "AUTO: " << bestRng[0] << " " << bestRng[1] << std::endl;
   }
-  else
-  {                       // forced range R/O mode
-      CalVec<FaceNum, RngNum> forcRng;
-      forcRng[0]= calFirstRng;
-      forcRng[1]= calFirstRng;
-      sc= fillDigi(calDigi, adcPed, forcRng, failureStatus);
+  else                         // forced range R/O mode
+  {
+      if(calFirstRng== "lex8" || calFirstRng== "lex1" || calFirstRng== "hex8" || calFirstRng== "hex1")
+      {
+          CalVec<FaceNum, RngNum> forcRng;
+          
+          if(calFirstRng== "lex8")
+          {
+              forcRng[0]= CalUtil::lex8;
+              forcRng[1]= CalUtil::lex8;
+          }
+          
+          if(calFirstRng== "lex1")
+          {
+              forcRng[0]= CalUtil::lex1;
+              forcRng[1]= CalUtil::lex1;
+          }
+          
+          if(calFirstRng== "hex8")
+          {
+              forcRng[0]= CalUtil::hex8;
+              forcRng[1]= CalUtil::hex8;
+          }
+          
+          if(calFirstRng== "hex1")
+          {
+              forcRng[0]= CalUtil::hex1;
+              forcRng[1]= CalUtil::hex1;
+          }
+          
+          sc= fillDigi(calDigi, adcPed, forcRng, failureStatus);
+          std::cout << "FORC: " << forcRng[0] << " " << forcRng[1] << std::endl;
+      }
+      else
+      {
+        msglog << MSG::ERROR << "invalid R/O range specified in jobOptions" << endreq;
+        return StatusCode::FAILURE;
+      }
   }
       
   if(sc.isFailure()) return sc;
