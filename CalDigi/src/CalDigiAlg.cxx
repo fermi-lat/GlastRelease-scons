@@ -54,7 +54,7 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   m_calSignalTool(0),
   m_detSvc(0),
   m_trgConfigSvc(0),
-  m_firstRng(AUTO)
+  m_firstRng("autoRng")
 {
 
   // Declare the properties that may be set in the job options file
@@ -63,12 +63,9 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   declareProperty("TrgConfigSvcName",    m_trgConfigSvcName = "TrgConfigSvc");
   declareProperty("DefaultZeroSuppress", m_defaultZeroSuppress = true);
   declareProperty("DefaultAllRange",     m_defaultAllRange = false);
-  declareProperty("FirstRangeReadout", m_firstRng= AUTO);  // -1 -> (AUTO) best range
-}                                                          //  0 ->  RNG_LEX8
-                                                           //  1 ->  RNG_LEX1
-                                                           //  2 ->  RNG_HEX8
-                                                           //  3 ->  RNG_HEX1
-                                                     
+  declareProperty("FirstRangeReadout",   m_firstRng= "autoRng"); 
+}
+
 /// initialize the algorithm. retrieve helper tools & services
 StatusCode CalDigiAlg::initialize() {
   StatusCode sc;
@@ -237,6 +234,7 @@ StatusCode CalDigiAlg::registerDigis() {
 
         //-- get signal map--//
         // look up xtal in hit map
+                
         sc = m_xtalDigiTool->calculate(*curDigi,
                                        lacBits,
                                        zeroSupp,
