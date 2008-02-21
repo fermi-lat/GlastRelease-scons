@@ -327,8 +327,24 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionH
     log << MSG::ERROR << "Missing a ribbon calibration " << ribId.id() << ' ' << energy << endreq;
     return StatusCode::FAILURE;
   }
-  double factorA = pmtACalib->ribbon_calib()->operator[](ribbonBin);
-  double factorB = pmtBCalib->ribbon_calib()->operator[](ribbonBin);
+
+  
+  double factorA(1.);
+  double factorB(1.);
+  switch ( ribbonBin ) {
+  case 0:
+  case 1:
+  case 2:
+    factorA = pmtACalib->ribbon_calib()->operator[](ribbonBin);
+    factorB = pmtBCalib->ribbon_calib()->operator[](ribbonBin);
+    break;
+  case 4:
+  case 5:
+  case 6:
+    factorA = pmtACalib->ribbon_calib()->operator[](ribbonBin-1);
+    factorB = pmtBCalib->ribbon_calib()->operator[](ribbonBin-1);
+    break;
+  }
   pePerMeV_A *= factorA;
   pePerMeV_B *= factorB;  
 
@@ -344,6 +360,11 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_ribbon(const Event::McPositionH
     log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT B " << ribId.id() << ' ' << energy << endreq;
     return sc;
   }
+
+  log << MSG::DEBUG << "Ribbon: " << ribId.id() << ' ' << volId.name() << ' ' << ribbonBin 
+      << "  E: " << energy 
+      << "  pe/MeV " << pePerMeV_A << ',' << pePerMeV_B
+      << "  pe: " << pe_pmtA << ',' << pe_pmtB << endreq;  
 
   return sc;
 }

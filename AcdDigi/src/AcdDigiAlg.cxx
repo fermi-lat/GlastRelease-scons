@@ -265,7 +265,9 @@ StatusCode AcdDigiAlg::convertPeToMips( const std::map<idents::AcdId, std::pair<
     if ( sc.isFailure() ) return sc;
 
     mipsMap[itr->first] = std::make_pair(mipA,mipB);
-
+    
+    //uncomment to make it easier to test ribbons
+    //if ( itr->first.tile() ) continue;
     log << MSG::DEBUG << "PMT: " << itr->first.id() 
 	<< "  E: " << m_energyDepMap[itr->first]
 	<< "  pe_mean: " << pe_pmtA_mean << ',' << pe_pmtB_mean
@@ -327,6 +329,8 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
 						 vetoArr, phaThreshArr, highArr);
       aDigi->setRanges(rangeArr);
       digiCol.push_back( aDigi );
+      //uncomment to make it easier to test ribbons
+      //if ( acdId.tile() ) continue;
       log << MSG::DEBUG << "PMT: " << acdId.id()
 	  << "  E: " << m_energyDepMap[acdId]
 	  << "  mips: " << mipsPmt[0] << ',' <<  mipsPmt[1]
