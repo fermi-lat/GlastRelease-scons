@@ -7,11 +7,11 @@ namespace CalUtil
 {
     typedef enum
     {
-        AUTO= -1,
-        RNG_LEX8,
-        RNG_LEX1,
-        RNG_HEX8,
-        RNG_HEX1
+       autoRng= -1,
+       lex8,
+       lex1,
+       hex8,
+       hex1
     }
     CalFirstRng;
 };
