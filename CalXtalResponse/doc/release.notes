@@ -1,3 +1,4 @@
+v0r19p2 02/21/08 makeev   - removed debug output to std::cout
 v0r19p1 02/21/08 makeev   - fixed a bug that was causing CalDigiAlg to crash, and changed CalDigiAlg.FirstRangeReadout to be a string property
 v0r19   02/19/08 makeev   - support forced first range readout mode in CalDigi
 v0r18p1 01/22/08 fewtrell - fix a few compiler warnings / errors on windows

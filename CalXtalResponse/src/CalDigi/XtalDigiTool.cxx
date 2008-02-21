@@ -226,7 +226,6 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
       if(sc.isFailure()) return sc;
 
       sc= fillDigi(calDigi, adcPed, bestRng, failureStatus);
-      std::cout << "AUTO: " << bestRng[0] << " " << bestRng[1] << std::endl;
   }
   else                         // forced range R/O mode
   {
@@ -259,7 +258,6 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
           }
           
           sc= fillDigi(calDigi, adcPed, forcRng, failureStatus);
-          std::cout << "FORC: " << forcRng[0] << " " << forcRng[1] << std::endl;
       }
       else
       {
