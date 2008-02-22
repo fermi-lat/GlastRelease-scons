@@ -1,5 +1,8 @@
 
 #include <rootUtil/CompositeEventList.h>
+#include <rootUtil/ComponentsInfoGlast.h>
+#include <rootUtil/RuInvertedIndex.h>
+#include <rootUtil/RuChain.h>
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
 
@@ -9,6 +12,7 @@
 #  include <TMap.h>
 #  include <TObjArray.h>
 #  include <TObjString.h>
+#  include <TChainIndex.h>
 
 #  include <stdlib.h>
 #  include <fstream>
@@ -26,70 +30,27 @@
 std::string theApp("celConvert.exe") ;
 
   
-void print_cel_header()
- { std::cout<<"\n#\n#! CEL TXT 0.1\n#\n"<<std::flush ; }
+//====================================================================
+// 
+//====================================================================
 
-//void print_files
-// ( const char* fileName,
-//   unsigned long int beginEvent,
-//   unsigned long int nEvent )
-// {
-//  std::cout<<"\n#! SECTION Files\n"<<std::flush ;
-//  
-//  TFile file(fileName,"READ") ;
-//  TTree * tree = (TTree *)file.Get("FileAndTreeSets") ;
-//  
-//  // discover components and prepare arrays
-//  TObjArray setFileNames ;
-//  TObjArray * componentFileNames = 0 ;
-//  TMap componentNames ;
-//  TObjString * componentName  = 0 ;
-//  TIter * fileIter = 0 ;
-//  TObjString * inputFilePath = 0 ;
-//  TObjArray * branches = tree->GetListOfBranches() ;
-//  TBranch * branch = 0 ;
-//  Ssiz_t find ;
-//  TString name ;
-//  Int_t i ;
-//  for ( i = 0 ; i < branches->GetEntries() ; i++ )
-//   {
-//    branch = (TBranch *)branches->UncheckedAt(i) ;
-//    name = branch->GetName() ;
-//    find = name.Index("_Set_FileNames") ;
-//    if (find==kNPOS) continue ;
-//    name.Remove(find) ;
-//    componentFileNames = new TObjArray ;
-//    setFileNames.Add(componentFileNames) ;
-//    componentName = new TObjString(name) ;
-//    componentNames.Add(componentFileNames,componentName) ;
-//    branch->SetAddress(&setFileNames[setFileNames.GetEntries()-1]) ;
-//   }
-//
-//  // read and print file names
-//  Long64_t iSet, nSets = tree->GetEntries() ;
-//  TIter componentIter(&setFileNames) ;
-//  for ( iSet = 0 ; iSet<nSets ; ++iSet )
-//   {
-//    tree->GetEntry(iSet) ;
-//    componentIter.Reset() ;
-//    while ((componentFileNames=((TObjArray *)componentIter.Next())))
-//     {
-//      componentName = (TObjString *)componentNames.GetValue(componentFileNames) ;
-//      fileIter = new TIter(componentFileNames) ;
-//      while ((inputFilePath=((TObjString *)fileIter->Next())))
-//       {
-//        std::cout
-//          <<'('<<componentName->GetString()<<')'
-//          <<inputFilePath->GetString()
-//          <<std::endl ;
-//       }
-//      delete fileIter ;
-//      fileIter = 0 ;
-//     }
-//   }
-//  file.Close() ;
-// }
-//
+
+
+//====================================================================
+// 
+//====================================================================
+
+void print_cel_header( const char* fileName )
+ {
+  std::cout
+    <<"\n"
+    <<"#\n"
+    <<"#! CEL TXT 0.1\n"
+    <<"#! Converted from ROOT CEL file : "<<fileName<<'\n'
+    <<"#\n"
+    <<std::flush ;
+ }
+
 void print_files
  ( const char* fileName,
    unsigned long int beginEvent,
@@ -106,7 +67,6 @@ void print_files
   if (numEvents==0)
    { numEvents = cel.numEvents()-beginEvent ; }
   Long64_t endEvent = beginEvent+numEvents ;
-
   
   // discover components and prepare arrays
   cel.shallowRead(beginEvent) ; // enforce discovery of components
@@ -164,9 +124,94 @@ void print_files
 void print_events
  ( const char* fileName,
    unsigned long int beginEvent,
-   unsigned long int nEvent )
+   unsigned long int numEvents )
  {
   std::cout<<"\n#! SECTION Events\n"<<std::flush ;
+  CompositeEventList cel(fileName) ;
+  if ( cel.isOk()==kFALSE )
+   {
+    std::cerr<<"Can't open file "<<fileName<<std::endl ;
+    return ;
+   }
+  if (numEvents==0)
+   { numEvents = cel.numEvents()-beginEvent ; }
+  Long64_t endEvent = beginEvent+numEvents ;
+  
+  // discover components and prepare info
+  ComponentsInfoGlast componentsInfo ;
+  cel.shallowRead(beginEvent) ; // enforce discovery of components
+  UInt_t iComponent, numComponents = cel.numComponents() ;
+  std::vector<const ComponentInfo *> componentsInfoArray(numComponents) ;
+  std::vector<RuChain *> componentsChains(numComponents) ;
+  std::vector<RuInvertedIndex *> componentsIndexes(numComponents) ;
+  const ComponentInfo * info ;
+  RuChain * chain ;
+  RuInvertedIndex * index ;
+  for ( iComponent = 0 ; iComponent < numComponents ; ++iComponent )
+   {
+    info = componentsInfo.getInfo(cel.componentName(iComponent)) ;
+    componentsInfoArray[iComponent] = info ;
+    if ((info->runIdBranchName=="")||(info->eventIdBranchName==""))
+     { continue ; }
+    chain = cel.newChain(iComponent) ;
+    componentsChains[iComponent] = chain ;
+    index = new RuInvertedIndex(chain,info->runIdBranchName,info->eventIdBranchName) ;
+    componentsIndexes[iComponent] = index ;
+   }
+
+  // loop on events
+  Int_t runID1, runID2 ;
+  Int_t eventID1, eventID2 ;
+  Bool_t found1, found2 ;
+  Long64_t iEvent, iEntry ;
+  for ( iEvent = beginEvent ; iEvent < endEvent ; ++iEvent )
+   {
+    found1 = kFALSE ;
+    cel.shallowRead(iEvent) ;
+    for ( iComponent = 0 ; iComponent < numComponents ; ++iComponent )
+     {
+      info = (const ComponentInfo *)componentsInfoArray[iComponent] ;
+      if ((info->runIdBranchName=="")||(info->eventIdBranchName==""))
+       { continue ; }
+      iEntry = cel.entryIndex(iComponent) ;
+      chain = componentsChains[iComponent] ;
+      index = componentsIndexes[iComponent] ;
+      if (found1==kFALSE)
+       {
+        found1 = index->GetMajorMinorWithEntry(iEntry,runID1,eventID1) ;
+        if (found1==kFALSE)
+         {
+          std::cerr
+            <<"Can't find event "<<iEvent
+            <<" which is entry "<<iEntry
+            <<" in reverse index of component "<<cel.componentName(iComponent)
+            <<std::endl ;
+          return ;
+         }
+       }
+      else
+       {
+        found2 = index->GetMajorMinorWithEntry(iEntry,runID2,eventID2) ;
+        if (found2==kFALSE)
+         {
+          std::cerr
+            <<"Can't find event "<<iEvent
+            <<"which is entry "<<iEntry
+            <<" in reverse index of component "<<cel.componentName(iComponent)
+            <<std::endl ;
+          return ;
+         }
+        if ((runID2!=runID1)||(eventID2!=eventID1))
+         {
+          std::cerr
+            <<"Inconsistent run/event IDs for event "<<iEvent
+            <<std::endl ;
+          return ;
+         }
+       }
+     }
+    std::cout<<runID1<<" "<<eventID1<<std::endl ;
+   }  
  }
 
 void usage()
@@ -196,7 +241,7 @@ int main(int argn, char** argc)
     gSystem->Load("libTreePlayer.dll");
 # endif
 
-  std::string sections("f") ;
+  std::string sections("fe") ;
   unsigned long int beginEvent(0) ;
   unsigned long int nEvent(0) ;
 
@@ -243,7 +288,7 @@ int main(int argn, char** argc)
    }
 
   const char * fileName = argc[optind] ;
-  print_cel_header() ;
+  print_cel_header(fileName) ;
   std::size_t iChar, nChar = sections.size() ;
   for ( iChar = 0 ; iChar<nChar ; ++iChar )
    {

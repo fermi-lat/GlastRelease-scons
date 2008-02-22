@@ -20,7 +20,7 @@
 #include "BgDataHandle.h"
 
 #include <TString.h>
-class TChain ;
+class RuChain ;
 class TTree ;
 class TFile ;
 class TObjArray ;
@@ -73,7 +73,7 @@ class CelFileAndTreeSet  : public BranchGroup
     Long64_t getOffset( UShort_t key ) const ;
 
     // reading interface
-    Bool_t addToChain( TChain * & chain ) ;  
+    Bool_t addToChain( RuChain * & chain ) ;  
   
     // Override the methods in BranchGroup.  
     virtual Int_t makeBranches( TTree & celTree, const char * prefix = 0, Int_t bufsize = 32000) const ;

@@ -12,6 +12,7 @@
 #include "rootUtil/CompositeEventList.h"
 #include "rootUtil/CelEventComponent.h"
 #include "rootUtil/CelIndex.h"
+#include "rootUtil/RuChain.h"
 #include "rootUtil/RuUtil.h"
 
 #include <TTree.h>
@@ -681,7 +682,7 @@ Int_t CompositeEventList::attachToTree( TTree * entryTree, TTree * linkTree,  TT
  }
 
 // Build the TChain for a component. 
-TChain * CompositeEventList::newChain( UInt_t componentIndex ) const
+RuChain * CompositeEventList::newChain( UInt_t componentIndex ) const
  {
   TString caller ("CompositeEventList::newChain") ;
   if ( ! checkCelPrepared(caller) ) return 0 ;
@@ -696,7 +697,7 @@ TChain * CompositeEventList::newChain( UInt_t componentIndex ) const
   
   // the chain is made on the fly because we
   // do not know the tree name.
-  TChain * chain =0 ;
+  RuChain * chain = 0 ;
   Long64_t i ;
   for ( i=0 ; i<_fileTree->GetEntries() ; i++ )
    {

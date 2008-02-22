@@ -172,7 +172,7 @@ Int_t CelEventComponent::attachToTree( TTree * entryTree, TTree * fileTree, TTre
  }
 
 // Building a TChain
-Bool_t CelEventComponent::addSetToChain( TChain * & chain )
+Bool_t CelEventComponent::addSetToChain( RuChain * & chain )
  { return _currentSet.addToChain(chain) ; }
 
 Long64_t CelEventComponent::currentIndexInChain() const

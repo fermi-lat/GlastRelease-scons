@@ -3,6 +3,7 @@
 #include <rootUtil/CompositeEventList.h>
 #include <rootUtil/CelManager.h>
 #include <rootUtil/ComponentsInfoGlast.h>
+#include <rootUtil/RuChain.h>
 #include <Riostream.h>
 
 int main( int argc, char ** argv )
@@ -70,7 +71,10 @@ int main( int argc, char ** argv )
       digiChain->GetEntry(cel.entryIndex(digiIndex)) ;
       reconChain->GetEntry(cel.entryIndex(reconIndex)) ;
       if ((digiData!=0)&&(reconData!=0))
-       { std::cout<<*digiData<<", "<<*reconData<<std::endl ; }
+       {
+        std::cout
+          <<"("<<cel.entryIndex(digiIndex)<<") "<<*digiData<<", "
+          <<"("<<cel.entryIndex(reconIndex)<<") "<<*reconData<<std::endl ; }
       else
        { std::cout<<"Digi and/or Recon data not read"<<std::endl ; }
      }

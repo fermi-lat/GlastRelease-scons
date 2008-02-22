@@ -104,7 +104,7 @@ typedef TestData<TestReconLabel> TestRecon ;
 
 
 template <class Label>
-int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t lastEvent, TRandom * random )
+int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t lastEvent, TRandom * random, Bool_t makeIndex = kFALSE )
  {   
   Int_t buffer = 64000 ;
   Int_t splitLevel = 1 ;
@@ -141,26 +141,34 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
   Long64_t ievent = firstEvent, eventID  ;
   while ( ievent <= lastEvent )
    {
-	if (random&&random->Uniform()>0.5)
-	 {
-	  eventID = componentEntry->getEventID() ;
-	  componentEntry->setRunID(-1) ;
-	  componentEntry->setEventID(-1) ;
-      t->Fill() ;
-	  componentEntry->setEventID(eventID) ;
-	  componentEntry->setRunID(runId) ;
-	 }
-	else
-	 {
+    if (random&&random->Uniform()>0.5)
+     {
+      eventID = componentEntry->getEventID() ;
+      componentEntry->setRunID(-1) ;
+      componentEntry->setEventID(-1) ;
+         t->Fill() ;
+      componentEntry->setEventID(eventID) ;
+      componentEntry->setRunID(runId) ;
+     }
+    else
+     {
       t->Fill();
       componentEntry->incrementEventID() ;
       ievent++ ;
-	 }
+     }
    }
-  std::cout << "[testWrite] file filled with " << (lastEvent-firstEvent+1) << " events" << std::endl ;
-  delete componentEntry ;
+  std::cout << "[testWrite] File filled with " << (lastEvent-firstEvent+1) << " events" << std::endl ;
+  
+  if (makeIndex==kTRUE)
+   {
+    t->BuildIndex
+     ( TestComponent<Label>::info()->runIdBranchName,
+       TestComponent<Label>::info()->eventIdBranchName ) ;
+    std::cout << "[testWrite] Index made" << std::endl ;
+   }
 
   std::cout << "[testWrite] Writing and closing file" << std::endl ;
+  delete componentEntry ;
   f->Write() ;
   f->Close() ;
   delete f ;

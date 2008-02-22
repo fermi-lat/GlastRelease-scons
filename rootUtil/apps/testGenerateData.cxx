@@ -31,7 +31,7 @@ int main(int argc, char **argv)
       for ( fileIndex = 0, firstEvent = 0 ;
             fileIndex<numFilesByRun ;
             ++fileIndex, firstEvent += numEventsByFile )
-       { sc = testWrite<TestReconLabel>(baseName,runID,firstEvent,firstEvent+numEventsByFile-1,&random) ; }
+       { sc = testWrite<TestReconLabel>(baseName,runID,firstEvent,firstEvent+numEventsByFile-1,&random,kTRUE) ; }
      }
    }
   catch (...)

@@ -23,7 +23,7 @@ apply_pattern root_package headers="\
 
 private
 
-macro_append ROOT_libs " -lHist " WIN32 " libHist.lib "
+macro_append ROOT_libs " -lTreePlayer -lHist -lGraf3d " WIN32 " libTreePlayer.lib libHist.lib libGraf3d.lib "
 application testRootInterface ../apps/testRootInterface.cxx
 
 macro getoptSource "" WIN32 " ../apps/winutil/*.cxx "

@@ -21,6 +21,7 @@ class CelIndex ;
 
 #include <TObject.h>
 #include <TString.h>
+
 class TTree ;
 class TFile ;
 class TChain ;
@@ -28,6 +29,7 @@ class TVirtualIndex ;
 class TCollection ;
 class TObjArray ;
 class TObjString ;
+class RuChain ;
 
 #include <map>
 #include <vector>
@@ -103,7 +105,7 @@ class CompositeEventList : public TObject
     // OK! Shallow read (do not handle the user data trees)
     static const UInt_t COMPONENT_UNDEFINED ;
     UInt_t componentIndex( const TString &  componentName ) const ;
-    TChain * newChain( UInt_t componentIndex ) const ;
+    RuChain * newChain( UInt_t componentIndex ) const ;
     Int_t shallowRead( Long64_t eventIndex ) ;
     Long64_t entryIndex( UInt_t componentIndex ) const ;
     const TObjString * fileName( UInt_t componentIndex ) const ;

@@ -105,12 +105,16 @@ ComponentsInfoGlast::ComponentsInfoGlast()
   info->treeName = "TestDigiTree" ;
   info->topBranchName = "TestDigiBranch" ;
   info->topBranchType = "TestData<TestDigiLabel>" ;
+  info->runIdBranchName = "runID_" ;
+  info->eventIdBranchName = "eventID_" ;
   
   info = newInfo() ;
   info->componentName = "trecon" ;
   info->treeName = "TestReconTree" ;
   info->topBranchName = "TestReconBranch" ;
   info->topBranchType = "TestData<TestReconLabel>" ;
+  info->runIdBranchName = "runID_" ;
+  info->eventIdBranchName = "eventID_" ;
 
  }
  

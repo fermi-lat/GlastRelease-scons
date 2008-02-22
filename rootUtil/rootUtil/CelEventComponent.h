@@ -20,7 +20,7 @@
 
 #include <Rtypes.h>
 #include <TString.h>
-class TChain;
+class RuChain;
 class TEventList;
 
 //
@@ -54,7 +54,7 @@ class CelEventComponent
     void nextSet() ;
   
     /// Shallow read
-    Bool_t addSetToChain( TChain * & chain ) ; 
+    Bool_t addSetToChain( RuChain * & chain ) ; 
     Long64_t currentIndexInChain() const ;
 
     /// Deep read
