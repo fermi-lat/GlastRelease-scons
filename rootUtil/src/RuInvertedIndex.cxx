@@ -49,7 +49,7 @@ class MyFormula : public TTreeFormula, public RuChain::Observer
 //====================================================================
 
 RuInvertedIndex::RuInvertedIndex
- ( TChain * chain, const char* majorname, const char* minorname )
+ ( RuChain * chain, const char* majorname, const char* minorname )
  : fChain(chain), fMajorName(majorname), fMinorName(minorname),
    fMajorFormula(0), fMinorFormula(0),
    fZombie(kFALSE)

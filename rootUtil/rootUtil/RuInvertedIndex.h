@@ -10,13 +10,14 @@
 #define rootUtil_RuInvertedIndex_h
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
-#  include <TChain.h>
 #  include <TTreeIndex.h>
 #  include <TTreeFormula.h>
 #  include <vector>
 #endif
 
-// A new kind of chain index, meant to do the reverse transformation from
+class RuChain ;
+
+    // A new kind of chain index, meant to do the reverse transformation from
 // an entry number to a major/minor pair.
 // The implementation favors quickness over memory size : when relevant
 // indices already exists in the underlying trees, they are inverted and
@@ -26,7 +27,7 @@ class RuInvertedIndex
  {
   public :
    
-    RuInvertedIndex( TChain *, const char* majorname, const char* minorname ) ;
+    RuInvertedIndex( RuChain *, const char* majorname, const char* minorname ) ;
     ~RuInvertedIndex() ;
     Bool_t GetMajorMinorWithEntry                      // Affect the current
      ( Long64_t entryNumber,                              // entry of the chain.
@@ -49,13 +50,12 @@ class RuInvertedIndex
     
     TTreeIndex * GetTreeIndex( Long64_t index ) ;
     
-    TChain * fChain ;
+    RuChain * fChain ;
     std::vector<InvertedTreeIndex> fInvertedIndices ;
     TString fMajorName ; // Index major name
     TString fMinorName ; // Index minor name
     TTreeFormula * fMajorFormula ;
     TTreeFormula * fMinorFormula ;
-    Int_t fLastFormulaTree ;
     Bool_t fZombie ;
  } ;
 

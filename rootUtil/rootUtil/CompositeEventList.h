@@ -1,19 +1,18 @@
+//
+//========================================================
+// File: CompositeEventList.h
+// Authors:
+//   DC, David Chamont, LLR, chamont@llr.in2p3.fr
+//   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
+//========================================================
+//
+
+
 
 #ifndef CompositeEventList_h
 #define CompositeEventList_h
 
-/*
-* Project: GLAST
-* Package: rootUtil
-* File: $Id$
-* Authors:
-*   DC, David Chamont, LLR, chamont@llr.in2p3.fr
-*   EC, Eric Charles , SLAC, echarles@slac.stanford.edu
-*
-* Copyright (c) 2007
-*                   Regents of Stanford University. All rights reserved.
-*
-*/
+
 
 #include "CelEventLink.h"
 class CelEventComponent ;
@@ -96,9 +95,12 @@ class CompositeEventList : public TObject
     ~CompositeEventList() ;
 
     // OK! Write
-    Long64_t fillEvent( const TObjArray & realTrees ) ;
-    Long64_t fillEvent( const std::vector<TTree*> & ) ;
-    Long64_t fillEvent( const std::vector<TChain*> & ) ;
+    Bool_t fillEntry(  const TString & componentName, TTree * ) ;  // components one by one
+    Bool_t fillEntry(  UInt_t componentIndex, TTree * ) ;  // components one by one
+    Long64_t fillEvent() ;                                // components one by one
+    Long64_t fillEvent( const TObjArray & ) ;            // all components together
+    Long64_t fillEvent( const std::vector<TTree*> & ) ;  // all components together
+    Long64_t fillEvent( const std::vector<TChain*> & ) ; // all components together
     Long64_t fillFileAndTreeSet() ;
     void writeAndClose() ;
     
@@ -144,8 +146,8 @@ class CompositeEventList : public TObject
     TTree * fileTree() { return _fileTree ; }
     TTree * offsetTree() { return _offsetTree ; }
     CompositeEventList( TTree * eventTree, TTree * fileTree, TTree * entryTree ) ;
-    
-	/// FOR CelIndex
+
+    /// FOR CelIndex
     CelEventComponent * getComponent( const TString & name ) const ;
   
      
@@ -200,7 +202,7 @@ class CompositeEventList : public TObject
     std::map<TString,UInt_t> _compMap ; //! components lookup map to get the index in the list above from the name
 
     // internal print stuff
-    unsigned int _componentNameWidth ;
+    Ssiz_t _componentNameWidth ;
     unsigned int _setNumberWidth ;
     unsigned int _eventNumberWidth ;
     unsigned int _treeNumberWidth ;

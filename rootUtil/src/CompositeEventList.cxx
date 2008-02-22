@@ -467,7 +467,7 @@ Long64_t CompositeEventList::fillEvent( const TObjArray & trees )
    {
     TTree* t = static_cast<TTree*>(trees.UncheckedAt(i));
     v.push_back(t);
-  }
+   }
   return fillEvent(v);
  }
 
@@ -486,6 +486,52 @@ Long64_t CompositeEventList::fillEvent( const std::vector<TChain *> & chains )
 // This is here since CINT screws up with std::vector<TTree*> 
 Long64_t CompositeEventList::fillEvent( const std::vector<TTree *> & trees )
  {
+  TString caller ("[CompositeEventList::fillEvent] ") ;
+
+  if (trees.size() != _compList.size())
+   {
+    std::cerr<<caller
+      << "Do not know how to match " << _compList.size() << " components "
+      << "with " << trees.size() << " trees."
+      << std::endl ;
+    return -1 ;
+   }
+  
+  // TODO : check tree and component names ?
+  
+  UInt_t idx(0) ;
+  std::vector< TTree* >::const_iterator itr ;
+  for ( itr = trees.begin(), idx = 0 ; itr != trees.end() ; itr++, idx++ )
+   { if (fillEntry(idx,*itr)==kFALSE) return -1 ; }
+  
+  return fillEvent() ;
+ }
+
+Bool_t CompositeEventList::fillEntry( const TString & componentName, TTree * tree )
+ { return fillEntry(componentIndex(componentName),tree) ; }
+
+  // Register the current entry for a given component
+// After one has called fillEntry() for all components,
+// he must call fillEvent().
+Bool_t CompositeEventList::fillEntry(  UInt_t componentIndex, TTree * tree )
+ {
+  TString caller ("CompositeEventList::fillEntry") ;
+  if ( ! checkCelPrepared(caller) ) return kFALSE ;
+    
+  // TODO : check tree and component names ?
+  CelEventComponent * comp = getComponent(componentIndex) ;
+  assert ( 0 != comp ) ;
+  comp->registerEntry(*tree) ;
+  
+  return kTRUE ;
+}
+
+// Insert an event in the CEL, after some calls to fillEntry().
+// Returns the entry number of the event that has just been written  
+// Returns -1 if it failed to fill the event
+// This is here since CINT screws up with std::vector<TTree*> 
+Long64_t CompositeEventList::fillEvent()
+ {
   TString caller ("CompositeEventList::fillEvent") ;
   if ( ! checkCelPrepared(caller) ) return -1 ;
   
@@ -502,25 +548,6 @@ Long64_t CompositeEventList::fillEvent( const std::vector<TTree *> & trees )
     return -1 ;
    }
         
-  if (trees.size() != _compList.size())
-   {
-    std::cerr
-      << "Do not know how to match " << _compList.size() << " components "
-      << "with " << trees.size() << " trees."
-      << std::endl ;
-    return -1 ;
-   }
-  
-  // TODO : check tree and component names ?
-  UInt_t idx(0) ;
-  std::vector< TTree* >::const_iterator itr ;
-  for ( itr = trees.begin(), idx = 0 ; itr != trees.end() ; itr++, idx++ )
-   {  
-    CelEventComponent * comp = getComponent(idx) ;
-    assert ( 0 != comp ) ;
-    comp->registerEntry(**itr) ;
-   }
-  
   _currentLink.incrementEventIndex() ;
   _entryTree->Fill() ;
   _linkTree->Fill() ;
