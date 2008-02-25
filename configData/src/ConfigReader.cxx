@@ -457,7 +457,7 @@ Bool_t ConfigReader::read_TRC(DOMElement& elem){
 };
 
 Bool_t ConfigReader::read_GEM(DOMElement& elem){
-  TrgConfigParser parser(&elem,true);
+  TrgConfigParser parser(&elem);
   parser.parse(m_gem);
   return kTRUE;
 };

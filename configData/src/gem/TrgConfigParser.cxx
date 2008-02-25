@@ -24,12 +24,14 @@
 
 #include "configData/gem/TrgConfigParser.h"
 
-TrgConfigParser::TrgConfigParser(bool allow)
-  :m_topElt(0),m_allowMissing(allow){}
+TrgConfigParser::TrgConfigParser()
+  :m_topElt(0){
+  reset();
+}
 
-TrgConfigParser::TrgConfigParser(const char* filename,bool allowMissing)
-  :m_allowMissing(allowMissing){
+TrgConfigParser::TrgConfigParser(const char* filename) {
   XmlParser parser(true);
+  reset();
   DOMDocument* doc;
   try {
     doc =parser.parse( filename );
@@ -43,9 +45,25 @@ TrgConfigParser::TrgConfigParser(const char* filename,bool allowMissing)
   m_topElt = doc->getDocumentElement();
 }
 
-TrgConfigParser::TrgConfigParser(DOMElement* el,bool allowMissing)
-  :m_topElt(el),m_allowMissing(allowMissing){};
+TrgConfigParser::TrgConfigParser(DOMElement* el)
+  :m_topElt(el){
+  reset();
+};
 
+void TrgConfigParser::reset(){
+  const char *tagnames[]={"WIN","AOC","SCH","TAM","TIE","ROI","periodic_rate","configuration","periodic_mode"};
+  std::list<std::string> taglist;
+  for (int i=0;i<9;i++)m_missingTags.push_back(tagnames[i]);
+}
+
+std::list<std::string> TrgConfigParser::remainingTags(){
+  return m_missingTags;
+}
+
+bool TrgConfigParser::configComplete(){
+  return (m_missingTags.size()==0);
+}
+  
 int TrgConfigParser::parse(TrgConfig* tcf, const char* filename){
    XmlParser parser(true);
   DOMDocument* doc;
@@ -86,9 +104,6 @@ int TrgConfigParser::parse(TrgConfig* tcf){
   }
   std::vector<DOMElement*> children;
   std::string nm,ous;
-  const char *tagnames[]={"WIN","AOC","SCH","TAM","TIE","ROI"};
-  std::list<std::string> taglist;
-  for (int i=0;i<6;i++)taglist.push_back(tagnames[i]);
 
   Dom::getChildrenByTagName(m_topElt, "*", children);
   for (unsigned j=0; j < children.size(); j++) {
@@ -103,28 +118,31 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	if(per_rate&0x80000000)tcf->_tpt.setOnePPS(true);
 	else tcf->_tpt.setOnePPS(false);
 	tcf->_tpt.setPrescale(per_rate&0xffffff);
+	m_missingTags.remove("periodic_rate");
       }
       if (nm=="configuration"){
 	//ous=removeWhitespace(Dom::getTextContent(currentElement));
 	//unsigned long config=strtoul(ous.c_str(),0,0);
 	unsigned long config=content(m_topElt,"configuration");
 	tcf->_configuration.setConfiguration(config);
+	m_missingTags.remove("configuration");
       }
       if (nm=="periodic_mode"){
 	unsigned long mode=content(m_topElt,"periodic_mode");
 	tcf->_tpt.setFreeRunning(mode);
+	m_missingTags.remove("periodic_mode");
       }
       if (nm=="WIN"){
 	unsigned long win_width=content(currentElement,"window_width");
 	tcf->_twp.setWindowWidth(win_width);
-	taglist.remove("WIN");
+	m_missingTags.remove("WIN");
       }
       if (nm=="AOC"){
 	unsigned long window_open_mask=content(currentElement,"window_open_mask");
 	tcf->_twp.setWindowMask(window_open_mask);
 	unsigned long periodic_limit=content(currentElement,"periodic_limit");
 	tcf->_tpt.setLimit(periodic_limit);
-	taglist.remove("AOC");
+	m_missingTags.remove("AOC");
       }
       if (nm=="SCH"){
 	char condname[128];
@@ -133,7 +151,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  unsigned long condreg=content(currentElement,condname);
 	  tcf->_lut.setRegister(i,condreg);
 	}
-	taglist.remove("SCH");
+	m_missingTags.remove("SCH");
       }
       if (nm=="TAM"){
 	char engname[128];
@@ -142,7 +160,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  unsigned long engine=content(currentElement,engname);
 	  tcf->_tev.setEngine(i,engine);
 	}
-	taglist.remove("TAM");
+	m_missingTags.remove("TAM");
       }
       if (nm=="TIE"){
 	unsigned long reg;
@@ -191,7 +209,7 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	if(rList.size()==1) reg=content(currentElement,"external");	
 	else reg=content(currentElement,"external_trg");	
 	tcf->_tdv.setExternal(reg);
-	taglist.remove("TIE");
+	m_missingTags.remove("TIE");
       }
       if (nm=="ROI"){
 	unsigned long reg;
@@ -227,17 +245,9 @@ int TrgConfigParser::parse(TrgConfig* tcf){
 	  }
 	  tcf->_roi.setRoiRegister(i,reg);
 	}
-	taglist.remove("ROI");
+	m_missingTags.remove("ROI");
       }
     }
-  }
-  if (!taglist.empty()&& !m_allowMissing){
-    std::cout<<"Missing tags in GEM xml file: ";
-    for (std::list<std::string>::const_iterator it=taglist.begin();it!=taglist.end();it++){
-      std::cout<<(*it)<<" ";
-    }
-    std::cout<<". Aborting."<<std::endl;
-    assert(0);
   }
   return 0;
 }
@@ -254,11 +264,7 @@ unsigned long TrgConfigParser::content(DOMElement* el, const char* tag){
   unsigned res;
   Dom::getChildrenByTagName( el, tag, subList );
   if (subList.empty() ){
-    if ( m_allowMissing ) {
-      return 0;
-    }
-    std::cout<<"No "<<tag<<" tag found. Exiting"<<std::endl;
-    assert(0);
+    return 0;
   } else if(subList.size()>1){
     std::cout<<"More than 1 "<<tag<<" tag found. Exiting"<<std::endl;
     assert(0);
