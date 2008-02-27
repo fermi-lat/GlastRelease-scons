@@ -2,6 +2,8 @@
     implement CalGeom.h
 
     @author Zach Fewtrell
+
+    $Header$
 */
 
 // LOCAL INCLUDES

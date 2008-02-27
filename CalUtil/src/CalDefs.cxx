@@ -1,4 +1,4 @@
-// $Header $
+// $Header$
 
 /** @file implement CalDigi.h
     @author fewtrell

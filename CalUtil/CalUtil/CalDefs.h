@@ -652,7 +652,7 @@ namespace CalUtil {
     unsigned m_data;
   };
   
-  /// index class for all Cal crystals in GLAST LAT
+  /// index class for all Cal layers in GLAST LAT
   class LyrIdx : public LATWideIndex {
   public:
     explicit LyrIdx(const idents::CalXtalId &xtalId) :
