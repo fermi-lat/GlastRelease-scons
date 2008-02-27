@@ -292,7 +292,7 @@ if __name__ == '__main__':
             rootName = o[1]
             rootOutput = True
         elif o[0] == '-L':
-            logName = o[0]
+            logName = o[1]
         elif o[0] == '-V':
             log.setLevel(logging.DEBUG) 
         elif o[0] == '-r':
