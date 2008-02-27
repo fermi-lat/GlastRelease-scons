@@ -235,7 +235,7 @@ int TkrFlagHitsTool::flagHits(idents::TkrId tkrId,
 
     //don't bother if not truncated
 
-    if (truncInfo->isTruncated()) {
+    if (truncInfo!=NULL&&truncInfo->isTruncated()) {
         TkrTruncationInfo::TkrTruncationMap*  truncMap = truncInfo->getTruncationMap();
         SortId id(tower, tray, face, view);
         TkrTruncationInfo::TkrTruncationMap::iterator iter = truncMap->find(id);
