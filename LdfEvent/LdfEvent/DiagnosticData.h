@@ -8,6 +8,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "Event/TopLevel/Definitions.h"
 #include "Event/TopLevel/EventModel.h"
