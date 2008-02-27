@@ -101,9 +101,9 @@ StatusCode ObfCoordsAlg::initialize()
     // get the GPS instance: either from FluxSvc or local, non-MC mode
     IFluxSvc* fluxSvc(0);
     if( service("FluxSvc", fluxSvc, true).isFailure() ){
-        gps = fluxSvc->GPSinstance();
-    }else{
         gps = astro::GPS::instance();
+    }else{
+        gps = fluxSvc->GPSinstance();
     }
     return sc;
 }

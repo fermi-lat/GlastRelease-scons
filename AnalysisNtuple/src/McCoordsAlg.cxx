@@ -26,6 +26,7 @@ class McCworker;
 namespace { // anonymous namespace for file-global
     IFluxSvc* fluxSvc;
     std::string treename("MeritTuple");
+    astro::GPS* gps;
 #include "Item.h"
 }
 
@@ -98,7 +99,13 @@ StatusCode McCoordsAlg::initialize()
     }
     m_worker = new McCworker();
 
-    service("FluxSvc", fluxSvc, true);
+    // get the GPS instance: either from FluxSvc or local, non-MC mode
+    IFluxSvc* fluxSvc(0);
+    if( service("FluxSvc", fluxSvc, true).isFailure() ){
+        gps = astro::GPS::instance();
+    }else{
+        gps = fluxSvc->GPSinstance();
+    }
 
     m_count = 0;
 
@@ -161,15 +168,8 @@ void McCworker::evaluate()
 {
     // convert to (ra, dec)
 
-    // The GPS singleton has current time and orientation
-    static astro::GPS* gps = fluxSvc->GPSinstance();
-    //double time = gps->time();
-
     Vector Mc_t0(McXDir, McYDir, McZDir);
 
-    //CLHEP::HepRotation R ( gps->transformToGlast(time, astro::GPS::CELESTIAL) );
-
-    //astro::SkyDir mcdir( - (R.inverse() * Mc_t0 ) );
     astro::SkyDir mcdir = gps->toSky( Mc_t0 );
     m_mcRa   = mcdir.ra();
     m_mcDec  = mcdir.dec();
