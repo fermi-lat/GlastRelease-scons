@@ -107,6 +107,8 @@ namespace CalXtalResponse {
 
 
     zeroSuppress = CLHEP::RandFlat::shootBit();
+
+    createDiagnosticData = CLHEP::RandFlat::shootBit();
       
   }
 
@@ -141,6 +143,7 @@ namespace CalXtalResponse {
            << " N_HITS=" << testCfg.xtalHits.size()
            << " TRIG_MODE " << testCfg.trigMode
            << " zeroSuppress " << testCfg.zeroSuppress
+		   << " diag " << testCfg.createDiagnosticData
            << endl;
 
     for (TestCfg::XtalList::const_iterator xtalIt(testCfg.testXtals.begin());

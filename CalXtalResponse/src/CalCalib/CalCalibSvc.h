@@ -117,7 +117,7 @@ public:
   /// result in given ADC readout for given ADC channel
   StatusCode evalFaceSignal(CalUtil::RngIdx rngIdx, float adc, float &ene);
 
-  /// get MeVPerDAC value for given diode.
+  /// get MeVPerDAC value for single diode (instead of both faces)
   StatusCode getMPDDiode(CalUtil::DiodeIdx diodeIdx, float &mpdDiode);
 
   /// get light asymmetry associated with deposit at center of given crystal

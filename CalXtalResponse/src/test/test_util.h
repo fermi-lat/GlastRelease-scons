@@ -23,7 +23,7 @@ namespace CalXtalResponse {
   static const float MAX_SPLINE_DIFF = .005;
 
   /// possible variation in asymmetry curves (muon based HE calibration has high error on each point)
-  static const float MAX_ASYM_DIFF = .1;
+  static const float MAX_ASYM_DIFF = .07;
 
 
   inline float abs_diff(const float a, const float b) {

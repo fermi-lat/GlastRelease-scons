@@ -14,10 +14,12 @@
 #include "test_CalDigi.h"
 #include "test_CalXtalRecAlg.h"
 #include "test_CalTrigTool.h"
+#include "test_CalDiagnosticTool.h"
 #include "test_PrecalcCalibTool.h"
 #include "CalXtalResponse/ICalCalibSvc.h"
 #include "CalXtalResponse/ICalSignalTool.h"
 #include "CalXtalResponse/ICalTrigTool.h"
+#include "CalXtalResponse/ICalDiagnosticTool.h"
 #include "../CalCalib/IPrecalcCalibTool.h"
 #include "test_util.h"
 
@@ -43,10 +45,11 @@
 #include <memory>
 
 
-class ICalTrigTool;
+class ICalCalibSvc;
 class IPrecalcCalibTool;
 class ICalSignalTool;  
-class ICalCalibSvc;
+class ICalTrigTool;
+class ICalDiagnosticTool;
 
 /** unit test for CalXtalResponse package
     
@@ -82,6 +85,7 @@ class ICalCalibSvc;
     - CalDigiAlg (incl XtalDigiTool)
     - CalTrigTool (from MC)
     - CalTrigTool (from Digi)
+    - CalDiagnosticTool
     - CalXtalRecAlg (incl (XtalRecTool)
 
     @ todo
@@ -153,6 +157,8 @@ private:
   /// used to calculate Cal Trig response from Digi
   ICalTrigTool *m_calTrigToolDigi;
 
+  ICalDiagnosticTool *m_calDiagnosticTool;
+
   IPrecalcCalibTool *m_precalcCalibTool;
 
   /// list of active tower bays, populated at run time
@@ -181,6 +187,8 @@ private:
   test_CalDigi m_testCalDigi;
 
   test_CalTrigTool m_testCalTrigTool;
+
+  test_CalDiagnosticTool m_testCalDiagnosticTool;
 
   test_CalXtalRecAlg m_testCalXtalRecAlg;
 
@@ -263,6 +271,7 @@ test_CalXtalResponse::test_CalXtalResponse(const string& name, ISvcLocator* pSvc
   m_calSignalTool(0),
   m_calTrigTool(0),
   m_calTrigToolDigi(0),
+  m_calDiagnosticTool(0),
   m_precalcCalibTool(0),
   m_csiLength(0),
   m_eventId(0)
@@ -334,6 +343,15 @@ StatusCode test_CalXtalResponse::initialize() {
     return sc;
   }
 
+  sc = toolSvc()->retrieveTool("CalDiagnosticTool",
+                               "CalDiagnosticTool",
+                               m_calDiagnosticTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create CalDiagnosticTool" << endreq;
+    return sc;
+  }
+
   sc = toolSvc()->retrieveTool("PrecalcCalibTool",
                                "PrecalcCalibTool",
                                m_precalcCalibTool,
@@ -370,6 +388,9 @@ StatusCode test_CalXtalResponse::initialize() {
     return StatusCode::FAILURE;
 
   if (m_testCalTrigTool.initialize(msgSvc()).isFailure())
+    return StatusCode::FAILURE;
+
+  if (m_testCalDiagnosticTool.initialize(msgSvc()).isFailure())
     return StatusCode::FAILURE;
 
   if (m_testCalXtalRecAlg.initialize(msgSvc(), detSvc).isFailure())
@@ -453,6 +474,7 @@ StatusCode test_CalXtalResponse::retrieveConstants(IGlastDetSvc &detSvc) {
    - remove MC data from TDS (force CalTrigTool to use CalDigis)
    - verify CalTrigTool again (this time with CalDigi data instead of
    MC)
+   - verify CalDiagnosticTool
    - run CalXtalRecAlg
    - verify CalXtalRecCOl (output of CalXtalRecAlg)
    
@@ -534,6 +556,24 @@ StatusCode test_CalXtalResponse::execute() {
                                MAX_RECON_DIFF).isFailure())
     return StatusCode::FAILURE;
 
+  msglog << MSG::DEBUG << "verify CalDiagnosticTool" << endreq;
+  if (m_testCalDiagnosticTool.verify(*m_calSignalTool,
+                                     *m_calTrigTool,
+                                     *m_precalcCalibTool,
+                                     *m_calDiagnosticTool,
+                                     m_twrSet).isFailure())
+    return StatusCode::FAILURE;
+
+  // Retrieve the Event data for this event
+  SmartDataPtr<LdfEvent::DiagnosticData> diagTds(eventSvc(), "/Event/Diagnostic");
+
+  msglog << MSG::DEBUG << "verify CalDiagnostic TDS data" << endreq;
+  if (m_testCalDiagnosticTool.verifyTDS(diagTds,
+                                        *m_calDiagnosticTool,
+                                        m_testCfg,
+                                        m_twrSet).isFailure())
+    return StatusCode::FAILURE;
+  
   /// clear out MC so CalTrigToolDigi will work from Digi's instead
   if (clearMC().isFailure())
     return StatusCode::FAILURE;
@@ -547,7 +587,6 @@ StatusCode test_CalXtalResponse::execute() {
                                *m_precalcCalibTool,
                                MAX_ASYM_DIFF).isFailure())
     return StatusCode::FAILURE;
-                
 
   // execute CalXtalRecAlg
   sc = m_calXtalRecAlg->execute();
@@ -595,6 +634,9 @@ StatusCode test_CalXtalResponse::applyNewCfg(const TestCfg &testCfg) {
   if (sc.isFailure())
     return sc;
 
+  // cal diagnostic
+  if (m_calDigiAlg->setProperty("CreateDiagnosticData", testCfg.createDiagnosticData ? "1" : "0").isFailure())
+    return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }

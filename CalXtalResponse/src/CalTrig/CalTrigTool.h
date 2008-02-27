@@ -6,8 +6,6 @@
 #ifndef CalTrigTool_h
 #define CalTrigTool_h
 
-#include "Event/Digi/CalDigi.h"
-#include "GaudiKernel/AlgTool.h"
 
 
 // LOCAL
@@ -20,9 +18,11 @@
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
 #include "Event/Digi/GltDigi.h"
+#include "Event/Digi/CalDigi.h"
 
 // EXTLIB
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/AlgTool.h"
 
 
 // STD

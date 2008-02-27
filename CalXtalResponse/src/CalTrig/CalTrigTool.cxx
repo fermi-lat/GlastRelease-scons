@@ -47,6 +47,7 @@ CalTrigTool::CalTrigTool( const std::string& type,
                           const IInterface* parent)
   : AlgTool(type,name,parent),
     m_calCalibSvc(0),
+    m_precalcCalibTool(0),
     m_evtSvc(0),
     m_calSignalTool(0),
     m_detSvc(0),

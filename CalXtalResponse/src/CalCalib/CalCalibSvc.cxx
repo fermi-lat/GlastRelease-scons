@@ -138,11 +138,6 @@ StatusCode CalCalibSvc::evalFaceSignal(const RngIdx rngIdx, const float adcPed, 
   // CalXtalID w/ no face or range info
   XtalIdx xtalIdx(rngIdx.getXtalIdx());
 
-  // MeVPerDAC
-  // need to create tmp rngIdx w/ only twr/lyr/col info
-  CalibData::CalMevPerDac const*const calMPD = getMPD(xtalIdx);
-  if (!calMPD) return StatusCode::FAILURE;
-
   CalUtil::RngNum rng(rngIdx.getRng());
 
   float mpdDiode;
@@ -156,7 +151,7 @@ StatusCode CalCalibSvc::evalFaceSignal(const RngIdx rngIdx, const float adcPed, 
 
 
 StatusCode CalCalibSvc::getMPDDiode(const CalUtil::DiodeIdx diodeIdx, float &mpdDiode) {
-  XtalIdx xtalIdx(diodeIdx.getXtalIdx());
+  const XtalIdx xtalIdx(diodeIdx.getXtalIdx());
 
   // MeVPerDAC
   // need to create tmp rngIdx w/ only twr/lyr/col info

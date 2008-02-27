@@ -40,6 +40,7 @@ namespace CalXtalResponse {
       xtalHits.clear();
       trigMode      = idents::CalXtalId::BESTRANGE;
       zeroSuppress  = true;
+      createDiagnosticData = true;
     }
 
     /// select random test cfg
@@ -106,6 +107,9 @@ namespace CalXtalResponse {
 
     /// zero suppression for current test
     bool zeroSuppress;
+
+    /// enable cal diagnostic data in digi
+    bool createDiagnosticData;
 
   };
 

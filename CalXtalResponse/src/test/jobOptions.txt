@@ -52,23 +52,24 @@ DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 CalibDataSvc.CalibInstrumentName = "LAT";
 CalibDataSvc.CalibStorageType    = 14;
 CalibDataSvc.CalibRootName       = "Calib";
-CalibDataSvc.CalibFlavorList     = {"ideal","CalXtalResponse_test"};
+CalibDataSvc.CalibFlavorList     = {"ideal","CalXtalResponse_test_II"};
 
 
 ///////////////////////////////////////////////
 //-- test w/ real calibrations (default)   --//
 ///////////////////////////////////////////////
 ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvc"};
-CalCalibSvc.DefaultFlavor  = "CalXtalResponse_test";
+CalCalibSvc.DefaultFlavor  = "CalXtalResponse_test_II";
 CalDigiAlg.TrgConfigSvcName = "";
+CalDigiAlg.CreateDiagnosticData = "1";
 // disable noise
 ToolSvc.CalSignalTool.enableNoise = false;
 
-test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonPeds.digitization-licos-v3r6p9_077007133_digi_DIGI.FLIGHT_GAIN.txt";
-test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cidac2adc.digitization-licos-v3r6p6_077006635_digi_DIGI.FLIGHT_GAIN.txt";
-test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonMPD.digitization-licos-v3r6p5_077006531_digi_DIGI.FLIGHT_GAIN.txt";
-test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.digitization-licos-v3r6p5_077006531_digi_DIGI.FLIGHT_GAIN.txt";
-test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/tholdci_jul06.FLIGHT_GAIN.txt";
+test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_ped.txt";
+test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_cidac2adc.txt";
+test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_mpd.txt";
+test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_asym.txt";
+test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_tholdci.txt";
 
 
 
@@ -92,11 +93,6 @@ CalFailureModeSvc.towerAfeeList= {"10_2"};
 CalFailureModeSvc.towerList= {"11"}; 
 CalFailureModeSvc.towerControllerList= {"4_2"}; 
 
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel = 3;
-ApplicationMgr.EvtMax  = 100;
-
-
 //==============================================================
 //
 // End of job options file
@@ -114,5 +110,6 @@ ApplicationMgr.EvtMax  = 100;
 // test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/tholdci.ideal.txt";
 // GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
-ApplicationMgr.EvtMax  = 100;
+ApplicationMgr.EvtMax  = 200;

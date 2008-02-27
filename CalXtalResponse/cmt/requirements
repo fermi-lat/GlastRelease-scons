@@ -11,6 +11,7 @@ use CalUtil
 use CalibData
 use GlastSvc
 use ntupleWriterSvc
+use LdfEvent
 
 # Additional ROOT libraries Needed for TSpline3 object
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
