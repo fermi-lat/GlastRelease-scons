@@ -23,7 +23,7 @@ const int ValBase::s_badVal = -9999;
 ValBase::ValBase(const std::string& type, 
                          const std::string& name, 
                          const IInterface* parent)
-  : AlgTool( type, name, parent ) { }
+                         : AlgTool( type, name, parent ), m_isLoaded(false) { }
 
 
   StatusCode ValBase::initialize()

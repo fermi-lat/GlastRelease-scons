@@ -108,6 +108,10 @@ public:
     
     // common initialization
     virtual StatusCode initialize();
+
+    /// AnaTup loaded this object
+    virtual void setLoadFlag() { m_isLoaded = true; }
+    virtual bool isLoaded()    {return m_isLoaded; }
     
 protected:
     StatusCode getTypedPointer(std::string varName, TypedPointer*& ptr, int check);
@@ -146,11 +150,14 @@ protected:
     /// flag to signal new event
     bool m_newEvent;
     /// flag to allow an always-calculate call if 0; if 1 checks and sets m_newEvent
-    /// if -1 never skips calculation
+    /// if -1 skips calculation
     int m_check;
 
     /// count calls to tools
     int m_calcCount;
+
+    /// tells if this routine has been "loaded" by AnalysisNtupleAlg
+    bool m_isLoaded;
 
     /// Obvious "bad" value if an exception occurs whild computing output
     /// variables

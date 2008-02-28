@@ -51,6 +51,8 @@ public:
     /// return a string containing the value, as above
     virtual StatusCode getVal(std::string varName, std::string& value, int check = CALC) = 0;
     virtual StatusCode getValCheck(std::string varName, std::string& value) =0;
+    virtual void setLoadFlag() = 0;
+    virtual bool isLoaded() = 0;
     
     /** @class Visitor 
     @brief calls the client successively with the names and (ref to) values

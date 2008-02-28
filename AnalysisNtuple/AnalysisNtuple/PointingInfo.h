@@ -13,10 +13,9 @@ class MsgStream;
 namespace astro { class GPS;}
 
 /** @class PointingInfo
-
-Manage the data in the FT2 definition
-
+@brief Manage the data in the FT2 definition
 */
+
 namespace AnalysisNtuple {
 
 class PointingInfo {
