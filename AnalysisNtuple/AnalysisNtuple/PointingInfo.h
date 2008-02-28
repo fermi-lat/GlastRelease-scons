@@ -16,7 +16,7 @@ namespace astro { class GPS;}
 
 Manage the data in the FT2 definition
 
-/
+*/
 namespace AnalysisNtuple {
 
 class PointingInfo {
