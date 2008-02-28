@@ -146,6 +146,11 @@ namespace rdbModel {
   public:
     FieldVal(std::string colname="", std::string val="", bool isNull=false) :
       m_colname(colname), m_val(val), m_null(isNull) { }
+
+    // Alternate constructors if value is unsigned int or int
+    FieldVal(std::string colname="", unsigned int val=0);
+    FieldVal(std::string colname="", int val=0);
+
     void write (std::ostream& out) const;
     std::string m_colname;
     std::string m_val;
