@@ -3035,4 +3035,121 @@ version="v1r0" >
 
     <index name="unique" cols="acq_summary_fk fmx_logical mode" />
   </table>
+
+  <table name="Constituents" gui_readonly="true" version="v1r0"
+         comment="Make fmx info concerning interesting constituents 
+                  available to offline" >
+    <col name="prim_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned ="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+    <col name="dir" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="16" />
+      <comment>fmx.filetype.dir, e.g. cdm</comment>
+    </col>
+
+    <col name="pkg" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>fsw package this constituent belongs to</comment>
+    </col>
+
+    <col name="ver" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>fsw package version </comment>
+    </col>
+
+    <col name="name" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="255" />
+      <comment>fsw constituent name </comment>
+    </col>
+
+    <col name="fmx_path" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="text" />
+      <comment>File path relative to fmx archive root</comment>
+    </col>
+
+    <col name="FSW_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="FSW_inputs" keyCol="FSW_input_key" />
+      <comment>Refers to row in FSW_inputs</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false" >
+        <default value="new" />
+      </src>
+
+      <type typename="varchar" size="32" >
+        <restriction>
+          <enum use="prefer" values="new OK" />
+        </restriction>
+      </type>
+      <comment>status of this entry  </comment>
+    </col>
+
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <primary col="prim_key" /> 
+  
+    <index name="pkg" cols="pkg ver name" />
+
+</table>
+
+
+
 </rdbms>
