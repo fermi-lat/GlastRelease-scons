@@ -17,8 +17,6 @@ namespace rdbModel {
   class XercesBuilder;
   class MysqlConnection;
 
-
-
   /** 
    * rdbModel representation of a(n SQL-like) table description
    */
@@ -148,8 +146,8 @@ namespace rdbModel {
       m_colname(colname), m_val(val), m_null(isNull) { }
 
     // Alternate constructors if value is unsigned int or int
-    FieldVal(std::string colname="", unsigned int val=0);
-    FieldVal(std::string colname="", int val=0);
+    FieldVal(std::string colname, unsigned int val);
+    FieldVal(std::string colname, int val);
 
     void write (std::ostream& out) const;
     std::string m_colname;
