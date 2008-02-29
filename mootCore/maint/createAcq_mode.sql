@@ -1,6 +1,11 @@
 # Contains acq. information which may vary depending on mode.
 # At a minimum this includes filter configuration
-# Would like to have another column indicating 
+# Would like to have another column indicating..   
+# [?? too bad I didn't finish the above thought]
+
+# Might change name FSW_input_fk  --> FSW_fk (for consistency)
+#  or might change it to refer to new Constituents table rather than FSW_inputs
+#  table
 create table Acq_mode
  (acq_mode_key INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
     COMMENT "primary key",
