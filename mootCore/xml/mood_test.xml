@@ -3084,14 +3084,6 @@ version="v1r0" >
       <comment>fsw constituent name </comment>
     </col>
 
-    <col name="fmx_path" >
-      <src null="false" >
-        <from agent="enduser" />   
-      </src>
-      <type typename="text" />
-      <comment>File path relative to fmx archive root</comment>
-    </col>
-
     <col name="FSW_fk" >
       <src null="false" >
         <from agent="enduser" />
