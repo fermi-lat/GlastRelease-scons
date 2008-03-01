@@ -26,6 +26,7 @@ drop table if exists Acq_summary;
 drop table if exists Configs;
 
 ### drop instance tables
+drop table if exists Constituents;
 drop table if exists FSW_inputs;
 drop table if exists Parameters;
 drop table if exists Votes;

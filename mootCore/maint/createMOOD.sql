@@ -96,3 +96,5 @@ source createInstrument.sql;
 source createAcq_summary.sql;
 source createAcq_mode.sql;
 
+## Tentatively add a table for CDM's or other constituents; may not need it
+source createConstituents.sql;

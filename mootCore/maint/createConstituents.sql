@@ -5,8 +5,7 @@ create table Constituents
   pkg      VARCHAR(32) NOT NULL default '' COMMENT 'fsw package',
   ver      VARCHAR(32) NOT NULL default '' COMMENT 'fsw package version',
   name     VARCHAR(255) NOT NULL default '' COMMENT 'fsw constituent name',
-  fmx_path     TEXT NOT NULL COMMENT 'file path relative to fmx root',
-## or should we change FSW_fk to logical key?
+
   FSW_fk INT UNSIGNED NOT NULL COMMENT 'refers to FSW_inputs',
   status                VARCHAR(32) NOT NULL default 'new',
   creator               VARCHAR(32) NOT NULL,
