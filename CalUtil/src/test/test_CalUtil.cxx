@@ -5,7 +5,7 @@
     
     CalUtil test app. 
     Simple non-gaudi main() method runs test method for each CalUtil module
-    
+
     @return non-zero to os on failure
  */
 
@@ -81,12 +81,28 @@ bool testCalArray(){
   return true;
 }
 
+/// test AsymType class.
+/// 
+/// loop through possible values & constructor vs get methods
+bool testAsymType() {
+
+  for (DiodeNum pDiode; pDiode.isValid(); pDiode++)
+    for (DiodeNum nDiode; nDiode.isValid(); nDiode++) {
+      const AsymType asymType(pDiode, nDiode);
+      if (asymType.getDiode(POS_FACE) != pDiode) return false;
+      if (asymType.getDiode(NEG_FACE) != nDiode) return false;
+    }
+  return true;
+}
+
 /// \brief test suite of CalDefs classes
 ///
 /// Basically loop through all Cal components & check constructors & converters over all types and all crystals
 bool testCalDefs(){
 
   cout << "testCalDefs" << endl;
+
+  if (!testAsymType()) return false;
 
   //-- TEST CALDEFS CONVERSION ROUTINES --//
   // try to test all conversions & constructors for
@@ -97,12 +113,23 @@ bool testCalDefs(){
       const TwrNum twr(tRow, tCol);
       if (tRow != twr.getRow()) return false;
       if (tCol != twr.getCol()) return false;
+
+      const GTEMNum gtem(twr);
       
       for (DirNum dir; dir.isValid(); dir++)
         for (GCRCNum gcrc; gcrc.isValid(); gcrc++) {
 
           const LyrNum lyr(dir, gcrc);
           if (dir != lyr.getDir()) return false;
+          if (gcrc != lyr.getGCRC()) return false;
+          // test alternate constructors
+          if (LyrNum(dir,gcrc) != lyr) return false;
+
+          const LyrIdx lyrIdx(twr, lyr);
+          if (lyrIdx.getTwr() != twr) return false;
+          if (lyrIdx.getLyr() != lyr) return false;
+          // test alternate constructors
+          if (LyrIdx(idents::CalXtalId(twr.val(),lyr.val(),0)) != lyrIdx) return false;
 
           for (ColNum col; col.isValid(); col++) {
             const CalXtalId xtalId(twr.val(),
@@ -114,9 +141,16 @@ bool testCalDefs(){
             if (twr != xtalIdx.getTwr()) return false;
             if (lyr != xtalIdx.getLyr()) return false;
             if (col != xtalIdx.getCol()) return false;
-
-            // alt-constructor(s)
+            // test alternate constructors
             if (XtalIdx(xtalId) != xtalIdx) return false;
+
+            const tXtalIdx txtalIdx(lyr,col);
+            if (lyr != txtalIdx.getLyr()) return false;
+            if (col != txtalIdx.getCol()) return false;
+            // test alternate constructors
+            if (tXtalIdx(xtalId) != txtalIdx) return false;
+            
+            const GCFENum gcfe(col);
 
             for (FaceNum face; face.isValid(); face++) {
               const FaceIdx faceIdx(twr,lyr,col,face);
@@ -131,11 +165,35 @@ bool testCalDefs(){
               if (col != faceIdx.getCol()) return false;
               if (face.val() != faceIdx.getFace().val()) return false;
               if (xtalIdx != faceIdx.getXtalIdx()) return false;
-
-              // alt-constructor(s)
+              // test alternate constructors
               if (FaceIdx(faceId) != faceIdx) return false;
               if (FaceIdx(xtalIdx, face) != faceIdx) return false;
 
+              const tFaceIdx tfaceIdx(lyr,col,face);
+              if (lyr != tfaceIdx.getLyr()) return false;
+              if (col != tfaceIdx.getCol()) return false;
+              if (face.val() != tfaceIdx.getFace().val()) return false;
+              if (txtalIdx != tfaceIdx.getTXtalIdx()) return false;
+              // test alternate constructors
+              if (tFaceIdx(faceId) != tfaceIdx) return false;
+              if (tFaceIdx(txtalIdx, face) != tfaceIdx) return false;
+              
+              const GCCCNum gccc(dir, face);
+
+              const GCCCIdx gcccIdx(gtem, gccc);
+              if (gcccIdx.getGTEM() != gtem) return false;
+              if (gcccIdx.getGCCC() != gccc) return false;
+
+              const GCRCIdx gcrcIdx(gtem, gccc, gcrc);
+              if (gcrcIdx.getGTEM() != gtem) return false;
+              if (gcrcIdx.getGCCC() != gccc) return false;
+              if (gcrcIdx.getGCRC() != gcrc) return false;
+
+              const GCFEIdx gcfeIdx(gtem, gccc, gcrc, gcfe);
+              if (gcfeIdx.getGTEM() != gtem) return false;
+              if (gcfeIdx.getGCCC() != gccc) return false;
+              if (gcfeIdx.getGCRC() != gcrc) return false;
+              if (gcfeIdx.getGCFE() != gcfe) return false;
               
               for (DiodeNum diode; diode.isValid(); diode++) {
                 if (RngNum(diode,THX8).val() != diode.getX8Rng().val()) return false;
@@ -153,14 +211,25 @@ bool testCalDefs(){
                 if (diode != diodeIdx.getDiode()) return false;
                 if (xtalIdx != diodeIdx.getXtalIdx()) return false;
                 if (faceIdx != diodeIdx.getFaceIdx()) return false;
-
-                //alt-constructor(s)
+                //test alternate constructors
                 if (DiodeIdx(xtalIdx, face, diode) != diodeIdx) return false;
                 if (DiodeIdx(xtalIdx, xDiode) != diodeIdx) return false;
                 if (DiodeIdx(faceIdx, diode) != diodeIdx) return false;
+
+                const tDiodeIdx tdiodeIdx(lyr,col,face,diode);
+                if (lyr != tdiodeIdx.getLyr()) return false;
+                if (col != tdiodeIdx.getCol()) return false;
+                if (face != tdiodeIdx.getFace()) return false;
+                if (diode != tdiodeIdx.getDiode()) return false;
+                if (txtalIdx != tdiodeIdx.getTXtalIdx()) return false;
+                if (tfaceIdx != tdiodeIdx.getTFaceIdx()) return false;
+                //test alternate constructors
+                if (tDiodeIdx(faceId, diode) != tdiodeIdx) return false;
+                if (tDiodeIdx(txtalIdx, face, diode) != tdiodeIdx) return false;
+                if (tDiodeIdx(txtalIdx, xDiode) != tdiodeIdx) return false;
+                if (tDiodeIdx(tfaceIdx, diode) != tdiodeIdx) return false;
                 
-              
-                
+
                 for (THXNum thx; thx.isValid(); thx++) {
 
                   const RngNum rng(diode,thx);
@@ -184,11 +253,23 @@ bool testCalDefs(){
                   if (rng != rngIdx.getRng()) return false;
                   if (xtalIdx != rngIdx.getXtalIdx()) return false;
                   if (faceIdx != rngIdx.getFaceIdx()) return false;
-                  
-                  //alt-constructor(s)
+                  //test alternate constructors
                   if (RngIdx(xtalIdx, face, rng) != rngIdx) return false;
                   if (RngIdx(xtalIdx, xRng) != rngIdx) return false;
                   if (RngIdx(faceIdx, rng) != rngIdx) return false;
+
+                  const tRngIdx trngIdx(lyr,col,face,rng);
+                  if (lyr != trngIdx.getLyr()) return false;
+                  if (col != trngIdx.getCol()) return false;
+                  if (face != trngIdx.getFace()) return false;
+                  if (rng != trngIdx.getRng()) return false;
+                  if (txtalIdx != trngIdx.getTXtalIdx()) return false;
+                  if (tfaceIdx != trngIdx.getTFaceIdx()) return false;
+                  //test alternate constructors
+                  if (tRngIdx(rngId) != trngIdx) return false;
+                  if (tRngIdx(txtalIdx, face, rng) != trngIdx) return false;
+                  if (tRngIdx(txtalIdx, xRng) != trngIdx) return false;
+                  if (tRngIdx(tfaceIdx, rng) != trngIdx) return false;
 
 
                 } // thx/rng

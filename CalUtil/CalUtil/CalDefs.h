@@ -48,7 +48,7 @@ namespace CalUtil {
     
   /// generic type2string converter
   template <typename _T>
-      std::string toString(const _T &val) {
+  std::string toString(const _T &val) {
     std::ostringstream tmp;
     tmp << val;
     return tmp.str();
@@ -56,7 +56,7 @@ namespace CalUtil {
 
   /** \brief Atomic (simple) Cal Geometry Id's
 
-  Id single Cal component w/ in it's immediate container
+      Id single Cal component w/ in it's immediate container
   */
   class SimpleId {
   public:
@@ -109,11 +109,17 @@ namespace CalUtil {
 
   };
 
+  /// online TEM indexing is identical to offline Tower indexing.
+  typedef TwrNum GTEMNum;
+
+  class LyrNum;
+
   /// index class for GLAST Cal GCRC (layer 0-3 on a single cal front end board).
   class GCRCNum : public SimpleId {
   public:
     GCRCNum() : SimpleId() {}
     GCRCNum(const unsigned short val) : SimpleId(val) {}
+    GCRCNum(const LyrNum &lyr);
 
     static const unsigned short N_VALS=4;
     bool isValid() const {return m_data < N_VALS;}
@@ -148,6 +154,7 @@ namespace CalUtil {
     bool operator<(const LyrNum that) const {return m_data < that.m_data;}
 
   };
+
 
   /// index class for GLAST Cal xtal direction ('X' or 'Y')
   class DirNum : public SimpleId {
@@ -185,6 +192,9 @@ namespace CalUtil {
 
   };
 
+  /// GCFE numbering is identical to offline 'column' indexing
+  typedef ColNum GCFENum;
+
   /// index class for GLAST Cal xtal face ('POS' or 'NEG')
   class FaceNum : public SimpleId {
   public:
@@ -209,6 +219,42 @@ namespace CalUtil {
 
   const FaceNum POS_FACE(idents::CalXtalId::POS);
   const FaceNum NEG_FACE(idents::CalXtalId::NEG);
+
+  /// index class for GLAST Cal GCCC (face 0-3 on a single cal TEM module).
+  /// 0=X+,1=Y+,2=X-,3=Y-
+  class GCCCNum : public SimpleId {
+  public:
+    GCCCNum() : SimpleId() {}
+    GCCCNum(const unsigned short val) : SimpleId(val) {}
+
+    GCCCNum(const DirNum dir,
+            const FaceNum face) 
+    {
+      m_data = 0;
+      if (face == NEG_FACE)
+        m_data += 2;
+      if (dir == Y_DIR)
+        m_data++;
+    }
+      
+
+    static const unsigned short N_VALS=4;
+    bool isValid() const {return m_data < N_VALS;}
+
+    bool operator==(const GCCCNum that) const {return m_data == that.m_data;}
+    bool operator!=(const GCCCNum that) const {return m_data != that.m_data;}
+    bool operator>=(const GCCCNum that) const {return m_data >= that.m_data;}
+    bool operator<=(const GCCCNum that) const {return m_data <= that.m_data;}
+    bool operator>(const GCCCNum that) const {return m_data > that.m_data;}
+    bool operator<(const GCCCNum that) const {return m_data < that.m_data;}
+  };
+
+  const GCCCNum X_POS(X_DIR, POS_FACE);
+  const GCCCNum Y_POS(Y_DIR, POS_FACE);
+  const GCCCNum X_NEG(X_DIR, NEG_FACE);
+  const GCCCNum Y_NEG(Y_DIR, NEG_FACE);
+
+
 
   /// index class for GLAST Cal photo-diode on single xtal face 
   /// ('LARGE' or 'SMALL')
@@ -299,7 +345,7 @@ namespace CalUtil {
 
   /** \brief Id all components of same type within a single CAL xtal.
   
-  internal integer storage is contiguous and can be used as an array Index
+      internal integer storage is contiguous and can be used as an array Index
   */
 
   class XtalWideIndex {
@@ -424,11 +470,6 @@ namespace CalUtil {
        
     tXtalIdx() : TwrWideIndex() {}
        
-    idents::CalXtalId getCalXtalId() const {
-      return idents::CalXtalId(0,//twr
-                               getLyr().val(),
-                               getCol().val());
-    }
     static const unsigned N_VALS  = LyrNum::N_VALS*ColNum::N_VALS;
            
     LyrNum getLyr() const {return LyrNum((m_data)/LYR_BASE);}
@@ -464,13 +505,6 @@ namespace CalUtil {
     tFaceIdx(const tXtalIdx xtal, const FaceNum face) :
       TwrWideIndex(calc(xtal.getLyr(), xtal.getCol(), face)) {}
          
-    idents::CalXtalId getCalXtalId() const {
-      return idents::CalXtalId(0,//twr
-                               getLyr().val(),
-                               getCol().val(),
-                               getFace().val());
-    }
-           
     static const unsigned N_VALS = tXtalIdx::N_VALS*FaceNum::N_VALS;
              
     tXtalIdx getTXtalIdx() const {return tXtalIdx(getLyr(),
@@ -532,12 +566,6 @@ namespace CalUtil {
                                                   getCol(),
                                                   getFace());}
 
-    tDiodeIdx getTDiodeIdx() const {return tDiodeIdx(getLyr(),
-                                                     getCol(),
-                                                     getFace(),
-                                                     getDiode());}
-                             
-                             
     bool isValid() const {return m_data < N_VALS;}
   private:
     static unsigned calc(const LyrNum lyr, const ColNum col, const FaceNum face, const DiodeNum diode) {
@@ -576,13 +604,6 @@ namespace CalUtil {
            
     tRngIdx() : TwrWideIndex() {}
              
-    idents::CalXtalId getCalXtalId() const {
-      return idents::CalXtalId(getLyr().val(),
-                               getCol().val(),
-                               getFace().val(),
-                               getRng().val());
-    }
-               
     LyrNum getLyr()  const {return LyrNum((m_data)/LYR_BASE);}
     ColNum getCol()  const {return (m_data%LYR_BASE)/COL_BASE;}
     FaceNum getFace() const {return FaceNum((idents::CalXtalId::XtalFace)((m_data%COL_BASE)/FACE_BASE));}
@@ -610,7 +631,7 @@ namespace CalUtil {
 
   /** Id all Cal components of same type within full GLAST LAT
 
-  internal integer storage is contiguous and can be used as an array Index
+      internal integer storage is contiguous and can be used as an array Index
   */
 
   class LATWideIndex {
@@ -663,7 +684,7 @@ namespace CalUtil {
     LyrIdx() : LATWideIndex() {}
 
     static const unsigned N_VALS  = 
-    TwrNum::N_VALS*LyrNum::N_VALS;
+      TwrNum::N_VALS*LyrNum::N_VALS;
 
     TwrNum getTwr() const {return m_data/TWR_BASE;}
     LyrNum getLyr() const {return LyrNum(m_data%TWR_BASE);}
@@ -694,9 +715,9 @@ namespace CalUtil {
       LATWideIndex(calc(twr,lyr,col)) {}
 
     XtalIdx(const TwrNum twr,
-		const tXtalIdx twrXtalIdx) :
-	LATWideIndex(calc(twr,twrXtalIdx.getLyr(), twrXtalIdx.getCol())) {}
-		    
+            const tXtalIdx twrXtalIdx) :
+      LATWideIndex(calc(twr,twrXtalIdx.getLyr(), twrXtalIdx.getCol())) {}
+                    
     
     XtalIdx() : LATWideIndex() {}
 
@@ -712,7 +733,7 @@ namespace CalUtil {
     }
 
     static const unsigned N_VALS  = 
-    TwrNum::N_VALS*LyrNum::N_VALS*ColNum::N_VALS;
+      TwrNum::N_VALS*LyrNum::N_VALS*ColNum::N_VALS;
 
     TwrNum getTwr() const {return m_data/TWR_BASE;}
     LyrNum getLyr() const {return LyrNum((m_data%TWR_BASE)/LYR_BASE);}
@@ -938,11 +959,11 @@ namespace CalUtil {
 
   /** \brief id for 4 classes of Cal xtal asymmetry 
 
-  4 asymmetry classes are
-  - LL = large diode on both faces
-  - LS = large diode on positive face, small diode on neg
-  - SL = sm. diode on pos. face, large diode on neg
-  - SS = small diode on both faces
+      4 asymmetry classes are
+      - LL = large diode on both faces
+      - LS = large diode on positive face, small diode on neg
+      - SL = sm. diode on pos. face, large diode on neg
+      - SS = small diode on both faces
       
   */
 
@@ -980,6 +1001,126 @@ namespace CalUtil {
   const AsymType ASYM_SL(SM_DIODE, LRG_DIODE);
   const AsymType ASYM_SS(SM_DIODE, SM_DIODE);
 
+  /// index class for all Cal GCFE's
+  class GCFEIdx : public LATWideIndex {
+  public:
+    /// \param val should be the result of GCFEIdx::val() method to ensure proper encoding.
+    explicit GCFEIdx(int val) : LATWideIndex(val) {}
+
+    explicit GCFEIdx(const std::string &str);
+    
+    GCFEIdx(const GTEMNum tem,
+            const GCCCNum ccc,
+            const GCRCNum crc,
+            const GCFENum cfe) :
+      LATWideIndex(calc(tem, ccc, crc, cfe)) {}
+
+    GCFEIdx() : LATWideIndex() {}
+
+
+    static const unsigned N_VALS  = 
+      GTEMNum::N_VALS*GCCCNum::N_VALS*GCRCNum::N_VALS*GCFENum::N_VALS;
+
+    GTEMNum getGTEM() const {return m_data/TEM_BASE;}
+    GCCCNum getGCCC() const {return (m_data%TEM_BASE)/CCC_BASE;}
+    GCRCNum getGCRC() const {return (m_data%CCC_BASE)/CRC_BASE;}
+    GCFENum getGCFE() const {return m_data%CRC_BASE;}
+
+    bool isValid() const {return m_data < N_VALS;}
+
+    std::string toStr() const;
+
+  private:
+    static unsigned calc(const GTEMNum tem,
+                         const GCCCNum ccc,
+                         const GCRCNum crc,
+                         const GCFENum cfe) {
+      return tem.val()*TEM_BASE + ccc.val()*CCC_BASE + crc.val()*CRC_BASE + cfe.val()*CFE_BASE;
+    }
+
+    static const unsigned CFE_BASE = 1;
+    static const unsigned CRC_BASE = GCFENum::N_VALS;
+    static const unsigned CCC_BASE = CRC_BASE*GCRCNum::N_VALS;
+    static const unsigned TEM_BASE = CCC_BASE*GCCCNum::N_VALS;
+    static const unsigned short N_FIELDS = 4;
+
+  };
+
+  /// index class for all Cal GCRC's
+  class GCRCIdx : public LATWideIndex {
+  public:
+    /// \param val should be the result of GCRCIdx::val() method to ensure proper encoding.
+    explicit GCRCIdx(int val) : LATWideIndex(val) {}
+
+    explicit GCRCIdx(const std::string &str);
+    
+    GCRCIdx(const GTEMNum tem,
+            const GCCCNum ccc,
+            const GCRCNum crc) :
+      LATWideIndex(calc(tem, ccc, crc)) {}
+
+    GCRCIdx() : LATWideIndex() {}
+
+
+    static const unsigned N_VALS  = 
+      GTEMNum::N_VALS*GCCCNum::N_VALS*GCRCNum::N_VALS;
+
+    GTEMNum getGTEM() const {return m_data/TEM_BASE;}
+    GCCCNum getGCCC() const {return (m_data%TEM_BASE)/CCC_BASE;}
+    GCRCNum getGCRC() const {return m_data%CCC_BASE;}
+
+    bool isValid() const {return m_data < N_VALS;}
+
+    std::string toStr() const;
+
+  private:
+    static unsigned calc(const GTEMNum tem,
+                         const GCCCNum ccc,
+                         const GCRCNum crc) {
+      return tem.val()*TEM_BASE + ccc.val()*CCC_BASE + crc.val()*CRC_BASE;
+    }
+
+    static const unsigned CRC_BASE = 1;
+    static const unsigned CCC_BASE = CRC_BASE*GCRCNum::N_VALS;
+    static const unsigned TEM_BASE = CCC_BASE*GCCCNum::N_VALS;
+    static const unsigned short N_FIELDS = 3;
+  };
+
+  /// index class for all Cal GCCC's
+  class GCCCIdx : public LATWideIndex {
+  public:
+    /// \param val should be the result of GCCCIdx::val() method to ensure proper encoding.
+    explicit GCCCIdx(int val) : LATWideIndex(val) {}
+
+    explicit GCCCIdx(const std::string &str);
+    
+    GCCCIdx(const GTEMNum tem,
+            const GCCCNum ccc) :
+      LATWideIndex(calc(tem, ccc)) {}
+
+    GCCCIdx() : LATWideIndex() {}
+
+
+    static const unsigned N_VALS  = 
+      GTEMNum::N_VALS*GCCCNum::N_VALS;
+
+    GTEMNum getGTEM() const {return m_data/TEM_BASE;}
+    GCCCNum getGCCC() const {return m_data%TEM_BASE;}
+
+    bool isValid() const {return m_data < N_VALS;}
+
+    std::string toStr() const;
+
+  private:
+    static unsigned calc(const GTEMNum tem,
+                         const GCCCNum ccc) {
+      return tem.val()*TEM_BASE + ccc.val()*CCC_BASE;
+    }
+
+    static const unsigned CCC_BASE = 1;
+    static const unsigned TEM_BASE = CCC_BASE*GCCCNum::N_VALS;
+    static const unsigned short N_FIELDS = 2;
+  };
   
 
 }; // namespace CalUtil

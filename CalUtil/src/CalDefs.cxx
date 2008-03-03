@@ -96,6 +96,8 @@ namespace CalUtil {
     m_data = pos - first;
   }
 
+  GCRCNum::GCRCNum(const LyrNum &lyr) :
+    SimpleId(lyr.val()/2) {}
 
 
   const string THX_MNEM[] = {
@@ -160,4 +162,6 @@ namespace CalUtil {
   string RngIdx::toStr() const {
     return getFaceIdx().toStr() + "R" + toString(getRng().val());
   }
+
+
 };
