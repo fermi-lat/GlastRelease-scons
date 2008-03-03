@@ -1,8 +1,9 @@
-/** @file release.notes
+\/** @file release.notes
 
 @verbatim
  $Id$	
  * Package CalUtil
+ * v3r11      03-Mar-2008 ZGF added support for indexing GTEM,GCCC,GCRC,GCFE.  CalDefs unit test is not quite comprehensive
  * v3r10      27-Feb-2008 ZGF added support routines for CalDiagnosticData
  * v3r9p1     21-Feb-2008 AVM made slight notation changes to CalConfig enumeration
  * v3r9       19-Feb-2008 AVM added CalFirstRng enumeration for specifying first range readout option in CalDigi
