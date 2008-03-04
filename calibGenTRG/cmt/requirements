@@ -24,5 +24,6 @@ apply_pattern root_package headers="\
  ../calibGenTRG/afterglow.h\
  ../calibGenTRG/mippeak.h\
  ../calibGenTRG/vetoeff.h\
+ ../calibGenTRG/treqACD.h\
  ../calibGenTRG/takedata_mt.h"
 

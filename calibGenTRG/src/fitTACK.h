@@ -24,6 +24,7 @@ using namespace std;
 class fittack{
 public:
   fittack();
+  virtual ~fittack(){}
   void settextinput(char*);
   void setrootoutput(char*);
   void setfirstlastpoint(int,int);

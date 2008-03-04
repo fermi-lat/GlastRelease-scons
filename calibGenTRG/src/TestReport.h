@@ -13,6 +13,7 @@ class TestReport{
   void starttable( char*[],int);
   void addtableline(char*[],int);
   void endtable();
+  void addimage(char*, char*);
   void writereport();  
   void greentext(char* , const char*);
   void redtext(char* , const char*);

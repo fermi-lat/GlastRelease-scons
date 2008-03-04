@@ -119,7 +119,7 @@ public :
         TChain *mcChain = 0, 
         char *histFileName="Histograms.root");
 
-    ~RootTreeAnalysis();  
+    virtual ~RootTreeAnalysis();  
 
     /// start next Go with this event
     void StartWithEvent(Long64_t event) { m_StartEvent = event; };  
