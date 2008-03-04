@@ -38,7 +38,7 @@ library G4Propagator -s=../src $(source) -s=Dll *.cxx
 # following for test program only: no dependence on the interface
 use GlastSvc
 use FluxSvc
-use cfitsio * IExternal
+### use cfitsio * IExternal
 use flux
 
 public 
