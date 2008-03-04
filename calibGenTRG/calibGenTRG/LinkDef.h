@@ -12,4 +12,6 @@
 #pragma link C++ class fittack+;
 #pragma link C++ class LangauFun+;
 #pragma link C++ class afterglow+;
+#pragma link C++ class mippeak+;
+#pragma link C++ class vetoeff+;
 #endif

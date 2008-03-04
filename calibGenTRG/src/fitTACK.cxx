@@ -1,4 +1,6 @@
 #include "fitTACK.h"
+#include "TROOT.h"
+#include "math.h"
 
 fittack::fittack(){
   first=0;

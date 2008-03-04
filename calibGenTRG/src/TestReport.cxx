@@ -8,50 +8,50 @@
 
 TestReport::TestReport(char *filename){
   of.open(filename);  
-  of<<"<HTML>
-<HEAD>
-<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
-<TITLE>TRG Test Report</TITLE>
-<STYLE media=\"print\" type=\"text/css\">#toc {display:none}p {font: 12pt serif; page-break-inside:avoid}h1,h2 {page-break-before:always}</STYLE>
-<STYLE media=\"screen\" type=\"text/css\">h1,h2 {border-top-style:solid}</STYLE>
-</HEAD>
-<BODY>
-<Title>TRG Test Report</Title>
-<cdatanode>
-    <STYLE TYPE=\"text/css\">
-    H1 { font-size: x-large; color: blue }
-    H2 { font-size: large; color: blue }
-    H3 { font-size: medium; color: blue }
-    </STYLE>
-
-    </cdatanode>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<center>
-<b><font size=\"6\">
-<Line no=\"1\">
-      <cdatanode>GLAST LAT Trigger</cdatanode>
-    </Line>
-
-</font></b>
-</center>
-<center>
-<b><font size=\"6\">
-<Line no=\"2\">
-      <cdatanode>Test Report</cdatanode>
-    </Line>
-</font></b>
-</center>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>";
+  of<<"<HTML>"<<std::endl;
+of<<"<HEAD>"<<std::endl;
+of<<"<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"<<std::endl;
+of<<"<TITLE>TRG Test Report</TITLE>"<<std::endl;
+of<<"<STYLE media=\"print\" type=\"text/css\">#toc {display:none}p {font: 12pt serif; page-break-inside:avoid}h1,h2 {page-break-before:always}</STYLE>"<<std::endl;
+of<<"<STYLE media=\"screen\" type=\"text/css\">h1,h2 {border-top-style:solid}</STYLE>"<<std::endl;
+of<<"</HEAD>"<<std::endl;
+of<<"<BODY>"<<std::endl;
+of<<"<Title>TRG Test Report</Title>"<<std::endl;
+of<<"<cdatanode>"<<std::endl;
+of<<"    <STYLE TYPE=\"text/css\">"<<std::endl;
+of<<"    H1 { font-size: x-large; color: blue }"<<std::endl;
+of<<"    H2 { font-size: large; color: blue }"<<std::endl;
+of<<"    H3 { font-size: medium; color: blue }"<<std::endl;
+of<<"    </STYLE>"<<std::endl;
+of<<""<<std::endl;
+of<<"    </cdatanode>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<center>"<<std::endl;
+of<<"<b><font size=\"6\">"<<std::endl;
+of<<"<Line no=\"1\">"<<std::endl;
+of<<"      <cdatanode>GLAST LAT Trigger</cdatanode>"<<std::endl;
+of<<"    </Line>"<<std::endl;
+of<<""<<std::endl;
+of<<"</font></b>"<<std::endl;
+of<<"</center>"<<std::endl;
+of<<"<center>"<<std::endl;
+of<<"<b><font size=\"6\">"<<std::endl;
+of<<"<Line no=\"2\">"<<std::endl;
+of<<"      <cdatanode>Test Report</cdatanode>"<<std::endl;
+of<<"    </Line>"<<std::endl;
+of<<"</font></b>"<<std::endl;
+of<<"</center>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>"<<std::endl;
+of<<"<p>&nbsp;</p>";
 
 }
 

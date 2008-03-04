@@ -12,6 +12,7 @@
 #include "TF1.h"
 #include "TH1.h"
 #include "TNtuple.h"
+#include "TMath.h"
 
 // STD INCLUDES
 #include <cmath>
