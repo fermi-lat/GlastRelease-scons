@@ -24,6 +24,9 @@ use G4HadronSim v*
 # for linux execution clients to get the LD_LIBRARY_PATH set.
 use Geant4Runtime v3r* IExternal
 
+## Attempt to keep our clients' test programs happy by making this public
+use cfitsio * IExternal
+
 #=============================================================
 private
 #this is private to avoid passing on build info to clients
@@ -34,7 +37,7 @@ use GlastMS
 
 # only needed by test program 
 use FluxSvc v*
-use cfitsio  * IExternal
+
 # this seems to be needed by FluxSvc
 use flux *  
 
