@@ -21,7 +21,7 @@ create table FSW_inputs
   source_fmt             VARCHAR(32) NOT NULL
      COMMENT 'could be, e.g. xml',
 
-  fmx_path                TEXT NOT NULL DEFAULT 'unknown'
+  fmx_path                TEXT NOT NULL
      COMMENT 'path within fmx archive relative to root; used in fof',
 
   creation_time         DATETIME
