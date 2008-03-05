@@ -200,6 +200,7 @@ StatusCode InterleaveAlg::execute()
 
     if( ke > 0. )
     {
+        log <<  MSG::DEBUG << "ke > 0, returning " << endreq;
         return sc; // not a flagged sampled_background 
     }
     ++m_count;
@@ -220,6 +221,7 @@ StatusCode InterleaveAlg::execute()
     IBkgndTupleSelectTool* selector = srcToSelMap[sourceName];
 
     // ask for a tree corresponding to our current position: it will set all the tuple
+    log << MSG::DEBUG << "Calling selectEvent" << endreq;
     selector->selectEvent();
 
     // let the livetime service know about the current trigger rate,
@@ -234,12 +236,14 @@ StatusCode InterleaveAlg::execute()
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
 
+    log << MSG::DEBUG << "Calling copyEventInfo" << endreq;
     // overwrite the event info
     selector->copyEventInfo();
 
     // We have read the event in, want to now proceed down the interleave branch
     setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
+    log << MSG::DEBUG << "exiting InterleaveAlg" << endreq;
     return sc;
 }
 

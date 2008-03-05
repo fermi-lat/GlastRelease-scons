@@ -311,6 +311,8 @@ double BkgndTupleSelectTool::value()const
 //------------------------------------------------------------------------
 void BkgndTupleSelectTool::selectEvent()
 {
+    MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG << "begin selectEvent" << endreq;
     double x(value());
 
 #if 0 // have to do this since my specification was not understood
@@ -335,11 +337,15 @@ void BkgndTupleSelectTool::selectEvent()
         setCurrentTree(x);   
     }
 
+    log << MSG::DEBUG << "Calling GetEntry" << endreq;
     // grab the next event, cycling if needed
     int code = m_inputTree->GetEntry(m_eventOffset++);
+    log << MSG::DEBUG << "Called GetEntry with event: " << m_eventOffset << endreq;
 
     if( code <= 0)
     { 
+        log << MSG::DEBUG << "Failed first GetEntry, trying again with event 0"
+            << endreq;
         m_eventOffset = 0; 
         code = m_inputTree->GetEntry(m_eventOffset++);
         if( code <= 0 )
@@ -347,6 +353,7 @@ void BkgndTupleSelectTool::selectEvent()
             throw std::runtime_error("BkgndTupleSelectTool::selectEvent -- could not read file");
         }
     }
+    log << MSG::DEBUG << "exiting selectEvent" << endreq;
 }
 //------------------------------------------------------------------------
 void BkgndTupleSelectTool::disableBranches(TTree* t) 
@@ -361,6 +368,9 @@ void BkgndTupleSelectTool::disableBranches(TTree* t)
 //------------------------------------------------------------------------
 void BkgndTupleSelectTool::setCurrentTree(double x) 
 {
+    MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG << "begin setCurrentTree" << endreq;
+
     // replace the TChain
     delete m_inputTree; 
 
@@ -372,6 +382,8 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     
     int stat = m_fetch->getFiles(x, dynamic_cast<TChain*>(m_inputTree));
     
+    log << MSG::DEBUG << "BkgndTupleSelectTool::setCurrentTree returned from getFiles" << endreq;
+
     if( stat!=0 )
     {
         std::stringstream msg;
@@ -386,6 +398,8 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
+    log << MSG::DEBUG << "BkgndTupleSelectTool::setCurrentTree called" 
+        << " GetEntries which returned: " << length << endreq;
     if( length==0 ) 
     {
         throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: no events in the tree");
@@ -399,6 +413,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     m_downlinkRate = m_fetch->getAttributeValue("downlinkRate", x);
 
     int ret = m_inputTree->GetEntry(0);
+    log << MSG::DEBUG << "called GetEntry" << endreq;
     if( ret<0 ) throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: could not read");
 
     double minBin = m_fetch->minVal();
@@ -409,6 +424,8 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
         m_binList.push_back(minBin);
 ////        BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_inputTree);
     }
+
+    log << MSG::DEBUG << "exiting BkgndTupleSelectTool::setCurrentTree" << endreq;
 
     return;
 }

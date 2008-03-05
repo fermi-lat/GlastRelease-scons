@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+04-Mar-08 v1r5p3 HMK Insert some debug logging messages
 12-Feb-08 v1r5p2 HMK Remove BackgroundSelection include from TestAlg
  8-Feb-08 v1r5p1 TU  Restructure Interleave in preparation for using CEL's
 21-Jul-07 v1r4p5 THB Tweak the test program to check SAA failure on all platforms
