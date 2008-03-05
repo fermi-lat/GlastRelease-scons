@@ -31,6 +31,9 @@ class RootTreeAnalysis;
 #include  <iomanip> 
 #include  <fstream> 
 
+class AcdId;
+class TestReport;
+
 class treqACD : public RootTreeAnalysis {
 
 public :
@@ -41,9 +44,10 @@ public :
 
   void inithistos();
   void setParameters(int tkrdelay,int acddelay);
-  void savehistos(char*);
-  void writeoutresults(char* reportname);
+  void writeoutresults(const char* reportname, const char* filename);
+  void fit(TH1D* histo,double& mean, double &emean, double& sigma, double& esigma, int& nevents);
   void Go(Long64_t numEvents);
+  void markError(char*, TestReport*);
   
  private: 
   char m_filename[256]; 
@@ -52,7 +56,10 @@ public :
   int m_nev;
   int m_status;
   int m_tkrdelay,m_acddelay;
-  TH1D *m_allevents;
+  double m_mean,m_sigma;
+  TH1D *m_allevents, *m_intersect, *m_singletile, *m_singletower, *m_singletowertile;
+  TH1D *m_bytower[16];
+  TH1D *m_bytile[108];
   
   string m_testnr; 
  

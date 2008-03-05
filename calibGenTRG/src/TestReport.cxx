@@ -93,8 +93,8 @@ void TestReport::addtableline(char* line[],int columns){
 void TestReport::endtable(){
   of<<"</Table>";
 }
-void TestReport::addimage(char* location, char* description){
-  of<<"<img src="<<location<<" alt="<<description<<">"<<std::endl;
+void TestReport::addimage(char* location){
+  of<<"<img src="<<location<<">"<<std::endl;
 }
     
 void TestReport::writereport(){
