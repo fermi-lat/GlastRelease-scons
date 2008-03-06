@@ -152,10 +152,10 @@ BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type,
                                  , m_varLeaf(0)
                                  , m_runLeaf(0)
                                  , m_eventLeaf(0)
-                                 , m_eventOffset(0)
-                                 , m_inputTree(0)
-                                 , m_outputTree(0)
                                  , m_inputFile(0)
+                                 , m_outputTree(0)
+                                 , m_inputTree(0)
+                                 , m_eventOffset(0)
                                  , m_fetch(0)
                                  , m_downlinkRate(0)
                                  , m_triggerRate(0)
@@ -422,7 +422,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     m_downlinkRate = m_fetch->getAttributeValue("downlinkRate", x);
 
     time_t rawtime;
-    time(&rawtime)
+    time(&rawtime);
     log << MSG::DEBUG << ctime(&rawtime) << " GetEntry(0) should load tree" 
         << endreq;
     int ret = m_inputTree->GetEntry(0);
