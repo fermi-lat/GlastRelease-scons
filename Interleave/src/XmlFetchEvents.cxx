@@ -16,6 +16,7 @@ $Header$
 #include <sstream>
 #include <cmath>
 #include <cassert>
+#include <ctime>
 
 
 using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument;
@@ -171,8 +172,12 @@ int XmlFetchEvents::getFiles(double binVal, TChain* chain, bool verbose) {
             facilities::Util::expandEnvVar(&fileNameStr);
             std::string treeNameStr = xmlBase::Dom::getAttribute(*fileIt, "treeName");
             // Returns 1 if success and 0 if there is a problem adding the file
-            if (verbose) std::cout << "XmlFetchEvents::getFiles Adding: " 
-                << fileNameStr << std::endl;
+            if (verbose) {
+                time_t rawtime;
+                time( &rawtime );
+                std::cout << "XmlFetchEvents::getFiles " << ctime(&rawtime)
+                          << " Adding: " << fileNameStr << std::endl;
+            }
             int status = (dynamic_cast<TChain*>(chain))->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
             if (status == 0) statFlag |= 1;
         }

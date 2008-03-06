@@ -40,6 +40,7 @@
 #include <cmath>
 #include <vector>
 #include <list>
+#include <ctime>
 
 /** @class BackgroundSelection
     @brief manage the selection of background events to merge with signal events
@@ -355,6 +356,10 @@ void BkgndTupleSelectTool::selectEvent()
     if( code <= 0)
     { 
         m_eventOffset = 0; 
+        time_t rawtime;
+        time(&rawtime);
+        log << MSG::DEBUG << ctime(&rawtime) << "Failed to GetEntry, "
+            << "trying event 0" << endreq;
         code = m_inputTree->GetEntry(m_eventOffset++);
         if( code <= 0 )
         {
@@ -416,6 +421,10 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     m_triggerRate  = m_fetch->getAttributeValue("triggerRate", x);
     m_downlinkRate = m_fetch->getAttributeValue("downlinkRate", x);
 
+    time_t rawtime;
+    time(&rawtime)
+    log << MSG::DEBUG << ctime(&rawtime) << " GetEntry(0) should load tree" 
+        << endreq;
     int ret = m_inputTree->GetEntry(0);
     if( ret<0 ) throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: could not read");
 
