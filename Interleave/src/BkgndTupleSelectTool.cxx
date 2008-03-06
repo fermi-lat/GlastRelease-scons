@@ -31,6 +31,8 @@
 
 // access to the tuple
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
+// access to the CEL
+#include "RootIo/IRootIoSvc.h"
 
 #include <stdexcept>
 #include <cassert>
@@ -101,6 +103,9 @@ private:
     /// access the ntupleWriter service to write out to ROOT ntuples
     INTupleWriterSvc *   m_rootTupleSvc;
 
+    /// access the RootIoSvc to get the CompositeEventList ptr
+    IRootIoSvc *         m_rootIoSvc;
+
     TLeaf*               m_varLeaf;         ///< corresponding TLeaf for access to current value
     TLeaf*               m_runLeaf;
     TLeaf*               m_eventLeaf;
@@ -142,6 +147,7 @@ BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type,
                                  const IInterface* parent) :
                                  AlgTool(type, name, parent)
                                  , m_rootTupleSvc(0)
+                                 , m_rootIoSvc(0)
                                  , m_varLeaf(0)
                                  , m_runLeaf(0)
                                  , m_eventLeaf(0)
@@ -215,6 +221,13 @@ StatusCode BkgndTupleSelectTool::initialize()
     }
     m_outputTree = static_cast<TTree*>(ptr);
 
+    sc = service("RootIoSvc", m_rootIoSvc);       
+    if( sc.isFailure() ) 
+    {
+        log << MSG::ERROR << "failed to get the RootIoSvc" << endreq;
+        return sc;
+    }
+  
 ////    BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_outputTree);
 
     std::string  filePath;
@@ -312,7 +325,6 @@ double BkgndTupleSelectTool::value()const
 void BkgndTupleSelectTool::selectEvent()
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << "begin selectEvent" << endreq;
     double x(value());
 
 #if 0 // have to do this since my specification was not understood
@@ -337,15 +349,11 @@ void BkgndTupleSelectTool::selectEvent()
         setCurrentTree(x);   
     }
 
-    log << MSG::DEBUG << "Calling GetEntry" << endreq;
     // grab the next event, cycling if needed
     int code = m_inputTree->GetEntry(m_eventOffset++);
-    log << MSG::DEBUG << "Called GetEntry with event: " << m_eventOffset << endreq;
 
     if( code <= 0)
     { 
-        log << MSG::DEBUG << "Failed first GetEntry, trying again with event 0"
-            << endreq;
         m_eventOffset = 0; 
         code = m_inputTree->GetEntry(m_eventOffset++);
         if( code <= 0 )
@@ -380,10 +388,8 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
     
-    int stat = m_fetch->getFiles(x, dynamic_cast<TChain*>(m_inputTree));
+    int stat = m_fetch->getFiles(x, dynamic_cast<TChain*>(m_inputTree), log.level()<=MSG::DEBUG);
     
-    log << MSG::DEBUG << "BkgndTupleSelectTool::setCurrentTree returned from getFiles" << endreq;
-
     if( stat!=0 )
     {
         std::stringstream msg;
@@ -398,8 +404,6 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
-    log << MSG::DEBUG << "BkgndTupleSelectTool::setCurrentTree called" 
-        << " GetEntries which returned: " << length << endreq;
     if( length==0 ) 
     {
         throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: no events in the tree");
@@ -413,7 +417,6 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     m_downlinkRate = m_fetch->getAttributeValue("downlinkRate", x);
 
     int ret = m_inputTree->GetEntry(0);
-    log << MSG::DEBUG << "called GetEntry" << endreq;
     if( ret<0 ) throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: could not read");
 
     double minBin = m_fetch->minVal();
@@ -422,6 +425,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     if (binIter != m_binList.end())
     {
         m_binList.push_back(minBin);
+
 ////        BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_inputTree);
     }
 
@@ -528,7 +532,18 @@ void BkgndTupleSelectTool::copyEventInfo()
     m_rootTupleSvc->saveRow(m_treeName.value());
     m_interleaveMap->saveInterleaveMapRow();
 
-    // Tell the CEL Manager about this...
-////    BackgroundManager::instance()->getCelManager()->fillEvent();
+    // Tell the CEL about this...
+    // Recall David's note:
+    // for each tree, if the associated file is not writable (this is a tree where you just get an entry), 
+    // the "current" entry is obtained through a call to tree::GetReadEntry(). On the contrary,
+    // if the associated file is writable (this is a tree where you just filled
+    // an entry), the "current" is assumed to be (GetEntries()-1).
+
+    // Calling CEL's fill after RootTupleSvc::saveRow which does a TTree::Fill
+    // HMK March 5, 2008 Waiting until we're sure we can insert events with NULL components
+    // For now we will run an after-burner to fill the interleaved events into the CEL
+    //// m_rootIoSvc->getCell()->fillEntry("merit",m_outputTree);
+    // If we just fill the merit entry, will the others (mc, digi, etc) be left as NULL for this event as intended?
+    ////BackgroundManager::instance()->getCel()->fillEvent();
 }
 

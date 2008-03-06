@@ -37,7 +37,7 @@ public:
 
     double getAttributeValue(const std::string& elemName, double binVal);
 
-    int getFiles(double binVal, TChain* chain);
+    int getFiles(double binVal, TChain* chain, bool verbose=false);
 
     virtual double minValFullRange()const{return m_minval;}///< return minimum value allowed
     virtual double maxValFullRange()const{return m_maxval;}///< return maximum value allowed

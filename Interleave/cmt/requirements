@@ -34,6 +34,7 @@ use flux *
 use facilities *
 use AnalysisNtuple *
 use OnboardFilterTds *
+use RootIo *
 
 
 use xmlBase v*

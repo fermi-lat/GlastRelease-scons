@@ -132,7 +132,7 @@ StatusCode InterleaveAlg::initialize()
     }
 
     // Initialize the CEL manager
-////    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
+    //std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
 ////    m_bkgndManager->getCelManager()->initWrite(celFileName,"RECREATE");
 
     // initialize the background selection
@@ -221,7 +221,6 @@ StatusCode InterleaveAlg::execute()
     IBkgndTupleSelectTool* selector = srcToSelMap[sourceName];
 
     // ask for a tree corresponding to our current position: it will set all the tuple
-    log << MSG::DEBUG << "Calling selectEvent" << endreq;
     selector->selectEvent();
 
     // let the livetime service know about the current trigger rate,
@@ -236,14 +235,13 @@ StatusCode InterleaveAlg::execute()
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
 
-    log << MSG::DEBUG << "Calling copyEventInfo" << endreq;
     // overwrite the event info
     selector->copyEventInfo();
 
     // We have read the event in, want to now proceed down the interleave branch
     setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
-    log << MSG::DEBUG << "exiting InterleaveAlg" << endreq;
+    log << MSG::DEBUG << "exiting InterleaveAlg after processing" << endreq;
     return sc;
 }
 
@@ -257,7 +255,7 @@ StatusCode InterleaveAlg::finalize()
 
     log << MSG::INFO << "Inserted "<< m_count << " sampled background events." << endreq; 
 
-////    m_bkgndManager->getCelManager()->fillFileAndTreeSet();
+    //m_bkgndManager->getCel()->writeAndClose();
 
     return sc;
 }

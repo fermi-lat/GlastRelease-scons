@@ -1,7 +1,7 @@
 #ifndef BackgroundManager_h
 #define BackgroundManager_h 
 
-////#include "rootUtil/CelManager.h"
+#include "rootUtil/CompositeEventList.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -34,8 +34,9 @@ public:
     /// already)
     static  BackgroundManager* instance();
 
-    /// Return pointer to CelManager
-////    CelManager* getCelManager() {return &m_celManager;}
+    /// Return pointer to CompositeEventList
+    //CompositeEventList* getCel() {return m_cel;}
+    //bool initCel(const std::string &fileName, const std::string &opt, const TObjArray *componentNames=0);
 
     /// Methods for interfacing to the class
     ///! access rate according to section variable
@@ -60,8 +61,8 @@ private:
     /// Pointer to the class to make it a singleton
     static BackgroundManager* m_instance;
 
-    /// Pointer to the CelManager for input sources to share
-////    CelManager                m_celManager;
+    /// Pointer to the CompositeEventList for input sources to share
+    //CompositeEventList        *m_cel;
 
     double                    m_defaultRate;
 

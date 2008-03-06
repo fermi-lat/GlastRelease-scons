@@ -35,7 +35,7 @@ public:
     virtual double getAttributeValue(const std::string& elemName, double binVal) = 0;
 
     /// adds TTree's to a TChain
-    virtual int getFiles(double binVal, TChain* chain) = 0;
+    virtual int getFiles(double binVal, TChain* chain, bool verbose=false) = 0;
 
 
     virtual double minValFullRange()const{return -1e30;}///< return minimum value allowed
