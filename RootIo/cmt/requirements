@@ -17,7 +17,7 @@ apply_pattern package_include
 
 # I believe these no_auto_imports are essentially overridden by the use of RootConvert
 #use metaRootData v* -no_auto_imports
-use rootUtil v* -no_auto_imports
+use rootUtil v*
 use mcRootData v* -no_auto_imports
 use digiRootData v* -no_auto_imports
 use reconRootData v* -no_auto_imports

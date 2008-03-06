@@ -38,6 +38,7 @@
 #include "GaudiKernel/IInterface.h"
 #include <TChain.h>
 #include <string>
+#include "rootUtil/CompositeEventList.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_IRootIoSvc("RootIoSvc",4,1) ; 
@@ -115,6 +116,8 @@ class  IRootIoSvc : virtual public IInterface
     virtual int getAutoSaveInterval() = 0 ;
 
     virtual StatusCode closeFile( const std::string & type ) = 0 ;
+
+    virtual CompositeEventList* getCel() = 0;
 
 
     //====================
