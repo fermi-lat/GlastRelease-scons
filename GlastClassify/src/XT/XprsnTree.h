@@ -155,14 +155,14 @@ private:
     // The allowed operations:
     const T1* operator+ (IXTExprsnNode* rhs) const 
     {
-        REALNUM left   = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM left   = m_left ? *(reinterpret_cast<const REALNUM*>((*m_left)())) : 0;
         REALNUM rght   = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value  = left + rght;
         return m_value;
     }
     const T1* operator- (IXTExprsnNode* rhs) const 
     {
-        REALNUM left = *(reinterpret_cast<const REALNUM*>((*m_left)()));
+        REALNUM left = m_left ? *(reinterpret_cast<const REALNUM*>((*m_left)())) : 0;
         REALNUM rght = *(reinterpret_cast<const REALNUM*>((*rhs)()));
         *m_value = left - rght;
         return m_value;

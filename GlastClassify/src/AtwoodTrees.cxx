@@ -17,7 +17,7 @@ $Header$
 
 namespace {
     // This should be changed each time there is a new file, to make it defautl
-    std::string default_xml("$(GLASTCLASSIFYROOT)/xml/Pass6_Analysis_Complete_PSep_3.xml");
+    std::string default_xml("$(GLASTCLASSIFYROOT)/xml/Pass6_Analysis_Complete_PSep_5.xml");
 }
 /* 
 */
