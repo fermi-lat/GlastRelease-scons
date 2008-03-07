@@ -326,6 +326,7 @@ double BkgndTupleSelectTool::value()const
 void BkgndTupleSelectTool::selectEvent()
 {
     MsgStream log(msgSvc(), name());
+    try {
     double x(value());
 
 #if 0 // have to do this since my specification was not understood
@@ -367,6 +368,10 @@ void BkgndTupleSelectTool::selectEvent()
         }
     }
     log << MSG::DEBUG << "exiting selectEvent" << endreq;
+    } catch(...) {
+        log << MSG::WARNING << "exception thrown aborting" << endreq;
+        abort();
+    }
 }
 //------------------------------------------------------------------------
 void BkgndTupleSelectTool::disableBranches(TTree* t) 
@@ -384,6 +389,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG << "begin setCurrentTree" << endreq;
 
+   try {
     // replace the TChain
     delete m_inputTree; 
 
@@ -409,6 +415,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
+    log << MSG::DEBUG << "found " << length << " events in the chain" << endreq;
     if( length==0 ) 
     {
         throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: no events in the tree");
@@ -418,8 +425,11 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     // point tree to buffer for copying events:
     setLeafPointers();
+    log << MSG::DEBUG << "Called setLeafPointers" << endreq;
     m_triggerRate  = m_fetch->getAttributeValue("triggerRate", x);
     m_downlinkRate = m_fetch->getAttributeValue("downlinkRate", x);
+    log << MSG::DEBUG << "triggerRate: " << m_triggerRate 
+        << " downlinkRate: " << m_downlinkRate << endreq;
 
     time_t rawtime;
     time(&rawtime);
@@ -439,6 +449,10 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     }
 
     log << MSG::DEBUG << "exiting BkgndTupleSelectTool::setCurrentTree" << endreq;
+   } catch(...) {
+      log << MSG::WARNING << "exception thrown aborting" << endreq;
+      abort();
+   }
 
     return;
 }

@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+07-Mar-08 v1r5p6 HMK Add some try catch blocks and call abort to force core dump
 06-Mar-08 v1r5p5 HMK Insert timestamps in some debug logging messages
 06-Mar-08 v1r5p4 HMK Clean up debug messages and introduce call to RootIoSvc
 04-Mar-08 v1r5p3 HMK Insert some debug logging messages
