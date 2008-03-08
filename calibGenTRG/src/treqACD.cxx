@@ -63,6 +63,8 @@ void treqACD::inithistos(){
   m_singletower->GetXaxis()->SetTitle("ACD conditions arrival time (ticks)");
   m_singletowertile=new TH1D("singletowertile","Single Tower and Tile Events",32,-.5,31.5);
   m_singletowertile->GetXaxis()->SetTitle("ACD conditions arrival time (ticks)");
+  m_cno=new TH1D("cno","CNO",32,-.5,31.5);
+  m_cno->GetXaxis()->SetTitle("ACD conditions arrival time (ticks)");
   for (int i=0;i<16;i++){
     sprintf(histname,"tower_%d",i);
     sprintf(histtitle,"Tower %d",i);
@@ -121,6 +123,7 @@ void treqACD::writeoutresults(const char* reportname, const char* filename){
 
   r.newheadline("General Results");
   r.addimage("allevents.gif");
+  r.addimage("cno.gif");
   char* restable[]={"Cut","Number of events","Mean +- error","Sigma +- error","Optimal delay difference"};
   double mean,emean,sigma,esigma;
   int nentries, bestdelay, delay;
@@ -199,6 +202,21 @@ void treqACD::writeoutresults(const char* reportname, const char* filename){
   r.addtableline(line,5);
   c1.SaveAs("singletowertile.gif");
   m_singletowertile->Write();
+
+  fit(m_cno,mean,emean,sigma,esigma,nentries);
+  bestdelay=(int)(mean+.5);
+  delay=m_acddelay-m_tkrdelay-bestdelay;
+  r.linktext(line[0],"CNO", "cno.gif");
+  sprintf(line[1],"%d",nentries);
+  if(nentries<100)markError(line[1],&r);
+  sprintf(line[2],"%.2f +- %.2f",mean,emean);
+  if(fabs(mean-m_mean)>3)markError(line[2],&r);
+  sprintf(line[3],"%.2f +- %.2f",sigma,esigma);
+  if(fabs(sigma-m_sigma)>3)markError(line[3],&r);
+  sprintf(line[4],"%d",delay);
+  r.addtableline(line,5);
+  c1.SaveAs("cno.gif");
+  m_cno->Write();
 
   r.endtable();
 
@@ -327,8 +345,11 @@ void treqACD::Go(Long64_t numEvents)
         if(ievent%1000==0) 
             std::cout << "** Processing Event " << ievent << std::endl;  
 	const Gem gem=evt->getGem();
-	if(gem.getConditionSummary()!=3)continue;  // TKR && ROI
 	UShort_t condarracd=gem.getCondArrTime().roi();
+	if(gem.getConditionSummary()&0x10){ //CNO
+	  m_cno->Fill((double)condarracd);
+	}
+	if(gem.getConditionSummary()!=3)continue;  // TKR && ROI
 	m_allevents->Fill((double)condarracd);
 	std::vector<AcdId>tilelist;
 	const GemTileList acdTiles = gem.getTileList();
