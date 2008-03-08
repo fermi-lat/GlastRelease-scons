@@ -242,5 +242,42 @@ const CalibData::MootParmCol* MootSvc::getMootParmCol(unsigned& hw)  {
 }
 
 StatusCode MootSvc::updateMootParmCol( ) {
+
+  using CalibData::MootParmCol;
+  using CalibData::MootParm;
+  using CalibData::MootParmVec;
+
+  MootParmVec& v = m_mootParmCol->m_v;
+  v.clear();
+  m_mootParmCol->m_key = m_hw;
+
+  std::vector<MOOT::ParmOffline> parmsOff;
+
+  if (!(m_q->getParmsFromMaster(m_hw, parmsOff)) ) {
+    (*m_log) << MSG::ERROR 
+             << "Unable to fetch parameter collection from Moot" << std::endl;
+    return StatusCode::FAILURE;
+  }
+   
+  v.reserve(parmsOff.size() );
+  std::vector<MOOT::ParmOffline>::const_iterator poff = parmsOff.begin();
+
+  while (poff != parmsOff.end() ) {
+    unsigned ix = (*m_parmMap)[poff->getClass().c_str()];
+    MootParm p(poff->getKey(), poff->getClass(), poff->getClassFk(),
+               poff->getSrc(), poff->getSrcFmt(), poff->getStatus(),
+               m_prNames[ix]);
+    v.push_back(p);
+    poff++;
+  }
+
+  // Step through parms.   For each
+
+  //   Find its index in mootParmCol
+  //   Copy in precinct name from m_parmPrecinct into mootParmCol
+  //   (indexing is the same as       in mootParmCol
+
+  //   Copy everything in the parm object into mootParmCol
+
   return StatusCode::SUCCESS;   // for now
 }
