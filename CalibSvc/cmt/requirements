@@ -57,8 +57,6 @@ macro_append includes ' $(ppcmd)"$(Event_root)" '
 library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData  *.cxx\
                         CalibDataSvc/*.cxx      \
                         MootSvc/*.cxx       \
-                        MootSvc/cnv/*.cxx   \
-                        MootTds/*.cxx        \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
                         CalibXMLCnv/cnv/*.cxx   \

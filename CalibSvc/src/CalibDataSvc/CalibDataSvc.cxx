@@ -47,7 +47,6 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
   declareProperty("UseEventTime", m_useEventTime = true);
   //  declareProperty("UseEventKeys", m_useEventKeys = true);
-  declareProperty("UseEventKeys", m_useEventKeys = false);
   declareProperty("UseMoot", m_useMoot = 0);
 
   // m_rootName and m_rootCLID are declared in base class DataSvc
@@ -192,12 +191,8 @@ StatusCode CalibDataSvc::initialize()   {
     sc = service("MootSvc", iMootSvc, true);
     if (!sc.isSuccess()) return sc;
 
-    MootSvc* mootSvc = dynamic_cast<MootSvc * > (iMootSvc);
-    std::string rootNode("/");
-    rootNode += m_calibRootName;
-    return mootSvc->makeMootNodes(rootNode);
   }
-  else return sc;
+  return sc;
 }
 
 void CalibDataSvc::initPathArrays() {
@@ -483,7 +478,7 @@ StatusCode CalibDataSvc::updateObject( DataObject* toUpdate ) {
   updateTime();
 
   // and configuration (if necessary)
-  updateFswKeys();
+  //  updateFswKeys();
 
 
   // Retrieve IValidity interface of object to update
@@ -555,7 +550,7 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
                                     IRegistry* pRegistry) {
   if (m_newEvent) {
     updateTime();
-    updateFswKeys();
+    //    updateFswKeys();
 
     m_newEvent = false;
   }
@@ -563,6 +558,7 @@ StatusCode CalibDataSvc::loadObject(IConversionSvc* pLoader,
 
 }
 
+/*
 StatusCode  CalibDataSvc::updateFswKeys() {
   // For now either we update from event or we don't update at all
   if (!m_useEventKeys) return StatusCode::SUCCESS;
@@ -594,14 +590,11 @@ StatusCode  CalibDataSvc::updateFswKeys() {
   if (newMasterKey)     m_LATCMaster = newMasterKey;
   return StatusCode::SUCCESS;
    
-  /*   Leave it to conversion service to update info related to keys as
+     Leave it to conversion service to update info related to keys as
        needed.  Our job is just to get the key(s) out of the event
-  */
-  /*
-  if (newMasterKey == m_LATCMaster) return StatusCode::SUCCESS;
-  else return updateLATCConfig(newMasterKey);
-  */
-}
+
+ }
+ */
 
 // For timeSource = "data", "mc", "digi" or "clock"
 StatusCode  CalibDataSvc::updateTime() {
