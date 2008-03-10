@@ -42,6 +42,9 @@ use OnboardFilter v*
 use RootIo      v*
 use RootDisplay v*
 
+#Calibrations
+use CalibSvc    v*
+
 #diagnostic and summary of bottom line
 use merit       v*
 use AnalysisNtuple v*

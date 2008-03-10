@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+*          HMK 10-Mar-08 Add use of CalibSvc so that when building Gleam
+*                        CalibSvc will be as well
 * v6r33p13 AWB 15-JAN-08 Yet another filter JO update for pipeline.
 * v6r33p12 AWB 15-JAN-08 Filter JO update for pipeline.
 * v6r33p11 LSR 15-Jan-08 Another little fix to jobOptions.txt
