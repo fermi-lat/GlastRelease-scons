@@ -33,7 +33,7 @@ MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
   : Service(name, svc), m_q(0), m_c(0), m_log(0), m_mootParmCol(0)
 {
   declareProperty("MootArchive", m_archive = std::string("") );
-  declareProperty("UseEventKeys", m_useEventKeys = false);
+  declareProperty("UseEventKeys", m_useEventKeys = true);
   declareProperty("Verbose", m_verbose = false);
 }
 
@@ -202,6 +202,7 @@ int MootSvc::latcParmIx(const std::string& parmClass) const {
 
 StatusCode  MootSvc::updateFswKeys() {
   // For now either we update from event or we don't update at all
+  m_hw = 0;
   if (!m_useEventKeys) return StatusCode::SUCCESS;
   using namespace enums;
 
