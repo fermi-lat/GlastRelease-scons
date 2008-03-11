@@ -4,6 +4,8 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v0r10p1 11-Mar-2008 HMK patch for windows to make sure __i386 is defined
+        so that endianness can be determined
 v0r10   12-Dec-2007 HMK Update LSFReader for rename of missingGps to sourceGps
         need to consider rename in enums as well
 v0r9    30-Oct-2007 RBL Relocated LSFReader object to lsfData to break a dependency cycle in CHS/eventFile.

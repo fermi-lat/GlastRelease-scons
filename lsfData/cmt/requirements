@@ -1,5 +1,5 @@
 package lsfData 
-version v0r10
+version v0r10p1
 
 author Heather Kelly <heather@lheapop@gsfc.nasa.gov>
 
@@ -17,6 +17,9 @@ apply_pattern shared_library
 apply_pattern ld_library_path
 
 private
+
+macro_append cppflags "" \
+    WIN32 ' /D "__i386" '
 
 library lsfData *.cxx ${lsfData_headers} 
 
