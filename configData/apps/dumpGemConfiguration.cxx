@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <cassert>
 #ifndef WIN32
 #include <unistd.h>
 #else
