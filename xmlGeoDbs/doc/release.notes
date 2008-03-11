@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+   v1r47p2 11-Mar-2008 jrb  Rotate cu06 side tiles into place as is done for LAT
    v1r47p1 26-Nov-2007 jrb  cu06 changes: 1) change CsI density, dimensions
                                           2) replace 4th CAL with air
    v1r47   29-Oct-2007 jrb  Trapezoidal side tiles (they go in rows 1&2, col 0&4)
