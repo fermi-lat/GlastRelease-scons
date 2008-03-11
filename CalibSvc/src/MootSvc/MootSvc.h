@@ -7,16 +7,6 @@
 #include <string>
 #include <cstring>
 
-#ifdef _WIN32
-#  include <hash_map>
-using  stdext::hash_map;
-// using  stdext::hash;
-#else
-#  include <ext/hash_map>
-using __gnu_cxx::hash_map;
-// using __gnu_cxx::hash;
-#endif
-
 class IDataProviderSvc;
 
 #include "GaudiKernel/Service.h"
@@ -25,7 +15,6 @@ class IDataProviderSvc;
 
 
 /// Forward and external declarations
-// class ConditionsDBGate;
 template <class TYPE> class SvcFactory;
 class ISvcLocator;
 class MsgStream;
@@ -50,18 +39,21 @@ class MootSvc :  public Service, virtual public IMootSvc
   /// Only factories can access protected constructors
   friend class SvcFactory<MootSvc>;
 
-#ifdef _WIN32
-typedef hash_map<const char*, int> HashMap; 
-
-#else
-typedef hash_map<const char*, int> HashMap;
-
-#endif
-
-  typedef std::pair<const char*, int>  hashpair;
  public:
 
   // Reimplemented from IMootSv
+
+  /// Return absolute path for parameter source file of specified class.
+  /// If none return empty string.
+  std::string getMootParmPath(const std::string& cl, unsigned& hw);
+
+  /// Return MootParm structure for parameter source file of specified class.
+  /// If none return blank structure.
+  virtual const CalibData::MootParm* getMootParm(const std::string& cl, 
+                                           unsigned& hw);
+
+  // Return pointer to Moot parameter collection.  Also set output
+  // arg. hw to current hw key
   virtual const CalibData::MootParmCol* getMootParmCol(unsigned& hw);
 
   /// Return last LATC master key seen in data
@@ -78,13 +70,8 @@ typedef hash_map<const char*, int> HashMap;
   virtual StatusCode queryInterface( const InterfaceID& riid, 
 				     void** ppvInterface );  
 
-
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-
-  // stuff for other services within the package,
-  unsigned getLatcParmMaxCnt();
-
 
  protected:
 
@@ -97,12 +84,15 @@ typedef hash_map<const char*, int> HashMap;
   // Not part of IMootSvc interface
   virtual MOOT::MootQuery* makeConnection(bool verbose=true);
   typedef std::pair<std::string, std::string> ParmPrecinct;
-  const std::vector<ParmPrecinct>* getParmPrecinct() const 
-  {return  &m_parmPrecincts;}
+
 
  private:
 
-  StatusCode getPrecincts();  // fills m_prNames, hash map
+  StatusCode getPrecincts();  // fills m_parmPrecincts
+
+  /// Given param class name, find associated precinct
+  std::string findPrecinct(const std::string& pclass);
+
   StatusCode updateMootParmCol();
   StatusCode updateFswKeys();
 
@@ -113,19 +103,7 @@ typedef hash_map<const char*, int> HashMap;
   /// MOOT archive path.  
   std::string   m_archive;  
 
-  // Precinct names.  Index comes from public enum
-  std::vector<std::string> m_prNames;
-  hash_map<const char*, int>* m_parmMap;
-
   std::vector<ParmPrecinct> m_parmPrecincts;
-
-  /*
-    probably should have a job option.  Special value of * would mean
-    'use existing value of env var MOOT_ARCHIVE'   Otherwise 
-    do setenv of MOOT_ARCHIVE, using supplied value
-  */
-
-
 
   IInstrumentName*     m_instrSvc;   // might not need this one
   IDataProviderSvc* m_eventSvc;
@@ -133,9 +111,9 @@ typedef hash_map<const char*, int> HashMap;
   MsgStream*           m_log;
 
   unsigned             m_hw; // latc master from most recent event
-  //  std::string          m_latcPath;
 
   bool  m_useEventKeys;                       // job options
+  bool  m_verbose;                            // controls MoodConnection
 
   CalibData::MootParmCol*  m_mootParmCol;
 };

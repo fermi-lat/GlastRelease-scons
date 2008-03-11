@@ -3,7 +3,7 @@
 // Include files
 #include <algorithm>
 #include "CalibDataSvc.h"
-#include "../MootSvc/MootSvc.h"
+// #include "../MootSvc/MootSvc.h"
 #include "CalibCLIDNode.h"
 #include "CalibData/CalibTime.h"
 #include "GaudiKernel/IAddressCreator.h"
@@ -47,7 +47,7 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
   declareProperty("UseEventTime", m_useEventTime = true);
   //  declareProperty("UseEventKeys", m_useEventKeys = true);
-  declareProperty("UseMoot", m_useMoot = 0);
+  //  declareProperty("UseMoot", m_useMoot = 0);
 
   // m_rootName and m_rootCLID are declared in base class DataSvc
   m_rootName = "/" + m_calibRootName;
@@ -184,14 +184,6 @@ StatusCode CalibDataSvc::initialize()   {
   sc =  makeFlavorNodes(calibCreator);
   if (!sc.isSuccess()) return sc;
 
-  // Moot stuff. First make sure service is up and running
-  if (m_useMoot) {
-    IMootSvc* iMootSvc;
-
-    sc = service("MootSvc", iMootSvc, true);
-    if (!sc.isSuccess()) return sc;
-
-  }
   return sc;
 }
 

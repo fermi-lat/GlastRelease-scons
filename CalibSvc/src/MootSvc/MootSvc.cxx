@@ -34,6 +34,7 @@ MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
 {
   declareProperty("MootArchive", m_archive = std::string("") );
   declareProperty("UseEventKeys", m_useEventKeys = false);
+  declareProperty("Verbose", m_verbose = false);
 }
 
 MootSvc::~MootSvc(){ }
@@ -74,11 +75,10 @@ StatusCode MootSvc::initialize()
   */
 
   // Make a MOOT::MootQuery instance
-  m_q = makeConnection(true);    // for now, always verbose
+  m_q = makeConnection(m_verbose); 
   if (!m_q) return StatusCode::FAILURE;
  
   // Get local info
-
   sc = getPrecincts();
 
   m_mootParmCol = new CalibData::MootParmCol(CalibData::MOOTSUBTYPE_latcParm);
@@ -103,7 +103,7 @@ StatusCode MootSvc::finalize()
 MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
   if (m_q) return m_q;
 
-  const std::string slacDefault("/afs/slac/glast/g/moot/archive-mood/");
+  const std::string slacDefault("/afs/slac/glast/g/moot/archive-mood");
 
   std::string archEnv("$(MOOT_ARCHIVE)");
   std::string archEnvName("MOOT_ARCHIVE");
@@ -118,9 +118,10 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
   //   else try default value above 
 
   if (m_archive.size() == 0 ) {
-    // Check to see if MOOT_ARCHIVE has a value.  If not, set m_archive to 
+    // Check to see if MOOT_ARCHIVE has a value.  
     int nExpand = facilities::Util::expandEnvVar(&archEnv);
     if (nExpand > 0) envSet = true;
+    // If not, set m_archive to 
     else m_archive = slacDefault;
   }
   if (!envSet) {
@@ -135,40 +136,39 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
   if (m_c) m_q = new MOOT::MootQuery(m_c);
 
   if (!m_q) {
-    (*m_log) << MSG::ERROR << "Could not open connection to MOOT dbs" << endreq;
+    (*m_log) << MSG::ERROR 
+             << "Could not open connection to MOOT dbs for archive " 
+             << m_archive << endreq;
+  }
+  else if (!verbose) {
+    (*m_log) << MSG::INFO
+             << "Successfully connect to MOOT dbs for archive "
+             << m_archive << endreq;
   }
   
   return m_q;
 }
 
-unsigned MootSvc::getLatcParmMaxCnt() {
-  if (m_parmMap) return m_parmMap->size();
-  else return 0;
-}
 
 StatusCode MootSvc::getPrecincts() {
 
-  m_parmMap = new HashMap();
-
-
-  m_q->getPrecincts(m_prNames);
+  std::vector<std::string> prNames;
+  m_q->getPrecincts(prNames);
   std::vector<std::string> pclasses;
-  pclasses.reserve(20);   // plenty
+  pclasses.reserve(50);   // lots for precinct 'generic'
   m_parmPrecincts.reserve(60);
 
   int pclassIx = 0;
-  for (unsigned ix = 0; ix < m_prNames.size(); ix++) {
-    // Get parm classes for all but 'generic'
-    if (m_prNames[ix] != std::string("generic") ) {
-      pclasses.clear();
-      m_q->getParmClasses(pclasses, m_prNames[ix]);
-      for (unsigned jx = 0; jx < pclasses.size(); jx++) {
-        m_parmMap->insert(hashpair(pclasses[jx].c_str(), (int) pclassIx) );
-        m_parmPrecincts.push_back(ParmPrecinct(pclasses[jx], m_prNames[ix]));
-        pclassIx++;
-      }
+  for (unsigned ix = 0; ix < prNames.size(); ix++) {
+    // Get parm classes 
+    pclasses.clear();
+    m_q->getParmClasses(pclasses, prNames[ix]);
+    for (unsigned jx = 0; jx < pclasses.size(); jx++) {
+      m_parmPrecincts.push_back(ParmPrecinct(pclasses[jx], prNames[ix]));
+      pclassIx++;
     }
   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -189,7 +189,13 @@ StatusCode MootSvc::queryInterface(const InterfaceID& riid,
 
 
 int MootSvc::latcParmIx(const std::string& parmClass) const {
-  return (*m_parmMap)[parmClass.c_str()];
+  if (!m_mootParmCol) return -2;
+  const CalibData::MootParmVec& vec = m_mootParmCol->getMootParmVec();
+  for (unsigned ix = 0; ix < vec.size(); ix++) {
+    if (parmClass.compare(vec[ix].getClass()) == 0)
+      return ix;
+  }
+  return -1;
 }
 
 
@@ -200,8 +206,6 @@ StatusCode  MootSvc::updateFswKeys() {
   using namespace enums;
 
   SmartDataPtr<LsfEvent::MetaEvent> metaEvt(m_eventSvc, "/Event/MetaEvent");
-
-  //  unsigned int newMasterKey = metaEvt->keys()->LATC_master();
 
   unsigned newMasterKey;
   switch (metaEvt->keyType()) {
@@ -231,6 +235,26 @@ unsigned MootSvc::getHardwareKey()  {
   return m_hw;
 }
 
+std::string MootSvc::getMootParmPath(const std::string& cl, unsigned& hw) {
+  const CalibData::MootParm* pParm = getMootParm(cl, hw);
+  if (pParm) return pParm->getSrc();
+  else return std::string("");
+}
+
+const CalibData::MootParm* MootSvc::getMootParm(const std::string& cl,
+                                                   unsigned& hw) {
+  updateFswKeys();
+  hw = m_hw;
+  if (hw != m_mootParmCol->fswKey() ) {
+    StatusCode sc = updateMootParmCol();
+    if (!sc.isSuccess() ) return 0;
+  }
+  // Find desired parm
+  int ix = latcParmIx(cl);
+  if (ix < 0) return 0;
+  else return &m_mootParmCol->m_v[ix];
+}
+
 const CalibData::MootParmCol* MootSvc::getMootParmCol(unsigned& hw)  {
   updateFswKeys();
   hw = m_hw;
@@ -249,6 +273,7 @@ StatusCode MootSvc::updateMootParmCol( ) {
 
   MootParmVec& v = m_mootParmCol->m_v;
   v.clear();
+
   m_mootParmCol->m_key = m_hw;
 
   std::vector<MOOT::ParmOffline> parmsOff;
@@ -263,21 +288,29 @@ StatusCode MootSvc::updateMootParmCol( ) {
   std::vector<MOOT::ParmOffline>::const_iterator poff = parmsOff.begin();
 
   while (poff != parmsOff.end() ) {
-    unsigned ix = (*m_parmMap)[poff->getClass().c_str()];
+
+    std::string path(m_archive);
+    path += std::string("/") + poff->getSrc();
+    
+    // Find pclass in parm-precinct vector; prec = elt.second;
+    std::string prec = findPrecinct(poff->getClass());
+    
     MootParm p(poff->getKey(), poff->getClass(), poff->getClassFk(),
-               poff->getSrc(), poff->getSrcFmt(), poff->getStatus(),
-               m_prNames[ix]);
+               path, poff->getSrcFmt(), poff->getStatus(),
+               prec);
     v.push_back(p);
+
     poff++;
   }
-
-  // Step through parms.   For each
-
-  //   Find its index in mootParmCol
-  //   Copy in precinct name from m_parmPrecinct into mootParmCol
-  //   (indexing is the same as       in mootParmCol
-
-  //   Copy everything in the parm object into mootParmCol
-
   return StatusCode::SUCCESS;   // for now
 }
+
+std::string MootSvc::findPrecinct(const std::string& pclass) {
+  for (unsigned ix = 0; ix < m_parmPrecincts.size(); ix++) {
+    if (pclass.compare(m_parmPrecincts[ix].first) == 0)
+      return m_parmPrecincts[ix].second;
+  }
+  return std::string("");
+}
+
+
