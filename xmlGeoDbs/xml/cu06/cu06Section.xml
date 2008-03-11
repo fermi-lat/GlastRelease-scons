@@ -83,6 +83,8 @@
         <idField name="fTileSeg" value="0" />
       </posXYZ>
       <posXYZ volume="sideTileMPkg"
+              xrot="90"
+              zrot="-90"
               XREF="ACDTilePkg_100_dx"
               YREF="ACDTile_100_dy"
               ZREF="ACDTile_100_dz" >
@@ -95,6 +97,8 @@
       </posXYZ>
 
       <posXYZ volume="sideTileMPkg"
+              xrot="90"
+              zrot="-90"
               XREF="ACDTilePkg_110_dx"
               YREF="ACDTile_110_dy"
               ZREF="ACDTile_110_dz" >
@@ -109,6 +113,8 @@
 
 
       <posXYZ volume="sideTileSPkg"
+              xrot="90"
+              zrot="-90"
               XREF="ACDTilePkg_120_dx"
               YREF="ACDTile_120_dy"
               ZREF="ACDTile_120_dz" >
@@ -121,6 +127,8 @@
       </posXYZ>
 
       <posXYZ volume="sideTileSPkg"
+              xrot="90"
+              zrot="-90"
               XREF="ACDTilePkg_130_dx"
               YREF="ACDTile_130_dy"
               ZREF="ACDTile_130_dz" >
