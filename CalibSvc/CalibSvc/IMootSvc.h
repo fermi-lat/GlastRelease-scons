@@ -36,9 +36,21 @@ public:
   // Re-implemented from IInterface
   static const InterfaceID& interfaceID() { return IID_IMootSvc; }
 
+  /// Return absolute path for parameter source file of specified class.
+  /// If none return empty string.
+  virtual std::string getMootParmPath(const std::string& cl, 
+                                      unsigned& hw)=0;
+
+
+  /// Return MootParm structure for parameter source file of specified class.
+  /// If none return blank structure.
+  virtual const CalibData::MootParm* getMootParm(const std::string& cl, 
+                                                 unsigned& hw)=0;
+
   // Return pointer to Moot parameter collection.  Also set output
   // arg. hw to current hw key
   virtual const CalibData::MootParmCol* getMootParmCol(unsigned& hw)=0;
+
 
   /// Return last LATC master key seen in data
   virtual unsigned getHardwareKey()=0;
@@ -48,15 +60,8 @@ public:
   virtual int latcParmIx(const std::string& parmClass) const =0;
 
 
-  // Given a (latc??) precinct, return  list of indices? iterators?
-
-
-
   // Get handle for metadata access from mootCore.
   virtual MOOT::MootQuery* getConnection() const = 0;
-
-
-
 };
 
 #endif
