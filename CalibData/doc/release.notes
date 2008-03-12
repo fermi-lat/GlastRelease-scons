@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r21   11-Mar-2008  jrb  Add definition of Moot data-related classes
    v0r20   19-Feb-2008  eac  Added AcdRibbon calibration
    v0r19p3 17-Dec-2007  jrb  Hide statics needed for Acd calibrations to make
                              Windows happy (thanks, Tracy)
