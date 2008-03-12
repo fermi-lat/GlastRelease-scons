@@ -1,7 +1,7 @@
 // $Header$
 
-#ifndef MootData_h
-#define MootData_h
+#ifndef CalibData_MootData_h
+#define CalibData_MootData_h
 
 #include <string>
 #include "GaudiKernel/ContainedObject.h"
