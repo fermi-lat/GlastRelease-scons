@@ -15,9 +15,9 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_ALGORITHM( McCoordsAlg       );
     DECLARE_ALGORITHM( ObfCoordsAlg      );
     DECLARE_ALGORITHM( PtValsAlg         );
-#if 0
+
     DECLARE_AUDITOR(   EventAuditor      );
-#endif
+
     DECLARE_TOOL(      TkrValsTool      );
     DECLARE_TOOL(      CalValsTool      );
     DECLARE_TOOL(      AcdValsTool      );
