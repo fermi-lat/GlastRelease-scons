@@ -2782,4 +2782,186 @@ version="v1r0" >
     <primary col="instrument_key" /> 
   </table>
 
+  <table name="Acq_summary" gui_readonly="true" version="v1r0"
+         comment="Written/updated by half-pipe" >
+    <col name="acq_summary_key">
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+
+    <col name="scid" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <comment> Same as SCI in Oracle table ISOC_FLIGHT.GLASTOPS_ACQSUMMARY
+      </comment>
+    </col>
+  
+    <col name="started_at" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <comment>Same as STARTEDAT in Oracle table 
+              ISOC_FLIGHT.GLASTOPS_ACQSUMMARY </comment>
+    </col>
+
+    <col name="config_fk" >
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Configs" keyCol="config_key" />
+      <comment>Refers to Config presumed used for this acquisition</comment>
+    </col>
+
+    <col name="type" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="16" />
+      <comment>Same as TYPE in Oracle table ISOC_FLIGHT.GLASTOPS_ACQSUMMARY,
+               typically LCI or LPA</comment>
+    </col>
+
+    <col name="analysis" >
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+      <type typename="varchar" size="64" />
+      <comment>Same as ANALYSIS in Oracle table 
+             ISOC_FLIGHT.GLASTOPS_ACQSUMMARY, typically LCI or LPA</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false" >
+        <default value="STARTED" />
+      </src>
+      <type typename="varchar" size="16" />
+      <comment>Whether acq. is done, in progress, aborted, etc.</comment>
+    </col>
+
+    <col name="nevts" >
+      <src null="false" >
+        <default value="0" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <comment>Number of evts from this acq decoded so far</comment>
+    </col>
+
+    <col name="evtutc0" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>Timestamp (UTC) for first evt decoded so far for this acq,
+               trunc. to second</comment>
+    </col>
+
+    <col name="evtutc1" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>Timestamp (UTC) for last evt decoded so far for this acq,
+               rounded up to full second</comment>
+    </col>
+
+    <col name="hw_key" >
+      <src null="false" >
+        <default value="0" />
+      </src>
+      <type  typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>fmx key for LATC master for this acq.</comment>
+    </col>
+
+    <col name="sw_key" >
+      <src null="false" >
+        <default value="0" />
+      </src>
+      <type  typename="int" unsigned="true">
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>fmx key for script (if LCI type) or SBS (if PHA type)</comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)  (utc)
+      </comment>
+    </col>
+
+    <col name="update_time" >
+      <src null="true">
+        <from agent="service" contents="update_time" />         
+      </src>
+      <type typename="datetime" size="14" />
+      <comment>Time of last modification to row. Equal to time it was entered
+      if there were no subsequent mods.  End user is not allowed to set it
+      </comment>
+    </col>
+
+    <primary col="acq_summary_key" />
+    <index name="unique" cols="scid started_at" />
+  </table>
+
 </rdbms>
