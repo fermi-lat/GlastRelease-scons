@@ -181,6 +181,23 @@ template <class T1, class T2> inline void RelTable<T1,T2>::init()
     m_secondMMap = new RelKeyMultiMap<T2,T1,T2>;
 }
 
+//
+// Define a class for the sorting algorithm
+// This will be used to sort a vector of pointers to TrackElements
+//
+template <class T1,class T2> class CompareRelations
+{
+public:
+    CompareRelations(const Relation<T1,T2>* rel) : m_rel(rel) {}
+
+    const bool operator()(const Relation<T1,T2>* rel) const
+    {
+        return *rel == *m_rel;
+    }
+private:
+    const Relation<T1,T2>* m_rel;
+};
+
 template <class T1,class T2> bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* rel) 
 {
     // Purpose and Method:  This routine add a relation to the table if it doesn't 
@@ -190,15 +207,30 @@ template <class T1,class T2> bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* 
     // Outputs: a boolean value which is true if the realtion has been added to the
     //          table and false it it is a duplicate and thus has not been added.
     //          In the latter case the user has to delete the relation
+    bool addedToList = false;
 
-    // This adds the relation to the list
-    rel->insertInList(m_relations);
+    typedef typename RelationList<T1,T2>::RelationListIter RelListIter;
+    RelListIter listIter = std::find_if(m_relations->begin(),m_relations->end(),CompareRelations<T1,T2>(rel));
 
-    // Take care of the maps
-    rel->insertFirst(m_firstMMap);
-    rel->insertSecond(m_secondMMap);
+    // If not in list then add it
+    if (listIter == m_relations->end())
+    {
+        // This adds the relation to the list
+        rel->insertInList(m_relations);
 
-    return true;
+        // Take care of the maps
+        rel->insertFirst(m_firstMMap);
+        rel->insertSecond(m_secondMMap);
+
+        addedToList = true;
+    }
+    // Otherwise, update the "info" vector 
+    else if (!rel->getInfos().empty())
+    {
+        (*listIter)->addInfo(rel->getInfos().front());
+    }
+
+    return addedToList;
 }
 
 template <class T1,class T2>

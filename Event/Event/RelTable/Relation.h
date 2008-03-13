@@ -57,6 +57,9 @@ public:
     void addInfo(std::string inf);
     std::vector<std::string> getInfos() const;
 
+    /// Comparison operator for searching for duplicate entries
+    const bool operator==(const Relation<T1,T2>& relation) const;
+
     /// Fill the ASCII output stream
     std::ostream& fillStream( std::ostream& s ) const;
 
@@ -141,6 +144,11 @@ template <class T1, class T2> void Relation<T1,T2>::removeFromList(RelationList<
     return;
 }     
 
+template <class T1, class T2> const bool Relation<T1,T2>::operator==(const Relation<T1,T2>& relation) const
+{
+    if (m_first == relation.m_first && m_second == relation.m_second) return true;
+    return false;
+}
 
 template <class T1, class T2> inline std::ostream& Relation<T1,T2>::fillStream( std::ostream& s ) const 
 {
