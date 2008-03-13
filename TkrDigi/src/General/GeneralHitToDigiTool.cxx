@@ -439,9 +439,10 @@ StatusCode GeneralHitToDigiTool::execute()
                 rel->addInfo(ost.str());
                 //addRelation now does the right thing with duplicates
                 // namely, appends the info to the existing info
-                unsigned int size = digiHit.size();
-                digiHit.addRelation(rel);
-                if (size==digiHit.size()) delete rel;
+                if (!digiHit.addRelation(rel))
+                {
+                    delete rel;
+                }
             }
         }    
         // add the digi if it has some hits
