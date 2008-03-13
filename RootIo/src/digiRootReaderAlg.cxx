@@ -225,6 +225,10 @@ StatusCode digiRootReaderAlg::execute()
     m_common.m_rootTkrDigiMap.clear();
     m_common.m_rootCalDigiMap.clear();
 
+    // Clear the digi common maps
+    m_common.m_tkrDigiMap.clear();
+    m_common.m_calDigiMap.clear();
+
     sc = readDigiEvent();
     if (sc.isFailure()) {
         log << MSG::ERROR << "Failed to read top level DigiEvent" << endreq;
@@ -642,6 +646,7 @@ StatusCode digiRootReaderAlg::readCalDigi() {
         calDigiTdsCol->push_back(calDigiTds);
 
         m_common.m_rootCalDigiMap[calDigiRoot] = calDigiTds;
+        m_common.m_calDigiMap[calDigiTds]      = calDigiRoot;
     }
  
     return sc;
@@ -689,6 +694,7 @@ StatusCode digiRootReaderAlg::readTkrDigi() {
         tkrDigiTdsCol->push_back(tkrDigiTds);
 
         m_common.m_rootTkrDigiMap[tkrDigiRoot] = tkrDigiTds;
+        m_common.m_tkrDigiMap[tkrDigiTds]      = tkrDigiRoot;
     }
 
     return sc;

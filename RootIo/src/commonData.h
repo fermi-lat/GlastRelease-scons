@@ -87,8 +87,6 @@ public:
     static std::map<const TObject*, const Event::TkrTrack*>         m_rootTkrTrackMap;
     static std::map<const TObject*, const Event::TkrVertex*>        m_rootTkrVertexMap;
 
-
-
     /// Provide access to the ROOT event pointers
     static McEvent *m_mcEvt;
     static DigiEvent *m_digiEvt;
