@@ -3,8 +3,9 @@
 
 $Id$
 @verbatim
- 8-Feb-09  v6r1p0 TU  Updates for allowing use of xrootd and moving to version 3 of the Pass 6 analysis
- 5-Feb-09  v6r0p0 TU  First round of updates for Pass 6 
+13-Mar-08  v6r1p1 TU  Move to Pass6_Analysis_Complete_PSep_5.xml and fix some potential bugs
+ 8-Feb-08  v6r1p0 TU  Updates for allowing use of xrootd and moving to version 3 of the Pass 6 analysis
+ 5-Feb-08  v6r0p0 TU  First round of updates for Pass 6 
 23-Jan-08  v5r0p1 TU  Provide mechanism to print info about CT tree at initialization
  9-Aug-07  v5r0p0 TU  Update default xml file to load for ClassifyAlg and apply
  9-Aug-07  v5r0   TU  Moving to Bill Atwood's Pass 5 analysis with Particle Separator
