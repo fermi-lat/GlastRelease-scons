@@ -1,6 +1,6 @@
  package Gleam
 
-version v6r33p14
+version v6r33p15
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -86,8 +86,8 @@ branches data
 
 # temporary=============================================
 # this is set to the correct place for SLAC and glast-ts
-#set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
-#                    WIN32 "f:\glast\calibrations"
+set LATCalibRoot "" Linux "/nfs/slac/g/glast/calibrations/" \
+                    WIN32 "\\slaccfs\slac_afs\g\glast\ground\releases\calibrations"
 
 # the pointing history file. !!!
 #set POINTING_HISTORY_FILE  "F:\glast\data\SC2\orbit_files\FT2_orbit9_v2.fits"

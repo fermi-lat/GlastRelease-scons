@@ -30,4 +30,5 @@ AcdSimCalibSvc.FlavorHighRange = "ideal";
 AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
 AcdSimCalibSvc.FlavorVeto      = "MC_OktoberFest07";
 AcdSimCalibSvc.FlavorCno       = "ideal";
+AcdSimCalibSvc.FlavorRibbon       = "ideal";
 

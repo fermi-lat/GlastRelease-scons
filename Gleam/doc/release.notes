@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r33p15 HMK 12-Mar-08 Update calibrations.txt to set FlavorRibbon="ideal"
 * v6r33p14 HMK 10-Mar-08 Add use of CalibSvc so that when building Gleam
 *                        CalibSvc will be as well
 *                        includes Toby's updates to calibration.txt
