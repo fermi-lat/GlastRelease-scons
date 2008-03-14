@@ -476,6 +476,14 @@ used for container vote files which reference regular votes by alias" />
              val="Can be used as FSW_class value when no real class applies" />
     </row>
 
+    <row>
+      <field col="name" val="sbsResolved" />
+      <field col="from_precursors" val="none" />
+      <field col="to_binary" val="none" />
+      <field col="description" 
+             val="Secondary boot script (resolved)" />
+    </row>
+
   </table>
 
   <table name="Parameter_class" mode="add" >

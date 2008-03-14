@@ -3084,17 +3084,43 @@ version="v1r0" >
       <comment>fsw constituent name </comment>
     </col>
 
-    <col name="FSW_fk" >
+    <col name="FSW_id" >
       <src null="false" >
-        <from agent="enduser" />
+        <default value="0" />
       </src>
       <type typename="int" unsigned="true" >
         <restriction>
           <nonnegative />
         </restriction>
       </type>
-      <fk tableName="FSW_inputs" keyCol="FSW_input_key" />
-      <comment>Refers to row in FSW_inputs</comment>
+      <comment>Refers to row in fmx Logical table</comment>
+    </col>
+
+    <col name="src_path" >
+      <src null="false" >
+        <default value="NA" />
+      </src>
+      <type typename="text" />
+      <comment>Where applicable, path to source file rel. to Moot archive root
+      </comment>
+    </col>
+
+
+    <col name="fmx_db" >
+      <src null="false">
+        <default value="none" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Normally one of "development", "production" </comment>
+    </col>
+
+    <col name="fmx_path" >
+      <src null="false" >
+        <default value="unknown" />
+      </src>
+      <type typename="text" />
+      <comment>Describes where file handed to fmx goes, relative to root
+      </comment>
     </col>
 
     <col name="status" >
@@ -3139,9 +3165,86 @@ version="v1r0" >
     <primary col="prim_key" /> 
   
     <index name="pkg" cols="pkg ver name" />
+    <index name="FSW_id" cols="FSW_id fmx_db" />
 
-</table>
+  </table>
 
+  <table name="SBS_to_Constituents" gui_readonly="true" version="v1r0"
+    comment="relate SBS key to Constituents ">
 
+    <col name="prim_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned ="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+     <col name="sbs_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="FSW_inputs" keyCol="FSW_input_key" />
+      <comment>Refers to row in FSW_inputs for a particular secondary
+          boot script</comment>
+    </col>
+
+    <col name="Constituents_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Constituents" keyCol="prim_key" />
+      <comment>Refers to row in Constituents</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false" >
+        <default value="active" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Should always have value 'active'</comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
+  </table>
 
 </rdbms>

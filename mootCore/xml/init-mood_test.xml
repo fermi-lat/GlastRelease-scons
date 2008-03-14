@@ -484,14 +484,6 @@ used for container vote files which reference regular votes by alias" />
              val="Secondary boot script (resolved)" />
     </row>
 
-    <row>
-      <field col="name" val="cdm" />
-      <field col="from_precursors" val="none" />
-      <field col="to_binary" val="cmx" />
-      <field col="description" 
-             val="cdm constituent" />
-    </row>
-
   </table>
 
   <table name="Parameter_class" mode="add" >
