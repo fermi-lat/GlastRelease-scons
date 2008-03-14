@@ -410,8 +410,11 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
         throw std::runtime_error(msg.str());
     }
 
+    log << MSG::DEBUG << "Returned from getFiles with stat: " << stat << endreq;
+    if (!m_inputTree) log << MSG::DEBUG << "inputTree is Null" << endreq;
+
     // this is necessary due to the design of ROOT :-(
-    saveDir->cd();
+    //saveDir->cd(); HMK Move this to the end of the method
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
@@ -449,6 +452,8 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     }
 
     log << MSG::DEBUG << "exiting BkgndTupleSelectTool::setCurrentTree" << endreq;
+    // this is necessary due to the design of ROOT :-(
+    saveDir->cd();
    } catch(...) {
       log << MSG::WARNING << "exception thrown aborting" << endreq;
       abort();
