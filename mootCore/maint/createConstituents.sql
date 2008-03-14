@@ -6,14 +6,24 @@ create table Constituents
   ver      VARCHAR(32) NOT NULL default '' COMMENT 'fsw package version',
   name     VARCHAR(255) NOT NULL default '' COMMENT 'fsw constituent name',
 
-  FSW_fk INT UNSIGNED NOT NULL COMMENT 'refers to FSW_inputs',
+  FSW_id                 INT UNSIGNED NOT NULL 
+     COMMENT 'id from FSW logical table when binary has been created', 
+
+  src_path                 TEXT  NOT NULL COMMENT 
+     'where applicable, path to source file in Moot archive, relative to root',
+
+  fmx_db  varchar(32) not null default 'none'
+      COMMENT 'recognized values are development, production, none  ',
+
+  fmx_path                TEXT NOT NULL
+     COMMENT 'path within fmx archive relative to root of binary',
+
   status                VARCHAR(32) NOT NULL default 'new',
   creator               VARCHAR(32) NOT NULL,
   creation_time         DATETIME   COMMENT 'When this row was created',
 
-  UNIQUE INDEX pkg (pkg, ver, name),
-  FOREIGN KEY(FSW_fk) REFERENCES FSW_inputs(FSW_input_key)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+  UNIQUE KEY pkg (pkg, ver, name),
+  UNIQUE KEY (FSW_id, fmx_db)
+  
 ) TYPE=InnoDB
 COMMENT='a row corresponds to a fsw constitutent';

@@ -96,5 +96,10 @@ source createInstrument.sql;
 source createAcq_summary.sql;
 source createAcq_mode.sql;
 
-## Tentatively add a table for CDM's or other constituents; may not need it
+## Table for CDM's or other constituents
 source createConstituents.sql;
+## Relations between constituents and SBS
+source createSBS_to_Constituents.sql;
+
+
+

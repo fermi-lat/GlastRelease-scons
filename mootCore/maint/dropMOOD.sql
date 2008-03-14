@@ -15,6 +15,7 @@ drop table if exists Vote_PClass_AClass;
 drop table if exists Parameters_to_Ancillary;
 drop table if exists Offline_to_Ancillary;
 drop table if exists Container_Precinct;
+drop table if exists SBS_to_Constituents;
 
 ### drop alias tables
 drop table if exists Vote_aliases;
