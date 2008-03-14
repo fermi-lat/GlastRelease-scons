@@ -25,5 +25,6 @@ apply_pattern root_package headers="\
  ../calibGenTRG/mippeak.h\
  ../calibGenTRG/vetoeff.h\
  ../calibGenTRG/treqACD.h\
+ ../calibGenTRG/treqCAL.h\
  ../calibGenTRG/takedata_mt.h"
 

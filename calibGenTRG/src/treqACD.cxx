@@ -240,6 +240,7 @@ void treqACD::writeoutresults(const char* reportname, const char* filename){
     r.addtableline(line,5);
     sprintf(name,"tower_%d.gif",i);
     c1.SaveAs(name);
+    m_bytower[i]->Write();
   }
   r.endtable();
     
