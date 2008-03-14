@@ -13,6 +13,7 @@ class IDataProviderSvc;
 #include "CalibSvc/IMootSvc.h"
 #include "CalibSvc/IInstrumentName.h"
 
+#include "GaudiKernel/IIncidentListener.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
@@ -34,7 +35,9 @@ namespace CalibData {
     
     @author J. Bogart
 */
-class MootSvc :  public Service, virtual public IMootSvc
+class MootSvc :  public Service, 
+                 virtual public IIncidentListener,
+                 virtual public IMootSvc
 {
   /// Only factories can access protected constructors
   friend class SvcFactory<MootSvc>;
@@ -82,12 +85,17 @@ class MootSvc :  public Service, virtual public IMootSvc
 
   // For internal CalibSvc use, but not necessarily MootSvc class
   // Not part of IMootSvc interface
-  virtual MOOT::MootQuery* makeConnection(bool verbose=true);
   typedef std::pair<std::string, std::string> ParmPrecinct;
 
 
  private:
 
+  /// Routine which willbe called when a new incident has occurred
+  virtual void handle(const Incident&);
+
+  MOOT::MootQuery* makeConnection(bool verbose=true);
+  void closeConnection();
+ 
   StatusCode getPrecincts();  // fills m_parmPrecincts
 
   /// Given param class name, find associated precinct
@@ -108,9 +116,8 @@ class MootSvc :  public Service, virtual public IMootSvc
   IInstrumentName*     m_instrSvc;   // might not need this one
   IDataProviderSvc* m_eventSvc;
 
-  MsgStream*           m_log;
-
-  unsigned             m_hw; // latc master from most recent event
+  unsigned          m_hw; // latc master from most recent event
+  unsigned          m_countdown; // decide when to close open MySQL connection
 
   bool  m_useEventKeys;                       // job options
   bool  m_verbose;                            // controls MoodConnection

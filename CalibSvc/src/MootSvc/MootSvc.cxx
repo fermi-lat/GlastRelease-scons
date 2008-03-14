@@ -19,8 +19,10 @@
 
 #include "GaudiKernel/ISvcLocator.h"
 
+
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -30,7 +32,7 @@ static SvcFactory<MootSvc>          MootSvc_factory;
 const ISvcFactory& MootSvcFactory = MootSvc_factory;
 
 MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
-  : Service(name, svc), m_q(0), m_c(0), m_log(0), m_mootParmCol(0)
+  : Service(name, svc), m_q(0), m_c(0), m_mootParmCol(0)
 {
   declareProperty("MootArchive", m_archive = std::string("") );
   declareProperty("UseEventKeys", m_useEventKeys = true);
@@ -42,30 +44,30 @@ MootSvc::~MootSvc(){ }
 StatusCode MootSvc::initialize()
 {
   // Initialize base class
-  if (m_log) {    // already attempted initialization
+  if (m_mootParmCol) {    // already attempted initialization
     return (m_q) ? StatusCode::SUCCESS : StatusCode::FAILURE;
   }
 
   StatusCode sc = Service::initialize();
   if ( !sc.isSuccess() ) return sc;
 
-  m_log = new MsgStream(msgSvc(), "MootSvc");
+  MsgStream log(msgSvc(), "MootSvc");
 
-  (*m_log) << MSG::INFO << "Specific initialization starting" << endreq;
+  log << MSG::INFO << "Specific initialization starting" << endreq;
 
 
   // Get properties from the JobOptionsSvc
   sc = setProperties();
   if ( !sc.isSuccess() ) {
-    (*m_log) << MSG::ERROR << "Could not set jobOptions properties" << endreq;
+    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
-  (*m_log) << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
+  log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
 
   // Needed for access for fsw keys
   sc = serviceLocator()->service("EventDataSvc", m_eventSvc, true);
   if (sc .isFailure() ) {
-    (*m_log) << MSG::ERROR << "Unable to find EventDataSvc " << endreq;
+    log << MSG::ERROR << "Unable to find EventDataSvc " << endreq;
     return sc;
   }
 
@@ -78,29 +80,53 @@ StatusCode MootSvc::initialize()
   m_q = makeConnection(m_verbose); 
   if (!m_q) return StatusCode::FAILURE;
  
+  // Arrange to be woken up once per event.  
+  IIncidentSvc* incSvc;
+  sc = service("IncidentSvc", incSvc, true);
+  if (sc.isSuccess() ) {
+    int priority = 100;
+    incSvc->addListener(this, "EndEvent", priority);
+  }
+  else {
+    log << MSG::ERROR << "Unable to find IncidentSvc" << endreq;
+    return sc;
+  }
+
   // Get local info
   sc = getPrecincts();
 
   m_mootParmCol = new CalibData::MootParmCol(CalibData::MOOTSUBTYPE_latcParm);
 
 
-  (*m_log) << MSG::INFO << "Specific initialization completed" << endreq;
+  log << MSG::INFO << "Specific initialization completed" << endreq;
   return sc;
 }
 
 
 StatusCode MootSvc::finalize()
 {
-  (*m_log) << MSG::DEBUG << "Finalizing" << endreq;
-  if (m_q) delete m_q;
-  if (m_c) delete m_c;
-  delete m_log;
-  m_q = 0;  m_c = 0; m_log = 0;
+  MsgStream log(msgSvc(), "MootSvc");
+  log << MSG::DEBUG << "Finalizing" << endreq;
+  closeConnection();
     
   return Service::finalize();
 }
 
+void MootSvc::closeConnection() {
+  if (m_q) {
+    delete m_q;
+    m_q = 0;
+  }
+  if (m_c) {
+    delete m_c;
+    m_c = 0;
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::INFO << "Closed connection to Moot db" << endreq;
+  }
+}
+
 MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
+  static nOpen = 4;     // keep MySQL connection for this many events
   if (m_q) return m_q;
 
   const std::string slacDefault("/afs/slac/glast/g/moot/archive-mood");
@@ -136,16 +162,20 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
   if (m_c) m_q = new MOOT::MootQuery(m_c);
 
   if (!m_q) {
-    (*m_log) << MSG::ERROR 
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR 
              << "Could not open connection to MOOT dbs for archive " 
              << m_archive << endreq;
+    return 0;
   }
-  else if (!verbose) {
-    (*m_log) << MSG::INFO
+
+  if (!verbose) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::INFO
              << "Successfully connect to MOOT dbs for archive "
              << m_archive << endreq;
   }
-  
+  m_countdown = nOpen;
   return m_q;
 }
 
@@ -153,6 +183,9 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
 StatusCode MootSvc::getPrecincts() {
 
   std::vector<std::string> prNames;
+
+  // Currently only called once at initialization time, when m_q is
+  // known to be valid.  Might conceivably call if connection is re-established
   m_q->getPrecincts(prNames);
   std::vector<std::string> pclasses;
   pclasses.reserve(50);   // lots for precinct 'generic'
@@ -186,6 +219,19 @@ StatusCode MootSvc::queryInterface(const InterfaceID& riid,
   return StatusCode::SUCCESS;
 }
 
+/// At EndEvent check if MySQL connection is open periodically.  
+/// If so, close it.
+void MootSvc::handle(const Incident& inc) {
+
+  if (inc.type() != "EndEvent" ) return;
+
+  if (m_c) {
+    if (m_countdown) m_countdown--;
+    if  (!m_countdown) {
+      closeConnection();
+    }
+  }
+}
 
 
 int MootSvc::latcParmIx(const std::string& parmClass) const {
@@ -279,9 +325,15 @@ StatusCode MootSvc::updateMootParmCol( ) {
 
   std::vector<MOOT::ParmOffline> parmsOff;
 
+  if (!m_q) {
+    m_q = makeConnection(m_verbose);
+    if (!m_q) return StatusCode::FAILURE;
+  }
+
   if (!(m_q->getParmsFromMaster(m_hw, parmsOff)) ) {
-    (*m_log) << MSG::ERROR 
-             << "Unable to fetch parameter collection from Moot" << std::endl;
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR 
+             << "Unable to fetch parameter collection from Moot" << endreq;
     return StatusCode::FAILURE;
   }
    

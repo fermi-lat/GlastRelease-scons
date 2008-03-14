@@ -229,6 +229,7 @@ void CalibDataSvc::initPathArrays() {
   m_calibCLIDs[Calib_CalibTest1] = CLID_Calib_CalibTest1;
   m_calibCLIDs[Calib_NAS_TowerCfg] = CLID_Calib_NAS_TowerCfg;
   m_calibCLIDs[Calib_NAS_SAABoundary] = CLID_Calib_NAS_SAABoundary;
+  m_calibCLIDs[Calib_NAS_LATAlignment] = CLID_Calib_NAS_LATAlignment;
   m_calibCLIDs[Calib_ANC_TaggerPed] = CLID_Calib_ANC_TaggerPed;
   m_calibCLIDs[Calib_ANC_TaggerGain] = CLID_Calib_ANC_TaggerGain;
   m_calibCLIDs[Calib_ANC_QdcPed] = CLID_Calib_ANC_QdcPed;
