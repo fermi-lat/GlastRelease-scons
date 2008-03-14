@@ -1,2 +1,5 @@
 Byron
 old
+createTextTable.sql
+createTestTable.sql
+addAllVerifyStates.sql
