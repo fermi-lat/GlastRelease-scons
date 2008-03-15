@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r32p2 14-Mar-2008  jrb  Release MOOT Mysql connection when no longer needed
    v0r32p1 11-Mar-2008  jrb  set MootSvc.UseEventKeys default to "true"
    v0r32   11-Mar-2008  jrb  Usable MootSvc
    v0r31p1 20-Feb-2008  jrb  One last little thing in support of AcdRibbon calib.
