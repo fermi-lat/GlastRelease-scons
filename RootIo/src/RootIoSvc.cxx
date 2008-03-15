@@ -28,7 +28,7 @@
 #include "GaudiKernel/IRunable.h"
 #include "GaudiKernel/Property.h"
 #include "RootIo/IRootIoSvc.h"
-#include "ntupleWriterSvc/INtupleWriterSvc.h"
+#include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 #include "TSystem.h"
 #include "TFile.h"
