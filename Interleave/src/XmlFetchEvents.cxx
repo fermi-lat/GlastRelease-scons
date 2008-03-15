@@ -178,7 +178,18 @@ int XmlFetchEvents::getFiles(double binVal, TChain* chain, bool verbose) {
                 std::cout << "XmlFetchEvents::getFiles " << ctime(&rawtime)
                           << " Adding: " << fileNameStr << std::endl;
             }
-            int status = (dynamic_cast<TChain*>(chain))->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
+            if (!chain) {
+                if (verbose) std::cout << "XmlFetchEvents::getFiles chain is"
+                                       << " Null" << std::endl;
+                return(-1);
+            }
+            TChain *ch = dynamic_cast<TChain*>(chain);
+            if (!ch) {
+                if (verbose) std::cout << "XmlFetchEvents::getFiles dynamic " 
+                                       << "cast failed" << std::endl;
+            }
+            //int status = (dynamic_cast<TChain*>(chain))->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
+            int status = ch->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
             if (verbose) std::cout << "XmlFethEvents::getFiles returned "
                          << status << std::endl;
             if (status == 0) statFlag |= 1;

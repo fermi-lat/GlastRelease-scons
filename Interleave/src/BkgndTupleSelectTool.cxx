@@ -399,7 +399,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
     
-    int stat = m_fetch->getFiles(x, dynamic_cast<TChain*>(m_inputTree), log.level()<=MSG::DEBUG);
+    int stat = m_fetch->getFiles(x, m_inputTree, log.level()<=MSG::DEBUG);
     
     if( stat!=0 )
     {
@@ -454,6 +454,9 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     log << MSG::DEBUG << "exiting BkgndTupleSelectTool::setCurrentTree" << endreq;
     // this is necessary due to the design of ROOT :-(
     saveDir->cd();
+    } catch( const std::exception& e) {
+        log << MSG::ERROR << e.what() << endreq;
+        abort();
    } catch(...) {
       log << MSG::WARNING << "exception thrown aborting" << endreq;
       abort();
