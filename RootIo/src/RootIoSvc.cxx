@@ -475,10 +475,10 @@ bool RootIoSvc::setRootFile( const char * mc, const char * digi, const char * re
  {
   bool success = false ;
 
-  unsigned mcResult = setSingleFile("MC",mc) ;
-  unsigned digiResult = setSingleFile("DIGI",digi) ;
-  unsigned reconResult = setSingleFile("RECON",rec) ;
-  unsigned gcrResult = setSingleFile("GCR",gcr) ;
+  unsigned mcResult = setSingleFile("mc",mc) ;
+  unsigned digiResult = setSingleFile("digi",digi) ;
+  unsigned reconResult = setSingleFile("recon",rec) ;
+  unsigned gcrResult = setSingleFile("gcr",gcr) ;
 
   // at least one string must be non-null
   if ( (mcResult==1) &&
