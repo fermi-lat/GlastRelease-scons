@@ -54,7 +54,8 @@ class CelIndex : public TVirtualIndex
 
     // Dummy implementation
     CelIndex() ; // Needed for ROOT
-    virtual void UpdateFormulaLeaves() { return ; }
+    virtual void UpdateFormulaLeaves(const TTree*) { return ; }
+
     virtual void SetTree( const TTree * tree )
      { fTree = const_cast<TTree*>(tree) ; }
   

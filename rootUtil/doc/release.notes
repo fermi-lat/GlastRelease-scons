@@ -3,6 +3,8 @@
 @verbatim
 Coordinator:H.Kelly
 
+v1r3p1      13 Mar 2008 HMK Patch to CelIndex due to change in TVirtualIndex
+            in ROOT v5.18
 v1r3        24 Feb 2008 DC  Updates to CEL including extension to write
             interface of CompositeEventList to fill components one by one
             celConvert can extrct list of run/event ids in skimmer format
