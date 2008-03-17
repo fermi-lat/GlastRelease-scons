@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+17-Mar-08  v6r1p2 TU  Tag with Pass6_Analysis_Complete_PSep_6.xml 
 13-Mar-08  v6r1p1 TU  Move to Pass6_Analysis_Complete_PSep_5.xml and fix some potential bugs
  8-Feb-08  v6r1p0 TU  Updates for allowing use of xrootd and moving to version 3 of the Pass 6 analysis
  5-Feb-08  v6r0p0 TU  First round of updates for Pass 6 
