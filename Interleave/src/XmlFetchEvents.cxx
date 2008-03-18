@@ -189,7 +189,12 @@ int XmlFetchEvents::getFiles(double binVal, TChain* chain, bool verbose) {
                                        << "cast failed" << std::endl;
             }
             //int status = (dynamic_cast<TChain*>(chain))->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
-            int status = ch->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
+            TFile f(fileNameStr.c_str(),"READ");
+            if ( (!f.IsOpen()) || (f.IsZombie()) ) {
+                std::cout<<"XmlFetchEvents::getFiles failed to open file "
+                         << fileNameStr << std::endl;
+            }
+            int status = chain->AddFile(fileNameStr.c_str(),0,treeNameStr.c_str());
             if (verbose) std::cout << "XmlFethEvents::getFiles returned "
                          << status << std::endl;
             if (status == 0) statFlag |= 1;

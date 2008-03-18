@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+17-Mar-08 v1r5p9 HMK add a few more logging messages
 13-Mar-08 v1r5p8 HMK test dynamic_cast of TChain
 11-Mar-08 v1r5p7 HMK couple more logging statements and move of saveDir->cd
 07-Mar-08 v1r5p6 HMK Add some try catch blocks and call abort to force core dump

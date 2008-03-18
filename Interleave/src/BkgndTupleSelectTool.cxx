@@ -395,6 +395,8 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     std::string treeName = m_treeName;
     m_inputTree = new TChain(treeName.data());
+    if (!m_inputTree) 
+        log << MSG::DEBUG << "Failed to create a new TChain" << endreq;
 
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
