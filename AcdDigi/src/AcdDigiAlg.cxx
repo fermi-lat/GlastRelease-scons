@@ -323,6 +323,10 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
     sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,log,makeDigi,phaThreshArr,vetoArr,highArr);
     if ( sc.isFailure() ) return sc;
     
+    // Ok, kill PHA below ZS threshold
+    phaArr[0] = phaThreshArr[0] ? phaArr[0] : 0;
+    phaArr[1] = phaThreshArr[1] ? phaArr[1] : 0;
+
     if ( makeDigi ) {
       Event::AcdDigi* aDigi = new Event::AcdDigi(acdId, volId,
 						 m_energyDepMap[acdId], phaArr, 
