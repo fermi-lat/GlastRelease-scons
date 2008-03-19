@@ -315,7 +315,24 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     }
     // note have to cast away the const here!
-    m_tree[treename]->Branch(itemName.c_str(), const_cast<void*>(pval), (itemName+type).c_str(),m_bufferSize);
+    TBranch* thisBranch = m_tree[treename]->GetBranch(itemName.c_str());
+    if(thisBranch==NULL) {
+        // This is a new branch
+        m_tree[treename]->Branch(itemName.c_str(), 
+            const_cast<void*>(pval), (itemName+type).c_str(),m_bufferSize);
+    } else {
+        // This branch already exists; just change the pointer to the value
+        log << MSG::INFO << "addItem() called for existing branch " 
+            << itemName << ", ";
+        TLeaf* thisLeaf = thisBranch->GetLeaf((itemName).c_str());
+        if (thisLeaf==NULL) {
+            log << "leaf not found, did nothing";
+        } else {
+            thisLeaf->SetAddress(const_cast<void*>(pval));
+            log << "updated pointer instead.";
+        }
+        log << endreq;
+    }
     saveDir->cd();
     return status;
 }
