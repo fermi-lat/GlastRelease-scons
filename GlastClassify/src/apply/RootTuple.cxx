@@ -39,9 +39,19 @@ public:
         m_type  = m_leaf->GetTypeName();
         m_pdata = m_leaf->GetValuePointer();
     }
-    operator double() const { return m_leaf->GetValue();}
+    operator double() const { return m_leaf->GetValue(); }
+
     void setDataValue(void* data) 
     {
+        // Check that the data pointer is still valid (why do we need to do this?)
+        void* tempPtr = m_leaf->GetValuePointer();
+
+        // If it is not the same then we update.
+        if (m_pdata != tempPtr)
+        {
+            m_pdata = tempPtr;
+        }
+
         if (m_type == "UInt_t")
         {
             *(reinterpret_cast<int*>(m_pdata)) = *(reinterpret_cast<int*>(data));
@@ -111,6 +121,9 @@ RootTuple::RootTuple( std::string file, std::string treeName)
         throw std::invalid_argument("Tree not found");
     }
     m_numEvents = m_tree->GetEntries();
+
+    // Prime the pump to set memory locations...
+    m_tree->GetEvent(0);
 
     // Use this to define max tree size (apparantly a "bazillion" is not really a number...)
     Long64_t maxTreeSize=50000000000;

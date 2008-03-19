@@ -610,14 +610,41 @@ std::string XTExprsnParser::findFuncArgument(const std::string& expression, int&
 std::string XTExprsnParser::trimCharacters(std::string& expression, const char& charToTrim)
 {
     std::string trimmedString = expression;
-    int blankPos = trimmedString.find(charToTrim,0);
 
-    if (blankPos > -1) 
+    // Policy is to not remove special characters (like blanks) from quoted strings
+    // So, find first occurance of special character AND
+    // positions of matching quotes. 
+    int charPos  = trimmedString.find(charToTrim,0);
+    int qtBegPos = trimmedString.find("\"",0);
+    int qtEndPos = trimmedString.find("\"",qtBegPos+1);
+
+    // Loop over all occurances of special character to be removed
+    while(charPos > -1)
     {
-        std::string temp = trimmedString.erase(blankPos, 1);
+        // If special character lies inside a quote pair then attempt to skip to next occurance
+        if (charPos < qtEndPos && charPos > qtBegPos)
+        {
+            charPos = trimmedString.find(charToTrim, qtEndPos);
+            continue;
+        }
+        
+        // Get rid of this occurance of the special character
+        trimmedString.erase(charPos, 1);
 
-        trimmedString = trimCharacters(trimmedString, charToTrim);
+        // Must now reset start and end of quote string pair (if one). 
+        qtBegPos = trimmedString.find("\"", charPos);
+        qtEndPos = trimmedString.find("\"", qtBegPos+1);
+
+        // Advance the charPos
+        charPos = trimmedString.find(charToTrim,charPos);
     }
+
+    //if (blankPos > -1) 
+    //{
+    //    std::string temp = trimmedString.erase(blankPos, 1);
+
+    //    trimmedString = trimCharacters(trimmedString, charToTrim);
+    //}
 
     return trimmedString;
 }

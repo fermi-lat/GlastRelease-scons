@@ -150,6 +150,14 @@ void TreeAnalysis::storeCTvals()
                 if (colVal->dataIsValid()) result = *(*colVal)();
 
                 const_cast<GlastClassify::Item*>(m_nTupleMap[dataIter->first])->setDataValue(&result);
+
+                REALNUM test = *(m_nTupleMap[dataIter->first]);
+
+                if (test != result)
+                {
+                    // what do we do here?
+                    int j = 0;
+                }
             }
         }
     }
