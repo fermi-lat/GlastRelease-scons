@@ -396,9 +396,8 @@ StatusCode CalSignalTool::calcPoissonicNoiseXtal(const CalUtil::XtalIdx xtalIdx)
 StatusCode CalSignalTool::getDiodeSignal(const CalUtil::DiodeIdx diodeIdx, float &signal)
 {
   /// check that all internal data is up2date
-  StatusCode sc = syncData();
-  if (sc.isFailure())
-    return 0;
+  if (syncData().isFailure())
+    return StatusCode::FAILURE;
 
   signal = m_calSignalMap[diodeIdx];
   

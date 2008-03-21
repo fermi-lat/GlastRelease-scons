@@ -206,6 +206,7 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
                                 cidac[xDiode],
                                 adcPed[xRng]);
     if (sc.isFailure()) return sc;   
+
   } // xRng
   
   //////////////////////////////
@@ -361,6 +362,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi,
       // may clip HEX1 to HEX1 saturation point
       adc[face] = max<float>(0, adcPed[xRng] + ped);
       adc[face] = round_int(min<float>(m_maxAdc, adc[face]));
+
     }
       
     CalDigi::CalXtalReadout ro = CalDigi::CalXtalReadout(roRange[POS_FACE].val(), 
@@ -368,6 +370,7 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi,
                                                          roRange[NEG_FACE].val(), 
                                                          (short)adc[NEG_FACE], 
                                                          failureStatus);
+
     calDigi.addReadout(ro);
   }
   
