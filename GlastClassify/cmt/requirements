@@ -1,6 +1,6 @@
 package GlastClassify
 
-version v6r1p5
+version v6r1p6
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 use GlastPolicy *
@@ -46,7 +46,7 @@ set PRUNEROWS "false"
 set MERIT_INPUT_FILE "C:/Glast/data/allGamma-GR-v13r9p3-Lyon-000000-merit.root"
 #set MERIT_INPUT_FILE "root://glast-rdr//glast/mc/ServiceChallenge/allGamma-GR-v13r9p3-Lyon/merit/allGamma-GR-v13r9p3-Lyon-000000-merit.root"
 set MERIT_OUTPUT_FILE "test.root"
-set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/Pass6_Analysis_Complete_RRmod_2_NB.xml"
+set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/Pass6_Analysis_Complete_RRmod_3_NB.xml"
 #set CTREE_PATH "${GLASTCLASSIFYROOT}/xml/ParticleSeparator.xml"
 
 application apply -s=../src/apply $(source)
