@@ -68,7 +68,7 @@ namespace enums {
     };
 
     namespace TimeTone {
-      enum { MISSING_GPS_MASK = 1,         ///> NO GPS lock, message w.r.t. LAT clock
+      enum { SOURCE_GPS_MASK = 1,         ///> GPS lock, message w.r.t. LAT clock
 	     MISSING_CPU_MASK = 2,         ///> NO 1-PPS signal at CPU level
 	     MISSING_LAT_MASK = 4,         ///> NO 1-PPS signal at CPU level
 	     MISSING_TIMETONE_MASK = 8,    ///> NO 1-PPS signal at Spacecraft 
