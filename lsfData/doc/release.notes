@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v1r0    22-Mar-2008 HMK replace missingGps with sourceGps
 v0r10p1 11-Mar-2008 HMK patch for windows to make sure __i386 is defined
         so that endianness can be determined
 v0r10   12-Dec-2007 HMK Update LSFReader for rename of missingGps to sourceGps

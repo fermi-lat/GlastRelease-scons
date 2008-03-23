@@ -64,9 +64,12 @@ public:
   /// Make sure that the flags are valid
   inline Bool_t flagsValid() const { return m_flags != LSF_INVALID_UCHAR; }
 
-  /// NO GPS lock, message w.r.t. LAT clock
-  inline Bool_t missingGps() const { return (m_flags & enums::Lsf::TimeTone::MISSING_GPS_MASK) != 0; }
+ // NO GPS lock, message w.r.t. LAT clock
+//  inline Bool_t missingGps() const { return (m_flags & enums::Lsf::TimeTone::MISSING_GPS_MASK) != 0; }
   
+  /// GPS lock, message w.r.t. LAT clock
+  inline Bool_t sourceGps() const { return (m_flags & enums::Lsf::TimeTone::SOURCE_GPS_MASK) != 0; }
+
   /// NO 1-PPS signal at CPU level
   inline Bool_t missingCpuPps() const { return (m_flags & enums::Lsf::TimeTone::MISSING_CPU_MASK) != 0; }
   
@@ -97,10 +100,15 @@ public:
   inline void setTimeSecs( UInt_t value ) { m_timeSecs = value; }
   inline void setFlywheeling( UInt_t value ) { m_flywheeling = value; }  
   inline void setFlags( UChar_t value ) { m_flags = value; }
-  inline void setMissingGps( Bool_t value ) { 
+  //inline void setMissingGps( Bool_t value ) { 
+  //  if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;
+  //  if ( value ) { m_flags |= enums::Lsf::TimeTone::MISSING_GPS_MASK; }
+  //  else { m_flags &= ~(enums::Lsf::TimeTone::MISSING_GPS_MASK) ; }
+ // }
+  inline void setSourceGps( Bool_t value ) { 
     if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;
-    if ( value ) { m_flags |= enums::Lsf::TimeTone::MISSING_GPS_MASK; }
-    else { m_flags &= ~(enums::Lsf::TimeTone::MISSING_GPS_MASK) ; }
+    if ( value ) { m_flags |= enums::Lsf::TimeTone::SOURCE_GPS_MASK; }
+    else { m_flags &= ~(enums::Lsf::TimeTone::SOURCE_GPS_MASK) ; }
   }
   inline void setMissingCpu( Bool_t value ) {
     if ( m_flags == LSF_INVALID_UCHAR ) m_flags = 0;

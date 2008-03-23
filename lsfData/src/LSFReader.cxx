@@ -103,11 +103,11 @@ namespace lsfData {
   {
     // get the current timetone info
     unsigned char flags = 0;
-    flags |= ( ctx.current.missingTimeTone ) ? TimeTone::MISSING_TIMETONE_MASK : 0x0;
-    flags |= ( ctx.current.missingLatPps )   ? TimeTone::MISSING_LAT_MASK      : 0x0;
-    flags |= ( ctx.current.missingCpuPps )   ? TimeTone::MISSING_CPU_MASK      : 0x0;
-    flags |= ( ctx.current.earlyEvent )      ? TimeTone::EARLY_EVENT_MASK      : 0x0;
-    flags |= ( ctx.current.sourceGps )      ? TimeTone::MISSING_GPS_MASK      : 0x0;
+    flags |= ( ctx.current.missingTimeTone ) ? enums::Lsf::TimeTone::MISSING_TIMETONE_MASK : 0x0;
+    flags |= ( ctx.current.missingLatPps )   ? enums::Lsf::TimeTone::MISSING_LAT_MASK      : 0x0;
+    flags |= ( ctx.current.missingCpuPps )   ? enums::Lsf::TimeTone::MISSING_CPU_MASK      : 0x0;
+    flags |= ( ctx.current.earlyEvent )      ? enums::Lsf::TimeTone::EARLY_EVENT_MASK      : 0x0;
+    flags |= ( ctx.current.sourceGps )      ? enums::Lsf::TimeTone::SOURCE_GPS_MASK      : 0x0;
     TimeTone curr( ctx.current.incomplete, ctx.current.timeSecs, 
 			    ctx.current.flywheeling, flags,
 			    GemTime( ctx.current.timeHack.hacks, ctx.current.timeHack.tics )
@@ -115,11 +115,11 @@ namespace lsfData {
 
     // get the previous timetone info
     flags = 0;
-    flags |= ( ctx.previous.missingTimeTone ) ? TimeTone::MISSING_TIMETONE_MASK : 0x0;
-    flags |= ( ctx.previous.missingLatPps )   ? TimeTone::MISSING_LAT_MASK      : 0x0;
-    flags |= ( ctx.previous.missingCpuPps )   ? TimeTone::MISSING_CPU_MASK      : 0x0;
-    flags |= ( ctx.previous.earlyEvent )      ? TimeTone::EARLY_EVENT_MASK      : 0x0;
-    flags |= ( ctx.previous.sourceGps )      ? TimeTone::MISSING_GPS_MASK      : 0x0;
+    flags |= ( ctx.previous.missingTimeTone ) ? enums::Lsf::TimeTone::MISSING_TIMETONE_MASK : 0x0;
+    flags |= ( ctx.previous.missingLatPps )   ? enums::Lsf::TimeTone::MISSING_LAT_MASK      : 0x0;
+    flags |= ( ctx.previous.missingCpuPps )   ? enums::Lsf::TimeTone::MISSING_CPU_MASK      : 0x0;
+    flags |= ( ctx.previous.earlyEvent )      ? enums::Lsf::TimeTone::EARLY_EVENT_MASK      : 0x0;
+    flags |= ( ctx.previous.sourceGps )      ? enums::Lsf::TimeTone::SOURCE_GPS_MASK      : 0x0;
     TimeTone prev( ctx.previous.incomplete, ctx.previous.timeSecs, 
 			    ctx.previous.flywheeling, flags,
 			    GemTime( ctx.previous.timeHack.hacks, ctx.previous.timeHack.tics )

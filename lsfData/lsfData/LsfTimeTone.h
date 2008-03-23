@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "lsfData/LsfGemTime.h"
+#include "enums/Lsf.h"
 
 /** @class TimeTone
 * @brief FIXME
@@ -17,11 +18,11 @@ namespace lsfData {
     
   public:
     
-    enum { MISSING_GPS_MASK = 1, 
-	   MISSING_CPU_MASK = 2,
-	   MISSING_LAT_MASK = 4,
-	   MISSING_TIMETONE_MASK = 8,
-           EARLY_EVENT_MASK = 16 } MASKS;
+    //enum { SOURCE_GPS_MASK = 1, 
+//	   MISSING_CPU_MASK = 2,
+//	   MISSING_LAT_MASK = 4,
+//	   MISSING_TIMETONE_MASK = 8,
+ //          EARLY_EVENT_MASK = 16 } MASKS;
     
   public:
     
@@ -72,20 +73,23 @@ namespace lsfData {
     /// All the flags at once
     inline unsigned char flags() const { return m_flags; }
     
-    /// NO GPS lock, message w.r.t. LAT clock
-    inline bool missingGps() const { return (m_flags & MISSING_GPS_MASK) != 0; }
+    // NO GPS lock, message w.r.t. LAT clock
+    //inline bool missingGps() const { return (m_flags & MISSING_GPS_MASK) != 0; }
+    /// Replacing missingGps with sourceGps March 22, 2008 
+    /// GPS lock, message w.r.t. LAT clock
+    inline bool sourceGps() const { return (m_flags & enums::Lsf::TimeTone::SOURCE_GPS_MASK) != 0; }
     
     /// NO 1-PPS signal at CPU level
-    inline bool missingCpuPps() const { return (m_flags & MISSING_CPU_MASK) != 0; }
+    inline bool missingCpuPps() const { return (m_flags & enums::Lsf::TimeTone::MISSING_CPU_MASK) != 0; }
     
     /// NO 1-PPS signal at LAT level
-    inline bool missingLatPps() const {  return (m_flags & MISSING_LAT_MASK) != 0; }
+    inline bool missingLatPps() const {  return (m_flags & enums::Lsf::TimeTone::MISSING_LAT_MASK) != 0; }
     
     /// NO 1-PPS signal at Spacecraft 
-    inline bool missingTimeTone() const  { return (m_flags & MISSING_TIMETONE_MASK) != 0; }
+    inline bool missingTimeTone() const  { return (m_flags & enums::Lsf::TimeTone::MISSING_TIMETONE_MASK) != 0; }
 
     /// Event arrived early
-    inline bool earlyEvent() const { return (m_flags & EARLY_EVENT_MASK) != 0; }
+    inline bool earlyEvent() const { return (m_flags & enums::Lsf::TimeTone::EARLY_EVENT_MASK) != 0; }
 
     /// The time hack
     inline const GemTime& timeHack() const { return m_timeHack; }
@@ -106,25 +110,29 @@ namespace lsfData {
     inline void setTimeSecs( unsigned int value ) { m_timeSecs = value; }
     inline void setFlywheeling( unsigned int value ) { m_flywheeling = value; }  
     inline void setFlags( unsigned char value ) { m_flags = value; }
-    inline void setMissingGps( bool value ) { 
-      if ( value ) m_flags |= MISSING_GPS_MASK; 
-      else m_flags &= (~MISSING_GPS_MASK);
+    //inline void setMissingGps( bool value ) { 
+    //  if ( value ) m_flags |= MISSING_GPS_MASK; 
+    //  else m_flags &= (~MISSING_GPS_MASK);
+   // }
+    inline void setSourceGps( bool value ) { 
+      if ( value ) m_flags |= enums::Lsf::TimeTone::SOURCE_GPS_MASK; 
+      else m_flags &= (~enums::Lsf::TimeTone::SOURCE_GPS_MASK);
     }
     inline void setMissingCpu( bool value ) {
-      if ( value ) m_flags |= MISSING_CPU_MASK;
-      else m_flags &= (~MISSING_CPU_MASK);
+      if ( value ) m_flags |= enums::Lsf::TimeTone::MISSING_CPU_MASK;
+      else m_flags &= (~enums::Lsf::TimeTone::MISSING_CPU_MASK);
     }
     inline void setMissingLAT( bool value ) {
-      if ( value ) m_flags |= MISSING_LAT_MASK;
-      else m_flags &= (~MISSING_LAT_MASK);
+      if ( value ) m_flags |= enums::Lsf::TimeTone::MISSING_LAT_MASK;
+      else m_flags &= (~enums::Lsf::TimeTone::MISSING_LAT_MASK);
     }
     inline void setMissingTimeTone( bool value ) {
-      if ( value ) m_flags |= MISSING_TIMETONE_MASK;
-      else m_flags &= (~MISSING_TIMETONE_MASK);
+      if ( value ) m_flags |= enums::Lsf::TimeTone::MISSING_TIMETONE_MASK;
+      else m_flags &= (~enums::Lsf::TimeTone::MISSING_TIMETONE_MASK);
     }
     inline void setEarlyEvent( bool value ) {
-      if ( value ) m_flags |= EARLY_EVENT_MASK;
-      else m_flags &= (~EARLY_EVENT_MASK);
+      if ( value ) m_flags |= enums::Lsf::TimeTone::EARLY_EVENT_MASK;
+      else m_flags &= (~enums::Lsf::TimeTone::EARLY_EVENT_MASK);
     }
 
 
