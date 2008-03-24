@@ -45,7 +45,7 @@ void RelTable::addRelation(Relation *rel) {
 }
 
 const Relation* RelTable::getRelByFirst(const TObject *key) const {
-    TIter it(m_table);
+    TObjArrayIter it(m_table);
     Relation *rel = 0;
     while ((rel = (Relation*)it.Next())) {
         if (rel->getKey() == key) return rel;
