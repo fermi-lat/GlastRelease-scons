@@ -418,17 +418,20 @@ class Channel : public TObject {
   
     LciAcdConfiguration() 
       :LciConfiguration(),
-      m_injected(0),m_threshold(0),m_biasDac(0), m_holdDelay(0) {
+      m_injected(0),m_threshold(0),m_biasDac(0), m_holdDelay(0),
+      m_hitmapDelay(0),m_range(0) {
       m_trigger.Clear("");
       m_channel.Clear("");
     }
      
     LciAcdConfiguration(UShort_t injected, UShort_t threshold,
-                     UShort_t biasDac, UShort_t holdDelay, 
+                     UShort_t biasDac, UShort_t holdDelay,
+                     UShort_t hitmapDelay, UShort_t range, 
                      AcdTrigger trigger, Channel ch ) 
       :LciConfiguration(),
        m_injected(injected),m_threshold(threshold),m_biasDac(biasDac),
-       m_holdDelay(holdDelay),m_trigger(trigger),m_channel(ch){
+       m_holdDelay(holdDelay),m_trigger(trigger),m_channel(ch),
+       m_hitmapDelay(hitmapDelay),m_range(range){
     }
     
     LciAcdConfiguration(const LciAcdConfiguration& other) 
@@ -436,7 +439,8 @@ class Channel : public TObject {
        other.period(), other.flags()),
        m_injected(other.injected()),m_threshold(other.threshold()),
        m_biasDac(other.biasDac()), m_holdDelay(other.holdDelay()),
-       m_trigger(other.trigger()),m_channel(other.channel()){
+       m_trigger(other.trigger()),m_channel(other.channel()),
+       m_hitmapDelay(other.hitmapDelay()),m_range(other.range()){
     }
 
     virtual ~LciAcdConfiguration(){
@@ -450,6 +454,8 @@ class Channel : public TObject {
         m_holdDelay = other.m_holdDelay;
         m_trigger = other.m_trigger;
         m_channel = other.m_channel;
+        m_hitmapDelay = other.m_hitmapDelay;
+        m_range = other.m_range;
         LciConfiguration::initialize(other.softwareKey(), other.writeCfg(),
                           other.readCfg(),other.period(), other.flags());
         return *this;
@@ -461,6 +467,8 @@ class Channel : public TObject {
         m_threshold = 0;
         m_biasDac = 0;
         m_holdDelay = 0;
+        m_hitmapDelay = 0;
+        m_range = 0;
         m_trigger.Clear("");
         m_channel.Clear("");
      }
@@ -478,7 +486,9 @@ class Channel : public TObject {
          LciConfiguration::Print("");
          std::cout << "injected: " << m_injected << " threshold: " 
                    << m_threshold << " biasDac: " << m_biasDac
-                   << " holdDelay: " << m_holdDelay << std::endl;
+                   << " holdDelay: " << m_holdDelay 
+                   << " hitmapDelay: " << m_hitmapDelay
+                   << " range: " << m_range << std::endl;
          m_trigger.Print("");
          m_channel.Print("");
      }
@@ -495,17 +505,22 @@ class Channel : public TObject {
 
     inline UShort_t biasDac() const { return m_biasDac; }
     inline UShort_t holdDelay() const { return m_holdDelay; }
+    inline UShort_t hitmapDelay() const { return m_hitmapDelay; }
+    inline UShort_t range() const { return m_range; }
 
     inline const AcdTrigger& trigger() const { return m_trigger; }
     inline const Channel& channel() const { return m_channel; }
 
     void initialize(UShort_t injected, UShort_t threshold, 
              UShort_t biasDac, UShort_t holdDelay,
+             UShort_t hitmapDelay, UShort_t range,
              const AcdTrigger& trigger, const Channel& channel) {
              m_injected = injected;
              m_threshold = threshold;
              m_biasDac = biasDac;
              m_holdDelay = holdDelay;
+             m_hitmapDelay = hitmapDelay;
+             m_range = range;
              m_trigger = trigger;
              m_channel = channel;
     }
@@ -514,6 +529,8 @@ class Channel : public TObject {
     void setThreshold(UShort_t threshold) { m_threshold = threshold; }
     void setBiasDac(UShort_t biasDac) { m_biasDac = biasDac; }
     void setHoldDelay(UShort_t holdDelay) { m_holdDelay = holdDelay; }
+    void setHitmapDelay(UShort_t hitmapDelay) { m_hitmapDelay = hitmapDelay; }
+    void setRange(UShort_t range) { m_range = range; }
     void setTrigger(const AcdTrigger& trig) { m_trigger = trig; }
     void setChannel(const  Channel& ch) { m_channel = ch; }
     
@@ -531,8 +548,10 @@ class Channel : public TObject {
     UShort_t m_holdDelay;
     AcdTrigger m_trigger;
     Channel    m_channel;
+    UShort_t m_hitmapDelay;
+    UShort_t m_range;
 
-    ClassDef(LciAcdConfiguration,1)
+    ClassDef(LciAcdConfiguration,2)
   };
 
 
@@ -543,28 +562,38 @@ class Channel : public TObject {
      class CalTrigger : public TObject {
      public:
 
-        CalTrigger() : TObject(), m_le(0), m_he(0) {};
-        CalTrigger(unsigned short le, unsigned short he) 
-        : TObject(), m_le(le), m_he(he) {};
+        CalTrigger() : TObject(), m_le(0), m_he(0), m_lowTrgEna(0),
+                       m_highTrgEna(0) {};
+        CalTrigger(unsigned short le, unsigned short lowTrgEna, 
+                   unsigned short he, unsigned short highTrgEna) 
+        : TObject(), m_le(le), m_he(he),  m_lowTrgEna(lowTrgEna), 
+          m_highTrgEna(highTrgEna) {};
         CalTrigger(const CalTrigger& cal) 
-        : TObject(cal), m_le(cal.le()), m_he(cal.he()) {}
+        : TObject(cal), m_le(cal.le()), m_he(cal.he()),
+          m_lowTrgEna(cal.lowTrgEna()), m_highTrgEna(cal.highTrgEna()) {}
 
         ~CalTrigger() { }
 
         /// Assignment operator.  Nothing fancy, just copy all values.
         CalTrigger& operator=(const CalTrigger& other) {
             m_le = other.m_le;
+            m_lowTrgEna = other.m_lowTrgEna;
             m_he = other.m_he;
+            m_highTrgEna = other.m_highTrgEna;
             return *this;
         }
 
         void Clear(Option_t* /* option="" */) {
             m_le = 0;
+            m_lowTrgEna = 0;
             m_he = 0;
+            m_highTrgEna = 0;
         }
 
         void Print(Option_t* /* option="" */) const {
-            std::cout << "le: " << m_le << " he: " << m_he << std::endl;
+            std::cout << "le: " << m_le << " lowTrgEna: " << m_lowTrgEna
+                      << " he: " << m_he << " highTrgEna: " << m_highTrgEna
+                      << std::endl;
         }
 
         /// Returns discrimination threshold necessary to toggle CAL's Low
@@ -573,19 +602,28 @@ class Channel : public TObject {
         /// database.
         inline UShort_t le() const { return m_le; };
 
+        inline UShort_t lowTrgEna() const { return m_lowTrgEna; };
+
         /// Returns discrimination threshold necessary to toggle CAL's High 
         /// Energy trigger signal sent to the GEM, in units of DAC counts.
         /// Return LSF_UNDEFINED if this value was determined from the LATC
         /// database.
         inline UShort_t he() const { return m_he; };
 
-        void initialize(UShort_t le, UShort_t he) {
+        inline UShort_t highTrgEna() const { return m_highTrgEna; }
+
+        void initialize(UShort_t le, UShort_t lowTrgEna, 
+                        UShort_t he, UShort_t highTrgEna) {
             m_le = le;
+            m_lowTrgEna = lowTrgEna;
             m_he = he;
+            m_highTrgEna = highTrgEna;
         }
 
         inline void setLe(UShort_t le) { m_le = le; }
+        inline void setLowTrgEna(UShort_t lowTrgEna) { m_lowTrgEna = lowTrgEna; }
         inline void setHe(UShort_t he) { m_he = he; }
+        inline void setHighTrgEna(UShort_t highTrgEna) { m_highTrgEna = highTrgEna; }
 
         /// Create a fake for tests
         void Fake( Int_t ievent, UInt_t rank, Float_t randNum ); 
@@ -597,22 +635,32 @@ class Channel : public TObject {
      private:
          UShort_t m_le;
          UShort_t m_he;
+         UShort_t m_lowTrgEna;
+         UShort_t m_highTrgEna;
 
-         ClassDef(CalTrigger, 1)
+         ClassDef(CalTrigger, 2)
      };
 
     LciCalConfiguration() 
       :LciConfiguration(),
       m_uld(0),m_injected(0),m_delay(0),m_threshold(0),
-      m_trigger(),m_channel(){
+      m_trigger(),m_channel(),m_firstRange(0),m_calibGain(0),m_highCalEna(0),
+      m_highRngEna(0),m_highGain(0),m_lowCalEna(0),m_lowRngEna(0),m_lowGain(0){
     }
 
     LciCalConfiguration(UShort_t uld, UShort_t injected,
-                        UShort_t delay, UShort_t threshold,
+                        UShort_t delay, UShort_t firstRange, UShort_t threshold,
+                        UShort_t calibGain, UShort_t highCalEna, 
+                        UShort_t highRngEna, UShort_t highGain,
+                        UShort_t lowCalEna, UShort_t lowRngEna, 
+                        UShort_t lowGain,
                         CalTrigger trigger, Channel ch ) 
       :LciConfiguration(),
        m_uld(uld),m_injected(injected),m_delay(delay),m_threshold(threshold),
-       m_trigger(trigger),m_channel(ch){
+       m_trigger(trigger),m_channel(ch),m_firstRange(firstRange),
+       m_calibGain(calibGain),m_highCalEna(highCalEna),m_highRngEna(highRngEna),
+       m_highGain(highGain),m_lowCalEna(lowCalEna),m_lowRngEna(lowRngEna),
+       m_lowGain(lowGain){
     }
     
     LciCalConfiguration(const LciCalConfiguration& other) 
@@ -620,7 +668,11 @@ class Channel : public TObject {
        other.period(), other.flags()),
        m_uld(other.uld()),m_injected(other.injected()),
        m_delay(other.delay()),m_threshold(other.threshold()),
-       m_trigger(other.trigger()),m_channel(other.channel()){
+       m_trigger(other.trigger()),m_channel(other.channel()),
+       m_firstRange(other.firstRange()),m_calibGain(other.calibGain()),
+       m_highCalEna(other.highCalEna()),m_highRngEna(other.highRngEna()),
+       m_highGain(other.highGain()),m_lowCalEna(other.lowCalEna()),
+       m_lowRngEna(other.lowRngEna()),m_lowGain(other.lowGain()){
     }
 
     virtual ~LciCalConfiguration(){
@@ -631,7 +683,15 @@ class Channel : public TObject {
         m_uld = other.m_uld;
         m_injected = other.m_injected;
         m_delay = other.m_delay;
+        m_firstRange = other.m_firstRange;
         m_threshold = other.m_threshold;
+        m_calibGain = other.m_calibGain;
+        m_highCalEna = other.m_highCalEna;
+        m_highRngEna = other.m_highRngEna;
+        m_highGain = other.m_highGain;
+        m_lowCalEna = other.m_lowCalEna;
+        m_lowRngEna = other.m_lowRngEna;
+        m_lowGain = other.m_lowGain;
         m_trigger = other.m_trigger;
         m_channel = other.m_channel;
         LciConfiguration::initialize(other.softwareKey(), other.writeCfg(),
@@ -643,7 +703,15 @@ class Channel : public TObject {
         m_uld = 0;
         m_injected = 0;
         m_delay = 0;
+        m_firstRange = 0;
         m_threshold = 0;
+        m_calibGain = 0;
+        m_highCalEna = 0;
+        m_highRngEna = 0;
+        m_highGain = 0;
+        m_lowCalEna = 0;
+        m_lowRngEna = 0;
+        m_lowGain = 0;
         m_trigger.Clear("");
         m_channel.Clear("");
     }
@@ -659,7 +727,13 @@ class Channel : public TObject {
     void Print(Option_t* /* option="" */) const {
          LciConfiguration::Print("");
          std::cout << "uld: " << m_uld << " injected: " << m_injected
-                   << " delay: " << m_delay << " threshold: " << m_threshold
+                   << " delay: " << m_delay << " firstRange: " 
+                   << m_firstRange << " threshold: " << m_threshold
+                   << " calibGain: " << m_calibGain << " highCalEna: "
+                   << m_highCalEna << " highRngEna: " << m_highRngEna
+                   << " highGain: " << m_highGain << " lowCalEna: "
+                   << m_lowCalEna << " lowRngEna: " << m_lowRngEna
+                   << " lowGain: " << m_lowGain
                    << std::endl;
 	 m_trigger.Print("");
          m_channel.Print("");
@@ -683,11 +757,27 @@ class Channel : public TObject {
     /// database
     inline UShort_t delay () const { return m_delay; }
 
+    inline UShort_t firstRange () const { return m_firstRange; }
+
     /// Returns threshold necessary to cross in order to generate the specified
     /// calibration data, in units of DAC counts
     /// Returns LSF_UNDEFINED if the value was determined from the LATC
     /// database
     inline UShort_t threshold() const { return m_threshold;}
+
+    inline UShort_t calibGain () const { return m_calibGain; }
+
+    inline UShort_t highCalEna() const { return m_highCalEna; }
+
+    inline UShort_t highRngEna() const { return m_highRngEna; }
+
+    inline UShort_t highGain() const { return m_highGain; }
+
+    inline UShort_t lowCalEna() const { return m_lowCalEna; }
+
+    inline UShort_t lowRngEna() const { return m_lowRngEna; }
+
+    inline UShort_t lowGain() const { return m_lowGain; }
 
     inline const CalTrigger& trigger() const { return m_trigger; }
 
@@ -698,12 +788,24 @@ class Channel : public TObject {
     inline const Channel& channel() const { return m_channel; }
 
     void initialize(UShort_t uld, UShort_t injected, UShort_t delay,
-             UShort_t threshold, const CalTrigger& trigger, 
+             UShort_t firstRange,
+             UShort_t threshold, UShort_t calibGain, UShort_t highCalEna,
+             UShort_t highRngEna, UShort_t highGain, UShort_t lowCalEna,
+             UShort_t lowRngEna, UShort_t lowGain,
+             const CalTrigger& trigger, 
              const Channel& ch) {
              m_uld = uld;
              m_injected = injected;
              m_delay = delay;
+             m_firstRange = firstRange;
              m_threshold = threshold;
+             m_calibGain = calibGain;
+             m_highCalEna = highCalEna;
+             m_highRngEna = highRngEna;
+             m_highGain = highGain;
+             m_lowCalEna = lowCalEna;
+             m_lowRngEna = lowRngEna;
+             m_lowGain = lowGain;
              m_trigger = trigger;
              m_channel = ch;
     }
@@ -711,7 +813,15 @@ class Channel : public TObject {
     void setUld(UShort_t uld) { m_uld = uld; }
     void setInjected(UShort_t injected) { m_injected = injected; }
     void setDelay(UShort_t delay) { m_delay = delay; }
+    void setFirstRange(UShort_t firstRange) { m_firstRange = firstRange; }
     void setThreshold(UShort_t threshold) { m_threshold = threshold; } 
+    void setCalibGain(UShort_t calibGain) { m_calibGain = calibGain; } 
+    void setHighCalEna(UShort_t highCalEna) { m_highCalEna = highCalEna; }
+    void setHighRngEna(UShort_t highRngEna) { m_highRngEna = highRngEna; }
+    void setHighGain(UShort_t highGain) { m_highGain = highGain; }    
+    void setLowCalEna(UShort_t lowCalEna) { m_lowCalEna = lowCalEna; }
+    void setLowRngEna(UShort_t lowRngEna) { m_lowRngEna = lowRngEna; }
+    void setLowGain(UShort_t lowGain) { m_lowGain = lowGain; }    
     void setTrigger(const CalTrigger& trig) { m_trigger = trig; }
     void setChannel(const Channel& ch) { m_channel = ch; }
 
@@ -728,8 +838,16 @@ class Channel : public TObject {
       UShort_t m_threshold;
       CalTrigger m_trigger;
       Channel m_channel;
+      UShort_t m_firstRange;
+      UShort_t m_calibGain;
+      UShort_t m_highCalEna;
+      UShort_t m_highRngEna;
+      UShort_t m_highGain;
+      UShort_t m_lowCalEna;
+      UShort_t m_lowRngEna;
+      UShort_t m_lowGain;
 
-    ClassDef(LciCalConfiguration,1)
+    ClassDef(LciCalConfiguration,2)
   };
 
 
@@ -738,21 +856,24 @@ class Channel : public TObject {
   public:
     LciTkrConfiguration() 
       :LciConfiguration(),
-      m_injected(0),m_delay(0),m_threshold(0),m_channel(){
+      m_injected(0),m_delay(0),m_threshold(0),m_channel(),m_splitLow(0), 
+      m_splitHigh(0) {
     }
 
     LciTkrConfiguration(UShort_t injected, UShort_t delay,
-                        UShort_t threshold, Channel ch ) 
+                        UShort_t threshold, UShort_t splitLow,
+                        UShort_t splitHigh, Channel ch ) 
       :LciConfiguration(),
        m_injected(injected),m_delay(delay),m_threshold(threshold),
-       m_channel(ch){
+       m_channel(ch),m_splitLow(splitLow),m_splitHigh(splitHigh){
     }
     
     LciTkrConfiguration(const LciTkrConfiguration& other) 
       :LciConfiguration(other.softwareKey(), other.writeCfg(),other.readCfg(),
        other.period(), other.flags()),
        m_injected(other.injected()),m_delay(other.delay()),
-       m_threshold(other.threshold()),m_channel(other.channel()){
+       m_threshold(other.threshold()),m_channel(other.channel()),
+       m_splitLow(other.splitLow()),m_splitHigh(other.splitHigh()){
     }
 
     virtual ~LciTkrConfiguration(){
@@ -763,6 +884,8 @@ class Channel : public TObject {
         m_injected = other.m_injected;
         m_delay = other.m_delay;
         m_threshold = other.m_threshold;
+        m_splitLow = other.m_splitLow;
+        m_splitHigh = other.m_splitHigh;
         m_channel = other.m_channel;
         LciConfiguration::initialize(other.softwareKey(), other.writeCfg(),
                           other.readCfg(),other.period(), other.flags());
@@ -773,6 +896,8 @@ class Channel : public TObject {
         m_injected = 0;
         m_delay = 0;
         m_threshold = 0;
+        m_splitLow = 0;
+        m_splitHigh = 0;
         m_channel.Clear("");
     }
 
@@ -787,7 +912,8 @@ class Channel : public TObject {
     void Print(Option_t* /* option="" */) const {
          LciConfiguration::Print("");
          std::cout << "injected: " << m_injected << " delay: " << m_delay
-                   << " threshold: " << m_threshold << std::endl;
+                   << " threshold: " << m_threshold << " splitLow: "
+                   << m_splitLow << " splitHigh: " << m_splitHigh << std::endl;
          m_channel.Print("");
      }
 
@@ -809,6 +935,9 @@ class Channel : public TObject {
       /// from the LATC database
       inline UShort_t threshold() const { return m_threshold; }
 
+      inline UShort_t splitLow() const { return m_splitLow; }
+      inline UShort_t splitHigh() const { return m_splitHigh; }
+
       /// TKR definition of Channel
       /// Single is the channel number in layer space, this channel is enabled
       ///  in all layers, in all towers.  Range [0,1535]
@@ -817,16 +946,21 @@ class Channel : public TObject {
       inline const Channel& channel() const { return m_channel;}
 
       void initialize(UShort_t injected, UShort_t delay, 
-               UShort_t threshold, const Channel& ch) {
+               UShort_t threshold, UShort_t splitLow, UShort_t splitHigh,
+               const Channel& ch) {
                m_injected = injected;
                m_delay = delay;
                m_threshold = threshold;
+               m_splitLow = splitLow;
+               m_splitHigh = splitHigh;
                m_channel = ch;
       }
 
       inline void setInjected(UShort_t injected) { m_injected = injected; }
       inline void setDelay(UShort_t delay) { m_delay = delay; }
       inline void setThreshold(UShort_t threshold) { m_threshold = threshold; }
+      inline void setSplitLow(UShort_t splitLow) { m_splitLow = splitLow; }
+      inline void setSplitHigh(UShort_t splitHigh) { m_splitHigh = splitHigh; }
       inline void setChannel(const Channel& ch) { m_channel = ch; }
 
 
@@ -842,8 +976,10 @@ class Channel : public TObject {
       UShort_t m_delay;
       UShort_t m_threshold;
       Channel m_channel;
+      UShort_t m_splitLow;
+      UShort_t m_splitHigh;
 
-    ClassDef(LciTkrConfiguration,1)
+    ClassDef(LciTkrConfiguration,2)
   };
 
 

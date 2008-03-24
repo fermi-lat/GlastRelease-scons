@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v10r1     23-Mar-2008 HMK Update LCI data for DFI 3-4-5
 v10r0     22-Mar-2008 HMK Replace missingGps with sourceGps
 v9r30p2   11-Feb-2008 HMK Make sure to init all members in L1T
 v9r30p1   07-Feb-2008 HMK Increment the Class versions for the changnes in

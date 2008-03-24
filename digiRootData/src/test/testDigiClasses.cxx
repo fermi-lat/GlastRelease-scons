@@ -659,7 +659,7 @@ int write(char* fileName, int numEvents) {
         MetaEvent meta;
         LciAcdConfiguration::AcdTrigger acdTrig(1,2,3);
         Channel ch(4,true,false);
-        LciAcdConfiguration acdConfig(1,2,3,4,acdTrig,ch);
+        LciAcdConfiguration acdConfig(1,2,3,4,5,6,acdTrig,ch);
         meta.setLciAcdConfiguration(acdConfig);
         LpaKeys keys;
         keys.Fake(ievent, randNum);
