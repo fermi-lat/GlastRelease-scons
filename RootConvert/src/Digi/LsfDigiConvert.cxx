@@ -136,7 +136,8 @@ namespace RootPersistence {
           channelTds.latc());
 
       rootObj.initialize(tdsObj->injected(), tdsObj->threshold(),
-          tdsObj->biasDac(), tdsObj->holdDelay(), triggerRoot, channelRoot);
+          tdsObj->biasDac(), tdsObj->holdDelay(), tdsObj->hitmapDelay(),
+          tdsObj->range(), triggerRoot, channelRoot);
 
       rootObj.setSoftwareKey(tdsObj->softwareKey());
       rootObj.setWriteCfg(tdsObj->writeCfg());
@@ -157,7 +158,8 @@ namespace RootPersistence {
       lsfData::Channel chTds(chRoot.single(), chRoot.all(), chRoot.latc());
 
       tdsObj->set(rootObj->injected(), rootObj->threshold(),
-         rootObj->biasDac(), rootObj->holdDelay(), triggerTds, chTds);
+         rootObj->biasDac(), rootObj->holdDelay(), rootObj->hitmapDelay(),
+         rootObj->range(), triggerTds, chTds);
       tdsObj->setSoftwareKey(rootObj->softwareKey());
       tdsObj->setWriteCfg(rootObj->writeCfg());
       tdsObj->setReadCfg(rootObj->readCfg());
@@ -169,13 +171,17 @@ namespace RootPersistence {
                 LciCalConfiguration& rootObj) {
       lsfData::LciCalConfiguration::CalTrigger trigTds = tdsObj->trigger();
 
-      LciCalConfiguration::CalTrigger trigRoot(trigTds.le(), trigTds.he());
+      LciCalConfiguration::CalTrigger trigRoot(trigTds.le(), 
+                     trigTds.lowTrgEna(), trigTds.he(), trigTds.highTrgEna());
 
       lsfData::Channel chTds = tdsObj->channel();
       Channel chRoot(chTds.single(), chTds.all(), chTds.latc());
 
       rootObj.initialize(tdsObj->uld(), tdsObj->injected(), tdsObj->delay(),
-              tdsObj->threshold(),trigRoot,chRoot);
+              tdsObj->firstRange(), tdsObj->threshold(),tdsObj->calibGain(),
+              tdsObj->highCalEna(),tdsObj->highRngEna(),tdsObj->highGain(),
+              tdsObj->lowCalEna(),tdsObj->lowRngEna(),tdsObj->lowGain(),
+              trigRoot,chRoot);
       rootObj.setSoftwareKey(tdsObj->softwareKey());
       rootObj.setWriteCfg(tdsObj->writeCfg());
       rootObj.setReadCfg(tdsObj->readCfg());
@@ -188,11 +194,14 @@ namespace RootPersistence {
 
       LciCalConfiguration::CalTrigger trigRoot = rootObj->trigger();
       lsfData::LciCalConfiguration::CalTrigger trigTds(trigRoot.le(),
-          trigRoot.he());
+          trigRoot.lowTrgEna(), trigRoot.he(), trigRoot.highTrgEna());
       Channel chRoot = rootObj->channel();
       lsfData::Channel chTds(chRoot.single(), chRoot.all(), chRoot.latc());
       tdsObj->set(rootObj->uld(), rootObj->injected(), rootObj->delay(),
-              rootObj->threshold(),trigTds,chTds);
+              rootObj->firstRange(),
+              rootObj->threshold(),rootObj->calibGain(),rootObj->highCalEna(),
+              rootObj->highRngEna(),rootObj->highGain(),rootObj->lowCalEna(),
+              rootObj->lowRngEna(),rootObj->lowGain(),trigTds,chTds);
       tdsObj->setSoftwareKey(rootObj->softwareKey());
       tdsObj->setWriteCfg(rootObj->writeCfg());
       tdsObj->setReadCfg(rootObj->readCfg());
@@ -206,7 +215,8 @@ namespace RootPersistence {
       lsfData::Channel chTds = tdsObj->channel();
       Channel chRoot(chTds.single(), chTds.all(), chTds.latc());
       rootObj.initialize(tdsObj->injected(),tdsObj->delay(),
-              tdsObj->threshold(), chRoot);
+              tdsObj->threshold(), tdsObj->splitLow(), tdsObj->splitHigh(),
+              chRoot);
       rootObj.setSoftwareKey(tdsObj->softwareKey());
       rootObj.setWriteCfg(tdsObj->writeCfg());
       rootObj.setReadCfg(tdsObj->readCfg());
@@ -221,7 +231,8 @@ namespace RootPersistence {
       lsfData::Channel chTds(chRoot.single(), chRoot.all(), chRoot.latc());
 
       tdsObj->set(rootObj->injected(),rootObj->delay(),
-              rootObj->threshold(), chTds);
+              rootObj->threshold(), rootObj->splitLow(),rootObj->splitHigh(),
+              chTds);
       tdsObj->setSoftwareKey(rootObj->softwareKey());
       tdsObj->setWriteCfg(rootObj->writeCfg());
       tdsObj->setReadCfg(rootObj->readCfg());
