@@ -433,17 +433,20 @@ namespace lsfData {
   
     LciAcdConfiguration() 
       :LciConfiguration(),
-      m_injected(0),m_threshold(0),m_biasDac(0), m_holdDelay(0) {
+      m_injected(0),m_threshold(0),m_biasDac(0), m_holdDelay(0),
+      m_hitmapDelay(0), m_range(0) {
       m_trigger.clear();
       m_channel.clear();
     }
      
     LciAcdConfiguration(unsigned short injected, unsigned short threshold,
                      unsigned short biasDac, unsigned short holdDelay, 
+                     unsigned short hitmapDelay, unsigned short range,
                      AcdTrigger trigger, Channel ch ) 
       :LciConfiguration(),
        m_injected(injected),m_threshold(threshold),m_biasDac(biasDac),
-       m_holdDelay(holdDelay),m_trigger(trigger),m_channel(ch){
+       m_holdDelay(holdDelay),m_hitmapDelay(hitmapDelay), m_range(range),
+       m_trigger(trigger),m_channel(ch){
     }
     
     LciAcdConfiguration(const LciAcdConfiguration& other) 
@@ -451,6 +454,7 @@ namespace lsfData {
        other.period(), other.flags()),
        m_injected(other.injected()),m_threshold(other.threshold()),
        m_biasDac(other.biasDac()), m_holdDelay(other.holdDelay()),
+       m_hitmapDelay(other.hitmapDelay()), m_range(other.range()),
        m_trigger(other.trigger()),m_channel(other.channel()){
     }
 
@@ -462,6 +466,8 @@ namespace lsfData {
         m_threshold = 0;
         m_biasDac = 0;
         m_holdDelay = 0;
+        m_hitmapDelay = 0;
+        m_range = 0;
         m_trigger.clear();
         m_channel.clear();
      }
@@ -480,6 +486,8 @@ namespace lsfData {
          printf("%s threshold = %u\n", str.c_str(), m_threshold);
          printf("%s biasDac = %u\n", str.c_str(), m_biasDac);
          printf("%s holdDelay = %u\n", str.c_str(), m_holdDelay);
+         printf("%s hitmapDelay = %u\n", str.c_str(), m_hitmapDelay);
+         printf("%s range = %u\n", str.c_str(), m_range);
          m_trigger.print(str);
          m_channel.print(str);
      }
@@ -497,6 +505,8 @@ namespace lsfData {
                   << " threshold = " << m_threshold << std::endl 
                   << " biasDac = " << m_biasDac << std::endl
                   << " holdDelay = " << m_holdDelay << std::endl
+                  << " hitmapDelay = " << m_hitmapDelay << std::endl
+                  << " range = " << m_range << std::endl
                   << m_trigger
                   << m_channel << std::endl;
      }
@@ -513,17 +523,22 @@ namespace lsfData {
 
     inline unsigned short biasDac() const { return m_biasDac; }
     inline unsigned short holdDelay() const { return m_holdDelay; }
+    inline unsigned short hitmapDelay() const { return m_hitmapDelay; }
+    inline unsigned short range() const { return m_range; }
 
     inline const AcdTrigger& trigger() const { return m_trigger; }
     inline const Channel& channel() const { return m_channel; }
 
     void set(unsigned short injected, unsigned short threshold, 
              unsigned short biasDac, unsigned short holdDelay,
+             unsigned short hitmapDelay, unsigned short range,
              const AcdTrigger& trigger, const Channel& channel) {
              m_injected = injected;
              m_threshold = threshold;
              m_biasDac = biasDac;
              m_holdDelay = holdDelay;
+             m_hitmapDelay = hitmapDelay;
+             m_range = range;
              m_trigger = trigger;
              m_channel = channel;
     }
@@ -532,6 +547,8 @@ namespace lsfData {
     void setThreshold(unsigned short threshold) { m_threshold = threshold; }
     void setBiasDac(unsigned short biasDac) { m_biasDac = biasDac; }
     void setHoldDelay(unsigned short holdDelay) { m_holdDelay = holdDelay; }
+    void setHitmapDelay(unsigned short hitmapDelay) { m_hitmapDelay = hitmapDelay; }
+    void setRange(unsigned short range) { m_range = range; }
     void setTrigger(const AcdTrigger& trig) { m_trigger = trig; }
     void setChannel(const  Channel& ch) { m_channel = ch; }
     
@@ -541,6 +558,8 @@ namespace lsfData {
     unsigned short m_threshold;
     unsigned short m_biasDac;
     unsigned short m_holdDelay;
+    unsigned short m_hitmapDelay;
+    unsigned short m_range;
     AcdTrigger m_trigger;
     Channel    m_channel;
 
@@ -555,20 +574,25 @@ namespace lsfData {
      public:
 
         CalTrigger() : m_le(0), m_he(0) {};
-        CalTrigger(unsigned short le, unsigned short he) 
-        : m_le(le), m_he(he) {};
+        CalTrigger(unsigned short le, unsigned short ITE,
+                   unsigned short he, unsigned short hTE) 
+        : m_le(le), m_lowTrgEna(ITE), m_he(he), m_highTrgEna(hTE) {};
         CalTrigger(const CalTrigger& cal) : m_le(cal.le()), m_he(cal.he()) {}
 
         ~CalTrigger() { }
 
         void clear() { 
             m_le = 0;
+            m_lowTrgEna = 0;
             m_he = 0;
+            m_highTrgEna = 0;
         }
 
         void print(const std::string &str="") const {
          printf("%s le = %u\n", str.c_str(), m_le);
+         printf("%s lowTraEna = %u\n", str.c_str(), m_lowTrgEna);
          printf("%s he = %u\n", str.c_str(), m_he);
+         printf("%s highTraEna = %u\n", str.c_str(), m_highTrgEna);
         }
 
         /// Output operator (ASCII)
@@ -580,7 +604,9 @@ namespace lsfData {
         /// Fill the output stream (ASCII)
         std::ostream& fillStream( std::ostream& s ) const {
             return s << " le = " << m_le << std::endl 
-                     << " he = " << m_he << std::endl;
+                     << " lowTrgEna = " << m_lowTrgEna << std::endl
+                     << " he = " << m_he << std::endl
+                     << " highTrgEna = " << m_highTrgEna << std::endl;
         }
 
         /// Returns discrimination threshold necessary to toggle CAL's Low
@@ -589,36 +615,56 @@ namespace lsfData {
         /// database.
         inline unsigned short le() const { return m_le; };
 
+        inline unsigned short lowTrgEna() const { return m_lowTrgEna; }
+
         /// Returns discrimination threshold necessary to toggle CAL's High 
         /// Energy trigger signal sent to the GEM, in units of DAC counts.
         /// Return LSF_UNDEFINED if this value was determined from the LATC
         /// database.
         inline unsigned short he() const { return m_he; };
 
-        void set(unsigned short le, unsigned short he) {
+        inline unsigned short highTrgEna() const { return m_highTrgEna; };
+
+        void set(unsigned short le, unsigned short ITE, 
+                 unsigned short he, unsigned short hTE) {
             m_le = le;
+            m_lowTrgEna = ITE;
             m_he = he;
+            m_highTrgEna = hTE;
         }
 
         inline void setLe(unsigned short le) { m_le = le; }
+        inline void setLowTrgEna(unsigned short ITE) { m_lowTrgEna = ITE; };
         inline void setHe(unsigned short he) { m_he = he; }
+        inline void setHighTrgEna(unsigned short hTE) { m_highTrgEna = hTE; }
    
      private:
          unsigned short m_le;
+         unsigned short m_lowTrgEna;
          unsigned short m_he;
+         unsigned short m_highTrgEna;
      };
 
     LciCalConfiguration() 
       :LciConfiguration(),
-      m_uld(0),m_injected(0),m_delay(0),m_threshold(0),
+      m_uld(0),m_injected(0),m_delay(0),m_firstRange(0), m_threshold(0),
+      m_calibGain(0),m_highCalEna(0),m_highRngEna(0),m_highGain(0),
+      m_lowCalEna(0),m_lowRngEna(0),m_lowGain(0),
       m_trigger(),m_channel(){
     }
 
     LciCalConfiguration(unsigned short uld, unsigned short injected,
-                        unsigned short delay, unsigned short threshold,
+                        unsigned short delay, unsigned short firstRange,
+                        unsigned short threshold, unsigned short calibGain,
+                        unsigned short highCalEna, unsigned short highRngEna,
+                        unsigned short highGain, unsigned short lowCalEna,
+                        unsigned short lowRngEna, unsigned short lowGain,
                         CalTrigger trigger, Channel ch ) 
       :LciConfiguration(),
-       m_uld(uld),m_injected(injected),m_delay(delay),m_threshold(threshold),
+       m_uld(uld),m_injected(injected),m_delay(delay),m_firstRange(firstRange),
+       m_threshold(threshold),m_calibGain(calibGain),m_highCalEna(highCalEna),
+       m_highRngEna(highRngEna),m_highGain(highGain),m_lowCalEna(lowCalEna),
+       m_lowRngEna(lowRngEna),m_lowGain(lowGain),
        m_trigger(trigger),m_channel(ch){
     }
     
@@ -626,7 +672,11 @@ namespace lsfData {
       :LciConfiguration(other.softwareKey(), other.writeCfg(),other.readCfg(),
        other.period(), other.flags()),
        m_uld(other.uld()),m_injected(other.injected()),
-       m_delay(other.delay()),m_threshold(other.threshold()),
+       m_delay(other.delay()),m_firstRange(other.firstRange()),
+       m_calibGain(other.calibGain()), m_highCalEna(other.highCalEna()),
+       m_highRngEna(other.highRngEna()), m_highGain(other.highGain()),
+       m_lowCalEna(other.lowCalEna()), m_lowRngEna(other.lowRngEna()),
+       m_lowGain(other.lowGain()), m_threshold(other.threshold()),
        m_trigger(other.trigger()),m_channel(other.channel()){
     }
 
@@ -637,7 +687,15 @@ namespace lsfData {
         m_uld = 0;
         m_injected = 0;
         m_delay = 0;
+        m_firstRange = 0;
         m_threshold = 0;
+        m_calibGain = 0;
+        m_highCalEna = 0;
+        m_highRngEna = 0;
+        m_highGain = 0;
+        m_lowCalEna = 0;
+        m_lowRngEna = 0;
+        m_lowGain = 0;
         m_trigger.clear();
         m_channel.clear();
     }
@@ -654,7 +712,15 @@ namespace lsfData {
          printf("%s uld = %u\n", str.c_str(), m_uld);
          printf("%s injected = %u\n", str.c_str(), m_injected);
          printf("%s delay = %u\n", str.c_str(), m_delay);
+         printf("%s firstRange = %u\n", str.c_str(), m_firstRange);
          printf("%s threshold = %u\n", str.c_str(), m_threshold);
+         printf("%s calibGain = %u\n", str.c_str(), m_calibGain);
+         printf("%s highCalEna = %u\n", str.c_str(), m_highCalEna);
+         printf("%s highRngEna = %u\n", str.c_str(), m_highRngEna);
+         printf("%s highGain = %u\n", str.c_str(), m_highGain);
+         printf("%s lowCalEna = %u\n", str.c_str(), m_lowCalEna);
+         printf("%s lowRngEna = %u\n", str.c_str(), m_lowRngEna);
+         printf("%s lowGain = %u\n", str.c_str(), m_lowGain);
 	 m_trigger.print( str.c_str() );
          m_channel.print();
      }
@@ -671,7 +737,15 @@ namespace lsfData {
          return s << " uld = " << m_uld << std::endl 
                   << " injected = " << m_injected << std::endl
                   << " delay = " << m_delay << std::endl
+                  << " firstRange = " << m_firstRange << std::endl
                   << " threshold = " << m_threshold << std::endl
+                  << " calibGain = " << m_calibGain << std::endl
+                  << " highCalEna = " << m_highCalEna << std::endl
+                  << " highRngEna = " << m_highRngEna << std::endl
+                  << " highGain = " << m_highGain << std::endl
+                  << " lowCalEna = " << m_lowCalEna << std::endl
+                  << " lowRngEna = " << m_lowRngEna << std::endl
+                  << " lowGain = " << m_lowGain << std::endl
 	          << m_trigger
                   << m_channel << std::endl;
       }
@@ -694,11 +768,21 @@ namespace lsfData {
     /// database
     inline unsigned short delay () const { return m_delay; }
 
+    inline unsigned short firstRange() const { return m_firstRange; }
+
     /// Returns threshold necessary to cross in order to generate the specified
     /// calibration data, in units of DAC counts
     /// Returns LSF_UNDEFINED if the value was determined from the LATC
     /// database
     inline unsigned short threshold() const { return m_threshold;}
+
+    inline unsigned short calibGain() const { return m_calibGain; }
+    inline unsigned short highCalEna() const { return m_highCalEna; }
+    inline unsigned short highRngEna() const { return m_highRngEna; }
+    inline unsigned short highGain() const { return m_highGain; }
+    inline unsigned short lowCalEna() const { return m_lowCalEna; }
+    inline unsigned short lowRngEna() const { return m_lowRngEna; }
+    inline unsigned short lowGain() const { return m_lowGain; }
 
     inline const CalTrigger& trigger() const { return m_trigger; }
 
@@ -709,12 +793,25 @@ namespace lsfData {
     inline const Channel& channel() const { return m_channel; }
 
     void set(unsigned short uld, unsigned short injected, unsigned short delay,
-             unsigned short threshold, const CalTrigger& trigger, 
+             unsigned short firstRange, unsigned short threshold, 
+             unsigned short calibGain, unsigned short highCalEna, 
+             unsigned short highRngEna, unsigned short highGain,
+             unsigned short lowCalEna,
+             unsigned short lowRngEna, unsigned short lowGain,
+             const CalTrigger& trigger, 
              const Channel& ch) {
              m_uld = uld;
              m_injected = injected;
              m_delay = delay;
+             m_firstRange = firstRange;
              m_threshold = threshold;
+             m_calibGain = calibGain;
+             m_highCalEna = highCalEna;
+             m_highRngEna = highRngEna;
+             m_highGain = highGain;
+             m_lowCalEna = lowCalEna;
+             m_lowRngEna = lowRngEna;
+             m_lowGain = lowGain;
              m_trigger = trigger;
              m_channel = ch;
     }
@@ -722,7 +819,15 @@ namespace lsfData {
     void setUld(unsigned short uld) { m_uld = uld; }
     void setInjected(unsigned short injected) { m_injected = injected; }
     void setDelay(unsigned short delay) { m_delay = delay; }
+    void setFirstRange(unsigned short first) { m_firstRange = first; }
     void setThreshold(unsigned short threshold) { m_threshold = threshold; } 
+    void setCalibGain(unsigned short calibGain) { m_calibGain = calibGain; }
+    void setHighCalEna(unsigned short highCalEna) { m_highCalEna = highCalEna; }
+    void setHighRngEna(unsigned short highRngEna) { m_highRngEna = highRngEna; }
+    void setHighGain(unsigned short highGain) { m_highGain = highGain; }
+    void setLowCalEna(unsigned short lowCalEna) { m_lowCalEna = lowCalEna; }
+    void setLowRngEna(unsigned short lowRngEna) { m_lowRngEna = lowRngEna; }
+    void setLowGain(unsigned short lowGain) { m_lowGain = lowGain; }
     void setTrigger(const CalTrigger& trig) { m_trigger = trig; }
     void setChannel(const Channel& ch) { m_channel = ch; }
 
@@ -730,7 +835,15 @@ namespace lsfData {
       unsigned short m_uld;
       unsigned short m_injected;
       unsigned short m_delay;
+      unsigned short m_firstRange;
       unsigned short m_threshold;
+      unsigned short m_calibGain;
+      unsigned short m_highCalEna;
+      unsigned short m_highRngEna;
+      unsigned short m_highGain;
+      unsigned short m_lowCalEna;
+      unsigned short m_lowRngEna;
+      unsigned short m_lowGain;
       CalTrigger m_trigger;
       Channel m_channel;
 
@@ -742,21 +855,24 @@ namespace lsfData {
   public:
     LciTkrConfiguration() 
       :LciConfiguration(),
-      m_injected(0),m_delay(0),m_threshold(0),m_channel(){
+      m_injected(0),m_delay(0),m_threshold(0),m_splitLow(0),m_splitHigh(0),
+      m_channel(){
     }
 
     LciTkrConfiguration(unsigned short injected, unsigned short delay,
-                        unsigned short threshold, Channel ch ) 
+                        unsigned short threshold, unsigned short splitLow,
+                        unsigned short splitHigh, Channel ch ) 
       :LciConfiguration(),
        m_injected(injected),m_delay(delay),m_threshold(threshold),
-       m_channel(ch){
+       m_splitLow(splitLow),m_splitHigh(splitHigh),m_channel(ch){
     }
     
     LciTkrConfiguration(const LciTkrConfiguration& other) 
       :LciConfiguration(other.softwareKey(), other.writeCfg(),other.readCfg(),
        other.period(), other.flags()),
        m_injected(other.injected()),m_delay(other.delay()),
-       m_threshold(other.threshold()),m_channel(other.channel()){
+       m_threshold(other.threshold()),m_splitLow(other.splitLow()),
+       m_splitHigh(other.splitHigh()), m_channel(other.channel()){
     }
 
     virtual ~LciTkrConfiguration(){
@@ -766,6 +882,8 @@ namespace lsfData {
         m_injected = 0;
         m_delay = 0;
         m_threshold = 0;
+        m_splitLow = 0;
+        m_splitHigh = 0;
         m_channel.clear();
     }
 
@@ -781,6 +899,8 @@ namespace lsfData {
          printf("%s injected = %u\n", str.c_str(), m_injected);
          printf("%s delay = %u\n", str.c_str(), m_delay);
          printf("%s threshold = %u\n", str.c_str(), m_threshold);
+         printf("%s splitLow = %u\n", str.c_str(), m_splitLow);
+         printf("%s splitHigh = %u\n", str.c_str(), m_splitHigh);
          m_channel.print();
      }
 
@@ -796,6 +916,8 @@ namespace lsfData {
          return s << " injected = " << m_injected << std::endl
                   << " delay = " << m_delay << std::endl
                   << " threshold = " << m_threshold << std::endl
+                  << " splitLow = " << m_splitLow << std::endl
+                  << " splitHigh = " << m_splitHigh << std::endl
                   << m_channel << std::endl;
       }
 
@@ -817,6 +939,9 @@ namespace lsfData {
       /// from the LATC database
       inline unsigned short threshold() const { return m_threshold; }
 
+      inline unsigned short splitLow() const { return m_splitLow; }
+      inline unsigned short splitHigh() const { return m_splitHigh; }
+
       /// TKR definition of Channel
       /// Single is the channel number in layer space, this channel is enabled
       ///  in all layers, in all towers.  Range [0,1535]
@@ -825,16 +950,21 @@ namespace lsfData {
       inline const Channel& channel() const { return m_channel;}
 
       void set(unsigned short injected, unsigned short delay, 
-               unsigned short threshold, const Channel& ch) {
+               unsigned short threshold, unsigned short splitLow,
+               unsigned short splitHigh, const Channel& ch) {
                m_injected = injected;
                m_delay = delay;
                m_threshold = threshold;
+               m_splitLow = splitLow;
+               m_splitHigh = splitHigh;
                m_channel = ch;
       }
 
       inline void setInjected(unsigned short injected) { m_injected = injected; }
       inline void setDelay(unsigned short delay) { m_delay = delay; }
       inline void setThreshold(unsigned short threshold) { m_threshold = threshold; }
+      inline void setSplitLow(unsigned short splitLow) { m_splitLow = splitLow; }
+      inline void setSplitHigh(unsigned short splitHigh) { m_splitHigh = splitHigh; }
       inline void setChannel(const Channel& ch) { m_channel = ch; }
 
 
@@ -843,6 +973,8 @@ namespace lsfData {
       unsigned short m_injected;
       unsigned short m_delay;
       unsigned short m_threshold;
+      unsigned short m_splitLow;
+      unsigned short m_splitHigh;
       Channel m_channel;
 
   };
