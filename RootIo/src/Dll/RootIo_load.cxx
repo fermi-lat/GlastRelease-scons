@@ -26,6 +26,7 @@ DECLARE_FACTORY_ENTRIES(RootIo) {
     DECLARE_TOOL( RootIoRandom );
 #endif
     DECLARE_SERVICE( RootIoSvc );
+    DECLARE_SERVICE( ntupleReaderSvc );
 
 
 }
