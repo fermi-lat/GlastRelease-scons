@@ -72,6 +72,7 @@ public:
 
   virtual bool GcrReconTool::TriggerEngine4ON();
   virtual bool GcrReconTool::OBF_HFCVetoExist();
+  virtual bool GcrReconTool::checkFilters();
 
   virtual StatusCode GcrReconTool::findGcrXtals(std::string initDir);
   
@@ -115,6 +116,8 @@ private:
   StatusCode  storeGcrXtals();
   ///stores m_gcrTrack into the TDS, using the Event/Recon/CalRecon/GcrReconClasses information  
   StatusCode storeGcrTrack (); 
+  ///stores m_statusWord into the TDS, using the Event/Recon/CalRecon/GcrReconClasses information -- To be written! 
+  StatusCode storeGcrStatusWord (); 
   
   ///verifies reliability of informations in m_gcrXtalVec 
   void verifyGcrXtalsVec();
@@ -348,6 +351,85 @@ bool GcrReconTool::TriggerEngine4ON(){
     return engine4ON2;
 }
 
+bool GcrReconTool::checkFilters(){
+  m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters Begin"<<endreq ;
+  // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is set, false if not.
+  // Transfert of statusWord to TDS needs to be added at the end of this method here.
+  bool vetoHFCExists=true;
+  bool vetoDGNExists=true;
+  bool vetoMIPExists=true;
+  bool vetoExists=true;
+ 
+  SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
+  if (obfStatus)
+   {
+       // Pointer to our retrieved objects
+       const OnboardFilterTds::IObfStatus* obfResultHFC = 0;
+       const OnboardFilterTds::IObfStatus* obfResultDGN = 0;
+       const OnboardFilterTds::IObfStatus* obfResultMip = 0;
+
+
+       obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);      
+       if(obfResultHFC){
+	 unsigned int statusHFC32 = obfResultHFC->getStatus32();
+         unsigned int vetoHFC= obfResultHFC->getVetoBit();
+
+	 vetoHFCExists = (statusHFC32 & vetoHFC)>0;
+
+	 m_log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoHFCExists << endreq;
+
+       }
+       else
+           m_log << MSG::INFO <<  "no obfResultHFC" << endreq;
+
+       obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter); //DFCFilter: Filter key in ObfFilterStatus.h
+       //DFCFilter seems to be linked to DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
+       if(obfResultDGN){
+	 unsigned int statusDGN32 = obfResultDGN->getStatus32();
+         unsigned int vetoDGN= obfResultDGN->getVetoBit();
+
+	 vetoDGNExists = (statusDGN32 & vetoDGN)>0;
+
+	 m_log << MSG::INFO << "(statusDGN32 & vetoDGN)>0= " << vetoDGNExists << endreq;
+
+       }
+       else
+           m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
+
+
+       obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter);//MipFilter: Filter key in ObfFilterStatus.h      
+       if(obfResultMip){
+	 unsigned int statusMIP32 = obfResultMip->getStatus32();
+         unsigned int vetoMIP= obfResultMip->getVetoBit();
+
+	 vetoMIPExists = (statusMIP32 & vetoMIP)>0;
+
+	 m_log << MSG::INFO << "(statusMIP32 & vetoMIP)>0= " << vetoMIPExists << endreq;
+
+       }
+       else
+           m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
+
+
+   }
+   else
+     m_log << MSG::INFO << "no obfStatus"<< endreq;
+
+
+   vetoExists = (vetoHFCExists || vetoDGNExists || vetoMIPExists);
+
+   m_log << MSG::INFO << "vetoHFCExists || vetoDGNExists || vetoMIPExists : " << vetoExists << endreq;
+
+   //TDS variable containing the OBF filter flags:
+   storeGcrStatusWord();
+
+   m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters End"<<endreq ;
+
+   return(vetoExists);
+
+}
+
+//==============
 
 bool GcrReconTool::OBF_HFCVetoExist(){
 
@@ -951,6 +1033,35 @@ for (int itow=0; itow<NTOW; itow++)
 
   //m_log << MSG::INFO << "END verifyHitsMap in GcrReconTool"<< endreq;
 }
+
+// ----------------------------------------------------------------------------
+
+/**
+ * @author CL 06/02/2006
+ * This method allows to store GcrXtals in TDS structure
+ */
+StatusCode GcrReconTool::storeGcrStatusWord () {
+  StatusCode sc = StatusCode::SUCCESS;
+
+/**  m_gcrStatusWord = SmartDataPtr<Event::GcrStatusWord>(m_dataSvc,EventModel::CalRecon::GcrStatusWord);
+
+  // If no pointer then create it
+  if (m_gcrStatusWord == 0)
+    {
+      m_gcrXtalCol = new Event::GcrStatusWord();
+      sc = m_dataSvc->registerObject(EventModel::CalRecon::GcrStatusWord, m_gcrStatusWord);
+      if (sc.isFailure()) throw GaudiException("Failed to create Gcr Status Word !", name(), sc);
+    }
+*/
+
+  return sc;
+
+  
+}
+
+
+// ----------------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------------
 

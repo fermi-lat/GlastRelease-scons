@@ -21,8 +21,10 @@ class IGcrReconTool : virtual public IAlgTool
     // retrieve Gaudi interface ID
     static const InterfaceID& interfaceID() { return IID_IGcrReconTool; }
 
+    virtual bool checkFilters()=0;
     //! main method    
     virtual StatusCode findGcrXtals(std::string initDir)=0;
+    
     
  } ;
 

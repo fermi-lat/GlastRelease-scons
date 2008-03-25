@@ -21,6 +21,13 @@
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 
+#include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/GaudiException.h" 
+#include "TkrUtil/ITkrGeometrySvc.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+
 //#include <CalRecon/ICalReconSvc.h>
 
 /**   
@@ -48,6 +55,10 @@ public:
     StatusCode finalize() ;
 
 private:
+
+  StatusCode readGlastDet();  //read CAL geometry
+  StatusCode getCalEntryExitPoints();  // if using TkrRecon, extrapolate Track1 initial dir to verify it enters the CAL
+
   //! Check if the event is a heavy ion candidate.
   bool passTrigger();
   void selectEventAxis(Vector&,Point&);
@@ -67,6 +78,18 @@ private:
 
   /// Pointer to the Gaudi data provider service
   DataSvc*           m_dataSvc;
+  
+    //CAL dimensions parameters
+  double             m_calZTop;
+  double             m_calZBot;
+  double             m_calXLo;
+  double             m_calXHi;
+  double             m_calYLo;
+  double             m_calYHi;
+
+  Point m_calEntryPoint;
+  Point m_calExitPoint;
+
     
 } ;
 
@@ -136,6 +159,32 @@ StatusCode GcrReconAlg::execute()
     log << MSG::DEBUG << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
     log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
     
+    // TEST:  Does TkrTrack enters CAL?
+    if (!(m_initAxis=="MC")){
+      readGlastDet();   // Warning: code duplicated in GcrReconTool, should be passed as parameter of findGcrXtals
+      
+      if(getCalEntryExitPoints()==StatusCode::SUCCESS)   // Warning: code duplicated in GcrReconTool, should be passed as parameter of findGcrXtals
+      {
+	if((m_calEntryPoint.x()<m_calXLo) || (m_calEntryPoint.x()>m_calXHi) || (m_calEntryPoint.y()<m_calYLo) || (m_calEntryPoint.y()>m_calXHi)) 
+	  { 
+	    log<<MSG::DEBUG<<"track1 out of calorimeter"<<endreq ;
+
+            return;
+	  }
+	else
+	  log<<MSG::DEBUG<<"track1 in the calorimeter"<<endreq ; 
+
+       }
+       else{
+         log<<MSG::INFO<<"no TKRtrack found"<<endreq ;
+	 return;
+       } 
+      
+      
+    }
+
+    
+    
     // Apply filter(TRIGGER Engine 4 "CNO Trigger" or HFC OnboardFilter), then find GCRs
     if(passTrigger())
       {
@@ -175,31 +224,150 @@ bool GcrReconAlg::passTrigger()
   }
   else{
     log<<MSG::DEBUG<<"@@@@@@@@ Using HFC OBF"<<endreq ;
-    bool vetoExists=true;
-    
-    SmartDataPtr<OnboardFilterTds::ObfFilterStatus> 
-      obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
-    if (obfStatus)
-      {
-        // Pointer to our retrieved objects
-        const OnboardFilterTds::IObfStatus* obfResult = 0;
-        obfResult = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);
-        if(obfResult){
-          unsigned int statusHFC32 = obfResult->getStatus32();
-          unsigned int vetoHFC= obfResult->getVetoBit();
-          vetoExists = (statusHFC32 & vetoHFC)>0;   
-          log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoExists << endreq;
-        }     else{
-          log << MSG::INFO <<  "no obfResult" << endreq;}
-      }
-    else{
-      log << MSG::INFO << "no obfStatus"<< endreq;}
+    bool vetoExists=m_gcrReconTool->checkFilters();
     
     return (!vetoExists);
-    
-    //	log<<MSG::DEBUG<<"@@@@@@@@ Vetoed Event"<<endreq ;
+ 
   }
 }
+
+StatusCode GcrReconAlg::readGlastDet()
+{
+  StatusCode sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::DEBUG << "GcrReconTool BEGIN readGlastDet()" << endreq ;  
+
+  //TkrGeometrySvc used for access to tracker geometry info
+  ITkrGeometrySvc*   m_geoSvc;
+   // find TkrGeometrySvc service
+  if (service("TkrGeometrySvc", m_geoSvc, true).isFailure()){
+    log << MSG::ERROR << "Couldn't find the TkrGeometrySvc!" << endreq;
+    return StatusCode::FAILURE;
+  }
+   
+  /// the GlastDetSvc used for access to detector info
+  IGlastDetSvc*      m_detSvc;
+  
+  m_calZTop = m_geoSvc->calZTop();
+  m_calZBot = m_geoSvc->calZBot();
+  
+  double towerPitch = m_geoSvc->towerPitch();
+  int xNum = m_geoSvc->numXTowers();
+  int yNum = m_geoSvc->numYTowers();
+  double calXWidth = m_geoSvc->calXWidth();
+  double calYWidth = m_geoSvc->calYWidth();
+  double deltaX = 0.5*(xNum*towerPitch - calXWidth);
+  double deltaY = 0.5*(yNum*towerPitch - calYWidth);
+
+
+  m_calXLo = m_geoSvc->getLATLimit(0,LOW)  + deltaX;
+  m_calXHi = m_geoSvc->getLATLimit(0,HIGH) - deltaX;
+  m_calYLo = m_geoSvc->getLATLimit(1,LOW)  + deltaY;
+  m_calYHi = m_geoSvc->getLATLimit(1,HIGH) - deltaY;
+  
+
+  //  log << MSG::DEBUG << "Cal limits: YLo,YHi, XLo, XHi" << m_calYLo <<"," << m_calYHi << "," << m_calXLo << ","<< m_calXHi<< endreq;  
+  log << MSG::DEBUG << "GcrReconTool END readGlastDet()" << endreq ;  
+  return sc;
+}
+
+
+
+
+StatusCode GcrReconAlg::getCalEntryExitPoints(){
+  //returns StatusCode::FAILURE if no TkrTrack found
+  MsgStream log(msgSvc(), name());
+  StatusCode sc = StatusCode::SUCCESS;
+ 
+  Vector initDir;
+  Point initPos;
+
+  //Locate and store a pointer to the data service
+  DataSvc*           dataSvc;
+  IService* iService = 0;
+  if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
+  throw GaudiException("Service [EventDataSvc] not found", name(), sc);
+  dataSvc = dynamic_cast<DataSvc*>(iService);
+
+
+  SmartDataPtr<Event::TkrTrackCol>   pTracks(dataSvc,EventModel::TkrRecon::TkrTrackCol);
+
+	if (pTracks){   
+            // Count number of tracks
+	    
+            int nTracks = pTracks->size();
+            
+            log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
+            if(nTracks < 1) return StatusCode::FAILURE;
+            // Get the first Track - it should be the "Best Track"
+            Event::TkrTrackColConPtr pTrack = pTracks->begin();
+
+	    const Event::TkrTrack* track_1 = *pTrack;
+  
+	    initPos = track_1->getInitialPosition();
+	    initDir = track_1->getInitialDirection().unit();
+
+	}
+	else
+            log << MSG::INFO << "no TkrTrackCol found" << endreq;
+
+  
+  double x0 = initPos.x();
+  double y0 = initPos.y();
+  double z0 = initPos.z();
+
+  double ux0 = initDir.x();
+  double uy0 = initDir.y();
+  double uz0 = initDir.z();
+ 
+ 
+  log << MSG::DEBUG << "initPos=(" << x0 <<"," << y0 << "," << z0 <<")"<< endreq;  
+  log << MSG::DEBUG << "initDir=(" << ux0 <<"," << uy0 << "," << uz0 <<")"<< endreq;  
+
+
+  if (uz0!=0)
+    {
+      m_calEntryPoint = initPos+((m_calZTop-z0)/uz0)*initDir; 
+      m_calExitPoint  = initPos+((m_calZBot-z0)/uz0)*initDir;        
+      
+    }
+  else
+    {
+      if (ux0!=0)
+        {
+         
+	  if (ux0>0){
+	    m_calEntryPoint = initPos+((m_calXLo-x0)/ux0)*initDir; 
+	    m_calExitPoint  = initPos+((m_calXHi-x0)/ux0)*initDir;
+	  }
+	  else{
+	    m_calEntryPoint = initPos+((m_calXHi-x0)/ux0)*initDir; 
+	    m_calExitPoint  = initPos+((m_calXLo-x0)/ux0)*initDir;
+	    }
+        }
+      else if (uy0!=0)
+        {
+	  if (uy0>0){
+	    m_calEntryPoint = initPos+((m_calYLo-y0)/uy0)*initDir; 
+	    m_calExitPoint  = initPos+((m_calYHi-y0)/uy0)*initDir;
+	    }
+	  else{
+	    m_calEntryPoint = initPos+((m_calYHi-y0)/uy0)*initDir; 
+	    m_calExitPoint  = initPos+((m_calYLo-y0)/uy0)*initDir;
+	    
+	    }
+        }
+  
+    }
+
+  log << MSG::DEBUG << "CalEntryPoint=       " << '(' << m_calEntryPoint.x() << ',' << m_calEntryPoint.y() << ',' << m_calEntryPoint.z() << ')'  <<endreq;
+    
+  return sc;
+
+}
+
+
 
 void GcrReconAlg::selectEventAxis(Vector &dir, Point &pos)
 {
