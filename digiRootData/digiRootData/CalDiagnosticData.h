@@ -29,8 +29,11 @@ public:
     /// Returns the full packed data word for this CalDiagnosticData object
     UInt_t getDataWord() const { return m_datum; };
 
+  /// return FHE trigger bit for given face
     UInt_t high(UInt_t sign) const;
+  /// return FLE trigger bit for given face
     UInt_t low(UInt_t sign) const;
+
     UInt_t logAccepts(UInt_t sign) const;
     UShort_t tower() const { return m_tower; };
     UShort_t layer() const { return m_layer; };
