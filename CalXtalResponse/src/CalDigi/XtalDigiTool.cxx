@@ -202,10 +202,18 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
   for (XtalRng xRng; xRng.isValid(); xRng++) {
     const XtalDiode xDiode(xRng.getFace(), xRng.getRng().getDiode());
     // calcuate adc val from cidac
-    sc = m_calCalibSvc->evalADC(RngIdx(xtalIdx, xRng), 
+    const RngIdx rngIdx(xtalIdx, xRng);
+    sc = m_calCalibSvc->evalADC(rngIdx, 
                                 cidac[xDiode],
                                 adcPed[xRng]);
     if (sc.isFailure()) return sc;   
+
+#if 0
+    cout << "XtalDigiTool: " << rngIdx.toStr()
+         << " cidac " << cidac[xDiode]
+         << " adcPed " << adcPed[xRng]
+         << endl;
+#endif
 
   } // xRng
   
@@ -339,12 +347,12 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi,
   // set up the digi
   CalVec<FaceNum, RngNum> roRange;
   CalVec<FaceNum, float> adc;
+  const CalXtalId xtalId(calDigi.getPackedId());
   for (unsigned short nRo=0; nRo < roLimit; nRo++) {
     for (FaceNum face; face.isValid(); face++) {
       // represents ranges used for current readout in loop
       roRange[face] = RngNum((bestRng[face].val() + nRo) % RngNum::N_VALS); 
 
-      const CalXtalId xtalId(calDigi.getPackedId());
       const XtalRng xRng(face,roRange[face]);
       const XtalIdx xtalIdx(xtalId);
       const RngIdx rngIdx(xtalIdx, face, roRange[face]);
@@ -362,6 +370,14 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi,
       // may clip HEX1 to HEX1 saturation point
       adc[face] = max<float>(0, adcPed[xRng] + ped);
       adc[face] = round_int(min<float>(m_maxAdc, adc[face]));
+
+#if 0
+      cout << "fillDigi " << rngIdx.toStr()
+           << " adcPed " << adcPed[xRng]
+           << " ped " << ped
+           << " adc " << adc[face]
+           << endl;
+#endif
 
     }
       

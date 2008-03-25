@@ -43,7 +43,7 @@ namespace {
   static std::auto_ptr<CalXtalResponse::TestCfg> _testCfg;
   
   /// intended LAC threshold in mev
-  const static float LAC_MEV_INTENT = 2.0;
+  static const float LAC_MEV_INTENT = 2.0;
 
 }
 

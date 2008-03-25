@@ -135,11 +135,6 @@ StatusCode CalCalibSvc::evalFaceSignal(const RngIdx rngIdx, const float adcPed, 
   sc = evalCIDAC(rngIdx, adcPed, cidac);
   if (sc.isFailure()) return sc;
 
-  // CalXtalID w/ no face or range info
-  XtalIdx xtalIdx(rngIdx.getXtalIdx());
-
-  CalUtil::RngNum rng(rngIdx.getRng());
-
   float mpdDiode;
   sc = getMPDDiode(rngIdx.getDiodeIdx(), mpdDiode);
   if (sc.isFailure()) return StatusCode::FAILURE;

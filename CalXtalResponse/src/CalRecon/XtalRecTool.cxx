@@ -127,8 +127,6 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
                                   CalVec<FaceNum, bool> &belowNoise,
                                   CalVec<FaceNum, bool> &saturated,
                                   INeighborXtalkTool const*const xtalkTool) {
-  StatusCode sc;
-
   // initialize return values
   fill(belowNoise.begin(), belowNoise.end(), false);
   fill(saturated.begin(), saturated.end(), false);

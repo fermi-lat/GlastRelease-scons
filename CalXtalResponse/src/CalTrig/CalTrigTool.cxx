@@ -321,8 +321,6 @@ StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
 
   for (FaceNum face; face.isValid(); face++) {
     const FaceIdx faceIdx(xtalIdx, face);
-    const XtalDiode xDiodeLrg(face, LRG_DIODE);
-    const XtalDiode xDiodeSm(face,  SM_DIODE);
 
     // FLE //
     //-- RETRIEVE THESHOLD CALIB (per-face) --//
@@ -377,8 +375,6 @@ StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
   //-- RETRIEVE CALIB --//
   for (FaceNum face; face.isValid(); face++) {
     const FaceIdx faceIdx(xtalIdx,face);
-    const XtalDiode xDiodeLrg(face, LRG_DIODE);
-    const XtalDiode xDiodeSm(face,  SM_DIODE);
 
     // FLE //
     DiodeIdx diodeIdx(faceIdx, LRG_DIODE);

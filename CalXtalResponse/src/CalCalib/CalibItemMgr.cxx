@@ -167,15 +167,30 @@ StatusCode CalibItemMgr::evalSpline(int calibType, LATWideIndex idx,
 #if 0
   //-- USEFUL FOR DEBUGGING SPLINE BEHAVIOR --//
   // create MsgStream only when needed (for performance)
-  if (idx.val()==48) {
+  if (spline->GetName()[0] != 'a') {
+
     MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
     msglog << MSG::VERBOSE << "Evaluating spline: "
            << spline->GetName()
-           << " " << spline
            << " idx=" << idx.val()
            << " X=" << x
-           << " Y=" << y
-           << endreq;
+           << " Y=" << y;
+    if (y != 0)
+      msglog << " x/y=" << x/y;
+    msglog << endreq;
+    const unsigned nKnots = spline->GetNp();
+    for (unsigned nPt = 0 ; nPt < nKnots; nPt++) {
+      /// spline parms
+      double x,y,b,c,d;
+      spline->GetCoeff(nPt,x,y,b,c,d);
+      msglog << MSG::VERBOSE
+             << "spline coeff x=" << x
+             << " y=" << y
+             << " b=" << b
+             << " c=" << c
+             << " d=" << d
+             << endreq;
+    }
   }
 #endif
 
@@ -204,17 +219,18 @@ StatusCode CalibItemMgr::genSpline(int calibType, LATWideIndex idx, const string
 #if 0
   //-- USEFUL FOR DEBUGGING SPLINE BEHAVIOR --//
   // create MsgStream only when needed (for performance)
-  if (idx.val()==48) {
-    MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
-    msglog << MSG::VERBOSE << "Generating spline: "
-           << mySpline->GetName()
-           << " " << mySpline
-           << " idx=" << idx.val();
-    for (int i = 0; i < n; i++)
-      msglog << "\tX=" << xp[i]
-             << " Y=" << yp[i];
-    msglog << endreq;
+  MsgStream msglog(m_ccsShared.m_service->msgSvc(), m_ccsShared.m_service->name()); 
+  msglog << MSG::VERBOSE << "Generating spline: "
+         << mySpline->GetName()
+         << " " << mySpline.get()
+         << " idx=" << idx.val();
+  for (int i = 0; i < n; i++) {
+    msglog << "\tX=" << xp[i]
+           << " Y=" << yp[i];
+    if (xp[i] != 0)                                                          
+      msglog << "\t" << yp[i] / xp[i];
   }
+  msglog << endreq;
 #endif
 
   

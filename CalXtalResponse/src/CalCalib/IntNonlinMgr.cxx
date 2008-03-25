@@ -242,5 +242,12 @@ StatusCode IntNonlinMgr::evalADC(const CalUtil::RngIdx rngIdx, const float cidac
     // ceiling check
     adc = min(m_splineYMax[INV_INL_SPLINE][rngIdx],adc);
 
+#if 0
+    cout << "evalADC() cidac " << cidac
+         << " adc " << adc
+         << " " << adc/cidac
+         << endl;
+#endif
+
     return StatusCode::SUCCESS;
 }
