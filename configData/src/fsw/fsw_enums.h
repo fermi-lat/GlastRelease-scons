@@ -28,7 +28,7 @@ namespace configData {
 
   namespace fsw_enums {
 
-    // These are the FMX schema IDs
+    /// These are the FMX schema IDs
     enum { GFC_SCHEMA_ID = 0xe1,
 	   MFC_SCHEMA_ID = 0xe3,
 	   HFC_SCHEMA_ID = 0xe4,

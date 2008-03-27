@@ -3,7 +3,7 @@
 //      $Id$
 //
 // Description:
-//      Base class for converting FSW headers to XML
+//      Function to load CDM and set bookkeeping values
 //
 // Environment:
 //      Software developed for GLAST.
@@ -20,9 +20,13 @@
 // headers
 #include "./fsw_iface.h"
 
+
+// This is a c file, not a c++ file, b/c CDM_pubdefs uses a variable called "new"
+
 // fsw headers
 #include "fsw/CDM/CDM_pubdefs.h"
 
+// Just the wrapped functions
 const void* fsw_get_data( const char* fileName, 
 			  unsigned int option,
 			  unsigned int* key,
