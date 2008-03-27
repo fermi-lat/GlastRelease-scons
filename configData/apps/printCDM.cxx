@@ -18,6 +18,7 @@
 
 // local
 #include "../src/fsw/fsw_cdb.h"
+#include "../src/fsw/fsw_datum.h"
 
 void usage() {
   std::cout << "printCDB.exe -i <CDM_NAME> -o <OUTFILE>" << std::endl
@@ -79,7 +80,7 @@ int main(int argn, char** argc) {
     std::cout << "CDM_NAME    :  " <<  cdm_name << std::endl;
   }
   
-  configData::fsw_cdb* cdb = configData::fsw_cdb::read_cdb(cdm_name.c_str(),0);
+  configData::fsw_cdb* cdb = configData::fsw_datum::read_cdb(cdm_name.c_str(),0);
   if ( cdb == 0 ) {
     std::cerr << "Failed to read CDB " << cdm_name << std::endl;
     return 3;
