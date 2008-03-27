@@ -222,7 +222,7 @@ StatusCode BkgndTupleSelectTool::initialize()
     }
     m_outputTree = static_cast<TTree*>(ptr);
 
-    sc = service("RootIoSvc", m_rootIoSvc);       
+    sc = service("RootIoSvc", m_rootIoSvc, true);       
     if( sc.isFailure() ) 
     {
         log << MSG::ERROR << "failed to get the RootIoSvc" << endreq;
@@ -255,7 +255,8 @@ StatusCode BkgndTupleSelectTool::initialize()
     if( !filePath.empty())
     {
         facilities::Util::expandEnvVar(&filePath);
-        log << MSG::INFO << "Using xml file path " << filePath << " for BkgndTupleSelectTool " + name() + "." << endreq;
+        log << MSG::INFO << "Using xml file path " << filePath 
+            << " for BkgndTupleSelectTool " + name() + "." << endreq;
 
         // If passed an XML file, set up the XmlFetchEvents object
         std::string xmlFileName = filePath+"/" + m_tupVarName + ".xml";
@@ -367,10 +368,9 @@ void BkgndTupleSelectTool::selectEvent()
             throw std::runtime_error("BkgndTupleSelectTool::selectEvent -- could not read file");
         }
     }
-    log << MSG::DEBUG << "exiting selectEvent" << endreq;
     } catch(...) {
-        log << MSG::WARNING << "exception thrown aborting" << endreq;
-        abort();
+        log << MSG::WARNING << "exception thrown" << endreq;
+        throw;
     }
 }
 //------------------------------------------------------------------------
@@ -387,7 +387,6 @@ void BkgndTupleSelectTool::disableBranches(TTree* t)
 void BkgndTupleSelectTool::setCurrentTree(double x) 
 {
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << "begin setCurrentTree" << endreq;
 
    try {
     // replace the TChain
@@ -395,8 +394,6 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     std::string treeName = m_treeName;
     m_inputTree = new TChain(treeName.data());
-    if (!m_inputTree) 
-        log << MSG::DEBUG << "Failed to create a new TChain" << endreq;
 
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
@@ -412,15 +409,11 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
         throw std::runtime_error(msg.str());
     }
 
-    log << MSG::DEBUG << "Returned from getFiles with stat: " << stat << endreq;
-    if (!m_inputTree) log << MSG::DEBUG << "inputTree is Null" << endreq;
-
     // this is necessary due to the design of ROOT :-(
     //saveDir->cd(); HMK Move this to the end of the method
 
     // start at a random location in the tree:
     double length (m_inputTree->GetEntries());
-    log << MSG::DEBUG << "found " << length << " events in the chain" << endreq;
     if( length==0 ) 
     {
         throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: no events in the tree");
@@ -430,16 +423,11 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 
     // point tree to buffer for copying events:
     setLeafPointers();
-    log << MSG::DEBUG << "Called setLeafPointers" << endreq;
     m_triggerRate  = m_fetch->getAttributeValue("triggerRate", x);
     m_downlinkRate = m_fetch->getAttributeValue("downlinkRate", x);
     log << MSG::DEBUG << "triggerRate: " << m_triggerRate 
         << " downlinkRate: " << m_downlinkRate << endreq;
 
-    time_t rawtime;
-    time(&rawtime);
-    log << MSG::DEBUG << ctime(&rawtime) << " GetEntry(0) should load tree" 
-        << endreq;
     int ret = m_inputTree->GetEntry(0);
     if( ret<0 ) throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: could not read");
 
@@ -453,15 +441,14 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
 ////        BackgroundManager::instance()->getCelManager()->addComponent(m_treeName.value(), m_inputTree);
     }
 
-    log << MSG::DEBUG << "exiting BkgndTupleSelectTool::setCurrentTree" << endreq;
     // this is necessary due to the design of ROOT :-(
     saveDir->cd();
     } catch( const std::exception& e) {
-        log << MSG::ERROR << e.what() << endreq;
-        abort();
+        log << MSG::WARNING << e.what() << endreq;
+        throw(e);
    } catch(...) {
-      log << MSG::WARNING << "exception thrown aborting" << endreq;
-      abort();
+      log << MSG::WARNING << "exception thrown" << endreq;
+      throw;
    }
 
     return;
