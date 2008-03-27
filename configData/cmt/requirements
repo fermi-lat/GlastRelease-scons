@@ -16,6 +16,9 @@ use GlastPolicy v*
 use python * IExternal
 use ROOT * IExternal
 
+use fsw v* IExternal
+
+
 apply_pattern shared_library
 
 # Need to add a bunch of stuff to pythonpath
@@ -40,21 +43,21 @@ use xmlUtil v*
 # Force extern variable to be found on windows
 apply_pattern use_facilities_symbols
 
+macro_append fsw_linkopts "-L$(fsw_DIR)/lib -lcdm -lmdb -lcmx_asBuilt -lzlib_inflate -lfbs_rtos "
 
 macro_append cppflags "-Wno-unused-parameter " WIN32 ""
 
 apply_pattern package_headers
 
-macro source "*.cxx" WIN32 "*.h *.cxx"
+macro source "*.cxx *.c" WIN32 "*.h *.cxx *.c"
 
 library configData  \
  -s=../src $(source)\
+ -s=fsw $(source)\
  -s=gem $(source)\
  -s=base $(source)\
  -s=db $(source) 
 
-
-#        gem/*.cxx base/*.cxx db/*.cxx *.cxx
 
 #macro_append ROOT_linkopts " -L/u/ec/kocian/data/glnew/external/ROOT/v5.14.00d/root/lib -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -pthread -lm -ldl -rdynamic "
 
@@ -64,6 +67,8 @@ library configData  \
 #  gmake Linux 
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 application RootConfigCompare  ../apps/RootConfigCompare.cxx
+
+application printCDM  ../apps/printCDM.cxx
 
 application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
 #application getIntent ../apps/getIntent.cxx
