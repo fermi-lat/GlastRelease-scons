@@ -1,6 +1,9 @@
 #ifndef ConfigXmlUtil_h
 #define ConfigXmlUtil_h 
 
+// c++/stl
+#include <string>
+
 // Include xerces
 #include <xercesc/util/XercesDefs.hpp>
 
@@ -44,6 +47,13 @@ namespace configData {
     // Find a DOMElement with a given name in the set of children of a given element
     DOMElement* findChildByName(DOMElement& parent, const char* name );
     
+    // Get an attribute from a DOMElement, put in in theVal;
+    // return true for success, false for failture
+    bool getAttribute(DOMElement& domNode, const char* attrName, std::string& theVal);
+
+    // Get the text content from DOMElement
+    void getText(DOMElement& domNode, std::string& theVal);
+
     // Write a DOMDocument to a file
     bool writeIt(DOMElement& doc, const char* fileName);
   }

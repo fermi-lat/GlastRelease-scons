@@ -74,6 +74,16 @@ namespace configData {
       return xmlBase::Dom::findFirstChildByName(&parent,name);
     }
     
+    bool getAttribute(DOMElement& domNode, const char* attrName, std::string& theVal) {
+      try { theVal = xmlBase::Dom::getAttribute(&domNode,attrName); }
+      catch ( std::exception& ) { return false; }
+      return true;
+    }
+
+    void getText(DOMElement& domNode, std::string& theVal) {
+      theVal = xmlBase::Dom::getText(&domNode);
+    }
+
     bool writeIt(DOMElement& doc,const char* fileName) {
       return xmlBase::Dom::writeIt(doc.getOwnerDocument(),fileName);
     }
