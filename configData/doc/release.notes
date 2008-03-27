@@ -4,6 +4,7 @@
  * package manager:M. Kocian
  *
  *
+ * v1r7   27-Mar-08 EAC added fsw to handle filter configs
  * v1r6p6 11-Mar-08 HMK Patch to include cassert for windows
  * v1r6p2 25-Jan-08 panetta Fix parsing of TFE elements to allow '+x0' type IDs
  * v1r6p1 18-Jan-08 HMK Move to use facilities::Util::stringToUll
