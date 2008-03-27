@@ -7,6 +7,8 @@
 #include "Riostream.h"
 #include "TCollection.h"  // Declares TIter
 
+#include "DigiObjectManager.h"
+
 using namespace std;
 
 ClassImp(DigiEvent)
@@ -82,6 +84,8 @@ DigiEvent::~DigiEvent() {
     m_temCloneCol->Delete();
     delete m_temCloneCol;
     m_temCloneCol = 0;
+
+    delete DigiObjectManager::getPointer();
 }
 
 void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time, 
@@ -109,10 +113,10 @@ void DigiEvent::initialize(UInt_t eventId, UInt_t runId, Double_t time,
 
 void DigiEvent::Clear(Option_t *option) {
 
-    const Int_t nd = 20000;
-    static Int_t limit = 100;
-    static Int_t ind=0;
-    static TkrDigi* keep[nd];
+    //const Int_t nd = 20000;
+    //static Int_t limit = 100;
+    //static Int_t ind=0;
+    //static TkrDigi* keep[nd];
 
     m_eventId = 0;
     m_runId = 0;
@@ -143,25 +147,9 @@ void DigiEvent::Clear(Option_t *option) {
     m_temCloneCol->Clear("C");
     m_numTem = -1;
 
-   //m_tkrDigiCol->Delete();  //<======THIS LINE COMMENTED
-   //we delete the objects in keep every nd TkrDigi objects
-   //these few lines emulates what TClonesArray is doing
+    // Tell the MC object manager to reset its iterators
+    DigiObjectManager::getPointer()->Delete();
 
-    Int_t n = m_tkrDigiCol->GetEntries();
-    if (n>limit) {
-      //cout <<"!!!Warning: tkrDigi nr entries more than limit!!!Limit was increased "<<n<<endl;
-      limit=n+10;
-      if (limit > nd)
-        cout << "!!!Warning: limit for tkrDigi is greater than " << nd << endl;
-      for (Int_t j=0;j<ind;j++) delete keep[j];
-      ind = 0;
-    }
-    for (Int_t i=0;i<n;i++) keep[ind+i] = (TkrDigi*)m_tkrDigiCol->At(i);
-    ind += n;
-    if (ind > nd-limit) {
-      for (Int_t j=0;j<ind;j++) delete keep[j];
-      ind = 0;
-    }
     m_tkrDigiCol->Clear();
     m_gem.Clear();
 

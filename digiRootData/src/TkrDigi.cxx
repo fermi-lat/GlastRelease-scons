@@ -1,6 +1,8 @@
 #include "digiRootData/TkrDigi.h"
 #include "Riostream.h"
 
+#include "DigiObjectManager.h"
+
 ClassImp(TkrDigi)
 
 TkrDigi::TkrDigi() {
@@ -82,4 +84,25 @@ void TkrDigi::addC1Hit( UInt_t strip )
     m_hitCol.push_back(strip);
 }
 
+
+void* TkrDigi::operator new(size_t size)
+{
+    TkrDigi* temp = DigiObjectManager::getPointer()->getNewTkrDigi();
+
+    // Since we recycle, make sure these member functions are cleared
+    temp->m_hitCol.clear();
+
+    return temp;
+}
+
+void* TkrDigi::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+void TkrDigi::operator delete(void* p)
+{
+    // Since we let DigiObjectManager handle memory, nothing to do here
+    return;
+}
 

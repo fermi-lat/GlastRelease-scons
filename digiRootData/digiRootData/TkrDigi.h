@@ -68,6 +68,12 @@ public:
     
     //! Add a controller 1 hit to the hit list
     void addC1Hit( UInt_t strip);
+
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    void  operator delete(void* p);
     
 private:
 
@@ -81,7 +87,7 @@ private:
     /// Collection of hit strips
     vector<UInt_t> m_hitCol;
     
-    ClassDef(TkrDigi,4)
+    ClassDef(TkrDigi,5)
 };
 
 #endif // digiRootData_TkrDigi_H
