@@ -29,13 +29,22 @@ extern "C" {
 #endif
 
 
-
-const void* fsw_get_data( const char* fileName, 
-			  unsigned int option, 
-			  unsigned int* key,
-			  short* schemaID,
-			  short* versionID,
-			  short* instanceID );
+  // Load a CDM to memory
+  //
+  // returns a pointer to the loaded memory
+  //
+  // fileName is the full file name of the shared object we are loading
+  // option is always zero for now
+  // key is set the fmx key of the loaded file
+  // schemaID is set to the ID of the schema of the loaded file (ie, which CDM);
+  // versionID is set to the ID of the schema version of the loaded file
+  // instanceID is set to the ID associated with this instance of the schema in the loaded file
+  const void* fsw_get_data( const char* fileName, 
+			    unsigned int option, 
+			    unsigned int* key,
+			    short* schemaID,
+			    short* versionID,
+			    short* instanceID );
 
 #ifdef __cplusplus
 }

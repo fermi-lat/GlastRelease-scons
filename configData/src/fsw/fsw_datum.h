@@ -48,6 +48,9 @@ using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 
 namespace configData {
 
+
+  // Base class for managing IO on FSW CDM
+
   class fsw_datum {
    
   public:
@@ -81,8 +84,10 @@ namespace configData {
   private: 
 
     // The name of this datum
-    std::string    m_name;     
+    std::string m_name;     
   }; 
+
+
 
 
   class fsw_datum_mask : public fsw_datum {

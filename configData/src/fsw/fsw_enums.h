@@ -27,7 +27,12 @@
 namespace configData {
 
   namespace fsw_enums {
-    enum CDM_TYPE { INVALID = 0, GFC, HFC, MFC, DFC };
+
+    // These are the FMX schema IDs
+    enum { GFC_SCHEMA_ID = 0xe1,
+	   MFC_SCHEMA_ID = 0xe3,
+	   HFC_SCHEMA_ID = 0xe4,
+	   DFC_SCHEMA_ID = 0xe5 };
   }
 
 }

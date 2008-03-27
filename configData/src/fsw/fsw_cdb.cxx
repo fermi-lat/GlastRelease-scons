@@ -28,47 +28,60 @@
 
 // other headers
 #include "configData/base/ConfigXmlUtil.h"
-#include "./fsw_cdb_print.h"
 #include "./fsw_datum.h"
+
+// FSW headers
+#include "fsw/GFC_DB/GFC_DB_schema.h"
+#include "fsw/XFC_DB/HFC_DB_schema.h"
+#include "fsw/XFC_DB/MFC_DB_schema.h"
+#include "fsw/XFC_DB/DFC_DB_schema.h"
+
+
 
 namespace configData {
 
-  fsw_cdb* fsw_cdb::read_cdb( fsw_enums::CDM_TYPE cdmType, const char* name, int option ) {
+  fsw_cdb* fsw_cdb::read_cdb( const char* cdm_name, int option ) {
+
+    unsigned int key(0);
+    short schemaID(-1);
+    short versionID(-1);
+    short instanceID(-1);
+
+    void* schema_ptr = const_cast<void*>(fsw_get_data( cdm_name, option,
+						       &key, &schemaID, &versionID, &instanceID ));
+
     fsw_cdb* retVal(0);
-    switch ( cdmType ) {
-    case fsw_enums::GFC:
-      retVal = new fsw_cdb_inst<GFC_DB_schema>(name,option);
+    switch ( schemaID ) {
+    case fsw_enums::GFC_SCHEMA_ID :
+      retVal = new fsw_cdb_inst<GFC_DB_schema>(cdm_name,key,schemaID,versionID,instanceID,
+					       static_cast<GFC_DB_schema*>(schema_ptr));
       break;
-    case fsw_enums::DFC:
-      retVal = new fsw_cdb_inst<DFC_DB_schema>(name,option);
+    case fsw_enums::DFC_SCHEMA_ID:
+      retVal = new fsw_cdb_inst<DFC_DB_schema>(cdm_name,key,schemaID,versionID,instanceID,
+					       static_cast<DFC_DB_schema*>(schema_ptr));
       break;
-    case fsw_enums::MFC:
-      retVal = new fsw_cdb_inst<MFC_DB_schema>(name,option);
+    case fsw_enums::MFC_SCHEMA_ID:
+      retVal = new fsw_cdb_inst<MFC_DB_schema>(cdm_name,key,schemaID,versionID,instanceID,
+					       static_cast<MFC_DB_schema*>(schema_ptr));
       break;
-    case fsw_enums::HFC:
-      retVal = new fsw_cdb_inst<HFC_DB_schema>(name,option);
+    case fsw_enums::HFC_SCHEMA_ID:
+      retVal = new fsw_cdb_inst<HFC_DB_schema>(cdm_name,key,schemaID,versionID,instanceID,
+					       static_cast<HFC_DB_schema*>(schema_ptr));
       break;
     default:
       break;
     }
     return retVal;
-  }
+  } 
 
-  
-  fsw_enums::CDM_TYPE fsw_cdb::cdm_type( const std::string& cdb_type_name ) {
-    static std::map<std::string,fsw_enums::CDM_TYPE> typeNameMap;
-    if ( typeNameMap.size() == 0 ) {
-      typeNameMap["GFC"] = fsw_enums::GFC;
-      typeNameMap["HFC"] = fsw_enums::HFC;
-      typeNameMap["DFC"] = fsw_enums::DFC;
-      typeNameMap["MFC"] = fsw_enums::MFC;
-    }
-    static std::map<std::string,fsw_enums::CDM_TYPE>::const_iterator itrFind = typeNameMap.find(cdb_type_name);
-    return itrFind != typeNameMap.end() ? itrFind->second : fsw_enums::INVALID;
-  }
-
-  fsw_cdb::fsw_cdb(const char* cdm_name)
-    :m_name(cdm_name){
+  fsw_cdb::fsw_cdb(const char* cdm_name, 
+		   unsigned int key, short schemaID, 
+		   short versionID, short instanceID)
+    :m_key(key),
+     m_schemaID(schemaID),
+     m_versionID(versionID),
+     m_instanceID(instanceID),
+     m_name(cdm_name){     
   }
   
   fsw_cdb::~fsw_cdb() {
@@ -111,7 +124,7 @@ namespace configData {
     if ( doc == 0 ) return 2;
     DOMElement* check = io->writeToXml(*doc);
     if ( check == 0 ) return 3;
-    configData::XmlUtil::writeIt(*doc,fileName);
+    if ( ! XmlUtil::writeIt(*doc,fileName) ) return 4;
     return 0;
   }
   
@@ -130,35 +143,41 @@ namespace configData {
 
 
   template <typename SCHEMA>
-  fsw_cdb_inst<SCHEMA>::fsw_cdb_inst(const char* cdm_name, int option)
-    :fsw_cdb(cdm_name),
-     m_schema(0){
-    m_schema = load( option );
-    if ( m_schema == 0 ) {
-      std::cerr << "Failed to load CDM from " << cdm_name << std::endl;
-    } else {
-      std::cout << "Loaded " << cdm_name << std::endl;
-    }
+  fsw_cdb_inst<SCHEMA>::fsw_cdb_inst(const char* cdm_name,
+				     unsigned int key, short schemaID, 
+				     short versionID, short instanceID, SCHEMA* value) 
+    :fsw_cdb(cdm_name,key,schemaID,versionID,instanceID),
+     m_schema(value){
   }
     
   template <typename SCHEMA>
   fsw_cdb_inst<SCHEMA>::~fsw_cdb_inst() {
     delete m_schema;
   }
-  
-  template <typename SCHEMA>
-  SCHEMA* fsw_cdb_inst<SCHEMA>::load( int option ) {    
-    const void* schema_ptr = fsw_get_data( get_name().c_str(), option,
-					   &m_key, &m_schemaID, &m_versionID, &m_instanceID );
-    m_schema = const_cast<SCHEMA*>(static_cast<const SCHEMA*>(schema_ptr));
-    return m_schema;
-  }
-  
+    
   template <typename SCHEMA>
   fsw_datum* fsw_cdb_inst<SCHEMA>::get_io_handler() const {
     if ( m_schema == 0 ) return 0;
-    fsw_datum* retVal = new fsw_datum_inst<SCHEMA>( "Config", *m_schema );
+    std::string ioName;
+    switch ( get_schemaID() ) {
+    case fsw_enums::GFC_SCHEMA_ID:
+      ioName = "GFC_DB";
+      break;
+    case fsw_enums::DFC_SCHEMA_ID:
+      ioName = "DFC_DB";
+      break;
+    case fsw_enums::MFC_SCHEMA_ID:
+      ioName = "MFC_DB"; 
+      break;
+    case fsw_enums::HFC_SCHEMA_ID:
+      ioName = "HFC_DB"; 
+      break;
+    default:
+      break;
+    }
+    fsw_datum* retVal = new fsw_datum_inst<SCHEMA>( ioName.c_str(), *m_schema );
     return retVal;
   }
 
 }
+

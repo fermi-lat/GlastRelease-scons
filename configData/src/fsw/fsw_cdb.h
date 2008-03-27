@@ -44,14 +44,21 @@ namespace configData {
     
   public:
     
-    static fsw_cdb* read_cdb( fsw_enums::CDM_TYPE cdmType, const char* name, int option = 0 );
+    // This is the important function
+    // 
+    // Load a CDM, cast to the correct type and return us 
+    // the base class
+    //
+    // cdm_name is the file name of the shared object file
+    // option is not used 
+    static fsw_cdb* read_cdb( const char* cdm_name, int option = 0 );
     
-    static fsw_enums::CDM_TYPE cdm_type( const std::string& cdb_type_name );
-
   public:
     
     // C'tor
-    fsw_cdb(const char* cdm_name);
+    fsw_cdb(const char* cdm_name, 
+	    unsigned int key, short schemaID, 
+	    short versionID, short instanceID);
     
     // D'tor
     virtual ~fsw_cdb();
@@ -61,7 +68,16 @@ namespace configData {
     
     // get the name of the CDM
     inline const std::string& get_name() const { return m_name; }
-    
+    // get the The FMX key of this CDM
+    inline unsigned int get_key() const { return m_key; }
+    // get the ID of the schema of the CDM (ie, what kind of schema)
+    inline short get_schemaID() const { return m_schemaID; }
+    // get the ID of the version of schema used for this CDM
+    inline short get_versionID() const { return m_versionID; }
+    // get the ID of the instance of the CDM (relative to other CDM of same type)
+    inline short get_instanceID() const { return m_instanceID; }
+
+
     // print to a stream
     // return 0 for success, error flag otherwise
     int printToStream( std::ostream& os ) const;
@@ -76,16 +92,21 @@ namespace configData {
        
   protected:
 
+    // Make the object that handles the IO for this schema
     virtual fsw_datum* get_io_handler() const = 0;
-
-    unsigned int m_key;
-    short        m_schemaID;
-    short        m_versionID;
-    short        m_instanceID;
 
   private: 
     
-    std::string    m_name;     // The name of the CDM we are printing
+    // The FMX key of this CDM
+    unsigned int   m_key;     
+    // ID of the schema of the CDM (ie, what kind of schema)
+    short          m_schemaID;   
+    // ID of the version of schema used for this CDM
+    short          m_versionID;  
+    // ID of the instance of the CDM (relative to other CDM of same type)
+    short          m_instanceID; 
+    // The name of the CDM we are printing
+    std::string    m_name;        
   }; 
 
 
@@ -96,7 +117,10 @@ namespace configData {
   public:
     
     // C'tor
-    fsw_cdb_inst(const char* cdm_name, int option = 0);
+    fsw_cdb_inst(const char* cdm_name,  
+		 unsigned int key, short schemaID, 
+		 short versionID, short instanceID,
+		 SCHEMA* value);
     
     // D'tor
     virtual ~fsw_cdb_inst();
@@ -108,20 +132,16 @@ namespace configData {
     inline const SCHEMA* get_schema() const { return m_schema; }
     // get the data
     inline SCHEMA* get_schema() { return m_schema; }
-    
-    
-    // class methods
-    
-    // Read the data and cast it to the correct SCHEMA
-    // null pointer means failure
-    SCHEMA* load( int option = 0 );
-       
+
+              
   protected:
 
+    // Make the object that handles the IO for this schema
     virtual fsw_datum* get_io_handler() const;
 
   private:
     
+    // The data
     mutable SCHEMA*  m_schema;    
   };
 

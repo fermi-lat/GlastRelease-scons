@@ -21,7 +21,7 @@
 #include "./fsw_iface.h"
 
 // fsw headers
-#include "CDM/CDM_pubdefs.h"
+#include "fsw/CDM/CDM_pubdefs.h"
 
 const void* fsw_get_data( const char* fileName, 
 			  unsigned int option,
