@@ -1,3 +1,5 @@
+#ifndef fsw_datum_CXX
+#define fsw_datum_CXX
 //---------------------------------------------------------------------------
 // File and Version Information:
 //      $Id$
@@ -21,41 +23,66 @@
 #include "./fsw_datum.h"
 
 // c++/stl headers
-#include <map>
 #include <iostream>
 #include <iomanip>
-#include <fstream>
-
 
 // Local headers
 #include "configData/base/ConfigXmlUtil.h"
+#include "./fsw_cdb.h"
 
 
 
 namespace configData {
 
+  // write bookkeeping information to an XML file
+  DOMElement* fsw_datum::writeXmlHeader( DOMElement& parent, const char* cdm_name, const fmx_id& fmxId ) {
+    DOMElement* node = configData::XmlUtil::makeChildNode(parent,"FMX");
+    if ( node == 0 ) return 0;
+    DOMElement* cnode = configData::XmlUtil::makeChildNodeWithContent(*node,"FMX_FILE",cdm_name);
+    if ( cnode == 0 ) return 0;   
+    char tmp[16];
+    sprintf(tmp,"0x%08x",fmxId.get_key());
+    cnode = configData::XmlUtil::makeChildNodeWithContent(*node,"FMX_KEY",tmp);
+    if ( cnode == 0 ) return 0;
+    sprintf(tmp,"0x%04x",fmxId.get_schemaID());    
+    cnode = configData::XmlUtil::makeChildNodeWithContent(*node,"FMX_SCEHMA",tmp);
+    if ( cnode == 0 ) return 0;
+    cnode = configData::XmlUtil::makeChildNodeWithContent(*node,"FMX_VERSION",fmxId.get_versionID());
+    if ( cnode == 0 ) return 0;
+    cnode = configData::XmlUtil::makeChildNodeWithContent(*node,"FMX_INSTANCE",fmxId.get_instanceID());
+    if ( cnode == 0 ) return 0;    
+    return node;
+  }
+
+  // C'tor for for fsw_datum gives a name to any item of data
   fsw_datum::fsw_datum(const char* name) 
     :m_name(name){
   }
   
+  // D'tor is trivial
   fsw_datum::~fsw_datum() {
   }
   
   
-
+  // C'tor for fsw_datum_mask, gives a name to a 32 bit mask
   fsw_datum_mask::fsw_datum_mask(const char* name, unsigned int& val)
     :fsw_datum(name),
      m_mask(val){
   }
 
+  // D'tor is trivial
   fsw_datum_mask::~fsw_datum_mask() {
   }
 
 
+  // Print the mask to a stream
   void fsw_datum_mask::print( int depth, std::ostream& os ) const {
+    
+    // print the name
     os << std::setw(depth) << ' '  
        << std::setw(35-depth) << std::left << get_name() << std::right
-       << ": ";
+       << ": ";    
+    // print 32 bits
     unsigned int test(0x1);
     for ( int i(0); i < 32; i++ ) {
       os << ( m_mask & test ? '.' : 'X' );
@@ -64,172 +91,19 @@ namespace configData {
     os << std::endl;
   }
 
+  // Write the mask to a stream
   DOMElement* fsw_datum_mask::writeToXml( DOMElement& parent ) const {
+    // use format "0x%08x", ie. zero-filled 8 digit hex preceded by "0x"
     char tmp[12];
-    sprintf(tmp,"0x%8x",m_mask);
+    sprintf(tmp,"0x%08x",m_mask);
     return XmlUtil::makeChildNodeWithContent( parent, get_name().c_str(), tmp);
   }
   
+  // Read the mask from a stream
   bool fsw_datum_mask::readFromXml( DOMElement& node ) {
     return true;
-  }
-  
-
-  template <typename T>
-  fsw_datum_inst<T>::fsw_datum_inst(const char* name, T& val)
-    :fsw_datum(name),
-     m_datum(val){
-  }
-
-  template <typename T>
-  fsw_datum_inst<T>::~fsw_datum_inst() {
-    for ( std::list<fsw_datum*>::iterator itr = m_children.begin();
-	  itr != m_children.end(); itr++ ) {
-      fsw_datum* child = *itr;
-      delete child;
-    }
-  }
-
-  template <typename T>
-  fsw_datum* fsw_datum_inst<T>::getChildByName( const char* name ) {
-    std::map<std::string,fsw_datum*>::iterator itr = m_childMap.find(name);
-    return itr != m_childMap.end() ? itr->second : 0;
-  }
-
-  template <typename T>
-  void fsw_datum_inst<T>::addChild( fsw_datum& datum ) {
-    m_children.push_back( &datum );
-    m_childMap[datum.get_name()] = &datum;
-  }
-
-  template <typename T>
-  void fsw_datum_inst<T>::print( int depth, std::ostream& os ) const {
-    specializedPrint(depth, os);
-    printChildren(depth, os);
-  }
-
-  template <typename T>
-  DOMElement* fsw_datum_inst<T>::writeToXml( DOMElement& parent ) const {
-    DOMElement* elem = specializedWriteToXml(parent);
-    if ( elem == 0 ) return 0;
-    if ( ! writeChildren(*elem) ) return 0;
-    return elem;
-  }
-  
-  template <typename T>
-  bool fsw_datum_inst<T>::readFromXml( DOMElement& node ) {
-    if ( ! specializedReadFromXml(node) ) return false;
-    if ( ! readChildren(node) ) return false;
-    return true;
-  }
-
-  template <typename T>
-  void fsw_datum_inst<T>::printChildren( int depth, std::ostream& os ) const {
-    int newDepth = depth + 2;
-    for ( std::list<fsw_datum*>::const_iterator itr = m_children.begin();
-	  itr != m_children.end(); itr++ ) {
-      fsw_datum* child = *itr;
-      child->print(newDepth,os);
-    }
-  }
-
-  template <typename T>
-  bool fsw_datum_inst<T>::writeChildren( DOMElement& thisNode ) const {
-    for ( std::list<fsw_datum*>::const_iterator itr = m_children.begin();
-	  itr != m_children.end(); itr++ ) {
-      fsw_datum* child = *itr;
-      DOMElement* ok = child->writeToXml(thisNode);
-      if ( ok == 0 ) return false;
-    }
-    return true;
-  }
-
-  template <typename T>
-  bool fsw_datum_inst<T>::readChildren( DOMElement& thisNode ) {
-    for ( std::map<std::string,fsw_datum*>::iterator itr = m_childMap.begin();
-	  itr != m_childMap.end(); itr++ ) {
-      DOMElement* childNode = XmlUtil::findChildByName( thisNode, itr->first.c_str() );
-      if ( childNode == 0 ) return false;
-      fsw_datum* child = itr->second;
-      bool ok = child->readFromXml(*childNode);
-      if ( !ok ) return false;
-    }
-    return true;
-  }
-  
-  // print to a stream
-  template <typename T>
-  void fsw_datum_inst<T>::specializedPrint( int depth, std::ostream& os ) const {
-    os << std::setw(depth) << ' ' << get_name() << std::endl;
-  }
-  
-  // Write to XML
-  template <typename T>
-  DOMElement* fsw_datum_inst<T>::specializedWriteToXml( DOMElement& parent ) const {
-    DOMElement* thisNode = XmlUtil::makeChildNode( parent, get_name().c_str() );    
-    return thisNode;
-  }
-
-  // Read from XML
-  template <typename T>
-  bool fsw_datum_inst<T>::specializedReadFromXml( DOMElement& thisNode ) {
-    return true;
-  }
-
-  // Print
-  template <>
-  void fsw_datum_inst<void*>::specializedPrint( int depth, std::ostream& os) const {
-    os << std::setw(depth) << ' '  
-       << std::setw(35-depth) << std::left << get_name() << std::right
-       << ':' << m_datum << std::endl;
-  }
-
-  template <>
-  void fsw_datum_inst<unsigned int>::specializedPrint( int depth, std::ostream& os) const {
-    os << std::setw(depth) << ' ' 
-       << std::setw(35-depth) << std::left << get_name() << std::right
-       << ':' << m_datum << std::endl;
-  }
-
-  template <>
-  void fsw_datum_inst<unsigned short>::specializedPrint( int depth, std::ostream& os) const {
-    os << std::setw(depth) << ' ' 
-       << std::setw(35-depth) << std::left << get_name() << std::right
-       << ':' << m_datum << std::endl;
-  }
-
-  // Write to XML
-  template <>
-  DOMElement* fsw_datum_inst<void*>::specializedWriteToXml( DOMElement& parent ) const {
-    return XmlUtil::makeChildNodeWithContent( parent, get_name().c_str(), m_datum);
-  }
-
-  template <>
-  DOMElement* fsw_datum_inst<unsigned int>::specializedWriteToXml( DOMElement& parent ) const {
-    return XmlUtil::makeChildNodeWithContent( parent, get_name().c_str(), m_datum );
-  }
-
-  template <>
-  DOMElement* fsw_datum_inst<unsigned short>::specializedWriteToXml( DOMElement& parent ) const {
-    return XmlUtil::makeChildNodeWithContent( parent, get_name().c_str(), m_datum );
-  }
-
-  // Read from XML
-  template <>
-  bool fsw_datum_inst<void*>::specializedReadFromXml( DOMElement& thisNode ) {
-    return true;
-  }
-
-  template <>
-  bool fsw_datum_inst<unsigned int>::specializedReadFromXml( DOMElement& thisNode ) {
-    return true;
-  }
-
-  template <>
-  bool fsw_datum_inst<unsigned short>::specializedReadFromXml( DOMElement& thisNode ) {
-    return true;
-  }
+  }  
 
 }
 
-#include "./fsw_schema.icxx"
+#endif

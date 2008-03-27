@@ -6,7 +6,7 @@
 //      $Id$
 //
 // Description:
-//      Base class for converting FSW headers to XML
+//      Base class for converting FSW headers to XML or text
 //
 // Environment:
 //      Software developed for GLAST.
@@ -18,18 +18,11 @@
 //      Copyright (C) 2008      Stanford Linear Accelerator Center
 //
 //---------------------------------------------------------------------------
-/** @class fsw_datum
-    @author E. Charles
-
-    .Base class for converting FSW headers to XML
-*/
 
 
 
 // c++/stl
 #include <string>
-#include <list>
-#include <map>
 #include <iostream>
 
 // stuff for xerces
@@ -44,159 +37,185 @@ using XERCES_CPP_NAMESPACE_QUALIFIER DOMElement;
 // local includes
 
 // forward declares
-
+namespace configData {
+  class fsw_cdb;
+  struct fmx_id;
+}
 
 namespace configData {
 
 
-  // Base class for managing IO on FSW CDM
+  /** 
+   *  @class fsw_datum
+   *  @author E. Charles
+   *
+   *  Wrap data for IO functionality 
+   *  The idea is to wrap any structure used in CDM
+   *
+   *  This class define 3 virtual funtions
+   *
+   *   print        -> to a std::ostream
+   *   writeToXml   -> make and return a DOMElement
+   *   readFromXml  -> set values from a DOMElement
+   *
+   *  At the lowest level this just wraps simple types like unsigned int
+   *  At higher levels this wraps sub-structure of the CDM
+   *  At the top level this wraps the CDM itself
+   *
+   **/
 
   class fsw_datum {
+
+  public:    
+  
+    /**
+     * @brief Load a CDM, cast to the correct type and return us 
+     * the base class
+     * 
+     * @param cdm_name is the file name of the shared object file
+     * @param option is not used 
+     * @return an fsw_cdb that wraps the CDM, null for failure
+     **/
+    static fsw_cdb* read_cdb( const char* cdm_name, int option = 0 );
    
+    /**
+     * @brief write bookkeeping information to an XML file
+     * 
+     * @param parent is the parent xml element
+     * @param cdm_name is the file name of the shared object file
+     * @param fmxId is the FMX bookkeeping information 
+     * @return the newly created XML element
+     **/
+    static DOMElement* writeXmlHeader( DOMElement& parent, const char* cdm_name, const fmx_id& fmxId );
+
   public:
-    
-    // C'tor
+
+    /**
+     * @brief C'tor for fsw_datum gives a name to any item of data
+     *
+     * This name will be used in both the XML and text printouts
+     *
+     * @param name is the name associated with the datum
+     **/
     fsw_datum(const char* name);
     
-    // D'tor
+    /// D'tor for fsw_datum
     virtual ~fsw_datum();
     
     
     // access ----------------------------------
     
-    // get the name of the CDM
+    /// get the name this datum
     inline const std::string& get_name() const { return m_name; }
   
 
     // virtual methods
     
-    // print to a stream
+    /**
+     * @brief print to a stream
+     *
+     * @param depth is the indent depth
+     * @param os is the stream
+     **/
     virtual void print( int depth, std::ostream& os = std::cout ) const = 0;
 
-    // Write to XML
+    /**
+     * @brief create and fill a XML element with this datum
+     *
+     * @param parent is the parent xml element
+     * @return the newly created XML element
+     **/
     virtual DOMElement* writeToXml( DOMElement& parent ) const = 0;
 
-    // Read from XML
+    /**
+     * @brief set CDM values from an XML element
+     *
+     * @param node is the xml element
+     * @return true for success, false otherwise
+     **/
     virtual bool readFromXml( DOMElement& node ) = 0;
     
   protected:
 
   private: 
 
-    // The name of this datum
+    /// The name of this datum
     std::string m_name;     
   }; 
 
 
-
+  /** 
+   *  @class fsw_datum_mask
+   *  @author E. Charles
+   *
+   *  Wrap 32 bit unsigned int for IO
+   *
+   *  This class implements the io functions
+   *
+   *   print        -> to a std::ostream as a series of '.' (0) or 'X' (1)
+   *      name                    :.....XXXX...XX.....XX...XX.X.X.X
+   *   writeToXml   -> make and return a DOMElement
+   *   readFromXml  -> set values from a DOMElement
+   *      <name>0x5ff23091</name>
+   *
+   **/
 
   class fsw_datum_mask : public fsw_datum {
 
   public:
     
-    // C'tor
+    /**
+     * @brief C'tor for fsw_datum_mask, gives a name to a 32 bit mask
+     *
+     * This name will be used in both the XML and text printouts
+     *
+     * @param name is the name associated with the datum
+     * @param val is a reference to the mask, will be managed by this class
+     **/
     fsw_datum_mask(const char* name, unsigned int& val);
     
-    // D'tor
+    /// D'tor
     virtual ~fsw_datum_mask();
 
+
     // access ----------------------------------
     
-    // get the data
+    /// get the data
     inline unsigned int get_mask() const { return m_mask; }
 
-    // print to a stream
+
+    // virtual methods -------------------------
+
+    /**
+     * @brief print to a stream
+     *
+     * @param depth is the indent depth
+     * @param os is the stream
+     **/
     virtual void print( int depth, std::ostream& os = std::cout ) const;
 
-    // Write to XML
+    
+    /**
+     * @brief create and fill a XML element with this datum
+     *
+     * @param parent is the parent xml element
+     * @return the newly created XML element
+     **/
     virtual DOMElement* writeToXml( DOMElement& parent ) const;
 
-    // Read from XML
+    /**
+     * @brief set CDM values from an XML element
+     *
+     * @param node is the xml element
+     * @return true for success, false otherwise
+     **/
     virtual bool readFromXml( DOMElement& node );
 
   private:
 
+    /// reference to 32 bit mask handled by this object
     unsigned int& m_mask;
   };
-
-
-  template <typename T>
-  class fsw_datum_inst : public fsw_datum {
-    
-  public:
-    
-    // C'tor
-    fsw_datum_inst(const char* name, T& val);
-    
-    // D'tor
-    virtual ~fsw_datum_inst();
-    
-    
-    // access ----------------------------------
-    
-    // get the data
-    inline const T& get_datum() const { return m_datum; }
-    
-
-    // get a child
-    fsw_datum* getChildByName( const char* name );
-
-
-    // modifiers -------------------------------
-
-    // add a child node
-    void addChild( fsw_datum& datum );
-
-
-    // print to a stream
-    virtual void print( int depth, std::ostream& os = std::cout ) const;
-
-    // Write to XML
-    virtual DOMElement* writeToXml( DOMElement& parent ) const;
-
-    // Read from XML
-    virtual bool readFromXml( DOMElement& node );
-    
-  protected:
-    
-
-    // Print the children
-    void printChildren( int depth, std::ostream& os = std::cout) const;
-    
-    // Write the children
-    bool writeChildren( DOMElement& thisNode ) const;
-
-    // Read the children
-    bool readChildren( DOMElement& thisNode );
-
-    // print to a stream
-    void specializedPrint( int depth, std::ostream& os = std::cout ) const;
-
-    // Write to XML
-    DOMElement* specializedWriteToXml( DOMElement& parent ) const;
-
-    // Read from XML
-    bool specializedReadFromXml( DOMElement& thisNode );
-
-
-  private:
-
-    // This datum
-    T&                               m_datum;    
-
-    // All the children of this datum
-    std::list<fsw_datum*>            m_children;
-    
-    // All the children, sorted by name
-    std::map<std::string,fsw_datum*> m_childMap;
-
-
-  };
-
-  // All the basic types we use
-  typedef fsw_datum_inst<void*>                 fsw_datum_ptr;
-  typedef fsw_datum_inst<unsigned int>          fsw_datum_uint;
-  typedef fsw_datum_inst<unsigned short>        fsw_datum_ushort;  
 
 }
 
