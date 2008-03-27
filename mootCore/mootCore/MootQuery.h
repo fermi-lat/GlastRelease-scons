@@ -195,6 +195,10 @@ namespace MOOT {
     bool getConfigParmsUsed(unsigned configKey, 
                             std::vector<unsigned>& parameterKeys);
 
+    ConstitInfo* getConstituentInfo(unsigned constitKey);
+
+    ConstitInfo* getConstituentByFswId(unsigned fswId);
+
 
     unsigned getLastConfigKeyByAlg(const std::string& alg, unsigned step=1,
                                    const std::string& status="CREATED",
@@ -339,6 +343,11 @@ namespace MOOT {
     unsigned getVoteParmViaClassKey(const std::string& voteKeyStr,
                                     const std::string& parameterClassKey);
     */
+
+    /**
+       Utility does the work for getConstituentInfo and getConstituentByFswId
+     */
+    ConstitInfo* getConstituentWhere(const std::string& where);
 
 
     // Get info about each parameter file which was input source for the

@@ -10,9 +10,10 @@
 #include "mootCore/MootQuery.h"
 
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out);
+void writeConstituent(MOOT::ConstitInfo* pInfo, std::ostream& out);
 void writeParmOff(const std::vector<MOOT::ParmOffline>& parm);
 
-int main(int nargs, char**)    {
+int main(int /* nargs */, char**)    {
 
   MOOT::MoodConnection* moodCon = 
     new MOOT::MoodConnection(false);  // read only
@@ -42,7 +43,7 @@ int main(int nargs, char**)    {
   
   std::vector<std::string> inputKeys;
   //  bool gottem = q.getConfigInputsUn(4, inputKeys);
-  bool gottem;
+  //  bool gottem;
   /*
   try {
     gottem = q.getConfigInputs(4, inputKeys);
@@ -532,6 +533,13 @@ int main(int nargs, char**)    {
     }
   } while (!done) ;
 
+  MOOT::ConstitInfo* byKey = 
+    q.getConstituentInfo(75);
+  writeConstituent(byKey, std::cout);
+
+  MOOT::ConstitInfo* byId = q.getConstituentByFswId(6025);
+  writeConstituent(byId, std::cout);
+
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
@@ -559,4 +567,17 @@ void writeParmOff(const std::vector<MOOT::ParmOffline>& parm) {
               << std::endl << std::endl;
   }
 
+}
+
+void writeConstituent(MOOT::ConstitInfo* pInfo, std::ostream& out) {
+  out << "Constituent info: " << std::endl;
+  out << "prim_key = " << pInfo->getKey() << std::endl;
+  out << "name = " << pInfo->getName() << std::endl;
+  out << "version = " << pInfo->getVersion() << std::endl;
+  out << "package = " << pInfo->getPkg() << std::endl;
+  out << "dir = " << pInfo->getDir() << std::endl;
+  out << "fmx_path = " << pInfo->getFmxPath() << std::endl;
+  out << "src_path = " << pInfo->getSrcPath() << std::endl;
+  out << "fsw id = " << pInfo->getFswId() << std::endl;
+  out << "status = " << pInfo->getStatus() << std::endl << std::endl;
 }

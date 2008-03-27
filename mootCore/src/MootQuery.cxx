@@ -672,6 +672,67 @@ namespace MOOT {
     return true;
   }
 
+  /* ----------- */
+  ConstitInfo* MootQuery::getConstituentByFswId(unsigned fswId) {
+    std::string fswIdStr;
+    facilities::Util::utoa(fswId, fswIdStr);
+    std::string where(" WHERE FSW_id='");
+    where += fswIdStr + std::string("'");
+    return getConstituentWhere(where);
+  }
+
+  ConstitInfo* MootQuery::getConstituentInfo(unsigned key) {
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    std::string where(" WHERE prim_key= '");
+    where += keyStr + std::string("'");
+    return getConstituentWhere(where);
+  }
+
+
+  ConstitInfo* MootQuery::getConstituentWhere(const std::string& where) {
+
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(9);
+    getCols.clear(); noCols.clear();
+
+    getCols.push_back("prim_key");
+    getCols.push_back("name");
+    getCols.push_back("ver");
+    getCols.push_back("pkg");
+    getCols.push_back("dir");
+    getCols.push_back("fmx_path");
+    getCols.push_back("src_path");
+    getCols.push_back("FSW_id");
+    getCols.push_back("status");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Constituents", 
+                                           getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getConstituentWhere, where = " << where
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  flds;
+    res->getRow(flds, 0);
+
+    return new ConstitInfo(flds[0], flds[1], flds[2], flds[3], flds[4],
+                               flds[5], flds[6], flds[7], flds[8]);
+  }
+
   unsigned MootQuery::getLastConfigKeyByAlg(const std::string& alg, 
                                             unsigned step,
                                             const std::string& status,
