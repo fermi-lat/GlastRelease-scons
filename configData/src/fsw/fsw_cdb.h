@@ -33,6 +33,11 @@
 #include "./fsw_iface.h"
 
 
+// forward declares
+namespace configData {
+  class fsw_datum;
+}
+
 namespace configData {
 
   class fsw_cdb {
@@ -57,11 +62,21 @@ namespace configData {
     // get the name of the CDM
     inline const std::string& get_name() const { return m_name; }
     
-    // print to xml file
+    // print to a stream
     // return 0 for success, error flag otherwise
-    virtual int printToXmlFile( const char* fileName ) const = 0;
-    
+    int printToStream( std::ostream& os ) const;
+
+    // write to an XML file
+    // return 0 for success, error flag otherwise
+    int writeToXmlFile( const char* fileName ) const;
+   
+    // write from an XML file
+    // return 0 for success, error flag otherwise    
+    int readFromXmlFile( const char* fileName );
+       
   protected:
+
+    virtual fsw_datum* get_io_handler() const = 0;
 
     unsigned int m_key;
     short        m_schemaID;
@@ -91,28 +106,23 @@ namespace configData {
     
     // get the data
     inline const SCHEMA* get_schema() const { return m_schema; }
+    // get the data
+    inline SCHEMA* get_schema() { return m_schema; }
     
     
     // class methods
     
     // Read the data and cast it to the correct SCHEMA
     // null pointer means failure
-    const SCHEMA* load( int option = 0 );
-
-    // print to xml file
-    // return 0 for success, error flag otherwise
-    virtual int printToXmlFile( const char* fileName ) const;
-    
-    
+    SCHEMA* load( int option = 0 );
+       
   protected:
-    
-    int genericPrint( std::ostream& os = std::cout ) const;
 
-    int specializedPrint( std::ostream& os = std::cout ) const;    
+    virtual fsw_datum* get_io_handler() const;
 
   private:
     
-    const SCHEMA* m_schema;    
+    mutable SCHEMA*  m_schema;    
   };
 
 }
