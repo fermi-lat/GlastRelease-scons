@@ -224,9 +224,9 @@ bool GcrReconAlg::passTrigger()
   }
   else{
     log<<MSG::DEBUG<<"@@@@@@@@ Using HFC OBF"<<endreq ;
-    bool vetoExists=m_gcrReconTool->checkFilters();
+    bool passFilter=m_gcrReconTool->checkFilters();
     
-    return (!vetoExists);
+    return (passFilter);
  
   }
 }

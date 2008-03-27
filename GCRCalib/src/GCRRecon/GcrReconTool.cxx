@@ -71,7 +71,7 @@ public:
   virtual StatusCode initialize();
 
   virtual bool GcrReconTool::TriggerEngine4ON();
-  virtual bool GcrReconTool::OBF_HFCVetoExist();
+  //virtual bool GcrReconTool::OBF_HFCVetoExist();
   virtual bool GcrReconTool::checkFilters();
 
   virtual StatusCode GcrReconTool::findGcrXtals(std::string initDir);
@@ -353,62 +353,128 @@ bool GcrReconTool::TriggerEngine4ON(){
 
 bool GcrReconTool::checkFilters(){
   m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters Begin"<<endreq ;
+  
   // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is set, false if not.
-  // Transfert of statusWord to TDS needs to be added at the end of this method here.
+  // Transfert of statusWord to TDS needs to be added at the end of this method 
+/**  bool vetoGAMExists=true;
   bool vetoHFCExists=true;
   bool vetoDGNExists=true;
   bool vetoMIPExists=true;
-  bool vetoExists=true;
- 
+  bool vetoExists=true;*/
+  unsigned int filtersbGamma, filtersbHFC, filtersbDGN, filtersbMip;
+
+  bool debug=true; 
+  
+  int statusBytes; 
+  if(debug)
+    std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+
   SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
   if (obfStatus)
    {
        // Pointer to our retrieved objects
+       const OnboardFilterTds::IObfStatus* obfResultGamma = 0;
        const OnboardFilterTds::IObfStatus* obfResultHFC = 0;
        const OnboardFilterTds::IObfStatus* obfResultDGN = 0;
        const OnboardFilterTds::IObfStatus* obfResultMip = 0;
+       
+
+
+       obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
+       if(obfResultGamma){
+//	 unsigned int statusGAM32 = obfResultGAM->getStatus32();
+	 filtersbGamma = obfResultGamma->getFiltersb() >> 4;
+
+/**     int contribSBGamma = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::GammaFilter))&0xF;
+
+         unsigned int vetoGAM= obfResultGAM->getVetoBit();*/
+
+         statusBytes = (obfResultGamma->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::GammaFilter);
+	 
+	 /*vetoGAMExists = (statusGAM32 & vetoGAM)>0;
+	 
+	 if(debug) {
+	   //std::cout << "statusGAM32=" << std::hex << statusGAM32 << std::dec << std::endl;
+	   std::cout << "filtersbGAM=" << std::hex << filtersbGAM << std::dec << std::endl;
+	   //std::cout << "vetoGAM=" << std::hex << vetoGAM << std::dec << std::endl;
+	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+         }
+	 
+	 m_log << MSG::INFO << "(statusGAM32 & vetoGAM)>0= " << vetoGAMExists << endreq;*/
+
+       }
+       else
+           m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
 
 
        obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);      
        if(obfResultHFC){
-	 unsigned int statusHFC32 = obfResultHFC->getStatus32();
-         unsigned int vetoHFC= obfResultHFC->getVetoBit();
+//	 unsigned int statusHFC32 = obfResultHFC->getStatus32();
+	 filtersbHFC = obfResultHFC->getFiltersb() >> 4;;
+/**         unsigned int vetoHFC= obfResultHFC->getVetoBit();*/
+         statusBytes |= (obfResultHFC->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::HFCFilter);
 
-	 vetoHFCExists = (statusHFC32 & vetoHFC)>0;
-
-	 m_log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoHFCExists << endreq;
+	/** vetoHFCExists = (statusHFC32 & vetoHFC)>0;
+	 
+	 if(debug){
+	   //std::cout << "statusHFC32=" << std::hex << statusHFC32  << std::dec << std::endl;
+	   std::cout << "filtersbHFC=" << std::hex << filtersbHFC << std::dec << std::endl;
+	   //std::cout << "vetoHFC=" << std::hex << vetoHFC  << std::dec << std::endl;
+	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+         }
+	 m_log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoHFCExists << endreq;*/
 
        }
        else
            m_log << MSG::INFO <<  "no obfResultHFC" << endreq;
 
+
+       obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter);//MipFilter: Filter key in ObfFilterStatus.h      
+       if(obfResultMip){
+//	 unsigned int statusMIP32 = obfResultMip->getStatus32();
+	 filtersbMip = obfResultMip->getFiltersb() >> 4;;
+/**         unsigned int vetoMIP= obfResultMip->getVetoBit();*/
+         statusBytes |= (obfResultMip->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::MipFilter);
+
+	 /**vetoMIPExists = (statusMIP32 & vetoMIP)>0;
+
+       
+         if(debug) {
+	   //std::cout << "statusMIP32=" << std::hex << statusMIP32 << std::dec << std::endl;
+	   std::cout << "filtersbMIP=" << std::hex << filtersbMIP << std::dec << std::endl;
+	   //std::cout << "vetoMIP=" << std::hex << vetoMIP  << std::dec << std::endl;
+	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+	 }
+
+	 m_log << MSG::INFO << "(statusMIP32 & vetoMIP)>0= " << vetoMIPExists << endreq;*/
+
+       }
+       else
+           m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
+
+
        obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter); //DFCFilter: Filter key in ObfFilterStatus.h
        //DFCFilter seems to be linked to DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
        if(obfResultDGN){
-	 unsigned int statusDGN32 = obfResultDGN->getStatus32();
-         unsigned int vetoDGN= obfResultDGN->getVetoBit();
+//	 unsigned int statusDGN32 = obfResultDGN->getStatus32();
+	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;;
+ /**        unsigned int vetoDGN= obfResultDGN->getVetoBit();*/
+         statusBytes |= (obfResultDGN->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::DFCFilter);
 
-	 vetoDGNExists = (statusDGN32 & vetoDGN)>0;
+	/** vetoDGNExists = (statusDGN32 & vetoDGN)>0;
 
-	 m_log << MSG::INFO << "(statusDGN32 & vetoDGN)>0= " << vetoDGNExists << endreq;
+	 if(debug){
+	   //std::cout << "statusDGN32=" << std::hex << statusDGN32 << std::dec << std::endl;
+	   std::cout << "filtersbDGN=" << std::hex << filtersbDGN << std::dec << std::endl;
+	   //std::cout << "vetoDGN=" << std::hex << vetoDGN  << std::dec << std::endl;
+	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+         }
+	 m_log << MSG::INFO << "(statusDGN32 & vetoDGN)>0= " << vetoDGNExists << endreq;*/
 
        }
        else
            m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
 
-
-       obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter);//MipFilter: Filter key in ObfFilterStatus.h      
-       if(obfResultMip){
-	 unsigned int statusMIP32 = obfResultMip->getStatus32();
-         unsigned int vetoMIP= obfResultMip->getVetoBit();
-
-	 vetoMIPExists = (statusMIP32 & vetoMIP)>0;
-
-	 m_log << MSG::INFO << "(statusMIP32 & vetoMIP)>0= " << vetoMIPExists << endreq;
-
-       }
-       else
-           m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
 
 
    }
@@ -416,22 +482,53 @@ bool GcrReconTool::checkFilters(){
      m_log << MSG::INFO << "no obfStatus"<< endreq;
 
 
-   vetoExists = (vetoHFCExists || vetoDGNExists || vetoMIPExists);
 
-   m_log << MSG::INFO << "vetoHFCExists || vetoDGNExists || vetoMIPExists : " << vetoExists << endreq;
+   if(debug){
+     std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+     int contribSBGamma = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::GammaFilter))&0xF;
+     int contribSBHFC = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::HFCFilter))&0xF;
+     int contribSBDGN = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::DFCFilter))&0xF;
+     int contribSBMip = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::MipFilter))&0xF;
+     std::cout << "JC:contribGamma=" << std::hex << contribSBGamma << std::dec << std::endl;
+     std::cout << "JC:contribHFC=" << std::hex << contribSBHFC << std::dec << std::endl;
+     std::cout << "JC:contribMip=" << std::hex << contribSBMip << std::dec << std::endl;
+     std::cout << "JC:contribDGN=" << std::hex << contribSBDGN << std::dec << std::endl;
+
+   }
+
+//NOTE: other cuts a prendre pour Gamma et DFC: CalEnergyRaw > 15 MeV   
+//src/CalValsTool.cxx:    addItem("CalEnergyRaw",  &CAL_EnergyRaw);
+//src/CalValsTool.cxx:    CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
+
+
+   bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
+   bool cutHFC = (filtersbHFC==0) || (filtersbHFC==6);
+   bool cutMip = (filtersbMip==0) || (filtersbMip==6);
+   bool cutDGN = (filtersbDGN==0) || (filtersbDGN==6);
+
+   bool passFilter = cutGamma || cutHFC || cutMip || cutDGN;
+   m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
 
    //TDS variable containing the OBF filter flags:
+   
+   //ce calcul doit reprendre les 4 booleans et les ranger dans le meme ordre que m_statusBytes:
+   unsigned int gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
+   gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HFCFilter;
+   gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MipFilter;
+   gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DFCFilter;
+     std::cout << "gcrOBFStatusWord=" << std::hex << gcrOBFStatusWord << std::dec << std::endl;
+   
    storeGcrStatusWord();
 
    m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters End"<<endreq ;
 
-   return(vetoExists);
+   return(passFilter);
 
 }
 
 //==============
 
-bool GcrReconTool::OBF_HFCVetoExist(){
+/**bool GcrReconTool::OBF_HFCVetoExist(){
 
   //CL. 26/03/07:  Task #0: verify OBF status
  bool vetoExists=true;
@@ -464,7 +561,7 @@ bool GcrReconTool::OBF_HFCVetoExist(){
   return vetoExists;
 
 
-}
+}*/
 
 
 
