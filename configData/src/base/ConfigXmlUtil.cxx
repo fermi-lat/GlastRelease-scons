@@ -73,18 +73,6 @@ namespace configData {
     DOMElement* findChildByName(DOMElement& parent, const char* name ) {
       return xmlBase::Dom::findFirstChildByName(&parent,name);
     }
-
-    void addAttribute(DOMElement& domNode, const char* name, const char* val) {
-      xmlBase::Dom::addAttribute(&domNode,std::string(name),val);
-    }
-    
-    void addAttribute(DOMElement& domNode, const char* name, const int& val) {
-      xmlBase::Dom::addAttribute(&domNode,std::string(name),val);
-    }
-    
-    void addAttribute(DOMElement& domNode, const char* name, const double& val) {
-      xmlBase::Dom::addAttribute(&domNode,std::string(name),val);
-    }
     
     bool writeIt(DOMElement& doc,const char* fileName) {
       return xmlBase::Dom::writeIt(doc.getOwnerDocument(),fileName);
