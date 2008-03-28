@@ -4,6 +4,7 @@
 
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/MonteCarlo/McParticle.h"
+#include "geometry/Point.h"
 
 /**   
 * @class IGcrReconTool
@@ -23,7 +24,7 @@ class IGcrReconTool : virtual public IAlgTool
 
     virtual bool checkFilters()=0;
     //! main method    
-    virtual StatusCode findGcrXtals(std::string initDir)=0;
+    virtual StatusCode findGcrXtals(std::string initDir, Point calEntryPoint, Point calExitPoint)=0;
     
     
  } ;

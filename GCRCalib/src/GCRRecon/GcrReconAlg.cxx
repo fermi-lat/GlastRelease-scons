@@ -10,7 +10,7 @@
 
 //Needed by Engine4
 #include "Event/TopLevel/Event.h"
-#include "Event/TopLevel/EventModel.h"
+//#include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/GaudiException.h" 
 #include "OnboardFilterTds/FilterStatus.h"
@@ -26,6 +26,13 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+#include "Event/MonteCarlo/McParticle.h"
+
+
+#include "TkrRecon/../src/Filter/ITkrFilterTool.h"
+#include "Event/Recon/TkrRecon/TkrEventParams.h"
+
 
 
 //#include <CalRecon/ICalReconSvc.h>
@@ -58,6 +65,10 @@ private:
 
   StatusCode readGlastDet();  //read CAL geometry
   StatusCode getCalEntryExitPoints();  // if using TkrRecon, extrapolate Track1 initial dir to verify it enters the CAL
+
+  ///gets the First McParticle launched for current event
+  Event::McParticle* GcrReconAlg::findFirstMcParticle();
+
 
   //! Check if the event is a heavy ion candidate.
   bool passTrigger();
@@ -192,7 +203,7 @@ StatusCode GcrReconAlg::execute()
         Point pos;
         selectEventAxis(dir, pos);
         //m_gcrReconTool->findGcrXtals(m_initAxis, dir, pos);
-        m_gcrReconTool->findGcrXtals(m_initAxis);
+        m_gcrReconTool->findGcrXtals(m_initAxis, m_calEntryPoint, m_calExitPoint);
       }
 
     log<<MSG::DEBUG<<"GcrReconAlg::execute End"<<endreq ;
@@ -274,6 +285,7 @@ StatusCode GcrReconAlg::readGlastDet()
 
 
 
+//---------------------------------------------------------------------------------
 
 StatusCode GcrReconAlg::getCalEntryExitPoints(){
   //returns StatusCode::FAILURE if no TkrTrack found
@@ -283,37 +295,91 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
  
   Vector initDir;
   Point initPos;
-
-  //Locate and store a pointer to the data service
-  DataSvc*           dataSvc;
-  IService* iService = 0;
-  if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
-  throw GaudiException("Service [EventDataSvc] not found", name(), sc);
-  dataSvc = dynamic_cast<DataSvc*>(iService);
+  Vector mcDir;
 
 
-  SmartDataPtr<Event::TkrTrackCol>   pTracks(dataSvc,EventModel::TkrRecon::TkrTrackCol);
+  if(m_initAxis == "MC"){
+       // ******the first McParticle initial position (when launched):
+       Event::McParticle* firstMcParticle = findFirstMcParticle();
 
-	if (pTracks){   
-            // Count number of tracks
-	    
-            int nTracks = pTracks->size();
-            
-            log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
-            if(nTracks < 1) return StatusCode::FAILURE;
-            // Get the first Track - it should be the "Best Track"
-            Event::TkrTrackColConPtr pTrack = pTracks->begin();
+      const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
+      // casting to Point of initPosition, necessary to define propagator steps
 
-	    const Event::TkrTrack* track_1 = *pTrack;
+      if(firstMcParticle != 0)
+	    mcDir = Vector(firstMcParticle->initialFourMomentum().vect().unit());
+      else 
+	    mcDir = Vector(-1e9,-1e9,-1e9);
+
+
+      initPos.setX(initPosition.x());
+      initPos.setY(initPosition.y());
+      initPos.setZ(initPosition.z());
+
+
+      // ******the first McParticle initial direction (when launched):
+      initDir = Vector(mcDir.x(), mcDir.y(), mcDir.z());  
+  }  
   
-	    initPos = track_1->getInitialPosition();
-	    initDir = track_1->getInitialDirection().unit();
+  else if(m_initAxis=="TKR"){
+      //Locate and store a pointer to the data service
+      DataSvc*           dataSvc;
+      IService* iService = 0;
+      if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
+      throw GaudiException("Service [EventDataSvc] not found", name(), sc);
+      dataSvc = dynamic_cast<DataSvc*>(iService);
 
-	}
-	else
-            log << MSG::INFO << "no TkrTrackCol found" << endreq;
 
-  
+      SmartDataPtr<Event::TkrTrackCol>   pTracks(dataSvc,EventModel::TkrRecon::TkrTrackCol);
+
+	    if (pTracks){   
+        	// Count number of tracks
+
+        	int nTracks = pTracks->size();
+
+        	log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
+        	if(nTracks < 1) return StatusCode::FAILURE;
+        	// Get the first Track - it should be the "Best Track"
+        	Event::TkrTrackColConPtr pTrack = pTracks->begin();
+
+		const Event::TkrTrack* track_1 = *pTrack;
+
+		initPos = track_1->getInitialPosition();
+		initDir = track_1->getInitialDirection().unit();
+
+	    }
+	    else
+        	log << MSG::INFO << "no TkrTrackCol found" << endreq;
+
+  }
+  else if(m_initAxis=="MOM")
+    {
+      MsgStream log(msgSvc(), name());
+      StatusCode sc = StatusCode::SUCCESS;
+      ITkrFilterTool* filterTool;
+      if ((sc = toolSvc()->retrieveTool("TkrFilterTool", filterTool)).isFailure())
+        {
+          log << MSG::ERROR << " could not find TkrFilterTool " << endreq;
+          return sc;
+        }
+      sc = filterTool->doFilterStep();
+      //ok now the results need to be retrieved from the TDS:
+      // Recover pointer to TkrEventParams
+      Event::TkrEventParams* tkrEventParams = 
+        SmartDataPtr<Event::TkrEventParams>(m_dataSvc, EventModel::TkrRecon::TkrEventParams);
+      // First pass means no TkrEventParams
+      if (tkrEventParams == 0)
+        {
+          log << MSG::ERROR << " could not find TkrEventParams in the TDS " << endreq;
+          return StatusCode::FAILURE;
+        }
+      initPos = tkrEventParams->getEventPosition();
+      initDir = -tkrEventParams->getEventAxis();    
+    } else{
+    log<<MSG::ERROR<<"Invalid property "<<m_initAxis<<endreq;
+    return;
+  }
+
+
   double x0 = initPos.x();
   double y0 = initPos.y();
   double z0 = initPos.z();
@@ -321,8 +387,9 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   double ux0 = initDir.x();
   double uy0 = initDir.y();
   double uz0 = initDir.z();
- 
- 
+
+
+  
   log << MSG::DEBUG << "initPos=(" << x0 <<"," << y0 << "," << z0 <<")"<< endreq;  
   log << MSG::DEBUG << "initDir=(" << ux0 <<"," << uy0 << "," << uz0 <<")"<< endreq;  
 
@@ -368,7 +435,39 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 
 }
 
+//--------------------------------------------------------------------------
 
+Event::McParticle* GcrReconAlg::findFirstMcParticle(){
+
+  MsgStream log(msgSvc(), name());
+
+  //m_log << MSG::INFO << "BEGIN findFirstMcParticle in GcrReconTool" << endreq;
+
+  Event::McParticleCol* mcParticleCol = SmartDataPtr<Event::McParticleCol>(m_dataSvc, EventModel::MC::McParticleCol);
+  // Event::McParticleCol::const_iterator mcParticleColIter=mcParticleCol->begin(); 
+
+   
+  Event::McParticle* firstMcParticle = 0; 
+  if (mcParticleCol){  
+    firstMcParticle = *mcParticleCol->begin();
+    //m_log << MSG::INFO << "firstMcParticle particle ID= " << firstMcParticle->particleProperty()<< endreq;
+  } 
+  else 
+    log << MSG::INFO << "no mcParticleCol" << endreq;
+       
+  //m_log << MSG::INFO << "firstMcParticle.x()= " << firstMcParticle->initialPosition().x() << endreq;
+
+  //m_log << MSG::INFO << "END findFirstMcParticle in GcrReconTool" << endreq;
+  
+  return firstMcParticle;
+   
+
+
+}
+
+
+
+//----------------------------------------------------------------------------
 
 void GcrReconAlg::selectEventAxis(Vector &dir, Point &pos)
 {

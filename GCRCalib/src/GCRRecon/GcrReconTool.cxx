@@ -46,6 +46,7 @@
 
 #include "geometry/Vector.h"
 #include "geometry/Ray.h"
+#include "geometry/Point.h"
 
 #include "TMath.h"
 #include "TObjArray.h"
@@ -77,7 +78,7 @@ public:
   //virtual bool GcrReconTool::OBF_HFCVetoExist();
   virtual bool GcrReconTool::checkFilters();
 
-  virtual StatusCode GcrReconTool::findGcrXtals(std::string initDir);
+  virtual StatusCode GcrReconTool::findGcrXtals(std::string initDir, Point calEntryPoint, Point calExitPoint);
   
   
 private:
@@ -93,7 +94,7 @@ private:
   StatusCode readGlastDet();
   
   ///gets the First McParticle launched for current event
-  Event::McParticle* GcrReconTool::findFirstMcParticle();
+  //Event::McParticle* GcrReconTool::findFirstMcParticle();
   
   ///builds a 3D table of dimensions NTOw,NLAY,NCOL
   ///containing the central point for each Xtal
@@ -115,7 +116,7 @@ private:
   ///builds GcrXtalsVec, a collection of elements GcrXtals.  References all Xtals
   /// that should theoretically (MonteCarlo) have been touched by first MC particle 
   /// associated to current Event. 
-  void buildGcrXtalsVec();
+  void buildGcrXtalsVec(Point calEntryPoint, Point calExitPoint);
   
   ///stores m_gcrXtalCol into the TDS, using the Event/Recon/CalRecon/GcrReconClasses information
   StatusCode  storeGcrXtals();
@@ -393,12 +394,6 @@ bool GcrReconTool::checkFilters(){
   // get calEnergyRaw from TDS, to be considered for OBFGamma and OBFHFC cuts
   float calEnergyRaw =getCALEnergyRaw();
 
-  bool debug=true; 
-  
-  int statusBytes =0; 
-  if(debug)
-    std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
-
   SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
   if (obfStatus)
    {
@@ -408,61 +403,31 @@ bool GcrReconTool::checkFilters(){
        const OnboardFilterTds::IObfStatus* obfResultDGN = 0;
        const OnboardFilterTds::IObfStatus* obfResultMip = 0;
        
-
-
        obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
-       if(obfResultGamma){
-	 
+       if(obfResultGamma)
 	 filtersbGamma = obfResultGamma->getFiltersb() >> 4;
-         statusBytes |= (obfResultGamma->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::GammaFilter);
-
-	 if(debug) {
-	   std::cout << "filtersbGamma=" << std::hex << filtersbGamma << std::dec << std::endl;
-         }	 
-
-       }
        else
            m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
 
 
        obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);      
-       if(obfResultHFC){
-	 filtersbHFC = obfResultHFC->getFiltersb() >> 4;;
-         statusBytes |= (obfResultHFC->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::HFCFilter);
-
-	 if(debug){
-	   std::cout << "filtersbHFC=" << std::hex << filtersbHFC << std::dec << std::endl;
-         }
-
-       }
+       if(obfResultHFC)
+	 filtersbHFC = obfResultHFC->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultHFC" << endreq;
 
 
        obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter);//MipFilter: Filter key in ObfFilterStatus.h      
-       if(obfResultMip){
-	 filtersbMip = obfResultMip->getFiltersb() >> 4;;
-         statusBytes |= (obfResultMip->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::MipFilter);
-     
-         if(debug) {
-	   std::cout << "filtersbMIP=" << std::hex << filtersbMip << std::dec << std::endl;
-	 }
-       }
+       if(obfResultMip)
+	 filtersbMip = obfResultMip->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
 
 
        obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter); //DFCFilter: Filter key in ObfFilterStatus.h
        //DFCFilter is the old name of DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
-       if(obfResultDGN){
-	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;;
-         statusBytes |= (obfResultDGN->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::DFCFilter);
-
-	 if(debug){
-	   std::cout << "filtersbDGN=" << std::hex << filtersbDGN << std::dec << std::endl;
-         }
-
-       }
+       if(obfResultDGN)
+	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
 
@@ -474,19 +439,6 @@ bool GcrReconTool::checkFilters(){
 
    //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
 
-   if(debug){
-     std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
-     int contribSBGamma = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::GammaFilter))&0xF;
-     int contribSBHFC = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::HFCFilter))&0xF;
-     int contribSBMip = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::MipFilter))&0xF;
-     int contribSBDGN = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::DFCFilter))&0xF;
-     std::cout << "JC:contribGamma=" << std::hex << contribSBGamma << std::dec << std::endl;
-     std::cout << "JC:contribHFC=" << std::hex << contribSBHFC << std::dec << std::endl;
-     std::cout << "JC:contribMip=" << std::hex << contribSBMip << std::dec << std::endl;
-     std::cout << "JC:contribDGN=" << std::hex << contribSBDGN << std::dec << std::endl;
-
-   }
-
    bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
    bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6)) && (calEnergyRaw > CALRawE_TH);
    bool cutMip = (filtersbMip==0) || (filtersbMip==6);
@@ -496,13 +448,11 @@ bool GcrReconTool::checkFilters(){
    m_log << MSG::DEBUG << "passFilter:" << passFilter << endreq;
 
    //TDS variable containing the OBF filter flags:
-   
-   //ce calcul doit reprendre les 4 booleans et les ranger dans le meme ordre que m_statusBytes:
+   // gcrOBFStatusWord bits order is the same than statusBytes merit variable   
    m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
    m_gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HFCFilter;
    m_gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MipFilter;
    m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DFCFilter;
-     std::cout << "gcrOBFStatusWord=" << std::hex << m_gcrOBFStatusWord << std::dec << std::endl;
    
    // store gcrOBFStatus Word in TDS:
    storeGcrReconVals();
@@ -520,7 +470,7 @@ bool GcrReconTool::checkFilters(){
    This method builds the map of the Xtals that are theoretically touched by the original MCParticle.
    The map is obtained by propagating the first MCparticle initial trajectory.
 */
-StatusCode GcrReconTool::findGcrXtals(std::string initDir){
+StatusCode GcrReconTool::findGcrXtals(std::string initDir, Point calEntryPoint, Point calExitPoint){
 
       m_log << MSG::DEBUG << "BEGIN findGcrXtals in GcrReconTool" << endreq;
       m_log << MSG::DEBUG << "initDir=" << initDir << endreq;
@@ -551,7 +501,7 @@ StatusCode GcrReconTool::findGcrXtals(std::string initDir){
       
   //Task #4: build gcrXtalsVec
  
-  buildGcrXtalsVec();
+  buildGcrXtalsVec(calEntryPoint, calExitPoint);
    
   m_log << MSG::INFO << "m_numGcrXtals= " << m_numGcrXtals << endreq;
   m_log << MSG::INFO << "number of entries in m_gcrXtalVec=" << m_gcrXtalVec.size() << endreq;
@@ -593,7 +543,7 @@ void GcrReconTool::verifyGcrXtalsVec(){
 }
 
 //-----------------------------------------------------------------------------------------------------------------
-void GcrReconTool::buildGcrXtalsVec(){
+void GcrReconTool::buildGcrXtalsVec(Point calEntryPoint, Point calExitPoint){
   
   m_log << MSG::DEBUG << "BEGIN buildGcrXtalsVec in GcrReconTool" << endreq;
   
@@ -608,147 +558,12 @@ void GcrReconTool::buildGcrXtalsVec(){
 
   m_numGcrXtals=0;
     
-  //====== Task #4.1: define initial Position and Direction =====================================
+  //====== Task #4.1: define initial Position and Direction : Done in GcrReconAlg=====================================
   
-  //get MC direction:
-  
-  Event::McParticle* firstMcParticle = GcrReconTool::findFirstMcParticle();
-
-  if(firstMcParticle != 0)
-  	m_mcDir = Vector(firstMcParticle->initialFourMomentum().vect().unit());
-  else 
-        m_mcDir = Vector(-1e9,-1e9,-1e9);
- 
- 
-  if(m_propertyDir=="MC"){ // if taking MCTrack, get theoretical initial position and direction
-
-     // ******the first McParticle initial position (when launched):
-      const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
-      // casting to Point of initPosition, necessary to define propagator steps
-
-      m_initPos.setX(initPosition.x());
-      m_initPos.setY(initPosition.y());
-      m_initPos.setZ(initPosition.z());
-
-      // ******the first McParticle initial direction (when launched):
-      m_initDir = Vector(m_mcDir.x(), m_mcDir.y(), m_mcDir.z());
-
-  
-  }
-  
-  else if(m_propertyDir=="TKR"){ // if taking MCTrack, get reconstructed initial position and direction
-  
-	SmartDataPtr<Event::TkrTrackCol>   pTracks(m_dataSvc,EventModel::TkrRecon::TkrTrackCol);
-
-	if (pTracks){   
-            // Count number of tracks
-            int nTracks = pTracks->size();
-            if(nTracks < 1) return;
-
-            // Get the first Track - it should be the "Best Track"
-            Event::TkrTrackColConPtr pTrack = pTracks->begin();
-
-	    const Event::TkrTrack* track_1 = *pTrack;
-             
-	    m_initPos = track_1->getInitialPosition();
-	    m_initDir = track_1->getInitialDirection().unit();
-
-	}
-	else 
-    {
-      m_log << MSG::INFO << "no TkrTrackCol found" << endreq;
-    }
-  } else if(m_propertyDir=="MOM")
-    {
-      MsgStream log(msgSvc(), name());
-      StatusCode sc = StatusCode::SUCCESS;
-      ITkrFilterTool* filterTool;
-      if ((sc = toolSvc()->retrieveTool("TkrFilterTool", filterTool)).isFailure())
-        {
-          log << MSG::ERROR << " could not find TkrFilterTool " << endreq;
-          return sc;
-        }
-      sc = filterTool->doFilterStep();
-      //ok now the results need to be retrieved from the TDS:
-      // Recover pointer to TkrEventParams
-      Event::TkrEventParams* tkrEventParams = 
-        SmartDataPtr<Event::TkrEventParams>(m_dataSvc, EventModel::TkrRecon::TkrEventParams);
-      // First pass means no TkrEventParams
-      if (tkrEventParams == 0)
-        {
-          log << MSG::ERROR << " could not find TkrEventParams in the TDS " << endreq;
-          return StatusCode::FAILURE;
-        }
-      m_initPos = tkrEventParams->getEventPosition();
-      m_initDir = -tkrEventParams->getEventAxis();    
-    } else{
-    m_log<<MSG::ERROR<<"Invalid property "<<m_propertyDir<<endreq;
-    return;
-  }
-  
-  double x0 = m_initPos.x();
-  double y0 = m_initPos.y();
-  double z0 = m_initPos.z();
-
-  double ux0 = m_initDir.x();
-  double uy0 = m_initDir.y();
-  double uz0 = m_initDir.z();
- 
-
-
-    
-  m_log << MSG::DEBUG << "initPos="<< '(' << x0 << ',' << y0 << ',' << z0 << ')'<<endreq;
-  
-  m_log << MSG::DEBUG << "initDir=" << '(' << ux0 << ',' << uy0 << ',' << uz0 << ')'<<endreq ;
-  
-  // ========================================================================================
-
     
    
-  //====== Task #4.2 & 4.3: find entry and exit point from Calorimeter=========================================
-  
-  if (uz0!=0)
-    {
-      m_calEntryPoint = m_initPos+((m_calZTop-z0)/uz0)*m_initDir; 
-      m_calExitPoint  = m_initPos+((m_calZBot-z0)/uz0)*m_initDir;        
-      
-    }
-  else
-    {
-      if (ux0!=0)
-        {
-         
-	  if (ux0>0){
-	    m_calEntryPoint = m_initPos+((m_calXLo-x0)/ux0)*m_initDir; 
-	    m_calExitPoint  = m_initPos+((m_calXHi-x0)/ux0)*m_initDir;
-	  }
-	  else{
-	    m_calEntryPoint = m_initPos+((m_calXHi-x0)/ux0)*m_initDir; 
-	    m_calExitPoint  = m_initPos+((m_calXLo-x0)/ux0)*m_initDir;
-	    }
-        }
-      else if (uy0!=0)
-        {
-	  if (uy0>0){
-	    m_calEntryPoint = m_initPos+((m_calYLo-y0)/uy0)*m_initDir; 
-	    m_calExitPoint  = m_initPos+((m_calYHi-y0)/uy0)*m_initDir;
-	    }
-	  else{
-	    m_calEntryPoint = m_initPos+((m_calYHi-y0)/uy0)*m_initDir; 
-	    m_calExitPoint  = m_initPos+((m_calYLo-y0)/uy0)*m_initDir;
-	    
-	    }
-        }
-  
-    }
+  //====== Task #4.2 & 4.3: find entry and exit point from Calorimeter: Done in GcrReconAlg (parameters)=========================================
     
-  //m_log << MSG::INFO << "CalEntryPoint=       " << '(' << m_calEntryPoint.x() << ',' << m_calEntryPoint.y() << ',' << m_calEntryPoint.z() << ')'  <<endreq;
-    
-  //m_log << MSG::INFO << "CalExitPoint=       " << '(' << m_calExitPoint.x() << ',' << m_calExitPoint.y() << ',' << m_calExitPoint.z() << ')'  <<endreq;
-  //exitP.printOn(std::cout); 
-
-  // ========================================================================================
-     
   //====== Task #4.4:  propagate and update m_gcrXtalsMap & gcrXtalVec:
   totalTrack=m_calEntryPoint-m_calExitPoint;
 
@@ -903,7 +718,7 @@ void GcrReconTool::buildGcrXtalsVec(){
 
 //-----------------------------------------------------------------------------------------------------------------
 
-Event::McParticle* GcrReconTool::findFirstMcParticle(){
+/**Event::McParticle* GcrReconTool::findFirstMcParticle(){
 
   //m_log << MSG::INFO << "BEGIN findFirstMcParticle in GcrReconTool" << endreq;
 
@@ -931,7 +746,7 @@ Event::McParticle* GcrReconTool::findFirstMcParticle(){
 
 }
 
-
+*/
 
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -1085,6 +900,8 @@ for (int itow=0; itow<NTOW; itow++)
 /**
  * @author CL 06/02/2006
  * This method allows to store GcrReconVals in TDS structure
+ * contains (only) gcrOBFStatusWord which contains information about Gamma, HFC, DGN and Mip vetos 
+ * Bits of gcrOBFStatusWord are in the same order than those of statusBytes merit variable{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
  */
 StatusCode GcrReconTool::storeGcrReconVals () {
   StatusCode sc = StatusCode::SUCCESS;
