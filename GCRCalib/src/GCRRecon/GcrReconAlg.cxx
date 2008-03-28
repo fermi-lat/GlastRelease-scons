@@ -223,7 +223,7 @@ bool GcrReconAlg::passTrigger()
     //    return m_gcrReconTool->TriggerEngine4ON();
   }
   else{
-    log<<MSG::DEBUG<<"@@@@@@@@ Using HFC OBF"<<endreq ;
+    log<<MSG::DEBUG<<"@@@@@@@@ Using Gamma,HFC,Mip,DGN OBF filters"<<endreq ;
     bool passFilter=m_gcrReconTool->checkFilters();
     
     return (passFilter);
@@ -277,6 +277,7 @@ StatusCode GcrReconAlg::readGlastDet()
 
 StatusCode GcrReconAlg::getCalEntryExitPoints(){
   //returns StatusCode::FAILURE if no TkrTrack found
+  
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
  

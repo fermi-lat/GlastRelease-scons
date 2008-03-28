@@ -74,6 +74,7 @@ private:
   
   Event::GcrXtalVec getGcrXtalVec(){return m_gcrXtalVec;} 
   void setGcrXtalVec(Event::GcrXtalVec gcrXtalVec){m_gcrXtalVec = gcrXtalVec;}
+  Event::GcrReconVals*   m_gcrReconVals; 
 
   StatusCode retrieveGcrXtalsMap();
  

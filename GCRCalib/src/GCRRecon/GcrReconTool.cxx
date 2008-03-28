@@ -32,6 +32,9 @@
 #include "Event/MonteCarlo/McTrajectory.h"
 #include "Event/MonteCarlo/McParticle.h"
 
+//needed to get CALEnergyRaw:
+#include "Event/Recon/CalRecon/CalCluster.h"
+
 //#include "TkrUtil/ITkrGeometrySvc.h"
 
 #include "idents/TowerId.h" 
@@ -78,6 +81,7 @@ public:
   
   
 private:
+
   /// PRIVATE METHODS
     
   DataSvc* getDataSvc(){return m_dataSvc;} 
@@ -97,6 +101,7 @@ private:
   void verifyXtalCentersTab();
 
   
+  float GcrReconTool::getCALEnergyRaw();
   
   ///builds a 3D table of dimensions NbTow,NbLay,NbCol 
   ///containing a sequential number when a corresponding CalXtalRecData is found.
@@ -117,7 +122,7 @@ private:
   ///stores m_gcrTrack into the TDS, using the Event/Recon/CalRecon/GcrReconClasses information  
   StatusCode storeGcrTrack (); 
   ///stores m_statusWord into the TDS, using the Event/Recon/CalRecon/GcrReconClasses information -- To be written! 
-  StatusCode storeGcrStatusWord (); 
+  StatusCode storeGcrReconVals (); 
   
   ///verifies reliability of informations in m_gcrXtalVec 
   void verifyGcrXtalsVec();
@@ -130,6 +135,7 @@ private:
 
 
   /// PRIVATE DATA MEMBERS
+  static const float CALRawE_TH=15.0;  //Energy threshold to apply to OBF Gamma and HFC filters cuts
   
   static const int NTOW = 16;
   static const int NLAY = 8;
@@ -198,6 +204,11 @@ private:
   int m_eTowerCAL;  ///< the value of fTowerObject field, defining calorimeter module 
   int m_eXtal;  ///< the value of fCellCmp field defining CsI crystal
   int m_nCsISeg;  ///< number of geometric segments per Xtal
+
+  // variable that contains information of OBFFilters (Gamma, HFC, DGN, Mip) vetos 
+  
+  unsigned int m_gcrOBFStatusWord; 
+  Event::GcrReconVals*   m_gcrReconVals; 
 
     //variable that indicates if we want to keep mcTrack direction or TrackReconTrack direction
   std::string m_propertyDir;
@@ -351,21 +362,40 @@ bool GcrReconTool::TriggerEngine4ON(){
     return engine4ON2;
 }
 
+float GcrReconTool::getCALEnergyRaw()
+{
+    StatusCode sc = StatusCode::SUCCESS;
+    float CAL_EnergyRaw=0.0;
+    // Recover pointer to CalClusters
+    SmartDataPtr<Event::CalClusterCol> pCals(m_dataSvc,EventModel::CalRecon::CalClusterCol);
+    //Make sure we have valid cluster data and some energy
+    if (!pCals) return -1.0;
+    if (pCals->empty()) return -2.0;
+    Event::CalCluster* calCluster = pCals->front();
+    CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
+    if(CAL_EnergyRaw<1.0) return -3.0;
+
+    m_log << MSG::DEBUG << "CAL_EnergyRaw=" << CAL_EnergyRaw << endreq;
+    
+    return CAL_EnergyRaw;
+    
+}
+
+
 bool GcrReconTool::checkFilters(){
   m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters Begin"<<endreq ;
   
-  // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is set, false if not.
-  // Transfert of statusWord to TDS needs to be added at the end of this method 
-/**  bool vetoGAMExists=true;
-  bool vetoHFCExists=true;
-  bool vetoDGNExists=true;
-  bool vetoMIPExists=true;
-  bool vetoExists=true;*/
+  // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is NOT set, false if the event is vetoed by all these filters.
+  // Transfert of statusWord to TDS needs still to be added at the end of this method 
+
   unsigned int filtersbGamma, filtersbHFC, filtersbDGN, filtersbMip;
+  
+  // get calEnergyRaw from TDS, to be considered for OBFGamma and OBFHFC cuts
+  float calEnergyRaw =getCALEnergyRaw();
 
   bool debug=true; 
   
-  int statusBytes; 
+  int statusBytes =0; 
   if(debug)
     std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
 
@@ -382,25 +412,13 @@ bool GcrReconTool::checkFilters(){
 
        obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
        if(obfResultGamma){
-//	 unsigned int statusGAM32 = obfResultGAM->getStatus32();
+	 
 	 filtersbGamma = obfResultGamma->getFiltersb() >> 4;
+         statusBytes |= (obfResultGamma->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::GammaFilter);
 
-/**     int contribSBGamma = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::GammaFilter))&0xF;
-
-         unsigned int vetoGAM= obfResultGAM->getVetoBit();*/
-
-         statusBytes = (obfResultGamma->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::GammaFilter);
-	 
-	 /*vetoGAMExists = (statusGAM32 & vetoGAM)>0;
-	 
 	 if(debug) {
-	   //std::cout << "statusGAM32=" << std::hex << statusGAM32 << std::dec << std::endl;
-	   std::cout << "filtersbGAM=" << std::hex << filtersbGAM << std::dec << std::endl;
-	   //std::cout << "vetoGAM=" << std::hex << vetoGAM << std::dec << std::endl;
-	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
-         }
-	 
-	 m_log << MSG::INFO << "(statusGAM32 & vetoGAM)>0= " << vetoGAMExists << endreq;*/
+	   std::cout << "filtersbGamma=" << std::hex << filtersbGamma << std::dec << std::endl;
+         }	 
 
        }
        else
@@ -409,20 +427,12 @@ bool GcrReconTool::checkFilters(){
 
        obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);      
        if(obfResultHFC){
-//	 unsigned int statusHFC32 = obfResultHFC->getStatus32();
 	 filtersbHFC = obfResultHFC->getFiltersb() >> 4;;
-/**         unsigned int vetoHFC= obfResultHFC->getVetoBit();*/
          statusBytes |= (obfResultHFC->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::HFCFilter);
 
-	/** vetoHFCExists = (statusHFC32 & vetoHFC)>0;
-	 
 	 if(debug){
-	   //std::cout << "statusHFC32=" << std::hex << statusHFC32  << std::dec << std::endl;
 	   std::cout << "filtersbHFC=" << std::hex << filtersbHFC << std::dec << std::endl;
-	   //std::cout << "vetoHFC=" << std::hex << vetoHFC  << std::dec << std::endl;
-	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
          }
-	 m_log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoHFCExists << endreq;*/
 
        }
        else
@@ -431,45 +441,26 @@ bool GcrReconTool::checkFilters(){
 
        obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter);//MipFilter: Filter key in ObfFilterStatus.h      
        if(obfResultMip){
-//	 unsigned int statusMIP32 = obfResultMip->getStatus32();
 	 filtersbMip = obfResultMip->getFiltersb() >> 4;;
-/**         unsigned int vetoMIP= obfResultMip->getVetoBit();*/
          statusBytes |= (obfResultMip->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::MipFilter);
-
-	 /**vetoMIPExists = (statusMIP32 & vetoMIP)>0;
-
-       
+     
          if(debug) {
-	   //std::cout << "statusMIP32=" << std::hex << statusMIP32 << std::dec << std::endl;
-	   std::cout << "filtersbMIP=" << std::hex << filtersbMIP << std::dec << std::endl;
-	   //std::cout << "vetoMIP=" << std::hex << vetoMIP  << std::dec << std::endl;
-	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
+	   std::cout << "filtersbMIP=" << std::hex << filtersbMip << std::dec << std::endl;
 	 }
-
-	 m_log << MSG::INFO << "(statusMIP32 & vetoMIP)>0= " << vetoMIPExists << endreq;*/
-
        }
        else
            m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
 
 
        obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter); //DFCFilter: Filter key in ObfFilterStatus.h
-       //DFCFilter seems to be linked to DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
+       //DFCFilter is the old name of DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
        if(obfResultDGN){
-//	 unsigned int statusDGN32 = obfResultDGN->getStatus32();
 	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;;
- /**        unsigned int vetoDGN= obfResultDGN->getVetoBit();*/
          statusBytes |= (obfResultDGN->getFiltersb() >> 4) << (4 * OnboardFilterTds::ObfFilterStatus::DFCFilter);
 
-	/** vetoDGNExists = (statusDGN32 & vetoDGN)>0;
-
 	 if(debug){
-	   //std::cout << "statusDGN32=" << std::hex << statusDGN32 << std::dec << std::endl;
 	   std::cout << "filtersbDGN=" << std::hex << filtersbDGN << std::dec << std::endl;
-	   //std::cout << "vetoDGN=" << std::hex << vetoDGN  << std::dec << std::endl;
-	   //std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
          }
-	 m_log << MSG::INFO << "(statusDGN32 & vetoDGN)>0= " << vetoDGNExists << endreq;*/
 
        }
        else
@@ -481,14 +472,14 @@ bool GcrReconTool::checkFilters(){
    else
      m_log << MSG::INFO << "no obfStatus"<< endreq;
 
-
+   //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
 
    if(debug){
      std::cout << "statusBytes=" << std::hex << statusBytes << std::dec << std::endl;
      int contribSBGamma = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::GammaFilter))&0xF;
      int contribSBHFC = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::HFCFilter))&0xF;
-     int contribSBDGN = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::DFCFilter))&0xF;
      int contribSBMip = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::MipFilter))&0xF;
+     int contribSBDGN = (statusBytes >> 4*(OnboardFilterTds::ObfFilterStatus::DFCFilter))&0xF;
      std::cout << "JC:contribGamma=" << std::hex << contribSBGamma << std::dec << std::endl;
      std::cout << "JC:contribHFC=" << std::hex << contribSBHFC << std::dec << std::endl;
      std::cout << "JC:contribMip=" << std::hex << contribSBMip << std::dec << std::endl;
@@ -496,73 +487,31 @@ bool GcrReconTool::checkFilters(){
 
    }
 
-//NOTE: other cuts a prendre pour Gamma et DFC: CalEnergyRaw > 15 MeV   
-//src/CalValsTool.cxx:    addItem("CalEnergyRaw",  &CAL_EnergyRaw);
-//src/CalValsTool.cxx:    CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
-
-
    bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
-   bool cutHFC = (filtersbHFC==0) || (filtersbHFC==6);
+   bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6)) && (calEnergyRaw > CALRawE_TH);
    bool cutMip = (filtersbMip==0) || (filtersbMip==6);
-   bool cutDGN = (filtersbDGN==0) || (filtersbDGN==6);
+   bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6))  && (calEnergyRaw > CALRawE_TH);
 
    bool passFilter = cutGamma || cutHFC || cutMip || cutDGN;
-   m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
+   m_log << MSG::DEBUG << "passFilter:" << passFilter << endreq;
 
    //TDS variable containing the OBF filter flags:
    
    //ce calcul doit reprendre les 4 booleans et les ranger dans le meme ordre que m_statusBytes:
-   unsigned int gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
-   gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HFCFilter;
-   gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MipFilter;
-   gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DFCFilter;
-     std::cout << "gcrOBFStatusWord=" << std::hex << gcrOBFStatusWord << std::dec << std::endl;
+   m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
+   m_gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HFCFilter;
+   m_gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MipFilter;
+   m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DFCFilter;
+     std::cout << "gcrOBFStatusWord=" << std::hex << m_gcrOBFStatusWord << std::dec << std::endl;
    
-   storeGcrStatusWord();
+   // store gcrOBFStatus Word in TDS:
+   storeGcrReconVals();
 
    m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters End"<<endreq ;
 
    return(passFilter);
 
 }
-
-//==============
-
-/**bool GcrReconTool::OBF_HFCVetoExist(){
-
-  //CL. 26/03/07:  Task #0: verify OBF status
- bool vetoExists=true;
- 
- SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
- if (obfStatus)
-  {
-      // Pointer to our retrieved objects
-      const OnboardFilterTds::IObfStatus* obfResult = 0;
-
-      obfResult = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);
-      
-      if(obfResult){
-	unsigned int statusHFC32 = obfResult->getStatus32();
-        unsigned int vetoHFC= obfResult->getVetoBit();
-	
-	vetoExists = (statusHFC32 & vetoHFC)>0;
-		
-	m_log << MSG::INFO << "(statusHFC32 & vetoHFC)>0= " << vetoExists << endreq;
-	
-      }
-      else
-          m_log << MSG::INFO <<  "no obfResult" << endreq;
-      
-  }
-  else
-    m_log << MSG::INFO << "no obfStatus"<< endreq;
-
-  
-  return vetoExists;
-
-
-}*/
-
 
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -1135,22 +1084,32 @@ for (int itow=0; itow<NTOW; itow++)
 
 /**
  * @author CL 06/02/2006
- * This method allows to store GcrXtals in TDS structure
+ * This method allows to store GcrReconVals in TDS structure
  */
-StatusCode GcrReconTool::storeGcrStatusWord () {
+StatusCode GcrReconTool::storeGcrReconVals () {
   StatusCode sc = StatusCode::SUCCESS;
-
-/**  m_gcrStatusWord = SmartDataPtr<Event::GcrStatusWord>(m_dataSvc,EventModel::CalRecon::GcrStatusWord);
+ 
+  
+  m_log << MSG::DEBUG << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
+  
+  m_gcrReconVals = SmartDataPtr<Event::GcrReconVals>(m_dataSvc,EventModel::CalRecon::GcrReconVals);
 
   // If no pointer then create it
-  if (m_gcrStatusWord == 0)
-    {
-      m_gcrXtalCol = new Event::GcrStatusWord();
-      sc = m_dataSvc->registerObject(EventModel::CalRecon::GcrStatusWord, m_gcrStatusWord);
-      if (sc.isFailure()) throw GaudiException("Failed to create Gcr Status Word !", name(), sc);
-    }
-*/
+  if (m_gcrReconVals == 0)
+  {
+    m_gcrReconVals = new Event::GcrReconVals();
+    sc = m_dataSvc->registerObject(EventModel::CalRecon::GcrReconVals, m_gcrReconVals);
+    if (sc.isFailure()) throw GaudiException("Failed to create GCR ReconVals !", name(), sc);
+  }
 
+
+  m_log << MSG::DEBUG << "In storeGcrReconVals, m_gcrOBFStatusWord =" << m_gcrOBFStatusWord << endreq;
+
+  m_gcrReconVals->setGcrOBFStatusWord(m_gcrOBFStatusWord);
+  
+
+  m_log << MSG::DEBUG << "END storeGcrReconVals in GcrSelectTool" << endreq;
+ 
   return sc;
 
   
