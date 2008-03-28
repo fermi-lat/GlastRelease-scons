@@ -91,6 +91,14 @@ public:
     TObject*    getTrack(UInt_t idx) const    {return m_tracks[idx];   }
     void        addTrack(TObject* track)      {m_tracks.Add(track);}
 
+    /// Override the "new" operator in order to use the ReconObjectManager pool management
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    /// Override the "delete" operator in order to use the ReconObjectManager pool management
+    void  operator delete(void* p);
+
 private:
     
     UInt_t                m_statusBits;    // Status bits to describe vertex

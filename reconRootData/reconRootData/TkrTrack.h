@@ -141,6 +141,14 @@ public:
 
     TkrTrackHit*        getHit(UInt_t iHit)      const {return iHit < Size() ? dynamic_cast<TkrTrackHit*>(At(iHit)) : 0; }
 
+    /// Override the "new" operator in order to use the ReconObjectManager pool management
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    /// Override the "delete" operator in order to use the ReconObjectManager pool management
+    void  operator delete(void* p);
+
 private:
     /// Status
     UInt_t       m_statusBits;

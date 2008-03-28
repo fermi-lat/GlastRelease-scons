@@ -2,6 +2,8 @@
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
+#include "ReconObjectManager.h"
+
 ClassImp(TkrTrack)
 
 TkrTrack::TkrTrack() 
@@ -135,5 +137,26 @@ Bool_t TkrTrack::CompareInRange( const TkrTrack & ref, const std::string & name 
     }
     return result ;
 
+}
+
+void* TkrTrack::operator new(size_t size)
+{
+    TkrTrack* temp = ReconObjectManager::getPointer()->getNewTkrTrack();
+
+    // Since we recycle, make sure these member functions are cleared
+    //temp->m_hitCol.clear();
+
+    return temp;
+}
+
+void* TkrTrack::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+void TkrTrack::operator delete(void* p)
+{
+    // Since we let ReconObjectManager handles memory, nothing to do here
+    return;
 }
 

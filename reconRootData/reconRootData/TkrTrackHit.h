@@ -172,6 +172,14 @@ public:
     inline void setStatusBit(UInt_t bitToSet)          {m_statusBits |=  bitToSet;}
     inline void clearStatusBit(UInt_t bitToClear)      {m_statusBits &= ~bitToClear;}
 
+    /// Override the "new" operator in order to use the ReconObjectManager pool management
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    /// Override the "delete" operator in order to use the ReconObjectManager pool management
+    void  operator delete(void* p);
+
 private:
     inline const Double32_t getCoordinate(const TkrTrackParams& params, int coord) const;
     inline Double32_t       getCoordinate(const TkrTrackParams& params, int coord);

@@ -2,6 +2,8 @@
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
+#include "ReconObjectManager.h"
+
 ClassImp(TkrVertex)
 
 TkrVertex::TkrVertex() 
@@ -108,3 +110,24 @@ Bool_t TkrVertex::CompareInRange( const TkrVertex & ref, const std::string & nam
 
 }
 
+
+void* TkrVertex::operator new(size_t size)
+{
+    TkrVertex* temp = ReconObjectManager::getPointer()->getNewTkrVertex();
+
+    // Since we recycle, make sure these member functions are cleared
+    //temp->m_hitCol.clear();
+
+    return temp;
+}
+
+void* TkrVertex::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+void TkrVertex::operator delete(void* p)
+{
+    // Since we let ReconObjectManager handles memory, nothing to do here
+    return;
+}

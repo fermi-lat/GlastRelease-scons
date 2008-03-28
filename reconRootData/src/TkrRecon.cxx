@@ -3,16 +3,9 @@
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
-ClassImp(TkrRecon)
+#include "ReconObjectManager.h"
 
-const Int_t nd = 10000;
-const Int_t maxCluster = 16384;
-TkrCluster *TkrRecon::keepCluster[maxCluster];
-TkrTrack *TkrRecon::keepTrack[nd];
-TkrVertex *TkrRecon::keepVertex[nd];
-// HMK-v12r7 TkrTruncationData *TkrRecon::keepTruncationData[nd];
-Int_t TkrRecon::indCluster=0, TkrRecon::indTrack=0, 
-  TkrRecon::indVertex=0; //, TkrRecon::indTruncationData=0;
+ClassImp(TkrRecon)
 
 TkrRecon::TkrRecon() {
     m_clusterCol  = 0;
@@ -37,124 +30,21 @@ TkrRecon::~TkrRecon() {
 }
 
 void TkrRecon::initialize() {
-    if (!m_clusterCol) m_clusterCol = new TObjArray();
-    if (!m_trackCol) m_trackCol = new TObjArray();
-    if (!m_vertexCol) m_vertexCol = new TObjArray();
+    if (!m_clusterCol)        m_clusterCol        = new TObjArray();
+    if (!m_trackCol)          m_trackCol          = new TObjArray();
+    if (!m_vertexCol)         m_vertexCol         = new TObjArray();
     if (!m_truncationDataCol) m_truncationDataCol = new TObjArray();
 }
 
 void TkrRecon::Clear(Option_t* /*option*/) {
-    //const Int_t nd = 10000;
-    //static Int_t indCluster = 0, indTrack=0, indVertex=0;
-    static Int_t limitCluster = 100;
-    static Int_t limitTrack = 100;
-    static Int_t limitVertex = 100;
     static Int_t limitTruncationData = 100;
 
-//    if (m_clusterCol) m_clusterCol->Delete();
-//    if (m_trackCol) m_trackCol->Delete();
-//    if (m_vertexCol) m_vertexCol->Delete();
-
-    // Emulate what the TClonesArray is doing as introduced in DigiEvent
-    // For the Cluster TObjArray, by deleting the objects in chunks
-    Int_t i, j;
-    Int_t n;
-    if (m_clusterCol) {
-        n = m_clusterCol->GetEntries();
-        if (n > limitCluster) {
-            limitCluster = n + 10;
-            if (limitCluster > maxCluster)  
-                std::cout << "!!!Warning: limit for TkrCluster Array is greater than " 
-                     << maxCluster << std::endl;
-            for (j = 0; j<indCluster; j++) delete keepCluster[j];
-            indCluster = 0;
-        }
-        // add current clusters for this event to the keepCluster array
-        for (i=0;i<n;i++) 
-            keepCluster[indCluster+i] = (TkrCluster*)m_clusterCol->At(i);
-        indCluster +=n;
-        // if we're close to the max number of clusters in the static array
-        // clear the whole array out
-        if (indCluster > maxCluster-limitCluster) {
-            for (j = 0; j<indCluster;j++) delete keepCluster[j];
-            indCluster = 0;
-        }
-        m_clusterCol->Clear();
-    }
-
-    // Emulate what the TClonesArray is doing as introduced in DigiEvent
-    // For the Track TObjArray, by deleting the objects in chunks
-    if (m_trackCol) {
-        n = m_trackCol->GetEntries();
-        if (n > limitTrack) {
-            limitTrack = n + 10;
-            if (limitTrack > nd)  
-                std::cout << "!!!Warning: limit for TkrTrack Array is greater than " 
-                     << nd << std::endl;
-            for (j = 0; j<indTrack; j++) delete keepTrack[j];
-            indTrack = 0;
-        }
-        for (i=0;i<n;i++) keepTrack[indTrack+i] = (TkrTrack*)m_trackCol->At(i);
-        indTrack +=n;
-        if (indTrack > nd-limitTrack) {
-            for (j = 0; j<indTrack;j++) delete keepTrack[j];
-            indTrack = 0;
-        }
-        m_trackCol->Clear();
-    }
-
-    // Emulate what the TClonesArray is doing as introduced in DigiEvent
-    if (m_vertexCol) {
-        n = m_vertexCol->GetEntries();
-        if (n > limitVertex) {
-            limitVertex = n + 10;
-            if (limitVertex > nd)  
-                std::cout << "!!!Warning: limit for TkrVertex Array is greater than " 
-                   << nd << std::endl;
-            for (j = 0; j<indVertex; j++) delete keepVertex[j];
-            indVertex = 0;
-        }
-        for (i=0;i<n;i++) keepVertex[indVertex+i] = (TkrVertex*)m_vertexCol->At(i);
-        indVertex +=n;
-        if (indVertex > nd-limitVertex) {
-            for (j = 0; j<indVertex;j++) delete keepVertex[j];
-            indVertex = 0;
-        }
-        m_vertexCol->Clear();
-    }
-
-    // Emulate what the TClonesArray is doing as introduced in DigiEvent
-    /* HMK-v12r7
-    if (m_truncationDataCol) {
-        n = m_truncationDataCol->GetEntries();
-        if (n > limitTruncationData) {
-            limitTruncationData = n + 10;
-            if (limitTruncationData > nd)  
-                std::cout << "!!!Warning: limit for TkrTruncationData Array is greater than " 
-                   << nd << std::endl;
-            for (j = 0; j<indTruncationData; j++) delete keepTruncationData[j];
-            indTruncationData = 0;
-        }
-        for (i=0;i<n;i++) keepTruncationData[indTruncationData+i] = (TkrTruncationData*)m_truncationDataCol->At(i);
-        indTruncationData +=n;
-        if (indTruncationData > nd-limitTruncationData) {
-            for (j = 0; j<indTruncationData;j++) delete keepTruncationData[j];
-            indTruncationData = 0;
-        }
-        m_truncationDataCol->Clear();
-    }
-    */
-
+    // Tell the RECON object manager to reset its iterators
+    ReconObjectManager::getPointer()->Delete();
 }
 
 void TkrRecon::CleanUp() {
-    Int_t i;
-    for (i=0;i<indCluster;i++) delete keepCluster[i];
-    for (i=0;i<indTrack;i++) delete keepTrack[i];
-    for (i=0;i<indVertex;i++) delete keepVertex[i];
-    // HMK-v12r7 for (i=0;i<indTruncationData;i++) delete keepTruncationData[i];
-    indCluster = 0; indTrack = 0; indVertex = 0;
-
+    return;
 }
 
 void TkrRecon::Print(Option_t *option) const {

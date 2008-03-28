@@ -94,6 +94,14 @@ public:
     /// retrieve end
     inline UInt_t getEnd() const { return ((m_status&maskEND)>>shiftEND);}
 
+    /// Override the "new" operator in order to use the ReconObjectManager pool management
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    /// Override the "delete" operator in order to use the ReconObjectManager pool management
+    void  operator delete(void* p);
+
 private:
     inline UInt_t getPlaneOffset() const { 
         return ((m_status&maskPLANEOFFSET)>>shiftPLANEOFFSET); }

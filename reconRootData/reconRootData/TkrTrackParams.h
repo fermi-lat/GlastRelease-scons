@@ -75,6 +75,14 @@ public:
     Double32_t&       operator()(const int &i, const int &j);
     const Double32_t& operator()(const int &i, const int &j) const;
 
+    /// Override the "new" operator in order to use the ReconObjectManager pool management
+    void* operator new(size_t size);
+
+    void* operator new(size_t size, void* vp);
+
+    /// Override the "delete" operator in order to use the ReconObjectManager pool management
+    void  operator delete(void* p);
+
 private:
   
     /// Track parameters

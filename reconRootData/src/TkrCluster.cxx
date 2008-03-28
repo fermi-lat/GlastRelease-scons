@@ -2,6 +2,7 @@
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
+#include "ReconObjectManager.h"
 
 ClassImp(TkrCluster)
 
@@ -112,5 +113,26 @@ Bool_t TkrCluster::CompareInRange( const TkrCluster & ref, const std::string & n
     }
     return result ;
 
+}
+
+void* TkrCluster::operator new(size_t size)
+{
+    TkrCluster* temp = ReconObjectManager::getPointer()->getNewTkrCluster();
+
+    // Since we recycle, make sure these member functions are cleared
+    //temp->m_hitCol.clear();
+
+    return temp;
+}
+
+void* TkrCluster::operator new(size_t size, void* vp)
+{
+    return vp;
+}
+
+void TkrCluster::operator delete(void* p)
+{
+    // Since we let ReconObjectManager handles memory, nothing to do here
+    return;
 }
 
