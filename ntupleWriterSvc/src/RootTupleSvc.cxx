@@ -169,6 +169,9 @@ private:
 
     StatusCode checkForNAN(TTree*, MsgStream& log);
 
+    /// For getting "the" tree...
+    TTree* getTree(std::string& treeName);
+
     /// routine to be called at the beginning of an event
     void beginEvent();
     /// routine that is called when we reach the end of an event
@@ -176,6 +179,7 @@ private:
 
     // Associated with the name of the first output ROOT file
     StringProperty m_filename;
+    StringProperty m_inFilename;
     StringProperty m_treename;
     StringProperty m_title;
 
@@ -190,9 +194,14 @@ private:
 
     std::map<std::string, TTree *> m_tree;
 
+    std::map<std::string, TTree *> m_inTree;
+
     /// the flags, one per tree, for storing at the end of an event
     // assumes each TTree has a unique name
     std::map<std::string, bool> m_storeTree;
+
+    /// If reading an input tuple also, then this is next event
+    int m_nextEvent;
 
     /// if set, store all ttrees 
     bool m_storeAll;
@@ -220,10 +229,11 @@ const ISvcFactory& RootTupleSvcFactory = a_factory;
 //         Implementation of RootTupleSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc), m_trials(0), m_badEventCount(0)
+: Service(name,svc), m_trials(0), m_badEventCount(0), m_nextEvent(0)
 {
     // declare the properties and set defaults
     declareProperty("filename",  m_filename="RootTupleSvc.root");
+    declareProperty("inFilename",  m_inFilename="");
     declareProperty("treename", m_treename="1");
     declareProperty("title", m_title="Glast tuple");
     declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
@@ -263,10 +273,26 @@ StatusCode RootTupleSvc::initialize ()
 
     m_fileCol.clear();
     m_tree.clear();
+    m_inTree.clear();
     m_badMap.clear();
 
-    // -- create primary root file---
+    // Split here depending on whether we are reading an input ntuple
+    // and augmenting its output
     TDirectory* curdir = gDirectory; // will prevent unauthorized use
+    if (m_inFilename.value() != "")
+    {
+        TFile* tf = new TFile(m_inFilename.value().c_str(), "READ");
+        if (!tf->IsOpen())
+        {
+            log << MSG::ERROR 
+                << "cannot open ROOT file: " << m_filename.value() << endreq;
+            delete tf;
+            return StatusCode::FAILURE;
+        }
+        m_fileCol[m_inFilename.value()] = tf;
+    }
+
+    // -- create primary root file---
     TFile *tf   = new TFile( m_filename.value().c_str(), "RECREATE");
     if (!tf->IsOpen()) {
         log << MSG::ERROR 
@@ -275,10 +301,57 @@ StatusCode RootTupleSvc::initialize ()
         return StatusCode::FAILURE;
     }
     m_fileCol[m_filename.value()] = tf;
+
     curdir->cd(); // restore previous directory
 
     return status;
 }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TTree* RootTupleSvc::getTree(std::string& treeName)
+{
+    TTree* t = 0;
+
+    // Are we reading from an input ntuple?
+    if (m_inFilename.value() != "")
+    {
+        // Must self-initialize the first time around
+        if (m_inTree.find(treeName) == m_inTree.end())
+        {
+            // Attempt to retrieve the tree info
+            TFile* inFile = m_fileCol[m_inFilename.value()];
+            TTree* inTree = (TTree*)(inFile->Get(treeName.c_str()));
+
+            // Might not exist... if it does then do some more set up
+            if (inTree != 0)
+            {
+                int nEvents = inTree->GetEntries();
+
+                // ignore the tree if no entries...
+                if (nEvents > 0) 
+                {
+                    inTree->GetEvent(0);
+                    m_inTree[treeName] = inTree;
+                }
+            }
+        }
+
+        // Ok, see if we have a tree here
+        std::map<std::string, TTree*>::iterator inIter = m_inTree.find(treeName);
+        if (inIter != m_inTree.end())
+        {
+            t = inIter->second->CloneTree(0);
+        }
+    }
+
+    if (t == 0)
+    {
+        t = new TTree(treeName.c_str(), m_title.value().c_str());
+        t->SetAutoSave(m_autoSave);
+    }
+
+    return t;
+}
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName, 
                                     const std::string& itemName, 
@@ -302,16 +375,12 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
             return StatusCode::FAILURE;
         }
         m_fileCol[rootFileName] = tf;
-        TTree* t = new TTree(treename.c_str(), m_title.value().c_str());
-        t->SetAutoSave(m_autoSave);
-        m_tree[treename]=t;
+        m_tree[treename]=getTree(treename);
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     } else if( m_tree.find(treename)==m_tree.end()){
         // create new tree
         m_fileCol[rootFileName]->cd();
-        TTree* t = new TTree(treename.c_str(), m_title.value().c_str());
-        t->SetAutoSave(m_autoSave);
-        m_tree[treename]=t;
+        m_tree[treename]=getTree(treename);
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     }
     // note have to cast away the const here!
@@ -410,6 +479,13 @@ void RootTupleSvc::handle(const Incident &inc)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::beginEvent()
 {
+    /// If we have an input ntuple then read the branches...
+    int debugme = 0;
+    for(std::map<std::string, TTree*>::iterator inIter = m_inTree.begin(); inIter != m_inTree.end(); inIter++)
+    {
+        inIter->second->GetEvent(m_nextEvent++);
+    }
+
     /// Assume that we will NOT write out the row
     storeRowFlag(m_defaultStoreFlag);
     for(std::map<std::string, bool>::iterator it=m_storeTree.begin(); it!=m_storeTree.end(); ++it){
