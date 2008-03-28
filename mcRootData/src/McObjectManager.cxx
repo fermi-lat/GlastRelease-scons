@@ -16,7 +16,7 @@ McObjectManager* McObjectManager::m_pointer = 0;
 
 // Define the pool for McParticles
 #define MCPOOLSIZE         1000
-#define MCMAXPOOLGROW      20000
+#define MCMAXPOOLGROW      50000
 #define MCHITPOOLSIZE      1000
 #define MCHITMAXPOOLGROW   1000
 #define MCPOINTPOOLSIZE    5000
@@ -54,7 +54,7 @@ McParticle* McObjectManager::getNewMcParticle()
         m_mcPartPoolIdx = m_mcPartPool.insert(m_mcPartPoolIdx, McParticle());
 
         // Expand the pool by some reasonable amount
-        int newSize = std::max((int)(2 * m_mcPartPool.size()), (int)MCMAXPOOLGROW);
+        int newSize = std::min((int)(2 * m_mcPartPool.size()), (int)MCMAXPOOLGROW);
 
         // For good measure expand the pool by our starting poolsize
         m_mcPartPool.insert(m_mcPartPool.end(), newSize, McParticle());
@@ -78,7 +78,7 @@ McPositionHit* McObjectManager::getNewMcPositionHit()
         m_mcPosHitPoolIdx = m_mcPosHitPool.insert(m_mcPosHitPoolIdx, McPositionHit());
 
         // Expand the pool by some reasonable amount
-        int newSize = std::max((int)(2 * m_mcPosHitPool.size()), (int)MCHITMAXPOOLGROW);
+        int newSize = std::min((int)(2 * m_mcPosHitPool.size()), (int)MCHITMAXPOOLGROW);
 
         // For good measure expand the pool by our starting poolsize
         m_mcPosHitPool.insert(m_mcPosHitPool.end(), newSize, McPositionHit());
@@ -102,7 +102,7 @@ McIntegratingHit* McObjectManager::getNewMcIntegratingHit()
         m_mcIntHitPoolIdx = m_mcIntHitPool.insert(m_mcIntHitPoolIdx, McIntegratingHit());
 
         // Expand the pool by some reasonable amount
-        int newSize = std::max((int)(2 * m_mcIntHitPool.size()), (int)MCHITMAXPOOLGROW);
+        int newSize = std::min((int)(2 * m_mcIntHitPool.size()), (int)MCHITMAXPOOLGROW);
 
         // For good measure expand the pool by our starting poolsize
         m_mcIntHitPool.insert(m_mcIntHitPool.end(), newSize, McIntegratingHit());
@@ -126,7 +126,7 @@ McTrajectory* McObjectManager::getNewMcTrajectory()
         m_mcTrajectoryPoolIdx = m_mcTrajectoryPool.insert(m_mcTrajectoryPoolIdx, McTrajectory());
 
         // Expand the pool by some reasonable amount
-        int newSize = std::max((int)(2 * m_mcTrajectoryPool.size()), (int)MCMAXPOOLGROW);
+        int newSize = std::min((int)(2 * m_mcTrajectoryPool.size()), (int)MCMAXPOOLGROW);
 
         // For good measure expand the pool by our starting poolsize
         m_mcTrajectoryPool.insert(m_mcTrajectoryPool.end(), newSize, McTrajectory());
@@ -150,7 +150,7 @@ McTrajectoryPoint* McObjectManager::getNewMcTrajectoryPoint()
         m_mcTrajPointPoolIdx = m_mcTrajPointPool.insert(m_mcTrajPointPoolIdx, McTrajectoryPoint());
 
         // Expand the pool by some reasonable amount
-        int newSize = std::max((int)(2 * m_mcTrajPointPool.size()), (int)MCPOINTMAXPOOLGROW);
+        int newSize = std::min((int)(2 * m_mcTrajPointPool.size()), (int)MCPOINTMAXPOOLGROW);
 
         // For good measure expand the pool by our starting poolsize
         m_mcTrajPointPool.insert(m_mcTrajPointPool.end(), newSize, McTrajectoryPoint());
