@@ -142,6 +142,38 @@ namespace Event
         // Define a vector of GcrXtals
     typedef ObjectVector<GcrTrack>      GcrTrackCol;
 
+
+    class GcrReconVals: public DataObject
+    {
+    
+    	private:
+	
+	    unsigned int m_gcrOBFStatusWord;
+
+
+
+	public:
+	    GcrReconVals(){};
+
+	    GcrReconVals(unsigned int gcrOBFStatusWord):m_gcrOBFStatusWord(gcrOBFStatusWord) {};
+
+	    ~GcrReconVals() {};
+
+	    void                   initialize(unsigned int gcrOBFStatusWord);
+
+	    void                   setGcrOBFStatusWord (unsigned int gcrOBFStatusWord){m_gcrOBFStatusWord  = gcrOBFStatusWord;}
+	   
+	    unsigned int                    getGcrOBFStatusWord ()  const  {return m_gcrOBFStatusWord;}
+
+           
+	    /// Utilities 
+	    //void writeOut(MsgStream& log) const; 
+	    //std::ostream& fillStream( std::ostream& s ) const;
+    
+    
+    
+    };
+
   
     
     

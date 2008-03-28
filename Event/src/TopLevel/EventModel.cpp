@@ -76,6 +76,7 @@ std::string EventModel::CalRecon::CalClusterHitTab    = EventModel::CalRecon::Ev
 //@@@FP 07/09/05
 //@@@CL 01/06/06 BEGIN:
 std::string EventModel::CalRecon::GcrXtalCol      = EventModel::CalRecon::Event + "/GcrXtalCol";
+std::string EventModel::CalRecon::GcrReconVals     = EventModel::CalRecon::Event + "/GcrReconVals";
 //@@@CL 01/06/06 END
 //@@@CL 06/27/06 BEGIN:
 std::string EventModel::CalRecon::GcrSelectedXtalsCol      = EventModel::CalRecon::Event + "/GcrSelectedXtalsCol";

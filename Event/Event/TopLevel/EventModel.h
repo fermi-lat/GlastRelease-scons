@@ -132,6 +132,7 @@ public:
     //@@@FP 07/09/05
            //@@@CL 06/01/06 BEGIN:
        static std::string GcrXtalCol;
+       static std::string GcrReconVals;
        //@@@CL 06/01/06 END
        //@@@CL 26/27/06 BEGIN:
        static std::string GcrSelectedXtalsCol;
