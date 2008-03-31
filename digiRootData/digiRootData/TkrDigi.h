@@ -87,7 +87,7 @@ private:
     /// Collection of hit strips
     vector<UInt_t> m_hitCol;
     
-    ClassDef(TkrDigi,5)
+    ClassDef(TkrDigi,4)
 };
 
 #endif // digiRootData_TkrDigi_H
