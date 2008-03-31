@@ -3,6 +3,7 @@
  *    * EOH *
  *
  @verbatim
+ * v3r20p1 31-Mar-2008  HMK: A couple of gcc warnings
  * v3r20p0 31-Mar-2008   TU: Kludge mechanism to read and ntuple and clone for output as well 
  * v3r19p1 18-jan-2008  HMK: handle exception if thrown for stringToDouble
  *         call if processing the jobinfo string
