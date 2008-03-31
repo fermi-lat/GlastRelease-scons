@@ -3,6 +3,8 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r18     31-Mar-08  : TU  HMK tagging Tracy's update for TkrRecon objects to
+          use the new ReconObjectManager for memory management
 v9r17p3   23-Oct-07  : HMK rootmap generation
 v9r17p2   14-Oct-07  : HMK include cmath
 v9r17p1   28-Sep-07  : HMK additional includes now moving to ROOT v5.16.00
