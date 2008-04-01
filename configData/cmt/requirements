@@ -16,7 +16,6 @@ use GlastPolicy v*
 use python * IExternal
 use ROOT * IExternal
 
-use fsw v* IExternal
 
 
 apply_pattern shared_library
@@ -49,11 +48,10 @@ macro_append cppflags "-Wno-unused-parameter " WIN32 ""
 
 apply_pattern package_headers
 
-macro source "*.cxx *.c" WIN32 "*.h *.cxx *.c"
+macro source "*.cxx" WIN32 "*.h *.cxx"
 
 library configData  \
  -s=../src $(source)\
- -s=fsw $(source)\
  -s=gem $(source)\
  -s=base $(source)\
  -s=db $(source) 
@@ -67,8 +65,6 @@ library configData  \
 #  gmake Linux 
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 application RootConfigCompare  ../apps/RootConfigCompare.cxx
-
-application printCDM  ../apps/printCDM.cxx
 
 application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
 #application getIntent ../apps/getIntent.cxx
