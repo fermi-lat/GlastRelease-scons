@@ -3,6 +3,7 @@
  *    * EOH *
  *
  @verbatim
+ * v3r20p1 01-Apr-2008  LSR: Fix to handle vectors like PtPos[3]
  * v3r20p1 31-Mar-2008  HMK: A couple of gcc warnings
  * v3r20p0 31-Mar-2008   TU: Kludge mechanism to read and ntuple and clone for output as well 
  * v3r19p1 18-jan-2008  HMK: handle exception if thrown for stringToDouble

@@ -220,6 +220,8 @@ private:
     int m_bufferSize;
 
     Char_t test; // to see what this is
+
+    int m_updateCount;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
@@ -304,11 +306,16 @@ StatusCode RootTupleSvc::initialize ()
 
     curdir->cd(); // restore previous directory
 
+    m_updateCount = 0;
+
     return status;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 TTree* RootTupleSvc::getTree(std::string& treeName)
 {
+    MsgStream log(msgSvc(),name());
+
     TTree* t = 0;
 
     // Are we reading from an input ntuple?
@@ -325,6 +332,8 @@ TTree* RootTupleSvc::getTree(std::string& treeName)
             if (inTree != 0)
             {
                 int nEvents = inTree->GetEntries();
+                log << MSG::INFO << "Number of events in input file = " 
+                    << nEvents << endreq;
 
                 // ignore the tree if no entries...
                 if (nEvents > 0) 
@@ -351,10 +360,10 @@ TTree* RootTupleSvc::getTree(std::string& treeName)
 
     return t;
 }
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName, 
-                                    const std::string& itemName, 
+                                    const std::string& itemName0, 
                                     const std::string type,  
                                     const void* pval, 
                                     const std::string& fileName)
@@ -384,23 +393,32 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
     }
     // note have to cast away the const here!
-    TBranch* thisBranch = m_tree[treename]->GetBranch(itemName.c_str());
+
+    TBranch* thisBranch = m_tree[treename]->GetBranch(itemName0.c_str());
     if(thisBranch==NULL) {
         // This is a new branch
-        m_tree[treename]->Branch(itemName.c_str(), 
-            const_cast<void*>(pval), (itemName+type).c_str(),m_bufferSize);
+        m_tree[treename]->Branch(itemName0.c_str(), 
+            const_cast<void*>(pval), (itemName0+type).c_str(),m_bufferSize);
     } else {
         // This branch already exists; just change the pointer to the value
-        log << MSG::INFO << "addItem() called for existing branch " 
-            << itemName << ", ";
+        std::string itemName(itemName0);
+        int index = itemName.find("[");
+        if(index!=std::string::npos) itemName = itemName.substr(0,index); 
         TLeaf* thisLeaf = thisBranch->GetLeaf((itemName).c_str());
         if (thisLeaf==NULL) {
-            log << "leaf not found, did nothing";
+            log << MSG::INFO << endreq << "leaf " << itemName << " not found, did nothing"
+                << endreq;
+            m_updateCount = 0;
         } else {
             thisLeaf->SetAddress(const_cast<void*>(pval));
-            log << "updated pointer instead.";
+            log << MSG::INFO << "Updating pointer to " << itemName << endreq;
+            /*
+            if(m_updateCount==0) log << MSG::INFO << "Updating pointers: ";
+            m_updateCount++;
+            if(m_updateCount%10==0) log << MSG::INFO << endreq;
+            log << MSG::INFO << itemName << " " ;
+            */
         }
-        log << endreq;
     }
     saveDir->cd();
     return status;
