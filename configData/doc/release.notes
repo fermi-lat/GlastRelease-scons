@@ -4,6 +4,8 @@
  * package manager:M. Kocian
  *
  *
+ * v1r8   01-Apr-08 EAC Remove fsw code which is now temporarily located in
+ *        the new fswDecipher package (Thanks Joanne)
  * v1r7   27-Mar-08 EAC added fsw to handle filter configs
  * v1r6p6 11-Mar-08 HMK Patch to include cassert for windows
  * v1r6p2 25-Jan-08 panetta Fix parsing of TFE elements to allow '+x0' type IDs
