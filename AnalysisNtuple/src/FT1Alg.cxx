@@ -131,7 +131,8 @@ StatusCode FT1Alg::initialize()
 
     // get the GPS instance: either from FluxSvc or local, non-MC mode
     IFluxSvc* fluxSvc(0);
-    if( service("FluxSvc", fluxSvc, true).isFailure() ){
+    if( service("FluxSvc", fluxSvc).isFailure() ){
+        //log << MSG::INFO << "Will use the GPS singleton to get pointing information instead" << endreq;
         gps = astro::GPS::instance();
     }else{
         gps = fluxSvc->GPSinstance();
