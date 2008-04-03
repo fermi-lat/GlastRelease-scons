@@ -74,7 +74,7 @@ public:
 
     ///@name other methods
     /// Load shareable libraries
-    bool loadLibrary (const std::string& libraryName, int verbosity = 0);
+    bool loadLibrary (std::string libraryName, std::string libraryPath = "", int verbosity = 0);
     
     // Output status of counters
     void dumpCounters();
@@ -100,6 +100,10 @@ private:
     // Map master schema to a file name
     typedef std::map<SchemaPair, std::string> IdToFileMap;
     IdToFileMap        m_idToFile;
+
+    // Map filter schema to the file path
+    typedef std::map<unsigned short int, std::string> IdToPathMap;
+    IdToPathMap        m_idToPath;
 
     // Map file name to EH_id enum value
     typedef std::map<std::string, unsigned int> FileToEnumMap;
