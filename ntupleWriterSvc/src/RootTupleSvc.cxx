@@ -21,6 +21,7 @@
 
 // root includes
 #include "TTree.h"
+#include "TChain.h"
 #include "TFile.h"
 #include "TSystem.h"
 #include "TLeafD.h"
@@ -31,6 +32,7 @@
 #include <iomanip>
 #include <list>
 #include <string>
+#include <utility>
 
 #ifdef WIN32
 #include <float.h> // used to check for NaN
@@ -169,7 +171,9 @@ private:
 
     StatusCode checkForNAN(TTree*, MsgStream& log);
 
-    /// For getting "the" tree...
+    bool fileExists( const std::string & filename );
+
+    /// For getting "the" current tree...
     TTree* getTree(std::string& treeName);
 
     /// routine to be called at the beginning of an event
@@ -179,7 +183,9 @@ private:
 
     // Associated with the name of the first output ROOT file
     StringProperty m_filename;
-    StringProperty m_inFilename;
+    StringArrayProperty m_inFileJoParam;
+    // stores the list of input files after env variables have been expanded
+    std::vector<std::string> m_inFileList;
     StringProperty m_treename;
     StringProperty m_title;
 
@@ -188,20 +194,31 @@ private:
 
     /// the ROOT stuff: a file and a a set of trees to put into it
     // replaced with m_fileCol, so we can handle multiple ROOT output files
-    //TFile * m_tf;
-
     std::map<std::string, TFile*> m_fileCol;
 
+    /// collection of output TTrees
     std::map<std::string, TTree *> m_tree;
 
-    std::map<std::string, TTree *> m_inTree;
+    //std::map<std::string, TTree *> m_inTree;
+
+    /// collection of input TChains
+    std::map<std::string, TChain *> m_inChain;
+
+    /// Current Tree Number loaded in a TChain;
+    std::map<std::string, int> m_curTreeNumber;
+
+    /// collection of leaf addresses that may need to be updated when we
+    /// load a new tree from the input TChain
+    /// vector of pairs, where first is the key into m_tree, the name of
+    /// output TTree, and the second is a pair of leaf name, and address
+    std::vector< std::pair< std::string, std::pair<std::string, void*> > > m_branchCol;
 
     /// the flags, one per tree, for storing at the end of an event
     // assumes each TTree has a unique name
     std::map<std::string, bool> m_storeTree;
 
     /// If reading an input tuple also, then this is next event
-    int m_nextEvent;
+    long long m_nextEvent;
 
     /// if set, store all ttrees 
     bool m_storeAll;
@@ -231,11 +248,18 @@ const ISvcFactory& RootTupleSvcFactory = a_factory;
 //         Implementation of RootTupleSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc), m_trials(0), m_nextEvent(0), m_badEventCount(0)
+: Service(name,svc), m_nextEvent(0), m_trials(0), m_badEventCount(0)
 {
     // declare the properties and set defaults
     declareProperty("filename",  m_filename="RootTupleSvc.root");
-    declareProperty("inFilename",  m_inFilename="");
+
+    // Provide a default empty list for inFileList parameter
+    StringArrayProperty initList;
+    std::vector<std::string> initVec;
+    initVec.clear();
+    initList.setValue(initVec);
+    declareProperty("inFileList",  m_inFileJoParam=initList);
+
     declareProperty("treename", m_treename="1");
     declareProperty("title", m_title="Glast tuple");
     declareProperty("defaultStoreFlag", m_defaultStoreFlag=false);
@@ -251,6 +275,7 @@ StatusCode RootTupleSvc::initialize ()
 {
     StatusCode  status =  Service::initialize ();
 
+    // shut down ROOT's exception handling for Gleam runs
     gSystem->ResetSignal(kSigBus);
     gSystem->ResetSignal(kSigSegmentationViolation);
     gSystem->ResetSignal(kSigIllegalInstruction);
@@ -275,15 +300,30 @@ StatusCode RootTupleSvc::initialize ()
 
     m_fileCol.clear();
     m_tree.clear();
-    m_inTree.clear();
+    //m_inTree.clear();
     m_badMap.clear();
+    m_inChain.clear();
+    m_curTreeNumber.clear();
+    m_branchCol.clear();
+    m_inFileList.clear();
 
     // Split here depending on whether we are reading an input ntuple
     // and augmenting its output
     TDirectory* curdir = gDirectory; // will prevent unauthorized use
-    if (m_inFilename.value() != "")
+
+    /* HMK Not adding input TFiles to the m_fileCol, since they will 
+       be apart of the TChain. */
+    if (m_inFileJoParam.value().size() > 0)
     {
-        TFile* tf = new TFile(m_inFilename.value().c_str(), "READ");
+        facilities::Util::expandEnvVarList(m_inFileJoParam.value(),m_inFileList);
+        std::vector<std::string>::iterator it;
+        for(it = m_inFileList.begin(); it != m_inFileList.end(); it++) {
+            std::string tempStr = *it;
+            facilities::Util::expandEnvVar(&tempStr);
+            *it = tempStr;
+        }
+       /*
+        TFile* tf = new TFile(m_inFileList.value().c_str(), "READ");
         if (!tf->IsOpen())
         {
             log << MSG::ERROR 
@@ -292,9 +332,10 @@ StatusCode RootTupleSvc::initialize ()
             return StatusCode::FAILURE;
         }
         m_fileCol[m_inFilename.value()] = tf;
+        */
     }
 
-    // -- create primary root file---
+    // -- create primary output root file---
     TFile *tf   = new TFile( m_filename.value().c_str(), "RECREATE");
     if (!tf->IsOpen()) {
         log << MSG::ERROR 
@@ -318,40 +359,59 @@ TTree* RootTupleSvc::getTree(std::string& treeName)
 
     TTree* t = 0;
 
-    // Are we reading from an input ntuple?
-    if (m_inFilename.value() != "")
+    // Are we reading from input ntuple(s)?
+    if (m_inFileList.size() > 0)
     {
+        std::map<std::string, TChain*>::iterator inIter = m_inChain.find(treeName);
         // Must self-initialize the first time around
-        if (m_inTree.find(treeName) == m_inTree.end())
-        {
-            // Attempt to retrieve the tree info
-            TFile* inFile = m_fileCol[m_inFilename.value()];
-            TTree* inTree = (TTree*)(inFile->Get(treeName.c_str()));
+        if (inIter == m_inChain.end()) {
+            
+            // Assuming all input ROOT files have the same tree name,
+            // we could adjust the code to pick out the TTree and provide 
+            // its name in the TChain::Add call
+            TChain *ch = new TChain(treeName.c_str());
+            // Add all files in the JO list
+            std::vector<std::string>::const_iterator fileListItr;
+            for (fileListItr = m_inFileList.begin();
+                 fileListItr != m_inFileList.end();
+                 fileListItr++ ) {
+                std::string fileName = *fileListItr;
+                facilities::Util::expandEnvVar(&fileName);
+                if (fileExists(fileName)) {
+                    int stat = ch->Add(fileName.c_str());
+                    if (stat <= 0)
+                        log << MSG::WARNING << "Failed to TChain::Add " 
+                            << fileName << " return code: " << stat << endreq;
+                } else 
+                    log << MSG::WARNING << "File " << fileName << " does not "
+                        << "exist, not added to chain" << endreq;
 
-            // Might not exist... if it does then do some more set up
-            if (inTree != 0)
-            {
-                int nEvents = inTree->GetEntries();
-                log << MSG::INFO << "Number of events in input file = " 
-                    << nEvents << endreq;
+            }  // end for loop TChain initialized
+            // add new TChain to the map
+            m_inChain[treeName] = ch;
+            // call GetEntries to load the headers of the TFiles
+            long long nevents = ch->GetEntries();
+            log << MSG::INFO << "Number of events in input files = " 
+                << nevents << endreq;
+            if (nevents > 0) {
+                int numBytes = ch->GetEntry(0);
+                m_curTreeNumber[treeName] = ch->GetTreeNumber();
+                if (numBytes <= 0)
+                    log << MSG::WARNING << "Failed to load event zero"
+                        << endreq;
 
-                // ignore the tree if no entries...
-                if (nEvents > 0) 
-                {
-                    inTree->GetEvent(0);
-                    m_inTree[treeName] = inTree;
-                }
             }
-        }
-
-        // Ok, see if we have a tree here
-        std::map<std::string, TTree*>::iterator inIter = m_inTree.find(treeName);
-        if (inIter != m_inTree.end())
+        } // end if for initialization first time 
+        else if (inIter != m_inChain.end())
         {
-            t = inIter->second->CloneTree(0);
+            // copy the current tree to allow access to its branches
+            // zero is the number of entries to copy - so we're just 
+            // copying the TTree structure not contents
+            t = inIter->second->GetTree()->CloneTree(0);
         }
-    }
+    } // end check for input files
 
+    // Back to regular situation, where we are setting up an output file
     if (t == 0)
     {
         t = new TTree(treeName.c_str(), m_title.value().c_str());
@@ -374,6 +434,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     std::string rootFileName = fileName.empty() ? m_filename.value() : fileName;
     TDirectory *saveDir = gDirectory;
 
+    // Check both the list of output files
     if ( m_fileCol.find(rootFileName) == m_fileCol.end()) {
         // create a new TFile
         TFile *tf = new TFile(rootFileName.c_str(), "RECREATE");
@@ -394,11 +455,13 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     }
     // note have to cast away the const here!
 
+    // Searches list of branches, and returns NULL if itemName0 is not found
     TBranch* thisBranch = m_tree[treename]->GetBranch(itemName0.c_str());
     if(thisBranch==NULL) {
         // This is a new branch
         m_tree[treename]->Branch(itemName0.c_str(), 
             const_cast<void*>(pval), (itemName0+type).c_str(),m_bufferSize);
+        m_branchCol.push_back(std::make_pair(treename, std::make_pair(itemName0,pval)));
     } else {
         // This branch already exists; just change the pointer to the value
         std::string itemName(itemName0);
@@ -411,6 +474,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
             m_updateCount = 0;
         } else {
             thisLeaf->SetAddress(const_cast<void*>(pval));
+            m_branchCol.push_back(std::make_pair(treename, std::make_pair(itemName0,pval)));
             log << MSG::INFO << "Updating pointer to " << itemName << endreq;
             /*
             if(m_updateCount==0) log << MSG::INFO << "Updating pointers: ";
@@ -498,10 +562,27 @@ void RootTupleSvc::handle(const Incident &inc)
 void RootTupleSvc::beginEvent()
 {
     /// If we have an input ntuple then read the branches...
-    int debugme = 0;
-    for(std::map<std::string, TTree*>::iterator inIter = m_inTree.begin(); inIter != m_inTree.end(); inIter++)
+    for(std::map<std::string, TChain*>::iterator inIter = m_inChain.begin(); inIter != m_inChain.end(); inIter++)
     {
-        inIter->second->GetEvent(m_nextEvent++);
+        int numBytes = inIter->second->GetEntry(m_nextEvent++);
+        if (numBytes <= 0){
+            MsgStream log(msgSvc(),name());
+            log << MSG::WARNING << "Failed to load event " << m_nextEvent-1
+                << " from the input chain" << endreq;
+        }
+        std::string treename = inIter->first;
+        if (inIter->second->GetTreeNumber() != m_curTreeNumber[treename]) {
+            m_curTreeNumber[treename] = inIter->second->GetTreeNumber();
+            // reset branch pointers
+            std::vector< std::pair< std::string, std::pair<std::string, void*> > >::const_iterator it;
+            for (it = m_branchCol.begin(); it != m_branchCol.end(); it++) {
+                std::string treeName = it->first;
+                TBranch *br = m_tree[treeName]->GetBranch(it->second.first.c_str());
+                TLeaf *leaf = br->GetLeaf(it->second.first.c_str());
+                leaf->SetAddress(const_cast<void*>(it->second.second));
+            }
+
+        }
     }
 
     /// Assume that we will NOT write out the row
@@ -747,3 +828,18 @@ void RootTupleSvc::setBufferSize(const std::string& tupleName, int bufSize,
 
 }
 
+bool RootTupleSvc::fileExists( const std::string & filename )
+ {
+  bool fileExists = false ;
+  TFile * file = TFile::Open(filename.c_str()) ;
+  if (file)
+   {
+    if (!file->IsZombie()) 
+     {
+      file->Close() ;
+      fileExists = true ;
+     }
+    delete file ;
+   }
+  return fileExists ;
+ }  
