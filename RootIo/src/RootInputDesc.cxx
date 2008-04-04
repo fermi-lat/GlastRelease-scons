@@ -115,9 +115,18 @@ Long64_t RootInputDesc::setFileList( const StringArrayProperty & fileList, bool 
  {
   Long64_t numEvents = -1;
  
-  bool stat = checkForEnvVar(fileList);
+ // bool stat = checkForEnvVar(fileList);
+  try {
+      std::vector<std::string> expandedList;
+    facilities::Util::expandEnvVarList(fileList.value(),expandedList);
+    m_fileList.setValue(expandedList);
+  } catch(...) {
+      std::cout << "RootInputDesc::setFileList call to expandEnvVarList failed, taking the JO"
+          << " parameter as is and continuing on" << std::endl;
+      m_fileList = fileList;
+  }
   // If the checkForEnvVar method fails, just set the local m_fileList to the fileList input
-  if (!stat) m_fileList = fileList;
+  //if (!stat) m_fileList = fileList;
  
   // Save the current directory for the ntuple writer service
   TDirectory * saveDir = gDirectory ;	
@@ -299,7 +308,7 @@ TObject * RootInputDesc::getEvent( int runNum, int evtNum )
   return true;
  }
 
-bool RootInputDesc::checkForEnvVar(const StringArrayProperty & fileList) {
+/*bool RootInputDesc::checkForEnvVar(const StringArrayProperty & fileList) {
      // Purpose and Method:  The JobOptions parameter for the file list may be an env variable.
      // This env variable may contain a list of files.  We desire to expand the env variable and 
      // then populate the m_fileList StringArrayProperty
@@ -326,6 +335,7 @@ bool RootInputDesc::checkForEnvVar(const StringArrayProperty & fileList) {
      }
      return true;
  }
+*/
 
 void RootInputDesc::clearEvent()
  {
