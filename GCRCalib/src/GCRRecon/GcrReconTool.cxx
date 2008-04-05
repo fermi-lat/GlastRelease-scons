@@ -78,7 +78,7 @@ public:
   //virtual bool GcrReconTool::OBF_HFCVetoExist();
   virtual bool GcrReconTool::checkFilters();
 
-  virtual StatusCode GcrReconTool::findGcrXtals(std::string initDir, Point calEntryPoint, Point calExitPoint);
+  virtual StatusCode GcrReconTool::findGcrXtals(std::string initAxis, Point calEntryPoint, Point calExitPoint, Vector initDir);
   
   
 private:
@@ -116,7 +116,7 @@ private:
   ///builds GcrXtalsVec, a collection of elements GcrXtals.  References all Xtals
   /// that should theoretically (MonteCarlo) have been touched by first MC particle 
   /// associated to current Event. 
-  void buildGcrXtalsVec(Point calEntryPoint, Point calExitPoint);
+  void buildGcrXtalsVec();
   
   ///stores m_gcrXtalCol into the TDS, using the Event/Recon/CalRecon/GcrReconClasses information
   StatusCode  storeGcrXtals();
@@ -470,14 +470,18 @@ bool GcrReconTool::checkFilters(){
    This method builds the map of the Xtals that are theoretically touched by the original MCParticle.
    The map is obtained by propagating the first MCparticle initial trajectory.
 */
-StatusCode GcrReconTool::findGcrXtals(std::string initDir, Point calEntryPoint, Point calExitPoint){
+StatusCode GcrReconTool::findGcrXtals(std::string initAxis, Point calEntryPoint, Point calExitPoint, Vector initDir){
 
       m_log << MSG::DEBUG << "BEGIN findGcrXtals in GcrReconTool" << endreq;
-      m_log << MSG::DEBUG << "initDir=" << initDir << endreq;
+      m_initDir = initDir;
+      m_log << MSG::DEBUG << "m_initDir=" << m_initDir << endreq;
+      
+      m_calEntryPoint = calEntryPoint;
+      m_calExitPoint = calExitPoint;
 
   StatusCode sc = StatusCode::SUCCESS;
   
-  m_propertyDir = initDir;  
+  m_propertyDir = initAxis;  
   
 
   
@@ -501,7 +505,7 @@ StatusCode GcrReconTool::findGcrXtals(std::string initDir, Point calEntryPoint, 
       
   //Task #4: build gcrXtalsVec
  
-  buildGcrXtalsVec(calEntryPoint, calExitPoint);
+  buildGcrXtalsVec();
    
   m_log << MSG::INFO << "m_numGcrXtals= " << m_numGcrXtals << endreq;
   m_log << MSG::INFO << "number of entries in m_gcrXtalVec=" << m_gcrXtalVec.size() << endreq;
@@ -543,9 +547,12 @@ void GcrReconTool::verifyGcrXtalsVec(){
 }
 
 //-----------------------------------------------------------------------------------------------------------------
-void GcrReconTool::buildGcrXtalsVec(Point calEntryPoint, Point calExitPoint){
+void GcrReconTool::buildGcrXtalsVec(){
   
   m_log << MSG::DEBUG << "BEGIN buildGcrXtalsVec in GcrReconTool" << endreq;
+  
+  m_log << MSG::DEBUG << "CalEntryPoint=       " << '(' << m_calEntryPoint.x() << ',' << m_calEntryPoint.y() << ',' << m_calEntryPoint.z() << ')'  <<endreq;
+  m_log << MSG::DEBUG << "CalExitPoint=       " << '(' << m_calExitPoint.x() << ',' << m_calExitPoint.y() << ',' << m_calExitPoint.z() << ')'  <<endreq;
   
     
   /**m_log << MSG::INFO << " (m_calZBot,m_calZTop)= " << m_calZBot << "," << m_calZTop << endreq ;
@@ -576,6 +583,7 @@ void GcrReconTool::buildGcrXtalsVec(Point calEntryPoint, Point calExitPoint){
       return;
     }
   
+  m_log << MSG::DEBUG << "m_initDir=" << m_initDir << endreq;
   m_G4PropTool->setStepStart(m_calEntryPoint,m_initDir);
     
   //m_log << MSG::INFO << "\n totalTrack=" <<endreq;

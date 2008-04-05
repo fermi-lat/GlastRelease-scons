@@ -292,7 +292,7 @@ StatusCode GcrSelectTool::readGlastDet()
 //-----------------------------------------------------------------------------------------------------------------
 
 StatusCode GcrSelectTool::selectGcrXtals(){
-  //m_log << MSG::INFO << "GcrSelectTool BEGIN selectGCRXtals()" << endreq ; 
+  m_log << MSG::INFO << "GcrSelectTool BEGIN selectGCRXtals()" << endreq ; 
   
   StatusCode sc = StatusCode::SUCCESS; 
 
@@ -334,11 +334,11 @@ StatusCode GcrSelectTool::selectGcrXtals(){
    
   }
  
- 
+  m_log << MSG::INFO << "GcrSelectTool END selectGCRXtals()" << endreq ;  
+
   return sc; 
     
-  //m_log << MSG::INFO << "GcrSelectTool END selectGCRXtals()" << endreq ;  
-
+  
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -1524,7 +1524,7 @@ int GcrSelectTool::buildSelectedXtalsVec (){
 
   bool debugging = false;
 
-  //m_log << MSG::INFO << "GcrSelectTool BEGIN buildSelectedXtalsVec()" << endreq ;  
+  m_log << MSG::INFO << "GcrSelectTool BEGIN buildSelectedXtalsVec()" << endreq ;  
   
   m_gcrSelectedXtalsVec.clear();
   
@@ -1684,7 +1684,7 @@ int GcrSelectTool::buildSelectedXtalsVec (){
    
    
 
-  //m_log << MSG::INFO << "GcrSelectTool END buildSelectedXtalsVec(), m_gcrSelectedXtalsVec.size()= " << m_gcrSelectedXtalsVec.size()<< endreq ;  
+  m_log << MSG::INFO << "GcrSelectTool END buildSelectedXtalsVec(), m_gcrSelectedXtalsVec.size()= " << m_gcrSelectedXtalsVec.size()<< endreq ;  
    
   return m_gcrSelectedXtalsVec.size();
   
@@ -1750,13 +1750,13 @@ StatusCode GcrSelectTool::storeGcrSelectedXtals () {
 
 /**
  * @author CL 06/02/2006
- * This method allows to store GCRXtals in TDS structure
+ * This method allows to store GCRSelectVals in TDS structure
  */
 StatusCode GcrSelectTool::storeGcrSelectVals () {
   StatusCode sc = StatusCode::SUCCESS;
  
-  if(m_debugging)
-    m_log << MSG::INFO << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
+  
+    m_log << MSG::DEBUG << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
   
  
 
@@ -1778,11 +1778,20 @@ StatusCode GcrSelectTool::storeGcrSelectVals () {
   m_gcrSelectVals->setAcdZ(-999);
   m_gcrSelectVals->setInteractionParams(-999);
   
+    //gcrOBFStatusWord comes from gcrReconVals - calculated in GcrReconTool
+  unsigned int gcrOBFStatusWord;
+  Event::GcrReconVals* gcrReconVals;
+  gcrReconVals = SmartDataPtr<Event::GcrReconVals>(m_dataSvc,EventModel::CalRecon::GcrReconVals);
+  if(!(gcrReconVals == 0)){
+    gcrOBFStatusWord = gcrReconVals->getGcrOBFStatusWord();
+    m_gcrSelectVals->setGcrOBFStatusWord(gcrOBFStatusWord);
+  }else{
+     ;
+    //m_gcrSelectVals->setGcr0BFStatusWord(9999); DOESN'T WORK! 
+  }
+  m_log << MSG::DEBUG << "In storeGcrSelectVals, gcrOBFStatusWord =" << gcrOBFStatusWord << endreq;
   
-
-
-  if(m_debugging)
-    m_log << MSG::INFO << "END storeGcrSelectVals in GcrSelectTool" << endreq;
+    m_log << MSG::DEBUG << "END storeGcrSelectVals in GcrSelectTool" << endreq;
  
   return sc;
 

@@ -101,6 +101,9 @@ private:
   Point m_calEntryPoint;
   Point m_calExitPoint;
 
+  //initial direction of the particle (initial Direction of TKR1 if using TKRTrack)
+  Vector m_initDir;
+
     
 } ;
 
@@ -171,7 +174,7 @@ StatusCode GcrReconAlg::execute()
     log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
     
     // TEST:  Does TkrTrack enters CAL?
-    if (!(m_initAxis=="MC")){
+    //if (!(m_initAxis=="MC")){
       readGlastDet();   // Warning: code duplicated in GcrReconTool, should be passed as parameter of findGcrXtals
       
       if(getCalEntryExitPoints()==StatusCode::SUCCESS)   // Warning: code duplicated in GcrReconTool, should be passed as parameter of findGcrXtals
@@ -192,7 +195,7 @@ StatusCode GcrReconAlg::execute()
        } 
       
       
-    }
+    //}
 
     
     
@@ -203,7 +206,7 @@ StatusCode GcrReconAlg::execute()
         Point pos;
         selectEventAxis(dir, pos);
         //m_gcrReconTool->findGcrXtals(m_initAxis, dir, pos);
-        m_gcrReconTool->findGcrXtals(m_initAxis, m_calEntryPoint, m_calExitPoint);
+        m_gcrReconTool->findGcrXtals(m_initAxis, m_calEntryPoint, m_calExitPoint, m_initDir);
       }
 
     log<<MSG::DEBUG<<"GcrReconAlg::execute End"<<endreq ;
@@ -293,12 +296,13 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
  
-  Vector initDir;
   Point initPos;
   Vector mcDir;
 
 
   if(m_initAxis == "MC"){
+       log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MC " << endreq;
+
        // ******the first McParticle initial position (when launched):
        Event::McParticle* firstMcParticle = findFirstMcParticle();
 
@@ -317,10 +321,12 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 
 
       // ******the first McParticle initial direction (when launched):
-      initDir = Vector(mcDir.x(), mcDir.y(), mcDir.z());  
+      m_initDir = Vector(mcDir.x(), mcDir.y(), mcDir.z());  
   }  
   
   else if(m_initAxis=="TKR"){
+      log << MSG::DEBUG << " CAL Exit Entry points for initAxis==TKR " << endreq;
+
       //Locate and store a pointer to the data service
       DataSvc*           dataSvc;
       IService* iService = 0;
@@ -344,7 +350,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 		const Event::TkrTrack* track_1 = *pTrack;
 
 		initPos = track_1->getInitialPosition();
-		initDir = track_1->getInitialDirection().unit();
+		m_initDir = track_1->getInitialDirection().unit();
 
 	    }
 	    else
@@ -353,6 +359,8 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   }
   else if(m_initAxis=="MOM")
     {
+      log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MOM " << endreq;
+
       MsgStream log(msgSvc(), name());
       StatusCode sc = StatusCode::SUCCESS;
       ITkrFilterTool* filterTool;
@@ -373,7 +381,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
           return StatusCode::FAILURE;
         }
       initPos = tkrEventParams->getEventPosition();
-      initDir = -tkrEventParams->getEventAxis();    
+      m_initDir = -tkrEventParams->getEventAxis();    
     } else{
     log<<MSG::ERROR<<"Invalid property "<<m_initAxis<<endreq;
     return;
@@ -384,20 +392,20 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   double y0 = initPos.y();
   double z0 = initPos.z();
 
-  double ux0 = initDir.x();
-  double uy0 = initDir.y();
-  double uz0 = initDir.z();
+  double ux0 = m_initDir.x();
+  double uy0 = m_initDir.y();
+  double uz0 = m_initDir.z();
 
 
   
   log << MSG::DEBUG << "initPos=(" << x0 <<"," << y0 << "," << z0 <<")"<< endreq;  
-  log << MSG::DEBUG << "initDir=(" << ux0 <<"," << uy0 << "," << uz0 <<")"<< endreq;  
+  log << MSG::DEBUG << "m_initDir=(" << ux0 <<"," << uy0 << "," << uz0 <<")"<< endreq;  
 
 
   if (uz0!=0)
     {
-      m_calEntryPoint = initPos+((m_calZTop-z0)/uz0)*initDir; 
-      m_calExitPoint  = initPos+((m_calZBot-z0)/uz0)*initDir;        
+      m_calEntryPoint = initPos+((m_calZTop-z0)/uz0)*m_initDir; 
+      m_calExitPoint  = initPos+((m_calZBot-z0)/uz0)*m_initDir;        
       
     }
   else
@@ -406,23 +414,23 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
         {
          
 	  if (ux0>0){
-	    m_calEntryPoint = initPos+((m_calXLo-x0)/ux0)*initDir; 
-	    m_calExitPoint  = initPos+((m_calXHi-x0)/ux0)*initDir;
+	    m_calEntryPoint = initPos+((m_calXLo-x0)/ux0)*m_initDir; 
+	    m_calExitPoint  = initPos+((m_calXHi-x0)/ux0)*m_initDir;
 	  }
 	  else{
-	    m_calEntryPoint = initPos+((m_calXHi-x0)/ux0)*initDir; 
-	    m_calExitPoint  = initPos+((m_calXLo-x0)/ux0)*initDir;
+	    m_calEntryPoint = initPos+((m_calXHi-x0)/ux0)*m_initDir; 
+	    m_calExitPoint  = initPos+((m_calXLo-x0)/ux0)*m_initDir;
 	    }
         }
       else if (uy0!=0)
         {
 	  if (uy0>0){
-	    m_calEntryPoint = initPos+((m_calYLo-y0)/uy0)*initDir; 
-	    m_calExitPoint  = initPos+((m_calYHi-y0)/uy0)*initDir;
+	    m_calEntryPoint = initPos+((m_calYLo-y0)/uy0)*m_initDir; 
+	    m_calExitPoint  = initPos+((m_calYHi-y0)/uy0)*m_initDir;
 	    }
 	  else{
-	    m_calEntryPoint = initPos+((m_calYHi-y0)/uy0)*initDir; 
-	    m_calExitPoint  = initPos+((m_calYLo-y0)/uy0)*initDir;
+	    m_calEntryPoint = initPos+((m_calYHi-y0)/uy0)*m_initDir; 
+	    m_calExitPoint  = initPos+((m_calYLo-y0)/uy0)*m_initDir;
 	    
 	    }
         }
@@ -430,6 +438,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
     }
 
   log << MSG::DEBUG << "CalEntryPoint=       " << '(' << m_calEntryPoint.x() << ',' << m_calEntryPoint.y() << ',' << m_calEntryPoint.z() << ')'  <<endreq;
+  log << MSG::DEBUG << "CalExitPoint=       " << '(' << m_calExitPoint.x() << ',' << m_calExitPoint.y() << ',' << m_calExitPoint.z() << ')'  <<endreq;
     
   return sc;
 
