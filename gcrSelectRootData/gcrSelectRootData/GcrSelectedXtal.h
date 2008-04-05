@@ -6,7 +6,6 @@
 
 #include <commonRootData/idents/CalXtalId.h>
 
-<<<<<<< GcrSelectedXtal.h
 /** @class GcrSelectedXtal
  * 
  * $Header$
