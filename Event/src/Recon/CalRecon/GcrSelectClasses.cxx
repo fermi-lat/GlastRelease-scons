@@ -37,11 +37,12 @@ void Event::GcrSelectedXtal::writeOut(MsgStream& log) const
 
 
 //-----------------------------------------------------------------------------------------------------------------
-void Event::GcrSelectVals::initialize(int inferedZ, int acdZ, int interactionParams)
+void Event::GcrSelectVals::initialize(int inferedZ, int acdZ, int interactionParams, unsigned int gcrOBFStatusWord)
 {
     m_inferedZ   = inferedZ;
     m_acdZ = acdZ;
     m_interactionParams = interactionParams;
+    m_gcrOBFStatusWord = gcrOBFStatusWord;
 }
 	   
 

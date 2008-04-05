@@ -75,26 +75,29 @@ namespace Event
 	    int m_inferedZ;
 	    int m_acdZ;
 	    int m_interactionParams;
+            unsigned int m_gcrOBFStatusWord;
 
 
 
 	public:
 	    GcrSelectVals(){};
 
-	    GcrSelectVals(int inferedZ, int acdZ, int interactionParams) : 
-                	m_inferedZ(inferedZ), m_acdZ(acdZ), m_interactionParams(interactionParams) {};
+	    GcrSelectVals(int inferedZ, int acdZ, int interactionParams, unsigned int gcrOBFStatusWord) : 
+                	m_inferedZ(inferedZ), m_acdZ(acdZ), m_interactionParams(interactionParams), m_gcrOBFStatusWord(gcrOBFStatusWord) {};
 
 	    ~GcrSelectVals() {};
 
-	    void                   initialize(int inferedZ, int acdZ, int interactionParams);
+	    void                   initialize(int inferedZ, int acdZ, int interactionParams, unsigned int gcrOBFStatusWord);
 
 	    void                   setInferedZ (int inferedZ)         {m_inferedZ  = inferedZ;}
 	    void                   setAcdZ  (int acdZ)         {m_acdZ  = acdZ;}
 	    void                   setInteractionParams  (int interactionParams)         {m_interactionParams  = interactionParams;}
+	    void                   setGcrOBFStatusWord (unsigned int gcrOBFStatusWord){m_gcrOBFStatusWord  = gcrOBFStatusWord;}
 	   
 	    int                    getInferedZ ()  const                        {return m_inferedZ    ;}
 	    int                    getAcdZ ()      const                    {return m_acdZ    ;}
 	    double                 getInteractionParams ()  const                        {return m_interactionParams    ;}
+	    unsigned int           getGcrOBFStatusWord ()  const  {return m_gcrOBFStatusWord;}
 
            
 	    /// Utilities 
