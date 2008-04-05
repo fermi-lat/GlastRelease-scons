@@ -166,6 +166,8 @@ StatusCode gcrSelectRootWriterAlg::execute()
     
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
+    
+    log << MSG::DEBUG << "gcrSelectRootWriterAlg::execute BEGIN" << endreq;
         
     if(!m_gcrTree->GetCurrentFile()->IsOpen()) {
         log << MSG::ERROR << "ROOT file " << m_fileName 
@@ -188,6 +190,9 @@ StatusCode gcrSelectRootWriterAlg::execute()
     }
        
     writeEvent();
+    
+        log << MSG::DEBUG << "gcrSelectRootWriterAlg::execute BEGIN" << endreq;
+
 
     return sc;
 }
@@ -250,9 +255,9 @@ StatusCode gcrSelectRootWriterAlg::writeGcrSelect() {
     SmartDataPtr<Event::GcrSelectVals> gcrSelectValsTds(eventSvc(), EventModel::CalRecon::GcrSelectVals);   
     if (gcrSelectValsTds) 
       fillGcrSelectVals(gcrSelect, gcrSelectValsTds); 
-    /**else
+    else
       log << MSG::INFO << "no gcrSelectVals found in TDS, do not fill GcrSelectVals" << endreq;
-    */
+    
    //log << MSG::INFO << "gcrSelectRootWriterAlg::writeGcrSelect END" << endreq;
     
     return sc;
@@ -296,7 +301,7 @@ void gcrSelectRootWriterAlg::fillGcrSelectVals(GcrSelect *gcrSelect, Event::GcrS
     
      MsgStream log(msgSvc(), name());
  
-    //log << MSG::INFO << "gcrSelectRootWriterAlg::fillGcrSelectVals BEGIN" << endreq;   
+    log << MSG::INFO << "gcrSelectRootWriterAlg::fillGcrSelectVals BEGIN" << endreq;   
     
     
     GcrSelectVals* gcrSelectValsRoot = new GcrSelectVals();
@@ -307,10 +312,12 @@ void gcrSelectRootWriterAlg::fillGcrSelectVals(GcrSelect *gcrSelect, Event::GcrS
     
     //log << MSG::INFO << "gcrSelectValsRoot->getInferedZ()" << gcrSelectValsRoot->getInferedZ()<< endreq;   
     
+    std::cout << "gcrOBFStatusWord=" << std::hex << gcrSelectValsRoot->getGcrOBFStatusWord() << std::dec << std::endl;
+   
     gcrSelect->addGcrSelectVals(gcrSelectValsRoot);
     
   
-   //log << MSG::INFO << "gcrSelectRootWriterAlg::fillGcrSelectVals END" << endreq;   
+   log << MSG::INFO << "gcrSelectRootWriterAlg::fillGcrSelectVals END" << endreq;   
     
     return;   
  
