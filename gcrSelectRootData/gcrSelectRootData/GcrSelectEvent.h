@@ -17,35 +17,32 @@
 
 /** @page gcrSelectRootData_doc
     @section GcrSelectEvent GcrSelectEvent Documentation
-    Notes 
+    \image html gcrSelectRootDataTree.gif
+    
 
 <table>
-<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
-
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr>
 <small>
-<tr><td> getEventId
-<td>UInt_t<td> Returns the event identifier
-<tr><td> getRunId
-<td>UInt_t<td> Returns the run identifier
-<tr><td> getGcrSelect
-<td>const GcrSelect*<td> Returns const pointer to GcrSelect object 
-<tr><td> getGcrSelect
-<td>GcrSelect*<td> Returns non-const pointer to GcrSelect object 
-<tr><td> getEventFlags
-<td>UInt_t<td> Returns the event flags 
-<tr><td> goodEvent 
-<td>Bool_t<td> Returns true/false after checking event flags, if zero this
-is a good event 
-<tr><td> badEvent 
-<td>Bool_t<td> Returns true/false after checking event flags is non-zero
-<tr><td> badEventSeq
-<td>Bool_t<td> Returns true/false after checking event flags to see if bad
-event sequence number bit is up 
-
+<tr><td>getEventId( )</td><td>Returns the Event Id</td><td>UInt_t</td>
+</tr><tr>
+<td>getRunId( )</td><td>Returns the Run Id</td><td>UInt_t</td>
+</tr><tr>
+<td>getGcrSelect( )</td><td>Returns a pointer to the GcrSelect object</td><td>GcrSelect*</td>
+</tr><tr>
+<td>getEventFlags( )</td><td>Returns the event flags associated with this event.  O (zero) denotes a good event, non-zero a bad event.  Currently the only type of bad event recognized is a bad event Sequence denoted by eventFlags == 1</td><td>UInt_t</td>
+</tr><tr>
+<td>goodEvent( )</td><td>Returns TRUE if the event flag is zero, FALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>badEvent( )</td><td>Returns TRUE if the event flag is non-zero, FALSE otherwise</td><td>Bool_t</td>
+</tr><tr>
+<td>badEventSeq( )</td><td>Returns TRUE if the event sequence bit is high in event flag</td><td>Bool_t</td>
+</tr>
 </small>
 </table>
-*/
 
+*/
 
 
 class GcrSelectEvent : public TObject

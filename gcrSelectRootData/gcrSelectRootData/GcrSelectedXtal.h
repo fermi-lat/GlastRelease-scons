@@ -6,37 +6,46 @@
 
 #include <commonRootData/idents/CalXtalId.h>
 
+<<<<<<< GcrSelectedXtal.h
+/** @class GcrSelectedXtal
+ * 
+ * $Header$
+*/
+
 /** @page gcrSelectRootData_doc
     @section GcrSelectedXtal GcrSelectedXtal Documentation
-    Notes 
+    
+    <P> A GcrSelectedXtal is a log beeing crossed by the primary particle track, having an energy deposit > 120 MeV, selected after rejection of nuclear interactions </P>
 
 <table>
-<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
-
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr>
 <small>
-<tr><td> getXtalId
-<td>CalXtalId<td> Returns the CalXtalId object
-<tr><td> getRawEnergy
-<td>Double_t<td> Returns the raw energy
-<tr><td> getPathLength
-<td>Double_t<td> Returns the path length
-<tr><td> getCorrEnergy
-<td>Double_t<td> 
-<tr><td> getSelectGrade
-<td>Int_t<td> Returns 
-<tr><td> getClosestFaceDist
-<td>Double_t<td> Returns 
-<tr><td> getCrossedFaces
-<td>Int_t<td> Returns 
-<tr><td> getEntryPoint
-<td>TVector3<td> Returns 
-<tr><td> getExitPoint
-<td>TVector3<td> Returns 
+<tr><td>  getXtalId ()</td><td>Returns the CalXtal Id</td><td>CalXtalId</td>
+</tr>
+<tr><td>  getRawEnergy ()</td><td>Returns the energy deposited in this Xtal</td><td>Double_t</td>
+</tr>
+<tr><td>  getPathLength ()</td><td>Returns the length of the track segment contained in this Xtal</td><td>Double_t</td>
+</tr>
+<tr><td>  getCorrEnergy ()</td><td>Returns the path-length corrected energy </td><td>Double_t</td>
+</tr>
+<tr><td>  getSelectGrade ()</td><td>Returns </td><td>Int_t</td>
+</tr>
+<tr><td>  getClosestFaceDist ()</td><td>Returns the distance to the closest Xtal face to the central point of the piece of track contained  in that Xtal</td><td>Double_t</td>
+</tr>
+<tr><td>  getCrossedFaces ()</td><td>Returns a code that contains information about what Xtal faces were crossed by the particle</td><td>Int_t</td>
+</tr>
+<tr><td>  getEntryPoint ()</td><td>Returns the 3D coordinates of the point where the particule entered into the calorimeter</td><td>TVector3</td>
+</tr>
+<tr><td>  getExitPoint ()</td><td>Returns the 3D coordinates of the point where the particule left the calorimeter</td><td>TVector3</td>
+</tr>
+
 
 </small>
 </table>
-*/
 
+*/
 
 //-----------------------------------------------------------------------------------------------------------------
 

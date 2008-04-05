@@ -11,6 +11,7 @@ void GcrSelectVals::Clear(Option_t* /* option */)
     m_inferedZ = 0;
     m_acdZ = 0;
     m_interactionParams = 0;
+    m_gcrOBFStatusWord = 0;
 }
 
 
@@ -32,6 +33,7 @@ void GcrSelectVals::Fake( Int_t ievent, Float_t randNum ) {
     m_inferedZ = ievent * 1;
     m_acdZ = ievent *2;
     m_interactionParams = ievent * 3;
+    m_gcrOBFStatusWord = ievent * 4;
 }
 
 #define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
@@ -43,6 +45,7 @@ Bool_t GcrSelectVals::CompareInRange(const GcrSelectVals & ref, const std::strin
     result = COMPARE_IN_RANGE(InferedZ) && result;
     result = COMPARE_IN_RANGE(AcdZ) && result;
     result = COMPARE_IN_RANGE(InteractionParams) && result;
+    result = COMPARE_IN_RANGE(GcrOBFStatusWord) && result;
 
     if (!result) {
         if ( name == "" ) {

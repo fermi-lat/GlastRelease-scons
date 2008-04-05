@@ -33,6 +33,29 @@ GcrSelectedXtal
 </table>
 */
 
+/** @page gcrSelectRootData_doc
+    @section GcrSelect GcrSelect Documentation
+ 
+
+<table>
+<tr>
+<th>Method</th><th>Description</th><th>Return Value</th>
+</tr>
+
+<small>
+<tr>
+<td>getGcrSelectedXtalCol( )</td><td>Returns the Collection of hits selected for calibration</td><td>TClonesArray* of SelectedXtals</td>
+</tr><tr>
+<td>getGcrSelectVals( )</td><td>Returns a set of simple parameters for selected events</td><td>GcrSelectVals*</td>
+</tr>
+
+</small>
+</table>
+
+*/
+
+
+
 class GcrSelect : public TObject
 {
 
