@@ -3,9 +3,11 @@
 #include <ctime>
 #include <cassert>
 
-#include "calibTkrUtil/TkrHits.h"
 #include "facilities/Util.h"
 #include "commonRootData/idents/TowerId.h"
+
+#include "calibTkrUtil/TkrHits.h"
+#include "src/tkrPyRoot/tkrPyRoot.h"
 
 using std::string;
 using std::cout;
