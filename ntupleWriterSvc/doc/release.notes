@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r21p1 06-Apr-2008  HMK: Patch TChain init in getTree
+ * v3r21   04-Apr-2008  HMK: Use TChains for input tuples
  * v3r20p2 01-Apr-2008  LSR: Fix to handle vectors like PtPos[3]
  * v3r20p1 31-Mar-2008  HMK: A couple of gcc warnings
  * v3r20p0 31-Mar-2008   TU: Kludge mechanism to read and ntuple and clone for output as well 
