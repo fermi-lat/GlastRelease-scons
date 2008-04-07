@@ -170,8 +170,8 @@ StatusCode GcrReconAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    log << MSG::DEBUG << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
-    log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
+    log << MSG::INFO << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
+    log<<MSG::INFO<<"GcrReconAlg::execute Begin"<<endreq ;
     
     // TEST:  Does TkrTrack enters CAL?
     //if (!(m_initAxis=="MC")){
@@ -181,12 +181,12 @@ StatusCode GcrReconAlg::execute()
       {
 	if((m_calEntryPoint.x()<m_calXLo) || (m_calEntryPoint.x()>m_calXHi) || (m_calEntryPoint.y()<m_calYLo) || (m_calEntryPoint.y()>m_calXHi)) 
 	  { 
-	    log<<MSG::DEBUG<<"track1 out of calorimeter"<<endreq ;
+	    log<<MSG::INFO<<"track1 out of calorimeter"<<endreq ;
 
             return;
 	  }
 	else
-	  log<<MSG::DEBUG<<"track1 in the calorimeter"<<endreq ; 
+	  log<<MSG::INFO<<"track1 in the calorimeter"<<endreq ; 
 
        }
        else{
@@ -232,12 +232,12 @@ bool GcrReconAlg::passTrigger()
     unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
     bool engine4ON2 = (Trig_gemengine==4);
     if(!engine4ON2){
-      log<<MSG::DEBUG<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;}
+      log<<MSG::INFO<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;}
     return engine4ON2;
     //    return m_gcrReconTool->TriggerEngine4ON();
   }
   else{
-    log<<MSG::DEBUG<<"@@@@@@@@ Using Gamma,HFC,Mip,DGN OBF filters"<<endreq ;
+    log<<MSG::INFO<<"@@@@@@@@ Using Gamma,HFC,Mip,DGN OBF filters"<<endreq ;
     bool passFilter=m_gcrReconTool->checkFilters();
     
     return (passFilter);

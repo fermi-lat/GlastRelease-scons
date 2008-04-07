@@ -75,9 +75,13 @@ private:
   Event::GcrXtalVec getGcrXtalVec(){return m_gcrXtalVec;} 
   void setGcrXtalVec(Event::GcrXtalVec gcrXtalVec){m_gcrXtalVec = gcrXtalVec;}
   Event::GcrReconVals*   m_gcrReconVals; 
+  
+  
+
+ float GcrSelectTool::chooseEth(); // decides energy threshold to select useful hits for calibration, depending of which OBF filter (Gamma, HFC, Mip, DFC) the event passes
+
 
   StatusCode retrieveGcrXtalsMap();
- 
   
   void attributeGcrGrade ();
   
@@ -126,11 +130,7 @@ private:
   static const int NTOW = 16;
   static const int NLAY = 8;
   static const int NCOL = 12;
-  
-  //static const float E_TH = 60.0;  //--> Gives same number of GcrSelectedXtals that GcrXtals
-  //static const float E_TH = 120.0;  //Energy threshold for considering an energy deposit as representatif
-  static const float E_TH;  //Energy threshold for considering an energy deposit as representatif
-    
+      
   /// MsgStream member variable to speed up execution
   MsgStream          m_log;
 
@@ -172,6 +172,10 @@ private:
   Event::GcrSelectVals*   m_gcrSelectVals; 
   
   
+  unsigned int m_gcrOBFStatusWord;  // contains information about Gamma, HFC, Mip, DFC filters vetoes
+                                     //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
+
+  
   ZVect m_zVect; 
   
   //data structures necessary for E.N. codes:
@@ -192,6 +196,8 @@ private:
  
   double m_energyMap[NTOW][NLAY][NCOL];
   
+  float m_Eth; //Energy threshold for considering an energy deposit as representatif
+  
   int m_inferedZ; /// inferedZ for this event, from cluster from first lay.
   
   // global Criteria match variables: intertowers criteria
@@ -205,7 +211,6 @@ private:
 
 } ;
 
-const float GcrSelectTool::E_TH = 120.0;  //Energy threshold for considering an energy deposit as representatif
 
 //-----------------------------------------------------------------------------------------------------------------
 static ToolFactory<GcrSelectTool> s_factory;
@@ -706,20 +711,6 @@ StatusCode GcrSelectTool::retrieveGcrXtalsMap(){
  
 }
  
-//-----------------------------------------------------------------------------------------------------------------
-/**StatusCode GcrSelectTool::buildOutputs(){
-   StatusCode sc= StatusCode::SUCCESS;
-   
-   attributeGcrGrade(); // not implemented yet
-   //buildSelectedXtalsVec(Grade); // not implemented yet
-  
-  
-   m_selectedXtalsVecSize= buildSelectedXtalsVec (); // this method contains for the moment an hybrid combination of attributeGCRGrade and buildSelXtalsVec(grade)
-  
-   
-   return sc;
-
-   }*/
 
 //-----------------------------------------------------------------------------------------------------------------
 StatusCode GcrSelectTool::store(){
@@ -769,9 +760,52 @@ void GcrSelectTool::findClusters(){
 //-----------------------------------------------------------------------------------------------------------------
 
 
+float GcrSelectTool::chooseEth(){
+
+  float Eth=0;
+  bool passGamma, passHFC, passMip, passDFC;
+
+  //gcrOBFStatusWord comes from gcrReconVals - calculated in GcrReconTool
+
+  Event::GcrReconVals* gcrReconVals;
+  gcrReconVals = SmartDataPtr<Event::GcrReconVals>(m_dataSvc,EventModel::CalRecon::GcrReconVals);
+  if(!(gcrReconVals == 0)){
+    m_gcrOBFStatusWord = gcrReconVals->getGcrOBFStatusWord();
+  }else{
+     m_log << MSG::INFO << "No gcrReconVals found" << endreq;
+  }
+  
+  //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
+  passGamma = (m_gcrOBFStatusWord & 1)!=0;
+  passHFC = (m_gcrOBFStatusWord & 2)!=0;
+  passMip = (m_gcrOBFStatusWord & 4)!=0;
+  passDFC = (m_gcrOBFStatusWord & 8)!=0;
+  
+  m_log << MSG::INFO << "passGamma, passHFC, passMip, passDFC= " << passGamma <<"," << passHFC << "," <<passMip << "," << passDFC << endreq;
+  
+  if (passGamma || passMip || passDFC) 
+    Eth = 5.0;
+  else
+    Eth = 100.0;
+    
+  
+  m_log << MSG::INFO << "Eth =" << Eth << endreq; 
+  
+  return Eth;
+
+}
+
+
+//-----------------------------------------------------------------------------------------------------------------
+
+
 void GcrSelectTool::buildLayMultArr(){
   
-  //m_log << MSG::INFO << "GcrSelectTool BEGIN buildLayMultArr()" << endreq ; 
+  m_log << MSG::INFO << "GcrSelectTool BEGIN buildLayMultArr()" << endreq ; 
+  
+  m_Eth = chooseEth();  //Energy threshold for considering an energy deposit as representatif
+
+
     
   for (int itow=0; itow<NTOW; itow++){
     //m_log << MSG::INFO << "itow=" << itow << endreq;
@@ -783,7 +817,7 @@ void GcrSelectTool::buildLayMultArr(){
       int multCurrentLay=0;
       for (int icol=0; icol<NCOL; icol++){
         // m_log << MSG::INFO << "m_energyMap[itow][ilay][icol]" << m_energyMap[itow][ilay][icol] << endreq;
-        if(m_energyMap[itow][ilay][icol]>=E_TH) {
+        if(m_energyMap[itow][ilay][icol]>=m_Eth) {
           //m_log << MSG::INFO << "multiplicity increment" << endreq;
           multCurrentLay++;
 	      
@@ -801,7 +835,7 @@ void GcrSelectTool::buildLayMultArr(){
      m_log << MSG::INFO << "m_layerMultiplicity[" << itow<< "][" << ilay<< "]=" << m_layerMultiplicity[itow][ilay] << endreq;
      }*/
     
-  //m_log << MSG::INFO << "GcrSelectTool END buildLayMultArr()" << endreq ; 
+  m_log << MSG::INFO << "GcrSelectTool END buildLayMultArr()" << endreq ; 
   
 }
   
@@ -812,7 +846,6 @@ void GcrSelectTool::buildLayMultArr(){
 void GcrSelectTool::buildCluArr(){
   //m_log << MSG::INFO << "GcrSelectTool BEGIN buildCluArr()" << endreq ; 
     
-  //float seuilE = E_TH;
   
   for(int itow=0; itow<NTOW;itow++) { //Car ici on a toutes les tours.
   
@@ -844,14 +877,14 @@ void GcrSelectTool::buildCluArr(){
         {
 		 
 		  
-          while( (m_energyMap[itow][ilay][nha]<E_TH) && (nha<NCOL))
+          while( (m_energyMap[itow][ilay][nha]<m_Eth) && (nha<NCOL))
           {
-            //m_log << MSG::INFO << "Dans while energy<E_TH, nha= " << nha  << ", m_energyMap[itow][ilay][nha]= " << m_energyMap[itow][ilay][nha] << ", seuilE=" << seuilE << endreq;
+            //m_log << MSG::INFO << "Dans while energy<m_Eth, nha= " << nha  << ", m_energyMap[itow][ilay][nha]= " << m_energyMap[itow][ilay][nha] << ", seuilE=" << seuilE << endreq;
             nha++;
 		     
           }
 		    
-          //m_log << MSG::INFO << "à la sortie de while En<E_TH nha= " << nha<< endreq;
+          //m_log << MSG::INFO << "à la sortie de while En<m_Eth nha= " << nha<< endreq;
           if(nha>=NCOL)
             continue;  
 		   
@@ -865,14 +898,14 @@ void GcrSelectTool::buildCluArr(){
           //look for the last hit of the cluster:
           nhb=nha;
 	
-          while( (m_energyMap[itow][ilay][nhb]>=E_TH) && (nhb<NCOL) )  
+          while( (m_energyMap[itow][ilay][nhb]>=m_Eth) && (nhb<NCOL) )  
           {
             m_cluArr[itow][ilay][nclu][0]+=m_energyMap[itow][ilay][nhb];	
             nhb++;
 		      
           }
 		    
-          //m_log << MSG::INFO << "à la sortie de while En>=E_TH nhb= " << nhb<< endreq;
+          //m_log << MSG::INFO << "à la sortie de while En>=m_Eth nhb= " << nhb<< endreq;
           if(nhb > NCOL)
             continue;
 		    
@@ -1683,7 +1716,7 @@ int GcrSelectTool::buildSelectedXtalsVec (){
   }//end of loop on TowersVec
    
    
-
+  m_log << MSG::INFO << "m_gcrSelectedXtalsVec.size()" << m_gcrSelectedXtalsVec.size()<< endreq;
   m_log << MSG::INFO << "GcrSelectTool END buildSelectedXtalsVec(), m_gcrSelectedXtalsVec.size()= " << m_gcrSelectedXtalsVec.size()<< endreq ;  
    
   return m_gcrSelectedXtalsVec.size();
@@ -1700,7 +1733,7 @@ int GcrSelectTool::buildSelectedXtalsVec (){
 StatusCode GcrSelectTool::storeGcrSelectedXtals () {
   StatusCode sc = StatusCode::SUCCESS;
 
-  //m_log << MSG::INFO << "BEGIN storeGcrSelectedXtals in GcrSelectTool" << endreq;
+  m_log << MSG::INFO << "BEGIN storeGcrSelectedXtals in GcrSelectTool" << endreq;
 
   m_gcrSelectedXtalsCol = SmartDataPtr<Event::GcrSelectedXtalsCol>(m_dataSvc,EventModel::CalRecon::GcrSelectedXtalsCol);
 
@@ -1738,8 +1771,8 @@ StatusCode GcrSelectTool::storeGcrSelectedXtals () {
     nbStoredSelGcrXtals++;
   }
 
-  //m_log << MSG::INFO << "END storeGcrSelectedXtals in GcrSelectTool,  nbStoredSelGcrXtals=" << nbStoredSelGcrXtals  << endreq;
   m_log << MSG::INFO << "nbStoredSelGcrXtals=" << nbStoredSelGcrXtals  << endreq;
+  m_log << MSG::INFO << "END storeGcrSelectedXtals in GcrSelectTool,  nbStoredSelGcrXtals=" << nbStoredSelGcrXtals  << endreq;
 
   return sc;
 
@@ -1778,18 +1811,10 @@ StatusCode GcrSelectTool::storeGcrSelectVals () {
   m_gcrSelectVals->setAcdZ(-999);
   m_gcrSelectVals->setInteractionParams(-999);
   
-    //gcrOBFStatusWord comes from gcrReconVals - calculated in GcrReconTool
-  unsigned int gcrOBFStatusWord;
-  Event::GcrReconVals* gcrReconVals;
-  gcrReconVals = SmartDataPtr<Event::GcrReconVals>(m_dataSvc,EventModel::CalRecon::GcrReconVals);
-  if(!(gcrReconVals == 0)){
-    gcrOBFStatusWord = gcrReconVals->getGcrOBFStatusWord();
-    m_gcrSelectVals->setGcrOBFStatusWord(gcrOBFStatusWord);
-  }else{
-     ;
-    //m_gcrSelectVals->setGcr0BFStatusWord(9999); DOESN'T WORK! 
-  }
-  m_log << MSG::DEBUG << "In storeGcrSelectVals, gcrOBFStatusWord =" << gcrOBFStatusWord << endreq;
+  //gcrOBFStatusWord comes from gcrReconVals - loaded from TDS in GcrSelectTool:chooseEth() method
+  m_gcrSelectVals->setGcrOBFStatusWord(m_gcrOBFStatusWord);
+
+  m_log << MSG::DEBUG << "In storeGcrSelectVals, gcrOBFStatusWord =" << m_gcrOBFStatusWord << endreq;
   
     m_log << MSG::DEBUG << "END storeGcrSelectVals in GcrSelectTool" << endreq;
  

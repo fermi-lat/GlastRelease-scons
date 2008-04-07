@@ -240,7 +240,7 @@ StatusCode GcrReconTool::initialize()
 
   m_log.setLevel(outputLevel());
 
-  //m_log << MSG::INFO << "GcrReconTool BEGIN initialize()" << endreq ;
+  m_log << MSG::INFO << "GcrReconTool BEGIN initialize()" << endreq ;
    
   //Locate and store a pointer to the data service
   IService* iService = 0;
@@ -445,7 +445,7 @@ bool GcrReconTool::checkFilters(){
    bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6))  && (calEnergyRaw > CALRawE_TH);
 
    bool passFilter = cutGamma || cutHFC || cutMip || cutDGN;
-   m_log << MSG::DEBUG << "passFilter:" << passFilter << endreq;
+   m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
 
    //TDS variable containing the OBF filter flags:
    // gcrOBFStatusWord bits order is the same than statusBytes merit variable   
@@ -454,6 +454,7 @@ bool GcrReconTool::checkFilters(){
    m_gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MipFilter;
    m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DFCFilter;
    
+   m_log << MSG::INFO << "m_gcrOBFStatusWord= " << m_gcrOBFStatusWord <<endreq;
    // store gcrOBFStatus Word in TDS:
    storeGcrReconVals();
 
@@ -472,7 +473,7 @@ bool GcrReconTool::checkFilters(){
 */
 StatusCode GcrReconTool::findGcrXtals(std::string initAxis, Point calEntryPoint, Point calExitPoint, Vector initDir){
 
-      m_log << MSG::DEBUG << "BEGIN findGcrXtals in GcrReconTool" << endreq;
+      m_log << MSG::INFO << "BEGIN findGcrXtals in GcrReconTool" << endreq;
       m_initDir = initDir;
       m_log << MSG::DEBUG << "m_initDir=" << m_initDir << endreq;
       
@@ -521,7 +522,7 @@ StatusCode GcrReconTool::findGcrXtals(std::string initAxis, Point calEntryPoint,
   //Task #6: clean up gcrXtalVec
   clearGcrXtalVec(&m_gcrXtalVec);
 
-  //m_log << MSG::INFO << "END findGcrXtals in GcrReconTool" << endreq;
+  m_log << MSG::INFO << "END findGcrXtals in GcrReconTool" << endreq;
   
   return sc;
 
@@ -915,7 +916,7 @@ StatusCode GcrReconTool::storeGcrReconVals () {
   StatusCode sc = StatusCode::SUCCESS;
  
   
-  m_log << MSG::DEBUG << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
+  m_log << MSG::INFO << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
   
   m_gcrReconVals = SmartDataPtr<Event::GcrReconVals>(m_dataSvc,EventModel::CalRecon::GcrReconVals);
 
@@ -928,12 +929,12 @@ StatusCode GcrReconTool::storeGcrReconVals () {
   }
 
 
-  m_log << MSG::DEBUG << "In storeGcrReconVals, m_gcrOBFStatusWord =" << m_gcrOBFStatusWord << endreq;
+  m_log << MSG::INFO << "In storeGcrReconVals, m_gcrOBFStatusWord =" << m_gcrOBFStatusWord << endreq;
 
   m_gcrReconVals->setGcrOBFStatusWord(m_gcrOBFStatusWord);
   
 
-  m_log << MSG::DEBUG << "END storeGcrReconVals in GcrSelectTool" << endreq;
+  m_log << MSG::INFO << "END storeGcrReconVals in GcrSelectTool" << endreq;
  
   return sc;
 
@@ -953,7 +954,7 @@ StatusCode GcrReconTool::storeGcrReconVals () {
 StatusCode GcrReconTool::storeGcrXtals () {
   StatusCode sc = StatusCode::SUCCESS;
 
-  //m_log << MSG::INFO << "BEGIN storeGcrXtals in GcrReconAlg" << endreq;
+  m_log << MSG::INFO << "BEGIN storeGcrXtals in GcrReconAlg" << endreq;
 
   m_gcrXtalCol = SmartDataPtr<Event::GcrXtalCol>(m_dataSvc,EventModel::CalRecon::GcrXtalCol);
 
@@ -984,8 +985,8 @@ StatusCode GcrReconTool::storeGcrXtals () {
       nbStoredGcrXtals++;
     }
 
-  //m_log << MSG::INFO << "END storeGcrXtals in GcrReconAlg" << endreq;
   m_log << MSG::INFO << "nbStoredGcrXtals=" << nbStoredGcrXtals << endreq;
+  m_log << MSG::INFO << "END storeGcrXtals in GcrReconAlg" << endreq;
 
   return sc;
 
