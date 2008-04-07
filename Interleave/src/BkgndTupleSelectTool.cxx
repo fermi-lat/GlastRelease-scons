@@ -398,7 +398,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
     // this is necessary due to the design of ROOT :-(
     TDirectory *saveDir = gDirectory;
     
-    int stat = m_fetch->getFiles(x, m_inputTree, log.level()<=MSG::DEBUG);
+    int stat = m_fetch->getFiles(x, dynamic_cast<TChain*>(m_inputTree), log.level()<=MSG::DEBUG);
     
     if( stat!=0 )
     {

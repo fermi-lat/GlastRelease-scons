@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+07-Apr-08 v1r5p11 HMK put dynamic_cast to TChain* back in!
 28-Mar-08 v1r5p10 HMK Clean up
 17-Mar-08 v1r5p9 HMK add a few more logging messages
 13-Mar-08 v1r5p8 HMK test dynamic_cast of TChain
