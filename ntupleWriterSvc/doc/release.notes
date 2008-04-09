@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r21p2 09-Apr-2008  HMK: SetDirectory when TTree is created in a separate
+ *         routine
  * v3r21p1 06-Apr-2008  HMK: Patch TChain init in getTree
  * v3r21   04-Apr-2008  HMK: Use TChains for input tuples
  * v3r20p2 01-Apr-2008  LSR: Fix to handle vectors like PtPos[3]

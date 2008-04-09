@@ -312,7 +312,9 @@ StatusCode RootTupleSvc::initialize ()
     TDirectory* curdir = gDirectory; // will prevent unauthorized use
 
     /* HMK Not adding input TFiles to the m_fileCol, since they will 
-       be apart of the TChain. */
+       be apart of the TChain.
+       We will expand any env variables in the input JO parameter.
+       */
     if (m_inFileJoParam.value().size() > 0)
     {
         facilities::Util::expandEnvVarList(m_inFileJoParam.value(),m_inFileList);
@@ -433,7 +435,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     std::string rootFileName = fileName.empty() ? m_filename.value() : fileName;
     TDirectory *saveDir = gDirectory;
 
-    // Check both the list of output files
+    // Check list of output files
     if ( m_fileCol.find(rootFileName) == m_fileCol.end()) {
         // create a new TFile
         TFile *tf = new TFile(rootFileName.c_str(), "RECREATE");
@@ -445,12 +447,16 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
         }
         m_fileCol[rootFileName] = tf;
         m_tree[treename]=getTree(treename);
-        log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
+        m_tree[treename]->SetDirectory(tf);
+        log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
+            << " in file: " << rootFileName << endreq;
     } else if( m_tree.find(treename)==m_tree.end()){
         // create new tree
         m_fileCol[rootFileName]->cd();
         m_tree[treename]=getTree(treename);
-        log << MSG::INFO << "Creating new tree \"" << treename << "\"" << endreq;
+        m_tree[treename]->SetDirectory(m_fileCol[rootFileName]);
+        log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
+            << " in file: " << rootFileName << endreq;
     }
     // note have to cast away the const here!
 
@@ -460,6 +466,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
         // This is a new branch
         m_tree[treename]->Branch(itemName0.c_str(), 
             const_cast<void*>(pval), (itemName0+type).c_str(),m_bufferSize);
+        // Save this branch pointer
         m_branchCol.push_back(std::make_pair(treename, std::make_pair(itemName0,pval)));
     } else {
         // This branch already exists; just change the pointer to the value
@@ -473,6 +480,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
             m_updateCount = 0;
         } else {
             thisLeaf->SetAddress(const_cast<void*>(pval));
+            // Save this branch pointer
             m_branchCol.push_back(std::make_pair(treename, std::make_pair(itemName0,pval)));
             log << MSG::INFO << "Updating pointer to " << itemName << endreq;
             /*
