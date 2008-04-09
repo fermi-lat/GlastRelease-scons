@@ -44,7 +44,7 @@ class ObfInterface
 {
 public:
     // constructors
-    ObfInterface(MsgStream& log, const std::string& filePath, ObfOutputCallBackParm* callBackParm, int verbosity = 0);
+    ObfInterface(MsgStream& log, ObfOutputCallBackParm* callBackParm, int verbosity = 0);
 
     // destructor
     virtual ~ObfInterface();
@@ -82,8 +82,6 @@ public:
 private:
 
     // Private functions
-    // The path where we can find the fsw libraries
-    std::string m_libraryPath;
 
     // Verbosity for output
     int                m_verbosity;
