@@ -694,19 +694,21 @@ namespace MOOT {
 
     std::vector<std::string> getCols;
     std::vector<std::string> noCols;
-    getCols.reserve(9);
+    getCols.reserve(12);
     getCols.clear(); noCols.clear();
 
     getCols.push_back("prim_key");
     getCols.push_back("name");
-    getCols.push_back("ver");
     getCols.push_back("pkg");
+    getCols.push_back("ver");
     getCols.push_back("dir");
     getCols.push_back("fmx_path");
     getCols.push_back("src_path");
     getCols.push_back("FSW_id");
     getCols.push_back("status");
-
+    getCols.push_back("schema_id");
+    getCols.push_back("instance_id");
+    getCols.push_back("version_id");
     rdbModel::ResultHandle* res = 0;
 
     try {
@@ -730,7 +732,8 @@ namespace MOOT {
     res->getRow(flds, 0);
 
     return new ConstitInfo(flds[0], flds[1], flds[2], flds[3], flds[4],
-                               flds[5], flds[6], flds[7], flds[8]);
+                           flds[5], flds[6], flds[7], flds[8],
+                           flds[9], flds[10], flds[11]);
   }
 
   unsigned MootQuery::getLastConfigKeyByAlg(const std::string& alg, 

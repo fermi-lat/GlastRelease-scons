@@ -573,11 +573,18 @@ void writeConstituent(MOOT::ConstitInfo* pInfo, std::ostream& out) {
   out << "Constituent info: " << std::endl;
   out << "prim_key = " << pInfo->getKey() << std::endl;
   out << "name = " << pInfo->getName() << std::endl;
-  out << "version = " << pInfo->getVersion() << std::endl;
   out << "package = " << pInfo->getPkg() << std::endl;
+  out << "package version = " << pInfo->getPkgVersion() << std::endl;
   out << "dir = " << pInfo->getDir() << std::endl;
   out << "fmx_path = " << pInfo->getFmxPath() << std::endl;
   out << "src_path = " << pInfo->getSrcPath() << std::endl;
   out << "fsw id = " << pInfo->getFswId() << std::endl;
-  out << "status = " << pInfo->getStatus() << std::endl << std::endl;
+  out << "status = " << pInfo->getStatus() << std::endl;
+  if  ((pInfo->getSchemaId()).size() > 0 ) {
+    out << "schema id = " << pInfo->getSchemaId() << std::endl;
+    out << "instance id = " << pInfo->getInstanceId() << std::endl;
+    out << "instance version id = " << pInfo->getInstanceVersionId() 
+        << std::endl;
+  }
+  out << std::endl;
 }
