@@ -15,6 +15,8 @@ create table Configs
     COMMENT 'typical values are NOT_VERIFIED, LAT_VERIFIED, GND_VERIFIED',
   vote_fk INT UNSIGNED 
     COMMENT 'refers to container Vote file describing intent (optional)',
+  sbs_key INT UNSIGNED NOT NULL default '0' 
+    COMMENT 'fmx logical key for resolved sbs',
 
   creator                VARCHAR(32) NOT NULL,
   mode                   ENUM('DATA', 'CALIB', 'QUIET', 'TEST') NOT NULL

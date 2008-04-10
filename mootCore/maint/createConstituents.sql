@@ -18,6 +18,16 @@ create table Constituents
   fmx_path                TEXT NOT NULL
      COMMENT 'path within fmx archive relative to root of binary',
 
+  schema_id               SMALLINT  COMMENT
+      'schema id from cdm header',
+
+  instance_id             SMALLINT  COMMENT
+      'instance id from cdm header',
+
+  version_id              SMALLINT COMMENT
+      'version id of this cdm, from header',
+
+
   status                VARCHAR(32) NOT NULL default 'new',
   creator               VARCHAR(32) NOT NULL,
   creation_time         DATETIME   COMMENT 'When this row was created',
