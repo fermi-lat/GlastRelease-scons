@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r21p4 11-Apr-2008  HMK: make certain current ROOT directory is saved
+ *                      and restored
  * v3r21p3 09-Apr-2008  HMK: Fix careless typo in requirements file
  * v3r21p2 09-Apr-2008  HMK: SetDirectory when TTree is created in a separate
  *         routine
