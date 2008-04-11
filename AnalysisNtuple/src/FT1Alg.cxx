@@ -282,6 +282,9 @@ void FT1worker::evaluate()
     // celestial coordinates
 
     // transform 
+    // glastDir points down... 
+    // toSky converts a *particle* direction
+    // into a direction on the sky, so the minus-sign is taken care of!
     SkyDir sdir( gps->toSky(glastDir) ); 
     m_ft1ra  = sdir.ra();
     m_ft1dec = sdir.dec();

@@ -187,6 +187,9 @@ void ObfCworker::evaluate()
     // Old school stuff first
     Vector filterDir(FilterXDir, FilterYDir, FilterZDir);
     if (filterDir.mag()==0) return;
+    // Filter direction points up... 
+    // toSky converts a *particle* direction
+    // into a direction on the sky, so the minus-sign is needed below (twice)!
     astro::SkyDir skydir( gps->toSky(-filterDir) );
     m_obfRa  = skydir.ra();
     m_obfDec = skydir.dec();
