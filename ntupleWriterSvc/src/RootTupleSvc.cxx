@@ -358,6 +358,7 @@ StatusCode RootTupleSvc::initialize ()
 TTree* RootTupleSvc::getTree(std::string& treeName)
 {
     MsgStream log(msgSvc(),name());
+    TDirectory* saveDir = gDirectory; // will prevent unauthorized use
 
     TTree* t = 0;
 
@@ -379,14 +380,16 @@ TTree* RootTupleSvc::getTree(std::string& treeName)
                  fileListItr++ ) {
                 std::string fileName = *fileListItr;
                 facilities::Util::expandEnvVar(&fileName);
-                if (fileExists(fileName)) {
+                //if (fileExists(fileName)) {
                     int stat = ch->Add(fileName.c_str());
                     if (stat <= 0)
                         log << MSG::WARNING << "Failed to TChain::Add " 
                             << fileName << " return code: " << stat << endreq;
-                } else 
-                    log << MSG::WARNING << "File " << fileName << " does not "
-                        << "exist, not added to chain" << endreq;
+                    else
+                        log << MSG::INFO << "Added File: " << fileName << endreq;
+               // } else 
+               //     log << MSG::WARNING << "File " << fileName << " does not "
+               //         << "exist, not added to chain" << endreq;
 
             }  // end for loop TChain initialized
             // add new TChain to the map
@@ -409,16 +412,20 @@ TTree* RootTupleSvc::getTree(std::string& treeName)
         // copy the current tree to allow access to its branches
         // zero is the number of entries to copy - so we're just 
         // copying the TTree structure not contents
-        t = inIter->second->GetTree()->CloneTree(0);
+        //t = inIter->second->GetTree()->CloneTree(0);
+        m_tree[treeName]=inIter->second->GetTree()->CloneTree(0);
     } // end check for input files
 
     // Back to regular situation, where we are setting up an output file
-    if (t == 0)
+    if (m_tree[treeName] == 0)
     {
-        t = new TTree(treeName.c_str(), m_title.value().c_str());
-        t->SetAutoSave(m_autoSave);
+        m_tree[treeName]=new TTree(treeName.c_str(), m_title.value().c_str());
+        m_tree[treeName]->SetAutoSave(m_autoSave);
+        //t = new TTree(treeName.c_str(), m_title.value().c_str());
+        //t->SetAutoSave(m_autoSave);
     }
 
+    saveDir->cd();
     return t;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -443,17 +450,20 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
             log << MSG::ERROR 
                 << "cannot open ROOT file: " << rootFileName << endreq;
             delete tf;
+            saveDir->cd();
             return StatusCode::FAILURE;
         }
         m_fileCol[rootFileName] = tf;
-        m_tree[treename]=getTree(treename);
+        //m_tree[treename]=getTree(treename);
+        getTree(treename);
         m_tree[treename]->SetDirectory(tf);
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
             << " in file: " << rootFileName << endreq;
     } else if( m_tree.find(treename)==m_tree.end()){
         // create new tree
         m_fileCol[rootFileName]->cd();
-        m_tree[treename]=getTree(treename);
+        //m_tree[treename]=getTree(treename);
+        getTree(treename);
         m_tree[treename]->SetDirectory(m_fileCol[rootFileName]);
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
             << " in file: " << rootFileName << endreq;
@@ -568,9 +578,13 @@ void RootTupleSvc::handle(const Incident &inc)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void RootTupleSvc::beginEvent()
 {
+    TDirectory *saveDir = gDirectory;
     /// If we have an input ntuple then read the branches...
     for(std::map<std::string, TChain*>::iterator inIter = m_inChain.begin(); inIter != m_inChain.end(); inIter++)
     {
+            MsgStream log(msgSvc(),name());
+        log << MSG::DEBUG << "event: " << m_nextEvent << " TreeNum: "
+            << inIter->second->GetTreeNumber() << endreq;
         int numBytes = inIter->second->GetEntry(m_nextEvent++);
         if (numBytes <= 0){
             MsgStream log(msgSvc(),name());
@@ -578,18 +592,32 @@ void RootTupleSvc::beginEvent()
                 << " from the input chain" << endreq;
         }
         std::string treename = inIter->first;
+/*
         if (inIter->second->GetTreeNumber() != m_curTreeNumber[treename]) {
+            MsgStream log(msgSvc(),name());
+            log << MSG::DEBUG << "Changing trees" << endreq;
             m_curTreeNumber[treename] = inIter->second->GetTreeNumber();
+            log << MSG::DEBUG << "Tree num: " << m_curTreeNumber[treename] << endreq;
             // reset branch pointers
             std::vector< std::pair< std::string, std::pair<std::string, const void*> > >::const_iterator it;
             for (it = m_branchCol.begin(); it != m_branchCol.end(); it++) {
                 std::string treeName = it->first;
+                log << MSG::DEBUG << "Getting branch: " << it->second.first << endreq;
                 TBranch *br = m_tree[treeName]->GetBranch(it->second.first.c_str());
+                if (!br) {
+                    log << MSG::INFO << "Failed to get branch " << it->second.first << endreq;
+                    continue;
+                }
                 TLeaf *leaf = br->GetLeaf(it->second.first.c_str());
+                if (!leaf) {
+                    log << MSG::INFO << "Failed to get leaf " << it->second.first <<endreq;
+                    continue;
+                }
                 leaf->SetAddress(const_cast<void*>(it->second.second));
             }
 
         }
+*/
     }
 
     /// Assume that we will NOT write out the row
@@ -597,6 +625,8 @@ void RootTupleSvc::beginEvent()
     for(std::map<std::string, bool>::iterator it=m_storeTree.begin(); it!=m_storeTree.end(); ++it){
         it->second=false;
     }
+
+    saveDir->cd();
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::endEvent()
@@ -669,7 +699,7 @@ StatusCode RootTupleSvc::finalize ()
 {
     // open the message log
     MsgStream log( msgSvc(), name() );
-    
+
     // -- set up job info TTree if requested to add values, or the tree exists already
 
     TTree * jobinfotree(0);
@@ -837,6 +867,7 @@ void RootTupleSvc::setBufferSize(const std::string& tupleName, int bufSize,
 
 bool RootTupleSvc::fileExists( const std::string & filename )
  {
+  TDirectory *saveDir = gDirectory;
   bool fileExists = false ;
   TFile * file = TFile::Open(filename.c_str()) ;
   if (file)
@@ -848,5 +879,6 @@ bool RootTupleSvc::fileExists( const std::string & filename )
      }
     delete file ;
    }
+  saveDir->cd();
   return fileExists ;
  }  
