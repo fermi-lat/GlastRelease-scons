@@ -2,6 +2,9 @@
 #include "MomentsClusterInfo.h"
 #include "src/Utilities/CalException.h"
 
+#include "CalUtil/CalDefs.h"
+#include "Event/Digi/CalDigi.h"
+
 namespace 
 {
     #ifdef WIN32
@@ -21,15 +24,37 @@ namespace
     }
 } // anom namespace
  
+Point MomentsClusterInfo::m_fit_p_layer[8];
+Vector MomentsClusterInfo::m_fit_v_layer[8];
+double MomentsClusterInfo::m_fit_e_layer[8];
+double MomentsClusterInfo::m_fit_errp_layer[8];
+double MomentsClusterInfo::m_fit_chisq = 0;
+double MomentsClusterInfo::m_fit_xcentroid = 0;
+double MomentsClusterInfo::m_fit_ycentroid = 0;
+double MomentsClusterInfo::m_fit_zcentroid = 0;
+double MomentsClusterInfo::m_fit_xdirection = 0;
+double MomentsClusterInfo::m_fit_ydirection = 0;
+double MomentsClusterInfo::m_fit_zdirection = 0;
+int MomentsClusterInfo::m_fit_option = 0;
+
 /// Constructor
-MomentsClusterInfo::MomentsClusterInfo(const ICalReconSvc* calReconSvc, double transScaleFactor) 
+MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, double transScaleFactor) 
                                      : m_calReconSvc(calReconSvc), 
                                        m_p0(0.,0.,0.),
+				       m_p1(0.,0.,0.),
                                        m_transScaleFactor(transScaleFactor)
 {
     m_calnLayers = m_calReconSvc->getCalNLayers();
 
+    m_saturationadc = 4060;
+
     m_dataVec.clear();
+
+    // Minuit object
+    m_minuit = new TMinuit(5);
+    
+    //Sets the function to be minimized
+    m_minuit->SetFCN(fcncal);
 
     return;
 }
@@ -39,13 +64,20 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVe
 {
     // Create an output cluster
     Event::CalCluster* cluster = 0;
-    
+
     if (!xTalVec->empty())
     {
         cluster = new Event::CalCluster(0);
         cluster->setProducerName("MomentsClusterInfo") ;
 
         cluster->clear();
+
+	//	DetectSaturation(calDigiCol);
+	DetectSaturation();
+
+	//	getCentroidTransverseInfoOnly(xTalVec);
+
+	fitDirectionCentroid(xTalVec);
 
         double energy = fillLayerData(xTalVec, cluster);
 
@@ -194,6 +226,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 
     XtalDataVec::const_iterator xTalMax = xTalVec->end();
 
+    double xyz[3];
+
     // Loop through the xtals setting the hits to analyze
     for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
@@ -201,7 +235,28 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
 
         Event::CalXtalRecData* recData = *xTalIter;
 
-        CalMomentsData momentsData(recData->getPosition(), recData->getEnergy(), 0.);
+	xyz[0] = recData->getPosition().x();
+	xyz[1] = recData->getPosition().y();
+	xyz[2] = recData->getPosition().z();
+	
+	// If there are saturated crystals, change the longitudinal position
+	if(m_Nsaturated>0 && m_fit_nlayers>=4 && m_fit_zdirection!=0)
+	  {
+	    if(m_saturated[(int)(recData->getPackedId()).getTower()][(int)(recData->getPackedId()).getLayer()][(int)(recData->getPackedId()).getColumn()])
+	      {
+		Point CorPos = GetCorrectedPosition(recData->getPosition(),
+						    (recData->getPackedId()).getTower(),
+						    (recData->getPackedId()).getLayer(),
+						    (recData->getPackedId()).getColumn());
+		xyz[0] = CorPos.x();
+		xyz[1] = CorPos.y();
+		xyz[2] = CorPos.z();
+	      }
+	  }
+
+	Point CrystalPos(xyz[0],xyz[1],xyz[2]);
+
+	CalMomentsData momentsData(CrystalPos, recData->getEnergy(), 0.);
 
         // DC: unused !
         // TU: Actually... bad design on my part but this method must be called. 
@@ -228,7 +283,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
         // Recalculate the moments going back to using all the data points but with
         // the iterated moments centroid
         if (nIterations > 1) chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
-
+	
         // Extract the values for the moments with all hits present
         double rms_long  = momentsAnalysis.getLongitudinalRms();
         double rms_trans = momentsAnalysis.getTransverseRms();
@@ -250,12 +305,450 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
         // Store all this information away in the cluster
-        Event::CalParams params(energy, 10*energy, centroid.x(), centroid.y(), centroid.z(), 1.,0.,0.,1.,0.,1.,
-                                                   axis.x(),     axis.y(),     axis.z(),     1.,0.,0.,1.,0.,1.);
+        Event::CalParams params(energy, 10*energy,
+				centroid.x(), centroid.y(), centroid.z(),
+				m_fit_xcentroid, m_fit_chisq, (double)m_fit_nlayers, m_fit_ycentroid, (double)m_Nsaturated, m_fit_zcentroid,
+				axis.x(),     axis.y(),     axis.z(),
+				m_fit_xdirection, 0., 0., m_fit_ydirection, 0., m_fit_zdirection);
 
         cluster->initialize(params, rms_long, rms_trans, long_asym, num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS); 
     }
 
     return;
+}
+
+int MomentsClusterInfo::getCentroidTransverseInfoOnly(const XtalDataVec* xTalVec)
+{
+  //
+  // Purpose and Method:
+  // Find the centroid using only the transverse position information
+  // This is needed when there are saturated crystals : we need the centroid and direction
+  // in order to set the longitudinal position for saturated crystals before the moment analysis is run
+
+  double mycentroid[3];
+  double myenergy[3];
+  int i;
+  for(i=0;i<3;++i)
+    {
+      mycentroid[i] = 0;
+      myenergy[i] = 0;
+    }
+
+  XtalDataVec::const_iterator xTalIter;
+  for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    {
+      // get pointer to the reconstructed data for given crystal
+      Event::CalXtalRecData* recData = *xTalIter;
+      double eneXtal = recData->getEnergy();                  // crystal energy
+      int layer   = (recData->getPackedId()).getLayer();   // layer number
+      Vector pXtal   = recData->getPosition();         // Vector of crystal position
+      if(layer%2==0)
+	{
+	  myenergy[1] += eneXtal;
+	  mycentroid[1] += eneXtal*pXtal.y();
+	}
+      else
+	{
+	  myenergy[0] += eneXtal;
+	  mycentroid[0] += eneXtal*pXtal.x();
+	}
+      myenergy[2] += eneXtal;
+      mycentroid[2] += eneXtal*pXtal.z();
+    }
+  
+  if(myenergy[0]<=0 || myenergy[1]<=0) return 1; // we must have x AND y information
+
+  for(i=0;i<3;++i)
+    mycentroid[i] /= myenergy[i];
+
+  m_p1 = Point(mycentroid[0],mycentroid[1],mycentroid[2]);
+
+  return 0;
+}
+
+double MomentsClusterInfo::getsqdistancebetweenlines(Point p0, Vector v0, Point p1, Vector v1)
+{
+  Vector p0p1 = p0-p1;
+  Point p2;
+  double lambda = 1-(v0*v1)*(v0*v1);
+  double mydist2 = 0;
+  if(lambda==0) // xtal axis and main axis are parallel
+    {
+      mydist2 = p0p1*p0p1 - (p0p1*v1)*(p0p1*v1);
+    }
+  else
+    {
+      lambda = (-(p0p1*v0)+(p0p1*v1)*(v0*v1))/lambda;
+      p2 = p0 + lambda*v0;
+      p0p1 = p2-p1;
+      mydist2 = p0p1*p0p1 - (p0p1*v1)*(p0p1*v1);
+    }
+  return mydist2;
+}
+
+double MomentsClusterInfo::compute_chi2_cal(double *par)
+{
+  if(m_fit_option>0)
+    {
+      m_fit_xcentroid = par[2];
+      m_fit_ycentroid = par[3];
+    }
+  Point m_fit_p = Point(m_fit_xcentroid,m_fit_ycentroid,m_fit_zcentroid);
+  m_fit_xdirection = sqrt(1-par[0]*par[0])*cos(par[1]);
+  m_fit_ydirection = sqrt(1-par[0]*par[0])*sin(par[1]);
+  m_fit_zdirection = par[0];
+  Vector m_fit_v = Vector(m_fit_xdirection,m_fit_ydirection,m_fit_zdirection);
+
+  m_fit_chisq = 0;
+  int i;
+  double mydist2 = 0;
+  double xpos,ypos,zpos;
+  for(i=0;i<8;++i)
+    {
+      if(m_fit_e_layer[i]<=0) continue;
+      zpos = m_fit_p_layer[i].z();
+      xpos = m_fit_p.x()+(zpos-m_fit_p.z())/m_fit_v.z()*m_fit_v.x();
+      ypos = m_fit_p.y()+(zpos-m_fit_p.z())/m_fit_v.z()*m_fit_v.y();
+      mydist2 = getsqdistancebetweenlines(m_fit_p_layer[i],m_fit_v_layer[i],m_fit_p,m_fit_v);
+      m_fit_chisq += mydist2/64*m_fit_errp_layer[i];
+    }
+
+  return m_fit_chisq;
+}
+
+void MomentsClusterInfo::fcncal(int & , double *, double &f, double *par, int )
+{
+  f = compute_chi2_cal(par);
+}
+
+
+int MomentsClusterInfo::fitDirectionCentroid(const XtalDataVec* xTalVec)
+{
+  //
+  // Purpose and Method:
+
+//     static Point m_fit_p_layer[8];
+//     static Vector m_fit_v_layer[8];
+//     static double m_fit_e_layer[8];
+//     static double m_fit_chisq = 0;
+//     static Point m_fit_p0;
+//     static Point m_fit_p1;
+//     static Point m_fit_v;
+
+  m_fit_nlayers = 0;
+  double totenergy = 0;
+  double mypos[8][3];
+  double mypos2[8][3];
+  int i,j;
+  for(i=0;i<8;++i)
+    {
+      m_fit_e_layer[i] = 0;
+      for(j=0;j<3;++j)
+	{
+	  mypos[i][j] = 0;
+	  mypos2[i][j] = 0;
+	}
+    }
+
+  double mycentroid[3];
+  double myenergy[3];
+  for(i=0;i<3;++i)
+    {
+      mycentroid[i] = 0;
+      myenergy[i] = 0;
+    }
+
+  XtalDataVec::const_iterator xTalIter;
+  for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    {
+      // get pointer to the reconstructed data for given crystal
+      Event::CalXtalRecData* recData = *xTalIter;
+      double eneXtal = recData->getEnergy();                  // crystal energy
+      int layer   = (recData->getPackedId()).getLayer();   // layer number
+      Vector pXtal   = recData->getPosition();         // Vector of crystal position
+      //
+      totenergy += eneXtal;
+      m_fit_e_layer[layer] += eneXtal;
+      mypos[layer][0] += eneXtal*pXtal.x();
+      mypos[layer][1] += eneXtal*pXtal.y();
+      mypos[layer][2] += eneXtal*pXtal.z();
+      mypos2[layer][0] += eneXtal*pXtal.x()*pXtal.x();
+      mypos2[layer][1] += eneXtal*pXtal.y()*pXtal.y();
+      mypos2[layer][2] += eneXtal*pXtal.z()*pXtal.z();
+      //
+      if(layer%2==0)
+	{
+	  myenergy[1] += eneXtal;
+	  mycentroid[1] += eneXtal*pXtal.y();
+	}
+      else
+	{
+	  myenergy[0] += eneXtal;
+	  mycentroid[0] += eneXtal*pXtal.x();
+	}
+      myenergy[2] += eneXtal;
+      mycentroid[2] += eneXtal*pXtal.z();
+    }
+
+  if(myenergy[0]<=0 || myenergy[1]<=0) return 1; // we must have x AND y information
+  
+  for(i=0;i<3;++i)
+    mycentroid[i] /= myenergy[i];
+
+  m_fit_xcentroid = mycentroid[0];
+  m_fit_ycentroid = mycentroid[1];
+  m_fit_zcentroid = mycentroid[2];
+
+  //
+  m_fit_nlayers = 0;
+  for(i=0;i<8;++i)
+    {
+      if(m_fit_e_layer[i]<=0) continue;
+      ++m_fit_nlayers;
+      for(j=0;j<3;++j)
+	{
+	  mypos[i][j] /= m_fit_e_layer[i];
+	  mypos2[i][j] /= m_fit_e_layer[i];
+	  mypos2[i][j] -= mypos[i][j]*mypos[i][j];
+	  if(mypos2[i][j]<=0) mypos2[i][j] = 0;
+	}
+    }
+
+  // need at least 4 layers
+  if(m_fit_nlayers<4) return 1;
+
+  for(i=0;i<8;++i)
+    {
+      if(m_fit_e_layer[i]<=0) continue;
+      if(i%2==0)
+	{
+	  m_fit_p_layer[i] = Point(0,mypos[i][1],mypos[i][2]);
+	  m_fit_v_layer[i] = Vector(1,0,0);
+	}
+      else
+	{
+	  m_fit_p_layer[i] = Point(mypos[i][0],0,mypos[i][2]);
+	  m_fit_v_layer[i] = Vector(0,1,0);
+	}
+      m_fit_errp_layer[i] = m_fit_e_layer[i]/totenergy*(double)m_fit_nlayers;
+    }
+
+  //
+  m_fit_option = 0;
+
+  double arglist[10];
+  int ierflg = 0;
+  double amin,edm,errdef;
+  int nvpar,nparx,icstat;
+  
+  // Set no output because of tuple output
+  arglist[0] = -1;
+  m_minuit->mnexcm("SET PRI", arglist ,1,ierflg);
+  
+  // idem with warnings ( minuit prints warnings
+  // when the Hessian matrix is not positive )
+  m_minuit->mnexcm("SET NOW", arglist ,1,ierflg);
+  
+  arglist[0] = 1;
+  m_minuit->mnexcm("SET ERR", arglist ,1,ierflg);
+  
+  // defines the strategy used by minuit
+  // 1 is standard
+  arglist[0] = 2;
+  m_minuit->mnexcm("SET STR", arglist ,1,ierflg);        
+  
+  double vstart[4];
+  double vstart2[4];
+  double vstep[4];
+  
+  double par0,par1,par2,par3;
+  double epar0,epar1,epar2,epar3;
+
+  int nstep0 = 10;
+  double par0min = 0;
+  double par0max = 1;
+  double par0step = (par0max-par0min)/(double)nstep0;
+  int nstep1 = 4*nstep0;
+  double par1min = -TMath::Pi();
+  double par1max = TMath::Pi();
+  double par1step = (par1max-par1min)/(double)nstep1;
+
+  int imin = -1;
+  int jmin = -1;
+  double mymin = 99999999;
+  double myval = 0;
+  for(i=0;i<nstep0;++i)
+    for(j=0;j<nstep1;++j)
+      {
+	vstart2[0] = par0min+(0.5+(double)i)*par0step;
+	vstart2[1] = par1min+(0.5+(double)j)*par1step;
+	myval = compute_chi2_cal(vstart2);
+	if(myval<mymin)
+	  {
+	    mymin = myval;
+	    imin = i;
+	    jmin = j;
+	  }
+      }
+
+  vstart2[0] = par0min+(0.5+(double)imin)*par0step;
+  vstart2[1] = par1min+(0.5+(double)jmin)*par1step;
+  vstart[0] = vstart2[0];
+  vstart[1] = vstart2[1];
+    
+  vstep[0] = par0step/2;
+  vstep[1] = par1step/2;
+  
+  m_minuit->mnparm(0, "a1", vstart[0], vstep[0], par0min, par0max, ierflg);
+  m_minuit->mnparm(1, "a2", vstart[1], vstep[1], par1min, par1max, ierflg);
+  
+  // Calls Migrad with 500 iterations maximum
+  arglist[0] = 500;
+  arglist[1] = 1.;
+  m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg); // fit with only two parameters : positions in x and y in the place z = mean z (direction fixed)
+
+  m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+
+  m_minuit->GetParameter(0,par0,epar0);
+  m_minuit->GetParameter(1,par1,epar1);
+
+  //
+  m_fit_option = 1;
+
+  // Clear minuit
+  arglist[0] = 1;
+  m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
+
+  // Set no output because of tuple output
+  arglist[0] = -1;
+  m_minuit->mnexcm("SET PRI", arglist ,1,ierflg);
+  
+  // idem with warnings ( minuit prints warnings
+  // when the Hessian matrix is not positive )
+  m_minuit->mnexcm("SET NOW", arglist ,1,ierflg);
+  
+  arglist[0] = 1;
+  m_minuit->mnexcm("SET ERR", arglist ,1,ierflg);
+  
+  // defines the strategy used by minuit
+  // 1 is standard
+  arglist[0] = 2;
+  m_minuit->mnexcm("SET STR", arglist ,1,ierflg);
+
+  vstart[0] = par0;
+  vstart[1] = par1;  
+  vstart[2] = mycentroid[0];
+  vstart[3] = mycentroid[1];
+  
+  vstep[0] = par0step/10;
+  vstep[1] = par1step/10;
+  vstep[2] = 5;
+  vstep[3] = 5;
+  
+  m_minuit->mnparm(0, "a1", vstart[0], vstep[0], par0min, par0max, ierflg);
+  m_minuit->mnparm(1, "a2", vstart[1], vstep[1], par1min, par1max, ierflg);
+  m_minuit->mnparm(2, "a3", vstart[2], vstep[2], mycentroid[0]-100, mycentroid[0]+100, ierflg);
+  m_minuit->mnparm(3, "a4", vstart[3], vstep[3], mycentroid[1]-100, mycentroid[1]+100, ierflg);
+  
+  // Calls Migrad with 500 iterations maximum
+  arglist[0] = 500;
+  arglist[1] = 1.;
+  m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);  // fit with 4 parameters : theta and phi and positions in x and y
+
+  m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+
+  m_minuit->GetParameter(0,par0,epar0);
+  m_minuit->GetParameter(1,par1,epar1);
+  m_minuit->GetParameter(2,par2,epar2);
+  m_minuit->GetParameter(3,par3,epar3);
+
+  vstart2[0] = par0;
+  vstart2[1] = par1;
+  vstart2[2] = par2;
+  vstart2[3] = par3;
+  // Don't remove : the following line fills m_fit_xycentroid, m_fit_xyzdirection and m_fit_chisq !!!!!!!!!!!!!!!!!
+  compute_chi2_cal(vstart2);
+
+  // Clear minuit
+  arglist[0] = 1;
+  m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
+
+  return 0;
+}
+
+Point MomentsClusterInfo::GetCorrectedPosition(Point pcrystal, int itower, int ilayer, int icolumn)
+{
+  // set the longitudinal position of crystal to the longitudinal position of the extrapolation of the cal direction using only the transverse information
+  double xyz[3];
+  xyz[0] = pcrystal.x();
+  xyz[1] = pcrystal.y();
+  xyz[2] = pcrystal.z();
+  int itowy = itower/4;
+  int itowx = itower-4*itowy;
+  double minpos,maxpos;
+
+  if(ilayer%2==0)
+    {
+      xyz[0] = m_fit_xcentroid+(xyz[2]-m_fit_zcentroid)/m_fit_zdirection*m_fit_xdirection;
+      minpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowx - m_calReconSvc->getCalCsILength()/2;
+      maxpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowx + m_calReconSvc->getCalCsILength()/2;
+      if(xyz[0]<minpos) xyz[0] = minpos;
+      if(xyz[0]>maxpos) xyz[0] = maxpos;
+    }
+  else
+    {
+      xyz[1] = m_fit_ycentroid+(xyz[2]-m_fit_zcentroid)/m_fit_zdirection*m_fit_ydirection;
+      if(m_calReconSvc->getCalFlightGeom())
+	{
+	  minpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowy - m_calReconSvc->getCalCsILength()/2;
+	  maxpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowy + m_calReconSvc->getCalCsILength()/2;
+	}
+      else
+	{
+	  minpos = - m_calReconSvc->getCalCsILength()/2;
+	  maxpos = m_calReconSvc->getCalCsILength()/2;
+	}
+      if(xyz[1]<minpos) xyz[1] = minpos;
+      if(xyz[1]>maxpos) xyz[1] = maxpos;
+    }
+
+  Point CorPos(xyz[0],xyz[1],xyz[2]);
+
+  return CorPos;
+}
+
+int MomentsClusterInfo::DetectSaturation()
+{
+  int i,j,k;
+  m_Nsaturated = 0;
+  for(i=0;i<16;++i)
+    for(j=0;j<8;++j)
+      for(k=0;k<12;++k)
+	m_saturated[i][j][k] = false;
+
+  const Event::CalDigiCol *calDigiCol = m_calReconSvc->getDigis();
+
+  if(calDigiCol==NULL) return 0;
+
+  for (Event::CalDigiCol::const_iterator digiIter = calDigiCol->begin(); digiIter != calDigiCol->end(); digiIter++)
+    {
+      const Event::CalDigi calDigi = **digiIter;
+      idents::CalXtalId id = calDigi.getPackedId();
+      CalUtil::XtalIdx xtalIdx(calDigi.getPackedId());
+      for (Event::CalDigi::CalXtalReadoutCol::const_iterator ro =  calDigi.getReadoutCol().begin();ro != calDigi.getReadoutCol().end();ro++)
+	{
+	  float adcP = ro->getAdc(idents::CalXtalId::POS);
+	  float adcN = ro->getAdc(idents::CalXtalId::NEG);
+	  int rangepos = ro->getRange(idents::CalXtalId::POS);
+	  int rangeneg = ro->getRange(idents::CalXtalId::NEG);
+	  if( (rangepos==3 && adcP>=m_saturationadc) || (rangeneg==3 && adcN>=m_saturationadc))
+	    {
+	      m_saturated[id.getTower()][id.getLayer()][id.getColumn()] = true;
+	      ++m_Nsaturated;
+	    }
+	}
+    }
+  
+  return 0;
 }

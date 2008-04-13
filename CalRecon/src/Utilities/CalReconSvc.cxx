@@ -53,9 +53,13 @@ class CalReconSvc
         int                     getCalNLayers()     const {return m_calNLayers;}
         double                  getCalCsIWidth()    const {return m_calCsIWidth;}
         double                  getCalCsIHeight()   const {return m_calCsIHeight;}
+        double                  getCalCsILength()   const {return m_calCsILength;}
+        double                  getCaltowerPitch()   const {return m_caltowerPitch;}
+        bool                    getCalFlightGeom()   const {return m_calflightgeom;}
     
         // cal event data
         Event::CalXtalRecCol * getXtalRecs() ;
+        Event::CalDigiCol *getDigis() ;
         Event::CalClusterCol * getClusters() ;
 
     private :
@@ -79,9 +83,19 @@ class CalReconSvc
         double                m_calCsIWidth ;
         //! CAL crystal height
         double                m_calCsIHeight ;
-        
+        //! CAL crystal length
+        double m_calCsILength;
+        //! CAL tower pitch
+        double m_caltowerPitch;
+        // !CAL tower numbers and flight mode
+        int m_calnumX;
+        int m_calnumY;
+        bool m_calflightgeom;
+
         //! reconstructed data for crystals
         Event::CalXtalRecCol* m_calXtalRecCol ;
+        //! the digis list
+        Event::CalDigiCol* m_calDigiCol ;
         //! the clusters list
         Event::CalClusterCol* m_calClusterCol ;
 } ;
@@ -181,6 +195,33 @@ StatusCode CalReconSvc::initialize() {
         throw GaudiException("Constant CsIHeight not defined", name(), sc);
     }
 
+    if (!m_detSvc->getNumericConstByName(std::string("CsILength"),&m_calCsILength))
+    { 
+        sc = StatusCode::FAILURE;
+        throw GaudiException("Constant CsILength not defined", name(), sc);
+    }
+
+    if (!m_detSvc->getNumericConstByName(std::string("towerPitch"),&m_caltowerPitch))
+    { 
+        sc = StatusCode::FAILURE;
+        throw GaudiException("Constant towerPitch not defined", name(), sc);
+    }
+
+    if (!m_detSvc->getNumericConstByName(std::string("xNum"),&m_calnumX))
+    { 
+        sc = StatusCode::FAILURE;
+        throw GaudiException("Constant xNum not defined", name(), sc);
+    }
+
+    if (!m_detSvc->getNumericConstByName(std::string("yNum"),&m_calnumY))
+    { 
+        sc = StatusCode::FAILURE;
+        throw GaudiException("Constant yNum not defined", name(), sc);
+    }
+
+    m_calflightgeom = true;
+    if(m_calnumX==4 && m_calnumY==1) m_calflightgeom = false;
+    
    // for errors
    m_lastTime   = 0.0 ;
 
@@ -203,6 +244,7 @@ void CalReconSvc::handle( const Incident & inc ) {
         // reset other values, which cannot be prepared as long as
         // reading input files is done with an algo.
         m_calXtalRecCol = 0 ;
+        m_calDigiCol = 0 ;
         m_calClusterCol = 0 ;
 
     } else if (inc.type()=="EndEvent") {
@@ -260,6 +302,18 @@ Event::CalXtalRecCol * CalReconSvc::getXtalRecs() {
     }
         
     return m_calXtalRecCol ;
+}
+
+Event::CalDigiCol * CalReconSvc::getDigis() {
+    
+    if (m_calDigiCol!=0) return m_calDigiCol ;
+    
+    m_calDigiCol = SmartDataPtr<Event::CalDigiCol>(getEventSvc(),EventModel::Digi::CalDigiCol);
+    if (!m_calDigiCol) { 
+        (*m_log)<<MSG::VERBOSE<<"No CalDigiCol"<<endreq ; 
+    }
+        
+    return m_calDigiCol ;
 }
 
 Event::CalClusterCol * CalReconSvc::getClusters() {

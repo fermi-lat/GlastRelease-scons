@@ -133,8 +133,8 @@ class FullShowerDevelopmentDescription{
  private:
   double wideningfactor;
 
- private:
-
+ public:
+  int OffSatu[16][8][12]; // 0 = on; 1= off or saturated
 
  public:
   FullShowerDevelopmentDescription(FullShowerGeometryManager *fsgm_input, int type_input, double zstep_input, double radialcontainedfraction_input);
@@ -169,6 +169,7 @@ class FullShowerDevelopmentDescriptionManager{
   double maxtotx0cal;
   double meantotx0lay[8];
   double meanposx0lay[8];
+  int OffSatu[16][8][12]; // 0 = on; 1= off or saturated
   FullShowerDevelopmentDescription *FSDDMM[FSDD_NMAX];
   FullShowerDevelopmentDescription *FSDDX0[FSDD_NMAX];
   FullShowerDevelopmentDescription *CurrentFSDD;

@@ -6,6 +6,7 @@
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "Event/Digi/CalDigi.h"
 //#include "geometry/Point.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -42,9 +43,13 @@ public:
     virtual int                   getCalNLayers()   const = 0 ;
     virtual double                getCalCsIWidth()  const = 0 ;
     virtual double                getCalCsIHeight() const = 0 ;
+    virtual double                getCalCsILength() const = 0 ;
+    virtual double                getCaltowerPitch() const = 0 ;
+    virtual bool                  getCalFlightGeom() const = 0 ;
 
     // cal event data
     virtual Event::CalXtalRecCol* getXtalRecs()           = 0 ;
+    virtual Event::CalDigiCol *getDigis()                 = 0 ;
     virtual Event::CalClusterCol* getClusters()           = 0 ;
 };
 

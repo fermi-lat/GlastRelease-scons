@@ -96,7 +96,7 @@ void FullShowerGeometryManager::Initialize()
   geom_xy_step = (4*FSGM_towerPitch)/(double)(FSGM_XY_MAX);
   
   double xyz[3];
-  int whereincal[2];
+  int whereincal[4];
 
   int i,j;
   // reference = middle of first layer
@@ -203,22 +203,35 @@ void FullShowerGeometryManager::FillXYPoints()
 
 void FullShowerGeometryManager::WhereInCalForGeom(double *xyz, int *whereincal)
 {
-  whereincal[0] = 0;
-  whereincal[1] = 0;
+  whereincal[0] = 0; // material
+  whereincal[1] = 0; // layer
+  whereincal[2] = 0; // tower
+  whereincal[3] = 0; // column
   if(xyz[2]>=FSGM_calZTop) return;
   if(xyz[2]<FSGM_calZBot) return;
+  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
+  //  if(fabs(xyz[2]- (FSGM_calZTop-FSGM_cellVertPitch*(0.5+(double)ilayer)))>FSGM_CsIHeight*0.5) return;
+  //
   if(fabs(xyz[0])>2*FSGM_towerPitch) return;
   if(fabs(xyz[1])>2*FSGM_towerPitch) return;
+  whereincal[2] = (int)floor((xyz[0]+2*FSGM_towerPitch)/FSGM_towerPitch);
+  whereincal[3] = (int)floor((xyz[1]+2*FSGM_towerPitch)/FSGM_towerPitch);
+  whereincal[2] = 4*whereincal[3]+whereincal[2];
+  //
   double xmod = xyz[0]+2*FSGM_towerPitch-FSGM_towerPitch*floor((xyz[0]+2*FSGM_towerPitch)/FSGM_towerPitch);
-  if(FSGM_towerPitch-xmod<xmod) xmod = FSGM_towerPitch-xmod;
   double ymod = xyz[1]+2*FSGM_towerPitch-FSGM_towerPitch*floor((xyz[1]+2*FSGM_towerPitch)/FSGM_towerPitch);
+  if(ilayer%2==0)
+    whereincal[3] = (int)floor((ymod-(FSGM_towerPitch/2-6*FSGM_cellHorPitch))/FSGM_cellHorPitch);
+  else
+    whereincal[3] = (int)floor((xmod-(FSGM_towerPitch/2-6*FSGM_cellHorPitch))/FSGM_cellHorPitch);
+  //
+  if(FSGM_towerPitch-xmod<xmod) xmod = FSGM_towerPitch-xmod;
   if(FSGM_towerPitch-ymod<ymod) ymod = FSGM_towerPitch-ymod;
   if(xmod<FSGM_crackHalfWidth || ymod<FSGM_crackHalfWidth)
     {
       whereincal[0] = 2;
       return;
     }
-  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
   double xy = ymod;
   if(ilayer%2==1) xy = xmod;
   xy -= (FSGM_towerPitch/2-6*FSGM_cellHorPitch);
@@ -236,20 +249,27 @@ void FullShowerGeometryManager::WhereInCalForGeomCU(double *xyz, int *whereincal
 {
   whereincal[0] = 0;
   whereincal[1] = 0;
+  whereincal[2] = 0;
+  whereincal[3] = 0;
   if(xyz[2]>=FSGM_calZTop) return;
   if(xyz[2]<FSGM_calZBot) return;
-  if(fabs(xyz[0])>2*FSGM_towerPitch) return;
+  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
+  if(xyz[0]>2*FSGM_towerPitch || xyz[0]<-FSGM_towerPitch) return;
   if(fabs(xyz[1])>FSGM_towerPitch/2) return;
+  whereincal[2] = (int)floor((xyz[0]+2*FSGM_towerPitch)/FSGM_towerPitch);
   double xmod = xyz[0]+2*FSGM_towerPitch-FSGM_towerPitch*floor((xyz[0]+2*FSGM_towerPitch)/FSGM_towerPitch);
-  if(FSGM_towerPitch-xmod<xmod) xmod = FSGM_towerPitch-xmod;
   double ymod = xyz[1]+FSGM_towerPitch/2;
+  if(ilayer%2==0)
+    whereincal[3] = (int)floor((ymod-(FSGM_towerPitch/2-6*FSGM_cellHorPitch))/FSGM_cellHorPitch);
+  else
+    whereincal[3] = (int)floor((xmod-(FSGM_towerPitch/2-6*FSGM_cellHorPitch))/FSGM_cellHorPitch);
+  if(FSGM_towerPitch-xmod<xmod) xmod = FSGM_towerPitch-xmod;
   if(FSGM_towerPitch-ymod<ymod) ymod = FSGM_towerPitch-ymod;
   if(xmod<FSGM_crackHalfWidth || ymod<FSGM_crackHalfWidth)
     {
       whereincal[0] = 2;
       return;
     }
-  int ilayer = (int)floor( (FSGM_calZTop-xyz[2])/FSGM_cellVertPitch );
   double xy = ymod;
   if(ilayer%2==1) xy = xmod;
   xy -= (FSGM_towerPitch/2-6*FSGM_cellHorPitch);
@@ -303,7 +323,10 @@ void FullShowerGeometryManager::WhereInCalLT(double *xyz, int *whereincal)
 void FullShowerGeometryManager::WhereInCal(double *xyz, int *whereincal)
 {
   if(FSGM_flight_geom)
-    WhereInCalLT(xyz,whereincal);
+    {
+      WhereInCalForGeom(xyz,whereincal);
+      //      WhereInCalLT(xyz,whereincal); // not used anymore because of saturation handling
+    }
   else
     WhereInCalForGeomCU(xyz,whereincal);
 }
@@ -442,7 +465,7 @@ void FullShowerDevelopmentDescription::Initialize()
 void FullShowerDevelopmentDescription::Reset()
 {
 
-  int i,j;
+  int i,j,k;
   NStep = 0;
   ZStep = 0;
   x0maxshower = 0;
@@ -462,6 +485,10 @@ void FullShowerDevelopmentDescription::Reset()
       for(j=0;j<3;++j) materialfraction[j][i] = 0;
       for(j=0;j<8;++j) layerfraction[j][i] = 0;
     }
+  for(i=0;i<16;++i)
+    for(j=0;j<8;++j)
+      for(k=0;k<12;++k)
+	OffSatu[i][j][k] = 0;
 }
 
 void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend)
@@ -529,7 +556,11 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
     }
 
   int i,j;
-  int whereincal[2];
+  int whereincal[4];
+  // whereincal[0] = material
+  // whereincal[1] = layer
+  // whereincal[2] = tower
+  // whereincal[3] = column
 
   NStep = 0;
   x0maxshower = x0maxshower_input;
@@ -636,6 +667,10 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
 	  if(whereincal[0]==1)
 	    {
 	      layerfraction[whereincal[1]][j] += radialprofile;
+// 	      if(OffSatu[whereincal[2]][whereincal[1]][whereincal[3]]==0)
+// 		{
+// 		  layerfraction[whereincal[1]][j] += radialprofile;
+// 		}
 	    }
 	}
       if(etotdep>0)
@@ -643,9 +678,7 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
 	  for(i=0;i<3;++i)
 	    materialfraction[i][j] /= etotdep;
 	  for(i=0;i<8;++i)
-	    {
-	      layerfraction[i][j] /= etotdep;
-	    }
+	    layerfraction[i][j] /= etotdep;
 	}
       
       z2X0mat = materialfraction[1][j]/FSDD_XCSI+materialfraction[2][j]/FSDD_XCRK;
@@ -904,9 +937,21 @@ FullShowerDevelopmentDescriptionManager::~FullShowerDevelopmentDescriptionManage
 
 bool FullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0_input)
 {
-  int i,j;
+  int i,j,k,l;
   mintotx0cal = 99999999;
   maxtotx0cal = -99999999;
+
+  for(l=0;l<=NDevelopment;++l)
+    {
+      for(i=0;i<16;++i)
+	for(j=0;j<8;++j)
+	  for(k=0;k<12;++k)
+	    {
+	      FSDDMM[l]->OffSatu[i][j][k] = OffSatu[i][j][k];
+	      FSDDX0[l]->OffSatu[i][j][k] = OffSatu[i][j][k];
+	    }
+    }
+  
   for(i=0;i<=NDevelopment;++i)
     {
       if(!FSDDMM[i]->Compute(pp,vv,startx0_input,XMax[i])) return false;
