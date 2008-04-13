@@ -7,6 +7,12 @@ package CalRecon
 
 package manager: David Chamont
 
+  v6r6       13-Apr-08 LSR (for Philippe B.)
+                           cluster pos and dir using only the transverse xtal info
+                           correction for saturated xtal ends
+                           full profile fit always uses cal pos and dir with possible tracker info 
+                              and saturation correction
+                           new transverse size calculations
   v6r5       30-Oct-07 HMK use gr_app
   v6r4p9     17-Apr-07 JRB Add <cerrno> include to make RHEL4 compiler happy
   v6r4p8     23-Nov-06 DC  Move back in the test root data files which were in rootTestData
@@ -44,7 +50,8 @@ package manager: David Chamont
                        DC  extract CalEventEnergyAlg from CalClustersAlg.
   v5r26p1    29-apr-05 DC  bug fix for the ambiguous use of log10.
   v5r26      22-apr-05 DC  merge v5r22p5em2->v5r22p5em3 into tthe trunk.
-  v5r22p5em3 21-apr-05 ZF  moved CalXtalRecAlg to CalXtalResponse as it's development path is tied closer to CalXtalResponse than to the other Algs in CalRecon
+  v5r22p5em3 21-apr-05 ZF  moved CalXtalRecAlg to CalXtalResponse as it's development path 
+                           is tied closer to CalXtalResponse than to the other Algs in CalRecon
   v5r25      20-apr-05 DC  move loop on clusters from CalClustersAlg into EnergyCorr.
                        DC  huge renaming session
   v5r24p5    15-apr-05 DC  better integrate CalValsCorrTool into the CalRecon framework.
@@ -75,7 +82,8 @@ package manager: David Chamont
   v5r22p3    20-feb-05 THB include CalValsCoorTool update to correct tracker plane numbering.  
   v5r22p2    20-feb-05 THB replace xml with xmlBase, so that xml package can be removed.  
   v5r22p1    18-feb-05 ZF  once again... DOS path had bad case, had to fix for linux
-  v5r22      18-feb-05 ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); only calc one energy & pos estimate per xtal (best range only)
+  v5r22      18-feb-05 ZF  differentiate range_below_thresh from xtal_below_thresh; fix math error in calcPos(); 
+                           only calc one energy & pos estimate per xtal (best range only)
   v5r21p2    07-feb-05 ZF  Fixed small bug in requirements file re: ROOT_linkopts
   v5r21p1    05-feb-05 ZF  Builds & runs on Linux
   v5r21      05-feb-05 ZF  Now works with CalXtalResponse package
@@ -85,11 +93,13 @@ package manager: David Chamont
   v5r17p2    10-jan-05 THB Accept Tracy's change to CalValsCorrTool to adapt to new Event
   v5r17p1    07-jan-05 THB Change from xml to xmlBase for JRB
   v5r17      07-jan-05 THB Tag the previous change
-             22-sep-04 THB Modify CalValsCorrTool to invoke a local copy of code from AnalysisNtuple::CalvalsTool
+             22-sep-04 THB Modify CalValsCorrTool to invoke a local copy of code 
+                             from AnalysisNtuple::CalvalsTool
   v5r15                BG  Temporarily move Fuzzies to Attic
   v5r14                BG  Tag for Gabriel's clustering
   v5r13p3    25-Jun-03 BG  Extend LastLayer tool to 26 degrees
-  v5r13p2    13-Jun-03 RXD Replace LastLayerTool with Berrie's updates; fix test app to handle change in use of CalValTool
+  v5r13p2    13-Jun-03 RXD Replace LastLayerTool with Berrie's updates; fix test app to handle 
+                             change in use of CalValTool
   v5r12p1    11-may-03 THB Fix Tool inheritance to use abstract interface, avoid downcasts 
   v5r12      03-apr-03 AC  CalibSvc is used to get calibration data
   v5r11p6    25-mar-03 AC  required RootIo version set to v*
@@ -100,7 +110,8 @@ package manager: David Chamont
   v5r7p6     06-nov-02 AC  INFO messages in CalClusterAlg changed to DEBUG
   v5r7p5     24-sep-02 AC  cal response constants from xml file are now expressed in MeV
   v5r7p4     13-sep-02 AC  warnings in linux compilation corrected
-  v5r7p3     11-sep-02 AC  Required version numbers for Event and GlastSvc set to *. Profile fitting now uses TMinut from ROOT.
+  v5r7p3     11-sep-02 AC  Required version numbers for Event and GlastSvc set to *. 
+                           Profile fitting now uses TMinut from ROOT.
   v5r7p2     22-jul-02 AC  unphysical longitudinal positions fixed
   v5r7p1     13-jun-02 AC  minor corrections in documentation and comments - submitted for code review
   v5r7       13-jun-02 AC  headers moved to src folder, requirements moved to cmt folder
