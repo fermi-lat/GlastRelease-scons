@@ -256,7 +256,7 @@ StatusCode gcrSelectRootWriterAlg::writeGcrSelect() {
     if (gcrSelectValsTds) 
       fillGcrSelectVals(gcrSelect, gcrSelectValsTds); 
     else
-      log << MSG::INFO << "no gcrSelectVals found in TDS, do not fill GcrSelectVals" << endreq;
+      log << MSG::DEBUG << "no gcrSelectVals found in TDS, do not fill GcrSelectVals" << endreq;
     
    //log << MSG::INFO << "gcrSelectRootWriterAlg::writeGcrSelect END" << endreq;
     
