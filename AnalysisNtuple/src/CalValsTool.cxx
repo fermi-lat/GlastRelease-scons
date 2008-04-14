@@ -1185,7 +1185,7 @@ StatusCode CalValsTool::calculate()
     //
     TSfillTSdist(pxtalrecs);
 
-    int i;
+    //int i;
 
     if(TSnlog>0)
       {
