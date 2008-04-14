@@ -718,7 +718,7 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
                else
                {
                    /* Store this value and indicate more to come */
-                   *out++ = pha | 0x4000;
+                   *out++ = rngV | pha | 0x4000;
                    //printf("EbfACD: pha value %x\n",pha | 0x4000);
                }
            }
@@ -728,6 +728,7 @@ unsigned int *EbfAcdData::format (unsigned int *dst) const
            }
            
            adc++;
+           rng++;
        }
    }
 
