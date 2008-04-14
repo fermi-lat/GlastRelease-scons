@@ -7,7 +7,7 @@ branches src cmt doc
 
 #GlastPolicy needed for Doxygen documentation 
 use GlastPolicy
-use Event Event*
+use Event
 use GlastSvc 
 use TkrUtil
 use TkrRecon
