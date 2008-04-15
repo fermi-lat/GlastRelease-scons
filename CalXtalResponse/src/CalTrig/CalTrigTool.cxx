@@ -51,14 +51,15 @@ CalTrigTool::CalTrigTool( const std::string& type,
     m_evtSvc(0),
     m_calSignalTool(0),
     m_detSvc(0),
-    m_isValid(false)
+    m_isValid(false),
+    m_selectionRule("default")
 {
   declareInterface<ICalTrigTool>(this);
 
-  declareProperty("CalCalibSvc",      m_calCalibSvcName = "CalCalibSvc");
-  declareProperty("PrecalcCalibTool", m_precalcCalibName = "PrecalcCalibTool");
+  declareProperty("CalCalibSvc",       m_calCalibSvcName = "CalCalibSvc");
+  declareProperty("PrecalcCalibTool",  m_precalcCalibName = "PrecalcCalibTool");
   declareProperty("CalSignalToolName", m_calSignalToolName = "CalSignalTool");
-
+  declareProperty("selectionRule",     m_selectionRule= "default");
 }
 
 StatusCode CalTrigTool::initialize() {
@@ -72,7 +73,7 @@ StatusCode CalTrigTool::initialize() {
     msglog << MSG::ERROR << "Failed to set properties" << endreq;
     return sc;
   }
-
+    
   // obtain CalCalibSvc
   sc = service(m_calCalibSvcName.value(), m_calCalibSvc);
   if (sc.isFailure()) {
@@ -274,14 +275,39 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi) {
 
 /// set all appropriate internal trigger bits
 void CalTrigTool::setSingleBit(const CalUtil::DiodeIdx diodeIdx) {
-  /// full trigger map
-  m_calTriggerMap[diodeIdx] = true;
-  
-  /// cal trigger vectors
-  const DiodeNum diode(diodeIdx.getDiode());
-  const TwrNum twr(diodeIdx.getTwr());
-  m_calTriggerVec[diode] |= (1 << twr.val());
-
+    
+    //----- check whether rows/columns selection requested from jobOptions
+    // GCRCNum, ColNum
+    
+    short  crc= diodeIdx.getLyr().getGCRC().val();  // get "CAL row controller" number - can be 0-3 for a CAL face
+    short  col= diodeIdx.getCol().val();            // get column number
+    string sr=  m_selectionRule;                    // get rows/columns selection rule specified in jobOptions
+        
+    if(sr== "erec")
+    {
+        //----- disable trigger generation in [even rows, odd columns] OR [odd rows, even columns]
+        
+        if((crc%2== 0 && col%2!= 0) || (crc%2!= 0 && col%2== 0)) return;
+    }
+    else
+    {
+        if(sr== "eroc")
+        {
+            //----- disable trigger generation in [even rows, even columns] OR [odd rows, odd columns]
+            
+            if((crc%2== 0 && col%2== 0) || (crc%2!= 0 && col%2!= 0)) return;
+        }
+    }
+    
+    //----- full trigger map
+            
+    m_calTriggerMap[diodeIdx]= true;
+        
+    //----- cal trigger vectors
+        
+    const DiodeNum diode(diodeIdx.getDiode());
+    const TwrNum   twr(diodeIdx.getTwr());
+    m_calTriggerVec[diode] |= (1 << twr.val());
 }
 
 

@@ -227,10 +227,10 @@ StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
 
 #if 0 // debug printing
   cout << "XtalSignalTool::sumCsIHit(): " << m_dat.xtalIdx.toStr() 
-       << " " << ene
-       << " " << realpos
-       << " " << asymL
-       << " " << asymS
+	   << " " << ene
+	   << " " << realpos
+	   << " " << asymL
+	   << " " << asymS
        << endl;
   for (XtalDiode xDiode;xDiode.isValid(); xDiode++)
 	  cout << " " << xDiode.val() << " " << cidacArray[xDiode] << endl;

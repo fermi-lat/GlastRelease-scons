@@ -153,7 +153,12 @@ private:
 
   /// if current private data store is valid
   bool m_isValid;
-
+  
+  /// CAL rows/columns selection for FLE/FHE trigger generation:
+  /// "default" - enable all channels to produce trigger
+  /// "erec"    - enable only even columns in even rows and odd columns in odd rows
+  /// "eroc"    - enable only odd columns in even rows and even columns in odd rows
+  StringProperty m_selectionRule;
 };
 
 
