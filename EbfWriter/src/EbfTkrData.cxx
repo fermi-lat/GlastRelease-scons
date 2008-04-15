@@ -854,9 +854,8 @@ static int packTots (unsigned int                  *dst,
        
        tot   = *tots++;
 
-// The TEM truncates the TOT value to 8 bits by dropping the
-// least significant 2 bits.
-       tot  = (tot>>2) & 0xff;
+// Ensure TOT is only 8 bits
+       tot  = tot & 0xff;
        
        bdx   = ((boff ^ 0x1f) & 0x1f) - 7;
         

@@ -420,8 +420,16 @@ unsigned int FESOutput::dumpTKR(const EbfTkrData *tkr, int nDeltaTime){
                  nw_gtrc[ocable][layNum] = tkrTower->m_nhits[ilayerEnd];
 	              if(encode) nw_gtrc[ocable][layNum] = 64;
                  gtrc_addr[ocable][layNum] = layNum;
-                 tot_gtrc[ocable][layNum] = tkrTower->m_tots[ilayerEnd];
+		 
+		 //The gtrc tot is a 10-bit word, which is truncated by the
+		 // TEM to 8-bits. We need to increase the number of bits from
+		 // the digi version which is already truncated. Tack a bit on
+		 // the end so we can see it in the FES files, this bit will 
+		 // be dropped by the TEMs.
+                 tot_gtrc[ocable][layNum] = (tkrTower->m_tots[ilayerEnd] << 2) | 0x1;
 		           /* if(encode) tot_gtrc[ocable][layNum] = */
+			   
+			   
                  for (int ihits = 0; ihits < nw_gtrc[ocable][layNum]; ihits++)
                  {
                      unsigned short int stripId = stripIds[ihits];
