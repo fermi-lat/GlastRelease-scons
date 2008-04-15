@@ -23,6 +23,7 @@
 
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
+#include "eventFile/LPA_Handler.h"
 #include "eventFile/EBF_Data.h"
 #include "eventFile/LSE_Keys.h"
 
@@ -176,33 +177,16 @@ namespace eventFile {
       throw std::runtime_error( ess.str() );
     }
 
-    // write the two LSE keys
-    unsigned ukeys[2];
+    // write the two LSE keys and the LPA_db key
+    unsigned ukeys[4];
     ukeys[0] = keys.LATC_master;
     ukeys[1] = keys.LATC_ignore;
+    ukeys[2] = keys.SBS;
+    ukeys[3] = keys.LPA_db;
     nitems = fwrite( ukeys, sizeof( ukeys ), 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
-      ess << "LSEWriter::write: error writing LPA_Keys LSE content to " << m_name;
-      ess << " (" << errno << "=" << strerror( errno ) << ")";
-      throw std::runtime_error( ess.str() );
-    }
-
-    // write the CDM_keys vector size
-    size_t len = keys.CDM_keys.size();
-    nitems = fwrite( &len, sizeof( size_t ), 1, m_FILE );
-    if ( nitems != 1 ) {
-      std::ostringstream ess;
-      ess << "LSEWriter::write: error writing LPA_Keys CDM_keys length to " << m_name;
-      ess << " (" << errno << "=" << strerror( errno ) << ")";
-      throw std::runtime_error( ess.str() );
-    }
-
-    // write the CDM_keys vector
-    nitems = fwrite( &keys.CDM_keys[0], sizeof( unsigned ), keys.CDM_keys.size(), m_FILE );
-    if ( nitems != keys.CDM_keys.size() ) {
-      std::ostringstream ess;
-      ess << "LSEWriter::write: error writing LPA_Keys CDM_keys content to " << m_name;
+      ess << "LSEWriter::write: error writing LPA_Keys content to " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
@@ -238,8 +222,7 @@ namespace eventFile {
   void LSEWriter::write( const LSE_Context& ctx, const EBF_Data& ebf, const LPA_Info& info, const LPA_Keys& keys )
   {
     write( ctx, ebf );
-    int itype = LSE_Info::LPA;
-    write( itype, &info, sizeof( info ) );
+    info.write( m_FILE );
     write( keys );
   }
 

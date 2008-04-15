@@ -9,6 +9,7 @@
 namespace eventFile {
 
   LSEHeader::LSEHeader() :
+    m_version( FormatVersion ),
     m_runid(0), m_secs_beg(0), m_secs_end(0), m_evtcnt(0), m_GEMseq_beg(0), m_GEMseq_end(0)
   {
     memset( m_src_apids,  0, LSEHEADER_MAX_APIDS*sizeof(unsigned) );
@@ -35,6 +36,14 @@ namespace eventFile {
       std::ostringstream ess;
       ess << "LSEHeader::read: error reading header, ";
       ess << "(" << errno << ":'" << strerror( errno ) << "')";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // check for a version mismatch
+    if ( m_version != FormatVersion ) {
+      std::ostringstream ess;
+      ess << "LSEHeader::read: unsupported format, file is v" << version();
+      ess << " reader is v" << (FormatVersion & 0x000000FF);
       throw std::runtime_error( ess.str() );
     }
   }

@@ -1,6 +1,9 @@
-#include <stdio.h>
+#include <errno.h>
+#include <stdexcept>
+#include <sstream>
 
 #include "eventFile/LSE_Info.h"
+#include "eventFile/LPA_Handler.h"
 
 namespace eventFile {
 
@@ -15,6 +18,102 @@ namespace eventFile {
     LSE_Info::dump( "LSE_Info: ", "\n" );
     printf( "LPA_Info: softwareKey = 0x%08X\n", softwareKey ); 
     printf( "LPA_Info: hardwareKey = 0x%08X\n", hardwareKey ); 
+    printf( "LPA_Info: lpaDbKey    = 0x%08X\n", lpaDbKey );
+    std::vector< LPA_Handler >::const_iterator itr( handlers.begin() );
+    int ihnd=0;
+    for ( ; itr != handlers.end(); ++itr, ++ihnd ) {
+      char pre[256];
+      sprintf( pre, "LPA_Info: LPA_Handler[%X]: ", ihnd );
+      itr->dump( pre, "\n" );
+    }
+  }
+
+  void LPA_Info::write( FILE* fp ) const
+  {
+    // write the object type id to the file
+    size_t nitems(0);
+    int itype = LSE_Info::LPA;
+    nitems = fwrite( &itype, sizeof( int ), 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LPA_Info::write: error writing LPA_Info typeid ";
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // write the "fixed" part of the structure to the file
+    size_t fixedsize = sizeof( LPA_Info ) - sizeof( std::vector< LPA_Handler > );
+    nitems = fwrite( this, fixedsize, 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LPA_Info::write: error writing fixed LPA_Info content ";
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // write the number of LPA_Handler instances to the file
+    unsigned nhandlers = handlers.size();
+    nitems = fwrite( &nhandlers, sizeof( unsigned ), 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEWriter::write: error writing LPA_Info nhandlers  ";
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // if there are no handlers, then we're done
+    if ( nhandlers == 0 ) {
+      return;
+    }
+
+    // write each LPA_Handler to the file
+    nitems = fwrite( &(handlers[0]), nhandlers * sizeof( LPA_Handler ), 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LPA_Info::write: error writing LPA_Handler content ";
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+  }
+
+  void LPA_Info::read( FILE* fp )
+  {
+    // read the fixed-size LPA_Info data from the file
+    size_t fixedsize = sizeof( LPA_Info ) - sizeof( std::vector< LPA_Handler > );
+    int nitems(0);
+    nitems = fread( this, fixedsize, 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LPA_Info::read: error reading fixed LPA_Info content ";
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+    
+    // read the number of LPA_Handler instances
+    unsigned nhandlers;
+    nitems = fread( &nhandlers, sizeof( nhandlers ), 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LPA_Info::read: error reading handler count ";
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+
+    // if there are no handlers, then we're done
+    if ( nhandlers == 0 ) {
+      return;
+    }
+
+    // read the handler instances from the file
+    handlers.resize( nhandlers );
+    nitems = fread( &(handlers[0]), nhandlers * sizeof( LPA_Handler ), 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LPA_Info::read: error reading handlers block ";
+      ess << "nitems = " << nitems << " nhandlers = " << nhandlers;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
   }
 
   void LCI_Info::dump( const char* pre, const char* post ) const
@@ -30,9 +129,11 @@ namespace eventFile {
 
   void LCI_Channel::dump( const char* pre, const char* post ) const
   {
-    printf( "%ssingle = %6d%s", pre, single, post );
-    printf( "%sall    = %s%s", pre, (all) ? "True" : "False", post );
-    printf( "%slatc   = %s%s", pre, (latc) ? "True" : "False", post );
+    printf( "%snumChan = 0x%04X%s", pre, numChan, post );
+    printf( "%ssingle  = %s%s", pre, (single) ? "True" : "False", post );
+    printf( "%sall     = %s%s", pre, (all) ? "True" : "False", post );
+    printf( "%slatc    = %s%s", pre, (latc) ? "True" : "False", post );
+    printf( "%sperFE   = %s%s", pre, (perFE) ? "True" : "False", post );
   }
 
   void LCI_AcdTrigger::dump( const char* pre, const char* post ) const

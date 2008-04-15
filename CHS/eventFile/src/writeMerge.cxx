@@ -15,6 +15,7 @@
 #include "eventFile/LSEWriter.h"
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
+#include "eventFile/LPA_Handler.h"
 #include "eventFile/EBF_Data.h"
 #include "eventFile/LSE_Keys.h"
 

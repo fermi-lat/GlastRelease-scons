@@ -1,5 +1,5 @@
 package eventFile
-version v4r0p2
+version v5r0
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -30,7 +30,8 @@ library eventFile ${eventFile_headers} \
 	LSEHeader.cxx \
 	LSEReader.cxx \
 	LSEWriter.cxx \
-	LSE_Keys.cxx
+	LSE_Keys.cxx \
+	LPA_Handler.cxx
 
 application writeMerge writeMerge.cxx
 

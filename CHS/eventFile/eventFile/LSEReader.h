@@ -71,11 +71,12 @@ namespace eventFile {
     FILE* m_FILE;
 
     bool read( LSE_Context&, EBF_Data& );
-    void read( int&, unsigned char*, size_t& );
+    void read( unsigned char*, size_t& );
     void read( LPA_Keys& );
     void read( LCI_Keys& );
     void read( LSE_Keys& );
     void readKeys( LSE_Keys::KeysType&, LPA_Keys&, LCI_Keys& );
+    void readInfo( LSE_Info::InfoType&, LPA_Info&, LCI_ACD_Info&, LCI_CAL_Info&, LCI_TKR_Info& );
     void readHeader();
   };
   

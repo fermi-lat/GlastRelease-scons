@@ -23,6 +23,7 @@ namespace eventFile {
     ~LSEHeader() {};
 
     // data members
+    unsigned m_version;
     unsigned m_runid;
     unsigned m_secs_beg;
     unsigned m_secs_end;
@@ -37,6 +38,12 @@ namespace eventFile {
     // read-write routines
     void read( FILE* );
     void write( FILE* );
+
+    // version accessor
+    unsigned version() const { return m_version & 0x000000FF; }
+
+    // file-format version specifier
+    static const unsigned FormatVersion = 0x05050505;
   };
 };
 

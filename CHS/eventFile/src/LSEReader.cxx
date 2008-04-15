@@ -12,6 +12,7 @@
 #include "eventFile/LSEReader.h"
 #include "eventFile/LSE_Context.h"
 #include "eventFile/LSE_Info.h"
+#include "eventFile/LPA_Handler.h"
 #include "eventFile/EBF_Data.h"
 
 namespace eventFile {
@@ -125,24 +126,14 @@ namespace eventFile {
     return true;
   }
 
-  void LSEReader::read( int& itype, unsigned char* buf, size_t& len )
+  void LSEReader::read( unsigned char* buf, size_t& len )
   {
-    // read in the LSE_Info typeid
-    size_t nitems(0);
-    nitems = fread( &itype, sizeof( int ), 1, m_FILE );
-    if ( nitems != 1 ) {
-      std::ostringstream ess;
-      ess << "LSEReader::read: error reading LSE_Info typeid from " << m_name;
-      ess << " (" << errno << "=" << strerror( errno ) << ")";
-      throw std::runtime_error( ess.str() );
-    }
-
     // read in the LSE_Info size
+    int nitems(0);
     nitems = fread( &len, sizeof( size_t ), 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
       ess << "LSEReader::read: error reading LSE_Info size from " << m_name;
-      ess << " for typeid = " << itype;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
@@ -152,7 +143,6 @@ namespace eventFile {
     if ( nitems != 1 ) {
       std::ostringstream ess;
       ess << "LSEReader::read: error reading LSE_Info content from " << m_name;
-      ess << " for typeid = " << itype << " size = " << len;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
@@ -184,27 +174,21 @@ namespace eventFile {
     LSE_Keys& ekeys = pakeys;
     read( ekeys );
 
-    // read the number of LPA_DB entries
-    unsigned nDB( 0 );
+    // read the SBS value
     size_t nitems( 0 );
-    nitems = fread( &nDB, sizeof( unsigned ), 1, m_FILE );
+    nitems = fread( &pakeys.SBS, sizeof( unsigned ), 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
-      ess << "LSEReader::read: error reading LPA_Keys number of DB's from " << m_name;
+      ess << "LSEReader::read: error reading LPA_Keys.SBS key from " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
 
-    // if no entries, we're done
-    if ( nDB == 0 ) return;
-
-    // read the entries themselves
-    pakeys.CDM_keys.clear();
-    pakeys.CDM_keys.resize( nDB );
-    nitems = fread( &(pakeys.CDM_keys[0]), nDB*sizeof( unsigned ), 1, m_FILE );
+    // read the LPA_db value
+    nitems = fread( &pakeys.LPA_db, sizeof( unsigned ), 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
-      ess << "LSEReader::read: error reading LPA_Keys CDM_keys's from " << m_name;
+      ess << "LSEReader::read: error reading LPA_Keys.LPA_db from " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
@@ -253,6 +237,47 @@ namespace eventFile {
     }
   }
 
+  void LSEReader::readInfo( LSE_Info::InfoType& infotype, LPA_Info& pinfo, 
+			    LCI_ACD_Info& ainfo, LCI_CAL_Info& cinfo, LCI_TKR_Info& tinfo )
+  {
+    // read in the LSE_Info typeid
+    int itype(0);
+    size_t nitems(0);
+    nitems = fread( &itype, sizeof( int ), 1, m_FILE );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEReader::read: error reading LSE_Info typeid from " << m_name;
+      ess << " (" << errno << "=" << strerror( errno ) << ")";
+      throw std::runtime_error( ess.str() );
+    }
+    infotype = static_cast<LSE_Info::InfoType>( itype );
+
+    // read the LSE_Info object type id
+    unsigned char buf[ 128 * 1024 ];
+    size_t len(0);
+
+    // assign to the proper type of object
+    switch ( infotype ) {
+    case LSE_Info::LPA:
+      pinfo.read( m_FILE );
+      break;
+    case LSE_Info::LCI_ACD:
+      read( &buf[0], len );
+      ainfo = *reinterpret_cast<LCI_ACD_Info*>( buf );
+      break;
+    case LSE_Info::LCI_CAL:
+      read( &buf[0], len );
+      cinfo = *reinterpret_cast<LCI_CAL_Info*>( buf );
+      break;
+    case LSE_Info::LCI_TKR:
+      read( &buf[0], len );
+      tinfo = *reinterpret_cast<LCI_TKR_Info*>( buf );
+      break;
+    default:
+      break;
+    }
+  }
+
   bool LSEReader::read( LSE_Context& ctx, EBF_Data& ebf, LSE_Info::InfoType& infotype,
 			LPA_Info& pinfo, LCI_ACD_Info& ainfo, LCI_CAL_Info& cinfo, LCI_TKR_Info& tinfo,
 			LSE_Keys::KeysType& ktype, LPA_Keys& pakeys, LCI_Keys& cikeys )
@@ -263,29 +288,7 @@ namespace eventFile {
     }
 
     // read the LSE_Info object content
-    int itype(0);
-    unsigned char buf[ 128 * 1024 ];
-    size_t len(0);
-    read( itype, &buf[0], len );
-
-    // assign to the proper type of object
-    infotype = (LSE_Info::InfoType) itype;
-    switch ( infotype ) {
-    case LSE_Info::LPA:
-      pinfo = *reinterpret_cast<LPA_Info*>( buf );
-      break;
-    case LSE_Info::LCI_ACD:
-      ainfo = *reinterpret_cast<LCI_ACD_Info*>( buf );
-      break;
-    case LSE_Info::LCI_CAL:
-      cinfo = *reinterpret_cast<LCI_CAL_Info*>( buf );
-      break;
-    case LSE_Info::LCI_TKR:
-      tinfo = *reinterpret_cast<LCI_TKR_Info*>( buf );
-      break;
-    default:
-      break;
-    }
+    readInfo( infotype, pinfo, ainfo, cinfo, tinfo );
 
     // read the translated-key objects
     readKeys( ktype, pakeys, cikeys );

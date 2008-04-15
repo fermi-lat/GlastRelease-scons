@@ -1,4 +1,4 @@
-/** 
+/** -*- Mode: C++ -*-
  * @class eventFile::LSE_Info
  *
  * @brief Classes encapsulating event-type-specific acquisition information.
@@ -11,9 +11,15 @@
 #ifndef EVENTFILE_LSE_INFO_HH
 #define EVENTFILE_LSE_INFO_HH
 
+#include <vector>
+
 #include "eventFile/LSE_GemTime.h"
 
 namespace eventFile {
+
+  class LPA_Handler;
+  class LSEReader;
+  class LSEWriter;
 
   struct LSE_Info {
     typedef enum _InfoType {
@@ -36,6 +42,15 @@ namespace eventFile {
     void dump() const;
     unsigned softwareKey;
     unsigned hardwareKey;
+    unsigned lpaDbKey;
+    std::vector< LPA_Handler > handlers;
+
+  private:
+    void write( FILE* fp ) const;
+    void read( FILE* fp );
+    friend class LSEReader;
+    friend class LSEWriter;
+
   };
 
   struct LCI_Info : public LSE_Info {
@@ -52,12 +67,14 @@ namespace eventFile {
 
   struct LCI_Channel {
     LCI_Channel() {};
-    LCI_Channel( unsigned short s, bool a, bool l ) :
-      single(s), all(a), latc(l) {};
+    LCI_Channel( unsigned short n, bool s, bool a, bool l, bool p ) :
+      numChan(n), single(s), all(a), latc(l), perFE(p) {};
     void dump( const char* pre, const char* post ) const;
-    unsigned short single;
+    unsigned short numChan;
+    bool single;
     bool all;
     bool latc;
+    bool perFE;
   };
 
   struct LCI_AcdTrigger {
