@@ -295,6 +295,7 @@ private:
     DoubleArrayProperty m_SAA_poly_lat;
     DoubleArrayProperty m_SAA_poly_lon;
     StringProperty m_xmlFiles;
+    BooleanProperty m_aberrate;
 
 
 };
@@ -331,6 +332,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("SAApolyLat"  , m_SAA_poly_lat);
     declareProperty("SAApolyLon"  , m_SAA_poly_lon);
     declareProperty("xmlListFile"    , m_xmlFiles="");
+    declareProperty("EnableAberration", m_aberrate=false);
 
 }
 
@@ -448,6 +450,12 @@ StatusCode FluxSvc::initialize ()
         }
         astro::EarthCoordinate::setSAAboundary( saa_array);
     }
+
+
+    if( m_aberrate ){
+        log << MSG::INFO << "Enabled generation of stellar aberration" << endreq;
+    }
+    astro::GPS::instance()->enableAberration(m_aberrate.value());
 
 
     //----------------------------------------------------------------

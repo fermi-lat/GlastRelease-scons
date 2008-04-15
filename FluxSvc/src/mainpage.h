@@ -35,6 +35,7 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     @param FluxSvc.SAApolyLat  [{}] list of latitudes defining the SAA exclusion polygon
     @param FluxSvc.SAApolyLon  [{}] longitudes
     @param FluxSvc.xmlListFile    [""] name of a file containing a list of xml file names, multiple source_lib entries, consistent with obssim
+    @param FluxSvc.EnableAberration [false] enable stellar aberration for celestial sources
 
   @section fluxalg_jobOptions FluxAlg jobOptions
     @param FluxAlg.source_name  ["default"] source name, name must be in the source_lib files
