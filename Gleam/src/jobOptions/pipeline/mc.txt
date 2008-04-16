@@ -82,6 +82,7 @@ Digitization.Members = {"TkrDigiAlg",
 
 // 
 // This sequence contains the trigger test:
+// What about adding 'TriRowBitsAlg'?
 //
 TriggerTest.Members = {"TriggerAlg", "Count/trigger" };
 

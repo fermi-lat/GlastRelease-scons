@@ -51,7 +51,7 @@ GlastDetSvc.visitorMode = "recon";
 // Define the Trigger sequence:
 //
 ApplicationMgr.DLLs   += {"Trigger"};
-Trigger.Members        = {"TriggerAlg"};
+Trigger.Members        = {"TriggerAlg","TriRowBitsAlg"};
 ApplicationMgr.ExtSvc += {"LivetimeSvc"};
 LivetimeSvc.Deadtime   = 0; // disable this for real data!
 

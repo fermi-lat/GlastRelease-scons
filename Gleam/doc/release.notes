@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v6r33p17 awb 16-Apr-08 Added 'TriRowBitsAlg' to pipeline JO.
 * v6r33p16 HMK 12-Mar-08 Comment out LATCalibRoot in requirements file like it
 *                        should be
 * v6r33p15 HMK 12-Mar-08 Update calibrations.txt to set FlavorRibbon="ideal"
