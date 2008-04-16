@@ -136,7 +136,7 @@ private:
 
 
   /// PRIVATE DATA MEMBERS
-  static const float CALRawE_TH=15.0;  //Energy threshold to apply to OBF Gamma and HFC filters cuts
+  //static const float CALRawE_TH=15.0;  //Energy threshold to apply to OBF Gamma and HFC filters cuts
   
   static const int NTOW = 16;
   static const int NLAY = 8;
@@ -440,9 +440,11 @@ bool GcrReconTool::checkFilters(){
    //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
 
    bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
-   bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6)) && (calEnergyRaw > CALRawE_TH);
+   //bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6)) && (calEnergyRaw > CALRawE_TH);
+   bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6));
    bool cutMip = (filtersbMip==0) || (filtersbMip==6);
-   bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6))  && (calEnergyRaw > CALRawE_TH);
+   //bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6))  && (calEnergyRaw > CALRawE_TH);
+   bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6));
 
    bool passFilter = cutGamma || cutHFC || cutMip || cutDGN;
    m_log << MSG::INFO << "passFilter:" << passFilter << endreq;

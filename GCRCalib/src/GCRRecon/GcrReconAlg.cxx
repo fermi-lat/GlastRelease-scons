@@ -71,7 +71,7 @@ private:
 
 
   //! Check if the event is a heavy ion candidate.
-  bool passTrigger();
+  bool isValidForGCR();
   void selectEventAxis(Vector&,Point&);
 
     //! correction tool names
@@ -170,8 +170,7 @@ StatusCode GcrReconAlg::execute()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     
-    log << MSG::INFO << "---------------@@@@@@@@@@@@@@ ------------" << endreq;
-    log<<MSG::INFO<<"GcrReconAlg::execute Begin"<<endreq ;
+    log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
     
     // TEST:  Does TkrTrack enters CAL?
     //if (!(m_initAxis=="MC")){
@@ -181,17 +180,17 @@ StatusCode GcrReconAlg::execute()
       {
 	if((m_calEntryPoint.x()<m_calXLo) || (m_calEntryPoint.x()>m_calXHi) || (m_calEntryPoint.y()<m_calYLo) || (m_calEntryPoint.y()>m_calXHi)) 
 	  { 
-	    log<<MSG::INFO<<"track1 out of calorimeter"<<endreq ;
+	    log<<MSG::DEBUG<<"track1 out of calorimeter"<<endreq ;
 
-            return;
+            return sc;
 	  }
 	else
-	  log<<MSG::INFO<<"track1 in the calorimeter"<<endreq ; 
+	  log<<MSG::DEBUG<<"track1 in the calorimeter"<<endreq ; 
 
        }
        else{
-         log<<MSG::INFO<<"no TKRtrack found"<<endreq ;
-	 return;
+         log<<MSG::DEBUG<<"no TKRtrack found"<<endreq ;
+	 return sc;
        } 
       
       
@@ -200,7 +199,7 @@ StatusCode GcrReconAlg::execute()
     
     
     // Apply filter(TRIGGER Engine 4 "CNO Trigger" or HFC OnboardFilter), then find GCRs
-    if(passTrigger())
+    if(isValidForGCR())
       {
         Vector dir;
         Point pos;
@@ -222,7 +221,7 @@ StatusCode GcrReconAlg::finalize()
     
 }
 
-bool GcrReconAlg::passTrigger()
+bool GcrReconAlg::isValidForGCR()
 {
   MsgStream log(msgSvc(), name());
   if(m_HfcOrCnoTrig == "TriggerEng4"){

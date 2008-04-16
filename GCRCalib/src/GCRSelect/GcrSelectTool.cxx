@@ -22,6 +22,7 @@
 #include "CLHEP/Vector/LorentzVector.h"
 
 #include "Event/TopLevel/EventModel.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/GcrReconClasses.h"
 #include "Event/Recon/CalRecon/GcrSelectClasses.h"
@@ -762,7 +763,18 @@ void GcrSelectTool::findClusters(){
 
 float GcrSelectTool::chooseEth(){
 
-  float Eth=0;
+  //ugly : duplicated from GcrReconTool::getCALEnergyRaw
+    float CAL_EnergyRaw=0.0;
+    // Recover pointer to CalClusters
+    SmartDataPtr<Event::CalClusterCol> pCals(m_dataSvc,EventModel::CalRecon::CalClusterCol);
+    //Make sure we have valid cluster data and some energy
+    if (!pCals) CAL_EnergyRaw=-1.0;
+    if (pCals->empty()) CAL_EnergyRaw=-2.0;
+    Event::CalCluster* calCluster = pCals->front();
+    CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
+    if(CAL_EnergyRaw<1.0) CAL_EnergyRaw=-3.0;
+
+  float Eth=100.0;
   bool passGamma, passHFC, passMip, passDFC;
 
   //gcrOBFStatusWord comes from gcrReconVals - calculated in GcrReconTool
@@ -781,15 +793,26 @@ float GcrSelectTool::chooseEth(){
   passMip = (m_gcrOBFStatusWord & 4)!=0;
   passDFC = (m_gcrOBFStatusWord & 8)!=0;
   
-  m_log << MSG::INFO << "passGamma, passHFC, passMip, passDFC= " << passGamma <<"," << passHFC << "," <<passMip << "," << passDFC << endreq;
+  m_log << MSG::DEBUG << "passGamma, passHFC, passMip, passDFC= " << passGamma <<"," << passHFC << "," <<passMip << "," << passDFC << endreq;
   
-  if (passGamma || passMip || passDFC) 
-    Eth = 5.0;
-  else
+  if (passHFC)
     Eth = 100.0;
-    
-  
-  m_log << MSG::INFO << "Eth =" << Eth << endreq; 
+  else if (passGamma) {
+      if(CAL_EnergyRaw>3160)
+	{ //10^3.5 obtained with simulation
+	  Eth = 100.0;
+	} 
+      else 
+	{
+	  Eth = 5.0;
+	}
+    }
+  else if (passMip || passDFC)
+    {
+      Eth = 5.0;
+    }
+
+  m_log << MSG::DEBUG << "Eth =" << Eth << endreq; 
   
   return Eth;
 
@@ -801,7 +824,7 @@ float GcrSelectTool::chooseEth(){
 
 void GcrSelectTool::buildLayMultArr(){
   
-  m_log << MSG::INFO << "GcrSelectTool BEGIN buildLayMultArr()" << endreq ; 
+  m_log << MSG::VERBOSE << "GcrSelectTool BEGIN buildLayMultArr()" << endreq ; 
   
   m_Eth = chooseEth();  //Energy threshold for considering an energy deposit as representatif
 
@@ -835,7 +858,7 @@ void GcrSelectTool::buildLayMultArr(){
      m_log << MSG::INFO << "m_layerMultiplicity[" << itow<< "][" << ilay<< "]=" << m_layerMultiplicity[itow][ilay] << endreq;
      }*/
     
-  m_log << MSG::INFO << "GcrSelectTool END buildLayMultArr()" << endreq ; 
+  m_log << MSG::VERBOSE << "GcrSelectTool END buildLayMultArr()" << endreq ; 
   
 }
   
