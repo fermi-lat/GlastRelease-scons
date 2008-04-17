@@ -717,9 +717,16 @@ unsigned int TriggerAlg::anticoincidence(const Event::AcdDigiCol& tiles, unsigne
 	  // cno vector
 	  unsigned int garc,gafe;
 	  garc=gafe=0xff;
-	  unsigned int pmt=digi.getCno(Event::AcdDigi::A) ? Event::AcdDigi::A : Event::AcdDigi::B;
-	  idents::AcdId::convertToGarcGafe(id,pmt,garc,gafe);
-	  cnovector|=1<<garc;
+          if (digi.getCno(Event::AcdDigi::A)){
+	    unsigned int pmt= Event::AcdDigi::A;
+	    idents::AcdId::convertToGarcGafe(id,pmt,garc,gafe);
+	    cnovector|=1<<garc;
+          }
+          if (digi.getCno(Event::AcdDigi::B)){
+	    unsigned int pmt= Event::AcdDigi::B;
+	    idents::AcdId::convertToGarcGafe(id,pmt,garc,gafe);
+	    cnovector|=1<<garc;
+          }
 	}
     } 
     return ret;
