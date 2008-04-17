@@ -69,7 +69,7 @@ if __name__ == '__main__':
                     online_face = calConstant.offline_face_to_online[face]
                     for rng in range(calConstant.NUM_RNG):
                         ## retrieve data for this channel ##
-                        len = inLen[rng][twr, row, online_face, col]
+                        len = inLen[rng][twr, row, online_face, col][0]
                         
                         # skip channel if data is empty
                         if (len <= 1):
