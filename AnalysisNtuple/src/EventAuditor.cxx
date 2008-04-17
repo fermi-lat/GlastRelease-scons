@@ -213,10 +213,16 @@ StatusCode EventAuditor::afterExecute( IAlgorithm * algo )
         }
     }
 
+/* HMK Apr172008
+    Do not want EventAuditor forcing events to be stored to the MeritTuple
+    without meeting our trigger requirements.  Other algorithms will set
+    this flag for us, such as AnalysisNtupleAlg
+
     m_save_tuple = true;
     if( m_rootTupleSvc!=0 && !m_root_tree.value().empty()){
         m_rootTupleSvc->storeRowFlag(m_root_tree.value(), m_save_tuple);
     }
+*/
 
     return StatusCode::SUCCESS ;
 }
