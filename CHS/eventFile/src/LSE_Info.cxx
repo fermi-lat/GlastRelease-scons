@@ -186,6 +186,7 @@ namespace eventFile {
   void LCI_TKR_Info::dump() const
   {
     LCI_Info::dump( "LCI_Info: ", "\n" );
+    printf( "LCI_TKR_Info: dacRange  = 0x%04X\n", dacRange );
     printf( "LCI_TKR_Info: injected  = 0x%04X\n", injected );
     printf( "LCI_TKR_Info: threshold = 0x%04X\n", threshold );
     printf( "LCI_TKR_Info: delay     = 0x%04X\n", delay );

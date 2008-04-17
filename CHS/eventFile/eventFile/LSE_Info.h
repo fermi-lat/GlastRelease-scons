@@ -133,6 +133,8 @@ namespace eventFile {
   struct LCI_TKR_Info : public LCI_Info {
     LCI_TKR_Info() {};
     void dump() const;
+    enum DacRange { DAC_LO=0, DAC_HI=1 };
+    DacRange dacRange;
     unsigned short injected;
     unsigned short delay;
     unsigned short threshold;

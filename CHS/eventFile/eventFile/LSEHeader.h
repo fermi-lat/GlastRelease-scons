@@ -43,7 +43,7 @@ namespace eventFile {
     unsigned version() const { return m_version & 0x000000FF; }
 
     // file-format version specifier
-    static const unsigned FormatVersion = 0x05050505;
+    static const unsigned FormatVersion = 0x06060606;
   };
 };
 
