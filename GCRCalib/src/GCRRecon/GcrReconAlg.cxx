@@ -115,7 +115,7 @@ GcrReconAlg::GcrReconAlg( const std::string & name, ISvcLocator * pSvcLocator ) 
 {   
     // Declare the properties with these defaults
     declareProperty("GcrReconToolName", m_gcrReconToolName = "GcrReconTool");
-    declareProperty("InitAxis", m_initAxis = "MC");
+    declareProperty("InitAxis", m_initAxis = "TKR");
     declareProperty("HFC_Or_TriggerEng4", m_HfcOrCnoTrig = "TriggerEng4");
 
 }
