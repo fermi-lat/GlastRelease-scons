@@ -235,12 +235,16 @@ int DfiParser::loadData() {
         // First clear the LatData
         ldfReader::LatData::instance()->clearTowers();
 
-        ldfReader::LatData::instance()->setRunId(m_runId);
-
         ldfReader::LatData::instance()->setEventSizeInBytes(m_eventSize);
 
         readContextAndInfo();
 
+        if (ldfReader::LatData::instance()->oldStyleRunId())
+            ldfReader::LatData::instance()->setRunId(m_runId);
+        else{
+            const lsfData::MetaEvent& meta = ldfReader::LatData::instance()->getMetaEvent();
+            ldfReader::LatData::instance()->setRunId(meta.run().startTime());
+        }
 
         EbfEventParser ldf;
         ldf.iterate(m_start, m_end);

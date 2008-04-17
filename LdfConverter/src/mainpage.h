@@ -57,6 +57,10 @@ xx/** @mainpage package LdfConverter
   Integer.  Defaults to 0 (false).  If set to non-zero value, this will set 
   the signal handles for a segmentation fault to ignore to allow processing
   to continue...not to be used lightly.
+  @param LdfEventSelector.OldStyleRunId
+  Integer.  Defaults to 0 (false).  If set to non-zero value, this will cause
+  the runId to be obtained the same way done for I&T (via LSEReader::runid())
+  rather than use the method for flight using ctx.run.startedAt
   <hr>
   @section notes release notes
   release.notes

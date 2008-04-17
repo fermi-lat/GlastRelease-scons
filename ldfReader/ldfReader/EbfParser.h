@@ -39,6 +39,11 @@ namespace ldfReader {
 
         virtual void setIgnoreSegFault();
 
+        /// Set flag that determines what method we use to retrieve the
+        /// the run ID.  We may use the LdfReader::runId routine (old I&T)
+        /// or use ctx.run.startedAt (real data)
+        virtual void setOldStyleRunId(bool flag=true);
+
         // local exception class
         class Exception{ };
 

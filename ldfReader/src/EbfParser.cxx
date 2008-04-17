@@ -31,6 +31,9 @@ void EbfParser::setIgnoreSegFault() {
 
 }
 
+void EbfParser::setOldStyleRunId(bool flag) {
+   ldfReader::LatData::instance()->setOldStyleRunId(flag);
+}
 
 } //namespace
 #endif

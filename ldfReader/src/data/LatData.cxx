@@ -21,6 +21,7 @@ namespace ldfReader {
     LatData::LatData() {
         clearTowers(); 
         m_acdRemapCol.clear();
+        m_oldStyleRunId = false;
     }
 
     LatData::~LatData() {

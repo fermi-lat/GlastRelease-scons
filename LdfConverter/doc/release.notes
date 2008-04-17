@@ -3,6 +3,10 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v4r0    17-Apr-2007 HMK JIRA ROOT-34 adding new JO parameter OldStyleRunId
+        which defaults to false, but when set to true, will obtain the runId
+        the same way I&T did, rather than the method that is used for flight
+        via the ctx.run.startedAt item
 v3r10   30-Oct-2007 HMK use gr_app
 v3r9p3  02-Oct-2007 HMK Add FILE_OFFSET_BITS to cppflags
 v3r9p2  22-Aug-2007 HMK Avoid creation of volids for NA ACDs to avoid 

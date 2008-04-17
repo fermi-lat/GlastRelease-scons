@@ -302,6 +302,7 @@ LdfEventSelector::LdfEventSelector( const std::string& name,
     declareProperty("FileName", m_fileName="");
     declareProperty("AcdRemapFile", m_acdRemap="");
     declareProperty("IgnoreSegFault", m_ignoreSegFault=0);
+    declareProperty("OldStyleRunId", m_oldStyleRunId=0);
 
     // Options for using socket connections
     declareProperty("SocketConnection", m_socket = 0);
@@ -356,6 +357,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 
             m_ebfParser = new ldfReader::SocketParser(m_server);
             m_ebfParser->setDebug((m_ebfDebugLevel != 0));
+            m_ebfParser->setOldStyleRunId((m_oldStyleRunId != 0));
             if (m_acdRemap != "")
                 if (m_ebfParser->setAcdRemap(m_acdRemap) < 0) 
                     log << MSG::WARNING << "Failed to read ACD remap file" 
@@ -387,6 +389,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
             m_ebfParser = new ldfReader::DfiParser(m_fileName);
             m_ebfParser->printHeader();
             m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
+            m_ebfParser->setOldStyleRunId((m_oldStyleRunId != 0));
             log << MSG::DEBUG << "return from ctor" << endreq;
         } catch(...) {
             log << MSG::ERROR << "failed to setup DfiParser" << endreq;
@@ -411,6 +414,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
             if (!m_ebfParser) 
                 log << MSG::DEBUG << "Creating LdfParser failed" << endreq;
             m_ebfParser->setDebug((m_ebfDebugLevel != 0) );
+            m_ebfParser->setOldStyleRunId((m_oldStyleRunId != 0));
             if (m_acdRemap != "")
                 if (m_ebfParser->setAcdRemap(m_acdRemap) < 0) 
                     log << MSG::WARNING << "Failed to read ACD remap file" << endreq;
@@ -441,6 +445,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 
             m_ebfParser = new ldfReader::LdfParser(m_fileName, true, m_instrument);
             m_ebfParser->setDebug((m_ebfDebugLevel != 0));
+            m_ebfParser->setOldStyleRunId((m_oldStyleRunId != 0));
             if (m_acdRemap != "")
                 if (m_ebfParser->setAcdRemap(m_acdRemap) < 0) 
                     log << MSG::WARNING << "Failed to read ACD remap file" << endreq;

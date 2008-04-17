@@ -222,6 +222,12 @@ private:
 
   IntegerProperty       m_ignoreSegFault;
 
+
+  /// Default 0 (false)
+  /// Flag that determines what quantity from the evt file to use for the
+  /// runId
+  IntegerProperty       m_oldStyleRunId;
+
   IntegerProperty       m_server;  // For socket commections
   IntegerProperty       m_socket; // Boolean JO parameter to denote use of 
                                   // sockets rather than file input
