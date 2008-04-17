@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "eventFile/EBF_Data.h"
+#include "eventFile/LPA_Handler.h"
 
 #include "lsfData/LSFReader.h"
 #include "lsfData/LsfCcsds.h"

@@ -1,6 +1,7 @@
 #include "eventFile/LSE_Context.h"
 #include "eventFile/EBF_Data.h"
 #include "eventFile/LSE_Info.h"
+#include "eventFile/LPA_Handler.h"
 #include "eventFile/LSE_Keys.h"
 
 #include "lsfData/LSFReader.h"
@@ -149,7 +150,8 @@ namespace lsfData {
   void LSFReader::transferKeys( const eventFile::LPA_Keys& pakeys, MetaEvent& lmeta )
   {
     // create & populate a local LpaKeys object
-    LpaKeys lkeys( pakeys.LATC_master, pakeys.LATC_ignore, pakeys.CDM_keys );
+    LpaKeys lkeys( pakeys.LATC_master, pakeys.LATC_ignore, pakeys.SBS,
+                   pakeys.LPA_db );
 
     // install the keys object into the MetaEvent
     lmeta.setKeys( lkeys );

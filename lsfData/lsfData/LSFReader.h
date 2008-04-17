@@ -2,6 +2,7 @@
 #define LSFREADER_H
 
 #include "eventFile/LSEReader.h"
+#include "eventFile/LPA_Handler.h"
 
 namespace eventFile {
 

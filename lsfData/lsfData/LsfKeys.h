@@ -82,34 +82,33 @@ namespace lsfData {
 
   // translated keys from LPA data
   class LpaKeys : public LsfKeys {
-    std::vector< unsigned int > m_CDM_keys;
+      unsigned m_sbs;    /// The FMX key of the secondary boot script replaces CDM_keys  
+      unsigned m_lpa_db; // same value as LPA_Info::lpaDbKey 
 
   public:
-    LpaKeys() : LsfKeys(), m_CDM_keys( std::vector<unsigned int>() ) {};
+    LpaKeys() : LsfKeys(), m_sbs(0), m_lpa_db(0) {};
 
-    LpaKeys( unsigned int master, unsigned int ignore, const std::vector< unsigned int >& dbs )
-      : LsfKeys( master, ignore ), m_CDM_keys( dbs ) {};
+    LpaKeys( unsigned int master, unsigned int ignore, unsigned int sbs,
+             unsigned int lpadb )
+      : LsfKeys( master, ignore ), m_sbs( sbs ), m_lpa_db(lpadb) {};
 
-    LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_CDM_keys( other.CDM_keys() ) {};
+    LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_sbs( other.sbs() ), 
+                                      m_lpa_db(other.lpa_db()) {};
 
     virtual ~LpaKeys() {};
 
     const LpaKeys& operator=( const LpaKeys& other ) {
       if ( &other != this ) {
 	( dynamic_cast< LsfKeys& >( *this ) ) = other;
-	m_CDM_keys.clear();
-	m_CDM_keys.insert( m_CDM_keys.begin(), other.CDM_keys().begin(), other.CDM_keys().end() );
+        m_sbs = other.sbs();
+        m_lpa_db = other.lpa_db();
       }
       return *this;
     }
 
-    const std::vector< unsigned int >& CDM_keys() const { return m_CDM_keys; };
+    unsigned int sbs() const { return m_sbs; }
 
-    void setCDM_keys( const std::vector< unsigned int >& value ) {
-      m_CDM_keys.clear();
-      m_CDM_keys.insert( m_CDM_keys.begin(), value.begin(), value.end() );
-    };
-
+    unsigned int lpa_db() const { return m_lpa_db; }
 
    /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const LpaKeys& obj )    {
@@ -120,19 +119,14 @@ namespace lsfData {
     std::ostream& fillStream( std::ostream& s ) const
  {
       LsfKeys::fillStream(s); 
-      std::vector<unsigned int>::const_iterator itr = m_CDM_keys.begin();
-      for ( int i=0; itr != m_CDM_keys.end(); ++itr, ++i ) {
-	s << " CDM_key[" << i << "] = 0x" << std::setw(8) << std::setfill('0') << std::hex << *itr << std::endl;
-      }
+      s << "SBS: " << m_sbs << " LPA_DB: " << m_lpa_db << std::endl;
       return s;
     }
 
     virtual void print( const std::string& str="" ) const {
       LsfKeys::print( str );
-      std::vector<unsigned int>::const_iterator itr = m_CDM_keys.begin();
-      for ( int i=0; itr != m_CDM_keys.end(); ++itr, ++i ) {
-	std::cout << str << " CDM_key[" << i << "] = 0x" << std::setw(8) << std::setfill('0') << std::hex << *itr << std::endl;
-      }
+      std::cout << str << " SBS: " << m_sbs << " LPA_DB: " << m_lpa_db
+                << std::endl;
     }
     
     virtual LsfKeys*                   clone() const { return new LpaKeys( *this ); };

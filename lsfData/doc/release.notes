@@ -4,6 +4,8 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v3r0    17-Apr-2008 HMK Catching up to DFI which includes filter config
+        and results summary
 v2r0    17-Apr-2008 HMK Add RunInfo::dataTransferId to store the runid 
         in response to JIRA ROOT-34
 v1r1    23-Mar-2008 HMK Add in the additional LCI items
