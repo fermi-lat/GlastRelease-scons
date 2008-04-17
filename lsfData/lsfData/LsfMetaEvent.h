@@ -119,6 +119,7 @@ namespace lsfData {
 
     // set the individual data members
     inline void setRun( const RunInfo& val) { m_run = val; };
+    inline void setRunDataTransferId(unsigned int id) { m_run.setDataTransferId(id); };
     inline void setDatagram( const DatagramInfo& val) { m_datagram = val; };
     inline void setScalers( const GemScalers& val) { m_scalers = val; };
     inline void setTime( const Time& val) { m_time = val; }; 

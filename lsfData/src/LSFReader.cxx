@@ -87,7 +87,7 @@ namespace lsfData {
     enums::Lsf::Platform   pl = static_cast< enums::Lsf::Platform   >( ctx.run.platform );
     enums::Lsf::DataOrigin od = static_cast< enums::Lsf::DataOrigin >( ctx.run.origin );
     RunInfo  run( pl, od,
-			   ctx.run.groundId, ctx.run.startedAt 
+			   ctx.run.groundId, ctx.run.startedAt, runid()
 			   );
     lsfmeta.setRun( run );
 
