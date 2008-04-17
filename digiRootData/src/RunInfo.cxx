@@ -10,7 +10,8 @@ void RunInfo::Print(Option_t* /*option*/) const {
       << id() << std::dec << ", started = 0x" << std::hex
       << startTime() << std::dec << " (" << startTime() << ")\n"
       << " run:      platform = (" << platform() << ")\n"
-      << " run:      origin = (" << dataOrigin() << ")\n";
+      << " run:      origin = (" << dataOrigin() << ")\n"
+      << " dataTransferId: " << dataTransferId() << "\n";
 }
 
 void RunInfo::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */ ) {
@@ -43,6 +44,7 @@ Int_t RunInfo::Compare(const TObject *obj) const {
   if ( m_platform != other->platform() ) return m_platform > other->platform() ? 1 : -1;
   // then check origin
   if ( m_origin != other->dataOrigin() ) return m_origin > other->dataOrigin() ? 1 : -1;
+  if ( m_dataTransferId != other->dataTransferId() ) return m_dataTransferId > other->dataTransferId() ? 1 : -1;
   // they are equivalent
   return 0;  
 }

@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v10r3     17-Apr-2008 HMK add in RunInfo::dataTransferId to address JIRA
+          ROOT-34
 v10r2     31-Mar-2008 TU  HMK tagging Tracy's update to TkrDigi to use
           the new DigiObjectManager
 v10r1     23-Mar-2008 HMK Update LCI data for DFI 3-4-5

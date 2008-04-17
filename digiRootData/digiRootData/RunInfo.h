@@ -13,6 +13,8 @@
 *            dataOrigin  -> to distinguish ground, flight and MC ( One of enums::Lsf::DataOrigin )
 *            id          -> run number assigned on the ground. 
 *            startTime   -> number of seconds since start of GLAST epoch at which the run started
+*            dataTransferId -> number of seconds since start of GLAST epoch
+*            at which the run started
 *
 * $Header$
 */
@@ -24,19 +26,22 @@ public:
   /// Default c'tor.  Assigns sentinel values to all fields
   RunInfo( )
     : m_platform(enums::Lsf::NoPlatform), m_origin(enums::Lsf::NoOrigin), 
-      m_id(LSF_INVALID_UINT), m_startTime(LSF_INVALID_UINT) {
+      m_id(LSF_INVALID_UINT), m_startTime(LSF_INVALID_UINT),
+      m_dataTransferId(LSF_INVALID_UINT) {
   }
   
   /// Standard c'tor.  Takes input values for all fields
-  RunInfo( enums::Lsf::Platform p, enums::Lsf::DataOrigin d, UInt_t id, UInt_t startTime )
-    : m_platform(p), m_origin(d), m_id(id), m_startTime(startTime) {
+  RunInfo( enums::Lsf::Platform p, enums::Lsf::DataOrigin d, UInt_t id, UInt_t startTime, UInt_t dataTransferId=LSF_INVALID_UINT )
+    : m_platform(p), m_origin(d), m_id(id), m_startTime(startTime),
+      m_dataTransferId(dataTransferId) {
   }
   
   /// Copy c'tor.  Nothing fancy, just copy all values.
   RunInfo( const RunInfo& other )
     : TObject(other), 
       m_platform(other.platform()), m_origin(other.dataOrigin()), 
-      m_id(other.id()), m_startTime(other.startTime()) {
+      m_id(other.id()), m_startTime(other.startTime()),
+      m_dataTransferId(other.dataTransferId()) {
   }
   
   /// D'tor.  Nothing special.
@@ -47,6 +52,7 @@ public:
   inline RunInfo& operator=( const RunInfo& other ) {
     initialize(other.platform(),other.dataOrigin(),
 	       other.id(),other.startTime());
+    setDataTransferId(other.dataTransferId());
     return *this;
   }
   
@@ -73,14 +79,20 @@ public:
   inline UInt_t startTime() const {
     return m_startTime;
   }
+
+  inline UInt_t dataTransferId() const {
+     return m_dataTransferId;
+  }
   
   /// set everything at once
   inline void initialize(enums::Lsf::Platform p, enums::Lsf::DataOrigin d, 
-			 UInt_t id, UInt_t startTime ) {
+			 UInt_t id, UInt_t startTime,
+                         UInt_t dataTransferId = LSF_INVALID_UINT ) {
     m_platform = p;
     m_origin = d;
     m_id = id;
     m_startTime = startTime;
+    m_dataTransferId = dataTransferId;
   }
   
   // set the individual data members
@@ -88,6 +100,7 @@ public:
   inline void setDataOrigin(enums::Lsf::DataOrigin val) { m_origin = val; }
   inline void setId ( UInt_t val ) { m_id = val; }
   inline void setStartTime ( UInt_t val ) { m_startTime = val; }
+  inline void setDataTransferId( UInt_t val ) { m_dataTransferId = val; }
   
   /// this is a helper function for formated printing
   void printString(std::ostream& s) const {
@@ -104,6 +117,7 @@ public:
       s << DataOrigins[m_origin] << '_';     
     }
     s << m_id << '_' << m_startTime;
+    s << "dataTransferId: " << m_dataTransferId;
   }
 
   /// Reset function
@@ -112,6 +126,7 @@ public:
     m_origin = enums::Lsf::NoOrigin;
     m_id = LSF_INVALID_UINT;
     m_startTime = LSF_INVALID_UINT;
+    m_dataTransferId = LSF_INVALID_UINT;
   }
 
   /// ROOT print function
@@ -144,7 +159,9 @@ private:
   /// The time the run started (in seconds since the start of the GLAST epoch)
   UInt_t m_startTime;
 
-  ClassDef(RunInfo,1) // Unique Run Identifier
+  UInt_t m_dataTransferId;
+
+  ClassDef(RunInfo,2) // Unique Run Identifier
 
 };
 
