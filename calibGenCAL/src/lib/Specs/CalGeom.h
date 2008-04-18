@@ -22,6 +22,8 @@
 namespace calibGenCAL {
 
   namespace CalGeom {
+    static bool CU_GEOM = false;
+
     /// z pos of top surface of Layer 0 Cal Xtal
     static const float CalTopZ       = -48.12;
     static const float CsILength     = 326.  ;
