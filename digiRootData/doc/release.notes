@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r0     17-Apr-2008 HMK Updates to LpaKeys, for DFI upgrade
+          removes CDM_keys vector, and adds two new UInt_t members
 v10r3     17-Apr-2008 HMK add in RunInfo::dataTransferId to address JIRA
           ROOT-34
 v10r2     31-Mar-2008 TU  HMK tagging Tracy's update to TkrDigi to use

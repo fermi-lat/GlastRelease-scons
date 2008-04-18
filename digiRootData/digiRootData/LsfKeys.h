@@ -76,14 +76,15 @@ class LsfKeys : public TObject {
   class LpaKeys : public LsfKeys {
 
   public:
-    LpaKeys() : LsfKeys(), m_CDM_keys( std::vector<UInt_t>() ) {};
+    LpaKeys() : LsfKeys(), m_sbs(0), m_lpa_db(0) {};
 
-    LpaKeys( UInt_t master, UInt_t ignore, const std::vector< UInt_t >& dbs )
-      : LsfKeys( master, ignore ), m_CDM_keys( dbs ) {};
+    LpaKeys( UInt_t master, UInt_t ignore, UInt_t sbs, UInt_t lpa_db)
+      : LsfKeys( master, ignore ), m_sbs(sbs), m_lpa_db(lpa_db) {};
 
-    LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_CDM_keys( other.CDM_keys() ) {};
+    LpaKeys( const LpaKeys& other ) : LsfKeys( other ), m_sbs( other.sbs() ),
+                                      m_lpa_db(other.lpa_db()) {};
 
-    virtual ~LpaKeys() { m_CDM_keys.clear(); };
+    virtual ~LpaKeys() { };
 
     void Print(Option_t* option="" ) const;
     void Fake(Int_t ievent, Float_t randNum);
@@ -92,18 +93,15 @@ class LsfKeys : public TObject {
     const LpaKeys& operator=( const LpaKeys& other ) {
       if ( &other != this ) {
 	( dynamic_cast< LsfKeys& >( *this ) ) = other;
-	m_CDM_keys.clear();
-	m_CDM_keys.insert( m_CDM_keys.begin(), other.CDM_keys().begin(), other.CDM_keys().end() );
       }
       return *this;
     }
 
-    const std::vector< UInt_t >& CDM_keys() const { return m_CDM_keys; };
+    void setSbs(UInt_t val) { m_sbs = val; }
+    UInt_t sbs() const { return m_sbs; }
 
-    void setCDM_keys( const std::vector< UInt_t >& value ) {
-      m_CDM_keys.clear();
-      m_CDM_keys.insert( m_CDM_keys.begin(), value.begin(), value.end() );
-    };
+    void setLpa_db(UInt_t val) { m_lpa_db = val ; }
+    UInt_t lpa_db() const { return m_lpa_db; }
 
     virtual LsfKeys*  clone() const { return new LpaKeys( *this ); };
     virtual const LpaKeys* castToLpaKeys() const { return this; };
@@ -111,7 +109,9 @@ class LsfKeys : public TObject {
 
   private:
     std::vector<UInt_t> m_CDM_keys;
-    ClassDef(LpaKeys,1) // LPA Key
+    UInt_t m_sbs; /// FMX key of the secondary boot script
+    UInt_t m_lpa_db; /// same as LPA_Info::lpaDbKey
+    ClassDef(LpaKeys,2) // LPA Key
   };
 
   // keys from LCI data

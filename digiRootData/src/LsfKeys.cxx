@@ -36,28 +36,21 @@ void LpaKeys::Print(Option_t* /*option*/) const {
   cout << "LpaKeys: " << endl;
   cout << " Master = 0x" << std::hex << std::setfill('0')
        << m_LATC_master << "\n"
-       << " Ignore = 0x" << m_LATC_ignore << std::endl;
-  std::vector<UInt_t>::const_iterator it;
-  unsigned int i = 0;
-  for(it = m_CDM_keys.begin(); it != m_CDM_keys.end(); it++) {
-    cout << std::dec << "CDM key " << i << " " << m_CDM_keys[i] << endl;
-    ++i;
-  }
+       << " Ignore = 0x" << m_LATC_ignore 
+       << " SBS: " << m_sbs << " LPA_DB: " << m_lpa_db << std::endl;
 }
 
 void LpaKeys::Fake( Int_t ievent, Float_t randNum ) {
   LsfKeys::Fake(ievent, randNum);
-  std::vector<unsigned int> vec;
-  unsigned int i;
-  for (i=0; i<10; i++) 
-    vec.push_back(ievent*i);
-  setCDM_keys(vec);
+  m_sbs = ievent * 3;
+  m_lpa_db = ievent * 4;
 }
 
 Bool_t LpaKeys::CompareInRange( const LpaKeys& ref, 
 			        const std::string & name ) const {
   bool result = true ;
-  result = rootdatautil::CompareInRange(CDM_keys(),ref.CDM_keys(),"CDM_keys") && result;
+  result = rootdatautil::CompareInRange(sbs(),ref.sbs(),"SBS") && result;
+  result = rootdatautil::CompareInRange(lpa_db(),ref.lpa_db(),"LPA_DB") && result;
  result = rootdatautil::CompareInRange(LATC_master(),ref.LATC_master(),"LATC_master") && result;
  result = rootdatautil::CompareInRange(LATC_ignore(),ref.LATC_ignore(),"LATC_ignore") && result;
   return result;
