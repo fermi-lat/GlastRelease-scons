@@ -106,8 +106,10 @@ namespace lsfData {
       return *this;
     }
 
+    void setSbs(unsigned int val) { m_sbs = val; }
     unsigned int sbs() const { return m_sbs; }
 
+    void setLpa_db(unsigned int val) { m_lpa_db = val; }
     unsigned int lpa_db() const { return m_lpa_db; }
 
    /// Output operator (ASCII)
