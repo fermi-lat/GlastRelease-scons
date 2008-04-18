@@ -34,7 +34,7 @@ use facilities *
 macro_append calibTkrUtil_headers "" WIN32 "../calibTkrUtil/*.h"
 
 macro_prepend includes " -I../src/test/ -I../"
-application test_calibTkrUtil ../src/test/*.cxx $(calibTkrUtil_srcs)
+application tkrRootAnalysis ../src/test/*.cxx $(calibTkrUtil_srcs)
 
 
 
