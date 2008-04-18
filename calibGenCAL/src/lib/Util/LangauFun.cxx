@@ -42,7 +42,7 @@ namespace calibGenCAL {
       30.81,
       5000,
       .0618,
-      1.76
+      0.0
     };
 
     static bool   fixParms[N_PARMS] = {
@@ -50,7 +50,7 @@ namespace calibGenCAL {
       false,
       false,
       false,
-      false
+      true
     };
 
     static bool   useLimits[N_PARMS] = {
@@ -70,10 +70,10 @@ namespace calibGenCAL {
     };
 
     static double parmHi[N_PARMS] = {
-      10,
+      0.2,
       10000,
       1e9,
-      10,
+      0.2,
       1e6
     };
 
