@@ -61,6 +61,7 @@
 %template(vectorOfFileDescrip) std::vector<MOOT::FileDescrip>;
 %template(vectorOfFswInfo) std::vector<MOOT::FswInfo>;
 %template(vectorOfConfigInfo) std::vector<MOOT::ConfigInfo>;
+%template(vectorOfConstitInfo) std::vector<MOOT::ConstitInfo>;
 %template(vectorOfParmOffline) std::vector<MOOT::ParmOffline>;
 %include ../mootCore/MootQuery.h
 
@@ -147,6 +148,19 @@
     std::vector<MOOT::FileDescrip> my_descrips;
     self->getLatcSrc(latcMasterKey, my_descrips);
     return my_descrips;
+  }
+
+  std::vector<MOOT::ConstitInfo> lpaConstituents(unsigned sbsKey) {
+    std::vector<MOOT::ConstitInfo> my_constits;
+    self->getLpaConstituents(sbsKey, my_constits);
+    return my_constits;
+  }
+
+  std::vector<MOOT::ConstitInfo>packageConstituents(unsigned sbsKey,
+                                                    const std::string& pkg) {
+    std::vector<MOOT::ConstitInfo> my_constits;
+    self->getPackageConstituents(sbsKey, pkg, my_constits);
+    return my_constits;
   }
 
   std::vector<MOOT::FswInfo> configFswInfo(const std::string& configKey) {

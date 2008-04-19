@@ -707,8 +707,8 @@ namespace MOOT {
     getCols.push_back("FSW_id");
     getCols.push_back("status");
     getCols.push_back("schema_id");
-    getCols.push_back("instance_id");
     getCols.push_back("version_id");
+    getCols.push_back("instance_id");
     rdbModel::ResultHandle* res = 0;
 
     try {
@@ -846,6 +846,46 @@ namespace MOOT {
       //    Prepend MOOT_ARCHIVE root to source to give abs. path
       //    look up name corresponding to class_fk in FSW_class table
       pos = newPos + 1;
+    }
+    return true;
+  }
+
+  // sbsKey arg.  refers to fmx logical key
+  bool MootQuery::getLpaConstituents(unsigned sbsKey, 
+                                     std::vector<ConstitInfo>& lpas) {
+    return getPackageConstituents(sbsKey, "LPA_DB", lpas);
+  }
+
+  bool MootQuery::getPackageConstituents(unsigned sbsKey, 
+                                         const std::string& pkg,
+                                         std::vector<ConstitInfo>& constits) {
+    /*
+      Find all constituents associated with
+      the sbs key and with package = [pkg]
+
+      select prim_key from SBS_to_Constituents where sbs_key = 
+         (select FSW_input_key from FSW_inputs where FSW_id = [sbsKey] ) 
+        and "LPA_DB" = (select pkg from Constituents where 
+        Constituents.prim_key = SBS_to_Constituents.Constituents_fk)
+    */
+    std::string sbsKeyStr;
+    facilities::Util::utoa(sbsKey, sbsKeyStr);
+    std::vector<std::string> constitKeys;
+    std::string 
+      where("WHERE sbs_fk=(select FSW_input_key from FSW_inputs where FSW_id='");
+    where += sbsKeyStr + 
+      std::string("') and '") + pkg;
+    where += std::string("'=(select pkg from Constituents where ");
+    where += 
+      std::string("Constituents.prim_key=SBS_to_Constituents.Constituents_fk)");
+    int cnt = DbUtil::getAllWhere(m_rdb, "SBS_to_Constituents", "prim_key",
+                                  where, constitKeys);
+    if (cnt <= 0) return false;
+    for (int ix=0; ix < cnt; ix++) {
+      unsigned key = facilities::Util::stringToUnsigned(constitKeys[ix]);
+      ConstitInfo* info = getConstituentInfo(key);
+      constits.push_back(*info);
+      delete info; 
     }
     return true;
   }
