@@ -147,17 +147,17 @@ namespace MOOT {
                 const std::string& fswId = std::string(""),
                 const std::string& status = std::string(""),
                 const std::string& schemaId = std::string(""),
-                const std::string& instanceId = std::string(""),
-                const std::string& instanceVersionId = std::string("")) :
+                const std::string& schemaVersionId = std::string(""),
+                const std::string& instanceId = std::string("")) :
       m_key(key), m_name(name), m_pkg(pkg), m_pkgVersion(pkgVersion), 
       m_dir(dir), m_fmxPath(fmxPath), m_srcPath(srcPath), m_fswId(fswId), 
-      m_status(status), m_schemaId(schemaId), m_instanceId(instanceId),
-      m_instanceVersionId(instanceVersionId)
+      m_status(status), m_schemaId(schemaId), 
+      m_schemaVersionId(schemaVersionId), m_instanceId(instanceId)
     {};
     void clear() {
       m_key = m_name = m_pkgVersion = m_pkg = m_dir = m_fmxPath = m_srcPath
         = m_fswId = m_status = m_schemaId = m_instanceId
-        = m_instanceVersionId = std::string("");
+        = m_schemaVersionId = std::string("");
     }
     std::string getKey() const {return m_key;}
     std::string getName() const {return m_name;}
@@ -169,8 +169,8 @@ namespace MOOT {
     std::string getFswId() const {return m_fswId;}
     std::string getStatus() const {return m_status;}
     std::string getSchemaId() const {return m_schemaId;}
+    std::string getSchemaVersionId() const {return m_schemaVersionId;}
     std::string getInstanceId() const {return m_instanceId;}
-    std::string getInstanceVersionId() const {return m_instanceVersionId;}
   private:
     std::string m_key;
     std::string m_name;
@@ -182,8 +182,8 @@ namespace MOOT {
     std::string m_fswId;
     std::string m_status;
     std::string m_schemaId;
+    std::string m_schemaVersionId;
     std::string m_instanceId;
-    std::string m_instanceVersionId;
   };
 
   /**

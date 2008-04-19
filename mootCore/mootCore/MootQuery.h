@@ -223,6 +223,20 @@ namespace MOOT {
     bool getLatcSrc(unsigned latcMasterKey,
                     std::vector<FileDescrip>& sources);
 
+    /** 
+        Given SBS logical key, return constituent info for all
+        lpa_db constituents
+     */
+    bool getLpaConstituents(unsigned sbsKey, std::vector<ConstitInfo>& lpas);
+
+
+    /** 
+        Given SBS logical key, return constituent info for all
+        constituents in the specified package
+     */
+    bool getPackageConstituents(unsigned sbsKey, const std::string& pkg,
+                                std::vector<ConstitInfo>& constits);
+
     /** Store everything of interest about this row in Parameters
         table in Info structure.
         @return 0 if no row exists with this key; 1 otherwise
