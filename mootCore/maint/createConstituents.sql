@@ -21,11 +21,11 @@ create table Constituents
   schema_id               SMALLINT  COMMENT
       'schema id from cdm header',
 
+  version_id              SMALLINT COMMENT
+      'version id (i.e., version of schema) of this cdm, from header',
+
   instance_id             SMALLINT  COMMENT
       'instance id from cdm header',
-
-  version_id              SMALLINT COMMENT
-      'version id of this cdm, from header',
 
 
   status                VARCHAR(32) NOT NULL default 'new',
