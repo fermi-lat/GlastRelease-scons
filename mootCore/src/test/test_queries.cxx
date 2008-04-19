@@ -540,6 +540,14 @@ int main(int /* nargs */, char**)    {
   MOOT::ConstitInfo* byId = q.getConstituentByFswId(6025);
   writeConstituent(byId, std::cout);
 
+  
+  std::cout << std::endl << "Output from getLpaConstituents: " << std::endl;
+  std::vector<MOOT::ConstitInfo> lpa;
+  bool ok = q.getLpaConstituents(6241, lpa);
+  if (ok) {
+    for (unsigned ix = 0; ix < lpa.size(); ix++) 
+      writeConstituent(&(lpa[ix]), std::cout);
+  }
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
@@ -582,9 +590,9 @@ void writeConstituent(MOOT::ConstitInfo* pInfo, std::ostream& out) {
   out << "status = " << pInfo->getStatus() << std::endl;
   if  ((pInfo->getSchemaId()).size() > 0 ) {
     out << "schema id = " << pInfo->getSchemaId() << std::endl;
-    out << "instance id = " << pInfo->getInstanceId() << std::endl;
-    out << "instance version id = " << pInfo->getInstanceVersionId() 
+    out << "schema version id = " << pInfo->getSchemaVersionId() 
         << std::endl;
+    out << "instance id = " << pInfo->getInstanceId() << std::endl;
   }
   out << std::endl;
 }
