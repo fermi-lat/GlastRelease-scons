@@ -677,7 +677,7 @@ void TkrHits::saveAllHist( bool saveWaferOcc, bool runFitTot )
   TTree *tree = new TTree("timeStamps","time stamps");
   tree->Branch("startTime",&m_startTime,"startTime/D");
   tree->Branch("endTime",&m_endTime,"endTime/D");
-  tree->Branch("fistRunId",&m_firstRunId,"firstRunId/i"); // unsigned int
+  tree->Branch("firstRunId",&m_firstRunId,"firstRunId/i"); // unsigned int
   tree->Branch("lastRunId",&m_lastRunId,"lastRunId/i"); // unsigned int
   tree->Fill();
   tree->Write();
