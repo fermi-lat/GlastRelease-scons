@@ -18,6 +18,7 @@
 
 #include "mysql/mysql.h"
 #include "mysql/errmsg.h"
+#include "mysql/mysqld_error.h"
 #include <iostream>
 #include <cerrno>
 #include <cstdlib>
@@ -338,6 +339,9 @@ namespace rdbModel {
     return mysqlEscape(m_mysql, value);
   }
 
+  bool MysqlConnection::duplicateError() const {
+    return (getLastError() == ER_DUP_ENTRY);
+  }
 
   unsigned MysqlConnection::getLastError( ) const {
     unsigned errcode;

@@ -1,5 +1,6 @@
 // $Header$ 
 #include "rdbModel/Rdb.h"
+#include "rdbModel/Db/Connection.h"
 #include "rdbModel/Tables/Table.h"
 #include "rdbModel/RdbException.h"
 #include "rdbModel/Management/Builder.h"
@@ -24,6 +25,11 @@ namespace rdbModel {
     }
     else return errCode;
   }
+
+  bool Rdb::duplicateError() const {
+    return m_connection->duplicateError();
+  }
+
 
   Table* Rdb::getTable(const std::string& name) const {
     unsigned nTable = m_tables.size();

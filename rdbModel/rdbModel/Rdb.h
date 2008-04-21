@@ -49,6 +49,9 @@ namespace rdbModel {
     virtual ~Rdb();
     Rdb() : m_connection(0), m_builder(0), m_descrip("") { }
 
+    // Return true iff insert failed because of uniqueness constraint
+    bool duplicateError() const;
+
     int build(const std::string& description, Builder* b);
 
     unsigned getMajorVersion(){return m_majorVersion;};

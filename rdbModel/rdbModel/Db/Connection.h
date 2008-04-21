@@ -258,6 +258,10 @@ namespace rdbModel{
 
     virtual unsigned getLastError( ) const = 0;
 
+    // Return true iff last operation was an insert violating
+    // uniqueness constraint
+    virtual bool duplicateError() const = 0;
+
   protected:
     std::ostream* m_out;
     std::ostream* m_err;

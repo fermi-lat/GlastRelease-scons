@@ -203,6 +203,10 @@ namespace rdbModel{
     virtual bool 
     compileAssertion(const Assertion* a, std::string& sqlString) const;
 
+    // Return true iff last operation was an insert violating
+    // uniqueness constraint
+    virtual bool duplicateError() const;
+
     virtual unsigned  getLastError( ) const;
 
     /**
