@@ -86,7 +86,7 @@ public:
     
     */
     virtual std::string getItem(const std::string & tupleName, 
-        const std::string& itemName, void*& pointer)const =0;
+        const std::string& itemName, void*& pointer) =0;
 
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName)=0; 
