@@ -51,7 +51,7 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     /// in Figure 124 and read the description in Section 1.6.5
 
     // AKA GEM hitmap.  See the GEM documetation cited above Section 4.9
-    const GemDataTileList& tileList = ldfGem.tileList();
+    //const GemDataTileList& tileList = ldfGem.tileList();
 
     const std::map<const char*, ldfReader::AcdDigi*> acdCol = myLatData->getAcdCol();
     std::map<const char*, ldfReader::AcdDigi*>::const_iterator thisAcdDigi;
