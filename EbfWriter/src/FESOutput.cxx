@@ -979,7 +979,7 @@ unsigned int FESOutput::dumpCAL(const EbfCalData *cal, ICalTrigTool &calTrigTool
                  /// all 4 cal trigger bits for single crystal
                  using namespace CalUtil;
                  CalArray<XtalDiode, bool> calTriggerBits;
-                 const XtalIdx xtalIdx(tower, layer, nlog);
+                 const XtalIdx xtalIdx(tower, LyrNum(layer), nlog);
                  for (XtalDiode xDiode;
                       xDiode.isValid();
                       xDiode++) {

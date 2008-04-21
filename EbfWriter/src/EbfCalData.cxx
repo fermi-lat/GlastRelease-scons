@@ -46,8 +46,6 @@ static inline unsigned int pack (int xtalId,
 void EbfCalData::initialize ()
 {
 
-   StatusCode sc;
-
    unsigned int      itower;
    EbfCalTowerData   *tower;
 
@@ -166,7 +164,7 @@ StatusCode EbfCalData::fill (const Event::CalDigiCol &calDigiCol,
            /// all 4 cal trigger bits for single crystal
            using namespace CalUtil;
            CalArray<XtalDiode, bool> calTriggerBits;
-           const XtalIdx xtalIdx(towerId, layerId, xtalId);
+           const XtalIdx xtalIdx(towerId, LyrNum(layerId), xtalId);
            for (XtalDiode xDiode;
                 xDiode.isValid();
                 xDiode++) {
