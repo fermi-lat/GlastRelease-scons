@@ -57,7 +57,7 @@ namespace CalUtil {
             >> ped[0] >> ped[1] >> ped[2] >> ped[3];
 
       const FaceIdx faceIdx(twr,
-                            lyr,
+                            LyrNum(lyr),
                             col,
                             // the parenthesis are _very_ important.
                             // see Scott Meyers "Effective STL" Item 6

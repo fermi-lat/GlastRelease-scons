@@ -96,6 +96,20 @@ namespace CalUtil {
     m_data = pos - first;
   }
 
+  FaceNum::FaceNum(const std::string &str) {
+    /// find string in list of mnemonics
+    static const string *const first = FACE_MNEM;
+    static const string *const last = FACE_MNEM + FaceNum::N_VALS;
+    const string *const pos = find(FACE_MNEM,
+                                   last,
+                                   str);
+    if (pos == last)
+      throw runtime_error(str + " is inavlid FaceNum string repr");
+    
+    /// set internal index value
+    m_data = pos - first;
+  }
+
   GCRCNum::GCRCNum(const LyrNum &lyr) :
     SimpleId(lyr.val()/2) {}
 
@@ -163,5 +177,7 @@ namespace CalUtil {
     return getFaceIdx().toStr() + "R" + toString(getRng().val());
   }
 
-
+  string LyrIdx::toStr() const {
+    return "T" + toString(getTwr().val()) + "L" + toString(getLyr().val());
+  }
 };
