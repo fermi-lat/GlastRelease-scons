@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r6p2 21-Apr-2008 ZGF Add some explicit contructors for CalUtil/CalDefs objects - shouldn't break anything
  * v1r6p1 17-Apr-2008 BLW  Fill Part ID into EBF header
  * v1r6   15-Apr-2008 BLW  Fix ACD Pha Range Bug; TOTs 10 --> 8 bits
  * v1r5   17-Jan-2007 ZGF

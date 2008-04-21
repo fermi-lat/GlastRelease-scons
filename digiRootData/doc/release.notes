@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r0p1   21-Apr-2008 ZGF added 'const' specifiers to some methods, shouldn't break anything
 v11r0     17-Apr-2008 HMK Updates to LpaKeys, for DFI upgrade
           removes CDM_keys vector, and adds two new UInt_t members
 v10r3     17-Apr-2008 HMK add in RunInfo::dataTransferId to address JIRA
