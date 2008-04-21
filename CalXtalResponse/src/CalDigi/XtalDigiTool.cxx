@@ -138,17 +138,17 @@ StatusCode XtalDigiTool::initialize() {
 
 /** \brief calculate single cystal CalDigi object from diode signal levels
 
-    Basic Algorithm:
-    - test LAC thresholds, quit early if zeroSuppression is enabled
-    - check channel failure status from CalFailureMode
-    - convert cidac->adc units for each channel
-    - select 'best range' or lowest non-saturated range
-    - generate CalDigi object
+Basic Algorithm:
+- test LAC thresholds, quit early if zeroSuppression is enabled
+- check channel failure status from CalFailureMode
+- convert cidac->adc units for each channel
+- select 'best range' or lowest non-saturated range
+- generate CalDigi object
   
 */
 
 StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
-                                   CalUtil::CalVec<CalUtil::FaceNum, bool> &lacBits,
+                                   CalVec<FaceNum, bool> &lacBits,
                                    const bool zeroSuppress, string calFirstRng) {
   StatusCode sc;
   MsgStream msglog(msgSvc(), name());
@@ -228,52 +228,52 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
   // generate xtalDigReadouts.
 
   if(calFirstRng== "autoRng")  // default (best range) R/O mode
-  {
+    {
       CalVec<FaceNum, RngNum> bestRng;
       
       sc= rangeSelect(xtalIdx, adcPed, bestRng);
       if(sc.isFailure()) return sc;
 
       sc= fillDigi(calDigi, adcPed, bestRng, failureStatus);
-  }
+    }
   else                         // forced range R/O mode
-  {
+    {
       if(calFirstRng== "lex8" || calFirstRng== "lex1" || calFirstRng== "hex8" || calFirstRng== "hex1")
-      {
+        {
           CalVec<FaceNum, RngNum> forcRng;
           
           if(calFirstRng== "lex8")
-          {
-              forcRng[0]= CalUtil::lex8;
-              forcRng[1]= CalUtil::lex8;
-          }
+            {
+              forcRng[POS_FACE]= LEX8;
+              forcRng[NEG_FACE]= LEX8;
+            }
           
           if(calFirstRng== "lex1")
-          {
-              forcRng[0]= CalUtil::lex1;
-              forcRng[1]= CalUtil::lex1;
-          }
+            {
+              forcRng[POS_FACE]= LEX1;
+              forcRng[NEG_FACE]= LEX1;
+            }
           
           if(calFirstRng== "hex8")
-          {
-              forcRng[0]= CalUtil::hex8;
-              forcRng[1]= CalUtil::hex8;
-          }
+            {
+              forcRng[POS_FACE]= HEX8;
+              forcRng[NEG_FACE]= HEX8;
+            }
           
           if(calFirstRng== "hex1")
-          {
-              forcRng[0]= CalUtil::hex1;
-              forcRng[1]= CalUtil::hex1;
-          }
+            {
+              forcRng[POS_FACE]= HEX1;
+              forcRng[NEG_FACE]= HEX1;
+            }
           
           sc= fillDigi(calDigi, adcPed, forcRng, failureStatus);
-      }
+        }
       else
-      {
-        msglog << MSG::ERROR << "invalid R/O range specified in jobOptions" << endreq;
-        return StatusCode::FAILURE;
-      }
-  }
+        {
+          msglog << MSG::ERROR << "invalid R/O range specified in jobOptions" << endreq;
+          return StatusCode::FAILURE;
+        }
+    }
       
   if(sc.isFailure()) return sc;
 
@@ -281,7 +281,7 @@ StatusCode XtalDigiTool::calculate(Event::CalDigi &calDigi,
 }
 
 /// select lowest non-saturated ADC range on each crystal face
-StatusCode XtalDigiTool::rangeSelect(const CalUtil::XtalIdx xtalIdx,
+StatusCode XtalDigiTool::rangeSelect(const XtalIdx xtalIdx,
                                      CalArray<XtalRng, float> &adcPed,
                                      CalVec<FaceNum, RngNum> &bestRng) {
   for (FaceNum face; face.isValid(); face++) {

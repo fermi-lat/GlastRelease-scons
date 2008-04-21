@@ -107,7 +107,7 @@ private:
   struct AlgData {
     void Clear() {
 		fill(diodeCIDAC.begin(), diodeCIDAC.end(),0);
-		xtalIdx = CalUtil::XtalIdx(0);
+		xtalIdx = CalUtil::XtalIdx(); //< 0
 		fill(mpd.begin(), mpd.end(),0);
 	}
 

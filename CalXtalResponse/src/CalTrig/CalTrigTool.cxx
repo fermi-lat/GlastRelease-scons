@@ -187,9 +187,7 @@ StatusCode CalTrigTool::calcGlobalTrigSignalTool() {
       for (ColNum col; col.isValid(); col++) {
         
         // assemble current calXtalId
-        const XtalIdx xtalIdx(twr.val(),
-                              lyr.val(),
-                              col.val());
+        const XtalIdx xtalIdx(twr,lyr, col);
 
         StatusCode sc = calcXtalTrigSignalTool(xtalIdx);
         if (sc.isFailure())

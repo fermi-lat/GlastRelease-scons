@@ -307,9 +307,9 @@ StatusCode CalSignalTool::calcNoise() {
       for (ColNum col; col.isValid(); col++) {
         
         // assemble current calXtalId
-        const XtalIdx xtalIdx(twr.val(),
-                              lyr.val(),
-                              col.val());
+        const XtalIdx xtalIdx(twr,
+                              lyr,
+                              col);
 
         StatusCode sc = calcPoissonicNoiseXtal(xtalIdx);
         if (sc.isFailure())
