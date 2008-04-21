@@ -43,6 +43,16 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     // Retrieve the LAT data for this event and grab the ACD digi data
     ldfReader::LatData* myLatData = ldfReader::LatData::instance();
     if (!myLatData) return StatusCode::SUCCESS;
+ 
+    ldfReader::GemData ldfGem = myLatData->getGem();
+    unsigned short cnoVector = ldfGem.cnoVector();
+    /// This cnoVector is described in 
+    /// http://www-glast.slac.stanford.edu/IntegrationTest/ONLINE/docs/GEM.pdf 
+    /// in Figure 124 and read the description in Section 1.6.5
+
+    // AKA GEM hitmap.  See the GEM documetation cited above Section 4.9
+    const GemDataTileList& tileList = ldfGem.tileList();
+
     const std::map<const char*, ldfReader::AcdDigi*> acdCol = myLatData->getAcdCol();
     std::map<const char*, ldfReader::AcdDigi*>::const_iterator thisAcdDigi;
     
@@ -83,6 +93,7 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
             pha[index] = (unsigned short) curReadout->getPha();
             hitMapArr[index] = curReadout->getHit();
             acceptMapArr[index] = curReadout->getAccept();
+            cnoArr[index] = ((cnoVector >> curReadout->getCable()) & 1) ? true : false;
 
             range[index] = (curReadout->getRange() == 0) ? Event::AcdDigi::LOW : Event::AcdDigi::HIGH;
             error[index] = (curReadout->getParityError() == ldfReader::AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;

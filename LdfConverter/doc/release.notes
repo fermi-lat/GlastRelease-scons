@@ -3,6 +3,8 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v4r1    18-Apr-2007 HMK JIRA ACD-19 set the CNO bits in the ACD digis using
+        the GEM CNO word
 v4r0    17-Apr-2007 HMK JIRA ROOT-34 adding new JO parameter OldStyleRunId
         which defaults to false, but when set to true, will obtain the runId
         the same way I&T did, rather than the method that is used for flight
