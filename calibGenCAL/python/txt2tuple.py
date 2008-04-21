@@ -71,7 +71,7 @@ if __name__ == '__main__':
             # don't process this line
             if has_header:
                 continue
-        
+
         vals = [float(x) for x in line]
         data = array.array('f',vals)
         tpl.Fill(data)

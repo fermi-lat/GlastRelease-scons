@@ -80,7 +80,7 @@ if __name__ == '__main__':
                 for face in range(calConstant.NUM_END):
                     online_face = calConstant.offline_face_to_online[face]
                     for rng in range(calConstant.NUM_RNG):
-                        length = int(lenData[rng][twr][row][online_face][col])
+                        length = int(lenData[rng][twr][row][online_face][col][0])
                         dacs = array.array('f',dacData[rng][twr][row][online_face][col])
                         adcs = array.array('f',adcData[rng][twr][row][online_face][col])
 
