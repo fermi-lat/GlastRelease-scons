@@ -12,6 +12,7 @@ create table SBS_to_Constituents
   creation_time          DATETIME,
   creator              VARCHAR(32) NOT NULL,
   INDEX(sbs_fk),
+  UNIQUE fk_pair (sbs_fk, Constituents_fk),
   FOREIGN KEY(sbs_fk) REFERENCES FSW_inputs (FSW_input_key)
   ON DELETE CASCADE
   ON UPDATE CASCADE,
