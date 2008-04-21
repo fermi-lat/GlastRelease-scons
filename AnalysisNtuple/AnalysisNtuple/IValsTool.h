@@ -51,7 +51,8 @@ public:
     /// return a string containing the value, as above
     virtual StatusCode getVal(std::string varName, std::string& value, int check = CALC) = 0;
     virtual StatusCode getValCheck(std::string varName, std::string& value) =0;
-    virtual void setLoadFlag() = 0;
+    virtual void setLoadOrder(int index) = 0;
+    virtual int  getLoadOrder() = 0;
     virtual bool isLoaded() = 0;
     
     /** @class Visitor 

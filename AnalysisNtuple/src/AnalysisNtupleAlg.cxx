@@ -230,6 +230,7 @@ StatusCode AnalysisNtupleAlg::initialize(){
     for (i =0; i<namesSize; ++i){
         m_toolvec.push_back(0);
         sc = pToolSvc->retrieveTool(m_toolnames[i], m_toolvec.back());
+        m_toolvec.back()->setLoadOrder(i);
         if( sc.isFailure() ) {
             log << MSG::ERROR << "Unable to find tool: " << m_toolnames[i] << endreq;
             return sc;
@@ -328,8 +329,8 @@ StatusCode AnalysisNtupleAlg::execute()
             else if (toolname=="VtxValsTool"    ) {varname = "VtxZDir";}
             else if (toolname=="CalValsTool"    ) {varname = "CalEnergyRaw";}
             else if (toolname=="CalMipValsTool" ) {varname = "CalMipNum";}
-	    else if (toolname=="GcrSelectValsTool" ) {varname = "GcrSelect[1536]","InferedZ";}
-	    else if (toolname=="GcrReconValsTool" )  {varname = "GcrRecon[1536]";}
+	    //else if (toolname=="GcrSelectValsTool" ) {varname = "GcrSelect[1536]","InferedZ";}
+	    //else if (toolname=="GcrReconValsTool" )  {varname = "GcrRecon[1536]";}
             else if (toolname=="AcdValsTool"    ) {varname = "AcdTileCount";}
             else if (toolname=="EvtValsTool"    ) {varname = "EvtEnergyRaw";}
             else if (toolname=="McAnalValsTool" ) {varname = "McaPrmEnegy";}
