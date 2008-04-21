@@ -8,7 +8,7 @@
 */
 
 // LOCAL INCLUDES
-#include "../Util/ROOTUtil.h"
+#include "src/lib/Util/ROOTUtil.h"
 
 // GLAST INCLUDES
 

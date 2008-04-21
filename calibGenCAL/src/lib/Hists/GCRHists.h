@@ -9,7 +9,7 @@
 // LOCAL INCLUDES
 #include "HistIdx.h"
 #include "HistVec.h"
-#include "../Specs/singlex16.h"
+#include "src/lib/Specs/singlex16.h"
 #include "HistMap.h"
 
 // GLAST INCLUDES

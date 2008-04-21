@@ -9,8 +9,8 @@
 #include "GCRHists.h"
 #include "HistIdx.h"
 #include "MPDHists.h"
-#include "../Util/CGCUtil.h"
-#include "../Util/ROOTUtil.h"
+#include "src/lib/Util/CGCUtil.h"
+#include "src/lib/Util/ROOTUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
