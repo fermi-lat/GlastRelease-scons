@@ -21,6 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <sstream>
 
 using namespace std;
 
@@ -100,6 +101,14 @@ namespace calibGenCAL {
 
   void LogStrm::addStream(ostream &ostrm) {
     _logStrm.getostreams().push_back(&ostrm);
+  }
+
+  std::string to_str(const int n) {
+    ostringstream tmpstrm;
+
+    tmpstrm << n;
+
+    return tmpstrm.str();
   }
 
 }; // namespace calibGenCAL

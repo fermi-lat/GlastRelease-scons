@@ -64,5 +64,7 @@ namespace calibGenCAL {
   /// return vector of each lin in txt file.
   std::vector<std::string> getLinesFromFile(const std::string &filename);
 
+  std::string to_str(const int n);
+
 }; // namespace calibGenCAL
 #endif // CGCUtil_H

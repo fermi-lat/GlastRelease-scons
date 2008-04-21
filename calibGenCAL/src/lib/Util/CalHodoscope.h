@@ -67,7 +67,7 @@ namespace calibGenCAL {
 
     // Hit lists
     /// list of xtalId's which were hit
-    std::vector<CalUtil::XtalIdx>                      hitList;
+    std::vector<CalUtil::XtalIdx> hitList;
 
     // His summary
     /// total # of hit xtals
