@@ -79,17 +79,17 @@ public:
     /*@{*/
     UInt_t summary() { return m_summary; };
 
-    UInt_t calStrobe();
-    UInt_t tag();
-    UInt_t TACK();
-    UInt_t readout4();
-    UInt_t zeroSuppress();
-    UInt_t marker();
-    UInt_t error();
-    UInt_t diagnostic();
-    UInt_t eventNumber();
+    UInt_t calStrobe() const;
+    UInt_t tag() const;
+    UInt_t TACK() const;
+    UInt_t readout4() const;
+    UInt_t zeroSuppress() const;
+    UInt_t marker() const;
+    UInt_t error() const;
+    UInt_t diagnostic() const;
+    UInt_t eventNumber() const;
     // renamed to promote the other trgParityError method
-    UInt_t getTrgParityError();
+    UInt_t getTrgParityError() const;
 
 
     ULong_t eventSizeInBytes() const { return m_eventSizeInBytes; };

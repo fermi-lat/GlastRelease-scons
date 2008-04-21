@@ -55,25 +55,25 @@ void EventSummaryData::Print(Option_t *option) const {
     cout << "OSW Len: " << m_otherContribLen[OSW] << " ERR Len: " << endl; 
 }
 
-UInt_t EventSummaryData::calStrobe() {return EventSummary::calStrobe(m_summary); }
+UInt_t EventSummaryData::calStrobe() const {return EventSummary::calStrobe(m_summary); }
 
-UInt_t EventSummaryData::tag() { return EventSummary::tag(m_summary); }
+UInt_t EventSummaryData::tag() const { return EventSummary::tag(m_summary); }
 
-UInt_t EventSummaryData::TACK() { return EventSummary::TACK(m_summary); }
+UInt_t EventSummaryData::TACK() const { return EventSummary::TACK(m_summary); }
 
-UInt_t EventSummaryData::readout4() { return EventSummary::readout4(m_summary); }
+UInt_t EventSummaryData::readout4() const { return EventSummary::readout4(m_summary); }
 
-UInt_t EventSummaryData::zeroSuppress() { return EventSummary::zeroSuppress(m_summary); }
+UInt_t EventSummaryData::zeroSuppress() const { return EventSummary::zeroSuppress(m_summary); }
 
-UInt_t EventSummaryData::marker() { return EventSummary::marker(m_summary); }
+UInt_t EventSummaryData::marker() const { return EventSummary::marker(m_summary); }
 
-UInt_t EventSummaryData::error() { return EventSummary::error(m_summary); }
+UInt_t EventSummaryData::error() const { return EventSummary::error(m_summary); }
 
-UInt_t EventSummaryData::diagnostic() { return EventSummary::diagnostic(m_summary); }
+UInt_t EventSummaryData::diagnostic() const { return EventSummary::diagnostic(m_summary); }
 
-UInt_t EventSummaryData::eventNumber() { return EventSummary::eventNumber(m_summary); }
+UInt_t EventSummaryData::eventNumber() const { return EventSummary::eventNumber(m_summary); }
 
-UInt_t EventSummaryData::getTrgParityError() { return EventSummary::trgParityError(m_summary); }
+UInt_t EventSummaryData::getTrgParityError() const { return EventSummary::trgParityError(m_summary); }
 
 
 
