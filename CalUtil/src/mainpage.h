@@ -51,8 +51,8 @@
  * @subsection SimpleCalCalib
    - represent offline cal calibration data in simple array format
    - provide readTXT() & writeTXT() methods
-   - not used by main Gleam calib pipelin, rather by test apps &
- calibGenCAL apps which do not have full Gleam toolset available
+   - not used by main Gleam calib pipeline, rather by test apps &
+     calibGenCAL apps which do not have full Gleam calibration toolset available
    
  *
  *
