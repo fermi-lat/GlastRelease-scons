@@ -22,7 +22,7 @@ using namespace std;
     \author Zachary Fewtrell
 
     \brief enums & array index types for use throughout GLAST Cal software.  
-    Required mainly because idents::CalXtalid is non-contiguous bitfield structure which
+    Required mainly because idents::CalXtalId is non-contiguous bitfield structure which
     can't (reasonably) be used as an array index.
 
     All classes have the following properties:
@@ -87,7 +87,10 @@ namespace CalUtil {
   class TwrNum : public SimpleId {
   public:
     TwrNum() : SimpleId() {}
+
+    /// \note not explicit b/c 0-15 is unabiguous, well known index
     TwrNum(const unsigned short val) : SimpleId(val) {}
+
     TwrNum(const unsigned short tRow, const unsigned short tCol) : 
       SimpleId(tRow*N_COLS + tCol) {}
 
@@ -118,7 +121,9 @@ namespace CalUtil {
   class GCRCNum : public SimpleId {
   public:
     GCRCNum() : SimpleId() {}
-    GCRCNum(const unsigned short val) : SimpleId(val) {}
+
+    explicit GCRCNum(const unsigned short val) : SimpleId(val) {}
+
     GCRCNum(const LyrNum &lyr);
 
     static const unsigned short N_VALS=4;
@@ -136,8 +141,9 @@ namespace CalUtil {
   class LyrNum : public SimpleId {
   public:
     LyrNum() : SimpleId() {}
-    LyrNum(const unsigned short val) : SimpleId(val) {}
-    inline LyrNum(const DirNum dir, const GCRCNum gcrc);
+    /// \note explicit b/c of alternate layer numbering schemes
+    explicit LyrNum(const unsigned short val) : SimpleId(val) {}
+    LyrNum(const DirNum dir, const GCRCNum gcrc);
     
     static const unsigned short N_VALS=8;
     bool isValid() const {return m_data < N_VALS;}
@@ -178,6 +184,7 @@ namespace CalUtil {
   class ColNum : public SimpleId {
   public:
     ColNum() : SimpleId() {}
+    /// \note not explicit b/c 0-11 unambiguous index
     ColNum(const unsigned short val) : SimpleId(val) {}
 
     static const unsigned short N_VALS=12;
@@ -199,12 +206,23 @@ namespace CalUtil {
   class FaceNum : public SimpleId {
   public:
     FaceNum() : SimpleId() {}
+
+    
+    /// \note explicit b/c face indexing is ambiguous 
     explicit FaceNum(const idents::CalXtalId::XtalFace face) : SimpleId(face) {}
-    FaceNum(unsigned short val) : SimpleId(val) {}
+
+    /// \note explicit b/c face indexing is ambiguous
+    explicit FaceNum(const unsigned short val) : SimpleId(val) {}
+
+    /// inverse of toStr() method
+    FaceNum(const std::string &str);
     
     static const vector<string> MNEM;
+    
     static const unsigned short N_VALS=2;    
+    
     bool isValid() const {return m_data < N_VALS;}
+    
     const std::string &toStr() const;
     
     /// allow quick conversion to idents::CalXtalId::XtalFace since internal
@@ -215,6 +233,11 @@ namespace CalUtil {
 
     bool operator==(const FaceNum that) const {return m_data == that.m_data;}
     bool operator!=(const FaceNum that) const {return m_data != that.m_data;}
+
+    /// return face id on opposite side of xtal
+    FaceNum oppositeFace() const {
+      return FaceNum(1-m_data);
+    }
   };
 
   const FaceNum POS_FACE(idents::CalXtalId::POS);
@@ -225,7 +248,9 @@ namespace CalUtil {
   class GCCCNum : public SimpleId {
   public:
     GCCCNum() : SimpleId() {}
-    GCCCNum(const unsigned short val) : SimpleId(val) {}
+
+    
+    explicit GCCCNum(const unsigned short val) : SimpleId(val) {}
 
     GCCCNum(const DirNum dir,
             const FaceNum face) 
@@ -261,11 +286,14 @@ namespace CalUtil {
   class DiodeNum : public SimpleId {
   public:
     explicit DiodeNum(const unsigned short val) : SimpleId(val) {}
-    explicit DiodeNum(const std::string &str);
+
+    /// inverse of toStr() method
+    DiodeNum(const std::string &str);
+
     DiodeNum() : SimpleId() {}
     
-    inline RngNum getX8Rng() const;
-    inline RngNum getX1Rng() const;
+    RngNum getX8Rng() const;
+    RngNum getX1Rng() const;
 
     static const vector<string> MNEM;
     static const unsigned short N_VALS = 2; 
@@ -307,9 +335,12 @@ namespace CalUtil {
   /// index class for GLAST Cal ADC range (LEX8 -> HEX1)
   class RngNum : public SimpleId {
   public:
+    /// \not not explicit b/c 0-3 is unambiguous range indexing scheme
     RngNum(const unsigned short val) : SimpleId(val) {}
+
     RngNum(DiodeNum diode, THXNum thx) :
       SimpleId(diode.val()*2 + thx.val()) {}
+
     RngNum() : SimpleId() {}
 
     static const vector<string> MNEM;
@@ -461,7 +492,7 @@ namespace CalUtil {
   /// index all crytals in single cal module
   class tXtalIdx : public TwrWideIndex {
   public:
-    explicit tXtalIdx(const idents::CalXtalId &xtal) :
+    explicit tXtalIdx(const idents::CalXtalId xtal) :
       TwrWideIndex(calc(LyrNum(xtal.getLayer()),
                         xtal.getColumn())) {}
    
@@ -489,7 +520,7 @@ namespace CalUtil {
   public:
     tFaceIdx() : TwrWideIndex() {}
    
-    explicit tFaceIdx(const idents::CalXtalId &xtalId) {
+    explicit tFaceIdx(const idents::CalXtalId xtalId) {
       if (!xtalId.validFace())
         throw invalid_argument("tFaceIdx requires valid face info in xtalId."
                                "  Programmer error");
@@ -526,7 +557,7 @@ namespace CalUtil {
   /// index all crystal diodes in single cal module
   class tDiodeIdx : public TwrWideIndex {
   public:
-    tDiodeIdx(const idents::CalXtalId &xtalId, DiodeNum diode) {
+    tDiodeIdx(const idents::CalXtalId xtalId, DiodeNum diode) {
       if (!xtalId.validFace())
         throw invalid_argument("tDiodeIdx requires valid face info in xtalId.  Programmer error");
                            
@@ -579,7 +610,7 @@ namespace CalUtil {
   /// index all adc channels in single GLAST Cal module
   class tRngIdx : public TwrWideIndex {
   public:
-    explicit tRngIdx(const idents::CalXtalId &xtalId) {
+    explicit tRngIdx(const idents::CalXtalId xtalId) {
       if (!xtalId.validFace() || ! xtalId.validRange())
         throw invalid_argument("tRngIdx requires valid face and range info in xtalId.  Programmer error");
       m_data = calc(LyrNum(xtalId.getLayer()),
@@ -676,7 +707,7 @@ namespace CalUtil {
   /// index class for all Cal layers in GLAST LAT
   class LyrIdx : public LATWideIndex {
   public:
-    explicit LyrIdx(const idents::CalXtalId &xtalId) :
+    explicit LyrIdx(const idents::CalXtalId xtalId) :
       LATWideIndex(calc(xtalId.getTower(),
                         LyrNum(xtalId.getLayer()))) {}
     LyrIdx(const TwrNum twr, const LyrNum lyr) :
@@ -691,6 +722,8 @@ namespace CalUtil {
 
     bool isValid() const {return m_data < N_VALS;}
     
+    std::string toStr() const;
+
   private:
     static unsigned calc(const TwrNum twr, const LyrNum lyr) {
       return twr.val()*TWR_BASE + lyr.val();
@@ -701,14 +734,12 @@ namespace CalUtil {
   /// index class for all Cal crystals in GLAST LAT
   class XtalIdx : public LATWideIndex {
   public:
-    explicit XtalIdx(const idents::CalXtalId &xtalId) :
+    explicit XtalIdx(const idents::CalXtalId xtalId) :
       LATWideIndex(calc(xtalId.getTower(),
                         LyrNum(xtalId.getLayer()),
                         xtalId.getColumn())) {}
 
-    /// \param val should be the result of XtalIdx::val() method to ensure proper encoding.
-    explicit XtalIdx(int val) : LATWideIndex(val) {}
-
+    /// inverse of toStr() method
     explicit XtalIdx(const std::string &str);
     
     XtalIdx(const TwrNum twr, const LyrNum lyr, const ColNum col) :
@@ -757,7 +788,7 @@ namespace CalUtil {
   public:
     FaceIdx() : LATWideIndex() {}
 
-    explicit FaceIdx(const idents::CalXtalId &faceId) {
+    explicit FaceIdx(const idents::CalXtalId faceId) {
       if (!faceId.validFace())
         throw invalid_argument("FaceIdx requires valid face info in xtalId"
                                ".  Programmer error");
@@ -858,7 +889,7 @@ namespace CalUtil {
 
     /// set internal raw value
     /// \warning (make sure you are using correctly encoded integer)
-    void setVal(unsigned v) {m_data = v;}
+    void setVal(const unsigned v) {m_data = v;}
   private:
     static unsigned calc(const TwrNum twr, const LyrNum lyr, const ColNum col, 
                          FaceNum face, DiodeNum diode) {
@@ -944,15 +975,18 @@ namespace CalUtil {
   enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
         fMeasure, fCALXtal,fCellCmp, fSegment};
    
-  // some functions must be placed after definition of types
+  /// \note inline b/c func def is outside of class body (due to use of forward declaration)
   inline RngNum DiodeNum::getX8Rng() const {return RngNum(m_data*2);}
 
+  /// \note inline b/c func def is outside of class body (due to use of forward declaration)
   inline RngNum DiodeNum::getX1Rng() const {return RngNum(getX8Rng().val()+1);}
 
+
+  /// \note inline b/c func def is outside of class body (due to use of forward declaration)
   inline LyrNum::LyrNum(const DirNum dir, const GCRCNum gcrc): 
     SimpleId(gcrc.val()*DirNum::N_VALS + dir.val()) {}
 
-
+  /// \note inline b/c func def is outside of class body (due to use of forward declaration)
   inline DirNum LyrNum::getDir() const {
     return (m_data%2 == 0) ? X_DIR : Y_DIR;}
 
@@ -974,7 +1008,7 @@ namespace CalUtil {
     AsymType(const DiodeNum posDiode, const DiodeNum negDiode) :
       SimpleId(posDiode.val()*2 + negDiode.val()) {};
     
-    inline DiodeNum getDiode(const FaceNum face) const {
+    DiodeNum getDiode(const FaceNum face) const {
       switch ((idents::CalXtalId::XtalFace)face.val()) {
       case idents::CalXtalId::POS:
         return DiodeNum(m_data/2);
@@ -1005,8 +1039,9 @@ namespace CalUtil {
   class GCFEIdx : public LATWideIndex {
   public:
     /// \param val should be the result of GCFEIdx::val() method to ensure proper encoding.
-    explicit GCFEIdx(int val) : LATWideIndex(val) {}
+    GCFEIdx(const unsigned val) : LATWideIndex(val) {}
 
+    /// inverse of toStr() method
     explicit GCFEIdx(const std::string &str);
     
     GCFEIdx(const GTEMNum tem,
@@ -1022,8 +1057,8 @@ namespace CalUtil {
       GTEMNum::N_VALS*GCCCNum::N_VALS*GCRCNum::N_VALS*GCFENum::N_VALS;
 
     GTEMNum getGTEM() const {return m_data/TEM_BASE;}
-    GCCCNum getGCCC() const {return (m_data%TEM_BASE)/CCC_BASE;}
-    GCRCNum getGCRC() const {return (m_data%CCC_BASE)/CRC_BASE;}
+    GCCCNum getGCCC() const {return GCCCNum((m_data%TEM_BASE)/CCC_BASE);}
+    GCRCNum getGCRC() const {return GCRCNum((m_data%CCC_BASE)/CRC_BASE);}
     GCFENum getGCFE() const {return m_data%CRC_BASE;}
 
     bool isValid() const {return m_data < N_VALS;}
@@ -1050,8 +1085,10 @@ namespace CalUtil {
   class GCRCIdx : public LATWideIndex {
   public:
     /// \param val should be the result of GCRCIdx::val() method to ensure proper encoding.
-    explicit GCRCIdx(int val) : LATWideIndex(val) {}
+    /// \note explicit as row indexing is ambiguous
+    explicit GCRCIdx(const unsigned val) : LATWideIndex(val) {}
 
+    /// inverse of toStr() method
     explicit GCRCIdx(const std::string &str);
     
     GCRCIdx(const GTEMNum tem,
@@ -1066,8 +1103,8 @@ namespace CalUtil {
       GTEMNum::N_VALS*GCCCNum::N_VALS*GCRCNum::N_VALS;
 
     GTEMNum getGTEM() const {return m_data/TEM_BASE;}
-    GCCCNum getGCCC() const {return (m_data%TEM_BASE)/CCC_BASE;}
-    GCRCNum getGCRC() const {return m_data%CCC_BASE;}
+    GCCCNum getGCCC() const {return GCCCNum((m_data%TEM_BASE)/CCC_BASE);}
+    GCRCNum getGCRC() const {return GCRCNum(m_data%CCC_BASE);}
 
     bool isValid() const {return m_data < N_VALS;}
 
@@ -1090,8 +1127,9 @@ namespace CalUtil {
   class GCCCIdx : public LATWideIndex {
   public:
     /// \param val should be the result of GCCCIdx::val() method to ensure proper encoding.
-    explicit GCCCIdx(int val) : LATWideIndex(val) {}
+    GCCCIdx(const unsigned val) : LATWideIndex(val) {}
 
+    /// inverse of toStr() method
     explicit GCCCIdx(const std::string &str);
     
     GCCCIdx(const GTEMNum tem,
@@ -1105,7 +1143,7 @@ namespace CalUtil {
       GTEMNum::N_VALS*GCCCNum::N_VALS;
 
     GTEMNum getGTEM() const {return m_data/TEM_BASE;}
-    GCCCNum getGCCC() const {return m_data%TEM_BASE;}
+    GCCCNum getGCCC() const {return GCCCNum(m_data%TEM_BASE);}
 
     bool isValid() const {return m_data < N_VALS;}
 

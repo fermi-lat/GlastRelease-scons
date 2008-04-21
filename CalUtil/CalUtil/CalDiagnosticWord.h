@@ -30,6 +30,9 @@ namespace CalUtil {
       
     }
 
+    /// construct from packed 32 bit word
+    CalDiagnosticWord(const unsigned dataWord);
+
     /// return 32 bit Cal diagnostic word with all LAC & trigger bits
     /// set 
     unsigned getDatum() const;

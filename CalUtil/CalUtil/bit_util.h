@@ -29,5 +29,14 @@ namespace CalUtil {
       datum &= ~mask;
     }
   }
+
+  /// return boolean value of specified bit in specified integer
+  template <typename INT_TYPE>
+  bool check_bit(INT_TYPE &datum,
+                 const unsigned short bitNum) {
+    const INT_TYPE mask = 1 << bitNum;
+
+    return datum & mask;
+  }
 }
 #endif
