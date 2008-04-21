@@ -5,10 +5,10 @@
 */
 
 // LOCAL INCLUDES
-#include "lib/Algs/IntNonlinAlg.h"
-#include "lib/Util/CfgMgr.h"
-#include "lib/Util/CGCUtil.h"
-#include "lib/Util/string_util.h"
+#include "IntNonlinAlg.h"
+#include "src/lib/Util/CfgMgr.h"
+#include "src/lib/Util/CGCUtil.h"
+#include "src/lib/Util/string_util.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
@@ -26,6 +26,7 @@ using namespace calibGenCAL;
 using namespace CalUtil;
 using namespace CfgMgr;
 
+/// Manage application configuration parameters
 class AppCfg {
 public:
   AppCfg(const int argc,

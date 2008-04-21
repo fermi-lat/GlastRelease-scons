@@ -5,9 +5,9 @@
 */
 
 // LOCAL INCLUDES
-#include "lib/Algs/NeighborXtalkAlg.h"
-#include "lib/Util/CfgMgr.h"
-#include "lib/Util/CGCUtil.h"
+#include "NeighborXtalkAlg.h"
+#include "src/lib/Util/CfgMgr.h"
+#include "src/lib/Util/CGCUtil.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
@@ -26,6 +26,7 @@ using namespace calibGenCAL;
 using namespace CalUtil;
 using namespace CfgMgr;
 
+/// Manage application configuration parameters
 class AppCfg {
 public:
   AppCfg(const int argc,

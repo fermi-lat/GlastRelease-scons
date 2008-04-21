@@ -7,10 +7,10 @@
 */
 
 // LOCAL INCLUDES
-#include "lib/Util/CfgMgr.h"
-#include "lib/Util/CGCUtil.h"
-#include "lib/Hists/GCRHists.h"
-#include "lib/Hists/GCRFit.h"
+#include "src/lib/Util/CfgMgr.h"
+#include "src/lib/Util/CGCUtil.h"
+#include "src/lib/Hists/GCRHists.h"
+#include "src/lib/Hists/GCRFit.h"
 
 // GLAST INCLUDES
 #include "CalUtil/SimpleCalCalib/CalMPD.h"
@@ -27,6 +27,7 @@ using namespace calibGenCAL;
 using namespace CfgMgr;
 using namespace CalUtil;
 
+/// Manage application configuration parameters
 class AppCfg {
 public:
   AppCfg(const int argc,
