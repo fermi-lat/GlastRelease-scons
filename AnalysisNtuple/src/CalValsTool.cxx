@@ -279,10 +279,10 @@ CalValsTool::CalValsTool(const std::string& type,
 <tr><td> CalEnergyRaw 
 <td>F<td>   Sum of the raw energies in all the crystals.  
 Includes estimate of missed energy due to zero-supression.  
-This replaces the variable CalEnergySum.  NEW! 
+This replaces the variable CalEnergySum.
 <tr><td> CalEnergyCorr 
 <td>F<td>   Cal Energy corrected layer-by-layer for edges and leakage.  
-This replaces the variable CalEneSumCorr. NEW! 
+This replaces the variable CalEneSumCorr.
 <tr><td> CalLeakCorr 
 <td>F<td>   Leakage correction: this is the contained fraction of the total energy 
 after edge corrections.  

@@ -73,7 +73,7 @@ TkrHitValsTool::TkrHitValsTool(const std::string& type,
     declareInterface<IValsTool>(this); 
 }
 
-/** @page anatup_vars_optional 
+/** @page anatup_vars 
     @section tkrhitvalstool TkrHitValsTool Variables
 
 <table>
