@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-#include "mysql/mysqld_error.h"
+// #include "mysql/mysqld_error.h"
 #include "rdbModel/Rdb.h"
 #include "rdbModel/RdbException.h"
 #include "rdbModel/Management/Manager.h"
@@ -236,12 +236,14 @@ namespace rdbModel {
         return 5;
       }
       else {
-        unsigned errcode = m_rdb->getConnection()->getLastError();
+        //        unsigned errcode = m_rdb->getConnection()->getLastError();
+        bool dupError = m_rdb->duplicateError();
         if (m_dbg) { 
 
           std::cout <<  "Insert row for table " << tname
                     << ", row " << std::endl << toInsert;
-          if (errcode == ER_DUP_ENTRY) { // keep going; acceptable error
+          // if (errcode == ER_DUP_ENTRY) { // keep going; acceptable error
+          if (dupError) { // keep going; acceptable error
             std::cout << " failed with acceptable error" << std::endl;
             std::cout << "Continuing with next row..." << std::endl;
             return 0;
@@ -251,7 +253,8 @@ namespace rdbModel {
             return 5;
           }
         }
-        else if (errcode == ER_DUP_ENTRY) { // keep going; acceptable error
+        // else if (errcode == ER_DUP_ENTRY) { // keep going; acceptable error
+        else if (dupError) { // keep going; acceptable error
           std::cout << "Dup. failure ok. Continuing with next row..." 
                     << std::endl;
           return 0;

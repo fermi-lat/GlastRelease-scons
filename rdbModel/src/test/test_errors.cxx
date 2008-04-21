@@ -271,6 +271,12 @@ int doBadInsert(rdbModel::Rdb* rdb) {
   unsigned errcode = rdb->getConnection()->getLastError();
   std::cerr << "From doBadInsert.  Last error code was " << errcode 
             << std::endl;
+  if (rdb->duplicateError() ) {
+    std::cerr << "Last error was duplicate insert " << std::endl;
+  }
+  else {
+    std::cerr << "Last error was NOT duplicate insert " << std::endl;
+  }
     
   return serial;
 }
@@ -303,6 +309,12 @@ int doBadUpdate(rdbModel::Rdb* rdb, int serial) {
   std::cerr << "From doBadUpdate.  Last error code was " << errcode 
             << std::endl;
 
+  if (rdb->duplicateError() ) {
+    std::cerr << "Last error was duplicate insert " << std::endl;
+  }
+  else {
+    std::cerr << "Last error was NOT duplicate insert " << std::endl;
+  }
   return (int) nChange;
 }
 
