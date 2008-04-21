@@ -291,7 +291,19 @@ bool test_bit_util() {
     unsigned char datum = 15;
     const unsigned char expected = 11;
 
+    if (!check_bit(datum,2)) {
+      cout << "test_bit_util():ERROR: check_bit() " << endl;
+      return false;
+
+    }
+
     set_bit(datum, 2, 0);
+
+    if (check_bit(datum,2)) {
+      cout << "test_bit_util():ERROR: check_bit() " << endl;
+      return false;
+
+    }
 
     if (datum != expected) {
       cout << "test_bit_util():ERROR: expected: " << expected
@@ -308,7 +320,19 @@ bool test_bit_util() {
     int datum = 0;
     const int expected = 0x80000000;
 
+    if (check_bit(datum,31)) {
+      cout << "test_bit_util():ERROR: check_bit() " << endl;
+      return false;
+
+    }
+
     set_bit(datum,31);
+
+    if (!check_bit(datum,31)) {
+      cout << "test_bit_util():ERROR: check_bit() " << endl;
+      return false;
+
+    }
 
     if (datum != expected) {
       cout << "test_bit_util():ERROR: expected: " << expected
@@ -366,6 +390,12 @@ bool testCalDiagnosticWord() {
     cout << "testCalDiagnosticWord():ERROR: expected: " << expected_datum
          << " result: " << datum
          << endl;
+    return false;
+  }
+
+  // check alternate constructor
+  if (CalDiagnosticWord(datum).getDatum() != datum) {
+    cout << "testCalDiagnosticWord():ERROR: " << __FILE__ << ":" << __LINE__ << endl;
     return false;
   }
 
