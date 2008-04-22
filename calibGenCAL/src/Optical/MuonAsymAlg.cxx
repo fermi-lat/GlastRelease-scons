@@ -76,7 +76,7 @@ namespace calibGenCAL {
 
   void MuonAsymAlg::processEvent(const DigiEvent &digiEvent) {
     // check that we are in 4 range mode
-    const EventSummaryData &summary = digiEvent.getEventSummaryData();
+    EventSummaryData &summary = const_cast<EventSummaryData&>(digiEvent.getEventSummaryData());
     if (!summary.readout4())
       return;
 
