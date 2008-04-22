@@ -1,3 +1,7 @@
+v1r4p1      22/04/08 jct	   merge with branch, change filter logic, clean up code		
+v1r3p3gr1 23/02/08 jct     patch to introduce try catch block for potential
+                           G4Propagator exceptions
+v1r3p3  30/10/07 jct       use Gem instead of Glt, try to protect use of G4Propagator
 v1r3    30/10/07 hmk       use gr_app
 v1r2p4  16/08/07 hmk       retag v1r1r6 as v1r2p4
 v1r2p3  12/07/07 hmk       need to call MsgStream's setLevel in the tools, due

@@ -2,7 +2,8 @@
 package gcrSelectRootData  
 package manager:C.Lavalley 
 @verbatim
-v2r1p3   HMK Introduce Doxygen tabls for use in the workbook
+v2r2p1     JCT add filter status to GCR persistent objects
+v2r1p3   HMK Introduce Doxygen tables for use in the workbook
 v2r1p2   HMK remove use of idents which seems unnecessary
 v2r1p1   HMK rootmap generation
 v2r1     HMK store GcrSelectVals as a GcrSelectVals not a TObject
