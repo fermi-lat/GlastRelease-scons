@@ -16,6 +16,7 @@
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
+#include "enums/TriggerBits.h"
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Vector/ThreeVector.h" 
@@ -426,10 +427,7 @@ void GcrSelectTool::verifyLayMatchTrackCrit(){
 void GcrSelectTool::buildLayMatchMultCrit(){
 
   
-  bool debugging = false;
-
-  if(debugging)
-    m_log << MSG::INFO << "BEGIN buildLayMatchMultCrit in GcrSelectTool" << endreq;
+  m_log << MSG::VERBOSE << "BEGIN buildLayMatchMultCrit in GcrSelectTool" << endreq;
      
   for(int itow=0; itow<NTOW;itow++)  
     for (int ilay=0;ilay<NLAY;ilay++)
@@ -441,8 +439,7 @@ void GcrSelectTool::buildLayMatchMultCrit(){
   for(int ilay=0; ilay<NLAY;ilay++) { 
     int nbClu=0;
     int maxNbHits=0;
-    if(debugging)
-      m_log << MSG::INFO << "ilay= " << ilay << endreq;
+    m_log << MSG::VERBOSE << "ilay= " << ilay << endreq;
         
     for (int itow=0;itow<NTOW;itow++)
     {
@@ -453,17 +450,14 @@ void GcrSelectTool::buildLayMatchMultCrit(){
         int nbHitsInCluster=0; 
         if(m_cluArr[itow][ilay][iClu][0]>0)
         {
-          if(debugging)
-            m_log << MSG::INFO << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][0]=" << m_cluArr[itow][ilay][iClu][0] << endreq;
+	  m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][0]=" << m_cluArr[itow][ilay][iClu][0] << endreq;
           nbClu++;
 	       
-          if(debugging)
-            m_log << MSG::INFO << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][1]," << "m_cluArr[" << itow<<"]["<<ilay<<"]["<< iClu <<"][2] = " << m_cluArr[itow][ilay][iClu][1]<<","<< m_cluArr[itow][ilay][iClu][2]<< endreq;	     
+	  m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][1]," << "m_cluArr[" << itow<<"]["<<ilay<<"]["<< iClu <<"][2] = " << m_cluArr[itow][ilay][iClu][1]<<","<< m_cluArr[itow][ilay][iClu][2]<< endreq;	     
 
           nbHitsInCluster =  m_cluArr[itow][ilay][iClu][2] -  m_cluArr[itow][ilay][iClu][1] + 1;
 
-          if(debugging)
-            m_log << MSG::INFO << "nbHitsInCluster= " << nbHitsInCluster << endreq;
+	  m_log << MSG::VERBOSE << "nbHitsInCluster= " << nbHitsInCluster << endreq;
 		 
 
 	      
@@ -478,10 +472,9 @@ void GcrSelectTool::buildLayMatchMultCrit(){
      
 	   
     }// end of loop on towers
-    if(debugging){
-      m_log << MSG::INFO << "nbClu= " << nbClu << endreq;
-      m_log << MSG::INFO << "maxNbHits= " << maxNbHits << endreq;
-    }
+
+    m_log << MSG::VERBOSE << "nbClu= " << nbClu << endreq;
+    m_log << MSG::VERBOSE << "maxNbHits= " << maxNbHits << endreq;
 
     if(nbClu>0)
     {
@@ -507,13 +500,11 @@ void GcrSelectTool::buildLayMatchMultCrit(){
       
     if(m_layMatchMultCrit[ilay]==1){ // if layer is good
       m_layMatchMultCrit2[ilay]=m_layMatchMultCrit[ilay];
-      if(debugging)
-        m_log << MSG::INFO << "m_layMatchMultCrit[ " << ilay << "]==1"<< endreq;
+      m_log << MSG::VERBOSE << "m_layMatchMultCrit[ " << ilay << "]==1"<< endreq;
  
     }
     else{   // if layer is not good
-      if(debugging)
-        m_log << MSG::INFO << "m_layMatchMultCrit[ " << ilay << "]<>1"<< endreq;
+      m_log << MSG::VERBOSE << "m_layMatchMultCrit[ " << ilay << "]<>1"<< endreq;
 	  
       int layMatchMultCritCourant = m_layMatchMultCrit[ilay];
       if(m_layMatchMultCrit[ilay] == -1 && !fstLayWithClusters)  // layer is not good but no cluster has been found before 
@@ -530,24 +521,21 @@ void GcrSelectTool::buildLayMatchMultCrit(){
       
   }   
  
-  
-  
-  if(debugging)
-    m_log << MSG::INFO << "END buildLayMatchMultCrit in GcrSelectTool" << endreq;
+  m_log << MSG::VERBOSE << "END buildLayMatchMultCrit in GcrSelectTool" << endreq;
 }
 
 void GcrSelectTool::verifyLayMatchMultCrit(){
 
-  m_log << MSG::INFO << "BEGIN verifyLayMatchMultCrit in GcrSelectTool" << endreq;
+  m_log << MSG::VERBOSE << "BEGIN verifyLayMatchMultCrit in GcrSelectTool" << endreq;
   //display:
    
   for (int ilay=0;ilay<NLAY;ilay++)
-    m_log << MSG::INFO << "m_layMatchMultCrit[" << ilay << "] = " << m_layMatchMultCrit[ilay] << endreq;
+    m_log << MSG::DEBUG << "m_layMatchMultCrit[" << ilay << "] = " << m_layMatchMultCrit[ilay] << endreq;
 
   for (int ilay=0;ilay<NLAY;ilay++)
-    m_log << MSG::INFO << "m_layMatchMultCrit2[" << ilay << "] = " << m_layMatchMultCrit2[ilay] << endreq;
+    m_log << MSG::DEBUG << "m_layMatchMultCrit2[" << ilay << "] = " << m_layMatchMultCrit2[ilay] << endreq;
 
-  m_log << MSG::INFO << "END verifyLayMatchMultCrit in GcrSelectTool" << endreq;
+  m_log << MSG::DEBUG << "END verifyLayMatchMultCrit in GcrSelectTool" << endreq;
       
       
 }
@@ -703,8 +691,6 @@ StatusCode GcrSelectTool::retrieveGcrXtalsMap(){
     sc = StatusCode::FAILURE;
     m_log << MSG::INFO << "no GcrXtalCol found" << endreq ; 
   }
-    
-
   
 
   //m_log << MSG::INFO << "GcrSelectTool END retrieveMcGcrXtalMap()" << endreq ;  
@@ -763,17 +749,6 @@ void GcrSelectTool::findClusters(){
 
 float GcrSelectTool::chooseEth(){
 
-  //ugly : duplicated from GcrReconTool::getCALEnergyRaw
-    float CAL_EnergyRaw=0.0;
-    // Recover pointer to CalClusters
-    SmartDataPtr<Event::CalClusterCol> pCals(m_dataSvc,EventModel::CalRecon::CalClusterCol);
-    //Make sure we have valid cluster data and some energy
-    if (!pCals) CAL_EnergyRaw=-1.0;
-    if (pCals->empty()) CAL_EnergyRaw=-2.0;
-    Event::CalCluster* calCluster = pCals->front();
-    CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
-    if(CAL_EnergyRaw<1.0) CAL_EnergyRaw=-3.0;
-
   float Eth=100.0;
   bool passGamma, passHFC, passMip, passDFC;
 
@@ -795,11 +770,16 @@ float GcrSelectTool::chooseEth(){
   
   m_log << MSG::DEBUG << "passGamma, passHFC, passMip, passDFC= " << passGamma <<"," << passHFC << "," <<passMip << "," << passDFC << endreq;
   
+  SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
+  unsigned int word2 =  ( pEvent==0? 0 : pEvent->triggerWordTwo());
+  unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
+  bool engine4ON = (Trig_gemengine==4);
+
   if (passHFC)
     Eth = 100.0;
   else if (passGamma) {
-      if(CAL_EnergyRaw>3160)
-	{ //10^3.5 obtained with simulation
+      if(engine4ON)
+	{ 
 	  Eth = 100.0;
 	} 
       else 

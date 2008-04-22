@@ -225,7 +225,7 @@ bool GcrReconAlg::isValidForGCR()
 {
   MsgStream log(msgSvc(), name());
   if(m_HfcOrCnoTrig == "TriggerEng4"){
-    log<<MSG::DEBUG<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
+    log<<MSG::VERBOSE<<"@@@@@@@@ Using Trigger Engine 4"<<endreq ;
     SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
     unsigned int word2 =  ( pEvent==0? 0 : pEvent->triggerWordTwo());
     unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
@@ -233,10 +233,9 @@ bool GcrReconAlg::isValidForGCR()
     if(!engine4ON2){
       log<<MSG::INFO<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;}
     return engine4ON2;
-    //    return m_gcrReconTool->TriggerEngine4ON();
   }
   else{
-    log<<MSG::INFO<<"@@@@@@@@ Using Gamma,HFC,Mip,DGN OBF filters"<<endreq ;
+    log<<MSG::VERBOSE<<"@@@@@@@@ Using Gamma,HFC,Mip,DGN OBF filters"<<endreq ;
     bool passFilter=m_gcrReconTool->checkFilters();
     
     return (passFilter);
