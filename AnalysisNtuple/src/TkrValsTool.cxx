@@ -1152,7 +1152,7 @@ StatusCode TkrValsTool::calculate()
         Tkr_1_VetoGapEdge = m_VetoGapEdge;   
         Tkr_1_VetoBadCluster = m_VetoBadCluster;
 
-        unsigned int veto_track_num = -1;
+        int veto_track_num = -1;
 		// Most likely track from AcdValsTool
         if(m_pAcdTool) {
             // check that Acd executes before Tkr

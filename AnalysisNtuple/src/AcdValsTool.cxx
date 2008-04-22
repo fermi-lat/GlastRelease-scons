@@ -79,7 +79,7 @@ private:
     float ACD_Total_Ribbon_Energy;
     unsigned int ACD_TileIdRecon;
     unsigned int ACD_RibbonIdRecon;
-    unsigned int ACD_ActiveDist_TrackNum;
+    int          ACD_ActiveDist_TrackNum;
 
     // Variables computed by looping over all tracks w.r.t. hit tiles
     float ACD_ActiveDist3D;
