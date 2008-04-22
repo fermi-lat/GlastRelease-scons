@@ -33,10 +33,6 @@ using namespace CfgMgr;
 using namespace calibGenCAL;
 using namespace CalUtil;
 
-namespace {
-  static const double SMALL_POS_DBL = nexttoward(0.0, 1.0);
-}
-
 /// Manage application configuration parameters
 class AppCfg {
 public:

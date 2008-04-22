@@ -256,7 +256,6 @@ int main(const int argc, const char **argv) {
         const unsigned short twr = faceIdx.getTwr().val();
         const unsigned short lyr = faceIdx.getLyr().val();
         const unsigned short col = faceIdx.getCol().val();
-        const unsigned short face = faceIdx.getFace().val();
 
         LogStrm::get() << twr << " " << lyr << " " << col << " " << face << " "
                        << lac << " " << errlac << " " << pedDrift << " " 
