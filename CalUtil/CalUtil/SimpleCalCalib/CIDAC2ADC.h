@@ -83,7 +83,7 @@ namespace CalUtil {
       return std::max<float>(0,m_splinesDAC2ADC[rngIdx]->Eval(dac));
     }
 
-    static const short INVALID_ADC;
+    static const short INVALID_ADC = -5000;
 
     /// pedestal subtract spline point ADC by using value from first point
     void pedSubtractADCSplines();

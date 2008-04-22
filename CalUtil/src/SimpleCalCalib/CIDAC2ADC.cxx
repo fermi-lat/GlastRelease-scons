@@ -20,27 +20,6 @@ namespace CalUtil {
   using namespace std;
   using namespace CalUtil;
 
-  namespace {
-    /// how many points for each smoothing 'group'?  (per adc range)
-    static const unsigned short SMOOTH_GRP_WIDTH[] = {
-      3, 4, 3, 4
-    };
-    /// how many points at beginning of curve to extrapolate from following points
-    static const unsigned short EXTRAP_PTS_LO[]    = {
-      2, 2, 2, 2
-    };
-    /// how many points to extrapolate beginning of curve _from_
-    static const unsigned short EXTRAP_PTS_LO_FROM[] = {
-      5, 5, 5, 5
-    };
-    /// how many points at end of curve not to smooth (simply copy them over verbatim from raw data)
-    static const unsigned short SMOOTH_SKIP_HI[]   = {
-      6, 10, 6, 10
-    };
-  };
-
-  const short CIDAC2ADC::INVALID_ADC = -5000;
-
   CIDAC2ADC::CIDAC2ADC()
   {
   }
