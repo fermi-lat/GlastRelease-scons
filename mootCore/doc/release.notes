@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r15 22-Apr-2008  jrb  Additional fields in Constituents table
    v1r14 27-Mar-2008  jrb  Add getConstituent routines
    v1r13 14-Mar-2008  jrb  Table design for MootBuild::registerConstituents
    v1r12p1 12-Mar-2008jrb  Add Acq_summary table to mood.xml and mood_user.xml
