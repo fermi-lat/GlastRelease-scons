@@ -29,6 +29,7 @@ AcdPha2MipTool::AcdPha2MipTool
    declareProperty("MIPSTileCut",    m_mips_tile_cut = 0.0);
    declareProperty("PHARibbonCut",    m_pha_ribbon_cut = 0.0);
    declareProperty("MIPSRibbonCut",    m_mips_ribbon_cut = 0.0);
+   declareProperty("VetoThrehsold",    m_vetoThreshold = 0.4);
  }
 
 AcdPha2MipTool::~AcdPha2MipTool()
@@ -102,6 +103,24 @@ StatusCode AcdPha2MipTool::makeAcdHit ( const Event::AcdDigi& digi,
   double mipsPmtB(0.);
   bool acceptDigi(false);
   bool ok = getCalibratedValues(digi,mipsPmtA,mipsPmtB,acceptDigi);
+
+  // Check Veto thresholds
+  if ( digi.getHitMapBit( Event::AcdDigi::A ) ) {
+    mipsPmtA = mipsPmtA > m_vetoThreshold ? mipsPmtA : m_vetoThreshold;
+    acceptDigi = true;
+  }
+  if ( digi.getHitMapBit( Event::AcdDigi::B ) ) {
+    mipsPmtB = mipsPmtB > m_vetoThreshold ? mipsPmtB : m_vetoThreshold;
+    acceptDigi = true;
+  }
+
+  // Check for Ninja Hits
+  //if ( digi.isNinja() {
+  //  mipsPmtA = mipsPmtA > m_vetoThreshold ? mipsPmtA : m_vetoThreshold;
+  //  mipsPmtB = mipsPmtB > m_vetoThreshold ? mipsPmtB : m_vetoThreshold;
+  //  acceptDigi = true;
+  //}
+
   if ( !ok ) return StatusCode::FAILURE;
   if ( acceptDigi ) {
     hit = new Event::AcdHit(digi,mipsPmtA,mipsPmtB);

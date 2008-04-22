@@ -153,6 +153,8 @@ private:
   float m_pha_ribbon_cut;
   /// cut ribbons with MIP equivalent signal below this value
   float m_mips_ribbon_cut;
+  /// Value to use for "Ninja" hits, with no signal, but veto bit asserted
+  float m_vetoThreshold;
 
   /// Output collection
   Event::AcdHitCol* output;
