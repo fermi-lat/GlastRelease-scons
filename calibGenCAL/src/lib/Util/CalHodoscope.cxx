@@ -25,8 +25,8 @@ namespace calibGenCAL {
 
   void CalHodoscope::clear() {
     // zero out all vectors
-    fill(adc_ped.begin(), adc_ped.end(), CIDAC2ADC::INVALID_ADC);
-    fill(dac.begin(), dac.end(), CIDAC2ADC::INVALID_ADC);
+    fill(adc_ped.begin(), adc_ped.end(), CIDAC2ADC::INVALID_ADC());
+    fill(dac.begin(), dac.end(), CIDAC2ADC::INVALID_ADC());
     fill_zero(perLyr);
     fill(bestRng.begin(), bestRng.end(), LEX8);
 

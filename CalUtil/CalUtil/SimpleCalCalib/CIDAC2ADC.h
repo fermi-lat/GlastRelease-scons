@@ -68,7 +68,7 @@ namespace CalUtil {
     float adc2dac(const CalUtil::RngIdx rngIdx,
                   const float adc) const {
       if (!m_splinesADC2DAC[rngIdx])
-        return INVALID_ADC;
+        return INVALID_ADC();
 
       return std::max<float>(0,m_splinesADC2DAC[rngIdx]->Eval(adc));
     }
@@ -78,12 +78,13 @@ namespace CalUtil {
     float dac2adc(const CalUtil::RngIdx rngIdx,
                   const float dac) const {
       if (!m_splinesDAC2ADC[rngIdx])
-        return INVALID_ADC;
+        return INVALID_ADC();
 
       return std::max<float>(0,m_splinesDAC2ADC[rngIdx]->Eval(dac));
     }
 
-    static const float INVALID_ADC;
+    /// return value which is used to indicated invalid entry in table
+    static float INVALID_ADC();
 
     /// pedestal subtract spline point ADC by using value from first point
     void pedSubtractADCSplines();

@@ -20,8 +20,11 @@
 */
 
 namespace calibGenCAL {
-  extern const std::string CVS_TAG;
-  extern const std::string CGC_DEFAULT_CFGPATH;
+  /// return string representing calibGenCAL CVS tag #.
+  std::string CVS_TAG();
+  
+  /// return stirng with default cfgFile path for calibGenCAL
+  std::string CGC_DEFAULT_CFGPATH();
                      
   /// logStream will support parallel output to mutitple ostream classes
   /// (as many as are added by the addStream method)

@@ -27,8 +27,8 @@ using namespace std;
 
 namespace calibGenCAL {
 
-  const string CVS_TAG("$Name$");
-  const string CGC_DEFAULT_CFGPATH("$(CALIBGENCALROOT)/cfg/defaults.cfg");
+  string CVS_TAG() {return "$Name$";}
+  string CGC_DEFAULT_CFGPATH() {return"$(CALIBGENCALROOT)/cfg/defaults.cfg";}
 
   void output_env_banner(ostream &ostrm) {
     // GENERATE TIME STRING

@@ -20,7 +20,7 @@ namespace CalUtil {
   using namespace std;
   using namespace CalUtil;
 
-  const float CIDAC2ADC::INVALID_ADC = -5000;
+  float CIDAC2ADC::INVALID_ADC() {return -5000;}
 
   CIDAC2ADC::CIDAC2ADC()
   {
