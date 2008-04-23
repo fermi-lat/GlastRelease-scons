@@ -301,7 +301,7 @@ void gcrSelectRootWriterAlg::fillGcrSelectVals(GcrSelect *gcrSelect, Event::GcrS
     
      MsgStream log(msgSvc(), name());
  
-    log << MSG::INFO << "gcrSelectRootWriterAlg::fillGcrSelectVals BEGIN" << endreq;   
+    log << MSG::VERBOSE << "gcrSelectRootWriterAlg::fillGcrSelectVals BEGIN" << endreq;   
     
     
     GcrSelectVals* gcrSelectValsRoot = new GcrSelectVals();
@@ -312,12 +312,12 @@ void gcrSelectRootWriterAlg::fillGcrSelectVals(GcrSelect *gcrSelect, Event::GcrS
     
     //log << MSG::INFO << "gcrSelectValsRoot->getInferedZ()" << gcrSelectValsRoot->getInferedZ()<< endreq;   
     
-    std::cout << "gcrOBFStatusWord=" << std::hex << gcrSelectValsRoot->getGcrOBFStatusWord() << std::dec << std::endl;
+    log << MSG::INFO << "gcrOBFStatusWord=" << std::hex << gcrSelectValsRoot->getGcrOBFStatusWord() << std::dec << endreq;
    
     gcrSelect->addGcrSelectVals(gcrSelectValsRoot);
     
   
-   log << MSG::INFO << "gcrSelectRootWriterAlg::fillGcrSelectVals END" << endreq;   
+   log << MSG::VERBOSE << "gcrSelectRootWriterAlg::fillGcrSelectVals END" << endreq;   
     
     return;   
  
