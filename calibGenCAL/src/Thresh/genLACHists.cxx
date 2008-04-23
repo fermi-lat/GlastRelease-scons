@@ -234,7 +234,8 @@ int main(const int argc, const char **argv) {
           rng[tmpFace] = calSignalArray.getAdcRng(faceIdx);
         }
 
-        if((gemConditionsWord & 32) == 0){
+        /// avoid periodic triggers (pedestals)
+        if(!gem.getPeriodicSet()){
           if(rng[POS_FACE] == LEX8 && rng[NEG_FACE] == LEX8 && 
              adc[POS_FACE]>3 && adc[NEG_FACE]>3 && 
              adc[POS_FACE]<350 && adc[NEG_FACE]<350) {
@@ -246,7 +247,8 @@ int main(const int argc, const char **argv) {
           }
         }
         
-        if((gemConditionsWord & 32) != 0)
+        /// select periodic (only) triggers for pedestals
+        if(gemConditionsWord == enums::PERIODIC)
           hped[xtalIdx]->Fill(adc[face]); 
       }
     }

@@ -40,7 +40,7 @@ namespace calibGenCAL {
   */
   class MuonPedAlg {
   public:
-    MuonPedAlg();
+    MuonPedAlg() {}
 
     /// which type of events should be filtered for
     /// pedestal processing?
