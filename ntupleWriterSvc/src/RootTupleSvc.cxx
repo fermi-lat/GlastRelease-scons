@@ -398,40 +398,41 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             int numBranches = brCol->GetEntries();
             int iBranch;
             for (iBranch=0;iBranch<numBranches;iBranch++) {
-                std::string itemName(((TBranch*)(brCol->At(iBranch)))->GetName());
-                int index = itemName.find("[");
-                if(index!=std::string::npos) itemName = itemName.substr(0,index); 
-                TLeaf *leaf = ((TBranch*)brCol->At(iBranch))->GetLeaf(itemName.c_str());
+                std::string branchName(((TBranch*)(brCol->At(iBranch)))->GetName());
+                std::string leafName = branchName;
+                int index = leafName.find("[");
+                if(index!=std::string::npos) leafName = leafName.substr(0,index); 
+                TLeaf *leaf = ((TBranch*)brCol->At(iBranch))->GetLeaf(leafName.c_str());
                 if (!leaf) {
-                    log << MSG::WARNING << "Leaf: " << itemName << " not found" << endreq;
+                    log << MSG::WARNING << "Leaf: " << leafName << " not found" << endreq;
                     continue;
                 }
                 std::string type_name = leaf->GetTypeName();
                 if (type_name == "UInt_t")
                 {
-                    m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+                    m_itemPool[branchName]= new UInt_t[leaf->GetNdata()];
                 }        
                 else if (type_name == "Int_t")
                 {
-                    m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+                    m_itemPool[branchName]= new UInt_t[leaf->GetNdata()];
                 }
                 else if (type_name == "Float_t")
                 {
-                    m_itemPool[itemName] = new Float_t[leaf->GetNdata()];
+                    m_itemPool[branchName] = new Float_t[leaf->GetNdata()];
                 }
                 else if (type_name == "Double_t")
                 {
-                    m_itemPool[itemName] = new Double_t[leaf->GetNdata()];
+                    m_itemPool[branchName] = new Double_t[leaf->GetNdata()];
                 }
                 else if (type_name == "Char_t")
                 {
-                    m_itemPool[itemName] = new Char_t[leaf->GetNdata()];
+                    m_itemPool[branchName] = new Char_t[leaf->GetNdata()];
                 }
                 else
                 {
                     log << MSG::WARNING << "type: " << type_name <<" not found" << endreq;
                 }
-                ch->SetBranchAddress(itemName.c_str(), m_itemPool[itemName]);
+                ch->SetBranchAddress(branchName.c_str(), m_itemPool[branchName]);
             }
 
             inIter = m_inChain.find(treeName);
