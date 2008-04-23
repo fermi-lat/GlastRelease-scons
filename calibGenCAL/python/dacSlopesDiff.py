@@ -414,9 +414,6 @@ ROOT.gPad.Print(rptFilename+"(")
 lacdac_4mev.Draw("colZ")
 ROOT.gPad.Print(rptFilename)
 
-lacdac_4mev.Draw("colZ")
-ROOT.gPad.Print(rptFilename)
-
 fledac_100mev.Draw("colZ")
 ROOT.gPad.Print(rptFilename)
 
