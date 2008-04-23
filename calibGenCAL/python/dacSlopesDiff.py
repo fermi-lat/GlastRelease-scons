@@ -469,7 +469,7 @@ for twr in twrSet:
                       array.array('d',numarray.ravel(uld10pct2[2])),
                       dac_weights)
 
-# GENERATE REPORT #
+# GENERATE POSTSCRIPT REPORT #
 rptFilename = outputBasename + ".ps"
 # setup plotting options
 ROOT.gStyle.SetPalette(1)
