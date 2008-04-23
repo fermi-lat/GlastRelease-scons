@@ -36,12 +36,3 @@
     <fractionmass fraction="0.3" />
   </addmaterial>
 </composite>
-
-<composite name="crystalCsI" density = "4.53">
-<addmaterial material="Cesium">
-<natoms n="1" />
-</addmaterial>
-<addmaterial material ="Iodine">
-<natoms n="1" />
-</addmaterial>
-</composite>
