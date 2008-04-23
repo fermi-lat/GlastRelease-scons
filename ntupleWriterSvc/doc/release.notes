@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r21p6 22-Apr-2008  HMK: Create branch pointers for input TChain in
+ *         getTree routine to prevent missing any
  * v3r21p5 21-Apr-2008  HMK: Finally think it's working
  * v3r21p4 11-Apr-2008  HMK: make certain current ROOT directory is saved
  *                      and restored

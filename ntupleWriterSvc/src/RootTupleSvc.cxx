@@ -392,6 +392,47 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             long long nevents = ch->GetEntries();
             log << MSG::INFO << "Number of events in input files = " 
                 << nevents << endreq;
+            // Here is our chance to set up branch pointers for the whole input TChain, so that
+            // no elements are missed
+            TObjArray *brCol = ch->GetListOfBranches();
+            int numBranches = brCol->GetEntries();
+            int iBranch;
+            for (iBranch=0;iBranch<numBranches;iBranch++) {
+                std::string itemName(((TBranch*)(brCol->At(iBranch)))->GetName());
+                int index = itemName.find("[");
+                if(index!=std::string::npos) itemName = itemName.substr(0,index); 
+                TLeaf *leaf = ((TBranch*)brCol->At(iBranch))->GetLeaf(itemName.c_str());
+                if (!leaf) {
+                    log << MSG::WARNING << "Leaf: " << itemName << " not found" << endreq;
+                    continue;
+                }
+                std::string type_name = leaf->GetTypeName();
+                if (type_name == "UInt_t")
+                {
+                    m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+                }        
+                else if (type_name == "Int_t")
+                {
+                    m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+                }
+                else if (type_name == "Float_t")
+                {
+                    m_itemPool[itemName] = new Float_t[leaf->GetNdata()];
+                }
+                else if (type_name == "Double_t")
+                {
+                    m_itemPool[itemName] = new Double_t[leaf->GetNdata()];
+                }
+                else if (type_name == "Char_t")
+                {
+                    m_itemPool[itemName] = new Char_t[leaf->GetNdata()];
+                }
+                else
+                {
+                    log << MSG::WARNING << "type: " << type_name <<" not found" << endreq;
+                }
+                ch->SetBranchAddress(itemName.c_str(), m_itemPool[itemName]);
+            }
 
             inIter = m_inChain.find(treeName);
 
@@ -548,7 +589,7 @@ void RootTupleSvc::beginEvent()
     {
         MsgStream log(msgSvc(),name());
         std::string treeName = inIter->first;
-        inIter->second->LoadTree(m_nextEvent);
+        //inIter->second->LoadTree(m_nextEvent);
         log << MSG::DEBUG << "event: " << m_nextEvent << " TreeNum: "
             << inIter->second->GetTreeNumber() << endreq;
 
@@ -790,11 +831,16 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
         // Create a new object to store this leaf pointer
         // This is necessary when we move to a new TTree in the TChain, otherwise, this address will be lost
         // and unusable by the clients that are relying on a stable address
+        log << MSG::DEBUG << "item: " << itemName << " type: " << type_name << " dim: " << leaf->GetNdata() << endreq;
         if (itemIt == m_itemPool.end()) {
             if (type_name == "UInt_t")
             {
                 m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
             }        
+            else if (type_name == "Int_t")
+            {
+                m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+            }
             else if (type_name == "Float_t")
             {
                 m_itemPool[itemName] = new Float_t[leaf->GetNdata()];
@@ -802,6 +848,10 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
             else if (type_name == "Double_t")
             {
                 m_itemPool[itemName] = new Double_t[leaf->GetNdata()];
+            }
+            else if (type_name == "Char_t")
+            {
+                m_itemPool[itemName] = new Char_t[leaf->GetNdata()];
             }
             else
             {
