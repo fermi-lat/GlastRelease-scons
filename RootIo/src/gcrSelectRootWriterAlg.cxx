@@ -312,7 +312,7 @@ void gcrSelectRootWriterAlg::fillGcrSelectVals(GcrSelect *gcrSelect, Event::GcrS
     
     //log << MSG::INFO << "gcrSelectValsRoot->getInferedZ()" << gcrSelectValsRoot->getInferedZ()<< endreq;   
     
-    log << MSG::INFO << "gcrOBFStatusWord=" << std::hex << gcrSelectValsRoot->getGcrOBFStatusWord() << std::dec << endreq;
+    log << MSG::DEBUG << "gcrOBFStatusWord=" << std::hex << gcrSelectValsRoot->getGcrOBFStatusWord() << std::dec << endreq;
    
     gcrSelect->addGcrSelectVals(gcrSelectValsRoot);
     
