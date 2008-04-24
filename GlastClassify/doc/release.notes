@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+24-Apr-09  v6r1p7 LSR Fix for acos(-X-Y-Z) -> 3.14159...-acos(X+Y+Z)
 21-Mar-09  v6r1p7 TU  Bill's fix to CTBVtxTkr1Angle not getting set in CAL only bypass
 20-Mar-09  v6r1p6 TU  Newest Pass6 file from Bill to improve PSF/Track/Vtx/etc
 19-Mar-09  v6r1p5 TU  Fix xml file: "LkHd" to "LikeliHood" in node 1640
