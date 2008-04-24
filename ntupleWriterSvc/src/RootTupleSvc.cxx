@@ -245,7 +245,8 @@ const ISvcFactory& RootTupleSvcFactory = a_factory;
 //         Implementation of RootTupleSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc), m_nextEvent(0), m_trials(0), m_badEventCount(0)
+: Service(name,svc), m_nextEvent(0), m_trials(0), 
+  m_badEventCount(0)
 {
     // declare the properties and set defaults
     declareProperty("filename",  m_filename="RootTupleSvc.root");
@@ -392,6 +393,7 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             long long nevents = ch->GetEntries();
             log << MSG::INFO << "Number of events in input files = " 
                 << nevents << endreq;
+            ch->GetEntry(0);
             // Here is our chance to set up branch pointers for the whole input TChain, so that
             // no elements are missed
             TObjArray *brCol = ch->GetListOfBranches();
@@ -402,6 +404,8 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
                 std::string leafName = branchName;
                 int index = leafName.find("[");
                 if(index!=std::string::npos) leafName = leafName.substr(0,index); 
+                log << MSG::DEBUG << "setting branch: " << branchName
+                    << " and Leaf: " << leafName << endreq;
                 TLeaf *leaf = ((TBranch*)brCol->At(iBranch))->GetLeaf(leafName.c_str());
                 if (!leaf) {
                     log << MSG::WARNING << "Leaf: " << leafName << " not found" << endreq;
@@ -463,7 +467,7 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
                                     const std::string& fileName)
 {
     MsgStream log(msgSvc(),name());
-    bool inFileFlag = false;
+    //bool inFileFlag = false;
     StatusCode status = StatusCode::SUCCESS;
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     std::string rootFileName = fileName.empty() ? m_filename.value() : fileName;
@@ -481,14 +485,14 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
             return StatusCode::FAILURE;
         }
         m_fileCol[rootFileName] = tf;
-        inFileFlag = getTree(treename,m_tree[treename]);
+        getTree(treename,m_tree[treename]);
         m_tree[treename]->SetDirectory(tf);
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
             << " in file: " << rootFileName << endreq;
     } else if( m_tree.find(treename)==m_tree.end()){
         // create new tree
         m_fileCol[rootFileName]->cd();
-        inFileFlag = getTree(treename,m_tree[treename]);
+        getTree(treename,m_tree[treename]);
         m_tree[treename]->SetDirectory(m_fileCol[rootFileName]);
         log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
             << " in file: " << rootFileName << endreq;
@@ -498,14 +502,15 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     // Searches list of branches, and returns NULL if itemName0 is not found
     TBranch* thisBranch = m_tree[treename]->GetBranch(itemName0.c_str());
     if(thisBranch==NULL) {
+        log << MSG::DEBUG << "Creating new branch in AddAny for " << itemName0
+            << endreq;
         // This is a new branch
         m_tree[treename]->Branch(itemName0.c_str(), 
             const_cast<void*>(pval), (itemName0+type).c_str(),m_bufferSize);
     } else {
-        if (inFileFlag) {
-            m_inChain[treename]->SetBranchAddress(itemName0.c_str(),const_cast<void*>(pval));
-        } else 
-            thisBranch->SetAddress(const_cast<void*>(pval));
+        log << MSG::DEBUG << "Found branch in TTree: " << itemName0
+            << endreq;
+        thisBranch->SetAddress(const_cast<void*>(pval));
     }
     saveDir->cd();
     return status;
@@ -655,6 +660,7 @@ StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
         TBranch * b = (TBranch*)(*ta)[i];
         TLeaf* leaf = (TLeaf*)(*b->GetListOfLeaves())[0]; 
         double val = leaf->GetValue();
+        log << MSG::DEBUG << leaf->GetName() << " val: " << val << endreq;
         void* valpointer = leaf->GetValuePointer();
         if( ! isFinite(val) ){
             log << MSG::DEBUG  << "Tuple item " << leaf->GetName() << " is not finite!" << endreq;
@@ -789,6 +795,7 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
     // Hack for inputChain required for reprocessing option
 
     MsgStream log(msgSvc(),name());
+
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     TDirectory *saveDir = gDirectory;
 

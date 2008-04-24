@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r21p8 24-Apr-2008  HMK: Get the branch address correct for updated items
+ *         that were already in the original input TChain
  * v3r21p7 23-Apr-2008  HMK: Handle branch names such as PtPos[3] correctly
  * v3r21p6 22-Apr-2008  HMK: Create branch pointers for input TChain in
  *         getTree routine to prevent missing any
