@@ -14,7 +14,7 @@
 #ifndef __OutputRtn_H
 #define __OutputRtn_H
 
-#include "OnboardFilterTds/FilterStatus.h"
+//#include "OnboardFilterTds/FilterStatus.h"
 #include "OnboardFilterTds/ObfFilterStatus.h"
 
 // Define a utility class for the callback routines 
@@ -24,7 +24,7 @@ public:
 
     typedef std::map<unsigned short int, void*> SchemaToCfgMap;
 
-    OnboardFilterTds::FilterStatus*    m_filterStatus;
+    //OnboardFilterTds::FilterStatus*    m_filterStatus;
     OnboardFilterTds::ObfFilterStatus* m_obfFilterStatus;
     OnboardFilterTds::TowerHits*       m_towerHits;
     SchemaToCfgMap                     m_schemaToCfgMap;

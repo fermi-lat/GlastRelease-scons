@@ -12,8 +12,13 @@
 // the library for this package.
 DECLARE_FACTORY_ENTRIES(OnboardFilter) {
     DECLARE_ALGORITHM(OnboardFilter);
-    DECLARE_ALGORITHM(FilterTracks);
-	DECLARE_ALGORITHM(FilterAlg);
-    DECLARE_ALGORITHM(FilterAlgTuple);
-    DECLARE_TOOL(FilterDisplay);
+    DECLARE_TOOL(GammaFilterTool);
+    DECLARE_TOOL(FSWAuxLibsTool);
+    DECLARE_TOOL(MIPFilterTool);
+    DECLARE_TOOL(HIPFilterTool);
+    DECLARE_TOOL(DGNFilterTool);
+    DECLARE_TOOL(FilterTrackTool);
+    DECLARE_TOOL(TkrOutputTool);
+    DECLARE_TOOL(CalOutputTool);
+    DECLARE_TOOL(GemOutputTool);
 } 
