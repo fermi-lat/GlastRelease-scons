@@ -48,8 +48,8 @@ namespace calibGenCAL {
     static bool   fixParms[N_PARMS] = {
       true,
       false,
-      false,
-      false,
+      true,
+      true,
       true
     };
 
