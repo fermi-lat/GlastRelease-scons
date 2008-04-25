@@ -34,7 +34,7 @@ public:
     cmdParser(path_remove_ext(__FILE__)),
     rootFileHE("rootFileHE",
                'h',
-               "input HE DIODE singlex16 digi root file (one of eitehr -l or -h is required)",
+               "input HE DIODE singlex16 digi root file (one of either -l or -h is required)",
                ""),
     rootFileLE("rootFileLE",
                'l',
