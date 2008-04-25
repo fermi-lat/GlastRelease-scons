@@ -13,6 +13,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "ldfReader/data/LatData.h"
+#include "LdfEvent/Gem.h"
 
 //#include "Event/Digi/AcdDigi.h"
 #include "idents/AcdId.h"
@@ -51,7 +52,36 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     /// in Figure 124 and read the description in Section 1.6.5
 
     // AKA GEM hitmap.  See the GEM documetation cited above Section 4.9
-    //const GemDataTileList& tileList = ldfGem.tileList();
+    const GemTileList& tileList = ldfGem.tileList();
+    unsigned short xzm = tileList.xzm(); // -Y side 200s
+    unsigned short xzp = tileList.xzp(); // +Y side 400s
+    unsigned short yzm = tileList.yzm(); // -X side 100s
+    unsigned short yzp = tileList.yzp(); // +X side 300s
+    unsigned xy = tileList.xy();         // top
+    unsigned short rbn = tileList.rbn(); // ribons
+    unsigned short na = tileList.na();   // Not connected
+
+    int layer = 0;
+    int face=0, iRow, iCol;
+    // Face 0
+    for (iRow = 0; iRow <= 4; iRow++) {
+        for (iCol = 0; iCol <= 4; iCol++) {
+            if ( !((xy >> (iCol+iRow)) & 1) ) continue;
+            idents::AcdId identsId(layer, face, iRow, iCol);
+            idents::VolumeIdentifier volId = identsId.volId();
+
+
+        }
+    }
+
+    // sides
+    for (iFace = 1; iFace <= 4; iFace++) {
+        for (iRow=0; iRow <=3; iRow++) {
+            for (iCol=0; iCol<=4; iCol++) {
+
+            }
+        }
+    }
 
     const std::map<const char*, ldfReader::AcdDigi*> acdCol = myLatData->getAcdCol();
     std::map<const char*, ldfReader::AcdDigi*>::const_iterator thisAcdDigi;
