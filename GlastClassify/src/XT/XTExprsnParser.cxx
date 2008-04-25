@@ -25,19 +25,34 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
 {
     m_delimiters.clear();
 
-    m_delimiters.push_back(DelimPair("|",7));
-    m_delimiters.push_back(DelimPair("&",6));
-    m_delimiters.push_back(DelimPair("==",5));
-    m_delimiters.push_back(DelimPair("!=",5));
-    m_delimiters.push_back(DelimPair(">=",4));
-    m_delimiters.push_back(DelimPair("<=",4));
-    m_delimiters.push_back(DelimPair(">",4));
-    m_delimiters.push_back(DelimPair("<",4));
-    m_delimiters.push_back(DelimPair("!",3));
-    m_delimiters.push_back(DelimPair("+",3));
-    m_delimiters.push_back(DelimPair("-",3));
+    //m_delimiters.push_back(DelimPair("|",7));
+    //m_delimiters.push_back(DelimPair("&",6));
+    //m_delimiters.push_back(DelimPair("==",5));
+    //m_delimiters.push_back(DelimPair("!=",5));
+    //m_delimiters.push_back(DelimPair(">=",4));
+    //m_delimiters.push_back(DelimPair("<=",4));
+    //m_delimiters.push_back(DelimPair(">",4));
+    //m_delimiters.push_back(DelimPair("<",4));
+    //m_delimiters.push_back(DelimPair("!",3));
+    //m_delimiters.push_back(DelimPair("+",3));
+    //m_delimiters.push_back(DelimPair("-",3));
+    //m_delimiters.push_back(DelimPair("*",2));
+    //m_delimiters.push_back(DelimPair("/",2));
+    //m_delimiters.push_back(DelimPair("^",1));
+
+    m_delimiters.push_back(DelimPair("|",10));
+    m_delimiters.push_back(DelimPair("&",9));
+    m_delimiters.push_back(DelimPair("==",8));
+    m_delimiters.push_back(DelimPair("!=",8));
+    m_delimiters.push_back(DelimPair(">=",7));
+    m_delimiters.push_back(DelimPair("<=",7));
+    m_delimiters.push_back(DelimPair(">",7));
+    m_delimiters.push_back(DelimPair("<",7));
+    m_delimiters.push_back(DelimPair("!",6));
+    m_delimiters.push_back(DelimPair("-",5));
+    m_delimiters.push_back(DelimPair("+",4));
+    m_delimiters.push_back(DelimPair("/",3));
     m_delimiters.push_back(DelimPair("*",2));
-    m_delimiters.push_back(DelimPair("/",2));
     m_delimiters.push_back(DelimPair("^",1));
 
     m_delimMap["("]  = " ";
@@ -430,6 +445,8 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
         fndDelim = leftOp;
         startPos = lDelim;
 
+        // The lowest precendence operator has the highest "second"...
+        // And this is where the expression should be split
         if (rightOp.second > leftOp.second)
         {
             fndDelim = rightOp;
@@ -448,7 +465,9 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
         {
             const DelimPair& delimOp = *delIter;
 
-            int subStrPos = inString.find(delimOp.first, startPos);
+            //int subStrPos = inString.find(delimOp.first, startPos);
+            //int subStrPos = inString.rfind(delimOp.first.data(), stringLen-1, stringLen-startPos);
+            int subStrPos = inString.rfind(delimOp.first, stringLen-1);
 
             // Attempt to catch special case of unary + or - operator
             if (subStrPos == 0 && checkUnary && (delimOp.first == "-" || delimOp.first == "+"))
@@ -459,7 +478,8 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
             }
 
             // position in string > -1 if we have a match
-            if (subStrPos > -1)
+            //if (subStrPos > -1)
+            if (subStrPos >= startPos)
             {
 
                 // Ugliness to check for exponential notation
