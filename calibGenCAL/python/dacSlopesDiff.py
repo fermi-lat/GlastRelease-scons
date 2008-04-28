@@ -475,6 +475,7 @@ rptFilename = outputBasename + ".ps"
 ROOT.gStyle.SetPalette(1)
 
 # print first page in doc
+log.info("Opening %s"%rptFilename)
 lacdac_2mev.Draw("colZ")
 ROOT.gPad.SetGrid()
 ROOT.gPad.Print(rptFilename+"(")
