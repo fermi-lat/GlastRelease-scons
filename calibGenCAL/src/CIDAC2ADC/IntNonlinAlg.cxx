@@ -48,10 +48,6 @@ namespace calibGenCAL {
     6, 10, 6, 10
   };
 
-  IntNonlinAlg::IntNonlinAlg()
-  {
-  }
-
   void IntNonlinAlg::AlgData::initHists() {
     adcHists.reset(new TObjArray(RngIdx::N_VALS));
 
@@ -298,9 +294,12 @@ namespace calibGenCAL {
     // last idx will be last index that is <= 0.99*adc_max
     // it is the last point we intend on using.
     unsigned short last_idx = 0;
-    while (curADC[last_idx] <= 0.99*adc_max)
+    while (curADC[last_idx] <= 0.99*adc_max  
+           && 
+           last_idx < N_CIDAC_VALS-1) //bounds check
       last_idx++;
-    last_idx--;
+    if (last_idx > 0)
+      last_idx--;
 
     //-- CREATE GRAPH OBJECT for fitting --//
     copy(curADC.begin(),

@@ -35,7 +35,8 @@ namespace calibGenCAL {
   */
   class IntNonlinAlg {
   public:
-    IntNonlinAlg();
+    IntNonlinAlg() 
+    {}
 
     /// process digi root event file
     /// \param diode specify whether to analyze HE or LE circuits
