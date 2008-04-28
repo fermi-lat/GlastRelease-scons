@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include "rdbModel/Tables/Column.h"
 #include "mootCore/FileDescrip.h"
 
@@ -182,18 +183,41 @@ namespace MOOT {
                                  const std::string& status="CREATED",
                                  const std::string& instr="LAT");
     /**
-       Return keys of parameter entries supplied when config was
+       Find keys of parameter entries supplied when config was
        created.
      */
     bool getConfigParmsRequest(unsigned configKey, 
                                std::vector<unsigned>& parameterKeys);
 
     /**
-       Return keys of parameter entries used to build FSW inputs
+       Find keys of parameter entries used to build FSW inputs
        for this config
      */
     bool getConfigParmsUsed(unsigned configKey, 
                             std::vector<unsigned>& parameterKeys);
+
+    /**
+       Find list of keys for all Configs using vote with alias
+       @a alias for precinct @a precinct.
+     */
+    bool getConfigsForAlias(const std::string& precinct, 
+                            const std::string& alias,
+                            std::set<unsigned>& keys);
+
+    /**
+       Return list of keys for all Configs with Parameter files dependent
+       on the ancillary register with key @a ancKey
+    */
+    bool getConfigsForAncillary(unsigned ancKey, 
+                                std::set<unsigned>& keys);
+
+
+    /**
+       Return list of keys for all Configs whose Parameter files were
+       built using specified vote
+    */
+    bool getConfigsForVote(unsigned voteKey, std::set<unsigned>& keys);
+
 
     ConstitInfo* getConstituentInfo(unsigned constitKey);
 
@@ -264,13 +288,20 @@ namespace MOOT {
 
     VoteInfo* getVoteInfo(unsigned key);
 
-    /* If vote file specified by @a voteKey is up to date, put keys 
+    /** If vote file specified by @a voteKey is up to date, put keys 
        of parameter files of all relevant classes associated with the
        vote file in the @a parmKeys vector and return true.  
        Else return false and an empty list.
      */
     bool getVoteParameters(unsigned voteKey, 
                            std::vector<unsigned>& parmKeys);
+
+    /**
+       Get all info for registered votes belonging to specified
+       precinct
+     */
+    bool getVotesForPrecinct(const std::string& precinct, 
+                             std::vector<VoteInfo>& voteInfo);
 
     /**
        Return ancillary alias keys satisfying specified conditions on fields

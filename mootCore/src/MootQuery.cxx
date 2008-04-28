@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
+#include <set>
 #include "mootCore/MootQuery.h"
 #include "mootCore/MoodConnection.h"
 #include "mootCore/DbUtil.h"
@@ -671,8 +672,49 @@ namespace MOOT {
     std::sort(parameterKeys.begin(), parameterKeys.end());
     return true;
   }
+  bool MootQuery::getConfigsForAlias(const std::string& precinct, 
+                                     const std::string& alias,
+                                     std::set<unsigned>& keys) {
+    // get key corresponding to precinct name
+    std::string where(" WHERE name='");
+    where += precinct + std::string("'");
+    std::string prKeyStr = 
+      DbUtil::getColumnValue(m_rdb, "Precincts", "precinct_key", where,
+                             false);
+    if (prKeyStr.empty()) return false;
+    where = std::string(" WHERE Container_Precinct.v_alias='");
+    where += alias + std::string("' AND Container_Precinct.precinct_fk ='");
+    where += prKeyStr + 
+      std::string(" AND Configs.vote_fk=Container_Precinct.ctn_fk");
+    std::vector<std::string> getCols;
+    getCols.push_back("Configs.prim_key");
+    rdbModel::ResultHandle* res = 
+      m_rdb->getConnection()->select("Container_Precinct,Configs",
+                                     getCols, getCols, where);
 
-  /* ----------- */
+    if (!res) return false;  // shouldn't happen even if none are found
+    int nRows = res->getNRows();
+    std::vector<std::string> vals;
+    for (unsigned ix = 0; ix < nRows; ix++) {
+      res->getRow(vals, ix);
+      unsigned key = facilities::Util::stringToUnsigned(vals[0]);
+      keys.insert(keys.end(), key);
+    }
+    delete res;
+    return true;
+  }
+
+  bool MootQuery::getConfigsForAncillary(unsigned ancKey, 
+                                         std::set<unsigned>& keys) {
+
+    return false;    // until real implementation is written
+  }
+
+  bool MootQuery::getConfigsForVote(unsigned voteKey,
+                                    std::set<unsigned>& keys) {
+    return false;    // until real implementation is written
+  }
+
   ConstitInfo* MootQuery::getConstituentByFswId(unsigned fswId) {
     std::string fswIdStr;
     facilities::Util::utoa(fswId, fswIdStr);
@@ -1179,6 +1221,11 @@ namespace MOOT {
 
     parmKeys.clear();
     return voteIsUpToDate(voteKeyStr, &parmKeys);
+  }
+
+  bool MootQuery::getVotesForPrecinct(const std::string& precinct, 
+                                      std::vector<VoteInfo>& voteInfo) {
+    return false;   // until real implementation is written
   }
 
   unsigned MootQuery::listAncAliasKeys(std::vector<unsigned>& keys,

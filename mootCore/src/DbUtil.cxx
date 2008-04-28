@@ -93,8 +93,6 @@ namespace MOOT {
       throw rdbModel::RdbException("DbUtil::getColumnValue: bad connection");
     }
 
-      // return std::string("");
-
     std::string myWhere(where);
     rdbModel::StringVector getCols;
     getCols.push_back(col);
