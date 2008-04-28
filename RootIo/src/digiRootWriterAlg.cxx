@@ -654,6 +654,16 @@ StatusCode digiRootWriterAlg::writeFilterStatus() {
     RootPersistence::convert(*obfFilterStatusTds,obfFilterStatusRoot);
     m_digiEvt->setObfFilterStatus(obfFilterStatusRoot);
 
+    SmartDataPtr<OnboardFilterTds::ObfFilterTrack> obfFilterTrackTds(eventSvc(), "/Event/Filter/ObfFilterTrack");
+    if (!obfFilterStatusTds) {
+        log << MSG::DEBUG << "No OBF ObfFilterTrack" << endreq;
+        return sc;
+     }
+
+    ObfFilterTrack obfFilterTrackRoot;
+    RootPersistence::convert(*obfFilterTrackTds,obfFilterTrackRoot);
+    m_digiEvt->setObfFilterTrack(obfFilterTrackRoot);
+
     return sc;
 }
 

@@ -739,7 +739,18 @@ StatusCode digiRootReaderAlg::readFilterStatus() {
         return StatusCode::FAILURE;
     }
 
-    RootPersistence::convert(obfFilterStatusRoot, *obfFilterStatusTds);
+    // Now do the new style obf filter track class
+    const ObfFilterTrack& obfFilterTrackRoot = m_digiEvt->getObfFilterTrack();
+
+    OnboardFilterTds::ObfFilterTrack *obfFilterTrackTds = new OnboardFilterTds::ObfFilterTrack;
+
+    RootPersistence::convert(obfFilterTrackRoot, *obfFilterTrackTds);
+
+    sc = eventSvc()->registerObject("/Event/Filter/ObfFilterTrack", obfFilterTrackTds);
+    if (sc.isFailure()) {
+        log << MSG::INFO << "Failed to register ObfFilterTrack" << endreq;
+        return StatusCode::FAILURE;
+    }
 
     return sc;
 
