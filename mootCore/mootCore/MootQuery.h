@@ -168,9 +168,10 @@ namespace MOOT {
 
     /**
        return list of all keys of configs with algorithm name algname,
-       alg_step = step.  Empty string for @status or @instr argument
-       means any value is acceptable.  Similarly, @step=0 means
-       Config can have any value for step.
+       alg_step = step.  Empty string for @a status or @a instr 
+       (or @a name argument for getConfigKeysByName) means any value 
+       is acceptable. Similarly, @a step=0 means Config can have any 
+       value for step.
      */
     unsigned getConfigKeysByAlg(std::vector<unsigned>& keys, 
                                 const std::string& algname,

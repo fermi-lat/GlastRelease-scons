@@ -636,6 +636,7 @@ namespace MOOT {
       where  += std::string(" AND instrument='" ) + instr +
         std::string("'");
     }
+
     // Ask for keys in ascending order
     return DbUtil::getKeys(keys, m_rdb, "Configs", "config_key", where,
                            0, true);
@@ -679,15 +680,15 @@ namespace MOOT {
     std::string where(" WHERE name='");
     where += precinct + std::string("'");
     std::string prKeyStr = 
-      DbUtil::getColumnValue(m_rdb, "Precincts", "precinct_key", where,
+      DbUtil::getColumnWhere(m_rdb, "Precincts", "precinct_key", where,
                              false);
     if (prKeyStr.empty()) return false;
     where = std::string(" WHERE Container_Precinct.v_alias='");
     where += alias + std::string("' AND Container_Precinct.precinct_fk ='");
     where += prKeyStr + 
-      std::string(" AND Configs.vote_fk=Container_Precinct.ctn_fk");
+      std::string("' AND Configs.vote_fk=Container_Precinct.ctn_fk");
     std::vector<std::string> getCols;
-    getCols.push_back("Configs.prim_key");
+    getCols.push_back("Configs.config_key");
     rdbModel::ResultHandle* res = 
       m_rdb->getConnection()->select("Container_Precinct,Configs",
                                      getCols, getCols, where);
@@ -695,10 +696,11 @@ namespace MOOT {
     if (!res) return false;  // shouldn't happen even if none are found
     int nRows = res->getNRows();
     std::vector<std::string> vals;
+    std::set<unsigned>::iterator hint=keys.begin();
     for (unsigned ix = 0; ix < nRows; ix++) {
       res->getRow(vals, ix);
       unsigned key = facilities::Util::stringToUnsigned(vals[0]);
-      keys.insert(keys.end(), key);
+      hint = keys.insert(hint, key);
     }
     delete res;
     return true;
@@ -706,13 +708,67 @@ namespace MOOT {
 
   bool MootQuery::getConfigsForAncillary(unsigned ancKey, 
                                          std::set<unsigned>& keys) {
+    using facilities::Util;
+    /*
+         select config_fk from 
+         Configs_to_Parameters,Parameters_to_Ancillary where 
+         Ancillary_fk=29 and Configs_to_Parameters.Parameter_fk = 
+         Parameters_to_Ancillary.Parameter_fk;
+    */
+    std::string ancKeyStr;
+    std::string where(" WHERE Ancillary_fk='");
+    Util::utoa(ancKey, ancKeyStr);
+    where += ancKeyStr + 
+      std::string("' AND Configs_to_Parameters.Parameter_fk=Parameters_to_Ancillary.Parameter_fk ");
 
-    return false;    // until real implementation is written
+    std::vector<std::string> getCols;
+    getCols.push_back("config_fk");
+    rdbModel::ResultHandle* res = 
+      m_rdb->getConnection()->select("Configs_to_Parameters,Parameters_to_Ancillary",
+                                     getCols, getCols, where);
+
+    if (!res) return false;  // shouldn't happen even if none are found
+    int nRows = res->getNRows();
+    std::vector<std::string> vals;
+    std::set<unsigned>::iterator hint=keys.begin();
+    for (unsigned ix = 0; ix < nRows; ix++) {
+      res->getRow(vals, ix);
+      unsigned key = Util::stringToUnsigned(vals[0]);
+      hint = keys.insert(hint, key);
+    }
+    delete res;
+    return true;
   }
 
   bool MootQuery::getConfigsForVote(unsigned voteKey,
                                     std::set<unsigned>& keys) {
-    return false;    // until real implementation is written
+    using facilities::Util;
+    /*
+      select config_fk from  Parameters,Configs_to_Parameters where 
+       vote_fk=120 and parm_key=Parameter_fk;
+    */
+    std::string voteKeyStr;
+    Util::utoa(voteKey, voteKeyStr);
+    std::string where(" WHERE vote_fk='");
+    where += voteKeyStr + 
+      std::string("' AND Parameters.parm_key=Configs_to_Parameters.Parameter_fk");
+    std::vector<std::string> getCols;
+    getCols.push_back("config_fk");
+    rdbModel::ResultHandle* res = 
+      m_rdb->getConnection()->select("Parameters,Configs_to_Parameters",
+                                     getCols, getCols, where);
+
+    if (!res) return false;  // shouldn't happen even if none are found
+    int nRows = res->getNRows();
+    std::vector<std::string> vals;
+    std::set<unsigned>::iterator hint=keys.begin();
+    for (unsigned ix = 0; ix < nRows; ix++) {
+      res->getRow(vals, ix);
+      unsigned key = Util::stringToUnsigned(vals[0]);
+      hint = keys.insert(hint, key);
+    }
+    delete res;
+    return true;
   }
 
   ConstitInfo* MootQuery::getConstituentByFswId(unsigned fswId) {
@@ -1013,12 +1069,15 @@ namespace MOOT {
     Util::utoa(fmxMasterKey, fmxMasterStr);
 
     // search in FSW_inputs for  key with FSW_id = fmxMasterKey, status
-    // = "added"; return description field.
+    // = "added"; return description field. Join with FSW_class to make
+    // sure it is a master
     std::string where(" WHERE FSW_id= '");
     where += fmxMasterStr + std::string("' AND status = 'added' ");
+    where += ("AND name='LATC_master' AND FSW_class_key=class_fk");
 
     std::string masterDescrip = 
-      DbUtil::getColumnWhere(m_rdb, "FSW_inputs", "description", where, false);
+      DbUtil::getColumnWhere(m_rdb, "FSW_class,FSW_inputs", 
+                             "FSW_inputs.description", where, false);
 
     if (!masterDescrip.size())       return false; // not found
 
@@ -1225,7 +1284,25 @@ namespace MOOT {
 
   bool MootQuery::getVotesForPrecinct(const std::string& precinct, 
                                       std::vector<VoteInfo>& voteInfo) {
-    return false;   // until real implementation is written
+    // select vote_key from Precincts,Votes where precinct.name=precinct
+    std::string where(" WHERE Precincts.name='");
+    where += precinct + std::string("'");
+    std::vector<unsigned> voteKeys;
+    unsigned nKeys;
+    try {
+      nKeys = DbUtil::getKeys(voteKeys, m_rdb, "Precincts,Votes",
+                              "vote_key", where, 0, true);
+    }
+    catch (std::exception ex) {
+      return false;
+    }
+    voteInfo.reserve(voteInfo.size() + nKeys);
+    for (unsigned ix = 0; ix < nKeys; ix++) {
+      VoteInfo* v = getVoteInfo(voteKeys[ix]);
+      voteInfo.push_back(*v);
+      delete v;
+    }
+    return true;
   }
 
   unsigned MootQuery::listAncAliasKeys(std::vector<unsigned>& keys,
