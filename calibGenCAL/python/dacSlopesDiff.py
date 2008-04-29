@@ -1,5 +1,5 @@
 """
-Diff 2 CAL dacSlopes  offline calibration XML files (generate useful ROOTo plots).  The command line is:
+Diff 2 CAL dacSlopes  offline calibration XML files (generate useful ROOT plots).  The command line is:
 
 python dacSlopesDiff.py <dacSlopes_xml_file1> <dacSlopes_xml_file2> <output_basename>
 
@@ -56,7 +56,7 @@ dacSlopesPath1 = args[0]
 dacSlopesPath2 = args[1]
 outputBasename = args[2]
 
-# read in dac xml files
+# read in xml files
 log.info("Opening %s"%dacSlopesPath1)
 dacSlopesFile1 = calCalibXML.calDacSlopesCalibXML(dacSlopesPath1)
 log.info("Opening %s"%dacSlopesPath2)

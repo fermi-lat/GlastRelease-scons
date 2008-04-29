@@ -207,7 +207,7 @@ MUONGAIN_FHE_VAL = ${MUONGAIN_DACSLOPES_BASE}.${MUONGAIN_FHE_THRESH}MeV.MUON_GAI
 MUONGAIN_LAC_VAL = ${MUONGAIN_DACSLOPES_BASE}.${MUONGAIN_LAC_THRESH}MeV.MUON_GAIN.lac.val.root
 MUONGAIN_ULD_VAL = ${MUONGAIN_DACSLOPES_BASE}.${MUONGAIN_ULD_THRESH}pct.MUON_GAIN.uld.val.root
 
-MUONGAIN_CALIBSET_VAL = $(addsuffix .calibSet..val.root, $(addsuffix ${MUONGAIN_SFX}, $(basename $(notdir ${FIRST_MUOPT_DIGI}))))
+MUONGAIN_CALIBSET_VAL = $(addsuffix .calibSet.val.root, $(addsuffix ${MUONGAIN_SFX}, $(basename $(notdir ${FIRST_MUOPT_DIGI}))))
 FLIGHTGAIN_CALIBSET_VAL = $(addsuffix .calibSet..val.root, $(addsuffix ${FLIGHTGAIN_SFX}, $(basename $(notdir ${FIRST_MUOPT_DIGI}))))
 
 

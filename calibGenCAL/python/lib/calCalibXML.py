@@ -581,6 +581,11 @@ class calTholdCICalibXML(calCalibXML):
 
         self.writeFile()
 
+    # array indices
+    ADCDATA_LAC = 0
+    ADCDATA_FLE = 1
+    ADCDATA_FHE = 2
+
     def read(self):
         """
         Read data from a CAL TholdCI XML file
@@ -2155,6 +2160,7 @@ class calDacSlopesCalibXML(calCalibXML):
     calibration data stored in XML format.
     """
 
+    # array indices
     DACDATA_LACDAC_SLOPE = 0
     DACDATA_LACDAC_OFFSET = 1
     DACDATA_FLEDAC_SLOPE = 2
