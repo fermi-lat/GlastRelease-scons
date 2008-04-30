@@ -41,6 +41,9 @@ protected:
                           short &row, short &col);
 
 
+  bool createAcdDigi(Event::AcdDigiCol*& digiCol, unsigned int bitWord, int face, int offset, 
+                     int maxRow, int maxCol);
+
 };
 
 

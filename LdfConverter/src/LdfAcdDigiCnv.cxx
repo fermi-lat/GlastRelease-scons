@@ -15,8 +15,8 @@
 #include "ldfReader/data/LatData.h"
 #include "LdfEvent/Gem.h"
 
-//#include "Event/Digi/AcdDigi.h"
 #include "idents/AcdId.h"
+#include "facilities/Util.h"
 
 #include <map>
 
@@ -32,12 +32,33 @@ LdfAcdDigiCnv::LdfAcdDigiCnv(ISvcLocator* svc)
     declareObject("/Event/Digi/AcdDigiCol", objType(), "PASS");
 }
 
+bool LdfAcdDigiCnv::createAcdDigi(Event::AcdDigiCol*& digiCol, unsigned int bitWord, int face, int offset, int maxRow, int maxCol) {
+    bool created = false;
+    int layer = 0;
+    unsigned int iRow, iCol;
+    for (iRow = 0; iRow <= maxRow; iRow++) {
+        for (iCol = 0; iCol <= maxCol; iCol++) {
+            // Right shift as necessary and check the bit
+            if ( !((bitWord >> (iCol+offset*iRow)) & 1) ) continue;
+            created = true;
+            idents::AcdId identsId(layer, face, iRow, iCol);
+            idents::VolumeIdentifier volId = identsId.volId();
+            Event::AcdDigi *digi = new Event::AcdDigi(identsId, volId);
+            digi->setNinja(true);
+            digi->setGem(true);
+            digiCol->push_back(digi);
+        }
+    }
+    return created;
+}
 
 StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     // Purpose and Method:  This converter will create an empty EventHeader on
     //   the TDS.
     MsgStream log(msgSvc(), "LdfAcdDigiCnv");
     log << MSG::DEBUG << "Inside createObj" << endreq;
+    std::map<idents::AcdId, Event::AcdDigi*> digiMapCol;
+
     Event::AcdDigiCol *digiCol = new Event::AcdDigiCol;
     refpObject = digiCol;
 
@@ -52,35 +73,67 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     /// in Figure 124 and read the description in Section 1.6.5
 
     // AKA GEM hitmap.  See the GEM documetation cited above Section 4.9
-    const GemTileList& tileList = ldfGem.tileList();
-    unsigned short xzm = tileList.xzm(); // -Y side 200s
-    unsigned short xzp = tileList.xzp(); // +Y side 400s
-    unsigned short yzm = tileList.yzm(); // -X side 100s
-    unsigned short yzp = tileList.yzp(); // +X side 300s
-    unsigned xy = tileList.xy();         // top
-    unsigned short rbn = tileList.rbn(); // ribons
-    unsigned short na = tileList.na();   // Not connected
+    const ldfReader::GemDataTileList& tileList = ldfGem.tileList();
+    unsigned short xzm = tileList.XZM(); // -Y side 200s
+    unsigned short xzp = tileList.XZP(); // +Y side 400s
+    unsigned short yzm = tileList.YZM(); // -X side 100s
+    unsigned short yzp = tileList.YZP(); // +X side 300s
+    unsigned xy = tileList.XY();         // top
+    unsigned short rbn = tileList.RBN(); // ribons
+    unsigned short na = tileList.NA();   // Not connected
 
-    int layer = 0;
-    int face=0, iRow, iCol;
-    // Face 0
-    for (iRow = 0; iRow <= 4; iRow++) {
-        for (iCol = 0; iCol <= 4; iCol++) {
-            if ( !((xy >> (iCol+iRow)) & 1) ) continue;
-            idents::AcdId identsId(layer, face, iRow, iCol);
-            idents::VolumeIdentifier volId = identsId.volId();
-
-
-        }
-    }
+    // Using the GEM map, create AcdDigi objects
+    int face=0, offset = 5;
+    createAcdDigi(digiCol, xy, face, offset, 4, 4);
 
     // sides
-    for (iFace = 1; iFace <= 4; iFace++) {
-        for (iRow=0; iRow <=3; iRow++) {
-            for (iCol=0; iCol<=4; iCol++) {
+    face = 1;
+    createAcdDigi(digiCol, yzm, face, offset, 3, 4);
 
-            }
+    face = 2;
+    createAcdDigi(digiCol, xzm, face, offset, 3, 4);
+
+    face = 3;
+    createAcdDigi(digiCol, yzp, face, offset, 3, 4);
+
+    face = 4;
+    createAcdDigi(digiCol, xzp, face, offset, 3, 4); 
+
+    face = 5;
+    offset = 4;
+    createAcdDigi(digiCol, rbn, face, offset, 0, 3);
+
+    face = 6;
+    unsigned short rbn2 = rbn >> 4;
+    createAcdDigi(digiCol, rbn2, face, offset, 0, 3);
+
+    // handle NAs separately
+    int layer = 1;
+    face = 0;
+    int row = 0, col = 0;
+    int iBit;
+    for (iBit = 0; iBit <= 10; iBit++) {
+        if (!(na & (1 << iBit))) continue;
+        idents::VolumeIdentifier volId;
+        if (iBit == 10) {
+            row = 1;
+            col = 0;
+        } else {
+            col = iBit;
         }
+
+        idents::AcdId acdId(layer, face, row, col);
+        
+        std::string tileName = "NA";
+        std::string numStr;
+        facilities::Util::itoa(iBit,numStr);
+        tileName += numStr;
+    }
+
+    // Create a map for easy retrieval of the created AcdDigis
+    std::vector<Event::AcdDigi*>::const_iterator vecIt;
+    for (vecIt = digiCol->begin(); vecIt != digiCol->end(); vecIt++){
+        digiMapCol[(*vecIt)->getId()] = *vecIt;
     }
 
     const std::map<const char*, ldfReader::AcdDigi*> acdCol = myLatData->getAcdCol();
@@ -88,6 +141,7 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     
     log << MSG::DEBUG << "found acddigis: " << acdCol.size() << endreq;
 
+    // Now loop over the original AcdDigis and search for the AcdDigi in the digiCol
     for (thisAcdDigi = acdCol.begin(); thisAcdDigi != acdCol.end(); thisAcdDigi++) {
         const char *tileName = thisAcdDigi->second->getTileName();
         int tileNumber = thisAcdDigi->second->getTileNumber();
@@ -130,14 +184,23 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
             // set header Parity bit each PMT..since they're on different FREE boards
             error[index+2] = (curReadout->getHeaderParity() == ldfReader::AcdDigi::NOERROR) ? Event::AcdDigi::NOERROR : Event::AcdDigi::ERROR;
         }
-        log << MSG::DEBUG << "Creating digi obj " << endreq;
-        Event::AcdDigi *newDigi = new Event::AcdDigi (
-            identsId, volId, 0.0, pha, hitMapArr, acceptMapArr, cnoArr);
+
+        std::map<idents::AcdId, Event::AcdDigi*>::iterator findDigi = digiMapCol.find(identsId);
+        if (findDigi == digiMapCol.end()) {
+
+            log << MSG::DEBUG << "Creating digi obj " << endreq;
+            Event::AcdDigi *newDigi = new Event::AcdDigi (
+                identsId, volId, 0.0, pha, hitMapArr, acceptMapArr, cnoArr);
 
 
-        newDigi->initLdfParameters(tileName, tileNumber, range, error);
+            newDigi->initLdfParameters(tileName, tileNumber, range, error);
 
-        digiCol->push_back(newDigi);
+            digiCol->push_back(newDigi);
+        } else {
+            findDigi->second->init(pha, hitMapArr, acceptMapArr, cnoArr);
+            findDigi->second->initLdfParameters(tileName, tileNumber, range, error);
+            findDigi->second->setNinja(false);
+        }
         
     }
 
