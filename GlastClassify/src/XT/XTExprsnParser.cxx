@@ -49,9 +49,9 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
     m_delimiters.push_back(DelimPair(">",7));
     m_delimiters.push_back(DelimPair("<",7));
     m_delimiters.push_back(DelimPair("!",6));
-    m_delimiters.push_back(DelimPair("-",5));
+    m_delimiters.push_back(DelimPair("-",4));
     m_delimiters.push_back(DelimPair("+",4));
-    m_delimiters.push_back(DelimPair("/",3));
+    m_delimiters.push_back(DelimPair("/",2));
     m_delimiters.push_back(DelimPair("*",2));
     m_delimiters.push_back(DelimPair("^",1));
 
@@ -447,7 +447,8 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
 
         // The lowest precendence operator has the highest "second"...
         // And this is where the expression should be split
-        if (rightOp.second > leftOp.second)
+        // If precedence is the same then split at the furthest right (evalulate left to right)
+        if (rightOp.second >= leftOp.second)
         {
             fndDelim = rightOp;
             startPos = rightPos + rDelim + 1;
@@ -465,9 +466,15 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
         {
             const DelimPair& delimOp = *delIter;
 
+            // Break out of loop if we have found the lowest precedence operator
+            if (delimOp.second < fndDelim.second) break;
+
             //int subStrPos = inString.find(delimOp.first, startPos);
             //int subStrPos = inString.rfind(delimOp.first.data(), stringLen-1, stringLen-startPos);
             int subStrPos = inString.rfind(delimOp.first, stringLen-1);
+
+            // Ok, can't find an operator at the same location twice...
+            if (subStrPos == startPos && fndDelim.second > 0) continue;
 
             // Attempt to catch special case of unary + or - operator
             if (subStrPos == 0 && checkUnary && (delimOp.first == "-" || delimOp.first == "+"))
@@ -477,7 +484,8 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
                 subStrPos    = inString.find(delimOp.first, startPos+1);
             }
 
-            // position in string > -1 if we have a match
+            // position in string > -1 if we have a match. We want to keep the right most
+            // operator of the same precedence
             //if (subStrPos > -1)
             if (subStrPos >= startPos)
             {
@@ -508,7 +516,7 @@ XTExprsnParser::DelimPair XTExprsnParser::findNextDelimiter(const std::string& i
                 // Valid delimiter! 
                 fndDelim = delimOp;
                 startPos = subStrPos;
-                break;
+                //break;
             }
         }
 
