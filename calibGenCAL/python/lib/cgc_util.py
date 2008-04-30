@@ -5,7 +5,7 @@ collection of simple utilities shared throughout code
 """
 
 __facility__  = "Offline"
-__abstract__  = "apply calibGain correction to asymmetry xml file"
+__abstract__  = "collection of utility code"
 __author__    = "Z.Fewtrell"
 __date__      = "$Date$"
 __version__   = "$Revision$, $Author$"
