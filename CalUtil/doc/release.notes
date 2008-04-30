@@ -1,8 +1,9 @@
-\/** @file release.notes
+/** @file release.notes
 
 @verbatim
  $Id$	
  * Package CalUtil
+ * v3r12p2    30-Apr-2008 ZGF changed some public static library variables to static accessor methods as linking on windows dll's was not working correctly.
  * v3r12p1    22-Apr-2008 ZGF trying (and failing) to remove some Windows compiler messages.
  * v3r12      21-Apr-2008 ZGF made some constructors in CalDefs explicit, CalDiagnosticWord can now construct from bit field, 2 new SimpleCalCalib types supported CalDAC & ADC2NRG
  * v3r11      03-Mar-2008 ZGF added support for indexing GTEM,GCCC,GCRC,GCFE.  CalDefs unit test is not quite comprehensive
