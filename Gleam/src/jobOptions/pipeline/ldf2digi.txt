@@ -127,6 +127,8 @@ OnboardFilter.DgnConfig = "DGN_gem";
 // Gamma, HIP and DGN in the accept decision:
 OnboardFilter.FilterList = {0,1,3};
 
+// Feed all events to the filters:
+EbfWriter.ReqGemTrig = false;
 
 //
 // The following things can be changed by the user:

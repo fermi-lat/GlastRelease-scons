@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+
+* v6r34p1  AWB 01-May-08 Added EbfWriter JO to pipeline JO.
 * v6r33p18 HMK 28-Apr-08 Added 'TriRowBitsAlg' to basicOptions
 * v6r33p17 awb 16-Apr-08 Added 'TriRowBitsAlg' to pipeline JO.
 * v6r33p16 HMK 12-Mar-08 Comment out LATCalibRoot in requirements file like it
