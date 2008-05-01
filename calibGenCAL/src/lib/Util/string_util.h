@@ -77,6 +77,11 @@ namespace calibGenCAL {
       return tmp.str();
     }
 
+  /// print variable name and value to stdout
+  /// \note from http://snippets.dzone.com/posts/show/1797 , 05/01/08
+#define PRINT_VAR(x) std::cout << #x " = '" << x << "'";
+
+
 };
 
 #endif
