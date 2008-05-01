@@ -137,6 +137,10 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
     }
 
     const std::map<const char*, ldfReader::AcdDigi*> acdCol = myLatData->getAcdCol();
+    if (digiCol->size() != acdCol.size()) {
+        log << MSG::DEBUG << "GEM created AcdDigis: " << digiCol->size()
+            << " AcdDigis found in hitmap: " << acdCol.size() << endreq;
+    }
     std::map<const char*, ldfReader::AcdDigi*>::const_iterator thisAcdDigi;
     
     log << MSG::DEBUG << "found acddigis: " << acdCol.size() << endreq;

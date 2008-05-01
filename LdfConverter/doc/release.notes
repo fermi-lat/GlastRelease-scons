@@ -3,6 +3,7 @@ Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
 
+v4r2p1  30-Apr-2008 HMK insert debug logging statement
 v4r2    23-Apr-2008 HMK ACD-10 use the GemTileDataList to create AcdDigis
 v4r1p1  21-Apr-2008 HMK back off GemTileDataList until we complete ACD-10
 v4r1    18-Apr-2008 HMK JIRA ACD-19 set the CNO bits in the ACD digis using
