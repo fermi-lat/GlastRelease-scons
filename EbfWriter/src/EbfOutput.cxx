@@ -533,6 +533,7 @@ int EbfOutput::open (const char     *fileName,
  *  @param tkr  The TKR data block, contains all 16 towers.
  *  @param gem  The GEM data block.
  *  @param mcInfo  Monte Carlo information to pack into header of ebf
+ *  @param reGemTrig Require Gem Trigger for output
  *  @return     The number of 32 bit words needed to format the event
  *
  */
@@ -540,7 +541,8 @@ unsigned int EbfOutput::format (const EbfAcdData *acd,
                                 const EbfCalData *cal,
                                 const EbfTkrData *tkr,
                                 const EbfGemData *gem,
-                                unsigned int *mcInfo)
+                                unsigned int *mcInfo,
+				bool reqGemTrig)
 {
     int print = m_print;
     
@@ -558,7 +560,7 @@ unsigned int EbfOutput::format (const EbfAcdData *acd,
  
 
    /* Check if this event is triggered */
-   if (!gem->isTriggered ())
+   if (!gem->isTriggered () && reqGemTrig)
    {
 //       printf (" WARNING: Event in = %8d not triggered\n", numEvtsIn);
        return 0;

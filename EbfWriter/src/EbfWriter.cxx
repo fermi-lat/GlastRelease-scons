@@ -99,6 +99,7 @@ private:
     bool        m_WriteEbf;
     bool        m_LdfFormat;
     bool        m_storeOnTds;
+    bool        m_reqGemTrig;
 
     int m_sourceId;
     int m_sequence;
@@ -159,7 +160,8 @@ EbfWriter::EbfWriter(const std::string& name, ISvcLocator* pSvcLocator) :
     declareProperty("CalEncode" ,m_CalEncodeFlag=-1);
     declareProperty("LdfFormat" ,m_LdfFormat=false);
     declareProperty("StoreOnTds",m_storeOnTds=true);
-
+    declareProperty("ReqGemTrig",m_reqGemTrig=true);
+ 
     return;
 }
 
@@ -363,7 +365,7 @@ StatusCode EbfWriter::execute()
     //
     // Put the contributor's data into EBF format and write it out 
     //
-    unsigned int evtSize = m_output.format (&acd, &cal, &tkr, &gem, (unsigned int *)&m_McInfo);
+    unsigned int evtSize = m_output.format (&acd, &cal, &tkr, &gem, (unsigned int *)&m_McInfo, m_reqGemTrig);
     //    if (level <= MSG::DEBUG) 
     //       m_output.print  ();
     

@@ -32,7 +32,8 @@ class EbfOutput
                         const EbfCalData *cal,
                         const EbfTkrData *tkr,
                         const EbfGemData *gem,
-                        unsigned int *mcInfo);
+                        unsigned int *mcInfo,
+			bool reqGemTrig);
    
    void         writeMC (unsigned int *mcInfo, int size);
    void         print  ()  const;
