@@ -26,6 +26,8 @@ namespace CalUtil {
   class CIDAC2ADC;
 }
 
+class TNtuple;
+
 namespace calibGenCAL {
 
 
@@ -79,6 +81,7 @@ namespace calibGenCAL {
         bcastMode = true;
         adcMeans  = 0;
         adcHists = 0;
+        m_fitResults = 0;
         initHists();
       }
 
@@ -91,7 +94,11 @@ namespace calibGenCAL {
       /// profiles owned by current ROOT directory/m_histFile.
       CalUtil::CalVec<CalUtil::RngIdx, TProfile *> profiles;
 
+      /// ntuple keeps track of fit results
+      TNtuple *m_fitResults;
+
       /// create new histogram objects and accompanying TObjArray
+      /// create TNtuple object for storing fit results
       void initHists();
 
       /// currently processing 1 of 2 diodes
