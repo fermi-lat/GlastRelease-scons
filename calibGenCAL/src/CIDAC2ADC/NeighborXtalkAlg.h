@@ -7,6 +7,7 @@
 */
 
 // LOCAL INCLUDES
+#include "src/lib/Specs/singlex16.h"
 
 // GLAST INCLUDES
 #include "CalUtil/SimpleCalCalib/NeighborXtalk.h"
@@ -30,7 +31,10 @@ namespace calibGenCAL {
   */
   class NeighborXtalkAlg {
   public:
-    NeighborXtalkAlg();
+    /// @param sx16 spec describing LCI script procedure
+    NeighborXtalkAlg(const singlex16 &sx16) :
+      m_singlex16(sx16)
+    {}
 
     /// process digi root event file
     void readRootData(const std::string &rootFileName,
@@ -103,6 +107,8 @@ namespace calibGenCAL {
       // current CIDAC index
       unsigned short  testDAC;
     } eventData;
+
+    const singlex16 &m_singlex16;
   };
 
 }; // namespace calibGenCAL

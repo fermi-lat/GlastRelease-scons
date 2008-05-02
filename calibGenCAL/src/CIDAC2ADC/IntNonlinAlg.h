@@ -7,6 +7,7 @@
 */
 
 // LOCAL INCLUDES
+#include "src/lib/Specs/singlex16.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
@@ -35,7 +36,10 @@ namespace calibGenCAL {
   */
   class IntNonlinAlg {
   public:
-    IntNonlinAlg() {}
+    /// @param sx16 spec describing LCI script procedure
+    IntNonlinAlg(const singlex16 &sx16) :
+      m_singlex16(sx16)
+    {}
 
     /// process digi root event file
     /// \param diode specify whether to analyze HE or LE circuits
@@ -133,7 +137,10 @@ namespace calibGenCAL {
       /// current CIDAC index
       unsigned short  testDAC;
 
+
     } eventData;
+
+    const singlex16 &m_singlex16;
   };
 }; // namespace calibGenCAL
 #endif

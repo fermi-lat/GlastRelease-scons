@@ -152,7 +152,7 @@ namespace calibGenCAL {
 
       // first check that histogram name matches pattern
       if (name.find(prefix) != 0)
-        throw std::runtime_error(string("Histogram : ") + name + "does not belong to collection: " + m_histBasename);
+        throw std::runtime_error(std::string("Histogram : ") + name + "does not belong to collection: " + m_histBasename);
 
       // trim collection string from histogram name
       return IdxType(name.substr(prefix.size()));

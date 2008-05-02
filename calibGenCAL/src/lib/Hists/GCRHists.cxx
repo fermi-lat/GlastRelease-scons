@@ -28,8 +28,6 @@ using namespace CalUtil;
   
 namespace calibGenCAL {
 
-  using namespace singlex16;
-
   namespace {
     static const unsigned short MAX_INFERREDZ = 30;
     static const string MEANDAC_HISTNAME("meanDAC");
