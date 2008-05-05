@@ -265,7 +265,7 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("RejectIfBad", m_rejectIfBad=true); 
     declareProperty("JobInfoTreeName", m_jobInfoTreeName="jobinfo");
     declareProperty("JobInfo", m_jobInfo=""); // string, if present, will write out single TTree entry
-    declareProperty("BufferSize",m_bufferSize=1000000);
+    declareProperty("BufferSize",m_bufferSize=32000);
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

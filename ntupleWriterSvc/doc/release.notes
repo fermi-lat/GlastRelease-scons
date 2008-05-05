@@ -3,6 +3,7 @@
  *    * EOH *
 
  @verbatim
+ * v3r22   04-May-2008  HMK: Reset default buffer size to 32000 bytes
  * v3r21p8 24-Apr-2008  HMK: Get the branch address correct for updated items
  *         that were already in the original input TChain
  * v3r21p7 23-Apr-2008  HMK: Handle branch names such as PtPos[3] correctly
