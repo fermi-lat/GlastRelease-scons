@@ -54,6 +54,8 @@
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
 
+#include "G4eBremsstrahlungModel.hh"
+#include "G4VEnergyLossProcess.hh"
 
 
 #include "G4MultipleScattering.hh"
@@ -186,6 +188,13 @@ void G4EmLowEnergyPhysics::ConstructProcess()
       G4VContinuousDiscreteProcess* thePositronBremsStrahlung     = 
       	m_eLossFactory(GlastMS::EnergyLossFactory::POSITRON, GlastMS::EnergyLossFactory::BREMSSTRAHLUNG);
       G4eplusAnnihilation*          theAnnihilation               = new G4eplusAnnihilation();
+
+
+      G4eBremsstrahlungModel* bp = new G4eBremsstrahlungModel();
+      bp->SetLPMflag(false);
+      G4VEnergyLossProcess* epbrem =
+	reinterpret_cast<G4VEnergyLossProcess*>(thePositronBremsStrahlung);
+      epbrem->AddEmModel(0,bp);
       
       pmanager->AddProcess(thePositronMultipleScattering, -1,  1, 1);
       pmanager->AddProcess(thePositronIonisation,         -1,           2, 2);
