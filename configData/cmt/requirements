@@ -42,7 +42,6 @@ use xmlUtil v*
 # Force extern variable to be found on windows
 apply_pattern use_facilities_symbols
 
-macro_append fsw_linkopts "-L$(fsw_DIR)/lib -lcdm -lmdb -lcmx_asBuilt -lzlib_inflate -lfbs_rtos "
 
 macro_append cppflags "-Wno-unused-parameter " WIN32 ""
 
@@ -65,6 +64,7 @@ library configData  \
 #  gmake Linux 
 application ConfigXml2Root ../apps/ConfigXml2Root.cxx
 application RootConfigCompare  ../apps/RootConfigCompare.cxx
+application findConfigs  ../apps/findConfigs.cxx
 
 application dumpGemConfiguration ../apps/dumpGemConfiguration.cxx
 #application getIntent ../apps/getIntent.cxx
