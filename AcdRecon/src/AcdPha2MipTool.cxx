@@ -115,11 +115,11 @@ StatusCode AcdPha2MipTool::makeAcdHit ( const Event::AcdDigi& digi,
   }
 
   // Check for Ninja Hits
-  //if ( digi.isNinja() {
-  //  mipsPmtA = mipsPmtA > m_vetoThreshold ? mipsPmtA : m_vetoThreshold;
-  //  mipsPmtB = mipsPmtB > m_vetoThreshold ? mipsPmtB : m_vetoThreshold;
-  //  acceptDigi = true;
-  //}
+  if ( digi.isNinja() || digi.getGemFlag() ) {
+    mipsPmtA = mipsPmtA > m_vetoThreshold ? mipsPmtA : m_vetoThreshold;
+    mipsPmtB = mipsPmtB > m_vetoThreshold ? mipsPmtB : m_vetoThreshold;
+    acceptDigi = true;
+  }
 
   if ( !ok ) return StatusCode::FAILURE;
   if ( acceptDigi ) {

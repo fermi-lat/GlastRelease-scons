@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v4r2p2    06-May-2008 EAC Update AcdPha2Mips to set a minimum value for hits with the GEM bit set
 v4r2p1    21-Dec-2007 EAC Bug fix in AcdPha2Mips tool to consider anything with PHA or Veto bits
 v4r2      08-Nov-2007 EAC Bug fix in Ribbon arclength and plane intersection calculation
 v4r1      30-Oct-2007 HMK Use gr_app
