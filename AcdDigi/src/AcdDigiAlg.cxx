@@ -327,11 +327,16 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
     phaArr[0] = phaThreshArr[0] ? phaArr[0] : 0;
     phaArr[1] = phaThreshArr[1] ? phaArr[1] : 0;
 
+    bool gemBit = vetoArr[0] || vetoArr[1];
+    bool ninjaBit = gemBit && ( ! ( phaThreshArr[0] || phaThreshArr[1] ) );				  
+
     if ( makeDigi ) {
+      
       Event::AcdDigi* aDigi = new Event::AcdDigi(acdId, volId,
 						 m_energyDepMap[acdId], phaArr, 
 						 vetoArr, phaThreshArr, highArr);
       aDigi->setRanges(rangeArr);
+      aDigi->initGem(ninjaBit,gemBit);
       digiCol.push_back( aDigi );
       //uncomment to make it easier to test ribbons
       //if ( acdId.tile() ) continue;
