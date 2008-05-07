@@ -137,6 +137,7 @@
                  status NMTOKEN #REQUIRED -->
 
 <!ELEMENT acdHighRange EMPTY>
-<!ATTLIST acdHighRange slope NMTOKEN #REQUIRED
+<!ATTLIST acdHighRange pedestal NMTOKEN #REQUIRED
+                  slope NMTOKEN #REQUIRED
                  saturation NMTOKEN #REQUIRED
                  status NMTOKEN #REQUIRED -->
