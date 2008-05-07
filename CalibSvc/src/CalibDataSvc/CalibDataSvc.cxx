@@ -203,6 +203,8 @@ void CalibDataSvc::initPathArrays() {
   m_calibCLIDs[Calib_TKR_ChargeScale] = CLID_Calib_TKR_ChargeScale;
   m_calibCLIDs[Calib_TKR_TrgThresh ] = CLID_Calib_TKR_TrgThresh ;
   m_calibCLIDs[Calib_TKR_DataThresh] = CLID_Calib_TKR_DataThresh;
+  m_calibCLIDs[Calib_TKR_TowerAlign] = CLID_Calib_TKR_TowerAlign;
+  m_calibCLIDs[Calib_TKR_InternalAlign] = CLID_Calib_TKR_InternalAlign;
   m_calibCLIDs[Calib_CAL_LightAtt] = CLID_Calib_CAL_LightAtt;
   m_calibCLIDs[Calib_CAL_LightAsym] = CLID_Calib_CAL_LightAsym;
   m_calibCLIDs[Calib_CAL_LightYield] = CLID_Calib_CAL_LightYield;

@@ -38,6 +38,8 @@ DECLARE_FACTORY_ENTRIES(CalibSvc) {
   DECLARE_CONVERTER(XmlAcdGainCnv);
 
   DECLARE_CONVERTER(XmlTkrSplitsCnv);
+  DECLARE_CONVERTER(XmlTkrTowerAlignCnv);
+  DECLARE_CONVERTER(XmlTkrInternalAlignCnv);
 
   DECLARE_CONVERTER(XmlSAABoundaryCnv);
 

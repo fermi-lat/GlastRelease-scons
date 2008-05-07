@@ -33,6 +33,8 @@ public:
     Calib_TKR_ChargeScale,
     Calib_TKR_TrgThresh,
     Calib_TKR_DataThresh,
+    Calib_TKR_TowerAlign,
+    Calib_TKR_InternalAlign,
 
     Calib_CAL_LightAtt,
     Calib_CAL_LightAsym,
