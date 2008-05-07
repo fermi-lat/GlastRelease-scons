@@ -82,6 +82,8 @@ public:
     CalibData::TKR_ChargeScale = CalibData::tkr + "_ChargeScale";
     CalibData::TKR_TrgThresh = CalibData::tkr + "_TrgThresh";
     CalibData::TKR_DataThresh = CalibData::tkr + "_DataThresh";
+    CalibData::TKR_TowerAlign = CalibData::tkr + "_TowerAlign";
+    CalibData::TKR_InternalAlign = CalibData::tkr + "_InternalAlign";
 
     CalibData::CAL_LightAtt = CalibData::cal + "_LightAtt";
     CalibData::CAL_LightAsym = CalibData::cal + "_LightAsym";
@@ -132,6 +134,13 @@ public:
                                               CLID_Calib_TKR_TrgThresh));
     CalibData::pairs.push_back(std::make_pair(CalibData::TKR_DataThresh,
                                               CLID_Calib_TKR_DataThresh));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_TowerAlign,
+                                              CLID_Calib_TKR_TowerAlign));
+    CalibData::pairs.push_back(std::make_pair(CalibData::TKR_InternalAlign,
+                                              CLID_Calib_TKR_InternalAlign));
+
+
+
 
     CalibData::pairs.push_back(std::make_pair(CalibData::CAL_Ped,
                                               CLID_Calib_CAL_Ped));

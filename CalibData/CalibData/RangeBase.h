@@ -6,7 +6,7 @@ namespace CalibData {
 
   /** 
         Base class for per crystal-face-range Calorimeter calibration data
-        or for per tile-pmt-range ACD calibration data
+        or for per tile-pmt-range ACD calibration data or ..
    */
   class RangeBase {
 

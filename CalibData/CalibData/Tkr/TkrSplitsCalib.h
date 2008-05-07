@@ -22,7 +22,7 @@ namespace CalibData {
   public:
     TkrSplit(unsigned short low=0, unsigned short high=0) :
     m_low(low), m_high(high) {};
-    ~TkrSplit() {};
+    virtual ~TkrSplit() {};
     unsigned getLow() const {return m_low;}
     unsigned getHigh() const {return m_high;}
 
