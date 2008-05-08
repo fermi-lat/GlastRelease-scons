@@ -22,10 +22,11 @@ namespace {
     CalibData::AcdVeto idealVeto (    CalibData::AcdVeto(-1.,0.,ok)      );// veto fires at 50 counts PHA
     CalibData::AcdCno  idealCno (     CalibData::AcdCno(50.,0.,ok)       ); // cno pedestals are ideal 
     CalibData::AcdRange idealRange (  CalibData::AcdRange(4000.,40.,ok));;   // Switch occurs at 4000 in low range = 0 in High Range 
-    CalibData::AcdHighRange idealHighRange 
-        (CalibData::AcdHighRange(0.,2.04,4000.,ok));// Pedestal = 0, slope = 2.4 PHA/mip, saturates at 4000 PHA
-    CalibData::AcdCoherentNoise 
-        idealCoherentNoise (CalibData::AcdCoherentNoise(0.,0.,0.,0.,ok));// Amplitude is 0, no oscillation
+    CalibData::AcdHighRange idealHighRange (CalibData::AcdHighRange(0.,2.04,4000.,ok));// Pedestal = 0, slope = 2.4 PHA/mip, saturates at 4000 PHA
+    CalibData::AcdCoherentNoise idealCoherentNoise (CalibData::AcdCoherentNoise(0.,0.,0.,0.,ok));// Amplitude is 0, no oscillation
+  
+    // for testing (30 PHA counts, time constant of 500 ticks, oscillation of 500 ticks, phase -1.
+    CalibData::AcdCoherentNoise realCoherentNoise(CalibData::AcdCoherentNoise(30.,800.,0.0054,-1.,ok)); 
     
     // PMT is on + side of detector
     CalibData::AcdRibbon idealRibbon_Plus( CalibData::AcdRibbon(0.4,0.6,0.8,1.4,2.2,3.0,ok));
@@ -45,6 +46,8 @@ CalibData::AcdCalibObj* AcdCalib::getIdeal(AcdCalibData::CALTYPE cType,
     case AcdCalibData::CNO: return  &idealCno;
     case AcdCalibData::RANGE: return  &idealRange;
     case AcdCalibData::HIGH_RANGE: return &idealHighRange ;
+      // switch to test
+      //case AcdCalibData::COHERENT_NOISE: return &realCoherentNoise ;     
     case AcdCalibData::COHERENT_NOISE: return &idealCoherentNoise ; 
     default:
         return 0;
