@@ -95,6 +95,23 @@ namespace AcdCalib {
    * @return StatusCode indicated success or failure of conversion
    */
   StatusCode mipEquivalent_highRange(unsigned short PHA, const double& pedestal, const double& slope, const double& saturation, double& mips);
+  /**
+   * @brief Determine the change in pedestal b/c of the coherent noise
+   *
+   * This describes ringing, ie, an falling exponential X an oscillation
+   *     deltaPed = amplitude * exp( - gemDT * decay ) * sin ( ( gemDT * freq ) + phase )
+   *
+   * @param gemDT is the "GemDeltaEventTime", ie time since last event
+   * @param amplitude of the pedestal oscillations 
+   * @param decay of the exponential fall off
+   * @param freq. of the oscillations
+   * @param phase of the oscillations
+   * @param deltaPed change in pedestal 
+   * @return StatusCode indicated success or failure of conversion
+   */
+  StatusCode coherentNoise(unsigned gemDT, 
+			   const double& amplitude, const double& decay, const double& freq, const double& phase,  
+			   double& deltaPed );
 
   /**
    * @brief Determine the Z value of a particular charge deposit

@@ -68,6 +68,30 @@ namespace AcdCalib {
     return StatusCode::SUCCESS;
   }
 
+  // Determine the change in pedestal b/c of the coherent noise
+  StatusCode coherentNoise(unsigned gemDT, 
+			   const double& amplitude, const double& decay, const double& freq, const double& phase,  
+			   double& deltaPed ) {
+    static const unsigned gemOffset(529);
+    if ( gemDT < gemOffset ) {
+      return StatusCode::FAILURE;
+    }
+    if ( gemDT > 3000 || amplitude < 1. ) {
+      deltaPed = 0.;
+      return StatusCode::SUCCESS;
+    }    
+    
+    unsigned time = gemDT - gemOffset;
+    double val = amplitude;
+    double expFact = (-1. * (double)time / decay);
+    double sinFact = ((double)time * freq) + phase;
+    val *= exp ( expFact );
+    val *= sin ( sinFact );
+    deltaPed = val;
+    return StatusCode::SUCCESS;
+  }
+  
+
   // Determine the Z value of a particular charge deposit
   StatusCode Z_value(const double& mips, const double& pathFactor, double& Z) {
     if ( pathFactor <= 0. ) {
