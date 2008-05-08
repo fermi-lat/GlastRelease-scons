@@ -60,6 +60,7 @@ public:
   **/
   virtual StatusCode makeAcdHits ( const Event::AcdDigiCol& digiCol,
 				   bool periodicEvent, 
+				   unsigned gemDeltaEventTime,
 				   Event::AcdHitCol& hitCol,
 				   AcdRecon::AcdHitMap& hitMap) = 0;
   

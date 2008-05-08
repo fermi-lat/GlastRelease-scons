@@ -79,7 +79,8 @@ public:
    * @return Success or Failure
   **/
   virtual StatusCode makeAcdHits ( const Event::AcdDigiCol&,
-				   bool periodicEvent, 
+				   bool periodicEvent,
+				   unsigned gemDeltaEventTime, 
 				   Event::AcdHitCol&,
 				   AcdRecon::AcdHitMap&);
   
@@ -155,6 +156,11 @@ private:
   float m_mips_ribbon_cut;
   /// Value to use for "Ninja" hits, with no signal, but veto bit asserted
   float m_vetoThreshold;
+  /// Flag to apply the coherent noise calibration
+  bool m_applyCoherentNoiseCalib;
+
+  /// Number of ticks since last readout.  Needed to calibration coherent noise
+  unsigned m_gemDeltaEventTime;
 
   /// Output collection
   Event::AcdHitCol* output;

@@ -10,6 +10,7 @@
 #include "CalibData/Acd/AcdPed.h"
 #include "CalibData/Acd/AcdGain.h"
 #include "CalibData/Acd/AcdHighRange.h"
+#include "CalibData/Acd/AcdCoherentNoise.h"
 
 #include "AcdUtil/AcdCalibFuncs.h"
 
@@ -21,7 +22,8 @@ AcdPha2MipTool::AcdPha2MipTool
  ( const std::string & type, 
    const std::string & name,
    const IInterface * parent )
- : AlgTool( type, name, parent )
+   : AlgTool( type, name, parent ),
+     m_gemDeltaEventTime(0)
  { 
    declareInterface<AcdIPha2MipTool>(this) ; 
    declareProperty("AcdCalibSvc",    m_calibSvcName = "AcdCalibSvc");
@@ -30,6 +32,8 @@ AcdPha2MipTool::AcdPha2MipTool
    declareProperty("PHARibbonCut",    m_pha_ribbon_cut = 0.0);
    declareProperty("MIPSRibbonCut",    m_mips_ribbon_cut = 0.0);
    declareProperty("VetoThrehsold",    m_vetoThreshold = 0.4);
+   declareProperty("ApplyCoherentNoiseCalib",    m_applyCoherentNoiseCalib = false);
+     
  }
 
 AcdPha2MipTool::~AcdPha2MipTool()
@@ -57,6 +61,7 @@ StatusCode AcdPha2MipTool::initialize()
 
 StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
 					bool periodicEvent, 
+					unsigned gemDeltaEventTime, 
 					Event::AcdHitCol& hits,
 					AcdRecon::AcdHitMap& hitMap)
   //
@@ -67,6 +72,8 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
 
 
   MsgStream log(msgSvc(),name()) ;
+
+  m_gemDeltaEventTime = gemDeltaEventTime;
 
   // loop on digis
   for ( Event::AcdDigiCol::const_iterator it = digis.begin();
@@ -182,6 +189,22 @@ bool AcdPha2MipTool::getValues_lowRange(const idents::AcdId& id, Event::AcdDigi:
   }
   double mipPeak = gain->getPeak();
 
+  if ( m_applyCoherentNoiseCalib ) {
+    CalibData::AcdCoherentNoise* cNoise(0);
+    sc = m_calibSvc->getCoherentNoise(id,pmt,cNoise);
+    if ( sc.isFailure() ) {
+      return false;
+    }
+    double deltaPed(0.);
+    sc = AcdCalib::coherentNoise(m_gemDeltaEventTime,
+				 cNoise->getAmplitude(),cNoise->getDecay(),cNoise->getFrequency(),cNoise->getPhase(),
+				 deltaPed);
+    if ( sc.isFailure() ) {
+      return false;
+    }
+    pedestal += deltaPed;
+  }
+
   pedSub = (double)pha - pedestal;
   sc = AcdCalib::mipEquivalent_lowRange(pha,pedestal,mipPeak,mips);
   return sc.isFailure() ? false : true;
@@ -197,7 +220,7 @@ bool AcdPha2MipTool::getValues_highRange(const idents::AcdId& id, Event::AcdDigi
   if ( sc.isFailure() ) {
     return false;
   }
-  double pedestal(0.);
+  double pedestal = highRange->getPedestal();
   double slope = highRange->getSlope();
   double saturation = highRange->getSaturation();
   pedSub = (double)pha - pedestal;

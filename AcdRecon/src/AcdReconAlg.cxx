@@ -30,6 +30,7 @@
 #include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrPoca.h"
+#include "LdfEvent/Gem.h"
 
 #include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/MCEvent.h"
@@ -301,11 +302,19 @@ StatusCode AcdReconAlg::reconstruct (const Event::AcdDigiCol& digiCol) {
 	
     // is this a periodic trigger?
     bool isPeriodicEvent(false);
+    unsigned gemDeltaEventTime(0);
+    
+    SmartDataPtr<LdfEvent::Gem> gemTds(eventSvc(), "/Event/Gem");    
+    if (gemTds) {
+      gemDeltaEventTime = gemTds->deltaEventTime();
+      isPeriodicEvent = gemTds->periodicSet();
+    }
 
     // make the hits (with MIP peak data) and fill the hitMap
     static Event::AcdHitCol acdHits;
     if (m_hitTool != 0) {
-      sc = m_hitTool->makeAcdHits(digiCol,isPeriodicEvent,acdHits,m_hitMap);
+
+      sc = m_hitTool->makeAcdHits(digiCol,isPeriodicEvent,gemDeltaEventTime,acdHits,m_hitMap);
       if ( sc.isFailure() ) {
 	log << MSG::WARNING << "AcdHitTool Failed - we'll bravely carry on" 
             << endreq;

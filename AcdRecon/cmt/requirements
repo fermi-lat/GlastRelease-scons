@@ -12,6 +12,7 @@ use TkrUtil  v*
 use Event    v*
 use GuiSvc   v3*
 use AcdUtil  v*
+use LdfEvent  v*
 
 # no use of default_include_path (no public headers)
 
