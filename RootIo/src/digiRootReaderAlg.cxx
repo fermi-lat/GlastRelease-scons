@@ -586,6 +586,9 @@ StatusCode digiRootReaderAlg::readAcdDigi() {
 
         acdDigiTds->initLdfParameters(acdDigiRoot->getTileName(), 
                              acdDigiRoot->getTileNumber(), range, err);
+
+        acdDigiTds->initGem(acdDigiRoot->isNinja(), acdDigiRoot->getGemFlag());
+
         acdDigiTdsCol->push_back(acdDigiTds);
     }
 

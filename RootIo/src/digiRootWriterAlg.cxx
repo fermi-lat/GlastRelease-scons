@@ -530,6 +530,8 @@ StatusCode digiRootWriterAlg::writeAcdDigi() {
         digi->initLdfParameters((*acdDigiTds)->getTileName(), 
               (*acdDigiTds)->getTileNumber(), range, oddParity, headerParity);
 
+        digi->initGem((*acdDigiTds)->isNinja(), (*acdDigiTds)->getGemFlag());
+
     }
 
     return sc;
