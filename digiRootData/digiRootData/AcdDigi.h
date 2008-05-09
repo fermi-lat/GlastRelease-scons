@@ -113,6 +113,11 @@ public:
 
     void initLdfParameters(const char *tileName, int tileNumber, Range *rangeCol, ParityError *oddParityCol, ParityError *headerParityCol);
 
+    void initGem(Bool_t ninja, Bool_t gem) {
+        m_ninja = ninja;
+        m_gem = gem;
+    }
+
     void Clear(Option_t *option ="");
 
     void Print(Option_t *option="") const;
@@ -173,6 +178,12 @@ public:
     /// Returns True if pmt was read out in low range
     Bool_t isLowRange(AcdDigi::PmtId pmt) const { return getRange(pmt) == LOW; }
 
+    /// Returns True if this AcdDigi was created solely due to GEM bit in TileList
+    Bool_t isNinja() const { return m_ninja; }
+
+    /// Returns True if GEM bit in TileList is set for this detector
+    Bool_t getGemFlag() const { return m_gem; }
+
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
@@ -199,7 +210,10 @@ private:
     /// String returned from LDF, which does conform to proper id conventions
     TString m_tileName;
 
-    ClassDef(AcdDigi,3) // Digitization for a single ACD entity
+    Bool_t m_ninja;  // Set if this AcdDigi was created solely due to GEM bit
+    Bool_t m_gem;     // Set if the GEM bit in the TileList is set for this detector
+
+    ClassDef(AcdDigi,4) // Digitization for a single ACD entity
 };
 
 #endif
