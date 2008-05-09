@@ -54,11 +54,11 @@ namespace RootPersistence {
   };
 
   void convert( const lsfData::RunInfo& tdsObj, RunInfo& rootObj) {
-    rootObj.initialize(tdsObj.platform(),tdsObj.dataOrigin(),tdsObj.id(),tdsObj.startTime());
+    rootObj.initialize(tdsObj.platform(),tdsObj.dataOrigin(),tdsObj.id(),tdsObj.startTime(),tdsObj.dataTransferId());
   };
 
   void convert( const RunInfo& rootObj, lsfData::RunInfo& tdsObj) {
-    tdsObj.set(rootObj.platform(),rootObj.dataOrigin(),rootObj.id(),rootObj.startTime());
+    tdsObj.set(rootObj.platform(),rootObj.dataOrigin(),rootObj.id(),rootObj.startTime(),rootObj.dataTransferId());
   };
    
   void convert( const lsfData::DatagramInfo& tdsObj, DatagramInfo& rootObj) {
@@ -243,7 +243,9 @@ namespace RootPersistence {
   void convert( const LpaKeys* rootObj,
                 lsfData::LpaKeys*& tdsObj){
 
-    tdsObj->setCDM_keys(rootObj->CDM_keys());
+    
+    tdsObj->setSbs(rootObj->sbs());
+    tdsObj->setLpa_db(rootObj->lpa_db());
     tdsObj->setLATC_master(rootObj->LATC_master());
     tdsObj->setLATC_ignore(rootObj->LATC_ignore());
 
@@ -252,7 +254,8 @@ namespace RootPersistence {
   void convert( const lsfData::LpaKeys* tdsObj,
                 LpaKeys& rootObj) {
 
-    rootObj.setCDM_keys(tdsObj->CDM_keys());
+    rootObj.setSbs(tdsObj->sbs());
+    rootObj.setLpa_db(tdsObj->lpa_db());
     rootObj.setLATC_master(tdsObj->LATC_master());
     rootObj.setLATC_ignore(tdsObj->LATC_ignore());
   };
