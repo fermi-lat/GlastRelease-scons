@@ -78,7 +78,6 @@
         </comment>
     </col>
 
-
     <col name="vote_fk" >
       <src null="true" >
         <from agent="enduser" />
@@ -90,6 +89,19 @@
       </type>
       <fk tableName="Votes" keyCol="vote_key" />
       <comment>Refers to row in Votes describing intent of this Config</comment>
+    </col>
+
+    <col name="sbs_key" >
+      <src null="false">
+        <default value="0" />
+      </src>
+      <type typename="int" unsigned = "true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <comment> fmx logical id of sbs (resolved) associated with this config
+      </comment>
     </col>
 
     <col name="mode" >
@@ -2963,6 +2975,242 @@ version="v1r0" >
 
     <primary col="acq_summary_key" />
     <index name="unique" cols="scid started_at" />
+  </table>
+
+  <table name="Constituents" gui_readonly="true" version="v1r0"
+         comment="Make fmx info concerning interesting constituents 
+                  available to offline" >
+    <col name="prim_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned ="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+
+      <comment>This is the primary key, automatically set when a 
+          row is inserted.</comment>
+    </col>
+    <col name="dir" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="16" />
+      <comment>fmx.filetype.dir, e.g. cdm</comment>
+    </col>
+
+    <col name="pkg" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>fsw package this constituent belongs to</comment>
+    </col>
+
+    <col name="ver" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>fsw package version </comment>
+    </col>
+
+    <col name="name" >
+      <src null="false" >
+        <from agent="enduser" />   
+      </src>
+      <type typename="varchar" size="255" />
+      <comment>fsw constituent name </comment>
+    </col>
+
+    <col name="FSW_id" >
+      <src null="false" >
+        <default value="0" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <comment>Refers to row in fmx Logical table</comment>
+    </col>
+
+    <col name="src_path" >
+      <src null="false" >
+        <default value="NA" />
+      </src>
+      <type typename="text" />
+      <comment>Where applicable, path to source file rel. to Moot archive root
+      </comment>
+    </col>
+
+
+    <col name="fmx_db" >
+      <src null="false">
+        <default value="none" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Normally one of "development", "production" </comment>
+    </col>
+
+    <col name="fmx_path" >
+      <src null="false" >
+        <default value="unknown" />
+      </src>
+      <type typename="text" />
+      <comment>Describes where file handed to fmx goes, relative to root
+      </comment>
+    </col>
+
+    <col name="schema_id">
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+      <type typename="smallint" />
+      <comment>schema id from cdm header</comment>
+    </col>
+
+    <col name="instance_id">
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+      <type typename="smallint" />
+      <comment>instance id from cdm header</comment>
+    </col>
+
+    <col name="version_id">
+      <src null="true" >
+        <from agent="enduser" />
+      </src>
+      <type typename="smallint" />
+      <comment>version id from cdm header</comment>
+    </col>
+
+
+    <col name="status" >
+      <src null="false" >
+        <default value="new" />
+      </src>
+
+      <type typename="varchar" size="32" >
+        <restriction>
+          <enum use="prefer" values="new OK" />
+        </restriction>
+      </type>
+      <comment>status of this entry  </comment>
+    </col>
+
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <primary col="prim_key" /> 
+  
+    <index name="pkg" cols="pkg ver name" />
+    <index name="FSW_id" cols="FSW_id fmx_db" />
+
+  </table>
+
+  <table name="SBS_to_Constituents" gui_readonly="true" version="v1r0"
+    comment="relate SBS key to Constituents ">
+
+    <col name="prim_key" >
+      <src null="false">
+        <from agent="auto_increment" />
+      </src>
+      <type typename="int" unsigned ="true" >
+        <restriction>          
+          <nonnegative />   
+        </restriction>
+      </type>
+      <comment>This is the primary key, automatically set when a 
+         row is inserted.</comment>
+     </col>
+
+     <col name="sbs_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="FSW_inputs" keyCol="FSW_input_key" />
+      <comment>Refers to row in FSW_inputs for a particular secondary
+          boot script</comment>
+    </col>
+
+    <col name="Constituents_fk" >
+      <src null="false" >
+        <from agent="enduser" />
+      </src>
+      <type typename="int" unsigned="true" >
+        <restriction>
+          <nonnegative />
+        </restriction>
+      </type>
+      <fk tableName="Constituents" keyCol="prim_key" />
+      <comment>Refers to row in Constituents</comment>
+    </col>
+
+    <col name="status" >
+      <src null="false" >
+        <default value="active" />
+      </src>
+      <type typename="varchar" size="32" />
+      <comment>Should always have value 'active'</comment>
+    </col>
+
+    <col name="creation_time" >
+      <src null="true" >
+        <from agent="service" contents="insert_time" />         
+      </src>
+      <type typename="datetime" >
+        <restriction>
+          <interval min="1970-1-1" max="2037-12-31"/>
+        </restriction>
+      </type>
+      <comment>
+      Date when this row was entered into database, to be
+      set automatically by service (not by end user)
+      </comment>
+    </col>
+
+    <col name="creator" >
+      <src null="false" >
+        <from agent="service"  contents="username" />
+      </src>
+      <type typename="varchar" size="12" />
+      <comment>Service creating the row should determine user id invoking
+             it and put it in this field.
+      </comment>
+    </col>
+    <primary col="prim_key" /> 
   </table>
 
 </rdbms>

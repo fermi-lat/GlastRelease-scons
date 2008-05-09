@@ -46,6 +46,12 @@
      val="to control some latc registers not naturally controlled elsewhere" />
     </row>
 
+    <row>
+      <field col="name" val="Filter" />
+      <field col="description"
+       val="filter config. and association" />
+    </row>
+
   </table>
 
   <table name="Precincts" mode="add" >
@@ -294,7 +300,13 @@ used for container vote files which reference regular votes by alias" />
            refVal="generic" />
     </row>
 
-
+    <row>
+      <field col="name" val="Filter_Associate" />
+      <field col="description"
+        val="specify association of filters with their handlers" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+           refVal="Filter" />
+    </row>
   </table>
 
   <table name="FSW_class" mode="add" >
