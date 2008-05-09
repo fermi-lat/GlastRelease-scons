@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r3    08-May-2008 EAC Added stuff to simulate coherent noise, disable by default, for testing only
  v3r2p3  06-May-2008 EAC Added correct setting of gem flag and ninja bit
  v3r2p2  17-Mar-2008 EAC Kill PHA below ZS threshold (set them to 0)
  v3r2p1  20-Feb-2008 EAC Fix to Ribbon binning
