@@ -128,50 +128,41 @@ StatusCode G4TestAlg::initialize() {
     Point  startPoint(m_startx, m_starty, propTop);
     Vector startDir(0., 0., -1.);
 
-    // Initialize the propagator with starting point and direction
-    // This causes the propagator to locate itself in the G4 geometry
-    m_propagator->setStepStart(startPoint, startDir);
-
-    // Determine an arclength that will run the length of the tracker in z
-    double propRange = stayClear+100.;
-    double propBot = propTop - propRange;
-
-    // Call the propagator to now step from the starting position through the given
-    // arclength in the defined direction
-    m_propagator->step(propRange);
-
-    log << MSG::INFO  << "Propagator goes from "<< propTop << " to " << propBot << endreq;
-
-    int numSteps = m_propagator->getNumberSteps();
-
-    log << MSG::INFO  << "Propagator took " << numSteps << " steps" << endreq;
-    //int istep;
-    //idents::VolumeIdentifier id;
-    //idents::VolumeIdentifier prefix = m_pDetSvc->getIDPrefix();
-
-    // Print results
-    log << MSG::INFO;
-    m_propagator->printOn(log.stream());
-    log << endreq;
-    /*
-    // Loop through the volumes encountered and output the results
-    double radlen;
-    bool startCount = false;
-    for (istep=0; istep<numSteps; ++istep) 
+    // Embed call to propagator in a try-catch block 
+    try
     {
-        Point stepPoint = track->getStepPosition(istep);
-        id = track->getStepVolumeId(istep);
-        id.prepend(prefix);
-        std::string idName = id.name();
-        radlen = track->getStepRadLength(istep);
-        double arclen = track->getStepArcLen(istep);
-        
-        std::cout << "step " << istep << " rl " << radlen 
-        << " arclen " << arclen 
-        << " volid " << id.name()
-        << " pos " << stepPoint <<   std::endl;
+        // Initialize the propagator with starting point and direction
+        // This causes the propagator to locate itself in the G4 geometry
+        m_propagator->setStepStart(startPoint, startDir);
+
+        // Determine an arclength that will run the length of the tracker in z
+        double propRange = stayClear+100.;
+        double propBot = propTop - propRange;
+
+        // Call the propagator to now step from the starting position through the given
+        // arclength in the defined direction
+        m_propagator->step(propRange);
+
+        log << MSG::INFO  << "Propagator goes from "<< propTop << " to " << propBot << endreq;
+
+        int numSteps = m_propagator->getNumberSteps();
+
+        log << MSG::INFO  << "Propagator took " << numSteps << " steps" << endreq;
+        //int istep;
+        //idents::VolumeIdentifier id;
+        //idents::VolumeIdentifier prefix = m_pDetSvc->getIDPrefix();
+
+        // This will print out the results of each step along the way
+        log << MSG::INFO;
+        m_propagator->printOn(log.stream());
+        log << endreq;
     }
-*/
+    catch(...)
+    {
+        log << MSG::INFO << "G4TestAlg has caught an exception thrown during propagation, passing along... " << endreq;
+        throw;
+    }
+
     return sc;
 }
 

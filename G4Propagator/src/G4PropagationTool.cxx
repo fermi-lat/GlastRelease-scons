@@ -314,11 +314,7 @@ Point G4PropagationTool::getStepPosition(int stepIdx) const
 
     if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
 
-    G4ThreeVector stepPoint = getStep(stepIdx).GetEndPoint();
-    //G4ThreeVector dir       = getStep(stepIdx).GetDirection();
-    //double        arclen    = getStep(idx).GetArcLen();
-
-    //stepPoint = stepPoint - 0.5*arclen*dir;
+    G4ThreeVector stepPoint = getStep(idx).GetEndPoint();
 
     return Point(stepPoint.x(),stepPoint.y(),stepPoint.z());
 }
