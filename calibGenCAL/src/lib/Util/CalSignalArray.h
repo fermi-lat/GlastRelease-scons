@@ -72,6 +72,11 @@ namespace calibGenCAL {
     CalUtil::RngNum getAdcRng(const CalUtil::FaceIdx faceIdx) const {
       return m_adcRng[faceIdx];
     }
+
+    /// represent one float value per xtal face
+    typedef CalUtil::CalVec<CalUtil::FaceIdx, float> FaceSignalArray;
+
+    const FaceSignalArray &getFaceSignalArray() {return m_faceSignal;}
     
   private:
 
@@ -79,9 +84,9 @@ namespace calibGenCAL {
     void addHit(const CalDigi &calDigi);
 
     /// store face signal value for each xtal face
-    CalUtil::CalVec<CalUtil::FaceIdx, float> m_faceSignal;
+    FaceSignalArray m_faceSignal;
     /// pedestal subtracted adc ranges
-    CalUtil::CalVec<CalUtil::FaceIdx, float> m_adcPed;
+    FaceSignalArray m_adcPed;
     /// adc rng to go w/ m_adcPed
     CalUtil::CalVec<CalUtil::FaceIdx, CalUtil::RngNum> m_adcRng;
 

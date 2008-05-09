@@ -249,8 +249,8 @@ int main(const int argc, const char **argv) {
     TFile inputROOT(cfg.histFilePath.getVal().c_str(),"READ");
 
     // read in input histograms
-    TrigHists trigHists;
-    trigHists.loadHists(inputROOT);
+    TrigHists trigHists("trigHist", 0, &inputROOT);
+    TrigHists specHists("specHist", 0, &inputROOT);
 
     /// open output TXT file
     ofstream outfileTXT(outTxtPath.c_str());
@@ -268,12 +268,12 @@ int main(const int argc, const char **argv) {
     outfileTXT << ";twr lyr col face threshMeV errthresMeV" << endl;
 
     for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++) {
-      TH1S * trigHist = trigHists.getTrigHist(faceIdx);
+      TH1S *const trigHist = trigHists.getHist(faceIdx);
       /// we don't require every channel to be present
       if (!trigHist)
         continue;
 
-      TH1S * specHist = trigHists.getSpecHist(faceIdx);
+      TH1S *const specHist = specHists.getHist(faceIdx);
       /// we _do_ require every trigger hist to have a matching spectrum hist
       if (!specHist) {
         LogStrm::get() << "ERROR: missing spectrum hist: " << faceIdx.toStr()

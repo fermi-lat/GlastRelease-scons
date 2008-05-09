@@ -97,7 +97,7 @@ namespace calibGenCAL {
 
       DigiEvent const*const digiEvent = rootFile.getDigiEvent();
       if (!digiEvent) {
-        LogStrm::get() << __FILE__ << ": Unable to read DigiEvent " << eventData.eventNum  << endl;
+        LogStrm::get() << __FILE__ << ": Unable to read DigiEvent: " << eventData.eventNum  << endl;
         continue;
       }
 
@@ -158,7 +158,6 @@ namespace calibGenCAL {
 
   unsigned MuonPedAlg::getMinEntries() {
     unsigned retVal = ULONG_MAX;
-
 
     for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
       const RngIdx rngIdx(xtalIdx,

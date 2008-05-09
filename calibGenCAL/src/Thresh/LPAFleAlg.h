@@ -29,7 +29,6 @@ namespace CalUtil {
 
 namespace calibGenCAL {
   class RootFileAnalysis;
-  class TrigHists;
 
   /** \brief Algorithm class fill & fit FLE Trigger threshold histograms.
       @author Zachary Fewtrell
@@ -46,10 +45,11 @@ namespace calibGenCAL {
               const TriggerPattern trigPattern,
               const CalUtil::CalPed &peds,
               const CalUtil::ADC2NRG &adc2nrg,
+              TrigHists &specHists,
               TrigHists &trigHists,
               const float expectedThresh=100,
               const float safetyMargin=50) :
-      LPATrigAlg(trigPattern, peds, adc2nrg, trigHists, expectedThresh, safetyMargin),
+      LPATrigAlg(trigPattern, peds, adc2nrg, specHists, trigHists, expectedThresh, safetyMargin),
       m_face(face)
     {}
 

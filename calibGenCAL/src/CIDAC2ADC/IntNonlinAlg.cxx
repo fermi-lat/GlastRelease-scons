@@ -269,7 +269,7 @@ namespace calibGenCAL {
         if (m_hugeTuple) {
           m_tupleData.rngIdx = rngIdx.val();
           m_tupleData.goodEvt = eventData.iGoodEvt;
-          m_tupleData.cidac = cidac;
+          m_tupleData.cidac = (unsigned short)cidac;
           m_tupleData.adc = adc;
           m_hugeTuple->Fill();
         }

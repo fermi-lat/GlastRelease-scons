@@ -69,5 +69,13 @@ namespace calibGenCAL {
 
   std::string to_str(const int n);
 
+  /// return true if min <= x <= max
+  template <typename T>
+  bool between(const T& min,
+               const T& x,
+               const T& max) {
+    return (x >= min && x <= max);
+  }
+
 }; // namespace calibGenCAL
 #endif // CGCUtil_H

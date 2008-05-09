@@ -205,9 +205,11 @@ int main(const int argc, const char **argv) {
 
     /// load up previous calibrations
     CalPed calPed;
+    LogStrm::get() << __FILE__ << ": calib file: " << cfg.pedFilename.getVal() << endl;
     calPed.readTXT(cfg.pedFilename.getVal());
     /// load up previous calibrations
     ADC2NRG adc2nrg;
+    LogStrm::get() << __FILE__ << ": calib file: " << cfg.adc2nrgFilename.getVal() << endl;
     adc2nrg.readTXT(cfg.adc2nrgFilename.getVal());
 
     // fill thold arrays

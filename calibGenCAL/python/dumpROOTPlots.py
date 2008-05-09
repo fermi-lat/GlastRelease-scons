@@ -94,7 +94,7 @@ for k in rootFile.GetListOfKeys():
         print_canvas(cvs)
 
     # TCVS (plain ol' plots are stored in TCanvas
-    if cls.InheritsFrom("TCanvas"):
+    elif cls.InheritsFrom("TCanvas"):
         cvs = k.ReadObj()
 
         print_canvas(cvs)

@@ -110,6 +110,7 @@ int main(const int argc, const char **argv) {
 
     // open input files
     ADC2NRG adc2nrg;
+    LogStrm::get() << __FILE__ << ": calib file: " << cfg.adc2nrgFilename.getVal() << endl;
     adc2nrg.readTXT(cfg.adc2nrgFilename.getVal());
 
     // open output files

@@ -9,7 +9,6 @@
 #include "LPAFleAlg.h"
 #include "src/lib/Util/ROOTUtil.h"
 #include "src/lib/Util/CGCUtil.h"
-#include "src/lib/Hists/TrigHists.h"
 
 // GLAST INCLUDES
 #include "CalUtil/CalVec.h"
@@ -38,7 +37,6 @@ namespace calibGenCAL {
 
   void LPAFleAlg::fillHists(const unsigned nEntries,
                             const std::vector<std::string> &digiFileList) {
-    m_trigHists.initHists(100,300);
 
     /////////////////////////////////////////
     /// Open ROOT Event File  ///////////////
@@ -168,7 +166,7 @@ namespace calibGenCAL {
       
 
     /// FILL 1: fill spectrum hist
-    m_trigHists.getSpecHist(faceIdx)->Fill(eventData.m_calSignalArray.getFaceSignal(faceIdx));
+    m_specHists.produceHist(faceIdx).Fill(eventData.m_calSignalArray.getFaceSignal(faceIdx));
 
     /// CUT 4 - trigger assertied
     if (!eventData.m_diagTrigBits[lyrIdx][XtalDiode(face,LRG_DIODE)])
@@ -200,7 +198,7 @@ namespace calibGenCAL {
     }
     
     /// FILL 2: trigger histogram
-    m_trigHists.getTrigHist(faceIdx)->Fill(faceSignal);
+    m_trigHists.produceHist(faceIdx).Fill(faceSignal);
   }
 
   bool LPAFleAlg::channelEnabled(const FaceIdx faceIdx) {
