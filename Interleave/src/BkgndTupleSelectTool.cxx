@@ -113,8 +113,6 @@ private:
     TLeaf*               m_timeLeaf;
     TLeaf*               m_liveLeaf;
     TLeaf*               m_mcidLeaf;
-   
-    TFile*               m_inputFile; ///< the file that contains the input tree
 
     TTree*               m_outputTree; ///< the tree to copy data to
     TTree*               m_inputTree; ///< the tree to copy data from
@@ -484,7 +482,7 @@ void BkgndTupleSelectTool::setLeafPointers()
         }
         else
         {
-            leaf->SetAddress(otherleaf->GetValuePointer());
+            m_inputTree->SetBranchAddress(leaf->GetName(), otherleaf->GetValuePointer());
         }
     }
 }
