@@ -156,6 +156,13 @@
     return my_constits;
   }
 
+  std::vector<MOOT::ConstitInfo> constituentInfoBySbs(unsigned sbsKey,
+                                                      int schemaId=-1) {
+    std::vector<MOOT::ConstitInfo> my_constits;
+    self->getConstituentInfoBySbs(sbsKey, my_constits, schemaId);
+    return my_constits;
+  }
+
   std::vector<MOOT::ConstitInfo>packageConstituents(unsigned sbsKey,
                                                     const std::string& pkg) {
     std::vector<MOOT::ConstitInfo> my_constits;

@@ -445,7 +445,7 @@ namespace MOOT {
     facilities::Util::utoa(key, keystr);
     where += keystr + "'";
     
-    getCols.reserve(11);
+    getCols.reserve(12);
     getCols.push_back("config_key");
     getCols.push_back("name");
     getCols.push_back("algorithm");
@@ -457,6 +457,7 @@ namespace MOOT {
     getCols.push_back("mode");
     getCols.push_back("creation_request_time");
     getCols.push_back("vote_fk");
+    getCols.push_back("sbs_key");
     rdbModel::ResultHandle* res = 0;
     try {
       res = m_rdb->getConnection()->select("Configs", getCols, orderCols,
@@ -480,7 +481,7 @@ namespace MOOT {
     ConfigInfo* c = 
       new ConfigInfo(selFields[0], selFields[1], selFields[2], selFields[3],
                      selFields[4], selFields[5], selFields[6], selFields[7],
-                     selFields[8], selFields[9], selFields[10]);
+                     selFields[8], selFields[9], selFields[10], selFields[11]);
     delete res;
     return c;
   }
@@ -526,6 +527,7 @@ namespace MOOT {
     getCols.push_back("mode");
     getCols.push_back("creation_request_time");
     getCols.push_back("vote_fk");
+    getCols.push_back("sbs_key");
 
     rdbModel::ResultHandle* res = 0;
     try {
@@ -548,7 +550,7 @@ namespace MOOT {
       res->getRow(selFields, i);
       ConfigInfo info1(selFields[0], selFields[1], selFields[2], selFields[3],
                        selFields[4], selFields[5], selFields[6], selFields[7],
-                       selFields[8], selFields[9], selFields[10]);
+                       selFields[8], selFields[9], selFields[10], selFields[11]);
       info.push_back(info1);
     }
     return n;
@@ -785,6 +787,52 @@ namespace MOOT {
     std::string where(" WHERE prim_key= '");
     where += keyStr + std::string("'");
     return getConstituentWhere(where);
+  }
+
+  unsigned 
+  MootQuery::getConstituentInfoBySbs(unsigned sbsFmxExportKey, 
+                                     std::vector<ConstitInfo>& info,
+                                     int schemaId) {
+    using facilities::Util;
+    std::string where(" WHERE FSW_id ='");
+    std::string keyStr;
+    Util::utoa(sbsFmxExportKey, keyStr);
+    where += keyStr + std::string("'");
+
+    std::string sbsFk = DbUtil::getColumnWhere(m_rdb, "FSW_inputs", 
+                                               "FSW_input_key", where,
+                                               false);
+    if (sbsFk.empty()) return 0;
+
+    /// Constraints are
+    //    SBS_to_Constituents.sbs_fk = sbsFk (computed above)
+    //    Constituents.prim_key = SBS_to_Constituents.Constituents_fk
+    //    Constituents.schema_id = supplied value, if not -1
+    std::vector<std::string> constitKeys;
+    std::string tbls("SBS_to_Constituents");
+
+
+    where = std::string(" WHERE sbs_fk='");
+    where += sbsFk + std::string("'");
+    if (schemaId >= 0) {
+      tbls += std::string(",Constituents");
+      std::string schemaIdStr;
+      Util::utoa(schemaId, schemaIdStr);
+      where +=
+        std::string(" AND Constituents.prim_key=SBS_to_Constituents.Constituents_fk AND Constituents.schema_id='");
+      where += schemaIdStr + std::string("'");
+    }
+    DbUtil::getAllWhere(m_rdb, tbls, "SBS_to_Constituents.Constituents_fk", 
+                        where, constitKeys);
+
+    info.reserve(constitKeys.size());
+    for (unsigned ix = 0; ix < constitKeys.size(); ix++) {
+      std::string where(" WHERE prim_key= '");
+      where += constitKeys[ix] + std::string("'");
+      ConstitInfo* pInfo =  getConstituentWhere(where);
+      if (pInfo) info.push_back(*pInfo);
+    }
+    return info.size();
   }
 
 
