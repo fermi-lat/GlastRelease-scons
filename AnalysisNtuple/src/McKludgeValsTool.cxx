@@ -51,6 +51,10 @@ private:
     float MC_DirErr;
     float MC_DirErrN;
     float MC_DirErrN1;
+    float MC_XDir;
+    float MC_YDir;
+    float MC_ZDir;
+
 
     // to decode the particle charge
     //IParticlePropertySvc* m_ppsvc;    
@@ -90,6 +94,8 @@ ClassifyAlg doesn't crash when it finds them missing
 <td>F<td>   set to -1 
 <tr><td> McDirErrN1 
 <td>F<td>   set to -1 
+<tr><td> Mc[X/Y/Z]Dir 
+<td>F<td>   set to -2 
 </table>
 */
 
@@ -120,6 +126,9 @@ StatusCode McKludgeValsTool::initialize()
     addItem("McTkr1DirErr",   &MC_Tkr1DirErr); 
     addItem("McDirErrN",      &MC_DirErrN);      
     addItem("McDirErrN1",     &MC_DirErrN1);      
+    addItem("McXDir",         &MC_XDir);
+    addItem("McYDir",         &MC_YDir);
+    addItem("McZDir",         &MC_ZDir);
     
     zeroVals();
     
@@ -137,6 +146,10 @@ StatusCode McKludgeValsTool::calculate()
     MC_Tkr1DirErr = -1.0f;
     MC_DirErrN    = -1.0f;
     MC_DirErrN1   = -1.0f;
+    MC_XDir       = -2.0f;
+    MC_YDir       = -2.0f;
+    MC_ZDir       = -2.0f;
+
    
     return sc;
 }
