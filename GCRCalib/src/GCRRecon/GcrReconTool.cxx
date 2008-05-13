@@ -579,7 +579,9 @@ void GcrReconTool::buildGcrXtalsVec(){
     double arcLen_step=0.;
     Point stepPos,entryPoint,exitPoint;
     
-    
+    // pre-set exit point before starting loop
+    exitPoint = m_calEntryPoint;
+
     for(int istep=0; istep<numSteps; ++istep)
       {
 	m_log << MSG::VERBOSE << "G4 propagation step number= " << istep <<endreq;
@@ -590,9 +592,9 @@ void GcrReconTool::buildGcrXtalsVec(){
 	
 	arcLen_step = m_G4PropTool->getStepArcLen(istep);
 	
-	//Comment from Tracy Usher: 
-	//getStepPosition(*int* stepIdx = -1) *const* = 0 actually returns the position at the end of a given step.
-	entryPoint = m_G4PropTool->getStepPosition(istep-1);  
+	// set the entry point for this step to the exit point of the previous step
+	entryPoint = exitPoint;	
+	// get this steps exit position
 	exitPoint = m_G4PropTool->getStepPosition(istep);
 	
 	

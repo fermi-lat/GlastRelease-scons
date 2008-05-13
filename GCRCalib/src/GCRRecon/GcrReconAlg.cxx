@@ -232,6 +232,7 @@ bool GcrReconAlg::isValidForGCR()
     bool engine4ON2 = (Trig_gemengine==4);
     if(!engine4ON2){
       log<<MSG::INFO<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;}
+    bool passFilter=m_gcrReconTool->checkFilters(); // make a pass to compute the status word
     return engine4ON2;
   }
   else{
