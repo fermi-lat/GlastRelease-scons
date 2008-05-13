@@ -581,6 +581,21 @@ int main(int /* nargs */, char**)    {
             << " votes " << std::endl;
 
 
+  // getConstituentsBySbs
+  std::vector<MOOT::ConstitInfo> conInfo;
+  unsigned sbsExportKey = 6241;
+  unsigned nAll = q.getConstituentInfoBySbs(sbsExportKey, conInfo);
+  std::cout << "getConstituentsBySbs for sbs_key=" << sbsExportKey
+            << " returns " << nAll << " constituents." << std::endl;
+   
+  unsigned schemaId = 225;  // gamma
+
+  conInfo.clear();
+
+  unsigned nGamma = q.getConstituentInfoBySbs(sbsExportKey, conInfo, schemaId);
+  std::cout << "getConstituentsBySbs for sbs_key=" << sbsExportKey
+            << " schema id =" << schemaId << " returns " << nGamma
+            << " constituents." << std::endl;
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
@@ -593,8 +608,9 @@ void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
   out << "active_state = " << pInfo->getActive() << std::endl;
   out << "Mode = " << pInfo->getMode() << std::endl;
   out << "Creation time = " << pInfo->getCreationTime() << std::endl;
-  out << "Vote key = '" << pInfo->getVoteKey() << "'" 
-            << std::endl << std::endl;
+  out << "Vote key = '" << pInfo->getVoteKey() << "'" << std::endl;
+  out << "sbs export key = '" << pInfo->getSbsKey() << "'" << std::endl
+            << std::endl;
 }
 
 void writeParmOff(const std::vector<MOOT::ParmOffline>& parm) {
