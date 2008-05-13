@@ -224,6 +224,16 @@ namespace MOOT {
 
     ConstitInfo* getConstituentByFswId(unsigned fswId);
 
+    /**
+      Return info for all constituents associated with the 
+      supplied @a sbsFmxExportKey. If @a schemaId is non-negative,
+      only return info for constituents with that value for schema_id.
+      @return  count of constituents satisfying constraints
+    */
+    unsigned getConstituentInfoBySbs(unsigned sbsFmxExportKey, 
+                                     std::vector<ConstitInfo>& info,
+                                     int schemaId=-1);
+
 
     unsigned getLastConfigKeyByAlg(const std::string& alg, unsigned step=1,
                                    const std::string& status="CREATED",

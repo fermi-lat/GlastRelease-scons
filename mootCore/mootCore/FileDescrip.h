@@ -97,11 +97,12 @@ namespace MOOT {
                const std::string& active="",
                const std::string& verify="",
                const std::string& mode="", const std::string& cTime="",
-               const std::string& voteKey="") : 
+               const std::string& voteKey="", const std::string& sbsKey="") : 
       m_key(key), m_name(name), m_alg(algorithm), m_step(step), 
       m_descrip(descrip), m_status(status), m_active(active),
       m_verify(verify),
-      m_mode(mode), m_creationTime(cTime), m_voteKey(voteKey) {};
+      m_mode(mode), m_creationTime(cTime), m_voteKey(voteKey),
+      m_sbsKey(sbsKey){};
 
     std::string getName() const {return m_name;}
     std::string getAlg() const {return m_alg;}
@@ -114,9 +115,11 @@ namespace MOOT {
     std::string getMode() const {return m_mode;}
     std::string getCreationTime() const {return m_creationTime;}
     std::string getVoteKey() const {return m_voteKey;}
+    std::string getSbsKey() const {return m_sbsKey;}
     void clear() {
       m_key = m_name = m_alg = m_step = m_descrip = m_status = m_active 
-        = m_verify = m_mode = m_creationTime = m_voteKey = std::string("");
+        = m_verify = m_mode = m_creationTime = m_voteKey 
+        = m_sbsKey = std::string("");
     }
   private:
     std::string m_key;
@@ -130,6 +133,7 @@ namespace MOOT {
     std::string m_mode;
     std::string m_creationTime;
     std::string m_voteKey;
+    std::string m_sbsKey;
   };                                 // end ConfigInfo
 
   /** @class ConstitInfo
