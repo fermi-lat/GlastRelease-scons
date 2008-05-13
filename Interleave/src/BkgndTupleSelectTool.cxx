@@ -150,7 +150,6 @@ BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type,
                                  , m_varLeaf(0)
                                  , m_runLeaf(0)
                                  , m_eventLeaf(0)
-                                 , m_inputFile(0)
                                  , m_outputTree(0)
                                  , m_inputTree(0)
                                  , m_eventOffset(0)
