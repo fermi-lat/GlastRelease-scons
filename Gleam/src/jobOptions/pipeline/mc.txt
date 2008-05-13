@@ -133,6 +133,9 @@ OnboardFilter.FileNameGains = "cal_db_gains_flight";
 OnboardFilter.DgnConfig = "DGN_gem";
 
 // Gamma, HIP and DGN in the accept decision:
+// The order is defined in: OnboardFilterTds/vXXX/OnboardFilterTds/ObfFilterStatus.h
+//                          GammaFilter=0,HIP,MIP,DGN.
+//
 OnboardFilter.FilterList = {0,1,3}; 
 
 
