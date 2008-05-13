@@ -20,7 +20,7 @@ macro_append ROOT_libs " ${ROOT_GUI_libs}"
 
 apply_pattern package_include
 
-application genTkrNoiseRep ../src/TkrRep/genTkrNoiseRep.cxx ../src/TkrRep/TkrNoiseRep.cxx
+#application genTkrNoiseRep ../src/TkrRep/genTkrNoiseRep.cxx ../src/TkrRep/TkrNoiseRep.cxx
 
 private 
 
