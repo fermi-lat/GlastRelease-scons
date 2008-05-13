@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r18 13-May-2008  jrb  Add MootQuery::getConstituentsBySbs; 
+                           sbsKey field in ConfigInfo
    v1r17  8-May-2008  jrb  Update db descrip for mood, mood_user for Constituents
    v1r16 30-Apr-2008  jrb  Add Eric C-requested queries to discover intent
    v1r15 22-Apr-2008  jrb  Additional fields in Constituents table
