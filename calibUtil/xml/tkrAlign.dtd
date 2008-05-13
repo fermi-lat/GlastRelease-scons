@@ -38,17 +38,17 @@
 <!ELEMENT towerInternal (tray*) >
 <!ATTLIST towerInternal id NMTOKEN #REQUIRED>
 
-<!ELEMENT tray (face?, face?) >
+<!ELEMENT tray (face*) >
 <!ATTLIST tray id NMTOKEN #REQUIRED
                 disp NMTOKENS "0.0 0.0 0.0" rot NMTOKENS "0.0 0.0 0.0"
 >
 
-<!ELEMENT face (ladder?, ladder?, ladder?, ladder?) >
+<!ELEMENT face (ladder*) >
 <!ATTLIST face id NMTOKEN #REQUIRED
                 disp NMTOKENS "0.0 0.0 0.0" rot NMTOKENS "0.0 0.0 0.0"
 >
 
-<!ELEMENT ladder (wafer?, wafer?, wafer?, wafer?) >
+<!ELEMENT ladder (wafer*) >
 <!ATTLIST ladder id NMTOKEN #REQUIRED
                 disp NMTOKENS "0.0 0.0 0.0" rot NMTOKENS "0.0 0.0 0.0"
 >
