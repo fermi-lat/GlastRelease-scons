@@ -82,7 +82,7 @@ namespace calibGenCAL {
       /////////////////////////////////////////
       if (eventData.eventNum % 2000 == 0) {
         // quit if we have enough entries in each histogram
-        unsigned currentMin = getMinEntries();
+        const unsigned currentMin = getMinEntries();
         if (currentMin >= nEntries) break;
         LogStrm::get() << "Event: " << eventData.eventNum
                          << " min entries per histogram: " << currentMin

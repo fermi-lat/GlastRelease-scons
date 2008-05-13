@@ -52,7 +52,7 @@ namespace calibGenCAL {
     /// populate histograms from digi root event file
     /// \nEvents max # events to loop through
     void fillHists(const unsigned nEventsMax,
-                   const std::vector<std::string> &digiRootFileList,
+                   const std::vector<std::string> &digiFileList,
                    const std::vector<std::string> &gcrSelectRootFileList,
                    const CalUtil::CalPed &peds,
                    const CalUtil::CIDAC2ADC &dac2adc,

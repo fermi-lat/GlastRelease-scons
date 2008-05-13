@@ -134,7 +134,7 @@ namespace calibGenCAL {
   }
 
   void GCRCalibAlg::fillHists(const unsigned nEventsMax,
-                              const vector<string> &digiRootFileList,
+                              const vector<string> &digiFileList,
                               const vector<string> &gcrSelectRootFileList,
                               const CalPed &peds,
                               const CIDAC2ADC &dac2adc,
@@ -146,7 +146,7 @@ namespace calibGenCAL {
     algData.gcrHists = &gcrHists;
   
 
-    RootFileAnalysis rootFile(0, &digiRootFileList, 0, 0, &gcrSelectRootFileList);
+    RootFileAnalysis rootFile(0, &digiFileList, 0, 0, &gcrSelectRootFileList);
 
     // enable only needed branches in root file
     rootFile.getDigiChain()->SetBranchStatus("*", 0);

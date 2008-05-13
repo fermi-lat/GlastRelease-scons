@@ -12,6 +12,7 @@
 #include "src/lib/Util/SimpleIniFile.h"
 #include "src/lib/Util/CfgMgr.h"
 #include "src/lib/Util/CGCUtil.h"
+#include "src/lib/Util/stl_util.h"
 
 // GLAST INCLUDES
 #include "CalUtil/SimpleCalCalib/CalPed.h"
@@ -128,13 +129,13 @@ int main(const int argc,
                 argv);
 
     // input file(s)
-    vector<string> digiRootFileList(getLinesFromFile(cfg.digiFilenames.getVal()));
-    if (digiRootFileList.size() < 1) {
+    vector<string> digiFileList(getLinesFromFile(cfg.digiFilenames.getVal().c_str()));
+    if (digiFileList.size() < 1) {
       cout << __FILE__ << ": No input files specified" << endl;
       return -1;
     }
 
-    vector<string> gcrSelectRootFileList(getLinesFromFile(cfg.gcrFilenames.getVal()));    
+    vector<string> gcrSelectRootFileList(getLinesFromFile(cfg.gcrFilenames.getVal().c_str()));
     if (gcrSelectRootFileList.size() < 1) {
       cout << __FILE__ << ": No input files specified" << endl;
       return -1;
@@ -183,9 +184,9 @@ int main(const int argc,
     GCRCalibAlg gcrCalib(cfg.cfgPath.getVal());
     CalMPD calMPD;
 
-    LogStrm::get() << __FILE__ << ": reading digiRoot event file(s) starting w/ " << digiRootFileList[0] << endl;
+    LogStrm::get() << __FILE__ << ": reading digiRoot event file(s) starting w/ " << digiFileList[0] << endl;
     gcrCalib.fillHists(cfg.nEntries.getVal(),
-                       digiRootFileList,
+                       digiFileList,
                        gcrSelectRootFileList,
                        peds,
                        dac2adc,

@@ -7,6 +7,8 @@
 #include <streambuf>
 #include <ostream>
 #include <ios>
+#include <istream>
+#include <fstream>
 
 //$Header$
 
@@ -193,8 +195,16 @@ namespace calibGenCAL {
     }
   };
 
+  /// return vector of each line in txt file.
+  std::vector<std::string> getLinesFromFile(std::istream &infile);
 
+  /// return vector of each line in txt file.
+  inline std::vector<std::string> getLinesFromFile(const std::string &inpath) {
+    std::ifstream infile(inpath.c_str());
+    return getLinesFromFile(infile);
+  }
 
+  std::string to_str(const int n);
 }
 
 #endif
