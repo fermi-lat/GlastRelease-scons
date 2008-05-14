@@ -3140,7 +3140,7 @@ version="v1r0" >
       <src null="true" >
         <from agent="enduser" />
       </src>
-      <type typename="smallint" />
+      <type typename="smallint" unsigned="true"/>
       <comment>schema id from cdm header</comment>
     </col>
 
@@ -3148,7 +3148,7 @@ version="v1r0" >
       <src null="true" >
         <from agent="enduser" />
       </src>
-      <type typename="smallint" />
+      <type typename="smallint" unsigned="true"/>
       <comment>instance id from cdm header</comment>
     </col>
 
@@ -3156,7 +3156,7 @@ version="v1r0" >
       <src null="true" >
         <from agent="enduser" />
       </src>
-      <type typename="smallint" />
+      <type typename="smallint" unsigned="true"/>
       <comment>version id from cdm header</comment>
     </col>
 
