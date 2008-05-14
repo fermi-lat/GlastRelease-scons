@@ -87,9 +87,9 @@ pedTwrs1 = pedFile1.getTowers()
 pedTwrs2 = pedFile2.getTowers()
 
 if (pedTwrs1 != pedTwrs2):
-    log.warning("input files have different n towers.  I quit! ;)")
+    log.warning("input files have different n towers.")
 
-twrSet = pedTwrs1 & pedTwrs2
+twrSet = set(pedTwrs1) & set(pedTwrs2)
 del pedTwrs1, pedTwrs2 # don't want to get confused & use these variables any more (twrSet subsumes them)
 log.info("Processing tower modules: %s"%twrSet)
 
