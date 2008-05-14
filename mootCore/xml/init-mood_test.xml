@@ -1131,6 +1131,16 @@ used for container vote files which reference regular votes by alias" />
       <ref col="precinct_fk" table="Precincts" refCol="name"
        refVal="generic" />
     </row>
+
+    <row>
+      <field col="name" val="fsw_FSW_Filter_Associate" />
+      <field col="description" 
+         val="Which filter config is assoc. with which handler, per mode" />
+      <ref col="precinct_fk" table="Precincts" refCol="name"
+       refVal="Filter_Associate" />
+    </row>
+
+
   </table>
 <!-- 8888  -->
   <table name="FClass_to_PClass" mode="add" >
@@ -2117,6 +2127,14 @@ used for container vote files which reference regular votes by alias" />
              val="Input for (and identical to) LATC ignore param. file" />
       <ref col="delegate_fk" table="Delegates" refCol="name"
        refVal="GNL" />
+    </row>
+
+    <row>
+      <field col="name" val="Filter_AssociateXml" />
+      <field col="description" 
+             val="Input for (and identical to) Filter assoc param. file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="Filter" />
     </row>
 
 
