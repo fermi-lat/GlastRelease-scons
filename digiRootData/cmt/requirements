@@ -41,3 +41,6 @@ apply_pattern root_package headers="\
  includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
  libs="libcommonRootData"\
  test_source="test/testDigiClasses.cxx"
+
+
+application ReadFilterStats ../apps/ReadFilterStats.cxx
