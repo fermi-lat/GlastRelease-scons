@@ -70,6 +70,10 @@ macro library_prefix ''
 apply_pattern my_root_library headers=$(headers) extra_source=$(extra) \
    includes="-I. -I.. -I$(CALIBTKRUTILROOT) " sourceDir="tkrPyRoot"
 
+#apply_pattern root_library headers="src/tkrPyRoot/tkrPyRoot.h"\ 
+#     includes="-I. -I.. -I$(CALIBTKRUTILROOT) "\
+#     libs=""\
+#     sourceDir="tkrPyRoot"
 
 ###PyRoot library  we assume all source files are in the src directory of the package
 # This is what I see in facilties - maybe Jim can explain why it's necessary to do the path_removes
