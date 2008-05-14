@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r19 14-May-2008  jrb  Change columns in Constituents table to unsigned
    v1r18 13-May-2008  jrb  Add MootQuery::getConstituentsBySbs; 
                            sbsKey field in ConfigInfo
    v1r17  8-May-2008  jrb  Update db descrip for mood, mood_user for Constituents
