@@ -138,6 +138,12 @@ StatusCode ExposureAlg::initialize(){
 
     m_initial_time =m_lasttime = startTime.value();
 
+    // Retrieve pointer to the Pointing Info tool
+    if ((sc = toolSvc()->retrieveTool("FluxPointingInfoTool", m_history)).isFailure())
+    {
+        log << MSG::ERROR << " could not retrieve the FluxPointingInfoTool" << endreq;
+    }
+
     // get a pointer to RootTupleSvc 
     if( (sc = service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
             log << MSG::ERROR << " failed to get the RootTupleSvc" << endreq;
