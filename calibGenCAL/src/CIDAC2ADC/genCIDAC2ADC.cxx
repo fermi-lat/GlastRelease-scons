@@ -126,7 +126,7 @@ int main(int argc,
     IntNonlinAlg inlAlg(sx16, cfg.hugeTuple.getVal());
 
     /// adc mean output filename
-    const string adcMeanPath(cfg.outputBasename.getVal() + ".adcmean.txt");
+    const string adcMeanPath(cfg.outputBasename.getVal() + ".txt");
 
     if (cfg.rootFileLE.getVal().length()) {
       LogStrm::get() << __FILE__ << ": reading LE calibGen event file: " << cfg.rootFileLE.getVal() << endl;
