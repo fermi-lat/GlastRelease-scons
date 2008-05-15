@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   15-May-08  v6r54p0 TU   Introduce FluxPointingInfoTool (see file commit notes)
    15-apr-08  v6r53   THB  Add flag to enable generation of aberration 
    09-jan-08  v6r52p1 THB  Add catch clause for flux, jobinfo parameter to force abort
    06-jan-08  v6r52   THB  Introduce jobinfo parameters to read gtobssim source description files
