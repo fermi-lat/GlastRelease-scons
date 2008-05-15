@@ -5,7 +5,7 @@
 
 */
 // Include files
-#include "FluxSvc/PointingInfo.h"
+#include "FluxSvc/IPointingInfo.h"
 
 // Gaudi system includes
 #include "GaudiKernel/Algorithm.h"
@@ -77,7 +77,7 @@ private:
     INTupleWriterSvc* m_rootTupleSvc;;
     ILivetimeSvc *    m_livetimeSvc;
 
-    PointingInfo m_history;
+    IPointingInfo* m_history;
 
     // this to support detection of SAA boundary
     bool m_insideSAA;
@@ -149,7 +149,7 @@ StatusCode ExposureAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-    m_history.setFT2Tuple(m_rootTupleSvc, m_root_tree.value());
+    m_history->setFT2Tuple(m_root_tree.value());
 
     log << MSG::INFO << "Using the clock \""<< m_clockName<< "\" to generate FT2 entries" << endreq;
 
@@ -206,16 +206,16 @@ void ExposureAlg::createEntry()
 {
     m_lasttime = astro::GPS::instance()->time();
     if( m_tickCount!=0){
-        double interval = m_lasttime - m_history.start_time();
+        double interval = m_lasttime - m_history->start_time();
         if( interval<=1e-10) return;
-        m_history.finish( m_lasttime, m_livetimeSvc->livetime()-m_last_livetime);
+        m_history->finish( m_lasttime, m_livetimeSvc->livetime()-m_last_livetime);
 
         m_rootTupleSvc->saveRow(this->m_root_tree.value());
     }
     m_last_livetime = m_livetimeSvc->livetime();
 
     // start new entry
-    m_history.set();
+    m_history->set();
 
     if(  m_tickCount% m_print_frequency==0){
         MsgStream   log( msgSvc(), name() );
@@ -226,11 +226,11 @@ void ExposureAlg::createEntry()
                 << m_lasttime - m_initial_time << " sec"
                 << std::setprecision(3)
                 << ", lat, lon, magLat, zenithTheta, SAA = " 
-                << m_history.lat_geo << ", " 
-                << m_history.lon_geo << ", "
-                << m_history.lat_mag << ", " 
-                << ( fabs(m_history.zenith_scz)<1e-8? 0: m_history.zenith_scz) << ", "
-                << m_history.in_saa;
+                << m_history->get_lat_geo() << ", " 
+                << m_history->get_lon_geo() << ", "
+                << m_history->get_lat_mag() << ", " 
+                << ( fabs(m_history->get_zenith_scz())<1e-8? 0: m_history->get_zenith_scz()) << ", "
+                << m_history->get_in_saa();
             log << t.str();
         }
         log << endreq;

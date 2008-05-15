@@ -15,5 +15,6 @@ DECLARE_FACTORY_ENTRIES(FluxSvc) {
     DECLARE_ALGORITHM( ExposureAlg );
     DECLARE_ALGORITHM( PointInfoAlg );
     DECLARE_TOOL( FluxSvcRandom );
+    DECLARE_TOOL( FluxPointingInfoTool );
 }
 
