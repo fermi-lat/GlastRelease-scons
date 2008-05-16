@@ -1809,6 +1809,15 @@ used for container vote files which reference regular votes by alias" />
       <field col="one_to_one" val="0" />
     </row>
 
+    <row>
+      <ref col="PClass_fk" table="Parameter_class" 
+           refCol="name" refVal="fsw_FSW_Filter_Associate" />
+      <ref col="FClass_fk" table="FSW_class" 
+           refCol="name" refVal="none" />
+      <field col="one_to_one" val="1" />
+    </row>
+
+
   </table>
 <!-- 8888  -->
 
