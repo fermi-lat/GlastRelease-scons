@@ -33,6 +33,9 @@ public:
     // Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IFilterTool; }
 
+    // Set Mode and Configuration for a given filter
+    virtual void setModeAndConfig(unsigned int mode, unsigned int config) = 0;
+
     // This defines the method called for end of event processing
     virtual void eoeProcessing(EDS_fwIxb* ixb) = 0;
 

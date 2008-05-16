@@ -67,6 +67,9 @@ public:
     /// @brief Finalize method for the tool
     StatusCode finalize();
 
+    // Set Mode and Configuration for a given filter
+    void setModeAndConfig(unsigned int mode, unsigned int config) {return;}
+
     // Dump out the running configuration
     void dumpConfiguration();
 

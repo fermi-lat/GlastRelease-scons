@@ -51,8 +51,16 @@ public:
 
     ///@name access methods
     /// Set up a filter specified by its name
-    int  setupFilter(const EFC_DB_Schema* schema,
-                     unsigned short int   configIndex);
+    int  setupFilter(const EFC_DB_Schema* schema, unsigned short int configIndex);
+
+    /// Associate a given (set of) filter(s) configuration with a mode
+    unsigned int associateConfigToMode(unsigned int targets, unsigned int mode, unsigned int configruation);
+
+    /// Enable/Disable filter(s)
+    unsigned int enableDisableFilter(unsigned int targets, unsigned int mask);
+
+    /// Set current mode for a given (set of) filter(s)
+    unsigned int selectFiltermode(unsigned int targets, unsigned int mode);
 
     /// Set up the specific passthrough filter
     bool setupPassThrough(void* prm);
@@ -67,6 +75,9 @@ public:
     /// Return a pointer to a given filter's parameter block of the requested type
     /// (must be typed by the user)
     void* getFilterPrm(unsigned short filterSchemaId, int type);
+
+    /// Return a "target" mask given a filter's schema id
+    unsigned int getFilterTargetMask(unsigned short int schemaId) const;
 
     ///@name other methods
     /// Load shareable libraries
@@ -117,6 +128,10 @@ private:
     int                  m_eventBad;
 
     int                  m_levels;
+
+    // Create a set of maps to relate mode enum to/from string representation
+    std::map<unsigned short int, std::string> m_modeEnumToStringMap;
+    std::map<std::string, unsigned short int> m_modeStringToEnumMap;
 };
 
 #endif // __ObfInterface_H
