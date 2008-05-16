@@ -23,7 +23,7 @@
 #include "GammaFilterCfgPrms.h"
 
 // FSW includes go here
-#include "CDM/CDM_pubdefs.h"
+#include "FSWHeaders/CDM_pubdefs.h"
 #include "EFC_DB/EFC_DB_schema.h"
 #include "EFC_DB/EH_ids.h"
 #include "GFC_DB/GFC_DB_schema.h"

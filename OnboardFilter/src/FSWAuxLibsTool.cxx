@@ -17,7 +17,7 @@
 #include "ObfInterface.h"
 
 // FSW includes go here
-#include "CDM/CDM_pubdefs.h"
+#include "FSWHeaders/CDM_pubdefs.h"
 
 // Useful stuff! 
 #include <stdexcept>
