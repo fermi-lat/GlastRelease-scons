@@ -72,7 +72,6 @@ private:
 
   //! Check if the event is a heavy ion candidate.
   bool isValidForGCR();
-  void selectEventAxis(Vector&,Point&);
 
     //! correction tool names
     std::string      m_gcrReconToolName ;
@@ -198,13 +197,11 @@ StatusCode GcrReconAlg::execute()
 
     
     
-    // Apply filter(TRIGGER Engine 4 "CNO Trigger" or HFC OnboardFilter), then find GCRs
+    // Apply an event filter selection step, then find GCRs
     if(isValidForGCR())
       {
         Vector dir;
         Point pos;
-        selectEventAxis(dir, pos);
-        //m_gcrReconTool->findGcrXtals(m_initAxis, dir, pos);
         m_gcrReconTool->findGcrXtals(m_initAxis, m_calEntryPoint, m_calExitPoint, m_initDir);
       }
 
@@ -233,6 +230,7 @@ bool GcrReconAlg::isValidForGCR()
     if(!engine4ON2){
       log<<MSG::INFO<<"@@@@@@@@ Trigger Engine 4 not set"<<endreq ;}
     bool passFilter=m_gcrReconTool->checkFilters(); // make a pass to compute the status word
+    passFilter=false;//dummy line to avoid warning at compilation time
     return engine4ON2;
   }
   else{
@@ -259,9 +257,6 @@ StatusCode GcrReconAlg::readGlastDet()
     return StatusCode::FAILURE;
   }
    
-  /// the GlastDetSvc used for access to detector info
-  IGlastDetSvc*      m_detSvc;
-  
   m_calZTop = m_geoSvc->calZTop();
   m_calZBot = m_geoSvc->calZBot();
   
@@ -383,7 +378,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
       m_initDir = -tkrEventParams->getEventAxis();    
     } else{
     log<<MSG::ERROR<<"Invalid property "<<m_initAxis<<endreq;
-    return;
+    return StatusCode::FAILURE;
   }
 
 
@@ -474,12 +469,5 @@ Event::McParticle* GcrReconAlg::findFirstMcParticle(){
 }
 
 
-
-//----------------------------------------------------------------------------
-
-void GcrReconAlg::selectEventAxis(Vector &dir, Point &pos)
-{
-  return;
-}
 
 
