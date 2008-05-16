@@ -33,10 +33,10 @@
 #include "EFC_DB/EFC_DB_sampler.h"
 #include "EFC/../src/GFC_def.h"
 #include "EFC/../src/TFC_geometryDef.h"
-#include "GGF_DB/../src/GEO_DB_data.h"
+#include "src/GEO_DB_data.h"
 
 // obf Track definitions
-#include "EFC/TFC_prjDef.h"
+#include "FSWHeaders/TFC_prjDef.h"
 #include "EFC/EFC_edsFw.h"
 
 #include "FSWHeaders/EFC.h"
