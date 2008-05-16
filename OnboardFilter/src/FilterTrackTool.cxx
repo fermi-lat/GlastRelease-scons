@@ -39,7 +39,7 @@
 #include "EFC/TFC_prjDef.h"
 #include "EFC/EFC_edsFw.h"
 
-#include "EFC/EFC.h"
+#include "FSWHeaders/EFC.h"
 
 // HepPoint3D
 #include "CLHEP/Geometry/Point3D.h"

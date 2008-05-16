@@ -30,7 +30,7 @@
 #include "GFC_DB/GAMMA_DB_instance.h"
 #include "EFC/GFC_status.h"
 
-#include "EFC/EFC.h"
+#include "FSWHeaders/EFC.h"
 #include "LSE/LFR_key.h"
 
 // FSW include but made local do to keyword usage

@@ -29,7 +29,7 @@
 #include "XFC_DB/DGN_DB_instance.h"
 #include "XFC/DFC_status.h"
 
-#include "EFC/EFC.h"
+#include "FSWHeaders/EFC.h"
 #include "LSE/LFR_key.h"
 
 // FSW include but made local do to keyword usage

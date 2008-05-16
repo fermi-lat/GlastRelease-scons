@@ -39,7 +39,7 @@
 #include "EFC_DB/EFC_DB_sampler.h"
 #include "EFC/../src/GFC_def.h"
 
-#include "EFC/EFC.h"
+#include "FSWHeaders/EFC.h"
 
 // Useful stuff! 
 #include <map>
