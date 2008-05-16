@@ -65,10 +65,10 @@ public:
     StatusCode finalize();
 
     // Set Mode and Configuration for a given filter
-    void setModeAndConfig(unsigned int mode, unsigned int config);
+    virtual void setModeAndConfig(unsigned int mode, unsigned int config);
 
     // Dump out the running configuration
-    void dumpConfiguration();
+    virtual void dumpConfiguration();
 
     // This defines the method called for end of event processing
     virtual void eoeProcessing(EDS_fwIxb* ixb);
