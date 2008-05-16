@@ -67,14 +67,14 @@ public:
     // Set Mode and Configuration for a given filter
     virtual void setModeAndConfig(unsigned int mode, unsigned int config);
 
-    // Dump out the running configuration
-    virtual void dumpConfiguration();
-
     // This defines the method called for end of event processing
     virtual void eoeProcessing(EDS_fwIxb* ixb);
 
     // This for end of run processing
     virtual void eorProcessing();
+
+    // Dump out the running configuration
+    virtual void dumpConfiguration();
 
 private:
 
