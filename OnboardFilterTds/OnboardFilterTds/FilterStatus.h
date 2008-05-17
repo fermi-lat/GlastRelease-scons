@@ -17,7 +17,8 @@
 #include "EDS/EBF_dir.h"
 #include "EDS/EDR_tkr.h"
 #include "EFC/GFC_status.h"
-#include "EFC/TFC_prjDef.h"
+//#include "EFC/TFC_prjDef.h"
+#include "OnboardFilterTds/TFC_prjDef.h"
 #include "OnboardFilterTds/LogInfoDef.h"
 /**
  * @class FilterStatus

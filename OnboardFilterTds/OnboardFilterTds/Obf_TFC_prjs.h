@@ -10,7 +10,8 @@
 **/
 
 // Include the FSW header file defining the tracking structures
-#include "EFC/TFC_prjDef.h"
+//#include "EFC/TFC_prjDef.h"
+#include "OnboardFilterTds/TFC_prjDef.h"
 
 namespace OnboardFilterTds {
 
