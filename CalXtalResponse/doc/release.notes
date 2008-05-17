@@ -1,3 +1,4 @@
+v0r21p3 05/16/08 chekhtman - merged pedestal temperature correction code for beam test from v0r14p4_CU3
 v0r21p1 04/21/08 fewtrell - minor update - responded to 'explicit'-ized constructors in CalUtil
 v0r21p0 04/15/08 makeev   - added ability to choose "even/odd" configuration for CAL FLE/FHE trigger calibration
 v0r20p1 03/21/08 fewtrell - slightly modified ideal intNonlin calibrations to match v0r16 response (response had changed due to a minor bug fix)

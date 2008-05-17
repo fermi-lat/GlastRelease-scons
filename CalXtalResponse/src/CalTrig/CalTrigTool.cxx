@@ -260,11 +260,12 @@ StatusCode CalTrigTool::calcXtalTrig(const Event::CalDigi& calDigi) {
         const RngIdx rngIdx(xtalIdx,
                             face, rng);
 
-        Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
-        if (!ped) return StatusCode::FAILURE;
-        
+    float ped;
+    StatusCode sc = m_calCalibSvc->getPed(rngIdx,ped);
+    if (sc.isFailure()) return StatusCode::FAILURE;
+
         adcPed[XtalRng(face, rng)]  = 
-          (*ro).getAdc(face) - ped->getAvr();
+          (*ro).getAdc(face) - ped;
       }
 
     return calcXtalTrig(xtalIdx, adcPed);
@@ -360,9 +361,11 @@ StatusCode CalTrigTool::calcXtalTrig(const XtalIdx xtalIdx,
     //-- retrieve pedestals 
     const RngIdx rngIdx(xtalIdx,
                         face, rng);
-    Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
-    if (!ped) return StatusCode::FAILURE;
-    const float adcPed = adc - ped->getAvr();
+
+	float ped;
+        StatusCode sc = m_calCalibSvc->getPed(rngIdx,ped);
+        if (sc.isFailure()) return StatusCode::FAILURE;
+    const float adcPed = adc - ped;
 
     //-- eval faceSignal 
     sc = m_calCalibSvc->evalFaceSignal(rngIdx, adcPed, ene);

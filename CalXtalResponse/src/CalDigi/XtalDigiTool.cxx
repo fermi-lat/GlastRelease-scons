@@ -356,9 +356,10 @@ StatusCode XtalDigiTool::fillDigi(CalDigi &calDigi,
       const XtalRng xRng(face,roRange[face]);
       const XtalIdx xtalIdx(xtalId);
       const RngIdx rngIdx(xtalIdx, face, roRange[face]);
-      CalibData::Ped const*const pedCalib = m_calCalibSvc->getPed(rngIdx);
-      if (!pedCalib) return StatusCode::FAILURE;
-      const float ped = pedCalib->getAvr();
+      float ped;
+      StatusCode sc = m_calCalibSvc->getPed(rngIdx,ped);
+      if (sc.isFailure()) return StatusCode::FAILURE;
+
   
       ////////////////////////////////////////
       // Stage 5: ADD PEDS, CHECK ADC RANGE //

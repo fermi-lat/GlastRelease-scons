@@ -216,15 +216,18 @@ StatusCode PrecalcCalibTool::genLocalStore() {
     for (RngNum rng; rng.isValid(); rng++) {
       const RngIdx rngIdx(faceIdx, rng);
 
-      CalibData::Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
+      //  CalibData::Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
+      float pedsig;
+      sc = m_calCalibSvc->getPed(rngIdx,pedsig);
+      if(sc.isFailure())return sc;
       
       float sigDAC;
 
       // this should work by now if we got this far.
-      sc = m_calCalibSvc->evalCIDAC(rngIdx, ped->getSig(), sigDAC);
+      sc = m_calCalibSvc->evalCIDAC(rngIdx, pedsig, sigDAC);
       if (sc.isFailure()) return sc;
 
-      // DAC scale is ped subtraced, so we'll make pedstal @ 0
+      // DAC scale is ped subtracted, so we'll make pedstal @ 0
       // ignore cos.
       m_pedSigCIDAC[rngIdx] = sigDAC;
     }  

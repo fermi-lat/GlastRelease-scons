@@ -203,10 +203,11 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
     diode[face] = rng[face].getDiode();
 
     // retrieve pedestal calibration
-    Ped const*const pedCalib = m_calCalibSvc->getPed(rngIdx);
-    if (!pedCalib) return 0;
-    const float ped = pedCalib->getAvr();
-    const float pedSig = pedCalib->getSig();
+    float ped,pedSig;
+    StatusCode sc = m_calCalibSvc->getPed(rngIdx,ped);
+    if (sc.isFailure()) return 0;
+    sc = m_calCalibSvc->getPedSig(rngIdx,pedSig);
+    if (sc.isFailure()) return 0;
 
     // ped subtracted ADC
     adcPed[face] = adc - ped;

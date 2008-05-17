@@ -310,11 +310,12 @@ StatusCode CalTupleAlg::execute() {
 
         // get pedestals
         // pedestals
-        Ped const*const ped= m_calCalibSvc->getPed(rngIdx);
-        if (!ped) return StatusCode::FAILURE;
+	float ped;
+        sc = m_calCalibSvc->getPed(rngIdx,ped);
+        if (sc.isFailure()) return StatusCode::FAILURE;
 
         // ped subtracted ADC
-        const float adcPed = adc - ped->getAvr();
+        const float adcPed = adc - ped;
 
         //-- face signal --//
         if (adcPed > 0) {
@@ -354,11 +355,12 @@ StatusCode CalTupleAlg::execute() {
           // get pedestals
           // pedestals
           const RngIdx rngIdx(xtalIdx, face, rng);
-          Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
-          if (!ped) return StatusCode::FAILURE;
+	  float ped;
+          sc = m_calCalibSvc->getPed(rngIdx,ped);
+          if (sc.isFailure()) return StatusCode::FAILURE;
             
           // ped subtracted ADC
-          const float adcPed = adc - ped->getAvr();
+          const float adcPed = adc - ped;
             
           m_tupleEntry.m_calXtalAdcPedAllRange[twr.val()][lyr.val()][col.val()][face.val()][rng.val()] = adcPed;
 
