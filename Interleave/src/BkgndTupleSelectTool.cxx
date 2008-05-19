@@ -546,7 +546,7 @@ void BkgndTupleSelectTool::copyEventInfo()
     setLeafValue(m_mcidLeaf, sourceId);
 
     // Save this row
-    m_rootTupleSvc->saveRow(m_treeName.value());
+    m_rootTupleSvc->storeRowFlag(m_treeName.value(),true);
     m_interleaveMap->saveInterleaveMapRow();
 
     // Tell the CEL about this...
