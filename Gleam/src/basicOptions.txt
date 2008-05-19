@@ -142,7 +142,8 @@ Reconstruction.Members={
     "Sequencer/Tkr",
     "Sequencer/Cal2",
     "Sequencer/TkrIter",
-    "Sequencer/Acd"
+    "Sequencer/Acd",
+    "Sequencer/Gcr"
     };
 
 
@@ -177,6 +178,8 @@ mcRootWriterAlg.mcRootFile       = "$(GLEAMROOT)/data/mc.root";
 digiRootWriterAlg.digiRootFile   = "$(GLEAMROOT)/data/digi.root";
 reconRootWriterAlg.reconRootFile = "$(GLEAMROOT)/data/recon.root";
 relationRootWriterAlg.rootFile   = "$(GLEAMROOT)/data/relations.root";
+gcrSelectRootWriterAlg.gcrSelectRootFile = "$(GLEAMROOT)/data/gcr.root";
+
 
 // Sets up the meta (event collection) file
 // Note, that if we eliminate all the RootWriterAlgs, we will not write
@@ -233,6 +236,14 @@ TkrIter.Members = {
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
 Acd.Members = {"AcdReconAlg"};
 
+// ----------------------------
+//   GCR
+ApplicationMgr.DLLs += {"GCRCalib"};
+
+Gcr.Members = {"GcrReconAlg","GcrSelectAlg"};
+
+GcrReconAlg.HFC_Or_TriggerEng4 = "ANYFILTER";
+GcrReconAlg.InitAxis           = "TKR";
 
 // ----------------------------
 //  Geometry definition
@@ -304,6 +315,12 @@ ToolSvc.LastLayerCorrTool.OutputLevel=4;
 ToolSvc.OutputLevel=4;
 CalXtalRecAlg.OutputLevel=4;
 AcdReconAlg.OutputLevel=4; // suppress INFO complaint about no tracks
+GcrReconAlg.OutputLevel           = 4;
+GcrReconSelect.OutputLevel        = 4;
+GcrSelectAlg.OutputLevel          = 4;
+ToolSvc.GcrReconTool.OutputLevel  = 4;
+ToolSvc.GcrSelectTool.OutputLevel = 4;
+
     
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
