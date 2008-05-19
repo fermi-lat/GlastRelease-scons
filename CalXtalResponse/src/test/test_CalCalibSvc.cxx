@@ -96,15 +96,14 @@ StatusCode test_CalCalibSvc::testPed(const XtalIdx xtalIdx,
        xRng++) {
     const RngIdx rngIdx(xtalIdx, xRng);
     
-    CalibData::Ped const*const ped = calCalibSvc.getPed(rngIdx);
-    if (!ped) {
+    float val,sig;
+    StatusCode sc = calCalibSvc.getPed(rngIdx,val);
+    StatusCode scs = calCalibSvc.getPedSig(rngIdx,sig);
+    if (sc.isFailure() || scs.isFailure()) {
       MsgStream msglog(m_msgSvc, "test_CalCalibSvc");   
       msglog << MSG::ERROR << "missing pedestal: " << rngIdx.toStr() << endreq;
       return StatusCode::FAILURE;
     }
-    const float val = ped->getAvr();
-    const float sig = ped->getSig();
-
     // check calibs against test values (should be close to w/in
     // rounding diff
     if (!smart_compare(val, calibSet.m_calPed.getPed(rngIdx), MAX_CALIB_DIFF)) {
@@ -494,8 +493,8 @@ StatusCode test_CalCalibSvc::testMissingXtal(const XtalIdx xtalIdx,
        xRng.isValid();
        xRng++) {
     const RngIdx rngIdx(xtalIdx, xRng);
-     
-    if (calCalibSvc.getPed(rngIdx) != 0) {
+    float ped;
+    if (calCalibSvc.getPed(rngIdx,ped).isFailure()) {
       MsgStream msglog(m_msgSvc, "test_CalCalibSvc");   
       msglog << MSG::ERROR << "Ped calibrations for empty tower returned: " << rngIdx.toStr() << endreq;
       return StatusCode::FAILURE;
@@ -582,13 +581,13 @@ StatusCode test_CalCalibSvc::testFaceSignal(const CalUtil::XtalIdx xtalIdx,
     const RngIdx rngIdx(xtalIdx, xRng);
     
     /// get pedestal
-    CalibData::Ped const*const pedCalib = calCalibSvc.getPed(rngIdx);
-    if (!pedCalib) {
+    float ped;
+    StatusCode sc = calCalibSvc.getPed(rngIdx,ped);
+    if (sc.isFailure()) {
       MsgStream msglog(m_msgSvc, "test_CalCalibSvc");   
       msglog << MSG::ERROR << "missing pedestal: " << rngIdx.toStr() << endreq;
       return StatusCode::FAILURE;
     }
-    const float ped = pedCalib->getAvr();
 
     /// select adc value within adc range.
     const float testADC = CLHEP::RandFlat::shoot(4095-ped);

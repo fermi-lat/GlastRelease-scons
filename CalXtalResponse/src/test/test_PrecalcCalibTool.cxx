@@ -38,13 +38,13 @@ StatusCode test_PrecalcCalibTool::testXtal(const XtalIdx xtalIdx,
     if (precalcCalibTool.getPedSigCIDAC(rngIdx, pedSigCIDAC).isFailure())
       return StatusCode::FAILURE;
 
-    CalibData::Ped const*const ped = calCalibSvc.getPed(rngIdx);
-    if (!ped) {
+    float pedSigADC;
+    StatusCode sc = calCalibSvc.getPedSig(rngIdx,pedSigADC);
+    if (sc.isFailure()) {
       MsgStream msglog(m_msgSvc, "test_PrecalcCalibTool");   
       msglog << MSG::ERROR << "missing pedestal: " << xtalIdx.toStr() << endreq;
       return StatusCode::FAILURE;
     }
-    const float pedSigADC = ped->getSig();
 
     float testSigCIDAC;
     if (calCalibSvc.evalCIDAC(rngIdx, pedSigADC, testSigCIDAC).isFailure())

@@ -101,9 +101,9 @@ namespace {
   /// \param maxADC destination for max ADC value
   StatusCode maxADC(const CalUtil::RngIdx rngIdx, ICalCalibSvc &calCalibSvc, float &maxADC) {
     // retrieve pedestal calibration
-    CalibData::Ped const*const pedCalib = calCalibSvc.getPed(rngIdx);
-    if (!pedCalib) return StatusCode::FAILURE;
-    const float ped = pedCalib->getAvr();
+    float ped;
+    StatusCode sc = calCalibSvc.getPed(rngIdx,ped);
+    if (sc.isFailure()) return StatusCode::FAILURE;
 
     vector<float> const*const inlADC = calCalibSvc.getInlAdc(rngIdx);
     if (!inlADC)
@@ -273,9 +273,9 @@ StatusCode test_CalXtalRecAlg::verifyRangeReadout(const CalUtil::XtalIdx xtalIdx
       return StatusCode::SUCCESS;
 
     // retrieve pedestal calibration
-    CalibData::Ped const*const pedCalib = calCalibSvc.getPed(rngIdx);
-    if (!pedCalib) return 0;
-    const float ped = pedCalib->getAvr();
+    float ped;
+    StatusCode sc = calCalibSvc.getPed(rngIdx,ped);
+    if (sc.isFailure()) return 0;
 
     // ped subtracted ADC
     adcPed[face] = adc - ped;
@@ -382,9 +382,9 @@ StatusCode test_CalXtalRecAlg::verifyRangeRecon(const CalUtil::XtalIdx xtalIdx,
       return StatusCode::SUCCESS;
 
     // retrieve pedestal calibration
-    CalibData::Ped const*const pedCalib = calCalibSvc.getPed(rngIdx);
-    if (!pedCalib) return StatusCode::FAILURE;
-    const float ped = pedCalib->getAvr();
+    float ped;
+    StatusCode sc = calCalibSvc.getPed(rngIdx,ped);
+    if (sc.isFailure()) return StatusCode::FAILURE;
 
     adcPed[face] = adc - ped;
   }
