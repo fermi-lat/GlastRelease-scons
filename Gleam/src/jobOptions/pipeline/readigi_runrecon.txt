@@ -147,8 +147,13 @@ TkrIter.Members = {"TkrReconAlg/Iteration"};
 //
 ApplicationMgr.DLLs += {"GCRCalib"};
 
-GcrReconAlg.UseMcDir           = false;
-GcrReconAlg.HFC_Or_TriggerEng4 = "HFC";
+// New:
+GcrReconAlg.HFC_Or_TriggerEng4 = "ANYFILTER";
+GcrReconAlg.InitAxis           = "TKR";
+
+// Old:
+//GcrReconAlg.UseMcDir           = false;
+//GcrReconAlg.HFC_Or_TriggerEng4 = "HFC";
 
 
 //

@@ -158,7 +158,8 @@ Reconstruction.Members = {"Sequencer/Cal1",
                           "Sequencer/Tkr",
                           "Sequencer/Cal2",
                           "Sequencer/TkrIter",
-                          "Sequencer/Acd"};
+                          "Sequencer/Acd",
+                          "Sequencer/Cal3"};
 
 //
 // Analyzes the performance of the filter (not ordinarily invoked):
@@ -186,15 +187,16 @@ Output.Members = {"FhSetAlg",
                   "digiRootWriterAlg", 
                   "reconRootWriterAlg",
                   "relationRootWriterAlg"};
+Output.Members += {"gcrSelectRootWriterAlg"};
 
 // 
 // Default output to GLEAMROOT/data:
 //
-mcRootWriterAlg.mcRootFile       = "mc.root";
-digiRootWriterAlg.digiRootFile   = "digi.root";
-reconRootWriterAlg.reconRootFile = "reccon.root";
-relationRootWriterAlg.rootFile   = "relations.root";
-
+mcRootWriterAlg.mcRootFile               = "mc.root";
+digiRootWriterAlg.digiRootFile           = "digi.root";
+reconRootWriterAlg.reconRootFile         = "reccon.root";
+relationRootWriterAlg.rootFile           = "relations.root";
+gcrSelectRootWriterAlg.gcrSelectRootFile = "gcr.root";
 
 // 
 // Ntuple generation :
@@ -242,6 +244,19 @@ Tkr.Members = {"TkrReconAlg/FirstPass"};
 Cal2.Members = {"CalEventEnergyAlg/second"};
 
 TkrIter.Members = {"TkrReconAlg/Iteration"};
+
+// GCR:
+Cal3.Members = {"GcrReconAlg","GcrSelectAlg"};
+
+
+//
+// GCR:
+//
+ApplicationMgr.DLLs += {"GCRCalib"};
+
+// New:
+GcrReconAlg.HFC_Or_TriggerEng4 = "ANYFILTER";
+GcrReconAlg.InitAxis           = "TKR";
 
 
 // 
@@ -518,6 +533,17 @@ RootTupleSvc.filename  = "merit.root";
 // Name of output CAL ntuple:
 //
 CalTupleAlg.tupleFilename = "caltuple.root";
+
+
+// Name of GCR file:
+gcrSelectRootWriterAlg.gcrSelectRootFile = "gcr.root";
+
+// GCR Output level:
+GcrReconAlg.OutputLevel           = 4;
+GcrReconSelect.OutputLevel        = 4;
+GcrSelectAlg.OutputLevel          = 4;
+ToolSvc.GcrReconTool.OutputLevel  = 4; 
+ToolSvc.GcrSelectTool.OutputLevel = 4; 
 
 
 //
