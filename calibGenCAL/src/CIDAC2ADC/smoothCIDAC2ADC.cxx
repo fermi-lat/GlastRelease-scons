@@ -269,6 +269,7 @@ int main(int argc,
     LogStrm::get() << __FILE__ << ": writing smoothed spline points: " << outputTXTPath << endl;
     cidac2adc.writeTXT(outputTXTPath);
 
+    LogStrm::get() << __FILE__ << "Successfully completed." << endl;
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
     return -1;

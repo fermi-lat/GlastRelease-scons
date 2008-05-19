@@ -142,8 +142,11 @@ int main(int argc,
                    << adcMeanPath << endl;
     adcMeans.writeTXT(adcMeanPath);
 
+    LogStrm::get() << __FILE__ << "Writing output ROOT file." << endl;
     outputROOTFile.Write();
     outputROOTFile.Close();
+
+    LogStrm::get() << __FILE__ << "Successfully completed." << endl;
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
     return -1;

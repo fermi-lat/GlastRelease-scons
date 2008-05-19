@@ -212,8 +212,11 @@ int main(int argc,
     lpaFleAlg.fillHists(nEntries,
                         digiFileList);
 
+    LogStrm::get() << __FILE__ << "Writing output ROOT file." << endl;
     histfile.Write();
     histfile.Close();
+
+    LogStrm::get() << __FILE__ << "Successfully completed." << endl;
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
     return -1;
