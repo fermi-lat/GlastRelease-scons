@@ -274,11 +274,11 @@ int main(const int argc, const char **argv) {
       }
 
   
-    LogStrm::get() << __FILE__ << "Writing output ROOT file." << endl;
+    LogStrm::get() << __FILE__ << ": Writing output ROOT file." << endl;
     fhist.Write();
     fhist.Close();
 
-    LogStrm::get() << __FILE__ << "Successfully completed." << endl;
+    LogStrm::get() << __FILE__ << ": Successfully completed." << endl;
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
     return -1;

@@ -125,11 +125,11 @@ int main(const int argc,
     //const string   outputTXTFile(cfg.outputBasename.getVal()+".txt");
     //calMPD.writeTXT(outputTXTFile);
     
-    LogStrm::get() << __FILE__ << "Writing output ROOT file." << endl;
+    LogStrm::get() << __FILE__ << ": Writing output ROOT file." << endl;
     outputROOTFile.Write();
     outputROOTFile.Close();
 
-    LogStrm::get() << __FILE__ << "Successfully completed." << endl;
+    LogStrm::get() << __FILE__ << ": Successfully completed." << endl;
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
     return -1;

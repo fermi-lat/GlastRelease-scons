@@ -202,7 +202,7 @@ int main(int argc,
     mupedHistfile.Write();
     mupedHistfile.Close();
 
-    LogStrm::get() << __FILE__ << "Successfully completed." << endl;
+    LogStrm::get() << __FILE__ << ": Successfully completed." << endl;
   } catch (exception &e) {
     cout << __FILE__ << ": exception thrown: " << e.what() << endl;
     return -1;
