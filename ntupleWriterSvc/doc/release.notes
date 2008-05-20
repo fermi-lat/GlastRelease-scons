@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r22p1 19-May-2008  HMK: Return error and exit if we cannot GetEntry
+ *         when reading input ntuples
  * v3r22   04-May-2008  HMK: Reset default buffer size to 32000 bytes
  * v3r21p8 24-Apr-2008  HMK: Get the branch address correct for updated items
  *         that were already in the original input TChain

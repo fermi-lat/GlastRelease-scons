@@ -603,8 +603,9 @@ void RootTupleSvc::beginEvent()
         int numBytes = inIter->second->GetEntry(m_nextEvent++);
         if (numBytes <= 0){
             MsgStream log(msgSvc(),name());
-            log << MSG::WARNING << "Failed to load event " << m_nextEvent-1
-                << " from the input chain" << endreq;
+            log << MSG::ERROR << "Failed to load event " << m_nextEvent-1
+                << " from the input chain, terminating job" << endreq;
+            exit(1);
         }
 
     }
