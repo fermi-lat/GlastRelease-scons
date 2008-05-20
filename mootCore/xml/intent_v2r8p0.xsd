@@ -1609,7 +1609,41 @@
 
   <!-- start Filter_Associate -->
 
-  <xs:element name="Filter_Associate-registers" type="emptyBaseType" />
+  <xs:complexType name="filterHandlerType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="master" type="xs:string" use="required"/>
+        <xs:attribute name="active" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="lpaModeType">
+    <xs:sequence>
+      <xs:element name="PASS" type="filterHandlerType"/>
+      <xs:element name="GAMMA" type="filterHandlerType"/>
+      <xs:element name="ASC" type="filterHandlerType"/>
+      <xs:element name="MIP" type="filterHandlerType"/>
+      <xs:element name="HIP" type="filterHandlerType"/>
+      <xs:element name="DGN" type="filterHandlerType"/>
+    </xs:sequence>
+    <xs:attribute name="modes" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="associationsType">
+    <xs:sequence>
+      <xs:element name="LPA_Mode" type="lpaModeType" minOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="LPA_DB" type="xs:Name" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="Filter_Associate-registers" >
+    <xs:complexType>
+      <xs:all minOccurs="0" maxOccurs="1">
+        <xs:element name="FSW_Associations" type="associationsType"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="Filter_Associate-anc" >
     <xs:complexType >
