@@ -25,7 +25,7 @@ using namespace GlastClassify;
 
 //_________________________________________________________________________
 
-/** @page meritTuple_CTB_variables
+/** @page merittuple
 @section ctbVars CTB Variables
 This list of CTB variables is up-to-date as of GlastClassify v6r2p1, April 30, 2008.
 We will <em>attempt</em> to keep it that way, but it's not yet guaranteed, since the

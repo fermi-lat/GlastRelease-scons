@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+20-May-08  v6r2p3 LSR but keep the same name for the doxygen file!
 20-May-08  v6r2p2 LSR Updated documentation from Bill
 30-Apr-08  v6r2p1 TU  Fix again the ordering for same precedence operators
 25-Apr-08  v6r2p0 TU  Set correct order for parsing same precedence operators 
