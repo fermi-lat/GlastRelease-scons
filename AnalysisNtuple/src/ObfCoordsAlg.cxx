@@ -64,11 +64,6 @@ private:
     // tuple items expect to find
     //TypedItem<unsigned int, 'i'> EvtRun, EvtEventId;
 
-    // these all float or double
-    Item FilterXDir;
-    Item FilterYDir;
-    Item FilterZDir;
-
     // These will replace Filter%Dir's above
     Item GrbXDir;
     Item GrbYDir;
@@ -153,10 +148,7 @@ StatusCode ObfCoordsAlg::finalize()
 
 ObfCworker::ObfCworker()
 // initialize pointers to current items
-: FilterXDir("FilterXDir")
-, FilterYDir("FilterYDir")
-, FilterZDir("FilterZDir")
-, GrbXDir("GrbXDir")
+: GrbXDir("GrbXDir")
 , GrbYDir("GrbYDir")
 , GrbZDir("GrbZDir")
 {
@@ -184,8 +176,17 @@ void ObfCworker::evaluate()
     m_grbRa = m_grbDec = m_grbL = m_grbB = 0;
     // convert to (ra, dec)
 
+    // "Best" GRB track in the Grb tuple variables
+    Vector grbDir(GrbXDir, GrbYDir, GrbZDir);
+    if (grbDir.mag()==0) return;
+    astro::SkyDir skyGrbdir( gps->toSky(-grbDir) );
+    m_grbRa  = skyGrbdir.ra();
+    m_grbDec = skyGrbdir.dec();
+    m_grbL   = skyGrbdir.l();
+    m_grbB   = skyGrbdir.b();
+
     // Old school stuff first
-    Vector filterDir(FilterXDir, FilterYDir, FilterZDir);
+    Vector filterDir(GrbXDir, GrbYDir, GrbZDir);
     if (filterDir.mag()==0) return;
     // Filter direction points up... 
     // toSky converts a *particle* direction
@@ -195,15 +196,6 @@ void ObfCworker::evaluate()
     m_obfDec = skydir.dec();
     m_obfL   = skydir.l();
     m_obfB   = skydir.b();
-
-    // New stuff now
-    Vector grbDir(GrbXDir, GrbYDir, GrbZDir);
-    if (grbDir.mag()==0) return;
-    astro::SkyDir skyGrbdir( gps->toSky(-grbDir) );
-    m_grbRa  = skyGrbdir.ra();
-    m_grbDec = skyGrbdir.dec();
-    m_grbL   = skyGrbdir.l();
-    m_grbB   = skyGrbdir.b();
 
     return;
 }
