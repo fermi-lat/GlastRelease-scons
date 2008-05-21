@@ -17,6 +17,7 @@
 #include "Tem.h"
 #include "FilterStatus.h"
 #include "ObfFilterStatus.h"
+#include "ObfFilterTrack.h"
 
 #include "MetaEvent.h"
 #include "Ccsds.h"
@@ -208,6 +209,9 @@ public:
     const ObfFilterStatus& getObfFilterStatus() const { return m_obfFilterStatus; };
     void setObfFilterStatus(const ObfFilterStatus& obf) { m_obfFilterStatus = obf; };
 
+    const ObfFilterTrack& getObfFilterTrack() const { return m_obfFilterTrack; };
+    void setObfFilterTrack(const ObfFilterTrack& obf) { m_obfFilterTrack = obf; };
+
     /// clear the whole array (necessary because of the consts-s)
     void clearTkrDigiCol() { m_tkrDigiCol->Clear(); }
     /// Add a TkrDigi into the TKR data collection
@@ -303,10 +307,11 @@ private:
  
     FilterStatus m_obf;
     ObfFilterStatus m_obfFilterStatus;
+    ObfFilterTrack m_obfFilterTrack;
    
     AdfDigi m_adfDigi;
 
-    ClassDef(DigiEvent,19) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(DigiEvent,20) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif

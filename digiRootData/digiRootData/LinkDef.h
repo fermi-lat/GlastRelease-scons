@@ -68,6 +68,7 @@
 #pragma link C++ class ObfHFCStatus+;
 #pragma link C++ class ObfMipStatus+;
 #pragma link C++ class ObfDFCStatus+;
+#pragma link C++ class ObfFilterTrack+;
 
 // Beamtest Ancillary Data 2006
 #pragma link C++ class AdfDigi+;

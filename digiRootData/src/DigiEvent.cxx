@@ -132,7 +132,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_ccsds.Clear("");
     m_obf.Clear("");
     m_obfFilterStatus.Clear("");
-
+    m_obfFilterTrack.Clear("");
 
     m_calDigiCloneCol->Clear("C");
     m_acdDigiCol->Clear("C");
