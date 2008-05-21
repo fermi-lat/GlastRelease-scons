@@ -1,6 +1,6 @@
  package Gleam
 
-version v6r35
+version v6r36
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 

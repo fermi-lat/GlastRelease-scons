@@ -17,6 +17,8 @@ CalCalibSvc.DefaultFlavor    = "MC_OktoberFest07";
 // TKR
 TkrCalibAlg.calibFlavor      = "MC_OktoberFest07";
 TkrCalibAlg.deadStripsCalibFlavor = "MC_OktoberFest07";
+TkrCalibAlg.towerAlignmentCalibFlavor    = "ideal"; 
+TkrCalibAlg.internalAlignmentCalibFlavor = "ideal";
 
 // ACD data
 AcdCalibSvc.DefaultFlavor     = "MC_OktoberFest07";
