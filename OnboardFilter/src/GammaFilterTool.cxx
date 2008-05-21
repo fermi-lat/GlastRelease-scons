@@ -341,7 +341,7 @@ void GammaFilterTool::dumpConfiguration()
     std::string    config   = m_filterLibs->getInstanceIdString(mode2cfg);
 
     log << MSG::INFO << "Gamma Filter Setup - FSW release " << m_filterLibs->FlightSoftwareRelease() << "\n"
-        << "   Using configuration: " << config << endreq;
+        << "   Using configuration: " << config.data() << endreq;
 
     return;
 }
