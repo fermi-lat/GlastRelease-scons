@@ -10,7 +10,7 @@
 #include "mootCore/MootQuery.h"
 
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out);
-void writeConstituent(MOOT::ConstitInfo* pInfo, std::ostream& out);
+void writeConstituent(const MOOT::ConstitInfo* pInfo, std::ostream& out);
 void writeParmOff(const std::vector<MOOT::ParmOffline>& parm);
 
 int main(int /* nargs */, char**)    {
@@ -596,6 +596,46 @@ int main(int /* nargs */, char**)    {
   std::cout << "getConstituentsBySbs for sbs_key=" << sbsExportKey
             << " schema id =" << schemaId << " returns " << nGamma
             << " constituents." << std::endl;
+
+  // Cache contents of  filter assoc file
+  //  std::string assocFile("/u/ey/jrb/junk/filterAssoc.xml");
+  //  q.parseFilterParm(assocFile);
+  unsigned cfgKey=144;
+  //  q.cacheFilterConfig(cfgKey);
+  conInfo.clear();
+  unsigned nFound = q.getActiveFilters(cfgKey, conInfo);
+  std::cout << "For cfgKey " << cfgKey << " found " << nFound << " filters"
+            << std::endl;
+  if (nFound) {
+    writeConstituent(&conInfo[0], std::cout);
+  }
+
+  conInfo.clear();
+  nFound = q.getActiveFilters(cfgKey, conInfo, MOOT::LPA_MODE_NORMAL);
+  std::cout << "For cfgKey " << cfgKey << " and mode = NORMAL found " 
+            << nFound << " filters" << std::endl;
+  if (nFound) {
+    writeConstituent(&conInfo[0], std::cout);
+  }
+  conInfo.clear();
+  nFound = q.getActiveFilters(cfgKey, conInfo, MOOT::LPA_MODE_GRB1);
+  std::cout << "For cfgKey " << cfgKey << " and mode = GRB1 found " 
+            << nFound << " filters" << std::endl;
+  if (nFound) {
+    writeConstituent(&conInfo[0], std::cout);
+  }
+
+  std::string handlerName;
+  for (unsigned hId = 0; hId < 6; hId++) {
+    const MOOT::ConstitInfo* pInfo = 
+      q.getActiveFilter(cfgKey, MOOT::LPA_MODE_NORMAL, hId, handlerName);
+    if (pInfo) {
+      std::cout << "For mode NORMAL, handler id " << hId 
+                << " handler name is " << handlerName << std::endl;
+      writeConstituent(pInfo, std::cout);
+    }
+  }
+
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
@@ -626,7 +666,7 @@ void writeParmOff(const std::vector<MOOT::ParmOffline>& parm) {
 
 }
 
-void writeConstituent(MOOT::ConstitInfo* pInfo, std::ostream& out) {
+void writeConstituent(const MOOT::ConstitInfo* pInfo, std::ostream& out) {
   out << "Constituent info: " << std::endl;
   out << "prim_key = " << pInfo->getKey() << std::endl;
   out << "name = " << pInfo->getName() << std::endl;
