@@ -3,10 +3,12 @@
 
 #include "OnboardFilterTds/FilterStatus.h"
 #include "OnboardFilterTds/ObfFilterStatus.h"
+#include "OnboardFilterTds/ObfFilterTrack.h"
 #include "EFC/TFC_prjDef.h"
 
 #include "digiRootData/FilterStatus.h"
 #include "digiRootData/ObfFilterStatus.h"
+#include "digiRootData/ObfFilterTrack.h"
 
 namespace RootPersistence {
 
@@ -66,6 +68,11 @@ namespace RootPersistence {
   void convert( const OnboardFilterTds::IObfStatus&, ObfDFCStatus& ) ;
   /// Fill transient verison of ObfFilterStatus 
   void convert( const IObfStatus&, OnboardFilterTds::ObfDFCStatus& ) ;
+
+  /// Fill persistent verison of ObfFilterTrack 
+  void convert( const OnboardFilterTds::ObfFilterTrack&, ObfFilterTrack& ) ;
+  /// Fill transient verison of ObfFilterStatus 
+  void convert( const ObfFilterTrack&, OnboardFilterTds::ObfFilterTrack& ) ;
 
 }
 
