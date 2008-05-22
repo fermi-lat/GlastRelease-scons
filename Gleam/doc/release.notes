@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+
+* v6r37    AWB 22-May-08 Updated AnalysisNtupleAlg.toolList for the pipeline.
 * v6r36    HMK 21-May-08 Add ideal calibration defaults to calibrations.txt
 *          for new Tkr alignment
 * v6r35    HMK 19-May-08 Update basicOption.txt to run GCR code
