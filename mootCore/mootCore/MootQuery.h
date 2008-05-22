@@ -7,8 +7,20 @@
 #include <string>
 #include <vector>
 #include <set>
+
 #include "rdbModel/Tables/Column.h"
 #include "mootCore/FileDescrip.h"
+
+#include <xercesc/util/XercesDefs.hpp>
+
+#ifndef SWIG
+XERCES_CPP_NAMESPACE_BEGIN
+#endif
+class  DOMElement;
+
+#ifndef SWIG
+XERCES_CPP_NAMESPACE_END
+#endif
 
 /** @file MootQuery.h
     @author J. Bogart
@@ -25,6 +37,20 @@ namespace rdbModel {
 typedef std::vector<std::string> VectorOfString;
 namespace MOOT {
   class MoodConnection;
+  class FilterAssoc; // Def is in filterConfig.cxx, only place it's used
+
+  enum LpaMode {
+    LPA_MODE_NORMAL = 0,
+      LPA_MODE_TOO = 1,
+    LPA_MODE_GRB0 = 2,
+    LPA_MODE_GRB1 = 3,
+    LPA_MODE_GRB2 = 4,
+    LPA_MODE_SOLAR = 5,
+    LPA_MODE_CALIBRATION = 6,
+    LPA_MODE_DIAGNOSTIC = 7,
+    LPA_MODE_count,
+    LPA_MODE_ALL = 0x8000 
+  };
 
   class MootQuery   {
   public:
@@ -58,6 +84,28 @@ namespace MOOT {
          to filled structure.  Caller is responsible for deleting.
      */
     AncAliasInfo* getAncAliasInfo(unsigned key);
+
+    /**
+       Return ConstitInfo objects for all active filters in specified
+       mode.  Return union of active filters for all modes for special
+       value LPA_MODE_ALL (the default)
+       By default the input vector will be cleared first.
+     */
+    unsigned getActiveFilters(unsigned configKey, 
+                              std::vector<ConstitInfo>& info,
+                              LpaMode mode = LPA_MODE_ALL,
+                              bool clear=true);
+
+    /**
+       Return pointer to ConstitInfo object, given configKey,
+       lpa mode and handler id if there is a filter config satisfying
+       these constraints; else return null pointer.
+       @a handlerName  is also returned (empty string if none)
+     */
+    const ConstitInfo* getActiveFilter(unsigned configKey, 
+                                       LpaMode mode,
+                                       unsigned handlerId,
+                                       std::string& handlerName);
 
     unsigned getAncClasses(std::vector<std::string>& names);
 
@@ -395,10 +443,16 @@ namespace MOOT {
                         bool* isCtn=0);
 
   private:
-    /*
-    unsigned getVoteParmViaClassKey(const std::string& voteKeyStr,
-                                    const std::string& parameterClassKey);
-    */
+    bool cacheFilterConfig(unsigned configKey);
+    bool parseFilterParm(const std::string& path);
+    /// Parse mode element in a filter assoc.  parameter file and
+    /// update cache accordingly
+    bool parseLpaModeElt(
+#ifndef SWIG
+                         XERCES_CPP_NAMESPACE_QUALIFIER 
+#endif
+                         DOMElement* modeElt);
+
 
     /**
        Utility does the work for getConstituentInfo and getConstituentByFswId
@@ -453,6 +507,9 @@ namespace MOOT {
     std::string     m_archive;  // translation of MOOT_ARCHIVE env. var.
     bool            m_dbg;
     std::vector<std::string> m_parmClasses; // cache them here
+
+    // Cache filter assoc info; only re-retrieve if necessary
+    static FilterAssoc* m_assoc;
   };
 }
 
