@@ -31,6 +31,8 @@ namespace LsfEvent {
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType) {
+
+       m_lpaHandlerCol.clear();
     }
 
     /// Standard c'tor.  Takes input values for all fields
@@ -47,6 +49,8 @@ namespace LsfEvent {
        m_type(configuration.type()),
        m_keys(keys.clone()),
        m_ktype(keys.type()) {
+
+       m_lpaHandlerCol.clear();
     }
 
     /// Copy c'tor.  Just copy all values.  
@@ -60,7 +64,8 @@ namespace LsfEvent {
        m_config(0),
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
-       m_ktype(enums::Lsf::NoKeysType) {
+       m_ktype(enums::Lsf::NoKeysType),
+       m_lpaHandlerCol(other.m_lpaHandlerCol) {
       if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
 	m_type = other.configuration()->type();
@@ -89,6 +94,7 @@ namespace LsfEvent {
             m_keys = other.keys()->clone();
             m_ktype = other.keys()->type();
        }
+       m_lpaHandlerCol = other.lpaHandlerCol();
     }
 
     /// D'tor.  Delete the configuration, which had been deep-copied
@@ -101,6 +107,13 @@ namespace LsfEvent {
           delete m_keys;
           m_keys = 0;
       }
+
+      std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator it;
+      for (it = m_lpaHandlerCol.begin(); it != m_lpaHandlerCol.end(); it++) {
+          delete it->second;
+      }
+      m_lpaHandlerCol.clear();
+
     }
 
     /// Retrieve reference to class definition structure
@@ -126,6 +139,17 @@ namespace LsfEvent {
 
     inline const lsfData::LsfKeys* keys() const { return m_keys; }
     inline const enums::Lsf::KeysType keyType() const { return m_ktype; }
+
+
+    inline const std::map<enums::Lsf::HandlerId,lsfData::LpaHandler*>& lpaHandlerCol() const 
+    { return m_lpaHandlerCol; }
+
+    inline const lsfData::LpaHandler* getLpaHandler(const enums::Lsf::HandlerId& id) {
+        std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator iter = m_lpaHandlerCol.find(id);
+        if (iter != m_lpaHandlerCol.end()) return (m_lpaHandlerCol[id]);
+        else return 0;
+    }
+
 
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
@@ -176,6 +200,11 @@ namespace LsfEvent {
         m_keys = keys.clone();
         m_ktype = keys.type();
     }
+
+   inline void setLpaHandlerCol ( const std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>& vec) {
+        m_lpaHandlerCol = vec;
+    }
+    
 
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
@@ -233,6 +262,9 @@ namespace LsfEvent {
 
     lsfData::LsfKeys* m_keys;
     enums::Lsf::KeysType m_ktype;
+
+    std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*> m_lpaHandlerCol;
+
 
   };
 
