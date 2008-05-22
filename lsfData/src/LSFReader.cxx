@@ -167,6 +167,57 @@ namespace lsfData {
 
     // install the configuration object into the MetaEvent
     lmeta.setConfiguration( lcfg );
+
+    std::vector<eventFile::LPA_Handler>::const_iterator handlerIt;
+    for (handlerIt = info.handlers.begin(); handlerIt != info.handlers.end(); handlerIt++) {
+        if (handlerIt->dgnRsdV0()) {
+            lsfData::DgnHandlerRsdV0 dgn;
+            dgn.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,(enums::Lsf::RsdState)(handlerIt->state),
+                (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),handlerIt->version,
+                (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
+            dgn.setStatus(handlerIt->dgnRsdV0()->status);
+            lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, dgn);
+        } else if (handlerIt->gammaRsdV0()) {
+            lsfData::GammaHandlerRsdV0 gam;
+            gam.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,(enums::Lsf::RsdState)(handlerIt->state),
+                (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),handlerIt->version,
+                (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
+            gam.setStatus(handlerIt->gammaRsdV0()->status,handlerIt->gammaRsdV0()->stage,
+                handlerIt->gammaRsdV0()->energyValid, handlerIt->gammaRsdV0()->energyInLeus);
+            lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, gam);
+        } else if (handlerIt->hipRsdV0()) {
+            lsfData::HipHandlerRsdV0 hip;
+            hip.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,(enums::Lsf::RsdState)(handlerIt->state),
+                (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),handlerIt->version,
+                (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
+            hip.setStatus(handlerIt->hipRsdV0()->status);
+            lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, hip);
+        } else if (handlerIt->mipRsdV0()) {
+            lsfData::MipHandlerRsdV0 mip;
+            mip.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,(enums::Lsf::RsdState)(handlerIt->state),
+                (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),handlerIt->version,
+                (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
+            mip.setStatus(handlerIt->mipRsdV0()->status);
+            lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, mip);
+        } else if (handlerIt->passthruRsdV0()) {
+            lsfData::PassthruHandlerRsdV0 pass;
+            pass.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,(enums::Lsf::RsdState)(handlerIt->state),
+                (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),handlerIt->version,
+                (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
+            pass.setStatus(handlerIt->passthruRsdV0()->status);
+            lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, pass);
+        } else {
+            lsfData::LpaHandler lpa;
+            lpa.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,(enums::Lsf::RsdState)(handlerIt->state),
+                (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),handlerIt->version,
+                (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
+            lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, lpa);
+            static int count = 1;
+            if (count < 5)
+                std::cout << "Unhandled LPA Handler" << std::endl;
+           
+        }
+    }
   }
 
   void LSFReader::transferKeys( const eventFile::LCI_Keys& cikeys, MetaEvent& lmeta )
@@ -201,6 +252,7 @@ namespace lsfData {
 
     // install the configuration object into the MetaEvent
     lmeta.setConfiguration( lcfg );
+
   }
 
   void LSFReader::transferInfo( const eventFile::LSE_Context& ctx, const eventFile::LCI_CAL_Info& info, MetaEvent& lmeta )

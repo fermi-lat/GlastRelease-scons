@@ -2,6 +2,7 @@
 #define LSFDATA_METAEVENT_H 1
 
 #include <iostream>
+#include <map>
 
 #include "lsfData/LsfTime.h"
 #include "lsfData/LsfRunInfo.h"
@@ -9,6 +10,7 @@
 #include "lsfData/LsfGemScalers.h"
 #include "lsfData/LsfConfiguration.h"
 #include "lsfData/LsfKeys.h"
+#include "lsfData/LpaHandler.h"
 
 /** @class MetaEvent
 *
@@ -62,6 +64,11 @@ namespace lsfData {
     virtual ~MetaEvent(){
       delete m_config;
       delete m_keys;
+      std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator it;
+      for (it = m_lpaHandlerCol.begin(); it!=m_lpaHandlerCol.end();it++)
+          delete it->second;
+      m_lpaHandlerCol.clear();
+
     }
 
     inline void clear() {
@@ -79,6 +86,11 @@ namespace lsfData {
         m_time.clear();      
         m_type = enums::Lsf::NoRunType;
 	m_ktype = enums::Lsf::NoKeysType;
+      std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator it;
+      for (it = m_lpaHandlerCol.begin(); it!=m_lpaHandlerCol.end();it++)
+          delete it->second;
+      m_lpaHandlerCol.clear();
+
     }
 
     /// Information about the run this event is from
@@ -98,6 +110,10 @@ namespace lsfData {
 
     /// Translated configuration file keys for this event
     inline const LsfKeys* keys() const { return m_keys; };
+
+    inline const std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>& lpaHandlerCol() const 
+        { return m_lpaHandlerCol; }
+
 
     /// set everything at once
     inline void set(const RunInfo& run, const DatagramInfo& datagram, 
@@ -133,6 +149,11 @@ namespace lsfData {
       m_keys = keys.clone();
       m_ktype = keys.type();
     }
+
+   inline void addLpaHandler(const enums::Lsf::HandlerId &id, const lsfData::LpaHandler &handler) {
+        m_lpaHandlerCol[id] = handler.clone();
+    }
+    
     
   private:
     
@@ -147,6 +168,7 @@ namespace lsfData {
     
     LsfKeys* m_keys;
     enums::Lsf::KeysType m_ktype;
+    std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*> m_lpaHandlerCol;
 
   };
 
