@@ -1,5 +1,5 @@
 package enums
-version v1r0
+version v1r1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use GlastPolicy v*

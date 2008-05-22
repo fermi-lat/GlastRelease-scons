@@ -139,6 +139,59 @@ namespace enums {
 		   STROBE = 4,
     } Masks;
 
+
+       /** enumerate the types of handlers */
+    typedef enum {
+      Unknown = -1,
+      Filter  =  0,
+      Monitor =  1,
+
+      // management values
+      HandlerTypeMin = -1,
+      HandlerTypeMax =  1,
+      HandlerTypeCnt = HandlerTypeMax - HandlerTypeMin + 1,
+    } HandlerType;
+
+    /** enumerate the handler identities */
+    typedef enum {
+      PASS_THRU = 0,
+      GAMMA     = 1,
+      ASC       = 2,
+      MIP       = 3,
+      HIP       = 4,
+      DGN       = 5,
+      MaxHandlerIds,
+    } HandlerId;
+
+    /** enumerate the overall result states for an event */
+    typedef enum {
+      INVALID    = -1,  /// Invalid state
+      PASSED     =  0,  /// Event passed the filter
+      SUPPRESSED =  1,  /// Event passed but was suppressed by an output prescaler
+      VETOED     =  2,  /// Event vetoed by the filter
+      LEAKED     =  3,  /// Event vetoed but leaked by an output prescaler
+      IGNORED    =  4,  /// Event ignored due to input prescaler
+    } RsdState;
+
+    /** enumerate valid values for the prescaler data member 
+	note the values > 0 indicate which condition-specifc
+	prescaler expired.
+    */
+    typedef enum {
+      UNSUPPORTED = -3, /// prescaler info not available (always for RSD V0)
+      INPUT       = -2, /// event not analyzed due to input prescaler
+      OUTPUT      = -1, /// event leaked by overall output prescaler
+
+      /** event leaked by condition-specific prescaler */
+      COND00, COND01, COND02, COND03, COND04, COND05, COND06, COND07,
+      COND08, COND09, COND10, COND11, COND12, COND13, COND14, COND15,
+      COND16, COND17, COND18, COND19, COND20, COND21, COND22, COND23,
+      COND24, COND25, COND26, COND27, COND28, COND29, COND30, COND31,
+    } LeakedPrescaler;
+
+
+
+
   }//namespace lsf
 }//namespace enums
 

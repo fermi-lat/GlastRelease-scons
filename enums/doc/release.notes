@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v1r1    21-May-2008 HMK Filter Bit enums added to Lsf.h
 v1r0    22-Mar-2008 HMK Replace MISSING_GPS with SOURCE_GPS
 v0r16p1 04-Nov-2007 HMK Patch unit test for removal of b_ACDL
 v0r16   02-Nov-2007 MK  
