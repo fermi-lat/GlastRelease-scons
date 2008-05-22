@@ -57,7 +57,7 @@ inlTwrs2 = inlFile2.getTowers()
 
 if (inlTwrs1 != inlTwrs2):
     log.error("input files have different nTowers.  I quit! ;)")
-
+    continue
 
 # load up arrays
 log.info("Reading %s"%inlPath1)
