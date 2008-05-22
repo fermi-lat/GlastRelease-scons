@@ -57,7 +57,6 @@ inlTwrs2 = inlFile2.getTowers()
 
 if (inlTwrs1 != inlTwrs2):
     log.error("input files have different nTowers.  I quit! ;)")
-    continue
 
 # load up arrays
 log.info("Reading %s"%inlPath1)
@@ -120,6 +119,7 @@ for twr in inlTwrs1:
                     # error condition if channel is missing from only one input file
                     if (length1 <2 or length2 <2):
                         log.error("Missing channel in one file: " + str([twr,lyr,row,col,face,rng]))
+                        continue
 
                     test_dac1 = inlDAC1[rng][twr,row,online_face,col,0:length1]
                     test_dac2 = inlDAC2[rng][twr,row,online_face,col,0:length2]
