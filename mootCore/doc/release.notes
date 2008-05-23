@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r22 23-May-2008  jrb  Add queries of Acq_summary table
    v1r21 22-May-2008  jrb  Add queries of active filters for specified MOOT config
    v1r20 20-May-2008  jrb  Support for Filter_Associate precinct
    v1r19 14-May-2008  jrb  Change columns in Constituents table to unsigned
