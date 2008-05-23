@@ -14,6 +14,7 @@
 #include "rdbModel/Db/Connection.h"
 #include "rdbModel/Db/ResultHandle.h"
 #include "facilities/Util.h"
+#include "facilities/Timestamp.h"
 #include "mootCore/DbUtilException.h"
 
 namespace {
@@ -104,6 +105,88 @@ namespace MOOT {
     }
   }
 
+  AcqSummaryInfo* MootQuery::getAcqSummaryInfoByKey(unsigned key) {
+    std::string where(" WHERE acq_summary_key='");
+    std::string keyStr;
+    facilities::Util::utoa(key, keyStr);
+    where += keyStr + std::string("'");
+    return getAcqSummaryWhere(where);
+  }
+
+  AcqSummaryInfo* MootQuery::getAcqSummaryInfo(unsigned startedAt,
+                                               unsigned scid) {
+    std::string scidStr;
+    facilities::Util::utoa(scid, scidStr);
+    std::string startedStr;
+    facilities::Util::utoa(startedAt, startedStr);
+    std::string where(" WHERE scid='");
+    where += scidStr + std::string("' AND started_at='");
+    where += startedStr + std::string("'");
+    return getAcqSummaryWhere(where);
+  }
+
+  AcqSummaryInfo* 
+  MootQuery::getAcqSummaryInfo(const facilities::Timestamp& eventTime,
+                               unsigned scid) {
+    std::string scidStr;
+    facilities::Util::utoa(scid, scidStr);
+   
+    std::string timStr = eventTime.getString();
+    std::string where(" WHERE scid='");
+    where += scidStr + std::string("' AND evtutc0 <='") + timStr;
+    where += std::string("' AND evtutc1 >='") + timStr + std::string("'");
+    return getAcqSummaryWhere(where);
+  }
+
+  AcqSummaryInfo* MootQuery::getAcqSummaryWhere(const std::string& where) {
+    std::vector<std::string> getCols;
+    std::vector<std::string> noCols;
+    getCols.reserve(15);
+
+    getCols.push_back("acq_summary_key");
+    getCols.push_back("scid");
+    getCols.push_back("started_at");
+    getCols.push_back("config_fk");
+    getCols.push_back("type");
+    getCols.push_back("analysis");
+    getCols.push_back("status");
+    getCols.push_back("nevts");
+    getCols.push_back("evtutc0");
+    getCols.push_back("evtutc1");
+    getCols.push_back("hw_key");
+    getCols.push_back("sw_key");
+    getCols.push_back("creator");
+    getCols.push_back("creation_time");
+    getCols.push_back("update_time");
+
+    rdbModel::ResultHandle* res = 0;
+
+    try {
+      res = m_rdb->getConnection()->select("Acq_summary", 
+                                           getCols, noCols, where);
+    }
+    catch (std::exception ex) {
+      std::cerr << "MootQuery::getAcqSummaryInfo, where = " << where
+                << " SQL error: "  << ex.what() << std::endl;
+      std::cerr.flush();
+      if (res) delete res;
+      throw ex;
+    }
+    int n = res->getNRows();
+    if (!n) {
+      delete res;
+      return 0;
+    }
+    
+    std::vector<std::string>  fields;
+    res->getRow(fields, 0);
+    delete res;
+    return new AcqSummaryInfo(fields[0], fields[1], fields[2], fields[3],
+                              fields[4], fields[5], fields[6], fields[7],
+                              fields[8], fields[9], fields[10], fields[11],
+                              fields[12], fields[13], fields[14]);
+  }
+
   AncAliasInfo* MootQuery::getAncAliasInfo(unsigned key) {
     std::string keyStr;
     facilities::Util::utoa(key, keyStr);
@@ -142,6 +225,8 @@ namespace MOOT {
     
     std::vector<std::string>  fields;
     res->getRow(fields, 0);
+    delete res;
+
     // translate anc class key to anc class name
     std::string ancClassName =
       DbUtil::getColumnValue(m_rdb, "Ancillary_class", "name", 
@@ -202,6 +287,7 @@ namespace MOOT {
     
     std::vector<std::string>  fields;
     res->getRow(fields, 0);
+    delete res;
     // translate anc class key to anc class name
     std::string ancClassName =
       DbUtil::getColumnValue(m_rdb, "Ancillary_class", "name", 
@@ -376,7 +462,6 @@ namespace MOOT {
       res->getRow(selFields);
       unsigned id = facilities::Util::stringToUnsigned(selFields[3]);
       unsigned classFk = facilities::Util::stringToUnsigned(selFields[4]);
- // FswInfo(fmxPath,src,description,fmxDb,fmxKey,mootClassKey);
       FswInfo f(selFields[0], selFields[1], selFields[2], selFields[5],
                 id, classFk);
       info.push_back(f);
@@ -553,6 +638,7 @@ namespace MOOT {
                        selFields[8], selFields[9], selFields[10], selFields[11]);
       info.push_back(info1);
     }
+    delete res;
     return n;
   }
 
@@ -876,7 +962,7 @@ namespace MOOT {
     
     std::vector<std::string>  flds;
     res->getRow(flds, 0);
-
+    delete res;
     return new ConstitInfo(flds[0], flds[1], flds[2], flds[3], flds[4],
                            flds[5], flds[6], flds[7], flds[8],
                            flds[9], flds[10], flds[11]);
@@ -1264,6 +1350,8 @@ namespace MOOT {
     
     std::vector<std::string>  fields;
     res->getRow(fields, 0);
+    delete res;
+
     // translate precinct key to precinct name
     std::string precinctName =
       DbUtil::getColumnValue(m_rdb, "Precincts", "name", 
@@ -1311,6 +1399,8 @@ namespace MOOT {
     
     std::vector<std::string>  fields;
     res->getRow(fields, 0);
+    delete res;
+
     // translate precinct key to precinct name
     std::string precinctName =
       DbUtil::getColumnValue(m_rdb, "Precincts", "name", 
@@ -1585,6 +1675,7 @@ namespace MOOT {
       }
       ancKeys.push_back(ancKey);
     }
+    delete res;
     return true;
   }
 
