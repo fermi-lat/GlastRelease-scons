@@ -11,6 +11,64 @@
 */
 namespace MOOT {
   /**
+        @class AcqSummaryInfo
+   */
+  class AcqSummaryInfo {
+  public:
+    AcqSummaryInfo(const std::string& key="",
+                   const std::string& scid="",
+                   const std::string& startedAt="",
+                   const std::string& configKey="",
+                   const std::string& acqType="",
+                   const std::string& analysis="",
+                   const std::string& status="",
+                   const std::string& nevts="",
+                   const std::string& evtutc0="",
+                   const std::string& evtutc1="",
+                   const std::string& hwKey="",
+                   const std::string& swKey="",
+                   const std::string& creator="",
+                   const std::string& creationTime="",
+                   const std::string& updateTime="") : 
+      m_key(key), m_scid(scid), m_startedAt(startedAt), m_configKey(configKey),
+      m_acqType(acqType), m_analysis(analysis), m_status(status), 
+      m_nevts(nevts), m_evtutc0(evtutc0), m_evtutc1(evtutc1), m_hwKey(hwKey),
+      m_swKey(swKey), m_creator(creator), m_creationTime(creationTime),
+      m_updateTime(updateTime)
+{}
+    std::string getKey() const {return m_key;}
+    std::string getScid() const {return m_scid;}
+    std::string getStartedAt() const {return m_startedAt;}
+    std::string getConfigKey() const {return m_configKey;}
+    std::string getAcqType() const {return m_acqType;}
+    std::string getAnalysis() const {return m_analysis;}
+    std::string getStatus() const {return m_status;}
+    std::string getNevts() const {return m_nevts;}
+    std::string getEvtutc0() const {return m_evtutc0;}
+    std::string getEvtutc1() const {return m_evtutc1;}
+    std::string getHwKey() const {return m_hwKey;}
+    std::string getSwKey() const {return m_swKey;}
+    std::string getCreator() const {return m_creator;}
+    std::string getCreationTime() const {return m_creationTime;}
+    std::string getUpdateTime() const {return m_updateTime;}
+  private:
+    std::string m_key;
+    std::string m_scid;
+    std::string m_startedAt;
+    std::string m_configKey;
+    std::string m_acqType;
+    std::string m_analysis;
+    std::string m_status;
+    std::string m_nevts;
+    std::string m_evtutc0;
+    std::string m_evtutc1;
+    std::string m_hwKey;
+    std::string m_swKey;
+    std::string m_creator;
+    std::string m_creationTime;
+    std::string m_updateTime;
+  };
+  /**
         @class AncAliasInfo
   */
   class AncAliasInfo {
