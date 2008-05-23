@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v3r1p1  22-May-2008 HMK Actually add the new LpaHandler.h file
 v3r1    21-May-2008 HMK Add new LpaHandler class and update LsfMetaEvent
         and LSFReader accordingly to handle the filter bits
 v3r0p1  18-Apr-2008 HMK Add set methods for SBS and LPA_DB in LpaKeys
