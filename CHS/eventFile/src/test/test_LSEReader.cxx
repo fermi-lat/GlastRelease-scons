@@ -12,23 +12,6 @@
 #include "eventFile/EBF_Data.h"
 #include "eventFile/LSE_Keys.h"
 
-#include "LATdatagramIterator.h"
-#include "EBFeventIterator.h"
-
-class EBFevent;
-class MyLATcomponentIterator;
-class MyEBFeventIterator : public EBFeventIterator
-{
-public:
-  MyEBFeventIterator();
-  virtual ~MyEBFeventIterator();
-
-  virtual int handleError(EBFevent* evt, unsigned code, unsigned p1=0, unsigned p2=0) const;
-  virtual int process(EBFevent*);
-private:
-  MyLATcomponentIterator* _lci;
-};
-
 int main( int argc, char* argv[] )
 {
   // create the LPA_File object from which input will be read
@@ -120,9 +103,6 @@ int main( int argc, char* argv[] )
     printf( "\nEvent %lld data:", ctx.scalers.sequence );
     printf( "\n---------------\n" );
     printf( "%d bytes of EBF\n", ebf.size() );
-//     MyEBFeventIterator eei;
-//     eei.iterate( const_cast< EBFevent* >( ebf.start() ), 
-// 		 const_cast< EBFevent* >( ebf.end() ) );
     printf( "\n" );
 
   } while ( true );

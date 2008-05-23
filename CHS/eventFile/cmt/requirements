@@ -1,9 +1,7 @@
 package eventFile
-version v6r0
+version v6r0p1
 
 author Bryson Lee <blee@slac.stanford.edu>
-
-use ldfExt * IExternal
 
 use GlastPolicy v*
 use facilities v*
@@ -14,8 +12,6 @@ apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern shared_library
 apply_pattern ld_library_path
-
-set LDFROOT ${ldfExt_DIR}
 
 private
 
@@ -35,5 +31,5 @@ library eventFile ${eventFile_headers} \
 
 application writeMerge writeMerge.cxx
 
-application test_LSEReader test/test_LSEReader.cxx test/LDFdump.cxx
+application test_LSEReader test/test_LSEReader.cxx
 

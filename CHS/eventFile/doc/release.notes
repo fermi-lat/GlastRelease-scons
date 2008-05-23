@@ -4,6 +4,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v6r0p1 23-May-2008 RBL eliminate vestigial LDF dependency.
  * v6r0   17-Apr-2008 RBL pick up DfiLci::TkrMetaEvent::dacRange() member
  * v5r0   14-Apr-2008 RBL first release with support for filter config and results summary.
  * v4r0p1 15-Feb-2007 RBL made writeMerge.exe chunk scaling controllable by env vars.
