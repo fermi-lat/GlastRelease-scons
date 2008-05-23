@@ -8,10 +8,12 @@
 #include <vector>
 #include "mootCore/MoodConnection.h"
 #include "mootCore/MootQuery.h"
+#include "facilities/Timestamp.h"
 
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out);
 void writeConstituent(const MOOT::ConstitInfo* pInfo, std::ostream& out);
 void writeParmOff(const std::vector<MOOT::ParmOffline>& parm);
+void writeAcqInfo(const MOOT::AcqSummaryInfo* pInfo, std::ostream& out);
 
 int main(int /* nargs */, char**)    {
 
@@ -636,6 +638,31 @@ int main(int /* nargs */, char**)    {
     }
   }
 
+  MOOT::AcqSummaryInfo* pAcqInfo = q.getAcqSummaryInfoByKey(7);
+  if (pAcqInfo) {
+    std::cout << "Result of getAcqSummaryInfoByKey(7):" << std::endl;
+    writeAcqInfo(pAcqInfo, std::cout);
+  }
+  else std::cout << "No info for key = 7" << std::endl << std::endl;
+
+  unsigned startedAt = 223083791;
+  pAcqInfo = q.getAcqSummaryInfo(startedAt);
+  if (pAcqInfo) {
+    std::cout << "Result of getAcqSummaryInfo(223083791):" << std::endl;
+    writeAcqInfo(pAcqInfo, std::cout);
+  }
+  else std::cout << "No info for started_at = 223083791" 
+                 << std::endl << std::endl;
+
+  facilities::Timestamp t("2008-1-27");
+  pAcqInfo = q.getAcqSummaryInfo(t);
+  if (pAcqInfo) {
+    std::cout << "Result of getAcqSummaryInfo(time) where time is 2008-1-27:" 
+              << std::endl;
+    writeAcqInfo(pAcqInfo, std::cout);
+  }
+  else std::cout << "No info for time 2008-1-27" << std::endl << std::endl;
+
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {
@@ -683,5 +710,25 @@ void writeConstituent(const MOOT::ConstitInfo* pInfo, std::ostream& out) {
         << std::endl;
     out << "instance id = " << pInfo->getInstanceId() << std::endl;
   }
+  out << std::endl;
+}
+
+void writeAcqInfo(const MOOT::AcqSummaryInfo* pInfo, std::ostream& out) {
+  out << "Acq summary info: " << std::endl;
+  out << "acq_summary_key = " << pInfo->getKey() << std::endl;
+  out << "scid = " << pInfo->getScid() << std::endl;
+  out << "started_at = " << pInfo->getStartedAt() << std::endl;
+  out << "config_fk = " << pInfo->getConfigKey() << std::endl;
+  out << "type = " << pInfo->getAcqType() << std::endl;
+  out << "analaysis = " << pInfo->getAnalysis() << std::endl;
+  out << "status = " << pInfo->getStatus() << std::endl;
+  out << "nevts = "  << pInfo->getNevts() << std::endl;
+  out << "evtutc0 = "  << pInfo->getEvtutc0() << std::endl;
+  out << "evtutc1 = "  << pInfo->getEvtutc1() << std::endl;
+  out << "hwKey = "  << pInfo->getHwKey() << std::endl;
+  out << "swKey = "  << pInfo->getSwKey() << std::endl;
+  out << "creator = "  << pInfo->getCreator() << std::endl;
+  out << "creation_time = "  << pInfo->getCreationTime() << std::endl;
+  out << "update_time = "  << pInfo->getUpdateTime() << std::endl;
   out << std::endl;
 }
