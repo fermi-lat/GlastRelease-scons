@@ -151,6 +151,11 @@ namespace LsfEvent {
     }
 
 
+    inline void addLpaHandler(const enums::Lsf::HandlerId &id, const lsfData::LpaHandler &handler) {
+        m_lpaHandlerCol[id] = handler.clone();
+    }
+
+
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
                     const lsfData::DatagramInfo& datagram, 
