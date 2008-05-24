@@ -42,6 +42,7 @@ library mootCore  \
   MootSys.cxx \
   DbUtil.cxx \
   MootQuery.cxx \
+  filterConfig.cxx \
   ${mootCore_headers}
 
 application test_mootConnect test/test_connect.cxx
