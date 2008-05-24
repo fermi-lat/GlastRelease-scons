@@ -117,11 +117,7 @@ protected:
     StatusCode getConstants();
     StatusCode getDetectorListFromGeometry();
 
-    // Utilities
-    StatusCode getDimensions(const idents::VolumeIdentifier &volIId, 
-			     std::vector<double> &dims, 
-			     HepPoint3D &xT) const;
-  
+    // Utilities  
     StatusCode getTransformAndLocalVectors(const idents::VolumeIdentifier &volIId,
 					   std::vector<double>& dim,
 					   HepGeom::Transform3D& transform,
@@ -130,14 +126,19 @@ protected:
 					   HepVector3D& x2VectorGlobal,
 					   HepVector3D& yVectorGlobal) const;
 			    
-
+ 
 
 private:
+
+    StatusCode readAlignmentFile();
 
     void clear();
 
     typedef std::vector<idents::VolumeIdentifier>::const_iterator VolIdIter;
-    
+
+    // where to get the alignment file
+    StringProperty m_alignFileName;
+
     /// pointer to the detector service
     IGlastDetSvc *m_glastDetSvc;
 

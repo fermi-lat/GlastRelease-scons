@@ -2,6 +2,7 @@
 #define __AcdGeomMap_H 1
 
 #include "idents/AcdId.h"
+#include "idents/VolumeIdentifier.h"
 
 #include "AcdUtil/AcdRibbonDim.h"
 #include "AcdUtil/AcdTileDim.h"
@@ -22,6 +23,44 @@ class IGlastDetSvc;
 * $Header$
 *
 */
+
+
+namespace AcdUtil {
+  struct AcdVolumeAlignment {
+  public:
+    AcdVolumeAlignment(double x = 0., double y = 0., 
+		       double sX = -1., double sY = -1.)
+      :m_centerX(x),
+       m_centerY(y),
+       m_sizeX(sX),
+       m_sizeY(sY){
+    }    
+    AcdVolumeAlignment(const AcdVolumeAlignment& other)
+      :m_centerX(other.m_centerX),
+       m_centerY(other.m_centerY),
+       m_sizeX(other.m_sizeX),
+       m_sizeY(other.m_sizeY){
+    }
+    AcdVolumeAlignment& operator=(const AcdVolumeAlignment& other){
+      if ( this == &other ) return *this;
+      m_centerX = other.centerX();
+      m_centerY = other.centerY();
+      m_sizeX = other.sizeX();
+      m_sizeY = other.sizeY();
+      return *this;
+    }
+    ~AcdVolumeAlignment(){;}    
+    inline const double& centerX() const { return m_centerX; }
+    inline const double& centerY() const { return m_centerY; }
+    inline const double& sizeX() const { return m_sizeX; }
+    inline const double& sizeY() const { return m_sizeY; }
+  private:
+    double m_centerX;
+    double m_centerY;
+    double m_sizeX;
+    double m_sizeY;
+  };
+};
 
 
 class AcdGeomMap {
@@ -77,6 +116,17 @@ public:
     return retVal;
   }
   
+  const AcdUtil::AcdVolumeAlignment& getAlignment(const idents::VolumeIdentifier& volId) const {
+    static AcdUtil::AcdVolumeAlignment nullAlign;
+    std::map<idents::VolumeIdentifier,AcdUtil::AcdVolumeAlignment>::const_iterator itr = m_alignMap.find(volId);
+    return itr != m_alignMap.end() ? itr->second : nullAlign;
+  }
+  
+  void putAlignment(const idents::VolumeIdentifier& volId, AcdUtil::AcdVolumeAlignment& acdAlign) {
+    m_alignMap[volId] = acdAlign;
+  }
+
+
   void setAcdGeomSvc(const IAcdGeometrySvc& svc){
     m_acdGeomSvc = &svc;
   }
@@ -94,6 +144,8 @@ private:
   std::map<idents::AcdId,AcdTileDim*>   m_tileMap;
   
   std::set<idents::AcdId> m_updated;
+
+  std::map<idents::VolumeIdentifier,AcdUtil::AcdVolumeAlignment> m_alignMap;
 
   const IAcdGeometrySvc* m_acdGeomSvc;
 

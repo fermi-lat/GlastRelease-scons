@@ -8,6 +8,11 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 
+#include "xmlBase/Dom.h"
+#include "xmlBase/XmlParser.h"
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+
 #include "idents/TowerId.h"
 
 #include <iostream>
@@ -42,7 +47,7 @@ AcdGeometrySvc::AcdGeometrySvc(const std::string& name,
                                ISvcLocator* pSvcLocator) 
                               : Service(name, pSvcLocator)
 {   
-
+    declareProperty("AlignmentFile",    m_alignFileName = "");
     AcdFrameUtil::buildRotations();
     clear();
     return; 
@@ -77,11 +82,66 @@ StatusCode AcdGeometrySvc::initialize()
         log << MSG::ERROR << "  Unable to get AcdGeometrySvc detector list" << endreq;
         return sc;
     }
- 
+
+    sc = readAlignmentFile();
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to read alignment" << endreq;
+        return sc;
+    }
+     
     log << MSG::INFO << "AcdGeometrySvc successfully initialized" << endreq;
     return StatusCode::SUCCESS;
 
 }
+
+
+StatusCode AcdGeometrySvc::readAlignmentFile() {
+
+  XERCES_CPP_NAMESPACE_USE;
+
+  std::string alignFile = m_alignFileName;
+  if ( alignFile.size() == 0 ) return StatusCode::SUCCESS;
+  
+  MsgStream log(msgSvc(), name());
+  log << MSG::WARNING << "Reading ACD aligment from " << alignFile << endreq;
+
+  
+  xmlBase::XmlParser parser;
+  DOMDocument* doc(0);
+  std::vector<DOMElement*> tileElems;
+  try {
+    doc = parser.parse(alignFile.c_str());
+    if ( doc == 0 ) return StatusCode::FAILURE;
+    const DOMElement* root = doc->getDocumentElement();
+    xmlBase::Dom::getDescendantsByTagName(root,"tile",tileElems);
+    for ( std::vector<DOMElement*>::const_iterator itr = tileElems.begin();
+	  itr != tileElems.end(); itr++ ) {
+      int tileId = xmlBase::Dom::getIntAttribute(*itr,"tileId");
+      std::vector<DOMElement*> volElems;
+      xmlBase::Dom::getDescendantsByTagName(*itr,"volume",volElems);
+      idents::AcdId acdId(tileId);
+      for (  std::vector<DOMElement*>::const_iterator itr2 = volElems.begin();
+	     itr2 != volElems.end(); itr2++ ) {
+	int volId = xmlBase::Dom::getIntAttribute(*itr2,"iVol");
+	const idents::VolumeIdentifier& vId = acdId.volId( volId > 0 );
+	DOMElement* alignElem =  xmlBase::Dom::findFirstChildByName(*itr2,"acdAlign");
+	double centerX = xmlBase::Dom::getDoubleAttribute(alignElem,"centerX");
+	double centerY = xmlBase::Dom::getDoubleAttribute(alignElem,"centerY");
+	double sizeX = xmlBase::Dom::getDoubleAttribute(alignElem,"sizeX");
+	double sizeY = xmlBase::Dom::getDoubleAttribute(alignElem,"sizeY");
+	AcdUtil::AcdVolumeAlignment align(centerX,centerY,sizeX,sizeY);
+	m_geomMap.putAlignment(vId,align);
+      }
+    } 
+  } catch ( xmlBase::DomException& e ) {
+    log << MSG::ERROR << "Xml parsing of " << alignFile << " failed with exception: " << std::endl 
+	<< "\t" << e.getMsg() << endreq;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+
 
 void AcdGeometrySvc::clear() {
     m_numXtowers = 0; m_numYtowers = 0;
@@ -231,35 +291,6 @@ bool AcdGeometrySvc::findDetector(const idents::VolumeIdentifier &volId) const {
     foundIt = find(m_detectorCol.begin(), m_detectorCol.end(), volId);
     return (foundIt != m_detectorCol.end());
 }
-
-
-StatusCode AcdGeometrySvc::getDimensions(
-                           const idents::VolumeIdentifier &volId,
-                           std::vector<double> &dims, HepPoint3D &xT) const {
-    std::string str;
-    StatusCode sc = StatusCode::SUCCESS;
-    sc = m_glastDetSvc->getShapeByID(volId, &str, &dims);
-    if ( sc.isFailure() ) {
-        MsgStream log(msgSvc(), name());
-        log << MSG::ERROR << "Failed to retrieve Shape by Id: " 
-            << volId.name() << endreq;
-        return sc;
-    }
-    HepGeom::Transform3D transform;
-    sc = m_glastDetSvc->getTransform3DByID(volId, &transform);
-    if ( sc.isFailure() ) {
-        MsgStream log(msgSvc(), name());
-        log << MSG::ERROR << "Failed to retrieve transform by Id: " 
-            << volId.name() << endreq;
-        return sc;
-    }
-
-    HepPoint3D center(0., 0., 0.);
-    xT = transform * center;
-    return sc;
-
-}
-
 
 
 const Ray AcdGeometrySvc::getCornerGapRay(unsigned int index) const {
@@ -772,11 +803,26 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
     return StatusCode::FAILURE;
   }
 
+  // Get the alignment for this volume
+  const AcdUtil::AcdVolumeAlignment& align = m_geomMap.getAlignment(volId);
+
   // Make the dimension vector in the local frame;
   if ( globalDim.size() == 3 ) {
     AcdFrameUtil::transformDimensionVector(frameId,globalDim,dim);
+    if ( align.sizeX() > 0 ) {
+      dim[0] = align.sizeX();
+    }
+    if ( align.sizeY() > 0 ) {
+      dim[1] = align.sizeY();
+    }    
   } else {
     AcdFrameUtil::transformDimensionVectorTrap(frameId,globalDim,dim);
+    if ( align.sizeX() > 0 ) {
+      // FIXME: too complicated, drop it for now.
+    }    
+    if ( align.sizeY() > 0 ) {
+      dim[3] = align.sizeY();
+    }    
   }
 
   // Get the transform from GEANT frame to the GLOBAL frame.  
@@ -789,8 +835,9 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
     return sc;
   }
 
+
   // Find the center of the volume, 
-  HepPoint3D origin;
+  HepPoint3D origin(align.centerX(),align.centerY(),0.);
   center = geantToGlobal * origin;
 
 
