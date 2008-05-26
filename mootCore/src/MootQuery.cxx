@@ -1801,7 +1801,7 @@ namespace MOOT {
   bool MootQuery::voteExists(unsigned voteKey, bool goodStatus) {
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
-    return voteExists(voteKey, goodStatus);
+    return voteExists(voteKeyStr, goodStatus);
   }
 
   bool MootQuery::voteExists(const std::string& voteKeyStr, bool goodStatus) {
