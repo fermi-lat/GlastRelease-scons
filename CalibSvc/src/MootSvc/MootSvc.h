@@ -22,13 +22,15 @@ class MsgStream;
 
 namespace MOOT {
   class MoodConnection;
-  class MootQuery;
+  //   class MootQuery;  already declared in IMootSvc
 }
 
+/* already declared in IMootSvc
 namespace CalibData {
   class MootParmCol;
+  class MootFilterCfg;
 }
-
+*/
 /** @class MootSvc
     Implements IMootSvc interface, providing access to Moot data.
     See also CalibData/Moot for definition of data structures
@@ -46,6 +48,33 @@ class MootSvc :  public Service,
 
   // Reimplemented from IMootSv
 
+  /// Filter config routines
+  /**
+     Get info for all active filters (union over all modes)
+   */
+  unsigned getActiveFilters(std::vector<CalibData::MootFilterCfg>&
+                            filters);
+
+  /**
+     Get info for  active filters for mode @a acqMode
+   */
+  unsigned getActiveFilters(std::vector<CalibData::MootFilterCfg>&
+                            filters, unsigned acqMode);
+
+  /**
+     Get info and handler name for filter specified by mode and handler id
+   */
+  CalibData::MootFilterCfg* 
+  getActiveFilter(unsigned acqMode, unsigned handlerId, 
+                  std::string& handlerName);
+
+  /// Return last LATC master key seen in data
+  virtual unsigned getHardwareKey();
+
+  /// Return Moot config key for current acquisition
+  /// Return 0 if unknown
+  virtual unsigned getMootConfigKey() {return m_mootConfigKey;}
+
   /// Return absolute path for parameter source file of specified class.
   /// If none return empty string.
   std::string getMootParmPath(const std::string& cl, unsigned& hw);
@@ -59,8 +88,7 @@ class MootSvc :  public Service,
   // arg. hw to current hw key
   virtual const CalibData::MootParmCol* getMootParmCol(unsigned& hw);
 
-  /// Return last LATC master key seen in data
-  virtual unsigned getHardwareKey() ;
+
 
 
   /// Return index in MootParmCol of specified class
@@ -102,7 +130,7 @@ class MootSvc :  public Service,
   std::string findPrecinct(const std::string& pclass);
 
   StatusCode updateMootParmCol();
-  StatusCode updateFswKeys();
+  StatusCode updateFswEvtInfo();  // keys and started_at
 
   /// Handles for metadata access
   MOOT::MootQuery*    m_q;
@@ -117,10 +145,14 @@ class MootSvc :  public Service,
   IDataProviderSvc* m_eventSvc;
 
   unsigned          m_hw; // latc master from most recent event
+  unsigned          m_mootConfigKey; // For current run
+  unsigned          m_startTime;     // use this to look up moot config
+  unsigned          m_scid;          // use this to look up moot config
   unsigned          m_countdown; // decide when to close open MySQL connection
 
   bool  m_useEventKeys;                       // job options
   bool  m_verbose;                            // controls MoodConnection
+  bool  m_lookUpStartTime;                    // true if we get it from event
 
   CalibData::MootParmCol*  m_mootParmCol;
 };

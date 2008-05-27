@@ -31,12 +31,40 @@
 static SvcFactory<MootSvc>          MootSvc_factory;
 const ISvcFactory& MootSvcFactory = MootSvc_factory;
 
+namespace {
+  unsigned lookupMootConfig(MOOT::MootQuery* q, unsigned scid,
+                            unsigned startedAt) {
+
+    MOOT::AcqSummaryInfo* pAcqInfo = 
+      q->getAcqSummaryInfo(startedAt, scid);
+    if (!pAcqInfo) return 0;
+    std::string keyStr = pAcqInfo->getKey();
+    if (keyStr.empty()) return 0;
+    unsigned mootKey = facilities::Util::stringToUnsigned(keyStr);
+    delete pAcqInfo;
+    return mootKey;
+  }
+
+  CalibData::MootFilterCfg* makeMootFilterCfg(const MOOT::ConstitInfo& c) {
+    using CalibData::MootFilterCfg;
+
+    MootFilterCfg* f = 
+      new MootFilterCfg(c.getKey(), c.getName(), c.getPkg(), 
+                        c.getPkgVersion(), c.getFmxPath(), c.getSrcPath(),
+                        c.getFswId(), c.getStatus(), c.getSchemaId(),
+                        c.getSchemaVersionId(), c.getInstanceId());
+    return f;
+  }
+}
+
 MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
   : Service(name, svc), m_q(0), m_c(0), m_mootParmCol(0)
 {
   declareProperty("MootArchive", m_archive = std::string("") );
   declareProperty("UseEventKeys", m_useEventKeys = true);
   declareProperty("Verbose", m_verbose = false);
+  declareProperty("scid" , m_scid = 77);  // source id for flight data
+  declareProperty("StartTime", m_startTime = 0);
 }
 
 MootSvc::~MootSvc(){ }
@@ -71,6 +99,7 @@ StatusCode MootSvc::initialize()
     return sc;
   }
 
+
   /*
     Might want to add something here to force use of
     user-supplied LATC master key if so requested
@@ -79,6 +108,21 @@ StatusCode MootSvc::initialize()
   // Make a MOOT::MootQuery instance
   m_q = makeConnection(m_verbose); 
   if (!m_q) return StatusCode::FAILURE;
+
+  // If StartTime has been set to default (0) we'll look it up in event;
+  // else use specified value
+  if (m_startTime == 0) {
+    m_lookUpStartTime = true;
+    m_mootConfigKey = 0;
+  }  else {
+    m_lookUpStartTime = false;
+    m_mootConfigKey = lookupMootConfig(m_q, m_scid, m_startTime);
+    if (!m_mootConfigKey) {
+      log << MSG::ERROR << "No MOOT config for scid = " << m_scid
+          << " and StartedAt = " << m_startTime << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
  
   // Arrange to be woken up once per event.  
   IIncidentSvc* incSvc;
@@ -126,7 +170,7 @@ void MootSvc::closeConnection() {
 }
 
 MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
-  static nOpen = 4;     // keep MySQL connection for this many events
+  static unsigned nOpen = 4;     // keep MySQL connection for this many events
   if (m_q) return m_q;
 
   const std::string slacDefault("/afs/slac/glast/g/moot/archive-mood");
@@ -246,13 +290,31 @@ int MootSvc::latcParmIx(const std::string& parmClass) const {
 
 
 
-StatusCode  MootSvc::updateFswKeys() {
+StatusCode  MootSvc::updateFswEvtInfo() {
   // For now either we update from event or we don't update at all
   m_hw = 0;
-  if (!m_useEventKeys) return StatusCode::SUCCESS;
   using namespace enums;
 
+  if ((!m_useEventKeys) && (!m_lookUpStartTime)) return StatusCode::SUCCESS;
+
   SmartDataPtr<LsfEvent::MetaEvent> metaEvt(m_eventSvc, "/Event/MetaEvent");
+
+  if (m_lookUpStartTime) {
+    unsigned old = m_lookUpStartTime;
+    m_lookUpStartTime = (metaEvt->run()).startTime();
+    if (old != m_lookUpStartTime) { // also refresh config
+
+      m_mootConfigKey = lookupMootConfig(m_q, m_scid, m_startTime);
+      if (!m_mootConfigKey) {
+        MsgStream log(msgSvc(), "MootSvc");
+
+        log << MSG::ERROR << "No MOOT config for scid = " << m_scid
+            << " and StartedAt = " << m_startTime << endreq;
+        return StatusCode::FAILURE;
+      }
+    }
+  }
+  if (!m_useEventKeys) return StatusCode::SUCCESS;
 
   unsigned newMasterKey;
   switch (metaEvt->keyType()) {
@@ -277,8 +339,75 @@ StatusCode  MootSvc::updateFswKeys() {
   return StatusCode::SUCCESS;
 }
 
+
+/// Filter config routines
+unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
+                                   filters, unsigned acqMode) {
+  using CalibData::MootFilterCfg;
+  if (!m_mootConfigKey) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "Cannot retrieve filters; no known MOOT config" 
+        << endreq;
+    return 0;
+  }
+  if (acqMode >= MOOT::LPA_MODE_count) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "Unknown acq. mode " << acqMode << endreq;
+    return 0;
+  }
+  MOOT::LpaMode lpaMode = (MOOT::LpaMode) acqMode;
+
+  std::vector<MOOT::ConstitInfo> constits;
+  unsigned cnt = m_q->getActiveFilters(m_mootConfigKey, constits,
+                                       lpaMode);
+
+  for (unsigned ix = 0; ix < cnt; ix++) {
+    MootFilterCfg* f = makeMootFilterCfg(constits[ix]);
+    filters.push_back(*f);
+    delete f;
+  }
+  return cnt;
+}
+unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
+                                   filters) {
+  using CalibData::MootFilterCfg;
+  if (!m_mootConfigKey) return 0;
+  std::vector<MOOT::ConstitInfo> constits;
+  unsigned cnt = m_q->getActiveFilters(m_mootConfigKey, constits,
+                                       MOOT::LPA_MODE_ALL);
+
+  for (unsigned ix = 0; ix < cnt; ix++) {
+    MootFilterCfg* f = makeMootFilterCfg(constits[ix]);
+    filters.push_back(*f);
+    delete f;
+  }
+  return cnt;
+}
+
+CalibData::MootFilterCfg* 
+MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
+                         std::string& handlerName) {
+  //  using CalibData::MootFilterCfg;
+  if (!m_mootConfigKey) return 0;
+  if (acqMode >= MOOT::LPA_MODE_count) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "Unknown acq. mode " << acqMode << endreq;
+    return 0;
+  }
+  MOOT::LpaMode lpaMode = (MOOT::LpaMode) acqMode;
+
+  const MOOT::ConstitInfo* pConstit = 
+    m_q->getActiveFilter(m_mootConfigKey, lpaMode, handlerId, handlerName);
+  if (!pConstit) return 0;
+
+  CalibData::MootFilterCfg* f = makeMootFilterCfg(*pConstit);
+  delete pConstit;
+  return f;
+}
+
+
 unsigned MootSvc::getHardwareKey()  {
-  updateFswKeys();
+  updateFswEvtInfo();
   return m_hw;
 }
 
@@ -290,7 +419,7 @@ std::string MootSvc::getMootParmPath(const std::string& cl, unsigned& hw) {
 
 const CalibData::MootParm* MootSvc::getMootParm(const std::string& cl,
                                                    unsigned& hw) {
-  updateFswKeys();
+  updateFswEvtInfo();
   hw = m_hw;
   if (hw != m_mootParmCol->fswKey() ) {
     StatusCode sc = updateMootParmCol();
@@ -303,7 +432,7 @@ const CalibData::MootParm* MootSvc::getMootParm(const std::string& cl,
 }
 
 const CalibData::MootParmCol* MootSvc::getMootParmCol(unsigned& hw)  {
-  updateFswKeys();
+  updateFswEvtInfo();
   hw = m_hw;
   if (hw != m_mootParmCol->fswKey() ) {
     StatusCode sc = updateMootParmCol();

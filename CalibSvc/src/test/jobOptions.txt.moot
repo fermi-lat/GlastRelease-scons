@@ -63,13 +63,21 @@ DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
-
+// Run against (glastDB) test archive on slac node with access to afs
 // MootSvc.MootArchive = "/afs/slac/g/glast/moot/srcArchive-test/";
-MootSvc.MootArchive = "/afs/slac/g/glast/moot/archive-mood";
+// Run against production archive on slac node with access to afs
+// MootSvc.MootArchive = "/afs/slac/g/glast/moot/archive-mood";
 
+// From laptop run against copy of glastDB test archive
+MootSvc.MootArchive = "/scratch/glastsoft/moot_test_glastDB
 
-CalibDataSvc.UseEventKeys = "true";
-CalibDataSvc.UseMoot = "1";
+// From laptop run against copy of production (glastlnx06) archive, 
+// where db is a slave  mirrored onto glastDB
+// MootSvc.MootArchive = "/scratch/glastsoft/moot_prod_slave
+
+// Following two job options are obsolete
+// CalibDataSvc.UseEventKeys = "true";
+// CalibDataSvc.UseMoot = "1";
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
