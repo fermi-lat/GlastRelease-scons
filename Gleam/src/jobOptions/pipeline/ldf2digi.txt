@@ -124,6 +124,10 @@ OnboardFilter.FileNameGains = "cal_db_gains_flight";
 // Correct DGN: Pre-scale factors are in $GLAST_EXT/rh9_gcc32/obf/B1-0-6/src/XFC_DB/src/DGN_gem.h
 OnboardFilter.DgnConfig = "DGN_gem";
 
+// MIP-filter:
+OnboardFilter.MipConfig = "MIP_all_axis";
+
+
 // Usually Gamma, HIP and DGN are in the accept decision on board.
 // It doesn't make sense to rerun DGN on real data. And it doesn't work on data anyway.
 // We might as well always run the MIP filter. It's additional information. 
