@@ -62,8 +62,7 @@ Digitization.Members +={"digiRootReaderAlg"};
 // so we can get the event time from them!
 // Note: this is the opposite of what is needed for the MC!
 //
-Calibration.Members = {"TkrCalibAlg"};
-
+Calibration.Members = {"TkrCalibAlg","TkrCalibAlg/TkrReconCalib"};
 
 //
 // Using EventIntegrityAlg to decide if we run or skip recon: 

@@ -37,6 +37,10 @@ CalCalibSvc.DefaultFlavor = "vanilla";
 //
 TkrCalibAlg.calibFlavor = "vanilla";
 
+// New alignments:
+TkrReconCalib.calibFlavor = "vanilla";
+
+
 //
 // Write out bad and hot strips to the log file: Not!
 //
