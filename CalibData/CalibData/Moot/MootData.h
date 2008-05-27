@@ -50,6 +50,57 @@ namespace CalibData {
     MOOTSUBTYPE m_subtype;
     
   };  // end MootBase
+
+  /**
+     @class MootFilterCfg
+
+     Pure data class to describe filter configuration cdm
+   */
+  class MootFilterCfg {
+    friend class MootSvc;
+  public:
+    MootFilterCfg(const std::string& keyStr="", const std::string& name="",
+                  const std::string& pkg="", const std::string& pkgVersion="",
+                  const std::string& fmxPath="", const std::string& srcPath="",
+                  const std::string& fswIdStr="", 
+                  const std::string& status="",
+                  const std::string& schemaIdStr="",
+                  const std::string& schemaVersionIdStr="",
+                  const std::string& instanceIdStr="");
+    unsigned getKey() const {return m_key;}
+    std::string getKeyStr() const {return m_keyStr;}
+    std::string getName() const {return m_name;}
+    std::string getPkg() const {return m_pkg;}
+    std::string getPkgVersion() const {return m_pkgVersion;}
+    std::string getFmxPath() const {return m_fmxPath;}
+    std::string getSrcPath() const {return m_srcPath;}
+    unsigned getFswId() const {return m_fswId;}
+    std::string getFswIdStr() const {return m_fswIdStr;}
+    std::string getStatus() const {return m_status;}
+    unsigned getSchemaId() const {return m_schemaId;}
+    std::string getSchemaIdStr() const {return m_schemaIdStr;}
+    unsigned getSchemaVersionId() const {return m_schemaVersionId;}
+    std::string getSchemaVersionIdStr() const {return m_schemaVersionIdStr;}
+    unsigned getInstanceId() const {return m_instanceId;}
+    std::string getInstanceIdStr() const {return m_instanceIdStr;}
+  private:
+    unsigned m_key;
+    std::string m_keyStr;
+    std::string m_name;
+    std::string m_pkg;
+    std::string m_pkgVersion;
+    std::string m_fmxPath;
+    std::string m_srcPath;
+    unsigned m_fswId;
+    std::string m_fswIdStr;
+    std::string m_status;
+    unsigned m_schemaId;
+    std::string m_schemaIdStr;
+    unsigned m_schemaVersionId;
+    std::string m_schemaVersionIdStr;
+    unsigned m_instanceId;
+    std::string m_instanceIdStr;
+  };
   
   /**
      @class MootParm
