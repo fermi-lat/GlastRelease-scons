@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r34   27-May-2008  jrb  Add MootSvc.MootConfigKey jo; code to support & test
    v0r33    7-May-2008  jrb  Tracker align calibs (inter-tower and intra-tower)
    v0r32p2 14-Mar-2008  jrb  Release MOOT Mysql connection when no longer needed
    v0r32p1 11-Mar-2008  jrb  set MootSvc.UseEventKeys default to "true"
