@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r23   28-May-2008  jrb  Data structures needed for filter config (MootSvc)
    v0r22p1  8-May-2008  jrb  Check in new include file needed for alignment
    v0r22    7-May-2008  jrb  Tracker align. calibs (inter- and intra-tower)
    v0r21   11-Mar-2008  jrb  Add definition of Moot data-related classes
