@@ -18,17 +18,20 @@ ApplicationMgr.Runable= "RootIoSvc";
 
 // There are several other possibilities for test algroithm, including
 //  UseBadStrips, UseGains,...
-ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
+// ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UsePeds" };
+ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseMoot" };
 // digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
 // Heather's suggested file
-digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-keys/digi.root";
+// digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-keys/digi.root";
 
 
 // From Martin
-digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u40/Integration/rootData/077015643/v8r1109p12/digi/digitization-licos-v3r9p15_077015643_digi_DIGI.root";
+// digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u40/Integration/rootData/077015643/v8r1109p12/digi/digitization-licos-v3r9p15_077015643_digi_DIGI.root";
 // Need to specify something other than digiRootReaderAlg for an evt file
 //digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u42/ISOC/Downlinks/071001001/r0252672900/r0252672900-e00000000000068423209.evt
 
+// laptop 
+digiRootReaderAlg.digiRootFile="/scratch/glastsoft/data/077017761-digi.root"; 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -44,7 +47,9 @@ GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 // ApplicationMgr.EvtMax = 10000;
-ApplicationMgr.EvtMax = 10;
+// ApplicationMgr.EvtMax = 10;
+ApplicationMgr.EvtMax = 3;
+
 
 // Model for immediately following lines is LHCb example.  See
 // http://lhcbsoft.web.cern.ch/LHCbSoft/Ex/DetConExamples/v2r0/options/
@@ -69,11 +74,12 @@ DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 // MootSvc.MootArchive = "/afs/slac/g/glast/moot/archive-mood";
 
 // From laptop run against copy of glastDB test archive
-MootSvc.MootArchive = "/scratch/glastsoft/moot_test_glastDB
+MootSvc.MootArchive = "/scratch/glastsoft/moot_test_glastDB";
+MootSvc.MootConfigKey = 144;
 
 // From laptop run against copy of production (glastlnx06) archive, 
 // where db is a slave  mirrored onto glastDB
-// MootSvc.MootArchive = "/scratch/glastsoft/moot_prod_slave
+// MootSvc.MootArchive = "/scratch/glastsoft/moot_prod_slave";
 
 // Following two job options are obsolete
 // CalibDataSvc.UseEventKeys = "true";

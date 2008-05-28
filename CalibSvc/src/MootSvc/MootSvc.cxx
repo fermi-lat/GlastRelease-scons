@@ -32,6 +32,7 @@ static SvcFactory<MootSvc>          MootSvc_factory;
 const ISvcFactory& MootSvcFactory = MootSvc_factory;
 
 namespace {
+
   unsigned lookupMootConfig(MOOT::MootQuery* q, unsigned scid,
                             unsigned startedAt) {
 
@@ -58,13 +59,14 @@ namespace {
 }
 
 MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
-  : Service(name, svc), m_q(0), m_c(0), m_mootParmCol(0)
+  : Service(name, svc), m_q(0), m_c(0), m_mootParmCol(0), m_fixedConfig(false)
 {
   declareProperty("MootArchive", m_archive = std::string("") );
   declareProperty("UseEventKeys", m_useEventKeys = true);
   declareProperty("Verbose", m_verbose = false);
   declareProperty("scid" , m_scid = 77);  // source id for flight data
   declareProperty("StartTime", m_startTime = 0);
+  declareProperty("MootConfigKey", m_mootConfigKey = 0);
 }
 
 MootSvc::~MootSvc(){ }
@@ -108,6 +110,20 @@ StatusCode MootSvc::initialize()
   // Make a MOOT::MootQuery instance
   m_q = makeConnection(m_verbose); 
   if (!m_q) return StatusCode::FAILURE;
+
+  if (m_mootConfigKey) { // use this to set up everything else
+    m_fixedConfig = true;
+    m_lookUpStartTime = false;
+    m_useEventKeys = false;
+    m_hw = m_q->getMasterKey(m_fixedConfig);
+    if (!m_hw) {
+      log << MSG::ERROR << "No LATC master associated with MOOT config "
+          << m_mootConfigKey << endreq;
+      // Normally would be a fatal error.  Let it go for testing
+      // return StatusCode::FAILURE;
+    }      
+    return StatusCode::SUCCESS;
+  }
 
   // If StartTime has been set to default (0) we'll look it up in event;
   // else use specified value

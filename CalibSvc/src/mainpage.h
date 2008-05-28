@@ -167,6 +167,11 @@ Ignored unless UseEventTime is false.  </dd>
     <dt>MootArchive</dt>
        <dd>Default of empty string will cause production archive
            to be used</dd>
+    <dt>MootConfigKey</dt>
+       <dd>Defaults to 0; i.e., determine moot config from StartTime
+           and scid.  If MootConfigKey is set to a non-zero value,
+           that config will be used and values for job options UseEventKeys,
+           StartTime and scid will be ignored.</dd>
     <dt>UseEventKeys</dt>
        <dd>Defaults to 'true'; that is, use event keys in data</dd>
     <dt>StartTime</dt>

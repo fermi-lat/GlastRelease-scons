@@ -35,7 +35,8 @@ public:
 
 private:
   /// Helper function called by execute
-  void processNew();
+  void processNewParm();
+  void processNewFilters();
 
   //  IDataProviderSvc* m_pCalibDataSvc;
   IMootSvc*                m_pMootSvc;
@@ -88,19 +89,55 @@ StatusCode UseMoot::initialize() {
 
 StatusCode UseMoot::execute( ) {
 
-  using CalibData::MootParmCol;
-  using CalibData::MootParm;
-  bool  newStuff;
-
-  processNew();
+  processNewFilters();
+  //  processNewParm();
   return StatusCode::SUCCESS;
 }
 
+void UseMoot::processNewFilters() {
+  using CalibData::MootFilterCfg;
 
+  (*m_log) << MSG::INFO << "Hi from UseMoot::processNewFilters" << std::endl;
 
-void UseMoot::processNew() {
+  unsigned configKey = m_pMootSvc->getMootConfigKey();
+  (*m_log) << MSG::INFO << "Using MOOT config #" << configKey << endreq;
+  std::vector<MootFilterCfg> filters;
 
-  (*m_log) << MSG::INFO << "Hi from UseMoot::processNew" << std::endl;
+  unsigned filterCnt = m_pMootSvc->getActiveFilters(filters);
+
+  (*m_log) << MSG::INFO << "There are " << filterCnt << " active filters"
+           << endreq;
+
+  (*m_log) << MSG::INFO << "Filter names are: "  << endreq;
+  for (unsigned ix = 0; ix < filterCnt; ix++) {
+    (*m_log) << MSG::INFO << filters[ix].getName() << endreq;
+  }
+
+  filters.clear();
+
+  unsigned acqMode = 1;
+
+  filterCnt = m_pMootSvc->getActiveFilters(filters, acqMode);
+  (*m_log) << MSG::INFO << "There are " << filterCnt 
+           << " active filters for mode " << acqMode << endreq;
+
+  for (unsigned hId = 0; hId < 8; hId++) {
+    std::string hName;
+    MootFilterCfg* pF = m_pMootSvc->getActiveFilter(acqMode, hId, hName);
+    if (!pF) {
+      (*m_log) << MSG::INFO << "No filter found for acqMode =" << acqMode
+               << " and handler id#" << hId << endreq;
+    }
+    else {
+      (*m_log) << MSG::INFO << "For acqMode " << acqMode 
+               << " and handler id#" << hId << " handler name is: "
+               << hName << " and filter name is " << pF->getName() << endreq;
+    }
+  }
+}
+void UseMoot::processNewParm() {
+
+  (*m_log) << MSG::INFO << "Hi from UseMoot::processNewParm" << std::endl;
 
   unsigned hw;
 
