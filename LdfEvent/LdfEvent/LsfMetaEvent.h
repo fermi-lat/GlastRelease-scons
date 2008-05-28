@@ -30,9 +30,10 @@ namespace LsfEvent {
       :m_config(0),
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
-       m_ktype(enums::Lsf::NoKeysType) {
+       m_ktype(enums::Lsf::NoKeysType),
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
 
-       m_lpaHandlerCol.clear();
+       //m_lpaHandlerCol.clear();
     }
 
     /// Standard c'tor.  Takes input values for all fields
@@ -48,9 +49,10 @@ namespace LsfEvent {
        m_config(configuration.clone()),
        m_type(configuration.type()),
        m_keys(keys.clone()),
-       m_ktype(keys.type()) {
+       m_ktype(keys.type()),
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
 
-       m_lpaHandlerCol.clear();
+       //m_lpaHandlerCol.clear();
     }
 
     /// Copy c'tor.  Just copy all values.  
@@ -64,8 +66,10 @@ namespace LsfEvent {
        m_config(0),
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
-       m_ktype(enums::Lsf::NoKeysType),
-       m_lpaHandlerCol(other.m_lpaHandlerCol) {
+       m_ktype(enums::Lsf::NoKeysType), 
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+
+       //m_lpaHandlerCol(other.m_lpaHandlerCol) {
       if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
 	m_type = other.configuration()->type();
@@ -74,6 +78,19 @@ namespace LsfEvent {
           m_keys = other.keys()->clone();
           m_ktype = other.keys()->type();
       }
+      /*std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>::const_iterator it;
+      for (it = other.m_lpaHandlerCol.begin(); it != other.m_lpaHandlerCol.end(); it++) {
+          m_lpaHandlerCol[it->first] = it->second->clone();
+      }*/
+
+      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandlerRsdV0(*(other.gammaFilter()));
+      if (other.mipFilter()) m_mip = new lsfData::MipHandlerRsdV0(*(other.mipFilter()));
+      if (other.hipFilter()) m_hip = new lsfData::HipHandlerRsdV0(*(other.hipFilter()));
+      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandlerRsdV0(*(other.dgnFilter()));
+      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandlerRsdV0(*(other.passthruFilter()));
+      if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
+
+      
     }
     
     MetaEvent( const lsfData::MetaEvent& other )
@@ -84,7 +101,8 @@ namespace LsfEvent {
        m_config(0),
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
-       m_ktype(enums::Lsf::NoKeysType) {
+       m_ktype(enums::Lsf::NoKeysType), 
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
 
        if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
@@ -94,7 +112,32 @@ namespace LsfEvent {
             m_keys = other.keys()->clone();
             m_ktype = other.keys()->type();
        }
-       m_lpaHandlerCol = other.lpaHandlerCol();
+       //m_lpaHandlerCol = other.lpaHandlerCol();
+//       std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>::const_iterator it;
+//       for (it = other.lpaHandlerCol().begin(); it != other.lpaHandlerCol().end(); it++) {
+//                m_lpaHandlerCol[it->first] = it->second->clone();
+//         }
+/*
+        if (other.gammaFilter()) 
+            m_lpaHandlerCol[enums::Lsf::GAMMA] = other.gammaFilter()->clone();
+        if (other.passthruFilter())
+            m_lpaHandlerCol[enums::Lsf::PASS_THRU] = other.passthruFilter()->clone();
+        if (other.mipFilter()) 
+            m_lpaHandlerCol[enums::Lsf::MIP] = other.mipFilter()->clone();
+        if (other.hipFilter()) 
+            m_lpaHandlerCol[enums::Lsf::HIP] = other.hipFilter()->clone();
+        if (other.dgnFilter()) 
+            m_lpaHandlerCol[enums::Lsf::DGN] = other.dgnFilter()->clone();
+        if (other.lpaHandler()) 
+            m_lpaHandlerCol[other.lpaHandler()->id()] = other.lpaHandler()->clone();*/
+      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandlerRsdV0(*(other.gammaFilter()));
+      if (other.mipFilter()) m_mip = new lsfData::MipHandlerRsdV0(*(other.mipFilter()));
+      if (other.hipFilter()) m_hip = new lsfData::HipHandlerRsdV0(*(other.hipFilter()));
+      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandlerRsdV0(*(other.dgnFilter()));
+      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandlerRsdV0(*(other.passthruFilter()));
+      if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
+
+        
     }
 
     /// D'tor.  Delete the configuration, which had been deep-copied
@@ -108,11 +151,35 @@ namespace LsfEvent {
           m_keys = 0;
       }
 
-      std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator it;
-      for (it = m_lpaHandlerCol.begin(); it != m_lpaHandlerCol.end(); it++) {
-          delete it->second;
+      //std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator it;
+      //for (it = m_lpaHandlerCol.begin(); it != m_lpaHandlerCol.end(); it++) {
+      //    delete it->second;
+     // }
+//      m_lpaHandlerCol.clear();
+      if (m_gamma) {
+          delete m_gamma;
+          m_gamma = 0;
       }
-      m_lpaHandlerCol.clear();
+      if (m_mip) {
+          delete m_mip;
+          m_mip = 0;
+      }
+      if (m_hip) {
+          delete m_hip;
+          m_hip = 0;
+      }
+      if (m_dgn) {
+          delete m_dgn;
+          m_dgn = 0;
+      }
+      if (m_pass) {
+          delete m_pass;
+          m_pass = 0;
+      }
+      if (m_lpaHandler) {
+          delete m_lpaHandler;
+          m_lpaHandler = 0;
+      }
 
     }
 
@@ -140,20 +207,59 @@ namespace LsfEvent {
     inline const lsfData::LsfKeys* keys() const { return m_keys; }
     inline const enums::Lsf::KeysType keyType() const { return m_ktype; }
 
+    inline const lsfData::MipHandlerRsdV0* mipFilter() const {
+        return m_mip; }
+    inline const lsfData::HipHandlerRsdV0* hipFilter() const {
+        return m_hip; }
+    inline const lsfData::DgnHandlerRsdV0* dgnFilter() const {
+        return m_dgn;  }
+    inline const lsfData::PassthruHandlerRsdV0* passthruFilter() const {
+        return m_pass;  }
+    inline const lsfData::GammaHandlerRsdV0* gammaFilter() const {
+        return m_gamma;  }
+    inline const lsfData::LpaHandler* lpaHandler() const {
+        return m_lpaHandler;  }
 
-    inline const std::map<enums::Lsf::HandlerId,lsfData::LpaHandler*>& lpaHandlerCol() const 
+
+    /*inline const std::map<enums::Lsf::HandlerId,lsfData::ILpaHandler*>& lpaHandlerCol() const 
     { return m_lpaHandlerCol; }
 
-    inline const lsfData::LpaHandler* getLpaHandler(const enums::Lsf::HandlerId& id) {
-        std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>::iterator iter = m_lpaHandlerCol.find(id);
+    inline const lsfData::ILpaHandler* getLpaHandler(const enums::Lsf::HandlerId& id) {
+        std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>::iterator iter = m_lpaHandlerCol.find(id);
         if (iter != m_lpaHandlerCol.end()) return (m_lpaHandlerCol[id]);
         else return 0;
-    }
+    } */
+
+/*inline const lsfData::LpaHandler* getLpaHandler(const enums::Lsf::HandlerId &id) {
+    if (id == enums::Lsf::GAMMA) return gammaFilter();
+    else if (id == enums::Lsf::PASS_THRU) return passthruFilter();
+    else if (id == enums::Lsf::HIP) return hipFilter();
+    else if (id == enums::Lsf::MIP) return mipFilter();
+    else if (id == enums::Lsf::DGN) return dgnFilter();
+    else  return lpaHandler();
+}*/
 
 
-    inline void addLpaHandler(const enums::Lsf::HandlerId &id, const lsfData::LpaHandler &handler) {
-        m_lpaHandlerCol[id] = handler.clone();
+/*
+    inline void addLpaHandler(const enums::Lsf::HandlerId &id, const lsfData::ILpaHandler &handler) {
+        lsfData::ILpaHandler* newHandler;
+        if (id == enums::Lsf::GAMMA)
+            newHandler = handler.castToGammaRsdV0()->clone();
+        else if (id == enums::Lsf::PASS_THRU)
+            newHandler = handler.castToPassthruRsdV0()->clone();
+        else if (id == enums::Lsf::MIP)
+            newHandler = handler.castToMipRsdV0()->clone();
+        else if (id == enums::Lsf::HIP)
+             newHandler = handler.castToHipRsdV0()->clone();
+        else if (id == enums::Lsf::DGN)
+             newHandler = handler.castToHipRsdV0()->clone();
+        else
+             newHandler = handler.castToLpaHandler()->clone();
+        m_lpaHandlerCol[id] = newHandler;
+
+        //m_lpaHandlerCol[id] = handler.clone();
     }
+*/
 
 
     /// set everything at once
@@ -206,9 +312,48 @@ namespace LsfEvent {
         m_ktype = keys.type();
     }
 
-   inline void setLpaHandlerCol ( const std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*>& vec) {
-        m_lpaHandlerCol = vec;
-    }
+void addGammaHandler(const lsfData::GammaHandlerRsdV0& gamma) {
+    m_gamma = new lsfData::GammaHandlerRsdV0(gamma);
+}
+void addDgnHandler(const lsfData::DgnHandlerRsdV0& dgn) {
+    m_dgn = new lsfData::DgnHandlerRsdV0(dgn);
+}
+void addPassthruHandler(const lsfData::PassthruHandlerRsdV0& pass) {
+    m_pass = new lsfData::PassthruHandlerRsdV0(pass);
+}
+void addMipHandler(const lsfData::MipHandlerRsdV0& mip) {
+    m_mip = new lsfData::MipHandlerRsdV0(mip);
+}
+void addHipHandler(const lsfData::HipHandlerRsdV0& hip) {
+    m_hip = new lsfData::HipHandlerRsdV0(hip);
+}
+void addLpaHandler(const lsfData::LpaHandler& lpa) {
+    m_lpaHandler = new lsfData::LpaHandler(lpa);
+}
+
+   /*inline void setLpaHandlerCol ( const std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>& vec) {
+        std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>::const_iterator it;
+        for (it = vec.begin(); it != vec.end(); it++) {
+            lsfData::ILpaHandler* newHandler;
+            if (it->first == enums::Lsf::GAMMA)
+               newHandler = it->second->castToGammaRsdV0()->clone();
+            else if (it->first == enums::Lsf::PASS_THRU)
+               newHandler = it->second->castToPassthruRsdV0()->clone();
+            else if (it->first == enums::Lsf::MIP)
+               newHandler = it->second->castToMipRsdV0()->clone();
+            else if (it->first == enums::Lsf::HIP)
+               newHandler = it->second->castToHipRsdV0()->clone();
+            else if (it->first == enums::Lsf::DGN)
+               newHandler = it->second->castToHipRsdV0()->clone();
+            else
+               newHandler = it->second->castToLpaHandler()->clone();
+            m_lpaHandlerCol[it->first] = newHandler;
+
+          //m_lpaHandlerCol[it->first] = it->second->clone();
+
+        }
+    } 
+*/
     
 
     /// Output operator (ASCII)
@@ -268,7 +413,14 @@ namespace LsfEvent {
     lsfData::LsfKeys* m_keys;
     enums::Lsf::KeysType m_ktype;
 
-    std::map<enums::Lsf::HandlerId, lsfData::LpaHandler*> m_lpaHandlerCol;
+  //  std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*> m_lpaHandlerCol;
+    lsfData::GammaHandlerRsdV0 *m_gamma;
+    lsfData::PassthruHandlerRsdV0 *m_pass;
+    lsfData::MipHandlerRsdV0 *m_mip;
+    lsfData::HipHandlerRsdV0 *m_hip;
+    lsfData::DgnHandlerRsdV0 *m_dgn;
+    lsfData::LpaHandler *m_lpaHandler;
+
 
 
   };

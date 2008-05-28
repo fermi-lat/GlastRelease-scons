@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v4r3    28-May-2008 HMK back off virtual ctors in LpaHandler for now
 v4r2    21-May-2008 HMK Update for LpaHandlers (aka filter bits)
 v4r1p1  27-Feb-2008 ZGF add needed #include directive
 v4r1    30-Oct-2007 HMK use gr_app
