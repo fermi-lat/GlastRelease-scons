@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r23 27-May-2008  jrb  Add MootQuery::getMasterKey; attempt to fix 
+                           Windows/SWIG compile problem
    v1r22p1 24-May-2008 jrb Fix req. file so package compiles
    v1r22 23-May-2008  jrb  Add queries of Acq_summary table
    v1r21 22-May-2008  jrb  Add queries of active filters for specified MOOT config
