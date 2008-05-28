@@ -15,6 +15,9 @@ namespace MOOT {
    */
   class AcqSummaryInfo {
   public:
+#ifndef SWIG
+    // Following causes SWIG problems on Windows.  In fact it doesn't need
+    // to be exposed at all to python
     AcqSummaryInfo(const std::string& key="",
                    const std::string& scid="",
                    const std::string& startedAt="",
@@ -36,6 +39,10 @@ namespace MOOT {
       m_swKey(swKey), m_creator(creator), m_creationTime(creationTime),
       m_updateTime(updateTime)
 {}
+#else
+    // Just give python simplest default constructor.  Probably unnecessary
+    AcqSummaryInfo() {}
+#endif
     std::string getKey() const {return m_key;}
     std::string getScid() const {return m_scid;}
     std::string getStartedAt() const {return m_startedAt;}
