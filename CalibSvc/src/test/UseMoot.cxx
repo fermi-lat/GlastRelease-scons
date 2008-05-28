@@ -97,11 +97,15 @@ StatusCode UseMoot::execute( ) {
 void UseMoot::processNewFilters() {
   using CalibData::MootFilterCfg;
 
+  static unsigned cfg = 0;
+
   (*m_log) << MSG::INFO << "Hi from UseMoot::processNewFilters" << std::endl;
 
   unsigned configKey = m_pMootSvc->getMootConfigKey();
   (*m_log) << MSG::INFO << "Using MOOT config #" << configKey << endreq;
   std::vector<MootFilterCfg> filters;
+  if (cfg == configKey) return;
+  else cfg = configKey;
 
   unsigned filterCnt = m_pMootSvc->getActiveFilters(filters);
 
@@ -121,17 +125,22 @@ void UseMoot::processNewFilters() {
   (*m_log) << MSG::INFO << "There are " << filterCnt 
            << " active filters for mode " << acqMode << endreq;
 
-  for (unsigned hId = 0; hId < 8; hId++) {
-    std::string hName;
-    MootFilterCfg* pF = m_pMootSvc->getActiveFilter(acqMode, hId, hName);
-    if (!pF) {
-      (*m_log) << MSG::INFO << "No filter found for acqMode =" << acqMode
-               << " and handler id#" << hId << endreq;
-    }
-    else {
-      (*m_log) << MSG::INFO << "For acqMode " << acqMode 
-               << " and handler id#" << hId << " handler name is: "
-               << hName << " and filter name is " << pF->getName() << endreq;
+  for (acqMode = 0; acqMode < 8; acqMode ++) {
+    for (unsigned hId = 0; hId < 8; hId++) {
+      std::string hName;
+      MootFilterCfg* pF = m_pMootSvc->getActiveFilter(acqMode, hId, hName);
+      if (!pF) {
+        (*m_log) << MSG::INFO << "No filter found for acqMode =" << acqMode
+                 << " and handler id#" << hId << endreq;
+      }
+      else {
+        (*m_log) << MSG::INFO << "For acqMode " << acqMode 
+                 << " and handler id#" << hId << " handler name is: "
+                 << hName << endreq
+                 << "filter name is " << pF->getName() << endreq
+                 << "schema id id is " << pF->getSchemaId() 
+                 << " and instance id is " << pF->getInstanceId() << endreq;
+      }
     }
   }
 }

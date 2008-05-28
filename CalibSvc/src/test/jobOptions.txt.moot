@@ -63,7 +63,7 @@ ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
 ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
 
 
-DetectorPersistencySvc.CnvServices += {"MootSvc"};
+// DetectorPersistencySvc.CnvServices += {"MootSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};

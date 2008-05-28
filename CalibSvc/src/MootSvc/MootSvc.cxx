@@ -417,7 +417,6 @@ MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
   if (!pConstit) return 0;
 
   CalibData::MootFilterCfg* f = makeMootFilterCfg(*pConstit);
-  delete pConstit;
   return f;
 }
 
