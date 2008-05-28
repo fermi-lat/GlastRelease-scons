@@ -5,7 +5,8 @@ version v4r8p1
 author Tracy Usher <usher@SLAC.Stanford.edu>
 
 use EbfWriter           *
-use obf v* IExternal 
+use obf v* IExternal
+use CalibSvc * 
 
 apply_pattern packageShr
 apply_pattern package_include

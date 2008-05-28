@@ -73,6 +73,10 @@ TriggerAlg.applyPrescales = false;
 // ----------------------------
 //  onboard filter 
 
+ApplicationMgr.ExtSvc += {"MootSvc"};
+MootSvc.MootArchive = "C:/Glast/moot/srcArchive-test";
+MootSvc.MootConfigKey = 145;
+
 ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
 Filter.Members       += {"EbfWriter", "OnboardFilter", "test_OnboardFilter"}; 
 
