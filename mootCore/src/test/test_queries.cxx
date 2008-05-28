@@ -663,6 +663,11 @@ int main(int /* nargs */, char**)    {
   }
   else std::cout << "No info for time 2008-1-27" << std::endl << std::endl;
 
+  unsigned configKey=138;
+  unsigned masterKey = q.getMasterKey(configKey);
+  std::cout << "For Config #" << configKey << " Retrieved master key "
+            << masterKey << std::endl;
+
   return 0;
 }
 void writeInfo(MOOT::ConfigInfo* pInfo, std::ostream& out) {

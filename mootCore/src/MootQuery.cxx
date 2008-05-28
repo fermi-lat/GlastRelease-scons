@@ -1088,6 +1088,30 @@ namespace MOOT {
     return getPackageConstituents(sbsKey, "LPA_DB", lpas);
   }
 
+  unsigned MootQuery::getMasterKey(unsigned configKey) {
+    using facilities::Util;
+
+    std::string configKeyStr;
+    Util::utoa(configKey, configKeyStr);
+    std::string masterClass = 
+      DbUtil::getColumnValue(m_rdb, "FSW_class", "FSW_class_key", "name",
+                             "latc_master");
+    std::string where("WHERE FSW_inputs.class_fk='");
+    where += masterClass + 
+      std::string("' and FSW_input_key=FSW_fk AND config_fk='");
+    where += configKeyStr + std::string("'");
+    std::string masterKeyStr;
+    try {
+      masterKeyStr =
+        DbUtil::getColumnWhere(m_rdb, "FSW_inputs,Configs_to_FSW", "FSW_id",
+                               where);
+    }
+    catch (DbUtilException ex) {
+      return 0;
+    }
+    return Util::stringToUnsigned(masterKeyStr);
+  }
+
   bool MootQuery::getPackageConstituents(unsigned sbsKey, 
                                          const std::string& pkg,
                                          std::vector<ConstitInfo>& constits) {

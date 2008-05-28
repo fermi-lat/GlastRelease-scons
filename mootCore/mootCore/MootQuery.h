@@ -342,6 +342,11 @@ namespace MOOT {
     bool getLpaConstituents(unsigned sbsKey, std::vector<ConstitInfo>& lpas);
 
 
+    /**
+       Get LATC master (i.e., fmx logical key for it) belonging to
+       @a configKey
+     */
+    unsigned getMasterKey(unsigned configKey);
     /** 
         Given SBS logical key, return constituent info for all
         constituents in the specified package

@@ -29,8 +29,12 @@ use SwigPolicy v*
 ## To  use 'real' test archive - the one resident on glastlnx06,
 ## use alternate def. of MOOT_ARCHIVE below
 ## set MOOT_ARCHIVE /afs/slac/g/glast/moot/archive-mood_test
+##  For access to test archive from laptop
+## set MOOT_ARCHIVE /scratch/glastsoft/moot_test_glastDB
+
 ## For real production, use
 set MOOT_ARCHIVE /afs/slac/g/glast/moot/archive-mood
+
 
 private 
 
