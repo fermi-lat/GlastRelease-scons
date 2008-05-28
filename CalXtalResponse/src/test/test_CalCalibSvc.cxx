@@ -494,7 +494,7 @@ StatusCode test_CalCalibSvc::testMissingXtal(const XtalIdx xtalIdx,
        xRng++) {
     const RngIdx rngIdx(xtalIdx, xRng);
     float ped;
-    if (calCalibSvc.getPed(rngIdx,ped).isFailure()) {
+    if (!calCalibSvc.getPed(rngIdx,ped).isFailure()) {
       MsgStream msglog(m_msgSvc, "test_CalCalibSvc");   
       msglog << MSG::ERROR << "Ped calibrations for empty tower returned: " << rngIdx.toStr() << endreq;
       return StatusCode::FAILURE;

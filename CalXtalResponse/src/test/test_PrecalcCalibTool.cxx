@@ -52,7 +52,10 @@ StatusCode test_PrecalcCalibTool::testXtal(const XtalIdx xtalIdx,
 
     if (!smart_compare(pedSigCIDAC, testSigCIDAC, MAX_SPLINE_DIFF)) {
       MsgStream msglog(m_msgSvc, "test_PrecalcCalibTool");   
-      msglog << MSG::ERROR << "Invalid pedestal sigma: " << rngIdx.toStr() << endreq;
+      msglog << MSG::ERROR << "Invalid pedestal sigma (cidac): " << pedSigCIDAC
+             << " " << rngIdx.toStr() 
+             << " expected: " << testSigCIDAC
+             << endreq;
       return StatusCode::FAILURE;
     }
   }

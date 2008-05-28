@@ -218,7 +218,7 @@ StatusCode PrecalcCalibTool::genLocalStore() {
 
       //  CalibData::Ped const*const ped = m_calCalibSvc->getPed(rngIdx);
       float pedsig;
-      sc = m_calCalibSvc->getPed(rngIdx,pedsig);
+      sc = m_calCalibSvc->getPedSig(rngIdx,pedsig);
       if(sc.isFailure())return sc;
       
       float sigDAC;
