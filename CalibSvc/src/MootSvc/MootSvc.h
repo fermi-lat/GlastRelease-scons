@@ -130,7 +130,7 @@ class MootSvc :  public Service,
   std::string findPrecinct(const std::string& pclass);
 
   StatusCode updateMootParmCol();
-  StatusCode updateFswEvtInfo();  // keys and started_at
+  StatusCode updateFswEvtInfo();  // keys, started_at, scid
 
   /// Handles for metadata access
   MOOT::MootQuery*    m_q;

@@ -60,7 +60,7 @@ namespace {
 }
 
 MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
-  : Service(name, svc), m_q(0), m_c(0), m_mootParmCol(0), m_fixedConfig(false)
+  : Service(name, svc), m_q(0), m_c(0), m_fixedConfig(false), m_mootParmCol(0)
 {
   declareProperty("MootArchive", m_archive = std::string("") );
   declareProperty("UseEventKeys", m_useEventKeys = true);
@@ -114,8 +114,9 @@ StatusCode MootSvc::initialize()
   if (m_mootConfigKey) { // use this to set up everything else
     m_fixedConfig = true;
     m_lookUpStartTime = false;
+    m_lookUpScid = false;     
     m_useEventKeys = false;
-    m_hw = m_q->getMasterKey(m_fixedConfig);
+    m_hw = m_q->getMasterKey(m_mootConfigKey);
     if (!m_hw) {
       log << MSG::ERROR << "No LATC master associated with MOOT config "
           << m_mootConfigKey << endreq;
@@ -143,10 +144,12 @@ StatusCode MootSvc::initialize()
             << " and StartedAt = " << m_startTime << endreq;
         return StatusCode::FAILURE;
       }
+      m_fixedConfig = true;
     }
   }
  
-  // Arrange to be woken up once per event.  
+  // Arrange to be woken up once per event.  For now can't think of
+  // anything handler needs to do except for 1st event
   IIncidentSvc* incSvc;
   sc = service("IncidentSvc", incSvc, true);
   if (sc.isSuccess() ) {
@@ -289,7 +292,7 @@ StatusCode MootSvc::queryInterface(const InterfaceID& riid,
 /// If so, close it.
 void MootSvc::handle(const Incident& inc) {
 
-  static nEvt = 0;
+  static unsigned nEvt = 0;
 
   if (inc.type() != "EndEvent" ) return;
 
@@ -318,19 +321,23 @@ int MootSvc::latcParmIx(const std::string& parmClass) const {
 }
 
 
-
+// This function gets primary information (hw key, moot config)
+// relating to configurations from the data.  It's called at the 
+// end of the first event and also whenever a client requests 
+// supported information types (LATC, filter)
 StatusCode  MootSvc::updateFswEvtInfo() {
   // For now either we update from event or we don't update at all
   using namespace enums;
 
-  if ((!m_useEventKeys) && (!m_lookUpStartTime) &&
-      (!m_lookUpScid) ) return StatusCode::SUCCESS;
+  //  if ((!m_useEventKeys) && (!m_lookUpStartTime) &&
+  //  (!m_lookUpScid) ) return  StatusCode::SUCCESS;
+
+  // If nothing comes from data, there is nothing for us to do 
+  if (m_fixedConfig) return StatusCode::SUCCESS;
 
   MsgStream log(msgSvc(), "MootSvc");
 
-  // Just to see if we can find anything at all
   SmartDataPtr<Event::EventHeader> eventHeader(m_eventSvc, "/Event");
-  
   if (!eventHeader) {
     log << "No Event header! " << endreq;
     return StatusCode::FAILURE;
@@ -341,6 +348,30 @@ StatusCode  MootSvc::updateFswEvtInfo() {
     log << MSG::DEBUG << "No MetaEvent" << endreq;
     return StatusCode::FAILURE;
   }
+
+  if (m_useEventKeys) {
+    unsigned newMasterKey;
+    m_hw = 0;
+    switch (metaEvt->keyType()) {
+
+    case Lsf::LpaKeys: {
+      const lsfData::LpaKeys *lpaKeysTds = metaEvt->keys()->castToLpaKeys();
+      newMasterKey = lpaKeysTds->LATC_master();
+      break;
+    }
+
+    case Lsf::LciKeys: {
+      const lsfData::LciKeys *lciKeysTds = metaEvt->keys()->castToLciKeys();
+      newMasterKey = lciKeysTds->LATC_master();
+      break;
+    }
+    default: 
+      log << MSG::DEBUG << "Unknown key type in LsfEvent::MetaEvent"
+          << endreq;
+      return StatusCode::FAILURE;
+    }
+    if (newMasterKey)     m_hw = newMasterKey;
+  }
   if (m_lookUpScid) {  
     SmartDataPtr<LsfEvent::LsfCcsds> ccsds(m_eventSvc, "/Event/Ccsds");
     if (!ccsds) {
@@ -348,18 +379,15 @@ StatusCode  MootSvc::updateFswEvtInfo() {
       return StatusCode::FAILURE;
     }
     m_scid = ccsds->scid();
-    m_lookUpScid = false;    // only need to do this once
   }
   if (m_lookUpStartTime) {
     unsigned old = m_startTime;
     m_startTime = (metaEvt->run()).startTime();
     if (old != m_startTime) { // also refresh config
-
       if (!m_q) {
         m_q = makeConnection(m_verbose);
         if (!m_q) return StatusCode::FAILURE;
       }
-
       m_mootConfigKey = lookupMootConfig(m_q, m_scid, m_startTime);
       if (!m_mootConfigKey) {
         MsgStream log(msgSvc(), "MootSvc");
@@ -370,28 +398,6 @@ StatusCode  MootSvc::updateFswEvtInfo() {
       }
     }
   }
-  if (!m_useEventKeys) return StatusCode::SUCCESS;
-
-  unsigned newMasterKey;
-  m_hw = 0;
-  switch (metaEvt->keyType()) {
-
-  case Lsf::LpaKeys: {
-    const lsfData::LpaKeys *lpaKeysTds = metaEvt->keys()->castToLpaKeys();
-    newMasterKey = lpaKeysTds->LATC_master();
-    break;
-  }
-
-  case Lsf::LciKeys: {
-    const lsfData::LciKeys *lciKeysTds = metaEvt->keys()->castToLciKeys();
-    newMasterKey = lciKeysTds->LATC_master();
-    break;
-  }
-  default: 
-   // tilt!
-    return StatusCode::FAILURE;
-  }
-  if (newMasterKey)     m_hw = newMasterKey;
   return StatusCode::SUCCESS;
 }
 
@@ -400,6 +406,7 @@ StatusCode  MootSvc::updateFswEvtInfo() {
 unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
                                    filters, unsigned acqMode) {
   using CalibData::MootFilterCfg;
+  updateFswEvtInfo();
   if (!m_mootConfigKey) {
     MsgStream log(msgSvc(), "MootSvc");
     log << MSG::ERROR << "Cannot retrieve filters; no known MOOT config" 
@@ -432,6 +439,7 @@ unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
 unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
                                    filters) {
   using CalibData::MootFilterCfg;
+  updateFswEvtInfo();
   if (!m_mootConfigKey) return 0;
   std::vector<MOOT::ConstitInfo> constits;
   if (!m_q) {
@@ -454,6 +462,7 @@ CalibData::MootFilterCfg*
 MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
                          std::string& handlerName) {
   //  using CalibData::MootFilterCfg;
+  updateFswEvtInfo();
   if (!m_mootConfigKey) return 0;
   if (acqMode >= MOOT::LPA_MODE_count) {
     MsgStream log(msgSvc(), "MootSvc");
@@ -503,6 +512,7 @@ const CalibData::MootParm* MootSvc::getMootParm(const std::string& cl,
 
 const CalibData::MootParmCol* MootSvc::getMootParmCol(unsigned& hw)  {
   updateFswEvtInfo();
+  if (!m_hw) return 0;
   hw = m_hw;
   if (hw != m_mootParmCol->fswKey() ) {
     StatusCode sc = updateMootParmCol();
