@@ -14,8 +14,9 @@
 #include "facilities/commonUtilities.h"
 #include "CalibData/Moot/MootData.h"
 
-#include "LdfEvent/LsfMetaEvent.h" //includes everything we need for fsw keys
-
+#include "Event/TopLevel/Event.h"
+#include "LdfEvent/LsfMetaEvent.h" // needed for fsw keys, start_time
+#include "LdfEvent/LsfCcsds.h"     // to retrieve scid
 
 #include "GaudiKernel/ISvcLocator.h"
 
@@ -101,7 +102,6 @@ StatusCode MootSvc::initialize()
     return sc;
   }
 
-
   /*
     Might want to add something here to force use of
     user-supplied LATC master key if so requested
@@ -126,17 +126,23 @@ StatusCode MootSvc::initialize()
   }
 
   // If StartTime has been set to default (0) we'll look it up in event;
-  // else use specified value
+  // else use specified value.  Similarly for scid
+
+  if (m_scid == 0) {
+    m_lookUpScid = true;
+  }
   if (m_startTime == 0) {
     m_lookUpStartTime = true;
     m_mootConfigKey = 0;
   }  else {
     m_lookUpStartTime = false;
-    m_mootConfigKey = lookupMootConfig(m_q, m_scid, m_startTime);
-    if (!m_mootConfigKey) {
-      log << MSG::ERROR << "No MOOT config for scid = " << m_scid
-          << " and StartedAt = " << m_startTime << endreq;
-      return StatusCode::FAILURE;
+    if (!m_lookUpScid) { // can look up config now
+      m_mootConfigKey = lookupMootConfig(m_q, m_scid, m_startTime);
+      if (!m_mootConfigKey) {
+        log << MSG::ERROR << "No MOOT config for scid = " << m_scid
+            << " and StartedAt = " << m_startTime << endreq;
+        return StatusCode::FAILURE;
+      }
     }
   }
  
@@ -283,7 +289,14 @@ StatusCode MootSvc::queryInterface(const InterfaceID& riid,
 /// If so, close it.
 void MootSvc::handle(const Incident& inc) {
 
+  static nEvt = 0;
+
   if (inc.type() != "EndEvent" ) return;
+
+  if (!nEvt)  { // update info from event stream  after very first event
+    updateFswEvtInfo();
+  }
+  nEvt++;
 
   if (m_c) {
     if (m_countdown) m_countdown--;
@@ -308,17 +321,44 @@ int MootSvc::latcParmIx(const std::string& parmClass) const {
 
 StatusCode  MootSvc::updateFswEvtInfo() {
   // For now either we update from event or we don't update at all
-  m_hw = 0;
   using namespace enums;
 
-  if ((!m_useEventKeys) && (!m_lookUpStartTime)) return StatusCode::SUCCESS;
+  if ((!m_useEventKeys) && (!m_lookUpStartTime) &&
+      (!m_lookUpScid) ) return StatusCode::SUCCESS;
+
+  MsgStream log(msgSvc(), "MootSvc");
+
+  // Just to see if we can find anything at all
+  SmartDataPtr<Event::EventHeader> eventHeader(m_eventSvc, "/Event");
+  
+  if (!eventHeader) {
+    log << "No Event header! " << endreq;
+    return StatusCode::FAILURE;
+  }
 
   SmartDataPtr<LsfEvent::MetaEvent> metaEvt(m_eventSvc, "/Event/MetaEvent");
-
+  if (!metaEvt) {
+    log << MSG::DEBUG << "No MetaEvent" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (m_lookUpScid) {  
+    SmartDataPtr<LsfEvent::LsfCcsds> ccsds(m_eventSvc, "/Event/Ccsds");
+    if (!ccsds) {
+      log << MSG::DEBUG << "No ccsds" << endreq;
+      return StatusCode::FAILURE;
+    }
+    m_scid = ccsds->scid();
+    m_lookUpScid = false;    // only need to do this once
+  }
   if (m_lookUpStartTime) {
-    unsigned old = m_lookUpStartTime;
-    m_lookUpStartTime = (metaEvt->run()).startTime();
-    if (old != m_lookUpStartTime) { // also refresh config
+    unsigned old = m_startTime;
+    m_startTime = (metaEvt->run()).startTime();
+    if (old != m_startTime) { // also refresh config
+
+      if (!m_q) {
+        m_q = makeConnection(m_verbose);
+        if (!m_q) return StatusCode::FAILURE;
+      }
 
       m_mootConfigKey = lookupMootConfig(m_q, m_scid, m_startTime);
       if (!m_mootConfigKey) {
@@ -333,6 +373,7 @@ StatusCode  MootSvc::updateFswEvtInfo() {
   if (!m_useEventKeys) return StatusCode::SUCCESS;
 
   unsigned newMasterKey;
+  m_hw = 0;
   switch (metaEvt->keyType()) {
 
   case Lsf::LpaKeys: {
@@ -350,7 +391,6 @@ StatusCode  MootSvc::updateFswEvtInfo() {
    // tilt!
     return StatusCode::FAILURE;
   }
-
   if (newMasterKey)     m_hw = newMasterKey;
   return StatusCode::SUCCESS;
 }
@@ -371,6 +411,11 @@ unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
     log << MSG::ERROR << "Unknown acq. mode " << acqMode << endreq;
     return 0;
   }
+  if (!m_q) {
+    m_q = makeConnection(m_verbose);
+    if (!m_q) return 0; //  StatusCode::FAILURE;
+  }
+
   MOOT::LpaMode lpaMode = (MOOT::LpaMode) acqMode;
 
   std::vector<MOOT::ConstitInfo> constits;
@@ -389,6 +434,11 @@ unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
   using CalibData::MootFilterCfg;
   if (!m_mootConfigKey) return 0;
   std::vector<MOOT::ConstitInfo> constits;
+  if (!m_q) {
+    m_q = makeConnection(m_verbose);
+    if (!m_q) return 0; // StatusCode::FAILURE;
+  }
+
   unsigned cnt = m_q->getActiveFilters(m_mootConfigKey, constits,
                                        MOOT::LPA_MODE_ALL);
 
@@ -411,6 +461,11 @@ MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
     return 0;
   }
   MOOT::LpaMode lpaMode = (MOOT::LpaMode) acqMode;
+
+  if (!m_q) {
+    m_q = makeConnection(m_verbose);
+    if (!m_q) return  0;       //StatusCode::FAILURE;
+  }
 
   const MOOT::ConstitInfo* pConstit = 
     m_q->getActiveFilter(m_mootConfigKey, lpaMode, handlerId, handlerName);

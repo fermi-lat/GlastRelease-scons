@@ -153,6 +153,7 @@ class MootSvc :  public Service,
   bool  m_useEventKeys;                       // job options
   bool  m_verbose;                            // controls MoodConnection
   bool  m_lookUpStartTime;                    // true if we get it from event
+  bool  m_lookUpScid;                         // true if we get it from event
   bool  m_fixedConfig;                        // diagnostic
 
   CalibData::MootParmCol*  m_mootParmCol;

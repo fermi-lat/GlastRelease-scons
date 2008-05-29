@@ -180,6 +180,7 @@ Ignored unless UseEventTime is false.  </dd>
          for an acquisition.</dd>
     <dt>scid</dt>
         <dd>Source id for data.  Defaults to 77, value for flight data.
+         Special value of 0 means look it up in the data.
         </dd>
     <dt>Verbose</dt>
         <dd>Determines whether informational messages will be printed,
