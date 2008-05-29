@@ -270,6 +270,7 @@ StatusCode GammaFilterTool::initialize()
                 if (filterIter->getSchemaId() == m_filterLibs->FilterSchema())
                 {
                     activeFilter = true;
+                    log << MSG::INFO << "Moot has filter " <<  filterIter->getName() << " as active" << endreq;
                     break;
                 }
             }
@@ -288,7 +289,11 @@ StatusCode GammaFilterTool::initialize()
                 CalibData::MootFilterCfg* mootCfg = m_mootSvc->getActiveFilter(modeIdx, m_handlerId, filterName);
 
                 // Returned configuration for this handler and mode 
-                if (mootCfg) configuration = mootCfg->getInstanceId();
+                if (mootCfg)
+                {
+                    configuration = mootCfg->getInstanceId();
+                    log << MSG::INFO << "Moot: mode " << modeIdx << " associated with configuration:\n" << mootCfg->getSrcPath() << endreq;
+                }
             }
 
             obf->associateConfigToMode(target, modeIdx, configuration);
@@ -386,7 +391,7 @@ void GammaFilterTool::dumpConfiguration()
     std::string    config   = m_filterLibs->getInstanceIdString(mode2cfg);
 
     log << MSG::INFO << "Gamma Filter Setup - FSW release " << m_filterLibs->FlightSoftwareRelease() << "\n"
-        << "   Using configuration: " << config.data() << endreq;
+        << "   Using configuration: " << config.data() << " for mode = 0" << endreq;
 
     return;
 }
