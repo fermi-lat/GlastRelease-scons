@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r34p2 28-May-2008  jrb  Minor fixes, improvements in MootSvc
    v0r34p1 28-May-2008  jrb  bug fix for getActiveFilter
    v0r34   27-May-2008  jrb  Add MootSvc.MootConfigKey jo; code to support & test
    v0r33    7-May-2008  jrb  Tracker align calibs (inter-tower and intra-tower)
