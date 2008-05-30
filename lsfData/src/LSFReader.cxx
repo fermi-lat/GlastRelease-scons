@@ -170,58 +170,66 @@ namespace lsfData {
 
     std::vector<eventFile::LPA_Handler>::const_iterator handlerIt;
     for (handlerIt = info.handlers.begin(); handlerIt != info.handlers.end(); handlerIt++) {
-   const eventFile::DgnHandlerRsdV0*      evtDgn( handlerIt->dgnRsdV0() );
-    const eventFile::GammaHandlerRsdV0*    evtGamma( handlerIt->gammaRsdV0() );
-    const eventFile::HipHandlerRsdV0*      evtHip( handlerIt->hipRsdV0() );
-    const eventFile::MipHandlerRsdV0*      evtMip( handlerIt->mipRsdV0() );
     const eventFile::PassthruHandlerRsdV0* evtPass( handlerIt->passthruRsdV0() );
-        if (evtDgn) {
-            lsfData::DgnHandlerRsdV0 dgn;
+        if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::DGN) {
+            lsfData::DgnHandler dgn;
             dgn.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,
                 (enums::Lsf::RsdState)(handlerIt->state),
                 (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),
                 handlerIt->version,
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
-            dgn.setStatus(evtDgn->status);
+            const eventFile::DgnHandlerRsdV0*  evtDgn( handlerIt->dgnRsdV0() );
+            if (evtDgn) {
+                dgn.setStatus(evtDgn->status);
+            }
             lmeta.addDgnHandler(dgn);
-        } else if (evtGamma) {
-            lsfData::GammaHandlerRsdV0 gam;
+        } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::GAMMA) {
+            lsfData::GammaHandler gam;
             gam.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,
                 (enums::Lsf::RsdState)(handlerIt->state),
                 (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),
                 handlerIt->version,
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
-            gam.setStatus(evtGamma->status,evtGamma->stage,
+            const eventFile::GammaHandlerRsdV0*  evtGamma( handlerIt->gammaRsdV0() );
+            if (evtGamma)
+                gam.setStatus(evtGamma->status,evtGamma->stage,
                 evtGamma->energyValid, evtGamma->energyInLeus);
             lmeta.addGammaHandler(gam);
-        } else if (evtHip) {
-            lsfData::HipHandlerRsdV0 hip;
+        } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::HIP) {
+            lsfData::HipHandler hip;
             hip.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,
                 (enums::Lsf::RsdState)(handlerIt->state),
                 (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),
                 handlerIt->version,
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
-            hip.setStatus(evtHip->status);
+            const eventFile::HipHandlerRsdV0*  evtHip( handlerIt->hipRsdV0() );
+            if (evtHip)
+                hip.setStatus(evtHip->status);
             lmeta.addHipHandler(hip);
-        } else if (evtMip) {
-            lsfData::MipHandlerRsdV0 mip;
+        } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::MIP) {
+            lsfData::MipHandler mip;
             mip.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,
                 (enums::Lsf::RsdState)(handlerIt->state),
                 (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),
                 handlerIt->version,
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
-            mip.setStatus(evtMip->status);
+            const eventFile::MipHandlerRsdV0* evtMip( handlerIt->mipRsdV0() );
+            if (evtMip)
+                mip.setStatus(evtMip->status);
             lmeta.addMipHandler(mip);
-        } else if (evtPass) {
-            lsfData::PassthruHandlerRsdV0 pass;
+        } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::PASS_THRU) {
+            lsfData::PassthruHandler pass;
             pass.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,
                 (enums::Lsf::RsdState)(handlerIt->state),
                 (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),
                 handlerIt->version,
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
-            pass.setStatus(evtPass->status);
+            const eventFile::PassthruHandlerRsdV0* evtPass( handlerIt->passthruRsdV0() );
+            if (evtPass) 
+                pass.setStatus(evtPass->status);
             lmeta.addPassthruHandler(pass);
         } else {
+          /* do nothing for now
             lsfData::LpaHandler lpa;
             lpa.set(handlerIt->masterKey,handlerIt->cfgKey,handlerIt->cfgId,
                     (enums::Lsf::RsdState)(handlerIt->state),
@@ -230,6 +238,7 @@ namespace lsfData {
                     (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
             //lmeta.addLpaHandler((enums::Lsf::HandlerId)handlerIt->id, lpa);
             lmeta.addLpaHandler(lpa);
+          */
            
         }
     }

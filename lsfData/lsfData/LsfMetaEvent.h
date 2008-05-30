@@ -62,11 +62,11 @@ namespace lsfData {
 	m_keys  = other.keys()->clone();
 	m_ktype = other.keys()->type();
       }
-      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandlerRsdV0(*(other.gammaFilter()));
-      if (other.mipFilter()) m_mip = new lsfData::MipHandlerRsdV0(*(other.mipFilter()));
-      if (other.hipFilter()) m_hip = new lsfData::HipHandlerRsdV0(*(other.hipFilter()));
-      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandlerRsdV0(*(other.dgnFilter()));
-      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandlerRsdV0(*(other.passthruFilter()));
+      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandler(*(other.gammaFilter()));
+      if (other.mipFilter()) m_mip = new lsfData::MipHandler(*(other.mipFilter()));
+      if (other.hipFilter()) m_hip = new lsfData::HipHandler(*(other.hipFilter()));
+      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandler(*(other.dgnFilter()));
+      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandler(*(other.passthruFilter()));
       if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
 
     }
@@ -162,15 +162,15 @@ namespace lsfData {
     /// Translated configuration file keys for this event
     inline const LsfKeys* keys() const { return m_keys; };
 
-    inline const MipHandlerRsdV0* mipFilter() const {
+    inline const MipHandler* mipFilter() const {
         return m_mip; }
-    inline const HipHandlerRsdV0* hipFilter() const {
+    inline const HipHandler* hipFilter() const {
         return m_hip; }
-    inline const DgnHandlerRsdV0* dgnFilter() const {
+    inline const DgnHandler* dgnFilter() const {
         return m_dgn;  }
-    inline const PassthruHandlerRsdV0* passthruFilter() const {
+    inline const PassthruHandler* passthruFilter() const {
         return m_pass;  }
-    inline const GammaHandlerRsdV0* gammaFilter() const {
+    inline const GammaHandler* gammaFilter() const {
         return m_gamma;  }
     inline const LpaHandler* lpaHandler() const {
         return m_lpaHandler;  }
@@ -211,20 +211,20 @@ namespace lsfData {
       m_ktype = keys.type();
     }
 
-void addGammaHandler(const GammaHandlerRsdV0& gamma) {
-    m_gamma = new lsfData::GammaHandlerRsdV0(gamma);
+void addGammaHandler(const GammaHandler& gamma) {
+    m_gamma = new lsfData::GammaHandler(gamma);
 }
-void addDgnHandler(const DgnHandlerRsdV0& dgn) {
-    m_dgn = new lsfData::DgnHandlerRsdV0(dgn);
+void addDgnHandler(const DgnHandler& dgn) {
+    m_dgn = new lsfData::DgnHandler(dgn);
 }
-void addPassthruHandler(const PassthruHandlerRsdV0& pass) {
-    m_pass = new lsfData::PassthruHandlerRsdV0(pass);
+void addPassthruHandler(const PassthruHandler& pass) {
+    m_pass = new lsfData::PassthruHandler(pass);
 }
-void addMipHandler(const MipHandlerRsdV0& mip) {
-    m_mip = new lsfData::MipHandlerRsdV0(mip);
+void addMipHandler(const MipHandler& mip) {
+    m_mip = new lsfData::MipHandler(mip);
 }
-void addHipHandler(const HipHandlerRsdV0& hip) {
-    m_hip = new lsfData::HipHandlerRsdV0(hip);
+void addHipHandler(const HipHandler& hip) {
+    m_hip = new lsfData::HipHandler(hip);
 }
 void addLpaHandler(const LpaHandler& lpa) {
     m_lpaHandler = new lsfData::LpaHandler(lpa);
@@ -244,11 +244,11 @@ void addLpaHandler(const LpaHandler& lpa) {
     LsfKeys* m_keys;
     enums::Lsf::KeysType m_ktype;
 
-    GammaHandlerRsdV0 *m_gamma;   
-    PassthruHandlerRsdV0 *m_pass;
-    MipHandlerRsdV0 *m_mip;
-    HipHandlerRsdV0 *m_hip;
-    DgnHandlerRsdV0 *m_dgn;
+    GammaHandler *m_gamma;   
+    PassthruHandler *m_pass;
+    MipHandler *m_mip;
+    HipHandler *m_hip;
+    DgnHandler *m_dgn;
     LpaHandler *m_lpaHandler;
 
   };
