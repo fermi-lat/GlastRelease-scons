@@ -117,7 +117,10 @@ public:
 
     DgnHandler(const DgnHandler &other)  {
           m_handler = other.m_handler;
-          m_dgn = new DgnHandlerRsdV0(*(other.m_dgn));
+          if (other.m_dgn)
+              m_dgn = new DgnHandlerRsdV0(*(other.m_dgn));
+           else
+              m_dgn = 0;
       } 
 
    // const char*                     typeName() const;
@@ -203,7 +206,10 @@ public:
     GammaHandler():m_gamma(0) { };
     GammaHandler(const GammaHandler &other)  {
           m_handler = other.m_handler;
-          m_gamma = new GammaHandlerRsdV0(*(other.m_gamma));
+          if (other.m_gamma)
+              m_gamma = new GammaHandlerRsdV0(*(other.m_gamma));
+          else 
+              m_gamma = 0;
       } 
 
     ~GammaHandler() { 
@@ -273,7 +279,10 @@ public:
 
     HipHandler(const HipHandler &other)  {
           m_handler = other.m_handler;
-          m_hip = new HipHandlerRsdV0(*(other.m_hip));
+          if (other.m_hip)
+              m_hip = new HipHandlerRsdV0(*(other.m_hip));
+          else
+              m_hip = 0;
       } 
     ~HipHandler() { 
        if (m_hip) {
@@ -342,7 +351,10 @@ public:
 
     MipHandler(const MipHandler &other)  {
           m_handler = other.m_handler;
-          m_mip = new MipHandlerRsdV0(*(other.m_mip));
+          if (other.m_mip)
+              m_mip = new MipHandlerRsdV0(*(other.m_mip));
+          else
+              m_mip = 0;
       } 
     ~MipHandler() { 
        if (m_mip) {
@@ -411,7 +423,10 @@ public:
 
     PassthruHandler(const PassthruHandler &other)  {
           m_handler = other.m_handler;
-          m_pass = new PassthruHandlerRsdV0(*(other.m_pass));
+          if (other.m_pass)
+              m_pass = new PassthruHandlerRsdV0(*(other.m_pass));
+          else
+              m_pass = 0;
       } 
     ~PassthruHandler() { 
        if (m_pass) {
