@@ -5,6 +5,7 @@
  * $Id$
 
 
+* v6r37p3  AWB 30-May-08 Fixed pipeline JO. Had duplicate of ACD.
 * v6r37p2  AWB 27-May-08 Changed pipeline JO to include TKR alignment.
 * v6r37p1  AWB 27-May-08 Changed pipeline JO to use correct MIP-filter.
 * v6r37    AWB 22-May-08 Updated AnalysisNtupleAlg.toolList for the pipeline.

@@ -177,7 +177,7 @@ ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 //
 // For dealing with non-MC data:
 //
-AnalysisNtupleAlg.toolList = {"McKludge","Glt","Acd","TkrHit","Tkr","Vtx","Cal","Acd","Evt","Obf"};
+AnalysisNtupleAlg.toolList = {"McKludge","Glt","Acd","TkrHit","Tkr","Vtx","Cal","Evt","Obf"};
 
 
 //
