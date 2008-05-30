@@ -84,9 +84,6 @@ MootSvc.MootConfigKey = 146;
 // where db is a slave  mirrored onto glastDB
 // MootSvc.MootArchive = "/scratch/glastsoft/moot_prod_slave";
 
-// Following two job options are obsolete
-// CalibDataSvc.UseEventKeys = "true";
-// CalibDataSvc.UseMoot = "1";
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",

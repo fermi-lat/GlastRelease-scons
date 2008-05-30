@@ -155,6 +155,7 @@ class MootSvc :  public Service,
   bool  m_lookUpStartTime;                    // true if we get it from event
   bool  m_lookUpScid;                         // true if we get it from event
   bool  m_fixedConfig;                        // diagnostic
+  bool  m_noMoot;                             // if true, just go away
 
   CalibData::MootParmCol*  m_mootParmCol;
 };

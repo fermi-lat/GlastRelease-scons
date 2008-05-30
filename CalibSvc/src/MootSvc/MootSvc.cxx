@@ -68,6 +68,7 @@ MootSvc::MootSvc(const std::string& name, ISvcLocator* svc)
   declareProperty("scid" , m_scid = 0);  // by default, look it up
   declareProperty("StartTime", m_startTime = 0);
   declareProperty("MootConfigKey", m_mootConfigKey = 0);
+  declareProperty("NoMoot", m_noMoot = false);
 }
 
 MootSvc::~MootSvc(){ }
@@ -95,6 +96,10 @@ StatusCode MootSvc::initialize()
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
 
+  if (m_noMoot) {
+    log << MSG::INFO << "Honoring request for no Moot" << endreq;
+    return StatusCode::SUCCESS;
+  }
   // Needed for access for fsw keys
   sc = serviceLocator()->service("EventDataSvc", m_eventSvc, true);
   if (sc .isFailure() ) {
@@ -227,8 +232,17 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
   }
   // Maybe should have some logic here to get verbose connection
   // depending on debug level?
-  m_c = new MOOT::MoodConnection(false, verbose);
-  if (m_c) m_q = new MOOT::MootQuery(m_c);
+  try {
+    m_c = new MOOT::MoodConnection(false, verbose);
+    if (m_c) m_q = new MOOT::MootQuery(m_c);
+  }
+  catch (std::exception ex) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR 
+             << "Could not open connection to MOOT dbs for archive " 
+             << m_archive << endreq;
+    return 0;
+  }
 
   if (!m_q) {
     MsgStream log(msgSvc(), "MootSvc");
@@ -252,6 +266,13 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
 StatusCode MootSvc::getPrecincts() {
 
   std::vector<std::string> prNames;
+
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // Currently only called once at initialization time, when m_q is
   // known to be valid.  Might conceivably call if connection is re-established
@@ -311,6 +332,14 @@ void MootSvc::handle(const Incident& inc) {
 
 
 int MootSvc::latcParmIx(const std::string& parmClass) const {
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return -2;
+  }
+
+
   if (!m_mootParmCol) return -2;
   const CalibData::MootParmVec& vec = m_mootParmCol->getMootParmVec();
   for (unsigned ix = 0; ix < vec.size(); ix++) {
@@ -406,6 +435,13 @@ StatusCode  MootSvc::updateFswEvtInfo() {
 unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
                                    filters, unsigned acqMode) {
   using CalibData::MootFilterCfg;
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   updateFswEvtInfo();
   if (!m_mootConfigKey) {
     MsgStream log(msgSvc(), "MootSvc");
@@ -439,6 +475,13 @@ unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
 unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
                                    filters) {
   using CalibData::MootFilterCfg;
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   updateFswEvtInfo();
   if (!m_mootConfigKey) return 0;
   std::vector<MOOT::ConstitInfo> constits;
@@ -461,7 +504,13 @@ unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
 CalibData::MootFilterCfg* 
 MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
                          std::string& handlerName) {
-  //  using CalibData::MootFilterCfg;
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return 0;
+  }
+
   updateFswEvtInfo();
   if (!m_mootConfigKey) return 0;
   if (acqMode >= MOOT::LPA_MODE_count) {
@@ -486,6 +535,12 @@ MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
 
 
 unsigned MootSvc::getHardwareKey()  {
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
   updateFswEvtInfo();
   return m_hw;
 }
@@ -498,6 +553,12 @@ std::string MootSvc::getMootParmPath(const std::string& cl, unsigned& hw) {
 
 const CalibData::MootParm* MootSvc::getMootParm(const std::string& cl,
                                                    unsigned& hw) {
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return 0;
+  }
   updateFswEvtInfo();
   hw = m_hw;
   if (hw != m_mootParmCol->fswKey() ) {
@@ -511,6 +572,14 @@ const CalibData::MootParm* MootSvc::getMootParm(const std::string& cl,
 }
 
 const CalibData::MootParmCol* MootSvc::getMootParmCol(unsigned& hw)  {
+
+  if (m_noMoot) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "MootSvc unavailable by job option request"
+        << endreq;
+    return 0;
+  }
+
   updateFswEvtInfo();
   if (!m_hw) return 0;
   hw = m_hw;
