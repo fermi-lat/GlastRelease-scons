@@ -1,5 +1,5 @@
 package configData
-version v1r8
+version v1r9
 
 author M. Kocian <kocian@slac.stanford.edu>
 
@@ -52,6 +52,7 @@ macro source "*.cxx" WIN32 "*.h *.cxx"
 library configData  \
  -s=../src $(source)\
  -s=gem $(source)\
+ -s=fsw $(source)\
  -s=base $(source)\
  -s=db $(source) 
 
