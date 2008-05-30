@@ -83,11 +83,11 @@ namespace LsfEvent {
           m_lpaHandlerCol[it->first] = it->second->clone();
       }*/
 
-      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandlerRsdV0(*(other.gammaFilter()));
-      if (other.mipFilter()) m_mip = new lsfData::MipHandlerRsdV0(*(other.mipFilter()));
-      if (other.hipFilter()) m_hip = new lsfData::HipHandlerRsdV0(*(other.hipFilter()));
-      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandlerRsdV0(*(other.dgnFilter()));
-      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandlerRsdV0(*(other.passthruFilter()));
+      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandler(*(other.gammaFilter()));
+      if (other.mipFilter()) m_mip = new lsfData::MipHandler(*(other.mipFilter()));
+      if (other.hipFilter()) m_hip = new lsfData::HipHandler(*(other.hipFilter()));
+      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandler(*(other.dgnFilter()));
+      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandler(*(other.passthruFilter()));
       if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
 
       
@@ -130,11 +130,11 @@ namespace LsfEvent {
             m_lpaHandlerCol[enums::Lsf::DGN] = other.dgnFilter()->clone();
         if (other.lpaHandler()) 
             m_lpaHandlerCol[other.lpaHandler()->id()] = other.lpaHandler()->clone();*/
-      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandlerRsdV0(*(other.gammaFilter()));
-      if (other.mipFilter()) m_mip = new lsfData::MipHandlerRsdV0(*(other.mipFilter()));
-      if (other.hipFilter()) m_hip = new lsfData::HipHandlerRsdV0(*(other.hipFilter()));
-      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandlerRsdV0(*(other.dgnFilter()));
-      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandlerRsdV0(*(other.passthruFilter()));
+      if (other.gammaFilter()) m_gamma = new lsfData::GammaHandler(*(other.gammaFilter()));
+      if (other.mipFilter()) m_mip = new lsfData::MipHandler(*(other.mipFilter()));
+      if (other.hipFilter()) m_hip = new lsfData::HipHandler(*(other.hipFilter()));
+      if (other.dgnFilter()) m_dgn = new lsfData::DgnHandler(*(other.dgnFilter()));
+      if (other.passthruFilter()) m_pass = new lsfData::PassthruHandler(*(other.passthruFilter()));
       if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
 
         
@@ -207,15 +207,15 @@ namespace LsfEvent {
     inline const lsfData::LsfKeys* keys() const { return m_keys; }
     inline const enums::Lsf::KeysType keyType() const { return m_ktype; }
 
-    inline const lsfData::MipHandlerRsdV0* mipFilter() const {
+    inline const lsfData::MipHandler* mipFilter() const {
         return m_mip; }
-    inline const lsfData::HipHandlerRsdV0* hipFilter() const {
+    inline const lsfData::HipHandler* hipFilter() const {
         return m_hip; }
-    inline const lsfData::DgnHandlerRsdV0* dgnFilter() const {
+    inline const lsfData::DgnHandler* dgnFilter() const {
         return m_dgn;  }
-    inline const lsfData::PassthruHandlerRsdV0* passthruFilter() const {
+    inline const lsfData::PassthruHandler* passthruFilter() const {
         return m_pass;  }
-    inline const lsfData::GammaHandlerRsdV0* gammaFilter() const {
+    inline const lsfData::GammaHandler* gammaFilter() const {
         return m_gamma;  }
     inline const lsfData::LpaHandler* lpaHandler() const {
         return m_lpaHandler;  }
@@ -229,37 +229,6 @@ namespace LsfEvent {
         if (iter != m_lpaHandlerCol.end()) return (m_lpaHandlerCol[id]);
         else return 0;
     } */
-
-/*inline const lsfData::LpaHandler* getLpaHandler(const enums::Lsf::HandlerId &id) {
-    if (id == enums::Lsf::GAMMA) return gammaFilter();
-    else if (id == enums::Lsf::PASS_THRU) return passthruFilter();
-    else if (id == enums::Lsf::HIP) return hipFilter();
-    else if (id == enums::Lsf::MIP) return mipFilter();
-    else if (id == enums::Lsf::DGN) return dgnFilter();
-    else  return lpaHandler();
-}*/
-
-
-/*
-    inline void addLpaHandler(const enums::Lsf::HandlerId &id, const lsfData::ILpaHandler &handler) {
-        lsfData::ILpaHandler* newHandler;
-        if (id == enums::Lsf::GAMMA)
-            newHandler = handler.castToGammaRsdV0()->clone();
-        else if (id == enums::Lsf::PASS_THRU)
-            newHandler = handler.castToPassthruRsdV0()->clone();
-        else if (id == enums::Lsf::MIP)
-            newHandler = handler.castToMipRsdV0()->clone();
-        else if (id == enums::Lsf::HIP)
-             newHandler = handler.castToHipRsdV0()->clone();
-        else if (id == enums::Lsf::DGN)
-             newHandler = handler.castToHipRsdV0()->clone();
-        else
-             newHandler = handler.castToLpaHandler()->clone();
-        m_lpaHandlerCol[id] = newHandler;
-
-        //m_lpaHandlerCol[id] = handler.clone();
-    }
-*/
 
 
     /// set everything at once
@@ -312,49 +281,25 @@ namespace LsfEvent {
         m_ktype = keys.type();
     }
 
-void addGammaHandler(const lsfData::GammaHandlerRsdV0& gamma) {
-    m_gamma = new lsfData::GammaHandlerRsdV0(gamma);
+void addGammaHandler(const lsfData::GammaHandler& gamma) {
+    m_gamma = new lsfData::GammaHandler(gamma);
 }
-void addDgnHandler(const lsfData::DgnHandlerRsdV0& dgn) {
-    m_dgn = new lsfData::DgnHandlerRsdV0(dgn);
+void addDgnHandler(const lsfData::DgnHandler& dgn) {
+    std::cout << "adding in LdfEvent LsfMeta DGN" << std::endl;
+    m_dgn = new lsfData::DgnHandler(dgn);
 }
-void addPassthruHandler(const lsfData::PassthruHandlerRsdV0& pass) {
-    m_pass = new lsfData::PassthruHandlerRsdV0(pass);
+void addPassthruHandler(const lsfData::PassthruHandler& pass) {
+    m_pass = new lsfData::PassthruHandler(pass);
 }
-void addMipHandler(const lsfData::MipHandlerRsdV0& mip) {
-    m_mip = new lsfData::MipHandlerRsdV0(mip);
+void addMipHandler(const lsfData::MipHandler& mip) {
+    m_mip = new lsfData::MipHandler(mip);
 }
-void addHipHandler(const lsfData::HipHandlerRsdV0& hip) {
-    m_hip = new lsfData::HipHandlerRsdV0(hip);
+void addHipHandler(const lsfData::HipHandler& hip) {
+    m_hip = new lsfData::HipHandler(hip);
 }
 void addLpaHandler(const lsfData::LpaHandler& lpa) {
     m_lpaHandler = new lsfData::LpaHandler(lpa);
 }
-
-   /*inline void setLpaHandlerCol ( const std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>& vec) {
-        std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*>::const_iterator it;
-        for (it = vec.begin(); it != vec.end(); it++) {
-            lsfData::ILpaHandler* newHandler;
-            if (it->first == enums::Lsf::GAMMA)
-               newHandler = it->second->castToGammaRsdV0()->clone();
-            else if (it->first == enums::Lsf::PASS_THRU)
-               newHandler = it->second->castToPassthruRsdV0()->clone();
-            else if (it->first == enums::Lsf::MIP)
-               newHandler = it->second->castToMipRsdV0()->clone();
-            else if (it->first == enums::Lsf::HIP)
-               newHandler = it->second->castToHipRsdV0()->clone();
-            else if (it->first == enums::Lsf::DGN)
-               newHandler = it->second->castToHipRsdV0()->clone();
-            else
-               newHandler = it->second->castToLpaHandler()->clone();
-            m_lpaHandlerCol[it->first] = newHandler;
-
-          //m_lpaHandlerCol[it->first] = it->second->clone();
-
-        }
-    } 
-*/
-    
 
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
@@ -414,11 +359,11 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
     enums::Lsf::KeysType m_ktype;
 
   //  std::map<enums::Lsf::HandlerId, lsfData::ILpaHandler*> m_lpaHandlerCol;
-    lsfData::GammaHandlerRsdV0 *m_gamma;
-    lsfData::PassthruHandlerRsdV0 *m_pass;
-    lsfData::MipHandlerRsdV0 *m_mip;
-    lsfData::HipHandlerRsdV0 *m_hip;
-    lsfData::DgnHandlerRsdV0 *m_dgn;
+    lsfData::GammaHandler *m_gamma;
+    lsfData::PassthruHandler *m_pass;
+    lsfData::MipHandler *m_mip;
+    lsfData::HipHandler *m_hip;
+    lsfData::DgnHandler *m_dgn;
     lsfData::LpaHandler *m_lpaHandler;
 
 
