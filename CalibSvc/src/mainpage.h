@@ -182,6 +182,11 @@ Ignored unless UseEventTime is false.  </dd>
         <dd>Source id for data.  Defaults to 77, value for flight data.
          Special value of 0 means look it up in the data.
         </dd>
+    <dt>noMoot</dt>
+        <dd>Defaults to "false".  If true, MootSvc will not attempt
+            to connect to Moot archive and db.  Subsequent calls
+            to MootSvc functions will fail with error.
+        </dd>
     <dt>Verbose</dt>
         <dd>Determines whether informational messages will be printed,
             including all details of MOOT database transactions.  
