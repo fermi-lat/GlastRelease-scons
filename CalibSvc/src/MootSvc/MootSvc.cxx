@@ -483,7 +483,13 @@ unsigned MootSvc::getActiveFilters(std::vector<CalibData::MootFilterCfg>&
   }
 
   updateFswEvtInfo();
-  if (!m_mootConfigKey) return 0;
+  if (!m_mootConfigKey) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "Cannot retrieve filters; no known MOOT config" 
+        << endreq;
+    return 0;
+  }
+
   std::vector<MOOT::ConstitInfo> constits;
   if (!m_q) {
     m_q = makeConnection(m_verbose);
@@ -512,7 +518,13 @@ MootSvc::getActiveFilter(unsigned acqMode, unsigned handlerId,
   }
 
   updateFswEvtInfo();
-  if (!m_mootConfigKey) return 0;
+  if (!m_mootConfigKey) {
+    MsgStream log(msgSvc(), "MootSvc");
+    log << MSG::ERROR << "Cannot retrieve filters; no known MOOT config" 
+        << endreq;
+    return 0;
+  }
+
   if (acqMode >= MOOT::LPA_MODE_count) {
     MsgStream log(msgSvc(), "MootSvc");
     log << MSG::ERROR << "Unknown acq. mode " << acqMode << endreq;
@@ -539,7 +551,7 @@ unsigned MootSvc::getHardwareKey()  {
     MsgStream log(msgSvc(), "MootSvc");
     log << MSG::ERROR << "MootSvc unavailable by job option request"
         << endreq;
-    return StatusCode::FAILURE;
+    return 0;
   }
   updateFswEvtInfo();
   return m_hw;
