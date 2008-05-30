@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r34p6 30-May-2008  jrb  Minor error-handling improvements
    v0r34p5 30-May-2008  jrb  Add MootSvc.noMoot job option in case Moot archive
                              or db unavailable and services aren't needed
    v0r34p4 30-May-2008  jrb  Change MootSvc.scid default to "look it up" (0)
