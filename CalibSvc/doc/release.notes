@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r34p4 30-May-2008  jrb  Change MootSvc.scid default to "look it up" (0)
    v0r34p3 29-May-2008  jrb  Reread config info from data as needed in case
                              it changes during a job
    v0r34p2 28-May-2008  jrb  Minor fixes, improvements in MootSvc
