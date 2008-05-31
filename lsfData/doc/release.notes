@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v3r3p2  30-May-2008 HMK Avoid reuse of eventFile's struct names 
 v3r3p1  30-May-2008 HMK patch for copy ctor in LpaHandler
 v3r3    29-May-2008 HMK Realizing RSDs are NULL for non-Gamma Filters
 v3r2    28-May-2008 HMK Skip virtual c'tors for now for LpaHandlers
