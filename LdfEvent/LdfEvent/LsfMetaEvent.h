@@ -285,7 +285,6 @@ void addGammaHandler(const lsfData::GammaHandler& gamma) {
     m_gamma = new lsfData::GammaHandler(gamma);
 }
 void addDgnHandler(const lsfData::DgnHandler& dgn) {
-    std::cout << "adding in LdfEvent LsfMeta DGN" << std::endl;
     m_dgn = new lsfData::DgnHandler(dgn);
 }
 void addPassthruHandler(const lsfData::PassthruHandler& pass) {
