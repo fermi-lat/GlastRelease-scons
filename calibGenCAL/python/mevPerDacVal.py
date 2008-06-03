@@ -60,7 +60,7 @@ def rootHists(errData, fileName):
     cs.SetLogy()
 
     hName = "h_Summary_Big"      
-    hs = ROOT.TH1F(hName, 'MevPerDac_Big %s' % fileName, 100, 0.0, bigErrLim)
+    hs = ROOT.TH1F(hName, 'MevPerDac_Big %s' % fileName, 100, 0, 0)
 
     for tem in towers:
         for row in range(calConstant.NUM_ROW):
@@ -89,7 +89,7 @@ def rootHists(errData, fileName):
     cs.SetLogy()
 
     hName = "h_Summary_Small"      
-    hs = ROOT.TH1F(hName, 'MevPerDac_Small: %s' % fileName, 100, 0.0, smallErrLim)
+    hs = ROOT.TH1F(hName, 'MevPerDac_Small: %s' % fileName, 100, 0, 0)
 
     for tem in towers:
         for row in range(calConstant.NUM_ROW):

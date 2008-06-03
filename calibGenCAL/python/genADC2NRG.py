@@ -157,7 +157,7 @@ if __name__ == '__main__':
                         # calibrate, however, in flight gain, HEX ranges it's way too
                         # low on the scale (0.5 CIDAC) to get an accurate ratio.
                         if gain == 'FLIGHT_GAIN' and diode == 1:
-                            test_energy = 1500 # roughly 50 CIDAC units @ 25 mevPerDAC
+                            test_energy = 1500 # roughly 75 CIDAC units @ 20 mevPerDAC
                         else:
                             test_energy = MUON_PEAK_ENERGY
 
