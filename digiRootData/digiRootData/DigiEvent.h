@@ -18,6 +18,7 @@
 #include "FilterStatus.h"
 #include "ObfFilterStatus.h"
 #include "ObfFilterTrack.h"
+#include "LpaHandler.h"
 
 #include "MetaEvent.h"
 #include "Ccsds.h"
@@ -198,6 +199,27 @@ public:
 
     /// Copies in the MetaEvent
     void setMetaEvent(const MetaEvent& meta) { m_metaEvent = meta; }
+
+   const LpaHandler& getLpaHandler() const { return m_metaEvent.lpaHandler();}
+
+   const LpaGammaFilter* getGammaFilter() {
+       return ( (LpaGammaFilter*)(m_metaEvent.lpaHandler().getHandler(enums::Lsf::GAMMA)));
+   }
+
+   const LpaHipFilter* getHipFilter() {
+       return ((LpaHipFilter*)(m_metaEvent.lpaHandler().getHandler(enums::Lsf::HIP)));
+   }
+
+   const LpaMipFilter* getMipFilter() {
+       return ((LpaMipFilter*)(m_metaEvent.lpaHandler().getHandler(enums::Lsf::MIP)));
+   }
+
+   const LpaDgnFilter* getDgnFilter() {
+       return ((LpaDgnFilter*)(m_metaEvent.lpaHandler().getHandler(enums::Lsf::DGN)));
+   }
+   const LpaPassthruFilter* getPassthruFilter() {
+       return ((LpaPassthruFilter*)(m_metaEvent.lpaHandler().getHandler(enums::Lsf::PASS_THRU)));
+   }
 
     const Ccsds& getCcsds() const { return m_ccsds; }
 

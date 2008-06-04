@@ -10,6 +10,7 @@
 #include "GemScalers.h"
 #include "Configuration.h"
 #include "LsfKeys.h"
+#include "LpaHandler.h"
 
 /** @class MetaEvent
 * @brief Encapsulate information about the State of the LAT when a particular event was captured.
@@ -85,6 +86,8 @@ public:
         setLpaKeys(*(other.lpaKeys()));
     if (other.lciKeys())
         setLciKeys(*(other.lciKeys()));
+
+    m_lpaHandler = other.m_lpaHandler;
   }
 
   /// D'tor.  Delete the configuration, which had been deep-copied
@@ -133,6 +136,8 @@ public:
         setLpaKeys(*(other.lpaKeys()));
      if (other.lciKeys())
         setLciKeys(*(other.lciKeys())); 
+
+     m_lpaHandler = other.m_lpaHandler;
 
      return *this;
   }
@@ -184,6 +189,15 @@ public:
       }
       return m_ktype; 
   }
+
+  /// Returns the complete set of LPA Handlers for this event, include OBF filters
+  inline const LpaHandler& lpaHandler() const { return m_lpaHandler; }
+  inline void addGamma(LpaGammaFilter* gamma) { m_lpaHandler.addGamma(gamma); }
+  inline void addHip(LpaHipFilter* hip) { m_lpaHandler.addHip(hip); }
+  inline void addMip(LpaMipFilter* mip) { m_lpaHandler.addMip(mip); }
+  inline void addDgn(LpaDgnFilter* dgn) { m_lpaHandler.addDgn(dgn); }
+  inline void addPassthru(LpaPassthruFilter* pass) { m_lpaHandler.addPassthru(pass); }
+
 
   /// set everything at once except Configuration
   inline void initialize(const RunInfo& run, const DatagramInfo& datagram, 
@@ -253,6 +267,10 @@ public:
       m_ktype = enums::Lsf::LciKeys;
   }
 
+  inline void addLpaHandler(const enums::Lsf::HandlerId &id, TObject* handler) {
+      m_lpaHandler.addHandler(id, handler);
+  }
+
   /// Reset function
   void Clear(Option_t* /* option="" */) {
     m_run.Clear("");
@@ -277,6 +295,8 @@ public:
     if (m_lciKeys) delete m_lciKeys;
     m_lciKeys = 0;
     m_ktype = enums::Lsf::NoKeysType;
+
+    m_lpaHandler.Clear("");
   }
 
   /// ROOT print function
@@ -321,7 +341,9 @@ private:
   LpaKeys *m_lpaKeys;
   LciKeys *m_lciKeys;
   
-  ClassDef(MetaEvent,3) // information about the State of the LAT when a particular event was captured
+  LpaHandler m_lpaHandler;
+
+  ClassDef(MetaEvent,4) // information about the State of the LAT when a particular event was captured
 
 };
 

@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r3     03-Jun-2008 HMK Merge in filter bits from GlastReleasev14r4 branch
 v11r2p2   21-May-2008  TU Source file for ObfFilterTrack...
 v11r2p1   21-May-2008  TU Forgot the new ObfFilterTrack class
 v11r2     21-May-2008  TU Updates to including ObfFilterTrack, etc....initial tag
@@ -11,7 +12,15 @@ v11r1     08-May-2008 HMK Merge updates for JIRA ACD-10 into HEAD
 v11r0p1   21-Apr-2008 ZGF added 'const' specifiers to some methods, shouldn't break anything
 v11r0     17-Apr-2008 HMK Updates to LpaKeys, for DFI upgrade
           removes CDM_keys vector, and adds two new UInt_t members
+end GlastReleasev14r4 branch
+v10r3gr7  30-May-2008 HMK doc
+v10r3gr6  29-May-2008 HMK add getPassthruFilter method to DigiEvent
+v10r3gr5  29-May-2008 HMK and more patches to check passed bit correctly
+v10r3gr4  28-May-2008 HMK patches to get LpaHandlers working
+v10r3gr3  22-May-2008 HMK Add the new LpaHandler files
+v10r3gr2  21-May-2008 HMK Updates to handle new DFI filter bits
 v10r3gr1  30-Apr-2008 HMK JIRA ACD-10
+begin GlastReleasev14r4 branch
 v10r3     17-Apr-2008 HMK add in RunInfo::dataTransferId to address JIRA
           ROOT-34
 v10r2     31-Mar-2008 TU  HMK tagging Tracy's update to TkrDigi to use
