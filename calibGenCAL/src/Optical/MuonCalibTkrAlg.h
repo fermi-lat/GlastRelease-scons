@@ -221,7 +221,7 @@ namespace calibGenCAL {
       }
 
     public:
-		EventData(const CalUtil::CalPed &ped,
+      EventData(const CalUtil::CalPed &ped,
                 const CalUtil::CIDAC2ADC &dac2adc) :
         hscope(ped, dac2adc)
       {
