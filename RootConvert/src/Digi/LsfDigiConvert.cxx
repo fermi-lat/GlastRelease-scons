@@ -13,6 +13,9 @@
 
 #include <RootConvert/Utilities/Toolkit.h>
 
+#include "TObjArray.h"
+#include "TCollection.h"
+
 
 namespace RootPersistence {
 
@@ -325,6 +328,71 @@ namespace RootPersistence {
       rootObj.setLciKeys(lciKeysRoot);
     }
 
+    if (tdsObj.passthruFilter()) {
+        const lsfData::PassthruHandler* tdsPass = tdsObj.passthruFilter();
+        LpaPassthruFilter *pass = new LpaPassthruFilter;
+        pass->initialize(tdsPass->masterKey(),tdsPass->cfgKey(),
+            tdsPass->cfgId(),tdsPass->state(),tdsPass->prescaler(),
+            tdsPass->version(),tdsPass->id(),tdsPass->has());
+        if(tdsPass->rsd())
+            pass->setStatusWord(tdsPass->rsd()->status());
+       rootObj.addPassthru(pass);
+    }
+    if (tdsObj.gammaFilter()) {
+       const lsfData::GammaHandler *tdsGam = tdsObj.gammaFilter();
+       LpaGammaFilter *gam = new LpaGammaFilter;
+       gam->initialize(tdsGam->masterKey(),tdsGam->cfgKey(),
+            tdsGam->cfgId(),tdsGam->state(),tdsGam->prescaler(),
+            tdsGam->version(),tdsGam->id(),tdsGam->has());
+       if (tdsGam->rsd())
+           gam->set(tdsGam->rsd()->status(), tdsGam->rsd()->stage(), 
+                     tdsGam->rsd()->energyValid(), tdsGam->rsd()->energyInLeus());
+        rootObj.addGamma(gam);
+    }
+    if (tdsObj.mipFilter()){
+       const lsfData::MipHandler *tdsMip = tdsObj.mipFilter();
+       LpaMipFilter *mip = new LpaMipFilter;
+       mip->initialize(tdsMip->masterKey(),tdsMip->cfgKey(),
+                tdsMip->cfgId(),tdsMip->state(),tdsMip->prescaler(),
+                tdsMip->version(),tdsMip->id(),tdsMip->has());
+       if (tdsMip->rsd())
+           mip->setStatusWord(tdsMip->rsd()->status());
+      rootObj.addMip(mip);
+    }
+    if (tdsObj.hipFilter()) {
+       const lsfData::HipHandler *tdsHip = tdsObj.hipFilter();
+       LpaHipFilter *hip = new LpaHipFilter;
+       hip->initialize(tdsHip->masterKey(),tdsHip->cfgKey(),
+             tdsHip->cfgId(),tdsHip->state(),tdsHip->prescaler(),
+             tdsHip->version(),tdsHip->id(),tdsHip->has());
+       if (tdsHip->rsd())
+           hip->setStatusWord(tdsHip->rsd()->status());
+       rootObj.addHip(hip);
+    }
+    if (tdsObj.dgnFilter()) {
+       const lsfData::DgnHandler *tdsDgn = tdsObj.dgnFilter();
+       LpaDgnFilter *dgn = new LpaDgnFilter;
+      
+       dgn->initialize(tdsDgn->masterKey(),tdsDgn->cfgKey(),
+             tdsDgn->cfgId(),tdsDgn->state(),tdsDgn->prescaler(),
+             tdsDgn->version(),tdsDgn->id(),tdsDgn->has());
+       if (tdsDgn->rsd())
+           dgn->setStatusWord(tdsDgn->rsd()->status());
+       rootObj.addDgn(dgn);
+    }
+/*  Holding off on this guy for now
+    if(tdsObj.lpaHandler()) {
+      const lsfData::LpaHandler *tdsHandler = tdsObj.lpaHandler();
+      ILpaHandler* handler = new ILpaHandler;
+      handler->initialize(tdsHandler->masterKey(),tdsHandler->cfgKey(),
+               tdsHandler->cfgId(),tdsHandler->state(),
+               tdsHandler->prescaler(), tdsHandler->version(),
+               tdsHandler->id(),tdsHandler->has());
+       rootObj.addLpaHandler(handler);
+     }
+*/
+
+
   };
 
   void convert( const MetaEvent& rootObj, LsfEvent::MetaEvent& tdsObj) {
@@ -386,6 +454,67 @@ namespace RootPersistence {
         tdsObj.setKeys(*keys);
         delete keys;
     }
+
+    if (rootObj.lpaHandler().getPassthruFilter()) {
+        const LpaPassthruFilter *handlerIt = rootObj.lpaHandler().getPassthruFilter();
+        lsfData::PassthruHandler pass;
+        pass.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
+                 handlerIt->getCfgId(), handlerIt->getState(),
+                 handlerIt->getPrescaler(),handlerIt->getVersion(),
+                 handlerIt->getId(),handlerIt->has());
+        if (handlerIt->has())
+            pass.setStatus(handlerIt->getStatusWord());
+        tdsObj.addPassthruHandler(pass);
+    }
+    if (rootObj.lpaHandler().getGammaFilter()) {
+        const LpaGammaFilter *handlerIt = rootObj.lpaHandler().getGammaFilter();
+        lsfData::GammaHandler gam;
+        gam.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
+                 handlerIt->getCfgId(), handlerIt->getState(),
+                 handlerIt->getPrescaler(),handlerIt->getVersion(),
+                 handlerIt->getId(),handlerIt->has());
+        if (handlerIt->has())
+            gam.setStatus(handlerIt->getStatusWord(),
+                      handlerIt->getStage(), handlerIt->getEnergyValid(),
+                      handlerIt->getEnergyInLeus());
+        tdsObj.addGammaHandler(gam);  
+    }
+    if (rootObj.lpaHandler().getMipFilter()) {
+        const LpaMipFilter *handlerIt = rootObj.lpaHandler().getMipFilter();
+        lsfData::MipHandler mip;
+        mip.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
+                 handlerIt->getCfgId(), handlerIt->getState(),
+                 handlerIt->getPrescaler(),handlerIt->getVersion(),
+                 handlerIt->getId(),handlerIt->has());
+        if (handlerIt->has())
+            mip.setStatus(handlerIt->getStatusWord());
+        tdsObj.addMipHandler(mip);
+    }
+    if (rootObj.lpaHandler().getHipFilter()) {
+        const LpaHipFilter *handlerIt = rootObj.lpaHandler().getHipFilter();
+        lsfData::HipHandler hip;
+        hip.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
+                 handlerIt->getCfgId(), handlerIt->getState(),
+                 handlerIt->getPrescaler(),handlerIt->getVersion(),
+                 handlerIt->getId(),handlerIt->has());
+        if (handlerIt->has())
+            hip.setStatus(handlerIt->getStatusWord());
+        tdsObj.addHipHandler(hip);
+     }
+    if (rootObj.lpaHandler().getDgnFilter()) {
+        const LpaDgnFilter *handlerIt = rootObj.lpaHandler().getDgnFilter();
+        lsfData::DgnHandler dgn;
+        dgn.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
+                 handlerIt->getCfgId(), handlerIt->getState(),
+                 handlerIt->getPrescaler(),handlerIt->getVersion(),
+                 handlerIt->getId(),handlerIt->has());
+        if (handlerIt->has())
+            dgn.setStatus(handlerIt->getStatusWord());
+        tdsObj.addDgnHandler(dgn);
+    }
+
+
+
   };
 
   void convert( const LsfEvent::LsfCcsds& tdsObj, Ccsds& rootObj) {
