@@ -163,7 +163,7 @@ int main(const int argc, const char **argv) {
     LogStrm::get() << __FILE__ << ": Opening output TXT file: " << outfilePath << endl;
     ofstream outfile(outfilePath.c_str());
     // output column headers
-    outfile << ";twr lyr col face slope offset" << endl;
+    outfile << ";twr lyr col face slope offset dac_rng" << endl;
 
     /// ROOT output filename
     const string rootFilePath(cfg.outputBasename.getVal()  + ".thold_slopes.root");
