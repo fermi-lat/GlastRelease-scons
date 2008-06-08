@@ -18,7 +18,10 @@ apply_pattern package_include
 # calibUtil, CalibData, and calibRootData 
 use calibUtil v1r*
 use CalibData v0r*
-use mootCore v1r*      
+
+##   For now could be private use since only needed by test program, but
+##   that will change when calibrations are handled by moot 
+use MootSvc v1r*
 use calibRootData v1r* -no_auto_imports
 
 #because the latter package unfortunately exposes RootcintPolicy, the following macros have to be defined
@@ -56,7 +59,6 @@ macro_append includes ' $(ppcmd)"$(Event_root)" '
 
 library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData  *.cxx\
                         CalibDataSvc/*.cxx      \
-                        MootSvc/*.cxx       \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
                         CalibXMLCnv/cnv/*.cxx   \

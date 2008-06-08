@@ -116,8 +116,6 @@ public:
   virtual void setUseEventTime(bool useEventTime) {
     m_useEventTime = useEventTime;}
 
-  /// Utility updates fsw keys if necessary, called by MootSvc
-
  private:
   //properties
   /// Calibration Data Persistency Storage type 
@@ -213,8 +211,6 @@ public:
 
   /// Absolute time spacing between events (milliseconds)
   long m_delayTime;
-
-  int m_useMoot;     // default to 0 (== 'no') for now
 
   unsigned m_LATCMaster;
   MsgStream *m_log;

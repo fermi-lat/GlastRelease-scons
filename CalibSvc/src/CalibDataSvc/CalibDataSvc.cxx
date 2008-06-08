@@ -3,7 +3,6 @@
 // Include files
 #include <algorithm>
 #include "CalibDataSvc.h"
-// #include "../MootSvc/MootSvc.h"
 #include "CalibCLIDNode.h"
 #include "CalibData/CalibTime.h"
 #include "GaudiKernel/IAddressCreator.h"
@@ -46,8 +45,6 @@ CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
   declareProperty("CalibFlavorList", m_flavorList);
   declareProperty("CalibRootName",   m_calibRootName  = "Calib" ); 
   declareProperty("UseEventTime", m_useEventTime = true);
-  //  declareProperty("UseEventKeys", m_useEventKeys = true);
-  //  declareProperty("UseMoot", m_useMoot = 0);
 
   // m_rootName and m_rootCLID are declared in base class DataSvc
   m_rootName = "/" + m_calibRootName;

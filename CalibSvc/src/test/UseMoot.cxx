@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "CalibData/Moot/MootData.h"
-#include "CalibSvc/IMootSvc.h"
+#include "MootSvc/IMootSvc.h"
 #include "CalibSvc/ICalibPathSvc.h"
 #include <string>
 
@@ -38,7 +38,6 @@ private:
   void processNewParm();
   void processNewFilters();
 
-  //  IDataProviderSvc* m_pCalibDataSvc;
   IMootSvc*                m_pMootSvc;
   std::string              m_parmPath;
   unsigned                 m_hw;     // cached hardware key

@@ -57,16 +57,16 @@ ApplicationMgr.EvtMax = 3;
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
-ApplicationMgr.ExtSvc += {"MootSvc"};
 
 ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc"};
 ApplicationMgr.ExtSvc += { "CalibRootCnvSvc" };
 
 
-// DetectorPersistencySvc.CnvServices += {"MootSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
+
+#include "$MOOTSVCROOT/src/defaultOptions.txt"
 
 // Run against (glastDB) test archive on slac node with access to afs
 // MootSvc.MootArchive = "/afs/slac/g/glast/moot/srcArchive-test/";
