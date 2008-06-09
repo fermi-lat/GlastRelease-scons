@@ -20,7 +20,7 @@ namespace calibGenCAL {
 
   class singlex16 {
   public:
-    singlex16( unsigned nPulsesPerDAC=100) :
+    singlex16( const unsigned nPulsesPerDAC=100) :
       nPulsesPerDAC(nPulsesPerDAC) 
     {}
 

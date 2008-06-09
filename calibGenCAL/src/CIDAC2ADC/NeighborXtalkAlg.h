@@ -32,13 +32,16 @@ namespace calibGenCAL {
   class NeighborXtalkAlg {
   public:
     /// @param sx16 spec describing LCI script procedure
-    NeighborXtalkAlg(const singlex16 &sx16) :
+    /// \param altLoopScheme - enable alternate LCI loop scheme used in run #077015240
+    NeighborXtalkAlg(const singlex16 &sx16,
+                     const bool altLoopScheme=false) :
+      eventData(altLoopScheme, sx16),
       m_singlex16(sx16)
     {}
 
     /// process digi root event file
     void readRootData(const std::string &rootFileName,
-		CalUtil::NeighborXtalk &xtalk);
+                      CalUtil::NeighborXtalk &xtalk);
 
   private:
     /// fill histograms w/ data from single event
@@ -88,9 +91,17 @@ namespace calibGenCAL {
       }
 
     public:
-      EventData() {
+      /// \param altLoopScheme - enable alternate LCI loop scheme used in run #077015240
+      EventData(const bool altLoopScheme,
+                const singlex16 &sx16) :
+        m_altLoopScheme(altLoopScheme) ,
+        m_singlex16(sx16)
+      {
         init();
       }
+
+      /// set internal object state to match next event id.
+      void nextEvent();
 
       /// count events read from root file
       unsigned        eventNum;
@@ -104,8 +115,13 @@ namespace calibGenCAL {
       /// how many samples @ current setting?
       unsigned short  iSamp;
 
-      // current CIDAC index
+      /// current CIDAC index
       unsigned short  testDAC;
+
+      /// enable alternate LCI loop scheme used in run #077015240
+      const bool m_altLoopScheme;
+
+      const singlex16 &m_singlex16;
     } eventData;
 
     const singlex16 &m_singlex16;

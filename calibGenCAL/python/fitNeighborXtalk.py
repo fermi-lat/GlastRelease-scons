@@ -2,7 +2,7 @@
 Fit max(0,pol1) to all neighbor xtalk curves.
 
 output is space delimited, to .txt file:
-destIdx, srcIdx, srcDAC, destDAC
+destIdx, srcIdx, x_offset, slope
 
 python fitNeighborXtalk.py <neighborXtalk.txt> <outputROOTPath>
 
