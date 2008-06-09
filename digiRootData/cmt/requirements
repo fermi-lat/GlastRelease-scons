@@ -42,5 +42,9 @@ apply_pattern root_package headers="\
  libs="libcommonRootData"\
  test_source="test/testDigiClasses.cxx"
 
+private
+
+use facilities *
+apply_pattern use_facilities_symbols
 
 application ReadFilterStats ../apps/ReadFilterStats.cxx
