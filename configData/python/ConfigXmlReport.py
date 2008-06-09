@@ -34,7 +34,6 @@ _log = logging.getLogger('offline.configData')
 
 CONFIG_NAMESPACE = EMPTY_NAMESPACE
 CONFIG_DEST_PRODUCTION = "/nfs/farm/g/glast/u03/ConfigReports/"
-CONFIG_DEST_JIMTEST = "/u/ec/panetta/public_html/glast/configReports/"
 
 CONFIG_XSL_TRANSFORM = os.path.expandvars("$CONFIGDATAROOT/python/configTransform.xsl")
 
@@ -93,12 +92,16 @@ class XmlReport(object):
         setAttribute(self.rootNode, ATTR_USER, getpass.getuser())
         setAttribute(self.rootNode, ATTR_DATE, time.asctime())
 
-    def writeReport(self, fileStub):
-        fileName = os.path.join(self.data.configDir, fileStub)
-        f = open(fileName, 'w')
-        PrettyPrint(self.__doc, f)
-        f.close()
-        return fileName
+    def writeReport(self, force=False):
+        """!@brief write this report to a file.
+
+        @param force   Force the creation of a file
+        """
+        if force or not self.isBuilt:
+            f = open(self.fileName, 'w')
+            PrettyPrint(self.__doc, f)
+            f.close()
+        return self.fileName
         
     def addConfigInfo(self):
         cInfoNode = makeChildNode(self.rootNode, TAG_CINFO)
@@ -137,7 +140,7 @@ class XmlReport(object):
     def addLink(self, parent, linkTarget, linkText, noConvert=False):
         "!@brief add a link to another file.  Links will be made relative to the report directory"
         # noConvert:  Don't convert 'xml' to 'html' in links
-        relTarget = self.data.makeRelative(linkTarget)
+        relTarget = relpath(linkTarget, self.path)
         link = makeChildNode(parent, TAG_LINKTO)
         setAttribute(link, ATTR_FNAME, str(relTarget))
         setAttribute(link, ATTR_NOCONV, str(noConvert))
@@ -145,11 +148,21 @@ class XmlReport(object):
 
     def addImage(self, parent, fileName, title, caption=""):
         imgNode = makeChildNode(parent, TAG_IMG)
-        setAttribute(imgNode, ATTR_FNAME, self.data.makeRelative(fileName))
+        setAttribute(imgNode, ATTR_FNAME, relpath(fileName, self.path))
         setAttribute(imgNode, ATTR_TITLE, title)
         if caption:
             makeTextChildNode(imgNode, caption)
 
+    @property
+    def isBuilt(self):
+        """!@brief   Is this report already built?  Return t/f
+        """
+        # Simply implement as check if self.fileName exists
+        try:
+            return os.path.exists(self.fileName)
+        except OSError, e:
+            _log.error("Saw exception in isBuilt: %s"%e)
+            return False
 
 
 class ConfigXmlReport(XmlReport, ConfigReport):
@@ -164,7 +177,7 @@ class ConfigXmlReport(XmlReport, ConfigReport):
         setAttribute(self.rootNode, ATTR_CNAME, self.data.configInfo.getName())
         self.addDataFiles()
 
-    def addPrecincts(self):
+    def addPrecincts(self, rebuild):
         self.__getAliases()
         precsNode = makeChildNode(self.rootNode, TAG_PRECINCTS)
         for pInfo in self.data.precinctInfo:
@@ -172,10 +185,10 @@ class ConfigXmlReport(XmlReport, ConfigReport):
                 handler = PRECINCT_HANDLERS[pInfo.getPrecinct()]
             else:
                 handler = PRECINCT_HANDLERS['DEFAULT']
+            #print 'jhpDebug', pInfo.alias, pInfo.getPrecinct(), [p.getSrc() for p in pInfo.ancillaries]
             pRpt = handler(pInfo, self.data)
-            pRpt.createReport()
-            rptName = pRpt.writeReport()
-            rName = self.data.makeRelative(pRpt.writeReport())
+            pRpt.createReport(rebuild)
+            rptName = pRpt.writeReport(rebuild)
             self.addLink(precsNode, rptName, "Precinct: %s;  Alias: %s"%(pInfo.getPrecinct(), pInfo.alias))
             self.__precRpts.append(rptName)
 
@@ -200,8 +213,8 @@ class ConfigXmlReport(XmlReport, ConfigReport):
     def precinctXml(self):
         return self.__precRpts
 
-    def writeReport(self, fileStub='ConfigReport.xml'):
-        return super(ConfigXmlReport, self).writeReport(fileStub)
+    def writeReport(self, rebuild=False):
+        return super(ConfigXmlReport, self).writeReport(rebuild)
 
 
 class PrecinctXmlReport(XmlReport, PrecinctReport):
@@ -224,7 +237,7 @@ class PrecinctXmlReport(XmlReport, PrecinctReport):
         setAttribute(pInfo, ATTR_DESC, self.info.getDescrip())
         setAttribute(pInfo, ATTR_FNAME, self.info.getSrc())
         setAttribute(pInfo, ATTR_ALIAS, self.info.alias)
-        self.addLink(self.rootNode, "ConfigReport.xml", "Parent Report")
+        #self.addLink(self.rootNode, "ConfigReport.xml", "Parent Report")
         
     def addIntent(self, parent, intentText=""):
         intent = makeChildNode(parent, TAG_INTENT)
@@ -232,7 +245,7 @@ class PrecinctXmlReport(XmlReport, PrecinctReport):
 
     def includeText(self, parent, includeFile, nLines=-1, isHtml=False):
         tInc = makeChildNode(parent, TAG_INCTEXT)
-        setAttribute(tInc, ATTR_FNAME, self.data.makeRelative(includeFile))
+        setAttribute(tInc, ATTR_FNAME, relpath(includeFile, self.path))
         setAttribute(tInc, ATTR_NOCONV, str(not isHtml))
         count = 0
         for line in open(includeFile, 'r').readlines():
@@ -244,11 +257,8 @@ class PrecinctXmlReport(XmlReport, PrecinctReport):
         if nLines>=0 and count > nLines:
             setAttribute(tInc, ATTR_NLINES, nLines)
 
-    def writeReport(self):
-        fileStub = '%s_report.xml' % self.info.getPrecinct()
-        return super(PrecinctXmlReport, self).writeReport(fileStub)
-
-
+    def writeReport(self, force=False):
+        return super(PrecinctXmlReport, self).writeReport(force)
 
 
 
@@ -269,6 +279,27 @@ def transformToFile(xslFileName, xmlFileName, htmlFileName):
 
 def makePrecinctHandlers():
     PRECINCT_HANDLERS["DEFAULT"] = PrecinctXmlReport
+    # ACD reports
+    from AcdXmlReport import AcdBiasXmlReport, AcdHldXmlReport, AcdModeXmlReport, AcdPHAXmlReport, AcdVetoXmlReport ## These are now trivial implementations and the base class would do below
+    PRECINCT_HANDLERS["ACD_Bias"] = AcdBiasXmlReport
+    PRECINCT_HANDLERS["ACD_Hld"] = AcdHldXmlReport
+    PRECINCT_HANDLERS["ACD_Mode"] = AcdModeXmlReport
+    PRECINCT_HANDLERS["ACD_PHA"] = AcdPHAXmlReport
+    PRECINCT_HANDLERS["ACD_Veto"] = AcdVetoXmlReport
+    # Cal reports
+    from CalXmlReport import CalLacXmlReport, CalFleXmlReport, CalFheXmlReport, CalUldXmlReport, CalModeXmlReport
+    PRECINCT_HANDLERS["CAL_LAC"]    = CalLacXmlReport
+    PRECINCT_HANDLERS["CAL_FLE"]    = CalFleXmlReport
+    PRECINCT_HANDLERS["CAL_FHE"]    = CalFheXmlReport
+    PRECINCT_HANDLERS["CAL_ULD"]    = CalUldXmlReport
+    PRECINCT_HANDLERS["CAL_Mode"]   = CalModeXmlReport
+    # Timing Reports
+    from TimingXmlReport import AcdTimingXmlReport, GnlModeXmlReport, GnlTimingXmlReport, CalTimingXmlReport, TkrTimingXmlReport
+    PRECINCT_HANDLERS["ACD_Timing"] = AcdTimingXmlReport
+    PRECINCT_HANDLERS["GNL_Mode"] = GnlModeXmlReport
+    PRECINCT_HANDLERS["GNL_Timing"] = GnlTimingXmlReport
+    PRECINCT_HANDLERS["CAL_Timing"] = CalTimingXmlReport
+    PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
     # Trigger reports
     from TrgGemXmlReport import TrgGemXmlReport
     PRECINCT_HANDLERS["TRG_GEM"] = TrgGemXmlReport
@@ -279,29 +310,17 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["TKR_Mode"] = TkrModeXmlReport
     PRECINCT_HANDLERS["TKR_Strips"] = TkrStripsXmlReport
     PRECINCT_HANDLERS["TKR_Thresh"] = TkrThreshXmlReport
-    from AcdXmlReport import AcdBiasXmlReport, AcdHldXmlReport, AcdModeXmlReport, AcdPHAXmlReport, AcdVetoXmlReport ## These are now trivial implementations and the base class would do below
-    PRECINCT_HANDLERS["ACD_Bias"] = AcdBiasXmlReport
-    PRECINCT_HANDLERS["ACD_Hld"] = AcdHldXmlReport
-    PRECINCT_HANDLERS["ACD_Mode"] = AcdModeXmlReport
-    PRECINCT_HANDLERS["ACD_PHA"] = AcdPHAXmlReport
-    PRECINCT_HANDLERS["ACD_Veto"] = AcdVetoXmlReport
-    from TimingXmlReport import AcdTimingXmlReport, GnlModeXmlReport, GnlTimingXmlReport, CalTimingXmlReport, TkrTimingXmlReport
-    PRECINCT_HANDLERS["ACD_Timing"] = AcdTimingXmlReport
-    PRECINCT_HANDLERS["GNL_Mode"] = GnlModeXmlReport
-    PRECINCT_HANDLERS["GNL_Timing"] = GnlTimingXmlReport
-    PRECINCT_HANDLERS["CAL_Timing"] = CalTimingXmlReport
-    PRECINCT_HANDLERS["TKR_Timing"] = TkrTimingXmlReport
+    # Non LATC reports
     from LciXmlReport import LciXmlReport
     PRECINCT_HANDLERS["ACD_LCI"] = LciXmlReport
     PRECINCT_HANDLERS["CAL_LCI"] = LciXmlReport
     PRECINCT_HANDLERS["TKR_LCI"] = LciXmlReport
-    # Cal reports
-    from CalXmlReport import CalLacXmlReport, CalFleXmlReport, CalFheXmlReport, CalUldXmlReport, CalModeXmlReport
-    PRECINCT_HANDLERS["CAL_LAC"]    = CalLacXmlReport
-    PRECINCT_HANDLERS["CAL_FLE"]    = CalFleXmlReport
-    PRECINCT_HANDLERS["CAL_FHE"]    = CalFheXmlReport
-    PRECINCT_HANDLERS["CAL_ULD"]    = CalUldXmlReport
-    PRECINCT_HANDLERS["CAL_Mode"]   = CalModeXmlReport
+    from IgnoreXmlReport import IgnoreXmlReport
+    PRECINCT_HANDLERS["latc_ignore"] = IgnoreXmlReport
+    from AssociateXmlReport import AssociateXmlReport
+    PRECINCT_HANDLERS["Filter_Associate"] = AssociateXmlReport
+    
+    
 
 
 def makeChildNode(parentNode, childName):
@@ -394,12 +413,11 @@ def optparse():
                       type="string", help="Destination directory for config reports")
     expert.add_option("--xslTransform", dest="xslTransform", action="store",
                       type="string", help="Use a different transform file")
-    expert.add_option("--noRebuild", dest="rebuild", action="store_false",
+    expert.add_option("--rebuild", dest="rebuild", action="store_true",
                       help="do rebuild")
 
-    parser.set_defaults(rebuild=True)
+    parser.set_defaults(rebuild=False)
     parser.set_defaults(configDir=CONFIG_DEST_PRODUCTION)
-    #parser.set_defaults(configDir=CONFIG_DEST_JIMTEST)
     parser.set_defaults(xslTransform=CONFIG_XSL_TRANSFORM)
     options,args = parser.parse_args(sys.argv[1:])
     if not options.configKey:
@@ -410,7 +428,7 @@ def optparse():
     return options, args
 
 if __name__ == '__main__':
-    import sys
+    import sys, os
 
     options, args = optparse()
     setLogging(options.verbose)
@@ -421,17 +439,18 @@ if __name__ == '__main__':
                                   options.baselineKey,
                                   configDirBase=options.configDir)
         cr = ConfigXmlReport(holder)
-        cr.createReport()
-        xmlName = cr.writeReport()
-    
-        transformToFile(options.xslTransform,
-                        xmlName,
-                        xmlName[:-3]+"html")
-        for pR in cr.precinctXml():
-            print pR
+        cr.createReport(options.rebuild)
+        xmlName = cr.writeReport(options.rebuild)
+
+        if options.rebuild or not os.path.exists(xmlName[:-3]+"html"):
             transformToFile(options.xslTransform,
-                            pR,
-                            pR[:-3]+"html")
+                            xmlName,
+                            xmlName[:-3]+"html")
+        for pR in cr.precinctXml():
+            if options.rebuild or not os.path.exists(pR[:-3]+"html"):
+                transformToFile(options.xslTransform,
+                                pR,
+                                pR[:-3]+"html")
     except ConfigReportError, e:
         _log.error(e.message)
         sys.exit(-1)
