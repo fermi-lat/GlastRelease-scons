@@ -18,7 +18,7 @@ __credits__  = "SLAC"
 
 #
 #
-import sys, array, struct
+import os, sys, array, struct
 import ROOT, numarray
 import tkrUtils
 import logging
@@ -294,10 +294,10 @@ class TkrRegisterChecker(object):
     for msgType in ['errors', 'warnings', 'informations']:
       self.dump(msgType)
 
-  def makePngs(self, outputStub):
-    #print 'make imagefiles for ', self.__precinctName
+  def makePngs(self, outputPath):
+    #print 'make imagefiles for ', self.__precinctName, outputPath
     self.plotInfos = []
-    self.__outputStub = outputStub
+    self.__outputPath = outputPath
     if self.__precinctName == 'Strips':
       self.hndmask.Draw()
 ##      ROOT.gPad.SetLogy( 1 )
@@ -522,7 +522,7 @@ class TkrRegisterChecker(object):
 
 
   def savePng(self, name, title, caption):
-    fileName = self.__outputStub + "TKR_" + self.__precinctName + "_" + name
+    fileName = os.path.join(self.__outputPath, "TKR_" + self.__precinctName + "_" + name)
     plotInfo = PlotInfo()
     ROOT.gPad.SaveAs(fileName)
     plotInfo.save(fileName, title, caption)
