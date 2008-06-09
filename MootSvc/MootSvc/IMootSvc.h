@@ -85,7 +85,14 @@ public:
   virtual int latcParmIx(const std::string& parmClass) const =0;
 
 
-  // Get handle for metadata access from mootCore.
+  /** Get handle for metadata access from mootCore.
+      Clients, especially in production code, are STRONGLY DISCOURAGED 
+      from using this connection directly since it is not guaranteed 
+      to stick around. Instead call appropriate IMootSvc function to 
+      fetch information.  
+      getConnection() is only here in case IMootSvc doesn't keep up with
+      developers' needs for Moot queries.
+  */
   virtual MOOT::MootQuery* getConnection() const = 0;
 };
 
