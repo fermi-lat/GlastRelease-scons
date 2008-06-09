@@ -35,7 +35,24 @@ class ReportBase(object):
     def data(self):
         return self.__data
 
-    def createReport(self):
+    @property
+    def fileName(self):
+        """!@brief  Generate a filename for this report object.
+
+        Note:  The filename will be an absolute path.
+        Note:  This function is abstract.
+        """
+        raise NotImplementedError
+
+    @property
+    def path(self):
+        """!@brief Return a fully-qualified path for storing report data
+
+        Note:  This function is abstract
+        """
+        raise NotImplementedError
+
+    def createReport(self, rebuild=False):
         raise NotImplementedError
 
     def createHeader(self):
@@ -50,35 +67,80 @@ class ReportBase(object):
     def addSection(self, sectionName, parent):
         raise NotImplementedError
 
-    def writeReport(self, fileStub):
+    def writeReport(self, force):
         raise NotImplementedError
 
 
 class ConfigReport(ReportBase):
+    CFGDIRSTR = 'ConfigReports'
     def __init__(self, configData):
         ReportBase.__init__(self, configData)
+        self.__path  = None
 
-    def createReport(self):
+    def createReport(self, rebuild=False):
         self.createHeader()
         self.addConfigInfo()
         self.addBaselineInfo()
-        self.addPrecincts()
+        self.addPrecincts(rebuild)
 
-    def addPrecincts(self):
+    def addPrecincts(self, rebuild=False):
         raise NotImplementedError
+
+    @property
+    def info(self):
+        return self.data.configInfo
+
+    @property
+    def path(self):
+        # return and (if necessary) create directory path where files are stored
+        # path is of format /TOP/ConfigReports/<configKey>
+        if not self.__path:
+            self.__path = os.path.join(self.data.configBase, self.CFGDIRSTR, self.info.getKey())
+            if not os.path.exists(self.__path):
+                os.makedirs(self.__path)
+        return self.__path
+
+    @property
+    def fileName(self):
+        relFile = "ConfigReport.xml"
+        return os.path.join(self.path, relFile)
 
 
 class PrecinctReport(ReportBase):
+    PDIRSTR = 'Precincts'
     def __init__(self, precinctInfo, configData):
         ReportBase.__init__(self, configData)
         self.__pInfo = precinctInfo
+        self.__path  = None
     @property
     def info(self):
         return self.__pInfo
 
-    def createReport(self):
+    def createReport(self, rebuild=False):
         # implemented to create a base report object
         self.createHeader()
+
+    @property
+    def path(self):
+        # return and (if necessary) create directory path where files are stored
+        # path is of format: /TOP/Precinct/<pName>/<pName>-<voteKey>{-<ancType>-<ancKey>}*/
+        if not self.__path:
+            baseDir = os.path.join(self.data.configBase, self.PDIRSTR, self.info.getPrecinct())
+            relDir = "%s-%s" % (self.info.getPrecinct(), self.info.getKey())
+            # for each ancillary, add a bit to the path
+            #   Doing this because if ancillary changes and vote doesn't, report still is different
+            for anc in self.info.ancillaries:
+                relDir = "".join([relDir, "+%s-%s" % (anc.getClass(), anc.getKey())])
+            self.__path = os.path.join(baseDir,relDir)
+            if not os.path.exists(self.__path):
+                os.makedirs(self.__path)
+        return self.__path
+        
+    @property
+    def fileName(self):
+        relFile = "%s.xml" % self.info.getPrecinct()
+        return os.path.join(self.path, relFile)
+        
     
 
 class ConfigDataHolder(object):
@@ -98,13 +160,20 @@ class ConfigDataHolder(object):
         self.__baseRoot = ""
         self.__compRoot = ""
         self.__confBase = configDirBase
-        self.__confDir  = os.path.join(configDirBase, "%s/" % str(configKey))
+        self.__confDir  = os.path.join(configDirBase, "ConfigReports", "%s/" % str(configKey))
         if not os.path.isdir(self.__confDir):
             try:
-                os.mkdir(self.__confDir)
+                # create the output directory and chmod it g+rwx, o+rx
+                import stat
+                os.makedirs(self.__confDir)
+                mode = os.stat(self.__confDir).st_mode
+                os.chmod(self.__confDir, mode | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH)
             except OSError, e:
                 raise ConfigReportError("ConfigReport failed in creating the configuration directory %s." % self.__confDir)
-        self.__pInfo = None
+        self.__pInfo = []
+        self.__fswInfo = []
+        self.__vParMap = {}
+        self.__vAncMap = {}
 
     @property
     def db(self):
@@ -143,13 +212,46 @@ class ConfigDataHolder(object):
         return self.__confDir
 
     @property
+    def configBase(self):
+        return self.__confBase
+
+    @property
     def precinctInfo(self):
+        # retrieve or fill precinct info list
         if not self.__pInfo:
-            params = map(self.__mq.getParmInfo, self.__mq.configParmsRequest(self.config))
-            vKeys = set([int(i.getVoteFk()) for i in params])
+            # base creation of precinct info.
+            db = self.db
+            # first find out what params were used for this config
+            params = map(db.getParmInfo, db.configParmsRequest(self.config))
+            # find out what ancils were used to build a specific param
+            # and which params hook to which votes
+            par2Anc = {}
+            vote2Par = {}
+            from py_mootCore import vectorOfUnsigned
+            for p in params:
+                pVec = vectorOfUnsigned()
+                aVec = vectorOfUnsigned()
+                pVec.append(int(p.getKey()))
+                db.getAncsFromParms(pVec, aVec) # aVec is output...
+                par2Anc[p.getKey()] = [db.getAncInfo(int(i)) for i in aVec]
+                if p.getVoteFk() not in vote2Par:
+                    vote2Par[p.getVoteFk()] = []
+                vote2Par[p.getVoteFk()].append(p)
+            # Get the vote info, and hook the ancillary info to the votes
+            vKeys = set(vote2Par.keys())
             self.__pInfo = [self.__mq.getVoteInfo(int(i)) for i in vKeys]
             self.__pInfo.sort(key=VoteInfo.getPrecinct) # sort in precinct alphabetical
+            for v in self.__pInfo:
+                v.ancillaries = []
+                for p in vote2Par[v.getKey()]:
+                    v.ancillaries.extend(par2Anc[p.getKey()])
         return self.__pInfo
+
+    @property
+    def fswInfo(self):
+        if not self.__fswInfo:
+            self.__fswInfo = self.__mq.configFswInfo(self.config)
+        return self.__fswInfo
 
     def configRootFileName(self, rebuild=False):
         "!@brief return the config ROOT file name.  rebuild if necessary."
@@ -181,9 +283,41 @@ class ConfigDataHolder(object):
 
     def makeRelative(self, aPath):
         # strip the configDir from a path, making it relative to configDir
-        if aPath.startswith(self.configDir):
-            return aPath[len(self.configDir):].strip('/')
-        return aPath
+        return relpath(aPath, self.configDir)
+
+
+
+def relpath(target, base=os.curdir):
+    """
+    Return a relative path to the target from either the current dir or an optional base dir.
+    Base can be a directory specified either as absolute or relative to current dir.
+    """
+
+    if not os.path.exists(target):
+        raise OSError, 'Target does not exist: '+target
+
+    if not os.path.isdir(base):
+        raise OSError, 'Base is not a directory or does not exist: '+base
+
+    base_list = (os.path.abspath(base)).split(os.sep)
+    target_list = (os.path.abspath(target)).split(os.sep)
+
+    # On the windows platform the target may be on a completely different drive from the base.
+    if os.name in ['nt','dos','os2'] and base_list[0] <> target_list[0]:
+        raise OSError, 'Target is on a different drive to base. Target: '+target_list[0].upper()+', base: '+base_list[0].upper()
+
+    # Starting from the filepath root, work out how much of the filepath is
+    # shared by base and target.
+    for i in range(min(len(base_list), len(target_list))):
+        if base_list[i] <> target_list[i]: break
+    else:
+        # If we broke out of the loop, i is pointing to the first differing path elements.
+        # If we didn't break out of the loop, i is pointing to identical path elements.
+        # Increment i so that in all cases it points to the first differing path elements.
+        i+=1
+
+    rel_list = [os.pardir] * (len(base_list)-i) + target_list[i:]
+    return os.path.join(*rel_list)
 
 
 if __name__ == '__main__':
