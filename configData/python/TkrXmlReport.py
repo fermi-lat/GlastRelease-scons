@@ -22,7 +22,7 @@ from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 from TkrRegisterChecker import *
 
-FN_SHORTSUM = "%sTKR_%s_shortSum.txt"
+FN_SHORTSUM = "TKR_%s_shortSum.txt"
 
 class TkrXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData, type):
@@ -32,13 +32,13 @@ class TkrXmlReport(PrecinctXmlReport):
         self.__baseRootFile = configData.baselineRootFileName()
         self.__pngFileInfos = []
         
-    def createReport(self):
+    def createReport(self, rebuild=False):
         self.createHeader()
         summary = self.addSection("TKR_%s_Summary" %(self.__type))
 
         self.addIntent(summary)  # blank intent node for later?
 
-        self.shortSummary(self.data.configDir, rebuild=True) ## rebuild for now
+        self.shortSummary(self.path, rebuild)
         self.includeText(summary, self.__builtName, nLines=100)
         for info in self.__pngFileInfos:
             file = info.fileName
@@ -49,12 +49,12 @@ class TkrXmlReport(PrecinctXmlReport):
         #print 'add comment'
         self.addComment(summary, "empty comment")
 
-    def shortSummary(self, outputStub="", rebuild=False):
-        self.__builtName = FN_SHORTSUM % (outputStub, self.__type)
+    def shortSummary(self, path, rebuild=False):
+        self.__builtName = os.path.join(path, FN_SHORTSUM % (self.__type))
         if not os.path.exists(self.__builtName) or rebuild:
-            tkrRegisterChecker = TkrRegisterChecker(self.__type, self.__confRootFile, self.__baseRootFile, self.__builtName,self.info.alias)
+            tkrRegisterChecker = TkrRegisterChecker(self.__type, self.__confRootFile, self.__baseRootFile, self.__builtName, self.info.alias)
             tkrRegisterChecker.doChecks()
-            self.__pngFileInfos = tkrRegisterChecker.makePngs(outputStub)
+            self.__pngFileInfos = tkrRegisterChecker.makePngs(path)
             tkrRegisterChecker.cleanupRoot()
             
 class TkrModeXmlReport(TkrXmlReport):
@@ -72,4 +72,21 @@ class TkrStripsXmlReport(TkrXmlReport):
 class TkrThreshXmlReport(TkrXmlReport):
     def __init__(self, precinctInfo, configData):
         TkrXmlReport.__init__(self, precinctInfo, configData, 'Thresh')
+
+if __name__ == '__main__':
+    from ConfigReport import *
+    configKey = 7
+    baseKey   = 57
+    voteKey   = 89
+
+    cr = ConfigDataHolder(configKey, baseKey, './')
+
+    pInfo = cr.db.getVoteInfo(voteKey)
+    pInfo.alias = "sptAlt_buffTRC26"
+
+    tr = TkrModeXmlReport(pInfo, cr)
+    tr.createReport()
+    pR = tr.writeReport()
+
+    transformToFile(CONFIG_XSL_TRANSFORM, pR, pR[:-3]+'html')
 

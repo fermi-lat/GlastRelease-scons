@@ -16,13 +16,13 @@ __version__  = "$Revision$"
 __release__  = "$Name$"
 __credits__  = "SLAC"
 
-import logging
+import logging, os
 
 from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 from AcdPlotChecker import *
 
-FN_SHORTSUM = "%s%s_shortSum.txt"
+FN_SHORTSUM = "%s_shortSum.txt"
 
 class AcdXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData):
@@ -33,13 +33,13 @@ class AcdXmlReport(PrecinctXmlReport):
         self.__compRootFile = configData.compareRootFileName()
         self.__pngFileInfos = []
         
-    def createReport(self):
+    def createReport(self, rebuild=False):
         self.createHeader()
         summary = self.addSection("%s_Summary" %(self.__precinctName))
 
         self.addIntent(summary)  # blank intent node for later?
 
-        self.shortSummary(self.data.configDir, rebuild=True) ## rebuild for now
+        self.shortSummary(self.path, rebuild)
         self.includeText(summary, self.__builtName, nLines=10)
         for info in self.__pngFileInfos:
             file = info.fileName
@@ -48,14 +48,14 @@ class AcdXmlReport(PrecinctXmlReport):
             self.addImage(summary, file, title, caption)
         self.addComment(summary, "empty comment")
 
-    def shortSummary(self, outputStub="", rebuild=False):
-        self.__builtName = FN_SHORTSUM % (outputStub, self.__precinctName)
+    def shortSummary(self, path, rebuild=False):
+        self.__builtName = os.path.join(path, FN_SHORTSUM % (self.__precinctName))
         if not os.path.exists(self.__builtName) or rebuild:
             fp = open(self.__builtName, 'w')
             fp.write("no comparison information available currently")
             fp.close()
             acdPlotChecker = AcdPlotChecker(self.__precinctName, self.__compRootFile)
-            self.__pngFileInfos = acdPlotChecker.makePngs(outputStub)
+            self.__pngFileInfos = acdPlotChecker.makePngs(path)
             
 class AcdBiasXmlReport(AcdXmlReport):
     def __init__(self, precinctInfo, configData):

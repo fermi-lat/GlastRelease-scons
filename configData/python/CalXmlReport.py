@@ -16,14 +16,14 @@ __version__  = "$Revision$"
 __release__  = "$Name$"
 __credits__  = "SLAC"
 
-import logging
+import logging, os
 
 from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 from CalPrecinctReport import *
 
 # template for txt output filename
-FN_SHORTSUM = "%sCAL_%s_shortSum.txt"
+FN_SHORTSUM = "CAL_%s_shortSum.txt"
 
 class CalXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData, type):
@@ -37,7 +37,7 @@ class CalXmlReport(PrecinctXmlReport):
         self._precinctReport = None
 
         
-    def createReport(self):
+    def createReport(self, rebuild=False):
         """
         generate all report img & data
 
@@ -49,7 +49,7 @@ class CalXmlReport(PrecinctXmlReport):
         self.addIntent(summary)  # blank intent node for later?
 
         # write TXT report to file & generate images
-        self.shortSummary(self.data.configDir, rebuild=True) ## rebuild for now
+        self.shortSummary(self.path, rebuild)
 
         # read in nLines of TXT back from file
         self.includeText(summary, self._txtName, nLines=100)
@@ -60,22 +60,19 @@ class CalXmlReport(PrecinctXmlReport):
             caption = info.caption
             title = info.title
             self.addImage(summary, file, title, caption)
-
-
         self.addComment(summary, "empty comment")
 
-    def shortSummary(self, outputStub="", rebuild=False):
+    def shortSummary(self, path, rebuild=False):
         """
         Write TXT report to file && generate images for use in full report
         
         """
-
         # output TXT report
-        self._txtName = FN_SHORTSUM % (outputStub, self.__type)
+        self._txtName = os.path.join(path, FN_SHORTSUM % (self.__type))
 
         if not os.path.exists(self._txtName) or rebuild:
             self._precinctReport.createTXTReport(self._txtName)
-            self.__pngFileInfos += self._precinctReport.makeImgs(self.data.configDir)
+            self.__pngFileInfos += self._precinctReport.makeImgs(self.path)
 
             
 class CalModeXmlReport(CalXmlReport):
