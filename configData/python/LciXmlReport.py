@@ -26,7 +26,7 @@ class LciXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData):
         PrecinctXmlReport.__init__(self, precinctInfo, configData)
 
-    def createReport(self):
+    def createReport(self, rebuild=False):
         logging.debug("Creating report for %s" % self.info.getPrecinct())
         self.createHeader()
         summary = self.addSection("LCI_File")
@@ -34,12 +34,3 @@ class LciXmlReport(PrecinctXmlReport):
         self.includeText(summary, lciFile)
         self.addComment(summary, "empty comment")
 
-
-
-
-def shortSummary(configKey, outputStub="", rebuild=False):
-    builtName = FN_SHORTSUM % (outputStub)
-    if not os.path.exists(builtName) or rebuild:
-        cmd = SystemCommand(CMD_SHORTSUM % (builtName, configKey))
-        cmd.handle()
-    return builtName
