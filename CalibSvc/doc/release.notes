@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r35   10-Jun-2008  jrb  Move MootSvc to its own package
    v0r34p6 30-May-2008  jrb  Minor error-handling improvements
    v0r34p5 30-May-2008  jrb  Add MootSvc.noMoot job option in case Moot archive
                              or db unavailable and services aren't needed
