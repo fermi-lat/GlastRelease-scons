@@ -26,7 +26,8 @@ private
 apply_pattern package_headers
 macro_append CalibData_headers "" WIN32 " \
 ../CalibData/Tkr/*.h ../CalibData/Cal/*.h ../CalibData/Acd/*.h \
-../CalibData/Anc/*.h ../CalibData/Nas/*.h ../src/Tkr/*.h ../src/Moot/*.h "
+../CalibData/Anc/*.h ../CalibData/Nas/*.h ../CalibData/Moot/*.h \
+../src/Tkr/*.h ../src/Moot/*.h "
 
 library CalibData *.cxx Cal/*.cxx Tkr/*.cxx Acd/*.cxx Moot/*.cxx \
                   Anc/*.cxx Nas/*.cxx ${CalibData_headers}
