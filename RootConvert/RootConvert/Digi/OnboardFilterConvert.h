@@ -55,9 +55,9 @@ namespace RootPersistence {
   void convert( const IObfStatus&, OnboardFilterTds::ObfGammaStatus& ) ;
 
   /// Fill persistent verison of ObfHFCStatus 
-  void convert( const OnboardFilterTds::IObfStatus&, ObfHFCStatus& ) ;
+  void convert( const OnboardFilterTds::IObfStatus&, ObfHipStatus& ) ;
   /// Fill transient verison of ObfFilterStatus 
-  void convert( const IObfStatus&, OnboardFilterTds::ObfHFCStatus& ) ;
+  void convert( const IObfStatus&, OnboardFilterTds::ObfHipStatus& ) ;
 
   /// Fill persistent verison of ObfMipStatus 
   void convert( const OnboardFilterTds::IObfStatus&, ObfMipStatus& ) ;
@@ -65,9 +65,9 @@ namespace RootPersistence {
   void convert( const IObfStatus&, OnboardFilterTds::ObfMipStatus& ) ;
 
   /// Fill persistent verison of ObfDFCStatus 
-  void convert( const OnboardFilterTds::IObfStatus&, ObfDFCStatus& ) ;
+  void convert( const OnboardFilterTds::IObfStatus&, ObfDgnStatus& ) ;
   /// Fill transient verison of ObfFilterStatus 
-  void convert( const IObfStatus&, OnboardFilterTds::ObfDFCStatus& ) ;
+  void convert( const IObfStatus&, OnboardFilterTds::ObfDgnStatus& ) ;
 
   /// Fill persistent verison of ObfFilterTrack 
   void convert( const OnboardFilterTds::ObfFilterTrack&, ObfFilterTrack& ) ;
