@@ -123,6 +123,7 @@ DGNFilterTool::DGNFilterTool(const std::string& type,
                                  AlgTool(type, name, parent)
                                , m_curConfig(0)
                                , m_curMode(EFC_DB_MODE_K_NORMAL)
+                               , m_mootSvc(0)
 {
     //Declare the additional interface
     declareInterface<IFilterTool>(this);

@@ -117,7 +117,7 @@ OnboardFilter::OnboardFilter(const std::string& name, ISvcLocator *pSvcLocator) 
     // Properties for this algorithm
     // Parameter: UseMootConfig
     // Default is to NOT expect to use Moot for configuration information - use master configuration or JO
-    declareProperty("UseMootConfig",    m_mootConfig         = false);
+    declareProperty("UseMootConfig",    m_mootConfig         = true);
     // Parameter: RejectEvents
     // Default is to not use this algorithm to accept/reject events (for MC production running)
     declareProperty("RejectEvents",     m_rejectEvents       = false);
