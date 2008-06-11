@@ -23,6 +23,12 @@
 #include "XFC/DFC_status.h"
 #include "EDS/EDS_rsd.h"
 
+// Include these to define the keys
+#include "GFC_DB/GAMMA_DB_INSTANCE.h"
+#include "XFC_DB/DGN_DB_INSTANCE.h"
+#include "XFC_DB/HIP_DB_INSTANCE.h"
+#include "XFC_DB/MIP_DB_INSTANCE.h"
+
 static const CLID& CLID_ObfStatus = InterfaceID("ObfStatus", 1, 0);
 
 namespace OnboardFilterTds {
@@ -68,15 +74,16 @@ class ObfFilterStatus : virtual public DataObject
 {
 public:
 
-    // @brief Enumerate the keys for possible Filters we might have results for
+    // @brief Enumerate the keys for possible Filters we might have results for 
+    // @brief The keys are meant to match the SchemaId's for each filter
     // @param GammaFilter - key for Gamma Filter results
     // @param CNOFilter   - key for CNO Filter results
     // @param MipFilter   - key for Mip Filter results
     enum FilterKeys {
-        GammaFilter = 0,
-        HFCFilter   = 1,
-        MipFilter   = 2,
-        DFCFilter   = 3
+        GammaFilter = GAMMA_DB_SCHEMA,
+        HIPFilter   = HIP_DB_SCHEMA,
+        MIPFilter   = MIP_DB_SCHEMA,
+        DGNFilter   = DGN_DB_SCHEMA
     };
 
     // Standard constructor
@@ -130,12 +137,12 @@ private:
     unsigned int  m_energy;
 };
 
-class ObfHFCStatus : virtual public IObfStatus
+class ObfHipStatus : virtual public IObfStatus
 {
 public:
-    ObfHFCStatus(unsigned char id, unsigned int status, unsigned char sb) : 
+    ObfHipStatus(unsigned char id, unsigned int status, unsigned char sb) : 
       m_id(id), m_status(status), m_sb(sb) {}
-    virtual ~ObfHFCStatus() {}
+    virtual ~ObfHipStatus() {}
 
      // If msb of below is set then event is to be vetoed
     unsigned int  getStatusWord() const {return m_status;}
@@ -148,7 +155,7 @@ public:
     
     std::ostream& fillStream(std::ostream& s) const
     {
-        s << "HFC Filter status:" << std::hex << m_status << std::dec << std::endl;
+        s << "HIP Filter status:" << std::hex << m_status << std::dec << std::endl;
         return s;
     }
 private:
@@ -183,12 +190,12 @@ private:
     unsigned char m_sb;
 };
 
-class ObfDFCStatus : virtual public IObfStatus
+class ObfDgnStatus : virtual public IObfStatus
 {
 public:
-    ObfDFCStatus(unsigned char id, unsigned int status, unsigned char sb) : 
+    ObfDgnStatus(unsigned char id, unsigned int status, unsigned char sb) : 
       m_id(id), m_status(status), m_sb(sb) {}
-    virtual ~ObfDFCStatus() {}
+    virtual ~ObfDgnStatus() {}
 
     // If msb of below is set then event is to be vetoed
     unsigned int  getStatusWord() const {return m_status;}
@@ -201,7 +208,7 @@ public:
     
     std::ostream& fillStream(std::ostream& s) const
     {
-        s << "DFC Filter status:" << std::hex << m_status << std::dec << std::endl;
+        s << "DGN Filter status:" << std::hex << m_status << std::dec << std::endl;
         return s;
     }
 private:
