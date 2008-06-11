@@ -5,6 +5,7 @@
  * $Id$
 
 
+*                        Added MootSvc to the L1 pipeline ldf2digi JO.
 * v6r37p3  AWB 30-May-08 Fixed pipeline JO. Had duplicate of ACD.
 * v6r37p2  AWB 27-May-08 Changed pipeline JO to include TKR alignment.
 * v6r37p1  AWB 27-May-08 Changed pipeline JO to use correct MIP-filter.

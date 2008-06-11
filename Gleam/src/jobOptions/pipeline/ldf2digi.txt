@@ -14,7 +14,11 @@
 //
 ApplicationMgr.DLLs   += {"GaudiAlg",
                           "GaudiAud"};
+ApplicationMgr.DLLs   += {"MootSvc"};
+
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+ApplicationMgr.ExtSvc += {"MootSvc"};
+
 AuditorSvc.Auditors    = {"ChronoAuditor"};
 
 
