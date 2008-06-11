@@ -384,21 +384,21 @@ bool GcrReconTool::checkFilters(){
            m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
 
 
-       obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HFCFilter);      
+       obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter);      
        if(obfResultHFC)
 	 filtersbHFC = obfResultHFC->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultHFC" << endreq;
 
 
-       obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MipFilter);//MipFilter: Filter key in ObfFilterStatus.h      
+       obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter);//MipFilter: Filter key in ObfFilterStatus.h      
        if(obfResultMip)
 	 filtersbMip = obfResultMip->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
 
 
-       obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DFCFilter); //DFCFilter: Filter key in ObfFilterStatus.h
+       obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter); //DFCFilter: Filter key in ObfFilterStatus.h
        //DFCFilter is the old name of DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
        if(obfResultDGN)
 	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;
@@ -423,9 +423,9 @@ bool GcrReconTool::checkFilters(){
    //TDS variable containing the OBF filter flags:
    // gcrOBFStatusWord bits order is the same than statusBytes merit variable   
    m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
-   m_gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HFCFilter;
-   m_gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MipFilter;
-   m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DFCFilter;
+   m_gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HIPFilter;
+   m_gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MIPFilter;
+   m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DGNFilter;
    
    m_log << MSG::INFO << "m_gcrOBFStatusWord= " << m_gcrOBFStatusWord <<endreq;
    // store gcrOBFStatus Word in TDS:
