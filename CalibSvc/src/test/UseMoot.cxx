@@ -42,6 +42,8 @@ private:
   std::string              m_parmPath;
   unsigned                 m_hw;     // cached hardware key
   CalibData::MootParmCol*  m_pCol;
+  bool                     m_latcParm;
+  bool                     m_filterCfg;
   MsgStream*               m_log;
 };
 
@@ -57,7 +59,8 @@ UseMoot::UseMoot(const std::string&  name,
     m_hw(0), m_pCol(0)
 {
   // Declare properties here.
-
+  Algorithm::declareProperty("FindLatcparm", m_latcParm = true);
+  Algorithm::declareProperty("FindFilterCfg", m_filterCfg = true);
 }
 
 
@@ -88,8 +91,32 @@ StatusCode UseMoot::initialize() {
 
 StatusCode UseMoot::execute( ) {
 
-  processNewFilters();
-  //  processNewParm();
+  static bool firstCall = true;
+
+  if (firstCall) {
+    for (MOOT::InfoItem item = MOOT::INFOITEM_MOOTCONFIGKEY;
+         item <= MOOT::INFOITEM_HWKEY; item = item + 1) {
+      MOOT::InfoSrc src = m_pMootSvc->getInfoItemSrc(item);
+      (*m_log) << "Source for item " << item; 
+      switch (src) {
+      case MOOT::INFOSRC_TDS:
+        (*m_log) << " is TDS";
+        break;
+      case MOOT::INFOSRC_JO:
+        (*m_log) << " is job options";
+        break;
+      default:
+        (*m_log) << " is unknown";
+        break;
+      }
+      (*m_log) << endreq;
+    }
+    firstCall = false;
+  }
+
+
+  if (m_latcParm) processNewParm();
+  if (m_filterCfg) processNewFilters();
   return StatusCode::SUCCESS;
 }
 
@@ -175,6 +202,23 @@ void UseMoot::processNewParm() {
   }
   else (*m_log) << MSG::INFO << "Full path for parm class " << badClass
            << " not found " << std::endl;
+
+  const CalibData::MootParm* gemParm = m_pMootSvc->getGemParm(hw);
+  if (gemParm) {
+    (*m_log) << "Gem parm src is " << gemParm->getSrc()
+             << ", is from precinct " << gemParm->getPrecinct()
+             << " and key is " << gemParm->getKey() << endreq;
+  }
+  else (*m_log) << "No gem parm found" << endreq;
+
+  const CalibData::MootParm* roiParm = m_pMootSvc->getRoiParm(hw);
+  if (roiParm) {
+    (*m_log) << "Roi parm src is " << roiParm->getSrc()
+             << ", is from precinct " << roiParm->getPrecinct()
+             << " and key is " << roiParm->getKey() << endreq;
+  }
+  else (*m_log) << "No roi parm found" << endreq;
+  
 }
 
 StatusCode UseMoot::finalize( ) {

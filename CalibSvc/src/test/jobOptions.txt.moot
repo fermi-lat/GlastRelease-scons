@@ -78,11 +78,19 @@ MootSvc.MootArchive = "/scratch/glastsoft/moot_test_glastDB";
 // MootSvc.MootConfigKey = 144;  a little odd (no active mip filter)
 // MootSvc.MootConfigKey = 145;  fsw default
 // next one is complicated:  different modes have different active filters
-MootSvc.MootConfigKey = 146;  
+// MootSvc.MootConfigKey = 146;  
 
 // From laptop run against copy of production (glastlnx06) archive, 
 // where db is a slave  mirrored onto glastDB
-// MootSvc.MootArchive = "/scratch/glastsoft/moot_prod_slave";
+MootSvc.MootArchive = "/scratch/glastsoft/moot_prod_slave";
+
+// In production db config 1637  is old-style and 1928 is new-style
+// For both (name="nomSciOps") 
+MootSvc.MootConfigKey = 1928;
+// MootSvc.MootConfigKey = 1637;
+
+UseMoot.Findlatcparm = true;
+UseMoot.FindFilterCfg = false;
 
 CalibDataSvc.CalibFlavorList = {"ideal"};
 // not used yet
