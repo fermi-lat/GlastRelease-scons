@@ -1,6 +1,7 @@
 // $Header$
 
-/** @file implement CalDigi.h
+/** @file CalDefs.cxx
+    implement CalDigi.h
     @author fewtrell
 */
 

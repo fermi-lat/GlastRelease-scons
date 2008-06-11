@@ -2,7 +2,8 @@
 #define SplineUtil_h
 // $Header $
 
-/** @file collection of classes for polylines and associated spline functions
+/** @file SplineUtil.h
+    collection of classes for polylines and associated spline functions
     @author fewtrell
 */
 

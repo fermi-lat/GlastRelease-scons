@@ -1,4 +1,5 @@
-/** @file implement CalDiagnosticWord
+/** @file CalDiagnosticWord.cxx
+    implement CalDiagnosticWord
     @author Z. Fewtrell
 */
 

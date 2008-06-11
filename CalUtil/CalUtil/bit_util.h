@@ -1,7 +1,8 @@
 #ifndef CalUtil_bit_util_h
 #define CalUtil_bit_util_h
 
-/** @file Generic bit manipulation utilities.
+/** @file bit_util.h
+    Generic bit manipulation utilities.
     @author fewtrell
  */
 
@@ -10,7 +11,7 @@ namespace CalUtil {
   /// specified integer reference
   ///
   /// @param datum reference to integer value to be modified
-  /// @param INT_TYPE type of integer value to be modified
+  /// INT_TYPE type of integer value to be modified
   /// @param bitNum index of bit to be modified (from lsb = 0)
   /// @param bitVal boolean value to set bit to
   template <typename INT_TYPE>
