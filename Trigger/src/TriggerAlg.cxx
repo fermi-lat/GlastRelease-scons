@@ -21,6 +21,7 @@
 
 #include "Event/Digi/TkrDigi.h"
 #include "Event/Digi/AcdDigi.h"
+#include "Event/Digi/CalDigi.h"
 #include "Event/Digi/GltDigi.h"
 
 #include "LdfEvent/DiagnosticData.h"
@@ -286,6 +287,9 @@ StatusCode TriggerAlg::execute()
     SmartDataPtr<Event::AcdDigiCol> acd(eventSvc(), EventModel::Digi::AcdDigiCol);
     if( acd==0 ) log << MSG::DEBUG << "No acd digis found" << endreq;
 
+    SmartDataPtr<Event::CalDigiCol> cal(eventSvc(), EventModel::Digi::CalDigiCol);
+    if( cal==0 ) log << MSG::DEBUG << "No cal digis found" << endreq;
+
     SmartDataPtr<Event::GltDigi> glt(eventSvc(),   EventModel::Digi::Event+"/GltDigi");
     if( glt==0 ) log << MSG::DEBUG << "No digi bits found" << endreq;
 
@@ -322,7 +326,7 @@ StatusCode TriggerAlg::execute()
     }
 
     // CAL CASE 2: Populate new GltDigi class with info from CalTrigTool
-    else {
+    else if(cal!=0){
       //-- Retrieve Trigger Vectors from CalTrigTool --//
       sc = m_calTrigTool->getCALTriggerVector(idents::CalXtalId::LARGE, callovector);
       if (sc.isFailure())
@@ -502,7 +506,7 @@ StatusCode TriggerAlg::execute()
       bool longdeadtime=false;
       if(m_pcounter!=0 && gltengine!=-1) // using TrgConfigSvc
 	longdeadtime=m_trgConfigSvc->getTrgConfig()->trgEngine()->fourRangeReadout(gltengine);
-        m_LivetimeSvc->tryToRegisterEvent(now,longdeadtime);
+      m_LivetimeSvc->tryToRegisterEvent(now,longdeadtime);
     } 
     
     m_triggered++;
