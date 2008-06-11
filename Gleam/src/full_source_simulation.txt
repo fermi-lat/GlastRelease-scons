@@ -49,6 +49,11 @@ OnboardFilter.FailNoEbfData = true; // if no EBF data (error anyway) reject the 
 //         calibration
 #include "$GLEAMROOT/src/calibration.txt"
 
+
+// --------------------------------------------
+//        MOOT 
+MootSvc.noMoot = "false";  // make sure MOOT is used
+
 // ------------------------------------------------
 //          Job length
 //

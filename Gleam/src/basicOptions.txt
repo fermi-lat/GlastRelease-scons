@@ -289,6 +289,12 @@ TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 #include "$CALIBSVCROOT/src/defaultOptions.txt"
 
 // -------------------------------------------
+//  MOOT services
+//
+#include "$MOOTSVCROOT/src/defaultOptions.txt"
+MootSvc.noMoot = "true";  // turn off MOOT access by default for now
+
+// -------------------------------------------
 //  Calorimeter services
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
