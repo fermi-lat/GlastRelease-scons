@@ -73,8 +73,9 @@ TriggerAlg.applyPrescales = false;
 // ----------------------------
 //  onboard filter 
 
+ApplicationMgr.DLLs += {"MootSvc"};
 ApplicationMgr.ExtSvc += {"MootSvc"};
-//MootSvc.MootArchive = "C:/Glast/moot/srcArchive-test";
+MootSvc.MootArchive = "C:/Glast/moot/srcArchive-test";
 MootSvc.MootConfigKey = 145;
 
 ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
@@ -137,7 +138,8 @@ MessageSvc.OutputLevel = 3;
 
 ApplicationMgr.EvtMax  = 100;
 
-ToolSvc.GammaFilterTool.Configuration = "GAMMA_DB_INSTANCE_K_NORMAL_LEAK";
+//ToolSvc.GammaFilterTool.Configuration = "GAMMA_DB_INSTANCE_K_NORMAL_LEAK";
+OnboardFilter.UseMootConfig=true;
 
 //==============================================================
 //

@@ -14,6 +14,7 @@ apply_pattern package_header
 
 private
 use OnboardFilterTds v*
+use MootSvc v*
 use CRflux v*
 use TkrDigi v*
 use AcdDigi v*
