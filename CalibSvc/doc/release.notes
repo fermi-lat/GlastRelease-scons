@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r36   10-Jun-2008  jrb  upgrade moot test program a bit (oops! should be
+                             only patch)
    v0r35   10-Jun-2008  jrb  Move MootSvc to its own package
    v0r34p6 30-May-2008  jrb  Minor error-handling improvements
    v0r34p5 30-May-2008  jrb  Add MootSvc.noMoot job option in case Moot archive
