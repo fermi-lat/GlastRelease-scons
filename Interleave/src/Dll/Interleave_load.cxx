@@ -13,6 +13,7 @@ DECLARE_FACTORY_ENTRIES(Interleave) {
     DECLARE_TOOL( BkgndTupleSelectTool );
     DECLARE_TOOL( InterleaveMapTool );
     DECLARE_ALGORITHM( InterleaveAlg);
+    DECLARE_ALGORITHM( InterleaveBranchAlg);
     DECLARE_ALGORITHM( FilterFailAlg);
 } 
 

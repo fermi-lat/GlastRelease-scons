@@ -132,7 +132,7 @@ StatusCode InterleaveAlg::initialize()
     }
 
     // Initialize the CEL manager
-    //std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
+////    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
 ////    m_bkgndManager->getCelManager()->initWrite(celFileName,"RECREATE");
 
     // initialize the background selection
@@ -200,7 +200,6 @@ StatusCode InterleaveAlg::execute()
 
     if( ke > 0. )
     {
-        log <<  MSG::DEBUG << "ke > 0, returning " << endreq;
         return sc; // not a flagged sampled_background 
     }
     ++m_count;
@@ -241,7 +240,6 @@ StatusCode InterleaveAlg::execute()
     // We have read the event in, want to now proceed down the interleave branch
     setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
-    log << MSG::DEBUG << "exiting InterleaveAlg after processing" << endreq;
     return sc;
 }
 
@@ -255,7 +253,7 @@ StatusCode InterleaveAlg::finalize()
 
     log << MSG::INFO << "Inserted "<< m_count << " sampled background events." << endreq; 
 
-    //m_bkgndManager->getCel()->writeAndClose();
+////    m_bkgndManager->getCelManager()->fillFileAndTreeSet();
 
     return sc;
 }
