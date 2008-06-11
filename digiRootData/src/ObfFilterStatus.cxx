@@ -25,9 +25,9 @@ void ObfFilterStatus::initialize()
 {
     m_obfStatusCol.Clear();
     m_obfStatusCol.AddAt(0,GammaFilter);
-    m_obfStatusCol.AddAt(0,HFCFilter);
+    m_obfStatusCol.AddAt(0,HipFilter);
     m_obfStatusCol.AddAt(0,MipFilter);
-    m_obfStatusCol.AddAt(0,DFCFilter);
+    m_obfStatusCol.AddAt(0,DgnFilter);
 
     return;
 }
@@ -36,9 +36,9 @@ void ObfFilterStatus::initialize()
 ObfFilterStatus& ObfFilterStatus::operator =(const ObfFilterStatus& rhs)
 {
     m_obfStatusCol[GammaFilter] = rhs.m_obfStatusCol[GammaFilter];
-    m_obfStatusCol[HFCFilter]   = rhs.m_obfStatusCol[HFCFilter];
+    m_obfStatusCol[HipFilter]   = rhs.m_obfStatusCol[HipFilter];
     m_obfStatusCol[MipFilter]   = rhs.m_obfStatusCol[MipFilter];
-    m_obfStatusCol[DFCFilter]   = rhs.m_obfStatusCol[DFCFilter];
+    m_obfStatusCol[DgnFilter]   = rhs.m_obfStatusCol[DgnFilter];
 
     m_obfStatusCol.SetOwner(kTRUE);
 
@@ -102,9 +102,9 @@ Bool_t ObfFilterStatus::CompareInRange( const ObfFilterStatus & ref, const std::
 void ObfFilterStatus::Print(Option_t* option) const 
 {
     if (m_obfStatusCol[GammaFilter]) m_obfStatusCol[GammaFilter]->Print(option);
-    if (m_obfStatusCol[HFCFilter])   m_obfStatusCol[HFCFilter]->Print(option);
+    if (m_obfStatusCol[HipFilter])   m_obfStatusCol[HipFilter]->Print(option);
     if (m_obfStatusCol[MipFilter])   m_obfStatusCol[MipFilter]->Print(option);
-    if (m_obfStatusCol[DFCFilter])   m_obfStatusCol[DFCFilter]->Print(option);
+    if (m_obfStatusCol[DgnFilter])   m_obfStatusCol[DgnFilter]->Print(option);
 }
 
 // Add results method
@@ -151,31 +151,31 @@ void ObfGammaStatus::Print(Option_t* option) const
     return;
 }
 
-// Implement the ObfHFCStatus class here
+// Implement the ObfHipStatus class here
 
 #include "enums/XfcHFCStatus.h"
-ClassImp(ObfHFCStatus)
+ClassImp(ObfHipStatus)
 
 // If msb is set below then event is to be vetoed
-UInt_t ObfHFCStatus::getStatusWord() const {return m_status;}
-UInt_t ObfHFCStatus::getVetoMask() const {return enums::HFC_STATUS_M_VETO_DEF;}
-UInt_t ObfHFCStatus::getVetoBit()  const {return enums::HFC_STATUS_M_VETOED;}
+UInt_t ObfHipStatus::getStatusWord() const {return m_status;}
+UInt_t ObfHipStatus::getVetoMask() const {return enums::HFC_STATUS_M_VETO_DEF;}
+UInt_t ObfHipStatus::getVetoBit()  const {return enums::HFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfHFCStatus::Clear(Option_t *option)
+void ObfHipStatus::Clear(Option_t *option)
 {
     m_status = 0;
     return;
 }
 
 // root print...
-void ObfHFCStatus::Print(Option_t* option) const 
+void ObfHipStatus::Print(Option_t* option) const 
 {
     TObject::Print(option);
 
     std::cout << "HFC status:" << std::hex << m_status << std::dec << std::endl;
     return;
 }
-// Implement the ObfHFCStatus class here
+// Implement the ObfHipStatus class here
 
 #include "enums/XfcMipStatus.h"
 ClassImp(ObfMipStatus)
@@ -201,24 +201,24 @@ void ObfMipStatus::Print(Option_t* option) const
 }
 
 
-// Implement the ObfDFCStatus class here
+// Implement the ObfDgnStatus class here
 
 #include "enums/XfcDFCStatus.h"
-ClassImp(ObfDFCStatus)
+ClassImp(ObfDgnStatus)
 
 // If msb is set below then event is to be vetoed
-UInt_t ObfDFCStatus::getStatusWord() const {return m_status;}
-UInt_t ObfDFCStatus::getVetoMask() const {return enums::DFC_STATUS_M_VETO_DEF;}
-UInt_t ObfDFCStatus::getVetoBit()  const {return enums::DFC_STATUS_M_VETOED;}
+UInt_t ObfDgnStatus::getStatusWord() const {return m_status;}
+UInt_t ObfDgnStatus::getVetoMask() const {return enums::DFC_STATUS_M_VETO_DEF;}
+UInt_t ObfDgnStatus::getVetoBit()  const {return enums::DFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfDFCStatus::Clear(Option_t *option)
+void ObfDgnStatus::Clear(Option_t *option)
 {
     m_status = 0;
     return;
 }
 
 // root print...
-void ObfDFCStatus::Print(Option_t* option) const 
+void ObfDgnStatus::Print(Option_t* option) const 
 {
     TObject::Print(option);
 

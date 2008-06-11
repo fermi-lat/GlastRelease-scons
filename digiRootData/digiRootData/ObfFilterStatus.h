@@ -49,9 +49,9 @@ public:
     // @param MipFilter   - key for Mip Filter results
     enum FilterKeys {
         GammaFilter = 0,
-        HFCFilter   = 1,
+        HipFilter   = 1,
         MipFilter   = 2,
-        DFCFilter   = 3
+        DgnFilter   = 3
     };
     
     /// clear lists, free pointers, etc., after read from / write to file
@@ -75,7 +75,7 @@ private:
     /// An array of points defining the trajectory
     TObjArray m_obfStatusCol;
     
-    ClassDef(ObfFilterStatus,2) // Onboard Filter container class
+    ClassDef(ObfFilterStatus,3) // Onboard Filter container class
 };
 
 class ObfGammaStatus : virtual public IObfStatus, public TObject
@@ -106,16 +106,16 @@ private:
     UChar_t m_sb;
     UInt_t  m_energy;
 
-    ClassDef(ObfGammaStatus,3) // Gamma Filter output
+    ClassDef(ObfGammaStatus,4) // Gamma Filter output
 };
 
-class ObfHFCStatus : virtual public IObfStatus, public TObject
+class ObfHipStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfHFCStatus() : m_status(0), m_id(0), m_sb(0) {}
-    ObfHFCStatus(UChar_t id, UInt_t status, UChar_t sb) : 
+    ObfHipStatus() : m_status(0), m_id(0), m_sb(0) {}
+    ObfHipStatus(UChar_t id, UInt_t status, UChar_t sb) : 
                    m_status(status), m_id(id), m_sb(sb) {}
-    virtual ~ObfHFCStatus() {}
+    virtual ~ObfHipStatus() {}
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
@@ -134,7 +134,7 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfHFCStatus,3) // HFC output
+    ClassDef(ObfHipStatus,4) // HFC output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
@@ -162,16 +162,16 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfMipStatus,3) // MIP filter output
+    ClassDef(ObfMipStatus,4) // MIP filter output
 };
 
-class ObfDFCStatus : virtual public IObfStatus, public TObject
+class ObfDgnStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfDFCStatus() : m_status(0), m_id(0), m_sb(0) {}
-    ObfDFCStatus(UChar_t id, UInt_t status, UChar_t sb)
+    ObfDgnStatus() : m_status(0), m_id(0), m_sb(0) {}
+    ObfDgnStatus(UChar_t id, UInt_t status, UChar_t sb)
      : m_status(status), m_id(id), m_sb(sb) {}
-    virtual ~ObfDFCStatus() {}
+    virtual ~ObfDgnStatus() {}
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
@@ -190,7 +190,7 @@ private:
     UChar_t m_id;
     UChar_t m_sb;
 
-    ClassDef(ObfDFCStatus,3) // DFC output
+    ClassDef(ObfDgnStatus,4) // DFC output
 };
 
 #endif
