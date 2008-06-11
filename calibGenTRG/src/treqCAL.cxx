@@ -33,10 +33,27 @@ ClassImp(treqCAL)
 // 
 // Initialization
 //
-treqCAL::treqCAL() 
+treqCAL::treqCAL() : m_caltuplefile(0),m_caltuple(0), m_useKalman(false), m_useToT(false), m_useMip(false), m_useGamma(false),
+		     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6), m_MipLower(3)
 {
 }
 
+void treqCAL::initCalTuple(const char* filename){
+  if (m_caltuplefile){
+    delete m_caltuple;
+    delete m_caltuplefile;
+  }
+    m_caltuplefile=TFile::Open(filename, "READ");
+    if(m_caltuplefile->IsOpen()){
+      std::cout<<"        CAL:    "<<filename<<std::endl;
+      m_caltuple=(TTree*)gDirectory->Get("CalTuple");
+      m_caltuple->SetBranchAddress("CalXtalFaceSignal[16][8][12][2]",m_calxtalfacesignal);
+    }else{
+      std::cout<<"CAL file "<<filename<<" not found"<<std::endl;
+    }
+}
+
+ 
 void treqCAL::setParameters(int tkrdelay, int caldelay){
   m_tkrdelay=tkrdelay;
   m_caldelay=caldelay;
@@ -57,7 +74,7 @@ void treqCAL::inithistos(){
   m_clvsenergy=new TH2D("clvsenergy","CAL LO arrival time vs. highest crystal energy",100,0,2000,63,-31.5,31.5);
   m_clvsenergy->GetYaxis()->SetTitle("CAL LO conditions arrival time (ticks)");
   m_clvsenergy->GetXaxis()->SetTitle("Energy (MeV)");
-  m_chvsenergy=new TH2D("chvsenergy","CAL HI arrival time vs. highest crystal energy",100,0,2000,63,-31.5,31.5);
+  m_chvsenergy=new TH2D("chvsenergy","CAL HI arrival time vs. highest crystal energy",100,0,10000,63,-31.5,31.5);
   m_chvsenergy->GetYaxis()->SetTitle("CAL HI conditions arrival time (ticks)");
   m_chvsenergy->GetXaxis()->SetTitle("Energy (MeV)");
   m_challevents=new TH1D("challevents","All Events with CAL HI",63,-31.5,31.5);
@@ -109,7 +126,7 @@ void treqCAL::writeoutresults(const char* reportname, const char* filename){
   char name[128];
   char title[128];
   char* line[7];
-  for (int j=0;j<7;j++)line[j]=new char[64];
+  for (int j=0;j<7;j++)line[j]=new char[512];
   gROOT->SetStyle("Plain");
   gStyle->SetOptStat(1110);
   gStyle->SetOptFit(0);
@@ -314,7 +331,7 @@ void treqCAL::writeoutresults(const char* reportname, const char* filename){
 
   r.newheadline("Status");
   if (m_status==0)r.addstatus("Passed");
-  else r.addstatus("Failed");
+  else r.addstatus("Warning");
   r.writereport();
   f.Close();
 }
@@ -328,7 +345,11 @@ void treqCAL::Go(Long64_t numEvents)
     ActivateAllBranches(); 
 
     // To speed up read in, can choose to disable some branches 
-    digiTree->SetBranchStatus("*",1);  // enable all branches
+    digiTree->SetBranchStatus("*",0);  // enable all branches
+    digiTree->SetBranchStatus("m_gem",1);  // enable all branches
+    digiTree->SetBranchStatus("m_metaEvent",1);  // enable all branches
+    digiTree->SetBranchStatus("m_levelOneTrigger",1);  // enable all branches
+    digiTree->SetBranchStatus("m_obfFilterStatus",1);  // enable all branches
     //reconTree->SetBranchStatus("*",1);  // disable recon branches
     
        
@@ -352,6 +373,8 @@ void treqCAL::Go(Long64_t numEvents)
     std::cout<<"gid "<<m_gid<<std::endl;
     m_starttime=evt->getTimeStamp( );
     m_nev=nEvtMax-m_StartEvent;
+    int eng5=0;
+    int gamma=0;
 
     //}
     // BEGINNING OF EVENT LOOP
@@ -362,11 +385,157 @@ void treqCAL::Go(Long64_t numEvents)
         if (rec) rec->Clear();
         
         Int_t nb = GetEvent(ievent);
-
+	if (m_caltuple)m_caltuple->GetEvent(ievent);
         if(ievent%1000==0) 
             std::cout << "** Processing Event " << ievent << std::endl;  
 	const Gem gem=evt->getGem();
 	if(!(gem.getConditionSummary()&0x2) || !(gem.getConditionSummary()&0xc))continue;  // require TKR && CAL
+	double maxeface=0;
+	bool maxveto=false;
+	int miplayers[8];
+	for (int i=0;i<8;i++)miplayers[i]=0;
+	XtalIdx maxIdxface;
+	if (rec){
+	  TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
+	  TIter xtalIter(xtalRecCol);
+	  CalXtalRecData *xtal = 0;
+	  if (xtalRecCol){
+	    if(xtalRecCol->GetEntries()>0 ){
+	      while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
+		const idents::CalXtalId cId(xtal->getPackedId());
+	      	Int_t tower  = cId.getTower();
+	      	Int_t layer  = cId.getLayer();
+	      	Int_t column  = cId.getColumn();
+		double xenergy=xtal->getEnergy();
+		if (xenergy>5&&xenergy<25)miplayers[layer]=1;
+		const XtalIdx xtalIdx(cId);
+		bool veto=false;
+		if (m_calxtalfacesignal[tower][layer][column][0]>0 && m_calxtalfacesignal[tower][layer][column][1]>0){
+		  float faceratio=m_calxtalfacesignal[tower][layer][column][0]/m_calxtalfacesignal[tower][layer][column][1];
+		  if(faceratio<1)faceratio=1/faceratio;
+		  if(faceratio>2){
+		    veto=true;
+		  }
+		}else{
+		  veto=true;
+		}
+		if(m_calxtalfacesignal[tower][layer][column][0]>maxeface){
+		  maxeface=m_calxtalfacesignal[tower][layer][column][0];
+		  maxIdxface=xtalIdx;
+		  maxveto=veto;
+		}
+		if(m_calxtalfacesignal[tower][layer][column][1]>maxeface){
+		  maxeface=m_calxtalfacesignal[tower][layer][column][1];
+		  maxIdxface=xtalIdx;
+		  maxveto=veto;
+		}
+	      }
+	    }
+	  }
+	}
+	if (maxeface<90 || maxveto==true)continue;
+	int nlayers=0;
+	for (int i=0;i<8;i++)nlayers+=miplayers[i];
+	if(m_useMip && nlayers<m_MipLower)continue; // MIP filter
+	// extract track information from recon file
+	TkrRecon* tkrRecon = rec->getTkrRecon();
+	TObjArray* tracks = tkrRecon->getTrackCol();
+	if(tracks->GetEntries()>0){
+	  //first track
+	  TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
+	  if(tkrTrack) {
+	    if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue; // event cut on Kalman energy 
+	    if (m_useToT){
+	      // calculate average TOT to cut on
+	      double Tkr_1_ToTAve=0;	      
+	      int clustersOnTrack=0;
+	      TIterator* hitIter = tkrTrack->Iterator();
+	      TObject*   hitObj  = 0;
+	      while ((hitObj = hitIter->Next())!=0){
+		TkrTrackHit*        hit = dynamic_cast<TkrTrackHit*>(hitObj);
+		unsigned int bits = hit->getStatusBits();
+		if ((bits & TkrTrackHit::HITISSSD)==0) continue;
+		const TkrCluster* cluster = hit->getClusterPtr();	       
+		int size =  (int) (const_cast<TkrCluster*>(cluster))->getSize();
+		// get the local slopes
+		double slope  = fabs(hit->getMeasuredSlope(TkrTrackHit::SMOOTHED));
+		double slope1 = fabs(hit->getNonMeasuredSlope(TkrTrackHit::SMOOTHED));
+		
+		// theta1 is the projected angle across the strip
+		double theta1       = atan(slope1);
+		
+		double aspectRatio = 0.228/0.400;
+		double totMax      =  250.;   // counts
+		double threshold   =  0.25;   // Mips
+		double countThreshold = 15; // counts
+		double normFactor  =  1./53.;
+		
+		double mips = cluster->getMips();
+		if(mips<0.0 || mips>10.0) continue;
+		clustersOnTrack++;
+		double tot = cluster->getToT();
+		if(tot>=totMax) tot = totMax;
+		double path1 = 1.0;
+		
+		// get the path length for the hit
+		// tries to get the average
+		// the calculation is part analytic, part approximation and part fudge.
+		//   more work is definitely in order!
+		
+		// theta1 first
+		if (tot>=totMax) { tot = normFactor*(totMax+countThreshold); }
+		else {
+		  double costh1 = cos(theta1);
+		  if (size==1) {
+		    double sinth1 = sin(theta1);
+		    if (slope1< aspectRatio) {
+		      path1 = (1./costh1*(aspectRatio-slope1) + 
+			       (1/costh1 - 0.5*threshold)*(2*threshold*sinth1))
+			/(aspectRatio - slope1 + 2*threshold*sinth1);
+		    } else if (slope1<aspectRatio/(1-2.*threshold*costh1)) {
+		      path1 = 1; //1/costh1 - threshold*costh1;
+		    } else { 
+		      path1 = 1;
+		    }
+		  }
+		  else if (size==2) {
+		    if (slope1<aspectRatio/(1.-threshold*costh1)) {
+		      path1 = 0.75/costh1 -0.5*threshold;
+		    } else if (slope1<2.*aspectRatio/(1.-2*threshold*costh1)) { 
+		      path1 = aspectRatio/sin(theta1);
+		    } else {
+		      path1 = 1.0;
+		    }
+		  } else {
+		    if(slope1>aspectRatio/(1.- 2.*threshold*costh1)) {
+		      path1 = aspectRatio/sin(theta1);
+		    } else {
+		      path1 = 1.0;
+		    }
+		  }
+		  double factor = path1*costh1*slope;
+		  double path2 = sqrt(path1*path1 + factor*factor);
+		  mips /= path2;
+		}
+		
+		Tkr_1_ToTAve += mips;
+	      }
+	      
+	      if(clustersOnTrack>3) {
+		Tkr_1_ToTAve /= clustersOnTrack;
+	      }
+	      if (Tkr_1_ToTAve>m_ToTUpper || Tkr_1_ToTAve<m_ToTLower)continue; // only use ToT between 1 and 1.6
+	      
+	    }
+	  }
+	}
+	assert (evt->getObfFilterStatus().getFilterStatus(ObfFilterStatus::GammaFilter) != 0);
+	UChar_t m_gammaStatus = evt->getObfFilterStatus().getFilterStatus(ObfFilterStatus::GammaFilter)->getFiltersb();
+	int m_gammaStatusInt = m_gammaStatus>>4;
+	if (m_useGamma && m_gammaStatusInt!=0 && m_gammaStatusInt!=6) continue; // Gamma Filter
+	gamma++;
+	
+	if (evt->getL1T().getGemEngine()==5)eng5++;
 	UShort_t condarrtkr=gem.getCondArrTime().tkr();
 	UShort_t condarrcalhi=gem.getCondArrTime().calHE();
 	UShort_t condarrcallo=gem.getCondArrTime().calLE();
@@ -386,42 +555,20 @@ void treqCAL::Go(Long64_t numEvents)
 	for (int i=0;i<16;i++){
 	  if((1<<i)&calhibits)calhivector.push_back(i);
 	}
-	double maxe=0;
-	XtalIdx maxIdx;
-	if (rec){
-	  TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
-	  TIter xtalIter(xtalRecCol);
-	  CalXtalRecData *xtal = 0;
-	  if (xtalRecCol){
-	    if(xtalRecCol->GetEntries()>0 ){
-	      while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
-		const idents::CalXtalId cId(xtal->getPackedId());
-	      	Int_t tower  = cId.getTower();
-		double xenergy=xtal->getEnergy();
-		const XtalIdx xtalIdx(cId);
-		if(xenergy>maxe){
-		  maxe=xenergy;
-		  maxIdx=xtalIdx;
-		}
-	      }
-	    }
-	  }
-	}
-	if (maxe<90)continue;
-	if(gem.getConditionSummary()&0x4 && maxe>90){
+	if(gem.getConditionSummary()&0x4 && maxeface>90){
 	  m_clallevents->Fill((double)condarrcallo-condarrtkr);
-	  m_clvsenergy->Fill(maxe,(double)condarrcallo-condarrtkr);
+	  m_clvsenergy->Fill(maxeface,(double)condarrcallo-condarrtkr);
 	}
-	if(gem.getConditionSummary()&0x8 && maxe>900){
+	if(gem.getConditionSummary()&0x8 && maxeface>900){
 	  m_challevents->Fill((double)condarrcalhi-condarrtkr);
-	  m_chvsenergy->Fill(maxe,(double)condarrcalhi-condarrtkr);
+	  m_chvsenergy->Fill(maxeface,(double)condarrcalhi-condarrtkr);
 	}
 	if (tkrvector.size()==1){
-	  if(callowvector.size()==1 && tkrvector[0]==callowvector[0] && maxIdx.getTwr()==callowvector[0] && maxe>90){
+	  if(callowvector.size()==1 && tkrvector[0]==callowvector[0] && maxIdxface.getTwr()==callowvector[0] && maxeface>90){
 	    m_clsingletower->Fill((double)condarrcallo-condarrtkr);
 	    m_clbytower[tkrvector[0]]->Fill((double)condarrcallo-condarrtkr);
 	  }
-	  if(calhivector.size()==1 && tkrvector[0]==calhivector[0]&& maxIdx.getTwr()==calhivector[0] && maxe>900 ){
+	  if(calhivector.size()==1 && tkrvector[0]==calhivector[0]&& maxIdxface.getTwr()==calhivector[0] && maxeface>900 ){
 	    m_chsingletower->Fill((double)condarrcalhi-condarrtkr);
 	    m_chbytower[tkrvector[0]]->Fill((double)condarrcalhi-condarrtkr);
 	  }
@@ -494,9 +641,9 @@ void treqCAL::Go(Long64_t numEvents)
 		
 		// possible that there were no good xtal intersections
 		if (!tkrHitMap.empty()){
-		  if (maxe>0 && std::find(tkrHitMap.begin(),tkrHitMap.end(),maxIdx)!=tkrHitMap.end()){
-		    if(gem.getConditionSummary()&0x4 && maxe>90)m_clintersect->Fill((double)condarrcallo-condarrtkr);
-		    if(gem.getConditionSummary()&0x8 && maxe>900)m_chintersect->Fill((double)condarrcalhi-condarrtkr);
+		  if (maxeface>0 && std::find(tkrHitMap.begin(),tkrHitMap.end(),maxIdxface)!=tkrHitMap.end()){
+		    if(gem.getConditionSummary()&0x4 && maxeface>90)m_clintersect->Fill((double)condarrcallo-condarrtkr);
+		    if(gem.getConditionSummary()&0x8 && maxeface>900)m_chintersect->Fill((double)condarrcalhi-condarrtkr);
 		  }
 		  //		      std::cout<<counter<<" ";
 		}
@@ -509,6 +656,8 @@ void treqCAL::Go(Long64_t numEvents)
     
 
 std::cout << "**** End of event loop **** " << std::endl;
+std::cout << eng5<< " Engine 5 events" << std::endl;
+std::cout << gamma<< " Gamma events" << std::endl;
 
 
 }

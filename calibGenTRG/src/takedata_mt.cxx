@@ -29,10 +29,27 @@ ClassImp(takedata_mt)
 // 
 // Initialization
 //
-takedata_mt::takedata_mt() 
+takedata_mt::takedata_mt() : m_caltuplefile(0),m_caltuple(0),m_useKalman(false), m_useToT(false),
+			     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6)
 {
 }
 
+void takedata_mt::initCalTuple(const char* filename){
+  if (m_caltuplefile){
+    delete m_caltuple;
+    delete m_caltuplefile;
+  }
+    m_caltuplefile=TFile::Open(filename, "READ");
+    if(m_caltuplefile->IsOpen()){
+      std::cout<<"        CAL:    "<<filename<<std::endl;
+      m_caltuple=(TTree*)gDirectory->Get("CalTuple");
+      m_caltuple->SetBranchAddress("CalXtalFaceSignalAllRange[16][8][12][2][4]",m_calrange);
+    }else{
+      std::cout<<"CAL file "<<filename<<" not found"<<std::endl;
+    }
+}
+
+    
 void takedata_mt::inithistos(){
 
   char histname[128];
@@ -52,6 +69,11 @@ void takedata_mt::inithistos(){
     m_adchist[i]= new TH1D(histname,histtitle,100,0,30);
     m_adchist[i]->SetMinimum(0.);
     m_adchist[i]->GetXaxis()->SetTitle("MeV");
+    sprintf(histname,"calratio_tower_%d_step_%d" ,i,m_stepNumber);
+    sprintf(histtitle,"HEX/LEX ratio in tower %d step %d" ,i,m_stepNumber);
+    m_calratio[i]= new TH1D(histname,histtitle,151,0.495,2.005);
+    m_calratio[i]->SetMinimum(0.);
+    m_calratio[i]->GetXaxis()->SetTitle("Ratio");
 
   }
   sprintf(histname,"ACD_adchist_step_%d" ,m_stepNumber);
@@ -66,6 +88,7 @@ void takedata_mt::savehistos(char* filename){
   for (int i=0;i<16;i++){
     m_tkrocc[i]->Write();
     m_adchist[i]->Write();
+    m_calratio[i]->Write();
   }
   m_acdadchist->Write();
   f.Close();
@@ -88,46 +111,14 @@ void takedata_mt::writeoutresults(char* rf){
   
 }
 
-int takedata_mt::readParameterFile(char* pf){
-  ifstream infile(pf);
-  char line[8192];
-  infile.getline(line,8000);
-  map<string,string> params;
-  map<string,string> properties;
-  vector<string> keys;
-  eval ev;
-  map<string,string>::const_iterator it;
-  params=ev.readdict(line);
-  it=params.find("\'csvTestId\'");
-  if (it==params.end())return -1;
-  keys=ev.readlistortuple(it->second);
-  m_testnr=ev.unquote(keys[1]);
-  if (m_testnr!="pedestals")m_stepNumber=atoi(m_testnr.c_str());
-  else return -1;
-  cout<<"test id "<<m_stepNumber<<endl;
-  for (int i=0;i<16;i++)m_temidlist[i]=i;
-  it=params.find("\'runTimeOrig\'");
-  if (it==params.end())return -1;
-  m_evPerStep=(int)(atof(ev.unquote(it->second).c_str())*3600);
-  cout<<"evPerStep"<<m_evPerStep<<endl;
-  
-  it=params.find("\'csvTestProperties\'");
-  if (it==params.end())return -1;
-  properties=ev.readdict(it->second);
-  it=properties.find("(\'CAL\', \'TACK   delay [ticks]\')");
-  if (it==properties.end())return -1;
-  keys=ev.readlistortuple(it->second);
-  m_tack_cal=atoi(ev.unquote(keys[0]).c_str());
+int takedata_mt::setParameters(int step, int caldelay, int tkrdelay, int acddelay){
+  m_stepNumber=step;
+  cout<<"Step number "<<m_stepNumber<<std::endl;
+  m_tack_cal=caldelay;
   cout<<"CAL TACK "<<m_tack_cal<<endl;
-  it=properties.find("(\'TKR\', \'TACK delay [ticks]\')");
-  if (it==properties.end())return -1;
-  keys=ev.readlistortuple(it->second);
-  m_tack_tkr=atoi(ev.unquote(keys[0]).c_str());
+  m_tack_tkr=tkrdelay;
   cout<<"TKR TACK "<<m_tack_tkr<<endl;
-  it=properties.find("(\'ACD\', \'Hold delay [ticks]\')");
-  if (it==properties.end())return -1;
-  keys=ev.readlistortuple(it->second);
-  m_tack_acd=atoi(ev.unquote(keys[0]).c_str());
+  m_tack_acd=acddelay;
   cout<<"ACD TACK "<<m_tack_acd<<endl;
   return 0;
 }
@@ -165,7 +156,8 @@ void takedata_mt::Go(Long64_t numEvents)
     m_gid=evt->getMetaEvent().run().id();
     std::cout<<"gid "<<m_gid<<std::endl;
     m_nev=nEvtMax-m_StartEvent;
-
+    m_evPerStep=m_nev;
+    cout<<"Events used: "<<m_evPerStep<<endl;
     //}
     // BEGINNING OF EVENT LOOP
     for (Long64_t ievent=m_StartEvent; ievent<nEvtMax; ievent++) {
@@ -173,12 +165,44 @@ void takedata_mt::Go(Long64_t numEvents)
         if (mc) mc->Clear();
         if (evt) evt->Clear();
         if (rec) rec->Clear();
-        
         Int_t nb = GetEvent(ievent);
-
+	if (m_caltuple)m_caltuple->GetEvent(ievent);
+	const Gem gem=evt->getGem();       
         if(ievent%1000==0) 
             std::cout << "** Processing Event " << ievent << std::endl;  
 	if (rec){
+	  if (evt->getL1T().getGemEngine()==4){
+	  //if (gem.getConditionSummary()==32){
+	      TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
+	      TIter xtalIter(xtalRecCol);
+	      CalXtalRecData *xtal = 0;
+	      if (xtalRecCol){
+		if(xtalRecCol->GetEntries()>0 ){
+		  while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
+		    const idents::CalXtalId cId(xtal->getPackedId());
+		    Int_t tower  = cId.getTower();
+		    Int_t layer  = cId.getLayer();
+		    Int_t column  = cId.getColumn();
+		    double xenergy=xtal->getEnergy();
+		    if (xenergy>100&&xenergy<800){
+		      if (m_calrange[tower][layer][column][0][1]>0 && m_calrange[tower][layer][column][0][2]>0
+			  && m_calrange[tower][layer][column][1][1]>0 && m_calrange[tower][layer][column][1][2]>0){
+			float faceratio2=m_calrange[tower][layer][column][0][2]/m_calrange[tower][layer][column][1][2];
+			float faceratio1=m_calrange[tower][layer][column][0][1]/m_calrange[tower][layer][column][1][1];
+			if(faceratio1<1)faceratio1=1/faceratio1;
+			if(faceratio2<1)faceratio2=1/faceratio2;
+			if (faceratio1<2 && faceratio2<2){
+			  float ratio1=m_calrange[tower][layer][column][0][2]/m_calrange[tower][layer][column][0][1];
+			  float ratio2=m_calrange[tower][layer][column][1][2]/m_calrange[tower][layer][column][1][1];
+			  m_calratio[tower]->Fill(ratio1);
+			  m_calratio[tower]->Fill(ratio2);
+			}
+		      }
+		    }
+		  }
+		}
+	      }
+	    }     
 
 	  // extract track information from recon file
 	  TkrRecon* tkrRecon = rec->getTkrRecon();
@@ -187,6 +211,90 @@ void takedata_mt::Go(Long64_t numEvents)
 	    //first track
 	    TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
 	    if(tkrTrack) {
+	      if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue; // event cut on Kalman energy
+	      if (m_useToT){
+		// calculate average TOT to cut on
+		double Tkr_1_ToTAve=0;	      
+		int clustersOnTrack=0;
+		TIterator* hitIter = tkrTrack->Iterator();
+		TObject*   hitObj  = 0;
+		while ((hitObj = hitIter->Next())!=0){
+		  TkrTrackHit*        hit = dynamic_cast<TkrTrackHit*>(hitObj);
+		  unsigned int bits = hit->getStatusBits();
+		  if ((bits & TkrTrackHit::HITISSSD)==0) continue;
+		  const TkrCluster* cluster = hit->getClusterPtr();	       
+		  int size =  (int) (const_cast<TkrCluster*>(cluster))->getSize();
+		  // get the local slopes
+		  double slope  = fabs(hit->getMeasuredSlope(TkrTrackHit::SMOOTHED));
+		  double slope1 = fabs(hit->getNonMeasuredSlope(TkrTrackHit::SMOOTHED));
+		  
+		  // theta1 is the projected angle across the strip
+		  double theta1       = atan(slope1);
+		  
+		  double aspectRatio = 0.228/0.400;
+		  double totMax      =  250.;   // counts
+		  double threshold   =  0.25;   // Mips
+		  double countThreshold = 15; // counts
+		  double normFactor  =  1./53.;
+		  
+		  double mips = cluster->getMips();
+		  if(mips<0.0 || mips>10.0) continue;
+		  clustersOnTrack++;
+		  double tot = cluster->getToT();
+		  if(tot>=totMax) tot = totMax;
+		  double path1 = 1.0;
+		  
+		  // get the path length for the hit
+		  // tries to get the average
+		  // the calculation is part analytic, part approximation and part fudge.
+		  //   more work is definitely in order!
+		  
+		  // theta1 first
+		  if (tot>=totMax) { tot = normFactor*(totMax+countThreshold); }
+		  else {
+		    double costh1 = cos(theta1);
+		    if (size==1) {
+		      double sinth1 = sin(theta1);
+		      if (slope1< aspectRatio) {
+			path1 = (1./costh1*(aspectRatio-slope1) + 
+				 (1/costh1 - 0.5*threshold)*(2*threshold*sinth1))
+			  /(aspectRatio - slope1 + 2*threshold*sinth1);
+		      } else if (slope1<aspectRatio/(1-2.*threshold*costh1)) {
+			path1 = 1; //1/costh1 - threshold*costh1;
+		      } else { 
+			path1 = 1;
+		      }
+		    }
+		    else if (size==2) {
+		      if (slope1<aspectRatio/(1.-threshold*costh1)) {
+			path1 = 0.75/costh1 -0.5*threshold;
+		      } else if (slope1<2.*aspectRatio/(1.-2*threshold*costh1)) { 
+			path1 = aspectRatio/sin(theta1);
+		      } else {
+			path1 = 1.0;
+		      }
+		    } else {
+		      if(slope1>aspectRatio/(1.- 2.*threshold*costh1)) {
+			path1 = aspectRatio/sin(theta1);
+		      } else {
+			path1 = 1.0;
+		      }
+		    }
+		    double factor = path1*costh1*slope;
+		    double path2 = sqrt(path1*path1 + factor*factor);
+		    mips /= path2;
+		  }
+		  
+		  Tkr_1_ToTAve += mips;
+		}
+		
+		if(clustersOnTrack>3) {
+		  Tkr_1_ToTAve /= clustersOnTrack;
+		}
+		if (Tkr_1_ToTAve>m_ToTUpper || Tkr_1_ToTAve<m_ToTLower)continue; // only use ToT between 1 and 1.6
+	      }
+		
+	      
 	      // end of track parameters
 	      TkrTrackHit* hit = (TkrTrackHit*) tkrTrack->Last();
 	      TVector3 endPos = hit->getPoint(TkrTrackHit::SMOOTHED);

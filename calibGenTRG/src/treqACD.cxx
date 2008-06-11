@@ -294,7 +294,7 @@ void treqACD::writeoutresults(const char* reportname, const char* filename){
   r.endtable();
   r.newheadline("Status");
   if (m_status==0)r.addstatus("Passed");
-  else r.addstatus("Failed");
+  else r.addstatus("Warning");
   r.writereport();
   f.Close();
 }
@@ -308,7 +308,9 @@ void treqACD::Go(Long64_t numEvents)
     ActivateAllBranches(); 
 
     // To speed up read in, can choose to disable some branches 
-    digiTree->SetBranchStatus("*",1);  // enable all branches
+    digiTree->SetBranchStatus("*",0);  // enable all branches
+    digiTree->SetBranchStatus("m_gem",1); 
+    digiTree->SetBranchStatus("m_levelOneTrigger",1); 
     //reconTree->SetBranchStatus("*",1);  // disable recon branches
     
        
@@ -347,10 +349,33 @@ void treqACD::Go(Long64_t numEvents)
             std::cout << "** Processing Event " << ievent << std::endl;  
 	const Gem gem=evt->getGem();
 	UShort_t condarracd=gem.getCondArrTime().roi();
+	if (evt->getL1T().getGemEngine()==5)continue; // engine 5 is heavily prescaled
 	if(gem.getConditionSummary()&0x10){ //CNO
 	  m_cno->Fill((double)condarracd);
 	}
 	if(gem.getConditionSummary()!=3)continue;  // TKR && ROI
+	int miplayers[8];
+	for (int i=0;i<8;i++)miplayers[i]=0;
+	if (rec){
+	  TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
+	  TIter xtalIter(xtalRecCol);
+	  CalXtalRecData *xtal = 0;
+	  if (xtalRecCol){
+	    if(xtalRecCol->GetEntries()>0 ){
+	      while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
+		const idents::CalXtalId cId(xtal->getPackedId());
+	      	Int_t tower  = cId.getTower();
+	      	Int_t layer  = cId.getLayer();
+		double xenergy=xtal->getEnergy();
+		if (xenergy>5&&xenergy<25)miplayers[layer]=1;
+		const XtalIdx xtalIdx(cId);
+	      }
+	    }
+	  }
+	}
+	int nlayers=0;
+	for (int i=0;i<8;i++)nlayers+=miplayers[i];
+	if(nlayers<3)continue; // MIP filter
 	m_allevents->Fill((double)condarracd);
 	std::vector<AcdId>tilelist;
 	const GemTileList acdTiles = gem.getTileList();

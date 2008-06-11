@@ -69,7 +69,7 @@ void TestReport::addstatus(char* text){
   of<<"<p> <b><Label>Status</Label>:&nbsp;</b> <Text> <b>"<<std::endl;
   std::string s(text);
   if (s=="PASSED" || s=="passed" || s=="Passed")of<<"<font color=\"#33CC33\">"<<std::endl;
-  else if (s=="FAILED" || s=="failed" || s=="Failed")of<<"<font color=\"#FF0000\">"<<std::endl;
+  else if (s=="FAILED" || s=="failed" || s=="Failed"||s=="WARNING" || s=="warning" || s=="Warning")of<<"<font color=\"#FF0000\">"<<std::endl;
   else if (s=="ABORTED" || s=="aborted" || s=="Aborted")of<<"<font color=\"#FFAA33\">"<<std::endl;
   else of<<"<font color=\"#000000\">"<<std::endl;
   of<<text;

@@ -27,6 +27,7 @@ public:
   virtual ~fittack(){}
   void settextinput(char*);
   void setrootoutput(char*);
+  void setratiofilename(const char*);
   void setfirstlastpoint(int,int);
   void readtextfiles();
   void readrootfiles();
@@ -48,17 +49,21 @@ private:
   int totalcountsum[30],totalsquaresum[30];
   double totalgoodsum[30];
   string filename[30];
+  string ratiofilename[30];
+  bool useratiofile;
   double calfitmeansum,ecalfitmeansum;
+  double calhifitmeansum,ecalhifitmeansum;
   double tkrfitmeansum,etkrfitmeansum;
   double calfitmean[16],ecalfitmean[16];
+  double calhifitmean[16],ecalhifitmean[16];
   double tkrfitmean[16],etkrfitmean[16];
   double acdfitmean,eacdfitmean;
   int acdstatus,calstatus[16],tkrstatus[16];
   int calstatussum,tkrstatussum;
-  TH1D *tkrocc[30][16], *adchist[30][16], *acdadchist[30];
-  TH1D  *adchistsum[30];
-  TH1D *acdwaveform, *calwaveform[16], *tkrwaveform[30];
-  TH1D *calsumwaveform,*tkrsumwaveform;
+  TH1D *tkrocc[30][16], *adchist[30][16], *acdadchist[30], *calratio[30][16];
+  TH1D  *adchistsum[30], *calratiosum[30];
+  TH1D *acdwaveform, *calwaveform[16], *calhiwaveform[16], *tkrwaveform[30];
+  TH1D *calsumwaveform, *calhisumwaveform, *tkrsumwaveform;
   ClassDef(fittack,1) 
 
 };

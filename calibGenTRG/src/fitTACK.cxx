@@ -6,6 +6,7 @@ fittack::fittack(){
   first=0;
   last=0;
   npoints=0;
+  useratiofile=false;
   
 }
 void fittack::settextinput(char* name){
@@ -18,6 +19,14 @@ void fittack::setfirstlastpoint(int i,int j){
   first=i;
   last=j;
   npoints=last-first+1;
+}
+void fittack::setratiofilename(const char* name){
+  useratiofile=true;
+  for (int i=first;i<=last;i++){
+    char fn[200];
+    sprintf(fn,"%s_%d.root",name,i);
+    ratiofilename[i]=fn;
+  }
 }
 void fittack::readtextfiles(){
   for (int i=first;i<=last;i++){
@@ -57,6 +66,13 @@ void fittack::readrootfiles(){
       adchist[i][j]->SetDirectory(gROOT);
       if(j==0)adchistsum[i]=(TH1D*)adchist[i][j]->Clone();
       else adchistsum[i]->Add(adchist[i][j]);
+      if(!useratiofile){
+	sprintf(histname,"calratio_tower_%d_step_%d",j,i);
+	calratio[i][j]=(TH1D*)gDirectory->Get(histname);
+	calratio[i][j]->SetDirectory(gROOT);
+	if(j==0)calratiosum[i]=(TH1D*)calratio[i][j]->Clone();
+	else calratiosum[i]->Add(calratio[i][j]);
+      }
     }
     sprintf(histname,"adchist_alltowers_step_%d",i);
     sprintf(histtitle,"CAL ADC histogram all towers step %d",i);
@@ -65,6 +81,17 @@ void fittack::readrootfiles(){
     acdadchist[i]=(TH1D*)gDirectory->Get(histname);
     acdadchist[i]->SetDirectory(gROOT);
     a.Close();
+    if(useratiofile){
+      a.Open(ratiofilename[i].c_str());
+      for (int j=0;j<16;j++){
+	sprintf(histname,"calratio_tower_%d_step_%d",j,i);
+	calratio[i][j]=(TH1D*)gDirectory->Get(histname);
+	calratio[i][j]->SetDirectory(gROOT);
+	if(j==0)calratiosum[i]=(TH1D*)calratio[i][j]->Clone();
+	else calratiosum[i]->Add(calratio[i][j]);
+      }
+      a.Close();
+    }
   }
 }
 
@@ -109,12 +136,16 @@ void fittack::fit(){
   acdfitmean=fn->GetParameter(1);
   eacdfitmean=fn->GetParError(1);
   char histname[128],histtitle[128];
-  calsumwaveform=new TH1D("calsumwaveform","CAL Waveform All Towers",npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
+  calsumwaveform=new TH1D("calsumwaveform","CALLO Waveform All Towers",npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
+  calhisumwaveform=new TH1D("calhisumwaveform","CALHI Waveform All Towers",npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
   langau->SetParameters(0.06,11.3,10000,0.05,20);
   for (int i=0;i<16;i++){
     sprintf(histname,"calwaveform_tower_%d",i);
     sprintf(histtitle,"Cal Waveform Tower %d",i);
     calwaveform[i]=new TH1D(histname,histtitle,npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
+    sprintf(histname,"calhiwaveform_tower_%d",i);
+    sprintf(histtitle,"Calhi Waveform Tower %d",i);
+    calhiwaveform[i]=new TH1D(histname,histtitle,npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
     for (int j=first;j<=last;j++){
       if (i==0){
 	//	fifl->SetParameters(100000,15,2,0.5,5000,.1);
@@ -123,10 +154,22 @@ void fittack::fit(){
 	adchistsum[j]->Fit(langau,"em","");
 	//	adchistsum[j]->Fit(langau,"q","");
 	adchistsum[j]->Write();
+	calratiosum[j]->Write();
 	double meanfit=langau->GetParameter(1);
 	double emeanfit=langau->GetParError(1);
 	calsumwaveform->SetBinContent(j-first+1,meanfit);
 	calsumwaveform->SetBinError(j-first+1,emeanfit);
+	double ratio=calratiosum[j]->GetMean();
+	double nentries=calratiosum[j]->GetEntries();
+	double eratio;
+	if (nentries>0)
+	  eratio=calratiosum[j]->GetRMS()/sqrt(float(nentries));
+	else{
+	  eratio=0;
+	  ratio=0;
+	}
+	calhisumwaveform->SetBinContent(j-first+1,meanfit*ratio);
+	calhisumwaveform->SetBinError(j-first+1,sqrt(ratio*ratio*emeanfit*emeanfit+meanfit*meanfit*eratio*eratio));
       }
       fifl->SetParameters(7000,15,2,0.5,5000,.1);
       //fnp->SetParameters(100000,15,2,5000,-100,0);
@@ -134,10 +177,23 @@ void fittack::fit(){
       adchist[j][i]->Fit(langau,"em","");
       //adchist[j][i]->Fit(langau,"q","");
       adchist[j][i]->Write();
+      calratio[j][i]->Write();
       double meanfit=langau->GetParameter(1);
       double emeanfit=langau->GetParError(1);
       calwaveform[i]->SetBinContent(j-first+1,meanfit);
       calwaveform[i]->SetBinError(j-first+1,emeanfit);
+      double ratio=calratio[j][i]->GetMean();
+      double nentries=calratio[j][i]->GetEntries();
+      double eratio;
+      if (nentries>0)
+	eratio=calratio[j][i]->GetRMS()/sqrt(float(nentries));
+      else{
+	eratio=0;
+	ratio=0;
+      }
+      calhiwaveform[i]->SetBinContent(j-first+1,meanfit*ratio);
+      calhiwaveform[i]->SetBinError(j-first+1,sqrt(ratio*ratio*emeanfit*emeanfit+meanfit*meanfit*eratio*eratio));
+
     }
     if (i==0){
       //fn->SetParameters(12,45,100,.5) ;
@@ -152,6 +208,16 @@ void fittack::fit(){
 	ecalfitmeansum=eg->GetParError(1);
 	sprintf(epsname,"cal_%s_sum.eps",textname.c_str());
 	sprintf(gifname,"cal_%s_sum.gif",textname.c_str());
+	c1->SaveAs(epsname);
+	c1->SaveAs(gifname);
+        eg->SetParameters(10,45,70);
+        calhisumwaveform->Fit(eg,"q");
+	calhisumwaveform->Write();
+	calhisumwaveform->Draw();
+	calhifitmeansum=eg->GetParameter(1);
+	ecalhifitmeansum=eg->GetParError(1);
+	sprintf(epsname,"calhi_%s_sum.eps",textname.c_str());
+	sprintf(gifname,"calhi_%s_sum.gif",textname.c_str());
 	c1->SaveAs(epsname);
 	c1->SaveAs(gifname);
     }
@@ -169,7 +235,17 @@ void fittack::fit(){
     c1->SaveAs(gifname);
     calfitmean[i]=eg->GetParameter(1);
     ecalfitmean[i]=eg->GetParError(1);
-  }
+    eg->SetParameters(10,45,70);
+    calhiwaveform[i]->Fit(eg,"q");
+    calhiwaveform[i]->Write();
+    calhiwaveform[i]->Draw();
+    sprintf(epsname,"calhi_%s_%d.eps",textname.c_str(),i);
+    sprintf(gifname,"calhi_%s_%d.gif",textname.c_str(),i);
+    c1->SaveAs(epsname);
+    c1->SaveAs(gifname);
+    calhifitmean[i]=eg->GetParameter(1);
+    ecalhifitmean[i]=eg->GetParError(1);
+   }
   tkrsumwaveform=new TH1D("tkrsumwaveform","TKR Waveform All Towers",npoints,tack_tkr[first]-steptkr/2.,tack_tkr[last]+steptkr/2.);
   for (int j=first;j<=last;j++){
     totalgoodsum[j]=0;
@@ -283,7 +359,7 @@ void fittack::writereport(int s){
   r.additem("Description", "TACK delay time-in analysis for multiple towers and ACD");
   r.additem("Type of run","Offline");
   if (s==0)r.addstatus("Passed");
-  else r.addstatus("Failed");
+  else r.addstatus("Warning");
   r.newheadline("Runs");
   char* header[]={"Ground Id","Number of events","Number of seconds","Trigger source","CAL TACK setting","TKR TACK setting","ACD TACK setting"};
   r.starttable(header,7);
@@ -303,15 +379,20 @@ void fittack::writereport(int s){
   r.newheadline("Plots");
   char tem[12],gifname[128];
   for (int i=0;i<16;i++){
-    sprintf(tem,"CAL %d",i);
+    sprintf(tem,"CALLO %d",i);
     sprintf(gifname,"cal_%s_%d.gif",textname.c_str(),i);
+    r.addlink("Unit",gifname,tem); 
+    sprintf(tem,"CALHI %d",i);
+    sprintf(gifname,"calhi_%s_%d.gif",textname.c_str(),i);
     r.addlink("Unit",gifname,tem); 
     sprintf(tem,"TKR %d",i);
     sprintf(gifname,"tkr_%s_%d.gif",textname.c_str(),i);
     r.addlink("Unit",gifname,tem); 
   }
   sprintf(gifname,"cal_%s_sum.gif",textname.c_str());
-  r.addlink("Unit",gifname,"CAL All Towers");
+  r.addlink("Unit",gifname,"CALLO All Towers");
+  sprintf(gifname,"calhi_%s_sum.gif",textname.c_str());
+  r.addlink("Unit",gifname,"CALHI All Towers");
   sprintf(gifname,"tkr_%s_sum.gif",textname.c_str());
   r.addlink("Unit",gifname,"TKR All Towers");
   sprintf(gifname,"acd_%s.gif",textname.c_str());
@@ -321,14 +402,20 @@ void fittack::writereport(int s){
     sprintf(name,"Results for tower at TEM %d",i);
     r.newheadline(name);
     r.starttable(restable,4);
-    sprintf(line[0],"Calorimeter");
-    if (calstatus[i])r.redtext(line[1],"Failed");
+    sprintf(line[0],"Calorimeter Low Energy");
+    if (calstatus[i])r.redtext(line[1],"Warning");
     else r.greentext(line[1],"Passed");
     sprintf(line[2],"%.2f +- %.2f",calfitmean[i],ecalfitmean[i]);
     sprintf(line[3],"%d",int(calfitmean[i]+.5));
     r.addtableline(line,4);
+    sprintf(line[0],"Calorimeter High Energy");
+    if (calstatus[i])r.redtext(line[1],"Warning");
+    else r.greentext(line[1],"Passed");
+    sprintf(line[2],"%.2f +- %.2f",calhifitmean[i],ecalhifitmean[i]);
+    sprintf(line[3],"%d",int(calhifitmean[i]+.5));
+    r.addtableline(line,4);
     sprintf(line[0],"Tracker");
-    if (tkrstatus[i])r.redtext(line[1],"Failed");
+    if (tkrstatus[i])r.redtext(line[1],"Warning");
     else r.greentext(line[1],"Passed");
     sprintf(line[2],"%.2f +- %.2f",tkrfitmean[i],etkrfitmean[i]);
     int bestvalue=int(tkrfitmean[i]+.5);
@@ -339,14 +426,20 @@ void fittack::writereport(int s){
   }
   r.newheadline("Results for all 16 towers");
   r.starttable(restable,4);
-  sprintf(line[0],"Calorimeter");
-  if (calstatussum)r.redtext(line[1],"Failed");
+  sprintf(line[0],"Calorimeter Low Energy");
+  if (calstatussum)r.redtext(line[1],"Warning");
   else r.greentext(line[1],"Passed");
   sprintf(line[2],"%.2f +- %.2f",calfitmeansum,ecalfitmeansum);
   sprintf(line[3],"%d",int(calfitmeansum+.5));
   r.addtableline(line,4);
+  sprintf(line[0],"Calorimeter High Energy");
+  if (calstatussum)r.redtext(line[1],"Warning");
+  else r.greentext(line[1],"Passed");
+  sprintf(line[2],"%.2f +- %.2f",calhifitmeansum,ecalhifitmeansum);
+  sprintf(line[3],"%d",int(calhifitmeansum+.5));
+  r.addtableline(line,4);
   sprintf(line[0],"Tracker");
-  if (tkrstatussum)r.redtext(line[1],"Failed");
+  if (tkrstatussum)r.redtext(line[1],"Warning");
   else r.greentext(line[1],"Passed");
   sprintf(line[2],"%.2f +- %.2f",tkrfitmeansum,etkrfitmeansum);
   int bestvalue=int(tkrfitmeansum+.5);
@@ -357,7 +450,7 @@ void fittack::writereport(int s){
   r.newheadline("Results for ACD");
   r.starttable(restable,4);
   sprintf(line[0],"ACD");
-  if (acdstatus)r.redtext(line[1],"Failed");
+  if (acdstatus)r.redtext(line[1],"Warning");
   else r.greentext(line[1],"Passed");
   sprintf(line[2],"%.2f +- %.2f",acdfitmean,eacdfitmean);
   sprintf(line[3],"%d",int(acdfitmean+.5));
