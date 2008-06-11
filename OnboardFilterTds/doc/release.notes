@@ -3,6 +3,7 @@
  Coordinator:R.Hughes
  @verbatim
 
+ v0r7p0 11-Jun-2008  TU Change ObfFilterStatus output names to conform to convention (request from Anders)
  v0r6p1 21-May-2008  TU Rework a bit for B1-0-8
  v0r6p0  7-Feb-2008  TU Initial import of updated scheme for tracking output to TDS
  v0r5p3 11-Jan-2008  TU Add filter id, status byte info to obf output
