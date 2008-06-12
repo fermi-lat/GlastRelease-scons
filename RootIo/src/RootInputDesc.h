@@ -56,8 +56,11 @@ class RootInputDesc
 
   private :
 
-    bool fileExists( const std::string & filename ) ;
-    //bool checkForEnvVar( const StringArrayProperty & fileList);
+    /// Checks to see if the filename exists and can be opened
+    /// if treeName is non-NULL, the TTree object is checked to be sure
+    /// there are entries.  If either fails, false is returned
+    bool fileExists( const std::string & filename, const char* treeName=0 ) ;
+    bool checkForEnvVar( const StringArrayProperty & fileList);
 
     StringArrayProperty m_fileList ; // A list of files (fully qualified) associated to this TChain
     std::string m_tree ;             // The name of the tree being accessed
