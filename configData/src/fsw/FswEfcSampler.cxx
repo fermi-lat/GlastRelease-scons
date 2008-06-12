@@ -65,7 +65,8 @@ FswEfcSampler* FswEfcSampler::makeFromXmlFile(const char* fileName) {
     unsigned ps[32];    
     for ( int i(0); i < 32; i++ ) {
       std::string psSt = xmlBase::Dom::getTextContent(psList[i]);
-      ps[i] = facilities::Util::stringToUnsigned(psSt);
+      int lineNum = xmlBase::Dom::getIntAttribute(psList[i],"line");
+      ps[lineNum] = facilities::Util::stringToUnsigned(psSt);
     }
     retVal = new FswEfcSampler;
     retVal->set(ps,input,output,enabled);
@@ -138,7 +139,7 @@ std::ostream& operator <<(std::ostream& os,  const FswEfcSampler& tc){
   os<<"Output Prescale: " << tc.outputPrescaler() <<std::endl;
   os<<"Prescales: "<<std::endl;
   for (int i=0;i<32;i++){
-    os<< "  line " << std::setw(2)<<i<<": " << tc.prescaler(i);
+    os<< "  line " << std::setw(2)<< i <<": " << tc.prescaler(i);
     os<< ( (tc.enabled() & (1 << i)) ?  " On" : " Off") << std::endl;
   }
   return os;

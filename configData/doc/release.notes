@@ -4,6 +4,8 @@
  * package manager:M. Kocian
  *
  *
+ * v1r10p2 13-Jun-08 EAC Use "line" attribute in xml to allow for prescaler lines to be
+                         in BigEndian order
  * v1r10p1 12-Jun-08 EAC Added FswEfcPrescaler::prescaleFactor() function
  * v1r9   29-May-08 EAC Put in a bit of code to get OBF prescaler values and top level MOOT key
  * v1r8   01-Apr-08 EAC Remove fsw code which is now temporarily located in
