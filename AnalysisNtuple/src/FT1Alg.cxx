@@ -16,9 +16,6 @@ $Header$
 #include "Event/TopLevel/Event.h"
 
 #include "astro/GPS.h"
-
-#include "FluxSvc/IFluxSvc.h"
-
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 #include <cassert>
@@ -53,6 +50,8 @@ private:
     //counter
     int m_count;
     IDataProviderSvc* m_pEventSvc;
+    BooleanProperty m_aberrate;  ///< set true to enable aberration correction
+
 
 };
 
@@ -101,6 +100,7 @@ FT1Alg::FT1Alg(const std::string& name, ISvcLocator* pSvcLocator)
 {
     declareProperty("TreeName",  treename="MeritTuple");
     declareProperty("NbOfEvtsInFile", nbOfEvtsInFile=100000);
+    declareProperty("CorrectForAberration", m_aberrate=false);
 }
 
 StatusCode FT1Alg::initialize()
@@ -129,13 +129,13 @@ StatusCode FT1Alg::initialize()
 
     m_worker =  new FT1worker();
 
-    // get the GPS instance: either from FluxSvc or local, non-MC mode
-    IFluxSvc* fluxSvc(0);
-    if( service("FluxSvc", fluxSvc).isFailure() ){
-        //log << MSG::INFO << "Will use the GPS singleton to get pointing information instead" << endreq;
-        gps = astro::GPS::instance();
-    }else{
-        gps = fluxSvc->GPSinstance();
+    // get the GPS instance: 
+    gps = astro::GPS::instance();
+
+    // enable aberration correction if requested
+    if( m_aberrate.value() ){
+        gps->enableAberration(true);
+        log << MSG::INFO << "Correction for aberration is enabled" << endreq;
     }
     return sc;
 }
