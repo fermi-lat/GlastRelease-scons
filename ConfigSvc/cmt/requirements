@@ -1,0 +1,22 @@
+package ConfigSvc
+
+# $Header$
+
+version v0
+
+author Eric Charles <echarles@slac.stanford.edu>
+
+use GlastPolicy v*
+
+apply_pattern package_include
+use configData v*
+use MootSvc v*
+
+private
+use GaudiInterface * IExternal
+use LdfEvent v*
+use Event    v*
+
+apply_pattern package_headers
+
+library ConfigSvc *.cxx Dll/*.cxx $(ConfigSvc_headers)
