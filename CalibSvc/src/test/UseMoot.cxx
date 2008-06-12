@@ -95,7 +95,7 @@ StatusCode UseMoot::execute( ) {
 
   if (firstCall) {
     for (MOOT::InfoItem item = MOOT::INFOITEM_MOOTCONFIGKEY;
-         item <= MOOT::INFOITEM_HWKEY; item = item + 1) {
+        item <= MOOT::INFOITEM_HWKEY; item = static_cast<MOOT::InfoItem> (item + 1) ) {
       MOOT::InfoSrc src = m_pMootSvc->getInfoItemSrc(item);
       (*m_log) << "Source for item " << item; 
       switch (src) {
