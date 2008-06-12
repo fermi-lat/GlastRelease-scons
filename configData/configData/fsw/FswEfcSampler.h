@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "configData/base/ConfigTuple.h"
+#include "enums/Lsf.h"
 
 class FswEfcSampler: public ConfigBranch {
 
@@ -54,6 +55,10 @@ public:
   ///
 
   void set(unsigned prescalers[32], unsigned input, unsigned output, unsigned enabled);
+
+  // Return the prescale factor for a given event
+  unsigned prescaleFactor(enums::Lsf::RsdState rsdState, enums::Lsf::LeakedPrescaler leakedPrescaler) const;
+
 
   /// Reset the cached and output values
   virtual void reset() { clear() ;}

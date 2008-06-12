@@ -103,6 +103,26 @@ void FswEfcSampler::set(unsigned prescalers[32], unsigned input, unsigned output
   m_enabled = enabled;
 }
 
+unsigned FswEfcSampler::prescaleFactor(enums::Lsf::RsdState rsdState, enums::Lsf::LeakedPrescaler leakedPrescaler) const {
+  switch ( rsdState ) {
+  case enums::Lsf::VETOED:
+    return 0;
+  case enums::Lsf::PASSED:
+    return 1;
+  case enums::Lsf::IGNORED:
+    return m_inputPrescaler;
+  case enums::Lsf::INVALID:
+    return LSF_INVALID_UINT;
+  case enums::Lsf::SUPPRESSED:
+  case enums::Lsf::LEAKED:
+    if ( leakedPrescaler >= 0 ) { return m_prescalers[leakedPrescaler]; }
+    else if ( leakedPrescaler == enums::Lsf::OUTPUT ) { return m_outputPrescaler; }
+    else if ( leakedPrescaler == enums::Lsf::INPUT ) { return m_inputPrescaler; }
+    break;
+  }
+  return LSF_INVALID_UINT;  
+}
+
 
 // Attach this value to a TTree
 void FswEfcSampler::makeBranch(TTree& /* tree */, const std::string& /* prefix */) const {
