@@ -162,6 +162,7 @@ class MootSvc :  public Service,
   unsigned          m_startTime;     // use this to look up moot config
   unsigned          m_scid;          // use this to look up moot config
   unsigned          m_countdown; // decide when to close open MySQL connection
+  int               m_nEvent;
 
   bool  m_useEventKeys;                       // job options
   bool  m_verbose;                            // controls MoodConnection
@@ -169,6 +170,7 @@ class MootSvc :  public Service,
   bool  m_lookUpScid;                         // true if we get it from event
   bool  m_fixedConfig;                        // diagnostic
   bool  m_noMoot;                             // if true, just go away
+  bool  m_exitOnFatal;                         // True by default
 
   CalibData::MootParmCol*  m_mootParmCol;
 };
