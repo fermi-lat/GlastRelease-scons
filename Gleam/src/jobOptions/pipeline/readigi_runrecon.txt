@@ -150,9 +150,11 @@ ApplicationMgr.DLLs += {"GCRCalib"};
 GcrReconAlg.HFC_Or_TriggerEng4 = "ANYFILTER";
 GcrReconAlg.InitAxis           = "TKR";
 
-// Old:
-//GcrReconAlg.UseMcDir           = false;
-//GcrReconAlg.HFC_Or_TriggerEng4 = "HFC";
+
+// New CAL calib file:
+CalTupleAlg.NeighborXtalkToolName   = "NeighborXtalkTool";
+CalXtalRecAlg.NeighborXtalkToolName = "NeighborXtalkTool";
+ToolSvc.NeighborXtalkTool.txtFile   = "$(LATCalibRoot)/CAL/LAT-flight_gain/pre_launch_calib_0608/digitization-licos-v3r9p12_077015240_digi_DIGI.neighborXtalk.txt";
 
 
 //
