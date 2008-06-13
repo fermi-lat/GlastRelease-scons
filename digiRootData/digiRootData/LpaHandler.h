@@ -23,7 +23,7 @@ class ILpaHandler : public TObject
 public:
     ILpaHandler() : TObject(), 
                  m_masterKey(0xFFFFFFFF), m_cfgKey(0xFFFFFFFF), 
-                 m_cfgId(0xFFFFFFFF), m_version(0), m_prescaleFactor(0), 
+                 m_cfgId(0xFFFFFFFF), m_version(0), m_prescaleFactor(LSF_INVALID_UINT), 
                  m_state(enums::Lsf::INVALID), 
                  m_prescaler(enums::Lsf::UNSUPPORTED), 
                  m_type(enums::Lsf::Unknown),
@@ -35,9 +35,13 @@ public:
     virtual void Clear(Option_t *option ="");
     virtual void Print(Option_t *option="") const;
 
-    void initialize(UInt_t masterKey, UInt_t cfgKey, UInt_t cfgId, enums::Lsf::RsdState state,
-        enums::Lsf::LeakedPrescaler prescaler, UInt_t version, enums::Lsf::HandlerId id,
-        Bool_t has);
+    void initialize(UInt_t masterKey, UInt_t cfgKey, UInt_t cfgId, 
+                    enums::Lsf::RsdState state, 
+                    enums::Lsf::LeakedPrescaler prescaler, UInt_t version, 
+                    enums::Lsf::HandlerId id, Bool_t has,
+                    UInt_t prescaleFactor=LSF_INVALID_UINT);
+
+    void setPrescaleFactor(UInt_t p) { m_prescaleFactor = p; }
 
 
     /// Lpa functions
@@ -76,6 +80,7 @@ public:
     UInt_t getVersion() const { return m_version; };
     Bool_t has() const { return m_has; }
     enums::Lsf::HandlerId getId() const { return m_id; }
+    UInt_t getPrescaleFactor() const { return m_prescaleFactor; }
 
 private:
     UInt_t                      m_masterKey;  /// FMX key of master CDM for handler (fixed for a run)

@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r5     12-Jun-2008 HMK Add mootKey data member to MetaEvent as requested
+          by Eric C.
 v11r4     11-Jun-2008  TU Rename Filter classes to conform to FSW convention (request from Anders)
 v11r3p2   09-Jun-2008 HMK Actually fix the windows build for getopt usage
 v11r3p1   09-Jun-2008 HMK forcing a GR LATEST build

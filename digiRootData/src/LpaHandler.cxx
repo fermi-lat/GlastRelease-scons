@@ -16,7 +16,7 @@ ClassImp(ILpaHandler)
 void ILpaHandler::initialize(UInt_t masterKey, UInt_t cfgKey, UInt_t cfgId, 
         enums::Lsf::RsdState state,
         enums::Lsf::LeakedPrescaler prescaler, UInt_t version, 
-        enums::Lsf::HandlerId id, Bool_t has) {
+        enums::Lsf::HandlerId id, Bool_t has, UInt_t prescaleFactor) {
             m_masterKey = masterKey;
             m_cfgKey = cfgKey;
             m_cfgId = cfgId;
@@ -25,6 +25,7 @@ void ILpaHandler::initialize(UInt_t masterKey, UInt_t cfgKey, UInt_t cfgId,
             m_version = version;
             m_id = id;
             m_has = has;
+            setPrescaleFactor(prescaleFactor);
         }
 
  void ILpaHandler::Clear(Option_t *option) {
