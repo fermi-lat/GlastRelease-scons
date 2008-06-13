@@ -1,5 +1,5 @@
 package lsfData 
-version v3r4
+version v3r4p1
 
 author Heather Kelly <heather@lheapop@gsfc.nasa.gov>
 
@@ -17,6 +17,8 @@ apply_pattern shared_library
 apply_pattern ld_library_path
 
 private
+# For dumpEvent only
+use ldfExt v* IExternal
 
 macro_append cppflags "" \
     WIN32 ' /D "__i386" '
