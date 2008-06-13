@@ -328,12 +328,15 @@ namespace RootPersistence {
       rootObj.setLciKeys(lciKeysRoot);
     }
 
+    rootObj.setMootKey(tdsObj.mootKey());
+
     if (tdsObj.passthruFilter()) {
         const lsfData::PassthruHandler* tdsPass = tdsObj.passthruFilter();
         LpaPassthruFilter *pass = new LpaPassthruFilter;
         pass->initialize(tdsPass->masterKey(),tdsPass->cfgKey(),
             tdsPass->cfgId(),tdsPass->state(),tdsPass->prescaler(),
-            tdsPass->version(),tdsPass->id(),tdsPass->has());
+            tdsPass->version(),tdsPass->id(),tdsPass->has(),
+            tdsPass->prescaleFactor());
         if(tdsPass->rsd())
             pass->setStatusWord(tdsPass->rsd()->status());
        rootObj.addPassthru(pass);
@@ -343,7 +346,8 @@ namespace RootPersistence {
        LpaGammaFilter *gam = new LpaGammaFilter;
        gam->initialize(tdsGam->masterKey(),tdsGam->cfgKey(),
             tdsGam->cfgId(),tdsGam->state(),tdsGam->prescaler(),
-            tdsGam->version(),tdsGam->id(),tdsGam->has());
+            tdsGam->version(),tdsGam->id(),tdsGam->has(),
+            tdsGam->prescaleFactor());
        if (tdsGam->rsd())
            gam->set(tdsGam->rsd()->status(), tdsGam->rsd()->stage(), 
                      tdsGam->rsd()->energyValid(), tdsGam->rsd()->energyInLeus());
@@ -354,7 +358,8 @@ namespace RootPersistence {
        LpaMipFilter *mip = new LpaMipFilter;
        mip->initialize(tdsMip->masterKey(),tdsMip->cfgKey(),
                 tdsMip->cfgId(),tdsMip->state(),tdsMip->prescaler(),
-                tdsMip->version(),tdsMip->id(),tdsMip->has());
+                tdsMip->version(),tdsMip->id(),tdsMip->has(),
+                tdsMip->prescaleFactor());
        if (tdsMip->rsd())
            mip->setStatusWord(tdsMip->rsd()->status());
       rootObj.addMip(mip);
@@ -364,7 +369,8 @@ namespace RootPersistence {
        LpaHipFilter *hip = new LpaHipFilter;
        hip->initialize(tdsHip->masterKey(),tdsHip->cfgKey(),
              tdsHip->cfgId(),tdsHip->state(),tdsHip->prescaler(),
-             tdsHip->version(),tdsHip->id(),tdsHip->has());
+             tdsHip->version(),tdsHip->id(),tdsHip->has(),
+             tdsHip->prescaleFactor());
        if (tdsHip->rsd())
            hip->setStatusWord(tdsHip->rsd()->status());
        rootObj.addHip(hip);
@@ -375,7 +381,8 @@ namespace RootPersistence {
       
        dgn->initialize(tdsDgn->masterKey(),tdsDgn->cfgKey(),
              tdsDgn->cfgId(),tdsDgn->state(),tdsDgn->prescaler(),
-             tdsDgn->version(),tdsDgn->id(),tdsDgn->has());
+             tdsDgn->version(),tdsDgn->id(),tdsDgn->has(),
+             tdsDgn->prescaleFactor());
        if (tdsDgn->rsd())
            dgn->setStatusWord(tdsDgn->rsd()->status());
        rootObj.addDgn(dgn);
@@ -455,13 +462,16 @@ namespace RootPersistence {
         delete keys;
     }
 
+    tdsObj.setMootKey(rootObj.mootKey());
+
     if (rootObj.lpaHandler().getPassthruFilter()) {
         const LpaPassthruFilter *handlerIt = rootObj.lpaHandler().getPassthruFilter();
         lsfData::PassthruHandler pass;
         pass.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
                  handlerIt->getCfgId(), handlerIt->getState(),
                  handlerIt->getPrescaler(),handlerIt->getVersion(),
-                 handlerIt->getId(),handlerIt->has());
+                 handlerIt->getId(),handlerIt->has(),
+                 handlerIt->getPrescaleFactor());
         if (handlerIt->has())
             pass.setStatus(handlerIt->getStatusWord());
         tdsObj.addPassthruHandler(pass);
@@ -472,7 +482,8 @@ namespace RootPersistence {
         gam.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
                  handlerIt->getCfgId(), handlerIt->getState(),
                  handlerIt->getPrescaler(),handlerIt->getVersion(),
-                 handlerIt->getId(),handlerIt->has());
+                 handlerIt->getId(),handlerIt->has(),
+                 handlerIt->getPrescaleFactor());
         if (handlerIt->has())
             gam.setStatus(handlerIt->getStatusWord(),
                       handlerIt->getStage(), handlerIt->getEnergyValid(),
@@ -485,7 +496,8 @@ namespace RootPersistence {
         mip.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
                  handlerIt->getCfgId(), handlerIt->getState(),
                  handlerIt->getPrescaler(),handlerIt->getVersion(),
-                 handlerIt->getId(),handlerIt->has());
+                 handlerIt->getId(),handlerIt->has(),
+                 handlerIt->getPrescaleFactor());
         if (handlerIt->has())
             mip.setStatus(handlerIt->getStatusWord());
         tdsObj.addMipHandler(mip);
@@ -496,7 +508,8 @@ namespace RootPersistence {
         hip.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
                  handlerIt->getCfgId(), handlerIt->getState(),
                  handlerIt->getPrescaler(),handlerIt->getVersion(),
-                 handlerIt->getId(),handlerIt->has());
+                 handlerIt->getId(),handlerIt->has(),
+                 handlerIt->getPrescaleFactor());
         if (handlerIt->has())
             hip.setStatus(handlerIt->getStatusWord());
         tdsObj.addHipHandler(hip);
@@ -507,7 +520,8 @@ namespace RootPersistence {
         dgn.set(handlerIt->getMasterKey(),handlerIt->getCfgKey(),
                  handlerIt->getCfgId(), handlerIt->getState(),
                  handlerIt->getPrescaler(),handlerIt->getVersion(),
-                 handlerIt->getId(),handlerIt->has());
+                 handlerIt->getId(),handlerIt->has(),
+                 handlerIt->getPrescaleFactor());
         if (handlerIt->has())
             dgn.setStatus(handlerIt->getStatusWord());
         tdsObj.addDgnHandler(dgn);

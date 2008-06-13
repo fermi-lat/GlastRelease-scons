@@ -3,6 +3,8 @@
  author David Chamont 
  @verbatim
 
+ v1r37   12-Jun-2008 HMK Add mootKey and prescaleFactor to MetaEvent and 
+         LpaHandler respectively as requested by Eric C.
  v1r36   11-Jun-2008  TU Updates to conform to naming convention changes in ObfFilterStatus
  v1r35   03-Jun-2008 HMK Merge in filter bits from GlastReleasev15r1 branch
  v1r34p1 21-May-2008  TU For every source there is a header that defines the work
