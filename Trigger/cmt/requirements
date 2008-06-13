@@ -1,5 +1,5 @@
 package Trigger
-version v6r0p4
+version v6r2
 
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
@@ -17,6 +17,8 @@ use enums *
 apply_pattern packageShr
 use CalXtalResponse
 use configData *
+use MootSvc *
+use ConfigSvc *
 
 apply_pattern package_include
 
