@@ -44,8 +44,6 @@ protected:
     return (lpaMode << 8) | handlerId;
   }
 
-  static void getFullPath( const std::string& mootPath, std::string& fullPath );
-
   enum ConfigPart {
     // First FSW filters, use the handler IDs
     GAMMA = 1,
@@ -94,7 +92,10 @@ public:
       
 
 protected:
-  
+
+  /// Get the full path of a file
+  void getFullPath( const std::string& mootPath, std::string& fullPath ) const;
+ 
   /// check to see if we have a new MOOT key
   bool newMootKey() const;
  
@@ -129,6 +130,7 @@ private:
 
   mutable unsigned                                 m_noMOOTMask;
   mutable unsigned                                 m_mootKey;
+  mutable unsigned                                 m_latcKey;
 };
 
 
