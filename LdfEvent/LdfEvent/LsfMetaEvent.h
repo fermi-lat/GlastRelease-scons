@@ -31,9 +31,9 @@ namespace LsfEvent {
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType),
-       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
+       m_mootKey(LSF_INVALID_UINT) {
 
-       //m_lpaHandlerCol.clear();
     }
 
     /// Standard c'tor.  Takes input values for all fields
@@ -50,7 +50,8 @@ namespace LsfEvent {
        m_type(configuration.type()),
        m_keys(keys.clone()),
        m_ktype(keys.type()),
-       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
+       m_mootKey(LSF_INVALID_UINT) {
 
        //m_lpaHandlerCol.clear();
     }
@@ -67,7 +68,8 @@ namespace LsfEvent {
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType), 
-       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
+       m_mootKey(other.m_mootKey) {
 
        //m_lpaHandlerCol(other.m_lpaHandlerCol) {
       if ( other.configuration() != 0 ) {
@@ -102,7 +104,8 @@ namespace LsfEvent {
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType), 
-       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
+       m_mootKey(other.mootKey()) {
 
        if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
@@ -231,6 +234,8 @@ namespace LsfEvent {
     } */
 
 
+    inline unsigned int mootKey() const { return m_mootKey; }
+
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
                     const lsfData::DatagramInfo& datagram, 
@@ -300,6 +305,8 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
     m_lpaHandler = new lsfData::LpaHandler(lpa);
 }
 
+    void setMootKey( unsigned int mootKey ) { m_mootKey = mootKey; }
+
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
       return obj.fillStream(s);
@@ -365,7 +372,7 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
     lsfData::DgnHandler *m_dgn;
     lsfData::LpaHandler *m_lpaHandler;
 
-
+    unsigned int m_mootKey;
 
   };
 

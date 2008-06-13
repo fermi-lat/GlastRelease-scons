@@ -4,6 +4,8 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v3r4    12-Jun-2008 HMK Add two new data members requested by EricC.
+        m_mootKey and m_prescaleFactor
 v3r3p2  30-May-2008 HMK Avoid reuse of eventFile's struct names 
 v3r3p1  30-May-2008 HMK patch for copy ctor in LpaHandler
 v3r3    29-May-2008 HMK Realizing RSDs are NULL for non-Gamma Filters

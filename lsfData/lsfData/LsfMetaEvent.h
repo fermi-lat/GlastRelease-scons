@@ -35,7 +35,8 @@ namespace lsfData {
        m_type(configuration.type()),
        m_keys(keys.clone()),
        m_ktype(keys.type()),
-       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
+       m_mootKey(LSF_INVALID_UINT) {
    
     }
 
@@ -44,7 +45,8 @@ namespace lsfData {
        m_type(enums::Lsf::NoRunType),
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType),
-       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0) {
+       m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
+       m_mootKey(LSF_INVALID_UINT) {
     }
     
     MetaEvent( const MetaEvent& other ) :
@@ -68,7 +70,7 @@ namespace lsfData {
       if (other.dgnFilter()) m_dgn = new lsfData::DgnHandler(*(other.dgnFilter()));
       if (other.passthruFilter()) m_pass = new lsfData::PassthruHandler(*(other.passthruFilter()));
       if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
-
+      m_mootKey = other.m_mootKey;
     }
     
     virtual ~MetaEvent(){
@@ -141,7 +143,7 @@ namespace lsfData {
           delete m_lpaHandler;
           m_lpaHandler = 0;
       }
-
+      m_mootKey = LSF_INVALID_UINT;
     }
 
     /// Information about the run this event is from
@@ -176,6 +178,8 @@ namespace lsfData {
         return m_lpaHandler;  }
 
 
+    inline unsigned int mootKey() const { return m_mootKey; }
+
     /// set everything at once
     inline void set(const RunInfo& run, const DatagramInfo& datagram, 
 		    const GemScalers& scalers,
@@ -209,6 +213,10 @@ namespace lsfData {
       if (m_keys) delete m_keys;
       m_keys = keys.clone();
       m_ktype = keys.type();
+    }
+
+    inline void setMootKey( unsigned int mootKey ) {
+        m_mootKey = mootKey;
     }
 
 void addGammaHandler(const GammaHandler& gamma) {
@@ -250,6 +258,8 @@ void addLpaHandler(const LpaHandler& lpa) {
     HipHandler *m_hip;
     DgnHandler *m_dgn;
     LpaHandler *m_lpaHandler;
+
+    unsigned int m_mootKey;
 
   };
 

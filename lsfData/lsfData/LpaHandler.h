@@ -29,7 +29,8 @@ namespace lsfData {
     /** ctor and dump routine */
       LpaHandler():m_type(enums::Lsf::Unknown), m_masterKey(0xFFFFFFFF), m_cfgKey(0xFFFFFFFF), 
           m_cfgId(0xFFFFFFFF), m_state(enums::Lsf::INVALID), m_prescaler(enums::Lsf::UNSUPPORTED), m_version(0), 
-          m_id(enums::Lsf::MaxHandlerIds), m_has(false) {};
+          m_id(enums::Lsf::MaxHandlerIds), m_has(false), 
+          m_prescaleFactor(LSF_INVALID_UINT) {};
 
       virtual ~LpaHandler() { };
 
@@ -54,6 +55,10 @@ namespace lsfData {
             m_id = id;
             m_has = has;
         }
+
+    void setPrescaleFactor(unsigned int prescaleFactor) {
+        m_prescaleFactor = prescaleFactor; 
+    }
  
     unsigned int masterKey() const { return m_masterKey; };
     unsigned int cfgKey() const { return m_cfgKey; };
@@ -62,6 +67,7 @@ namespace lsfData {
     enums::Lsf::LeakedPrescaler prescaler() const { return m_prescaler; };
     unsigned int version() const { return m_version; };
     bool has() const { return m_has; }
+    unsigned int prescaleFactor() const { return m_prescaleFactor; };
 
 
       LpaHandler(const LpaHandler &other)  {
@@ -74,6 +80,7 @@ namespace lsfData {
           m_version = other.m_version;
           m_id = other.m_id;
           m_has = other.m_has;
+          m_prescaleFactor = other.m_prescaleFactor;
       } 
 
    // const char*                     typeName() const;
@@ -88,6 +95,7 @@ namespace lsfData {
     unsigned int     m_version;    /// Encoding version of handler-specific RSD
     enums::Lsf::HandlerId         m_id;         /// Handler identifier
     bool              m_has;        /// Indicates whether handler generated summary data
+    unsigned int     m_prescaleFactor;
 
 
   };
@@ -133,13 +141,19 @@ public:
 
     void set(unsigned int masterKey, unsigned int cfgKey, unsigned int cfgId, 
             enums::Lsf::RsdState state, enums::Lsf::LeakedPrescaler prescaler, 
-            unsigned int version, enums::Lsf::HandlerId id, bool has) {
+            unsigned int version, enums::Lsf::HandlerId id, bool has,
+            unsigned int prescaleFactor=LSF_INVALID_UINT) {
         m_handler.set(masterKey, cfgKey, cfgId, state, prescaler,
              version, id, has);
+        m_handler.setPrescaleFactor(prescaleFactor);
     }
 
     void setLpaHandler(const LpaHandler &lpaHandler) {
         m_handler = lpaHandler;
+    }
+
+    void setPrescaleFactor(unsigned int factor) { 
+        m_handler.setPrescaleFactor(factor); 
     }
 
 
@@ -159,6 +173,7 @@ public:
     unsigned int version() const { return m_handler.version(); };
     bool has() const { return m_handler.has(); }
     enums::Lsf::HandlerId id() const { return m_handler.id(); }    
+    unsigned int prescaleFactor() const { return m_handler.prescaleFactor(); }
 
 
 private:
@@ -220,14 +235,19 @@ public:
 
     void set(unsigned int masterKey, unsigned int cfgKey, unsigned int cfgId, 
             enums::Lsf::RsdState state, enums::Lsf::LeakedPrescaler prescaler, 
-            unsigned int version, enums::Lsf::HandlerId id, bool has) {
+            unsigned int version, enums::Lsf::HandlerId id, bool has,
+            unsigned int prescaleFactor=LSF_INVALID_UINT) {
         m_handler.set(masterKey, cfgKey, cfgId, state, prescaler,
               version, id, has);
+        m_handler.setPrescaleFactor(prescaleFactor); 
     }
     void setLpaHandler(const LpaHandler &lpaHandler) {
         m_handler = lpaHandler;
     }
 
+    void setPrescaleFactor(unsigned int factor) { 
+        m_handler.setPrescaleFactor(factor); 
+    }
     void setStatus(unsigned int status, unsigned int stage,
                    unsigned int energyValid, int energyInLeus) {
             if (!m_gamma) m_gamma = new GammaRsdV0;
@@ -245,6 +265,7 @@ public:
     unsigned int version() const { return m_handler.version(); };
     bool has() const { return m_handler.has(); }
     enums::Lsf::HandlerId id() const { return m_handler.id(); }    
+    unsigned int prescaleFactor() const { return m_handler.prescaleFactor(); }
 
 private:
   LpaHandler m_handler;
@@ -291,12 +312,17 @@ public:
 
     void set(unsigned int masterKey, unsigned int cfgKey, unsigned int cfgId, 
             enums::Lsf::RsdState state, enums::Lsf::LeakedPrescaler prescaler, 
-            unsigned int version, enums::Lsf::HandlerId id, bool has) {
+            unsigned int version, enums::Lsf::HandlerId id, bool has,
+            unsigned int prescaleFactor = LSF_INVALID_UINT) {
         m_handler.set(masterKey, cfgKey, cfgId, state, prescaler,
              version, id, has);
+        m_handler.setPrescaleFactor(prescaleFactor); 
     }
     void setLpaHandler(const LpaHandler &lpaHandler) {
         m_handler = lpaHandler;
+    }
+    void setPrescaleFactor(unsigned int factor) { 
+        m_handler.setPrescaleFactor(factor); 
     }
 
     void setStatus(unsigned int status) {
@@ -316,6 +342,7 @@ public:
     unsigned int version() const { return m_handler.version(); };
     bool has() const { return m_handler.has(); }
     enums::Lsf::HandlerId id() const { return m_handler.id(); }    
+    unsigned int prescaleFactor() const { return m_handler.prescaleFactor(); }
 
 private:
   LpaHandler m_handler;
@@ -363,12 +390,17 @@ public:
 
     void set(unsigned int masterKey, unsigned int cfgKey, unsigned int cfgId, 
             enums::Lsf::RsdState state, enums::Lsf::LeakedPrescaler prescaler, 
-            unsigned int version, enums::Lsf::HandlerId id, bool has) {
+            unsigned int version, enums::Lsf::HandlerId id, bool has,
+            unsigned int prescaleFactor=LSF_INVALID_UINT) {
         m_handler.set(masterKey, cfgKey, cfgId, state, prescaler,
              version, id, has);
+        m_handler.setPrescaleFactor(prescaleFactor); 
     }
     void setLpaHandler(const LpaHandler &lpaHandler) {
         m_handler = lpaHandler;
+    }
+    void setPrescaleFactor(unsigned int factor) { 
+        m_handler.setPrescaleFactor(factor); 
     }
 
     //void setRsd(const MipRsdV0* mip) { m_mip = mip; }
@@ -388,6 +420,7 @@ public:
     unsigned int version() const { return m_handler.version(); };
     bool has() const { return m_handler.has(); }
     enums::Lsf::HandlerId id() const { return m_handler.id(); }    
+    unsigned int prescaleFactor() const { return m_handler.prescaleFactor(); }
 
 private:
   LpaHandler m_handler;
@@ -435,12 +468,17 @@ public:
 
     void set(unsigned int masterKey, unsigned int cfgKey, unsigned int cfgId, 
             enums::Lsf::RsdState state, enums::Lsf::LeakedPrescaler prescaler, 
-            unsigned int version, enums::Lsf::HandlerId id, bool has) {
+            unsigned int version, enums::Lsf::HandlerId id, bool has,
+            unsigned int prescaleFactor=LSF_INVALID_UINT) {
         m_handler.set(masterKey, cfgKey, cfgId, state, prescaler,
              version, id, has);
+        m_handler.setPrescaleFactor(prescaleFactor); 
     }
     void setLpaHandler(const LpaHandler &lpaHandler) {
         m_handler = lpaHandler;
+    }
+    void setPrescaleFactor(unsigned int factor) { 
+        m_handler.setPrescaleFactor(factor); 
     }
 
     void setStatus(unsigned int status) {
@@ -460,6 +498,7 @@ public:
     unsigned int version() const { return m_handler.version(); };
     bool has() const { return m_handler.has(); }
     enums::Lsf::HandlerId id() const { return m_handler.id(); }    
+    unsigned int prescaleFactor() const { return m_handler.prescaleFactor(); }
 
 private:
   LpaHandler m_handler;
