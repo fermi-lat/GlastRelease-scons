@@ -24,10 +24,10 @@
 #include "EDS/EDS_rsd.h"
 
 // Include these to define the keys
-#include "GFC_DB/GAMMA_DB_INSTANCE.h"
-#include "XFC_DB/DGN_DB_INSTANCE.h"
-#include "XFC_DB/HIP_DB_INSTANCE.h"
-#include "XFC_DB/MIP_DB_INSTANCE.h"
+#include "GFC_DB/GAMMA_DB_instance.h"
+#include "XFC_DB/DGN_DB_instance.h"
+#include "XFC_DB/HIP_DB_instance.h"
+#include "XFC_DB/MIP_DB_instance.h"
 
 static const CLID& CLID_ObfStatus = InterfaceID("ObfStatus", 1, 0);
 
