@@ -184,7 +184,7 @@ namespace configData {
 
   /// function to get all the configs built from a set of votes
   bool MootVoteParser::getConfigsFromVotes( std::set<unsigned>& configs, const std::set<unsigned>& votes ) {    
-    for ( std::set<unsigned>::iterator itr = votes.begin(); itr != votes.end(); itr++ ) {
+    for ( std::set<unsigned>::const_iterator itr = votes.begin(); itr != votes.end(); itr++ ) {
       if ( ! m_mq->getConfigsForVote(*itr,configs) ) return false;
     }
     return true;
