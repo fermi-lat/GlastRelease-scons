@@ -1,5 +1,6 @@
 package AnalysisNtuple
-version v2r41p2
+
+version v2r41p3
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -45,7 +46,7 @@ set JOBOPTIONS ${ANALYSISNTUPLEROOT}/src/test/jobOptions.txt
 # It may be necessary to move this to the public part for some configurations
 #   other than vanilla Gleam.
 #
-use FluxSvc         v*
+
 use astro           v*
 
 # use OnBoardFilterTDS v*
