@@ -5,6 +5,8 @@
  * $Id$
 
 
+* v7r0p2   LSR 15-Jun-08 Remove newly invalid line from basicOptions
+                         Turn off Moot for OnboardFilter in default jO
 * v7r0p1   AWB 13-Jun-08 Added new CAL Calib to pipeline JO. 
 * v7r0     HMK 10-Jun-08 Add MootSvc to req file and its defaultOptions to
 *              basicOptions

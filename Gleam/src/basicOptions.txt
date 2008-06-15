@@ -118,7 +118,6 @@ TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
 
 ApplicationMgr.DLLs  += { "EbfWriter", "OnboardFilter"};
 Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // this guy can cause rejection
-OnboardFilter.mask=0; // all bits off by default: no rejection
 
 // Feed all events to the filters
 EbfWriter.ReqGemTrig = false;
