@@ -135,7 +135,7 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_TkrNumTracks    = tuple.getItem("TkrNumTracks");
     m_CalEnergyRaw    = tuple.getItem("CalEnergyRaw");
     m_CalCsIRLn       = tuple.getItem("CalCsIRLn");
-    m_FilterStatus_HI = tuple.getItem("FilterStatus_HI");
+    m_obfGamStatus    = tuple.getItem("ObfGamStatus");
 
     m_AcdActiveDist3D  = tuple.getItem("AcdActiveDist3D");
     m_AcdRibbonActDist = tuple.getItem("AcdRibbonActDist");
@@ -231,12 +231,10 @@ bool AtwoodTrees::execute()
             m_caughtVals++;
         }
 
-        double FilterStatus_HI = *m_FilterStatus_HI;
-
-        FilterStatus_HI = 0;
+        unsigned int obfGamStatus = *m_obfGamStatus;
 
         // First cuts on Filter status and failures for energy and tails
-        if (FilterStatus_HI == 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
+        if (obfGamStatus > 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
         {
             double AcdActiveDist3D  = *m_AcdActiveDist3D;
             double AcdRibbonActDist = *m_AcdRibbonActDist;

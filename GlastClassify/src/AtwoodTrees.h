@@ -44,7 +44,7 @@ private:
     const Item*   m_TkrNumTracks;
     const Item*   m_CalEnergyRaw  ;
     const Item*   m_CalCsIRLn   ;  
-    const Item*   m_FilterStatus_HI;
+    const Item*   m_obfGamStatus;
     const Item*   m_eventId;
     const Item*   m_run;
 
