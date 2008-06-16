@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v3r4p2  16-Jun-2008 EAC Added LpaHander::prescaleIndex() function to re-order prescalers to help users
 v3r4p1  13-Jun-2008 HMK Add use of IExternal/ldfExt
 v3r4    12-Jun-2008 HMK Add two new data members requested by EricC.
         m_mootKey and m_prescaleFactor
