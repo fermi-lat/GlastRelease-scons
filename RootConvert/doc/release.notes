@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r38   16-Jun-2008  TU Add modifications to handle changes to ObfFilterStatus
  v1r37   12-Jun-2008 HMK Add mootKey and prescaleFactor to MetaEvent and 
          LpaHandler respectively as requested by Eric C.
  v1r36   11-Jun-2008  TU Updates to conform to naming convention changes in ObfFilterStatus
