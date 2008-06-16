@@ -115,6 +115,8 @@ public:
   /// Return index in MootParmCol of specified class
   virtual int latcParmIx(const std::string& parmClass) const =0;
 
+  /// Return true if MootSvc has been turned off via job option 
+  virtual bool noMoot() const = 0;
 
   /** Get handle for metadata access from mootCore.
       Clients, especially in production code, are STRONGLY DISCOURAGED 

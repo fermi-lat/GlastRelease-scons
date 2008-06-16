@@ -110,6 +110,10 @@ class MootSvc :  public Service,
 
   virtual MOOT::MootQuery* getConnection() const {return m_q;}
 
+  /// Return true if MootSvc has been turned off via job option 
+  virtual bool noMoot() const {return m_noMoot;}
+
+
   // Reimplemented from IInterface
 
   virtual StatusCode queryInterface( const InterfaceID& riid, 
