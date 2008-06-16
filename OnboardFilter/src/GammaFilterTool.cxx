@@ -164,8 +164,14 @@ GammaFilterTool::GammaFilterTool(const std::string& type,
     // declare properties with setProperties calls
     // See the file EFC/src/GFC_def.h for the definition of these variables
     // ****DO NOT CHANGE unless you know what you are doing ! *****
+    // Paramter: LeakAllEvents
+    // Default is TO "leak" (pass status/filter information) all events
     declareProperty("LeakAllEvents",         m_leakAllEvents         = true);
+    // Parameter: Configuration
+    // Overrides the default configuration given in the Master Configuration file
     declareProperty("Configuration",         m_configToRun           = "");
+    // Parameter: GamFilterMask
+    // Allows override of the "veto mask" the gamma filter uses to determine whether to veto an event
     declareProperty("GamFilterMask",         m_gamBitsToIgnore       = gamBitsToIgnore);
 
     declareProperty("Acd_TopSideEmax",       m_Acd_TopSideEmax       = 0xFFFFFFFF);
@@ -472,7 +478,7 @@ void GammaFilterTool::eoeProcessing(EDS_fwIxb* ixb)
     SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfFilterStatus(m_dataSvc,"/Event/Filter/ObfFilterStatus");
 
     // Create a new Gamma Status TDS sub object
-    OnboardFilterTds::ObfGammaStatus* gamStat = new OnboardFilterTds::ObfGammaStatus(rsdDsc->id, newStatusWord, sb, energy);
+    OnboardFilterTds::ObfGammaStatus* gamStat = new OnboardFilterTds::ObfGammaStatus(rsdDsc->id, newStatusWord, sb, 0, energy);
 
     // Add it to the TDS object
     obfFilterStatus->addFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter, gamStat);
