@@ -82,6 +82,8 @@ public:
     enums::Lsf::HandlerId getId() const { return m_id; }
     UInt_t getPrescaleFactor() const { return m_prescaleFactor; }
 
+    Int_t prescalerIndex() const;
+
 private:
     UInt_t                      m_masterKey;  /// FMX key of master CDM for handler (fixed for a run)
     UInt_t                      m_cfgKey;     /// FMX key of current CDM for handler (may vary by mode)

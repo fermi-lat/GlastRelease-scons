@@ -152,6 +152,47 @@ const ILpaHandler* LpaHandler::getHandler(const enums::Lsf::HandlerId &id) const
     else return 0;
 }
 
+Int_t ILpaHandler::prescalerIndex() const {
+  switch (m_prescaler){
+  case enums::Lsf::UNSUPPORTED:
+    // We really don't know what happened, maybe the state will tell us something
+    break;
+  case enums::Lsf::INPUT:
+    // filter never saw the event, set a value larger than any specific prescaler
+    return 33;
+  case enums::Lsf::OUTPUT:
+    // output prescale expired, this means the line prescalers are irrelevent
+    // set a value larger that the first line
+    return 32;      
+  default:
+    // one of the line prescales is asserted, return that 
+    return m_prescaler;
+  }
+
+  switch (m_state) {
+  case enums::Lsf::INVALID:  
+    // We really don't know what happened, set a large value so this 
+    // doesn't get into any of the other samples
+    return 100;
+  case enums::Lsf::IGNORED:
+    // Filter never saw the event, set a value larger than any specific prescaler
+    // should have been caught in the first switch above
+    return 33;
+  case enums::Lsf::PASSED:
+    // If the event made it here it means that none of the bits were asserted
+    // return a value smaller that the lowest bit
+    return -1;
+  case enums::Lsf::SUPPRESSED:
+  case enums::Lsf::VETOED:
+  case enums::Lsf::LEAKED:    
+    // In all of these cases the event should have been caught by the first switch
+    // but return the relevent prescaler, just in case
+    break;
+  }
+  return m_prescaler;
+}
+
+
 // Implement the LpaGammaFilter class here
 
 ClassImp(LpaGammaFilter)
