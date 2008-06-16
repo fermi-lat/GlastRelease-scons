@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r6     16-Jun-2008  TU Modify ObfFilterStatus.h for changes to TDS version
 v11r5     12-Jun-2008 HMK Add mootKey data member to MetaEvent as requested
           by Eric C.
 v11r4     11-Jun-2008  TU Rename Filter classes to conform to FSW convention (request from Anders)
