@@ -139,7 +139,7 @@ MessageSvc.OutputLevel = 3;
 ApplicationMgr.EvtMax  = 100;
 
 //ToolSvc.GammaFilterTool.Configuration = "GAMMA_DB_INSTANCE_K_NORMAL_LEAK";
-OnboardFilter.UseMootConfig=true;
+OnboardFilter.UseMootConfig=false;
 
 //==============================================================
 //
