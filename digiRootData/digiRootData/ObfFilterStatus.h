@@ -21,12 +21,14 @@ public:
     virtual void Print(Option_t *option="") const = 0;
 
     /// OBF functions
-    virtual UInt_t  getStatusWord() const = 0;
-    virtual UInt_t  getVetoMask()   const = 0;
-    virtual UInt_t  getVetoBit()    const = 0;
+    virtual UInt_t  getStatusWord()    const = 0;
+    virtual UInt_t  getVetoMask()      const = 0;
+    virtual UInt_t  getVetoBit()       const = 0;
 
-    virtual UChar_t getFilterId()   const = 0;
-    virtual UChar_t getFiltersb()   const = 0;
+    virtual UChar_t getFilterId()      const = 0;
+    virtual UChar_t getFiltersb()      const = 0;
+
+    virtual UInt_t  getPrescalerWord() const = 0;
 };
 
 /** @class ObfFilterStatus
@@ -75,27 +77,29 @@ private:
     /// An array of points defining the trajectory
     TObjArray m_obfStatusCol;
     
-    ClassDef(ObfFilterStatus,3) // Onboard Filter container class
+    ClassDef(ObfFilterStatus,4) // Onboard Filter container class
 };
 
 class ObfGammaStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfGammaStatus() : m_status(0), m_id(0), m_sb(0), m_energy(0) {}
-    ObfGammaStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t energy) : 
-                   m_status(status), m_id(id), m_sb(sb), m_energy(energy) {}
+    ObfGammaStatus() : m_status(0), m_id(0), m_sb(0), m_prescaler(0), m_energy(0) {}
+    ObfGammaStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t prescaler, UInt_t energy) : 
+                   m_status(status), m_id(id), m_sb(sb), m_prescaler(prescaler), m_energy(energy) {}
     virtual ~ObfGammaStatus() {}
 
     // If msb is set below then event is to be vetoed
-    UInt_t  getStatusWord() const;
+    UInt_t  getStatusWord()    const;
 
-    UInt_t  getVetoMask()   const;
-    UInt_t  getVetoBit()    const;
+    UInt_t  getVetoMask()      const;
+    UInt_t  getVetoBit()       const;
 
-    UChar_t getFilterId()   const {return m_id;}
-    UChar_t getFiltersb()   const {return m_sb;}
+    UChar_t getFilterId()      const {return m_id;}
+    UChar_t getFiltersb()      const {return m_sb;}
+    UInt_t  getPrescalerWord() const {return m_prescaler;}
 
-    UInt_t  getEnergy()     const {return m_energy;}
+    UInt_t  getEnergy()        const {return m_energy & 0x00FFFFFF;}
+    UInt_t  getStage()         const {return (m_energy & 0xFF000000) >> 24;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
@@ -104,27 +108,29 @@ private:
     UInt_t  m_status;
     UChar_t m_id;
     UChar_t m_sb;
+    UInt_t  m_prescaler;
     UInt_t  m_energy;
 
-    ClassDef(ObfGammaStatus,4) // Gamma Filter output
+    ClassDef(ObfGammaStatus,5) // Gamma Filter output
 };
 
 class ObfHipStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfHipStatus() : m_status(0), m_id(0), m_sb(0) {}
-    ObfHipStatus(UChar_t id, UInt_t status, UChar_t sb) : 
-                   m_status(status), m_id(id), m_sb(sb) {}
+    ObfHipStatus() : m_status(0), m_id(0), m_sb(0), m_prescaler(0) {}
+    ObfHipStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t prescaler) : 
+                 m_status(status), m_id(id), m_sb(sb), m_prescaler(prescaler) {}
     virtual ~ObfHipStatus() {}
 
     // If msb is set below then event is to be vetoed
-    UInt_t  getStatusWord() const;
+    UInt_t  getStatusWord()    const;
 
-    UInt_t  getVetoMask()   const;
-    UInt_t  getVetoBit()    const;
+    UInt_t  getVetoMask()      const;
+    UInt_t  getVetoBit()       const;
 
-    UChar_t getFilterId()   const {return m_id;}
-    UChar_t getFiltersb()   const {return m_sb;}
+    UChar_t getFilterId()      const {return m_id;}
+    UChar_t getFiltersb()      const {return m_sb;}
+    UInt_t  getPrescalerWord() const {return m_prescaler;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
@@ -133,26 +139,28 @@ private:
     UInt_t  m_status;
     UChar_t m_id;
     UChar_t m_sb;
+    UInt_t  m_prescaler;
 
-    ClassDef(ObfHipStatus,4) // HFC output
+    ClassDef(ObfHipStatus,5) // HFC output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfMipStatus(): m_status(0), m_id(0), m_sb(0) {}
-    ObfMipStatus(UChar_t id, UInt_t status, UChar_t sb) : 
-                   m_status(status), m_id(id), m_sb(sb) {}
+    ObfMipStatus(): m_status(0), m_id(0), m_sb(0), m_prescaler(0) {}
+    ObfMipStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t prescaler) : 
+                 m_status(status), m_id(id), m_sb(sb), m_prescaler(prescaler) {}
     virtual ~ObfMipStatus() {}
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
 
-    UInt_t  getVetoMask()   const;
-    UInt_t  getVetoBit()    const;
+    UInt_t  getVetoMask()      const;
+    UInt_t  getVetoBit()       const;
 
-    UChar_t getFilterId()   const {return m_id;}
-    UChar_t getFiltersb()   const {return m_sb;}
+    UChar_t getFilterId()      const {return m_id;}
+    UChar_t getFiltersb()      const {return m_sb;}
+    UInt_t  getPrescalerWord() const {return m_prescaler;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
@@ -161,26 +169,28 @@ private:
     UInt_t  m_status;
     UChar_t m_id;
     UChar_t m_sb;
+    UInt_t  m_prescaler;
 
-    ClassDef(ObfMipStatus,4) // MIP filter output
+    ClassDef(ObfMipStatus,5) // MIP filter output
 };
 
 class ObfDgnStatus : virtual public IObfStatus, public TObject
 {
 public:
-    ObfDgnStatus() : m_status(0), m_id(0), m_sb(0) {}
-    ObfDgnStatus(UChar_t id, UInt_t status, UChar_t sb)
-     : m_status(status), m_id(id), m_sb(sb) {}
+    ObfDgnStatus() : m_status(0), m_id(0), m_sb(0), m_prescaler(0) {}
+    ObfDgnStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t prescaler)
+     : m_status(status), m_id(id), m_sb(sb), m_prescaler(prescaler) {}
     virtual ~ObfDgnStatus() {}
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
 
-    UInt_t  getVetoMask()   const;
-    UInt_t  getVetoBit()    const;
+    UInt_t  getVetoMask()      const;
+    UInt_t  getVetoBit()       const;
 
-    UChar_t getFilterId()   const {return m_id;}
-    UChar_t getFiltersb()   const {return m_sb;}
+    UChar_t getFilterId()      const {return m_id;}
+    UChar_t getFiltersb()      const {return m_sb;}
+    UInt_t  getPrescalerWord() const {return m_prescaler;}
     
     void Clear(Option_t *option ="");
     void Print(Option_t *option="") const;
@@ -189,8 +199,9 @@ private:
     UInt_t  m_status;
     UChar_t m_id;
     UChar_t m_sb;
+    UInt_t  m_prescaler;
 
-    ClassDef(ObfDgnStatus,4) // DFC output
+    ClassDef(ObfDgnStatus,5) // DFC output
 };
 
 #endif
