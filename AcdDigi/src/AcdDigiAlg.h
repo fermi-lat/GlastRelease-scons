@@ -66,9 +66,13 @@ private:
   /// to the PHA values
   bool m_apply_coherent_noise;
 
- /// JobOptions parameter denoting whether or not to apply edge effects
+  /// JobOptions parameter denoting whether or not to apply edge effects
   /// according to the position of MC hits.
   bool m_edge_effect;
+
+  /// JobOptions parameter use to degrade performance of ACD
+  /// Reduces the light yield, defaults to 1.0
+  double m_lightYeildRatio;
 
   /// Access the methods in the AcdDigiUtil class
   AcdDigiUtil m_util;
