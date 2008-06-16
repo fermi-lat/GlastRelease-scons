@@ -57,6 +57,9 @@ public:
     virtual unsigned char getFilterId()               const = 0;
     virtual unsigned char getFiltersb()               const = 0;
 
+    // As is the word telling which prescaler affected the event
+    virtual unsigned int  getPrescalerWord()          const = 0;
+
     // Output for to diagnostic stream 
     virtual std::ostream& fillStream(std::ostream& s) const = 0;
 };
@@ -110,20 +113,22 @@ private:
 class ObfGammaStatus : virtual public IObfStatus
 {
 public:
-    ObfGammaStatus(unsigned char id, unsigned int status, unsigned char sb, unsigned int energy) : 
-      m_id(id), m_status(status), m_sb(sb), m_energy(energy) {}
+    ObfGammaStatus(unsigned char id, unsigned int status, unsigned char sb, unsigned int prescaler, unsigned int energy) : 
+      m_id(id), m_status(status), m_sb(sb), m_prescaler(prescaler), m_energy(energy) {}
     virtual ~ObfGammaStatus() {}
 
     // If msb is set below then event is to be vetoed
     unsigned int  getStatusWord() const {return m_status;}
 
-    unsigned int  getVetoMask()   const {return GFC_STATUS_M_VETOES;}
-    unsigned int  getVetoBit()    const {return GFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask()      const {return GFC_STATUS_M_VETOES;}
+    unsigned int  getVetoBit()       const {return GFC_STATUS_M_VETOED;}
 
-    unsigned char getFilterId()   const {return m_id;}
-    unsigned char getFiltersb()   const {return m_sb;}
+    unsigned char getFilterId()      const {return m_id;}
+    unsigned char getFiltersb()      const {return m_sb;}
+    unsigned int  getPrescalerWord() const {return m_prescaler;}
 
-    unsigned int  getEnergy()     const {return m_energy;}
+    unsigned int  getEnergy()        const {return m_energy & GFC_STAGE_M_ENERGY;}
+    unsigned int  getStage()         const {return (m_energy & GFC_STAGE_M_STAGE) >> GFC_STAGE_S_ENERGY;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -134,24 +139,26 @@ private:
     unsigned int  m_status;
     unsigned char m_id;
     unsigned char m_sb;
+    unsigned int  m_prescaler;
     unsigned int  m_energy;
 };
 
 class ObfHipStatus : virtual public IObfStatus
 {
 public:
-    ObfHipStatus(unsigned char id, unsigned int status, unsigned char sb) : 
-      m_id(id), m_status(status), m_sb(sb) {}
+    ObfHipStatus(unsigned char id, unsigned int status, unsigned char sb, unsigned int prescaler) : 
+      m_id(id), m_status(status), m_sb(sb), m_prescaler(prescaler) {}
     virtual ~ObfHipStatus() {}
 
      // If msb of below is set then event is to be vetoed
-    unsigned int  getStatusWord() const {return m_status;}
+    unsigned int  getStatusWord()    const {return m_status;}
 
-    unsigned int  getVetoMask()   const {return HFC_STATUS_M_VETO_DEF;}
-    unsigned int  getVetoBit()    const {return HFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask()      const {return HFC_STATUS_M_VETO_DEF;}
+    unsigned int  getVetoBit()       const {return HFC_STATUS_M_VETOED;}
 
-    unsigned char getFilterId()   const {return m_id;}
-    unsigned char getFiltersb()   const {return m_sb;}
+    unsigned char getFilterId()      const {return m_id;}
+    unsigned char getFiltersb()      const {return m_sb;}
+    unsigned int  getPrescalerWord() const {return m_prescaler;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -162,22 +169,24 @@ private:
     unsigned int  m_status;
     unsigned char m_id;
     unsigned char m_sb;
+    unsigned int  m_prescaler;
 };
 
 class ObfMipStatus : virtual public IObfStatus
 {
 public:
-    ObfMipStatus(unsigned char id, unsigned int status, unsigned char sb) : 
-      m_id(id), m_status(status), m_sb(sb) {}
+    ObfMipStatus(unsigned char id, unsigned int status, unsigned char sb, unsigned int prescaler) : 
+      m_id(id), m_status(status), m_sb(sb), m_prescaler(prescaler) {}
     virtual ~ObfMipStatus() {}
 
-    unsigned int  getStatusWord() const {return m_status;}
+    unsigned int  getStatusWord()    const {return m_status;}
 
-    unsigned int  getVetoMask()   const {return MFC_STATUS_M_VETO_DEF;}
-    unsigned int  getVetoBit()    const {return MFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask()      const {return MFC_STATUS_M_VETO_DEF;}
+    unsigned int  getVetoBit()       const {return MFC_STATUS_M_VETOED;}
 
-    unsigned char getFilterId()   const {return m_id;}
-    unsigned char getFiltersb()   const {return m_sb;}
+    unsigned char getFilterId()      const {return m_id;}
+    unsigned char getFiltersb()      const {return m_sb;}
+    unsigned int  getPrescalerWord() const {return m_prescaler;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -188,23 +197,25 @@ private:
     unsigned int  m_status;
     unsigned char m_id;
     unsigned char m_sb;
+    unsigned int  m_prescaler;
 };
 
 class ObfDgnStatus : virtual public IObfStatus
 {
 public:
-    ObfDgnStatus(unsigned char id, unsigned int status, unsigned char sb) : 
-      m_id(id), m_status(status), m_sb(sb) {}
+    ObfDgnStatus(unsigned char id, unsigned int status, unsigned char sb, unsigned int prescaler) : 
+      m_id(id), m_status(status), m_sb(sb), m_prescaler(prescaler) {}
     virtual ~ObfDgnStatus() {}
 
     // If msb of below is set then event is to be vetoed
-    unsigned int  getStatusWord() const {return m_status;}
+    unsigned int  getStatusWord()    const {return m_status;}
 
-    unsigned int  getVetoMask()   const {return DFC_STATUS_M_VETO_DEF;}
-    unsigned int  getVetoBit()    const {return DFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask()      const {return DFC_STATUS_M_VETO_DEF;}
+    unsigned int  getVetoBit()       const {return DFC_STATUS_M_VETOED;}
 
-    unsigned char getFilterId()   const {return m_id;}
-    unsigned char getFiltersb()   const {return m_sb;}
+    unsigned char getFilterId()      const {return m_id;}
+    unsigned char getFiltersb()      const {return m_sb;}
+    unsigned int  getPrescalerWord() const {return m_prescaler;}
     
     std::ostream& fillStream(std::ostream& s) const
     {
@@ -215,6 +226,7 @@ private:
     unsigned int  m_status;
     unsigned char m_id;
     unsigned char m_sb;
+    unsigned int  m_prescaler;
 };
 
 } // end namespace
