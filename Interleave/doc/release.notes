@@ -7,6 +7,7 @@ $Id$
 
 @verbatim
 
+17-Jun-08 v1r6p1  MLK Changed type for EvtLiveTime from float to double
 11-Jun-08 v1r6p0  TU  Add InterleaveBranchAlg as mechanism to help fix livetime issue
 18-May-08 v1r5p14 TU  Change saveRow to storeRowFlag to make sure vars past interleave row are saved
 12-May-08 v1r5p13 HMK Tiny patch to remove m_inputFile completely

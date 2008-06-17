@@ -45,7 +45,7 @@ private:
     unsigned int EvtRun;
     unsigned int EvtEventId;
     double EvtElapsedTime;
-    float EvtLiveTime;
+    double EvtLiveTime;
 
     float EvtEnergyCorr;
     float EvtEnergyRaw;

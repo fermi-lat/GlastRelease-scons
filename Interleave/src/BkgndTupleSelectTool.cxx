@@ -524,7 +524,7 @@ void BkgndTupleSelectTool::copyEventInfo()
     float  EvtRun         = header->run();
     float  EvtEventId     = header->event();
     double EvtElapsedTime = header->time();
-    float  EvtLiveTime    = header->livetime();
+    double EvtLiveTime    = header->livetime();
 
     // load the map entries to relate the interleaved row back to its original source
     m_interleaveMap->getInterleaveMap()->run      =  header->run();
