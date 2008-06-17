@@ -12,7 +12,6 @@ $Header$
 
 #include "astro/GPS.h"
 #include "geometry/Vector.h"
-#include "FluxSvc/IFluxSvc.h"
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
@@ -98,14 +97,9 @@ StatusCode ObfCoordsAlg::initialize()
     }
     m_worker = new ObfCworker();
 
-    // get the GPS instance: either from FluxSvc or local, non-MC mode
-    IFluxSvc* fluxSvc(0);
-    if( service("FluxSvc", fluxSvc).isFailure() ){
-        //log << MSG::INFO << "Will use the GPS singleton to get coordinates" << endreq;
-        gps = astro::GPS::instance();
-    }else{
-        gps = fluxSvc->GPSinstance();
-    }
+    // get the GPS instance
+    gps = astro::GPS::instance();
+
     return sc;
 }
 
