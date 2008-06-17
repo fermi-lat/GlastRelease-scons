@@ -13,7 +13,7 @@ use CalXtalResponse
 use GlastSvc
 use CalUtil
 use Event
-use Trigger
+use ConfigSvc
 use configData
 
 
