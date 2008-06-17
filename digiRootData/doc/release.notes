@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r6p3   17-Jun-2008 HMK Rewind ClassDef versions of ObfHipStatus and
+          ObfDgnStatus, since these are new classes, due to the renaming
 v11r6p2   17-Jun-2008 HMK remove virtual from def of ObfFilterTrack's derivation
           from TObject
 v11r6p1   16-Jun-2008 EAC Added LpaHandler::prescaleIndex() to re-order prescalers to help users.

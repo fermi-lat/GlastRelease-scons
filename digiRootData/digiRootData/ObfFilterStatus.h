@@ -143,7 +143,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfHipStatus,5) // HFC output
+    ClassDef(ObfHipStatus,0) // HIP output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
@@ -203,7 +203,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfDgnStatus,5) // DFC output
+    ClassDef(ObfDgnStatus,0) // DGN output
 };
 
 #endif
