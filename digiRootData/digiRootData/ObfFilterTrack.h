@@ -17,15 +17,15 @@
 *        the onboard filter tracking.
 *
 */
-class ObfFilterTrack : virtual public TObject
+class ObfFilterTrack : public TObject
 {
 public:
 
     // Standard constructor
-    ObfFilterTrack() : m_nXhits(0), m_nYhits(0), m_xInt(0), m_yInt(0), m_z(0), m_slpXZ(0), m_slpYZ(0) {}
+    ObfFilterTrack() : TObject(), m_nXhits(0), m_nYhits(0), m_xInt(0), m_yInt(0), m_z(0), m_slpXZ(0), m_slpYZ(0) {}
 
     // Constructor with known parameters
-    ObfFilterTrack(Int_t xHits, Int_t yHits, Float_t xInt, Float_t yInt, Float_t z, Float_t slpXZ, Float_t slpYZ) :
+    ObfFilterTrack(Int_t xHits, Int_t yHits, Float_t xInt, Float_t yInt, Float_t z, Float_t slpXZ, Float_t slpYZ) : TObject(),
         m_nXhits(xHits), m_nYhits(yHits), m_xInt(xInt), m_yInt(yInt), m_z(z), m_slpXZ(slpXZ), m_slpYZ(slpYZ) {}
 
     // Standard destructor

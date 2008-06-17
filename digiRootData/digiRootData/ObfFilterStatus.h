@@ -29,6 +29,8 @@ public:
     virtual UChar_t getFiltersb()      const = 0;
 
     virtual UInt_t  getPrescalerWord() const = 0;
+
+    ClassDef(IObfStatus,0) // Onboard Status abstract class
 };
 
 /** @class ObfFilterStatus
