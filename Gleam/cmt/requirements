@@ -1,6 +1,6 @@
 package Gleam
 
-version v7r0p3
+version v7r0p4
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
 
@@ -64,6 +64,9 @@ use EventIntegrity v*
 
 # MOOT
 use MootSvc v*
+
+use ConfigSvc v*
+
 
 # beamtest 2006 ancillary data
 use AncillaryDataEvent v*
