@@ -88,29 +88,36 @@ Triggered.Members={
 
 // ----------------------------
 //  Trigger and livetime
-
+ApplicationMgr.DLLs   += {"MootSvc","ConfigSvc"};
+ApplicationMgr.ExtSvc += {"MootSvc","ConfigSvc"};
 ApplicationMgr.DLLs +={ "Trigger"};
 ApplicationMgr.ExtSvc += { "LivetimeSvc"}; 
 LivetimeSvc.InterleaveMode = false; // interleave mode kills events on a statistical basis 
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
-// The following is for the new Trigger Configuration Service
-TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
+// The following is to use the ConfigSvc to configure the trigger
+TriggerAlg.engine="ConfigSvc"; // use ConfigSvc to configure trigger engines. The following options control the configuration:
 TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
 //TriggerAlg.applyWindowMask=true; // only use event if the window was open
 //TriggerAlg.applyDeadtime=true; // throw away events if GEM is busy
 //TriggerAlg.useGltWordForData=true; //when prescaling data use Glt word instead of Gem word
 
-// Configure TrgConfigSvc if used
+// Configure ConfigSvc and MootSvc
+MootSvc.ExitOnFatal = false;  // Allow MootSvc to continue if the MOOT key isn't found
 
-// TrgConfigSvc.configureFrom="Moot"; // options are "Default", "File", "Moot"
+// Configuration from xml files
+//ConfigSvc.GammaFilterXml = "./GFC_DB/0000002f-gamma_normal.xml";  
+//ConfigSvc.DgnFilterXml   = "./XFC_DB/0000004e-dgn_gem.xml";
+//ConfigSvc.MipFilterXml   = "./XFC_DB/00000054-hip_normal.xml";
+//ConfigSvc.HipFilterXml   = "./XFC_DB/00000059-mip_off_axis.xml";
+//ConfigSvc.GemXml         = "./latc_GEM_TRG_GEM/0000005b-TRG_GEM_GEM-nomSciOps_2HzPer.xml";
+//ConfigSvc.RoiXml         = "./latc_GEM_TRG_ROI/00000020-TRG_ROI_GEM-roiShadow.xml";
+//MootSvc.NoMoot = true;
 
-// Configuration from xml file
-//TrgConfigSvc.xmlFile= "/path/configFile.xml"; // path to config xml file
 
 // Configuration from database
-// TrgConfigSvc.useKeyFromData=false; // use DB key from the event
-// TrgConfigSvc.fixedKey=4561; // if useKeyFromData is false, use this fixed key for all events instead.
+//MootSvc.UseEventKeys=false; // Don't use DB key from the event
+//MootSvc.MootConfigKey=4561; // Use this fixed key for all events instead.
 
 
 // ----------------------------

@@ -47,8 +47,14 @@ Triggered.Members = {"Sequencer/Trigger",
 ApplicationMgr.DLLs   += {"GlastSvc"};
 ApplicationMgr.ExtSvc += {"GlastDetSvc"};
 
+ApplicationMgr.DLLs   += {"MootSvc","ConfigSvc"};
+ApplicationMgr.ExtSvc += {"MootSvc","ConfigSvc"};
+
 GlastDetSvc.topVolume   = "LAT"; 
 GlastDetSvc.visitorMode = "recon";
+
+// Allow MootSvc to continue if it can't find the MootKey
+MootSvc.ExitOnFatal = false;
 
 
 //
@@ -69,7 +75,7 @@ TriggerAlg.mask = 0;
 //
 // Trigger engines: Not applying any prescales for real data!
 //
-TriggerAlg.engine = "TrgConfigSvc";
+TriggerAlg.engine = "ConfigSvc";
 
 
 //
@@ -186,11 +192,6 @@ EventSelector.FileName = "file.fits";
 //
 digiRootWriterAlg.digiRootFile = "digi.root";
 
-
-//
-// Get trigger configuration from Moot:
-//
-TrgConfigSvc.configureFrom = "Moot";
 
 //
 // The Doors .....

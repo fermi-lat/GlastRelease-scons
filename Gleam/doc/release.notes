@@ -5,6 +5,7 @@
  * $Id$
 
 
+* v7r0p3   EAC 18-Jun-08 Change pipeline jobOptions and basicOptions to use ConfigSvc
 * v7r0p2   LSR 15-Jun-08 Remove newly invalid line from basicOptions
                          Turn off Moot for OnboardFilter in default jO
 * v7r0p1   AWB 13-Jun-08 Added new CAL Calib to pipeline JO. 
