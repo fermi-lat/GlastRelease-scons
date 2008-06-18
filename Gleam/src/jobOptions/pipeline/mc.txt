@@ -98,11 +98,8 @@ Triggered.Members = {"Sequencer/Filter",  // can also cause rejection
                      "Sequencer/Output",
                      "Sequencer/NtupleMaker"};
 
-// Set up to Use ConfigSvc to get trigger and OBF configurations
-ApplicationMgr.DLLs   += {"MootSvc","ConfigSvc"};
-ApplicationMgr.ExtSvc += {"MootSvc","ConfigSvc"};
-// Allow MootSvc to continue if it can't find the MootKey
-MootSvc.ExitOnFatal = false;
+// Configuration.  This get the configuration from MOOT
+ #include "$CONFIGSVCROOT/src/configOptions_moot.txt"
 
 
 //

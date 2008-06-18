@@ -47,14 +47,12 @@ Triggered.Members = {"Sequencer/Trigger",
 ApplicationMgr.DLLs   += {"GlastSvc"};
 ApplicationMgr.ExtSvc += {"GlastDetSvc"};
 
-ApplicationMgr.DLLs   += {"MootSvc","ConfigSvc"};
-ApplicationMgr.ExtSvc += {"MootSvc","ConfigSvc"};
-
 GlastDetSvc.topVolume   = "LAT"; 
 GlastDetSvc.visitorMode = "recon";
 
-// Allow MootSvc to continue if it can't find the MootKey
-MootSvc.ExitOnFatal = false;
+
+// Configuration.  This get the configuration from MOOT
+ #include "$CONFIGSVCROOT/src/configOptions_moot.txt"
 
 
 //
