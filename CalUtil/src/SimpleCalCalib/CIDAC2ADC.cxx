@@ -26,7 +26,7 @@ namespace CalUtil {
   {
   }
 
-  void CIDAC2ADC::writeTXT(const string &filename) const {
+  void CIDAC2ADC::writeTXT(const std::string &filename) const {
     ofstream outfile(filename.c_str());
 
     if (!outfile.is_open()) {
@@ -56,7 +56,7 @@ namespace CalUtil {
       }
   }
 
-  void CIDAC2ADC::readTXT(const string &filename) {
+  void CIDAC2ADC::readTXT(const std::string &filename) {
     ifstream infile(filename.c_str());
 
     if (!infile.is_open()) {

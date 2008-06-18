@@ -29,7 +29,7 @@ namespace CalUtil {
   {
   }
 
-  void TholdCI::readTXT(const string &filename) {
+  void TholdCI::readTXT(const std::string &filename) {
     // open file
     ifstream infile(filename.c_str());
     

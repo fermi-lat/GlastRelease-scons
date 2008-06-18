@@ -28,7 +28,7 @@ namespace CalUtil {
       fill(m_mpd[diode].begin(), m_mpd[diode].end(), INVALID_MPD);
   }
 
-  void CalMPD::writeTXT(const string &filename) const {
+  void CalMPD::writeTXT(const std::string &filename) const {
     ofstream outfile(filename.c_str());
 
     if (!outfile.is_open())
@@ -57,7 +57,7 @@ namespace CalUtil {
       }
   }
 
-  void CalMPD::readTXT(const string &filename) {
+  void CalMPD::readTXT(const std::string &filename) {
     unsigned short twr, lyr, col, diode;
     float mpd, sig;
 

@@ -27,7 +27,7 @@ namespace CalUtil {
   {
   }
 
-  void CalPed::writeTXT(const string &filename) const {
+  void CalPed::writeTXT(const std::string &filename) const {
     ofstream outfile(filename.c_str());
 
     // output header info as comment
@@ -48,7 +48,7 @@ namespace CalUtil {
                 << endl;
   }
 
-  void CalPed::readTXT(const string &filename) {
+  void CalPed::readTXT(const std::string &filename) {
     ifstream infile(filename.c_str());
 
     if (!infile.is_open())

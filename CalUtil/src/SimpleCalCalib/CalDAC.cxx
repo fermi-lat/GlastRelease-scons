@@ -28,7 +28,7 @@ namespace CalUtil {
   {
   }
 
-  void CalDAC::writeTXT(const string &filename) const {
+  void CalDAC::writeTXT(const std::string &filename) const {
     ofstream outfile(filename.c_str());
 
     // output header info as comment
@@ -46,7 +46,7 @@ namespace CalUtil {
               << endl;
   }
 
-  void CalDAC::readTXT(const string &filename) {
+  void CalDAC::readTXT(const std::string &filename) {
     ifstream infile(filename.c_str());
 
     if (!infile.is_open())

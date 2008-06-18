@@ -24,7 +24,7 @@ namespace CalUtil {
   {
   }
 
-  void CalAsym::writeTXT(const string &filename) const {
+  void CalAsym::writeTXT(const std::string &filename) const {
     ofstream outfile(filename.c_str());
 
     if (!outfile.is_open())
@@ -57,7 +57,7 @@ namespace CalUtil {
     }
   }
 
-  void CalAsym::readTXT(const string &filename) {
+  void CalAsym::readTXT(const std::string &filename) {
     unsigned short twr, lyr, col, pdiode, ndiode;
     float asym, sig;
 

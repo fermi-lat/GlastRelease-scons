@@ -3,7 +3,7 @@
 
 // $Header$
 
-/** @file
+/** @file ADC2NRG.h
     @author Zachary Fewtrell
 */
 

@@ -23,9 +23,9 @@
 
 namespace CalUtil {
 
-  /// find which GLAST LAT towers are present by creating a VolumeIdentifer inside of each one and
-  /// checking with GlastDetSvc if it is valid.
   std::vector<CalUtil::TwrNum>  findActiveTowers(IGlastDetSvc &detSvc) {
+    /// find which GLAST LAT towers are present by creating a VolumeIdentifer inside of each one and
+    /// checking with GlastDetSvc if it is valid.
     std::vector<CalUtil::TwrNum> twrList;
   
     /*-- RETRIEVE CONSTANTS */
