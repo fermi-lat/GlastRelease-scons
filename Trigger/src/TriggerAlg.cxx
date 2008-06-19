@@ -157,7 +157,7 @@ private:
 
     Trigger::TriggerTables* m_triggerTables;
 
-    IConfigSvc *m_configSvc(0);
+    IConfigSvc *m_configSvc;
     EnginePrescaleCounter* m_pcounter;
     bool m_printtables;
     bool m_isMc;
@@ -181,6 +181,7 @@ TriggerAlg::TriggerAlg(const std::string& name, ISvcLocator* pSvcLocator)
 , m_triggered(0), m_deadtime_reject(0), m_window_reject(0), m_prescaled(0)
 , m_busy(0), m_deadzone(0)
 , m_triggerTables(0)
+, m_configSvc(0)
 , m_pcounter(0)
 , m_isMc(0)
 , m_roi(0)
