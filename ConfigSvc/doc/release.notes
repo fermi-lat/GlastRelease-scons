@@ -3,6 +3,7 @@
 @verbatim
  * package manager:E. Charles
  *
+ * v0r2p3 19-Jun-08 EAC remove calls to MootSvc if IMootSvc::noMoot() is set
  * v0r2p2 19-Jun-08 HMK remove MootSvc from local JO 
  * v0r2p1 19-Jun-08 HMK Use the Gaudi component_library pattern
  * v0r2   18-Jun-08 EAC Added xml files to avoid needing MOOT 

@@ -185,12 +185,14 @@ const TrgConfig* ConfigSvc::getTrgConfig() const {
   if ( m_noMOOTMask & ( 1 << GEM ) ) {
     gemFileName = m_gemXmlFile.value();
   } else {
+    if ( m_mootSvc->noMoot() ) return 0;
     const CalibData::MootParm* gem = m_mootSvc->getGemParm(latcKey);    
     getFullPath( gem->getSrc(), gemFileName );
   }
   if ( m_noMOOTMask & ( 1 << ROI ) ) {
     roiFileName = m_roiXmlFile.value();
   } else {
+    if ( m_mootSvc->noMoot() ) return 0;
     const CalibData::MootParm* roi = m_mootSvc->getRoiParm(latcKey);
     getFullPath( roi->getSrc(), roiFileName );
   }
@@ -238,6 +240,7 @@ void ConfigSvc::getFullPath(const std::string& mootPath, std::string& fullPath) 
 
 /// check to see if we have a new MOOT key
 bool ConfigSvc::newMootKey() const {
+  if ( m_mootSvc->noMoot() ) return false;
   unsigned newMootKey = m_mootSvc->getMootConfigKey();
   unsigned newLatcKey = m_mootSvc->getHardwareKey();
   if ( m_mootKey == newMootKey && m_latcKey == newLatcKey ) return false;
@@ -300,8 +303,11 @@ FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) co
     // it is an old key, return the cached value
     return getFswSamplerFromCache(lpaMode,handlerId);
   }
+  if ( m_mootSvc->noMoot() ) {
+    return 0;
+  }
   // new value, read the xml file into the cache
-  std::string handlerName;
+  std::string handlerName; 
   CalibData::MootFilterCfg* filterCfg = m_mootSvc->getActiveFilter(lpaMode,handlerId,handlerName);
   if ( filterCfg == 0 ) return 0;
   std::string fullPath;
