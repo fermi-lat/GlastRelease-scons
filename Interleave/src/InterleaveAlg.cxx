@@ -15,7 +15,6 @@ $Header$
 #include "Trigger/ILivetimeSvc.h"
 
 // TDS class declarations: input data, and McParticle tree
-#include "Event/MonteCarlo/McParticle.h"
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
@@ -172,7 +171,7 @@ StatusCode InterleaveAlg::initialize()
 
     log << MSG::INFO << "initialized OK: initial downlink rate to merge is " << m_bkgndManager->downlinkRate() << " Hz"<< endreq;
 
-    m_LivetimeSvc->setTriggerRate(m_bkgndManager->triggerRate());
+    m_LivetimeSvc->setTriggerRate(m_bkgndManager->triggerRate() - m_bkgndManager->downlinkRate());
 
     return sc;
 }
@@ -185,23 +184,7 @@ StatusCode InterleaveAlg::execute()
 
     MsgStream   log( msgSvc(), name() );
 
-    // check that the TDS has an appropriate pseudo-background 
-
-    SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
-
-    if (0==particles) 
-    {
-        log << MSG::ERROR << "No MC particles!" << endreq;
-        return StatusCode::FAILURE;
-    }   
-
-    const Event::McParticle& primary = **particles->begin();
-    double ke = primary.initialFourMomentum().e()-primary.initialFourMomentum().m();
-
-    if( ke > 0. )
-    {
-        return sc; // not a flagged sampled_background 
-    }
+    // Keep track of the number of times we are called
     ++m_count;
 
     // Retrieve the source name from the MC Header
@@ -230,15 +213,12 @@ StatusCode InterleaveAlg::execute()
         << ", trigger, downlink rates: " << m_bkgndManager->triggerRate()<<", " 
         << m_bkgndManager->downlinkRate() << endreq;
 
-    m_LivetimeSvc->setTriggerRate(m_bkgndManager->triggerRate());
+    m_LivetimeSvc->setTriggerRate(m_bkgndManager->triggerRate() - m_bkgndManager->downlinkRate());
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     header->setLivetime( m_LivetimeSvc->livetime());
 
     // overwrite the event info
     selector->copyEventInfo();
-
-    // We have read the event in, want to now proceed down the interleave branch
-    setFilterPassed(false); // since this is on a branch, and we want the sequence to fail
 
     return sc;
 }
