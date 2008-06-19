@@ -2,11 +2,13 @@ package ConfigSvc
 
 # $Header$
 
-version v0r2
+version v0r2p1
 
 author Eric Charles <echarles@slac.stanford.edu>
 
 use GlastPolicy v*
+
+apply_pattern component_library library=ConfigSvc
 
 apply_pattern package_include
 use configData v*

@@ -4,6 +4,7 @@
  * package manager:E. Charles
  *
  *
+ * v0r2p1 19-Jun-08 HMK Use the Gaudi component_library pattern
  * v0r2   18-Jun-08 EAC Added xml files to avoid needing MOOT 
  * v0r1   13-Jun-08 EAC Minor Fixes to also get LATC key and use MOOT_ARCHIVE envar
  * v0r0   12-Jun-08 EAC Initial version
