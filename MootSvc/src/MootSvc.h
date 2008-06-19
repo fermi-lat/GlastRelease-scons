@@ -76,10 +76,7 @@ class MootSvc :  public Service,
 
   /// Return Moot config key for current acquisition
   /// Return 0 if unknown
-  virtual unsigned getMootConfigKey() {
-    updateFswEvtInfo();   // force re-compute just in case
-    return m_mootConfigKey;
-  }
+  virtual unsigned getMootConfigKey();
 
   /// Return absolute path for parameter source file of specified class.
   /// If none return empty string.
