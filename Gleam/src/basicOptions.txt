@@ -86,8 +86,6 @@ Triggered.Members={
     "Sequencer/NtupleMaker"
  };
 
-// Configuration.  This gets the configuration from files in the release
-#include "$CONFIGSVCROOT/src/configOptions_noMoot.txt"
 
 // ----------------------------
 //  Trigger and livetime
@@ -282,7 +280,9 @@ TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 //  MOOT services
 //
 #include "$MOOTSVCROOT/src/defaultOptions.txt"
-MootSvc.noMoot = "true";  // turn off MOOT access by default for now
+// Configuration.  This gets the configuration from files in the release
+#include "$CONFIGSVCROOT/src/configOptions_noMoot.txt"
+//MootSvc.noMoot = true;  // turn off MOOT access by default for now
 
 // -------------------------------------------
 //  Calorimeter services

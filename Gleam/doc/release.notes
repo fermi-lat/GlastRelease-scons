@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r0p7   HMK 19-Jun-08 Clean up basicOptions and default for new ConfigSvc
+*          and MootSvc
 * v7r0p6   AWB 19-Jun-08 Removed obsolete Gleam Onboardfilter JOs for the L1 pipeline.
 * v7r0p5   EAC 18-Jun-08 Re-Change pipeline jobOptions and basicOptions include 
 *                        fragments from ConfigSvc.
