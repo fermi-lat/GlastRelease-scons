@@ -294,6 +294,11 @@ bool ConfigSvc::readTrgConfig( const std::string& gemFileName, const std::string
 /// function to get the prescale factor
 FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) const {
 
+  // Open the message log
+  MsgStream log( msgSvc(), name() );
+
+  FswEfcSampler* sampler(0);
+
   // Check to see if we are reading that handler from a file instead of from MOOT
   if ( m_noMOOTMask & ( 1 << handlerId ) ) {
     return getFswSamplerFromCache(lpaMode,handlerId);
@@ -301,19 +306,30 @@ FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) co
   // Check the cache
   if ( ! newMootKey() ) {
     // it is an old key, return the cached value
-    return getFswSamplerFromCache(lpaMode,handlerId);
-  }
+    sampler = getFswSamplerFromCache(lpaMode,handlerId);
+    // No previous cache, try and get it.
+    if ( sampler != 0 ) return sampler;
+  } 
   if ( m_mootSvc->noMoot() ) {
+    log << MSG::ERROR << "Need to get FswHandler from MOOT, but IMootSvc::noMoot() is set." << endreq;
     return 0;
   }
   // new value, read the xml file into the cache
   std::string handlerName; 
   CalibData::MootFilterCfg* filterCfg = m_mootSvc->getActiveFilter(lpaMode,handlerId,handlerName);
-  if ( filterCfg == 0 ) return 0;
+  if ( filterCfg == 0 ) {
+    log << MSG::ERROR << "No active filter for mode " << lpaMode << " and handlerId " << handlerId << endreq;
+    return 0;
+  }
   std::string fullPath;
   getFullPath( filterCfg->getSrcPath(), fullPath );
 
-  FswEfcSampler* sampler = readEfcFromFile(lpaMode,handlerId,fullPath);
+  sampler = readEfcFromFile(lpaMode,handlerId,fullPath);
+  if ( sampler == 0 ) {
+    log << MSG::ERROR << "Failed to read sampler data from file " << fullPath << endreq;
+  } else {
+    log << MSG::INFO << "Read sampler data from file " << fullPath << endreq;
+  }
   return sampler;
 }
 
