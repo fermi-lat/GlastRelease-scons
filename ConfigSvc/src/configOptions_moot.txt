@@ -2,8 +2,8 @@
 // $Header$
 
 // DLLs 
-ApplicationMgr.DLLs   += {"MootSvc","ConfigSvc"};
-ApplicationMgr.ExtSvc += {"MootSvc","ConfigSvc"};
+ApplicationMgr.DLLs   += {"ConfigSvc"};
+ApplicationMgr.ExtSvc += {"ConfigSvc"};
 
 // Configure ConfigSvc and MootSvc
 MootSvc.ExitOnFatal = false;  // Allow MootSvc to continue if the MOOT key isn't found
