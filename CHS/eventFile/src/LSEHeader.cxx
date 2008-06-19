@@ -46,6 +46,22 @@ namespace eventFile {
       ess << " reader is v" << (FormatVersion & 0x000000FF);
       throw std::runtime_error( ess.str() );
     }
+
+    // read the MOOT key and alias into static members
+    nitems = fread( &m_moot_key, sizeof(unsigned), 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEHeader::read: error reading MOOT key, ";
+      ess << "(" << errno << ":'" << strerror( errno ) << "')";
+      throw std::runtime_error( ess.str() );
+    }
+    nitems = fread( m_moot_alias, LSEHEADER_ALIAS_LEN, 1, fp );
+    if ( nitems != 1 ) {
+      std::ostringstream ess;
+      ess << "LSEHeader::read: error reading MOOT alias, ";
+      ess << "(" << errno << ":'" << strerror( errno ) << "')";
+      throw std::runtime_error( ess.str() );
+    }
   }
 
   void LSEHeader::write( FILE* fp )
@@ -56,5 +72,34 @@ namespace eventFile {
 
     // write out the header data
     fwrite( this, sizeof( LSEHeader ), 1, fp );
+
+    // write out the MOOT key and alias
+    fwrite( &m_moot_key, sizeof( unsigned ), 1, fp );
+    fwrite( m_moot_alias, LSEHEADER_ALIAS_LEN, 1, fp );
   }
+
+  // define the mutable static members
+  unsigned LSEHeader::m_moot_key = 0xFFFFFFFF;
+  char     LSEHeader::m_moot_alias[LSEHEADER_ALIAS_LEN] = { 
+    'U',  'N',  'S',  'E',  'T',  '\0', '\0', '\0',
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+  };
+
+  // static-member mutators
+  void LSEHeader::set_moot_key( unsigned k )
+  {
+    m_moot_key = k;
+  }
+
+  void LSEHeader::set_moot_alias( const char* a )
+  {
+    strncpy( m_moot_alias, a, LSEHEADER_ALIAS_LEN-1 );
+  }
+    
 }

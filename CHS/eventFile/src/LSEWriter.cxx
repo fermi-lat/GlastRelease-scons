@@ -31,11 +31,15 @@
 
 namespace eventFile {
 
-  LSEWriter::LSEWriter( const std::string& filename, unsigned runid )
+  LSEWriter::LSEWriter( const std::string& filename, unsigned runid, unsigned mootKey, const char* mootAlias )
     : m_name( filename ), m_hdr()
   {
     // stash the runid in the header
     m_hdr.m_runid = runid;
+
+    // set the MOOT key/alias values
+    m_hdr.set_moot_key( mootKey );
+    m_hdr.set_moot_alias( mootAlias );
 
     // expand any environment variables in the filename
     facilities::Util::expandEnvVar( &m_name );

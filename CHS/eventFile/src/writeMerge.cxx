@@ -105,6 +105,17 @@ int main( int argc, char* argv[] )
     std::cout << "writeMerge: no LATC key override" << std::endl;
   }
 
+  // pick up the MOOT key/alias from the environment
+  unsigned WRITEMERGE_MOOTKEY = 0xFFFFFF00;
+  envbuf = getenv( "WRITEMERGE_MOOTKEY" );
+  if ( envbuf ) {
+    WRITEMERGE_MOOTKEY = strtoul( envbuf, NULL, 0 );
+  }
+  const char* WRITEMERGE_MOOTALIAS = getenv( "WRITEMERGE_MOOTALIAS" );
+  if ( !envbuf ) {
+    WRITEMERGE_MOOTALIAS = "WRITEMERGE_UNSET";
+  }
+
   // declare the file-output object pointer
   int eventsOut = 0;
   eventFile::LSEWriter* pLSEW = NULL;
@@ -178,7 +189,7 @@ int main( int argc, char* argv[] )
 
       // open the output file
       try {
-	pLSEW = new eventFile::LSEWriter( std::string( ofn ), downlinkID );
+	pLSEW = new eventFile::LSEWriter( std::string( ofn ), downlinkID, WRITEMERGE_MOOTKEY, WRITEMERGE_MOOTALIAS );
       } catch ( std::runtime_error& e ) {
 	std::cout << e.what() << std::endl;
 	exit( EXIT_FAILURE );

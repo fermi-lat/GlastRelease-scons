@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #define LSEHEADER_MAX_APIDS 4
+#define LSEHEADER_ALIAS_LEN 64
 
 namespace eventFile {
   
@@ -42,8 +43,20 @@ namespace eventFile {
     // version accessor
     unsigned version() const { return m_version & 0x000000FF; }
 
+    // static-variable accessors/mutators
+    static unsigned    moot_key()   { return m_moot_key; }
+    static const char* moot_alias() { return m_moot_alias; }
+    void set_moot_key( unsigned );
+    void set_moot_alias( const char* );
+
+    private:
+
+    // static members
+    static unsigned m_moot_key;
+    static char     m_moot_alias[LSEHEADER_ALIAS_LEN];
+
     // file-format version specifier
-    static const unsigned FormatVersion = 0x06060606;
+    static const unsigned FormatVersion = 0x07070707;
   };
 };
 

@@ -108,6 +108,10 @@ namespace eventFile {
 
     // from the close info
     FromClose close;
+
+    // from MOOT
+    unsigned    mootKey()   const;
+    const char* mootAlias() const;
   };
 
 };

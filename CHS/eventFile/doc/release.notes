@@ -4,6 +4,8 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v7r0   19-Jun-2008 RBL For ICS-770 inject MOOT key/alias into writeMerge-generated
+ *                        decoded-event files.
  * v6r0p1 23-May-2008 RBL eliminate vestigial LDF dependency.
  * v6r0   17-Apr-2008 RBL pick up DfiLci::TkrMetaEvent::dacRange() member
  * v5r0   14-Apr-2008 RBL first release with support for filter config and results summary.

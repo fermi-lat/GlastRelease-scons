@@ -2,6 +2,7 @@
 
 #include "eventFile/LSE_GemTime.h"
 #include "eventFile/LSE_Context.h"
+#include "eventFile/LSEHeader.h"
 
 namespace eventFile {
 
@@ -59,13 +60,25 @@ namespace eventFile {
 
   void LSE_Context::dump() const
   {
-    ccsds.dump(    " ccsds:    ", "\n" );
-    current.dump(  " current:  ", "\n" );
-    previous.dump( " previous: ", "\n" );
-    scalers.dump(  " scalers:  ", "\n" );
-    run.dump(      " run:      ", "\n" );
-    open.dump(     " open:     ", "\n" );
-    close.dump(    " close:    ", "\n" );
+    ccsds.dump(    " ccsds:     ", "\n" );
+    current.dump(  " current:   ", "\n" );
+    previous.dump( " previous:  ", "\n" );
+    scalers.dump(  " scalers:   ", "\n" );
+    run.dump(      " run:       ", "\n" );
+    open.dump(     " open:      ", "\n" );
+    close.dump(    " close:     ", "\n" );
+    printf(        " mootKey:   %10d (0x%08x)\n", mootKey(), mootKey() );
+    printf(        " mootAlias: %s\n", mootAlias() );
+  }
+
+  unsigned LSE_Context::mootKey() const
+  {
+    return LSEHeader::moot_key();
+  }
+
+  const char* LSE_Context::mootAlias() const
+  {
+    return LSEHeader::moot_alias();
   }
 
 }
