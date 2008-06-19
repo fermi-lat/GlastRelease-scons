@@ -65,5 +65,29 @@ std::ostream& ObfFilterStatus::fillStream( std::ostream& s ) const
     return s;
 }
 
+unsigned int ObfGammaStatus::getEnergyInLeus() const
+{
+    int energyBits = m_energy & GFC_STAGE_M_ENERGY;
+
+    // Drag the sign bit up and down
+    energyBits <<= 8;
+    energyBits >>= 8;
+
+    return energyBits;
+}
+
+float ObfGammaStatus::getEnergy() const
+{
+    int energyBits = m_energy & GFC_STAGE_M_ENERGY;
+
+    // Drag the sign bit up and down
+    energyBits <<= 8;
+    energyBits >>= 8;
+
+    float energy = static_cast<float>(energyBits) / 4.0;
+
+    return energy;
+}
+
 
 } // namespace

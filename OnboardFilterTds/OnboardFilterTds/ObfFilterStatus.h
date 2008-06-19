@@ -127,7 +127,8 @@ public:
     unsigned char getFiltersb()      const {return m_sb;}
     unsigned int  getPrescalerWord() const {return m_prescaler;}
 
-    unsigned int  getEnergy()        const {return m_energy & GFC_STAGE_M_ENERGY;}
+    unsigned int  getEnergyInLeus()  const;
+    float         getEnergy()        const; 
     unsigned int  getStage()         const {return (m_energy & GFC_STAGE_M_STAGE) >> GFC_STAGE_S_ENERGY;}
     
     std::ostream& fillStream(std::ostream& s) const
