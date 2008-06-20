@@ -59,7 +59,7 @@ namespace {
     MOOT::AcqSummaryInfo* pAcqInfo = 
       q->getAcqSummaryInfo(startedAt, scid);
     if (!pAcqInfo) return 0;
-    std::string keyStr = pAcqInfo->getKey();
+    std::string keyStr = pAcqInfo->getConfigKey();
     if (keyStr.empty()) return 0;
     unsigned mootKey = facilities::Util::stringToUnsigned(keyStr);
     delete pAcqInfo;
