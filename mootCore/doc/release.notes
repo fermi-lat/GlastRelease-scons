@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+   v1r23p1 20-Jun-2008 jrb Don't set MOOT_ARCHIVE env. var. in requirements
    v1r23 27-May-2008  jrb  Add MootQuery::getMasterKey; attempt to fix 
                            Windows/SWIG compile problem
    v1r22p1 24-May-2008 jrb Fix req. file so package compiles
