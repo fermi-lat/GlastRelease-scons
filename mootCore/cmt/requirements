@@ -37,7 +37,7 @@ use SwigPolicy v*
 ## \\Slaccfs\afs_slac\g\glast\moot\archive-mood for Windows
 ## Other Gleam users should override by setting job option
 ## MootSvc.MootArchive
-set MOOT_ARCHIVE *
+## set MOOT_ARCHIVE *
 
 private 
 
