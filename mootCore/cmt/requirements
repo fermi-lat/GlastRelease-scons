@@ -32,9 +32,12 @@ use SwigPolicy v*
 ##  For access to test archive from laptop
 ## set MOOT_ARCHIVE /scratch/glastsoft/moot_test_glastDB
 
-## For real production, use
-set MOOT_ARCHIVE /afs/slac/g/glast/moot/archive-mood
-
+## Seting MOOT_ARCHIVE to "*" causes Gleam to use defaults appropriate
+## to SLAC:  /afs/slac/g/glast/moot/archive-mood for Linux and
+## \\Slaccfs\afs_slac\g\glast\moot\archive-mood for Windows
+## Other Gleam users should override by setting job option
+## MootSvc.MootArchive
+set MOOT_ARCHIVE *
 
 private 
 
