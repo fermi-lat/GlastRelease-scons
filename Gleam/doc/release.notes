@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r0p8   AWB 20-Jun-08 Change L1 pipeline default JO to evt file as input to ldf2digi.
 * v7r0p7   HMK 19-Jun-08 Clean up basicOptions and default for new ConfigSvc
 *          and MootSvc
 * v7r0p6   AWB 19-Jun-08 Removed obsolete Gleam Onboardfilter JOs for the L1 pipeline.

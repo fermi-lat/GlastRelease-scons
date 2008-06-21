@@ -152,18 +152,14 @@ ApplicationMgr.EvtMax = 1000000000;
 GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 
 
-
-//
-// fits2digi: Use 'LDFFILE' for ldf2digi 
-//            and 'LDFFITS' for fits2digi!  
-//
-EventSelector.StorageType = "LDFFITS";
+// Evt file as input:
+EventSelector.StorageType = "CCSDSFILE";
 
 
 //
-// Input Fits/LDF file:
+// Input evt file:
 //
-EventSelector.FileName = "file.fits";
+EventSelector.FileName = "file.evt";
 
 
 //
