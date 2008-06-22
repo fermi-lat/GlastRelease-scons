@@ -187,14 +187,16 @@ const TrgConfig* ConfigSvc::getTrgConfig() const {
   } else {
     if ( m_mootSvc->noMoot() ) return 0;
     const CalibData::MootParm* gem = m_mootSvc->getGemParm(latcKey);    
-    getFullPath( gem->getSrc(), gemFileName );
+    //getFullPath( gem->getSrc(), gemFileName );
+    gemFileName = gem->getSrc();
   }
   if ( m_noMOOTMask & ( 1 << ROI ) ) {
     roiFileName = m_roiXmlFile.value();
   } else {
     if ( m_mootSvc->noMoot() ) return 0;
     const CalibData::MootParm* roi = m_mootSvc->getRoiParm(latcKey);
-    getFullPath( roi->getSrc(), roiFileName );
+    //getFullPath( roi->getSrc(), roiFileName );
+    roiFileName = roi->getSrc();
   }
   if ( ! readTrgConfig( gemFileName, roiFileName ) ) {
     return 0;
@@ -232,6 +234,7 @@ const FswEfcSampler* ConfigSvc::getFSWPrescalerInfo(enums::Lsf::Mode mode, unsig
 
 void ConfigSvc::getFullPath(const std::string& mootPath, std::string& fullPath) const {
   std::string archEnv("MOOT_ARCHIVE");
+  std::string localStr = facilities::commonUtilities::getEnvironment( archEnv );
   fullPath = facilities::commonUtilities::joinPath( facilities::commonUtilities::getEnvironment( archEnv ),
 						    mootPath );
 }
