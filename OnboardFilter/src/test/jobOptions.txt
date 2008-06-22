@@ -63,12 +63,16 @@ LivetimeSvc.InterleaveMode = false; // interleave mode kills events on a statist
 TriggerAlg.mask = -1; // all bits on by default: reject if none set (e.g., missed)
 
 // The following is for the new Trigger Configuration Service
-TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
+TriggerAlg.engine="ConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
 //TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
 TriggerAlg.applyPrescales = false;
 //TriggerAlg.applyWindowMask=true; // only use event if the window was open
 //TriggerAlg.applyDeadtime=true; // throw away events if GEM is busy
 //TriggerAlg.useGltWordForData=true; //when prescaling data use Glt word instead of Gem word
+
+#include "$MOOTSVCROOT/src/defaultOptions.txt"
+// Configuration.  This gets the configuration from files in the release
+#include "$CONFIGSVCROOT/src/configOptions_noMoot.txt"
 
 // ----------------------------
 //  onboard filter 
