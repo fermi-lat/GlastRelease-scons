@@ -60,7 +60,7 @@ void PointingInfo::execute( const astro::GPS& gps)
 
 <table>
 <tr><th> Variable <th>Type<th> Description
-<tr><td> PtTime       <td>F<td> (s) Current time, same as the elapsed time
+<tr><td> PtTime       <td>D<td> (s) Current time, same as the elapsed time
 <tr><td> PtLat,PtLon  <td>F<td> (deg) lattitude and longitude
 <tr><td> PtAlt        <td>F<td> (km) altitude
 <tr><td> PtMagLat     <td>F<td> magnetic latitude

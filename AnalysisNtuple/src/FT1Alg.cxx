@@ -231,7 +231,7 @@ see <a href="http://glast.gsfc.nasa.gov/ssc/dev/fits_def/definitionFT1.html">FT1
 <tr><td> FT1L, FT1B 
 <td>F<td>  (deg) galactic longitude and latitude of reconstructed direction
 <tr><td> FT1Livetime 
-<td>F<td>  (s) Cumulative live time, from start of run, or mission
+<td>D<td>  (s) Cumulative live time, from start of run, or mission
 <tr><td> FT1ConvLayer 
 <td>F<td>  Starting layer of the best track found in the tracker 
 (Layer 0 is the one closest to the calorimeter.)
