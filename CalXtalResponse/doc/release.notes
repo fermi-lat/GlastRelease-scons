@@ -1,3 +1,4 @@
+v0r21p6 06/23/08 hmk       - patch unit test JO file for move to ConfigSvc
 v0r21p5 05/28/08 fewtrell  - fixed bug introduced in latest pedestal implementation.
 v0r21p4 05/19/08 chekhtman - modified getPed interface in test application
 v0r21p3 05/16/08 chekhtman - merged pedestal temperature correction code for beam test from v0r14p4_CU3

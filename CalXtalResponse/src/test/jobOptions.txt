@@ -60,7 +60,7 @@ CalibDataSvc.CalibFlavorList     = {"ideal","CalXtalResponse_test_II"};
 ///////////////////////////////////////////////
 ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvc"};
 CalCalibSvc.DefaultFlavor  = "CalXtalResponse_test_II";
-CalDigiAlg.TrgConfigSvcName = "";
+CalDigiAlg.ConfigSvcName = "";
 CalDigiAlg.CreateDiagnosticData = "1";
 // disable noise
 ToolSvc.CalSignalTool.enableNoise = false;
