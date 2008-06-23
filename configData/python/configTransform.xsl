@@ -13,6 +13,7 @@
   <xsl:template match="/">
       <xsl:apply-templates select="ConfigReport"/>
       <xsl:apply-templates select="PrecinctReport"/>
+      <xsl:apply-templates select="HeritageReport"/>
   </xsl:template>
 
   <xsl:template match="ConfigReport">
@@ -45,17 +46,17 @@
   <xsl:template match="PrecinctReport">
     <HTML>
       <HEAD>
-        <TITLE>Precinct report for <xsl:value-of select="@Name"/> from
-               MOOT config Alias <xsl:value-of select="@Alias"/>
-               (Vote key <xsl:value-of select="@ConfigKey"/>)
+        <TITLE>Precinct report for <xsl:value-of select="@Name"/> 
+               (Vote key=<xsl:value-of select="@VoteKey"/>, 
+               Alias=<xsl:value-of select="@Alias"/>)
         </TITLE>
         <STYLE media ="print" type ="text/css">#toc {display:none}p {font: 12pt serif; page-break-inside:avoid}h1,h2 {page-break-before:always}</STYLE>
         <STYLE media ="screen" type ="text/css">h1,h2 {border-top-style:solid}</STYLE>
       </HEAD>
       <BODY>
-        <h1>Precinct report for <xsl:value-of select="@Name"/> from
-               MOOT config Alias <xsl:value-of select="@Alias"/>
-               (Vote key <xsl:value-of select="@ConfigKey"/>)
+        <h1>Precinct report for <xsl:value-of select="@Name"/>
+               (Vote key=<xsl:value-of select="@VoteKey"/>, 
+               Alias=<xsl:value-of select="@Alias"/>)
         </h1>
         <p>&nbsp;</p>
         <p>Precinct <xsl:value-of select="@Name"/> from MOOT configuration key
@@ -63,7 +64,24 @@
            to baseline configuration <xsl:value-of select="@BaselineKey"/>
         </p>
         <hr/>
-        <xsl:apply-templates select="*"/>
+        <xsl:apply-templates/>
+      </BODY>
+    </HTML>
+  </xsl:template>
+
+  <xsl:template match="HeritageReport">
+    <HTML>
+      <HEAD>
+        <TITLE>Heritage report for Configuration <xsl:value-of select="@ConfigKey"/> 
+        </TITLE>
+        <STYLE media ="print" type ="text/css">#toc {display:none}p {font: 12pt serif; page-break-inside:avoid}h1,h2 {page-break-before:always}</STYLE>
+        <STYLE media ="screen" type ="text/css">h1,h2 {border-top-style:solid}</STYLE>
+      </HEAD>
+      <BODY>
+        <h1>Heritage report for Configuration <xsl:value-of select="@ConfigKey"/> 
+        </h1>
+        <hr/>
+        <xsl:apply-templates/>
       </BODY>
     </HTML>
   </xsl:template>
@@ -141,6 +159,29 @@
       <tr><td align='left'>Vote File:</td>
           <td align='left'><xsl:value-of select="@FileName"/></td></tr>
     </table>
+    <xsl:if test="child::AncillaryInfo">
+      <h4>Ancillary files used:</h4>
+      <xsl:for-each select="AncillaryInfo">
+        Type:<xsl:value-of select="@Name"/>,
+        Path:<xsl:value-of select="@FileName"/>,
+        Key:<xsl:value-of select="@Key"/>,
+        Created by:<xsl:value-of select="@User"/> on <xsl:value-of select="@Date"/>,
+        Status:<xsl:value-of select="@Status"/>
+        <br/>
+      </xsl:for-each>
+    </xsl:if>
+    <xsl:if test="child::ParamInfo">
+      <h4>Parameter files produced:</h4>
+      <xsl:for-each select="ParamInfo">
+        Type:<xsl:value-of select="@Name"/>,
+        Path:<xsl:value-of select="@FileName"/>,
+        Key:<xsl:value-of select="@Key"/>,
+        Created by:<xsl:value-of select="@User"/> on <xsl:value-of select="@Date"/>,
+        Status:<xsl:value-of select="@Status"/>
+        <br/>
+      </xsl:for-each>
+    </xsl:if>
+
   </xsl:template>
 
   <xsl:template match="Precincts">
@@ -159,14 +200,14 @@
 
   <xsl:template match="ReportSection">
     <hr/>
-    <h4>Section <xsl:value-of select="@Name"/></h4>
-    <xsl:apply-templates select="*"/>
+    <h4><xsl:value-of select="@Name"/></h4>
+    <xsl:apply-templates/>
     <hr/>
   </xsl:template>
 
   <xsl:template match="Intent">
     <h5>Intent:</h5>
-    <table><tr><td><xsl:value-of select="Intent"/></td></tr></table>
+    <table><tr><td><xsl:value-of select="."/></td></tr></table>
   </xsl:template>
 
   <xsl:template match="TextInclude">
