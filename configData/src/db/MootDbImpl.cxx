@@ -11,6 +11,7 @@
 
 MootDBImpl::MootDBImpl(){
   m_mq=new MootQuery;
+  m_acqSummaryCache = 0;
   clearCache();
 }
 
@@ -162,8 +163,10 @@ void MootDBImpl::clearCache() const {
     }
   }
   m_fswEfcCache.clear();
-  delete m_acqSummaryCache;
-  m_acqSummaryCache = 0;
+  if (m_acqSummaryCache != 0) {
+    delete m_acqSummaryCache;
+    m_acqSummaryCache = 0;
+  }
   m_configKeyCache = LSF_INVALID_UINT;
   m_startedAtCache = LSF_INVALID_UINT;
   m_scidCache = LSF_INVALID_UINT;
