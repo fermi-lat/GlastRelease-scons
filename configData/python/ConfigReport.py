@@ -81,9 +81,13 @@ class ConfigReport(ReportBase):
         self.createHeader()
         self.addConfigInfo()
         self.addBaselineInfo()
+        self.addDataFiles(rebuild)
         self.addPrecincts(rebuild)
 
     def addPrecincts(self, rebuild=False):
+        raise NotImplementedError
+
+    def addDataFiles(self, rebuild=False):
         raise NotImplementedError
 
     @property
@@ -107,7 +111,7 @@ class ConfigReport(ReportBase):
 
 
 class PrecinctReport(ReportBase):
-    PDIRSTR = 'Precincts'
+    PDIRSTR = 'ConfigReports/Precincts'
     def __init__(self, precinctInfo, configData):
         ReportBase.__init__(self, configData)
         self.__pInfo = precinctInfo
@@ -170,7 +174,7 @@ class ConfigDataHolder(object):
                 os.chmod(self.__confDir, mode | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH)
             except OSError, e:
                 raise ConfigReportError("ConfigReport failed in creating the configuration directory %s." % self.__confDir)
-        self.__pInfo = []
+        self.__pInfo = {}
         self.__fswInfo = []
         self.__vParMap = {}
         self.__vAncMap = {}
@@ -183,12 +187,7 @@ class ConfigDataHolder(object):
     def baselineInfo(self):
         return self.__base
     def setBaseline(self, baselineKey):
-        if not isinstance(baselineKey, int):
-            try:
-                baselineKey = int(baselineKey)
-            except TypeError:
-                raise ConfigReportError("Non-integer (or coercable to integer) config key %s is disallowed"%baselineKey)
-        self.__base = self.__mq.getConfigInfo(baselineKey)
+        self.__base = self.__retrieveConfigInfo(baselineKey)
     def getBaseline(self):
         return int(self.baselineInfo.getKey()) if self.baselineInfo else -1
     baseline = property(getBaseline, setBaseline, doc='the baseline configuration key to compare to')
@@ -197,15 +196,38 @@ class ConfigDataHolder(object):
     def configInfo(self):
         return self.__conf
     def setConfig(self, configKey):
-        if not isinstance(configKey, int):
-            try:
-                configKey = int(configKey)
-            except TypeError:
-                raise ConfigReportError("Non-integer (or coercable to integer) config key %s is disallowed"%configKey)
-        self.__conf = self.__mq.getConfigInfo(configKey)
+        self.__conf = self.__retrieveConfigInfo(configKey)
     def getConfig(self):
         return int(self.configInfo.getKey()) if self.configInfo else -1
     config = property(getConfig, setConfig, doc='the config key of interest')
+
+    def __retrieveConfigInfo(self, key):
+        # wrapper function to get all known info about a specific config
+        if not isinstance(key, int):
+            try:
+                key = int(key)
+            except TypeError:
+                raise ConfigReportError("Non-integer (or coercable to integer) config key %s is disallowed"%configKey)
+        cInfo = self.db.getConfigInfo(key)
+        # attach FSW constituent information
+        cInfo.fswConstituents = set(self.db.constituentInfoBySbs(int(cInfo.getSbsKey())))
+        # attach FSW uploadables (LATC/LCI files)
+        cInfo.fswInputs = set(self.db.configFswInfo(key))
+        # attach parameter file info (LATC fragments)
+        cInfo.parameters = set(map(self.db.getParmInfo, self.db.configParmsRequest(key)))
+        # attach vote file info
+        votes = dict([(p.getVoteFk(), self.db.getVoteInfo(int(p.getVoteFk()))) for p in cInfo.parameters])
+        cInfo.votes = set(votes.values())
+        # attach ancillary file info
+        from py_mootCore import vectorOfUnsigned
+        pVec = vectorOfUnsigned()
+        aVec = vectorOfUnsigned()
+        [pVec.append(int(p.getKey())) for p in cInfo.parameters]
+        self.db.getAncsFromParms(pVec, aVec)
+        ancs = list(set(aVec))
+        ancs.sort()
+        cInfo.ancillaries = set([self.db.getAncInfo(int(a)) for a in ancs])
+        return cInfo
 
     @property
     def configDir(self):
@@ -217,18 +239,16 @@ class ConfigDataHolder(object):
 
     @property
     def precinctInfo(self):
-        # retrieve or fill precinct info list
+        # retrieve or fill precinct info dict
         if not self.__pInfo:
             # base creation of precinct info.
             db = self.db
-            # first find out what params were used for this config
-            params = map(db.getParmInfo, db.configParmsRequest(self.config))
             # find out what ancils were used to build a specific param
             # and which params hook to which votes
             par2Anc = {}
             vote2Par = {}
             from py_mootCore import vectorOfUnsigned
-            for p in params:
+            for p in self.configInfo.parameters:
                 pVec = vectorOfUnsigned()
                 aVec = vectorOfUnsigned()
                 pVec.append(int(p.getKey()))
@@ -239,11 +259,13 @@ class ConfigDataHolder(object):
                 vote2Par[p.getVoteFk()].append(p)
             # Get the vote info, and hook the ancillary info to the votes
             vKeys = set(vote2Par.keys())
-            self.__pInfo = [self.__mq.getVoteInfo(int(i)) for i in vKeys]
-            self.__pInfo.sort(key=VoteInfo.getPrecinct) # sort in precinct alphabetical
-            for v in self.__pInfo:
+            pList = [self.__mq.getVoteInfo(int(i)) for i in vKeys]
+            pList.sort(key=VoteInfo.getPrecinct) # sort in precinct alphabetical
+            self.__pInfo = dict([(p.getPrecinct(), p) for p in pList])
+            for v in self.__pInfo.values():
                 v.ancillaries = []
-                for p in vote2Par[v.getKey()]:
+                v.parameters  = vote2Par[v.getKey()]
+                for p in v.parameters:
                     v.ancillaries.extend(par2Anc[p.getKey()])
         return self.__pInfo
 

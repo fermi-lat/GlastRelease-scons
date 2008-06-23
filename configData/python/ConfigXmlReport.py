@@ -33,7 +33,7 @@ from ConfigReport import *
 _log = logging.getLogger('offline.configData')
 
 CONFIG_NAMESPACE = EMPTY_NAMESPACE
-CONFIG_DEST_PRODUCTION = "/nfs/farm/g/glast/u03/ConfigReports/"
+CONFIG_DEST_PRODUCTION = "/nfs/farm/g/glast/u03/"
 
 CONFIG_XSL_TRANSFORM = os.path.expandvars("$CONFIGDATAROOT/python/configTransform.xsl")
 
@@ -47,8 +47,11 @@ TAG_INTENT     = "Intent"
 TAG_LINKTO     = "LinkTo"
 TAG_PRCRPT     = "PrecinctReport"
 TAG_PRCINFO    = "PrecinctInfo"
+TAG_ANCINFO    = "AncillaryInfo"
+TAG_PARINFO    = "ParamInfo"
 TAG_SECTION    = "ReportSection"
 TAG_IMG        = "Image"
+TAG_TABLE      = "Table"
 TAG_INCTEXT    = "TextInclude"
 TAG_TEXTLINE   = "TextLine"
 
@@ -153,6 +156,71 @@ class XmlReport(object):
         if caption:
             makeTextChildNode(imgNode, caption)
 
+    def addTable(self, parentSection,  border='1', width='', caption=''):
+        """!@brief  Add a table under a section
+
+        Border and width are optional.
+
+        \param parentSection  section node that this image will be inserted in.
+        \param border    Specifies whether the table will have a border or not. Default value is 1.
+        \param width     Specifies the width of the border in percentage relative to the width of the page.
+
+        \return          created node
+        """
+        tabNode = makeChildNode(parentSection, TAG_TABLE)
+        if border != '':
+            setAttribute(tabNode, 'border', border)
+        if width != '':
+            setAttribute(tabNode, 'width', width)
+        if caption:
+            cap = makeChildNode(tabNode, 'CAPTION')
+            setAttribute(cap, 'align', 'bottom')
+            makeTextChildNode(cap, str(caption))
+        return tabNode
+
+    def addTableHeader(self, tableNode, text, align=''):
+        """!@brief Adds one column header to the table.
+    
+        \param tableNode tableNode where column headers are being added.
+        \param text    Column header text.
+        \param align   Optional text alignment.
+        """
+        firstRow = getChildNode(tableNode, 'TR')
+        if not firstRow:
+            firstRow = makeChildNode(tableNode, 'TR')
+        header = makeChildNode(firstRow, 'TH')
+        if align:
+            setAttribute(header, 'align', align)
+        makeTextChildNode(header, text)
+
+    def addTableRow(self, tableNode):
+        """!@brief start a table row
+        \param tableNode   tableNode to add a row to
+
+        \return the created row
+        """
+        return makeChildNode(tableNode, 'TR')
+
+    def addTableData(self, row, text, align='', width='', bold=False, underline=False):
+        """!@brief Adds a data column to a table row
+
+        \param row   the table row
+        \param text  Text of the data column.
+        \param align Optional text alignment.
+        \param width Optional column width in percentage.
+        """
+        element = makeChildNode(row, 'TD')
+        if align:
+            setAttribute(element, 'align', align)
+        if width:
+            setAttribute(element, 'width', width)
+        if bold:
+            element = makeChildNode(element, 'B')
+        if underline:
+            element = makeChildNode(element, 'U')
+        makeTextChildNode(element, text)
+        
+
     @property
     def isBuilt(self):
         """!@brief   Is this report already built?  Return t/f
@@ -175,12 +243,15 @@ class ConfigXmlReport(XmlReport, ConfigReport):
     def createHeader(self):
         super(ConfigXmlReport, self).createHeader()
         setAttribute(self.rootNode, ATTR_CNAME, self.data.configInfo.getName())
-        self.addDataFiles()
 
     def addPrecincts(self, rebuild):
         self.__getAliases()
         precsNode = makeChildNode(self.rootNode, TAG_PRECINCTS)
-        for pInfo in self.data.precinctInfo:
+        pSet = self.data.precinctInfo
+        pKeys = pSet.keys()
+        pKeys.sort()
+        for pName in pKeys:
+            pInfo = pSet[pName]
             if pInfo.getPrecinct() in PRECINCT_HANDLERS:
                 handler = PRECINCT_HANDLERS[pInfo.getPrecinct()]
             else:
@@ -191,23 +262,28 @@ class ConfigXmlReport(XmlReport, ConfigReport):
             rptName = pRpt.writeReport(rebuild)
             self.addLink(precsNode, rptName, "Precinct: %s;  Alias: %s"%(pInfo.getPrecinct(), pInfo.alias))
             self.__precRpts.append(rptName)
+        heritage = PRECINCT_HANDLERS['Heritage'](self.data)
+        heritage.createReport()
+        rptName = heritage.writeReport(rebuild)
+        self.addLink(precsNode, rptName, "Heritage Report")
+        self.__precRpts.append(rptName)
 
     def __getAliases(self):
         votePath = self.data.db.getVoteInfo(int(self.data.configInfo.getVoteKey())).getSrc()
         confPath = os.path.join(os.environ['MOOT_ARCHIVE'], votePath)
         tmp,confDoc = openXmlFileByName(confPath)
-        for pInfo in self.data.precinctInfo:
+        for pInfo in self.data.precinctInfo.values():
             precinctNode = confDoc.xpath('/descendant::%s-vote'%pInfo.getPrecinct())[0]
             precinctAlias = str(precinctNode.xpath('child::text()')[0].data)
             pInfo.alias = precinctAlias
         
 
-    def addDataFiles(self):
-        if self.data.configRootFileName():
+    def addDataFiles(self, rebuild=False):
+        if self.data.configRootFileName(rebuild):
             self.addLink(self.rootNode, self.data.configRootFileName(), "Configuration ROOT data file")
-        if self.data.baselineRootFileName():
+        if self.data.baselineRootFileName(rebuild):
             self.addLink(self.rootNode, self.data.baselineRootFileName(), "Baseline ROOT data file")
-        if self.data.compareRootFileName():
+        if self.data.compareRootFileName(rebuild):
             self.addLink(self.rootNode, self.data.compareRootFileName(), "Comparison ROOT data file")
 
     def precinctXml(self):
@@ -227,6 +303,7 @@ class PrecinctXmlReport(XmlReport, PrecinctReport):
         super(PrecinctXmlReport, self).createHeader()
         setAttribute(self.rootNode, ATTR_NAME, self.info.getPrecinct())
         setAttribute(self.rootNode, ATTR_ALIAS, self.info.alias)
+        setAttribute(self.rootNode, ATTR_VKEY, self.info.getKey())
         # precinct report info
         pInfo = makeChildNode(self.rootNode, TAG_PRCINFO)
         setAttribute(pInfo, ATTR_PNAME, self.info.getPrecinct())
@@ -237,7 +314,24 @@ class PrecinctXmlReport(XmlReport, PrecinctReport):
         setAttribute(pInfo, ATTR_DESC, self.info.getDescrip())
         setAttribute(pInfo, ATTR_FNAME, self.info.getSrc())
         setAttribute(pInfo, ATTR_ALIAS, self.info.alias)
-        #self.addLink(self.rootNode, "ConfigReport.xml", "Parent Report")
+        for anc in self.info.ancillaries:
+            ancInfo = makeChildNode(pInfo, TAG_ANCINFO)
+            setAttribute(ancInfo, ATTR_NAME, anc.getClass())
+            setAttribute(ancInfo, ATTR_KEY, anc.getKey())
+            setAttribute(ancInfo, ATTR_USER, anc.getCreator())
+            setAttribute(ancInfo, ATTR_DATE, anc.getRowCreation())
+            setAttribute(ancInfo, ATTR_STATUS, anc.getStatus())
+            setAttribute(ancInfo, ATTR_DESC, anc.getDescrip())
+            setAttribute(ancInfo, ATTR_FNAME, anc.getSrc())
+        for par in self.info.parameters:
+            parInfo = makeChildNode(pInfo, TAG_PARINFO)
+            setAttribute(parInfo, ATTR_NAME, par.getClass())
+            setAttribute(parInfo, ATTR_KEY, par.getKey())
+            setAttribute(parInfo, ATTR_USER, par.getCreator())
+            setAttribute(parInfo, ATTR_DATE, par.getRowCreation())
+            setAttribute(parInfo, ATTR_STATUS, par.getStatus())
+            setAttribute(parInfo, ATTR_DESC, par.getDescrip())
+            setAttribute(parInfo, ATTR_FNAME, par.getSrc())        
         
     def addIntent(self, parent, intentText=""):
         intent = makeChildNode(parent, TAG_INTENT)
@@ -319,6 +413,8 @@ def makePrecinctHandlers():
     PRECINCT_HANDLERS["latc_ignore"] = IgnoreXmlReport
     from AssociateXmlReport import AssociateXmlReport
     PRECINCT_HANDLERS["Filter_Associate"] = AssociateXmlReport
+    from HeritageXmlReport import HeritageXmlReport
+    PRECINCT_HANDLERS["Heritage"] = HeritageXmlReport
     
     
 
@@ -332,6 +428,23 @@ def makeChildNode(parentNode, childName):
     childNode = parentNode.rootNode.createElementNS(CONFIG_NAMESPACE, childName)
     parentNode.appendChild(childNode)
     return childNode
+
+def getChildNode(parentNode, childName):
+    "!@brief Get one child node with name childName"
+    n = getChildNodes(parentNode, childName)
+    if n:
+        return n[0]
+    
+def getChildNodes(parentNode, childName):
+    """ Finds the child nodes of the parent node with name childName
+    \param childName
+
+    return None if childName not found, else the child
+    """
+    cNodes = parentNode.xpath('child::%s'%childName)
+    if not cNodes:
+        return None
+    return cNodes
 
 def getAttribute(node, attrName):
     """ Return the value of attribute 'attrName' as a string
