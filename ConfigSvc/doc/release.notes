@@ -3,6 +3,9 @@
 @verbatim
  * package manager:E. Charles
  *
+ * v0r2p6 23-Jun-08 HMK set ConfigSvc's Xml JO parameters to "" in 
+ *        configOptions_moot.txt in case configOptions_noMoot.txt is included
+ *        and a user desires to "undo" that by include configOptions_moot
  * v0r2p5 21-Jun-08 LSR Fix apparent bug in decoding the archive path (but it worked before!)
  * v0r2p4 19-Jun-08 EAC Fix bug in ConfigSvc::getFswSampler() for more that 1 call / event
  * v0r2p3 19-Jun-08 EAC remove calls to MootSvc if IMootSvc::noMoot() is set
