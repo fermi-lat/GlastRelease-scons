@@ -81,3 +81,19 @@ class AcdTimingXmlReport(AcdXmlReport):
 class AcdVetoXmlReport(AcdXmlReport):
     def __init__(self, precinctInfo, configData):
         AcdXmlReport.__init__(self, precinctInfo, configData)
+
+
+if __name__ == '__main__':
+    from ConfigReport import *
+    configKey = 100
+    baseKey   = 136
+
+    cr = ConfigDataHolder(configKey, baseKey, './')
+    pInfo = cr.precinctInfo['ACD_Bias']
+    pInfo.alias = 'nomGSFC'
+
+    tr = AcdBiasXmlReport(pInfo, cr)
+    tr.createReport()
+    pR = tr.writeReport(force=True)
+
+    transformToFile(CONFIG_XSL_TRANSFORM, pR, pR[:-3]+'html')
