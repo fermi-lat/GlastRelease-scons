@@ -104,7 +104,11 @@ StatusCode PtValsAlg::initialize(){
         log << MSG::ERROR << " RootTupleSvc is not available" << endreq;
         m_rootTupleSvc=0;
         sc = StatusCode::FAILURE;
+    } else if( !m_root_tree.value().empty() ) {   
+     
+          if(m_fillNtuple) m_pointingInfo.setPtTuple(m_rootTupleSvc, m_root_tree.value()); 
     }
+
 
     // get the GPS instance: 
 
