@@ -637,34 +637,25 @@ StatusCode digiRootWriterAlg::writeFilterStatus() {
     StatusCode sc = StatusCode::SUCCESS;
 
     SmartDataPtr<OnboardFilterTds::FilterStatus> obfTds(eventSvc(), "/Event/Filter/FilterStatus");
-    if (!obfTds) {
-        log << MSG::DEBUG << "No OBF FilterStatus" << endreq;
-        return sc;
-     }
-
-    FilterStatus obfRoot;
-    RootPersistence::convert(*obfTds,obfRoot);
-    m_digiEvt->setFilterStatus(obfRoot);
+    if (obfTds) {
+        FilterStatus obfRoot;
+        RootPersistence::convert(*obfTds,obfRoot);
+        m_digiEvt->setFilterStatus(obfRoot);
+    }
 
     SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfFilterStatusTds(eventSvc(), "/Event/Filter/ObfFilterStatus");
-    if (!obfFilterStatusTds) {
-        log << MSG::DEBUG << "No OBF ObfFilterStatus" << endreq;
-        return sc;
-     }
-
-    ObfFilterStatus obfFilterStatusRoot;
-    RootPersistence::convert(*obfFilterStatusTds,obfFilterStatusRoot);
-    m_digiEvt->setObfFilterStatus(obfFilterStatusRoot);
+    if (obfFilterStatusTds) {
+        ObfFilterStatus obfFilterStatusRoot;
+        RootPersistence::convert(*obfFilterStatusTds,obfFilterStatusRoot);
+        m_digiEvt->setObfFilterStatus(obfFilterStatusRoot);
+    }
 
     SmartDataPtr<OnboardFilterTds::ObfFilterTrack> obfFilterTrackTds(eventSvc(), "/Event/Filter/ObfFilterTrack");
-    if (!obfFilterStatusTds) {
-        log << MSG::DEBUG << "No OBF ObfFilterTrack" << endreq;
-        return sc;
-     }
-
-    ObfFilterTrack obfFilterTrackRoot;
-    RootPersistence::convert(*obfFilterTrackTds,obfFilterTrackRoot);
-    m_digiEvt->setObfFilterTrack(obfFilterTrackRoot);
+    if (obfFilterTrackTds) {
+        ObfFilterTrack obfFilterTrackRoot;
+        RootPersistence::convert(*obfFilterTrackTds,obfFilterTrackRoot);
+        m_digiEvt->setObfFilterTrack(obfFilterTrackRoot);
+    }
 
     return sc;
 }
