@@ -30,7 +30,7 @@ public:
 
     virtual UInt_t  getPrescalerWord() const = 0;
 
-    ClassDef(IObfStatus,0) // Onboard Status abstract class
+    //ClassDef(IObfStatus,0) // Onboard Status abstract class
 };
 
 /** @class ObfFilterStatus
@@ -143,7 +143,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfHipStatus,0) // HIP output
+    ClassDef(ObfHipStatus,1) // HIP output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
@@ -203,7 +203,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfDgnStatus,0) // DGN output
+    ClassDef(ObfDgnStatus,1) // DGN output
 };
 
 #endif

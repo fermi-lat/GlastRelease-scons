@@ -534,11 +534,13 @@ int read(char* fileName, int numEvents) {
         if(!keys->CompareInRange(keysRef)) return -1;
         keys->Print();
 
+/*
         FilterStatus fs = evt->getFilterStatus();
         FilterStatus fsRef;
         fsRef.Fake(ievent,randNum);
         if (!fs.CompareInRange(fsRef)) return -1;
         fs.Print();
+*/
 
         const AdfDigi& adf = evt->getAdfDigi();
         AdfDigi adfRef;
@@ -667,10 +669,26 @@ int write(char* fileName, int numEvents) {
         meta.Print("");
         ev->setMetaEvent(meta);
 
+/*
         // create test OBF FilterStatus
         FilterStatus fs;
         fs.Fake(ievent, randNum);
         ev->setFilterStatus(fs);
+*/
+        // Create new OBF FilterStatus
+        ObfFilterStatus obfFilterStat;
+        ObfGammaStatus *gammaStatus = new ObfGammaStatus(1,2,3,4,5);
+        obfFilterStat.addFilterStatus(ObfFilterStatus::GammaFilter, gammaStatus);
+        ObfHipStatus *hipStatus = new ObfHipStatus(6,7,8,9);
+        obfFilterStat.addFilterStatus(ObfFilterStatus::HipFilter, hipStatus);
+        
+        ObfMipStatus *mipStatus = new ObfMipStatus(10, 11, 12, 13);
+        obfFilterStat.addFilterStatus(ObfFilterStatus::MipFilter, mipStatus);
+
+        ObfDgnStatus *dgnStatus = new ObfDgnStatus(14, 15, 16, 17);
+        obfFilterStat.addFilterStatus(ObfFilterStatus::DgnFilter, dgnStatus);
+
+        ev->setObfFilterStatus(obfFilterStat);
 
         AdfDigi& adf = ev->getAdfDigi();
         adf.Fake(ievent,randNum);
