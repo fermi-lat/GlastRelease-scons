@@ -175,7 +175,31 @@ void ObfHipStatus::Print(Option_t* option) const
     std::cout << "HFC status:" << std::hex << m_status << std::dec << std::endl;
     return;
 }
+
 // Implement the ObfHipStatus class here
+ClassImp(ObfHFCStatus)
+
+// If msb is set below then event is to be vetoed
+UInt_t ObfHFCStatus::getStatusWord() const {return m_status;}
+UInt_t ObfHFCStatus::getVetoMask() const {return enums::HFC_STATUS_M_VETO_DEF;}
+UInt_t ObfHFCStatus::getVetoBit()  const {return enums::HFC_STATUS_M_VETOED;}
+// root Clear...
+void ObfHFCStatus::Clear(Option_t *option)
+{
+    m_status = 0;
+    return;
+}
+
+// root print...
+void ObfHFCStatus::Print(Option_t* option) const 
+{
+    TObject::Print(option);
+
+    std::cout << "HFC status:" << std::hex << m_status << std::dec << std::endl;
+    return;
+}
+// Implement the ObfHipStatus class here
+
 
 #include "enums/XfcMipStatus.h"
 ClassImp(ObfMipStatus)
@@ -225,3 +249,26 @@ void ObfDgnStatus::Print(Option_t* option) const
     std::cout << "DFC status:" << std::hex << m_status << std::dec << std::endl;
     return;
 }
+
+ClassImp(ObfDFCStatus)
+
+// If msb is set below then event is to be vetoed
+UInt_t ObfDFCStatus::getStatusWord() const {return m_status;}
+UInt_t ObfDFCStatus::getVetoMask() const {return enums::DFC_STATUS_M_VETO_DEF;}
+UInt_t ObfDFCStatus::getVetoBit()  const {return enums::DFC_STATUS_M_VETOED;}
+// root Clear...
+void ObfDFCStatus::Clear(Option_t *option)
+{
+    m_status = 0;
+    return;
+}
+
+// root print...
+void ObfDFCStatus::Print(Option_t* option) const 
+{
+    TObject::Print(option);
+
+    std::cout << "DFC status:" << std::hex << m_status << std::dec << std::endl;
+    return;
+}
+

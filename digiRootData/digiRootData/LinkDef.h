@@ -68,6 +68,8 @@
 #pragma link C++ class ObfHipStatus+;
 #pragma link C++ class ObfMipStatus+;
 #pragma link C++ class ObfDgnStatus+;
+#pragma link C++ class ObfHFCStatus+;
+#pragma link C++ class ObfDFCStatus+;
 #pragma link C++ class ObfFilterTrack+;
 
 #pragma link C++ class ILpaHandler+;

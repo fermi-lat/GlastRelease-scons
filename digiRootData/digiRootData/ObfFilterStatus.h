@@ -146,6 +146,36 @@ private:
     ClassDef(ObfHipStatus,1) // HIP output
 };
 
+class ObfHFCStatus : virtual public IObfStatus, public TObject
+{
+public:
+    ObfHFCStatus() : m_status(0), m_id(0), m_sb(0), m_prescaler(0) {}
+    ObfHFCStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t prescaler) : 
+                 m_status(status), m_id(id), m_sb(sb), m_prescaler(prescaler) {}
+    virtual ~ObfHFCStatus() {}
+
+    // If msb is set below then event is to be vetoed
+    UInt_t  getStatusWord()    const;
+
+    UInt_t  getVetoMask()      const;
+    UInt_t  getVetoBit()       const;
+
+    UChar_t getFilterId()      const {return m_id;}
+    UChar_t getFiltersb()      const {return m_sb;}
+    UInt_t  getPrescalerWord() const {return m_prescaler;}
+    
+    void Clear(Option_t *option ="");
+    void Print(Option_t *option="") const;
+
+private:
+    UInt_t  m_status;
+    UChar_t m_id;
+    UChar_t m_sb;
+    UInt_t  m_prescaler;
+
+    ClassDef(ObfHFCStatus,3) // HFC output
+};
+
 class ObfMipStatus : virtual public IObfStatus, public TObject
 {
 public:
@@ -174,6 +204,36 @@ private:
     UInt_t  m_prescaler;
 
     ClassDef(ObfMipStatus,5) // MIP filter output
+};
+
+class ObfDFCStatus : virtual public IObfStatus, public TObject
+{
+public:
+    ObfDFCStatus() : m_status(0), m_id(0), m_sb(0), m_prescaler(0) {}
+    ObfDFCStatus(UChar_t id, UInt_t status, UChar_t sb, UInt_t prescaler)
+     : m_status(status), m_id(id), m_sb(sb), m_prescaler(prescaler) {}
+    virtual ~ObfDFCStatus() {}
+
+    // If msb is set below then event is to be vetoed
+    UInt_t  getStatusWord() const;
+
+    UInt_t  getVetoMask()      const;
+    UInt_t  getVetoBit()       const;
+
+    UChar_t getFilterId()      const {return m_id;}
+    UChar_t getFiltersb()      const {return m_sb;}
+    UInt_t  getPrescalerWord() const {return m_prescaler;}
+    
+    void Clear(Option_t *option ="");
+    void Print(Option_t *option="") const;
+
+private:
+    UInt_t  m_status;
+    UChar_t m_id;
+    UChar_t m_sb;
+    UInt_t  m_prescaler;
+
+    ClassDef(ObfDFCStatus,3) // DFC output
 };
 
 class ObfDgnStatus : virtual public IObfStatus, public TObject
@@ -205,5 +265,6 @@ private:
 
     ClassDef(ObfDgnStatus,1) // DGN output
 };
+
 
 #endif
