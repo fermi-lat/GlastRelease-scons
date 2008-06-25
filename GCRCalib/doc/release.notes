@@ -1,3 +1,4 @@
+v1r4p7      11/06/08 jct  initialize gcr status bits to avoid unphysical values
 v1r4p6      11/06/08  TU  Mods to reflect changes in ObfFilterStatus naming conventions
 v1r4p5      15/05/08 jct	   fix windows compilation, cleanup some code
 v1r4p4      14/05/08 jct	   fix a windows compilation issue

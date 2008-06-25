@@ -363,7 +363,7 @@ bool GcrReconTool::checkFilters(){
   // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is NOT set, false if the event is vetoed by all these filters.
   // Transfert of statusWord to TDS needs still to be added at the end of this method 
 
-  unsigned int filtersbGamma, filtersbHFC, filtersbDGN, filtersbMip;
+  unsigned int filtersbGamma=0, filtersbHFC=0, filtersbDGN=0, filtersbMip=0;
   
   // get calEnergyRaw from TDS, to be considered for OBFGamma and OBFHFC cuts
   //float calEnergyRaw =getCALEnergyRaw();
