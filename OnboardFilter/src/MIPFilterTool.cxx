@@ -316,7 +316,7 @@ void MIPFilterTool::setMode(unsigned int mode)
         EFC_sampler* sampler = (EFC_sampler*)obf->getFilterPrm(masterId, EFC_OBJECT_K_SAMPLER);
 
         // Set filter to leak all events
-        sampler->prescale.prescalers[0].refresh = 1;
+        //sampler->prescale.prescalers[0].refresh = 1;
     }
 
     return;

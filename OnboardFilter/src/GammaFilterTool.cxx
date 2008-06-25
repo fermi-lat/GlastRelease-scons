@@ -413,7 +413,7 @@ void GammaFilterTool::setMode(unsigned int mode)
         EFC_sampler* sampler = (EFC_sampler*)obf->getFilterPrm(masterId, EFC_OBJECT_K_SAMPLER);
 
         // Set filter to leak all events
-        if (m_leakAllEvents) sampler->prescale.prescalers[0].refresh = 1;
+        ////if (m_leakAllEvents) sampler->prescale.prescalers[0].refresh = 1;
 
         // Modify the bits to ignore in the filter
         if (m_gamBitsToIgnore) sampler->classes.enabled.all &= ~m_gamBitsToIgnore;
