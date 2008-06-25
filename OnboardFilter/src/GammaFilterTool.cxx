@@ -196,6 +196,8 @@ GammaFilterTool::GammaFilterTool(const std::string& type,
     declareProperty("Tkr_TwoTkrEmax",        m_Tkr_TwoTkrEmax        = 0xFFFFFFFF);
     declareProperty("Tkr_SkirtEmax",         m_Tkr_SkirtEmax         = 0xFFFFFFFF);
 
+    declareProperty("verbosity",             m_verbosity             = 0);
+
     // zero our counters
     memset(m_vetoBits,   0, 17*sizeof(int));
     memset(m_statusBits, 0, 15*sizeof(int));

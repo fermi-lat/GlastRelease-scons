@@ -139,6 +139,8 @@ HIPFilterTool::HIPFilterTool(const std::string& type,
     // Parameter: Configuration
     // Overrides the default configuration given in the Master Configuration file
     declareProperty("Configuration", m_configToRun   = "");
+
+    declareProperty("verbosity",     m_verbosity     = 0);
     
     // zero our counters
     memset(m_vetoBits,   0, 17*sizeof(int));
