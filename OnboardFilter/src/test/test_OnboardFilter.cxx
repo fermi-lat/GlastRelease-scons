@@ -10,6 +10,7 @@
 // TDS class declarations: input data, and McParticle tree
 
 #include "Event/TopLevel/EventModel.h"
+#include "OnboardFilterTds/ObfFilterStatus.h"
 
 // Define the class here instead of in a header file: 
 //  not needed anywhere but here!
@@ -77,16 +78,49 @@ StatusCode test_OnboardFilter::execute()
     log << MSG::INFO << endreq <<  "Call " << ++m_count << ": " ;
     
     // First, the collection of TkrDigis is retrieved from the TDS
-    //SmartDataPtr<Event::TkrDigiCol> digiCol(eventSvc(),
-    //    EventModel::Digi::TkrDigiCol );
-    
-    //if (digiCol == 0) {
-    //    log << "no TkrDigiCol found" << endreq;
-    //    sc = StatusCode::FAILURE;
-    //    return sc;
-    //} else {
-    //    log << digiCol->size() << " TKR digis found " << endreq;
-    //}
+    SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfFilterStatus(eventSvc(),"/Event/Filter/ObfFilterStatus");
+
+    // It better be there! 
+    if (!obfFilterStatus)
+    {
+        log << MSG::ERROR << "No ObfFilterStatus found in the TDS! " << endreq;
+        return StatusCode::FAILURE;
+    }
+
+    // Now step through and initialize the status objects one by one
+    const OnboardFilterTds::IObfStatus* tdsStatus = 0;
+
+    // We do this one by one explicitly for now. Start with the results of the gamma filter
+    if ((tdsStatus = obfFilterStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter)))
+    {
+        log << MSG::INFO << "*** Gamma Filter ***" << endreq;
+        log << MSG::INFO << "    Status Word: " << std::hex << tdsStatus->getStatusWord() << 
+                            ", Summary Byte: " << std::hex << tdsStatus->getFiltersb() << endreq;
+    }
+
+    // MIP Filter
+    if ((tdsStatus = obfFilterStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter)))
+    {
+        log << MSG::INFO << "*** MIP Filter ***" << endreq;
+        log << MSG::INFO << "    Status Word: " << std::hex << tdsStatus->getStatusWord() << 
+                            ", Summary Byte: " << std::hex << tdsStatus->getFiltersb() << endreq;
+    }
+
+    // HIP Filter
+    if ((tdsStatus = obfFilterStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter)))
+    {
+        log << MSG::INFO << "*** Gamma Filter ***" << endreq;
+        log << MSG::INFO << "    Status Word: " << std::hex << tdsStatus->getStatusWord() << 
+                            ", Summary Byte: " << std::hex << tdsStatus->getFiltersb() << endreq;
+    }
+
+    // DGN Filter
+    if ((tdsStatus = obfFilterStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter)))
+    {
+        log << MSG::INFO << "*** DGN Filter ***" << endreq;
+        log << MSG::INFO << "    Status Word: " << std::hex << tdsStatus->getStatusWord() << 
+                            ", Summary Byte: " << std::hex << tdsStatus->getFiltersb() << endreq;
+    }
     
     return sc;
 }
