@@ -48,7 +48,15 @@ public :
   void getMean(TH1D* histo,double& mean, double &emean, double& sigma, double& esigma, int& nevents);
   void Go(Long64_t numEvents);
   void markError(char*, TestReport*);
-  
+  void initCalTuple(const char* filename);  
+  void useKalmanCut(bool sw){m_useKalman=sw;}
+  void useToTCut(bool sw){m_useToT=sw;}
+  void useMipCut(bool sw){m_useMip=sw;}
+  void useGammaCut(bool sw){m_useGamma=sw;}
+  void setKalmanCut(float lower){m_kalmanLower=lower;}
+  void setMipCut(int lower){m_MipLower=lower;}
+  void setTotCut(float lower, float upper){m_ToTLower=lower;m_ToTUpper=upper;}
+
  private: 
   char m_filename[256]; 
   int m_gid;
@@ -62,9 +70,20 @@ public :
   TH1D *m_clbytower[16];
   TH1D *m_chbytower[16];
   TH2D *m_clvsenergy, *m_chvsenergy;
-  
+  float m_calxtalfacesignal[16][8][12][2];
+  TFile *m_caltuplefile;
+  TTree* m_caltuple;  
   string m_testnr; 
- 
+  bool m_useKalman;
+  bool m_useToT;
+  bool m_useMip;
+  bool m_useGamma;
+  float m_kalmanLower;
+  float m_ToTLower;
+  float m_ToTUpper;
+  float m_MipLower;
+  
+
 
 
   ClassDef(treqCAL,1) 

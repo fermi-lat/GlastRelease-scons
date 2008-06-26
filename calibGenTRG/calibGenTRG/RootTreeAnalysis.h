@@ -40,7 +40,7 @@
 * Version 1.0 Spring, 2000 Revised for use with GLAST 1999 TestBeam
 * Version 1.5 25-Mar-2001  Revised for use with GLAST 2001 Balloon
 * Version 2.0 14-Aug-2001 Final version for GLAST 2001 Balloon
-* Version 3.0 Jan 2006 SD Adapted for calibGenTRG  
+* Version 3.0 Jan 2006 SD Adapted for TrgTest  
 */
 
 
@@ -119,7 +119,7 @@ public :
         TChain *mcChain = 0, 
         char *histFileName="Histograms.root");
 
-    virtual ~RootTreeAnalysis();  
+    ~RootTreeAnalysis();  
 
     /// start next Go with this event
     void StartWithEvent(Long64_t event) { m_StartEvent = event; };  
@@ -312,7 +312,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (mcFileName != "") {
-        mcFile = new TFile(mcFileName,"READ");
+        mcFile = TFile::Open(mcFileName,"READ");
         if (mcFile->IsOpen() == kTRUE) {
             mcTree = (TTree*)gDirectory->Get("Mc");
                   
@@ -335,7 +335,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (digiFileName != "") {
-        digiFile = new TFile(digiFileName, "READ");
+        digiFile = TFile::Open(digiFileName, "READ");
         if (digiFile->IsOpen() == kTRUE) {
             digiTree = (TTree*)gDirectory->Get("Digi");
             evt = 0;
@@ -357,7 +357,7 @@ inline void RootTreeAnalysis::Init(const char* digiFileName, const char* reconFi
     }
     
     if (reconFileName != "") {
-        reconFile = new TFile(reconFileName,"READ");
+        reconFile = TFile::Open(reconFileName,"READ");
         if (reconFile->IsOpen() == kTRUE) {
             reconTree = (TTree*)gDirectory->Get("Recon");
             rec = 0;

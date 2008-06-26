@@ -38,9 +38,13 @@ public :
   takedata_mt(); 
 
   virtual ~takedata_mt() {;}
-  int readParameterFile(char *);
+  int setParameters(int,int,int,int);
   void writeoutresults(char*);
-
+  void initCalTuple(const char* filename);
+  void useKalmanCut(bool sw){m_useKalman=sw;}
+  void useToTCut(bool sw){m_useToT=sw;}
+  void setKalmanCut(float lower){m_kalmanLower=lower;}
+  void setTotCut(float lower, float upper){m_ToTLower=lower;m_ToTUpper=upper;}
 
   void inithistos();
   void savehistos(char*);
@@ -55,8 +59,15 @@ public :
   int m_evPerStep,m_stepNumber,m_temidlist[16];
   int m_totalcount[16],m_totalsquare[16];
   double m_totalgood[16];
-  TH1D *m_tkrocc[16], *m_adchist[16], *m_acdadchist;
-  
+  float m_calrange[16][8][12][2][4];
+  TFile *m_caltuplefile;
+  TTree* m_caltuple;
+  TH1D *m_tkrocc[16], *m_adchist[16], *m_calratio[16], *m_acdadchist;
+  bool m_useKalman;
+  bool m_useToT;
+  float m_kalmanLower;
+  float m_ToTLower;
+  float m_ToTUpper;
   string m_testnr; 
  
 
