@@ -135,7 +135,7 @@ HIPFilterTool::HIPFilterTool(const std::string& type,
     // declare properties with setProperties calls
     // Paramter: LeakAllEvents
     // Default is TO "leak" (pass status/filter information) all events
-    declareProperty("LeakAllEvents", m_leakAllEvents = true);
+    declareProperty("LeakAllEvents", m_leakAllEvents = false);
     // Parameter: Configuration
     // Overrides the default configuration given in the Master Configuration file
     declareProperty("Configuration", m_configToRun   = "");
