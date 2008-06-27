@@ -61,31 +61,18 @@ externalLibraries = {
     'f2c'      : {'version' : '',
                   'libraries' : {'f2cLibs' : ['g2c']}},
     
-    'fox'      : {'version' : '1.2.5',
-                  'includes' : ['fxver.h'],
-                  'libraries' : {'foxLibs' : ['FOX-1.2']},
-                  'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include', 'fox-1.2'),
-                  'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$OMPILER', 'lib'),
-                  'ld-path' : '$LIB-PATH'},
-    
-    'fred'     : {'version' : 'v0r99'},
-    
     'gaudi'    : {'version' : 'v18r1-gl4',
                   'includes' : ['GaudiAlg/GaudiAlg.h', 'GaudiKernel/Kernel.h'],
-                  'libraries' : {'gaudiKernelLibs' : ['GaudiKernel'],
-                                 'gaudiHistoryLibs' : ['GaudiHistory'],
-                                 'gaudiSvcLibs' : ['GaudiSvc'],
-                                 'gaudiAudLibs' : ['GaudiAud'],
-                                 'gaudiAlgLibs' : ['GaudiAlg']}
+                  'libraries' : {'gaudiLibs' : ['GaudiHistory', 'GaudiSvc', 'boost_filesystem-gcc', 'GaudiAud', 'GaudiAlg', 'GaudiAlgLib', 'GaudiKernel']},
                   'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
                   'ld-path' : '$LIB-PATH'},
     
     'geant4'   : {'version' : '8.0.p01-gl2',
                   'includes' : ['G4Version.hh'],
-                  'libraries' : {'geant4Libs' : ['G4global', 'G4intercoms', 'G4graphics_reps', 'G4materials', 'G4geometry', 'G4particles', 'G4track', 'G4digits_hits', 'G4processes', 'G4tracking', 'G4event', 'G4run', 'G4readout' ,'m']},
+                  'libraries' : {'geant4Libs' : [ 'G4readout', 'G4run', 'G4event', 'G4tracking', 'G4processes', 'G4digits_hits', 'G4track', 'G4particles', 'G4geometry', 'G4materials', 'G4graphics_reps', 'G4intercoms', 'G4global']},
                   'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
-                  'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
+                  'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib', 'Linux-g++'),
                   'ld-path' : '$LIB-PATH'},
     
     'ldf'      : {'version' : 'v06-02-00',
@@ -97,14 +84,14 @@ externalLibraries = {
     
     'mysql'    : {'version' : '4.1.18',
                   'includes' : ['mysql/mysql.h'],
-                  'libraries' : ['mysqlclient'],
+                  'libraries' : {'mysqlLibs' : ['mysqlclient']},
                   'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
-                  'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
+                  'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib', 'mysql'),
                   'ld-path' : '$LIB-PATH'},
     
     'zlib'     : {'version' : '1.1.4',
                   'includes' : ['zlib.h'],
-                  'libraries' : ['z'],
+                  'libraries' : {'zlibLibs' : ['z']},
                   'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
                   'ld-path' : '$LIB-PATH'},
