@@ -34,7 +34,8 @@ ClassImp(treqCAL)
 // Initialization
 //
 treqCAL::treqCAL() : m_caltuplefile(0),m_caltuple(0), m_useKalman(false), m_useToT(false), m_useMip(false), m_useGamma(false),
-		     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6), m_MipLower(3)
+		     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6), m_MipLower(3),
+		     m_useOneTrack(false)
 {
 }
 
@@ -389,7 +390,8 @@ void treqCAL::Go(Long64_t numEvents)
         if(ievent%10000==0) 
             std::cout << "\r** Processing Event " << ievent << std::flush;  
 	const Gem gem=evt->getGem();
-	if(!(gem.getConditionSummary()&0x2) || !(gem.getConditionSummary()&0xc))continue;  // require TKR && CAL
+	// require TKR && CAL but No CNO
+	if( (!(gem.getConditionSummary()&0x2) || !(gem.getConditionSummary()&0xc)) && !(gem.getConditionSummary()&0x10) )continue;  
 	double maxeface=0;
 	bool maxveto=false;
 	int miplayers[8];
@@ -405,7 +407,7 @@ void treqCAL::Go(Long64_t numEvents)
 	  CalXtalRecData *xtal = 0;
 	  if (xtalRecCol){
 	    if(xtalRecCol->GetEntries()>0 ){
-	      
+	    	      
 	      while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
 		const idents::CalXtalId cId(xtal->getPackedId());
 	      	Int_t tower  = cId.getTower();
@@ -457,14 +459,17 @@ void treqCAL::Go(Long64_t numEvents)
 	// extract track information from recon file
 	TkrRecon* tkrRecon = rec->getTkrRecon();
 	TObjArray* tracks = tkrRecon->getTrackCol();
-	// Select here event that have only 1 track
-//	if(tracks->GetEntries()>0){
-	if((tracks->GetEntries())==1){
+	if(tracks->GetEntries()>0){
+	  // Select here event that have only 1 track
+	  if( (tracks->GetEntries())==1 && m_useOneTrack)continue;
 	  //first track
 	  TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
-	  if(tkrTrack) {	    	    
-	    if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue; // event cut on Kalman energy 
-	    if(tkrTrack->getChiSquareFilter()<20)continue; // event cut track chi square	    
+	  if(tkrTrack) {	    	
+	    // event cut on Kalman energy 
+	    if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue;
+	    // event cut track chi square 
+	    if( (tkrTrack->getChiSquareSmooth()<20) && m_useOneTrack)continue; 
+	    // and now check the ToT cut
 	    if (m_useToT){
 	      // calculate average TOT to cut on
 	      double Tkr_1_ToTAve=0;	      
