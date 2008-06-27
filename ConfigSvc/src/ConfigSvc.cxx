@@ -322,6 +322,7 @@ FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) co
   CalibData::MootFilterCfg* filterCfg = m_mootSvc->getActiveFilter(lpaMode,handlerId,handlerName);
   if ( filterCfg == 0 ) {
     log << MSG::ERROR << "No active filter for mode " << lpaMode << " and handlerId " << handlerId << endreq;
+    m_noMOOTMask |= ( 1 << handlerId );
     return 0;
   }
   std::string fullPath;

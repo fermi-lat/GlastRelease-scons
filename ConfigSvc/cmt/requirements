@@ -2,7 +2,7 @@ package ConfigSvc
 
 # $Header$
 
-version v0r2p6
+version v0r2p7
 
 author Eric Charles <echarles@slac.stanford.edu>
 
