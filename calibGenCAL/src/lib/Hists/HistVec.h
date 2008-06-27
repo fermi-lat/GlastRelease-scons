@@ -65,7 +65,8 @@ namespace calibGenCAL {
       if (readDir != 0)
         loadHists(*readDir);
 
-      setDirectory(writeDir);
+      if (writeDir != 0)
+        setDirectory(writeDir);
     }
 
     /// act like STL vector
