@@ -111,6 +111,11 @@ Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // thi
 // Feed all events to the filters
 EbfWriter.ReqGemTrig = false;
 
+OnboardFilter.GammaFilterTool.LeakAllEvents=true;
+OnboardFilter.HIPFilterTool.LeakAllEvents=true;
+OnboardFilter.MIPFilterTool.LeakAllEvents=true;
+OnboardFilter.DGNFilterTool.LeakAllEvents=true;
+
 
 // to specify a different set of calibrations for recon (TKR only)
 
