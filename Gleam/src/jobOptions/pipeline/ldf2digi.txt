@@ -127,6 +127,10 @@ Trigger.Members      += {"EbfWriter","OnboardFilter"};
 // Feed all events to the filters:
 EbfWriter.ReqGemTrig = false;
 
+// Make sure we pick up the flight calibrations and gains
+ToolSvc.FSWAuxLibsTool.FileNamePeds="cal_db_pedestals";
+ToolSvc.FSWAuxLibsTool.FileNameGains="cal_db_gains";
+
 
 //
 // The following things can be changed by the user:

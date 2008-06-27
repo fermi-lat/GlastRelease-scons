@@ -116,6 +116,9 @@ OnboardFilter.HIPFilterTool.LeakAllEvents=true;
 OnboardFilter.MIPFilterTool.LeakAllEvents=true;
 OnboardFilter.DGNFilterTool.LeakAllEvents=true;
 
+ToolSvc.FSWAuxLibsTool.FileNamePeds="cal_db_pedestals";
+ToolSvc.FSWAuxLibsTool.FileNameGains="cal_db_gains";
+
 
 // to specify a different set of calibrations for recon (TKR only)
 

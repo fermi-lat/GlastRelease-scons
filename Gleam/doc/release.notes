@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r0p10  HMK Insert JO to make sure we pick up and find the flight peds/gains
+*          on all platforms
 * v7r0p9   HMK 26-Jun-08 Update basicOptions to set LeakAllEvents true for
 *          all filters for MC
 * v7r0p8   AWB 20-Jun-08 Change L1 pipeline default JO to evt file as input to ldf2digi.
