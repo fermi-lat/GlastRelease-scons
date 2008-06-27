@@ -210,7 +210,7 @@ namespace calibGenCAL {
       const float gemDeltaEventTime = gem->getDeltaEventTime()*0.05;
       if (gemConditionsWord != enums::PERIODIC ||     // skip unless we are periodic trigger only
           eventData.prev4Range      ||   // avoid bias from 4 range readout in prev event
-          gemDeltaEventTime < 2000)      // avoid bias from shaped readout noise from adjacent event
+          gemDeltaEventTime < 100)      // avoid bias from shaped readout noise from adjacent event
         return;
     }
 
