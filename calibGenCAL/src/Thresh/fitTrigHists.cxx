@@ -283,7 +283,11 @@ int main(const int argc, const char **argv) {
                        << "from file " << cfg.histFilePath.getVal() << endl;
         return -1;
       }
-      
+
+      /// skip empty histograms
+      if (specHist->GetEntries() <= 0)
+        continue;
+
       FitResults fr = fitHists(faceIdx, *trigHist, *specHist);
 
       const float twr = faceIdx.getTwr().val();
