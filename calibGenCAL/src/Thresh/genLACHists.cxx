@@ -115,7 +115,7 @@ public:
 };
 
 
-static const unsigned MAX_DELTA_EVENT_TIME_MUS = 500;
+static const unsigned MAX_DELTA_EVENT_TIME_MUS = 100;
 
 int main(const int argc, const char **argv) {
 
@@ -224,7 +224,6 @@ int main(const int argc, const char **argv) {
       const Gem &gem =digiEvent->getGem();
       const unsigned gemConditionsWord = gem.getConditionSummary();
       const float gemDeltaEventTime = gem.getDeltaEventTime()*0.05;
-
       
       // status print out
       if (nEvt % 1000 == 0)
