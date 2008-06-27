@@ -363,7 +363,7 @@ bool GcrReconTool::checkFilters(){
   // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is NOT set, false if the event is vetoed by all these filters.
   // Transfert of statusWord to TDS needs still to be added at the end of this method 
 
-  unsigned int filtersbGamma=0, filtersbHFC=0, filtersbDGN=0, filtersbMip=0;
+  unsigned int filtersbGamma=0, filtersbHIP=0, filtersbDGN=0, filtersbMIP=0;
   
   // get calEnergyRaw from TDS, to be considered for OBFGamma and OBFHFC cuts
   //float calEnergyRaw =getCALEnergyRaw();
@@ -373,9 +373,9 @@ bool GcrReconTool::checkFilters(){
    {
        // Pointer to our retrieved objects
        const OnboardFilterTds::IObfStatus* obfResultGamma = 0;
-       const OnboardFilterTds::IObfStatus* obfResultHFC = 0;
+       const OnboardFilterTds::IObfStatus* obfResultHIP = 0;
        const OnboardFilterTds::IObfStatus* obfResultDGN = 0;
-       const OnboardFilterTds::IObfStatus* obfResultMip = 0;
+       const OnboardFilterTds::IObfStatus* obfResultMIP = 0;
        
        obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
        if(obfResultGamma)
@@ -384,21 +384,21 @@ bool GcrReconTool::checkFilters(){
            m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
 
 
-       obfResultHFC = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter);      
-       if(obfResultHFC)
-	 filtersbHFC = obfResultHFC->getFiltersb() >> 4;
+       obfResultHIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter);      
+       if(obfResultHIP)
+	 filtersbHIP = obfResultHIP->getFiltersb() >> 4;
        else
-           m_log << MSG::INFO <<  "no obfResultHFC" << endreq;
+           m_log << MSG::INFO <<  "no obfResultHIP" << endreq;
 
 
-       obfResultMip = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter);//MipFilter: Filter key in ObfFilterStatus.h      
-       if(obfResultMip)
-	 filtersbMip = obfResultMip->getFiltersb() >> 4;
+       obfResultMIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter);
+       if(obfResultMIP)
+	 filtersbMIP = obfResultMIP->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
 
 
-       obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter); //DFCFilter: Filter key in ObfFilterStatus.h
+       obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter); 
        //DFCFilter is the old name of DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
        if(obfResultDGN)
 	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;
@@ -411,20 +411,18 @@ bool GcrReconTool::checkFilters(){
    //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
 
    bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
-   //bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6)) && (calEnergyRaw > CALRawE_TH);
-   bool cutHFC = ((filtersbHFC==0) || (filtersbHFC==6));
-   bool cutMip = (filtersbMip==0) || (filtersbMip==6);
-   //bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6))  && (calEnergyRaw > CALRawE_TH);
+   bool cutHIP = ((filtersbHIP==0) || (filtersbHIP==6));
+   bool cutMIP = (filtersbMIP==0) || (filtersbMIP==6);
    bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6));
 
-   bool passFilter = cutGamma || cutHFC || cutMip || cutDGN;
+   bool passFilter = cutGamma || cutHIP || cutMIP || cutDGN;
    m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
 
    //TDS variable containing the OBF filter flags:
    // gcrOBFStatusWord bits order is the same than statusBytes merit variable   
    m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
-   m_gcrOBFStatusWord|=cutHFC<<OnboardFilterTds::ObfFilterStatus::HIPFilter;
-   m_gcrOBFStatusWord|=cutMip<<OnboardFilterTds::ObfFilterStatus::MIPFilter;
+   m_gcrOBFStatusWord|=cutHIP<<OnboardFilterTds::ObfFilterStatus::HIPFilter;
+   m_gcrOBFStatusWord|=cutMIP<<OnboardFilterTds::ObfFilterStatus::MIPFilter;
    m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DGNFilter;
    
    m_log << MSG::INFO << "m_gcrOBFStatusWord= " << m_gcrOBFStatusWord <<endreq;

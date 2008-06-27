@@ -45,6 +45,7 @@
 #include "TObjArray.h"
 #include "TObject.h"
 
+#include "OnboardFilterTds/ObfFilterStatus.h"
 
 /**   
  * @class GcrSelectTool
@@ -750,7 +751,7 @@ void GcrSelectTool::findClusters(){
 float GcrSelectTool::chooseEth(){
 
   float Eth=100.0;
-  bool passGamma, passHFC, passMip, passDFC;
+  bool passGamma=0, passHIP=0, passMIP=0, passDGN=0;
 
   //gcrOBFStatusWord comes from gcrReconVals - calculated in GcrReconTool
 
@@ -762,20 +763,19 @@ float GcrSelectTool::chooseEth(){
      m_log << MSG::INFO << "No gcrReconVals found" << endreq;
   }
   
-  //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
-  passGamma = (m_gcrOBFStatusWord & 1)!=0;
-  passHFC = (m_gcrOBFStatusWord & 2)!=0;
-  passMip = (m_gcrOBFStatusWord & 4)!=0;
-  passDFC = (m_gcrOBFStatusWord & 8)!=0;
+  passGamma = (m_gcrOBFStatusWord & OnboardFilterTds::ObfFilterStatus::GammaFilter)!=0;
+  passHIP = (m_gcrOBFStatusWord   & OnboardFilterTds::ObfFilterStatus::HIPFilter)!=0;
+  passMIP = (m_gcrOBFStatusWord   & OnboardFilterTds::ObfFilterStatus::MIPFilter)!=0;
+  passDGN = (m_gcrOBFStatusWord   & OnboardFilterTds::ObfFilterStatus::DGNFilter)!=0;
   
-  m_log << MSG::DEBUG << "passGamma, passHFC, passMip, passDFC= " << passGamma <<"," << passHFC << "," <<passMip << "," << passDFC << endreq;
+  m_log << MSG::DEBUG << "passGamma, passHIP, passMIP, passDGN= " << passGamma <<"," << passHIP << "," <<passMIP << "," << passDGN << endreq;
   
   SmartDataPtr<Event::EventHeader> pEvent(m_dataSvc, EventModel::EventHeader);
   unsigned int word2 =  ( pEvent==0? 0 : pEvent->triggerWordTwo());
   unsigned int Trig_gemengine = ((word2 >> enums::ENGINE_offset) & enums::ENGINE_mask);
   bool engine4ON = (Trig_gemengine==4);
 
-  if (passHFC)
+  if (passHIP)
     Eth = 100.0;
   else if (passGamma) {
       if(engine4ON)
@@ -787,7 +787,7 @@ float GcrSelectTool::chooseEth(){
 	  Eth = 5.0;
 	}
     }
-  else if (passMip || passDFC)
+  else if (passMIP || passDGN)
     {
       Eth = 5.0;
     }
