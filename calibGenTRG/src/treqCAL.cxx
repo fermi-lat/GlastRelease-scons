@@ -386,14 +386,18 @@ void treqCAL::Go(Long64_t numEvents)
         
         Int_t nb = GetEvent(ievent);
 	if (m_caltuple)m_caltuple->GetEvent(ievent);
-        if(ievent%1000==0) 
-            std::cout << "** Processing Event " << ievent << std::endl;  
+        if(ievent%10000==0) 
+            std::cout << "\r** Processing Event " << ievent << std::flush;  
 	const Gem gem=evt->getGem();
 	if(!(gem.getConditionSummary()&0x2) || !(gem.getConditionSummary()&0xc))continue;  // require TKR && CAL
 	double maxeface=0;
 	bool maxveto=false;
 	int miplayers[8];
-	for (int i=0;i<8;i++)miplayers[i]=0;
+	double Elayers[8];
+	for (int i=0;i<8;i++){
+	  miplayers[i]=0;
+	  Elayers[i]  =0;
+	  }
 	XtalIdx maxIdxface;
 	if (rec){
 	  TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
@@ -401,16 +405,23 @@ void treqCAL::Go(Long64_t numEvents)
 	  CalXtalRecData *xtal = 0;
 	  if (xtalRecCol){
 	    if(xtalRecCol->GetEntries()>0 ){
+	      
 	      while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
 		const idents::CalXtalId cId(xtal->getPackedId());
 	      	Int_t tower  = cId.getTower();
 	      	Int_t layer  = cId.getLayer();
 	      	Int_t column  = cId.getColumn();
+		
 		double xenergy=xtal->getEnergy();
-		if (xenergy>5&&xenergy<25)miplayers[layer]=1;
+		if (xenergy>5&&xenergy<25)
+		  {
+		   miplayers[layer]=1;  // Require a mip in a single xtal
+		   Elayers[layer]+=xenergy;
+		  }
+		
 		const XtalIdx xtalIdx(cId);
 		bool veto=false;
-		if (m_calxtalfacesignal[tower][layer][column][0]>0 && m_calxtalfacesignal[tower][layer][column][1]>0){
+		if(m_calxtalfacesignal[tower][layer][column][0]>0 && m_calxtalfacesignal[tower][layer][column][1]>0){
 		  float faceratio=m_calxtalfacesignal[tower][layer][column][0]/m_calxtalfacesignal[tower][layer][column][1];
 		  if(faceratio<1)faceratio=1/faceratio;
 		  if(faceratio>2){
@@ -429,22 +440,31 @@ void treqCAL::Go(Long64_t numEvents)
 		  maxIdxface=xtalIdx;
 		  maxveto=veto;
 		}
-	      }
+	      } //end of while	      
 	    }
 	  }
 	}
 	if (maxeface<90 || maxveto==true)continue;
+	
+	// Check Layers Energy to see whether there is a mip in there or not
+	// layer counts for all CAL towers, this in someway cleans more events than checking only one tower.
+	for (int i=0;i<8;i++)
+	   miplayers[i] = (Elayers[i]>25)?0:1;
+
 	int nlayers=0;
 	for (int i=0;i<8;i++)nlayers+=miplayers[i];
 	if(m_useMip && nlayers<m_MipLower)continue; // MIP filter
 	// extract track information from recon file
 	TkrRecon* tkrRecon = rec->getTkrRecon();
 	TObjArray* tracks = tkrRecon->getTrackCol();
-	if(tracks->GetEntries()>0){
+	// Select here event that have only 1 track
+//	if(tracks->GetEntries()>0){
+	if((tracks->GetEntries())==1){
 	  //first track
 	  TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
-	  if(tkrTrack) {
+	  if(tkrTrack) {	    	    
 	    if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue; // event cut on Kalman energy 
+	    if(tkrTrack->getChiSquareFilter()<20)continue; // event cut track chi square	    
 	    if (m_useToT){
 	      // calculate average TOT to cut on
 	      double Tkr_1_ToTAve=0;	      
