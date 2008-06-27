@@ -1,3 +1,4 @@
+v1r5p1      26/06/08 jct  fix an oops
 v1r5        26/06/08 jct  fix the status word following the API change of obf 1-0-8
 v1r4p7      11/06/08 jct  initialize gcr status bits to avoid unphysical values
 v1r4p6      11/06/08  TU  Mods to reflect changes in ObfFilterStatus naming conventions
