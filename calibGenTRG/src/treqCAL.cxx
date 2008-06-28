@@ -458,14 +458,14 @@ void treqCAL::Go(Long64_t numEvents)
 	TObjArray* tracks = tkrRecon->getTrackCol();
 	if(tracks->GetEntries()>0){
 	  // Select here event that have more than 1 track
-	  if( (tracks->GetEntries())==1 && m_useOneTrack)continue;
+	  if( (tracks->GetEntries())!=1 && m_useOneTrack)continue;
 	  //first track
 	  TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
 	  if(tkrTrack) {	    	
 	    // event cut on Kalman energy 
 	    if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue;
 	    // event cut track chi square 
-	    if( (tkrTrack->getChiSquareSmooth()<20) && m_useOneTrack)continue; 
+	    if( (tkrTrack->getChiSquareSmooth()>20) && m_useOneTrack)continue; 
 	    // and now check the ToT cut
 	    if (m_useToT){
 	      // calculate average TOT to cut on
