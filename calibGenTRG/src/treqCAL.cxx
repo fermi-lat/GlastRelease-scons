@@ -415,11 +415,8 @@ void treqCAL::Go(Long64_t numEvents)
 	      	Int_t column  = cId.getColumn();
 		
 		double xenergy=xtal->getEnergy();
-		if (xenergy>5&&xenergy<25)
-		  {
-		   miplayers[layer]=1;  // Require a mip in a single xtal
-		   Elayers[layer]+=xenergy;
-		  }
+		if (xenergy>5&&xenergy<25) miplayers[layer]=1;  // Require a mip in a single xtal
+		Elayers[layer]+=xenergy; // and calculate Elayer for the whole LAT
 		
 		const XtalIdx xtalIdx(cId);
 		bool veto=false;
@@ -445,7 +442,7 @@ void treqCAL::Go(Long64_t numEvents)
 	      } //end of while	      
 	    }
 	  }
-	}
+	} // end of if rec ...but we're using recon for the tkr afterwards.
 	if (maxeface<90 || maxveto==true)continue;
 	
 	// Check Layers Energy to see whether there is a mip in there or not
@@ -460,7 +457,7 @@ void treqCAL::Go(Long64_t numEvents)
 	TkrRecon* tkrRecon = rec->getTkrRecon();
 	TObjArray* tracks = tkrRecon->getTrackCol();
 	if(tracks->GetEntries()>0){
-	  // Select here event that have only 1 track
+	  // Select here event that have more than 1 track
 	  if( (tracks->GetEntries())==1 && m_useOneTrack)continue;
 	  //first track
 	  TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
@@ -541,19 +538,19 @@ void treqCAL::Go(Long64_t numEvents)
 		  double factor = path1*costh1*slope;
 		  double path2 = sqrt(path1*path1 + factor*factor);
 		  mips /= path2;
-		}
+		} // end of else totMax
 		
 		Tkr_1_ToTAve += mips;
-	      }
+	      }// end of while on hits
 	      
 	      if(clustersOnTrack>3) {
 		Tkr_1_ToTAve /= clustersOnTrack;
 	      }
 	      if (Tkr_1_ToTAve>m_ToTUpper || Tkr_1_ToTAve<m_ToTLower)continue; // only use ToT between 1 and 1.6
 	      
-	    }
-	  }
-	}
+	    } //end of useToT
+	  }  // end of if tkrTrack
+	} // end of if tkrTrack GetEntries
 	assert (evt->getObfFilterStatus().getFilterStatus(ObfFilterStatus::GammaFilter) != 0);
 	UChar_t m_gammaStatus = evt->getObfFilterStatus().getFilterStatus(ObfFilterStatus::GammaFilter)->getFiltersb();
 	int m_gammaStatusInt = m_gammaStatus>>4;
