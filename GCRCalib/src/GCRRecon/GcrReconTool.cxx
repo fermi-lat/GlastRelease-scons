@@ -406,30 +406,22 @@ bool GcrReconTool::checkFilters(){
        else
            m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
 
-       bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
+       bool cutGamma = ((filtersbGamma==0) || (filtersbGamma==6));
        bool cutHIP = ((filtersbHIP==0) || (filtersbHIP==6));
        bool cutMIP = (filtersbMIP==0) || (filtersbMIP==6);
        bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6));
+
+       m_gcrOBFStatusWord=cutGamma<<0;
+       m_gcrOBFStatusWord|=cutHIP<<1;
+       m_gcrOBFStatusWord|=cutMIP<<2;
+       m_gcrOBFStatusWord|=cutDGN<<3;
+
        passFilter = cutGamma || cutHIP || cutMIP || cutDGN;
    }
    else
      m_log << MSG::INFO << "no obfStatus"<< endreq;
 
    m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
-
-   //TDS variable containing the OBF filter flags:
-   // gcrOBFStatusWord bits order is the same than statusBytes merit variable   
-
-//    m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
-//    m_gcrOBFStatusWord|=cutHIP<<OnboardFilterTds::ObfFilterStatus::HIPFilter;
-//    m_gcrOBFStatusWord|=cutMIP<<OnboardFilterTds::ObfFilterStatus::MIPFilter;
-//    m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DGNFilter;
-
-   m_gcrOBFStatusWord=cutGamma<<0;
-   m_gcrOBFStatusWord|=cutHIP<<1;
-   m_gcrOBFStatusWord|=cutMIP<<2;
-   m_gcrOBFStatusWord|=cutDGN<<3;
-   
    m_log << MSG::INFO << "m_gcrOBFStatusWord= " << m_gcrOBFStatusWord <<endreq;
    // store gcrOBFStatus Word in TDS:
    storeGcrReconVals();
