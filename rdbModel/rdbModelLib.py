@@ -6,7 +6,7 @@ def generate(env, **kw):
     env.Tool('facilitiesLib')
     env.Tool('xmlBaseLib')
     env.Tool('addLibrary', library = env['xercesLibs'])
-    env.Tool('addLibrary', library = env['MYSQLLibs'])
+    env.Tool('addLibrary', library = env['mysqlLibs'])
 
 def exists(env):
     return 1
