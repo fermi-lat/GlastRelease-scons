@@ -24,6 +24,7 @@
 #include "TProfile.h"
 #include "TNtuple.h"
 #include "TTree.h"
+#include "TCanvas.h"
 
 // STD INCLUDES
 #include <sstream>
@@ -295,6 +296,25 @@ namespace calibGenCAL {
                            << " " << rngIdx.toStr()
                            << "  cidac "  << cidac
                            << endl;
+
+            /// draw optional graph of this channel if we have the info
+            if (m_hugeTuple) {
+              ostringstream plotname;
+              plotname << "noise_warning_" << rngIdx.toStr()
+                            << "_dac_" << cidac;
+              TCanvas c(plotname.str().c_str(),
+                        plotname.str().c_str(),
+                        -1);
+              ostringstream cut;
+              cut << "cidac==" << cidac
+                  << " && rngIdx==" << rngIdx.val();
+              m_hugeTuple->Draw("adc:goodEventNum",
+                                cut.str().c_str(),
+                                "*");
+              c.Write();
+
+              
+            }
           }
         }
       }   // foreach face
