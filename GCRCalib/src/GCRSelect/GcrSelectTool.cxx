@@ -763,10 +763,15 @@ float GcrSelectTool::chooseEth(){
      m_log << MSG::INFO << "No gcrReconVals found" << endreq;
   }
   
-  passGamma = (m_gcrOBFStatusWord & (1 << OnboardFilterTds::ObfFilterStatus::GammaFilter))!=0;
-  passHIP = (m_gcrOBFStatusWord   & (1 << OnboardFilterTds::ObfFilterStatus::HIPFilter))!=0;
-  passMIP = (m_gcrOBFStatusWord   & (1 << OnboardFilterTds::ObfFilterStatus::MIPFilter))!=0;
-  passDGN = (m_gcrOBFStatusWord   & (1 << OnboardFilterTds::ObfFilterStatus::DGNFilter))!=0;
+//   passGamma = (m_gcrOBFStatusWord & (1 << OnboardFilterTds::ObfFilterStatus::GammaFilter))!=0;
+//   passHIP = (m_gcrOBFStatusWord   & (1 << OnboardFilterTds::ObfFilterStatus::HIPFilter))!=0;
+//   passMIP = (m_gcrOBFStatusWord   & (1 << OnboardFilterTds::ObfFilterStatus::MIPFilter))!=0;
+//   passDGN = (m_gcrOBFStatusWord   & (1 << OnboardFilterTds::ObfFilterStatus::DGNFilter))!=0;
+
+  passGamma = m_gcrOBFStatusWord & 1;
+  passHIP = m_gcrOBFStatusWord   & 2;
+  passMIP = m_gcrOBFStatusWord   & 4;
+  passDGN = m_gcrOBFStatusWord   & 8;
   
   m_log << MSG::DEBUG << "passGamma, passHIP, passMIP, passDGN= " << passGamma <<"," << passHIP << "," <<passMIP << "," << passDGN << endreq;
   

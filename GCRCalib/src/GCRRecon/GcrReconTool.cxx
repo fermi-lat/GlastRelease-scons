@@ -363,7 +363,8 @@ bool GcrReconTool::checkFilters(){
   // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is NOT set, false if the event is vetoed by all these filters.
   // Transfert of statusWord to TDS needs still to be added at the end of this method 
 
-  unsigned int filtersbGamma=0, filtersbHIP=0, filtersbDGN=0, filtersbMIP=0;
+  int filtersbGamma=-1, filtersbHIP=-1, filtersbDGN=-1, filtersbMIP=-1;
+  bool passFilter=0;
   
   // get calEnergyRaw from TDS, to be considered for OBFGamma and OBFHFC cuts
   //float calEnergyRaw =getCALEnergyRaw();
@@ -404,26 +405,30 @@ bool GcrReconTool::checkFilters(){
 	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;
        else
            m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
+
+       bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
+       bool cutHIP = ((filtersbHIP==0) || (filtersbHIP==6));
+       bool cutMIP = (filtersbMIP==0) || (filtersbMIP==6);
+       bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6));
+       passFilter = cutGamma || cutHIP || cutMIP || cutDGN;
    }
    else
      m_log << MSG::INFO << "no obfStatus"<< endreq;
 
-   //{'Gam':0,'Hfc':1,'Mip':2,'Dfc':3}
-
-   bool cutGamma = (filtersbGamma==0) || (filtersbGamma==6);
-   bool cutHIP = ((filtersbHIP==0) || (filtersbHIP==6));
-   bool cutMIP = (filtersbMIP==0) || (filtersbMIP==6);
-   bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6));
-
-   bool passFilter = cutGamma || cutHIP || cutMIP || cutDGN;
    m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
 
    //TDS variable containing the OBF filter flags:
    // gcrOBFStatusWord bits order is the same than statusBytes merit variable   
-   m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
-   m_gcrOBFStatusWord|=cutHIP<<OnboardFilterTds::ObfFilterStatus::HIPFilter;
-   m_gcrOBFStatusWord|=cutMIP<<OnboardFilterTds::ObfFilterStatus::MIPFilter;
-   m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DGNFilter;
+
+//    m_gcrOBFStatusWord=cutGamma<<OnboardFilterTds::ObfFilterStatus::GammaFilter;
+//    m_gcrOBFStatusWord|=cutHIP<<OnboardFilterTds::ObfFilterStatus::HIPFilter;
+//    m_gcrOBFStatusWord|=cutMIP<<OnboardFilterTds::ObfFilterStatus::MIPFilter;
+//    m_gcrOBFStatusWord|=cutDGN<<OnboardFilterTds::ObfFilterStatus::DGNFilter;
+
+   m_gcrOBFStatusWord=cutGamma<<0;
+   m_gcrOBFStatusWord|=cutHIP<<1;
+   m_gcrOBFStatusWord|=cutMIP<<2;
+   m_gcrOBFStatusWord|=cutDGN<<3;
    
    m_log << MSG::INFO << "m_gcrOBFStatusWord= " << m_gcrOBFStatusWord <<endreq;
    // store gcrOBFStatus Word in TDS:
