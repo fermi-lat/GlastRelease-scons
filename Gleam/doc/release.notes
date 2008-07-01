@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r0p11  HMK Turn off MOOT in Gleam unit test for now
 * v7r0p10  HMK Insert JO to make sure we pick up and find the flight peds/gains
 *          on all platforms
 * v7r0p9   HMK 26-Jun-08 Update basicOptions to set LeakAllEvents true for

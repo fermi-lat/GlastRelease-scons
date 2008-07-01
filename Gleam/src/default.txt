@@ -24,7 +24,9 @@ RootTupleSvc.filename="merit.root";
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 CalClustersAlg.OutputLevel=4; // too much info
 
-MootSvc.noMoot = false;
+// no MOOT in unit test for now
+//MootSvc.noMoot = false;
+MootSvc.noMoot = true;
 
 // Number of events to process
 MeritAlg.generated = 1000; // for estimation of Aeff
