@@ -92,6 +92,9 @@ void fittack::readrootfiles(){
       }
       a.Close();
     }
+    sprintf(histname,"calratio_alltowers_step_%d",i);
+    sprintf(histtitle,"CAL HEX/LEX histogram all towers step %d",i);
+    calratiosum[i]->SetNameTitle(histname,histtitle);
   }
 }
 
@@ -99,7 +102,7 @@ void fittack::readrootfiles(){
 void fittack::fit(){
   gROOT->SetStyle("Plain");
   gStyle->SetOptStat(0);
-  gStyle->SetOptFit(1111);
+  gStyle->SetOptFit(11);
   gStyle->SetErrorX(0.002);
   gStyle->SetMarkerStyle(20);
   gStyle->SetMarkerSize(.8);
@@ -138,6 +141,7 @@ void fittack::fit(){
   char histname[128],histtitle[128];
   calsumwaveform=new TH1D("calsumwaveform","CALLO Waveform All Towers",npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
   calhisumwaveform=new TH1D("calhisumwaveform","CALHI Waveform All Towers",npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
+  calratiosumwaveform=new TH1D("calratiosumwaveform","CAL HEX/LEX Waveform All Towers",npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
   langau->SetParameters(0.06,11.3,10000,0.05,20);
   for (int i=0;i<16;i++){
     sprintf(histname,"calwaveform_tower_%d",i);
@@ -146,6 +150,9 @@ void fittack::fit(){
     sprintf(histname,"calhiwaveform_tower_%d",i);
     sprintf(histtitle,"Calhi Waveform Tower %d",i);
     calhiwaveform[i]=new TH1D(histname,histtitle,npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
+    sprintf(histname,"calratiowaveform_tower_%d",i);
+    sprintf(histtitle,"Cal Ratio Waveform Tower %d",i);
+    calratiowaveform[i]=new TH1D(histname,histtitle,npoints,tack_cal[first]-stepcal/2.,tack_cal[last]+stepcal/2.);
     for (int j=first;j<=last;j++){
       if (i==0){
 	//	fifl->SetParameters(100000,15,2,0.5,5000,.1);
@@ -168,6 +175,8 @@ void fittack::fit(){
 	  eratio=0;
 	  ratio=0;
 	}
+	calratiosumwaveform->SetBinContent(j-first+1,ratio);
+	calratiosumwaveform->SetBinError(j-first+1,eratio);
 	calhisumwaveform->SetBinContent(j-first+1,meanfit*ratio);
 	calhisumwaveform->SetBinError(j-first+1,sqrt(ratio*ratio*emeanfit*emeanfit+meanfit*meanfit*eratio*eratio));
       }
@@ -191,60 +200,64 @@ void fittack::fit(){
 	eratio=0;
 	ratio=0;
       }
+      calratiowaveform[i]->SetBinContent(j-first+1,ratio);
+      calratiowaveform[i]->SetBinError(j-first+1,eratio);
       calhiwaveform[i]->SetBinContent(j-first+1,meanfit*ratio);
       calhiwaveform[i]->SetBinError(j-first+1,sqrt(ratio*ratio*emeanfit*emeanfit+meanfit*meanfit*eratio*eratio));
 
     }
     if (i==0){
-      //fn->SetParameters(12,45,100,.5) ;
-	      //calsumwaveform->Fit(fn,"q");
-	      //calsumwaveform->Fit(fn,"q");
-	      //calsumwaveform->Fit(fn,"q");
-        eg->SetParameters(10,45,70);
-        calsumwaveform->Fit(eg,"q");
+      fn->SetParameters(10,50,80,.5) ;
+      calsumwaveform->Fit(fn,"qem");
+      //  eg->SetParameters(10,45,70);
+       // calsumwaveform->Fit(eg,"q");
 	calsumwaveform->Write();
 	calsumwaveform->Draw();
-	calfitmeansum=eg->GetParameter(1);
-	ecalfitmeansum=eg->GetParError(1);
+	calfitmeansum=fn->GetParameter(1);
+	ecalfitmeansum=fn->GetParError(1);
 	sprintf(epsname,"cal_%s_sum.eps",textname.c_str());
 	sprintf(gifname,"cal_%s_sum.gif",textname.c_str());
 	c1->SaveAs(epsname);
 	c1->SaveAs(gifname);
         eg->SetParameters(10,45,70);
-        calhisumwaveform->Fit(eg,"q");
+      fn->SetParameters(10,50,80,.5) ;
+      calhisumwaveform->Fit(fn,"qem");
+      //  calhisumwaveform->Fit(eg,"q");
 	calhisumwaveform->Write();
 	calhisumwaveform->Draw();
-	calhifitmeansum=eg->GetParameter(1);
-	ecalhifitmeansum=eg->GetParError(1);
+	calhifitmeansum=fn->GetParameter(1);
+	ecalhifitmeansum=fn->GetParError(1);
 	sprintf(epsname,"calhi_%s_sum.eps",textname.c_str());
 	sprintf(gifname,"calhi_%s_sum.gif",textname.c_str());
 	c1->SaveAs(epsname);
 	c1->SaveAs(gifname);
+	calratiosumwaveform->Write();
     }
-    //fn->SetParameters(12,45,100,.5) ;
-    //calwaveform[i]->Fit(fn,"q");
-    //calwaveform[i]->Fit(fn,"q");
-    //calwaveform[i]->Fit(fn,"q");
-    eg->SetParameters(10,45,70);
-    calwaveform[i]->Fit(eg,"q");
+    fn->SetParameters(10,50,80,.5) ;
+    calwaveform[i]->Fit(fn,"qem");
+    //eg->SetParameters(10,45,70);
+    //calwaveform[i]->Fit(eg,"q");
     calwaveform[i]->Write();
     calwaveform[i]->Draw();
     sprintf(epsname,"cal_%s_%d.eps",textname.c_str(),i);
     sprintf(gifname,"cal_%s_%d.gif",textname.c_str(),i);
     c1->SaveAs(epsname);
     c1->SaveAs(gifname);
-    calfitmean[i]=eg->GetParameter(1);
-    ecalfitmean[i]=eg->GetParError(1);
-    eg->SetParameters(10,45,70);
-    calhiwaveform[i]->Fit(eg,"q");
+    calfitmean[i]=fn->GetParameter(1);
+    ecalfitmean[i]=fn->GetParError(1);
+    //eg->SetParameters(10,45,70);
+    fn->SetParameters(10,50,80,.5) ;
+    calhiwaveform[i]->Fit(fn,"qem");
+    //calhiwaveform[i]->Fit(eg,"q");
     calhiwaveform[i]->Write();
     calhiwaveform[i]->Draw();
     sprintf(epsname,"calhi_%s_%d.eps",textname.c_str(),i);
     sprintf(gifname,"calhi_%s_%d.gif",textname.c_str(),i);
     c1->SaveAs(epsname);
     c1->SaveAs(gifname);
-    calhifitmean[i]=eg->GetParameter(1);
-    ecalhifitmean[i]=eg->GetParError(1);
+    calhifitmean[i]=fn->GetParameter(1);
+    ecalhifitmean[i]=fn->GetParError(1);
+    calratiowaveform[i]->Write();
    }
   tkrsumwaveform=new TH1D("tkrsumwaveform","TKR Waveform All Towers",npoints,tack_tkr[first]-steptkr/2.,tack_tkr[last]+steptkr/2.);
   for (int j=first;j<=last;j++){

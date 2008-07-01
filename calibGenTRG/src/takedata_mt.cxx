@@ -29,8 +29,9 @@ ClassImp(takedata_mt)
 // 
 // Initialization
 //
-takedata_mt::takedata_mt() : m_caltuplefile(0),m_caltuple(0),m_useKalman(false), m_useToT(false),
-			     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6)
+takedata_mt::takedata_mt() : m_caltuplefile(0),m_caltuple(0),m_merittuplefile(0), m_merittuple(0),m_useKalman(false), m_useToT(false),
+			     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6),
+			     m_useOneTrack(false), m_useMip(false), m_MipLower(3),m_useptmaglat(0),m_ptmaglatlower(15),m_ptmaglatupper(25)
 {
 }
 
@@ -46,6 +47,22 @@ void takedata_mt::initCalTuple(const char* filename){
       m_caltuple->SetBranchAddress("CalXtalFaceSignalAllRange[16][8][12][2][4]",m_calrange);
     }else{
       std::cout<<"CAL file "<<filename<<" not found"<<std::endl;
+    }
+}
+void takedata_mt::initMeritTuple(const char* filename){
+  if (m_merittuplefile){
+    delete m_merittuple;
+    delete m_merittuplefile;
+  }
+    m_merittuplefile=TFile::Open(filename, "READ");
+    if(m_merittuplefile->IsOpen()){
+      std::cout<<"        Merit:    "<<filename<<std::endl;
+      m_merittuple=(TTree*)gDirectory->Get("MeritTuple");
+      m_merittuple->SetBranchStatus("*",0);
+      m_merittuple->SetBranchStatus("PtMcIlwainL",1);
+      m_merittuple->SetBranchAddress("PtMcIlwainL",&m_ptmaglat);
+    }else{
+      std::cout<<"Merit file "<<filename<<" not found"<<std::endl;
     }
 }
 
@@ -153,7 +170,7 @@ void takedata_mt::Go(Long64_t numEvents)
     if (rec) rec->Clear();
     
     Int_t nb = GetEvent(m_StartEvent);
-    m_gid=evt->getMetaEvent().run().id();
+    m_gid=evt->getRunId();
     std::cout<<"gid "<<m_gid<<std::endl;
     m_nev=nEvtMax-m_StartEvent;
     m_evPerStep=m_nev;
@@ -161,18 +178,28 @@ void takedata_mt::Go(Long64_t numEvents)
     //}
     // BEGINNING OF EVENT LOOP
     for (Long64_t ievent=m_StartEvent; ievent<nEvtMax; ievent++) {
+        if(ievent%10000==0) 
+            std::cout << "\r** Processing Event " << ievent << std::flush;  
         
         if (mc) mc->Clear();
         if (evt) evt->Clear();
         if (rec) rec->Clear();
+	if (m_merittuple)m_merittuple->GetEvent(ievent);
+	if (m_useptmaglat&& (m_ptmaglat<m_ptmaglatlower || m_ptmaglat>m_ptmaglatupper))continue;
         Int_t nb = GetEvent(ievent);
 	if (m_caltuple)m_caltuple->GetEvent(ievent);
 	const Gem gem=evt->getGem();       
-        if(ievent%1000==0) 
-            std::cout << "** Processing Event " << ievent << std::endl;  
+
+	int miplayers[8];
+	double Elayers[8];
+	for (int i=0;i<8;i++){
+	  miplayers[i]=0;
+	  Elayers[i]  =0;
+	  }
+	XtalIdx maxIdxface;
+
 	if (rec){
-	  if (evt->getL1T().getGemEngine()==4){
-	  //if (gem.getConditionSummary()==32){
+	  if (evt->getL1T().getGemEngine()==4){ // Why ?
 	      TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
 	      TIter xtalIter(xtalRecCol);
 	      CalXtalRecData *xtal = 0;
@@ -184,6 +211,8 @@ void takedata_mt::Go(Long64_t numEvents)
 		    Int_t layer  = cId.getLayer();
 		    Int_t column  = cId.getColumn();
 		    double xenergy=xtal->getEnergy();
+		    
+		    // if the cristal energy is high enough, calculate the ratio
 		    if (xenergy>100&&xenergy<800){
 		      if (m_calrange[tower][layer][column][0][1]>0 && m_calrange[tower][layer][column][0][2]>0
 			  && m_calrange[tower][layer][column][1][1]>0 && m_calrange[tower][layer][column][1][2]>0){
@@ -199,19 +228,70 @@ void takedata_mt::Go(Long64_t numEvents)
 			}
 		      }
 		    }
-		  }
+		  } //end of while	      
 		}
 	      }
-	    }     
+	    } // end of getGemEngine==4
 
+	    // Add here MIP selection from the calorimeter     
+	  if (m_useMip){
+	    TObjArray *xtalRecCol = rec->getCalRecon()->getCalXtalRecCol();
+	    TIter xtalIter(xtalRecCol);
+	    CalXtalRecData *xtal = 0;
+	    if (xtalRecCol){
+	      if(xtalRecCol->GetEntries()>0 ){
+	  		
+	  	while ((xtal = (CalXtalRecData*)xtalIter.Next())) {
+	  	  const idents::CalXtalId cId(xtal->getPackedId());
+	  	  Int_t tower  = cId.getTower();
+	  	  Int_t layer  = cId.getLayer();
+	  	  Int_t column  = cId.getColumn();
+	  	  
+	  	  double xenergy=xtal->getEnergy();
+	  	  Elayers[layer]+=xenergy; // and calculate Elayer for the whole LAT
+		  miplayers[layer]++;
+	  	  
+	  	} //end of while	
+	      }
+	    }
+	  } // end of if use mip
+
+	    
+	  // Check Layers Energy to see whether there is a mip in there or not
+	  // layer counts for all CAL towers, this in someway cleans more events than checking only one tower.
+	  int nlayers=0;
+	  for (int i=0;i<8;i++){
+	    if (Elayers[i]>5&&Elayers[i]<25) nlayers++;  // Require a mip in a single xtal
+	  }
+	  bool occveto=false; 
+	  for (int i=0;i<8;i++){
+	    if (miplayers[i]>2)occveto=true;
+	  }
+	  if(occveto)continue;
 	  // extract track information from recon file
 	  TkrRecon* tkrRecon = rec->getTkrRecon();
 	  TObjArray* tracks = tkrRecon->getTrackCol();
+	  if (tracks->GetEntries()==0)continue;
 	  if(tracks->GetEntries()>0){
+
+  	    // require TKR and ROI exactly
+	    if( !(gem.getConditionSummary()&0x3) ) continue;  
+
+	    // Require a MIP track in the calorimeter
+	    if(m_useMip && nlayers<m_MipLower)continue;
+
+	    // Select here event that have more than 1 track
+	    if( (tracks->GetEntries())!=1 && m_useOneTrack)continue;
+
 	    //first track
 	    TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
 	    if(tkrTrack) {
-	      if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue; // event cut on Kalman energy
+	      // event cut on Kalman energy 
+	      if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue;
+	      // event cut track chi square 
+	      if( (tkrTrack->getChiSquareSmooth()>20) && m_useOneTrack)continue; 
+
+
 	      if (m_useToT){
 		// calculate average TOT to cut on
 		double Tkr_1_ToTAve=0;	      

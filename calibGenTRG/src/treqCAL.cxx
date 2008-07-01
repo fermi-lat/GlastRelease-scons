@@ -34,8 +34,7 @@ ClassImp(treqCAL)
 // Initialization
 //
 treqCAL::treqCAL() : m_caltuplefile(0),m_caltuple(0), m_useKalman(false), m_useToT(false), m_useMip(false), m_useGamma(false),
-		     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6), m_MipLower(3),
-		     m_useOneTrack(false)
+		     m_kalmanLower(700), m_ToTLower(1), m_ToTUpper(1.6), m_MipLower(3)
 {
 }
 
@@ -225,7 +224,7 @@ void treqCAL::writeoutresults(const char* reportname, const char* filename){
   for (int i=0;i<16;i++){
     getMean(m_clbytower[i],mean,emean,sigma,esigma,nentries);
     bestdelay=TMath::Nint(mean);
-    delay=m_tkrdelay-m_caldelay-bestdelay;
+    delay=m_tkrdelay-m_caldelay+bestdelay;
     sprintf(name,"Tower %d (CAL LO)",i);
     sprintf(title,"cltower_%d.gif",i);
     r.linktext(line[0],name,title);
@@ -312,7 +311,7 @@ void treqCAL::writeoutresults(const char* reportname, const char* filename){
   for (int i=0;i<16;i++){
     getMean(m_chbytower[i],mean,emean,sigma,esigma,nentries);
     bestdelay=TMath::Nint(mean);
-    delay=m_tkrdelay-m_caldelay-bestdelay;
+    delay=m_tkrdelay-m_caldelay+bestdelay;
     sprintf(name,"Tower %d (CAL HI)",i);
     sprintf(title,"chtower_%d.gif",i);
     r.linktext(line[0],name,title);
@@ -458,14 +457,14 @@ void treqCAL::Go(Long64_t numEvents)
 	TObjArray* tracks = tkrRecon->getTrackCol();
 	if(tracks->GetEntries()>0){
 	  // Select here event that have more than 1 track
-	  if( (tracks->GetEntries())!=1 && m_useOneTrack)continue;
+	  //if( (tracks->GetEntries())!=1 && m_useOneTrack)continue;
 	  //first track
 	  TkrTrack* tkrTrack = dynamic_cast<TkrTrack*>(tracks->At(0));
 	  if(tkrTrack) {	    	
 	    // event cut on Kalman energy 
 	    if(m_useKalman && tkrTrack->getKalEnergy( )<m_kalmanLower)continue;
 	    // event cut track chi square 
-	    if( (tkrTrack->getChiSquareSmooth()>20) && m_useOneTrack)continue; 
+	    //if( (tkrTrack->getChiSquareSmooth()>20) && m_useOneTrack)continue; 
 	    // and now check the ToT cut
 	    if (m_useToT){
 	      // calculate average TOT to cut on
@@ -551,10 +550,13 @@ void treqCAL::Go(Long64_t numEvents)
 	    } //end of useToT
 	  }  // end of if tkrTrack
 	} // end of if tkrTrack GetEntries
-	assert (evt->getObfFilterStatus().getFilterStatus(ObfFilterStatus::GammaFilter) != 0);
-	UChar_t m_gammaStatus = evt->getObfFilterStatus().getFilterStatus(ObfFilterStatus::GammaFilter)->getFiltersb();
-	int m_gammaStatusInt = m_gammaStatus>>4;
-	if (m_useGamma && m_gammaStatusInt!=0 && m_gammaStatusInt!=6) continue; // Gamma Filter
+        const LpaGammaFilter *gamma = evt->getGammaFilter();
+        UInt_t state=2;
+        if (gamma){
+        state  = gamma->getState();
+        }
+        if (m_useGamma && state!=0) continue; // Gamma Filter
+ 
 	gamma++;
 	
 	if (evt->getL1T().getGemEngine()==5)eng5++;

@@ -62,8 +62,8 @@ private:
   int calstatussum,tkrstatussum;
   TH1D *tkrocc[30][16], *adchist[30][16], *acdadchist[30], *calratio[30][16];
   TH1D  *adchistsum[30], *calratiosum[30];
-  TH1D *acdwaveform, *calwaveform[16], *calhiwaveform[16], *tkrwaveform[30];
-  TH1D *calsumwaveform, *calhisumwaveform, *tkrsumwaveform;
+  TH1D *acdwaveform, *calwaveform[16], *calhiwaveform[16], *tkrwaveform[30],*calratiowaveform[30];
+  TH1D *calsumwaveform, *calhisumwaveform, *tkrsumwaveform, *calratiosumwaveform;
   ClassDef(fittack,1) 
 
 };

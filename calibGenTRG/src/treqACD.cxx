@@ -349,11 +349,14 @@ void treqACD::Go(Long64_t numEvents)
             std::cout << "** Processing Event " << ievent << std::endl;  
 	const Gem gem=evt->getGem();
 	UShort_t condarracd=gem.getCondArrTime().roi();
-	if (evt->getL1T().getGemEngine()==5)continue; // engine 5 is heavily prescaled
+	UShort_t condarrcno=gem.getCondArrTime().cno();
+	UShort_t condarrtkr=gem.getCondArrTime().tkr();
+	//if (evt->getL1T().getGemEngine()==5)continue; // engine 5 is heavily prescaled
 	if(gem.getConditionSummary()&0x10){ //CNO
-	  m_cno->Fill((double)condarracd);
+	  m_cno->Fill((double)condarrcno-condarrtkr);
 	}
 	if(gem.getConditionSummary()!=3)continue;  // TKR && ROI
+/*
 	int miplayers[8];
 	for (int i=0;i<8;i++)miplayers[i]=0;
 	if (rec){
@@ -376,6 +379,7 @@ void treqACD::Go(Long64_t numEvents)
 	int nlayers=0;
 	for (int i=0;i<8;i++)nlayers+=miplayers[i];
 	if(nlayers<3)continue; // MIP filter
+*/
 	m_allevents->Fill((double)condarracd);
 	std::vector<AcdId>tilelist;
 	const GemTileList acdTiles = gem.getTileList();

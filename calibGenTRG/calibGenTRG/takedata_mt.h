@@ -41,10 +41,16 @@ public :
   int setParameters(int,int,int,int);
   void writeoutresults(char*);
   void initCalTuple(const char* filename);
+  void initMeritTuple(const char* filename);
   void useKalmanCut(bool sw){m_useKalman=sw;}
   void useToTCut(bool sw){m_useToT=sw;}
+  void useMipCut(bool sw){m_useMip=sw;}
+  void useOneTrack(bool sw){m_useOneTrack=sw;}
   void setKalmanCut(float lower){m_kalmanLower=lower;}
   void setTotCut(float lower, float upper){m_ToTLower=lower;m_ToTUpper=upper;}
+  void setMipLower(int n){m_MipLower=n;}
+  void setPtMagLatCut(float lower, float upper){m_ptmaglatlower=lower;m_ptmaglatupper=upper;}
+  void usePtMagLatCut(bool sw){m_useptmaglat=sw;}
 
   void inithistos();
   void savehistos(char*);
@@ -58,16 +64,25 @@ public :
   int m_tack_cal,m_tack_tkr,m_tack_acd;
   int m_evPerStep,m_stepNumber,m_temidlist[16];
   int m_totalcount[16],m_totalsquare[16];
+  int m_MipLower;
   double m_totalgood[16];
   float m_calrange[16][8][12][2][4];
+  float m_ptmaglat;
   TFile *m_caltuplefile;
   TTree* m_caltuple;
+  TFile *m_merittuplefile;
+  TTree* m_merittuple;
   TH1D *m_tkrocc[16], *m_adchist[16], *m_calratio[16], *m_acdadchist;
   bool m_useKalman;
   bool m_useToT;
+  bool m_useMip;
+  bool m_useOneTrack;
   float m_kalmanLower;
   float m_ToTLower;
   float m_ToTUpper;
+  bool m_useptmaglat;
+  float m_ptmaglatlower;
+  float m_ptmaglatupper;
   string m_testnr; 
  
 
