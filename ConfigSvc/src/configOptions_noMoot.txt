@@ -13,7 +13,8 @@ ConfigSvc.GammaFilterXml = "$(CONFIGSVCROOT)/xml/gamma_normal.xml";
 ConfigSvc.DgnFilterXml   = "$(CONFIGSVCROOT)/xml/dgn_gem.xml";
 ConfigSvc.MipFilterXml   = "$(CONFIGSVCROOT)/xml/hip_normal.xml";
 ConfigSvc.HipFilterXml   = "$(CONFIGSVCROOT)/xml/mip_off_axis.xml";
-ConfigSvc.GemXml         = "$(CONFIGSVCROOT)/xml/TRG_GEM_GEM-nomSciOps_2HzPer.xml";
+ConfigSvc.GemXml         = "$(CONFIGSVCROOT)/xml/defaultTrgConfig.xml";
+//ConfigSvc.GemXml         = "$(CONFIGSVCROOT)/xml/TRG_GEM_GEM-nomSciOps_2HzPer.xml";
 ConfigSvc.RoiXml         = "$(CONFIGSVCROOT)/xml/TRG_ROI_GEM-roiShadow.xml";
 MootSvc.NoMoot = true;
 

@@ -37,7 +37,7 @@ const ISvcFactory& ConfigSvcFactory = a_factory;
 
 
 ConfigSvc::ConfigSvc(const std::string& name,ISvcLocator* svc) 
-  : Service(name,svc),m_mootSvc(0),m_trgConfig(0),m_noMOOTMask(0),m_mootKey(0),m_latcKey(0){
+  : Service(name,svc),m_mootSvc(0),m_trgConfig(0),m_noMOOTMask(0),m_mootKey(LSF_INVALID_UINT),m_latcKey(LSF_INVALID_UINT){
   // Purpose and Method: Constructor - Declares and sets default properties
   //                     
   // Inputs: service name and locator 
