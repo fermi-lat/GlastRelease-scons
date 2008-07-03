@@ -86,6 +86,7 @@ namespace ldfReader {
         lsfData::LsfCcsds m_ccsds;
         lsfData::MetaEvent m_meta;
         eventFile::EBF_Data m_ebf;
+        unsigned char mybuff[128*1024];
 
         bool m_more;
 

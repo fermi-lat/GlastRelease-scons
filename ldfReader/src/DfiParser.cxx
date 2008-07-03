@@ -249,6 +249,11 @@ int DfiParser::loadData() {
 
         readContextAndInfo();
 
+        memset(mybuff,0,128*1024);
+        memcpy(mybuff, m_ebf.data()+8, m_ebf.size()-8);
+        ldfReader::LatData::instance()->setEbf((char*)mybuff, m_ebf.size()-8);
+
+
         if (ldfReader::LatData::instance()->oldStyleRunId())
             ldfReader::LatData::instance()->setRunId(m_runId);
         else{
