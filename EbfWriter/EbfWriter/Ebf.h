@@ -7,6 +7,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "Event/TopLevel/Definitions.h"
 #include "Event/TopLevel/EventModel.h"
@@ -22,6 +23,7 @@
  * $Header$
  */
 
+static const CLID& CLID_Ebf = InterfaceID("Ebf", 1, 0);
 //extern const CLID& CLID_Ebf;
 
 namespace EbfWriterTds{

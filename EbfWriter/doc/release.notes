@@ -2,6 +2,7 @@
  * @file release.notes
  * @brief Package EbfWriter
  * @verbatim
+ * v1r7   03-Jul-2008 HMK Merge in code to grab ebf from evt
  * v1r6p3 30-Apr-2008 BLW Add Job Option switch to turn off GEM Trigger Requirement for writing output
  * v1r6p2 21-Apr-2008 ZGF Add some explicit contructors for CalUtil/CalDefs objects - shouldn't break anything
  * v1r6p1 17-Apr-2008 BLW  Fill Part ID into EBF header
