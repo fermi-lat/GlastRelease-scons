@@ -1,5 +1,5 @@
 package LdfConverter
-version v4r2p1
+version v4r3
 
 author Heather Kelly <heather@lheapop.gsfc.nasa.gov>
 author Tracy Usher   <usher@slac.stanford.edu>
@@ -23,6 +23,7 @@ macro_append cppflags "-D_FILE_OFFSET_BITS=64 " \
 
 use astro v*
 use facilities v*
+use EbfWriter v* 
 
 use gr_app v*
 
@@ -35,7 +36,7 @@ macro_append cppflags  "" \
       WIN32      ' /D "__i386" '\
       vsnet      ' /D__i386 ' 
 
-
+#macro_append includes '$(ppcmd)"$(EbfWriter_root)"'
 
 library LdfConverter  *.cxx Dll/*.cxx ${LdfConverter_headers}
 

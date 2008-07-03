@@ -26,5 +26,8 @@ DECLARE_FACTORY_ENTRIES(LdfConverter) {
   DECLARE_CONVERTER( AncillaryEventCnv );
   DECLARE_CONVERTER( AdfEventCnv );
 
+  DECLARE_CONVERTER( FilterCnv ); 
+  DECLARE_CONVERTER( EbfCnv ); 
+
 }
   
