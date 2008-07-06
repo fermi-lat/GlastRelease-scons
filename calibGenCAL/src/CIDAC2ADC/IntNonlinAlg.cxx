@@ -32,8 +32,11 @@
 
 
 namespace {
-  static const float warnMaxADCRMS = 20;
-
+  /// warning limit on RMS per ADC range
+  static const float rmsWarnLimit[CalUtil::RngIdx::N_VALS] = {20,
+                                                              15,
+                                                              12,
+                                                              3};
 };
 
 namespace calibGenCAL {
@@ -291,7 +294,9 @@ namespace calibGenCAL {
                              raw_adcrms,
                              adcmean,
                              adcrms);
-          if (adcrms > warnMaxADCRMS) {
+
+          /// throw warning if RMS > 3*average pedestal sigma for given range
+          if (adcrms > rmsWarnLimit[rng.val()]) {
             LogStrm::get() << "WARNING: adc_rms " << adcrms
                            << " " << rngIdx.toStr()
                            << "  cidac "  << cidac

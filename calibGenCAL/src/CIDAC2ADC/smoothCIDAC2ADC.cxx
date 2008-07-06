@@ -243,7 +243,7 @@ int main(int argc,
     /// simultaneously to cout and to logfile
     LogStrm::addStream(cout);
     // generate logfile name
-    const string logfile(cfg.outputBasename.getVal() + ".log.txt");
+    const string logfile(cfg.outputBasename.getVal() + ".cidac2adc.log.txt");
     ofstream tmpStrm(logfile.c_str());
     LogStrm::addStream(tmpStrm);
 
@@ -254,7 +254,7 @@ int main(int argc,
     LogStrm::get() << endl;
 
     /// txt output filename
-    const string outputTXTPath(cfg.outputBasename.getVal() + ".txt");
+    const string outputTXTPath(cfg.outputBasename.getVal() + ".cidac2adc.txt");
 
     CIDAC2ADC    adcMeans;
     CIDAC2ADC    cidac2adc;
