@@ -114,6 +114,6 @@ if __name__ == '__main__':
                             str(x) for x in twr, lyr, col, face, rng,
                             uldData[rng][twr][row][online_face][col][calDacSlopesCalibXML.ULDDATA_SLOPE],\
                             uldData[rng][twr][row][online_face][col][calDacSlopesCalibXML.ULDDATA_OFFSET],\
-                            uldData[rng][twr][row][online_face][col][calDacSlopesCalibXML.ULDDATA_SAT],\
-                            rngData[twr][row][online_face][col][calDacSlopesCalibXML.RNGDATA_ULDDAC_LEX8+rng]]))
+                            rngData[twr][row][online_face][col][calDacSlopesCalibXML.RNGDATA_ULDDAC_LEX8+rng],\
+                            uldData[rng][twr][row][online_face][col][calDacSlopesCalibXML.ULDDATA_SAT]]))
                         uldFile.write("\n")
