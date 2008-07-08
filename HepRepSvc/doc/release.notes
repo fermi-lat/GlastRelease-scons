@@ -53,3 +53,4 @@
  * v0r24    07-06-08 LSR new service: HepRepInitSvc, to carry jO parameters to non-Alg routines
                          First one is bool VertexFiller_dashes, to draw
                             extrapolated vertices with dashed lines
+ * v0r24p1  07-8-08 LSR  Try again!
