@@ -52,7 +52,7 @@ except getopt.GetoptError:
     log.error(__doc__)
     sys.exit(1)
 
-imgType = "pdf" #default 
+imgType = "png" #default 
 for o, a in opts:
     if o == "-f":
         imgType = a
