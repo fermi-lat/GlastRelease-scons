@@ -37,7 +37,7 @@ StatusCode EbfCnv::createObj(IOpaqueAddress* ,
     EbfWriterTds::Ebf *me = new EbfWriterTds::Ebf();
     unsigned int len;
     char *data = lsfEbf.get(len);
-    log << MSG::INFO << "EBF len " << len  << " first byte "
+    log << MSG::DEBUG << "EBF len " << len  << " first byte "
         << std::hex << (unsigned int)(data[0]) << std::dec << endreq;
     me->set(data,len);
     refpObject = me;
