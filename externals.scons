@@ -95,7 +95,13 @@ externalLibraries = {
                   'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
                   'ld-path' : '$LIB-PATH'},
-    
+
+    'x11'      : {'version' : '',
+                  'includes' : ['X11/X.h'],
+                  'libraries' : {'x11Libs' : ['Xm', 'Xt', 'X11']},
+                  'include-path' : os.path.join('/','usr','X11R6', 'include'),
+                  'lib-path' : os.path.join('/','usr', 'X11R6', 'lib'),
+                  'ld-path' : '$LIB-PATH'},
     
     'extFiles' : {'version' : 'v0r7',
                   'cppdefines' : ['extFiles=$VERSION']}
@@ -262,8 +268,8 @@ def rootcintEmitter(target, source, env):
 def rootcintGenerator(source,target,env,for_signature):
     buildlocation = Dir(str(target[0].dir)+'/..')
     root_headers = ''
-    for header in env['includes']:
-        root_headers += ' -I'+str(Dir(header))
+    for header in env['includes']+env['CPPPATH']:
+        root_headers += ' -I'+str(Dir(header).abspath)
     sources = ''
     for file in source:
         sources += ' '+str(buildlocation.rel_path(file))
