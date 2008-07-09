@@ -1140,8 +1140,15 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
   // run the propagator out to the right arclength
   if ( !forward ) maxArcLength *= -1.;
 
-  AcdRecon::startPropagator(*m_G4PropTool,aTrack,trackData,maxArcLength);
-  
+  try {
+    AcdRecon::startPropagator(*m_G4PropTool,aTrack,trackData,maxArcLength);
+  } catch (...) {
+    log << MSG::ERROR << "Caught exception starting propagator on track " << trackData.m_index 
+	<< ".  No intersection or POCA's will be calculated for that track." <<   endreq;
+    // Don't crash, just continue.
+    return sc;
+  }  
+
   // build all the intersections
   if ( m_intersectionTool != 0 ) {
     sc = m_intersectionTool->makeIntersections(*m_G4PropTool,trackData,isectData,pocaDataMap,m_hitMap,*m_geomMap,
