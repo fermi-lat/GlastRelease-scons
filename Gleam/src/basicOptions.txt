@@ -185,8 +185,8 @@ gcrSelectRootWriterAlg.gcrSelectRootFile = "$(GLEAMROOT)/data/gcr.root";
 // ----------------------------
 // ntuple generation 
 
-ApplicationMgr.DLLs +=   {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
-AuditorSvc.Auditors = {"EventAuditor"}; // For event-by-event timing
+ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
+AuditorSvc.Auditors += {"EventAuditor"}; // For event-by-event timing
 
 NtupleMaker.Members = {
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
