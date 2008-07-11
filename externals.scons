@@ -94,7 +94,7 @@ externalLibraries = {
                   'libraries' : {'zlibLibs' : ['z']},
                   'include-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST-EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
-                  'ld-path' : '$LIB-PATH'},
+                  'lvcd-path' : '$LIB-PATH'},
 
     'x11'      : {'version' : '',
                   'includes' : ['X11/X.h'],
@@ -111,10 +111,27 @@ externalLibraries = {
 # Override above default values for platform specific values #
 ##############################################################
 if baseEnv['PLATFORM'] == "win32":
-    externalLibraries['fftw']['libraries']['fftwLibs'] = ['libfftw3']
-    
-    externalLibraries['ape']['libraries']['apeLibs'] = ['apelib']
-    
+    externalLibraries['ldf']['cppdefines'] = ['_WIN32_LDF_STATIC']
+
+    externalLibraries['geant4']['lib-path'] = os.path.join(os.path.dirname(externalLibraries['geant4']['lib-path']), 'WIN32-VC')
+    externalLibraries['geant4']['libraries']['geant4Libs'] = [ 'libG4readout', 'libG4run', 'libG4event', 'libG4tracking', 'libG4processes',
+                                                               'libG4digits_hits', 'libG4track', 'libG4particles', 'libG4geometry',
+                                                               'libG4materials', 'libG4graphics_reps', 'libG4intercoms', 'libG4global']
+
+    externalLibraries['zlib']['libraries']['zlibLibs'] = ['zlib']
+
+    externalLibraries['gaudi']['libraries']['gaudiLibs'][externalLibraries['gaudi']['libraries']['gaudiLibs'].index('boost_filesystem-gcc')] = 'boost_filesystem-vc71-mt-1_32'
+
+    externalLibraries['mysql']['includes'] = ['windows.h'] + externalLibraries['mysql']['includes']
+    externalLibraries['mysql']['lib-path'] = os.path.join(os.path.dirname(externalLibraries['mysql']['lib-path']), 'opt')
+    externalLibraries['mysql']['libraries']['mysqlLibs'] = ['libmysql']
+
+    externalLibraries['x11']['includes'] = ['windows.h']
+    externalLibraries['x11']['libraries']['x11Libs'] = ['user32', 'gdi32', 'winspool', 'comdlg32', 'shell32']
+    del externalLibraries['x11']['include-path']
+    del externalLibraries['x11']['lib-path']
+    del externalLibraries['x11']['ld-path']
+
     externalLibraries['ROOT']['version'] = 'v5.18.00b'
     externalLibraries['ROOT']['libraries']['rootLibs'] = ['libCore', 'libCint', 'libRIO', 'libNet', 'libTree', 'libHist', 'libGraf', 'libGpad', 'libMatrix', 'libPhysics']
     externalLibraries['ROOT']['libraries']['rootGuiLibs'] = ['libHist', 'libGraf', 'libGraf3d', 'libGpad', 'libRint', 'libPostscript', 'libTreePlayer', 'libGui', 'libHistPainter']
@@ -239,10 +256,9 @@ if not baseEnv.GetOption('help') and not baseEnv.GetOption('clean'):
     conf = baseEnv.Configure()
     for lib in externalLibraries.keys():
         if 'includes' in externalLibraries[lib] and 'include-path' in externalLibraries[lib]:
-            for include in externalLibraries[lib]['includes']:
-                if not conf.CheckCXXHeader(include):
-                    print 'Unable to find a header file for '+lib+'. See config.log for more details.'
-                    Exit(1)
+            if not conf.CheckCXXHeader(externalLibraries[lib]['includes']):
+                print 'Unable to find a header file for '+lib+'. See config.log for more details.'
+                Exit(1)
         if 'libraries' in externalLibraries[lib] and 'lib-path' in externalLibraries[lib]:
             for libGroup in externalLibraries[lib]['libraries'].keys():
                 for library in reversed(externalLibraries[lib]['libraries'][libGroup]):

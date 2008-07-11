@@ -19,7 +19,6 @@ calibRootData = libEnv.SharedLibrary('calibRootData', listFiles(['src/*.cxx', 's
 
 progEnv.Tool('calibRootDataLib')
 progEnv.Tool('facilitiesLib')
-progEnv.Tool('commonRootDataLib')
 test_calibRootData = progEnv.Program('test_calibRootData', listFiles(['src/test/*.cxx']))
 makeTot = progEnv.Program('makeTot', 'src/test/makeTot.cxx')
 

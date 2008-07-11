@@ -4,6 +4,8 @@ def generate(env, **kw):
         env.Tool('addLibrary', library = ['TkrUtil'])
     env.Tool('CalibDataLib')
     env.Tool('xmlBaseLib')
+    env.Tool('geometryLib')
+    env.Tool('EventLib')
 
 def exists(env):
     return 1;

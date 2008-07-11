@@ -16,7 +16,7 @@ progEnv.Tool('AcdDigiLib')
 progEnv.Tool('identsLib')
 progEnv.Tool('EventLib')
 progEnv.Tool('xmlBaseLib')
-test_AcdDigiUtil = progEnv.GaudiProgram('test_AcdDigiUtil', ['src/AcdDigiUtil.cxx'] + listFiles(['src/test/util/*.cxx']), test = 1)
+test_AcdDigiUtil = progEnv.GaudiProgram('test_AcdDigiUtil', listFiles(['src/test/util/*.cxx']), test = 1)
 test_AcdDigi = progEnv.GaudiProgram('test_AcdDigi', listFiles(['src/test/*.cxx']), test = 1)
 
 progEnv.Tool('registerObjects', package = 'AcdDigi', libraries = [AcdDigiLib],

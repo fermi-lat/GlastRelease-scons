@@ -17,7 +17,10 @@ gui = libEnv.StaticLibrary('gui', listFiles(['src/LoopCommand.cxx', 'src/SceneCo
                                              'src/DisplayRep.cxx', 'src/GraphicsVector.cxx',
                                              'src/PrintControl.cxx', 'src/GuiMgr.cxx',
                                              'src/Projector.cxx', 'src/Scene.cxx', 'src/GUI.cxx']))
-guiSystem = libEnv.StaticLibrary('guisystem', listFiles(['src/MotifGUI.cxx', 'src/XScene.cxx', 'src/Xdraw.cxx', 'src/Xostream.cxx']))
+if baseEnv['PLATFORM'] == 'win32':
+    guiSystem = libEnv.StaticLibrary('guisystem', ['src/WinGUI.cxx', 'src/WinGUIostream.cxx', 'src/WinMain.cxx', 'src/WinScene.cxx', 'src/WinDraw.cxx'])
+else:
+    guiSystem = libEnv.StaticLibrary('guisystem', ['src/MotifGUI.cxx', 'src/XScene.cxx', 'src/Xdraw.cxx', 'src/Xostream.cxx'])
 
 progEnv.Tool('guiLib')
 testGui = progEnv.Program('testGui', listFiles(['src/test/*.cxx']))
