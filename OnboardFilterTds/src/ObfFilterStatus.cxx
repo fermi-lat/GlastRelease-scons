@@ -1,5 +1,8 @@
 #include "OnboardFilterTds/ObfFilterStatus.h"
 
+// Use this to define the "state" of each filter
+#include "enums/Lsf.h"
+
 namespace OnboardFilterTds{
     
 ObfFilterStatus::ObfFilterStatus()
@@ -65,6 +68,20 @@ std::ostream& ObfFilterStatus::fillStream( std::ostream& s ) const
     return s;
 }
 
+int  ObfGammaStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+
+}
+
 unsigned int ObfGammaStatus::getEnergyInLeus() const
 {
     int energyBits = m_energy & GFC_STAGE_M_ENERGY;
@@ -89,5 +106,48 @@ float ObfGammaStatus::getEnergy() const
     return energy;
 }
 
+int  ObfHipStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+
+}
+
+
+int  ObfMipStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+
+}
+
+
+int  ObfDgnStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+
+}
 
 } // namespace

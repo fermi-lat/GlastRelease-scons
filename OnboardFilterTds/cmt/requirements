@@ -9,6 +9,7 @@ branches OnboardFilterTds cmt doc src
 use obf v* IExternal 
 use GaudiInterface v* IExternal
 use Event v*
+use enums v*
 use GlastPolicy v*
 
 apply_pattern shared_library
