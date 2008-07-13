@@ -1,8 +1,8 @@
 package OnboardFilterTds
-version v0r8p1
+version v0r8p2
 # $Header$
 
-author Richard Hughes <HUGHES@mps.ohio-state.edu>
+author Tracy Usher <usher@slac.stanford.edu>
 
 branches OnboardFilterTds cmt doc src
 
