@@ -53,6 +53,7 @@ public :
   void useToTCut(bool sw){m_useToT=sw;}
   void useMipCut(bool sw){m_useMip=sw;}
   void useGammaCut(bool sw){m_useGamma=sw;}
+  void useOneTrack(bool sw){m_useOneTrack=sw;}
   void setKalmanCut(float lower){m_kalmanLower=lower;}
   void setMipCut(int lower){m_MipLower=lower;}
   void setTotCut(float lower, float upper){m_ToTLower=lower;m_ToTUpper=upper;}
@@ -78,6 +79,7 @@ public :
   bool m_useToT;
   bool m_useMip;
   bool m_useGamma;
+  bool m_useOneTrack;
   float m_kalmanLower;
   float m_ToTLower;
   float m_ToTUpper;
