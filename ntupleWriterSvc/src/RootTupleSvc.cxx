@@ -74,6 +74,8 @@ public:
     /// Query interface - required of all Gaudi services
     virtual StatusCode queryInterface( const InterfaceID& riid, void** ppvUnknown );
 
+// LSR 14-Jul-08 code for ntuple types
+
     /** @brief Adds a pointer to a double, or an array of doubles
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
     @param itemName - name of the tuple column. append [n] to make a fixed array of length n
@@ -114,6 +116,15 @@ public:
         const std::string& itemName, const unsigned int* pval,
         const std::string& fileName=std::string(""));
 
+    /** @brief Adds a pointer to an unsigned long long 
+    @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
+    @param itemName - name of the tuple column. append [n] to make a fixed array of length n
+    @param pval - pointer to a int value
+    @param fileName - name of ROOT file: if it does not exist, it will be created
+    */
+    virtual StatusCode addItem(const std::string & tupleName, 
+        const std::string& itemName, const unsigned long long* pval,
+        const std::string& fileName=std::string(""));
 
     /** @brief Adds a pointer to a zero-terminated array of char 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -568,6 +579,14 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
+                                 const std::string& itemName, 
+                                 const unsigned long long* pval, 
+                                 const std::string& fileName)
+{
+    return addAnyItem(tupleName, itemName, "/l", (void*)pval, fileName);
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                const std::string& itemName,
                                const char * pval,
                                const std::string& fileName)
@@ -846,6 +865,10 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
             {
                 m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
             }        
+            else if (type_name == "ULong64_t_t")
+            {
+                m_itemPool[itemName]= new ULong64_t[leaf->GetNdata()];
+            }
             else if (type_name == "Int_t")
             {
                 m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
