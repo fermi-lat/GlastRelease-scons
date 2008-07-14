@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
  *
+ *  v6r36   LSR  14-Jul-08 EvtEventId to unsigned long long
  *  v6r35   LSR  30-Mar-07 FT1Alg to AnalysisNtuple
  *  v6r34p1 THB  27-Nov-06 Bug fix for FT1EarthAzimuth calculation
  *  v6r34   THB  23-Oct-06 Strip out ClassifyAlg, moving to GlastClassify; support int in Tuple used by merit

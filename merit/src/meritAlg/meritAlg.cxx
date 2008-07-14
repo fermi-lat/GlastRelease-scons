@@ -202,6 +202,10 @@ StatusCode meritAlg::setupTools() {
     {
     public:
         VisitBill( meritAlg* me) : m_merit(me){}
+ 
+// LSR 14-Jul-08 code for ntuple types
+// LSR           note: "ignore, for now," below!
+
         IValsTool::Visitor::eVisitorRet analysisValue(std::string varName, const double& value) const
         {
             double * val = const_cast<double*>(&value);
@@ -221,6 +225,11 @@ StatusCode meritAlg::setupTools() {
             return IValsTool::Visitor::CONT;
         }
         IValsTool::Visitor::eVisitorRet analysisValue(std::string , const unsigned int& ) const
+        {
+            // ignore, for now
+            return IValsTool::Visitor::CONT;
+        }
+        IValsTool::Visitor::eVisitorRet analysisValue(std::string , const unsigned long long& ) const
         {
             // ignore, for now
             return IValsTool::Visitor::CONT;
