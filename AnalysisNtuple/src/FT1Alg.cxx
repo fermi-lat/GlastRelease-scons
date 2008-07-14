@@ -68,7 +68,9 @@ public:
 
     void evaluate();
     // tuple items expect to find
-    TypedItem<unsigned int, 'i'> EvtRun, EvtEventId;
+// LSR 14-Jul-08 code for ntuple types; potential changes here!
+    TypedItem<unsigned int, 'i'> EvtRun; 
+    TypedItem<unsigned long long , 'l'> EvtEventId;
 
     // these all float or double
     Item EvtLiveTime;

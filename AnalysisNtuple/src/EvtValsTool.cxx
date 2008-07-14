@@ -43,7 +43,7 @@ private:
 
     //Global Items
     unsigned int EvtRun;
-    unsigned int EvtEventId;
+    unsigned long long EvtEventId;
     double EvtElapsedTime;
     double EvtLiveTime;
 
@@ -134,7 +134,7 @@ NOTE
 <tr><td> EvtRun 
 <td>UI<td>   Run number, copied from the event header NEW: replaces Run in the merit ntuple  
 <tr><td> EvtEventId 
-<td>UI<td>   Sequence number of event in the run (as generated) NEW: replaces Event_ID in the merit ntuple 
+<td>UL<td>   Sequence number of event in the run (as generated) NEW: replaces Event_ID in the merit ntuple 
 <tr><td> EvtElapsedTime 
 <td>D<td>   Elapsed time in seconds since t0 (for DC1: 18-July-2005, 
             for the future: mission start 1-Jan-2001)

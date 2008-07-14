@@ -31,17 +31,24 @@ public:
     
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IValsTool; }
+
+// LSR 14-Jul-08 code for ntuple types
     
     /// get a particular value, using ntuple name
     virtual StatusCode getVal(std::string varName, double& value, int check = CALC) = 0;
     virtual StatusCode getVal(std::string varName, float& value, int check = CALC) = 0;
     virtual StatusCode getVal(std::string varName, int& value, int check = CALC) = 0;
     virtual StatusCode getVal(std::string varName, unsigned int& value, int check = CALC) = 0;
+    virtual StatusCode getVal(std::string varName, unsigned long long& value, int check = CALC) = 0;
+ 
+// LSR 14-Jul-08 code for ntuple types
     /// get a particular value, using ntuple name, with calc checking
     virtual StatusCode getValCheck(std::string varName, double& value) =0;
     virtual StatusCode getValCheck(std::string varName, float& value) =0;
     virtual StatusCode getValCheck(std::string varName, int& value) =0;
     virtual StatusCode getValCheck(std::string varName, unsigned int& value) =0;
+    virtual StatusCode getValCheck(std::string varName, unsigned long long& value) =0;
+
     /// output the names and values, either all (default) or just one;
     virtual StatusCode browse(MsgStream log, const std::string varName = "") =0;
     /// let the user trigger her own calculation
@@ -74,7 +81,8 @@ public:
         /// not used by client. Returned by traverse at end of normal processing
         DONE  
     };
-        
+ 
+// LSR 14-Jul-08 code for ntuple types       
         /// callback to send varnames and values to the client
         virtual Visitor::eVisitorRet analysisValue(std::string varName,
             const double& value) const =0;
@@ -84,6 +92,8 @@ public:
             const int& value) const =0;
         virtual Visitor::eVisitorRet analysisValue(std::string varName,
             const unsigned int& value) const =0;
+        virtual Visitor::eVisitorRet analysisValue(std::string varName,
+            const unsigned long long& value) const =0;
         virtual Visitor::eVisitorRet analysisValue(std::string varName,
             const char* value) const =0;
     }; 

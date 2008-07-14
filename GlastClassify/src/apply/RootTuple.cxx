@@ -47,6 +47,7 @@ public:
         void* tempPtr = m_leaf->GetValuePointer();
 
         // If it is not the same then we update.
+// LSR 14-Jul-08 code for ntuple types
         if (m_pdata != tempPtr)
         {
             m_pdata = tempPtr;
@@ -55,6 +56,10 @@ public:
         if (m_type == "UInt_t")
         {
             *(reinterpret_cast<int*>(m_pdata)) = *(reinterpret_cast<int*>(data));
+        }
+        if (m_type == "ULong64_t")
+        {
+            *(reinterpret_cast<int*>(m_pdata)) = *(reinterpret_cast<unsigned long long*>(data));
         }
         else if (m_type == "Float_t")
         {

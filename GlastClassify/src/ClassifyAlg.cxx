@@ -27,11 +27,18 @@ public:
     operator double()const {
         return (double)*m_pdata;
     }
+
+// LSR 14-Jul-08 code for ntuple types
+
     void setDataValue(void* data) 
     {
         if (m_type == "UInt_t")
         {
             *m_pdata = *(reinterpret_cast<int*>(data));
+        }
+        else if (m_type == "ULong64_t")
+        {
+            *m_pdata = *(reinterpret_cast<unsigned long long*>(data));
         }
         else if (m_type == "Float_t")
         {
@@ -65,6 +72,8 @@ public:
         , m_treename(treename)
     {}
 
+// LSR 14-Jul-08 code for ntuple types
+
     const GlastClassify::Item* getItem(const std::string& name)const
     {
         const GlastClassify::Item* item = 0;
@@ -87,6 +96,11 @@ public:
             unsigned int* data = (unsigned int*)dummy;
             item =new GleamItem<unsigned int>(name, type, data);
         }
+        else if (type == "ULong64_t")
+        {
+            unsigned long long* data = (unsigned long long*)dummy;
+            item =new GleamItem<unsigned long long>(name, type, data);
+        }
         else if (type == "Int_t")
         {
             int* data = (int*)dummy;
@@ -100,6 +114,8 @@ public:
         return item;
     }
 
+// LSR 14-Jul-08 code for ntuple types
+
     /// create a new item (float only for now) in the tuple, which will take the given value
    void addItem(const std::string& name, float & value)
     {
@@ -107,6 +123,10 @@ public:
     }
     
     void addItem(const std::string& name, double & value)
+    {
+        m_tuple->addItem(m_treename, name, &value);
+    }
+    void addItem(const std::string& name, unsigned long long & value)
     {
         m_tuple->addItem(m_treename, name, &value);
     }
