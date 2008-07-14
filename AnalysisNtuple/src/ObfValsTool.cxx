@@ -275,7 +275,7 @@ StatusCode ObfValsTool::calculate()
             m_gamStatus    = obfResult->getStatusWord();
             m_gamState     = obfResult->getState();
             m_gamStage     = dynamic_cast<const OnboardFilterTds::ObfGammaStatus*>(obfResult)->getStage();
-            m_gamEnergy    = dynamic_cast<const OnboardFilterTds::ObfGammaStatus*>(obfResult)->getEnergyInLeus();
+            m_gamEnergy    = dynamic_cast<const OnboardFilterTds::ObfGammaStatus*>(obfResult)->getEnergy();
         }
         else m_gamStatus = -1;
 
