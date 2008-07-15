@@ -132,15 +132,14 @@ NOTE
 <table>
 <tr><th> Variable <th> Type <th> Description
 <tr><td> EvtRun 
-<td>UI<td>   Run number, copied from the event header NEW: replaces Run in the merit ntuple  
+<td>U<td>   Run number, copied from the event header NEW: replaces Run in the merit ntuple  
 <tr><td> EvtEventId 
 <td>UL<td>   Sequence number of event in the run (as generated) NEW: replaces Event_ID in the merit ntuple 
 <tr><td> EvtElapsedTime 
 <td>D<td>   Elapsed time in seconds since t0 (for DC1: 18-July-2005, 
             for the future: mission start 1-Jan-2001)
-<tr><td> FT1Livetime 
+<tr><td> EvtLivetime 
 <td>D<td>  (s) Cumulative live time, from start of run, or mission
-
 <tr><td> EvtEnergyCorr 
 <td>F<td>   Event energy formed by adding the corrected tracker energy 
             (TkrEnergyCorr) to the layer-by-layer corrected cal. energy CalEnergyCorr. 
