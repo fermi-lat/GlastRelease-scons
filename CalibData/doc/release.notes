@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r24   14-Jul-2008  eac  Added Acd calibrations: AcdCarbon, AcdVetoFit, AcdCnoFit, AcdHighPed
    v0r23p1 10-Jun-2008  jrb  Make Moot headers visible to Windows debugger
    v0r23   28-May-2008  jrb  Data structures needed for filter config (MootSvc)
    v0r22p1  8-May-2008  jrb  Check in new include file needed for alignment
