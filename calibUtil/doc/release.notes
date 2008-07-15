@@ -3,6 +3,8 @@
  * Coordinator: J. Bogart
  *       *  EOH *
 
+   v1r11  14-Jul-2008 eac Added AcdCarbon, AcdHighPed, AcdVetoFit, AcdCnoFit 
+                          calibrations.
    v1r10p1 13-May-2008 jrb minor (transparent) change to dtd for W3C validator
    v1r10   7-May-2008 jrb dtd and sample xml files for tracker alignment
    v1r9p1  2-Nov-2007 jrb Fix small memory leaks
