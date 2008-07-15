@@ -29,9 +29,9 @@ namespace {
     CalibData::AcdCoherentNoise realCoherentNoise(CalibData::AcdCoherentNoise(30.,800.,0.0054,-1.,ok)); 
     
     // PMT is on + side of detector
-    CalibData::AcdRibbon idealRibbon_Plus( CalibData::AcdRibbon(0.4,0.6,0.8,1.4,2.2,3.0,ok));
+    CalibData::AcdRibbon idealRibbon_Plus( CalibData::AcdRibbon(0.4,0.6,0.8,1.4,2.2,3.0,200.,ok));
     // PMT is on - side of detector
-    CalibData::AcdRibbon idealRibbon_Minus( CalibData::AcdRibbon(3.0,2.2,1.4,0.8,0.6,0.4,ok));
+    CalibData::AcdRibbon idealRibbon_Minus( CalibData::AcdRibbon(3.0,2.2,1.4,0.8,0.6,0.4,200.,ok));
 }
 
 CalibData::AcdCalibObj* AcdCalib::getIdeal(AcdCalibData::CALTYPE cType, 

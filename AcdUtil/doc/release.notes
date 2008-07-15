@@ -4,6 +4,7 @@
  @verbatim
                EOH
 
+ v2r8p2   14-Jul-2008 EAC Added normalization term to AcdRibbon calibration.
  v2r8p1   14-Jul-2008 EAC Protect High range calibartion against rogue values
  v2r8     23-May-2008 EAC Added ACD alignment
  v2r7p3   08-May-2008 EAC Added function to apply coherent noise calibration, used both in sim and recon
