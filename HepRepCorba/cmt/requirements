@@ -1,5 +1,5 @@
 package HepRepCorba
-version v1r8
+version v2r0
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy
@@ -13,6 +13,7 @@ set TMP "/tmp" WIN32 "%TEMP%"
 
 # Set some OmniOrb env variables
 # This is useful for debugging
+#set ORBtraceLevel 10
 set ORBtraceLevel 0
 # This fix the maximum size for the CORBA messages .. it can be changed to
 # avoid problems on some platform/compiler combinations
