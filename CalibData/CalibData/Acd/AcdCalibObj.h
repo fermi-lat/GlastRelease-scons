@@ -162,6 +162,7 @@ namespace CalibData {
     void setVals(float v1, float v2, float v3, float v4, STATUS stat);
     void setVals(float v1, float v2, float v3, float v4, float v5, STATUS stat);
     void setVals(float v1, float v2, float v3, float v4, float v5, float v6, STATUS stat);
+    void setVals(float v1, float v2, float v3, float v4, float v4, float v5, float v7, STATUS stat);
     
   protected:
     
