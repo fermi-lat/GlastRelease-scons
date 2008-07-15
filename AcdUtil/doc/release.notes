@@ -4,6 +4,7 @@
  @verbatim
                EOH
 
+ v2r8p1   14-Jul-2008 EAC Protect High range calibartion against rogue values
  v2r8     23-May-2008 EAC Added ACD alignment
  v2r7p3   08-May-2008 EAC Added function to apply coherent noise calibration, used both in sim and recon
  v2r7p2   07-May-2008 HMK Move RayDoca to AcdUtilCommon for windows builds

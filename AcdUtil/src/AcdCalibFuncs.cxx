@@ -58,13 +58,20 @@ namespace AcdCalib {
   // Determine the MIP equivaltent value of a particular high range PHA value
   StatusCode mipEquivalent_highRange(unsigned short PHA, const double& pedestal, const double& slope, const double& saturation, double& mips) {
     double PHApedReduced = (double)PHA - pedestal;
-    double top = PHApedReduced * saturation * slope;
-    double bot = ( saturation + ( slope * PHApedReduced ) );
-    if ( bot <= 0 ) {
-      mips = 1000;
+    if ( PHApedReduced < 0 ) {
+      mips = 5.0;
       return StatusCode::SUCCESS;
     }
+    if ( PHApedReduced > ( saturation - 50 ) ) {
+      mips = 1000.0;
+      return StatusCode::SUCCESS;
+    }
+    double top = saturation * PHApedReduced;
+    double bot = slope * ( saturation - PHApedReduced );    
     mips = top/bot;
+    if ( mips > 1000.) {
+      mips = 1000.0;
+    }
     return StatusCode::SUCCESS;
   }
 
@@ -94,11 +101,19 @@ namespace AcdCalib {
 
   // Determine the Z value of a particular charge deposit
   StatusCode Z_value(const double& mips, const double& pathFactor, double& Z) {
-    if ( pathFactor <= 0. ) {
-      Z = 0;
-      return StatusCode::FAILURE;
+    
+    Z = 0;
+    // polynomial(3) fit params
+    static double fitPars[4] = {4.759350e-01,7.418234e-01,4.102662e-02,-7.995963e-04};
+    if ( pathFactor <= 0. || mips <= 0. ) {
+      return StatusCode::SUCCESS;
+    }    
+    double mipsR = sqrt( mips/pathFactor );
+    double x_n = 1.;
+    for ( unsigned i(0); i < 4; i++) {
+      Z += x_n * fitPars[i];
+      x_n *= mipsR;
     }
-    double mipsReduced = mips/pathFactor;
     return StatusCode::SUCCESS;
   }
 
