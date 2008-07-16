@@ -67,7 +67,7 @@ public:
 
   Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
 
-  int doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm);
+  int doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm, int optntrye);
 
   double GetRadiationLengthInTracker(Event::TkrVertex*);
 
@@ -378,7 +378,11 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalClusterCol *
       vv[2] = (cluster->getDirection()).z();
     }
 
-  int CALFIT = doProfileFit(pp,vv,tkr_RLn,lm);
+  int CALFIT = 0;
+  if(vertex!=NULL)
+    CALFIT = doProfileFit(pp,vv,tkr_RLn,lm,0);
+  else
+    CALFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
 
   double CALFIT_fit_energy = 1000.*m_par2;
   double CALFIT_energy_err = 1000.*m_epar2;
@@ -431,7 +435,7 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalClusterCol *
       vv[1] = (vertex->getDirection()).y();
       vv[2] = (vertex->getDirection()).z();
 
-      TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm);
+      TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
 
       if(TKRFIT>0)
 	{
@@ -542,7 +546,7 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalClusterCol *
   return corResult;
 }
 
-int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm)
+int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm, int optntrye)
   //
   //               This function fits the parameters of shower profile using
   //               the Minuit minimization package and stores the fitted
@@ -632,7 +636,7 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
   double par0,par1,par2;
   double epar0,epar1,epar2;
   
-  int ntrye = 20;
+  int ntrye = 10;
   double enemin = m_eTotal;
   double enemax = m_eTotal*10;
   double enestep = (enemax-enemin)/(double)ntrye;
@@ -646,36 +650,18 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
 
   double scan0,scan1,scan2;
   double mymin = 99999999;
-  for(i=0;i<=ntrye;++i)
+
+  if(optntrye==1)
     {
-      vstart[2] = enemin+enestep*((double)i);
-      m_fsppm->Fill(vstart[2]);
-      vstart[0] = m_fsppm->alpha;
-      vstart[1] = m_fsppm->tmax;
-      vstep[0] = 0.05;
-      vstep[1] = 0.05;
-      vstep[2] = vstart[2]*0.05;
-      m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
-      m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
-      m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
-      m_minuit->FixParameter(2);
-      arglist[0] = 500;
-      arglist[1] = 1.;
-      m_optpr = 0;
-      m_spy_totchisq = 99999999;
-      m_spy_par[0] = -1;
-      m_spy_par[1] = -1;
-      m_spy_par[2] = -1;
-      m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
-      m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
-      m_minuit->GetParameter(0,par0,epar0);
-      m_minuit->GetParameter(1,par1,epar1);
-      if(ierflg==4)
+      for(i=0;i<=ntrye;++i)
 	{
-	  vstart[0] = m_spy_par[0];
-	  vstart[1] = m_spy_par[1];
+	  vstart[2] = enemin+enestep*((double)i);
+	  m_fsppm->Fill(vstart[2]);
+	  vstart[0] = m_fsppm->alpha;
+	  vstart[1] = m_fsppm->tmax;
 	  vstep[0] = 0.05;
 	  vstep[1] = 0.05;
+	  vstep[2] = vstart[2]*0.05;
 	  m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
 	  m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
 	  m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
@@ -689,22 +675,47 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
 	  m_spy_par[2] = -1;
 	  m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
 	  m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
-	  //	  m_minuit->mnprin(3,amin);
 	  m_minuit->GetParameter(0,par0,epar0);
 	  m_minuit->GetParameter(1,par1,epar1);
-	}
-      mychisq[i] = amin;
-      myalpha[i] = par0;
-      mytmax[i] = par1;
-      myenergy[i] = vstart[2];
-      if(amin<mymin)
-	{
-	  mymin = amin;
-	  scan0 = par0;
-	  scan1 = par1;
-	  scan2 = vstart[2];
+	  if(ierflg==4)
+	    {
+	      vstart[0] = m_spy_par[0];
+	      vstart[1] = m_spy_par[1];
+	      vstep[0] = 0.05;
+	      vstep[1] = 0.05;
+	      m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
+	      m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
+	      m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
+	      m_minuit->FixParameter(2);
+	      arglist[0] = 500;
+	      arglist[1] = 1.;
+	      m_optpr = 0;
+	      m_spy_totchisq = 99999999;
+	      m_spy_par[0] = -1;
+	      m_spy_par[1] = -1;
+	      m_spy_par[2] = -1;
+	      m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+	      m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+	      //	  m_minuit->mnprin(3,amin);
+	      m_minuit->GetParameter(0,par0,epar0);
+	      m_minuit->GetParameter(1,par1,epar1);
+	    }
+	  mychisq[i] = amin;
+	  myalpha[i] = par0;
+	  mytmax[i] = par1;
+	  myenergy[i] = vstart[2];
+	  if(amin<mymin)
+	    {
+	      mymin = amin;
+	      scan0 = par0;
+	      scan1 = par1;
+	      scan2 = vstart[2];
+	    }
+	  if(amin>5*mymin) break;
 	}
     }
+  else
+    scan2 = m_eTotal;
 
   m_fsppm->Fill(scan2);
   vstart[0] = scan0;

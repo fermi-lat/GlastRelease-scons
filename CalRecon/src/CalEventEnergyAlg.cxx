@@ -86,12 +86,13 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
     // This the default for the second iteration of CalRecon
     else
     {
-		corrToolVec.push_back("CalValsCorrTool");
-        corrToolVec.push_back("CalProfileTool");
-        corrToolVec.push_back("CalLastLayerLikelihoodTool");
-        corrToolVec.push_back("CalFullProfileTool");
-        corrToolVec.push_back("CalTkrLikelihoodTool");
-        corrToolVec.push_back("CalLikelihoodManagerTool"); //POL
+      corrToolVec.push_back("CalValsCorrTool");
+      // Ph. Bruel : old profile method, not used anymore 
+      //        corrToolVec.push_back("CalProfileTool");
+      corrToolVec.push_back("CalLastLayerLikelihoodTool");
+      corrToolVec.push_back("CalFullProfileTool");
+      corrToolVec.push_back("CalTkrLikelihoodTool");
+      corrToolVec.push_back("CalLikelihoodManagerTool"); //POL
 // DC: probably useless
 //        corrToolVec.push_back("CalTransvOffsetTool");
 
