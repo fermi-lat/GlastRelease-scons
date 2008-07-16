@@ -7,7 +7,7 @@ package CalRecon
 
 package manager: David Chamont
 
-  v6r6p1     15-Jul-08 LSR (for Philippe B.)
+  v6r7       15-Jul-08 LSR (for Philippe B.)
                            Modified of the full profile to optimize processing time
                            The old profile is no longer called in CalEventEnergyAlg.cxx
   v6r6       13-Apr-08 LSR (for Philippe B.)
