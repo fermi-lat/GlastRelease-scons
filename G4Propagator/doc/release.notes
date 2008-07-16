@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v2r4p0   16-Jul-08 TU   Modify method to handle special case resulting in G4 "stuck track" syndrome
  v2r3p2    9-May-08 TU   Restoring protection on stepIdx in the getStepPosition method of G4PropagationTool
  v2r3p1    3-Mar-08 jrb  take out private use of cfitsio
  v2r3     30-Oct-07 HMK  Use gr_app
