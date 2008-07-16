@@ -4,6 +4,8 @@
  @verbatim
                EOH
 
+ v2r8p3   14-Jul-2008 EAC Fixed Coherent Noise to be relative to t=0. 
+ v2r8p1gl0 15-Jul-2008 EAC Fixed Coherent Noise to be relative to t=0, but tag relative to v2r8p1 for test
  v2r8p2   14-Jul-2008 EAC Added normalization term to AcdRibbon calibration.
  v2r8p1   14-Jul-2008 EAC Protect High range calibartion against rogue values
  v2r8     23-May-2008 EAC Added ACD alignment
