@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r0p13  AWB 17-Jul-08 Made Moot Fatal really fatal for L1.
 * v7r0p12  LSR 10-Jul-08 Fix addition of EventAuditor
 * v7r0p11  HMK           Turn off MOOT in Gleam unit test for now
 * v7r0p10  HMK           Insert JO to make sure we pick up and find the 

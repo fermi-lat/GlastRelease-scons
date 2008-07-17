@@ -52,7 +52,10 @@ GlastDetSvc.visitorMode = "recon";
 
 
 // Configuration.  This get the configuration from MOOT
- #include "$CONFIGSVCROOT/src/configOptions_moot.txt"
+#include "$CONFIGSVCROOT/src/configOptions_moot.txt"
+
+// Crash on FATAL:
+MootSvc.ExitOnFatal = true;
 
 
 //
