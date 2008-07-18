@@ -183,6 +183,20 @@ void RootTuple::addItem(const std::string& name, double& value)
     }
 }
 
+void RootTuple::addItem(const std::string& name, unsigned long long& value)
+{
+    TLeaf* leaf = m_tree->GetLeaf(name.c_str());
+    if( leaf!=0) {
+        std::cout << "Adding item "<< name << ", which already exists" << std::endl;
+        if( std::string(leaf->GetTypeName()) !="ULong64_t") {
+            throw std::invalid_argument("RootTuple::addItem replacing wrong type");
+        }
+        leaf->SetAddress(&value);
+    }else {
+        m_tree->Branch(name.c_str(), (void*)&value, (name+"/l").c_str());
+    }
+}
+
 
 
 bool RootTuple::nextEvent(){

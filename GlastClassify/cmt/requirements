@@ -1,6 +1,6 @@
 package GlastClassify
 
-version v6r3p1
+version v6r3p2
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 use GlastPolicy *
