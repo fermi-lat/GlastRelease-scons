@@ -379,7 +379,7 @@ StatusCode EbfWriter::execute()
     
     // Write out the file
     unsigned int length;
-    unsigned int *TdsBuffer;
+    unsigned int *TdsBuffer = 0;
     if(m_storeOnTds) {
         TdsBuffer = (unsigned int *)malloc(m_maxEvtSize*5);
         memset(TdsBuffer,0,m_maxEvtSize*5);
