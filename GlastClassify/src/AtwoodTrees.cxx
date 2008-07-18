@@ -17,7 +17,7 @@ $Header$
 
 namespace {
     // This should be changed each time there is a new file, to make it defautl
-    std::string default_xml("$(GLASTCLASSIFYROOT)/xml/Pass6_Analysis_Complete_RRmod_3_NB.xml");
+    std::string default_xml("$(GLASTCLASSIFYROOT)/xml/Pass6_Analysis_Protected.xml");
 }
 /* 
 */
@@ -210,50 +210,48 @@ bool AtwoodTrees::execute()
     // Always zero the CTB output values in case cuts below fail
     m_treeAnalysis->zeroCTvals();
 
-    // These are the "standard" selection cuts
-    if( calenergy > m_calEnergyCut && calCsiRln > m_csiRadLenCut && tkrNumTracks > m_numTracksCut)
+    // Note that as of July 18, 2008, we no longer make any selection cuts before calling the IM analysis
+    m_treeAnalysis->execute();
+
+    m_executeTreeCnt++;
+
+    // Recover the results?
+    try
     {
-        m_treeAnalysis->execute();
+        // Retrieve the energy classification results (needed below)
+        m_bestEnergyProb  = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
+        m_CORE            = m_treeAnalysis->getTupleVal("CTBCORE");
+        m_evtLogEnergyRaw = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
 
-        m_executeTreeCnt++;
+        m_goodVals++;
+    }
+    catch(...)
+    {
+        // Keeps on executing;
+        m_caughtVals++;
+    }
 
-        // Recover the results?
-        try
+    unsigned int obfGamStatus = *m_obfGamStatus;
+
+    // Section below is for when GlastClassify is use in MC to select events
+    // First cuts on Filter status and failures for energy and tails
+    if (obfGamStatus > 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
+    {
+        double AcdActiveDist3D  = *m_AcdActiveDist3D;
+        double AcdRibbonActDist = *m_AcdRibbonActDist;
+        double Tkr1SSDVeto      = *m_Tkr1SSDVeto;
+
+        // A series of selections on the ACD 
+        if (!((AcdActiveDist3D > 0 || AcdRibbonActDist > 0) && Tkr1SSDVeto < 2))
         {
-            // Retrieve the energy classification results (needed below)
-            m_bestEnergyProb  = m_treeAnalysis->getTupleVal("CTBBestEnergyProb");
-            m_CORE            = m_treeAnalysis->getTupleVal("CTBCORE");
-            m_evtLogEnergyRaw = m_treeAnalysis->getTupleVal("EvtLogEnergyRaw");
+            double AcdCornerDoca = *m_AcdCornerDoca;
 
-            m_goodVals++;
-        }
-        catch(...)
-        {
-            // Keeps on executing;
-            m_caughtVals++;
-        }
-
-        unsigned int obfGamStatus = *m_obfGamStatus;
-
-        // First cuts on Filter status and failures for energy and tails
-        if (obfGamStatus > 0 && m_bestEnergyProb > 0.1 && m_CORE > 0.1)
-        {
-            double AcdActiveDist3D  = *m_AcdActiveDist3D;
-            double AcdRibbonActDist = *m_AcdRibbonActDist;
-            double Tkr1SSDVeto      = *m_Tkr1SSDVeto;
-
-            // A series of selections on the ACD 
-            if (!((AcdActiveDist3D > 0 || AcdRibbonActDist > 0) && Tkr1SSDVeto < 2))
+            if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50))
             {
-                double AcdCornerDoca = *m_AcdCornerDoca;
+                // Finally, check the result of running the Analysis Sheet
+                double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
 
-                if (!(AcdCornerDoca > -5 && AcdCornerDoca < 50))
-                {
-                    // Finally, check the result of running the Analysis Sheet
-                    double dWriteTupleRow = m_treeAnalysis->getTupleVal("WriteTupleRow");
-
-                    if (dWriteTupleRow != 0.) writeTupleRow = true;
-                }
+                if (dWriteTupleRow != 0.) writeTupleRow = true;
             }
         }
     }
