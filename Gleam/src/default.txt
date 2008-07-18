@@ -25,8 +25,10 @@ RootTupleSvc.filename="merit.root";
 CalClustersAlg.OutputLevel=4; // too much info
 
 // no MOOT in unit test for now
-//MootSvc.noMoot = false;
-MootSvc.noMoot = true;
+#include "$CONFIGSVCROOT/src/configOptions_moot.txt"
+
+MootSvc.noMoot = false;
+MootSvc.MootConfigKey=2225;
 
 // Number of events to process
 MeritAlg.generated = 1000; // for estimation of Aeff
