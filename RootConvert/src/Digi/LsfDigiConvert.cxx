@@ -1,5 +1,6 @@
 #include <LdfEvent/LsfMetaEvent.h>
 #include "LdfEvent/LsfCcsds.h"
+#include "OnboardFilterTds/ObfFilterStatus.h"
 
 #include <digiRootData/GemTime.h>
 #include <digiRootData/TimeTone.h>
@@ -537,6 +538,76 @@ namespace RootPersistence {
 
   void convert (const Ccsds& rootObj, LsfEvent::LsfCcsds& tdsObj) {
       tdsObj.initialize(rootObj.getScid(), rootObj.getApid(), rootObj.getUtc());
+  };
+
+
+  void convert( const OnboardFilterTds::ObfFilterStatus& obf, MetaEvent& meta) {
+
+    // Now step through and initialize the status objects one by one
+    const OnboardFilterTds::IObfStatus* tdsStatus = 0;
+
+    bool has = true;   // Gleam OBF always creates RSD
+    unsigned int masterKey = LSF_INVALID_UINT; 
+    unsigned int cfgKey = LSF_INVALID_UINT;
+    unsigned int cfgId = LSF_INVALID_UINT;
+    unsigned int version = 0;
+    unsigned int prescaleFactor = LSF_INVALID_UINT;
+
+    // We do this one by one explicitly for now. Start with the results of the gamma filter
+    if ((tdsStatus = obf.getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter)))
+    {
+        const OnboardFilterTds::ObfGammaStatus* gamObj = dynamic_cast<const OnboardFilterTds::ObfGammaStatus*>(tdsStatus);
+
+       LpaGammaFilter *gam = new LpaGammaFilter;
+       gam->initialize(masterKey,cfgKey,
+            cfgId,enums::Lsf::RsdState(gamObj->getState()),
+            enums::Lsf::LeakedPrescaler(gamObj->getPrescalerWord()),
+            version,enums::Lsf::GAMMA,has, prescaleFactor);
+       gam->set(gamObj->getStatusWord(), gamObj->getStage(), 
+                     gamObj->getStage()&1, gamObj->getEnergyInLeus());
+        meta.addGamma(gam);
+    }
+
+    // HFC Filter is next
+    if ((tdsStatus = obf.getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter)))
+    {
+        const OnboardFilterTds::ObfHipStatus* hipObj = dynamic_cast<const OnboardFilterTds::ObfHipStatus*>(tdsStatus);
+       LpaHipFilter *hip = new LpaHipFilter;
+       hip->initialize(masterKey,cfgKey,
+            cfgId,enums::Lsf::RsdState(hipObj->getState()),
+            enums::Lsf::LeakedPrescaler(hipObj->getPrescalerWord()),
+            version,enums::Lsf::HIP,has, prescaleFactor);
+       hip->setStatusWord(hipObj->getStatusWord());
+       meta.addHip(hip);
+    }
+
+    // MIP Filter is next
+    if ((tdsStatus = obf.getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter)))
+    {
+        const OnboardFilterTds::ObfMipStatus* mipObj = dynamic_cast<const OnboardFilterTds::ObfMipStatus*>(tdsStatus);
+       LpaMipFilter *mip = new LpaMipFilter;
+       mip->initialize(masterKey,cfgKey,
+            cfgId,enums::Lsf::RsdState(mipObj->getState()),
+            enums::Lsf::LeakedPrescaler(mipObj->getPrescalerWord()),
+            version,enums::Lsf::MIP,has, prescaleFactor);
+       mip->setStatusWord(mipObj->getStatusWord());
+       meta.addMip(mip);
+    }
+
+    // DFC Filter is next
+    if ((tdsStatus = obf.getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter)))
+    {
+        const OnboardFilterTds::ObfDgnStatus* dgnObj = dynamic_cast<const OnboardFilterTds::ObfDgnStatus*>(tdsStatus);
+       LpaDgnFilter *dgn = new LpaDgnFilter;
+       dgn->initialize(masterKey,cfgKey,
+            cfgId,enums::Lsf::RsdState(dgnObj->getState()),
+            enums::Lsf::LeakedPrescaler(dgnObj->getPrescalerWord()),
+            version,enums::Lsf::DGN,has, prescaleFactor);
+       dgn->setStatusWord(dgnObj->getStatusWord());
+       meta.addDgn(dgn);
+    }
+
+
   };
 
 }

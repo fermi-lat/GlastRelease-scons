@@ -1,8 +1,10 @@
 #ifndef RootConvert_LsfDigiConvert_H
 #define RootConvert_LsfDigiConvert_H 1
 
-#include <LdfEvent/LsfMetaEvent.h>
+#include "LdfEvent/LsfMetaEvent.h"
 #include "LdfEvent/LsfCcsds.h"
+
+#include "OnboardFilterTds/ObfFilterStatus.h"
 
 #include <digiRootData/GemTime.h>
 #include <digiRootData/TimeTone.h>
@@ -95,6 +97,9 @@ namespace RootPersistence {
   /// Fill transient verison of Ccsds 
   void convert(const Ccsds&, LsfEvent::LsfCcsds&);
 
+
+  /// Special case to fill Flight OBF status words when running MC
+  void convert( const OnboardFilterTds::ObfFilterStatus&, MetaEvent& );
 }
 
 #endif
