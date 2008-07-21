@@ -45,9 +45,9 @@ public:
     static const CLID& classID() { return CLID_Event; }
     
     /// Retrieve event number
-    unsigned long event () const                                        { return m_event; }
+    unsigned long long event () const                                        { return m_event; }
     /// Update event number
-    void setEvent (unsigned long value)                                { m_event = value; }
+    void setEvent (unsigned long long value)                                { m_event = value; }
     
     /// Retrieve run number
     long run () const                                            { return m_run; }
@@ -103,7 +103,7 @@ public:
     
 private:
     /// Event number
-    unsigned long       m_event;
+    unsigned long long  m_event;
     /// Run number
     long                m_run;
     /// Time stamp: use special class to encapsulate type

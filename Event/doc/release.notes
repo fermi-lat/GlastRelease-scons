@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v12r0  21-Jul-08 HMK  make event id 64 bit as it should be
  * v11r27 08-May-08 HMK  JIRA ACD-10 merged back into HEAD
  * v11r26 22-Apr-08 JCT  Add a GCR filter status word
  * v11r25p2gr1 30-Apr-08 HMK JIRA ACD-10 address pile-up issue
