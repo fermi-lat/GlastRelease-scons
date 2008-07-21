@@ -70,7 +70,7 @@ public:
     // tuple items expect to find
 // LSR 14-Jul-08 code for ntuple types; potential changes here!
     TypedItem<unsigned int, 'i'> EvtRun; 
-    TypedItem<unsigned long long , 'l'> EvtEventId;
+    TypedItem<unsigned long long , 'l'> EvtEventId64;
 
     // these all float or double
     Item EvtLiveTime;
@@ -176,7 +176,7 @@ StatusCode FT1Alg::finalize()
 FT1worker::FT1worker()
 // initialize pointers to current items
 : EvtRun("EvtRun")
-, EvtEventId("EvtEventId")
+, EvtEventId64("EvtEventId64")
 , EvtElapsedTime("EvtElapsedTime")
 , EvtLiveTime("EvtLiveTime")
 , EvtEnergyCorr("EvtEnergyCorr")
@@ -270,7 +270,7 @@ void FT1worker::evaluate()
     using astro::SkyDir;
 
     //eventId and Time are always defined 
-    m_ft1eventid =  nbOfEvtsInFile *EvtRun.value()  + EvtEventId.value();
+    m_ft1eventid =  nbOfEvtsInFile *EvtRun.value()  + EvtEventId64.value();
 
     // Give default "guard" values in case there are no tracks in the event
     m_ft1energy = CTBBestEnergy;
