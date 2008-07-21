@@ -9,7 +9,7 @@
 //using namespace AncillaryData
 int main()
 {  
-  std::string dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
+  std::string dataFilePath="$(ADFREADERDATAPATH)/CR_01_v3.bin";
   facilities::Util::expandEnvVar(&dataFilePath);
   AncillaryDataServer *m_dataServer = new AncillaryDataServer(dataFilePath);
   m_dataServer->open();

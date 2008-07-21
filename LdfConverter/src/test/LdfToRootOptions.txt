@@ -25,7 +25,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.StorageType = "EBFFITS";
 // EventSelector.InputList = {"$(ldfReaderROOT)/src/test/muon-5.ebf"};
 // EventSelector.InputList = {"$(ldfReaderROOT)/src/test/muon-5_1.fits"};
-// EventSelector.InputList = {"$(LDFCONVERTERROOT)/data/ebf030502182112.fits"};
+// EventSelector.InputList = {"$(LDFCONVERTERDATAPATH)/ebf030502182112.fits"};
 EventSelector.InputList = {"/nfs/farm/g/glast/u03/EM2003/miniTower/ebf030507023417.fits"};
 // Supported instruments for now are EM and LAT.  Default is LAT.
 EventSelector.Instrument = "EM";

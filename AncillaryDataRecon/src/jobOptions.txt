@@ -16,11 +16,11 @@ ApplicationMgr.DLLs   += { "AdfReader" };
 ApplicationMgr.DLLs   += { "AncillaryDataRecon" };
 
 
-AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+AdfReaderAlg.dataFilePath="$(ADFREADERDATAPATH)/CR_DAQBARI_330000723.bin";
 AncillaryDataReconAlg.pedestalSubtraction=false;
 
 // add the local source library definitions and specify our test source
-//FluxSvc.source_lib += {"$(USERALGROOT)/xml/user_sources.xml"};
+//FluxSvc.source_lib += {"$(USERALGXMLPATH)/user_sources.xml"};
 
 //FluxAlg.source_name = "userspectrum";
 

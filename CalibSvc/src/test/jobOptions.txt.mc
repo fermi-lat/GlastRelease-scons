@@ -19,7 +19,7 @@ ApplicationMgr.Runable= "RootIoSvc";
 //  UseBadStrips, UseGains,...
 ApplicationMgr.TopAlg = {"mcRootReaderAlg", "UsePeds" };
 // digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi_1409.root";
-mcRootReaderAlg.mcRootFileList = {"$ROOTTESTDATAROOT/data/default/mc.root"};
+mcRootReaderAlg.mcRootFileList = {"$ROOTTESTDATADATAPATH/default/mc.root"};
 // mcRootReaderAlg.mcRootFileList = {"$CALIBSVCROOT/src/test/mc_1409.root"};
 
 
@@ -33,7 +33,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Next few lines from AcdDigi test jobOptions
 EventSelector.Input = "NONE";
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 //ApplicationMgr.EvtMax = 10000;

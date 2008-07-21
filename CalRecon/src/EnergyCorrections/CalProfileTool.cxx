@@ -78,7 +78,7 @@ public:
     * The fit output energy is debiased using a polynomial:
     *     P( log( fit energy ), cos( angle of incdence ) ) giving the most probable
     * bias for a certain monte carlo energy and incidfent angle. Its parameters are 
-    * contained in \$(CALRECONROOT)/xml/CalProfile.xml
+    * contained in \$(CALRECONXMLPATH)/CalProfile.xml
     * The correction is operated thrice:
     *   \f[ E_{debiased}=E_{fit} 
         \f]
@@ -292,7 +292,7 @@ CalProfileTool::CalProfileTool( const std::string& type,
 {
     // declare base interface for all consecutive concrete classes
     declareInterface<ICalEnergyCorr>(this);
-    declareProperty ("xmlFile", m_xmlFile="$(CALRECONROOT)/xml/CalProfile.xml");
+    declareProperty ("xmlFile", m_xmlFile="$(CALRECONXMLPATH)/CalProfile.xml");
     // Declare the properties that may be set in the job options file
 }
 

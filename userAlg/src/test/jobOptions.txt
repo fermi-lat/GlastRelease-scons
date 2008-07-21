@@ -12,7 +12,7 @@
 //#include "$GLEAMROOT/src/fredOptions.txt"
 
 // add the local source library definitions and specify our test source
-FluxSvc.source_lib += {"$(USERALGROOT)/xml/user_sources.xml"};
+FluxSvc.source_lib += {"$(USERALGXMLPATH)/user_sources.xml"};
 
 //FluxAlg.source_name = "userspectrum";
 

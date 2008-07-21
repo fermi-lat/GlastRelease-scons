@@ -36,7 +36,7 @@ GlastDetSvc.topVolume="LAT";
 
 // purposely pick  8 tower lat to check cases where towers aren't
 // present (needed to process older data)
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/latAssembly/lat8TowerSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/latAssembly/lat8TowerSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // Start up a CalibDataSvc 
@@ -108,7 +108,7 @@ CalFailureModeSvc.towerControllerList= {"4_2"};
 // test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/mpd.ideal.txt";
 // test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.ideal.txt";
 // test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/tholdci.ideal.txt";
-// GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+// GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;

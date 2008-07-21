@@ -11,17 +11,17 @@ $Header$
    <source name="sampled_EarthAlbedo" type="PtSCzenith" rangeUnits="degrees" rangeMin="-180" rangeMax="180.0">
       <bin min="-180" max="89." triggerRate="100.0" downlinkRate="0.1">
          <fileList>
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
+            <file filePath="$(ROOTTESTDATADATAPATH)/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
       <bin min="89" max="91" triggerRate="200.0" downlinkRate="0.2">
          <fileList>
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
+            <file filePath="$(ROOTTESTDATADATAPATH)/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
       <bin min="91" max="180." triggerRate="300.0" downlinkRate="0.3">
          <fileList>
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
+            <file filePath="$(ROOTTESTDATADATAPATH)/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
    </source>

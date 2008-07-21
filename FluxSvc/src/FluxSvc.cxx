@@ -305,8 +305,8 @@ static SvcFactory<FluxSvc> a_factory;
 const ISvcFactory& FluxSvcFactory = a_factory;
 
 
-static std::string default_source_library("$(FLUX_XML)/source_library.xml");
-static std::string default_dtd_file("$(FLUX_XML)/source.dtd");
+static std::string default_source_library("$(FLUXXMLPATH)/source_library.xml");
+static std::string default_dtd_file("$(FLUXXMLPATH)/source.dtd");
 
 // ------------------------------------------------
 // Implementation of the FluxSvc class

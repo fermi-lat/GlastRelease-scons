@@ -330,7 +330,7 @@ bool totCalib::readJobOptions( const std::string jobXml, const std::string defJo
 	return false;
       }
       if( m_dtdDir.size() < 5 ) // dtd directory is not specified. use default.
-	m_dtdDir = "$(CALIBUTILROOT)/xml/";
+	m_dtdDir = "$(CALIBUTILXMLPATH)/xml/";
       int status = facilities::Util::expandEnvVar(&m_dtdDir);
       if(status==-1){
 	std::cout << m_dtdDir << " not found!" << std::endl;

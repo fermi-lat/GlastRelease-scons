@@ -21,15 +21,15 @@ TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false; 
 
 Generator.Members    = { "mcRootReaderAlg" };
-mcRootReaderAlg.mcRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/mc.root";
+mcRootReaderAlg.mcRootFile = "$ROOTTESTDATADATAPATH/vertical_surface_muons/mc.root";
 
 Digitization.Members = { "digiRootReaderAlg" };
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/digi.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATADATAPATH/vertical_surface_muons/digi.root";
 
 Output.Members = { "reconRootWriterAlg" };
 
-reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/recon.root";
-RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/vertical_surface_muons/merit.root";
+reconRootWriterAlg.reconRootFile = "$ROOTTESTDATADATAPATH/vertical_surface_muons/recon.root";
+RootTupleSvc.filename            = "$ROOTTESTDATADATAPATH/vertical_surface_muons/merit.root";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )

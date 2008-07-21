@@ -34,7 +34,7 @@ const IAlgFactory& AcdDigiAlgFactory = Factory;
 AcdDigiAlg::AcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
     
-    declareProperty("xmlFile", m_xmlFileName="$(ACDDIGIROOT)/xml/acdDigi.xml");
+    declareProperty("xmlFile", m_xmlFileName="$(ACDDIGIXMLPATH)/acdDigi.xml");
     declareProperty("AcdSimCalibSvc",    m_calibSvcName = "AcdSimCalibSvc");
     declareProperty("applyPoisson", m_apply_poisson=true);
     declareProperty("applyGaussianNoise", m_apply_noise=true);

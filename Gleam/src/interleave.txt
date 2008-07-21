@@ -45,7 +45,7 @@ SimulateEvent.BranchMembers = {"InterleaveAlg"                 // process if int
                               };
                                
 //  the (pseudo) sources: get definitions, and add them to the list of sources
-FluxSvc.source_lib    += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+FluxSvc.source_lib    += {"$(INTERLEAVEXMLPATH)/source_library.xml"};
 FluxAlg.sources       += {"sampled_background"};
 FluxAlg.sources       += {"sampled_EarthAlbedo"};
 
@@ -53,6 +53,6 @@ FluxAlg.sources       += {"sampled_EarthAlbedo"};
 InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*","FT1*"};
 
 // the path to the xml files with pointers to the data and rate information 
-InterleaveAlg.FilePath = "$(INTERLEAVEPATH)";
+InterleaveAlg.FilePath = "$(INTERLEAVEXMLPATH)";
 
 // ---------------------------------------------------------

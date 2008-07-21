@@ -61,7 +61,7 @@ TestAcdDigiAlg::TestAcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator
 Algorithm(name, pSvcLocator) {
     
     // Declare the properties that may be set in the job options file
-    declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIROOT)/xml/acdDigi.xml");
+    declareProperty ("xmlFile", m_xmlFile="$(ACDDIGIXMLPATH)/acdDigi.xml");
 }
 
 StatusCode TestAcdDigiAlg::initialize() {

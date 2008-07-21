@@ -58,7 +58,7 @@ ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 
 //This line builds the EM geometry:
 //
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/em/emSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 

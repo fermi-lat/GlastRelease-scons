@@ -159,7 +159,7 @@ ApplicationMgr.EvtMax = 1000000000;
 //
 // Geometry: Use flight geometry!
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 
 
 // Evt file as input:

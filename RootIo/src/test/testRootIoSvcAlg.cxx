@@ -84,8 +84,8 @@ StatusCode testRootIoSvcAlg::execute()
         }
         retVal = m_rootIoSvc->setRootFile( 
                  "",
-                 "$(ROOTTESTDATAROOT)/data/vertical_surface_muons/digi.root", 
-                 "$(ROOTTESTDATAROOT)/data//vertical_surface_muons/recon.root",
+                 "$(ROOTTESTDATADATAPATH)/vertical_surface_muons/digi.root", 
+                 "$(ROOTTESTDATADATAPATH)//vertical_surface_muons/recon.root",
                  "");
         if (retVal)
              log << MSG::INFO << "Passed ROOT file open test "

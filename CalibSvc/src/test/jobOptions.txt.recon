@@ -17,7 +17,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Next few lines from AcdDigi test jobOptions
 EventSelector.Input = "NONE";
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 // Use the new RootIoSvc, implementing IRunable
@@ -28,7 +28,7 @@ ApplicationMgr.TopAlg += {"reconRootReaderAlg", "UsePeds" };
 
 //digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
 // digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/muon_5_digi.root";
-reconRootReaderAlg.reconRootFile = "$ROOTTESTDATAROOT/data/default/recon.root";
+reconRootReaderAlg.reconRootFile = "$ROOTTESTDATADATAPATH/default/recon.root";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )

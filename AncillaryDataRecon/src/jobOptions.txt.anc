@@ -19,8 +19,8 @@ ApplicationMgr.Runable= "RootIoSvc";
 ApplicationMgr.TopAlg = {"digiRootReaderAlg","AdfReaderAlg","AncillaryDataReconAlg"};
 
 digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi.root";
-AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
-//AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+AdfReaderAlg.dataFilePath="$(ADFREADERDATAPATH)/CR_01_v3.bin";
+//AdfReaderAlg.dataFilePath="$(ADFREADERDATAPATH)/CR_DAQBARI_330000723.bin";
 AncillaryDataReconAlg.pedestalSubtraction=false;
 
 
@@ -34,7 +34,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Next few lines from AcdDigi test jobOptions
 EventSelector.Input = "NONE";
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 // Start up a CalibDataSvc 

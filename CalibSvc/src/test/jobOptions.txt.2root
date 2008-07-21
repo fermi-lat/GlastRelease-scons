@@ -16,7 +16,7 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseScale", "UseTot"};
-digiRootReaderAlg.digiRootFile = "$(ROOTTESTDATAROOT)/data/default/digi.root";
+digiRootReaderAlg.digiRootFile = "$(ROOTTESTDATADATAPATH)/default/digi.root";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
@@ -28,7 +28,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Next few lines from AcdDigi test jobOptions
 EventSelector.Input = "NONE";
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 10000;

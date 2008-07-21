@@ -26,7 +26,7 @@ class MyObject : public calibUtil::ClientObject {
 int main(int argc, char* argv[]) {
   using calibUtil::StripSrv;
 
-  std::string name = "$(CALIBUTILROOT)/xml/test/testHot.xml";
+  std::string name = "$(CALIBUTILXMLPATH)/xml/test/testHot.xml";
   
   if (argc > 1) {
     name = std::string((argv[1]));

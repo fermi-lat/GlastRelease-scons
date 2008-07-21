@@ -22,7 +22,7 @@ ApplicationMgr.TopAlg = {
 ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 
@@ -34,7 +34,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
 // Stuff for detModel
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // select one of the following for a top volume 
@@ -46,7 +46,7 @@ GlastDetSvc.visitorMode="recon";
 // add in CRflux option
 //ApplicationMgr.DLLs +={ "CRflux" };
 //FluxSvc.source_lib += {
-//    "$(CRFLUXROOT)/xml/source_library.xml"};
+//    "$(CRFLUXXMLPATH)/source_library.xml"};
 
 // ask for a source that is in the library
 FluxAlg.source_name="default";

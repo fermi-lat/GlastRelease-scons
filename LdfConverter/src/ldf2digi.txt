@@ -54,7 +54,7 @@ Top.Members={
 //
 ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/em/emSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 

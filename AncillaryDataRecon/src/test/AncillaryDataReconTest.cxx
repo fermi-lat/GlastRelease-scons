@@ -67,7 +67,7 @@ int MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEven
 int main(int argc, char **argv)
 {  
   std::string arg_name("");
-  std::string dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin";
+  std::string dataFilePath="$(ADFREADERDATAPATH)/CR_01_v3.bin";
   int current_arg = 1;
   int Nevents=10;
   while(current_arg < argc)
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
      
   
   // INITIALIZE THE GEOMETRY:
-  std::string m_geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.dat";
+  std::string m_geometryFilePath="$(ANCILLARYDATAUTILDATAPATH)/Geometry_v0.dat";
   facilities::Util::expandEnvVar(&m_geometryFilePath); 
   std::cout<< "loading geometry from " << m_geometryFilePath << std::endl;
   AncillaryData::AncillaryGeometry   *m_geometry = new AncillaryData::AncillaryGeometry(m_geometryFilePath);

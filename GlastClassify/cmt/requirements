@@ -4,6 +4,7 @@ version v6r4p0
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 use GlastPolicy *
+use facilities *
 
 apply_pattern packageShr
 

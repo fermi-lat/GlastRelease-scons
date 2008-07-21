@@ -16,7 +16,7 @@ MessageSvc.OutputLevel      = 2;
 // Persistency service setup:
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 100;

@@ -70,8 +70,8 @@ AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocato
 {
   // Input parameters that may be set via the jobOptions file
   declareProperty("pedestalSubtraction",m_SubtractPedestals=true);
-  declareProperty("geometryFilePath",m_geometryFilePath="$(ANCILLARYDATAUTILROOT)/data/Geometry_v0.txt");
-  declareProperty("rcReportFilePath",m_rcReportFilePath="$(ANCILLARYDATAUTILROOT)/data/rcReport.out");
+  declareProperty("geometryFilePath",m_geometryFilePath="$(ANCILLARYDATAUTILDATAPATH)/Geometry_v0.txt");
+  declareProperty("rcReportFilePath",m_rcReportFilePath="$(ANCILLARYDATAUTILDATAPATH)/rcReport.out");
   declareProperty("NSigmaForPedestalSubrtraction",m_nSigma=10.0);
 }
 

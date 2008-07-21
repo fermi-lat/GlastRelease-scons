@@ -47,7 +47,7 @@ CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc)
   declareProperty("CalibDataSvc",      m_ccsShared.m_calibDataSvcName = 
                   "CalibDataSvc");
   declareProperty("idealCalibXMLPath", m_ccsShared.m_idealCalibXMLPath = 
-                  "$(CALXTALRESPONSEROOT)/xml/idealCalib_flight.xml");
+                  "$(CALXTALRESPONSEXMLPATH)/idealCalib_flight.xml");
   declareProperty("DefaultFlavor", m_defaultFlavor    
                   = "ideal");
   declareProperty("FlavorIntNonlin", m_flavorIntNonlin  = "");

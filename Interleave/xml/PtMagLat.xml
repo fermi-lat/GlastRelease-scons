@@ -13,8 +13,8 @@
       <bin min="-45." max="45.0" triggerRate="3000.0" downlinkRate="0.2">
          <fileList>
          <!-- two copies -->
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
-            <file filePath="$(ROOTTESTDATAROOT)/data/default/merit.root" treeName="MeritTuple" numEvents="5"/>
+            <file filePath="$(ROOTTESTDATADATAPATH)/default/merit.root" treeName="MeritTuple" numEvents="5"/>
+            <file filePath="$(ROOTTESTDATADATAPATH)/default/merit.root" treeName="MeritTuple" numEvents="5"/>
          </fileList>
       </bin>
    </source>      

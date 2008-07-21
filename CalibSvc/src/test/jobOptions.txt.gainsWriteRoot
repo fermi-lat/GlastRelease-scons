@@ -16,7 +16,7 @@ ApplicationMgr.ExtSvc += { "RootIoSvc" };
 ApplicationMgr.Runable= "RootIoSvc"; 
 
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseGains" };
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATADATAPATH/default/digi.root";
 
 // UseGains.DoWrite = "false";
 UseGains.DoWrite = "true";
@@ -32,7 +32,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Next few lines from AcdDigi test jobOptions
 EventSelector.Input = "NONE";
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 ApplicationMgr.EvtMax = 10000;

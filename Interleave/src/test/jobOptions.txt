@@ -53,16 +53,16 @@ Simulator.BranchMembers = {"InterleaveAlg", "Count/interleaved", "FT1Alg", "Filt
 
 // -----------------------------------------------
 //          define sources, select the one(s) to generate
-FluxSvc.source_lib =  {"$(FLUX_XML)/source_library.xml"};
+FluxSvc.source_lib =  {"$(FLUXXMLPATH)/source_library.xml"};
 FluxAlg.sources =  {"clock"};
 
-FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+FluxSvc.source_lib += {"$(INTERLEAVEXMLPATH)/xml/source_library.xml"};
 FluxAlg.sources += {"sampled_background"};
 FluxAlg.sources += {"sampled_EarthAlbedo"};
 
 
 // the path to the xml files
-InterleaveAlg.FilePath = "$(INTERLEAVEROOT)/xml";
+InterleaveAlg.FilePath = "$(INTERLEAVEXMLPATH)";
 
 // do not want to override these
 InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*"};

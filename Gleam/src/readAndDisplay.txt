@@ -38,7 +38,7 @@ Top.Members += { "relationRootReaderAlg"};
 ApplicationMgr.ExtSvc += { "RootIoSvc", "ParticlePropertySvc", "GlastDetSvc" };
 
 // Stuff for detModel
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT"; // the whole schebang
 // select one of the following for a top volume
 
@@ -54,10 +54,10 @@ HepRepSvc.startFred = "$Fred_DIR";
 // From time to time, the test files below become outdated. If this job doesn't 
 //   run out of the box, please notify Leon or Heather.
 
-mcRootReaderAlg.mcRootFileList = { "$(ROOTTESTDATAROOT)/data/default/mc.root" } ;
-digiRootReaderAlg.digiRootFileList = { "$(ROOTTESTDATAROOT)/data/default/digi.root" } ;
-reconRootReaderAlg.reconRootFileList = { "$(ROOTTESTDATAROOT)/data/default/recon.root" } ;
-relationRootReaderAlg.relationRootFileList   = { "$(ROOTTESTDATAROOT)/data/default/relations.root" } ;
+mcRootReaderAlg.mcRootFileList = { "$(ROOTTESTDATADATAPATH)/default/mc.root" } ;
+digiRootReaderAlg.digiRootFileList = { "$(ROOTTESTDATADATAPATH)/default/digi.root" } ;
+reconRootReaderAlg.reconRootFileList = { "$(ROOTTESTDATADATAPATH)/default/recon.root" } ;
+relationRootReaderAlg.relationRootFileList   = { "$(ROOTTESTDATADATAPATH)/default/relations.root" } ;
 ApplicationMgr.EvtMax  = 10;
 
 // -------end readAndDisplay-specific-------

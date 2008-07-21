@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!-- ifile for CalXtalResponse 'ideal' flavor vals (muon gain mode) -->
-<!DOCTYPE ifile SYSTEM "$(XMLBASEROOT)/xml/ifile.dtd" >
+<!DOCTYPE ifile SYSTEM "$(XMLBASEXMLPATH)/ifile.dtd" >
 
 
 <!-- ideal mode calibrations are based on measured means calibrations of real Cal flight models.

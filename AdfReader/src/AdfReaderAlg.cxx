@@ -45,7 +45,7 @@ AdfReaderAlg::AdfReaderAlg(const std::string& name, ISvcLocator* pSvcLocator)
   : Algorithm(name, pSvcLocator) 
 {
   // Input parameters that may be set via the jobOptions file
-  declareProperty("dataFilePath",dataFilePath="$(ADFREADERROOT)/data/CR_01_v3.bin");
+  declareProperty("dataFilePath",dataFilePath="$(ADFREADERDATAPATH)/CR_01_v3.bin");
 }
 
 StatusCode AdfReaderAlg::initialize()

@@ -27,7 +27,7 @@ EventDisplay.Members = {
    };
 
 //Change the geometry description for EM data
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/em/emSegVols.xml"; 
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/em/emSegVols.xml"; 
 
 
 // reco will be saved in root file

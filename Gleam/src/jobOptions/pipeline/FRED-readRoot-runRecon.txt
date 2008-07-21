@@ -56,13 +56,13 @@ HepRepSvc.geometryDepth = 1000;
 //
 
 // Flight:
-//GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+//GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 
 // Single bay:
-//GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/singleBay1TowerSegVols.xml";
+//GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/latAssembly/singleBay1TowerSegVols.xml";
 
 // Two towers:
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/lat2TowerSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/latAssembly/lat2TowerSegVols.xml";
 
 //
 // Name of the digi file we read in:

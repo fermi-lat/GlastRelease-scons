@@ -51,7 +51,7 @@ CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type,
     // declare base interface for all consecutive concrete classes
     declareInterface<ICalEnergyCorr>(this);
     declareProperty("dataFile",
-                    m_dataFile="$(CALRECONROOT)/xml/CalTkrLikelihood.data");
+                    m_dataFile="$(CALRECONXMLPATH)/CalTkrLikelihood.data");
 };
 
 Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)

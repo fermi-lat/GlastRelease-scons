@@ -305,7 +305,7 @@ ApplicationMgr.DLLs +={ "G4Propagator"};
 //
 ApplicationMgr.ExtSvc += {"FluxSvc"};
 ApplicationMgr.DLLs   += {"FluxSvc"}; 
-FluxSvc.source_lib     = {"$(FLUXROOT)/xml/source_library.xml"};
+FluxSvc.source_lib     = {"$(FLUXXMLPATH)/source_library.xml"};
 ApplicationMgr.ExtSvc += {"ParticlePropertySvc"};
 
 //
@@ -323,12 +323,12 @@ FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 // Add in CRflux option"
 //
 ApplicationMgr.DLLs += {"CRflux"};
-FluxSvc.source_lib  += {"$(CRFLUXROOT)/xml/source_library.xml"};
+FluxSvc.source_lib  += {"$(CRFLUXXMLPATH)/source_library.xml"};
 
 //
 // VDG sources: NB! test_sources.xml is incompatible with source_library.xml!
 //
-//FluxSvc.source_lib += {"$(FLUXROOT)/xml/test_sources.xml"};
+//FluxSvc.source_lib += {"$(FLUXXMLPATH)/test_sources.xml"};
 
 FluxAlg.source_name = "default";
 
@@ -492,7 +492,7 @@ ApplicationMgr.EvtMax = 200000;
 //
 // Geometry:
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/latAssemblySegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/latAssembly/latAssemblySegVols.xml";
 
 
 //

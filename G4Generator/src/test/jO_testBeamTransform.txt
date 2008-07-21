@@ -20,7 +20,7 @@ FluxAlg.source_name = "beamtest_muon";
 
 ApplicationMgr.EvtMax  = 100;
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/CU06/CU06SegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/CU06/CU06SegVols.xml";
    
 // for the new-style basicOptions
 Generation.Members = {

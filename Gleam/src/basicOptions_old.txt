@@ -59,7 +59,7 @@ Triggered.Members={
 ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // ----------------------------
@@ -80,7 +80,7 @@ FluxAlg.source_name="default";
 // add in CRflux option
 ApplicationMgr.DLLs +={ "CRflux" };
 FluxSvc.source_lib += {
-    "$(CRFLUXROOT)/xml/source_library.xml"};
+    "$(CRFLUXXMLPATH)/source_library.xml"};
 
 //-----------------------------
 // These algorithms run before digitization or reconstruction

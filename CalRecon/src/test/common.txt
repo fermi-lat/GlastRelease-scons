@@ -11,7 +11,7 @@ ApplicationMgr.EvtMax = 10 ;
 ApplicationMgr.DLLs += { "G4Generator","G4Propagator", "TkrUtil" } ;
 ApplicationMgr.ExtSvc += { "GlastDetSvc", "G4GeometrySvc" } ;
 GlastDetSvc.topVolume = "LAT" ; 
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml" ;
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml" ;
 GlastDetSvc.visitorMode = "recon" ;
 
 // calibration services

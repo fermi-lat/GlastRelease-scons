@@ -61,7 +61,7 @@ int main(int, char**) {
   /*
   ret = meta.openRecord(Metadata::INSTEm, Metadata::CTYPE_TKRHotChan,
                    Metadata::FMTXml, "1.0",
-                   "$CALIBUTILROOT/xml/test/testHot-2002-05-02.xml",
+                   "$CALIBUTILXMLPATH/test/testHot-2002-05-02.xml",
                    Metadata::CMPLOk);
   if (ret) {
     std::cerr << "openRecord failed with return value " << (int) ret 

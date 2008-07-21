@@ -11,7 +11,7 @@
 //#include "$GLEAMROOT/src/guiOptions.txt"
 //#include "$GLEAMROOT/src/fredOptions.txt"
 
-FluxSvc.source_lib += { "$(ROOTTESTDATAROOT)/data/gamma_5_gev_normal/source_library.xml" } ;
+FluxSvc.source_lib += { "$(ROOTTESTDATARDATAPATH)/gamma_5_gev_normal/source_library.xml" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 
 //// set root output from merit with following
@@ -22,11 +22,11 @@ AnalysisNtupleAlg.tupleName = "MeritTuple";
 TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false;
 
-mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/mc.root";
-relationRootWriterAlg.rootFile   = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/relations.root";
-digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/digi.root";
-reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/recon.root";
-RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/gamma_5_gev_normal/merit.root";
+mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATADATAPATH/gamma_5_gev_normal/mc.root";
+relationRootWriterAlg.rootFile   = "$ROOTTESTDATADATAPATH/gamma_5_gev_normal/relations.root";
+digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATADATAPATH/gamma_5_gev_normal/digi.root";
+reconRootWriterAlg.reconRootFile = "$ROOTTESTDATADATAPATH/gamma_5_gev_normal/recon.root";
+RootTupleSvc.filename            = "$ROOTTESTDATADATAPATH/gamma_5_gev_normal/merit.root";
 RootTupleSvc.rejectIfBad         = false;
 
 

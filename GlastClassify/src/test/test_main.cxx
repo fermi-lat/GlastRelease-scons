@@ -6,6 +6,7 @@ $Header$
 */
 
 #include "GlastClassify/TreeFactory.h"
+#include "facilities/commonUtilities.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -71,13 +72,14 @@ private:
 
 int main(int, char ** )
 {
+    facilities::commonUtilities::setupEnvironment();
     int rc=0;
     std::string name("goodcal");
     try {
         std::cout << "Gleam classification test:\n\ttree:\t"
             << name << std::endl;
         const char * root= ::getenv("GLASTCLASSIFYROOT");
-        std::string tree_path( std::string(root)+"/data");
+	std::string tree_path = facilities::commonUtilities::getDataPath("GlastClassify");
 
         std::cout << "\tpath:\t" << tree_path << std::endl;
 

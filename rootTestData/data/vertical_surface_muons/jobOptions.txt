@@ -21,11 +21,11 @@ AnalysisNtupleAlg.tupleName = "MeritTuple";
 TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false; 
 
-mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATAROOT/data/vertical_surface_muons/mc.root";
-relationRootWriterAlg.rootFile   = "$ROOTTESTDATAROOT/data/vertical_surface_muons/relations.root";
-digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATAROOT/data/vertical_surface_muons/digi.root";
-reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/vertical_surface_muons/recon.root";
-RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/vertical_surface_muons/merit.root";
+mcRootWriterAlg.mcRootFile       = "$ROOTTESTDATADATAPATH/vertical_surface_muons/mc.root";
+relationRootWriterAlg.rootFile   = "$ROOTTESTDATADATAPATH/vertical_surface_muons/relations.root";
+digiRootWriterAlg.digiRootFile   = "$ROOTTESTDATADATAPATH/vertical_surface_muons/digi.root";
+reconRootWriterAlg.reconRootFile = "$ROOTTESTDATADATAPATH/vertical_surface_muons/recon.root";
+RootTupleSvc.filename            = "$ROOTTESTDATADATAPATH/vertical_surface_muons/merit.root";
 RootTupleSvc.rejectIfBad         = false;
 
 

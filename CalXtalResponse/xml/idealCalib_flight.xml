@@ -23,7 +23,7 @@ it incoperates the following improvements over the prievous version.
 pedestal noise & LAC settings higher to accomodate expected higher noise levels in flight.
 
 -->
-<!DOCTYPE ifile SYSTEM "$(XMLBASEROOT)/xml/ifile.dtd" >
+<!DOCTYPE ifile SYSTEM "$(XMLBASEXMLPATH)/ifile.dtd" >
 
 <ifile cvs_Header="$Header$"
  cvs_Revision="$Revision$" >

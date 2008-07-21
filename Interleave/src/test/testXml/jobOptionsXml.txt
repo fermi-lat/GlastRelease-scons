@@ -22,7 +22,7 @@ EventSelector.Input = "NONE";
 // --------- define the program -----------------
 ApplicationMgr.TopAlg = {"TestXmlAlg" };
 
-TestXmlAlg.xmlFile = "$(INTERLEAVEROOT)/xml/exampleBackgroundSet.xml";
+TestXmlAlg.xmlFile = "$(INTERLEAVEXMLPATH)/exampleBackgroundSet.xml";
 
 
 ApplicationMgr.EvtMax = 50; 

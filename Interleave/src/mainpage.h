@@ -34,10 +34,10 @@ Trigger.BranchMembers = {"TriggerAlg", "TestAlg", "InterleaveAlg"};
 ApplicationMgr.DLLs+= { "Interleave" };
 Triggered.BranchMembers = {"TriggerAlg", "InterleaveAlg"}; //pseudo-sources do not trigger
 
-FluxSvc.source_lib += {"$(INTERLEAVEROOT)/xml/source_library.xml"};
+FluxSvc.source_lib += {"$(INTERLEAVEXMLPATH)/source_library.xml"};
 FluxAlg.sources += {"sampled_background"};
 FluxAlg.sources += {"sampled_EarthAlbedo"};
-InterleaveAlg.FileName= "$(INTERLEAVEROOT)/xml/exampleBackgroundSet.xml";
+InterleaveAlg.FileName= "$(INTERLEAVEXMLPATH)/exampleBackgroundSet.xml";
 @endverbatim
 
   @section job JobOptions

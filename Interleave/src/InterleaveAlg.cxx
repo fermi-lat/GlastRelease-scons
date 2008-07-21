@@ -131,7 +131,7 @@ StatusCode InterleaveAlg::initialize()
     }
 
     // Initialize the CEL manager
-////    std::string celFileName = "$GLEAMROOT/data/CELInterleaveFile.root";
+////    std::string celFileName = "$GLEAMDATAPATH/CELInterleaveFile.root";
 ////    m_bkgndManager->getCelManager()->initWrite(celFileName,"RECREATE");
 
     // initialize the background selection

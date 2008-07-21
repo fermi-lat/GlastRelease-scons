@@ -12,7 +12,7 @@
 ApplicationMgr.DLLs   += { "GlastSvc", "AdfReader" };
 
 
-AdfReaderAlg.dataFilePath="$(ADFREADERROOT)/data/CR_DAQBARI_330000723.bin";
+AdfReaderAlg.dataFilePath="$(ADFREADERDATAPATH)/CR_DAQBARI_330000723.bin";
 
 
 ApplicationMgr.ExtSvc   = { "EventSelector/EventSelector"};

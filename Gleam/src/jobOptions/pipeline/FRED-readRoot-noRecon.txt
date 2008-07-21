@@ -57,13 +57,13 @@ GlastDetSvc.topVolume = "LAT";
 //
 
 // Flight:
-//GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+//GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 
 // Single bay:
-//GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/singleBay1TowerSegVols.xml";
+//GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/latAssembly/singleBay1TowerSegVols.xml";
 
 // Two towers:
-GlastDetSvc.xmlfile = "$(XMLGEODBSROOT)/xml/latAssembly/lat2TowerSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/latAssembly/lat2TowerSegVols.xml";
 
 
 

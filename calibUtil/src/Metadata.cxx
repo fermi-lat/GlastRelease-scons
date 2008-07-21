@@ -102,7 +102,7 @@ namespace calibUtil {
         m_readCxt = 0;
       }  else { // look for compatible schema
         std::string schema = 
-          std::string("$(RDBMODELROOT)/xml/")+ m_dbName + ".xml"; 
+          std::string("$(RDBMODELXMLPATH)/")+ m_dbName + ".xml"; 
         err = compareSchema(m_readCxt, schema);
       }
       return ok;
@@ -127,7 +127,7 @@ namespace calibUtil {
         m_readCxt = 0;
       }     else { // look for compatible schema
         std::string schema = 
-          std::string("$(RDBMODELROOT)/xml/")+ m_dbName + ".xml"; 
+          std::string("$(RDBMODELXMLPATH)/")+ m_dbName + ".xml"; 
         err = compareSchema(m_writeCxt, schema);
       }
 

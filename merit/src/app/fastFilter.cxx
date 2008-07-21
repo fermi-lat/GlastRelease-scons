@@ -72,9 +72,10 @@ int main(int argc, char* argv[])
     // Get or generate the IM xml filename 
     std::string xml_file = ::getenv("IM_FILE_FILTER");
     if ( xml_file.empty() ) { 
-      std::string  default_file( "/xml/CTPruner_DC1.imw" );
-      const char *sPath = ::getenv("MERITROOT");
-      xml_file = std::string( sPath == 0 ?  "../" : sPath) + default_file;
+      //std::string  default_file( "/xml/CTPruner_DC1.imw" );
+      //const char *sPath = ::getenv("MERITROOT");
+      xml_file = facilities::commonUtilities::joinPath(facilities::commonUtilities::getXmlPath("merit"), "CTPruner_DC1.imw");
+      //std::string( sPath == 0 ?  "../" : sPath) + default_file;
     }
     std::cout << "fastFilter: IM xml file " 
               << "\n\t" << xml_file << std::endl;

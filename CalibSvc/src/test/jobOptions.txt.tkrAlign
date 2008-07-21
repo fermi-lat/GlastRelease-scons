@@ -19,7 +19,7 @@ ApplicationMgr.Runable= "RootIoSvc";
 // There are several other possibilities for test algroithm, including
 //  UseBadStrips, UseGains,...
 ApplicationMgr.TopAlg = {"digiRootReaderAlg", "UseTkrAlign" };
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATADATAPATH/default/digi.root";
 // digiRootReaderAlg.digiRootFile = "/nfs/farm/g/glast/u10/builds/GlastRelease/gr-v12r4/digi_077015344.root";
 
 
@@ -33,7 +33,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 // Next few lines from AcdDigi test jobOptions
 EventSelector.Input = "NONE";
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";
 
 // ApplicationMgr.EvtMax = 10000;

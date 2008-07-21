@@ -11,7 +11,7 @@
 ApplicationMgr.DLLs   += { "FluxSvc" } ; 
 ApplicationMgr.ExtSvc += { "FluxSvc" } ;
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" } ;
-FluxSvc.source_lib = { "$(FLUXROOT)/xml/source_library.xml" } ;
+FluxSvc.source_lib = { "$(FLUXXMLPATH)/source_library.xml" } ;
 FluxSvc.source_lib += { "$(G4GENERATORROOT)/src/test/test_sources.xml" } ;
 FluxSvc.source_lib += { "$(CALRECONROOT)/src/test/source_library.xml" } ;
 ApplicationMgr.Runable = "FluxSvc" ;

@@ -6,7 +6,7 @@ In order for it to work, following the steps below:
 1. copy CarbonStd.*, IronStd.* to ../../../Recon/v2r7p3/PEGS4
 2. add following to your job option file:
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/cu/cuSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/cu/cuSegVols.xml";
 GlastDetSvc.topVolume = "world";
 
 G4GeometrySvc.magneticFieldVolumn = "cuFieldBox";

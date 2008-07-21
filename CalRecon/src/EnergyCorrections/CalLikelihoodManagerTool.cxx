@@ -27,9 +27,9 @@ CalLikelihoodManagerTool::CalLikelihoodManagerTool(const std::string& type,
 {
     // declare base interface for all consecutive concrete classes
     std::vector<std::string> parameters;
-		parameters.push_back("$(CALRECONROOT)/xml/HighEnergyLowIncidence.data");
-		parameters.push_back("$(CALRECONROOT)/xml/LowEnergy.data");
-		parameters.push_back("$(CALRECONROOT)/xml/HighEnergyHighIncidence.data");
+		parameters.push_back("$(CALRECONXMLPATH)/HighEnergyLowIncidence.data");
+		parameters.push_back("$(CALRECONXMLPATH)/LowEnergy.data");
+		parameters.push_back("$(CALRECONXMLPATH)/HighEnergyHighIncidence.data");
 
     
     declareInterface<ICalEnergyCorr>(this);

@@ -6,7 +6,7 @@
 ApplicationMgr.ExtSvc += { "FluxSvc" };
 ApplicationMgr.DLLs   += { "FluxSvc" }; 
  
-FluxSvc.source_lib = {"$(FLUXSVCROOT)/xml/source_library.xml"};
+FluxSvc.source_lib = {"$(FLUXSVCXMLPATH)/source_library.xml"};
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 ApplicationMgr.ExtSvc += {"LivetimeSvc" };
 
@@ -18,11 +18,11 @@ ApplicationMgr.TopAlg = {"FluxAlg","FluxTestAlg"};
 MessageSvc.OutputLevel      = 2;
 
 // Set the default for a source library document
-FluxSvc.source_lib ={"$(FLUXSVCROOT)/xml/source_library.xml"};
+FluxSvc.source_lib ={"$(FLUXSVCXMLPATH)/source_library.xml"};
 
 // Append to a list of source library documents
-FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/user_library.xml"};
-FluxSvc.source_lib += {"$(FLUXSVCROOT)/xml/composite_library.xml"};
+FluxSvc.source_lib += {"$(FLUXSVCXMLPATH)/user_library.xml"};
+FluxSvc.source_lib += {"$(FLUXSVCXMLPATH)/composite_library.xml"};
 
 
 // ask for a source that is in the user_library

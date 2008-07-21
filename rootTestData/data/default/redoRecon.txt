@@ -21,15 +21,15 @@ TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false;
 
 Generator.Members    = { "mcRootReaderAlg" };
-mcRootReaderAlg.mcRootFile = "$ROOTTESTDATAROOT/data/default/mc.root";
+mcRootReaderAlg.mcRootFile = "$ROOTTESTDATADATAPATH/default/mc.root";
 
 Digitization.Members = { "digiRootReaderAlg" };
-digiRootReaderAlg.digiRootFile = "$ROOTTESTDATAROOT/data/default/digi.root";
+digiRootReaderAlg.digiRootFile = "$ROOTTESTDATADATAPATH/default/digi.root";
 
 Output.Members = { "reconRootWriterAlg" };
 
-reconRootWriterAlg.reconRootFile = "$ROOTTESTDATAROOT/data/default/recon.root";
-RootTupleSvc.filename            = "$ROOTTESTDATAROOT/data/default/merit.root";
+reconRootWriterAlg.reconRootFile = "$ROOTTESTDATADATAPATH/default/recon.root";
+RootTupleSvc.filename            = "$ROOTTESTDATADATAPATH/default/merit.root";
 
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
