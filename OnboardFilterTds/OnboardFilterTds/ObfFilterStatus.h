@@ -17,7 +17,7 @@
 #include "GaudiKernel/IInterface.h"
 
 // Include these to make sure we have the status/veto bit definitions and masks
-#include "EFC/GFC_status.h"
+#include "EFC/GFC_V2_status.h"
 #include "XFC/HFC_status.h"
 #include "XFC/MFC_status.h"
 #include "XFC/DFC_status.h"
@@ -122,8 +122,8 @@ public:
     unsigned int  getStatusWord()    const {return m_status;}
     int           getState()         const;
 
-    unsigned int  getVetoMask()      const {return GFC_STATUS_M_VETOES;}
-    unsigned int  getVetoBit()       const {return GFC_STATUS_M_VETOED;}
+    unsigned int  getVetoMask()      const {return GFC_V2_STATUS_M_VETOES;}
+    unsigned int  getVetoBit()       const {return GFC_V2_STATUS_M_VETOED;}
 
     unsigned char getFilterId()      const {return m_id;}
     unsigned char getFiltersb()      const {return m_sb;}
@@ -132,7 +132,7 @@ public:
     unsigned int  getEnergyInLeus()  const;
     float         getEnergy()        const;
     unsigned int  getStageEnergy()   const {return m_energy;}
-    unsigned int  getStage()         const {return (m_energy & GFC_STAGE_M_STAGE) >> GFC_STAGE_S_ENERGY;}
+    unsigned int  getStage()         const {return (m_energy & GFC_V2_STAGE_M_STAGE) >> GFC_V2_STAGE_S_ENERGY;}
     
     std::ostream& fillStream(std::ostream& s) const
     {

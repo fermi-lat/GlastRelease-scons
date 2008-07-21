@@ -16,7 +16,7 @@
 //#include "TkrUtil/ITkrGeometrySvc.h"
 #include "EDS/EBF_dir.h"
 #include "EDS/EDR_tkr.h"
-#include "EFC/GFC_status.h"
+#include "EFC/GFC_V2_status.h"
 #include "OnboardFilterTds/FSWHeaders/TFC_prjDef.h"
 #include "OnboardFilterTds/LogInfoDef.h"
 /**
