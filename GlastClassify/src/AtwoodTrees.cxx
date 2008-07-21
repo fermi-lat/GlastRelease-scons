@@ -142,7 +142,7 @@ AtwoodTrees::AtwoodTrees(ITupleInterface& tuple, std::ostream& log, std::string 
     m_AcdCornerDoca    = tuple.getItem("AcdCornerDoca");
     m_Tkr1SSDVeto      = tuple.getItem("Tkr1SSDVeto");
 
-    m_eventId          = tuple.getItem("EvtEventId");
+    m_eventId          = tuple.getItem("EvtEventId64");
     m_run              = tuple.getItem("EvtRun");
 
     // Default values as of 4/5/2007 at request of Bill Atwood
