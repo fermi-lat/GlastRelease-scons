@@ -21,6 +21,7 @@
 class DigiEvent;
 class CalDigi;
 class TProfile;
+class TGraph;
 
 namespace CalUtil {
   class CIDAC2ADC;
@@ -83,6 +84,9 @@ namespace calibGenCAL {
 
       /// profiles owned by current ROOT directory/m_histFile.
       CalUtil::CalVec<CalUtil::RngIdx, TProfile *> profiles;
+
+      /// graph all samples for given dac setting & channel
+      CalUtil::CalVec<CalUtil::RngIdx, TGraph *> noiseGraphs;
 
       /// create new histogram objects and accompanying TObjArray
       /// create TNtuple object for storing fit results

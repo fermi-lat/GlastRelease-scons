@@ -59,28 +59,32 @@ namespace calibGenCAL {
     return tmp.str();
   }
     
-    /// template method joins a sequence of data items ino
-    /// a string, separating each by delim.
-    template <class FwdIt>
-    std::string str_join(FwdIt start,
-                         const FwdIt stop,
-                         const std::string &delim = " ") {
-      std::ostringstream tmp;
+  /// template method joins a sequence of data items ino
+  /// a string, separating each by delim.
+  template <class FwdIt>
+  std::string str_join(FwdIt start,
+                       const FwdIt stop,
+                       const std::string &delim = " ") {
+    std::ostringstream tmp;
    
    
-      while (start != stop) {
-        tmp << *start;
-        tmp << delim;
-        start++;
-      }
-                           
-      return tmp.str();
+    while (start != stop) {
+      tmp << *start;
+      tmp << delim;
+      start++;
     }
+                           
+    return tmp.str();
+  }
 
   /// print variable name and value to stdout
   /// \note from http://snippets.dzone.com/posts/show/1797 , 05/01/08
 #define PRINT_VAR(x) std::cout << #x " = '" << x << "'";
 
+  
+  /// left pad inStr out to padLen with padchar
+  /// \note new string object is created and returned on stack
+  std::string lpad(const std::string &inStr, const size_t padLen, const char padChar);
 
 };
 

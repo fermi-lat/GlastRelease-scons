@@ -1,10 +1,11 @@
 """
 Loop throough all TCanvas & TH* objects in ROOT file & save plots to image file
 
-python dumpROOTPlots.py [-f ps|pdf|gif|png] <rootFile>
+python dumpROOTPlots.py [-f ps|pdf|gif|png] [-n namematch] <rootFile>
 
 where:
        -f ps|pdf|gif|png = specify output image file type (default = pdf)
+       -n namematch      = only output plots whose name contains the 'namematch' string         
        <rootFile>        = input root file from which plots to print.
 """
 
@@ -47,15 +48,18 @@ def print_canvas(cvs):
 ### COMMANDLINE ARGS ####
 # 1st check for optional args
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "-f:")
+    opts, args = getopt.getopt(sys.argv[1:], "-f:-n:")
 except getopt.GetoptError:
     log.error(__doc__)
     sys.exit(1)
 
-imgType = "png" #default 
+imgType = "png" #default
+namematch = "" # disabled by default
 for o, a in opts:
     if o == "-f":
         imgType = a
+    if o == "-n":
+        namematch = a
 
 # now check for req'd params
 if len(args) != 1:
@@ -82,6 +86,11 @@ rootFile = TFile(rootPath,"READ")
 
 for k in rootFile.GetListOfKeys():
     cls = gROOT.GetClass(k.GetClassName());
+
+    # optional name check
+    if namematch != "":
+        if k.GetName().find(namematch) < 0:
+            continue
 
     # HISTOGRAMS:
     if cls.InheritsFrom("TH1"):
