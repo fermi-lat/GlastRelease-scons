@@ -2,7 +2,9 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+   v3r23p2   21-Jul-2008  lsrea
  @verbatim
+ * v3r23p2 21-Jul-2008  lSR  Fix up scanTuple.C for EvtEventId64
  * v3r23   14-Jul-2008  LSR  add unsigned long long to ntuple types
  * v3r22p1 19-May-2008  HMK: Return error and exit if we cannot GetEntry
  *         when reading input ntuples
