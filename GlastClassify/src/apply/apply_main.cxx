@@ -8,6 +8,7 @@ $Header$
 
 #include "../AtwoodTrees.h"
 #include "facilities/Util.h"
+#include "facilities/commonUtilities.h"
 
 #include <iostream>
 #include <string>
