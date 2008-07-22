@@ -66,13 +66,19 @@ StatusCode RootTkrTotCnv::i_createObj (const std::string& fname,
     if (tree) {
       // handle generic tracker part
       ret = readTower(tree, iTow, totCol);
-      if (ret != StatusCode::SUCCESS) return ret;
-
+      if (ret != StatusCode::SUCCESS) {
+        closeRead();
+        return ret;
+      }
       // read in Tot info for each uniplane
       ret = readUnis(tree, iTow,  totCol);
-      if (ret != StatusCode::SUCCESS) return ret;
+      if (ret != StatusCode::SUCCESS) {
+        closeRead();
+        return ret;
+      }
     }
   }
+  closeRead();
   return ret;
 }
 

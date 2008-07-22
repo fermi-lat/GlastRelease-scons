@@ -66,13 +66,20 @@ StatusCode RootTkrScaleCnv::i_createObj (const std::string& fname,
     if (tree) {
       // handle generic tracker part
       ret = readTower(tree, iTow, scaleCol);
-      if (ret != StatusCode::SUCCESS) return ret;
+      if (ret != StatusCode::SUCCESS) {
+        closeRead();
+        return ret;
+      }
 
       // read in Scale info for each uniplane
       ret = readUnis(tree, iTow,  scaleCol);
-      if (ret != StatusCode::SUCCESS) return ret;
+      if (ret != StatusCode::SUCCESS) {
+        closeRead();
+        return ret;
+      }
     }
   }
+  closeRead();
   return ret;
 }
 
