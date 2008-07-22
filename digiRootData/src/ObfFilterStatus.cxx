@@ -9,6 +9,10 @@
 #include "digiRootData/ObfFilterStatus.h"
 #include "Riostream.h"
 
+// Use this to define the "state" of each filter
+#include "enums/Lsf.h"
+#include <map>
+
 ClassImp(ObfFilterStatus)
 
 ObfFilterStatus::ObfFilterStatus() 
@@ -142,6 +146,19 @@ void ObfGammaStatus::Clear(Option_t *option)
     return;
 }
 
+UInt_t ObfGammaStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+}
+
 // root print...
 void ObfGammaStatus::Print(Option_t* option) const 
 {
@@ -167,6 +184,19 @@ void ObfHipStatus::Clear(Option_t *option)
     return;
 }
 
+UInt_t ObfHipStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+}
+
 // root print...
 void ObfHipStatus::Print(Option_t* option) const 
 {
@@ -188,6 +218,19 @@ void ObfHFCStatus::Clear(Option_t *option)
 {
     m_status = 0;
     return;
+}
+
+UInt_t ObfHFCStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
 }
 
 // root print...
@@ -213,6 +256,19 @@ void ObfMipStatus::Clear(Option_t *option)
 {
     m_status = 0;
     return;
+}
+
+UInt_t ObfMipStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
 }
 
 // root print...
@@ -241,6 +297,19 @@ void ObfDgnStatus::Clear(Option_t *option)
     return;
 }
 
+UInt_t ObfDgnStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
+}
+
 // root print...
 void ObfDgnStatus::Print(Option_t* option) const 
 {
@@ -261,6 +330,19 @@ void ObfDFCStatus::Clear(Option_t *option)
 {
     m_status = 0;
     return;
+}
+
+UInt_t ObfDFCStatus::getState() const
+{
+    std::map<unsigned int, int> bitToEnumMap;
+
+    bitToEnumMap[0x00] = enums::Lsf::PASSED;
+    bitToEnumMap[0x20] = enums::Lsf::SUPPRESSED;
+    bitToEnumMap[0x40] = enums::Lsf::VETOED;
+    bitToEnumMap[0x60] = enums::Lsf::LEAKED;
+
+    if (bitToEnumMap.find(m_sb) != bitToEnumMap.end()) return bitToEnumMap[m_sb];
+    else return enums::Lsf::INVALID;
 }
 
 // root print...

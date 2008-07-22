@@ -22,6 +22,7 @@ public:
 
     /// OBF functions
     virtual UInt_t  getStatusWord()    const = 0;
+    virtual UInt_t  getState()         const = 0;
     virtual UInt_t  getVetoMask()      const = 0;
     virtual UInt_t  getVetoBit()       const = 0;
 
@@ -92,6 +93,7 @@ public:
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord()    const;
+    UInt_t  getState()         const;
 
     UInt_t  getVetoMask()      const;
     UInt_t  getVetoBit()       const;
@@ -113,7 +115,7 @@ private:
     UInt_t  m_prescaler;
     UInt_t  m_energy;
 
-    ClassDef(ObfGammaStatus,5) // Gamma Filter output
+    ClassDef(ObfGammaStatus,6) // Gamma Filter output
 };
 
 class ObfHipStatus : virtual public IObfStatus, public TObject
@@ -126,6 +128,7 @@ public:
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord()    const;
+    UInt_t  getState()         const;
 
     UInt_t  getVetoMask()      const;
     UInt_t  getVetoBit()       const;
@@ -143,7 +146,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfHipStatus,1) // HIP output
+    ClassDef(ObfHipStatus,2) // HIP output
 };
 
 class ObfHFCStatus : virtual public IObfStatus, public TObject
@@ -156,6 +159,7 @@ public:
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord()    const;
+    UInt_t  getState()         const;
 
     UInt_t  getVetoMask()      const;
     UInt_t  getVetoBit()       const;
@@ -173,7 +177,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfHFCStatus,3) // HFC output
+    ClassDef(ObfHFCStatus,4) // HFC output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
@@ -186,6 +190,7 @@ public:
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
+    UInt_t  getState()         const;
 
     UInt_t  getVetoMask()      const;
     UInt_t  getVetoBit()       const;
@@ -203,7 +208,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfMipStatus,5) // MIP filter output
+    ClassDef(ObfMipStatus,6) // MIP filter output
 };
 
 class ObfDFCStatus : virtual public IObfStatus, public TObject
@@ -216,6 +221,7 @@ public:
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
+    UInt_t  getState()         const;
 
     UInt_t  getVetoMask()      const;
     UInt_t  getVetoBit()       const;
@@ -233,7 +239,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfDFCStatus,3) // DFC output
+    ClassDef(ObfDFCStatus,4) // DFC output
 };
 
 class ObfDgnStatus : virtual public IObfStatus, public TObject
@@ -246,6 +252,7 @@ public:
 
     // If msb is set below then event is to be vetoed
     UInt_t  getStatusWord() const;
+    UInt_t  getState()         const;
 
     UInt_t  getVetoMask()      const;
     UInt_t  getVetoBit()       const;
@@ -263,7 +270,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfDgnStatus,1) // DGN output
+    ClassDef(ObfDgnStatus,2) // DGN output
 };
 
 
