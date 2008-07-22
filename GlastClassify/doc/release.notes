@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+22-Jul-08  v6r5   HMK Update revision for CMT env var removal for SCons
 21-Jul-08  v6r4p1 LSR change EvtEventId to EvtEventId64
 18-Jul-08  v6r4p0 TU  Move pre-filter from AtwoodTrees.cxx into xml file
 17-Jul-08  v6r3p2 HMK Patch RootTuple to define addItem for unsigned long long
