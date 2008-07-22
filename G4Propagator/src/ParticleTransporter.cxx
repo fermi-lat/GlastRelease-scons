@@ -347,7 +347,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 else 
                 {
                     stepOverDist += 1000. * kCarTolerance / fabs(trkToExitAng); // 1000 * minimum tolerance in G4
-                    overPoint     = curPoint + stepOverDist*curDir;
+                    overPoint    += stepOverDist*curDir;
                 }
 
                 // Re-step with new points
