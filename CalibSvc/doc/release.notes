@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r38   21-Jul-2008  jrb  Close calib. root files when through reading them in
    v0r37p1 21-Jul-2008  jrb  tag for Navid's updates to test jo files
    v0r37   14-Jul-2008  eac  Added factories for ACD calibrations: AcdCarbon, AcdHighPed, 
                              AcdCnoFit, AcdVetoFit 
