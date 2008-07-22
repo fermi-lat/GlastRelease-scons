@@ -322,33 +322,50 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
             //If we are right on the boundary then jump over and recalculate
             while(trackLen <= stepOverDist)
             {
-                // We are here because we are "on" the boundary (within the tolerance for that)
-                // Two reasons for the problem: 1) travelling almost exactly parallel to the boundary
-                // or, 2) not parallel
-                // Try to ascertain which here
-                G4bool              temp          = false;
-                const G4ThreeVector localExitNrml = navigator->GetLocalExitNormal(&temp);
-                G4ThreeVector       trackDir      = curDir;
+                // Ok, this drives me nuts but sometimes the "GetLocalExitNormal" returns the normal in the current 
+                // coordinate system, sometimes in the "local" system and I have not yet deduced how you tell. 
+                // So, apply brute force to find the direction to the closest surface (presumably the one we are on)
+                // This will be the normal vector toward the surface causing the problem:
+                G4ThreeVector globalExitNrml(0., 0., 0.);
+                bool          globalExitNrmlValid = false;
 
-                double trkToExitAng = trackDir.dot(localExitNrml);
+                // Predefine the three we will try
+                G4ThreeVector xDir(curDir.x() < 0. ? -1. : 1., 0., 0.);
+                G4ThreeVector yDir(0., curDir.y() < 0. ? -1. : 1., 0.);
+                G4ThreeVector zDir(0., 0., curDir.z() < 0. ? -1. : 1.);
 
-                // Parallel track case
-                // |cos(track to surface normal)| < 1e-5 - nearly exactly perpendicular
-                if (fabs(trkToExitAng) < 10000. * kCarTolerance)
+                // Loop through to find nearest surface
+                for(int axisDir = 0; axisDir < 3; axisDir++)
                 {
-                    // In this case one of the coordinates is either on the surface of the volume or 
-                    // within its tolerance (defined by kCarTolerance). So, we try to move the point to
-                    // get outside of the tolerance and start over... 
+                    G4ThreeVector surfaceDir = xDir;
 
-                    overPoint -= kCarTolerance * localExitNrml;
+                    if (axisDir == 1) surfaceDir = yDir;
+                    if (axisDir == 2) surfaceDir = zDir;
+
+                    // Recalculate the distance to the surface in this direction
+                    double distToSurface = navigator->ComputeStep(overPoint, surfaceDir, maxStep, safeStep);
+
+                    // This must be true in one direction (else how did we get here?)
+                    if (distToSurface <= stepOverDist)
+                    {
+                        globalExitNrml      = surfaceDir;
+                        globalExitNrmlValid = true;
+                        break;
+                    }
                 }
-                // Not exactly parallel, here we can probably "help" things by increasing the step by hand
-                // and starting again
-                else 
+
+                // This can't happen (right?)
+                if (!globalExitNrmlValid)
                 {
-                    stepOverDist += 1000. * kCarTolerance / fabs(trkToExitAng); // 1000 * minimum tolerance in G4
-                    overPoint    += stepOverDist*curDir;
+                    std::stringstream errorStream;
+                    errorStream << "StepAnArcLength cannot find distance to surface: current position: " 
+                        << overPoint << " dir: " << curDir << " step: " << stepInfo.size();
+                    throw std::domain_error(errorStream.str());
                 }
+
+                // Bump our point and, if necessary, the current step distance
+                stepOverDist += kCarTolerance * curDir.dot(globalExitNrml);
+                overPoint    -= kCarTolerance * globalExitNrml;
 
                 // Re-step with new points
                 pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
