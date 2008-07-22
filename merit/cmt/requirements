@@ -1,7 +1,10 @@
 package merit
 version v6r36p2
-# $Id$
+
 author T.Burnett <tburnett@u.washington.edu>
+
+# $Id$
+
 branches doc
 
 use GlastPolicy v*
