@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r8p0   22-Jul-2008 TU  Add "getState" to ObfFilterStatus to return enumerated state information
 v11r7     24-Jun-2008 HMK Make ObfFilterStatus classes backward compatible
 v11r6p4   23-Jun-2008 TU  Remove ClassDef for IObfStatus and increment
           ObfHip and ObfDgn ClassDefs to start at one
