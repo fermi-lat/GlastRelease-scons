@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r39p1 23-Jul-2008  jrb  Minor clean-up
    v0r39   23-Jul-2008  jrb  Modified interface for LAT alignment calib;
                              add boilerplate for new ACD 'calibrations' (not
                              expected to be accessed from Gleam)
