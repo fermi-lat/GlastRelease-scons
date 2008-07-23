@@ -111,11 +111,6 @@ Filter.Members       += {"EbfWriter", "OnboardFilter", "Count/downlink"}; // thi
 // Feed all events to the filters
 EbfWriter.ReqGemTrig = false;
 
-OnboardFilter.GammaFilterTool.LeakAllEvents=true;
-OnboardFilter.HIPFilterTool.LeakAllEvents=true;
-OnboardFilter.MIPFilterTool.LeakAllEvents=true;
-OnboardFilter.DGNFilterTool.LeakAllEvents=true;
-
 ToolSvc.FSWAuxLibsTool.FileNamePeds="cal_db_pedestals";
 ToolSvc.FSWAuxLibsTool.FileNameGains="cal_db_gains";
 
