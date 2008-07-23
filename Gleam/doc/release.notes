@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r0p18  HMK 23-Jul-08 Remove setting of flight ped/gains, should now be
+*          automatic default
 * v7r0p17  HMK 23-Jul-08 Remove LeakAllEvent JO which is now deprecated
 * v7r0p16  AWB 22-Jul-08 Fixed TKR calib JO for L1.
 * v7r0p15  AWB 18-Jul-08 Added new JO to L1 (from Tracy).
