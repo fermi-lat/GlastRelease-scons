@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 	    //std::string rootPath = ::getenv("GLASTCLASSIFYROOT");
             //facilities::Util::expandEnvVar(&rootPath);
 
-            CTFilePath = facilities::commonUtilities::joinPath(facilities::commonUtiliies::getXmlPath("GlastClassify"), "Pass4_Analysis_Complete.xml");
+            CTFilePath = facilities::commonUtilities::joinPath(facilities::commonUtilities::getXmlPath("GlastClassify"), "Pass4_Analysis_Complete.xml");
             std::cout << "Setting file to  " << CTFilePath << std::endl;
         }
         else
