@@ -90,35 +90,35 @@ StatusCode UseLATAlignment::execute( ) {
 
   static unsigned serial = 0;
 
-  SmartDataPtr<CalibData::CalibLATAlignment> test1Copy(m_pCalibDataSvc, m_path);
+  SmartDataPtr<CalibData::CalibLATAlignment> alignCalib(m_pCalibDataSvc, m_path);
 
-  if (!test1Copy) {
+  if (!alignCalib) {
     log << MSG::ERROR << "Failed access to CalibLATAlignment via smart ptr" << endreq;
     return StatusCode::FAILURE;
   }
 
-  unsigned newSerial = test1Copy->getSerNo();
+  unsigned newSerial = alignCalib->getSerNo();
 
   if (serial != newSerial) {
     serial = newSerial;
     double rx, ry, rz;
   
-    rx = test1Copy->getRx();
-    ry = test1Copy->getRy();
-    rz = test1Copy->getRz();
-    std::string units = test1Copy->getUnits();
+    rx = alignCalib->getRx();
+    ry = alignCalib->getRy();
+    rz = alignCalib->getRz();
+    std::string units = alignCalib->getUnits();
   
     log << MSG::INFO 
-        << "SAA boundary obj, serial #" <<  newSerial << endreq;
+        << "LAT alignment obj, serial #" <<  newSerial << endreq;
     
-    log << MSG::INFO << "Vstart: " <<  (test1Copy->validSince()).hours()
-        << "  Vend: " << (test1Copy->validTill()).hours() << endreq;
+    log << MSG::INFO << "Vstart: " <<  (alignCalib->validSince()).hours()
+        << "  Vend: " << (alignCalib->validTill()).hours() << endreq;
 
     log << MSG::INFO << "Rx: "   << rx  << endreq;
     log << MSG::INFO << "Ry: " << ry   << endreq;
     log << MSG::INFO << "Rz: "   << rz   << endreq;
 
-    const CalibData::ALIGN_ROT* r = test1Copy->getR();
+    const CalibData::ALIGN_ROT* r = alignCalib->getR();
     log << MSG::INFO << "Or equivalently, array is " << (*r)[0] << ", "
         << (*r)[1] << ", " << (*r)[2] << endreq;
 
