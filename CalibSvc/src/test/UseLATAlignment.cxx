@@ -25,7 +25,7 @@ private:
   IDataProviderSvc* m_pCalibDataSvc;
   ICalibPathSvc*    m_pCalibPathSvc;
   std::string       m_path;
-  // Maybe something to say which kind of data to look up?
+  std::string       m_flavor;
 
 };
 
@@ -39,7 +39,7 @@ UseLATAlignment::UseLATAlignment( const std::string&  name,
   : Algorithm     ( name, pSvcLocator ), m_pCalibDataSvc(0)
 {
   // Declare properties here.
-
+  declareProperty("CalibFlavor", m_flavor = "vanilla");
 }
 
 
@@ -48,7 +48,6 @@ StatusCode UseLATAlignment::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
 
-  // So far don't have any properties, but in case we do some day..
   setProperties();
 
 
@@ -76,7 +75,7 @@ StatusCode UseLATAlignment::initialize() {
 
   m_path = 
     m_pCalibPathSvc->getCalibPath(ICalibPathSvc::Calib_NAS_LATAlignment,
-                                  std::string("vanilla") );
+                                  m_flavor);
 
   // Get properties from the JobOptionsSvc
   sc = setProperties();
@@ -89,6 +88,8 @@ StatusCode UseLATAlignment::execute( ) {
 
   MsgStream log(msgSvc(), name());
 
+  static unsigned serial = 0;
+
   SmartDataPtr<CalibData::CalibLATAlignment> test1Copy(m_pCalibDataSvc, m_path);
 
   if (!test1Copy) {
@@ -96,37 +97,35 @@ StatusCode UseLATAlignment::execute( ) {
     return StatusCode::FAILURE;
   }
 
-  double roll,pitch,yaw;  
+  unsigned newSerial = test1Copy->getSerNo();
+
+  if (serial != newSerial) {
+    serial = newSerial;
+    double rx, ry, rz;
   
-  if(!(roll=test1Copy->getRoll())){
-    log << MSG::ERROR 
-        << "Failed to read phi" << endreq;
-    return StatusCode::FAILURE;
-  }  
-  if(!(pitch=test1Copy->getPitch())){
-    log << MSG::ERROR 
-        << "Failed to read theta" << endreq;
-    return StatusCode::FAILURE;
+    rx = test1Copy->getRx();
+    ry = test1Copy->getRy();
+    rz = test1Copy->getRz();
+    std::string units = test1Copy->getUnits();
+  
+    log << MSG::INFO 
+        << "SAA boundary obj, serial #" <<  newSerial << endreq;
+    
+    log << MSG::INFO << "Vstart: " <<  (test1Copy->validSince()).hours()
+        << "  Vend: " << (test1Copy->validTill()).hours() << endreq;
+
+    log << MSG::INFO << "Rx: "   << rx  << endreq;
+    log << MSG::INFO << "Ry: " << ry   << endreq;
+    log << MSG::INFO << "Rz: "   << rz   << endreq;
+
+    const CalibData::ALIGN_ROT* r = test1Copy->getR();
+    log << MSG::INFO << "Or equivalently, array is " << (*r)[0] << ", "
+        << (*r)[1] << ", " << (*r)[2] << endreq;
+
+    log << MSG::INFO << "in units of "   << units   << endreq;
   }
-  if(!(yaw=test1Copy->getYaw())){
-    log << MSG::ERROR 
-        << "Failed to read psi" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  
-  log << MSG::INFO 
-      << "SAA boundary obj, serial #" <<  test1Copy->getSerNo() << endreq;
-
-  log << MSG::INFO << "Vstart: " <<  (test1Copy->validSince()).hours()
-      << "  Vend: " << (test1Copy->validTill()).hours() << endreq;
-
-  log << MSG::INFO << "Roll: "   << roll  << endreq;
-  log << MSG::INFO << "Pitch: " << pitch   << endreq;
-  log << MSG::INFO << "Yaw: "   << yaw   << endreq;
-
-
-
+  else log << MSG::INFO << "Alignment calib. serial number " << serial 
+           << " unchanged since previous event" << endreq;
   return StatusCode::SUCCESS;
 }
 

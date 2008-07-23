@@ -61,6 +61,11 @@ public:
     Calib_ACD_HighRange,
     Calib_ACD_CoherentNoise,
     Calib_ACD_Ribbon,
+
+    Calib_ACD_HighPed,
+    Calib_ACD_Carbon,
+    Calib_ACD_VetoFit,
+    Calib_ACD_CnoFit,
                
     Calib_CalibTest1,
     

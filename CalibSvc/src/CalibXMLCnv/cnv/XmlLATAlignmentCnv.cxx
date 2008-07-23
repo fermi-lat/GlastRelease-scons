@@ -39,10 +39,6 @@ protected:
   virtual StatusCode i_createObj(const DOMElement* element,
                                  DataObject*& refpObject);
 				 
-  double m_roll;
-  double m_pitch;
-  double m_yaw;				 
-   
 };
 
 static CnvFactory<XmlLATAlignmentCnv> s_factory;
@@ -68,22 +64,25 @@ StatusCode XmlLATAlignmentCnv::i_createObj(const DOMElement* element,
                                            DataObject*& refpObject)
 {
    using xmlBase::Dom;
-
+   double rx, ry, rz;
+   std::string units;
   // Fetch quantities we need: the edges of the polygon
    DOMElement* angle = Dom::findFirstChildByName(element, "angle");
    if (angle == 0) return StatusCode::FAILURE;
-
+   
    try {
-     m_roll   = Dom::getDoubleAttribute(angle, "roll");
-     m_pitch = Dom::getDoubleAttribute(angle, "pitch");
-     m_yaw   = Dom::getDoubleAttribute(angle, "yaw");
+     rx   = Dom::getDoubleAttribute(angle, "Rx");
+     ry = Dom::getDoubleAttribute(angle, "Ry");
+     rz   = Dom::getDoubleAttribute(angle, "Rz");
+     units = Dom::getAttribute(angle, "units");
    } catch (xmlBase::DomException ex) {
-	std::cerr << "From CalibSvc::XmlLATAlignmentCnv::i_crateObj " << std::endl;
+	std::cerr << "From CalibSvc::XmlLATAlignmentCnv::i_createObj " << std::endl;
 	std::cerr << ex.getMsg() << std::endl;
    }
     
    refpObject = new  
-     CalibData::CalibLATAlignment(m_roll, m_pitch, m_yaw, *m_vstart, *m_vend,m_serNo);
+     CalibData::CalibLATAlignment(rx, ry, rz, units, 
+                                  *m_vstart, *m_vend,m_serNo);
 
    return StatusCode::SUCCESS;
 }

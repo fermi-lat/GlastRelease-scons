@@ -51,7 +51,8 @@ DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
 DetectorPersistencySvc.CnvServices += {"CalibRootCnvSvc"};
 
-CalibDataSvc.CalibFlavorList = {"ideal"};
+CalibDataSvc.CalibFlavorList = {"ideal", "align"};
+UseLATAlignment.CalibFlavor = "align";
 // not used yet
 CalibDataSvc.CalibNameList = {"TKR_HotChan/chocolate",
 			   "Test_1/mocha"};
@@ -74,9 +75,10 @@ CalibMySQLCnvSvc.Host = "*";
 //  calib_user is a development database for use of, e.g., calibration
 //  algorithm developers
 // CalibMySQLCnvSvc.DbName = "calib_user";
+CalibMySQLCnvSvc.DbName = "calib_test";
 
 CalibDataSvc.CalibTimeSource = "clock";
-CalibDataSvc.startTime = "2007-2-25 00:20";
+CalibDataSvc.startTime = "2008-07-01 00:20";
 CalibDataSvc.delayTime = 900;
 
 // In order to circumvent normal calibration-fetching mechanism, which
