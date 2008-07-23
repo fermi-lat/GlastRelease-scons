@@ -44,7 +44,7 @@ use LdfEvent v*
 use GlastSvc v9r* -no_auto_imports
 use RootIo v* -no_auto_imports
 
-use Event v11r* -no_auto_imports
+use Event v* -no_auto_imports
 use rootTestData v* -no_auto_imports
 
 use gr_app v*
