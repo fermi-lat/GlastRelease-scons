@@ -115,7 +115,7 @@ private:
     UInt_t  m_prescaler;
     UInt_t  m_energy;
 
-    ClassDef(ObfGammaStatus,6) // Gamma Filter output
+    ClassDef(ObfGammaStatus,5) // Gamma Filter output
 };
 
 class ObfHipStatus : virtual public IObfStatus, public TObject
@@ -146,7 +146,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfHipStatus,2) // HIP output
+    ClassDef(ObfHipStatus,1) // HIP output
 };
 
 class ObfHFCStatus : virtual public IObfStatus, public TObject
@@ -177,7 +177,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfHFCStatus,4) // HFC output
+    ClassDef(ObfHFCStatus,3) // HFC output
 };
 
 class ObfMipStatus : virtual public IObfStatus, public TObject
@@ -208,7 +208,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfMipStatus,6) // MIP filter output
+    ClassDef(ObfMipStatus,5) // MIP filter output
 };
 
 class ObfDFCStatus : virtual public IObfStatus, public TObject
@@ -239,7 +239,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfDFCStatus,4) // DFC output
+    ClassDef(ObfDFCStatus,3) // DFC output
 };
 
 class ObfDgnStatus : virtual public IObfStatus, public TObject
@@ -270,7 +270,7 @@ private:
     UChar_t m_sb;
     UInt_t  m_prescaler;
 
-    ClassDef(ObfDgnStatus,2) // DGN output
+    ClassDef(ObfDgnStatus,1) // DGN output
 };
 
 
