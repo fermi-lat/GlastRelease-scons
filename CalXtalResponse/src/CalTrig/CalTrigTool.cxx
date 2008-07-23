@@ -148,9 +148,9 @@ StatusCode CalTrigTool::calcGlobalTrig() {
     SmartDataPtr<Event::CalDigiCol> calDigiCol(m_evtSvc, EventModel::Digi::CalDigiCol);
     if (calDigiCol == 0) {
       MsgStream msglog(msgSvc(), name());   
-      msglog << MSG::WARNING << "Unable to retrieve cal digis (or MC) for cal trigger processing" << endreq;
+      msglog << MSG::DEBUG << "Unable to retrieve cal digis (or MC) for cal trigger processing" << endreq;
 
-      return StatusCode::FAILURE;
+      return StatusCode::SUCCESS;
     }
 
     if (calcGlobalTrigDigi(calDigiCol).isFailure())
@@ -310,7 +310,8 @@ void CalTrigTool::setSingleBit(const CalUtil::DiodeIdx diodeIdx) {
 }
 
 
-StatusCode CalTrigTool::getCALTriggerVector(const idents::CalXtalId::DiodeType diode, Event::GltDigi::CalTriggerVec &vec) {
+StatusCode CalTrigTool::getCALTriggerVector(const idents::CalXtalId::DiodeType diode, 
+                                            Event::GltDigi::CalTriggerVec &vec) {
   /// update internal tables
   StatusCode sc(calcGlobalTrig());
   if (sc.isFailure())

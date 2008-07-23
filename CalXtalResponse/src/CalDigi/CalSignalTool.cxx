@@ -378,7 +378,8 @@ StatusCode CalSignalTool::calcPoissonicNoiseXtal(const CalUtil::XtalIdx xtalIdx)
     float eDiode = meVXtal * m_ePerMeV[diode.val()];
     
     // apply poissonic fluctuation to # of electrons.
-    const float noise = sqrt(eDiode)*CLHEP::RandGauss::shoot();
+    float noise = CLHEP::RandGauss::shoot();
+    noise *= sqrt(eDiode);
     
     // add noise
     eDiode += noise;

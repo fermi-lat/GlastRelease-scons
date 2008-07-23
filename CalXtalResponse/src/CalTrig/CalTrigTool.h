@@ -69,7 +69,8 @@ public:
   StatusCode finalize() {return StatusCode::SUCCESS;}
 
   /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
-  StatusCode getCALTriggerVector(idents::CalXtalId::DiodeType diode, Event::GltDigi::CalTriggerVec &vec);
+  StatusCode getCALTriggerVector(idents::CalXtalId::DiodeType diode, 
+                                 Event::GltDigi::CalTriggerVec &vec);
 
   /// return trigger response for given channel (specify xtal, face & diode)
   StatusCode getTriggerBit(CalUtil::DiodeIdx diodeIdx, bool &trigBit);
