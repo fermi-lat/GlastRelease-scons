@@ -18,9 +18,11 @@
 
 
 namespace CalibData {
+  typedef double ALIGN_ROT[3];
   class CalibLATAlignment : public CalibBase {
   public:
-    CalibLATAlignment(double phi, double theta, double psi,
+    CalibLATAlignment(double rx, double ry, double rz, 
+                      const std::string& units,
                       const ITime& since, const ITime& till,int serNo);
 
     CalibLATAlignment(const CalibLATAlignment& other);
@@ -36,16 +38,22 @@ namespace CalibData {
     // Re-implemented from CalibBase
     virtual StatusCode   update(CalibBase& other, MsgStream* log);
 
-    double getRoll() const {return m_roll;}; //Rotation around x-axis
-    double getPitch() const {return m_pitch;}; //Rotation around y-axis
-    double getYaw() const {return m_yaw;}; //Rotation around z-axis
+    double getRx() const {return m_r[0];}; //Rotation around x-axis
+    double getRy() const {return m_r[1];}; //Rotation around y-axis
+    double getRz() const {return m_r[2];}; //Rotation around z-axis
+
+    const ALIGN_ROT* getR() {
+      return &m_r;
+    }
+    std::string getUnits() {return m_units;}
+    
     
   protected:
 
   private:
-    double m_roll;
-    double m_pitch;
-    double m_yaw;
+    //    double m_r[3];
+    ALIGN_ROT m_r;
+    std::string m_units;
   };
 }
 
