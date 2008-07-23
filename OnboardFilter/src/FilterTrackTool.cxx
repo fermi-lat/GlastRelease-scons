@@ -266,6 +266,7 @@ void FilterTrackTool::eoeProcessing(EDS_fwIxb* ixb)
             unsigned int   xLyrMask = xPrj->layers;
             int            xLayer   = xPrj->max;            // Highest hit
             const TFC_hit& xHit     = xPrj->hits[xLayer];
+            int            nxHits   = xPrj->nhits;
                 
             HepPoint3D point = findStripPosition(xHit.tower, xLayer, 0, xHit.strip);
 
@@ -285,8 +286,9 @@ void FilterTrackTool::eoeProcessing(EDS_fwIxb* ixb)
             unsigned int   yLyrMask = yPrj->layers;
             int            yLayer   = yPrj->max;            // Highest hit
             const TFC_hit& yHit     = yPrj->hits[xLayer];
+            int            nyHits   = yPrj->nhits;
                 
-            point = findStripPosition(yHit.tower, yLayer, 0, yHit.strip);
+            point = findStripPosition(yHit.tower, yLayer, 1, yHit.strip);
 
             float yInt     = point.y();
             float zy       = point.z();
@@ -296,7 +298,7 @@ void FilterTrackTool::eoeProcessing(EDS_fwIxb* ixb)
 
 
             // Ok, initialize the TDS class
-            filterTrack->initialize(nx, ny, xInt, yInt, zx, trkSlpXZ, trkSlpYZ);
+            filterTrack->initialize(nxHits, nyHits, xInt, yInt, zx, trkSlpXZ, trkSlpYZ);
         }
     }
 
