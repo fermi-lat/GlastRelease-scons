@@ -9,7 +9,9 @@ namespace eventFile {
 
   void LSE_Info::dump( const char* pre, const char* post ) const
   {
-    printf( "%stimeTics = 0x%08X%s", pre, timeTics, post );
+    printf( "%scompressionLevel = 0x%08x%s", pre, compressionLevel, post );
+    printf( "%scompressedSize   = 0x%08x (%d)%s", pre, compressedSize, compressedSize, post );
+    printf( "%stimeTics         = 0x%08X%s", pre, timeTics, post );
     timeHack.dump( pre, post );
   }
 

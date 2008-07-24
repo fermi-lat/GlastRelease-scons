@@ -14,29 +14,58 @@
 #include <vector>
 
 namespace eventFile {
-
-  /** structures representing V0 of the handler-specific RSD's */
+  /** structures representing the handler-specific RSD's */
   struct DgnHandlerRsdV0 {
     unsigned int status;
+    unsigned int stage() const;
+
+    // status-word value accessor
+    unsigned int gem_classes() const;
   };
     
   struct GammaHandlerRsdV0 {
     unsigned int status;
-    unsigned int stage;
+    unsigned int stage() const { return _stage; };
     unsigned int energyValid;
     signed int energyInLeus;
+    void stage( unsigned int s) { _stage = s; };
+    private:
+    unsigned int _stage;
+  };
+
+  struct GammaHandlerRsdV1 {
+    unsigned int status;
+    unsigned int stage() const { return _stage; };
+    unsigned int energyValid;
+    signed int energyInLeus;
+    void stage( unsigned int s) { _stage = s; };
+    private:
+    unsigned int _stage;
+  };
+
+  struct GammaHandlerRsdV2 {
+    unsigned int status;
+    unsigned int stage() const { return _stage; };
+    unsigned int energyValid;
+    signed int energyInLeus;
+    void stage( unsigned int s) { _stage = s; };
+    private:
+    unsigned int _stage;
   };
 
   struct HipHandlerRsdV0 {
     unsigned int status;
+    unsigned int stage() const;
   };
 
   struct MipHandlerRsdV0 {
     unsigned int status;
+    unsigned int stage() const;
   };
 
   struct PassthruHandlerRsdV0 {
     unsigned int status;
+    unsigned int stage() const { return 0; };
   };
 
   /** union of all RSD-specific structures */
@@ -46,6 +75,8 @@ namespace eventFile {
     HipHandlerRsdV0      hip0;
     MipHandlerRsdV0      mip0;
     PassthruHandlerRsdV0 passthru0;
+    GammaHandlerRsdV1    gamma1;
+    GammaHandlerRsdV2    gamma2;
   };
 
   /** class representing the result info from each active handler */
@@ -72,7 +103,11 @@ namespace eventFile {
       MIP       = 3,
       HIP       = 4,
       DGN       = 5,
-      MaxHandlerIds,
+
+      // management values
+      HandlerIdMin = 0,
+      HandlerIdMax = 5,
+      HandlerIdCnt = HandlerIdMax - HandlerIdMin + 1,
     };
 
     /** enumerate the overall result states for an event */
@@ -83,6 +118,11 @@ namespace eventFile {
       VETOED     =  2,  /// Event vetoed by the filter
       LEAKED     =  3,  /// Event vetoed but leaked by an output prescaler
       IGNORED    =  4,  /// Event ignored due to input prescaler
+      
+      // management values
+      RsdStateMin = -1,
+      RsdStateMax =  4,
+      RsdStateCnt = RsdStateMax - RsdStateMin + 1,
     };
 
     /** enumerate valid values for the prescaler data member 
@@ -99,12 +139,17 @@ namespace eventFile {
       COND08, COND09, COND10, COND11, COND12, COND13, COND14, COND15,
       COND16, COND17, COND18, COND19, COND20, COND21, COND22, COND23,
       COND24, COND25, COND26, COND27, COND28, COND29, COND30, COND31,
+
+      // management values
+      LeakedPrescalerMin = -3,
+      LeakedPrescalerMax = 31,
+      LeakedPrescalerCnt = LeakedPrescalerMax - LeakedPrescalerMin + 1,
     };
 
     /** ctor and dump routine */
     LPA_Handler() : 
       type(Unknown), masterKey(0xFFFFFFFF), cfgKey(0xFFFFFFFF), cfgId(0xFFFFFFFF),
-      state(INVALID), prescaler(UNSUPPORTED), version(0), id(MaxHandlerIds),
+      state(INVALID), prescaler(UNSUPPORTED), version(0), id(HandlerIdCnt),
       has(false) {};
     void dump( const char* pre, const char* post ) const;
 
@@ -124,9 +169,12 @@ namespace eventFile {
     const HipHandlerRsdV0*          hipRsdV0()      const;
     const MipHandlerRsdV0*          mipRsdV0()      const;
     const PassthruHandlerRsdV0*     passthruRsdV0() const;
+    const GammaHandlerRsdV1*        gammaRsdV1()    const;
+    const GammaHandlerRsdV2*        gammaRsdV2()    const;
     const char*                     typeName() const;
     const char*                     handlerName() const;
-
+    const char*                     stateName() const;
+    const char*                     prescalerName() const;
   };
 };
 

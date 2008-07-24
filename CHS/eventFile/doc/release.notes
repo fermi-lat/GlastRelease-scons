@@ -4,6 +4,7 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v8r0   24-Jul-2008 RBL Update for B1-1-0 / DFI V5-1-0
  * v7r0   19-Jun-2008 RBL For ICS-770 inject MOOT key/alias into writeMerge-generated
  *                        decoded-event files.
  * v6r0p1 23-May-2008 RBL eliminate vestigial LDF dependency.

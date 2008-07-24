@@ -31,8 +31,7 @@ namespace eventFile {
   
   class LSEWriter {
   public:
-    LSEWriter( const std::string& filename, unsigned runid = 0, 
-	       unsigned mootKey = 0xFFFFFFF0, const char* mootAlias = "LSEWRITER_UNSET" );
+    LSEWriter( const std::string& filename, unsigned runid = 0 );
     ~LSEWriter();
 
     std::string name() const { return m_name; };

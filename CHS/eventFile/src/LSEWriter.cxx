@@ -31,11 +31,22 @@
 
 namespace eventFile {
 
-  LSEWriter::LSEWriter( const std::string& filename, unsigned runid, unsigned mootKey, const char* mootAlias )
+  LSEWriter::LSEWriter( const std::string& filename, unsigned runid )
     : m_name( filename ), m_hdr()
   {
     // stash the runid in the header
     m_hdr.m_runid = runid;
+
+    // pick up the MOOT key/alias from the environment
+    unsigned mootKey = 0xFFFFFFF0;
+    const char* envbuf = getenv( "LSEWRITER_MOOTKEY" );
+    if ( envbuf ) {
+      mootKey = strtoul( envbuf, NULL, 0 );
+    }
+    const char* mootAlias = getenv( "LSEWRITER_MOOTALIAS" );
+    if ( !mootAlias ) {
+      mootAlias = "LSEWRITER_UNSET";
+    }
 
     // set the MOOT key/alias values
     m_hdr.set_moot_key( mootKey );

@@ -35,6 +35,8 @@ namespace eventFile {
     void dump( const char* pre, const char* post ) const;
     unsigned timeTics;
     LSE_GemTime timeHack;
+    int compressionLevel;
+    int compressedSize;
   };
 
   struct LPA_Info : public LSE_Info {
