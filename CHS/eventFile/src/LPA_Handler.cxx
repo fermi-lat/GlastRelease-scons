@@ -145,7 +145,7 @@ namespace eventFile {
   const char* LPA_Handler::typeName() const
   {
     int idx = type + abs( HandlerTypeMin );
-    if ( idx >=0 and idx < HandlerTypeCnt ) {
+    if ( idx >=0 && idx < HandlerTypeCnt ) {
       return HandlerTypeNames[ idx ];
     }
     return "Invalid";
