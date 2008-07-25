@@ -1,5 +1,5 @@
 package eventFile
-version v8r0
+version v8r0p1
 
 author Bryson Lee <blee@slac.stanford.edu>
 
@@ -14,9 +14,6 @@ apply_pattern shared_library
 apply_pattern ld_library_path
 
 private
-
-use fsw * IExternal
-macro_remove use_linkopts "$(fsw_linkopts)"
 
 macro_append cppflags "-D_FILE_OFFSET_BITS=64 -DHAVE_FACILITIES " \
 	WIN32	" /D __i386 /D HAVE_FACILITIES /Zp4 "

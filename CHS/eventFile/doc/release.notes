@@ -4,6 +4,8 @@
  * @verbatim
  * Coordinator: Bryson Lee <blee@slac.stanford.edu>
  *
+ * v8r0p1 24-Jul-2008 RBL remove build-time dependency on IExternal/fsw for handler-RSD
+ *                        stage masks.
  * v8r0   24-Jul-2008 RBL Update for B1-1-0 / DFI V5-1-0
  * v7r0   19-Jun-2008 RBL For ICS-770 inject MOOT key/alias into writeMerge-generated
  *                        decoded-event files.

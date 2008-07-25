@@ -1,11 +1,5 @@
 #include <stdio.h>
 
-// pick up the FSW includes to get the status-bit enumerations
-#include "fsw/DFI/DfiLpa-DgnHandler.hh"
-#include "fsw/DFI/DfiLpa-GammaHandler.hh"
-#include "fsw/DFI/DfiLpa-HipHandler.hh"
-#include "fsw/DFI/DfiLpa-MipHandler.hh"
-
 #include "eventFile/LPA_Handler.h"
 
 namespace eventFile {
@@ -13,23 +7,23 @@ namespace eventFile {
   // RSD method implementation
   unsigned int DgnHandlerRsdV0::gem_classes() const
   {
-    return (status & DfiLpa::DgnHandlerRsdV0::Gem_Classes_m) 
-      >> DfiLpa::DgnHandlerRsdV0::Gem_Classes_v;
+    return (status & DgnHandlerRsdV0::Gem_Classes_m) 
+      >> DgnHandlerRsdV0::Gem_Classes_v;
   }
 
   unsigned int DgnHandlerRsdV0::stage() const
   {
-    return status & DfiLpa::DgnHandlerRsdV0::Stage_m;
+    return status & DgnHandlerRsdV0::Stage_m;
   }
 
   unsigned int HipHandlerRsdV0::stage() const
   {
-    return status & DfiLpa::HipHandlerRsdV0::Stage_m;
+    return status & HipHandlerRsdV0::Stage_m;
   }
 
   unsigned int MipHandlerRsdV0::stage() const
   {
-    return status & DfiLpa::MipHandlerRsdV0::Stage_m;
+    return status & MipHandlerRsdV0::Stage_m;
   }
 
   // main implementation

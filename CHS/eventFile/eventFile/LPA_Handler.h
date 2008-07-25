@@ -1,4 +1,4 @@
-/** 
+/** -*- Mode: C++; -*- 
  * @class eventFile::LPA_Handler
  *
  * @brief Class encapsulating event-handler information
@@ -21,6 +21,20 @@ namespace eventFile {
 
     // status-word value accessor
     unsigned int gem_classes() const;
+
+  private:
+    enum Status_s {
+      Gem_Classes_s = 16,
+    };
+    enum Status_v {
+      Stage_Gem_v   = 0,
+      Gem_Classes_v = 15,
+    };
+    enum Status_m {
+      Stage_Gem_m   = 1 << Stage_Gem_v,
+      Gem_Classes_m = ((1 << Gem_Classes_s) - 1) << Gem_Classes_v,
+      Stage_m       = Stage_Gem_m,
+    };
   };
     
   struct GammaHandlerRsdV0 {
@@ -29,7 +43,7 @@ namespace eventFile {
     unsigned int energyValid;
     signed int energyInLeus;
     void stage( unsigned int s) { _stage = s; };
-    private:
+  private:
     unsigned int _stage;
   };
 
@@ -39,7 +53,7 @@ namespace eventFile {
     unsigned int energyValid;
     signed int energyInLeus;
     void stage( unsigned int s) { _stage = s; };
-    private:
+  private:
     unsigned int _stage;
   };
 
@@ -49,18 +63,58 @@ namespace eventFile {
     unsigned int energyValid;
     signed int energyInLeus;
     void stage( unsigned int s) { _stage = s; };
-    private:
+  private:
     unsigned int _stage;
   };
 
   struct HipHandlerRsdV0 {
     unsigned int status;
     unsigned int stage() const;
+  private:
+    enum Status_v {
+      Stage_Gem_v      = 0,
+      Stage_Dir_v      = 1,
+      Stage_Cal_v      = 2,
+      Stage_Cal_Echk_v = 3,
+      Stage_Cal_Lchk_v = 4,
+    };
+    enum Status_m {
+      Stage_Gem_m      = 1 << Stage_Gem_v,
+      Stage_Dir_m      = 1 << Stage_Dir_v,
+      Stage_Cal_m      = 1 << Stage_Cal_v,
+      Stage_Cal_Echk_m = 1 << Stage_Cal_Echk_v,
+      Stage_Cal_Lchk_m = 1 << Stage_Cal_Lchk_v,
+      Stage_m          = Stage_Gem_m
+                       | Stage_Dir_m
+                       | Stage_Cal_m
+                       | Stage_Cal_Echk_m
+                       | Stage_Cal_Lchk_m,
+    };
   };
 
   struct MipHandlerRsdV0 {
     unsigned int status;
     unsigned int stage() const;
+  private:
+    enum Status_v {
+      Stage_Gem_v   = 0,
+      Stage_Acd_v   = 1,
+      Stage_Dir_v   = 2,
+      Stage_Cal_v   = 3,
+      Stage_XCal_v  = 4,
+    };
+    enum Status_m {
+      Stage_Gem_m   = 1 << Stage_Gem_v,
+      Stage_Acd_m   = 1 << Stage_Acd_v,
+      Stage_Dir_m   = 1 << Stage_Dir_v,
+      Stage_Cal_m   = 1 << Stage_Cal_v,
+      Stage_XCal_m  = 1 << Stage_XCal_v,
+      Stage_m       = Stage_Gem_m
+                    | Stage_Acd_m
+                    | Stage_Dir_m
+                    | Stage_Cal_m
+                    | Stage_XCal_m,
+    };
   };
 
   struct PassthruHandlerRsdV0 {
