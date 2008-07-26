@@ -309,9 +309,9 @@
     return my_keys;
   }
     
-  std::vector<unsigned> voteParameters(unsigned voteKey) {
+  std::vector<unsigned> voteParameters(unsigned voteKey, bool force=false) {
     std::vector<unsigned> my_keys;
-    bool ret = self->getVoteParameters(voteKey, my_keys);
+    bool ret = self->getVoteParameters(voteKey, my_keys, force);
     if (!ret) my_keys.clear();
     return my_keys;
   }
