@@ -307,9 +307,12 @@ StatusCode TriggerAlg::execute()
     if( metaTds==0) log<< MSG::DEBUG <<"No Meta event found."<<endreq;
 
     // GET the MOOT key
-    unsigned mKey = m_configSvc->getMootKey();
-    bool configChanged = mKey != m_mootKey;
-    m_mootKey = mKey;
+    bool configChanged;
+    if (m_pcounter){ //ConfigSvc
+      unsigned mKey = m_configSvc->getMootKey();
+      configChanged = mKey != m_mootKey;
+      m_mootKey = mKey;
+    }
     const TrgConfig* tcf(0);
 
     //    SmartDataPtr<LdfEvent::EventSummaryData> evsum(eventSvc(), "/Event/EventSummary"); 
@@ -599,6 +602,7 @@ StatusCode TriggerAlg::execute()
       meta->setScalers(gs);
       
     }
+
 
 
     sc = handleMetaEvent(*meta,gemengine);    
