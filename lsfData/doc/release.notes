@@ -4,6 +4,8 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v3r6    26-Jul-2008 HMK Patch to get lsfData to compile against
+        v8r0p2 of CHS/eventFile
 v3r5    03-Jul-2008 HMK Merge in code to grab ebf from evt for TDS
 v3r4p2  16-Jun-2008 EAC Added LpaHander::prescaleIndex() function to re-order prescalers to help users
 v3r4p1  13-Jun-2008 HMK Add use of IExternal/ldfExt

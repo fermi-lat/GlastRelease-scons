@@ -192,7 +192,7 @@ namespace lsfData {
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
             const eventFile::GammaHandlerRsdV0*  evtGamma( handlerIt->gammaRsdV0() );
             if (evtGamma)
-                gam.setStatus(evtGamma->status,evtGamma->stage,
+                gam.setStatus(evtGamma->status,evtGamma->stage(),
                 evtGamma->energyValid, evtGamma->energyInLeus);
             lmeta.addGammaHandler(gam);
         } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::HIP) {
