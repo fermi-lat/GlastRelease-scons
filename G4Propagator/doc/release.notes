@@ -3,6 +3,7 @@
     $Id$
  @verbatim
 
+ v2r4p2   25-Jul-08 TU   Increase increment of stuck particles and add counter to abort stuck tracks 
  v2r4p1   22-Jul-08 TU   Modify again... "major combat operations have ended" is, I hope, not the operative phrase
  v2r4p0   16-Jul-08 TU   Modify method to handle special case resulting in G4 "stuck track" syndrome
  v2r3p2    9-May-08 TU   Restoring protection on stepIdx in the getStepPosition method of G4PropagationTool
