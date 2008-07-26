@@ -285,7 +285,6 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
     G4double      arcLen    = stepInfo.back().GetArcLen();
     G4ThreeVector curDir    = stepInfo.back().GetDirection();
     G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
-    int           maxTries  = 3;
 
     // If arcLen < maxArcLen then we still need to do some tracking
     // Note that this assumes arcLen is the value set at intialization! 
@@ -319,7 +318,10 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
             G4AffineTransform  globalToLocal = navigator->GetGlobalToLocalTransform();
             double             trackLen      = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
 
-            //If we are right on the boundary then jump over and recalculate
+            // Counter to try to prevent filling up the log file on stuck particles
+            int maxTries = 1000;
+
+            // If we are right on the boundary then jump over and recalculate
             while(trackLen <= stepOverDist)
             {
                 // Ok, this drives me nuts but sometimes the "GetLocalExitNormal" returns the normal in the current 
@@ -364,13 +366,23 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 }
 
                 // Bump our point and, if necessary, the current step distance
-                stepOverDist += kCarTolerance * curDir.dot(globalExitNrml);
-                overPoint    -= kCarTolerance * globalExitNrml;
+                // Try incrementing by 1 um instead of just the tolerance to see if this fixes stuck problem
+                stepOverDist += 1000. * kCarTolerance * curDir.dot(globalExitNrml);
+                overPoint    -= 1000. * kCarTolerance * globalExitNrml;
 
                 // Re-step with new points
                 pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
                 globalToLocal = navigator->GetGlobalToLocalTransform();
                 trackLen      = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
+
+                // Check count of how many times we've done this
+                if (trackLen <= stepOverDist && maxTries-- < 0)
+                {
+                    std::stringstream errorStream;
+                    errorStream << "ParticleTransporter is stuck, aborting processing for this track. pos: " 
+                            << overPoint << " dir: " << curDir;
+                    throw std::domain_error(errorStream.str());
+                }
             }
 
             //If infinite trackLen then we have stepped outside of GLAST
