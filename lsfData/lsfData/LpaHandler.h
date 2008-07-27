@@ -17,6 +17,8 @@ namespace lsfData {
  class LpaHandler;
  class DgnRsdV0;
  class GammaRsdV0;
+ class GammaRsdV1;
+ class GammaRsdV2;
  class HipRsdV0;
  class MipRsdV0;
  class PassthruRsdV0;
@@ -29,7 +31,7 @@ namespace lsfData {
     /** ctor and dump routine */
       LpaHandler():m_type(enums::Lsf::Unknown), m_masterKey(0xFFFFFFFF), m_cfgKey(0xFFFFFFFF), 
           m_cfgId(0xFFFFFFFF), m_state(enums::Lsf::INVALID), m_prescaler(enums::Lsf::UNSUPPORTED), m_version(0), 
-          m_id(enums::Lsf::MaxHandlerIds), m_has(false), 
+          m_id(enums::Lsf::HandlerIdCnt), m_has(false), 
           m_prescaleFactor(LSF_INVALID_UINT) {};
 
       virtual ~LpaHandler() { };
@@ -149,12 +151,34 @@ namespace lsfData {
     void setStatus(unsigned int status) { m_status = status; }
     unsigned int status() const { return m_status; }
 
+    unsigned int stage() const {
+        return m_status & DgnRsdV0::Stage_m;
+    }
+
+    // status-word value accessor
+    unsigned int gem_classes() const {
+      return (m_status & DgnRsdV0::Gem_Classes_m) >> DgnRsdV0::Gem_Classes_v;
+  }
+
       DgnRsdV0(const DgnRsdV0 &other)  {
           m_status = other.m_status;
       } 
 
   private:
     unsigned int m_status;
+
+   enum Status_s {
+      Gem_Classes_s = 16,
+    };
+    enum Status_v {
+      Stage_Gem_v   = 0,
+      Gem_Classes_v = 15,
+    };
+    enum Status_m {
+      Stage_Gem_m   = 1 << Stage_Gem_v,
+      Gem_Classes_m = ((1 << Gem_Classes_s) - 1) << Gem_Classes_v,
+      Stage_m       = Stage_Gem_m,
+    };
 
 
   };
@@ -223,11 +247,10 @@ private:
 
 };
 
-
-  class GammaRsdV0  {
+  class GammaRsd  {
   public:
-      GammaRsdV0()  { };
-      ~GammaRsdV0() { };
+      GammaRsd()  { };
+      virtual ~GammaRsd() { };
 
     void setStatus(unsigned int status, unsigned int stage, unsigned int energyValid, int energyInLeus) {
             m_status = status;
@@ -236,23 +259,87 @@ private:
             m_energyInLeus = energyInLeus;
         }
  
-    unsigned int status() const { return m_status; }
-    unsigned int stage() const { return m_stage; }
-    unsigned int energyValid() const { return m_energyValid; }
-    int energyInLeus() const { return m_energyInLeus; }
- 
-      GammaRsdV0(const GammaRsdV0 &other)  {
+     GammaRsd(const GammaRsd &other)  {
           m_status = other.m_status;
           m_stage = other.m_stage;
           m_energyValid = other.m_energyValid;
           m_energyInLeus = other.m_energyInLeus;
       } 
 
-  private:
+    virtual unsigned int status() const = 0;
+    virtual unsigned int stage() const = 0;
+    virtual unsigned int energyValid() const = 0; 
+    virtual int energyInLeus() const = 0;
+
+  protected:
     unsigned int m_status;
     unsigned int m_stage;
     unsigned int m_energyValid;
     signed int m_energyInLeus;
+  };
+
+
+  class GammaRsdV0 : public GammaRsd  {
+  public:
+      GammaRsdV0():GammaRsd()  { };
+      virtual ~GammaRsdV0() { };
+
+    unsigned int status() const { return m_status; }
+    unsigned int stage() const { return m_stage; }
+    unsigned int energyValid() const { return m_energyValid; }
+    int energyInLeus() const { return m_energyInLeus; }
+
+      GammaRsdV0(const GammaRsdV0 &other):GammaRsd(other)  {
+          m_status = other.m_status;
+          m_stage = other.m_stage;
+          m_energyValid = other.m_energyValid;
+          m_energyInLeus = other.m_energyInLeus;
+      } 
+
+      GammaRsdV0(const GammaRsd &other) : GammaRsd(other) { }
+          
+
+  };
+
+  class GammaRsdV1 : public GammaRsd {
+  public:
+      GammaRsdV1():GammaRsd()  { };
+      virtual ~GammaRsdV1() { };
+
+    unsigned int status() const { return m_status; }
+    unsigned int stage() const { return m_stage; }
+    unsigned int energyValid() const { return m_energyValid; }
+    int energyInLeus() const { return m_energyInLeus; }
+ 
+      GammaRsdV1(const GammaRsdV1 &other):GammaRsd(other)  {
+          m_status = other.m_status;
+          m_stage = other.m_stage;
+          m_energyValid = other.m_energyValid;
+          m_energyInLeus = other.m_energyInLeus;
+      } 
+
+      GammaRsdV1(const GammaRsd &other) : GammaRsd(other) { }
+
+  };
+
+  class GammaRsdV2 : public GammaRsd {
+  public:
+      GammaRsdV2():GammaRsd()  { };
+      virtual ~GammaRsdV2() { };
+
+    unsigned int status() const { return m_status; }
+    unsigned int stage() const { return m_stage; }
+    unsigned int energyValid() const { return m_energyValid; }
+    int energyInLeus() const { return m_energyInLeus; }
+ 
+      GammaRsdV2(const GammaRsdV2 &other):GammaRsd(other)  {
+          m_status = other.m_status;
+          m_stage = other.m_stage;
+          m_energyValid = other.m_energyValid;
+          m_energyInLeus = other.m_energyInLeus;
+      } 
+
+      GammaRsdV2(const GammaRsd &other) : GammaRsd(other) { }
   };
 
 class GammaHandler {
@@ -261,7 +348,21 @@ public:
     GammaHandler(const GammaHandler &other)  {
           m_handler = other.m_handler;
           if (other.m_gamma)
-              m_gamma = new GammaRsdV0(*(other.m_gamma));
+            switch(m_handler.version()) {
+              case 0:
+                m_gamma = new GammaRsdV0(*(other.m_gamma));
+                break;
+              case 1:
+                m_gamma = new GammaRsdV1(*(other.m_gamma));
+                break;
+              case 2:
+                m_gamma = new GammaRsdV2(*(other.m_gamma));
+                break;
+              default:
+                std:: cout << "No valid version for GammaRsd found, set to NULL"
+                           << std::endl;
+                m_gamma = 0;
+            }
           else 
               m_gamma = 0;
       } 
@@ -290,13 +391,29 @@ public:
     }
     void setStatus(unsigned int status, unsigned int stage,
                    unsigned int energyValid, int energyInLeus) {
-            if (!m_gamma) m_gamma = new GammaRsdV0;
+            if (!m_gamma)
+              switch(m_handler.version()) {
+              case 0:
+                m_gamma = new GammaRsdV0;
+                break;
+              case 1:
+                m_gamma = new GammaRsdV1;
+                break;
+              case 2:
+                m_gamma = new GammaRsdV2;
+                break;
+              default:
+                m_gamma = 0;
+                std::cout << "Gamma version invalid, not setting GammaRsd"
+                          << std::endl;
+                return;
+              }
             m_gamma->setStatus(status, stage, energyValid, energyInLeus);
         }
 
     const LpaHandler& lpaHandler() const { return m_handler; }
 
-    const GammaRsdV0* rsd() const { return m_gamma; }
+    const GammaRsd* rsd() const { return m_gamma; }
     unsigned int masterKey() const { return m_handler.masterKey(); };
     unsigned int cfgKey() const { return m_handler.cfgKey(); };
     unsigned int cfgId() const { return m_handler.cfgId(); };
@@ -309,7 +426,7 @@ public:
 
 private:
   LpaHandler m_handler;
-  GammaRsdV0 *m_gamma;
+  GammaRsd *m_gamma;
 
 
 };
@@ -323,6 +440,9 @@ private:
     void setStatus(unsigned int status) { m_status = status;}
  
     unsigned int status() const { return m_status; }
+    unsigned int stage() const {
+        return m_status & HipRsdV0::Stage_m;
+    }
  
       HipRsdV0(const HipRsdV0 &other)  {
           m_status = other.m_status;
@@ -330,6 +450,27 @@ private:
 
   private:
     unsigned int m_status;
+
+    enum Status_v {
+      Stage_Gem_v      = 0,
+      Stage_Dir_v      = 1,
+      Stage_Cal_v      = 2,
+      Stage_Cal_Echk_v = 3,
+      Stage_Cal_Lchk_v = 4,
+    };
+    enum Status_m {
+      Stage_Gem_m      = 1 << Stage_Gem_v,
+      Stage_Dir_m      = 1 << Stage_Dir_v,
+      Stage_Cal_m      = 1 << Stage_Cal_v,
+      Stage_Cal_Echk_m = 1 << Stage_Cal_Echk_v,
+      Stage_Cal_Lchk_m = 1 << Stage_Cal_Lchk_v,
+      Stage_m          = Stage_Gem_m
+                       | Stage_Dir_m
+                       | Stage_Cal_m
+                       | Stage_Cal_Echk_m
+                       | Stage_Cal_Lchk_m,
+    };
+
   };
 
 class HipHandler {
@@ -400,6 +541,9 @@ private:
     void setStatus(unsigned int status) { m_status = status; }
 
     unsigned int status() const { return m_status; }
+    unsigned int stage() const {
+      return m_status & MipRsdV0::Stage_m;
+    }
 
       MipRsdV0(const MipRsdV0 &other)  {
           m_status = other.m_status;
@@ -407,6 +551,26 @@ private:
 
   private:
     unsigned int m_status;
+
+    enum Status_v {
+      Stage_Gem_v   = 0,
+      Stage_Acd_v   = 1,
+      Stage_Dir_v   = 2,
+      Stage_Cal_v   = 3,
+      Stage_XCal_v  = 4,
+    };
+    enum Status_m {
+      Stage_Gem_m   = 1 << Stage_Gem_v,
+      Stage_Acd_m   = 1 << Stage_Acd_v,
+      Stage_Dir_m   = 1 << Stage_Dir_v,
+      Stage_Cal_m   = 1 << Stage_Cal_v,
+      Stage_XCal_m  = 1 << Stage_XCal_v,
+      Stage_m       = Stage_Gem_m
+                    | Stage_Acd_m
+                    | Stage_Dir_m
+                    | Stage_Cal_m
+                    | Stage_XCal_m,
+    };
   };
 
 
@@ -466,8 +630,6 @@ private:
   LpaHandler m_handler;
   MipRsdV0 *m_mip;
 
-
-
 };
 
 
@@ -479,6 +641,7 @@ private:
     void setStatus(unsigned int status) { m_status = status; }
  
     unsigned int status() const { return m_status; }
+    unsigned int stage() const { return 0; };
 
       PassthruRsdV0(const PassthruRsdV0 &other)  {
           m_status = other.m_status;

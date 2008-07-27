@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v4r0    27-Jul-2008 HMK Move for new CHS/eventFile v8 for FSW 1-1-0
 v3r6    26-Jul-2008 HMK Patch to get lsfData to compile against
         v8r0p2 of CHS/eventFile
 v3r5    03-Jul-2008 HMK Merge in code to grab ebf from evt for TDS

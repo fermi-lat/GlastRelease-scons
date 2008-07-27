@@ -98,6 +98,10 @@ namespace lsfData {
 			  ctx.scalers.sequence, ctx.scalers.deadzone
 			  );
     lsfmeta.setScalers( sca );
+
+    // Set MOOT key/alias
+    lsfmeta.setMootKey(ctx.mootKey());
+    lsfmeta.setMootAlias(ctx.mootAlias());
   }
   
   void LSFReader::transferTime( const eventFile::LSE_Context& ctx, const eventFile::LSE_Info& info, MetaEvent& lsfmeta )
@@ -190,10 +194,20 @@ namespace lsfData {
                 (enums::Lsf::LeakedPrescaler)(handlerIt->prescaler),
                 handlerIt->version,
                 (enums::Lsf::HandlerId)(handlerIt->id),handlerIt->has);
-            const eventFile::GammaHandlerRsdV0*  evtGamma( handlerIt->gammaRsdV0() );
-            if (evtGamma)
+            if (handlerIt->gammaRsdV0()) {
+                const eventFile::GammaHandlerRsdV0*  evtGamma( handlerIt->gammaRsdV0() );
                 gam.setStatus(evtGamma->status,evtGamma->stage(),
-                evtGamma->energyValid, evtGamma->energyInLeus);
+                              evtGamma->energyValid, evtGamma->energyInLeus);
+            } else if (handlerIt->gammaRsdV1()) {
+                const eventFile::GammaHandlerRsdV1*  evtGamma( handlerIt->gammaRsdV1() );
+                gam.setStatus(evtGamma->status,evtGamma->stage(),
+                              evtGamma->energyValid, evtGamma->energyInLeus);
+            } else if (handlerIt->gammaRsdV2()) {
+                const eventFile::GammaHandlerRsdV2*  evtGamma( handlerIt->gammaRsdV2() );
+                gam.setStatus(evtGamma->status,evtGamma->stage(),
+                              evtGamma->energyValid, evtGamma->energyInLeus);
+            }
+
             lmeta.addGammaHandler(gam);
         } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::HIP) {
             lsfData::HipHandler hip;

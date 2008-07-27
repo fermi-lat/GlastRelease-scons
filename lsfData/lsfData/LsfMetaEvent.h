@@ -36,7 +36,8 @@ namespace lsfData {
        m_keys(keys.clone()),
        m_ktype(keys.type()),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(LSF_INVALID_UINT) {
+       m_mootKey(LSF_INVALID_UINT),
+       m_mootAlias("") {
    
     }
 
@@ -46,7 +47,8 @@ namespace lsfData {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(LSF_INVALID_UINT) {
+       m_mootKey(LSF_INVALID_UINT),
+       m_mootAlias("") {
     }
     
     MetaEvent( const MetaEvent& other ) :
@@ -71,6 +73,7 @@ namespace lsfData {
       if (other.passthruFilter()) m_pass = new lsfData::PassthruHandler(*(other.passthruFilter()));
       if (other.lpaHandler()) m_lpaHandler = new lsfData::LpaHandler(*(other.lpaHandler()));
       m_mootKey = other.m_mootKey;
+      m_mootAlias = other.m_mootAlias;
     }
     
     virtual ~MetaEvent(){
@@ -144,6 +147,7 @@ namespace lsfData {
           m_lpaHandler = 0;
       }
       m_mootKey = LSF_INVALID_UINT;
+      m_mootAlias = "";
     }
 
     /// Information about the run this event is from
@@ -179,6 +183,8 @@ namespace lsfData {
 
 
     inline unsigned int mootKey() const { return m_mootKey; }
+
+    inline const std::string& mootAlias() const { return m_mootAlias; }
 
     /// set everything at once
     inline void set(const RunInfo& run, const DatagramInfo& datagram, 
@@ -217,6 +223,10 @@ namespace lsfData {
 
     inline void setMootKey( unsigned int mootKey ) {
         m_mootKey = mootKey;
+    }
+  
+    inline void setMootAlias( const char* mootAlias) {
+        m_mootAlias = mootAlias;
     }
 
 void addGammaHandler(const GammaHandler& gamma) {
@@ -260,6 +270,7 @@ void addLpaHandler(const LpaHandler& lpa) {
     LpaHandler *m_lpaHandler;
 
     unsigned int m_mootKey;
+    std::string  m_mootAlias;
 
   };
 
