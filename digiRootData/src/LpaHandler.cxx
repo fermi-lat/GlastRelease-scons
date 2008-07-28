@@ -215,6 +215,12 @@ void LpaGammaFilter::Print(Option_t* option) const
     return;
 }
 
+ClassImp(LpaGammaFilterV0)
+
+ClassImp(LpaGammaFilterV1)
+
+ClassImp(LpaGammaFilterV2)
+
 // Implement the LpaHipFilter class here
 
 ClassImp(LpaHipFilter)
@@ -237,6 +243,9 @@ void LpaHipFilter::Print(Option_t* option) const
     std::cout << "HIP status:" << std::hex << m_status << std::dec << std::endl;
     return;
 }
+
+ClassImp(LpaHipFilterV0)
+
 // Implement the LpaMipFilter class here
 
 ClassImp(LpaMipFilter)
@@ -260,6 +269,7 @@ void LpaMipFilter::Print(Option_t* option) const
     return;
 }
 
+ClassImp(LpaMipFilterV0)
 
 // Implement the LpaDgnFilter class here
 
@@ -284,6 +294,7 @@ void LpaDgnFilter::Print(Option_t* option) const
     return;
 }
 
+ClassImp(LpaDgnFilterV0)
 
 ClassImp(LpaPassthruFilter)
 
@@ -303,3 +314,4 @@ void LpaPassthruFilter::Print(Option_t* option) const
     return;
 }
 
+ClassImp(LpaPassthruFilterV0)

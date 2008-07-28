@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r9     27-Jul-2008 HMK Update for DFI and FSW B1-1-0
 v11r8p1   22-Jul-2008 HMK No need to increment the class version of 
           ObfFilterStatus
 v11r8p0   22-Jul-2008 TU  Add "getState" to ObfFilterStatus to return enumerated state information

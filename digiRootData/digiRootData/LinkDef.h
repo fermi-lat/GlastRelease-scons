@@ -75,10 +75,17 @@
 #pragma link C++ class ILpaHandler+;
 #pragma link C++ class LpaHandler;
 #pragma link C++ class LpaGammaFilter+;
+#pragma link C++ class LpaGammaFilterV0+;
+#pragma link C++ class LpaGammaFilterV1+;
+#pragma link C++ class LpaGammaFilterV2+;
 #pragma link C++ class LpaHipFilter+;
+#pragma link C++ class LpaHipFilterV0+;
 #pragma link C++ class LpaMipFilter+;
+#pragma link C++ class LpaMipFilterV0+;
 #pragma link C++ class LpaDgnFilter+;
+#pragma link C++ class LpaDgnFilterV0+;
 #pragma link C++ class LpaPassthruFilter+;
+#pragma link C++ class LpaPassthruFilterV0+;
 
 
 // Beamtest Ancillary Data 2006

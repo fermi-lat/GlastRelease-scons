@@ -108,7 +108,7 @@ public:
     LpaGammaFilter(UInt_t status) : m_status(status) {}
     virtual ~LpaGammaFilter() {}
 
-    void set(UInt_t status, UInt_t stage, UInt_t energyValid, Int_t energyInLeus) {
+    virtual void set(UInt_t status, UInt_t stage, UInt_t energyValid, Int_t energyInLeus) {
         m_status = status;
         m_stage = stage;
         m_energyValid = energyValid;
@@ -116,22 +116,57 @@ public:
     }
 
     virtual UInt_t getStatusWord() const { return m_status; };
-    UInt_t getStage() const { return m_stage; };
-    UInt_t getEnergyValid() const { return m_energyValid; }
-    Int_t getEnergyInLeus() const { return m_energyInLeus; }
+    virtual UInt_t getStage() const { return m_stage; };
+    virtual UInt_t getEnergyValid() const { return m_energyValid; }
+    virtual Int_t getEnergyInLeus() const { return m_energyInLeus; }
 
-    UInt_t getAllVetoBits() const;
+    virtual UInt_t getAllVetoBits() const;
 
-    void Clear(Option_t *option ="");
-    void Print(Option_t *option="") const;
+    virtual void Clear(Option_t *option ="");
+    virtual void Print(Option_t *option="") const;
 
-private:
+protected:
     UInt_t m_status;        /// GAMMA filter status word
     UInt_t m_stage;         /// bit mask indicating which stages of the filter have been processed
     UInt_t m_energyValid;   /// Flag indicating the energy of the event was evaluated by the gamma filter
     Int_t  m_energyInLeus;  /// energy in units of LEUS (1/4 Mev)
 
+private:
+
     ClassDef(LpaGammaFilter,1) // Gamma Filter
+};
+ 
+class LpaGammaFilterV0 : public LpaGammaFilter {
+public:
+    LpaGammaFilterV0() : LpaGammaFilter() { };
+    LpaGammaFilterV0(UInt_t status) : LpaGammaFilter(status) { };
+    virtual ~LpaGammaFilterV0() { }
+
+private:
+
+    ClassDef(LpaGammaFilterV0,1) // Gamma Filter Version 0
+};
+
+class LpaGammaFilterV1 : public LpaGammaFilter {
+public:
+    LpaGammaFilterV1() : LpaGammaFilter() { };
+    LpaGammaFilterV1(UInt_t status) : LpaGammaFilter(status) { };
+    virtual ~LpaGammaFilterV1() { }
+
+private:
+
+    ClassDef(LpaGammaFilterV1,1) // Gamma Filter Version 1 
+};
+
+class LpaGammaFilterV2 : public LpaGammaFilter {
+public:
+    LpaGammaFilterV2() : LpaGammaFilter() { };
+    LpaGammaFilterV2(UInt_t status) : LpaGammaFilter(status) { };
+    virtual ~LpaGammaFilterV2() { }
+
+private:
+
+    ClassDef(LpaGammaFilterV2,1) // Gamma Filter Version 2
 };
 
 class LpaHipFilter : public ILpaHandler
@@ -141,18 +176,54 @@ public:
     LpaHipFilter(UInt_t status) : m_status(status) {}
     virtual ~LpaHipFilter() {}
 
-    void setStatusWord(UInt_t status) { m_status = status; }
+    virtual void setStatusWord(UInt_t status) { m_status = status; }
     virtual UInt_t  getStatusWord() const { return m_status; };
+    virtual UInt_t getStage() const { return 0; }
     
-    UInt_t getAllVetoBits() const;
+    virtual UInt_t getAllVetoBits() const;
 
-    void Clear(Option_t *option ="");
-    void Print(Option_t *option="") const;
+    virtual void Clear(Option_t *option ="");
+    virtual void Print(Option_t *option="") const;
 
-private:
+protected:
     UInt_t  m_status;
 
+private:
+
     ClassDef(LpaHipFilter,1) // Highly Ionizing Particle Filter output
+};
+
+class LpaHipFilterV0 : public LpaHipFilter {
+public:
+    LpaHipFilterV0() : LpaHipFilter() { };
+    LpaHipFilterV0(UInt_t status) : LpaHipFilter(status) { };
+    virtual ~LpaHipFilterV0() { }
+    virtual UInt_t getStage() const {
+       return m_status & LpaHipFilterV0::Stage_m;
+    }
+
+private:
+    enum Status_v {
+      Stage_Gem_v      = 0,
+      Stage_Dir_v      = 1,
+      Stage_Cal_v      = 2,
+      Stage_Cal_Echk_v = 3,
+      Stage_Cal_Lchk_v = 4,
+    };
+    enum Status_m {
+      Stage_Gem_m      = 1 << Stage_Gem_v,
+      Stage_Dir_m      = 1 << Stage_Dir_v,
+      Stage_Cal_m      = 1 << Stage_Cal_v,
+      Stage_Cal_Echk_m = 1 << Stage_Cal_Echk_v,
+      Stage_Cal_Lchk_m = 1 << Stage_Cal_Lchk_v,
+      Stage_m          = Stage_Gem_m
+                       | Stage_Dir_m
+                       | Stage_Cal_m
+                       | Stage_Cal_Echk_m
+                       | Stage_Cal_Lchk_m,
+    };
+
+    ClassDef(LpaHipFilterV0,1) // HIP Filter Version 0 
 };
 
 class LpaMipFilter : public ILpaHandler
@@ -162,20 +233,58 @@ public:
     LpaMipFilter(UInt_t status) : m_status(status) {}
     virtual ~LpaMipFilter() {}
 
-    void setStatusWord(UInt_t status) { m_status = status; }
+    virtual void setStatusWord(UInt_t status) { m_status = status; }
     virtual UInt_t  getStatusWord() const { return m_status; };
+    virtual UInt_t getStage() const { return 0; }
+    virtual UInt_t getAllVetoBits() const;
 
-    UInt_t getAllVetoBits() const;
 
+    virtual void Clear(Option_t *option ="");
+    virtual void Print(Option_t *option="") const;
 
-    void Clear(Option_t *option ="");
-    void Print(Option_t *option="") const;
+protected:
+    UInt_t  m_status;
 
 private:
-    UInt_t  m_status;
 
     ClassDef(LpaMipFilter,1) // MIP filter output
 };
+
+class LpaMipFilterV0 : public LpaMipFilter {
+public:
+    LpaMipFilterV0() : LpaMipFilter() { };
+    LpaMipFilterV0(UInt_t status) : LpaMipFilter(status) { };
+    virtual ~LpaMipFilterV0() { }
+
+    virtual UInt_t getStage() const { 
+       return m_status & LpaMipFilterV0::Stage_m; 
+    };
+
+  private:
+    enum Status_v {
+      Stage_Gem_v   = 0,
+      Stage_Acd_v   = 1,
+      Stage_Dir_v   = 2,
+      Stage_Cal_v   = 3,
+      Stage_XCal_v  = 4,
+    };
+    enum Status_m {
+      Stage_Gem_m   = 1 << Stage_Gem_v,
+      Stage_Acd_m   = 1 << Stage_Acd_v,
+      Stage_Dir_m   = 1 << Stage_Dir_v,
+      Stage_Cal_m   = 1 << Stage_Cal_v,
+      Stage_XCal_m  = 1 << Stage_XCal_v,
+      Stage_m       = Stage_Gem_m
+                    | Stage_Acd_m
+                    | Stage_Dir_m
+                    | Stage_Cal_m
+                    | Stage_XCal_m,
+    };
+
+
+    ClassDef(LpaMipFilterV0,1) // MIP Filter Version 0 
+};
+
 
 class LpaDgnFilter : public ILpaHandler
 {
@@ -184,21 +293,55 @@ public:
     LpaDgnFilter(UInt_t status) : m_status(status) {}
     virtual ~LpaDgnFilter() {}
  
-    void setStatusWord(UInt_t status) { m_status = status; }
+    virtual void setStatusWord(UInt_t status) { m_status = status; }
     // If msb is set below then event is to be vetoed
     virtual UInt_t  getStatusWord() const { return m_status; };
 
-    UInt_t getAllVetoBits() const;
+    virtual UInt_t getStage() const { return 0; }
 
-    void Clear(Option_t *option ="");
-    void Print(Option_t *option="") const;
+    virtual UInt_t getGemClasses() const { return 0; }
 
-private:
+    virtual UInt_t getAllVetoBits() const;
+
+    virtual void Clear(Option_t *option ="");
+    virtual void Print(Option_t *option="") const;
+
+protected:
     UInt_t  m_status;
 
+private:
     ClassDef(LpaDgnFilter,1) // Diagnostic Filter output
 };
 
+class LpaDgnFilterV0 : public LpaDgnFilter {
+public:
+    LpaDgnFilterV0() : LpaDgnFilter() { };
+    LpaDgnFilterV0(UInt_t status) : LpaDgnFilter(status) { };
+    virtual ~LpaDgnFilterV0() { }
+    virtual UInt_t getStage() const {
+        return m_status & LpaDgnFilterV0::Stage_m;
+    }
+
+    virtual UInt_t getGemClasses() const {
+        return (m_status & LpaDgnFilterV0::Gem_Classes_m) >> LpaDgnFilterV0::Gem_Classes_v;
+    }
+
+  private:
+   enum Status_s {
+      Gem_Classes_s = 16,
+    };
+    enum Status_v {
+      Stage_Gem_v   = 0,
+      Gem_Classes_v = 15,
+    };
+    enum Status_m {
+      Stage_Gem_m   = 1 << Stage_Gem_v,
+      Gem_Classes_m = ((1 << Gem_Classes_s) - 1) << Gem_Classes_v,
+      Stage_m       = Stage_Gem_m,
+    };
+
+    ClassDef(LpaDgnFilterV0,1) // Diagnostic Filter output
+};
 
   class LpaPassthruFilter : public ILpaHandler {
   public:
@@ -206,21 +349,36 @@ private:
 
     LpaPassthruFilter(UInt_t status) : ILpaHandler() { m_status = status; }
 
-    void setStatusWord(UInt_t status) { m_status = status; }
+    virtual ~LpaPassthruFilter() { }
+
+    virtual void setStatusWord(UInt_t status) { m_status = status; }
  
     virtual UInt_t getStatusWord() const { return m_status; }
 
-    void Clear(Option_t *option ="");
-    void Print(Option_t *option="") const;
+    virtual UInt_t getStage() const { return 0; }
 
-  private:
+    virtual void Clear(Option_t *option ="");
+    virtual void Print(Option_t *option="") const;
+
+  protected:
 
     UInt_t m_status;
 
+  private:
     ClassDef(LpaPassthruFilter,1) // Passthru output
 
   };
 
+ class LpaPassthruFilterV0 : public LpaPassthruFilter {
+ public:
+    LpaPassthruFilterV0() : LpaPassthruFilter() { };
+    LpaPassthruFilterV0(UInt_t status) : LpaPassthruFilter(status) { };
+    virtual ~LpaPassthruFilterV0() { }
+    virtual UInt_t getStage() const { return 0; }
+
+ private:
+    ClassDef(LpaPassthruFilterV0,1) // Diagnostic Filter output
+};
 
 /** @class LpaFilterStatus
 * @brief A container for the output of the OnboardFilter. Will contain a list of 

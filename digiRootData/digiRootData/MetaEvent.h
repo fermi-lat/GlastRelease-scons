@@ -38,7 +38,7 @@ public:
      m_type(enums::Lsf::NoRunType),m_lpaConfig(0),m_lciAcdConfig(0),
      m_lciCalConfig(0),m_lciTkrConfig(0),
      m_ktype(enums::Lsf::NoKeysType), m_lpaKeys(0), m_lciKeys(0),
-     m_mootKey(LSF_INVALID_UINT) {
+     m_mootKey(LSF_INVALID_UINT), m_mootAlias("") {
      Clear("");
   }
   
@@ -55,7 +55,7 @@ public:
      m_lpaConfig(0),m_lciAcdConfig(0),m_lciCalConfig(0),
      m_lciTkrConfig(0),
      m_ktype(enums::Lsf::NoKeysType),m_lpaKeys(0),m_lciKeys(0),
-     m_mootKey(LSF_INVALID_UINT) {
+     m_mootKey(LSF_INVALID_UINT), m_mootAlias("") {
   }
  
   /// Copy c'tor.  Just copy all values.  
@@ -71,7 +71,8 @@ public:
      m_lciCalConfig(0), m_lciTkrConfig(0),
      m_ktype(other.keyType()),
      m_lpaKeys(0),m_lciKeys(0),
-     m_mootKey(other.mootKey()) {
+     m_mootKey(other.mootKey()),
+     m_mootAlias(other.mootAlias()) {
 
      if (other.configuration())
         setConfiguration(*(other.configuration()));
@@ -143,6 +144,7 @@ public:
      m_lpaHandler = other.m_lpaHandler;
 
      m_mootKey = other.m_mootKey;
+     m_mootAlias = other.m_mootAlias;
 
      return *this;
   }
@@ -196,6 +198,8 @@ public:
   }
 
   UInt_t mootKey() const { return m_mootKey; }
+
+  const char* mootAlias() const { return m_mootAlias.Data(); }
 
   /// Returns the complete set of LPA Handlers for this event, include OBF filters
   inline const LpaHandler& lpaHandler() const { return m_lpaHandler; }
@@ -280,6 +284,8 @@ public:
 
   inline void setMootKey(UInt_t mootKey) { m_mootKey = mootKey; }
 
+  inline void setMootAlias(const char* alias) { m_mootAlias = alias; }
+
   /// Reset function
   void Clear(Option_t* /* option="" */) {
     m_run.Clear("");
@@ -308,6 +314,7 @@ public:
     m_lpaHandler.Clear("");
 
     m_mootKey = LSF_INVALID_UINT;
+    m_mootAlias = "";
   }
 
   /// ROOT print function
@@ -355,8 +362,9 @@ private:
   LpaHandler m_lpaHandler;
 
   UInt_t m_mootKey;
+  TString m_mootAlias;
 
-  ClassDef(MetaEvent,5) // information about the State of the LAT when a particular event was captured
+  ClassDef(MetaEvent,6) // information about the State of the LAT when a particular event was captured
 
 };
 
