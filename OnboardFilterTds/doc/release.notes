@@ -3,6 +3,7 @@
  Coordinator: Tracy Usher
  @verbatim
 
+ v0r9p0 28-Jul-2008  TU First tag for B1-1-0
  v0r8p1 13-Jul-2008  TU Add new methods to filter output to return enumerated state information
  v0r8p1 19-Jun-2008  TU Remember to drag sign bit when returning energy from ObfGamStatus
  v0r8p0 16-Jun-2008  TU Update ObfFilterStatus to include new methods and placeholder for prescaler info
