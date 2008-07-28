@@ -2,7 +2,10 @@
  Package AncillaryDataEvent\n
  Coordinator:N.Omodei
  @verbatim
+     * EOH *
 
+ v1r1     28-Jul-2008 jrb Finally tag use of ICalibPathSvc.  Also pick up
+                          Navid's fix for new-style path references
  v1r0p2   13-Apr-2007 HMK Add use of IExternal/ROOT, was probably picking it
           up from IExternal/GaudiInterface previously
  v1r0p1   11-Aug-2006 NO Change the default for rcReport extecntsion (txt->out)
