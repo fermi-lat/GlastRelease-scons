@@ -160,7 +160,12 @@ namespace enums {
       MIP       = 3,
       HIP       = 4,
       DGN       = 5,
-      MaxHandlerIds,
+      MaxHandlerIds, // deprecated
+      
+      // Management values
+      HandlerIdMin=0,
+      HandlerIdMax=5,
+      HandlerIdCnt=HandlerIdMax-HandlerIdMin+1,
     } HandlerId;
 
     /** enumerate the overall result states for an event */
@@ -171,6 +176,11 @@ namespace enums {
       VETOED     =  2,  /// Event vetoed by the filter
       LEAKED     =  3,  /// Event vetoed but leaked by an output prescaler
       IGNORED    =  4,  /// Event ignored due to input prescaler
+   
+      // Management values
+      RsdStateMin = -1,
+      RsdStateMax = 4,
+      RsdStateCnt = RsdStateMax-RsdStateMin+1,
     } RsdState;
 
     /** enumerate valid values for the prescaler data member 
@@ -187,6 +197,11 @@ namespace enums {
       COND08, COND09, COND10, COND11, COND12, COND13, COND14, COND15,
       COND16, COND17, COND18, COND19, COND20, COND21, COND22, COND23,
       COND24, COND25, COND26, COND27, COND28, COND29, COND30, COND31,
+
+      // management values
+     LeakedPrescalerMin = -3,
+     LeakedPrescalerMax = 31,
+     LeakedPrescalerCnt = LeakedPrescalerMax - LeakedPrescalerMin + 1, 
     } LeakedPrescaler;
 
 
