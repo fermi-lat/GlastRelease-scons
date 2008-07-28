@@ -12,6 +12,7 @@
 #define __IFilterLibs_H
 
 #include <string>
+#include <vector>
 #include <map>
 
 typedef std::pair<unsigned short int, unsigned short int> SchemaPair;
@@ -55,6 +56,9 @@ public:
 
     // Other way, given instance id string, return the typedef
     virtual const unsigned short int getInstanceId(const std::string& id) const = 0;
+
+    // Return string description of a given bit in status word
+    virtual const std::string& getStatWordDesc(int idx) const = 0;
 
     // Create a copy of the master configuration file that can be modified
     virtual void setMasterConfiguration(const EFC_DB_Schema* schema) = 0;
