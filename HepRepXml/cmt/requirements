@@ -1,5 +1,5 @@
 package HepRepXml
-version v0r8
+version v0r8p1
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 
 use GlastPolicy
