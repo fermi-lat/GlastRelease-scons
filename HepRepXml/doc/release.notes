@@ -7,4 +7,5 @@
  * v0r7     29-09-04 RG Updated for new full name Types output
  * v0r7p1   15-03-07 LSR Fixed test program (same as for HepRepSvc!)
  * v0r8     30-10-07 HMK use gr_app
+ * v0r8p1   28-07-08 jrb Tag Navid's change to xml path ref. in job options
 */
