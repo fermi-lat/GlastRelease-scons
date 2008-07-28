@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "facilities/Util.h"
+#include "facilities/commonUtilities.h"
 
 #include "AdfEvent/AdfEvent.h"
 #include "AncillaryDataUtil/AncillaryDataServer.h"
@@ -66,6 +67,7 @@ int MakeClusters(AncillaryData::Digi *digiEvent, AncillaryData::Recon *reconEven
 
 int main(int argc, char **argv)
 {  
+  facilities::commonUtilities::setupEnvironment();
   std::string arg_name("");
   std::string dataFilePath="$(ADFREADERDATAPATH)/CR_01_v3.bin";
   int current_arg = 1;
