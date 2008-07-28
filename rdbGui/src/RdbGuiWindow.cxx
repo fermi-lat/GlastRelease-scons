@@ -4,6 +4,7 @@
 #include "InsertDialog.h"
 
 #include "rdbModel/Db/ResultHandle.h"
+#include "facilities/commonUtilities.h"
 
 #include <vector>
 
@@ -244,9 +245,11 @@ long RdbGUIWindow::onOpenXMLFile(FXObject*, FXSelector, void*)
 
   // If the env variable RDBMODELROOT is set, the directory $RDBMODELROOT/xml is
   // used as the default opening directory for the file browser
-  if (facilities::commonUtilities::getXmlPath("rdbModel") != "")
-    opendialog->setDirectory(FXString(facilities::commonUtilities::getXmlPath("rdbModel")));
-
+  if (facilities::commonUtilities::getXmlPath("rdbModel") != "") {
+    std::string rdbModelXml = 
+      facilities::commonUtilities::getXmlPath("rdbModel");
+    opendialog->setDirectory(FXString(rdbModelXml.c_str()));
+  }
   
   if (opendialog->execute() != 0)
     {
