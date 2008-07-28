@@ -1,6 +1,6 @@
 # $Header$
 package rdbGui
-version v1r11
+version v1r12
 
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Joanne Bogart <jrb@slac.stanford.edu>
