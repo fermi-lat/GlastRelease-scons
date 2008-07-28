@@ -10,7 +10,7 @@ CVS $Id$
 \endverbatim
 *//*-------------------------------------------------------------------------*/
 
-#include "CMX/CMX_asBuiltPub.h"
+#include "CAB/CAB_asBuiltPub.h"
 
 #ifdef __cplusplus
 extern "C" {
