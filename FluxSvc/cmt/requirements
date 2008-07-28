@@ -1,5 +1,5 @@
 package FluxSvc
-version v6r54p1
+version v6r54p2
 
 # $Id$
 author  T. Burnett <tburnett@u.washington.edu>
@@ -24,14 +24,8 @@ use Trigger *
 use flux             * -no_auto_imports
 use celestialSources * -no_auto_imports
 
-#this is needed to find the path to the source xml files
-#set FLUX_XML $(flux_root)/xml
-
-# and this makes 
-set GENERICSOURCES_XML $(genericSources_root)/xml
 
 #  set  path to particle properties (used by Gaudi ParticlePropertySvc) 
-#  $(FlUXSVCROOT)/cdf/particleproperty.cdf
 set LHCBDBASE       "${EXTFILESSYS}/gaudi"
 set PARAMFILESROOT  "${EXTFILESSYS}/gaudi"
 
