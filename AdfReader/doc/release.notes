@@ -2,7 +2,10 @@
  Package AdfReader\n
  Coordinator:N. Omodei
  @verbatim
+     * EOH *
 
+ v0r3p1 28-Jul-2008 jrb Tag Navid's upgrades for new env var. handling; add
+                        EOH line to this file
  v0r2p1 31-Jul-2006 HMK Make sure missing AdfEvent does not result in run
                     termination
  v0r2   25-Jul-2006 HMK Add AdfDigiAlg to read AdfEvent from TDS and create
