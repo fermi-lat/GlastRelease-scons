@@ -330,6 +330,7 @@ namespace RootPersistence {
     }
 
     rootObj.setMootKey(tdsObj.mootKey());
+    rootObj.setMootAlias(tdsObj.mootAlias());
 
     if (tdsObj.passthruFilter()) {
         const lsfData::PassthruHandler* tdsPass = tdsObj.passthruFilter();
@@ -344,7 +345,21 @@ namespace RootPersistence {
     }
     if (tdsObj.gammaFilter()) {
        const lsfData::GammaHandler *tdsGam = tdsObj.gammaFilter();
-       LpaGammaFilter *gam = new LpaGammaFilter;
+       LpaGammaFilter *gam =0;
+       switch(tdsGam->version()) {
+         case 0:
+             gam = new LpaGammaFilterV0;
+             break;
+         case 1:
+             gam = new LpaGammaFilterV1;
+             break;
+         case 2:
+             gam = new LpaGammaFilterV2;
+             break;
+         default:
+             gam = 0;
+       }
+       //LpaGammaFilter *gam = new LpaGammaFilter;
        gam->initialize(tdsGam->masterKey(),tdsGam->cfgKey(),
             tdsGam->cfgId(),tdsGam->state(),tdsGam->prescaler(),
             tdsGam->version(),tdsGam->id(),tdsGam->has(),
@@ -464,6 +479,7 @@ namespace RootPersistence {
     }
 
     tdsObj.setMootKey(rootObj.mootKey());
+    tdsObj.setMootAlias(rootObj.mootAlias());
 
     if (rootObj.lpaHandler().getPassthruFilter()) {
         const LpaPassthruFilter *handlerIt = rootObj.lpaHandler().getPassthruFilter();

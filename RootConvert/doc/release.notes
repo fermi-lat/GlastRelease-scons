@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r40   27-Jul-2008 HMK Updates for new CHS/eventFile for FSW B1-1-0
  v1r39   18-Jul-2008 HMK Fill flight OBF with Gleam OBF when running MC
  v1r38   16-Jun-2008  TU Add modifications to handle changes to ObfFilterStatus
  v1r37   12-Jun-2008 HMK Add mootKey and prescaleFactor to MetaEvent and 
