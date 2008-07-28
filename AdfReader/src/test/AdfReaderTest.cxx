@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "facilities/Util.h"
+#include "facilities/commonUtilities.h"
 #include "AdfEvent/AdfEvent.h"
 #include "AncillaryDataEvent/Digi.h"
 #include "AncillaryDataUtil/AncillaryDataServer.h"
@@ -9,6 +10,7 @@
 //using namespace AncillaryData
 int main()
 {  
+  facilities::commonUtilities::setupEnvironment();
   std::string dataFilePath="$(ADFREADERDATAPATH)/CR_01_v3.bin";
   facilities::Util::expandEnvVar(&dataFilePath);
   AncillaryDataServer *m_dataServer = new AncillaryDataServer(dataFilePath);
