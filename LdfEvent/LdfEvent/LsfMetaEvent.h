@@ -2,6 +2,7 @@
 #define LSF_METAEVENT_H 1
 
 #include <iostream>
+#include <string>
 #include "GaudiKernel/StreamBuffer.h"
 
 #include "Event/TopLevel/Definitions.h"
@@ -32,7 +33,7 @@ namespace LsfEvent {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(LSF_INVALID_UINT) {
+       m_mootKey(LSF_INVALID_UINT),m_mootAlias("") {
 
     }
 
@@ -51,7 +52,7 @@ namespace LsfEvent {
        m_keys(keys.clone()),
        m_ktype(keys.type()),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(LSF_INVALID_UINT) {
+       m_mootKey(LSF_INVALID_UINT),m_mootAlias("") {
 
        //m_lpaHandlerCol.clear();
     }
@@ -69,7 +70,7 @@ namespace LsfEvent {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType), 
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(other.m_mootKey) {
+       m_mootKey(other.m_mootKey), m_mootAlias(other.m_mootAlias) {
 
        //m_lpaHandlerCol(other.m_lpaHandlerCol) {
       if ( other.configuration() != 0 ) {
@@ -105,7 +106,7 @@ namespace LsfEvent {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType), 
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(other.mootKey()) {
+       m_mootKey(other.mootKey()),m_mootAlias(other.mootAlias()) {
 
        if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
@@ -235,6 +236,7 @@ namespace LsfEvent {
 
 
     inline unsigned int mootKey() const { return m_mootKey; }
+    inline const char* mootAlias() const { return m_mootAlias.c_str(); }
 
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
@@ -306,6 +308,7 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
 }
 
     void setMootKey( unsigned int mootKey ) { m_mootKey = mootKey; }
+    void setMootAlias(const char* mootAlias) { m_mootAlias = mootAlias; }
 
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
@@ -373,6 +376,7 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
     lsfData::LpaHandler *m_lpaHandler;
 
     unsigned int m_mootKey;
+    std::string m_mootAlias;
 
   };
 
