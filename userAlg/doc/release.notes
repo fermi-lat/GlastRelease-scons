@@ -3,6 +3,7 @@
 
 @verbatim
 
+ * v6r6p2 28-jul-08 thb  removed dependence on CMT-generated env vars
  * v6r6p1 22-jan-08 thb  demo source inherits from Spectrum now.
  * v6r6   30-oct-07 hmk  use gr_app
  * v6r5   11-apr-07 thb  fix to JO implied by new basicOptions
