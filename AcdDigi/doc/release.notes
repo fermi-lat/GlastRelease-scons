@@ -2,6 +2,8 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r4    27-Jul-2008 HMK Modify use of Event to accept any version
+             pick up Navid's update to remove CMT env vars
  v3r3p1  16-Jun-2008 EAC Added AcdDigiAlg.lightYeildRatio jobOption, to degrade the light yield
  v3r3    08-May-2008 EAC Added stuff to simulate coherent noise, disable by default, for testing only
  v3r2p3  06-May-2008 EAC Added correct setting of gem flag and ninja bit
