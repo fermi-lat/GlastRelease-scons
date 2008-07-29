@@ -13,8 +13,8 @@
 
 // STD INCLUDES
 
-namespace calibGenCAL {
-  const float singlex16::CIDAC_TEST_VALS[] =
+namespace {
+  const float __CIDACTestVals[] =
       {
         0,    2,     4,      6,      8,      10,      12,      14,      16,      18,      20,     22,    24,    26,    28,
         30,
@@ -36,7 +36,9 @@ namespace calibGenCAL {
         3871, 3903,  3935,   3967,   3999,   4031,    4063,    4095
       };
 
-  const unsigned short singlex16::N_CIDAC_VALS = sizeof(CIDAC_TEST_VALS)/sizeof(*CIDAC_TEST_VALS);
+};
 
-
+namespace calibGenCAL {
+	const float *singlex16::CIDACTestVals() { return __CIDACTestVals;}
+    unsigned short singlex16::nCIDACVals() {return sizeof(__CIDACTestVals)/sizeof(*__CIDACTestVals);}
 }

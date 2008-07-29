@@ -25,16 +25,16 @@ namespace calibGenCAL {
     {}
 
     /// sequence if charge injection DAC test values
-    static const float CIDAC_TEST_VALS[];
+    static const float *CIDACTestVals();
 
     /// number of CIDAC values tested
-    static const unsigned short N_CIDAC_VALS;
+    static unsigned short nCIDACVals();
 
     /// n pulses (events) per CIDAC val
     unsigned short nPulsesPerDAC;
 
     /// n total pulsees per xtal (or column)
-    unsigned nPulsesPerXtal() const {return N_CIDAC_VALS * nPulsesPerDAC;}
+    unsigned nPulsesPerXtal() const {return nCIDACVals() * nPulsesPerDAC;}
 
     /// total number of pulses in broadcast mode singlex16
     unsigned totalPulsesBCAST() const {return nPulsesPerXtal();}

@@ -297,7 +297,7 @@ namespace calibGenCAL {
 
           algData.xtalk->setPoint(diodeIdx,
                                   srcIdx,
-                                  m_singlex16.CIDAC_TEST_VALS[eventData.testDAC],
+                                  m_singlex16.CIDACTestVals()[eventData.testDAC],
                                   av);
         }
       }

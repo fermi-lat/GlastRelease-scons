@@ -162,14 +162,15 @@ namespace calibGenCAL {
     ////////////////
     eventData.clear();
     for (eventData.eventNum = 0; eventData.eventNum < nTotalEvents; eventData.eventNum++) {
-      algData.nEventsAttempted++;
-      eventData.next();
-
-      if (eventData.eventNum % 10000 == 0 || algData.nEventsAttempted == nEventsMax) {
+      if (eventData.eventNum % 100000 == 0 || algData.nEventsAttempted == nEventsMax) {
         LogStrm::get() << "Event: " << eventData.eventNum
                        << endl;
+        algData.summarizeAlg(LogStrm::get());
         LogStrm::get().flush();
       }
+
+      algData.nEventsAttempted++;
+      eventData.next();
 
       if (algData.nEventsAttempted == nEventsMax)
         break;
@@ -227,7 +228,7 @@ namespace calibGenCAL {
 
     const TObjArray *const      gcrSelectedXtalCol = gcrSelect->getGcrSelectedXtalCol();
     if (!gcrSelectedXtalCol) {
-      LogStrm::get() << __FILE__ << ": No GcrSelectedXtalCol found: " << eventData.eventNum  << endl;
+      //LogStrm::get() << __FILE__ << ": No GcrSelectedXtalCol found: " << eventData.eventNum  << endl;
       return;
     }
 
@@ -349,11 +350,9 @@ namespace calibGenCAL {
           // raw adc
           const float adc = calDigi.getAdcSelectedRange(rng.val(),
                                                         (CalXtalId::XtalFace)face.val());
-          if (adc < 0) {
-            LogStrm::get() << "Couldn't get adc val for face=" << face.val()
-                           << " rng=" << rng.val() << endl;
-            break;
-          }
+          // skip if range data is not available
+          if (adc < 0) 
+            continue;
           
           //-- RETRIEVE ADC / PED / CIDAC --//
           const XtalRng xRng(face,rng);

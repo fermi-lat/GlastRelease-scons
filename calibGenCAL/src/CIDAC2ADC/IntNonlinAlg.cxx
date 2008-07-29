@@ -244,7 +244,7 @@ namespace calibGenCAL {
 
         TH1S & h = *(dynamic_cast<TH1S *>(algData.adcHists->At(rngIdx.val())));
 
-        const float cidac = m_singlex16.CIDAC_TEST_VALS[eventData.testDAC];
+        const float cidac = m_singlex16.CIDACTestVals()[eventData.testDAC];
 
         // reset histogram if we're starting a new DAC setting
         if (eventData.iSamp == 0) {
@@ -354,7 +354,7 @@ namespace calibGenCAL {
 
     /// check charge injection DAC value
     const UShort_t dac = lciCalConf->injected();
-    const UShort_t expectedDAC = static_cast<unsigned short>(m_singlex16.CIDAC_TEST_VALS[eventData.testDAC]);
+    const UShort_t expectedDAC = static_cast<unsigned short>(m_singlex16.CIDACTestVals()[eventData.testDAC]);
 
     if (dac != expectedDAC) {
       LogStrm::get() << __FILE__ << ": LCI DAC: " << dac 

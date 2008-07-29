@@ -67,7 +67,7 @@ public:
 
     try {
       cmdParser.parseCmdLine(argc, argv);
-    } catch (exception &e) {
+    } catch (exception &) {
       cmdParser.printUsage();
       exit(-1);
     }
