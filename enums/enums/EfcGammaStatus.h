@@ -133,6 +133,18 @@ typedef enum _GFC_STAGE_M
 
 }
 GFC_STAGE_M;
+
+// This for FilterStatus.h - which we really really need to get rid of...
+
+typedef enum _EFC_GAMMA_STAGE_M
+{
+   EFC_GAMMA_STAGE_M_ENERGY         = 0x00ffffff
+   /*!< The energy portion of the stage and energy result word            */
+
+
+}
+EFC_GAMMA_STAGE_M;
+
 /* ---------------------------------------------------------------------- */
 
 
