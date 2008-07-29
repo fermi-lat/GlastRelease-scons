@@ -4,6 +4,10 @@
 namespace enums {
 
 
+// The following definitions are found in the FSW OnboardFilter header files
+// in EFC/GFC_status.h. They are repeated here to avoid unnecessary dependencies
+// on the FSW packages. 
+/* ---------------------------------------------------------------------- *//*!
 
   \enum    _GFC_STAGE_S
   \brief    Gamma filter analysis stage, bit definitions, size
