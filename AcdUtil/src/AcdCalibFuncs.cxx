@@ -88,7 +88,7 @@ namespace AcdCalib {
       return StatusCode::SUCCESS;
     }    
     
-    unsigned time = gemDT;
+    unsigned time = gemDT - gemOffset;
     double val = amplitude;
     double expFact = (-1. * (double)time / decay);
     double sinFact = ((double)time * freq) + phase;
