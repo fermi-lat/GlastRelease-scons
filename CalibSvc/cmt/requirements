@@ -4,7 +4,7 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r39p1
+version v0r39p2
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
