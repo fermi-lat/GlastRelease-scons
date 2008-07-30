@@ -3,6 +3,7 @@ Package rootTestData
 Coordinator:H.Kelly
 @verbatim
 
+v4r1      29-Jul-08  HMK tagging removal of CMT env vars
 v4r0      18-Jun-08  HMK Remake all ROOT files for new FSW filter and rework
           of OBF filter bits
 v3r8p2    16-Jan-08  LSR remake files; merit.root was bad
