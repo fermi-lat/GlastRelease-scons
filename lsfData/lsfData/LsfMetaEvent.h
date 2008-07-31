@@ -37,7 +37,8 @@ namespace lsfData {
        m_ktype(keys.type()),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
        m_mootKey(LSF_INVALID_UINT),
-       m_mootAlias("") {
+       m_mootAlias(""), m_compressionLevel(LSF_UNDEFINED),
+       m_compressedSize(LSF_UNDEFINED) {
    
     }
 
@@ -48,7 +49,8 @@ namespace lsfData {
        m_ktype(enums::Lsf::NoKeysType),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
        m_mootKey(LSF_INVALID_UINT),
-       m_mootAlias("") {
+       m_mootAlias(""),m_compressionLevel(LSF_UNDEFINED),
+       m_compressedSize(LSF_UNDEFINED) {
     }
     
     MetaEvent( const MetaEvent& other ) :
@@ -57,7 +59,9 @@ namespace lsfData {
        m_scalers(other.scalers()),
        m_time(other.time()),
        m_config(0),
-       m_type(enums::Lsf::NoRunType) {
+       m_type(enums::Lsf::NoRunType),
+       m_compressionLevel(other.compressionLevel()),
+       m_compressedSize(other.compressedSize()) {
       if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
 	m_type = other.configuration()->type();
@@ -148,6 +152,9 @@ namespace lsfData {
       }
       m_mootKey = LSF_INVALID_UINT;
       m_mootAlias = "";
+
+      m_compressionLevel = LSF_UNDEFINED;
+      m_compressedSize = LSF_UNDEFINED;
     }
 
     /// Information about the run this event is from
@@ -185,6 +192,9 @@ namespace lsfData {
     inline unsigned int mootKey() const { return m_mootKey; }
 
     inline const std::string& mootAlias() const { return m_mootAlias; }
+
+    inline int compressionLevel() const { return m_compressionLevel; }
+    inline int compressedSize() const { return m_compressedSize; }
 
     /// set everything at once
     inline void set(const RunInfo& run, const DatagramInfo& datagram, 
@@ -229,6 +239,9 @@ namespace lsfData {
         m_mootAlias = mootAlias;
     }
 
+    inline void setCompressionLevel(int level) { m_compressionLevel=level;}
+    inline void setCompressedSize(int size) { m_compressedSize = size; }
+
 void addGammaHandler(const GammaHandler& gamma) {
     m_gamma = new lsfData::GammaHandler(gamma);
 }
@@ -271,6 +284,9 @@ void addLpaHandler(const LpaHandler& lpa) {
 
     unsigned int m_mootKey;
     std::string  m_mootAlias;
+
+    int m_compressionLevel;
+    int m_compressedSize;
 
   };
 

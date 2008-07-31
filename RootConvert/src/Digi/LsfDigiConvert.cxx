@@ -332,6 +332,9 @@ namespace RootPersistence {
     rootObj.setMootKey(tdsObj.mootKey());
     rootObj.setMootAlias(tdsObj.mootAlias());
 
+    rootObj.setCompressionLevel(tdsObj.compressionLevel());
+    rootObj.setCompressedSize(tdsObj.compressedSize());
+
     if (tdsObj.passthruFilter()) {
         const lsfData::PassthruHandler* tdsPass = tdsObj.passthruFilter();
         LpaPassthruFilter *pass = new LpaPassthruFilter;
@@ -480,6 +483,9 @@ namespace RootPersistence {
 
     tdsObj.setMootKey(rootObj.mootKey());
     tdsObj.setMootAlias(rootObj.mootAlias());
+
+    tdsObj.setCompressionLevel(rootObj.compressionLevel());
+    tdsObj.setCompressedSize(rootObj.compressedSize());
 
     if (rootObj.lpaHandler().getPassthruFilter()) {
         const LpaPassthruFilter *handlerIt = rootObj.lpaHandler().getPassthruFilter();

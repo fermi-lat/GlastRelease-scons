@@ -38,7 +38,8 @@ public:
      m_type(enums::Lsf::NoRunType),m_lpaConfig(0),m_lciAcdConfig(0),
      m_lciCalConfig(0),m_lciTkrConfig(0),
      m_ktype(enums::Lsf::NoKeysType), m_lpaKeys(0), m_lciKeys(0),
-     m_mootKey(LSF_INVALID_UINT), m_mootAlias("") {
+     m_mootKey(LSF_INVALID_UINT), m_mootAlias(""),
+     m_compressionLevel(LSF_UNDEFINED),m_compressedSize(LSF_UNDEFINED) {
      Clear("");
   }
   
@@ -55,7 +56,9 @@ public:
      m_lpaConfig(0),m_lciAcdConfig(0),m_lciCalConfig(0),
      m_lciTkrConfig(0),
      m_ktype(enums::Lsf::NoKeysType),m_lpaKeys(0),m_lciKeys(0),
-     m_mootKey(LSF_INVALID_UINT), m_mootAlias("") {
+     m_mootKey(LSF_INVALID_UINT), m_mootAlias(""),
+     m_compressionLevel(LSF_UNDEFINED),m_compressedSize(LSF_UNDEFINED)
+ {
   }
  
   /// Copy c'tor.  Just copy all values.  
@@ -72,7 +75,9 @@ public:
      m_ktype(other.keyType()),
      m_lpaKeys(0),m_lciKeys(0),
      m_mootKey(other.mootKey()),
-     m_mootAlias(other.mootAlias()) {
+     m_mootAlias(other.mootAlias()),
+     m_compressionLevel(other.m_compressionLevel),
+     m_compressedSize(other.m_compressedSize) {
 
      if (other.configuration())
         setConfiguration(*(other.configuration()));
@@ -146,6 +151,9 @@ public:
      m_mootKey = other.m_mootKey;
      m_mootAlias = other.m_mootAlias;
 
+     m_compressionLevel = other.m_compressionLevel;
+     m_compressedSize = other.m_compressedSize;
+
      return *this;
   }
   
@@ -200,6 +208,9 @@ public:
   UInt_t mootKey() const { return m_mootKey; }
 
   const char* mootAlias() const { return m_mootAlias.Data(); }
+
+  Int_t compressionLevel() const { return m_compressionLevel; }
+  Int_t compressedSize() const { return m_compressedSize; }
 
   /// Returns the complete set of LPA Handlers for this event, include OBF filters
   inline const LpaHandler& lpaHandler() const { return m_lpaHandler; }
@@ -286,6 +297,9 @@ public:
 
   inline void setMootAlias(const char* alias) { m_mootAlias = alias; }
 
+  inline void setCompressionLevel(Int_t level) { m_compressionLevel = level; }
+  inline void setCompressedSize(Int_t size) { m_compressedSize = size; }
+
   /// Reset function
   void Clear(Option_t* /* option="" */) {
     m_run.Clear("");
@@ -315,6 +329,9 @@ public:
 
     m_mootKey = LSF_INVALID_UINT;
     m_mootAlias = "";
+
+    m_compressionLevel = LSF_UNDEFINED;
+    m_compressedSize = LSF_UNDEFINED;
   }
 
   /// ROOT print function
@@ -364,7 +381,10 @@ private:
   UInt_t m_mootKey;
   TString m_mootAlias;
 
-  ClassDef(MetaEvent,6) // information about the State of the LAT when a particular event was captured
+  Int_t m_compressionLevel;
+  Int_t m_compressedSize;
+
+  ClassDef(MetaEvent,7) // information about the State of the LAT when a particular event was captured
 
 };
 

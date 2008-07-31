@@ -172,6 +172,9 @@ namespace lsfData {
     // install the configuration object into the MetaEvent
     lmeta.setConfiguration( lcfg );
 
+    lmeta.setCompressionLevel( info.compressionLevel );
+    lmeta.setCompressedSize( info.compressedSize );
+
     std::vector<eventFile::LPA_Handler>::const_iterator handlerIt;
     for (handlerIt = info.handlers.begin(); handlerIt != info.handlers.end(); handlerIt++) {
     const eventFile::PassthruHandlerRsdV0* evtPass( handlerIt->passthruRsdV0() );
@@ -291,6 +294,9 @@ namespace lsfData {
     // install the configuration object into the MetaEvent
     lmeta.setConfiguration( lcfg );
 
+    lmeta.setCompressionLevel(info.compressionLevel);
+    lmeta.setCompressedSize(info.compressedSize);
+
   }
 
   void LSFReader::transferInfo( const eventFile::LSE_Context& ctx, const eventFile::LCI_CAL_Info& info, MetaEvent& lmeta )
@@ -321,6 +327,10 @@ namespace lsfData {
 
     // install the configuration object into the MetaEvent
     lmeta.setConfiguration( lcfg );
+
+    lmeta.setCompressionLevel(info.compressionLevel);
+    lmeta.setCompressedSize(info.compressedSize);
+
   }
 
   void LSFReader::transferInfo( const eventFile::LSE_Context& ctx, const eventFile::LCI_TKR_Info& info, MetaEvent& lmeta )
@@ -342,6 +352,8 @@ namespace lsfData {
 
     // install the configuration object into the MetaEvent
     lmeta.setConfiguration( lcfg );
+    lmeta.setCompressionLevel(info.compressionLevel);
+    lmeta.setCompressedSize(info.compressedSize);
   }
 
 }

@@ -18,7 +18,7 @@
 * $Header$
 */
 
-static const CLID& CLID_MetaEvent = InterfaceID("MetaEvent", 1, 0);
+static const CLID& CLID_MetaEvent = InterfaceID("MetaEvent", 2, 0);
 
 namespace LsfEvent {
   
@@ -33,7 +33,8 @@ namespace LsfEvent {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(LSF_INVALID_UINT),m_mootAlias("") {
+       m_mootKey(LSF_INVALID_UINT),m_mootAlias(""),
+       m_compressionLevel(LSF_UNDEFINED),m_compressedSize(LSF_UNDEFINED) {
 
     }
 
@@ -52,7 +53,8 @@ namespace LsfEvent {
        m_keys(keys.clone()),
        m_ktype(keys.type()),
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(LSF_INVALID_UINT),m_mootAlias("") {
+       m_mootKey(LSF_INVALID_UINT),m_mootAlias(""),
+       m_compressionLevel(LSF_UNDEFINED),m_compressedSize(LSF_UNDEFINED) {
 
        //m_lpaHandlerCol.clear();
     }
@@ -70,7 +72,9 @@ namespace LsfEvent {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType), 
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(other.m_mootKey), m_mootAlias(other.m_mootAlias) {
+       m_mootKey(other.m_mootKey), m_mootAlias(other.m_mootAlias),
+       m_compressionLevel(other.m_compressionLevel),
+       m_compressedSize(other.m_compressedSize) {
 
        //m_lpaHandlerCol(other.m_lpaHandlerCol) {
       if ( other.configuration() != 0 ) {
@@ -106,7 +110,9 @@ namespace LsfEvent {
        m_keys(0),
        m_ktype(enums::Lsf::NoKeysType), 
        m_gamma(0), m_pass(0), m_mip(0), m_hip(0), m_dgn(0), m_lpaHandler(0),
-       m_mootKey(other.mootKey()),m_mootAlias(other.mootAlias()) {
+       m_mootKey(other.mootKey()),m_mootAlias(other.mootAlias()),
+       m_compressionLevel(other.compressionLevel()),
+       m_compressedSize(other.compressedSize()) {
 
        if ( other.configuration() != 0 ) {
 	m_config = other.configuration()->clone();
@@ -238,6 +244,9 @@ namespace LsfEvent {
     inline unsigned int mootKey() const { return m_mootKey; }
     inline const char* mootAlias() const { return m_mootAlias.c_str(); }
 
+    inline int compressionLevel() const { return m_compressionLevel; }
+    inline int compressedSize() const { return m_compressedSize; }
+
     /// set everything at once
     inline void set(const lsfData::RunInfo& run, 
                     const lsfData::DatagramInfo& datagram, 
@@ -310,6 +319,9 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
     void setMootKey( unsigned int mootKey ) { m_mootKey = mootKey; }
     void setMootAlias(const char* mootAlias) { m_mootAlias = mootAlias; }
 
+    void setCompressionLevel(int level) { m_compressionLevel = level; }
+    void setCompressedSize(int size) { m_compressedSize = size; }
+
     /// Output operator (ASCII)
     friend std::ostream& operator<< ( std::ostream& s, const MetaEvent& obj )    {
       return obj.fillStream(s);
@@ -377,6 +389,9 @@ void addLpaHandler(const lsfData::LpaHandler& lpa) {
 
     unsigned int m_mootKey;
     std::string m_mootAlias;
+
+    int m_compressionLevel;
+    int m_compressedSize;
 
   };
 

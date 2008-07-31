@@ -1,5 +1,5 @@
 package LdfEvent
-version v4r6
+version v4r7
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
 use GaudiInterface * IExternal
