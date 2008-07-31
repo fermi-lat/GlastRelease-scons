@@ -206,7 +206,10 @@ StatusCode FT1Alg::execute()
 
             static double arcsec2deg(M_PI/648000);
             const CalibData::ALIGN_ROT* r = alignCalib->getR();
-            double x(*r[0]), y(*r[1]), z(*r[2]);
+            // explanation from Joanne for the following: 
+            //"The type of (*r)  is a  3-element array of double, so applying a subscript
+            // should give you one of the doubles in that array. r itself is a pointer to something 3 doubles long "
+            double x((*r)[0]), y((*r)[1]), z((*r)[2]);
             gps->setAlignmentRotation( 
                 CLHEP::HepRotationX(x * arcsec2deg)
                 *CLHEP::HepRotationY(y* arcsec2deg)
