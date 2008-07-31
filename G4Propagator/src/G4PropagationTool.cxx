@@ -138,6 +138,7 @@ StatusCode G4PropagationTool::initialize()
   MsgStream log(msgSvc(), name());
 
   log << MSG::INFO << "G4 Propagation Tool initializing now" << endreq;
+  log << MSG::INFO << "G4Propagator tag v2r4p4 is initializing" << endreq;
 
   IService* iService = 0;
   if( serviceLocator()->getService( "G4GeometrySvc", iService, true).isFailure() ) 

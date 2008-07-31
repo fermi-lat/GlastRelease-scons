@@ -140,16 +140,16 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
 //length
 bool ParticleTransporter::transport(const double step)
 {
-  // Purpose and Method: Uses Geant4 to do the transport of the track from
-  //                     initial to final points. 
-  // Inputs:  step - arclength to step through. If step is negative, then will
-  //          attempt to step until reaching the next sensitive via StepToNextPlane.
-  // Outputs:  bool, returns true if target stop point reached, false otherwise
-  // Dependencies: Requires initialization via SetInitStep
-  // Restrictions and Caveats: None
+    // Purpose and Method: Uses Geant4 to do the transport of the track from
+    //                     initial to final points. 
+    // Inputs:  step - arclength to step through. If step is negative, then will
+    //          attempt to step until reaching the next sensitive via StepToNextPlane.
+    // Outputs:  bool, returns true if target stop point reached, false otherwise
+    // Dependencies: Requires initialization via SetInitStep
+    // Restrictions and Caveats: None
 
-  if (step >= 0.) return StepAnArcLength(step);
-  else            return StepToNextPlane();
+    if (step >= 0.) return StepAnArcLength(step);
+    else            return StepToNextPlane();
 }
 
 Point  ParticleTransporter::getStartPoint() const
@@ -168,101 +168,116 @@ Vector ParticleTransporter::getStartDir() const
 //length
 bool ParticleTransporter::StepToNextPlane()
 {
-  // Purpose and Method: Uses Geant4 to do the transport of the particle from
-  //                     initial to final points
-  // ***** This method is no longer supported and remains for historical purposes *****
-  // Inputs:  None 
-  // Outputs:  bool, returns true if target stop point reached, false otherwise
-  // Dependencies: Requires initialization via SetInitStep
-  // Restrictions and Caveats: None
+    // Purpose and Method: Uses Geant4 to do the transport of the particle from
+    //                     initial to final points
+    // ***** This method is no longer supported and remains for historical purposes *****
+    // Inputs:  None 
+    // Outputs:  bool, returns true if target stop point reached, false otherwise
+    // Dependencies: Requires initialization via SetInitStep
+    // Restrictions and Caveats: None
 
-  G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
-  bool          success   = false;
-  G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
-  G4ThreeVector curDir    = stepInfo.back().GetDirection();
-  G4double      arcLen    = stepInfo.back().GetArcLen();
+    G4Navigator*  navigator = m_TransportationManager->GetNavigatorForTracking();
+    bool          success   = false;
+    G4ThreeVector curPoint  = stepInfo.back().GetEndPoint();
+    G4ThreeVector curDir    = stepInfo.back().GetDirection();
+    G4double      arcLen    = stepInfo.back().GetArcLen();
 
-  //Set the minimum step
-  double fudge       = 0.00001; // 0.01 um
-  double minimumStep = minStepSize(curPoint, curDir) + fudge;
+    //Set the minimum step
+    double fudge       = 0.00001; // 0.01 um
+    double minimumStep = minStepSize(curPoint, curDir) + fudge;
 
-  bool trackStatus = true;
+    bool   trackStatus = true;
+    int    maxTries    = 0;
 
-  //Continue stepping until the track is no longer "alive"
-  while(trackStatus)
+    //Continue stepping until the track is no longer "alive"
+    while(trackStatus)
     {
-      //Use the G4 navigator to locate the current point, then compute the distance
-      //to the current volume boundary
-      double maxStep = 1000.;
-      double safeStep;
+        //Use the G4 navigator to locate the current point, then compute the distance
+        //to the current volume boundary
+        double maxStep = 1000.;
+        double safeStep;
 
-      const G4VPhysicalVolume* pCurVolume    = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, false);
-      G4AffineTransform        globalToLocal = navigator->GetGlobalToLocalTransform();
-      double                   trackLen      = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
+        const G4VPhysicalVolume* pCurVolume    = navigator->LocateGlobalPointAndSetup(curPoint, 0, true, false);
+        G4AffineTransform        globalToLocal = navigator->GetGlobalToLocalTransform();
+        double                   trackLen      = navigator->ComputeStep(curPoint, curDir, maxStep, safeStep);
 
-      //If we are right on the boundary then jump over and recalculate
-      if (trackLen == 0.)
-      {
-        double        fudge      = 0.01; // 10 um over the edge
-        G4ThreeVector fudgePoint = curPoint + fudge*curDir;
+        //If we are right on the boundary then jump over and recalculate
+        if (trackLen == 0.)
+        {
+            double        fudge      = 0.01; // 10 um over the edge
+            G4ThreeVector fudgePoint = curPoint + fudge*curDir;
 
-        pCurVolume    = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, false);
-        globalToLocal = navigator->GetGlobalToLocalTransform();
-        trackLen      = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
-      }
+            pCurVolume    = navigator->LocateGlobalPointAndSetup(fudgePoint, 0, true, false);
+            globalToLocal = navigator->GetGlobalToLocalTransform();
+            trackLen      = navigator->ComputeStep(fudgePoint, curDir, maxStep, safeStep) + fudge;
+            maxTries++;
+        }
+        else maxTries = 0;
 
-      //If infinite trackLen then we have stepped outside of GLAST
-      if (trackLen > 10000000.) 
-      {
-        break;
-      }
+        // If maxTries is at limit then we must have a stuck particle so abort
 
-      //Which volume are we currently in?
-      G4TouchableHistory*      touchable = navigator->CreateTouchableHistory(); 
-      const G4VPhysicalVolume* pSiVolume = findSiLadders(touchable);
-      delete touchable;
+        // Check count of how many times we've done this
+        if (maxTries > 100)
+        {
+            std::stringstream errorStream;
+            errorStream << "ParticleTransporter::StepToNextPlane is stuck, aborting processing for this track. pos: " 
+                        << curPoint << " dir: " << curDir;
+            throw std::domain_error(errorStream.str());
+        }
 
-      // If we found the SiLadders volume, compute the distance to leave
-      if (pSiVolume)
-      {
-          // this transforms it to local coordinates
-          G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
-          G4ThreeVector trackDir = globalToLocal.IsRotated() ? globalToLocal.TransformAxis(curDir) : curDir;
 
-          trackLen   = pSiVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
-          pCurVolume = pSiVolume;
-      }
+        //If infinite trackLen then we have stepped outside of GLAST
+        if (trackLen > 10000000.) 
+        {
+            break;
+        }
 
-      //Where did we end up?
-      G4ThreeVector newPoint = curPoint + trackLen * curDir;
+        //Which volume are we currently in?
+        G4TouchableHistory*      touchable = navigator->CreateTouchableHistory(); 
+        const G4VPhysicalVolume* pSiVolume = findSiLadders(touchable);
+        delete touchable;
 
-      stepInfo.push_back(TransportStepInfo(newPoint, curDir, trackLen, globalToLocal, pCurVolume));
+        // If we found the SiLadders volume, compute the distance to leave
+        if (pSiVolume)
+        {
+            // this transforms it to local coordinates
+            G4ThreeVector trackPos = globalToLocal.TransformPoint(curPoint);
+            G4ThreeVector trackDir = globalToLocal.IsRotated() ? globalToLocal.TransformAxis(curDir) : curDir;
 
-      arcLen     += trackLen;
-      curPoint    = newPoint;
+            trackLen   = pSiVolume->GetLogicalVolume()->GetSolid()->DistanceToOut(trackPos,trackDir);
+            pCurVolume = pSiVolume;
+        }
+
+        //Where did we end up?
+        G4ThreeVector newPoint = curPoint + trackLen * curDir;
+
+        stepInfo.push_back(TransportStepInfo(newPoint, curDir, trackLen, globalToLocal, pCurVolume));
+
+        arcLen     += trackLen;
+        curPoint    = newPoint;
         
-      //Stop if we have found a new layer
-      if (arcLen > minimumStep && pCurVolume->GetName().contains("SiLadders"))
-      {
-          success = true;
-          break;
-      }
+        //Stop if we have found a new layer
+        if (arcLen > minimumStep && pCurVolume->GetName().contains("SiLadders"))
+        {
+            success = true;
+            break;
+        }
     }
 
-  //If ending in a sensitive layer then stop in the middle of that volume
-  if (success)
+    //If ending in a sensitive layer then stop in the middle of that volume
+    if (success)
     {
-      G4ThreeVector hitPos = stepInfo.back().GetEndPoint();
-      G4double      corLen = stepInfo.back().GetArcLen() * 0.5;
+        G4ThreeVector hitPos = stepInfo.back().GetEndPoint();
+        G4double      corLen = stepInfo.back().GetArcLen() * 0.5;
 
-      hitPos -= corLen * curDir;
+        hitPos -= corLen * curDir;
 
-      stepInfo.back().SetCoords(hitPos);
-      stepInfo.back().SetArcLen(corLen);
+        stepInfo.back().SetCoords(hitPos);
+        stepInfo.back().SetArcLen(corLen);
     }
 
-  //Stepping complete
-  return success;
+    //Stepping complete
+    return success;
 }
 
 
@@ -371,7 +386,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 overPoint    -= 500. * kCarTolerance * globalExitNrml;
 
                 // Re-step with new points
-                pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, true, true);
+                pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, false, false);
                 globalToLocal = navigator->GetGlobalToLocalTransform();
                 trackLen      = navigator->ComputeStep(overPoint, curDir, maxStep, safeStep) + stepOverDist;
 
@@ -379,7 +394,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 if (trackLen <= stepOverDist && maxTries-- < 0)
                 {
                     std::stringstream errorStream;
-                    errorStream << "ParticleTransporter is stuck, aborting processing for this track. pos: " 
+                    errorStream << "ParticleTransporter::StepAnArcLength is stuck, aborting processing for this track. pos: " 
                             << overPoint << " dir: " << curDir;
                     throw std::domain_error(errorStream.str());
                 }
