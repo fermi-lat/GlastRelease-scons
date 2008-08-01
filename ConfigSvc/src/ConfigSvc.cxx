@@ -52,6 +52,7 @@ ConfigSvc::ConfigSvc(const std::string& name,ISvcLocator* svc)
   declareProperty("MipFilterXml",  m_mipFilterXmlFile="");
   declareProperty("HipFilterXml",  m_hipFilterXmlFile="");
   declareProperty("GemXml", m_gemXmlFile="");
+  declareProperty("GemDftXml", m_gemDftXmlFile="");
   declareProperty("RoiXml", m_roiXmlFile="");
 }
 
@@ -95,21 +96,30 @@ StatusCode ConfigSvc::initialize () {
     return StatusCode::FAILURE;
   }
 
-  if ( m_gemXmlFile.value() != "" || m_roiXmlFile.value() != "" ) {
+  bool gemFromMoot = true;
+  if ( m_gemXmlFile.value() != "" ) {
+    gemFromMoot = false;
     m_noMOOTMask |= ( 1 << GEM );
-    m_noMOOTMask |= ( 1 << ROI );    
-    if ( ! readTrgConfig( m_gemXmlFile.value().c_str(), m_roiXmlFile.value()) ) {
-      log << MSG::ERROR << "Failed to read GEM configuration from " << m_gemXmlFile.value() << endreq;
-      return StatusCode::FAILURE;
-    } else {
-      log << MSG::WARNING << "Using GEM configuration from file " << m_gemXmlFile.value() << " instead of MOOT." << endreq;
-    }
-  } else {
+    log << MSG::WARNING << "Using GEM configuration from file " << m_gemXmlFile.value() << " instead of MOOT." << endreq;
+  }
+  if ( m_gemDftXmlFile.value() != "" ) {
+    gemFromMoot = false;
+    m_noMOOTMask |= ( 1 << GEM_DFT );
+    log << MSG::WARNING << "Using GEM_DFT configuration from file " << m_gemDftXmlFile.value() << " instead of MOOT." << endreq;
+  }
+  if ( m_roiXmlFile.value() != "" ) {
+    gemFromMoot = false;
+    m_noMOOTMask |= ( 1 << ROI );
+    log << MSG::WARNING << "Using GEM ROI configuration from file " << m_roiXmlFile.value() << " instead of MOOT." << endreq;
+  }
+  if ( gemFromMoot ) {
     log << MSG::WARNING << "Using GEM configuration from MootSvc" << endreq;
   }
+
   if ( m_gammaFilterXmlFile.value() != "" ) {
     m_noMOOTMask |= ( 1 << enums::Lsf::GAMMA );   
-    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::GAMMA, m_gammaFilterXmlFile.value() ) ) {
+    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::GAMMA, 
+			    m_gammaFilterXmlFile.value(), 0 ) ) {
       log << MSG::ERROR << "Failed to read Gamma filter configuration from " << m_gammaFilterXmlFile.value() << endreq;
       return StatusCode::FAILURE;
     } else {
@@ -120,7 +130,8 @@ StatusCode ConfigSvc::initialize () {
   }
   if ( m_dgnFilterXmlFile.value() != "" ) {
      m_noMOOTMask |= ( 1 << enums::Lsf::DGN );  
-    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::DGN, m_dgnFilterXmlFile.value() ) ) {
+    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::DGN, 
+			    m_dgnFilterXmlFile.value(), 0  ) ) {
       log << MSG::ERROR << "Failed to read DGN filter configuration from " << m_dgnFilterXmlFile.value() << endreq;
       return StatusCode::FAILURE;
     } else {
@@ -131,7 +142,8 @@ StatusCode ConfigSvc::initialize () {
   }
   if ( m_mipFilterXmlFile.value() != "" ) {
     m_noMOOTMask |= ( 1 << enums::Lsf::MIP );  
-    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::MIP, m_mipFilterXmlFile.value() ) ) {
+    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::MIP, 
+			    m_mipFilterXmlFile.value(), 0 ) ) {
       log << MSG::ERROR << "Failed to read MIP filter configuration from " << m_mipFilterXmlFile.value() << endreq;
       return StatusCode::FAILURE;
     } else {
@@ -142,7 +154,8 @@ StatusCode ConfigSvc::initialize () {
   }
   if ( m_hipFilterXmlFile.value() != "" ) {
     m_noMOOTMask |= ( 1 << enums::Lsf::HIP );  
-    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::HIP, m_hipFilterXmlFile.value() ) ) {
+    if ( ! readEfcFromFile( MOOT::LPA_MODE_ALL, enums::Lsf::HIP, 
+			    m_hipFilterXmlFile.value(), 0 ) ) {
       log << MSG::ERROR << "Failed to read HIP filter configuration from " << m_hipFilterXmlFile.value() << endreq;
       return StatusCode::FAILURE;
     } else {
@@ -164,14 +177,16 @@ unsigned ConfigSvc::getMootKey() const {
 const TrgConfig* ConfigSvc::getTrgConfig() const {
   
   std::string gemFileName;
+  std::string gemDftFileName;
   std::string roiFileName;
-  unsigned checkMOOT = ( (1 << GEM) | (1 << ROI) );
+  unsigned checkMOOT = ( (1 << GEM) | (1 << GEM_DFT) |(1 << ROI) );
   if ( (checkMOOT &  m_noMOOTMask) == checkMOOT ) {
     // no need to check moot, just return the TrgConfig
     if ( m_trgConfig == 0 ) {
       gemFileName = m_gemXmlFile.value();
+      gemDftFileName = m_gemDftXmlFile.value();
       roiFileName = m_roiXmlFile.value();
-      if ( ! readTrgConfig( gemFileName, roiFileName ) ) {
+      if ( ! readTrgConfig( gemFileName, gemDftFileName, roiFileName ) ) {
 	return 0;
       } 
     }
@@ -187,25 +202,37 @@ const TrgConfig* ConfigSvc::getTrgConfig() const {
   } else {
     if ( m_mootSvc->noMoot() ) return 0;
     const CalibData::MootParm* gem = m_mootSvc->getGemParm(latcKey);    
+    if ( gem == 0 ) return 0;
     //getFullPath( gem->getSrc(), gemFileName );
     gemFileName = gem->getSrc();
+  }
+  if ( m_noMOOTMask & ( 1 << GEM_DFT ) ) {
+    gemDftFileName = m_gemDftXmlFile.value();
+  } else {
+    if ( m_mootSvc->noMoot() ) return 0;    
+    const CalibData::MootParm* gemDft = m_mootSvc->getMootParm(std::string("latc_DFT_TRG_GEM"),latcKey);    
+    if ( gemDft == 0 ) return 0;
+    //getFullPath( gemDft->getSrc(), gemDftFileName );
+    gemDftFileName = gemDft->getSrc();
   }
   if ( m_noMOOTMask & ( 1 << ROI ) ) {
     roiFileName = m_roiXmlFile.value();
   } else {
     if ( m_mootSvc->noMoot() ) return 0;
     const CalibData::MootParm* roi = m_mootSvc->getRoiParm(latcKey);
+    if ( roi == 0 ) return 0;
     //getFullPath( roi->getSrc(), roiFileName );
     roiFileName = roi->getSrc();
   }
-  if ( ! readTrgConfig( gemFileName, roiFileName ) ) {
+  if ( ! readTrgConfig( gemFileName, gemDftFileName, roiFileName ) ) {
     return 0;
   }
   return m_trgConfig;
 }
 
 
-const FswEfcSampler* ConfigSvc::getFSWPrescalerInfo(enums::Lsf::Mode mode, unsigned handlerId ) const {
+const FswEfcSampler* ConfigSvc::getFSWPrescalerInfo(enums::Lsf::Mode mode, unsigned handlerId,
+						    unsigned int& fmxKey ) const {
 
   MOOT::LpaMode mootMode = MOOT::LPA_MODE_count;
   switch (mode) {
@@ -228,7 +255,7 @@ const FswEfcSampler* ConfigSvc::getFSWPrescalerInfo(enums::Lsf::Mode mode, unsig
   default:
     break;
   }
-  return getFswSampler(mootMode,handlerId);
+  return getFswSampler(mootMode,handlerId,fmxKey);
 }
 
 
@@ -272,7 +299,9 @@ void ConfigSvc::clearCache() const {
 
 
 /// read the TrgConfig
-bool ConfigSvc::readTrgConfig( const std::string& gemFileName, const std::string& roiFileName ) const {
+bool ConfigSvc::readTrgConfig( const std::string& gemFileName, 
+			       const std::string& gemDftFileName, 
+			       const std::string& roiFileName ) const {
   TrgConfigParser parser;
   m_trgConfig = new TrgConfig;
   if ( gemFileName != "" ) {
@@ -282,20 +311,27 @@ bool ConfigSvc::readTrgConfig( const std::string& gemFileName, const std::string
       return false;
     }
   }
-  if ( roiFileName != "" ) {
-    if ( parser.parse(m_trgConfig,roiFileName.c_str()) != 0 ) {
+  if ( gemDftFileName != "" && gemDftFileName != "None" ) {
+    if ( parser.parse(m_trgConfig,gemDftFileName.c_str()) != 0 ) {
       delete m_trgConfig;
       m_trgConfig = 0;
       return false;
     }
   }
-  return true;
+  if ( roiFileName != "" && roiFileName != "None" ) {
+    if ( parser.parse(m_trgConfig,roiFileName.c_str()) != 0 ) {
+      delete m_trgConfig;
+      m_trgConfig = 0;
+      return false;
+    }
+  }  
+  return parser.configComplete();
 }
 
 
-
 /// function to get the prescale factor
-FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) const {
+FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId, 
+					unsigned int& fmxKey) const {
 
   // Open the message log
   MsgStream log( msgSvc(), name() );
@@ -304,12 +340,12 @@ FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) co
 
   // Check to see if we are reading that handler from a file instead of from MOOT
   if ( m_noMOOTMask & ( 1 << handlerId ) ) {
-    return getFswSamplerFromCache(lpaMode,handlerId);
+    return getFswSamplerFromCache(lpaMode,handlerId,fmxKey);
   }
   // Check the cache
   if ( ! newMootKey() ) {
     // it is an old key, return the cached value
-    sampler = getFswSamplerFromCache(lpaMode,handlerId);
+    sampler = getFswSamplerFromCache(lpaMode,handlerId,fmxKey);
     // No previous cache, try and get it.
     if ( sampler != 0 ) return sampler;
   } 
@@ -327,8 +363,8 @@ FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) co
   }
   std::string fullPath;
   getFullPath( filterCfg->getSrcPath(), fullPath );
-
-  sampler = readEfcFromFile(lpaMode,handlerId,fullPath);
+  fmxKey = filterCfg->getFswId();
+  sampler = readEfcFromFile(lpaMode,handlerId,fullPath, fmxKey);
   if ( sampler == 0 ) {
     log << MSG::ERROR << "Failed to read sampler data from file " << fullPath << endreq;
   } else {
@@ -339,21 +375,25 @@ FswEfcSampler* ConfigSvc::getFswSampler(unsigned lpaMode, unsigned handlerId) co
 
 
 /// function to get the cached prescale factors
-FswEfcSampler* ConfigSvc::getFswSamplerFromCache(unsigned lpaMode, unsigned handlerId) const {
+FswEfcSampler* ConfigSvc::getFswSamplerFromCache(unsigned lpaMode, unsigned handlerId, unsigned int& fmxKey ) const {
   unsigned slotKey = filterSlotKey(lpaMode,handlerId);
   std::map<unsigned,FswEfcSampler*>::iterator itr = m_fswEfcCache.find(slotKey);
   FswEfcSampler* retVal = itr != m_fswEfcCache.end() ? itr->second : 0;
+  std::map<unsigned,unsigned>::iterator itr2 = m_fswCdmKeyCache.find(slotKey);
+  fmxKey = itr2 != m_fswCdmKeyCache.end() ? itr2->second : 0;
   return retVal;
 }
 
 
 /// read an xml file with the prescaler info 
-FswEfcSampler* ConfigSvc::readEfcFromFile(unsigned lpaMode, unsigned handlerId, const std::string& fileName ) const {    
+FswEfcSampler* ConfigSvc::readEfcFromFile(unsigned lpaMode, unsigned handlerId, 
+					  const std::string& fileName, unsigned fmxKey ) const {    
   FswEfcSampler* sampler = FswEfcSampler::makeFromXmlFile(fileName.c_str());
   if ( sampler == 0 ) return 0;
   if ( lpaMode == MOOT::LPA_MODE_ALL ) {
     for ( unsigned i =  MOOT::LPA_MODE_NORMAL; i < MOOT::LPA_MODE_count; i++ ) {
       unsigned slotKey = filterSlotKey(i,handlerId);
+      m_fswCdmKeyCache[slotKey] = fmxKey;
       std::map<unsigned,FswEfcSampler*>::iterator itr = m_fswEfcCache.find(slotKey);
       if ( itr == m_fswEfcCache.end() ) {
 	m_fswEfcCache[slotKey] = sampler;
@@ -364,7 +404,8 @@ FswEfcSampler* ConfigSvc::readEfcFromFile(unsigned lpaMode, unsigned handlerId, 
     }
   } else {
     unsigned slotKey = filterSlotKey(lpaMode,handlerId);
-    std::map<unsigned,FswEfcSampler*>::iterator itr = m_fswEfcCache.find(slotKey);
+    m_fswCdmKeyCache[slotKey] = fmxKey;
+    std::map<unsigned,FswEfcSampler*>::iterator itr = m_fswEfcCache.find(slotKey);    
     if ( itr == m_fswEfcCache.end() ) {
       m_fswEfcCache[slotKey] = sampler;
     } else {

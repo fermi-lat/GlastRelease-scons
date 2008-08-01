@@ -52,7 +52,8 @@ protected:
     DGN = 5,
     // Now LATC, starting at 8;
     GEM = 8,
-    ROI = 9
+    GEM_DFT = 9,
+    ROI = 10
   };
 
 public:
@@ -88,8 +89,8 @@ public:
   virtual const TrgConfig* getTrgConfig() const;
 
   /// get the information about the prescalers
-  virtual const FswEfcSampler* getFSWPrescalerInfo( enums::Lsf::Mode mode, unsigned handlerId ) const;
-      
+  virtual const FswEfcSampler* getFSWPrescalerInfo( enums::Lsf::Mode mode, unsigned handlerId, 
+						    unsigned int& fmxKey ) const;      
 
 protected:
 
@@ -103,16 +104,19 @@ protected:
   void clearCache() const;
   
   /// read the TrgConfig
-  bool readTrgConfig( const std::string& gemFileName, const std::string& roiFileName ) const;    
+  bool readTrgConfig( const std::string& gemFileName, 
+		      const std::string& gemDftFileName, 
+		      const std::string& roiFileName ) const;    
 
   /// function to get the prescale factors
-  FswEfcSampler* getFswSampler(unsigned lpaMode, unsigned handlerId) const;
+  FswEfcSampler* getFswSampler(unsigned lpaMode, unsigned handlerId, unsigned int& fmxKey ) const;
 
   /// function to get the cached prescale factors
-  FswEfcSampler* getFswSamplerFromCache(unsigned lpaMode, unsigned handlerId) const;
+  FswEfcSampler* getFswSamplerFromCache(unsigned lpaMode, unsigned handlerId, unsigned int& fmxKey ) const;
   
   /// read an xml file with the prescaler info 
-  FswEfcSampler* readEfcFromFile(unsigned mode, unsigned handlerId, const std::string& fileName ) const;
+  FswEfcSampler* readEfcFromFile(unsigned mode, unsigned handlerId, 
+				 const std::string& fileName, unsigned fmxKey) const;
   
 private:
   
@@ -121,12 +125,14 @@ private:
   StringProperty m_mipFilterXmlFile;
   StringProperty m_hipFilterXmlFile;    
   StringProperty m_gemXmlFile;
+  StringProperty m_gemDftXmlFile;
   StringProperty m_roiXmlFile;
   
   IMootSvc*      m_mootSvc;
 
   mutable TrgConfig*                               m_trgConfig;
   mutable std::map<unsigned,FswEfcSampler*>        m_fswEfcCache;  
+  mutable std::map<unsigned,unsigned>              m_fswCdmKeyCache;
 
   mutable unsigned                                 m_noMOOTMask;
   mutable unsigned                                 m_mootKey;

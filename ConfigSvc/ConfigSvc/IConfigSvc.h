@@ -39,7 +39,8 @@ public:
   virtual const TrgConfig* getTrgConfig() const = 0;
   
   /// get the information about the prescalers
-  virtual const FswEfcSampler* getFSWPrescalerInfo( enums::Lsf::Mode mode, unsigned handlerId ) const = 0;
+  virtual const FswEfcSampler* getFSWPrescalerInfo( enums::Lsf::Mode mode, unsigned handlerId, 
+						    unsigned int& fmxKey ) const = 0;
   
 };
 
