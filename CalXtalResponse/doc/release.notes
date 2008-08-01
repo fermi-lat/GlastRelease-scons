@@ -1,3 +1,4 @@
+v0r21p8 07/31/08 fewtrell  - Removed all references to Event::GltDigi (I guess it's being purged entirely).
 v0r21p7 07/23/08 fewtrell  - CalTrigTool does not return error if neither MC nor CalDigi are present in TDS, quietly returns 0.
 v0r21p6 06/23/08 hmk       - patch unit test JO file for move to ConfigSvc
 v0r21p5 05/28/08 fewtrell  - fixed bug introduced in latest pedestal implementation.

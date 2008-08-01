@@ -17,7 +17,6 @@
 // GLAST
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
-#include "Event/Digi/GltDigi.h"
 #include "Event/Digi/CalDigi.h"
 
 // EXTLIB
@@ -30,12 +29,6 @@
 class IGlastDetSvc;
 class IPrecalcCalibTool;
 class IDataProviderSvc;
-
-
-namespace Event {
-  class GltDigi;
-}
-
 
 /*! \class CalTrigTool
   \author Z.Fewtrell
@@ -70,7 +63,7 @@ public:
 
   /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
   StatusCode getCALTriggerVector(idents::CalXtalId::DiodeType diode, 
-                                 Event::GltDigi::CalTriggerVec &vec);
+                                 unsigned short &vec);
 
   /// return trigger response for given channel (specify xtal, face & diode)
   StatusCode getTriggerBit(CalUtil::DiodeIdx diodeIdx, bool &trigBit);
@@ -125,7 +118,7 @@ private:
 
   /// store FLE trigger vector for each tower in cal
   CalUtil::CalVec<CalUtil::DiodeNum,
-                  Event::GltDigi::CalTriggerVec> m_calTriggerVec;
+                  unsigned short> m_calTriggerVec;
 
   /// name of CalCalibSvc to use for calib constants.
   StringProperty  m_calCalibSvcName;      

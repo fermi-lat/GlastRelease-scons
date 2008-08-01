@@ -15,18 +15,11 @@
 
 // GLAST INCLUDES
 #include "Event/TopLevel/Event.h"
-#include "Event/Digi/GltDigi.h"
 #include "CalUtil/CalDefs.h"
 #include "CalUtil/CalVec.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/IAlgTool.h"
-
-// STD INCLUDES
-namespace Event {
-  class GltDigi;
-}
-
 
 static const InterfaceID IID_ICalTrigTool("ICalTrigTool", 2, 0);
 
@@ -42,7 +35,7 @@ public:
 
   /// \brief return 16 bit trigger vector for given diode size, one bit per tower
   virtual StatusCode getCALTriggerVector(idents::CalXtalId::DiodeType diode, 
-                                         Event::GltDigi::CalTriggerVec &vec) = 0;
+                                         unsigned short &vec) = 0;
 
 };
 

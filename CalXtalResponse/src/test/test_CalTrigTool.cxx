@@ -130,7 +130,7 @@ StatusCode test_CalTrigTool::verifyTriggerVecs(ICalSignalTool &calSignalTool,
                                                const float tolerance) {
 
   for (DiodeNum diode; diode.isValid(); diode++) {
-    Event::GltDigi::CalTriggerVec triggerVec;
+    unsigned short triggerVec;
 
     if (calTrigTool.getCALTriggerVector(static_cast<idents::CalXtalId::DiodeType>(diode.val()), triggerVec).isFailure())
       return StatusCode::FAILURE;
