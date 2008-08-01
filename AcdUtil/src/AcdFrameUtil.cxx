@@ -45,10 +45,10 @@ namespace AcdFrameUtil {
 		      const HepVector3D& yVector,  HepPoint3D *corner) {    
     // The corners are returned in order (-,-), (-,+), (+,+), (+,-)
     // a.k.a.   clockwise starting from (-,-) corner
-    corner[0] = center - x2Vector - yVector;
-    corner[1] = center - x1Vector + yVector;
-    corner[2] = center + x1Vector + yVector;
-    corner[3] = center + x2Vector - yVector;
+    corner[0] = center - x1Vector - yVector;
+    corner[1] = center - x2Vector + yVector;
+    corner[2] = center + x2Vector + yVector;
+    corner[3] = center + x1Vector - yVector;
   }
   
 
@@ -75,13 +75,13 @@ namespace AcdFrameUtil {
     const HepGeom::Transform3D& r = getRotationToLocal(type);
 
     inLocal.resize(5);
-    // Order is X1, X2, X_diff, Y, Z
-    inLocal[0] = (r.xx() * inGeant[0]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[3]);
-    inLocal[1] = (r.xx() * inGeant[1]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[3]);
-    inLocal[2] = (r.xx() * inGeant[2]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[3]);
-    inLocal[3] = (r.yx() * inGeant[0]) + (r.yy() * inGeant[3]) + (r.yz() * inGeant[3]);
-    inLocal[4] = (r.zx() * inGeant[0]) + (r.zy() * inGeant[3]) + (r.zz() * inGeant[3]);
-  
+    // Input Order is X1, X2, X_diff, Y, Z
+    // Output order is X1, Y, Z, X2, X_Diff
+    inLocal[0] = (r.xx() * inGeant[0]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[4]);
+    inLocal[1] = (r.yx() * inGeant[0]) + (r.yy() * inGeant[3]) + (r.yz() * inGeant[4]);
+    inLocal[2] = (r.zx() * inGeant[0]) + (r.zy() * inGeant[3]) + (r.zz() * inGeant[4]);  
+    inLocal[3] = (r.xx() * inGeant[1]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[4]);
+    inLocal[4] = (r.xx() * inGeant[2]) + (r.xy() * inGeant[3]) + (r.xz() * inGeant[4]);
   }
 
   // Get the mid point between two points

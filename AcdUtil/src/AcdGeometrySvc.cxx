@@ -637,15 +637,20 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
     return sc;
   } 
 
-  if ( dim.size() == 3 ) {
+  double x2(0.), xdelta(0.);
+  if ( dim.size() == 3 ) {   
     AcdFrameUtil::getCornersSquare(center,x1VectorGlobal,yVectorGlobal,corner);
   } else {
     AcdFrameUtil::getCornersTrap(center,x1VectorGlobal,x2VectorGlobal,yVectorGlobal,corner);
+    // Also grab a couple of things for the printout
+    x2 = dim[3];
+    xdelta = dim[4];
   }
+  
   
   log << MSG::DEBUG << volId.name() << ' ' 
       << "cen: " << center << ", " << std::endl
-      << "dim: " << dim[0] << ", " << dim[1] << ", " << dim[2] << std::endl
+      << "dim: " << dim[0] << ", " << dim[1] << ", " << dim[2] << ", " << x2 << ", " << xdelta << std::endl
       << "x1v: " << x1VectorGlobal << std::endl
       << "x2v: " << x2VectorGlobal << std::endl
       << "yv: "  << yVectorGlobal << std::endl
@@ -815,13 +820,13 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
     if ( align.sizeY() > 0 ) {
       dim[1] = align.sizeY();
     }    
-  } else {
+  } else {    
     AcdFrameUtil::transformDimensionVectorTrap(frameId,globalDim,dim);
     if ( align.sizeX() > 0 ) {
       // FIXME: too complicated, drop it for now.
     }    
     if ( align.sizeY() > 0 ) {
-      dim[3] = align.sizeY();
+      dim[1] = align.sizeY();
     }    
   }
 
@@ -857,9 +862,9 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   //HepGeom::Transform3D check = transformToLocal * transformToGlobal;
 
   // Make the half-vectors (center to edge of volume)  
-  double yHalfLength = dim[1]/2;
-  double xOffsetY = dim.size() == 3 ? 0. : dim[2]/2.;
   double xHalfLength = dim[0]/2;
+  double yHalfLength = dim[1]/2;
+  double xOffsetY = dim.size() == 3 ? 0. : dim[4]/2.;
   
   const HepVector3D x1VectorLocal(xHalfLength,0.,0.);
   x1VectorGlobal = transformToGlobal* x1VectorLocal;
@@ -868,7 +873,7 @@ StatusCode AcdGeometrySvc::getTransformAndLocalVectors(const idents::VolumeIdent
   yVectorGlobal = transformToGlobal* yVectorLocal;
 
   if ( dim.size() > 3 ) {
-    const HepVector3D x2VectorLocal(dim[1]/2,0.,0.);
+    const HepVector3D x2VectorLocal(dim[3]/2,0.,0.);
     x2VectorGlobal = transformToGlobal* x2VectorLocal;
   }
 
