@@ -121,8 +121,8 @@ int main(const int argc,
     GCRFit::gcrFitGaus(gcrHists, calMPD, &outputROOTFile);
 
     // output txt file name
-    //const string   outputTXTFile(cfg.outputBasename.getVal()+".txt");
-    //calMPD.writeTXT(outputTXTFile);
+    const string   outputTXTFile(cfg.outputBasename.getVal()+".txt");
+    calMPD.writeTXT(outputTXTFile);
     
     LogStrm::get() << __FILE__ << ": Writing output ROOT file." << endl;
     outputROOTFile.Write();

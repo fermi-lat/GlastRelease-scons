@@ -67,7 +67,6 @@ namespace calibGenCAL {
 
     m_meanDACSumHists->setDirectory(dir);
     m_adcRatioSumProfs->setDirectory(dir);
-
     m_meanDACSumAllZ->SetDirectory(dir);
     m_zHist->SetDirectory(dir);
     m_dacRatioSumProf->SetDirectory(dir);
@@ -101,7 +100,6 @@ namespace calibGenCAL {
                                                 0,
                                                 0));
     }
-
     m_meanDACSumHists.reset(new MeanDACSumHistCol(MEANDACSUM_HISTNAME.c_str(),
                                                   m_writeDir,
                                                   &readDir,
@@ -117,7 +115,8 @@ namespace calibGenCAL {
     //load individual histograms
     m_meanDACSumAllZ = retrieveROOTObj<TH1S>(readDir, MEANDACSUMALLZ_HISTNAME);
     m_zHist = retrieveROOTObj<TH1S>(readDir, Z_HISTNAME);
-    m_dacRatioSumProf = retrieveROOTObj<TProfile>(readDir, DACRATIOSUM_HISTNAME);
+    m_dacRatioSumProf = retrieveROOTObj<TProfile>(readDir,
+                                                  DACRATIOSUM_HISTNAME);
   }
 
   void GCRHists::initHists() {
