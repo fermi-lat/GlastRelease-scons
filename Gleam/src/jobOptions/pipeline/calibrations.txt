@@ -48,9 +48,9 @@ ApplicationMgr.DLLs   += {"AcdUtil"};
 ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 
 // For real data:
-AcdCalibSvc.DefaultFlavor       = "vanilla";
-AcdCalibSvc.FlavorHighRange     = "ideal";
-AcdCalibSvc.FlavorCoherentNoise = "ideal";
+AcdCalibSvc.DefaultFlavor = "vanilla";
+//
+ToolSvc.AcdPha2MipTool.ApplyCoherentNoiseCalib = true;
 
 //
 // To get some output about the ideal calibs for the ACD:
@@ -61,7 +61,7 @@ AcdCalibSvc.OutputLevel = 1;
 //
 // General calibration flavor list:
 //
-CalibDataSvc.CalibFlavorList = {"vanilla","ideal"};
+CalibDataSvc.CalibFlavorList = {"vanilla"};
 
 //
 // Only PROD! Default is PROD and DEV!
