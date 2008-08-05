@@ -274,6 +274,8 @@ StatusCode reconRootWriterAlg::writeReconEvent() {
     SmartDataPtr<LdfEvent::EventSummaryData> summaryTds(eventSvc(), "/Event/EventSummary");
     if (summaryTds) m_reconEvt->initEventFlags(summaryTds->eventFlags());
     
+    m_reconEvt->initGleamEventFlags(evtTds->gleamEventFlags());
+
     return sc;
 }
 

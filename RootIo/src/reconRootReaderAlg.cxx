@@ -290,6 +290,8 @@ StatusCode reconRootReaderAlg::readReconEvent() {
 
     log << MSG::DEBUG << "Reading Event (run, event): (" << runIdRoot
         << ", " << eventIdRoot << ")" << endreq;
+
+    evt->setGleamEventFlags(m_reconEvt->getGleamEventFlags());
     
     // Only update the eventflags on the TDS if the /Event/EventSummary
     // does not yet exist (digiRootReader may fill this for us)

@@ -5,6 +5,7 @@ Package enums
 Coordinator:H.Kelly
 @verbatim
 
+v2r2    05-Aug-2008 HMK Add GleamEventFlags
 v2r1    28-Jul-2008 TU  Modify EfcGammaStatus to get "right" bit defitions 
 v2r0    27-Jul-2008 HMK Upate Lsf enums in move to FSW B1-1-0
 v1r1    21-May-2008 HMK Filter Bit enums added to Lsf.h

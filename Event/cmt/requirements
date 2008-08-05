@@ -1,5 +1,5 @@
 package Event
-version v12r1p1
+version v13r0
 
 author T.Burnett <tburnett@u.washington.edu>
 
@@ -7,6 +7,7 @@ branches Event cmt doc src
 
 use geometry       v3r*
 use idents         v2r*
+use enums          v*
 use CLHEP          v3r* IExternal
 use GaudiInterface v*   IExternal 
 

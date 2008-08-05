@@ -28,6 +28,15 @@ namespace enums {
             LDFWARNING = 524288
         } EventFlags;
 
+namespace Gleam {
+    typedef enum {
+        GOOD = 0,
+        TKRRECON = 1, 
+        CALRECON = 2,
+        ACDRECON = 4
+     } GleamEventFlags; 
+
+} //namespace Gleam
 
 }//namespace enums
 

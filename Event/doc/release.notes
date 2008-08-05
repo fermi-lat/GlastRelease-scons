@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v13r0   04-Aug-08 HMK Add gleamEventFlags and fswEventFlags to /Event
  * v12r1p1 31-Jul-08 JCT  fix test main
  * v12r1 31-Jul-08 JCT  JIRA Remove GltDigi
  * v12r0  21-Jul-08 HMK  make event id 64 bit as it should be

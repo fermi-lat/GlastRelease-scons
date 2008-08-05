@@ -7,6 +7,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "Event/Utilities/TimeStamp.h"
 #include "Event/TopLevel/Definitions.h"
+#include "enums/EventFlags.h"
 
 //static const CLID& CLID_Event = InterfaceID("Event", 2, 0);
 //The following number is currently hardwired into Gaudi (v12r0)!!
@@ -36,7 +37,8 @@ public:
     EventHeader()
         : DataObject(), m_event(0), m_run(-1), m_time(-1),  m_trigger((unsigned int)-1),
         m_triggerWordTwo((unsigned int)-1), m_gemPrescale((unsigned int)-1), 
-        m_gltPrescale((unsigned int)-1), m_prescaleExpired((unsigned int)-1){ }
+        m_gltPrescale((unsigned int)-1), m_prescaleExpired((unsigned int)-1),
+        m_gleamEventFlags(0) { }
     
     virtual ~EventHeader() { }
     
@@ -88,6 +90,19 @@ public:
     double livetime()const                                { return m_livetime;}
     /// update live time
     void setLivetime(double value)                         {m_livetime = value;}
+
+
+    unsigned int gleamEventFlags() const { return m_gleamEventFlags; }
+    void setGleamEventFlags(unsigned int f) { m_gleamEventFlags = f; }
+    void setTkrReconError() { m_gleamEventFlags |= enums::Gleam::TKRRECON; }
+    void setCalReconError() { m_gleamEventFlags |= enums::Gleam::CALRECON; }
+    void setAcdReconError() { m_gleamEventFlags |= enums::Gleam::ACDRECON; }
+    bool goodEvent() { return (m_gleamEventFlags == 0); }
+    bool badEvent() { return (m_gleamEventFlags != 0); }
+    bool badTkrRecon() { return (m_gleamEventFlags & enums::Gleam::TKRRECON); }
+    bool badAcdRecon() { return (m_gleamEventFlags & enums::Gleam::ACDRECON); }
+    bool badCalRecon() { return (m_gleamEventFlags & enums::Gleam::CALRECON); }
+ 
     
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -121,6 +136,9 @@ private:
     unsigned int        m_gltPrescale;
     /// flag if prescale counter expired on this event
     unsigned int        m_prescaleExpired;
+
+    /// error bits, where m_gleamEventFlags == 0 is a GOOD event
+    unsigned int        m_gleamEventFlags;
 };
 
 
