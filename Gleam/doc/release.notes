@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r1     HMK 05-Aug-08 Run CalDigiAlg after Trigger alg to allow trigger to
+*          determine the CAL readout mode
 * v7r0p21  AWB 04-Aug-08 Made ACD High Range and Coherent Noise calibs for L1 "vanilla" (and enabled Coherent noise calib).
 * v7r0p20  AWB 31-Jul-08 Removed FRED-readRoot-noRecon.txt, FRED-readRoot-runRecon.txt, README VDG.txt, mc.txt, muonHyp.txt from src/jobOptions/pipeline.
 * v7r0p19  AWB 28-Jul-08 Removed unnecessary OBF JOs from L1.
