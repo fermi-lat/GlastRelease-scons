@@ -1434,15 +1434,14 @@ namespace MOOT {
                         fields[6]);
   }
   bool MootQuery::getVoteParameters(unsigned voteKey, 
-                                    std::vector<unsigned>& parmKeys,
-                                    bool force) {
+                                    std::vector<unsigned>& parmKeys) {
 
     // Get string version of vote key
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
 
     parmKeys.clear();
-    return voteIsUpToDate(voteKeyStr, &parmKeys, 0, force);
+    return voteIsUpToDate(voteKeyStr, &parmKeys);
   }
 
   bool MootQuery::getVotesForPrecinct(const std::string& precinct, 
@@ -1853,12 +1852,12 @@ namespace MOOT {
   }
 
   bool MootQuery::voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* pk,
-                                 bool* isCtn, bool force) {
+                                 bool* isCtn) {
 
     std::string voteKeyStr;
     facilities::Util::utoa(voteKey, voteKeyStr);
 
-    return voteIsUpToDate(voteKeyStr, pk, isCtn, force);
+    return voteIsUpToDate(voteKeyStr, pk, isCtn);
   }
 
   /**
@@ -1882,13 +1881,10 @@ namespace MOOT {
              parameter files (one per class) associated with the vote.
    */
   bool MootQuery::voteIsUpToDate(const std::string& voteKeyStr,
-                                 std::vector<unsigned>* pk, bool* isCtn,
-                                 bool force) {
+                                 std::vector<unsigned>* pk, bool* isCtn) {
 
     // First be sure vote is registered and valid
     bool isContainer;
-    bool ret = true;
-
     if (!voteExists(voteKeyStr, &isContainer) ) {
       std::cerr << "MootQuery::voteIsUpToDate:  " << voteKeyStr 
                 << " is not the key of a valid registered vote" << std::endl;
@@ -1912,32 +1908,18 @@ namespace MOOT {
 
       if (!resolveVoteAliases(innerKeys, voteKeyStr)) return false;
       for (unsigned iVote = 0; iVote < nContained; iVote++) {
-        bool goodPrecinct = 
-          voteIsUpToDate(innerKeys[iVote], &parmKeys, 0, force);
-        //        if (voteIsUpToDate(innerKeys[iVote], &parmKeys, 0, force)) {
-
-        if (!goodPrecinct) {
-          if (!parmKeys.size()) {   // Done. This vote was never even built
-            std::cerr << "Container vote " << voteKeyStr 
-                      << "not up to date; failed for unbuilt vote "
-                      << innerKeys[iVote] << std::endl;
-            if (pk) pk->clear();
-            return false;
-          }
+        if (voteIsUpToDate(innerKeys[iVote], &parmKeys)) {
+          if (pk) pk->insert(pk->end(), parmKeys.begin(), parmKeys.end());
+        }
+        else {
           std::cerr << "Container vote " << voteKeyStr 
                     << "not up to date; failed for resolved vote "
                     << innerKeys[iVote] << std::endl;
-          ret = false;
-        }
-        if (goodPrecinct || force) { 
-          if (pk) pk->insert(pk->end(), parmKeys.begin(), parmKeys.end());
-        }
-        else {  // bad precinct, no force.  We're done
           if (pk) pk->clear();
           return false;
         }
       }
-      return ret;
+      return true;
     }
 
     std::vector<std::string> aliasedAncKeys;
@@ -2044,16 +2026,11 @@ namespace MOOT {
       //      done (successfully) with this pclass
       }     // end 'look' at a collection of instances for a param. class
       if (!parmClassOk) {
-        if (force) {  // keep going, but will ultimately return bad status
-          ret = false;
-        }
-        else {
-          if (pk) pk->clear();
-          return false;
-        }
+        if (pk) pk->clear();
+        return false;
       }
-    }  // got through all parm classes one way or another
-    return ret;
+    }  // got through all parm classes successfully
+    return true;
   }
 
 }

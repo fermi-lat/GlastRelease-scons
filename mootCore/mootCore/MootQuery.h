@@ -384,17 +384,10 @@ namespace MOOT {
     /** If vote file specified by @a voteKey is up to date, put keys 
        of parameter files of all relevant classes associated with the
        vote file in the @a parmKeys vector and return true.  
-       Else 
-            if (!force) return false and an empty list. 
-            if (force) {
-                  still ultimately return false, but don't clear list
-                  [for container, if any contained vote has no
-                   parameters at all, clear list]
-            }
-              
+       Else return false and an empty list.
      */
     bool getVoteParameters(unsigned voteKey, 
-                           std::vector<unsigned>& parmKeys, bool force=false);
+                           std::vector<unsigned>& parmKeys);
 
     /**
        Get all info for registered votes belonging to specified
@@ -481,7 +474,7 @@ namespace MOOT {
     /// If isCtn is non-zero, inform caller whether or not vote was container
 
     bool voteIsUpToDate(unsigned voteKey, std::vector<unsigned>* parmKeys=0,
-                        bool* isCtn=0, bool force=false);
+                        bool* isCtn=0);
 
   private:
     bool cacheFilterConfig(unsigned configKey);
@@ -540,8 +533,7 @@ namespace MOOT {
 
 
     bool voteIsUpToDate(const std::string& voteKeyStr, 
-                        std::vector<unsigned>* pk=0, bool* isCtn=0, 
-                        bool force=false);
+                        std::vector<unsigned>* pk=0, bool* isCtn=0);
 
 
     // Following doesn't seem to be implemented anywhere
