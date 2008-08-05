@@ -416,6 +416,8 @@ StatusCode TkrReconAlg::handleError(std::string errorString)
 {
     MsgStream log(msgSvc(), name());
 
+    m_header->setTkrReconError(); 
+
     SmartDataPtr<LdfEvent::EventSummaryData> summaryTds(eventSvc(), "/Event/EventSummary"); 
     if (!summaryTds) {
         LdfEvent::EventSummaryData *evtSumTds = new LdfEvent::EventSummaryData();
