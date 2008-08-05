@@ -7,6 +7,8 @@
 #include "AcdRecon.h"
 #include "AdfRecon.h"
 
+#include "enums/EventFlags.h"
+
 /** @class ReconEvent
  * @brief Primary Root Recon Object - top level object in Root Tree.
  *
@@ -28,10 +30,10 @@ class ReconEvent : public TObject
 public:
 
     /// Define the bits in the m_eventFlag member
-    typedef enum {
-        GOOD = 0,
-        EVTSEQ = 1
-    } EventFlags;
+    //typedef enum {
+    //    GOOD = 0,
+    //    EVTSEQ = 1
+    //} EventFlags;
 
     ReconEvent();
 
@@ -40,6 +42,8 @@ public:
     void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdRecon *acd);
 
     void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
+   
+    void initGleamEventFlags( UInt_t flags) { m_gleamEventFlags = flags; }
 
     void initAdf(reconRootData::AdfRecon* adf);
 
@@ -68,9 +72,14 @@ public:
     //inline void setReconFlags(ReconHeader *r) { m_recFlags = r; };
 
     UInt_t getEventFlags() const { return m_eventFlags; };
-    Bool_t goodEvent() const { return (m_eventFlags == 0); };
-    Bool_t badEvent() const { return (m_eventFlags != 0); };
-    Bool_t badEventSeq() const { return (m_eventFlags && EVTSEQ); };
+    UInt_t getFswEventFlags() const { return m_eventFlags; };
+    Bool_t goodEvent() const { 
+        return ( (m_eventFlags == 0) && (m_gleamEventFlags == 0) ); };
+    Bool_t badEvent() const { 
+        return ( (m_eventFlags != 0) || (m_gleamEventFlags != 0) ); };
+    Bool_t badEventSeq() const { return (m_eventFlags && enums::EVTSEQ); };
+    
+    UInt_t getGleamEventFlags() const { return m_gleamEventFlags; }
 
 private:
     /// Event Id
@@ -85,12 +94,14 @@ private:
     TkrRecon *m_tkr;    
     /// pointer to Recon Header data
     //ReconHeader m_recFlags;
-    /// Do the easy thing and add flags here
+    /// Do the easy thing and add FSW flags here 
     UInt_t m_eventFlags;
     /// Ancillary data from beamtest 2006
     reconRootData::AdfRecon *m_adfRecon;
+    // Gleam Event Flags
+    UInt_t m_gleamEventFlags;
 
-    ClassDef(ReconEvent,4) 
+    ClassDef(ReconEvent,5)
 };
 
 #endif

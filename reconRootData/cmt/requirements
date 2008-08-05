@@ -1,11 +1,12 @@
 package reconRootData
-version v9r18
+version v9r19
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
 use commonRootData v2r*
 use GlastPolicy *
 use RootcintPolicy v* GlastPolicy
+use enums v*
 
 # See RootPolicy for discussion of this pattern
 apply_pattern root_package headers="\
@@ -41,7 +42,7 @@ apply_pattern root_package headers="\
  ../reconRootData/AdfRecon.h\
  ../reconRootData/GcrXtal.h\
  ../reconRootData/GcrTrack.h"\
- includes="-I$(COMMONROOTDATAROOT)"\
+ includes="-I$(COMMONROOTDATAROOT) -I$(ENUMSROOT)"\
  libs="libcommonRootData libMatrix libRIO"\
  test_source="test/testReconClasses.cxx"
 

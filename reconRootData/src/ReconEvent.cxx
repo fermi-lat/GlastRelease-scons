@@ -73,12 +73,14 @@ void ReconEvent::Clear(Option_t* /* option */) {
         m_adfRecon = 0;
     }
     m_eventFlags = 0;
+    m_gleamEventFlags = 0;
 }
 
 void ReconEvent::Print(Option_t* /* option */) const {
     using namespace std;
     cout << "(Run, Event): (" << m_runId << ", " << m_eventId << ")" << endl;
-    cout << "EventFlags: " << m_eventFlags << endl;
+    cout << "Fsw EventFlags: " << m_eventFlags << endl;
+    cout << "Gleam EventFlags: " << m_gleamEventFlags << endl;
 }
 
 
