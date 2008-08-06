@@ -1,6 +1,6 @@
 // $Header$
 
-
+#include "CalibData/Acd/AcdCalibObj.h"
 #include "CalibData/Acd/AcdPed.h"
 #include "CalibData/Acd/AcdGain.h"
 #include "CalibData/Acd/AcdVeto.h"
@@ -13,10 +13,16 @@
 #include "CalibData/Acd/AcdCarbon.h"
 #include "CalibData/Acd/AcdVetoFit.h"
 #include "CalibData/Acd/AcdCnoFit.h"
+#include "CalibData/Acd/AcdCheck.h"
 
 namespace CalibData {
 
   int buildAcdCalibDescriptions() {
+
+    static bool built = false;
+    if ( built ) return 0;
+    built = true;
+
     // careful, order matters within a calibration type
 
     // pedestals
@@ -43,7 +49,9 @@ namespace CalibData {
     AcdVetoFitFitDesc::instance();
     // CNO Fit parameters
     AcdCnoFitFitDesc::instance();
-    
+    // Calibration checking
+    AcdCheckDesc::instance();
+
     return 0;
   }
     

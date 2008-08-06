@@ -34,9 +34,10 @@ namespace CalibData {
   private:    
     /// This is a singleton
     AcdVetoFitFitDesc()
-      :AcdCalibDescription(AcdCalibData::VETO,"ACD_VetoFit"){
+      :AcdCalibDescription(AcdCalibData::VETO_FIT,"ACD_VetoFit"){
       addVarName("slope");
       addVarName("offset");
+      addVarName("mipPeak");
     }
   };
 
@@ -81,6 +82,7 @@ namespace CalibData {
     // Provide access to the values
     float getSlope() const { return (*this)[0];}
     float getOffset() const { return (*this)[1]; }
+    float getMipPeak() const { return (*this)[2]; }
   };
 }
 

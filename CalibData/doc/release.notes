@@ -4,6 +4,7 @@
 
                     EOH
 
+   v0r26   06-Aug-2008  eac  Added various tweaks to ancillary (non-gleam) ACD calibration types.
    v0r25   23-Jul-2008  jrb  Modified interface for LAT alignment calib.
    v0r24p1 15-Jul-2008  eac  Fix type in AcdCalibObj.h in previous tag
    v0r24   14-Jul-2008  eac  Added Acd calibrations: AcdCarbon, AcdVetoFit, AcdCnoFit, AcdHighPed

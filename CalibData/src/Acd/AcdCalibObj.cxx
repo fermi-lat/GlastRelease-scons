@@ -28,7 +28,7 @@ namespace CalibData {
 
   /// get the description for a particular calibration
   const AcdCalibDescription* AcdCalibDescription::getDesc(AcdCalibData::CALTYPE calType, int version) {
-//      const std::vector< const AcdCalibDescription* >& descs =  s_descs[calType];
+      buildAcdCalibDescriptions();
       const std::vector< const AcdCalibDescription* >& descs = AcdCalibDescriptionData::instance()->s_descs[calType];
       return version < 0 ? descs.back() : descs[version];
   }

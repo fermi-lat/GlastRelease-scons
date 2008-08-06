@@ -80,7 +80,8 @@ const CLID CLID_Calib_ACD_Ribbon         = 6309;
 const CLID CLID_Calib_ACD_HighPed        = 6310;
 const CLID CLID_Calib_ACD_Carbon         = 6311;
 const CLID CLID_Calib_ACD_VetoFit        = 6312;
-const CLID CLID_Calib_ACD_CnoFit         = 6313;
+const CLID CLID_Calib_ACD_CnoFit         = 6313; 
+const CLID CLID_Calib_ACD_Merit          = 6314;
 
 const CLID CLID_Calib_CalibTest1       = 6500;
 

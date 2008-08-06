@@ -27,7 +27,7 @@ namespace AcdCalibData {
 	       TIME_PROF=12,      // Time profile plots, used in EMI testing
 	       UNPAIRED=13,       // Looking for channels w/ only 1 PMT
 	       HITMAP=14,         // Checking hitmap timing and latching
-	       MERITCALIB=15,     // Filling an ntuple with variables from merit file
+	       MERITCALIB=15,     // Checking to make sure that all the calibs are ok
 	       NDESC=16};  
  
 };

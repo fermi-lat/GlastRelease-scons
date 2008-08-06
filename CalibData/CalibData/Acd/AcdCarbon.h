@@ -34,7 +34,7 @@ namespace CalibData {
   private:    
     /// This is a singleton
     AcdCarbonFitDesc()
-      :AcdCalibDescription(AcdCalibData::GAIN,"ACD_Carbon"){
+      :AcdCalibDescription(AcdCalibData::CARBON,"ACD_Carbon"){
       addVarName("peak");
       addVarName("width");
     }

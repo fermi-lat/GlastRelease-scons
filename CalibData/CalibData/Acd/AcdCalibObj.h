@@ -185,6 +185,9 @@ namespace CalibData {
     /// Calibration values
     std::vector<float> m_vals;
   };
+
+  int buildAcdCalibDescriptions();
+
 }
 
 

@@ -35,8 +35,9 @@ namespace CalibData {
     /// This is a singleton
     AcdCnoFitFitDesc()
       :AcdCalibDescription(AcdCalibData::CNO_FIT,"ACD_CnoFit"){
-      addVarName("cno");
-      addVarName("width");
+      addVarName("slope");
+      addVarName("offset");
+      addVarName("carbonPeak");
     }
   };
 
@@ -81,6 +82,7 @@ namespace CalibData {
     // Provide access to the values
     float getSlope() const { return (*this)[0];}
     float getOffset() const { return (*this)[1]; }
+    float getCarbonPeak() const { return (*this)[2]; }
   };
 }
 
