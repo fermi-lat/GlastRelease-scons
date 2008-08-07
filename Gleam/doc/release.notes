@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r1p1   AWB 07-Aug-08 Set failOnFmxKeyMismatch to false for L1 JO until DFI has been changed.
 * v7r1     HMK 05-Aug-08 Run CalDigiAlg after Trigger alg to allow trigger to
 *          determine the CAL readout mode
 * v7r0p21  AWB 04-Aug-08 Made ACD High Range and Coherent Noise calibs for L1 "vanilla" (and enabled Coherent noise calib).

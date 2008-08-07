@@ -57,6 +57,9 @@ GlastDetSvc.visitorMode = "recon";
 // Crash on FATAL:
 MootSvc.ExitOnFatal = true;
 
+// No filter consistency check: This is temporary until DFI has been changed!
+TriggerAlg.failOnFmxKeyMismatch = false;
+
 
 //
 // Define the Trigger sequence:
