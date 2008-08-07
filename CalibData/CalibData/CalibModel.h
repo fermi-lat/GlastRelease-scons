@@ -82,6 +82,7 @@ const CLID CLID_Calib_ACD_Carbon         = 6311;
 const CLID CLID_Calib_ACD_VetoFit        = 6312;
 const CLID CLID_Calib_ACD_CnoFit         = 6313; 
 const CLID CLID_Calib_ACD_Merit          = 6314;
+const CLID CLID_Calib_ACD_PE             = 6315;
 
 const CLID CLID_Calib_CalibTest1       = 6500;
 
@@ -127,6 +128,7 @@ const CLID CLID_Calib_ANC_QdcPed       = 6702;
       _EXTERN_ std::string   ACD_Carbon;
       _EXTERN_ std::string   ACD_VetoFit;
       _EXTERN_ std::string   ACD_CnoFit;
+      _EXTERN_ std::string   ACD_PE;
 
       // TKR calib types
       _EXTERN_ std::string   TKR_BadChan;

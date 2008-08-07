@@ -14,6 +14,7 @@
 #include "CalibData/Acd/AcdVetoFit.h"
 #include "CalibData/Acd/AcdCnoFit.h"
 #include "CalibData/Acd/AcdCheck.h"
+#include "CalibData/Acd/AcdPE.h"
 
 namespace CalibData {
 
@@ -51,6 +52,8 @@ namespace CalibData {
     AcdCnoFitFitDesc::instance();
     // Calibration checking
     AcdCheckDesc::instance();
+    // Photon electrons/mip
+    AcdPEFitDesc::instance();
 
     return 0;
   }

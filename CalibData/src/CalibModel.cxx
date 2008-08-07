@@ -71,6 +71,7 @@ public:
     CalibData::ACD_Carbon = CalibData::acd +"_Carbon";
     CalibData::ACD_VetoFit = CalibData::acd +"_VetoFit";
     CalibData::ACD_CnoFit = CalibData::acd +"_CnoFit";
+    CalibData::ACD_PE = CalibData::acd +"_PE";
 
     CalibData::TKR_BadChan = CalibData::tkr + "_BadChan";
     CalibData::TKR_HotChan = CalibData::tkr + "_HotChan";
@@ -194,6 +195,8 @@ public:
                                               CLID_Calib_ACD_VetoFit));
     CalibData::pairs.push_back(std::make_pair(CalibData::ACD_CnoFit,
                                               CLID_Calib_ACD_CnoFit));
+    CalibData::pairs.push_back(std::make_pair(CalibData::ACD_PE,
+                                              CLID_Calib_ACD_PE));
 
     CalibData::pairs.push_back(std::make_pair(CalibData::Test_1,
                                               CLID_Calib_CalibTest1));

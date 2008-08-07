@@ -28,7 +28,8 @@ namespace AcdCalibData {
 	       UNPAIRED=13,       // Looking for channels w/ only 1 PMT
 	       HITMAP=14,         // Checking hitmap timing and latching
 	       MERITCALIB=15,     // Checking to make sure that all the calibs are ok
-	       NDESC=16};  
+	       PE=16,             // Number of photon electrons/ MIP
+	       NDESC=17};  
  
 };
 

@@ -78,6 +78,11 @@ namespace CalibData {
     sizeVals(desc.nVar());
   }  
     
+  void AcdCalibObj::setVals(float v1, STATUS stat) {
+    m_vals[0] = v1;
+    setStatus(stat);
+  }
+
   void AcdCalibObj::setVals(float v1, float v2, STATUS stat) {
     m_vals[0] = v1;
     m_vals[1] = v2;
