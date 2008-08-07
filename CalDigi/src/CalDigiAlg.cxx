@@ -199,6 +199,12 @@ StatusCode CalDigiAlg::ensureDigiEventExists() {
 StatusCode CalDigiAlg::registerDigis() {
   StatusCode  sc;
 
+  // check for McIntegratingHit collection. Abort if empty.
+  SmartDataPtr<Event::McIntegratingHitVector> 
+    McCalHits(eventSvc(), EventModel::MC::McIntegratingHitCol );
+  if (McCalHits == 0)
+    return StatusCode::SUCCESS;
+
   // input list of xtalIdx <> mchit relations from CalSignalTool
   const ICalSignalTool::CalRelationMap *xtalMcRelMap = m_calSignalTool->getCalRelationMap();
   if (xtalMcRelMap == 0) {
