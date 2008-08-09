@@ -151,6 +151,9 @@ int DfiParser::readContextAndInfo() {
     metaEvent->set(m_meta.run(), m_meta.datagram(), m_meta.scalers(),
                    m_meta.time(), *(m_meta.configuration()), *(m_meta.keys()));
 
+    metaEvent->setCompressionLevel(m_meta.compressionLevel());
+    metaEvent->setCompressedSize(m_meta.compressedSize());
+
     //metaEvent->setHandlerCol(m_meta.lpaHandlerCol());
     if (m_meta.gammaFilter()) metaEvent->addGammaHandler(*(m_meta.gammaFilter())); 
     if (m_meta.mipFilter()) metaEvent->addMipHandler(*(m_meta.mipFilter())); 
