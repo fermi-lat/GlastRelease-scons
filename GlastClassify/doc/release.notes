@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+09-Aug-08  v6r5p2 LSR protect CTBCalPsfErr in the Pass6 xml file. Looks like I fixed this once before!
 22-Jul-08  v6r5p1 HMK fix typo
 22-Jul-08  v6r5   HMK Update revision for CMT env var removal for SCons
 21-Jul-08  v6r4p1 LSR change EvtEventId to EvtEventId64
