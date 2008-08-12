@@ -54,7 +54,7 @@ public:
     Tem*               getNewTem();
 
     /// "Delete" all objects
-    void Delete();
+    void Delete(const char* opt="");
 
 private:
     /// The constructor is private since this is a singleton

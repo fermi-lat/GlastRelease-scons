@@ -4,6 +4,11 @@ Coordinator:H.Kelly
 
 @verbatim
 
+v11r11    12-Aug-2008 HMK Provide char option parameter to DigiObjectManager's
+          Delete routine.  If "ALL" is passed in, the lists maintained will be
+          completely cleared, rather than maintaining a pool.  There does seem 
+          to be something awry with memory usage even when calling Delete on 
+          each event.  
 v11r10    30-Jul-2008 HMK Add compressionLevel and compressedSize to MetaEvent
 v11r9     27-Jul-2008 HMK Update for DFI and FSW B1-1-0
 v11r8p1   22-Jul-2008 HMK No need to increment the class version of 

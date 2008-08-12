@@ -148,7 +148,7 @@ void DigiEvent::Clear(Option_t *option) {
     m_numTem = -1;
 
     // Tell the MC object manager to reset its iterators
-    DigiObjectManager::getPointer()->Delete();
+    DigiObjectManager::getPointer()->Delete(option);
 
     m_tkrDigiCol->Clear();
     m_gem.Clear();

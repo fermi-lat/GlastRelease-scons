@@ -189,8 +189,25 @@ Tem* DigiObjectManager::getNewTem()
     return tem;
 }
 
-void DigiObjectManager::Delete()
+void DigiObjectManager::Delete(const char* opt)
 {
+
+   if (opt[0] == 'A') {
+       m_acdDigiPool.clear();
+       m_calDigiPool.clear();
+       m_tkrDigiPool.clear();
+       m_tkrDiagnosticDataPool.clear();
+       m_calDiagnosticDataPool.clear();
+       m_temPool.clear();
+       m_acdDigiPoolIdx       = m_acdDigiPool.begin();
+       m_calDigiPoolIdx       = m_calDigiPool.begin();
+       m_tkrDigiPoolIdx       = m_tkrDigiPool.begin();
+       m_tkrDiagnosticDataPoolIdx = m_tkrDiagnosticDataPool.begin();
+       m_calDiagnosticDataPoolIdx = m_calDiagnosticDataPool.begin();
+       m_temPoolIdx               = m_temPool.begin();
+       return;
+   } 
+
     // Keep all of the pools down to a reasonable size...
     // Start with AcdDigi pool
     if (m_acdDigiPool.size() > 5*DIGIPOOLSIZE)
@@ -232,6 +249,9 @@ void DigiObjectManager::Delete()
     m_acdDigiPoolIdx       = m_acdDigiPool.begin();
     m_calDigiPoolIdx       = m_calDigiPool.begin();
     m_tkrDigiPoolIdx       = m_tkrDigiPool.begin();
+    m_tkrDiagnosticDataPoolIdx = m_tkrDiagnosticDataPool.begin();
+    m_calDiagnosticDataPoolIdx = m_calDiagnosticDataPool.begin();
+    m_temPoolIdx               = m_temPool.begin();
 
     return;
 }
