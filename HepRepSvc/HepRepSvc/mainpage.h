@@ -121,10 +121,10 @@
     clients and memory usage)
 
   HepRepInitSvc provides a mechanism for passing jobOption parameters to the fillers,
-  which are not Gaudi components. One such paramater is currently implemented:
+  which are not Gaudi components. One such parameter is currently implemented:
 
   - <b>bool HepRepInitSvc.VertexFiller_dashes</b> causes the extrapolated vertices to be drawn
-  as dashed lines. Default is false.
+  as dashed lines. Default is true.
 
   @section heprep What is HepRep?
 

@@ -45,7 +45,8 @@ public:
  
 private:
 
-    /// Variables which can be changed in TkrControl
+    // Variables connected to jO parameters
+
     bool m_vtx_dashes;
 };
 
