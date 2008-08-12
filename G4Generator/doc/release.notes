@@ -1,6 +1,7 @@
 /** @file release.notes
     @brief package G4Generator 
 @verbatim
+ v5r23p0 12-Aug-08 TU  Francesco's version of EpaxIonPhysics to use this model for alphas
  v5r22p0  2-May-08 TU  Johan's version of EMPhysics to turn off LPM
  v5r21p3  3-Mar-08 jrb Public use of cfitsio to benefit clients' test programs
  v5r21p2 31-Jan-08 TU  Bump primary energy cutoff from 1 TeV to 5+ TeV
