@@ -24,6 +24,7 @@ ApplicationMgr.Runable=  "RootIoSvc";
 Generation.Members={ };
 Digitization.Members={"digiRootReaderAlg"};
 TriggerTest.Members={ };
+CalDigitization.Members = { };
 
 // Redefine Triggered Members to include Integrity check for real data
 // the integrity check should have no effect on MC data
