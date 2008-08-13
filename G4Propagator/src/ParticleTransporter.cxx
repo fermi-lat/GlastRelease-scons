@@ -113,7 +113,7 @@ void ParticleTransporter::setInitStep(const Point& start,  const Vector& dir)
             std::stringstream errorStream;
             errorStream << "ParticleTransporter given invalid initial conditions. pos: " 
                         << start << " dir: " << dir;
-            throw std::domain_error(errorStream.str());
+            throw std::runtime_error(errorStream.str());
         }
 
         // Get the arclength for the first step, if we can...
@@ -222,7 +222,7 @@ bool ParticleTransporter::StepToNextPlane()
             std::stringstream errorStream;
             errorStream << "ParticleTransporter::StepToNextPlane is stuck, aborting processing for this track. pos: " 
                         << curPoint << " dir: " << curDir;
-            throw std::domain_error(errorStream.str());
+            throw std::runtime_error(errorStream.str());
         }
 
 
@@ -326,7 +326,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 std::stringstream errorStream;
                 errorStream << "StepAnArcLength cannot find position within GLAST. pos: " 
                     << overPoint << " dir: " << curDir << " step: " << stepInfo.size();
-                throw std::domain_error(errorStream.str());
+                throw std::runtime_error(errorStream.str());
             }
 
             // If ok, compute the distance to the volume boundary
@@ -358,7 +358,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                     errorStream << "ParticleTransporter::StepAnArcLength is stuck, and call to get localExitNormal is not valid" 
                                 << ", so we are aborting processing for this track. \n pos: " 
                                 << overPoint << " dir: " << curDir << ", volume name: " << pCurVolume->GetName();
-                    throw std::domain_error(errorStream.str());
+                    throw std::runtime_error(errorStream.str());
                 }
 
                 localExitNormal *= *pCurVolume->GetRotation();
@@ -381,7 +381,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                     std::stringstream errorStream;
                     errorStream << "ParticleTransporter::StepAnArcLength is stuck, aborting processing for this track. pos: " 
                         << overPoint << " dir: " << curDir << ", volume name: " << pCurVolume->GetName();
-                    throw std::domain_error(errorStream.str());
+                    throw std::runtime_error(errorStream.str());
                 }
             }
 
@@ -848,7 +848,7 @@ idents::VolumeIdentifier ParticleTransporter::constructId(const Hep3Vector& posi
         std::stringstream errorStream;
         errorStream << "ParticleTransporter::constructId given invalid initial conditions. pos: " 
                     << position << " dir: " << direction;
-        throw std::domain_error(errorStream.str());
+        throw std::runtime_error(errorStream.str());
     }
 
     G4TouchableHistory* touchable  = navigator->CreateTouchableHistory();

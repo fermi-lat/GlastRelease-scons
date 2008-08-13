@@ -250,7 +250,15 @@ void G4PropagationTool::step(double arcLen)
         
         log << MSG::WARNING << exceptString << std::endl; 
 
-        throw std::exception();
+        throw std::runtime_error(exceptString);
+    }
+    catch(std::runtime_error& e)
+    {
+        MsgStream log(msgSvc(), name());
+
+        log << MSG::WARNING << e.what() << endreq;
+
+        throw e;
     }
     catch(...)
     {
@@ -259,7 +267,7 @@ void G4PropagationTool::step(double arcLen)
         
         log << MSG::WARNING << exceptString << std::endl; 
 
-        throw std::exception();
+        throw std::runtime_error(exceptString);
     }
 
     return;
