@@ -339,51 +339,36 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
             // If we are right on the boundary then jump over and recalculate
             while(trackLen <= stepOverDist)
             {
-                // Ok, this drives me nuts but sometimes the "GetLocalExitNormal" returns the normal in the current 
-                // coordinate system, sometimes in the "local" system and I have not yet deduced how you tell. 
-                // So, apply brute force to find the direction to the closest surface (presumably the one we are on)
-                // This will be the normal vector toward the surface causing the problem:
+                // Here is the now famous case of a "stuck track". Its been a most frustrating problem, but I think 
+                // it is finally understood and solved. Personally, I believe they should have tolerances on the 
+                // angle checking in G4Box::DistanceToOut since that is what causes some of the exit normal issues 
+                // I've had. In any case, localExitNormal returns from the ComputeStep call in the coordinate system
+                // of the "mother" volume, not the volume its in. So, we first must unrotate it to get back to the 
+                // local system, then transform that to the global system. ack! 
+                // Once done we can try to jump over the edge and continue. 
                 G4ThreeVector globalExitNrml(0., 0., 0.);
-                bool          globalExitNrmlValid = false;
 
-                // Predefine the three we will try
-                G4ThreeVector xDir(curDir.x() < 0. ? -1. : 1., 0., 0.);
-                G4ThreeVector yDir(0., curDir.y() < 0. ? -1. : 1., 0.);
-                G4ThreeVector zDir(0., 0., curDir.z() < 0. ? -1. : 1.);
+                G4bool isItValid = false;
+                G4ThreeVector localExitNormal = navigator->GetLocalExitNormal(&isItValid);
 
-                // Loop through to find nearest surface
-                for(int axisDir = 0; axisDir < 3; axisDir++)
-                {
-                    G4ThreeVector surfaceDir = xDir;
-
-                    if (axisDir == 1) surfaceDir = yDir;
-                    if (axisDir == 2) surfaceDir = zDir;
-
-                    // Recalculate the distance to the surface in this direction
-                    double distToSurface = navigator->ComputeStep(overPoint, surfaceDir, maxStep, safeStep);
-
-                    // This must be true in one direction (else how did we get here?)
-                    if (distToSurface <= stepOverDist)
-                    {
-                        globalExitNrml      = surfaceDir;
-                        globalExitNrmlValid = true;
-                        break;
-                    }
-                }
-
-                // This can't happen (right?)
-                if (!globalExitNrmlValid)
+                // This cannot happen (which means, of course, that it will happen frequently!)
+                if (!isItValid)
                 {
                     std::stringstream errorStream;
-                    errorStream << "StepAnArcLength cannot find distance to surface: current position: " 
-                        << overPoint << " dir: " << curDir << " step: " << stepInfo.size();
+                    errorStream << "ParticleTransporter::StepAnArcLength is stuck, and call to get localExitNormal is not valid" 
+                                << ", so we are aborting processing for this track. \n pos: " 
+                                << overPoint << " dir: " << curDir << ", volume name: " << pCurVolume->GetName();
                     throw std::domain_error(errorStream.str());
                 }
 
+                localExitNormal *= *pCurVolume->GetRotation();
+                localExitNormal  = navigator->GetLocalToGlobalTransform().TransformAxis(localExitNormal);
+                globalExitNrml   = localExitNormal;
+
                 // Bump our point and, if necessary, the current step distance
-                // Try incrementing by 1 um instead of just the tolerance to see if this fixes stuck problem
-                stepOverDist += 500. * kCarTolerance * curDir.dot(globalExitNrml);
-                overPoint    -= 500. * kCarTolerance * globalExitNrml;
+                // Try incrementing by .1 um instead of just the tolerance to see if this fixes stuck problem
+                stepOverDist += 100. * kCarTolerance * curDir.dot(globalExitNrml);
+                overPoint    += 100. * kCarTolerance * globalExitNrml;
 
                 // Re-step with new points
                 pCurVolume    = navigator->LocateGlobalPointAndSetup(overPoint, 0, false, false);
@@ -395,7 +380,7 @@ bool ParticleTransporter::StepAnArcLength(const double maxArcLen)
                 {
                     std::stringstream errorStream;
                     errorStream << "ParticleTransporter::StepAnArcLength is stuck, aborting processing for this track. pos: " 
-                            << overPoint << " dir: " << curDir;
+                        << overPoint << " dir: " << curDir << ", volume name: " << pCurVolume->GetName();
                     throw std::domain_error(errorStream.str());
                 }
             }
