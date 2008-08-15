@@ -1,0 +1,24 @@
+# -*- python -*-
+# $Header$
+# Authors: Francesco Longo <Francesco.Longo@ts.infn.it>, Tracy Usher <usher@slac.stanford.edu>
+# Version: G4HadronSim-01-03-00
+
+Import('baseEnv')
+Import('listFiles')
+Import('packages')
+progEnv = baseEnv.Clone()
+libEnv = baseEnv.Clone()
+
+libEnv.Tool('G4HadronSimLib', depsOnly = 1)
+
+G4HadronSim = libEnv.StaticLibrary('G4HadronSim', listFiles(['src/Packaging/src/*.cc','src/LHEP/src/*.cc',
+                                                             'src/LHEP_BERT/src/*.cc','src/LHEP_BIC/src/*.cc',
+                                                             'src/LHEP_BIC/src/*.cc','src/QGSP/src/*.cc',
+                                                             'src/QGSP_BERT/src/*.cxx','src/QGSP_BIC/src/*.cxx',
+                                                             'src/QGSC/src/*.cxx','src/QGSC_LEAD/src/*.cxx',
+                                                             'src/LC/src/*.cxx','src/SE/src/*.cxx']))
+
+
+progEnv.Tool('G4HadronSimLib')
+
+progEnv.Tool('registerObjects', package = 'G4HadronSim', libraries = [G4HadronSim], includes = listFiles(['G4HadronSim/*.h']))

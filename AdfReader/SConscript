@@ -1,0 +1,19 @@
+# -*- python -*-
+# $Header$
+# Authors: N.Omodei <nicola.omodei@pi.infn.it>
+# Version AdfReader-00-03-00
+
+Import('baseEnv')
+Import('listFiles')
+Import('packages')
+progEnv = baseEnv.Clone()
+libEnv = baseEnv.Clone()
+
+libEnv.Tool('AdfReaderLib', depsOnly=1)
+AdfReader = libEnv.SharedLibrary('AdfReader', listFiles(['src/Dll/*.cxx']) + listFiles(['src/*.cxx']))
+
+progEnv.Tool('AdfReaderLib')
+
+test_AdfReader=progEnv.Program('test_AdfReader', ['src/test/AdfReaderTest.cxx'] + listFiles(['src/*.cxx']))
+progEnv.Tool('registerObjects', package = 'AdfReader', libraries = [AdfReader], testApps = [test_AdfReader], includes = listFiles(['AdfReader/*.h']))
+

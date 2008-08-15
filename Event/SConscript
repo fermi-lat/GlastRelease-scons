@@ -14,8 +14,10 @@ EventLib = libEnv.SharedLibrary('Event', listFiles(['src/MonteCarlo/*.cxx', 'src
                                                     'src/Digi/*.cxx', 'src/TopLevel/*.cpp', 'src/Utilities/*.cxx']))
 
 progEnv.Tool('EventLib')
-test_Event = progEnv.Program('test_Event', 'src/test/testmain.cxx')
-test_Tables = progEnv.Program('test_Tables', 'src/test/test_RelTabs.cxx')
-test_TkrRecon = progEnv.Program('test_TkrRecon', 'src/test/test_TkrRecon.cxx')
+test_Event = progEnv.Program('test_Event',['src/test/testmain.cxx'])
+test_Tables = progEnv.Program('test_Tables',['src/test/test_RelTabs.cxx'])
 
-progEnv.Tool('registerObjects', package = 'Event', libraries = [EventLib], testApps = [test_Event, test_Tables, test_TkrRecon], includes = listFiles(['Event/*'], recursive = True))
+test_TkrRecon = progEnv.Program('test_TkrRecon_Event', ['src/test/test_TkrRecon.cxx']) 
+
+progEnv.Tool('registerObjects', package = 'Event', libraries = [EventLib],
+             testApps = [test_Event, test_Tables, test_TkrRecon], includes = listFiles(['Event/*'], recursive = True))

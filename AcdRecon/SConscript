@@ -10,10 +10,16 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('AcdReconLib', depsOnly = 1)
-AcdReconLib = libEnv.SharedLibrary('AcdRecon', listFiles(['src/*.cxx', 'src/Dll/*.cxx']))
+AcdRecon = libEnv.SharedLibrary('AcdRecon', listFiles(['src/*.cxx']) + listFiles(['src/Dll/*.cxx']))
 
 progEnv.Tool('AcdReconLib')
+
+if baseEnv['PLATFORM'] != 'win32':
+	progEnv.AppendUnique(LINKFLAGS = '-u  GuiSvc_loadRef')
+
+if baseEnv['PLATFORM'] == 'win32':
+	progEnv.AppendUnique(LINKFLAGS = ' /include:_GuiSvc_loadRef')
+
 test_AcdRecon = progEnv.GaudiProgram('test_AcdRecon', listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'facilities', libraries = [AcdReconLib], testApps = [test_AcdRecon],
-             includes = listFiles(['AcdRecon/*.h']))
+progEnv.Tool('registerObjects', package = 'facilities', libraries = [AcdRecon], testApps = [test_AcdRecon],includes = listFiles(['AcdRecon/*.h']))

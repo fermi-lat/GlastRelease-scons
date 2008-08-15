@@ -18,6 +18,6 @@ AcdUtil = libEnv.SharedLibrary('AcdUtil', ['src/AcdGeometrySvc.cxx', 'src/AcdDet
                                            'src/AcdSimCalibSvc.cxx', 'src/IAcdCalibSvc.cxx'] + listFiles(['src/Dll/*.cxx']) + [testAcdUtilObj])
 
 progEnv.Tool('AcdUtilLib')
-test_AcdUtil = progEnv.GaudiProgram('test_AcdUtil', testAcdUtilObj, test = 1)
+test_AcdUtil = progEnv.GaudiProgram('test_AcdUtil',[testAcdUtilObj], test = 1)
 
 progEnv.Tool('registerObjects', package = 'AcdUtil', libraries = [AcdUtilCommon, AcdUtil], testApps = [test_AcdUtil], includes = listFiles(['AcdUtil/*.h']))

@@ -1,0 +1,19 @@
+# -*- python -*-
+# $Header$
+# Authors: Tracy Usher <usher@slac.stanford.edu>
+# Version: GlastMS-00-03-00
+
+Import('baseEnv')
+Import('listFiles')
+Import('packages')
+progEnv = baseEnv.Clone()
+libEnv = baseEnv.Clone()
+
+libEnv.Tool('GlastMSLib', depsOnly = 1)
+
+
+GlastMS = libEnv.StaticLibrary('GlastMS', listFiles(['src/*.cxx']) + listFiles(['src/*.cc']))
+
+progEnv.Tool('GlastMSLib')
+
+progEnv.Tool('registerObjects', package = 'GlastMS', libraries = [GlastMS], includes = listFiles(['GlastMS/*.h']))

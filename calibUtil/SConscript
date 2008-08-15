@@ -13,7 +13,7 @@ calibUtil = libEnv.SharedLibrary('calibUtil', listFiles(['src/*.cxx', 'src/*.c']
 
 progEnv.Tool('calibUtilLib')
 test_strips = progEnv.Program('test_strips', ['src/test/test_strips.cxx'])
-test_meta = progEnv.Program('test_meta', 'src/test/test_meta.cxx')
+test_meta = progEnv.Program('test_meta',[ 'src/test/test_meta.cxx'])
 calibCoverage = progEnv.Program('calibCoverage', ['src/dbIntegrity/calibCoverage.cxx', 'src/dbIntegrity/Coverage.cxx'])
 
 progEnv.Tool('registerObjects', package = 'calibUtil', libraries = [calibUtil], testApps = [test_strips, test_meta], binaries = [calibCoverage], includes = listFiles(['calibUtil/*.h']))

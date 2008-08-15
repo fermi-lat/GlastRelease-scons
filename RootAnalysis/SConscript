@@ -1,0 +1,22 @@
+# -*- python -*-
+# $Header$
+# Authors: Tracy Usher <usher@SLAC.Stanford.edu>
+# Version: RootAnalysis-08-09-01
+Import('baseEnv')
+Import('listFiles')
+Import('packages')
+progEnv = baseEnv.Clone()
+libEnv = baseEnv.Clone()
+
+# libEnv.Tool('RootAnalysisLib', depsOnly = 1)
+
+# progEnv.Tool('RootAnalysisLib')
+progEnv.Tool('addLibrary', library = baseEnv['rootLibs'])
+progEnv.Tool('addLibrary', library = baseEnv['rootGuiLibs'])
+
+pruneTrees = progEnv.Program('pruneTrees', ['src/pruneTrees/PruneTree.cxx'])
+peelTrees = progEnv.Program('peelTrees', ['src/pruneTrees/PruneRunEvent.cxx', 'src/pruneTrees/runEventPeeler.cxx'])
+mergeRootFiles = progEnv.Program('mergeRootFiles',[ 'src/utilityMacros/mergeRootFiles.cxx'])
+test_RootAnalysis = progEnv.Program('test_RootAnalysis', ['src/test/runTreeAnalysis.cxx', 'src/RootTreeAnalysis/RootTreeAnalysis.cxx'])
+
+progEnv.Tool('registerObjects', package = 'RootAnalysis', testApps = [test_RootAnalysis], binaries = [pruneTrees, peelTrees, mergeRootFiles])

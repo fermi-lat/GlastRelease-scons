@@ -15,6 +15,6 @@ detModel = libEnv.StaticLibrary('detModel', listFiles(['src/Management/*.cxx', '
 progEnv.Tool('detModelLib')
 progEnv.Tool('xmlUtilLib')
 progEnv.Tool('identsLib')
-test_detModel = progEnv.Program('test_detModel', 'src/main.cxx')
+test_detModel = progEnv.Program('test_detModel',[ 'src/main.cxx'])
 
 progEnv.Tool('registerObjects', package = 'detModel', libraries = [detModel], testApps = [test_detModel], includes = listFiles(['detModel/*'], recursive = 1))
