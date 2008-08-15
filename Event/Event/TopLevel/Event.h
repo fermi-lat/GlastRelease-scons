@@ -47,49 +47,49 @@ public:
     static const CLID& classID() { return CLID_Event; }
     
     /// Retrieve event number
-    unsigned long long event () const                                        { return m_event; }
+    unsigned long long event () const        { return m_event; }
     /// Update event number
-    void setEvent (unsigned long long value)                                { m_event = value; }
+    void setEvent (unsigned long long value) { m_event = value; }
     
     /// Retrieve run number
-    long run () const                                            { return m_run; }
+    long run () const           { return m_run; }
     /// Update run number
-    void setRun (long value)                                    { m_run = value; }
+    void setRun (long value)    { m_run = value; }
     
     /// Retrieve reference to event time stamp
-    const TimeStamp& time () const                              { return m_time; }
+    const TimeStamp& time () const                { return m_time; }
     /// Update reference to event time stamp
-    void setTime (const TimeStamp& value)                      { m_time = value; }
+    void setTime (const TimeStamp& value)         { m_time = value; }
 
     /// Retrieve trigger word
-    unsigned int trigger()const                                { return m_trigger;}
+    unsigned int trigger()const         { return m_trigger;}
     /// update trigger word
-    void setTrigger(unsigned int value)                         {m_trigger = value;}
+    void setTrigger(unsigned int value) {m_trigger = value;}
 
     /// Retrieve second trigger word
-    unsigned int triggerWordTwo() const                         {return m_triggerWordTwo; }
+    unsigned int triggerWordTwo() const             {return m_triggerWordTwo; }
     /// update second trigger word
-    void setTriggerWordTwo(unsigned int value)                  { m_triggerWordTwo = value; }
+    void setTriggerWordTwo(unsigned int value)      { m_triggerWordTwo = value; }
     
     /// Retrieve the GEM prescale
-    unsigned int gemPrescale() const                         {return m_gemPrescale; }
+    unsigned int gemPrescale() const        {return m_gemPrescale; }
     /// update the GEM prescale
-    void setGemPrescale(unsigned int value)                  { m_gemPrescale = value; }
+    void setGemPrescale(unsigned int value) { m_gemPrescale = value; }
  
     /// Retrieve the GLT prescale
-    unsigned int gltPrescale() const                         {return m_gltPrescale; }
+    unsigned int gltPrescale() const        {return m_gltPrescale; }
     /// update second trigger word
-    void setGltPrescale(unsigned int value)                  { m_gltPrescale = value; }
+    void setGltPrescale(unsigned int value) { m_gltPrescale = value; }
  
     /// Retrieve prescale expired flag
-    unsigned int prescaleExpired() const                         {return m_prescaleExpired; }
+    unsigned int prescaleExpired() const        {return m_prescaleExpired; }
     /// update second trigger word
-    void setPrescaleExpired(unsigned int value)                  { m_prescaleExpired = value; }
+    void setPrescaleExpired(unsigned int value) { m_prescaleExpired = value; }
     
     /// Retrieve live time
-    double livetime()const                                { return m_livetime;}
+    double livetime()const         { return m_livetime;}
     /// update live time
-    void setLivetime(double value)                         {m_livetime = value;}
+    void setLivetime(double value) {m_livetime = value;}
 
 
     unsigned int gleamEventFlags() const { return m_gleamEventFlags; }
@@ -97,11 +97,13 @@ public:
     void setTkrReconError() { m_gleamEventFlags |= enums::Gleam::TKRRECON; }
     void setCalReconError() { m_gleamEventFlags |= enums::Gleam::CALRECON; }
     void setAcdReconError() { m_gleamEventFlags |= enums::Gleam::ACDRECON; }
+    void setAnalysisNtupleError() { m_gleamEventFlags |= enums::Gleam::ANALYSISNTUPLE; }
     bool goodEvent() { return (m_gleamEventFlags == 0); }
-    bool badEvent() { return (m_gleamEventFlags != 0); }
+    bool badEvent()  { return (m_gleamEventFlags != 0); }
     bool badTkrRecon() { return (m_gleamEventFlags & enums::Gleam::TKRRECON); }
     bool badAcdRecon() { return (m_gleamEventFlags & enums::Gleam::ACDRECON); }
     bool badCalRecon() { return (m_gleamEventFlags & enums::Gleam::CALRECON); }
+    bool badAnalysisNtuple() { return (m_gleamEventFlags & enums::Gleam::ANALYSISNTUPLE); }
  
     
     /// Serialize the object for writing
