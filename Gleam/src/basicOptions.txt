@@ -82,8 +82,8 @@ Triggered.Members={
     "Sequencer/FilterPerformance",
     "Sequencer/User",
     "Sequencer/EventDisplay",
-    "Sequencer/Output",
-    "Sequencer/NtupleMaker"
+    "Sequencer/NtupleMaker",
+    "Sequencer/Output"
  };
 
 

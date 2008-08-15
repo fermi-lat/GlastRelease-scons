@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
 
+* v7r2p1   LSR 14-Aug-08 Move Output after NtupleMaker in 3 jO files
+                           Should have no practical consequences
 * v7r2     HMK 12-Aug-08 Clean up MC JO files and remove obsolete ones
 * v7r1p1   AWB 07-Aug-08 Set failOnFmxKeyMismatch to false for L1 JO until DFI has been changed.
 * v7r1     HMK 05-Aug-08 Run CalDigiAlg after Trigger alg to allow trigger to

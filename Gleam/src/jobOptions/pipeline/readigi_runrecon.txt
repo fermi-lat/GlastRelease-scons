@@ -42,9 +42,9 @@ ApplicationMgr.TopAlg = {"Sequencer/Top"};
 Top.Members = {"Sequencer/Digitization",
                "Sequencer/Calibration",
                "Sequencer/Integrity",
-               "Sequencer/Output",
-               "Sequencer/NtupleMaker" };
-
+               "Sequencer/NtupleMaker",
+               "Sequencer/Output"
+                };
 
 //
 // Needed for EventIntegrityAlg sequence breaking:

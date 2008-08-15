@@ -41,8 +41,8 @@ Filter.Members={ "OnboardFilter", "Count/downlink" };
 
 OutputEvent.Members = {
     "Sequencer/EventDisplay",
-    "Sequencer/Output",
-    "Sequencer/NtupleMaker"
+    "Sequencer/NtupleMaker",
+    "Sequencer/Output"
  };
 
 
