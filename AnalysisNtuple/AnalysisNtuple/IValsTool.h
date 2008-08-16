@@ -53,6 +53,8 @@ public:
     virtual StatusCode browse(MsgStream log, const std::string varName = "") =0;
     /// let the user trigger her own calculation
     virtual StatusCode doCalcIfNotDone() = 0;
+    /// to allow calling from AnalysisNtupleAlg
+    virtual void zeroVals() = 0;
     /// number of times a tool did its calculation for this event
     virtual int getCalcCount() = 0;
     /// return a string containing the value, as above

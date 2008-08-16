@@ -701,3 +701,18 @@ IValsTool::Visitor::eVisitorRet ValBase::traverse(IValsTool::Visitor* v,
     }
     return IValsTool::Visitor::DONE;
 }
+
+void ValBase::printHeader(MsgStream& log)
+{
+      SmartDataPtr<Event::EventHeader> header(m_pEventSvc, EventModel::EventHeader);
+      unsigned long evtId = (header) ? header->event() : 0;
+      long runId = (header) ? header->run() : -1;
+      log << MSG::WARNING << "Caught exception (run,event): ( " 
+          << runId << ", " << evtId << " ) " << endreq;
+}
+
+void ValBase::setAnaTupBit()
+{
+      SmartDataPtr<Event::EventHeader> header(m_pEventSvc, EventModel::EventHeader);
+      if(header) header->setAnalysisNtupleError();
+}

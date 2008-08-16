@@ -251,7 +251,6 @@ StatusCode McValsTool::initialize()
     return sc;
 }
 
-
 StatusCode McValsTool::calculate()
 {
     StatusCode sc = StatusCode::SUCCESS;

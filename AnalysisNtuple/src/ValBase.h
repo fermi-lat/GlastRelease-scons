@@ -159,6 +159,9 @@ protected:
         double slice_m = circleFraction(r-angle_factor);
         return (slice_p + 4.*slice_0 + slice_m)/6.;
     }
+
+    void printHeader(MsgStream& log);
+    void setAnaTupBit();
     
     /// map containing ntuple names, and pointers to the ntuple variables
     valMap m_ntupleMap;
