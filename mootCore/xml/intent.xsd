@@ -402,6 +402,12 @@
       <xs:all minOccurs="0" >
         <xs:element name="ACD_HldSettings" type="ancFileType" 
                     minOccurs="0"/>
+        <xs:element name="ACD_CarbonCalibration" type="ancFileType" 
+                    minOccurs="0"/>
+        <xs:element name="ACD_HighPedCalibration" type="ancFileType" 
+                    minOccurs="0"/>
+        <xs:element name="ACD_HldElectronicsCalibration" type="ancFileType" 
+                    minOccurs="0"/>
       </xs:all>
     </xs:complexType>
   </xs:element>
