@@ -25,7 +25,7 @@ if baseEnv['PLATFORM'] == 'win32':
 
 
 libEnv.Tool('AnalysisNtupleLib', depsOnly=1)
-AnalysisNtuple = SharedLibrary('AnalysisNtuple', listFiles(['src/*.cxx','src/Dll/*.cxx']))
+AnalysisNtuple = libEnv.SharedLibrary('AnalysisNtuple', listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 
 progEnv.Tool('AnalysisNtupleLib')
