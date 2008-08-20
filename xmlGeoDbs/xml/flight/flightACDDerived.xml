@@ -2,6 +2,18 @@
 <derCategory name="derACD" save="true" >
   <overview>Derived constants specific to the ACD</overview>
 
+  <const name="ACDTileScale">
+    <notes>Scale factor to apply to ACD tile dimensions to account for
+       contraction due to temperature</notes>
+    <minus>
+      <const value="1.0" uType="count" />
+      <mul>
+        <refer refTo="d_temperature" />
+        <refer refTo="CT_plastic" />
+      </mul>
+    </minus>
+  </const>
+
   <const name="sideVerticalGap" >
     <notes>Vertical gap between (rows of?) side tiles.  
      As of 10 May 2007, this is an overlap, hence negative</notes> 
@@ -34,7 +46,7 @@
     <notes>Transverse dimension of side tiles in columns 1,2 and 3. </notes>
     <refer refTo="topTileXCentral_l" />
   </const>  
-
+ 
   <const name="tileSideThickness" >
     <notes>Thickness of ACD side depends on configuration of tiles.
            For now (May 2007) it's just double thickness of a single side
@@ -110,8 +122,11 @@
     <refer refTo="tileThickness" />
   </const>
 
-  <const name="ACDTotalR0TransSide" >
-    <notes>transverse length of collection of ACD side tiles,
+<!-- Total transverse dimensions of side rows are used in envelopes and
+     to compute position of centers of tile.  Do not scale for temperature
+-->
+  <const name="sideTileR0_t" >
+    <notes>transverse length of collection of ACD side tiles in row 0,
         e.g those alone -X side of instrument. Compute as sum of tranverse
         dimensions of tiles in R0, columns 0-5, plus gaps</notes>
     <add>
@@ -127,8 +142,361 @@
     </add>
   </const>
 
+  <const name="sideTileR1_t" >
+    <notes>transverse length of collection of ACD side tiles in row 1,
+        e.g those alone -X side of instrument. Compute as sum of tranverse
+        dimensions of tiles in R1, columns 0-5, plus gaps. Use max.
+        transverse extent for trapezoids: dimension across top</notes>
+    <add>
+      <refer refTo="sideTileR1TransTopLesser" />
+      <refer refTo="sideTileR1TransTopGreater" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <mul>
+        <const value="4" uType="count" />
+        <refer refTo="sideHorizontalGap" />
+      </mul>
+    </add>
+  </const>
 
-<!-- Scaled version  for operating temp. -->
+  <const name="sideTileR2_t" >
+    <notes>transverse length of collection of ACD side tiles in row 2,
+        e.g those alone -X side of instrument. Compute as sum of tranverse
+        dimensions of tiles in R1, columns 0-5, plus gaps. Use max.
+        transverse extent for trapezoids: dimension across top</notes>
+    <add>
+      <refer refTo="sideTileR2TransTopLesser" />
+      <refer refTo="sideTileR2TransTopGreater" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <refer refTo="sideTileTransMid" />
+      <mul>
+        <const value="4" uType="count" />
+        <refer refTo="sideHorizontalGap" />
+      </mul>
+    </add>
+  </const>
+
+<!-- Compute transverse coord. of centers of side tiles. Must be done
+     for each row and for two different orderings of tiles          -->
+  <const name="sideTileR0C0Face23_dt" >
+    <notes>For faces 2, 3 lesser comes first</notes>
+    <half>
+      <minus>
+        <refer refTo="sideTileR0TransLesser" />
+        <refer refTo="sideTileR0_t" />
+      </minus>
+    </half>
+  </const>
+          
+  <const name="sideTileR0C1Face23_dt" >
+    <notes> side row 0, col 1 trans. displacement</notes>
+    <add>
+      <refer refTo="sideTileR0C0Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <half>
+        <add>
+          <refer refTo="sideTileTransMid" />
+          <refer refTo="sideTileR0TransLesser" />
+        </add>
+      </half>
+    </add>
+  </const>
+
+  <const name="sideTileR0C2Face23_dt" >
+    <notes> side row 0, col 2 trans. displacement</notes>
+    <add>
+      <refer refTo="sideTileR0C1Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <refer refTo="sideTileTransMid" />
+    </add>
+  </const>
+
+  <const name="sideTileR0C3Face23_dt" >
+    <notes> side row 0, col 3 trans. displacement</notes>
+    <add>
+      <refer refTo="sideTileR0C2Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <refer refTo="sideTileTransMid" />
+    </add>
+  </const>
+
+
+  <const name="sideTileR0C4Face23_dt" >
+    <notes> side row 0, col 4 trans. displacement</notes>
+    <add>
+      <refer refTo="sideTileR0C3Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <half>
+        <add>
+          <refer refTo="sideTileR0TransGreater" />
+          <refer refTo="sideTileTransMid" />
+        </add>
+      </half>
+    </add>
+  </const>
+
+<!-- for faces 1 and 4, order of tiles is reversed -->
+
+  <const name="sideTileR0C0Face41_dt" >
+    <notes>side row 0, col 0 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR0C4Face23_dt" />
+  </const>
+
+  <const name="sideTileR0C1Face41_dt" >
+    <notes>side row 0, col 1 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR0C3Face23_dt" />
+  </const>
+
+  <const name="sideTileR0C2Face41_dt" >
+    <notes>side row 0, col 2 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR0C2Face23_dt" />
+  </const>
+
+  <const name="sideTileR0C3Face41_dt" >
+    <notes>side row 0, col 3 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR0C1Face23_dt" />
+  </const>
+
+  <const name="sideTileR0C4Face41_dt" >
+    <notes>side row 0, col 3 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR0C0Face23_dt" />
+  </const>
+
+<!-- Compute transverse dist of cm from leftmost point of trapezoidal tiles
+     Row 1 is different from Row 2 and faces 2, 3 are different from
+     4, 1 (ordering of tiles is reversed)
+  -->
+
+  <const name="sideTileR1C0Face23_toCM" >
+    <notes>Distance from left edge to CM. Right edge is vertical.
+         Go to right edge, subtract half of average of top and bottom</notes>
+    <minus>
+      <refer refTo="sideTileR1TransTopLesser" />
+      <quo>
+        <add>
+          <refer refTo="sideTileR1TransTopLesser" />
+          <refer refTo="sideTileR1TransBotLesser" />
+        </add>
+        <const value="4.0" uType="count" />
+      </quo>
+    </minus>
+  </const>
+
+
+  <const name="sideTileR1C4Face23_toCM" >
+    <notes>Distance from left edge to CM. Left edge is vertical.</notes>
+    <quo>
+      <add>
+        <refer refTo="sideTileR1TransTopGreater" />
+        <refer refTo="sideTileR1TransBotGreater" />
+      </add>
+      <const value="4.0" uType="count" />
+    </quo>
+  </const>
+
+  <const name="sideTileR2C0Face23_toCM" >
+    <notes>Distance from left edge to CM. Right edge is vertical.
+         Go to right edge, subtract half of average of top and bottom</notes>
+    <minus>
+      <refer refTo="sideTileR2TransTopLesser" />
+      <quo>
+        <add>
+          <refer refTo="sideTileR2TransTopLesser" />
+          <refer refTo="sideTileR2TransBotLesser" />
+        </add>
+        <const value="4.0" uType="count" />
+      </quo>
+    </minus>
+  </const>
+
+
+  <const name="sideTileR2C4Face23_toCM" >
+    <notes>Distance from left edge to CM. Left edge is vertical.</notes>
+    <quo>
+      <add>
+        <refer refTo="sideTileR2TransTopGreater" />
+        <refer refTo="sideTileR2TransBotGreater" />
+      </add>
+      <const value="4.0" uType="count" />
+    </quo>
+  </const>
+
+<!-- displacements for side row 1 -->
+  <const name="sideTileR1C0Face23_dt" >
+    <notes>r1 c0 disp, a trapezoid</notes>
+    <minus>
+      <refer refTo="sideTileR1C0Face23_toCM" />
+      <half>
+        <refer refTo="sideTileR1_t" />
+      </half>
+    </minus>
+  </const>
+
+  <const name="sideTileR1C1Face23_dt" >
+    <notes>r1 c1 disp. Go to left edge, add max transverse dim of trap, gap,
+         and half of our own transverse dim.</notes>
+    <minus>
+      <add>
+        <refer refTo="sideTileR1TransTopLesser" />
+        <refer refTo="sideHorizontalGap" />
+        <half>
+          <refer refTo="sideTileTransMid" />
+        </half>
+      </add>
+      <half>
+        <refer refTo="sideTileR1_t" />
+      </half>
+    </minus>
+  </const>
+
+  <const name="sideTileR1C2Face23_dt" >
+    <notes> r1 c2 disp.  Take previous, add one tile extent + gap</notes>
+    <add>
+      <refer refTo="sideTileR1C1Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <refer refTo="sideTileTransMid" />
+    </add>
+  </const>
+
+  <const name="sideTileR1C3Face23_dt" >
+    <notes> r1 c3 disp.  Take previous, add one tile extent + gap</notes>
+    <add>
+      <refer refTo="sideTileR1C2Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <refer refTo="sideTileTransMid" />
+    </add>
+  </const>
+
+  <const name="sideTileR1C4Face23_dt" >
+    <notes> r1 c4 disp.  Take previous, add 1/2 mid tile, gap and distance
+           to our cm</notes>
+    <add>
+      <refer refTo="sideTileR1C3Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <half>
+        <refer refTo="sideTileTransMid" />
+      </half>
+      <refer refTo="sideTileR1C4Face23_toCM" />
+    </add>
+  </const>
+
+<!-- Displacements for R 1, faces 4,1 are reverse of those for faces 2,3 -->
+  <const name="sideTileR1C0Face41_dt" >
+    <notes>side row 1, col 0 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR1C4Face23_dt" />
+  </const>
+
+  <const name="sideTileR1C1Face41_dt" >
+    <notes>side row 1, col 1 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR1C3Face23_dt" />
+  </const>
+
+  <const name="sideTileR1C2Face41_dt" >
+    <notes>side row 1, col 2 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR1C2Face23_dt" />
+  </const>
+
+  <const name="sideTileR1C3Face41_dt" >
+    <notes>side row 1, col 3 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR1C1Face23_dt" />
+  </const>
+
+  <const name="sideTileR1C4Face41_dt" >
+    <notes>side row 1, col 3 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR1C0Face23_dt" />
+  </const>
+
+<!-- Same computations for row 2 as for row 1.  Only the names have
+     changed, to protect the innocent -->
+  <const name="sideTileR2C0Face23_dt" >
+    <notes>r2 c0 disp, a trapezoid</notes>
+    <minus>
+      <refer refTo="sideTileR2C0Face23_toCM" />
+      <half>
+        <refer refTo="sideTileR2_t" />
+      </half>
+    </minus>
+  </const>
+
+  <const name="sideTileR2C1Face23_dt" >
+    <notes>r2 c1 disp. Go to left edge, add max transverse dim of trap, gap,
+         and half of our own transverse dim.</notes>
+    <minus>
+      <add>
+        <refer refTo="sideTileR2TransTopLesser" />
+        <refer refTo="sideHorizontalGap" />
+        <half>
+          <refer refTo="sideTileTransMid" />
+        </half>
+      </add>
+      <half>
+        <refer refTo="sideTileR2_t" />
+      </half>
+    </minus>
+  </const>
+
+  <const name="sideTileR2C2Face23_dt" >
+    <notes> r2 c2 disp.  Take previous, add one tile extent + gap</notes>
+    <add>
+      <refer refTo="sideTileR2C1Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <refer refTo="sideTileTransMid" />
+    </add>
+  </const>
+
+  <const name="sideTileR2C3Face23_dt" >
+    <notes> r2 c3 disp.  Take previous, add one tile extent + gap</notes>
+    <add>
+      <refer refTo="sideTileR2C2Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <refer refTo="sideTileTransMid" />
+    </add>
+  </const>
+
+  <const name="sideTileR2C4Face23_dt" >
+    <notes> r2 c4 disp.  Take previous, add 1/2 mid tile, gap and distance
+           to our cm</notes>
+    <add>
+      <refer refTo="sideTileR2C3Face23_dt" />
+      <refer refTo="sideHorizontalGap" />
+      <half>
+        <refer refTo="sideTileTransMid" />
+      </half>
+      <refer refTo="sideTileR2C4Face23_toCM" />
+    </add>
+  </const>
+
+<!-- Displacements for R 2, faces 4,1 are reverse of those for faces 2,3 -->
+  <const name="sideTileR2C0Face41_dt" >
+    <notes>side row 1, col 0 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR2C4Face23_dt" />
+  </const>
+
+  <const name="sideTileR2C1Face41_dt" >
+    <notes>side row 1, col 1 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR2C3Face23_dt" />
+  </const>
+
+  <const name="sideTileR2C2Face41_dt" >
+    <notes>side row 1, col 2 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR2C2Face23_dt" />
+  </const>
+
+  <const name="sideTileR2C3Face41_dt" >
+    <notes>side row 1, col 3 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR2C1Face23_dt" />
+  </const>
+
+  <const name="sideTileR2C4Face41_dt" >
+    <notes>side row 1, col 3 disp. for faces 1,4</notes>
+      <refer refTo="sideTileR2C0Face23_dt" />
+  </const>
+
+<!-- End of side row 2 tiles, transverse placement constants  -->
+
+<!-- Scaled tile dimensions  for operating temp. -->
 
   <const name="sideTileR3TransOp">
     <notes>Scaled for operating temperature 
@@ -138,9 +506,6 @@
       <refer refTo="ACDTileScale" />
     </mul>
   </const>
-
-
-
 
 <!-- Scale tile thicknesses for operating temperature -->
   <const name="tileThicknessOp">

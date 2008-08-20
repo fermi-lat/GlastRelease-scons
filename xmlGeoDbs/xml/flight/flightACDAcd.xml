@@ -1112,77 +1112,192 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
 
 <!-- Make rows for faces 2 & 3) with lesser trans. dimension first.
      Side 2 rotated +90 about Z is isomorphic to side 3.
+
+     Do same for sides 1 and 4 
+     Side 4 rotated +90 about Z is isomorphic to side 1.
  -->
 
 <!-- Now for horizontal (perp to Z) arrangement -->
-<stackX name="sideTileRow0Face23" >
-  <axisPos volume="sideTileR0EdgeLesser">
-    <idField name="fCol" value="0" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="1" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="2" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="3" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0EdgeGreater" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="4" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-</stackX>
 
-<stackX name="sideTileRow1Face23" >
-  <axisPos volume="sideTileR1EdgeLesser">
-    <idField name="fCol" value="0" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="1" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="2" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="3" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1EdgeGreater" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="4" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-</stackX>
+<box name="sideTileRow0Env" 
+   XREF="sideTileR0_t" YREF="sideTileHeight0Op" ZREF="tileThicknessOp" />
 
-<stackX name="sideTileRow2Face23" >
-  <axisPos volume="sideTileR2EdgeLesser">
+<composition name="sideTileRow0Face23" envelope="sideTileRow0Env" >
+  <posXYZ volume="sideTileR0EdgeLesser" XREF="sideTileR0C0Face23_dt">
     <idField name="fCol" value="0" />
     <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0Mid" XREF="sideTileR0C1Face23_dt">
     <idField name="fCol" value="1" />
     <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0Mid" XREF="sideTileR0C2Face23_dt">
     <idField name="fCol" value="2" />
     <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0Mid" XREF="sideTileR0C3Face23_dt">
     <idField name="fCol" value="3" />
     <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2EdgeGreater" gapREF="sideHorizontalGap" >
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0EdgeGreater" XREF="sideTileR0C4Face23_dt">
     <idField name="fCol" value="4" />
     <idField name="fTileSeg" value="0" />
-  </axisPos>
-</stackX>
+  </posXYZ>
+</composition>
+
+<!-- Row 0 for faces 1 and 4 -->
+
+<composition name="sideTileRow0Face41" envelope="sideTileRow0Env" >
+  <posXYZ volume="sideTileR0EdgeGreater" XREF="sideTileR0C0Face41_dt">
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0Mid" XREF="sideTileR0C1Face41_dt">
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0Mid" XREF="sideTileR0C2Face41_dt">
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0Mid" XREF="sideTileR0C3Face41_dt">
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR0EdgeLesser" XREF="sideTileR0C4Face41_dt">
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+</composition>
+
+<!-- Side Row 1-->
+<box name="sideTileRow1Env" 
+   XREF="sideTileR1_t" YREF="sideTileHeight1Op" ZREF="tileThicknessOp" />
+
+<!-- faces 2 and 3 -->
+<composition name="sideTileRow1Face23" envelope="sideTileRow1Env" >
+  <posXYZ volume="sideTileR1EdgeLesser" XREF="sideTileR1C0Face23_dt">
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1Mid" XREF="sideTileR1C1Face23_dt">
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1Mid" XREF="sideTileR1C2Face23_dt">
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1Mid" XREF="sideTileR1C3Face23_dt">
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1EdgeGreater" XREF="sideTileR1C4Face23_dt">
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+</composition>
+
+<!-- Row 1 for faces 1 and 4 -->
+<composition name="sideTileRow1Face41" envelope="sideTileRow1Env" >
+  <posXYZ volume="sideTileR1EdgeGreater" XREF="sideTileR1C0Face41_dt">
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1Mid" XREF="sideTileR1C1Face41_dt">
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1Mid" XREF="sideTileR1C2Face41_dt">
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1Mid" XREF="sideTileR1C3Face41_dt">
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR1EdgeLesser" XREF="sideTileR1C4Face41_dt">
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+</composition>
+
+<!-- Side Row 2-->
+<box name="sideTileRow2Env" 
+   XREF="sideTileR2_t" YREF="sideTileHeight2Op" ZREF="tileThicknessOp" />
+
+<!-- faces 2 and 3 -->
+<composition name="sideTileRow2Face23" envelope="sideTileRow2Env" >
+  <posXYZ volume="sideTileR2EdgeLesser" XREF="sideTileR2C0Face23_dt">
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2Mid" XREF="sideTileR2C1Face23_dt">
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2Mid" XREF="sideTileR2C2Face23_dt">
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2Mid" XREF="sideTileR2C3Face23_dt">
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2EdgeGreater" XREF="sideTileR2C4Face23_dt">
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+</composition>
+
+<!-- Row 2, faces 4 and 1 -->
+<composition name="sideTileRow2Face41" envelope="sideTileRow2Env" >
+  <posXYZ volume="sideTileR2EdgeGreater" XREF="sideTileR2C0Face41_dt">
+    <idField name="fCol" value="0" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2Mid" XREF="sideTileR2C1Face41_dt">
+    <idField name="fCol" value="1" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2Mid" XREF="sideTileR2C2Face41_dt">
+    <idField name="fCol" value="2" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2Mid" XREF="sideTileR2C3Face41_dt">
+    <idField name="fCol" value="3" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+
+  <posXYZ volume="sideTileR2EdgeLesser" XREF="sideTileR2C4Face41_dt">
+    <idField name="fCol" value="4" />
+    <idField name="fTileSeg" value="0" />
+  </posXYZ>
+</composition>
 
 <stackX name="sideTileRowR3" >
   <axisPos volume="sideTileR3">
@@ -1191,78 +1306,6 @@ components directly in LATInner.  See guts of this in flightACDTop.xml
   </axisPos>
 </stackX>
 
-<!-- Do same for sides 1 and 4 
-     Side 4 rotated +90 about Z is isomorphic to side 1. -->
-
-<stackX name="sideTileRow0Face41" >
-  <axisPos volume="sideTileR0EdgeLesser">
-    <idField name="fCol" value="4" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="3" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="2" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="1" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR0EdgeGreater" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="0" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-</stackX>
-
-<stackX name="sideTileRow1Face41" >
-  <axisPos volume="sideTileR1EdgeLesser">
-    <idField name="fCol" value="4" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="3" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="2" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="1" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR1EdgeGreater" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="0" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-</stackX>
-
-
-<stackX name="sideTileRow2Face41" >
-  <axisPos volume="sideTileR2EdgeLesser">
-    <idField name="fCol" value="4" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="3" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="2" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2Mid" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="1" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-  <axisPos volume="sideTileR2EdgeGreater" gapREF="sideHorizontalGap" >
-    <idField name="fCol" value="0" />
-    <idField name="fTileSeg" value="0" />
-  </axisPos>
-</stackX>
 
 <!-- Each row will be positioned independently in flightSection.  Ugh -->
 

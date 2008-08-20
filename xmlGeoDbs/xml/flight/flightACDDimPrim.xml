@@ -102,9 +102,11 @@ gap at the corners between adjacent columns of side tiles  (July 03; revised
 according to 3-d model 6-23-03, from old value of 3.0)
 (11/22/05) 2.0 still correct.</prim>
 
+<!--
 <prim name="ACDTileScale" value = "0.9968" uType="none">Scale factor
 used to transform tile dimensions to operating temperature:
 5*10**(-5) by 40 degrees, from Alex.  Added July 2005</prim>
+-->
 
 <!--
 <prim name="ACDTileScale" value = "1.0" uType="none">Unshrunk tiles;
