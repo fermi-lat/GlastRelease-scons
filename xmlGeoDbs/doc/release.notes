@@ -4,6 +4,9 @@
  *
  *                    **EOH**
 
+   v1r47p5 20-Aug-2008 jrb  1. Correctly locate side tiles by using composition
+                               rather than stack
+                            2. Assume higher (more realistic) operating temp.
    v1r47p4 23-Jul-2008 jrb  Pick up Navid's latest changes for SCons, new RM
    v1r47p3 23-Apr-2008 jrb  Set CsI density for cu06 back to old (correct)
                             value of 4.51gr/cm**3
