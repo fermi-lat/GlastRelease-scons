@@ -191,6 +191,13 @@ PtValsAlg.PointingHistory = {"FT2_Gleam.fits", "", ""};
 
 
 //
+// S/C alignment:
+//
+FT1Alg.CorrectForAberration = true;
+FT1Alg.AlignmentFlavor      = "vanilla";
+
+
+//
 // Make ntuple:
 //
 NtupleMaker.Members += {"AnalysisNtupleAlg"}; 
