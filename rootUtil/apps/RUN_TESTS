@@ -12,7 +12,10 @@ export PATH=../${CMTCONFIG}:${PATH}
    testGenerateData.exe \
 && testMakeCel.exe \
 && testReadCel.exe \
+&& celInspect.exe test.cel.root \
+&& celRelocate.exe -r $HOME -a HOME test.cel.root \
 && celInspect.exe test.cel.root
+
 
 
 

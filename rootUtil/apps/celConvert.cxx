@@ -98,7 +98,7 @@ void print_files
         ((TObjArray*)orderedFileNames[iComponent])->Add(objFileName) ;
         if (cel.treeName(iComponent)->IsEqual(treeNames[iComponent])!=kTRUE)
          {
-          std::cerr<<"Mutable tree names not supported"<<std::endl ;
+          std::cerr<<"Mutable tree names not yet supported"<<std::endl ;
           return ;
          }
        }

@@ -19,17 +19,16 @@
 #endif
 
 
-void relocateInputFilePath( TObjString * inputFilePath )
+void relocateInputFilePath( TObjString * inputFilePath, const TString & remove_path, const TString & add_path  )
  {
   TString path = inputFilePath->GetString() ;
-  Ssiz_t find ;
-  find = path.Last('/') ;
-  if (find!=kNPOS) 
-   { path.Remove(0,find+1) ; }
+  if (path.BeginsWith(remove_path)==kTRUE)
+   { path.Remove(0,remove_path.Length()) ; }
+  path = add_path+path ;
   inputFilePath->SetString(path) ;
  }
 
-void relocateCelFile( const char * fileName )
+void relocateCelFile( const char * fileName, const TString & remove_path, const TString & add_path  )
  {
   std::cout << "==== " << fileName << std::endl ;
   TString oldFileName = fileName ;
@@ -85,7 +84,7 @@ void relocateCelFile( const char * fileName )
       //std::cout<<"== Set "<<iSet<<" / Component "<<componentName->GetString()<<std::endl ;
       fileIter = new TIter(componentFileNames) ;
       while ((inputFilePath=((TObjString *)fileIter->Next())))
-       { relocateInputFilePath(inputFilePath) ; }
+       { relocateInputFilePath(inputFilePath,remove_path,add_path) ; }
       delete fileIter ;
       fileIter = 0 ;
      }
@@ -139,6 +138,8 @@ void usage()
        << std::endl
        << "\tOPTIONS for all jobs" << std::endl
        << "\t   -h                : print this message" << std::endl
+       << "\t   -r <path>         : remove <path> at the beginning of each input data file paths" << std::endl
+       << "\t   -a <path>         : add <path> at the beginning of each input data file paths" << std::endl
        << std::endl ;
  }
   
@@ -153,13 +154,20 @@ int main(int argn, char** argc)
 
   //  options
   int opt;
-  while ( (opt = getopt(argn, argc, "h")) != EOF )
+  TString remove_path, add_path ;
+  while ( (opt = getopt(argn, argc, "hr:a:")) != EOF )
    {
     switch (opt)
      {
     case 'h':   // help      
       usage() ;
       return 1 ;
+    case 'r':   //  output
+      remove_path = TString(optarg) ;
+      break ;
+    case 'a':   //  output
+      add_path = TString(optarg) ;
+      break ;
     case '?':
       usage();
       return 2;
@@ -169,18 +177,25 @@ int main(int argn, char** argc)
      }
    }
 
+  if ((remove_path=="")&&(add_path=="") )
+   {
+    std::cerr << "celRelocate.exe" << " requires at least -r or -a option." << std::endl
+         << "Try " << "celRelocate.exe" << " -h" << std::endl ;
+    return 4 ;
+   }
+
   if ( argn - optind == 0 )
    {
     std::cerr << "celRelocate.exe" << " requires some CEL files" << std::endl
-	 << "Try " << "celRelocate.exe" << " -h" << std::endl ;
-    return 3 ;
+         << "Try " << "celRelocate.exe" << " -h" << std::endl ;
+    return 4 ;
    }
 
   for ( int idx = optind ; idx < argn ; idx++ )
    {
     if (backupFile(argc[idx])==kFALSE)
-     { return 4 ; }
-    relocateCelFile(argc[idx]) ;
+     { return 5 ; }
+    relocateCelFile(argc[idx],remove_path,add_path) ;
    }
 
   return 0 ;
