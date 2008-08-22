@@ -81,6 +81,16 @@ void CelEventComponent::registerEntry( TTree & tree )
    { _currentEntryIndex.set(tIdx,tree.GetReadEntry()) ; }
  }
 
+void CelEventComponent::registerEntry
+ ( const TString & filePath, const TString & treeName,
+   Long64_t treeNbEntries, Long64_t entryIndex )
+ {
+  UShort_t tIdx = _currentSet.getKey(filePath,treeName) ;
+  if ( tIdx == rootUtil::NOKEY )
+   { tIdx = _currentSet.addTree(filePath,treeName,treeNbEntries) ; }
+  _currentEntryIndex.set(tIdx,entryIndex) ;
+ }
+
 void CelEventComponent::nextSet()
  {
   _currentOffset.increment(_currentSet.entries()) ;

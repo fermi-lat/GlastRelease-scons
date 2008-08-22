@@ -24,7 +24,7 @@ class TChain ;
 class TTree ;
 class TFile ;
 class TObjArray ;
-class TArrayL64 ;
+//class TArrayL64 ;
 
 class CelFileAndTreeOffset  : public BranchGroup
  {

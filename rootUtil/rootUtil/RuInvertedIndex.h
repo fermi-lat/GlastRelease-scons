@@ -17,7 +17,7 @@
 
 class RuChain ;
 
-    // A new kind of chain index, meant to do the reverse transformation from
+// A new kind of chain index, meant to do the reverse transformation from
 // an entry number to a major/minor pair.
 // The implementation favors quickness over memory size : when relevant
 // indices already exists in the underlying trees, they are inverted and
@@ -27,7 +27,7 @@ class RuInvertedIndex
  {
   public :
    
-    RuInvertedIndex( RuChain *, const char* majorname, const char* minorname ) ;
+    RuInvertedIndex( RuChain * ) ;
     ~RuInvertedIndex() ;
     Bool_t GetMajorMinorWithEntry                      // Affect the current
      ( Long64_t entryNumber,                              // entry of the chain.

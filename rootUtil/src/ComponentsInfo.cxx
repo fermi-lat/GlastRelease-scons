@@ -5,14 +5,22 @@
 //========================================================
 //
 
-#include <rootUtil/ComponentsInfo.h>
-
+// Unhappily enough, I need to use a given include syntax
+// for the skimmer interpretation, and another one for
+// GlastRelease compilation
 #if !defined(__CINT__) || defined(__MAKECINT__)
+
+#  include <rootUtil/ComponentsInfo.h>
 #  include <Riostream.h>
 #  include <TNamed.h>
 #  include <TObjArray.h>
 #  include <TObjString.h>
 #  include <TString.h>
+
+#else
+
+#  include "ComponentsInfo.h"
+
 #endif
 
 ComponentsInfo::ComponentsInfo()
@@ -43,10 +51,9 @@ const ComponentInfo * ComponentsInfo::getInfo( const TString & componentName ) c
   return 0 ;
  }
 
-Bool_t ComponentsInfo::needLibrary( const TString & componentNames ) const
+Bool_t ComponentsInfo::needLibrary( const RuStringSet & componentNames ) const
  {
-  TObjArray * componentNamesArray = componentNames.Tokenize(':') ;
-  TIter componentNamesIter(componentNamesArray) ;
+  TIter componentNamesIter = componentNames.MakeIterator() ;
   TObjString * componentName ;
   TIter * infoIter ;
   ComponentInfo * currentInfo ;
@@ -59,14 +66,12 @@ Bool_t ComponentsInfo::needLibrary( const TString & componentNames ) const
           (currentInfo->libName!=""))
        {
         delete infoIter ;
-        delete componentNamesArray ;
         return kTRUE ;
        }
      }
     delete infoIter ;
     infoIter = 0 ;
    }
-  delete componentNamesArray ; 
   return kFALSE ;
  }
  

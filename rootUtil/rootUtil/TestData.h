@@ -60,22 +60,26 @@ typedef TestComponent<TestReconLabel> TestReconComponent ;
 // Dummy data classes
 //==================================================
 
+typedef UInt_t IdType ;
 
 class TestAbstractData
  {
   public :
-    TestAbstractData( Long64_t runID =0, Long64_t eventID =0)
-     : runID_(runID), eventID_(eventID) {}
-    Long64_t getRunID() const { return runID_ ; }
-    Long64_t getEventID() const { return eventID_ ; }
-    void setRunID( Long64_t runID ) { runID_ = runID ; }
-    void setEventID( Long64_t eventID ) { eventID_ = eventID ; }
+    TestAbstractData( IdType runID =0, IdType eventID =0, Bool_t isValid =kTRUE )
+     : runID_(runID), eventID_(eventID), isValid_(isValid) {}
+    IdType getRunID() const { return runID_ ; }
+    IdType getEventID() const { return eventID_ ; }
+    Bool_t isValid() const { return isValid_ ; }
+    void setRunID( IdType runID ) { runID_ = runID ; }
+    void setEventID( IdType eventID ) { eventID_ = eventID ; }
+    void setIsValid( Bool_t isValid ) { isValid_ = isValid ; }
     void incrementRunID() { ++runID_ ; }
     void incrementEventID() { ++eventID_ ; }
     virtual const TString & getComponentName() const =0 ;
   private :
-    Long64_t runID_ ;
-    Long64_t eventID_ ;
+    IdType runID_ ;
+    IdType eventID_ ;
+    Bool_t isValid_ ;
     ClassDef(TestAbstractData,1)
  } ;
  
@@ -85,7 +89,7 @@ template <class Label>
 class TestData : public TestAbstractData
  {
   public :
-    TestData( Long64_t runID =0, Long64_t eventID =0 )
+    TestData( IdType runID =0, IdType eventID =0 )
      : TestAbstractData(runID,eventID) {}
     virtual const TString & getComponentName() const
      { return TestComponent<Label>::info()->componentName ; }
@@ -104,10 +108,10 @@ typedef TestData<TestReconLabel> TestRecon ;
 
 
 template <class Label>
-int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t lastEvent, TRandom * random, Bool_t makeIndex = kFALSE )
+int testWrite( char * baseName, IdType runId, IdType firstEvent, IdType lastEvent, TRandom * random, Bool_t makeIndex = kFALSE )
  {   
   Int_t buffer = 64000 ;
-  Int_t splitLevel = 1 ;
+  Int_t splitLevel = 99 ;
   
   TString fileName = baseName ;
   fileName += TestComponent<Label>::info()->componentName ;
@@ -138,17 +142,15 @@ int testWrite( char * baseName, Long64_t runId, Long64_t firstEvent, Long64_t la
     <<"[testWrite] Filling "
     <<TestComponent<Label>::info()->treeName<<" tree" << std::endl ;
   
-  Long64_t ievent = firstEvent, eventID  ;
+  IdType ievent = firstEvent, eventID  ;
   while ( ievent <= lastEvent )
    {
     if (random&&random->Uniform()>0.5)
      {
       eventID = componentEntry->getEventID() ;
-      componentEntry->setRunID(-1) ;
-      componentEntry->setEventID(-1) ;
-         t->Fill() ;
-      componentEntry->setEventID(eventID) ;
-      componentEntry->setRunID(runId) ;
+      componentEntry->setIsValid(kFALSE) ;
+      t->Fill() ;
+      componentEntry->setIsValid(kTRUE) ;
      }
     else
      {
@@ -204,7 +206,7 @@ class TestReader
 	  
     TObjArray readers_ ;
     RootForest forest_ ;
-    Long64_t currentEvent_ ;
+    IdType currentEvent_ ;
 	
     struct BranchReader : public TObject
      {

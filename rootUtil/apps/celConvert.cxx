@@ -154,8 +154,9 @@ void print_events
     if ((info->runIdBranchName=="")||(info->eventIdBranchName==""))
      { continue ; }
     chain = cel.newChain(iComponent) ;
+    chain->SetInfo(*info) ;
     componentsChains[iComponent] = chain ;
-    index = new RuInvertedIndex(chain,info->runIdBranchName,info->eventIdBranchName) ;
+    index = new RuInvertedIndex(chain) ;
     componentsIndexes[iComponent] = index ;
    }
 

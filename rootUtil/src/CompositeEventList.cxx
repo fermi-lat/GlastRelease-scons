@@ -13,6 +13,7 @@
 #include "rootUtil/CelEventComponent.h"
 #include "rootUtil/CelIndex.h"
 #include "rootUtil/RuChain.h"
+#include "rootUtil/RuStringSet.h"
 #include "rootUtil/RuUtil.h"
 
 #include <TTree.h>
@@ -269,13 +270,24 @@ CompositeEventList::~CompositeEventList()
 
 
 UInt_t CompositeEventList::numComponents() const
- { return _compList.size() ; }
+ {
+  static TString caller ("CompositeEventList::numComponents") ;
+  if ( ! checkCelPrepared(caller) ) return 0 ;
+  return _compList.size() ;
+ }
 
 const TString & CompositeEventList::componentName( UInt_t componentIndex ) const
- { return _compNames[componentIndex] ; }
+ {
+  static TString empty ("") ;
+  static TString caller ("CompositeEventList::componentName") ;
+  if ( ! checkCelPrepared(caller) ) return empty ;
+  return _compNames[componentIndex] ;
+ }
 
 UInt_t CompositeEventList::componentIndex( const TString & componentName ) const
  {
+  static TString caller ("CompositeEventList::componentIndex") ;
+  if ( ! checkCelPrepared(caller) ) return COMPONENT_UNDEFINED ;
   std::map<TString,UInt_t>::const_iterator itrFind = _compMap.find(componentName) ;
   return itrFind != _compMap.end() ? itrFind->second : COMPONENT_UNDEFINED ;
  }
@@ -323,6 +335,16 @@ UInt_t CompositeEventList::declareComponents( const TObjArray * names )
     TObjString * s = static_cast<TObjString*>(names->UncheckedAt(i)) ;
     declareComponent(s->GetString()) ;
    }
+  return numComponents() ;
+ }
+
+UInt_t CompositeEventList::declareComponents( const RuStringSet & names )
+ {
+  TIter dataTypeNamesItr = names.MakeIterator() ;
+  TObjString * componentObjName ;
+  TString componentName ;
+  while ((componentObjName=(TObjString *)dataTypeNamesItr()))
+   { declareComponent(componentObjName->String()) ; }
   return numComponents() ;
  }
 
@@ -460,12 +482,23 @@ Int_t CompositeEventList::makeCelBranches
   return total ;
  }
 
-Long64_t CompositeEventList::fillEvent( const TObjArray & trees )
+Long64_t CompositeEventList::fillEventFromTrees( const TObjArray & trees )
  {
   std::vector<TTree*> v;
   for ( Int_t i(0); i < trees.GetEntries(); i++ )
    {
     TTree* t = static_cast<TTree*>(trees.UncheckedAt(i));
+    v.push_back(t);
+   }
+  return fillEvent(v);
+ }
+
+Long64_t CompositeEventList::fillEventFromChains( const TObjArray & chains )
+ {
+  std::vector<TTree*> v;
+  for ( Int_t i(0); i < chains.GetEntries(); i++ )
+   {
+    TTree* t = (static_cast<TChain*>(chains.UncheckedAt(i)))->GetTree();
     v.push_back(t);
    }
   return fillEvent(v);
@@ -522,6 +555,29 @@ Bool_t CompositeEventList::fillEntry(  UInt_t componentIndex, TTree * tree )
   CelEventComponent * comp = getComponent(componentIndex) ;
   assert ( 0 != comp ) ;
   comp->registerEntry(*tree) ;
+  
+  return kTRUE ;
+}
+
+Bool_t CompositeEventList::fillEntry(  const TString & componentName,
+      const TString & fileName, const TString & treeName,
+      Long64_t treeNbEntries, Long64_t entryIndex )
+ { return fillEntry(componentIndex(componentName),fileName,treeName,treeNbEntries,entryIndex) ; }
+
+  // Register the current entry for a given component
+// After one has called fillEntry() for all components,
+// he must call fillEvent().
+Bool_t CompositeEventList::fillEntry(  UInt_t componentIndex,
+      const TString & fileName, const TString & treeName,
+      Long64_t treeNbEntries, Long64_t entryIndex )
+ {
+  TString caller ("CompositeEventList::fillEntry") ;
+  if ( ! checkCelPrepared(caller) ) return kFALSE ;
+    
+  // TODO : check tree and component names ?
+  CelEventComponent * comp = getComponent(componentIndex) ;
+  assert ( 0 != comp ) ;
+  comp->registerEntry(fileName,treeName,treeNbEntries,entryIndex) ;
   
   return kTRUE ;
 }
@@ -768,14 +824,14 @@ Int_t CompositeEventList::shallowRead( Long64_t eventIndex )
   if ( eventIndex == _currentLink.eventIndex() )
    { return 0 ; }
 
-  // is it useful below, for a shallow (=>fast) read ???
-  if ( eventIndex != 0 )
-   {
-    if ( eventIndex % 10000 == 0 )
-     { std::cout << 'x' << std::flush ; }
-    else if ( eventIndex % 1000 == 0 )
-     { std::cout << '.' << std::flush ; } 
-   }
+//  // is it useful below, for a shallow (=>fast) read ???
+//  if ( eventIndex != 0 )
+//   {
+//    if ( eventIndex % 10000 == 0 )
+//     { std::cout << 'x' << std::flush ; }
+//    else if ( eventIndex % 1000 == 0 )
+//     { std::cout << '.' << std::flush ; } 
+//   }
   
   //_currentLink.changeEventIndex(eventIndex) ; // ??
   
@@ -843,6 +899,22 @@ const TObjString * CompositeEventList::treeName( UInt_t componentIndex ) const
   UShort_t treeIndex = comp->currentEntryIndex().treeIndex() ;
   return comp->currentFileSet().getTreeName(treeIndex) ;
  }
+
+Long64_t CompositeEventList::treeNbEntries( UInt_t componentIndex ) const
+ {
+  TString caller ("[CompositeEventList::treeNbEntries]") ;
+  if ( ! checkCelOk(caller) ) return 0 ;
+  if ( ! checkCelPrepared(caller) ) return 0 ;
+  if (componentIndex==COMPONENT_UNDEFINED)
+   {
+    std::cerr<<caller<<" undefined component"<<std::endl ;
+    return 0 ;
+   }
+  CelEventComponent * comp = getComponent(componentIndex) ;
+  UShort_t treeIndex = comp->currentEntryIndex().treeIndex() ;
+  return comp->currentFileSet().getTreeNbEntries(treeIndex) ;
+ }
+
 
 void CompositeEventList::setDataAddress
  ( const TString & componentName,
@@ -1042,7 +1114,7 @@ void CompositeEventList::printInfo
     if ( comp == 0 ) throw "?!?" ;
     componentName = comp->componentName() ;
     std::cout << " " << componentName ;
-    if (((unsigned int)componentName.Length())>_componentNameWidth)
+    if ((componentName.Length())>_componentNameWidth)
      { _componentNameWidth = componentName.Length() ; }
    } 
   std::cout << std::endl ;

@@ -51,6 +51,7 @@ class CelEventComponent
   
     // Write
     void registerEntry( TTree & ) ;
+    void registerEntry( const TString & filePath, const TString & treeName, Long64_t treeNbEntries, Long64_t entryIndex ) ; // shallow flavor
     void nextSet() ;
   
     /// Shallow read
@@ -75,7 +76,7 @@ class CelEventComponent
     // print a single event
     void printEventInfo(const char* options ) const;
     // print all the trees used by this Components
-    void printSetInfo(const char* options, const char * prefix ="" ) const;
+    void printSetInfo(const char* options, const char* prefix ="" ) const;
 
    private :
   

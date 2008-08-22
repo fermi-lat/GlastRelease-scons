@@ -5,7 +5,14 @@
 //========================================================
 //
 
-#include <rootUtil/ComponentsInfoGlast.h>
+// Unhappily enough, I need to use a given include syntax
+// for the skimmer interpretation, and another one for
+// GlastRelease compilation
+#if !defined(__CINT__) || defined(__MAKECINT__)
+#  include <rootUtil/ComponentsInfoGlast.h>
+#else
+#  include "ComponentsInfoGlast.h"
+#endif
 
 
 ComponentsInfoGlast::ComponentsInfoGlast()

@@ -29,6 +29,7 @@ class TCollection ;
 class TObjArray ;
 class TObjString ;
 class RuChain ;
+class RuStringSet ;
 
 #include <map>
 #include <vector>
@@ -48,7 +49,7 @@ class RuChain ;
 // The information is stored within 5 internal trees
 // 
 //   TO BE DONE : EventIDs: 3 branches, 1 entry per event
-//      Event_ProductionID (char *)
+//      Event_CampaignID   (char *)
 //      Event_RunID        (Long64_t)
 //      Event_EventID      (Long64_t)
 // 
@@ -71,7 +72,7 @@ class RuChain ;
 // and/or afterwards with declareComponent() method.
 //
 // Note : the pair (RunID/EventID) is expected to be unique for GLAST real data. For
-// what concerns the simulation data, the triplet (ProductionID/RunID/EventID) should
+// what concerns the simulation data, the triplet (CampaignID/RunID/EventID) should
 // be unique.
 //
 // CAUTION : the fillEvent() method rely on TTree::GetReadEntry() to know
@@ -91,14 +92,22 @@ class CompositeEventList : public TObject
        const TString & options = "READ",
        const TObjArray * componentNames = 0 ) ;
     UInt_t declareComponent( const TString & name ) ;
+    UInt_t declareComponents( const RuStringSet & names ) ;
     Bool_t isOk() ;
     ~CompositeEventList() ;
 
     // OK! Write
     Bool_t fillEntry(  const TString & componentName, TTree * ) ;  // components one by one
-    Bool_t fillEntry(  UInt_t componentIndex, TTree * ) ;  // components one by one
-    Long64_t fillEvent() ;                                // components one by one
-    Long64_t fillEvent( const TObjArray & ) ;            // all components together
+    Bool_t fillEntry(  UInt_t componentIndex, TTree * ) ;           // components one by one
+    Bool_t fillEntry(  const TString & componentName,
+      const TString & fileName, const TString & treeName,
+      Long64_t treeNbEntries, Long64_t entryIndex ) ;                //   (shallow flavor)
+    Bool_t fillEntry(  UInt_t componentIndex,
+      const TString & fileName, const TString & treeName,
+      Long64_t treeNbEntries, Long64_t entryIndex ) ;                //   (shallow flavor)
+    Long64_t fillEvent() ;                                          // components one by one
+    Long64_t fillEventFromTrees( const TObjArray & trees ) ;      // all components together, trees only !!
+    Long64_t fillEventFromChains( const TObjArray & chains ) ;      // all components together, chains only !!
     Long64_t fillEvent( const std::vector<TTree*> & ) ;  // all components together
     Long64_t fillEvent( const std::vector<TChain*> & ) ; // all components together
     Long64_t fillFileAndTreeSet() ;
@@ -112,6 +121,7 @@ class CompositeEventList : public TObject
     Long64_t entryIndex( UInt_t componentIndex ) const ;
     const TObjString * fileName( UInt_t componentIndex ) const ;
     const TObjString * treeName( UInt_t componentIndex ) const ;
+    Long64_t treeNbEntries( UInt_t componentIndex ) const ;
     
     // OK! Deep read (handle the user data trees)
     void setDataAddress
@@ -134,11 +144,11 @@ class CompositeEventList : public TObject
     
     /// PRINTING
     // Dump a set of event component pointers and the list of TTree where they live
-    void printInfo( const char * options ="", UInt_t nEvent=0, UInt_t startEvent=0) ;
+    void printInfo( const char* options ="", UInt_t nEvent=0, UInt_t startEvent=0) ;
     // Dump a single event
-    void printEventInfo( const char * options ="" ) ;
+    void printEventInfo( const char* options ="" ) ;
     // Dump the list of TTree where our events live
-    void printSetInfo( const char * options ) ;
+    void printSetInfo( const char* options ) ;
 
     /// FOR CelUtil
     TTree * entryTree() { return _entryTree ; }
@@ -171,7 +181,7 @@ class CompositeEventList : public TObject
     Int_t attachToTree( TTree * entryTree, TTree * linkTree, TTree * fileTree, TTree * offsetTree ) const ;
 
     // Components utilities
-    UInt_t CompositeEventList::declareComponents( const TObjArray * componentNames ) ;
+    UInt_t declareComponents( const TObjArray * componentNames ) ;
     UInt_t discoverComponents() ;
     CelEventComponent * getComponent( UInt_t index ) const ;
     // UNUSED ? Get a Tree that is being read by a deepRead

@@ -66,18 +66,21 @@ class CelFileAndTreeSet  : public BranchGroup
     
     // Data Access
     UShort_t addTree( TTree & tree) ;
+    UShort_t addTree( const TString & filePath, const TString & treeName, Long64_t nbTreeEntries ) ;
     UShort_t getKey( TTree * tree) const ;
+    UShort_t getKey( const TString & filePath, const TString & treeName ) const ;
     TTree * getTree( UShort_t key ) const ;
     const TObjString * getFileName( UShort_t key ) const ;
     const TObjString * getTreeName( UShort_t key ) const ;
+    Long64_t getTreeNbEntries( UShort_t key ) const ;
     Long64_t getOffset( UShort_t key ) const ;
 
     // reading interface
     Bool_t addToChain( RuChain * & chain ) ;  
   
     // Override the methods in BranchGroup.  
-    virtual Int_t makeBranches( TTree & celTree, const char * prefix = 0, Int_t bufsize = 32000) const ;
-    virtual Int_t attachToTree( TTree & celTree, const char * prefix = 0) ;
+    virtual Int_t makeBranches( TTree & celTree, const char* prefix = 0, Int_t bufsize = 32000) const ;
+    virtual Int_t attachToTree( TTree & celTree, const char* prefix = 0) ;
 
     // Access
     inline UShort_t size() const { return _setSize ; }
@@ -86,9 +89,9 @@ class CelFileAndTreeSet  : public BranchGroup
 
     // Printing
     // Print the list of trees
-    void printTreesInfo( const char * options ="tf", const char * prefix ="" ) const ;
+    void printTreesInfo( const char* options ="tf", const char* prefix ="" ) const ;
     // Print information about a single tree
-    void printTreeInfo( UShort_t key, const char * options ="tf", const char * prefix =""  ) const ;
+    void printTreeInfo( UShort_t key, const char* options ="tf", const char* prefix =""  ) const ;
 
   private :
 
@@ -106,7 +109,7 @@ class CelFileAndTreeSet  : public BranchGroup
     BgDataHandle<UShort_t>  _setSize ;     //! Number of trees stored by this CelFileAndTreeSet
     TObjArray*            _fileNames ;   //! Names of files where the TTree live
     TObjArray*            _treeNames ;   //! Names of trees stored by this CelFileAndTreeSet
-    BgDataHandle<Long64_t>  _treesSize ;   //! Number of entries on the trees stored by this CelFileAndTreeSet
+    BgDataHandle<Long64_t>  _treesSize ;   //! Total number of entries on the trees stored by this CelFileAndTreeSet
     TArrayL64*            _treeOffsets ; //! Number of entries in TTrees
 
     // Cache for fast lookup

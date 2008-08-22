@@ -38,10 +38,12 @@ std::ostream & operator<<( std::ostream & os, const TestAbstractData & data )
  {
   return
    (
-    os
-      <<data.getComponentName()<<" "
-      <<setw(2)<<std::right<<data.getRunID()<<"|"
-      <<setw(2)<<std::left<<data.getEventID()
+     ( data.isValid()==kTRUE ) ?
+     ( os
+         <<data.getComponentName()<<" "
+         <<setw(2)<<std::right<<data.getRunID()<<"|"
+         <<setw(2)<<std::left<<data.getEventID() ) :
+     ( os<<data.getComponentName()<<" *|* " )
    ) ;
  }
 
@@ -105,14 +107,16 @@ void TestReader::showByComponent() const
       else
        { separator = prefix ; }
       reader->chain_->GetEntry(ievent) ;
-      if ((reader->data_->getRunID()==-1)&&(reader->data_->getEventID()==-1))
-       { std::cout<<separator<<" *|* " ; }
-      else
-       {
-        std::cout
-          <<separator<<setw(2)<<std::right<<reader->data_->getRunID()
-          <<'|'<<setw(2)<<std::left<<reader->data_->getEventID() ;
-       }
+      std::cout<<separator<<(*(reader->data_)) ;
+//      
+//      if (reader->data_->isValid()==kFALSE)
+//       { std::cout<<separator<<" *|* " ; }
+//      else
+//       {
+//        std::cout
+//          <<separator<<setw(2)<<std::right<<reader->data_->getRunID()
+//          <<'|'<<setw(2)<<std::left<<reader->data_->getEventID() ;
+//       }
      }
    }
   std::cout<<std::endl ;
@@ -131,12 +135,12 @@ void TestReader::resetEvent()
   BranchReader * reader = 0 ;
   while ((reader=(BranchReader *)next()))
    { reader->nextEntry_ = 0 ; }
-  currentEvent_ = -1 ;
+  currentEvent_ = ((IdType)-1) ;
  }
 
 bool TestReader::nextEvent()
  {
-  // search next component entries, ignoring -1 values
+  // search next component valid entries
   bool result = true ;
   TIter next(&readers_) ;
   BranchReader * reader = 0 ;
@@ -149,11 +153,10 @@ bool TestReader::nextEvent()
       while (reader->nextEntry_<reader->chain_->GetEntries())
        {
         reader->chain_->GetEntry(reader->nextEntry_++) ;
-        if ((reader->data_->getRunID()!=-1)&&
-    	    (reader->data_->getEventID()!=-1))
+        if (reader->data_->isValid()==kTRUE)
          { break ; }
        }
-      if ((reader->data_->getRunID()==-1)||(reader->data_->getEventID()==-1))
+      if (reader->data_->isValid()==kFALSE)
        { result = false ; }
      }
    }
@@ -166,7 +169,7 @@ bool TestReader::nextEvent()
 
 void TestReader::showEvent() const
  {
-  assert(currentEvent_!=-1) ; 
+  assert(currentEvent_!=((IdType)-1)) ; 
   
   std::cout<<"[TestReader] Event "<<setw(2)<<std::right<<currentEvent_ ;
   TString separator(" : ") ;

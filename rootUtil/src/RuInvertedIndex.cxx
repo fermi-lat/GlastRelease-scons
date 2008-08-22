@@ -36,7 +36,7 @@ class MajorMinorPair
 class MyFormula : public TTreeFormula, public RuChain::Observer
  {
   public :
-    MyFormula( const char *name, const char *formula, RuChain *chain)
+    MyFormula( const char* name, const char* formula, RuChain * chain )
      : TTreeFormula(name,formula,chain), RuChain::Observer(chain)
      { SetQuickLoad(kTRUE) ; }
     virtual void newTreeLoaded()
@@ -48,10 +48,8 @@ class MyFormula : public TTreeFormula, public RuChain::Observer
 // 
 //====================================================================
 
-RuInvertedIndex::RuInvertedIndex
- ( RuChain * chain, const char* majorname, const char* minorname )
- : fChain(chain), fMajorName(majorname), fMinorName(minorname),
-   fMajorFormula(0), fMinorFormula(0),
+RuInvertedIndex::RuInvertedIndex( RuChain * chain )
+ : fChain(chain), fMajorFormula(0), fMinorFormula(0),
    fZombie(kFALSE)
  {
   TString methodName("[RuInvertedIndex::RuInvertedIndex] ") ;
@@ -63,6 +61,9 @@ RuInvertedIndex::RuInvertedIndex
     fZombie = kTRUE ;
     return ;
    }
+  fChain->CheckRunEventInfo() ;
+  fMajorName = fChain->GetInfo().runIdBranchName ;
+  fMinorName = fChain->GetInfo().eventIdBranchName ;
   
   // Invert existing indices
   TTreeIndex * index ;
@@ -166,6 +167,8 @@ Bool_t RuInvertedIndex::GetMajorMinorWithEntry
     majorValue = (Long64_t)fMajorFormula->EvalInstance() ;
     minorValue = (Long64_t)fMinorFormula->EvalInstance() ;
    }
+  
+  fChain->CheckRunEventIds(majorValue,minorValue) ;
   
   return kTRUE ;
  }

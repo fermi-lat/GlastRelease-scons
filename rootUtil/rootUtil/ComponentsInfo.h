@@ -5,15 +5,14 @@
 //========================================================
 //
 
-
 #ifndef rootUtil_ComponentsInfo_h
 #define rootUtil_ComponentsInfo_h 1
 
+#include "../rootUtil/RuStringSet.h"
+
 #if !defined(__CINT__) || defined(__MAKECINT__)
-#  include <TObject.h>
 #  include <TString.h>
 #  include <TObjArray.h>
-#  include <TMap.h>
 #endif
 
 class ComponentInfo : public TObject
@@ -35,7 +34,7 @@ class ComponentsInfo
   
     ComponentsInfo() ;
     ~ComponentsInfo() ;
-    Bool_t needLibrary( const TString & componentNames ) const ;
+    Bool_t needLibrary( const RuStringSet & componentNames ) const ;
     const ComponentInfo * getInfo( const TString & componentName ) const ;
     TIter getInfoIter() const ;
       
@@ -45,8 +44,8 @@ class ComponentsInfo
     
   private :
 
-    ComponentsInfo( const ComponentsInfo & ) ;
-    ComponentsInfo & operator=( const ComponentsInfo & ) ;
+    //ComponentsInfo( const ComponentsInfo & ) ;
+    //ComponentsInfo & operator=( const ComponentsInfo & ) ;
    
     TObjArray info_ ;
   

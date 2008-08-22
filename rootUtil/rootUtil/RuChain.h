@@ -9,11 +9,9 @@
 #ifndef rootUtil_RuChain_h
 #define rootUtil_RuChain_h
 
-#if !defined(__CINT__) || defined(__MAKECINT__)
-#  include <TChain.h>
-#  include <vector>
-#endif
-
+#include <rootUtil/ComponentsInfo.h>
+#include <TChain.h>
+#include <vector>
 
 
 // Extension of TChain, trying to make it observable
@@ -29,12 +27,11 @@ class RuChain : public TChain
     class Observer
      {
       public :
-        Observer( RuChain * chain ) : chain_(chain), zombie_(kFALSE)
-         { chain_->AddObserver(this) ; }
-        virtual ~Observer() {}
+        Observer( RuChain * chain ) ;
+        virtual ~Observer() ;
         virtual void newTreeLoaded() =0 ;
-        void makeZombie() { zombie_ = kTRUE ; }
-        Bool_t isZombie() { return zombie_ ; }
+        void makeZombie() ;
+        Bool_t isZombie() ;
       protected :
         RuChain * chain_ ;
       private :
@@ -42,40 +39,33 @@ class RuChain : public TChain
      } ;
   
     // Construction/destruction
-    RuChain( const char* name, const char* title = "")
-     : TChain(name,title), lastTreeNumber_(-1)
-     {}
-    virtual ~RuChain()
-     {
-      std::vector<Observer *>::iterator observer ;
-      for ( observer = observers_.begin() ; observer != observers_.end() ; ++observer )
-       { (*observer)->makeZombie() ; }
-     }
+    RuChain( const char* name, const char* title = "" ) ;
+    virtual ~RuChain() ;
+    
+    // Add files generated due to maximum size
+    Int_t AddFileSet( const char * firstFileName, Long64_t nentries = kBigNumber ) ;
     
     // Observers
-    void AddObserver( Observer * observer )
-     { observers_.push_back(observer) ; }
+    void AddObserver( Observer * observer ) ;
     
     // Observed TChain fonctions
-    virtual Long64_t LoadTree( Long64_t entry )
-     {
-      Long64_t res = TChain::LoadTree(entry) ;
-      Int_t treeNumber = GetTreeNumber() ;
-      if (lastTreeNumber_!=treeNumber)
-       {
-        lastTreeNumber_=treeNumber ;
-        std::vector<Observer *>::iterator observer ;
-        for ( observer = observers_.begin() ; observer != observers_.end() ; ++observer )
-         { (*observer)->newTreeLoaded() ; }
-       }
-      return res ;
-     }
+    virtual Long64_t LoadTree( Long64_t entry ) ;
+    
+    // Associated component info
+    void SetInfo( const ComponentInfo & info ) ;
+    const ComponentInfo & GetInfo() const ;
+    void CheckRunEventInfo() ;
+    void CheckRunEventIds( Int_t runId, Int_t eventId ) ;
     
   private :
    
-    Int_t lastTreeNumber_ ;
-    std::vector<Observer *> observers_ ;
+    ComponentInfo info_ ;
+    bool unsignedChainRunIdType_ ;
+    bool unsignedChainEventIdType_ ;
     
+    Int_t lastTreeNumber_ ;     
+    std::vector<Observer *> observers_ ;
+     
  } ;
 
 

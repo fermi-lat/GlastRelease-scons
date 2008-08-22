@@ -18,7 +18,7 @@
 #include <TTree.h>
 #include <Riostream.h>
 
-ClassImp(CelIndex) ;
+//ClassImp(CelIndex) ;
 
 CelIndex::CelIndex()
  : TVirtualIndex(), _cel(0), _component(0)

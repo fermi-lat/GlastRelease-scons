@@ -79,7 +79,7 @@ void CelFileAndTreeSet::resetCache()
   _lookup.clear() ;
  }
 
-UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
+UShort_t CelFileAndTreeSet::addTree( TTree & tree) {
   // Add a new tree to the set of trees this object is looking after
   // 
   const char* tName = tree.GetName();
@@ -89,21 +89,28 @@ UShort_t CelFileAndTreeSet::addTree(TTree& tree) {
     return rootUtil::NOKEY;
   }
   const char* fName = f->GetName();
-  TObjString* fNameSt = new TObjString(fName);
+  return addTree(fName,tName,tree.GetEntries()) ;
+}
+
+UShort_t CelFileAndTreeSet::addTree
+ ( const TString & fPath, const TString & tName, Long64_t nbTreeEntries )
+ {
+  // Add a new tree to the set of trees this object is looking after
+  TObjString* fNameSt = new TObjString(fPath);
   TObjString* tNameSt = new TObjString(tName);
   _fileNames->AddLast(fNameSt);  
   _treeNames->AddLast(tNameSt);
   UShort_t retVal = _setSize;
   _setSize = _setSize + 1;
   // should do something better here  
-  _treeOffsets->Set(_setSize);
-  _treeOffsets->AddAt(_treesSize,retVal);
-  _treesSize = _treesSize + tree.GetEntries();
+  _treeOffsets->Set(_setSize) ;
+  _treeOffsets->AddAt(_treesSize,retVal) ;
+  _treesSize = _treesSize + nbTreeEntries ;
   //[David] the adress could be reused. it is dangerous to store it.
   //_cache[retVal] = &tree;
   _cache[retVal] = 0;
   
-  TString treePath(fName) ;
+  TString treePath(fPath) ;
   treePath += '/' ;
   treePath += tName ;
   _lookup[treePath] = retVal;
@@ -135,18 +142,23 @@ const TObjString * CelFileAndTreeSet::getTreeName( UShort_t key ) const
 
 UShort_t CelFileAndTreeSet::getKey( TTree * tree ) const
  {
+  if ( 0 == tree ) return rootUtil::NOKEY ;
+  else return getKey(tree->GetDirectory()->GetName(),tree->GetName()) ;
+ }
+
+UShort_t CelFileAndTreeSet::getKey( const TString & filePath, const TString & treeName ) const
+ {
   // Get the persistent KEY for a given tree
   // Return rootUtil::NOKEY if 'tree' is NULL
   // Warns and returns rootUtil::NOKEY if tree is not found in lookup table
 
   // [David] We cannot garanty that several trees will not have the
   // same adresse (it happens when reading a TChain).
-	
-  if ( 0 == tree ) return rootUtil::NOKEY;
-  TString treePath(tree->GetDirectory()->GetName()) ;
+        
+  TString treePath(filePath) ;
   treePath += '/' ;
-  treePath += tree->GetName() ;
-	
+  treePath += treeName ;
+        
   std::map<TString,UShort_t>::iterator itrFind = _lookup.find(treePath) ; 
   if ( itrFind == _lookup.end() )
    { return rootUtil::NOKEY ; }
@@ -162,6 +174,20 @@ Long64_t CelFileAndTreeSet::getOffset( UShort_t key ) const
   if ( key == rootUtil::NOKEY ) return 0;
   if ( key >= _setSize ) return -1;
   return _treeOffsets->At(key);
+ }
+
+Long64_t CelFileAndTreeSet::getTreeNbEntries( UShort_t key ) const
+ {
+  // Get the Event offset using persistent KEY
+  //
+  // Return 0 if "key" is rootUtil::NOKEY
+  // Returns -1 if key is not found
+  if ( key == rootUtil::NOKEY ) return 0;
+  if ( key >= _setSize ) return -1;
+  if ( key == (_setSize-1) )
+   { return (_treesSize-_treeOffsets->At(key)) ; }
+  else
+   { return (_treeOffsets->At(key+1)-_treeOffsets->At(key)) ; }
  }
 
 

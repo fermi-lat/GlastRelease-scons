@@ -43,7 +43,7 @@ class CelEventLink : public BranchGroup
     void incrementFileSetIndex() { _setIndex = _setIndex+1 ; }
 
     // print the info about the current event
-    void printInfo( const char * options ) const ;  
+    void printInfo( const char* options ) const ;
 
   private :
   
