@@ -461,8 +461,11 @@ class TkrMonitor:
         self.logAlerts( tower, 0, alert, "trigEff" ,alertLevels[1] )   # 0 is dummy
 
       
-    self.latave["trigEff"] = (100*htrg.Integral()/htrk.Integral(), "trigger efficiency")
-      
+    if htrk.Integral() > 0:
+      self.latave["trigEff"] = (100*htrg.Integral()/htrk.Integral(), "trigger efficiency")
+    else:
+      self.latave["trigEff"] = (100.0, "trigger efficiency")      
+
   #
   #*********************
   #set Histogram label
@@ -651,7 +654,10 @@ class TkrMonitor:
     self.sumttrk += hltrk.Integral()
     self.sumthit += hlhit.Integral()
     if tower == nTower-1 :
+      if self.sumttrk > 0:
       self.latave["towerEff"] = (100*self.sumthit/self.sumttrk, "hit efficiency")
+    else:
+      self.latave["towerEff"] = (100.0, "hit efficiency")      
 
     sumltrk = hltrk.Integral()
     if sumltrk > 0:
@@ -912,6 +918,7 @@ class TkrMonitor:
     hWmap = self.inputRoot.FindObjectAny( "hTkrWHitMapT%d%s" %(tower,lname) )
     hmul = self.inputRoot.FindObjectAny( "hTkrNoiseMulT%d%s" %(tower,lname) )
     lexp = hmul.Integral()
+    if lexp == 0: lexp = 1
     locc = hWmap.Integral()/lexp
     lsat = hmul.Integral(nsat,128)/lexp
     if lsat < self.limits["fracSat"]:
