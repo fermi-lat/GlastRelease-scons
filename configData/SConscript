@@ -10,8 +10,8 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('configDataLib', depsOnly = 1)
 
-configData = libEnv.SharedLibrary('configData', listFiles(['configData/*.cxx']) + listFiles(['src/gem/*.cxx']) + listFiles(['src/fsw/*.cxx']) + \
-listFiles(['src/base/*.cxx']) + listFiles(['src/fsw/*.db']))
+configData = libEnv.SharedLibrary('configData', listFiles(['src/*.cxx','src/gem/*.cxx',
+	'src/fsw/*.cxx','src/base/*.cxx','src/db/*.cxx']))
 
 
 progEnv.Tool('configDataLib')
@@ -28,5 +28,9 @@ dumpGemConfiguration = progEnv.Program('dumpGemConfiguration',['apps/dumpGemConf
 testdb = progEnv.Program('testdb',['apps/testdb.cxx'])
 test_configData = progEnv.Program('test_configData',['src/test/test_configData.cxx'])
 
-progEnv.Tool('registerObjects', package = 'configData', libraries = [configData], testApps = [test_configData], binaries = [ConfigXml2Root,RootConfigCompare,findConfigs \
-,dumpGemConfiguration,testdb])
+progEnv.Tool('registerObjects', package = 'configData', libraries = [configData],
+	     testApps = [test_configData],
+	     binaries = [ConfigXml2Root,RootConfigCompare,findConfigs,
+			 dumpGemConfiguration,testdb],
+	     includes = listFiles(['configData/*'], recursive = 1))
+
