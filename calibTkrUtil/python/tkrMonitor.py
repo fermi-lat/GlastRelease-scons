@@ -655,9 +655,9 @@ class TkrMonitor:
     self.sumthit += hlhit.Integral()
     if tower == nTower-1 :
       if self.sumttrk > 0:
-      self.latave["towerEff"] = (100*self.sumthit/self.sumttrk, "hit efficiency")
-    else:
-      self.latave["towerEff"] = (100.0, "hit efficiency")      
+        self.latave["towerEff"] = (100*self.sumthit/self.sumttrk, "hit efficiency")
+      else:
+        self.latave["towerEff"] = (100.0, "hit efficiency")      
 
     sumltrk = hltrk.Integral()
     if sumltrk > 0:
