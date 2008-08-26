@@ -35,7 +35,7 @@ CalCalibSvc.DefaultFlavor = "vanilla";
 //
 // Tracker flavor: 
 //
-TkrCalibAlg.calibFlavor = "vanilla";
+TkrReconCalib.calibFlavor = "vanilla";
 
 //
 // Write out bad and hot strips to the log file: Not!

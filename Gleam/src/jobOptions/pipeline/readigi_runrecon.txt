@@ -58,11 +58,9 @@ Top.StopOverride = true;
 Digitization.Members +={"digiRootReaderAlg"};
 
 //
-// This needs to run after having read in the digis 
-// so we can get the event time from them!
-// Note: this is the opposite of what is needed for the MC!
-//
-Calibration.Members = {"TkrCalibAlg"};
+// Need 'Rec' in the name to get the alignment:
+// 
+Calibration.Members = {"TkrCalibAlg/TkrReconCalib"};
 
 //
 // Using EventIntegrityAlg to decide if we run or skip recon: 
