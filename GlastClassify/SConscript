@@ -20,6 +20,7 @@ ClassificationTree = libEnv.StaticLibrary('ClassificationTree', listFiles(['src/
 GlastClassify = libEnv.SharedLibrary('GlastClassify', listFiles(['src/Dll/*.cxx']))
 
 progEnv.Tool('GlastClassifyLib')
+progEnv.Tool('addLibrary', library = ['ClassificationTree'])
 apply = progEnv.Program('apply', listFiles(['src/apply/*.cxx']))
 progEnv.Tool('registerObjects', package = 'GlastClassify', 
 	libraries = [ClassificationTree, GlastClassify], 
