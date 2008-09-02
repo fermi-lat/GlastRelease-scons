@@ -19,8 +19,7 @@ if baseEnv['PLATFORM'] != 'win32':
 if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(LINKFLAGS = ['/include:_GuiSvc_loadRef'])
 
-Gleam = progEnv.GaudiProgram('Gleam',['']) 
+#Gleam = progEnv.GaudiProgram('Gleam',[' '],test=0) 
 test_Gleam = progEnv.GaudiProgram('test_Gleam', listFiles(['src/test/*.cxx']), test=1)
-progEnv.Tool('registerObjects', package = 'Gleam', binaries = [Gleam], 
-	testApps = [test_Gleam], 
+progEnv.Tool('registerObjects', package = 'Gleam', 
 	includes = listFiles(['Gleam/*.h']))
