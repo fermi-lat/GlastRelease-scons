@@ -99,7 +99,7 @@ const bool TrackElements::operator==(const TrackElements& right) const
 typedef std::vector<TrackElements>  TrackElementsVec;
 typedef std::vector<TrackElements*> TrackElementsPtrVec;
 
-#include "src/PatRec/VectorLinks/StdRelTable/RelTable.h"
+#include "StdRelTable/RelTable.h"
 #include "VecPoint.h"
 
 typedef TkrRecon::RelTable<TrackElements, VecPoint>               TrackElemToPointsTab;
