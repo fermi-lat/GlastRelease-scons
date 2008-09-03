@@ -82,6 +82,9 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
     // sanity check
     if ( aDigi == 0 ) return StatusCode::FAILURE ;
     
+    // Don't do with NA channels, they are likely to have bad calibrations, which can cause problems
+    if ( ! aDigi->getId().tile() && ! aDigi->getId().ribbon() ) continue;
+
     // get the hit mask bits
     unsigned int hitMask = 0;
     hitMask |= aDigi->getAcceptMapBit(Event::AcdDigi::A) ? AcceptMapBit_AMask : 0;

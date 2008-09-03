@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 @verbatim
 
+v4r3p3    03-Sep-2008 EAC Don't try to get mip equivalent for NA channels
 v4r3p2    14-Jul-2008 EAC Put call to run G4Propagator in try-catch to protect against bad tracks
 v4r3p1    09-Jul-2008 EAC Put call to start G4Propagator in try-catch to protect against bad tracks
 v4r3      08-May-2008 EAC Update AcdPha2Mips to be able to use coherent noise calibration
