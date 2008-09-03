@@ -4,6 +4,7 @@
  @verbatim
                EOH
 
+ v2r8p7   02-Sep-2008 EAC Allow values below pedestal in mipEquilvalent_lowRange, since that does happen in data
  v2r8p6   01-Aug-2008 EAC Flip trapezoids around, so the long end is on top
  v2r8p5   14-Jul-2008 EAC Set Coherent Noise to be relative to t=529 ticks as that is more stable 
  v2r8p4   29-Jul-2008 HMK Tagging Navid's update to remove CMT env vars
