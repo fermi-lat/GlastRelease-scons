@@ -54,9 +54,10 @@ StatusCode AcdTileDim::getVals() {
 
   if ( m_dim[0].size() == 5 ) {
     m_trapezoid = true;
-    m_xmean = m_dim[0][0] + m_dim[0][1];
+    m_xmean = m_dim[0][0] + m_dim[0][3];
     m_xmean /= 2.;
-    m_xdiff = m_dim[0][0] - m_dim[0][1];
+    m_xdiff = m_dim[0][4];
+    m_xdiff /= 2.;
   } else {
     m_trapezoid = false;
     m_xmean = 0.;
