@@ -56,7 +56,7 @@ StatusCode AcdTileDim::getVals() {
     m_trapezoid = true;
     m_xmean = m_dim[0][0] + m_dim[0][3];
     m_xmean /= 2.;
-    m_xdiff = m_dim[0][4];
+    m_xdiff = m_dim[0][3] - m_dim[0][0];
     m_xdiff /= 2.;
   } else {
     m_trapezoid = false;
@@ -85,13 +85,19 @@ double AcdTileDim::widthAtLocalY(int iVol, double localY) const {
 
 void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& activeX, double& activeY) const {
 
-  
-  activeX = (widthAtLocalY(iVol,localPoint.y())/2.) - fabs(localPoint.x()); 
   activeY = (dim(iVol)[1]/2.) - fabs(localPoint.y());
+  if ( ! m_trapezoid ) {
+    activeX = (dim(iVol)[0]/2.) - fabs(localPoint.y());
+  } else {
+    double correctionAtLocalY = ( m_dim[0][4] * (  localPoint.y() / m_dim[iVol][1] ) ) / 2.;
+    double half_width = widthAtLocalY(iVol,localPoint.y())/2.;
+    activeX = half_width - fabs(localPoint.x() + correctionAtLocalY); 
+  }
 
   if ( nVol() == 2 ) {
     int face = acdId().face();
     if ( face == 0 ) {
+
       // first make sure that it actually hit the tile piece
       if ( activeY < 0. ) return;
       // Ok, it hit the tile.  Correct for the fact that it bends around
