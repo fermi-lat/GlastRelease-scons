@@ -123,7 +123,9 @@ namespace MOOT {
 
     if (!(isDir(parent))) return false;
 
-    static mode_t mode = S_IRWXU;   // need only user permissions in afs space
+    // need only user permissions in afs space but for devel. on nfs
+    // give everyone read access
+    static mode_t mode = S_IRWXU | S_IRWXG | S_IRWXO;   
 
     int ret = mkdir(path.c_str(), mode);
     int errCode = errno;
