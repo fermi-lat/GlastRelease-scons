@@ -24,6 +24,7 @@
 #include "CalibData/Acd/AcdHighRange.h"
 #include "CalibData/Acd/AcdCoherentNoise.h"
 #include "CalibData/Acd/AcdRibbon.h"
+#include "CalibData/Acd/AcdPE.h"
 
 namespace CalibData {
 
@@ -85,6 +86,7 @@ namespace CalibData {
   typedef AcdCalib<CalibData::AcdHighRange> AcdHighRangeCalib;  
   typedef AcdCalib<CalibData::AcdCoherentNoise> AcdCoherentNoiseCalib;
   typedef AcdCalib<CalibData::AcdRibbon> AcdRibbonCalib;
+  typedef AcdCalib<CalibData::AcdPE> AcdPECalib;
 
 }
 
