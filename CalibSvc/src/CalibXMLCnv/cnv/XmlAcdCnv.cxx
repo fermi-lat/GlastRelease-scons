@@ -14,6 +14,7 @@
 #include "CalibData/Acd/AcdCarbon.h"
 #include "CalibData/Acd/AcdVetoFit.h"
 #include "CalibData/Acd/AcdCnoFit.h"
+#include "CalibData/Acd/AcdPE.h"
 
 typedef XmlAcdCnv<CalibData::AcdPed> XmlAcdPedCnv;
 typedef XmlAcdCnv<CalibData::AcdGain> XmlAcdGainCnv;
@@ -27,6 +28,7 @@ typedef XmlAcdCnv<CalibData::AcdHighPed> XmlAcdHighPedCnv;
 typedef XmlAcdCnv<CalibData::AcdCarbon> XmlAcdCarbonCnv;
 typedef XmlAcdCnv<CalibData::AcdVetoFit> XmlAcdVetoFitCnv;
 typedef XmlAcdCnv<CalibData::AcdCnoFit> XmlAcdCnoFitCnv;
+typedef XmlAcdCnv<CalibData::AcdPE> XmlAcdPECnv;
 
 static CnvFactory< XmlAcdPedCnv > s_PedFactory;
 const  ICnvFactory& XmlAcdPedCnvFactory = s_PedFactory;
@@ -63,3 +65,6 @@ const  ICnvFactory& XmlAcdVetoFitCnvFactory = s_VetoFitFactory;
 
 static CnvFactory< XmlAcdCnoFitCnv > s_CnoFitFactory;
 const  ICnvFactory& XmlAcdCnoFitCnvFactory = s_CnoFitFactory;
+
+static CnvFactory< XmlAcdPECnv > s_PEFactory;
+const  ICnvFactory& XmlAcdPECnvFactory = s_PEFactory;

@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+   v0r40   05-Sep-2008  eac  Added AcdPE calibration
    v0r39p2 30-Jul-2008  jrb  Declare converter for LATAlignment calib
    v0r39p1 23-Jul-2008  jrb  Minor clean-up
    v0r39   23-Jul-2008  jrb  Modified interface for LAT alignment calib;
