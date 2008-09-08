@@ -87,7 +87,7 @@ void AcdTileDim::activeDistance(const HepPoint3D& localPoint, int iVol, double& 
 
   activeY = (dim(iVol)[1]/2.) - fabs(localPoint.y());
   if ( ! m_trapezoid ) {
-    activeX = (dim(iVol)[0]/2.) - fabs(localPoint.y());
+    activeX = (dim(iVol)[0]/2.) - fabs(localPoint.x());
   } else {
     double correctionAtLocalY = ( m_dim[0][4] * (  localPoint.y() / m_dim[iVol][1] ) ) / 2.;
     double half_width = widthAtLocalY(iVol,localPoint.y())/2.;

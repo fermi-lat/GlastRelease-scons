@@ -4,6 +4,7 @@
  @verbatim
                EOH
 
+ v2r8p9   08-Sep-2008 EAC Bug fix, change localX to localY to fix typo.
  v2r8p8   04-Sep-2008 EAC Fix active distance 2d calculatoin for trapezoids.
  v2r8p7   02-Sep-2008 EAC Allow values below pedestal in mipEquilvalent_lowRange, since that does happen in data
  v2r8p6   01-Aug-2008 EAC Flip trapezoids around, so the long end is on top
