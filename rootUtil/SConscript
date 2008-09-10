@@ -13,7 +13,10 @@ libEnv.Tool('rootUtilLib', depsOnly = 1)
 
 rootUtilRootcint = libEnv.Rootcint('rootUtil/rootUtil_rootcint', ['rootUtil/BranchGroup.h','rootUtil/BgDataHandleBase.h',
 		'rootUtil/BgDataHandle.h', 'rootUtil/CompositeEventList.h','rootUtil/CelEventComponent.h','rootUtil/CelEventEntry.h',
-  		'rootUtil/CelFileAndTreeSet.h','rootUtil/CelFileAndTreeOffset.h','rootUtil/CelEventIDs.h'])
+  		'rootUtil/CelFileAndTreeSet.h','rootUtil/CelFileAndTreeOffset.h','rootUtil/CelEventIDs.h',
+		'rootUtil/CelEventLink.h', 'rootUtil/CelUtil.h', 'rootUtil/ComponentsInfo.h',
+		'rootUtil/TestData.h', 'rootUtil/LinkDef.h'],
+		includes = [''])
  
 rootUtil = libEnv.SharedLibrary('rootUtil', listFiles(['src/*.cxx']) + ['rootUtil/rootUtil_rootcint.cxx'])
 
