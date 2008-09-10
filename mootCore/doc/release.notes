@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r23p2 10-Sep-2008 jrb use more sensible (for nfs) permissions when creating
+                           archive directories.  Doesn't affect production dbs
    v1r23p1 20-Jun-2008 jrb Don't set MOOT_ARCHIVE env. var. in requirements
    v1r23 27-May-2008  jrb  Add MootQuery::getMasterKey; attempt to fix 
                            Windows/SWIG compile problem
