@@ -41,6 +41,7 @@ public:
     const InterfaceID& type() const;
 
     const bool getVertexFiller_dashes(){return m_vtx_dashes;}
+    const bool getClusterFiller_showWide() { return m_cls_showWide;}
 
  
 private:
@@ -48,6 +49,7 @@ private:
     // Variables connected to jO parameters
 
     bool m_vtx_dashes;
+    bool m_cls_showWide;
 };
 
 #endif // __HEPREPINITSVC_H
