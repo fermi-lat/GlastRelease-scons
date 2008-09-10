@@ -22,19 +22,19 @@
 
 #include "GaudiKernel/IInterface.h"
 
-static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 4, 0);
+static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 5, 0);
 
 namespace Event {
 
-/** 
-* @class TkrCluster
-*
-* @brief Contains the data members which specify a TKR cluster, 
-* and access methods
-*
-* Adapted from SiCluster of Jose Hernando
-*
-*/
+    /** 
+    * @class TkrCluster
+    *
+    * @brief Contains the data members which specify a TKR cluster, 
+    * and access methods
+    *
+    * Adapted from SiCluster of Jose Hernando
+    *
+    */
 
     class TkrCluster : virtual public ContainedObject
     {
@@ -48,23 +48,70 @@ namespace Event {
         // fields and shifts of the status word, which together make a mask
         //  
 
+        // Status word is organized as follows:
+        //
+        // Low-order bits (0-15, right to left):
+        //
+        // |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+        //
+        //            A   A     E   T   S   G                 R        {Cntlr}  U
+        //            l   l     x   o   a   h                 e          0=0    s
+        //            n   o     t   T   m   o                 m          1=1    e
+        //            E   n     r   2   e   s                 o         2=1+2   d
+        //            n   e     a   5   T   t                 v            
+        //            d         s   5   k                     d         
+        // 
+        // High-order bits (16-31, right to left):
+        //
+        // |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+        //
+        //        L   P                                 
+        //        y   l                                
+        //        r   n                                
+        //        O   O                                
+        //        f   f                                
+        //        f   f                                
+
+
         enum { 
             fieldUSED        = 1,    // tells whether cluster is used on a track
             fieldEND         = 3,    // identifies controller, 0, 1, 2=mixed
+            fieldREMOVED     = 1,    // cluster removed by Ghost Filter
+            fieldGHOST       = 1,    // cluster is marked as a ghost
+            fieldSAMETRACK   = 1,    // This cluster belongs to a track with a 255 or ghost
+            field255         = 1,    // cluster is marked as a ToT==255
+            fieldEXTRA       = 1,    // extra hits found somehow
+            fieldALONE       = 1,    // cluster is alone in its plane
+            fieldALONEEND    = 1,    // cluster is alone in its readout end
             fieldPLANEOFFSET = 1,    // to calculate Plane number from Tray/Face (1 for LAT)
             fieldLAYEROFFSET = 1     // to calculate Layer number from Plane (0 for LAT)
         };
         enum {    
             shiftUSED        =  0,
             shiftEND         =  1,
+            shiftREMOVED     =  4,
+            shiftGHOST       =  8,
+            shiftSAMETRACK   =  9,
+            shift255         = 10,
+            shiftEXTRA       = 11,
+            shiftALONE       = 12,
+            shiftALONEEND    = 13,
             shiftPLANEOFFSET = 29,
             shiftLAYEROFFSET = 30 
         };
-        enum {
+        enum maskType {
             maskUSED        = fieldUSED<<shiftUSED,
             maskEND         = fieldEND<<shiftEND,
+            maskREMOVED     = fieldREMOVED<<shiftREMOVED,
+            maskGHOST       = fieldGHOST<<shiftGHOST,
+            maskSAMETRACK   = fieldSAMETRACK<<shiftSAMETRACK,
+            mask255         = field255<<shift255,
+            maskEXTRA       = fieldEXTRA<<shiftEXTRA,
+            maskALONE       = fieldALONE<<shiftALONE,
+            maskALONEEND    = fieldALONEEND<<shiftALONEEND,
             maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
-            maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET
+            maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
+            maskZAPPED      = mask255|maskGHOST|maskSAMETRACK
         };
 
         TkrCluster(): m_tkrId(0,0,0,false) {}
@@ -85,7 +132,7 @@ namespace Event {
             Point position, int rawToT, float ToT, unsigned int status, int nBad)
             : m_tkrId(tkrId),m_strip0(istrip0),m_stripf(istripf), m_nBad(nBad),
             m_position(position), m_rawToT(rawToT), m_ToT(ToT), m_status(status) 
-            
+
         { }
 
         virtual ~TkrCluster() {}
@@ -102,18 +149,10 @@ namespace Event {
         int           tower()      const {return idents::TowerId(m_tkrId.getTowerX(),
             m_tkrId.getTowerY()).id();} //DANGEROUS: SOON TO BE REMOVED??
 
-        /// sets the flag of a cluster
-        inline void flag(int flag=1) {
-            if (flag==0) {
-                unflag();
-            } else {
-                m_status = ((m_status&~maskUSED) | (1<<shiftUSED));
-            }
-        }
-        /// clears the flag of a cluster
-        inline void unflag() {
-            m_status = (m_status&~maskUSED);
-        }
+        /// sets the flag of a cluster (or clear if flag==0), legacy
+        inline void flag(int flag=1) { setMask(maskUSED, flag);}
+        /// clears the used flag of a cluster, legacy
+        inline void unflag() { clearMask(maskUSED); }
 
         inline int    firstStrip() const {return m_strip0;}
         inline int    lastStrip()  const {return m_stripf;}
@@ -133,8 +172,8 @@ namespace Event {
         // construct layer from Plane
         inline int getLayer() const { 
             return (getPlane() + getLayerOffset())/2 ; }
-        // cluster used on a track
-        bool hitFlagged()     const { return ((m_status&maskUSED)>0);}
+        // cluster used on a track, legacy
+        inline bool hitFlagged()     const { return isSet(maskUSED); }
         // returns chip number, hardwired strips/chip = 64
         inline int    chip()  const { return m_strip0/64;}
 
@@ -153,6 +192,17 @@ namespace Event {
         inline int getEnd() const {
             return ((m_status&maskEND)>>shiftEND);
         }
+
+        /// set/clear/test any mask (including USED)
+        inline bool isSet(unsigned int mask) const { return (m_status&mask)>0; }
+        inline void setMask(unsigned int mask, int flag=1) {
+            if(flag!=0) { m_status |= mask;  }
+            else        { clearMask(mask); }
+        }
+        inline void clearMask(unsigned int mask) {
+            m_status &= ~mask;
+        }
+
 
     private:
 
