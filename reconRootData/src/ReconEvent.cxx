@@ -34,9 +34,7 @@ ReconEvent::~ReconEvent() {
         m_adfRecon = 0;
     }
 
-    Clear();
-
-    TkrRecon::CleanUp();
+    Clear("ALL");
 
 }
 
@@ -74,6 +72,8 @@ void ReconEvent::Clear(Option_t* /* option */) {
     }
     m_eventFlags = 0;
     m_gleamEventFlags = 0;
+
+    //ReconObjectManager::getPointer()->Delete(option);
 }
 
 void ReconEvent::Print(Option_t* /* option */) const {

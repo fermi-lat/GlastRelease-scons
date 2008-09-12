@@ -16,7 +16,7 @@ TkrRecon::TkrRecon() {
 }
 
 TkrRecon::~TkrRecon() {
-    Clear();
+    Clear("ALL");
     if (m_clusterCol) delete m_clusterCol;
     m_clusterCol = 0;
     if (m_trackCol) delete m_trackCol;
@@ -36,16 +36,13 @@ void TkrRecon::initialize() {
     if (!m_truncationDataCol) m_truncationDataCol = new TObjArray();
 }
 
-void TkrRecon::Clear(Option_t* /*option*/) {
+void TkrRecon::Clear(Option_t* option) {
     static Int_t limitTruncationData = 100;
 
     // Tell the RECON object manager to reset its iterators
-    ReconObjectManager::getPointer()->Delete();
+    ReconObjectManager::getPointer()->Delete(option);
 }
 
-void TkrRecon::CleanUp() {
-    return;
-}
 
 void TkrRecon::Print(Option_t *option) const {
     TObject::Print(option);

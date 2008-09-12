@@ -167,8 +167,24 @@ TkrVertex* ReconObjectManager::getNewTkrVertex()
     return vertex;
 }
 
-void ReconObjectManager::Delete()
+void ReconObjectManager::Delete(const char* opt)
 {
+    if (opt[0] == 'A') {
+
+        m_tkrClusterPool.clear();
+        m_tkrTrackPool.clear();
+        m_tkrTrackHitPool.clear();
+        m_tkrTrackParamsPool.clear();
+        m_tkrVertexPool.clear();
+
+        m_tkrClusterPoolIdx     = m_tkrClusterPool.begin();
+        m_tkrTrackPoolIdx       = m_tkrTrackPool.begin();
+        m_tkrTrackHitPoolIdx    = m_tkrTrackHitPool.begin();
+        m_tkrTrackParamsPoolIdx = m_tkrTrackParamsPool.begin();
+        m_tkrVertexPoolIdx      = m_tkrVertexPool.begin();
+        return;
+    }
+
     // Keep all of the pools down to a reasonable size...
     // Start with TkrCluster pool
     if (m_tkrClusterPool.size() > 5*CLUSTERPOOLSIZE)

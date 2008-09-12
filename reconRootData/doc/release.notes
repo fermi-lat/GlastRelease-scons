@@ -3,6 +3,7 @@ package reconRootData
 package manager:H.Kelly 
 @verbatim
 
+v9r20     12-Sep-08  : HMK provide delete ALL option
 v9r19     05-Aug-08  : Add GleamEventFlags to ReconEvent
 v9r18     31-Mar-08  : TU  HMK tagging Tracy's update for TkrRecon objects to
           use the new ReconObjectManager for memory management
