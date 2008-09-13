@@ -1,6 +1,7 @@
 //$Header$
 /*
  
+ * v2r26    13-Sep-08   LSR  Display ghosts, wide clusters, needs latest Event
  * v0r25   11-Jun-08 LSR Refactoring of package: 
                             Implement Filler base class, and move common utils there
                          Also:
