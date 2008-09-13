@@ -3,7 +3,8 @@
 @verbatim
  * package manager:T.Burnett
  *
- * v13r1   14-Aug-08 LSR add set/get methods for gleamEventFlags::ANALYSISNTUPLE
+ * v13r1   13-Sep-08 LSR new TkrCluster status bits and access methods
+ * v13r0p1 14-Aug-08 LSR add set/get methods for gleamEventFlags::ANALYSISNTUPLE
                            recast the other flags as hex, for readability
  * v13r0   04-Aug-08 HMK Add gleamEventFlags and fswEventFlags to /Event
  * v12r1p1 31-Jul-08 JCT  fix test main
