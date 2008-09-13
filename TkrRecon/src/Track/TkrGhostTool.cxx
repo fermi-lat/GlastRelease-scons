@@ -235,8 +235,12 @@ StatusCode TkrGhostTool::flagEarlyHits()
     }
 
     if((tkrVector&trigBits)!=tkrVector) {
-        std::cout <<" disagrees!" << std::hex << tkrVector 
-            << " " << trigBits << std::dec << std::endl;
+        log << MSG::DEBUG;
+        if (log.isActive()) {
+            log <<"tkrVector and calculated tower trigger disagree:" << endreq 
+                << "tkrVector = " << std::hex << tkrVector 
+            << ", calculation = " << trigBits << std::dec << endreq;
+        }
     }
 
     // Flag the hits that would have made the trigger
