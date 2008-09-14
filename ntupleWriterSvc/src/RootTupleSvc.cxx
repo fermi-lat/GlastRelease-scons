@@ -423,17 +423,21 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
                     continue;
                 }
                 std::string type_name = leaf->GetTypeName();
-                if (type_name == "UInt_t")
+                if (type_name == "Float_t")
+                {
+                    m_itemPool[branchName] = new Float_t[leaf->GetNdata()];
+                }
+                else if (type_name == "Int_t")
+                {
+                    m_itemPool[branchName]= new Int_t[leaf->GetNdata()];
+                }
+                else if (type_name == "UInt_t")
                 {
                     m_itemPool[branchName]= new UInt_t[leaf->GetNdata()];
                 }        
-                else if (type_name == "Int_t")
+                else if (type_name == "ULong64_t")
                 {
-                    m_itemPool[branchName]= new UInt_t[leaf->GetNdata()];
-                }
-                else if (type_name == "Float_t")
-                {
-                    m_itemPool[branchName] = new Float_t[leaf->GetNdata()];
+                    m_itemPool[branchName]= new ULong64_t[leaf->GetNdata()];
                 }
                 else if (type_name == "Double_t")
                 {
@@ -861,21 +865,21 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
         // and unusable by the clients that are relying on a stable address
         log << MSG::DEBUG << "item: " << itemName << " type: " << type_name << " dim: " << leaf->GetNdata() << endreq;
         if (itemIt == m_itemPool.end()) {
-            if (type_name == "UInt_t")
+            if (type_name == "Float_t")
             {
-                m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
-            }        
-            else if (type_name == "ULong64_t_t")
-            {
-                m_itemPool[itemName]= new ULong64_t[leaf->GetNdata()];
+                m_itemPool[itemName] = new Float_t[leaf->GetNdata()];
             }
             else if (type_name == "Int_t")
             {
-                m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+                m_itemPool[itemName]= new Int_t[leaf->GetNdata()];
             }
-            else if (type_name == "Float_t")
+            else if (type_name == "UInt_t")
             {
-                m_itemPool[itemName] = new Float_t[leaf->GetNdata()];
+                m_itemPool[itemName]= new UInt_t[leaf->GetNdata()];
+            }        
+            else if (type_name == "ULong64_t")
+            {
+                m_itemPool[itemName]= new ULong64_t[leaf->GetNdata()];
             }
             else if (type_name == "Double_t")
             {
