@@ -3,7 +3,7 @@
  *    * EOH *
 
  @verbatim
- * v3r23p3 14-Sep-2008  LSR  Repair ULong64_t,Int_t bugs in RootTupleSvc. Don't seem
+ * v3r23p4 14-Sep-2008  LSR  Repair ULong64_t,Int_t bugs in RootTupleSvc. Don't seem
                			to have hurt, but I don't know why...
  * v3r23p2 21-Jul-2008  LSR  Fix up scanTuple.C for EvtEventId64
  * v3r23   14-Jul-2008  LSR  add unsigned long long to ntuple types
