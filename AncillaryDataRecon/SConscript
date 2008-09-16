@@ -12,6 +12,6 @@ libEnv.Tool('AncillaryDataReconLib', depsOnly = 1)
 AncillaryDataRecon = libEnv.SharedLibrary('AncillaryDataRecon', listFiles(['src/*.cxx']) + listFiles(['src/Dll/*.cxx']))
 
 progEnv.Tool('AncillaryDataReconLib')
-test_AncillaryDataRecon = progEnv.GaudiProgram('test_AncillaryDataRecon', ['src/test/AncillaryDataReconTest.cxx'] + listFiles(['src/*.cxx']), test = 1)
+test_AncillaryDataRecon = progEnv.Program('test_AncillaryDataRecon', ['src/test/AncillaryDataReconTest.cxx'] + listFiles(['src/*.cxx']))
 
 progEnv.Tool('registerObjects', package = 'AncillaryDataRecon', libraries = [AncillaryDataRecon], testApps = [test_AncillaryDataRecon], includes = listFiles(['AncillaryDataRecon/*.h']))
