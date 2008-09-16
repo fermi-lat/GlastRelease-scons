@@ -12,7 +12,7 @@ libEnv.Tool('AncillaryDataUtilLib', depsOnly = 1)
 AncillaryDataUtil = libEnv.StaticLibrary('AncillaryDataUtil', listFiles(['src/*.cxx']))
 
 progEnv.Tool('AncillaryDataUtilLib')
-test_AncillaryDataUtil = progEnv.GaudiProgram('test_AncillaryDataUtil',[[ 'src/test/testMain.cxx']], test = 1)
+test_AncillaryDataUtil = progEnv.Program('test_AncillaryDataUtil',['src/test/testMain.cxx'])
 
 progEnv.Tool('registerObjects', package = 'AncillaryDataUtil', libraries = [AncillaryDataUtil], testApps = [test_AncillaryDataUtil], includes = listFiles(['AncillaryDataUtil/*.h']))
 
