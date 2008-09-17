@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors:  Claudia Lavalley
-# Version: gcrSelectRootData-00-39-01
+# Version: gcrSelectRootData-02-02-02
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
