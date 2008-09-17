@@ -6,7 +6,6 @@
 */
 
 // LOCAL
-#include "IdealCalCalib.h"
 #include "CalCalibShared.h"
 
 // GLAST

@@ -6,9 +6,9 @@
 */
 
 // LOCAL INCLUDES
-#include "IdealCalCalib.h"
 
 // GLAST INCLUDES
+#include "CalUtil/SimpleCalCalib/IdealCalCalib.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 
@@ -38,7 +38,7 @@ class CalCalibShared {
   StringProperty m_idealCalibXMLPath;
 
   /// stores 'ideal' flavor generic calibration constants
-  IdealCalCalib m_idealCalib;
+  CalUtil::IdealCalCalib m_idealCalib;
 
   /// name of CalibDataSvc, main data source
   StringProperty m_calibDataSvcName;     

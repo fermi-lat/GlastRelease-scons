@@ -15,7 +15,7 @@
 //-- NOTE: to play with various response settings, etc... simply edit/create
 //         your own idealCalib.xml file:
 //CalCalibSvc.idealCalibXMLPath = 
-//	"$(CALXTALRESPONSEXMLPATH)/idealCalib_muon.xml";
+//	"$(CALUTILXMLPATH)/idealCalib_muon.xml";
 ///////////////////////////////////////////////////////////////////////////////
 
 

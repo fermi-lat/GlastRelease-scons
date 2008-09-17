@@ -11,7 +11,6 @@
 #include "MPDMgr.h"
 #include "PedMgr.h"
 #include "TholdCIMgr.h"
-#include "IdealCalCalib.h"
 #include "CalCalibShared.h"
 
 // GLAST 
@@ -39,7 +38,7 @@
     *
     * jobOptions:
     * - CalibDataSvc - calibration data source (default="CalibDataSvc")
-    * - idealCalibXMLPath - source for ideal calibration data (which by-passes the CalibSvc) (default="$(CALXTALRESPONSEROOT)/xml/idealCalib_flight.xml")
+    * - idealCalibXMLPath - source for ideal calibration data (which by-passes the CalibSvc) (default="$(CALUTILXMLPATH)/idealCalib_flight.xml")
     * - DefaultFlavor - default flavor for all Cal Calibration types (default="ideal")
     * - FlavorIntNonlin - override default calibration flavor for IntNonlin only (default="" - disabled) 
     * - FlavorAsym - override default calib flavor for Asymmetry only (default="" - disabled)
@@ -219,3 +218,4 @@ private:
 };
 
 #endif // CalCalibSvc_H
+
