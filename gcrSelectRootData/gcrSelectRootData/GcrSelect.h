@@ -7,30 +7,12 @@
 #include "GcrSelectedXtal.h"
 #include "GcrSelectVals.h"
 
+
 /** @class GcrSelect 
  * @brief Primary Root object containing GcrSelect data.
  *
  *
  * $Header$
-*/
-
-
-/** @page gcrSelectRootData_doc
-    @section GcrSelect GcrSelect Documentation
-    Notes 
-
-<table>
-<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
-
-<small>
-<tr><td> getGcrSelectedXtalCol
-<td>const TClonesArray*<td> Returns a const pointer to the TClonesArray of 
-GcrSelectedXtal
-<tr><td> getGcrSelectVals
-<td>const GcrSelectVals*<td> Returns const pointer to GcrSelectVals object
-
-</small>
-</table>
 */
 
 /** @page gcrSelectRootData_doc
@@ -44,9 +26,9 @@ GcrSelectedXtal
 
 <small>
 <tr>
-<td>getGcrSelectedXtalCol( )</td><td>Returns the Collection of hits selected for calibration</td><td>TClonesArray* of SelectedXtals</td>
+<td>getGcrSelectedXtalCol( )</td><td>Returns the collection of hits selected for calibration</td><td>TClonesArray* of SelectedXtals</td>
 </tr><tr>
-<td>getGcrSelectVals( )</td><td>Returns a set of simple parameters for selected events</td><td>GcrSelectVals*</td>
+<td>getGcrSelectVals( )</td><td>Returns a set of variables characterizing the event</td><td>GcrSelectVals*</td>
 </tr>
 
 </small>

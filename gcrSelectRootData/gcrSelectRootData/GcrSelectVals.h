@@ -4,25 +4,6 @@
 #include "TObject.h"
 #include "TVector3.h"
 
-/** @page gcrSelectRootData_doc
-    @section GcrSelectVals GcrSelectVals Documentation
-    Notes 
-
-<table>
-<tr><th><EM> Method <th> Return Type </EM><th> Description <th>
-
-<small>
-<tr><td> getInferedZ
-<td>Int_t<td> Returns 
-<tr><td> getAcdZ
-<td>Int_t<td> Returns
-<tr><td> getInteractionParmas
-<td>Int_t<td> Returns 
-
-</small>
-</table>
-*/
-
 /** @class GcrSelectVals
  * 
  * $Header$
@@ -38,10 +19,13 @@
 <small>
 <tr><td>  getInferedZ ()</td><td>Returns the Z infered from energy deposited in the first layer</td><td>Int_t</td>
 </tr>
-<tr><td>  getAcdZ ()</td><td>Returns Z given by ACD</td><td>Int_t</td>
+<tr><td>  getAcdZ ()</td><td>Obsolete</td><td>Int_t</td>
 </tr>
-<tr><td>  getInteractionParams ()</td><td>Returns</td><td>Int_t</td>
+<tr><td>  getInteractionParams ()</td><td>Not used</td><td>Int_t</td>
 </tr>
+<tr><td>  getGcrOBFStatusWord ()</td><td>Returns a four bit word indicating which OBF Filters have been passed (1 bit for each of OBF Filters Gamma:0, HIP:1, MIP:2, DGN:3  (values 1, 2, 4 and 8, respectively)</td><td>Int_t</td>
+</tr>
+
 
 </small>
 </table>

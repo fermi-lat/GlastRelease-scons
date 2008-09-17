@@ -14,7 +14,7 @@
 /** @page gcrSelectRootData_doc
     @section GcrSelectedXtal GcrSelectedXtal Documentation
     
-    <P> A GcrSelectedXtal is a log beeing crossed by the primary particle track, having an energy deposit > 120 MeV, selected after rejection of nuclear interactions </P>
+    <P> A GcrSelectedXtal is a log crossed by the primary particle track, having an energy deposit > 100 MeV (if event passes HIP Filter) or > 5 MeV (if event passes Gamma, MIP or GCN filters), selected after rejection of nuclear interactions </P>
 
 <table>
 <tr>
@@ -29,15 +29,15 @@
 </tr>
 <tr><td>  getCorrEnergy ()</td><td>Returns the path-length corrected energy </td><td>Double_t</td>
 </tr>
-<tr><td>  getSelectGrade ()</td><td>Returns </td><td>Int_t</td>
+<tr><td>  getSelectGrade ()</td><td>Obsolete </td><td>Int_t</td>
 </tr>
-<tr><td>  getClosestFaceDist ()</td><td>Returns the distance to the closest Xtal face to the central point of the piece of track contained  in that Xtal</td><td>Double_t</td>
+<tr><td>  getClosestFaceDist ()</td><td>Returns the distance to the closest Xtal face of the middle point of the track segment contained in that Xtal</td><td>Double_t</td>
 </tr>
 <tr><td>  getCrossedFaces ()</td><td>Returns a code that contains information about what Xtal faces were crossed by the particle</td><td>Int_t</td>
 </tr>
-<tr><td>  getEntryPoint ()</td><td>Returns the 3D coordinates of the point where the particule entered into the calorimeter</td><td>TVector3</td>
+<tr><td>  getEntryPoint ()</td><td>Returns the 3D coordinates of the entry point in the Xtal</td><td>TVector3</td>
 </tr>
-<tr><td>  getExitPoint ()</td><td>Returns the 3D coordinates of the point where the particule left the calorimeter</td><td>TVector3</td>
+<tr><td>  getExitPoint ()</td><td>Returns the 3D coordinates of the exit point in the Xtal</td><td>TVector3</td>
 </tr>
 
 
