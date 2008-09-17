@@ -16,15 +16,15 @@ namespace CalUtil {
   
   /** \brief STL vector wrapper restricts indexing to specified type.
       
-      \author Zachary Fewtrell
+  \author Zachary Fewtrell
       
-      intended for use w/ index classes from CalDefs.h.
+  intended for use w/ index classes from CalDefs.h.
 
-      \note default initial size of vector is 0
-      \note default initial vector values are all set to 0.
+  \note default initial size of vector is 0
+  \note default initial vector values are all set to 0.
 
-      \param idx_type vector index type.
-      \param val_type vector value type.
+  \param idx_type vector index type.
+  \param val_type vector value type.
   */
 
 
@@ -42,18 +42,18 @@ namespace CalUtil {
 
   public:
     /// default to initial size based on idx_type, zero initialize like STL
-	explicit CalVec() : parent_type(idx_type::N_VALS) {}
-	
-	/// just like STL, set initial size
+    explicit CalVec() : parent_type(idx_type::N_VALS) {}
+        
+    /// just like STL, set initial size
     explicit CalVec(const size_type sz) : parent_type(sz) {}
     
-	/// just like STL, set initial size & value
+    /// just like STL, set initial size & value
     CalVec(const size_type sz, const val_type &val) : parent_type(sz,val) {}
-	
-	/// just like STL, copy from another collection
-	template <typename _iterator>
-	CalVec(_iterator first, _iterator last) :
-	parent_type(first,last) {}
+        
+    /// just like STL, copy from another collection
+    template <typename _iterator>
+    CalVec(_iterator first, _iterator last) :
+      parent_type(first,last) {}
 
     reference operator[] (const idx_type &idx) {
       return parent_type::operator[](idx.val());

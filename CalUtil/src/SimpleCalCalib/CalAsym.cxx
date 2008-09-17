@@ -20,7 +20,8 @@ using namespace std;
 using namespace CalUtil;
   
 namespace CalUtil {
-  CalAsym::CalAsym()
+  CalAsym::CalAsym(const unsigned short nSlicesPerXtal) :
+    nSlicesPerXtal(nSlicesPerXtal)
   {
   }
 
@@ -40,9 +41,9 @@ namespace CalUtil {
       const ColNum col (xtalIdx.getCol());
       for (AsymType asymType; asymType.isValid(); asymType++)
         // per point along curve
-        for (unsigned short i = 0; i < N_ASYM_PTS; i++) {
+        for (unsigned short i = 0; i < nSlicesPerXtal; i++) {
           // skip empty channels
-          if (m_asym[asymType][xtalIdx].size() != N_ASYM_PTS)
+          if (m_asym[asymType][xtalIdx].size() != nSlicesPerXtal)
             continue;
 
           outfile << twr.val()
@@ -103,10 +104,10 @@ namespace CalUtil {
 
     // create position (Y-axis) array
     // linearly extrapolate for 1st and last points (+2 points)
-    double pos[N_ASYM_PTS+2];
-    for (unsigned short i = 0; i < N_ASYM_PTS+2; i++)
+    double pos[nSlicesPerXtal+2];
+    for (unsigned short i = 0; i < nSlicesPerXtal+2; i++)
       pos[i] = i + 0.5; // (center of the column)
-    double asym[N_ASYM_PTS+2];
+    double asym[nSlicesPerXtal+2];
 
     // PER XTAL LOOP
     for (DiodeNum diode; diode.isValid(); diode++) {
@@ -115,7 +116,7 @@ namespace CalUtil {
 
       for (XtalIdx xtalIdx; xtalIdx.isValid(); xtalIdx++) {
         // skip empty channels
-        if (m_asym[asymType][xtalIdx].size() != N_ASYM_PTS)
+        if (m_asym[asymType][xtalIdx].size() != nSlicesPerXtal)
           continue;
 
         // copy asym vector into middle of array
@@ -124,7 +125,7 @@ namespace CalUtil {
 
         // extrapolate 1st & last points
         asym[0] = 2*asym[1] - asym[2];
-        asym[N_ASYM_PTS+1]     = 2*asym[N_ASYM_PTS]-asym[N_ASYM_PTS-1];
+        asym[nSlicesPerXtal+1]     = 2*asym[nSlicesPerXtal]-asym[nSlicesPerXtal-1];
 
         {
           //generate splinename
@@ -133,7 +134,7 @@ namespace CalUtil {
 
           // create spline object
           TSpline3     *mySpline = new TSpline3(name.str().c_str(),
-                                                asym, pos, N_ASYM_PTS+2);
+                                                asym, pos, nSlicesPerXtal+2);
           mySpline->SetName(name.str().c_str());
 
           m_a2pSplines[diode][xtalIdx] = mySpline;
@@ -147,7 +148,7 @@ namespace CalUtil {
 
           // create spline object
           TSpline3     *mySpline = new TSpline3(name.str().c_str(),
-                                                pos, asym, N_ASYM_PTS+2);
+                                                pos, asym, nSlicesPerXtal+2);
           mySpline->SetName(name.str().c_str());
 
           m_p2aSplines[diode][xtalIdx] = mySpline;

@@ -141,6 +141,13 @@ namespace CalUtil {
     TFile rootFile(filename.c_str(),
                    "RECREATE",
                    "GLAST Cal Neighboring Crystal Cross-talk splines");
+    if (!rootFile.IsOpen()) {
+      ostringstream tmp;
+      tmp << __FILE__ << ":" << __LINE__ << " "
+          << "ERROR! unable to open txtFile='" << filename << "'";
+      throw runtime_error(tmp.str());
+    }
+
   
     // loop through each destination channel
     for (DiodeIdx destIdx; destIdx.isValid(); destIdx++) {

@@ -20,7 +20,7 @@
 
 namespace {
   /// length of cal CsI crystal (hardcoded)
-  static const float CSI_LEN=326;
+  static const float CSI_LEN=326.0;
 }
 
 namespace CalUtil {
@@ -34,7 +34,7 @@ namespace CalUtil {
   class CalAsym {
   public:
     /// start with zero values
-    CalAsym();
+    CalAsym(const unsigned short nSlicesPerXtal=10);
 
     /// write asymmetry tables out to text file.
     void writeTXT(const std::string &filename) const;
@@ -45,7 +45,7 @@ namespace CalUtil {
     /// # of points per xtal for asymmetry type data.
     /// 1 point for the center of each orthogonal xtal
     /// excluding the two outermost xtals
-    static const unsigned short N_ASYM_PTS = 10;
+    const unsigned short nSlicesPerXtal;
 
     /// creates & populates Asymmetry splines from m_asym
     void genSplines();
@@ -135,8 +135,7 @@ namespace CalUtil {
 
   private:
 
-    /// collection of spline functions based on LEX8 vs LEX8 asymmetry
-    /// for calculating hit position in muon gain calibration (1 per xtal)
+    /// collection of spline functions based on LEX8 vs LEX8 light asymmetry
     CalUtil::CalVec<CalUtil::DiodeNum, CalUtil::CalVec<CalUtil::XtalIdx,
                                                        TSpline3 *> >
     m_a2pSplines;
@@ -147,7 +146,7 @@ namespace CalUtil {
                                                        TSpline3 *> >
     m_p2aSplines;
 
-    /// 2d vector N_ASYM_PTS lograt asymvals per xtal/asymType
+    /// 2d vector nSlicesPerXtal lograt asymvals per xtal/asymType
     CalUtil::CalVec<CalUtil::AsymType, CalUtil::CalVec<CalUtil::XtalIdx, std::vector<float> > > m_asym;
     /// corresponding error value
     CalUtil::CalVec<CalUtil::AsymType, CalUtil::CalVec<CalUtil::XtalIdx,
