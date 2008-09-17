@@ -110,6 +110,10 @@ int main(const int argc,
     TFile outputROOTFile(outputROOTFilename.c_str(),
                          "RECREATE",
                          "Fitted GCR Histograms");
+    if (!outputROOTFile.IsOpen()) {
+      LogStrm::get() << __FILE__ << ": ERROR: Opening file: " << outputROOTFilename << endl;
+      return -1;
+    }
 
     /// retrieve histograms from previous analysis.
     LogStrm::get() << __FILE__ << ": opening input histogram file: " << cfg.inputROOTPath.getVal() << endl;

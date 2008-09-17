@@ -1,52 +1,51 @@
-/** @file Fit MevPerDAC & Asym histograms generated with genMuonCalibTkr
+// $Header$
+
+/** @file fit Cal Light Asymmetry Histograms & output TXT calibration data
 
     @author Zachary Fewtrell
 */
 
 // LOCAL INCLUDES
+#include "MuonAsymAlg.h"
 #include "src/lib/Hists/AsymHists.h"
-#include "src/lib/Hists/MPDHists.h"
 #include "src/lib/Util/CfgMgr.h"
 #include "src/lib/Util/CGCUtil.h"
 #include "src/lib/Util/string_util.h"
-
+#include "src/lib/Util/stl_util.h"
 
 // GLAST INCLUDES
-#include "facilities/Util.h"
 #include "CalUtil/SimpleCalCalib/CalAsym.h"
-#include "CalUtil/SimpleCalCalib/CalMPD.h"
 
 // EXTLIB INCLUDES
 #include "TFile.h"
 
 // STD INCLUDES
-#include <sstream>
+#include <iostream>
+#include <string>
 #include <fstream>
 
 using namespace std;
 using namespace calibGenCAL;
 using namespace CfgMgr;
-using namespace facilities;
 using namespace CalUtil;
 
+/// Manage application configuration parameters
 class AppCfg {
 public:
   AppCfg(const int argc,
          const char **argv) :
     cmdParser(path_remove_ext(__FILE__)),
-    skipAsym("skipAsym",
-             'm',
-             "Skip processing asymmetry histograms"),
     outputBasename("outputBasename",
                    "all output files will use this basename + some_ext",
                    ""),
+    muonGain("muonGain",
+             'm',
+             "assume cal in MUON GAIN mode instead of FLIGHT_GAIN"),
     help("help",
          'h',
          "print usage info")
-
   {
     cmdParser.registerArg(outputBasename);
-    cmdParser.registerSwitch(skipAsym);
     cmdParser.registerSwitch(help);
 
     try {
@@ -57,26 +56,20 @@ public:
         cout << e.what() << endl;
       cmdParser.printUsage();
       exit(-1);
-    }  
+    }
   }
-
   /// construct new parser
   CmdLineParser cmdParser;
-
-  /// skip asymmetry processing (mpd only)
-  CmdSwitch skipAsym;
-
   CmdArg<string> outputBasename;
 
-
+  CmdSwitch muonGain;
   /// print usage string
   CmdSwitch help;
+
 };
 
 int main(int argc,
          const char **argv) {
-
-
   // libCalibGenCAL will throw runtime_error
   try {
     AppCfg cfg(argc, argv);
@@ -96,53 +89,37 @@ int main(int argc,
     cfg.cmdParser.printStatus(LogStrm::get());
     LogStrm::get() << endl;
 
-    //-- MUON CALIB
-    // output histogram file name
+    //-- LIGHT ASYM
+    // input histogram file name
     const string histFilename(cfg.outputBasename.getVal() + ".root");
-    const string mpdTXTFile(cfg.outputBasename.getVal() + ".calMPD.txt");
 
-    ///////////////////////////////////////
-    //-- OPEN HISTOGRAM FILE             //
-    //   (either 'CREATE' or 'UPDATE') --//
-    ///////////////////////////////////////
+    // output txt file name
+    const string outputTXTFile(cfg.outputBasename.getVal() + ".txt");
+
+    CalAsym   calAsym;
 
     // open file to save output histograms.
-    LogStrm::get() << __FILE__ << ": opening output histogram file: "
-                     << histFilename << endl;
-    TFile histFile(histFilename.c_str(), "UPDATE", "CAL Muon Calib");
-
-    MPDHists  mpdHists(MPDHists::FitMethods::LANGAU);
-    mpdHists.loadHists(histFile);
-
-    CalMPD    calMPD;
-
-    if (!cfg.skipAsym.getVal()) {
-      CalAsym   calAsym;
-
-      AsymHists asymHists(CalResponse::MUON_GAIN);
-      asymHists.loadHists(histFile);
-      LogStrm::get() << __FILE__ << ": fitting asymmetry histograms." << endl;
-      asymHists.fitHists(calAsym);
-      
-      string asymTXTFile(cfg.outputBasename.getVal() + ".calAsym.txt");
-      LogStrm::get() << __FILE__ << ": writing light asymmetry: "
-                     << asymTXTFile << endl;
-      calAsym.writeTXT(asymTXTFile);
+    LogStrm::get() << __FILE__ << ": opening input histogram file: "
+                   << histFilename << endl;
+    TFile histFile(histFilename.c_str(),
+                   "READ",
+                   "CAL Light Asymmetry");
+    if (!histFile.IsOpen()) {
+      LogStrm::get() << __FILE__ << ": ERROR: Opening file: " << histFilename << endl;
+      return -1;
     }
-
-    LogStrm::get() << __FILE__ << ": fitting MeVPerDAC histograms." << endl;
-    mpdHists.fitHists(calMPD);
-
-    LogStrm::get() << __FILE__ << ": writing muon mevPerDAC: "
-                     << mpdTXTFile << endl;
-    calMPD.writeTXT(mpdTXTFile);
     
-    LogStrm::get() << __FILE__ << ": generating mpd fit result tuple: " << endl;
-    mpdHists.buildTuple();
+    CalResponse::CAL_GAIN_INTENT calGain = (cfg.muonGain.getVal()) ? CalResponse::MUON_GAIN : CalResponse::FLIGHT_GAIN;
+    AsymHists asymHists(calGain, 12,10,0,&histFile);
 
+    LogStrm::get() << __FILE__ << ": fitting light asymmmetry histograms." << endl;
+    asymHists.fitHists(calAsym);
+
+    LogStrm::get() << __FILE__ << ": writing light asymmetry: "
+                     << outputTXTFile << endl;
+    calAsym.writeTXT(outputTXTFile);
     LogStrm::get() << __FILE__ << ": writing histogram file: "
                      << histFilename << endl;
-    histFile.Write();
 
     LogStrm::get() << __FILE__ << ": Successfully completed." << endl;
   } catch (exception &e) {

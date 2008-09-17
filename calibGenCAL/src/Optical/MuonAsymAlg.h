@@ -37,7 +37,7 @@ namespace calibGenCAL {
   */
   class MuonAsymAlg {
   public:
-	  MuonAsymAlg(const CalUtil::CalPed &ped,
+    MuonAsymAlg(const CalUtil::CalPed &ped,
                 const CalUtil::CIDAC2ADC &dac2adc,
                 AsymHists &asymHists);
 
@@ -90,7 +90,7 @@ namespace calibGenCAL {
       }
 
     public:
-		EventData(const CalUtil::CalPed &peds,
+      EventData(const CalUtil::CalPed &peds,
                 const CalUtil::CIDAC2ADC &dac2adc) :
         hscopes(CalUtil::TwrNum::N_VALS,
                 TwrHodoscope(peds, dac2adc)),

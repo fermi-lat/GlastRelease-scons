@@ -57,5 +57,13 @@ namespace calibGenCAL {
     Vec3D            xtalCtrPos(const CalUtil::XtalIdx xtalIdx);
   };
 
+  /// convert longitudinal slice of crystal to mm from center of xtal
+  /// \param sliceNum input slice number to convert
+  /// \param nSlicesTotal total number of slices in sinngle crystal
+  inline float xtalSliceToMMFromCtr(const unsigned short sliceNum,
+                                    const unsigned short nSlicesTotal) {
+    return (sliceNum+.5)*CalGeom::CsILength/nSlicesTotal - CalGeom::CsILength/2;
+  }
+
 }; // namespace calibGenCAL
 #endif // CalGeom_H

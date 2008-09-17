@@ -99,7 +99,6 @@ namespace calibGenCAL {
                                   const vector<string> &svacFileList,
                                   unsigned startEvent
                                   ) {
-    m_asymHists.initHists();
     m_mpdHists.initHists();
 
     RootFileAnalysis rootFile(0,
@@ -126,8 +125,8 @@ namespace calibGenCAL {
         const unsigned currentMin = m_mpdHists.getMinEntries();
         if (currentMin >= nEntries) break;
         LogStrm::get() << "Event: " << eventData.eventNum
-                         << " min entries per histogram: " << currentMin
-                         << endl;
+                       << " min entries per histogram: " << currentMin
+                       << endl;
         LogStrm::get().flush();
 
         algData.printStatus(LogStrm::get());
@@ -363,11 +362,12 @@ namespace calibGenCAL {
             continue;
 
           algData.asymFills++;
-          float asym = dac[XtalDiode(POS_FACE, pDiode)] /
-            dac[XtalDiode(NEG_FACE, nDiode)];
-          asym = log(asym);
 
-          m_asymHists.getHist(asymType, xtalIdx)->Fill(segmentNo, asym);
+          m_asymHists.fill(asymType,
+                           xtalIdx,
+                           xtalSliceToMMFromCtr(segmentNo,ColNum::N_VALS),
+                           dac[XtalDiode(POS_FACE,pDiode)],
+                           dac[XtalDiode(NEG_FACE,nDiode)]);
         }
       }
     }

@@ -48,7 +48,7 @@ namespace calibGenCAL {
     /// \param dac2adc cal intNonlin calibrations
     /// \param asymHists output asymmetry histograms
     /// \param mpdHists output mevPerDAC histograms
-	  MuonCalibTkrAlg(const CalUtil::CalPed &ped,
+    MuonCalibTkrAlg(const CalUtil::CalPed &ped,
                     const CalUtil::CIDAC2ADC &dac2adc,
                     AsymHists &asymHists,
                     MPDHists &mpdHists,

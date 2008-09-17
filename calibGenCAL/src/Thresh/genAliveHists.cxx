@@ -433,8 +433,8 @@ int main(int argc,
 	(hp2nhex8[twr])->Fill(col,lyr,p2nhex8);	
       }
       for (FaceIdx faceIdx; faceIdx.isValid(); faceIdx++){
-	int nlex8 = lex8Hists.produceHist(faceIdx).GetEntries();
-	int nhex8 = hex8Hists.produceHist(faceIdx).GetEntries();
+	int nlex8 = (int)lex8Hists.produceHist(faceIdx).GetEntries();
+	int nhex8 = (int)hex8Hists.produceHist(faceIdx).GetEntries();
 	float avlex8 = lex8Hists.produceHist(faceIdx).GetMean();
 	float avhex8 = hex8Hists.produceHist(faceIdx).GetMean();
 	if(maxnlex8 < nlex8)maxnlex8=nlex8;

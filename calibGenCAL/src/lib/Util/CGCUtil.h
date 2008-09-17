@@ -64,9 +64,9 @@ namespace calibGenCAL {
     return degrees*M_PI/180;
   }
                      
-  /// return true if min <= x <= max
+  /// return true if min <= x <= max (inclusive)
   template <typename T>
-  bool between(const T& min,
+  bool between_incl(const T& min,
                const T& x,
                const T& max) {
     return (x >= min && x <= max);

@@ -39,6 +39,6 @@ namespace {
 };
 
 namespace calibGenCAL {
-	const float *singlex16::CIDACTestVals() { return __CIDACTestVals;}
-    unsigned short singlex16::nCIDACVals() {return sizeof(__CIDACTestVals)/sizeof(*__CIDACTestVals);}
+  const float *singlex16::CIDACTestVals() { return __CIDACTestVals;}
+  unsigned short singlex16::nCIDACVals() {return sizeof(__CIDACTestVals)/sizeof(*__CIDACTestVals);}
 }

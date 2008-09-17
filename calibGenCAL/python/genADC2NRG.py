@@ -73,6 +73,9 @@ if __name__ == '__main__':
         log.exception("getopt exception: "+__doc__)
         sys.exit(-1)
 
+    if len(args) != 6:
+        log.error("wrong # of commandline arguments: "+__doc__)
+        sys.exit(-1)
     (gain, inlPath, asymPath, mpdPath, adc2nrgPath, muSlopePath) = args
 
     if not gain in ("MUON_GAIN","FLIGHT_GAIN"):

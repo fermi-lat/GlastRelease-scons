@@ -120,7 +120,7 @@ int main(int argc,
 
     //-- RETRIEVE PEDESTALS
     CalPed peds;
-    LogStrm::get() << __FILE__ << ": reading in muon pedestal file: "
+    LogStrm::get() << __FILE__ << ": reading in pedestal file: "
                      << cfg.pedTXTFile.getVal() << endl;
     peds.readTXT(cfg.pedTXTFile.getVal());
 
@@ -133,17 +133,12 @@ int main(int argc,
     LogStrm::get() << __FILE__ << ": generating dac2adc splines: " << endl;
     dac2adc.genSplines();
 
-    //-- MUON ASYM
+    //-- LIGHT ASYM
     // output histogram file name
-    string histFilename(cfg.outputBasename.getVal() + ".root");
+    const string histFilename(cfg.outputBasename.getVal() + ".root");
 
     // output txt file name
-    string    outputTXTFile(cfg.outputBasename.getVal() + ".txt");
-
-    AsymHists asymHists;
-    MuonAsymAlg muonAsym(peds,
-                         dac2adc,
-                         asymHists);
+    const string    outputTXTFile(cfg.outputBasename.getVal() + ".txt");
 
     CalAsym   calAsym;
 
@@ -152,7 +147,13 @@ int main(int argc,
                      << histFilename << endl;
     TFile histFile(histFilename.c_str(),
                    "RECREATE",
-                   "CAL Muon Asymmetry");
+                   "CAL Light Asymmetry");
+
+    AsymHists asymHists(CalResponse::MUON_GAIN,12,10,&histFile);
+    MuonAsymAlg muonAsym(peds,
+                         dac2adc,
+                         asymHists);
+
 
     LogStrm::get() << __FILE__ << ": reading root event file(s) starting w/ "
                      << digiFileList[0] << endl;
@@ -165,10 +166,10 @@ int main(int argc,
     
     asymHists.summarizeHists(LogStrm::get());
 
-    LogStrm::get() << __FILE__ << ": fitting muon asymmmetry histograms." << endl;
+    LogStrm::get() << __FILE__ << ": fitting light asymmmetry histograms." << endl;
     asymHists.fitHists(calAsym);
 
-    LogStrm::get() << __FILE__ << ": writing muon asymmetry: "
+    LogStrm::get() << __FILE__ << ": writing light asymmetry: "
                      << outputTXTFile << endl;
     calAsym.writeTXT(outputTXTFile);
     LogStrm::get() << __FILE__ << ": writing histogram file: "
