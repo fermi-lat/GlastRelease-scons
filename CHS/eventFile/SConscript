@@ -12,7 +12,7 @@ if baseEnv['PLATFORM'] != "win32":
 else:
     libEnv.AppendUnique(CPPDEFINES = ['__i386'])
     libEnv.AppendUnique(CCFLAGS = '/Zp4')
-libEnv.AppendUnique(CPPDEFIENS = ['HAVE_FACILITIES'])
+libEnv.AppendUnique(CPPDEFINES = ['HAVE_FACILITIES'])
 progEnv = libEnv.Clone()
 
 libEnv.Tool('eventFileLib', depsOnly = 1)

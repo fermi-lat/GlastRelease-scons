@@ -41,6 +41,7 @@ namespace eventFile {
     const GammaHandlerRsdV0*    grsd0( gammaRsdV0() );
     const GammaHandlerRsdV1*    grsd1( gammaRsdV1() );
     const GammaHandlerRsdV2*    grsd2( gammaRsdV2() );
+    const GammaHandlerRsdV3*    grsd3( gammaRsdV3() );
     const HipHandlerRsdV0*      hrsd( hipRsdV0() );
     const MipHandlerRsdV0*      mrsd( mipRsdV0() );
     const PassthruHandlerRsdV0* prsd( passthruRsdV0() );
@@ -67,6 +68,13 @@ namespace eventFile {
       printf( "%s%s RSD:    energyValid  = %s%s", pre, handlerName(), ( (grsd2->energyValid) ? "True" : "False" ), post );
       if ( grsd2->energyValid ) {
 	printf( "%s%s RSD:    energyInLeus = %d%s", pre, handlerName(), grsd2->energyInLeus, post );
+      }
+    } else if ( grsd3 ) {
+      printf( "%s%s RSD:    status  = 0x%08X%s", pre, handlerName(), grsd3->status, post );
+      printf( "%s%s RSD:    stage   = 0x%08X%s", pre, handlerName(), grsd3->stage(), post );
+      printf( "%s%s RSD:    energyValid  = %s%s", pre, handlerName(), ( (grsd3->energyValid) ? "True" : "False" ), post );
+      if ( grsd3->energyValid ) {
+	printf( "%s%s RSD:    energyInLeus = %d%s", pre, handlerName(), grsd3->energyInLeus, post );
       }
     } else if ( hrsd ) {
       printf( "%s%s RSD:      status = 0x%08X%s", pre, handlerName(), hrsd->status, post );
@@ -134,6 +142,14 @@ namespace eventFile {
   {
     if ( has && version == 2 && id == LPA_Handler::GAMMA ) {
       return &(rsd.gamma2);
+    }
+    return NULL;
+  }
+
+  const GammaHandlerRsdV3* LPA_Handler::gammaRsdV3() const
+  {
+    if ( has && version == 3 && id == LPA_Handler::GAMMA ) {
+      return &(rsd.gamma3);
     }
     return NULL;
   }

@@ -56,7 +56,7 @@ namespace eventFile {
     static char     m_moot_alias[LSEHEADER_ALIAS_LEN];
 
     // file-format version specifier
-    static const unsigned FormatVersion = 0x08080808;
+    static const unsigned FormatVersion = 0x09090909;
   };
 };
 

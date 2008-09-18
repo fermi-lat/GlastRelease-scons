@@ -67,6 +67,16 @@ namespace eventFile {
     unsigned int _stage;
   };
 
+  struct GammaHandlerRsdV3 {
+    unsigned int status;
+    unsigned int stage() const { return _stage; };
+    unsigned int energyValid;
+    signed int energyInLeus;
+    void stage( unsigned int s) { _stage = s; };
+  private:
+    unsigned int _stage;
+  };
+
   struct HipHandlerRsdV0 {
     unsigned int status;
     unsigned int stage() const;
@@ -131,6 +141,7 @@ namespace eventFile {
     PassthruHandlerRsdV0 passthru0;
     GammaHandlerRsdV1    gamma1;
     GammaHandlerRsdV2    gamma2;
+    GammaHandlerRsdV3    gamma3;
   };
 
   /** class representing the result info from each active handler */
@@ -225,6 +236,7 @@ namespace eventFile {
     const PassthruHandlerRsdV0*     passthruRsdV0() const;
     const GammaHandlerRsdV1*        gammaRsdV1()    const;
     const GammaHandlerRsdV2*        gammaRsdV2()    const;
+    const GammaHandlerRsdV3*        gammaRsdV3()    const;
     const char*                     typeName() const;
     const char*                     handlerName() const;
     const char*                     stateName() const;
