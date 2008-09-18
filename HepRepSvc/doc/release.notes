@@ -1,6 +1,7 @@
 //$Header$
 /*
  
+ * v2r27p2 18-Sep-08   LSR  Back out ghost stuff so this can go in faster
  * v2r27p1 17-Sep-08   LSR  Speed up large events by a large factor!
  * v2r27   15-Sep-08   LSR  Connect Clusters on track to the TkrTrackHit
  * v2r26p2 13-Sep-08   LSR  typo in requirements file
