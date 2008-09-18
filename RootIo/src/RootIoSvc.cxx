@@ -33,6 +33,7 @@
 #include "TSystem.h"
 #include "TFile.h"
 #include "facilities/Util.h"
+#include "facilities/Timestamp.h"
 
 #include <vector>
 #include <algorithm>
@@ -1013,9 +1014,12 @@ void RootIoSvc::loopStatus( int eventNumber, double currentTime, MsgStream & log
     last_fraction = percent_complete ;
     if ((percent_complete<10)||((percent_complete%10)==0))
      {
+      facilities::Timestamp tstamp;
       log<<MSG::INFO
+        << " [" << tstamp.getString() << "] "
+        << std::setprecision(12) << std::resetiosflags(4096)
         <<percent_complete<<"% complete: "
-        <<" event "<<eventNumber<<",  time "<<currentTime<<endreq ;
+        <<" event "<<eventNumber<<",  time= "<<currentTime<<endreq ;
      }
    }
  }
