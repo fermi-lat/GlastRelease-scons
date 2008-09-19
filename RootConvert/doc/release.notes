@@ -3,6 +3,7 @@
  author David Chamont 
  @verbatim
 
+ v1r42   18-Sep-2008 HMK Add GammaRsdV3 for FSW B1-1-2
  v1r41   30-Jul-2008 HMK Handle new compressionLevel and compressedSize in LSF
  v1r40   27-Jul-2008 HMK Updates for new CHS/eventFile for FSW B1-1-0
  v1r39   18-Jul-2008 HMK Fill flight OBF with Gleam OBF when running MC

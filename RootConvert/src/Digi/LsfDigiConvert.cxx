@@ -359,6 +359,9 @@ namespace RootPersistence {
          case 2:
              gam = new LpaGammaFilterV2;
              break;
+         case 3:
+             gam = new LpaGammaFilterV3;
+             break;
          default:
              gam = 0;
        }
