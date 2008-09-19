@@ -426,6 +426,9 @@ public:
               case 2:
                 m_gamma = new GammaRsdV2;
                 break;
+              case 3:
+                m_gamma = new GammaRsdV3;
+                break;
               default:
                 m_gamma = 0;
                 std::cout << "Gamma version invalid, not setting GammaRsd"

@@ -209,7 +209,16 @@ namespace lsfData {
                 const eventFile::GammaHandlerRsdV2*  evtGamma( handlerIt->gammaRsdV2() );
                 gam.setStatus(evtGamma->status,evtGamma->stage(),
                               evtGamma->energyValid, evtGamma->energyInLeus);
-            }
+            } else if (handlerIt->gammaRsdV3()) {
+                const eventFile::GammaHandlerRsdV3*  evtGamma( handlerIt->gammaRsdV3() );
+                gam.setStatus(evtGamma->status,evtGamma->stage(),
+                              evtGamma->energyValid, evtGamma->energyInLeus);
+            } else {
+            // no version found
+              std::cout << "LSEReader ERROR:  No matching GammaRsd found!" 
+                        << " version is: " << handlerIt->version
+                        << std::endl;
+            } 
 
             lmeta.addGammaHandler(gam);
         } else if (((enums::Lsf::HandlerId)(handlerIt->id)) == enums::Lsf::HIP) {

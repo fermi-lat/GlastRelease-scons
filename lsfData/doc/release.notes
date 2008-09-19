@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v4r2p1  19-Sep-2008 HMK Really completely handle GammaRsdV3
 v4r2    18-Sep-2008 HMK Add GammaRsdV3 to LpaHandlers in anticipation of new
         FSW B1-1-2
 v4r1    30-Jul-2008 HMK Handle new LSE_Info compressionLevel and 
