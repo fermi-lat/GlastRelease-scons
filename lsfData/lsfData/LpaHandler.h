@@ -19,6 +19,7 @@ namespace lsfData {
  class GammaRsdV0;
  class GammaRsdV1;
  class GammaRsdV2;
+ class GammaRsdV3;
  class HipRsdV0;
  class MipRsdV0;
  class PassthruRsdV0;
@@ -342,6 +343,26 @@ private:
       GammaRsdV2(const GammaRsd &other) : GammaRsd(other) { }
   };
 
+  class GammaRsdV3 : public GammaRsd {
+  public:
+      GammaRsdV3():GammaRsd()  { };
+      virtual ~GammaRsdV3() { };
+
+    unsigned int status() const { return m_status; }
+    unsigned int stage() const { return m_stage; }
+    unsigned int energyValid() const { return m_energyValid; }
+    int energyInLeus() const { return m_energyInLeus; }
+ 
+      GammaRsdV3(const GammaRsdV3 &other):GammaRsd(other)  {
+          m_status = other.m_status;
+          m_stage = other.m_stage;
+          m_energyValid = other.m_energyValid;
+          m_energyInLeus = other.m_energyInLeus;
+      } 
+
+      GammaRsdV3(const GammaRsd &other) : GammaRsd(other) { }
+  };
+
 class GammaHandler {
 public:
     GammaHandler():m_gamma(0) { };
@@ -357,6 +378,9 @@ public:
                 break;
               case 2:
                 m_gamma = new GammaRsdV2(*(other.m_gamma));
+                break;
+              case 3:
+                m_gamma = new GammaRsdV3(*(other.m_gamma));
                 break;
               default:
                 std:: cout << "No valid version for GammaRsd found, set to NULL"
