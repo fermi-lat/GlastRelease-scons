@@ -169,6 +169,17 @@ private:
     ClassDef(LpaGammaFilterV2,1) // Gamma Filter Version 2
 };
 
+class LpaGammaFilterV3 : public LpaGammaFilter {
+public:
+    LpaGammaFilterV3() : LpaGammaFilter() { };
+    LpaGammaFilterV3(UInt_t status) : LpaGammaFilter(status) { };
+    virtual ~LpaGammaFilterV3() { }
+
+private:
+
+    ClassDef(LpaGammaFilterV3,1) // Gamma Filter Version 3
+};
+
 class LpaHipFilter : public ILpaHandler
 {
 public:

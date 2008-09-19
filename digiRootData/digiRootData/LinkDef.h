@@ -78,6 +78,7 @@
 #pragma link C++ class LpaGammaFilterV0+;
 #pragma link C++ class LpaGammaFilterV1+;
 #pragma link C++ class LpaGammaFilterV2+;
+#pragma link C++ class LpaGammaFilterV3+;
 #pragma link C++ class LpaHipFilter+;
 #pragma link C++ class LpaHipFilterV0+;
 #pragma link C++ class LpaMipFilter+;

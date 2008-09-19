@@ -221,6 +221,8 @@ ClassImp(LpaGammaFilterV1)
 
 ClassImp(LpaGammaFilterV2)
 
+ClassImp(LpaGammaFilterV3)
+
 // Implement the LpaHipFilter class here
 
 ClassImp(LpaHipFilter)
