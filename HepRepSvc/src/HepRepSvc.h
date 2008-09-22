@@ -134,6 +134,9 @@ private:
     /// A property to set the depth of the geometry 
     int m_geomDepth;
 
+    /// A property to specify how to draw the geometry
+    std::string m_geomType;
+
     /// The fillers registry
     IRegistry* m_registry;
 
