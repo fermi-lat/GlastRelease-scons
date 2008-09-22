@@ -84,7 +84,7 @@ int  ObfGammaStatus::getState() const
 
 unsigned int ObfGammaStatus::getEnergyInLeus() const
 {
-    int energyBits = m_energy & GFC_V2_STAGE_M_ENERGY;
+    int energyBits = m_energy & GFC_V3_STAGE_M_ENERGY;
 
     // Drag the sign bit up and down
     energyBits <<= 8;
@@ -95,7 +95,7 @@ unsigned int ObfGammaStatus::getEnergyInLeus() const
 
 float ObfGammaStatus::getEnergy() const
 {
-    int energyBits = m_energy & GFC_V2_STAGE_M_ENERGY;
+    int energyBits = m_energy & GFC_V3_STAGE_M_ENERGY;
 
     // Drag the sign bit up and down
     energyBits <<= 8;
