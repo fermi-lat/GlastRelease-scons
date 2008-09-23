@@ -16,7 +16,7 @@
 #include "src/lib/Util/CGCUtil.h"
 #include "src/lib/Util/stl_util.h"
 #include "src/lib/Util/string_util.h"
-#include "src/Ped/MuonPedAlg.h"
+#include "src/lib/Algs/MuonPedAlg.h"
 
 // GLAST INCLUDES
 #include "CalUtil/SimpleCalCalib/CalPed.h"
