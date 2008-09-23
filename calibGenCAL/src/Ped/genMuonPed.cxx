@@ -7,7 +7,7 @@
 */
 
 // LOCAL INCLUDES
-#include "MuonPedAlg.h"
+#include "src/lib/Algs/MuonPedAlg.h"
 #include "src/lib/Util/CfgMgr.h"
 #include "src/lib/Util/CGCUtil.h"
 #include "src/lib/Util/string_util.h"
