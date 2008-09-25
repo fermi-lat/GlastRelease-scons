@@ -6,6 +6,8 @@
 
    *  EOH  *
 
+   v1r24   25-Sep-2008 panetta  Add new ACD HLD calibrations to intent.xsd.  
+                                bump xsd version to v2r9p0
    v1r23p2 10-Sep-2008 jrb use more sensible (for nfs) permissions when creating
                            archive directories.  Doesn't affect production dbs
    v1r23p1 20-Jun-2008 jrb Don't set MOOT_ARCHIVE env. var. in requirements
