@@ -54,7 +54,7 @@
 
 
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_StringArray;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_StringArray;
 
 class StringArray_var;
 
@@ -169,13 +169,13 @@ struct HepRepAttDef {
   typedef _CORBA_ConstrType_Variable_Var<HepRepAttDef> _var_type;
 
   
-  CORBA::String_member name;
+  ::CORBA::String_member name;
 
-  CORBA::String_member desc;
+  ::CORBA::String_member desc;
 
-  CORBA::String_member category;
+  ::CORBA::String_member category;
 
-  CORBA::String_member extra;
+  ::CORBA::String_member extra;
 
 
 
@@ -187,9 +187,9 @@ typedef HepRepAttDef::_var_type HepRepAttDef_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepAttDef,HepRepAttDef_var > HepRepAttDef_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepAttDef;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepAttDef;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepAttDefList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepAttDefList;
 
 class HepRepAttDefList_var;
 
@@ -304,11 +304,11 @@ struct HepRepAttValue {
   typedef _CORBA_ConstrType_Variable_Var<HepRepAttValue> _var_type;
 
   
-  CORBA::String_member name;
+  ::CORBA::String_member name;
 
-  CORBA::Any value;
+  ::CORBA::Any value;
 
-  CORBA::Long showLabel;
+  ::CORBA::Long showLabel;
 
 
 
@@ -320,9 +320,9 @@ typedef HepRepAttValue::_var_type HepRepAttValue_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepAttValue,HepRepAttValue_var > HepRepAttValue_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepAttValue;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepAttValue;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepAttValueList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepAttValueList;
 
 class HepRepAttValueList_var;
 
@@ -437,11 +437,11 @@ struct HepRepPoint {
   typedef _CORBA_ConstrType_Variable_Var<HepRepPoint> _var_type;
 
   
-  CORBA::Double x;
+  ::CORBA::Double x;
 
-  CORBA::Double y;
+  ::CORBA::Double y;
 
-  CORBA::Double z;
+  ::CORBA::Double z;
 
   HepRepAttValueList attValues;
 
@@ -455,9 +455,9 @@ typedef HepRepPoint::_var_type HepRepPoint_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepPoint,HepRepPoint_var > HepRepPoint_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepPoint;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepPoint;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepPointList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepPointList;
 
 class HepRepPointList_var;
 
@@ -572,7 +572,7 @@ struct HepRepInstance {
   typedef _CORBA_ConstrType_Variable_Var<HepRepInstance> _var_type;
 
   
-  CORBA::String_member typeName;
+  ::CORBA::String_member typeName;
 
   typedef _CORBA_Unbounded_Sequence< HepRepInstance >  _instances_seq;
   _instances_seq instances;
@@ -591,9 +591,9 @@ typedef HepRepInstance::_var_type HepRepInstance_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepInstance,HepRepInstance_var > HepRepInstance_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepInstance;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepInstance;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepInstanceList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepInstanceList;
 
 class HepRepInstanceList_var;
 
@@ -708,9 +708,9 @@ struct HepRepTreeID {
   typedef _CORBA_ConstrType_Variable_Var<HepRepTreeID> _var_type;
 
   
-  CORBA::String_member name;
+  ::CORBA::String_member name;
 
-  CORBA::String_member version;
+  ::CORBA::String_member version;
 
 
 
@@ -722,9 +722,9 @@ typedef HepRepTreeID::_var_type HepRepTreeID_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepTreeID,HepRepTreeID_var > HepRepTreeID_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepTreeID;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepTreeID;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepTreeIDList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepTreeIDList;
 
 class HepRepTreeIDList_var;
 
@@ -857,17 +857,17 @@ typedef HepRepInstanceTree::_var_type HepRepInstanceTree_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepInstanceTree,HepRepInstanceTree_var > HepRepInstanceTree_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepInstanceTree;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepInstanceTree;
 
 struct HepRepType {
   typedef _CORBA_ConstrType_Variable_Var<HepRepType> _var_type;
 
   
-  CORBA::String_member name;
+  ::CORBA::String_member name;
 
-  CORBA::String_member desc;
+  ::CORBA::String_member desc;
 
-  CORBA::String_member infoURL;
+  ::CORBA::String_member infoURL;
 
   typedef _CORBA_Unbounded_Sequence< HepRepType >  _types_seq;
   _types_seq types;
@@ -886,9 +886,9 @@ typedef HepRepType::_var_type HepRepType_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepType,HepRepType_var > HepRepType_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepType;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepType;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepTypeList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepTypeList;
 
 class HepRepTypeList_var;
 
@@ -1017,15 +1017,15 @@ typedef HepRepTypeTree::_var_type HepRepTypeTree_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepTypeTree,HepRepTypeTree_var > HepRepTypeTree_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepTypeTree;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepTypeTree;
 
 struct HepRepAction {
   typedef _CORBA_ConstrType_Variable_Var<HepRepAction> _var_type;
 
   
-  CORBA::String_member name;
+  ::CORBA::String_member name;
 
-  CORBA::String_member expression;
+  ::CORBA::String_member expression;
 
 
 
@@ -1037,9 +1037,9 @@ typedef HepRepAction::_var_type HepRepAction_var;
 
 typedef _CORBA_ConstrType_Variable_OUT_arg< HepRepAction,HepRepAction_var > HepRepAction_out;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepAction;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepAction;
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRepActionList;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRepActionList;
 
 class HepRepActionList_var;
 
@@ -1185,8 +1185,8 @@ public:
   typedef HepRep_var _var_type;
 
   static _ptr_type _duplicate(_ptr_type);
-  static _ptr_type _narrow(CORBA::Object_ptr);
-  static _ptr_type _unchecked_narrow(CORBA::Object_ptr);
+  static _ptr_type _narrow(::CORBA::Object_ptr);
+  static _ptr_type _unchecked_narrow(::CORBA::Object_ptr);
   
   static _ptr_type _nil();
 
@@ -1207,14 +1207,14 @@ public:
 };
 
 class _objref_HepRep :
-  public virtual CORBA::Object,
+  public virtual ::CORBA::Object,
   public virtual omniObjRef
 {
 public:
   HepRepInstanceTree* getInstanceTreeTop(const char* instanceTreeName, const char* instanceTreeVersion);
   HepRepTypeTree* getTypeTree(const char* typeTreeName, const char* typeTreeVersion);
   HepRepInstanceTree* getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames);
-  HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, CORBA::Boolean getPoints, CORBA::Boolean getDrawAtts, CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts);
+  HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts);
   StringArray* getLayerOrder();
   char* checkForException();
 
@@ -1253,7 +1253,7 @@ public:
   virtual HepRepInstanceTree* getInstanceTreeTop(const char* instanceTreeName, const char* instanceTreeVersion) = 0;
   virtual HepRepTypeTree* getTypeTree(const char* typeTreeName, const char* typeTreeVersion) = 0;
   virtual HepRepInstanceTree* getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames) = 0;
-  virtual HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, CORBA::Boolean getPoints, CORBA::Boolean getDrawAtts, CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts) = 0;
+  virtual HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts) = 0;
   virtual StringArray* getLayerOrder() = 0;
   virtual char* checkForException() = 0;
   
@@ -1267,13 +1267,13 @@ private:
 };
 
 
-_CORBA_GLOBAL_VAR _dyn_attr const CORBA::TypeCode_ptr _tc_HepRep;
+_CORBA_GLOBAL_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_HepRep;
 
 
 
 class POA_HepRep :
   public virtual _impl_HepRep,
-  public virtual PortableServer::ServantBase
+  public virtual ::PortableServer::ServantBase
 {
 public:
   virtual ~POA_HepRep();
@@ -1292,94 +1292,94 @@ public:
 #undef _core_attr
 #undef _dyn_attr
 
-void operator<<=(CORBA::Any& _a, const StringArray& _s);
-void operator<<=(CORBA::Any& _a, StringArray* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, StringArray*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const StringArray*& _sp);
+void operator<<=(::CORBA::Any& _a, const StringArray& _s);
+void operator<<=(::CORBA::Any& _a, StringArray* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, StringArray*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const StringArray*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepAttDef& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepAttDef* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttDef*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttDef*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepAttDef& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepAttDef* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttDef*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttDef*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepAttDefList& _s);
-void operator<<=(CORBA::Any& _a, HepRepAttDefList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttDefList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttDefList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepAttDefList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepAttDefList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttDefList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttDefList*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepAttValue& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepAttValue* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttValue*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttValue*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepAttValue& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepAttValue* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttValue*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttValue*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepAttValueList& _s);
-void operator<<=(CORBA::Any& _a, HepRepAttValueList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttValueList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttValueList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepAttValueList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepAttValueList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttValueList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttValueList*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepPoint& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepPoint* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepPoint*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepPoint*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepPoint& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepPoint* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepPoint*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepPoint*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepPointList& _s);
-void operator<<=(CORBA::Any& _a, HepRepPointList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepPointList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepPointList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepPointList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepPointList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepPointList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepPointList*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepInstance& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepInstance* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepInstance*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepInstance*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepInstance& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepInstance* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepInstance*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepInstance*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepInstanceList& _s);
-void operator<<=(CORBA::Any& _a, HepRepInstanceList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepInstanceList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepInstanceList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepInstanceList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepInstanceList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepInstanceList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepInstanceList*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepTreeID& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepTreeID* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTreeID*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTreeID*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepTreeID& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepTreeID* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepTreeID*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTreeID*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepTreeIDList& _s);
-void operator<<=(CORBA::Any& _a, HepRepTreeIDList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTreeIDList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTreeIDList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepTreeIDList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepTreeIDList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepTreeIDList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTreeIDList*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepInstanceTree& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepInstanceTree* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepInstanceTree*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepInstanceTree*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepInstanceTree& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepInstanceTree* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepInstanceTree*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepInstanceTree*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepType& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepType* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepType*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepType*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepType& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepType* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepType*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepType*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepTypeList& _s);
-void operator<<=(CORBA::Any& _a, HepRepTypeList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTypeList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTypeList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepTypeList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepTypeList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepTypeList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTypeList*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepTypeTree& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepTypeTree* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTypeTree*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTypeTree*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepTypeTree& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepTypeTree* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepTypeTree*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTypeTree*& _sp);
 
-extern void operator<<=(CORBA::Any& _a, const HepRepAction& _s);
-extern void operator<<=(CORBA::Any& _a, HepRepAction* _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAction*& _sp);
-extern CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAction*& _sp);
+extern void operator<<=(::CORBA::Any& _a, const HepRepAction& _s);
+extern void operator<<=(::CORBA::Any& _a, HepRepAction* _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepAction*& _sp);
+extern _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAction*& _sp);
 
-void operator<<=(CORBA::Any& _a, const HepRepActionList& _s);
-void operator<<=(CORBA::Any& _a, HepRepActionList* _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepActionList*& _sp);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepActionList*& _sp);
+void operator<<=(::CORBA::Any& _a, const HepRepActionList& _s);
+void operator<<=(::CORBA::Any& _a, HepRepActionList* _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRepActionList*& _sp);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, const HepRepActionList*& _sp);
 
-void operator<<=(CORBA::Any& _a, HepRep_ptr _s);
-void operator<<=(CORBA::Any& _a, HepRep_ptr* _s);
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRep_ptr& _s);
+void operator<<=(::CORBA::Any& _a, HepRep_ptr _s);
+void operator<<=(::CORBA::Any& _a, HepRep_ptr* _s);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, HepRep_ptr& _s);
 
 
 
