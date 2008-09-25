@@ -13,6 +13,6 @@ libEnv.Tool('CalUtilLib', depsOnly = 1)
 CalUtil = libEnv.SharedLibrary('CalUtil', listFiles(['src/*.cxx']) + listFiles(['src/SimpleCalCalib/*.cxx']))
 
 progEnv.Tool('CalUtilLib')
-test_CalUtil = progEnv.GaudiProgram('test_CalUtil', listFiles(['src/test/*.cxx']), test = 1)
+test_CalUtil = progEnv.Program('test_CalUtil', listFiles(['src/test/*.cxx']))
 
 progEnv.Tool('registerObjects', package = 'CalUtil', libraries = [CalUtil], testApps = [test_CalUtil], includes = listFiles(['CalUtil/*.h']) + listFiles(['CalUtil/SimpleCalCalib/*.h']))
