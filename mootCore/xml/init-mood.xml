@@ -1928,6 +1928,30 @@ used for container vote files which reference regular votes by alias" />
     </row>
 
     <row>
+      <field col="name" val="ACD_CarbonCalibration" />
+      <field col="description" 
+             val="ACD carbon calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_HighPedCalibration" />
+      <field col="description" 
+             val="ACD high ped calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
+      <field col="name" val="ACD_HldElectronicsCalibration" />
+      <field col="description" 
+             val="ACD hld electronics calibration file" />
+      <ref col="delegate_fk" table="Delegates" refCol="name"
+       refVal="ACD" />
+    </row>
+
+    <row>
       <field col="name" val="CAL_FLESettings" />
       <field col="description" 
              val="Settings for CAL_FLE precinct" />
