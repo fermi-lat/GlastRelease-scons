@@ -104,10 +104,10 @@ namespace CalUtil {
 
     // create position (Y-axis) array
     // linearly extrapolate for 1st and last points (+2 points)
-    double pos[nSlicesPerXtal+2];
+    double *pos = new double[nSlicesPerXtal+2];
     for (unsigned short i = 0; i < nSlicesPerXtal+2; i++)
       pos[i] = i + 0.5; // (center of the column)
-    double asym[nSlicesPerXtal+2];
+    double *asym = new double[nSlicesPerXtal+2];
 
     // PER XTAL LOOP
     for (DiodeNum diode; diode.isValid(); diode++) {
@@ -155,6 +155,9 @@ namespace CalUtil {
         }
       }
     }
+
+	delete [] pos;
+	delete [] asym;
   }
 
 }; // namespace CalUtil
