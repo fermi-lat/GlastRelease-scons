@@ -52,6 +52,9 @@
  * @param RootTupleSvc.RejectIfBad
  * Default true
  * if set, tuple entries containing any non-finite values are not written
+ * @param RootTupleSvc.StartingIndex
+ * Default 0
+ * Used for input ROOT tuples to denote starting index to read
  * @param RootTupleSvc.JobInfoTreeName 
  * Default ["jobinfo"]
  * Name of the tree to contain the jobinfo data

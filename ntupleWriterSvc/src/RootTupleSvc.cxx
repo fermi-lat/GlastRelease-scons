@@ -277,6 +277,7 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("JobInfoTreeName", m_jobInfoTreeName="jobinfo");
     declareProperty("JobInfo", m_jobInfo=""); // string, if present, will write out single TTree entry
     declareProperty("BufferSize",m_bufferSize=32000);
+    declareProperty("StartingIndex",m_nextEvent=0);
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -404,7 +405,15 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             long long nevents = ch->GetEntries();
             log << MSG::INFO << "Number of events in input files = " 
                 << nevents << endreq;
-            ch->GetEntry(0);
+            if ((m_nextEvent > nevents-1) || (m_nextEvent < 0)) {
+                log << MSG::WARNING << "StartingIndex invalid, resetting "
+                    << m_nextEvent << " to zero" << endreq;
+                m_nextEvent = 0;
+            }
+            int numbytes = ch->GetEntry(m_nextEvent++);
+            if (numbytes <= 0) 
+                log << MSG::WARNING << "Unable to read tuple event, "
+                    << m_nextEvent << endreq;
             // Here is our chance to set up branch pointers for the whole input TChain, so that
             // no elements are missed
             TObjArray *brCol = ch->GetListOfBranches();
