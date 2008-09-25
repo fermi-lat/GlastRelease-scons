@@ -34,5 +34,5 @@ if baseEnv['PLATFORM'] != 'win32':
 
 if baseEnv['PLATFORM'] == 'win32':
 	progEnv.Tool('registerObjects', package = 'CalRecon', libraries = [CalRecon], testApps = [test_CalRecon],
-		     includes = listFiles(['src/Display/*.h','src/Clustering/*.h','src/Clustering/*.h',
-					   'src/MipFinding/*.h','src/EnergyCorrections/*.h','src/Utilities/*.h']))
+		     includes = listFiles(['CalRecon/*.h']))
+
