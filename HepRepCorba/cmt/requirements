@@ -1,6 +1,7 @@
 package HepRepCorba
 version v2r0
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
+author Leon Rochester <lsrea@slac.stanford.edu>
 
 use GlastPolicy
 use OmniOrb v0r4* IExternal 
