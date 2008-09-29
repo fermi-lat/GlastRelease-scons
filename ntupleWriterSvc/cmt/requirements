@@ -1,5 +1,5 @@
 package ntupleWriterSvc
-version v3r24
+version v3r24p1
 #$Id$
 author H. Kelly <heather@slac.stanford.edu>
 branches src doc

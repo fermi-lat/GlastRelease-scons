@@ -410,7 +410,7 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
                     << m_nextEvent << " to zero" << endreq;
                 m_nextEvent = 0;
             }
-            int numbytes = ch->GetEntry(m_nextEvent++);
+            int numbytes = ch->GetEntry(m_nextEvent);
             if (numbytes <= 0) 
                 log << MSG::WARNING << "Unable to read tuple event, "
                     << m_nextEvent << endreq;

@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v3r24p1 29-Sep-2008  HMK  Avoid incrementing startingIndex during getTree
+ *         call
  * v3r24   24-Sep-2008  HMK  Provide StartingIndex JO parmeter for input
  *         ntuples
  * v3r23p4 14-Sep-2008  LSR  Repair ULong64_t,Int_t bugs in RootTupleSvc. Don't seem
