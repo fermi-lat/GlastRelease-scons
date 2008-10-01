@@ -49,6 +49,8 @@ class TkrDigiAlg : public Algorithm {
     Algorithm* m_hitToDigiAlg;
     Algorithm* m_chargeAlg;
 
+    IDataProviderSvc* m_edSvc;
+
 };
 
 #endif

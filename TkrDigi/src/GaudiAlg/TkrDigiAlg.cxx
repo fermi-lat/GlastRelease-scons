@@ -20,6 +20,12 @@
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+#include "Event/MonteCarlo/McParticle.h"
+
+#include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/Event.h"
 
 
 // Definitions for use within Gaudi
@@ -93,6 +99,15 @@ StatusCode TkrDigiAlg::initialize() {
     // Currently only one choice, "General".
     m_hitToDigiAlg->setProperty("Type", "General");
 
+    IService* iService = 0;
+    StatusCode sc = serviceLocator()->service("EventDataSvc", iService, true);
+    if ( sc.isFailure() ) {
+        log << MSG::ERROR << "could not find EventDataSvc !" << endreq;
+        return sc;
+    }
+    m_edSvc = dynamic_cast<IDataProviderSvc*>(iService);
+
+
     return StatusCode::SUCCESS;
 }
 
@@ -107,6 +122,16 @@ StatusCode TkrDigiAlg::execute() {
 
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG << "execute" << endreq;
+
+    // check that G4Generator ran successfully
+    // if not, exit gracefully
+
+    SmartDataPtr<Event::McParticleCol> 
+        mcParts(m_edSvc, EventModel::MC::McParticleCol);
+
+    if (!mcParts||mcParts->size()<=1) {
+        return StatusCode::SUCCESS;
+    }
 
     // loading the sub algorithms
 
