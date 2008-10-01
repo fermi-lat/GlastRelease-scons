@@ -167,6 +167,9 @@ public:
     virtual bool storeRowFlag(const std::string& tupleName, bool flag);
 
 
+    //! Returns a pointer to the requested TTree
+    virtual bool getTreePtr(const std::string& tupleName, void*& pointer);
+
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName);
 
@@ -404,7 +407,7 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             // call GetEntries to load the headers of the TFiles
             long long nevents = ch->GetEntries();
             log << MSG::INFO << "Number of events in input files = " 
-                << nevents << endreq;
+                << nevents << " StartingIndex: " << m_nextEvent << endreq;
             if ((m_nextEvent > nevents-1) || (m_nextEvent < 0)) {
                 log << MSG::WARNING << "StartingIndex invalid, resetting "
                     << m_nextEvent << " to zero" << endreq;
@@ -820,6 +823,46 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
     return t;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bool RootTupleSvc::getTreePtr(const std::string & tupleName,
+                              void*& pval)
+{
+    MsgStream log(msgSvc(),name());
+
+    std::string treename=tupleName.empty()? m_treename.value() : tupleName;
+    TDirectory *saveDir = gDirectory;
+
+    // Check input files for this TTree first
+    std::map<std::string, TChain*>::const_iterator chainit = m_inChain.find(treename);
+    if (chainit != m_inChain.end()) {
+        // Found the TChain, now return
+        TChain* ch = chainit->second;
+        ch->GetCurrentFile()->cd();
+
+        pval = (void *)(ch->GetTree());
+        saveDir->cd();
+        return true;
+
+    }
+
+    // Check output files
+    std::map<std::string, TTree*>::const_iterator treeit = m_tree.find(treename);
+    if( treeit==m_tree.end()){
+        log << MSG::INFO << "Did not find tree" << treename << endreq;
+        pval = 0;
+        saveDir->cd();
+        return false;
+    }
+
+    // Found the TTree, now return
+    TTree* t = treeit->second;
+    t->GetCurrentFile()->cd();
+
+    pval = (void *)t;
+    saveDir->cd();
+    return true;
+
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 std::string RootTupleSvc::getItem(const std::string & tupleName, 

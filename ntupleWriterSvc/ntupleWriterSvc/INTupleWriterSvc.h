@@ -10,7 +10,7 @@
 #include <string>
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  7 ,1); 
+static const InterfaceID IID_INTupleWriterSvc("INTupleWriterSvc",  7 ,2); 
 
 /*! @class INTupleWriterSvc
  @brief Proper Gaudi abstract interface class for the ntupleWriterSvc 
@@ -94,6 +94,9 @@ public:
     */
     virtual std::string getItem(const std::string & tupleName, 
         const std::string& itemName, void*& pointer) =0;
+
+    //! Provide access to TTree pointer given tuple name
+    virtual bool getTreePtr(const std::string& tupleName, void*& pointer) = 0;
 
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName)=0; 

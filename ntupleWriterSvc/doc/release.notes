@@ -3,6 +3,7 @@
  *    * EOH *
 
  @verbatim
+ * v3r25   30-Sep-2008  HMK  Add RootTupleSvc::getTreePtr 
  * v3r24p1 29-Sep-2008  HMK  Avoid incrementing startingIndex during getTree
  *         call
  * v3r24   24-Sep-2008  HMK  Provide StartingIndex JO parmeter for input
