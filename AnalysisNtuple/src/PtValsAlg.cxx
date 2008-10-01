@@ -177,11 +177,18 @@ StatusCode PtValsAlg::execute()
  
    SmartDataPtr<Event::EventHeader> header(m_pEventSvc, EventModel::EventHeader);
 
-   // get event time from header and look up position info from the history
-    double etime(header->time());
+   // get event time from header or merit 
+   // and look up position info from the history  
 
+   double etime;
 
-    // Tell the  GPS object about the current time.
+   if(header==0) {
+       void* ptr;
+       m_rootTupleSvc->getItem(m_root_tree,"PtTime",ptr);
+       etime = *reinterpret_cast<double*>(ptr);
+   } else {
+       etime = header->time();
+   }
     gps->time(etime);
 
     // and create the tuple
