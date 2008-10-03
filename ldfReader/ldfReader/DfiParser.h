@@ -5,19 +5,13 @@
 #include <string>
 #include "data/LatData.h"
 #include "EBFevent.h"
-//#include "../src/ccsds2lsf.h"
 
 #include "lsfData/LSFReader.h"
 #include "lsfData/LsfMetaEvent.h"
 #include "lsfData/LsfCcsds.h"
 #include "eventFile/EBF_Data.h"
 
-/*
-#include "eventFile/LPA_File.h"
-#include "eventFile/LSE_Context.h"
-#include "eventFile/LSE_Info.h"
-#include "eventFile/EBF_Data.h"
-*/
+#include "../src/iterators/LdfDataParser.h"
 
 #include <vector>
 
@@ -84,6 +78,8 @@ namespace ldfReader {
         unsigned long m_eventSize;
 
         EBFevent *m_end, *m_start;
+
+        LdfDataParser m_dataParser;
 
         lsfData::LsfCcsds   m_ccsds;
         lsfData::MetaEvent  m_meta;

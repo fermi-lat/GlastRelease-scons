@@ -8,8 +8,8 @@ $Header$
 */
 
 #include "ldfReader/SocketParser.h"
-#include "iterators/EbfDatagramParser.h"
-#include "iterators/TkrParser.h"
+//#include "iterators/EbfDatagramParser.h"
+//#include "iterators/TkrParser.h"
 #include "EbfDebug.h"
 #include "ldfReader/LdfException.h"
 #include <exception>
@@ -119,7 +119,7 @@ SocketParser::SocketParser(unsigned int server) {
     int SocketParser::nextEvent() {
         try {
 #ifndef WIN32
-            char buffer[BufferSize+1];
+            static char buffer[BufferSize+1];
             int ibuf;
             for (ibuf = 0; ibuf < BufferSize+1; ibuf++)
                 buffer[ibuf] = 0;
@@ -135,13 +135,14 @@ SocketParser::SocketParser(unsigned int server) {
             } else if (EbfDebug::getDebug())
                 std::cout << "read " << stat << " bytes" << std::endl;
 
-            if (!DFC_BIG_ENDIAN)
-                EBF_swap32_lclXbigN((unsigned*)buffer, stat / sizeof (unsigned));
+            m_buffer = buffer;
+            //if (!DFC_BIG_ENDIAN)
+            //    EBF_swap32_lclXbigN((unsigned*)buffer, stat / sizeof (unsigned));
 
-            m_start = (LATdatagram*)buffer;
-            m_end = (LATdatagram*)(&buffer[stat]);
+            //m_start = (LATdatagram*)buffer;
+            //m_end = (LATdatagram*)(&buffer[stat]);
             m_eventSize = stat;
-            m_datagram = m_start;
+            //m_datagram = m_start;
 #endif
             return 0;
     
@@ -175,15 +176,18 @@ int SocketParser::loadData() {
         if (ldfReader::LatData::instance()->ignoreSegFault()) 
             ignoreSegFault(true);
 
-        if (m_datagram >= m_end) return -1;
+//        if (m_datagram >= m_end) return -1;
 
-        EbfDatagramParser ldf(m_start, m_end);
-        ldf.iterate();
-        if (ldf.status()) {
+////        EbfDatagramParser ldf(m_start, m_end);
+//        ldf.iterate();
+//        if (ldf.status()) {
+        //Parse the data
+        m_dataParser.iterate(m_buffer,m_eventSize);
+        if (m_dataParser.status()) {
             std::ostringstream errMsg;
             errMsg.str("LDF EBFeventParser reported a bad status 0x");
-            errMsg << std::hex << ldf.status() << " = " << std::dec
-                   << ldf.status() << " EventId: " 
+            errMsg << std::hex << m_dataParser.status() << " = " << std::dec
+                   << m_dataParser.status() << " EventId: " 
                    << ldfReader::LatData::instance()->getOsw().evtSequence();
             std::cout << errMsg << std::endl;
             ldfReader::LatData::instance()->setBadLdfStatusFlag();
@@ -258,9 +262,9 @@ int SocketParser::loadData() {
 } 
 
 
-    bool SocketParser::end() {
-        return (m_datagram < m_end);
-    }
+//    bool SocketParser::end() {
+//        return (m_datagram < m_end);
+//    }
 
 
 

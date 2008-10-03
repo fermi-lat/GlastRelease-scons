@@ -13,7 +13,7 @@
 #include <netinet/in.h>
 #endif
 
-#include "../src/iterators/EbfDatagramParser.h"
+#include "../src/iterators/LdfDataParser.h"
 
 
 /** @class SocketParser
@@ -78,8 +78,9 @@ namespace ldfReader {
         static const std::string GROUP;
 
         //    EBFevent *m_evt, *m_end;
-        LATdatagram *m_end, *m_start, *m_datagram;
-        EbfDatagramParser *m_datagramParser;
+        //LATdatagram *m_end, *m_start, *m_datagram;
+        //EbfDatagramParser *m_datagramParser;
+        LdfDataParser m_dataParser;
 
         int m_handle;  // stores return value from socket call
 #ifndef WIN32

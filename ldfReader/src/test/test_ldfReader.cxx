@@ -20,7 +20,7 @@ $Header$
 int main(int argn, char** argc) {
   try {
     using namespace ldfReader;
-    std::string filename = "$(LDFROOT)/test/muon-5.arch";
+    std::string filename = "$(LDFROOT)/test/data/muon-5.arch";
     std::string remap = "";
 
     bool fitsWrap = false;

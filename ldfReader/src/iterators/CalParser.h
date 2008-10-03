@@ -20,20 +20,20 @@
 
 namespace ldfReader {
 
-    class CalParser : public CALcontributionIterator
+    class CalParser : public virtual CALcontributionIterator
     {
     public:
-        CalParser(EBFevent* event,
-            CALcontribution* contribution,
-            const char* prefix);
+        CalParser( const char* prefix);
 
         virtual ~CalParser() {}
 
         virtual void log(unsigned tower, unsigned layer, CALlog theLog);
 
-        void parse();
-
     virtual int handleError(CALcontribution*, unsigned code, unsigned p1=0, unsigned p2=0) const;
+
+   protected :
+        virtual void _handleErrorCommon() const = 0;
+
 
     private:
         const char *m_prefix;
