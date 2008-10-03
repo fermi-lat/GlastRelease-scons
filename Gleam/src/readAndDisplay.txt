@@ -10,7 +10,7 @@ ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud", "FluxSvc", "GlastSvc"};
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
-ApplicationMgr.DLLs+=    {"TkrUtil","G4Propagator", "G4Generator", "CalibSvc"};
+ApplicationMgr.DLLs+=    {"AcdUtil","TkrUtil","G4Propagator", "G4Generator", "CalibSvc"};
 ApplicationMgr.DLLs+=    {"HepRepSvc", "HepRepXml", "HepRepCorba"}; 
 ApplicationMgr.ExtSvc += {"HepRepSvc","EventSelector/EventSelector"}; 
 ApplicationMgr.Runable = "HepRepSvc";
