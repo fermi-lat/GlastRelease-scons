@@ -1,5 +1,5 @@
 package lsfData 
-version v4r2p1
+version v4r3
 
 author Heather Kelly <heather@lheapop@gsfc.nasa.gov>
 
@@ -29,4 +29,4 @@ application test_lsfData test/test_lsfData.cxx
 
 application test_LSFReader test/test_LSFReader.cxx
 
-application dumpEvent test/dumpEvent.cxx test/LDFdump.cxx
+#application dumpEvent test/dumpEvent.cxx test/LDFdump.cxx

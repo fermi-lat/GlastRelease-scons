@@ -4,6 +4,7 @@ Package lsfData
 Coordinator:H.Kelly
 @verbatim
 
+v4r3    03-Oct-2008 HMK Comment out dumpEvent for now, until LDF v7 shakes out
 v4r2p1  19-Sep-2008 HMK Really completely handle GammaRsdV3
 v4r2    18-Sep-2008 HMK Add GammaRsdV3 to LpaHandlers in anticipation of new
         FSW B1-1-2
