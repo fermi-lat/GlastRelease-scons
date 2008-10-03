@@ -29,11 +29,15 @@ ApplicationMgr.TopAlg = {
 "Sequencer/Top" };
 
 ApplicationMgr.DLLs += { "RootIo" };
+ApplicationMgr.DLLs += { "TkrRecon" };
 
 Top.Members =  { "mcRootReaderAlg"}; 
 Top.Members += { "digiRootReaderAlg"}; 
-Top.Members += { "reconRootReaderAlg"};
+Top.Members += { "reconRootReaderAlg", "TkrReconAlg/FirstPass" };
 Top.Members += { "relationRootReaderAlg"};
+// This runs TkrReconAlg to update the ghost flags
+FirstPass.firstStage = 0;
+FirstPass.lastStage  = 0;
 
 ApplicationMgr.ExtSvc += { "RootIoSvc", "ParticlePropertySvc", "GlastDetSvc" };
 
