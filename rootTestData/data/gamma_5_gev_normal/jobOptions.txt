@@ -11,7 +11,7 @@
 //#include "$GLEAMROOT/src/guiOptions.txt"
 //#include "$GLEAMROOT/src/fredOptions.txt"
 
-FluxSvc.source_lib += { "$(ROOTTESTDATARDATAPATH)/gamma_5_gev_normal/source_library.xml" } ;
+FluxSvc.source_lib += { "$(ROOTTESTDATADATAPATH)/gamma_5_gev_normal/source_library.xml" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 
 //// set root output from merit with following

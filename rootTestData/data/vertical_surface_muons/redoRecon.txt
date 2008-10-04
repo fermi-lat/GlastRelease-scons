@@ -5,6 +5,11 @@
 
 //$Header$
 
+// I don't think this works... 
+// the relations file contains information which is generated when the mc file is made
+// This is why we end up with files that are out of synch.
+// LSR 03-Oct-2008
+
 // start with the basic program defined in Gleam
 #include "$GLEAMROOT/src/basicOptions.txt"
 
