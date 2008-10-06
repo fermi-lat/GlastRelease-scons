@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v13r2   06-Oct-08 LSR new Ghost bit for TkrTrack status, and new clear option
  * v13r1p1 13-Sep-08 LSR new TkrCluster status bits and access methods
  * v13r0p1 14-Aug-08 LSR add set/get methods for gleamEventFlags::ANALYSISNTUPLE
                            recast the other flags as hex, for readability

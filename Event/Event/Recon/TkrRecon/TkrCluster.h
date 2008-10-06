@@ -149,10 +149,10 @@ namespace Event {
         int           tower()      const {return idents::TowerId(m_tkrId.getTowerX(),
             m_tkrId.getTowerY()).id();} //DANGEROUS: SOON TO BE REMOVED??
 
-        /// sets the flag of a cluster (or clear if flag==0), legacy
-        inline void flag(int flag=1) { setMask(maskUSED, flag);}
+        /// sets the USED flag of a cluster (or clear if flag==0), legacy
+        inline void flag(int flag=1) { setStatusBits(maskUSED, flag);}
         /// clears the used flag of a cluster, legacy
-        inline void unflag() { clearMask(maskUSED); }
+        inline void unflag() { clearStatusBits(maskUSED); }
 
         inline int    firstStrip() const {return m_strip0;}
         inline int    lastStrip()  const {return m_stripf;}
@@ -193,13 +193,13 @@ namespace Event {
             return ((m_status&maskEND)>>shiftEND);
         }
 
-        /// set/clear/test any mask (including USED)
+        /// set/clear/test any bits (including USED)
         inline bool isSet(unsigned int mask) const { return (m_status&mask)>0; }
-        inline void setMask(unsigned int mask, int flag=1) {
+        inline void setStatusBits(unsigned int mask, int flag=1) {
             if(flag!=0) { m_status |= mask;  }
-            else        { clearMask(mask); }
+            else        { clearStatusBits(mask); }
         }
-        inline void clearMask(unsigned int mask) {
+        inline void clearStatusBits(unsigned int mask) {
             m_status &= ~mask;
         }
 
