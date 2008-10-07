@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v4r0    07-Oct-2008  HMK  Add RootTupleSvc::getInputTreePtr and 
+ *         getOutputTreePtr
  * v3r25   30-Sep-2008  HMK  Add RootTupleSvc::getTreePtr 
  * v3r24p1 29-Sep-2008  HMK  Avoid incrementing startingIndex during getTree
  *         call

@@ -167,8 +167,13 @@ public:
     virtual bool storeRowFlag(const std::string& tupleName, bool flag);
 
 
-    //! Returns a pointer to the requested TTree
-    virtual bool getTreePtr(const std::string& tupleName, void*& pointer);
+    //! Returns a pointer to the requested input TTree
+    virtual bool getInputTreePtr(void*& treePtr,
+                         const std::string& tupleName="MeritTuple");
+
+    //! Returns a pointer to the requested output TTree
+    virtual bool getOutputTreePtr(void*& treePtr,
+                         const std::string& tupleName="MeritTuple");
 
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName);
@@ -824,15 +829,14 @@ bool RootTupleSvc::storeRowFlag(const std::string& tupleName, bool flag)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bool RootTupleSvc::getTreePtr(const std::string & tupleName,
-                              void*& pval)
+bool RootTupleSvc::getInputTreePtr(void*& pval, const std::string & tupleName)
 {
     MsgStream log(msgSvc(),name());
 
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     TDirectory *saveDir = gDirectory;
 
-    // Check input files for this TTree first
+    // Check input files for this TTree
     std::map<std::string, TChain*>::const_iterator chainit = m_inChain.find(treename);
     if (chainit != m_inChain.end()) {
         // Found the TChain, now return
@@ -845,24 +849,39 @@ bool RootTupleSvc::getTreePtr(const std::string & tupleName,
 
     }
 
-    // Check output files
+    log << MSG::INFO << "Did not find tree" << treename << endreq;
+    pval = 0;
+    saveDir->cd();
+    return false;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bool RootTupleSvc::getOutputTreePtr(void*& pval, const std::string & tupleName)
+{
+    MsgStream log(msgSvc(),name());
+
+    std::string treename=tupleName.empty()? m_treename.value() : tupleName;
+    TDirectory *saveDir = gDirectory;
+
+    // Check input files for this TTree
     std::map<std::string, TTree*>::const_iterator treeit = m_tree.find(treename);
-    if( treeit==m_tree.end()){
-        log << MSG::INFO << "Did not find tree" << treename << endreq;
-        pval = 0;
+    if (treeit != m_tree.end()) {
+        // Found the TChain, now return
+        TTree* t = treeit->second;
+        t->GetCurrentFile()->cd();
+
+        pval = (void *)t;
         saveDir->cd();
-        return false;
+        return true;
+
     }
 
-    // Found the TTree, now return
-    TTree* t = treeit->second;
-    t->GetCurrentFile()->cd();
-
-    pval = (void *)t;
+    log << MSG::INFO << "Did not find tree" << treename << endreq;
+    pval = 0;
     saveDir->cd();
-    return true;
-
+    return false;
 }
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 std::string RootTupleSvc::getItem(const std::string & tupleName, 

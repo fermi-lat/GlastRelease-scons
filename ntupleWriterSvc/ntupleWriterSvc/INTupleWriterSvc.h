@@ -95,8 +95,13 @@ public:
     virtual std::string getItem(const std::string & tupleName, 
         const std::string& itemName, void*& pointer) =0;
 
-    //! Provide access to TTree pointer given tuple name
-    virtual bool getTreePtr(const std::string& tupleName, void*& pointer) = 0;
+    //! Provide access to input TTree pointer given tuple name
+    virtual bool getInputTreePtr(void*& treePtr, 
+                               const std::string& tupleName="MeritTuple") = 0;
+
+    //! Provide access to output TTree pointer given tuple name
+    virtual bool getOutputTreePtr(void*& treePtr, 
+                              const std::string& tupleName="MeritTuple") = 0;
 
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName)=0; 
