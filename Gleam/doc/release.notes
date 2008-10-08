@@ -4,12 +4,14 @@
  * package manager:T.Burnett
  * $Id$
 
+
 * v7r2p5   LSR 03-Oct-08 set ghost flags when reading in a recon.root file
                             After ghosts get to the pipeline, we may want to
                             revisit this.
 * v7r2p4   LSR 03-Oct-08 Fixed readAndDisplay.txt to work with new Acd code
 * v7r2p3   AWB 25-Aug-08 Enabled correctly the alignment for L1.
 * v7r2p2   AWB 20-Aug-08 Enabled S/C alignment in L1 JO. 
+
 * v7r2p1   LSR 14-Aug-08 Move Output after NtupleMaker in 3 jO files
                            Should have no practical consequences
 * v7r2     HMK 12-Aug-08 Clean up MC JO files and remove obsolete ones

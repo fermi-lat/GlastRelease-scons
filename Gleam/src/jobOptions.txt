@@ -19,6 +19,7 @@ ApplicationMgr.EvtMax  = 1000;
 // Disable pre-scales, otherwise muons won't trigger!
 TriggerAlg.applyPrescales = false;
 
+
 // Don't use Moot for out-of-the-box Gleam
 OnboardFilter.useMootConfig = false;
 
