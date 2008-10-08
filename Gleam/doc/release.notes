@@ -5,6 +5,7 @@
  * $Id$
 
 
+* v7r2p6   LSR 07-Oct-08 update readAndDisplay.txt for merit->FRED/WIRED
 * v7r2p5   LSR 03-Oct-08 set ghost flags when reading in a recon.root file
                             After ghosts get to the pipeline, we may want to
                             revisit this.
