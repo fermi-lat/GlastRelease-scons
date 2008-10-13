@@ -284,6 +284,10 @@ TObject * RootInputDesc::getEvent( int index )
   if (m_chain) 
    {
     int ret = m_chain->GetEntry(index) ;
+    if (ret <= 0) {
+        std::cout << "RootInputDesc::getEvent bad read" << std::endl;
+        return 0;
+    }
     dataPtr = *m_dataObject ;
    } 
 
@@ -305,6 +309,10 @@ TObject * RootInputDesc::getEvent( int runNum, int evtNum )
   if (m_chain) 
    {
     int ret = m_chain->GetEntryWithIndex(runNum,evtNum) ;
+    if (ret <= 0) {
+        std::cout << "RootInputDesc::getEvent bad read" << std::endl;
+        return 0;
+    }
     dataPtr = *m_dataObject ;
    } 
 
