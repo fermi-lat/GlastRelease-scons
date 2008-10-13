@@ -85,6 +85,8 @@ class  IRootIoSvc : virtual public IInterface
        const std::string & tree,
        const std::string & branch,
        const StringArrayProperty & fileList) = 0 ;
+
+    virtual StatusCode closeInput(const std::string& type) = 0;
        
     virtual TObject * getNextEvent( const std::string & type ) = 0 ;
     
