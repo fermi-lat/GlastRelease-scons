@@ -39,5 +39,6 @@ Bool_t GleamMessageHandler::Notify() {
     default :
       break;
   }
+  return kTRUE;
 }
 

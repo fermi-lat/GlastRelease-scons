@@ -969,6 +969,14 @@ StatusCode RootIoSvc::run()
         log << MSG::ERROR << "Unable to locate PropertyManager Service" << endreq;
         return status;
     }
+
+    // Check for an input merit tuple, and add its number of events to our
+    // m_rootEvtMax
+    if (m_rootTupleSvc) {
+        void *treePtr;
+        Long64_t entries = m_rootTupleSvc->getInputTreePtr(treePtr);
+        if (entries > 0) setEvtMax(entries);
+    }
     
     IntegerProperty evtMax("EvtMax",0);
     status = propMgr->getProperty( &evtMax );
