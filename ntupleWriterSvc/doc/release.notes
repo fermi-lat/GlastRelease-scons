@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v4r1    14-Oct-2008  HMK  Return number of entries from getOutputTreePtr
+ *         and getInputTreePtr
  * v4r0    07-Oct-2008  HMK  Add RootTupleSvc::getInputTreePtr and 
  *         getOutputTreePtr
  * v3r25   30-Sep-2008  HMK  Add RootTupleSvc::getTreePtr 

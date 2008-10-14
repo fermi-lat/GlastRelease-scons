@@ -96,11 +96,11 @@ public:
         const std::string& itemName, void*& pointer) =0;
 
     //! Provide access to input TTree pointer given tuple name
-    virtual bool getInputTreePtr(void*& treePtr, 
+    virtual long long getInputTreePtr(void*& treePtr, 
                                const std::string& tupleName="MeritTuple") = 0;
 
     //! Provide access to output TTree pointer given tuple name
-    virtual bool getOutputTreePtr(void*& treePtr, 
+    virtual long long getOutputTreePtr(void*& treePtr, 
                               const std::string& tupleName="MeritTuple") = 0;
 
     //! Save the row in the output file
