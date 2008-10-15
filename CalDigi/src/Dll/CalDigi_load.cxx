@@ -14,5 +14,6 @@
 
 DECLARE_FACTORY_ENTRIES(CalDigi) {
   DECLARE_ALGORITHM( CalDigiAlg );
+  DECLARE_ALGORITHM( CalDigiMergeAlg );
 } 
 
