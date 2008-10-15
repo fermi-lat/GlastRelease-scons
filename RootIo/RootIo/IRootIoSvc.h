@@ -91,9 +91,13 @@ class  IRootIoSvc : virtual public IInterface
     virtual TObject * getNextEvent( const std::string & type ) = 0 ;
     
     // the number of events we want to read
-    // based on ApplicationMgr.EvtMax and number available in files
-    virtual Long64_t getEvtMax() = 0 ;
+    // based on ApplicationMgr.EvtMax and entries available in files
+    virtual long long getEvtMax() const = 0 ;
+    /// min number of entries in input ROOT files
+    virtual long long getRootEvtMax() const = 0;
+    /// used by reader algs to register their number of ROOT events per file
     virtual void setEvtMax( Long64_t max ) = 0 ;
+    virtual void setRootEvtMax( Long64_t max ) = 0;
 
 
     //====================
