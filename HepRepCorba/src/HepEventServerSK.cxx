@@ -18,13 +18,13 @@ HepEventServer_ptr HepEventServer_Helper::_nil() {
   return ::HepEventServer::_nil();
 }
 
-CORBA::Boolean HepEventServer_Helper::is_nil(::HepEventServer_ptr p) {
-  return CORBA::is_nil(p);
+::CORBA::Boolean HepEventServer_Helper::is_nil(::HepEventServer_ptr p) {
+  return ::CORBA::is_nil(p);
 
 }
 
 void HepEventServer_Helper::release(::HepEventServer_ptr p) {
-  CORBA::release(p);
+  ::CORBA::release(p);
 }
 
 void HepEventServer_Helper::marshalObjRef(::HepEventServer_ptr obj, cdrStream& s) {
@@ -47,7 +47,7 @@ HepEventServer::_duplicate(::HepEventServer_ptr obj)
 }
 
 HepEventServer_ptr
-HepEventServer::_narrow(CORBA::Object_ptr obj)
+HepEventServer::_narrow(::CORBA::Object_ptr obj)
 {
   if( !obj || obj->_NP_is_nil() || obj->_NP_is_pseudo() ) return _nil();
   _ptr_type e = (_ptr_type) obj->_PR_getobj()->_realNarrow(_PD_repoId);
@@ -56,7 +56,7 @@ HepEventServer::_narrow(CORBA::Object_ptr obj)
 
 
 HepEventServer_ptr
-HepEventServer::_unchecked_narrow(CORBA::Object_ptr obj)
+HepEventServer::_unchecked_narrow(::CORBA::Object_ptr obj)
 {
   if( !obj || obj->_NP_is_nil() || obj->_NP_is_pseudo() ) return _nil();
   _ptr_type e = (_ptr_type) obj->_PR_getobj()->_uncheckedNarrow(_PD_repoId);
@@ -136,9 +136,9 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var arg_0_;
+  ::CORBA::String_var arg_0_;
   const char* arg_0;
-  CORBA::String_var result;
+  ::CORBA::String_var result;
 };
 
 void _0RL_cd_dda6ad98b427082d_00000000::marshalArguments(cdrStream& _n)
@@ -207,7 +207,7 @@ public:
 
 // Local call call-back function.
 static void
-_0RL_lcfn_dda6ad98b427082d_30000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_dda6ad98b427082d_30000000(omniCallDescriptor*, omniServant* svnt)
 {
   
   _impl_HepEventServer* impl = (_impl_HepEventServer*) svnt->_ptrToInterface(HepEventServer::_PD_repoId);
@@ -264,7 +264,7 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::Long result;
+  ::CORBA::Long result;
 };
 
 void _0RL_cd_dda6ad98b427082d_50000000::marshalReturnedValues(cdrStream& _n)
@@ -275,7 +275,7 @@ void _0RL_cd_dda6ad98b427082d_50000000::marshalReturnedValues(cdrStream& _n)
 
 void _0RL_cd_dda6ad98b427082d_50000000::unmarshalReturnedValues(cdrStream& _n)
 {
-  (CORBA::Long&)result <<= _n;
+  (::CORBA::Long&)result <<= _n;
 
 }
 
@@ -290,7 +290,7 @@ _0RL_lcfn_dda6ad98b427082d_60000000(omniCallDescriptor* cd, omniServant* svnt)
 
 }
 
-CORBA::Long _objref_HepEventServer::getNumberOfEvents()
+::CORBA::Long _objref_HepEventServer::getNumberOfEvents()
 {
   _0RL_cd_dda6ad98b427082d_50000000 _call_desc(_0RL_lcfn_dda6ad98b427082d_60000000, "getNumberOfEvents", 18);
 
@@ -317,7 +317,7 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var result;
+  ::CORBA::String_var result;
 };
 
 void _0RL_cd_dda6ad98b427082d_70000000::marshalReturnedValues(cdrStream& _n)
@@ -372,9 +372,9 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var arg_0_;
+  ::CORBA::String_var arg_0_;
   const char* arg_0;
-  CORBA::Any_var result;
+  ::CORBA::Any_var result;
 };
 
 void _0RL_cd_dda6ad98b427082d_90000000::marshalArguments(cdrStream& _n)
@@ -392,14 +392,14 @@ void _0RL_cd_dda6ad98b427082d_90000000::unmarshalArguments(cdrStream& _n)
 
 void _0RL_cd_dda6ad98b427082d_90000000::marshalReturnedValues(cdrStream& _n)
 {
-  (const CORBA::Any&) result >>= _n;
+  (const ::CORBA::Any&) result >>= _n;
 
 }
 
 void _0RL_cd_dda6ad98b427082d_90000000::unmarshalReturnedValues(cdrStream& _n)
 {
-  result = new CORBA::Any;
-  (CORBA::Any&)result <<= _n;
+  result = new ::CORBA::Any;
+  (::CORBA::Any&)result <<= _n;
 
 }
 
@@ -414,7 +414,7 @@ _0RL_lcfn_dda6ad98b427082d_a0000000(omniCallDescriptor* cd, omniServant* svnt)
 
 }
 
-CORBA::Any* _objref_HepEventServer::getEventData(const char* dataFormat)
+::CORBA::Any* _objref_HepEventServer::getEventData(const char* dataFormat)
 {
   _0RL_cd_dda6ad98b427082d_90000000 _call_desc(_0RL_lcfn_dda6ad98b427082d_a0000000, "getEventData", 13);
   _call_desc.arg_0 = dataFormat;
@@ -434,7 +434,7 @@ _pof_HepEventServer::newObjRef(omniIOR* ior, omniIdentity* id)
 }
 
 
-CORBA::Boolean
+::CORBA::Boolean
 _pof_HepEventServer::is_a(const char* id) const
 {
   if( omni::ptrStrMatch(id, ::HepEventServer::_PD_repoId) )
@@ -448,7 +448,7 @@ const _pof_HepEventServer _the_pof_HepEventServer;
 _impl_HepEventServer::~_impl_HepEventServer() {}
 
 
-CORBA::Boolean
+::CORBA::Boolean
 _impl_HepEventServer::_dispatch(omniCallHandle& _handle)
 {
   const char* op = _handle.operation_name();

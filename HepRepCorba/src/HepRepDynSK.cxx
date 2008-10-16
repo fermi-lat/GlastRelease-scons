@@ -6,7 +6,7 @@ OMNI_USING_NAMESPACE(omni)
 
 static const char* _0RL_dyn_library_version = omniORB_4_1_dyn;
 
-static CORBA::TypeCode::_Tracker _0RL_tcTrack(__FILE__);
+static ::CORBA::TypeCode::_Tracker _0RL_tcTrack(__FILE__);
 
 static CORBA::TypeCode_ptr _0RL_tc_StringArray = CORBA::TypeCode::PR_alias_tc("IDL:StringArray:1.0", "StringArray", CORBA::TypeCode::PR_sequence_tc(0, CORBA::TypeCode::PR_string_tc(0, &_0RL_tcTrack), &_0RL_tcTrack), &_0RL_tcTrack);
 
@@ -283,7 +283,7 @@ static void _0RL_StringArray_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const StringArray& _s)
+void operator<<=(::CORBA::Any& _a, const StringArray& _s)
 {
   StringArray* _p = new StringArray(_s);
   _a.PR_insert(_0RL_tc_StringArray,
@@ -291,7 +291,7 @@ void operator<<=(CORBA::Any& _a, const StringArray& _s)
                _0RL_StringArray_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, StringArray* _sp)
+void operator<<=(::CORBA::Any& _a, StringArray* _sp)
 {
   _a.PR_insert(_0RL_tc_StringArray,
                _0RL_StringArray_marshal_fn,
@@ -299,11 +299,11 @@ void operator<<=(CORBA::Any& _a, StringArray* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, StringArray*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, StringArray*& _sp)
 {
   return _a >>= (const StringArray*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const StringArray*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const StringArray*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_StringArray,
@@ -334,7 +334,7 @@ static void _0RL_HepRepAttDef_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepAttDef& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepAttDef& _s)
 {
   HepRepAttDef* _p = new HepRepAttDef(_s);
   _a.PR_insert(_0RL_tc_HepRepAttDef,
@@ -342,7 +342,7 @@ void operator<<=(CORBA::Any& _a, const HepRepAttDef& _s)
                _0RL_HepRepAttDef_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepAttDef* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepAttDef* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepAttDef,
                _0RL_HepRepAttDef_marshal_fn,
@@ -350,11 +350,11 @@ void operator<<=(CORBA::Any& _a, HepRepAttDef* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttDef*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttDef*& _sp)
 {
   return _a >>= (const HepRepAttDef*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttDef*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttDef*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepAttDef,
@@ -385,7 +385,7 @@ static void _0RL_HepRepAttDefList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepAttDefList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepAttDefList& _s)
 {
   HepRepAttDefList* _p = new HepRepAttDefList(_s);
   _a.PR_insert(_0RL_tc_HepRepAttDefList,
@@ -393,7 +393,7 @@ void operator<<=(CORBA::Any& _a, const HepRepAttDefList& _s)
                _0RL_HepRepAttDefList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepAttDefList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepAttDefList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepAttDefList,
                _0RL_HepRepAttDefList_marshal_fn,
@@ -401,11 +401,11 @@ void operator<<=(CORBA::Any& _a, HepRepAttDefList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttDefList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttDefList*& _sp)
 {
   return _a >>= (const HepRepAttDefList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttDefList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttDefList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepAttDefList,
@@ -436,7 +436,7 @@ static void _0RL_HepRepAttValue_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepAttValue& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepAttValue& _s)
 {
   HepRepAttValue* _p = new HepRepAttValue(_s);
   _a.PR_insert(_0RL_tc_HepRepAttValue,
@@ -444,7 +444,7 @@ void operator<<=(CORBA::Any& _a, const HepRepAttValue& _s)
                _0RL_HepRepAttValue_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepAttValue* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepAttValue* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepAttValue,
                _0RL_HepRepAttValue_marshal_fn,
@@ -452,11 +452,11 @@ void operator<<=(CORBA::Any& _a, HepRepAttValue* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttValue*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttValue*& _sp)
 {
   return _a >>= (const HepRepAttValue*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttValue*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttValue*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepAttValue,
@@ -487,7 +487,7 @@ static void _0RL_HepRepAttValueList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepAttValueList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepAttValueList& _s)
 {
   HepRepAttValueList* _p = new HepRepAttValueList(_s);
   _a.PR_insert(_0RL_tc_HepRepAttValueList,
@@ -495,7 +495,7 @@ void operator<<=(CORBA::Any& _a, const HepRepAttValueList& _s)
                _0RL_HepRepAttValueList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepAttValueList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepAttValueList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepAttValueList,
                _0RL_HepRepAttValueList_marshal_fn,
@@ -503,11 +503,11 @@ void operator<<=(CORBA::Any& _a, HepRepAttValueList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAttValueList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepAttValueList*& _sp)
 {
   return _a >>= (const HepRepAttValueList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAttValueList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAttValueList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepAttValueList,
@@ -538,7 +538,7 @@ static void _0RL_HepRepPoint_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepPoint& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepPoint& _s)
 {
   HepRepPoint* _p = new HepRepPoint(_s);
   _a.PR_insert(_0RL_tc_HepRepPoint,
@@ -546,7 +546,7 @@ void operator<<=(CORBA::Any& _a, const HepRepPoint& _s)
                _0RL_HepRepPoint_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepPoint* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepPoint* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepPoint,
                _0RL_HepRepPoint_marshal_fn,
@@ -554,11 +554,11 @@ void operator<<=(CORBA::Any& _a, HepRepPoint* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepPoint*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepPoint*& _sp)
 {
   return _a >>= (const HepRepPoint*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepPoint*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepPoint*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepPoint,
@@ -589,7 +589,7 @@ static void _0RL_HepRepPointList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepPointList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepPointList& _s)
 {
   HepRepPointList* _p = new HepRepPointList(_s);
   _a.PR_insert(_0RL_tc_HepRepPointList,
@@ -597,7 +597,7 @@ void operator<<=(CORBA::Any& _a, const HepRepPointList& _s)
                _0RL_HepRepPointList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepPointList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepPointList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepPointList,
                _0RL_HepRepPointList_marshal_fn,
@@ -605,11 +605,11 @@ void operator<<=(CORBA::Any& _a, HepRepPointList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepPointList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepPointList*& _sp)
 {
   return _a >>= (const HepRepPointList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepPointList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepPointList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepPointList,
@@ -640,7 +640,7 @@ static void _0RL_HepRepInstance_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepInstance& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepInstance& _s)
 {
   HepRepInstance* _p = new HepRepInstance(_s);
   _a.PR_insert(_0RL_tc_HepRepInstance,
@@ -648,7 +648,7 @@ void operator<<=(CORBA::Any& _a, const HepRepInstance& _s)
                _0RL_HepRepInstance_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepInstance* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepInstance* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepInstance,
                _0RL_HepRepInstance_marshal_fn,
@@ -656,11 +656,11 @@ void operator<<=(CORBA::Any& _a, HepRepInstance* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepInstance*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepInstance*& _sp)
 {
   return _a >>= (const HepRepInstance*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepInstance*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepInstance*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepInstance,
@@ -691,7 +691,7 @@ static void _0RL_HepRepInstanceList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepInstanceList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepInstanceList& _s)
 {
   HepRepInstanceList* _p = new HepRepInstanceList(_s);
   _a.PR_insert(_0RL_tc_HepRepInstanceList,
@@ -699,7 +699,7 @@ void operator<<=(CORBA::Any& _a, const HepRepInstanceList& _s)
                _0RL_HepRepInstanceList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepInstanceList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepInstanceList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepInstanceList,
                _0RL_HepRepInstanceList_marshal_fn,
@@ -707,11 +707,11 @@ void operator<<=(CORBA::Any& _a, HepRepInstanceList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepInstanceList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepInstanceList*& _sp)
 {
   return _a >>= (const HepRepInstanceList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepInstanceList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepInstanceList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepInstanceList,
@@ -742,7 +742,7 @@ static void _0RL_HepRepTreeID_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepTreeID& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepTreeID& _s)
 {
   HepRepTreeID* _p = new HepRepTreeID(_s);
   _a.PR_insert(_0RL_tc_HepRepTreeID,
@@ -750,7 +750,7 @@ void operator<<=(CORBA::Any& _a, const HepRepTreeID& _s)
                _0RL_HepRepTreeID_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepTreeID* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepTreeID* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepTreeID,
                _0RL_HepRepTreeID_marshal_fn,
@@ -758,11 +758,11 @@ void operator<<=(CORBA::Any& _a, HepRepTreeID* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTreeID*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepTreeID*& _sp)
 {
   return _a >>= (const HepRepTreeID*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTreeID*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTreeID*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepTreeID,
@@ -793,7 +793,7 @@ static void _0RL_HepRepTreeIDList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepTreeIDList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepTreeIDList& _s)
 {
   HepRepTreeIDList* _p = new HepRepTreeIDList(_s);
   _a.PR_insert(_0RL_tc_HepRepTreeIDList,
@@ -801,7 +801,7 @@ void operator<<=(CORBA::Any& _a, const HepRepTreeIDList& _s)
                _0RL_HepRepTreeIDList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepTreeIDList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepTreeIDList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepTreeIDList,
                _0RL_HepRepTreeIDList_marshal_fn,
@@ -809,11 +809,11 @@ void operator<<=(CORBA::Any& _a, HepRepTreeIDList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTreeIDList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepTreeIDList*& _sp)
 {
   return _a >>= (const HepRepTreeIDList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTreeIDList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTreeIDList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepTreeIDList,
@@ -844,7 +844,7 @@ static void _0RL_HepRepInstanceTree_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepInstanceTree& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepInstanceTree& _s)
 {
   HepRepInstanceTree* _p = new HepRepInstanceTree(_s);
   _a.PR_insert(_0RL_tc_HepRepInstanceTree,
@@ -852,7 +852,7 @@ void operator<<=(CORBA::Any& _a, const HepRepInstanceTree& _s)
                _0RL_HepRepInstanceTree_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepInstanceTree* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepInstanceTree* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepInstanceTree,
                _0RL_HepRepInstanceTree_marshal_fn,
@@ -860,11 +860,11 @@ void operator<<=(CORBA::Any& _a, HepRepInstanceTree* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepInstanceTree*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepInstanceTree*& _sp)
 {
   return _a >>= (const HepRepInstanceTree*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepInstanceTree*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepInstanceTree*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepInstanceTree,
@@ -895,7 +895,7 @@ static void _0RL_HepRepType_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepType& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepType& _s)
 {
   HepRepType* _p = new HepRepType(_s);
   _a.PR_insert(_0RL_tc_HepRepType,
@@ -903,7 +903,7 @@ void operator<<=(CORBA::Any& _a, const HepRepType& _s)
                _0RL_HepRepType_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepType* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepType* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepType,
                _0RL_HepRepType_marshal_fn,
@@ -911,11 +911,11 @@ void operator<<=(CORBA::Any& _a, HepRepType* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepType*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepType*& _sp)
 {
   return _a >>= (const HepRepType*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepType*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepType*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepType,
@@ -946,7 +946,7 @@ static void _0RL_HepRepTypeList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepTypeList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepTypeList& _s)
 {
   HepRepTypeList* _p = new HepRepTypeList(_s);
   _a.PR_insert(_0RL_tc_HepRepTypeList,
@@ -954,7 +954,7 @@ void operator<<=(CORBA::Any& _a, const HepRepTypeList& _s)
                _0RL_HepRepTypeList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepTypeList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepTypeList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepTypeList,
                _0RL_HepRepTypeList_marshal_fn,
@@ -962,11 +962,11 @@ void operator<<=(CORBA::Any& _a, HepRepTypeList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTypeList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepTypeList*& _sp)
 {
   return _a >>= (const HepRepTypeList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTypeList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTypeList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepTypeList,
@@ -997,7 +997,7 @@ static void _0RL_HepRepTypeTree_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepTypeTree& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepTypeTree& _s)
 {
   HepRepTypeTree* _p = new HepRepTypeTree(_s);
   _a.PR_insert(_0RL_tc_HepRepTypeTree,
@@ -1005,7 +1005,7 @@ void operator<<=(CORBA::Any& _a, const HepRepTypeTree& _s)
                _0RL_HepRepTypeTree_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepTypeTree* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepTypeTree* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepTypeTree,
                _0RL_HepRepTypeTree_marshal_fn,
@@ -1013,11 +1013,11 @@ void operator<<=(CORBA::Any& _a, HepRepTypeTree* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepTypeTree*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepTypeTree*& _sp)
 {
   return _a >>= (const HepRepTypeTree*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepTypeTree*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepTypeTree*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepTypeTree,
@@ -1048,7 +1048,7 @@ static void _0RL_HepRepAction_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepAction& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepAction& _s)
 {
   HepRepAction* _p = new HepRepAction(_s);
   _a.PR_insert(_0RL_tc_HepRepAction,
@@ -1056,7 +1056,7 @@ void operator<<=(CORBA::Any& _a, const HepRepAction& _s)
                _0RL_HepRepAction_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepAction* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepAction* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepAction,
                _0RL_HepRepAction_marshal_fn,
@@ -1064,11 +1064,11 @@ void operator<<=(CORBA::Any& _a, HepRepAction* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepAction*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepAction*& _sp)
 {
   return _a >>= (const HepRepAction*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepAction*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepAction*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepAction,
@@ -1099,7 +1099,7 @@ static void _0RL_HepRepActionList_destructor_fn(void* _v)
   delete _p;
 }
 
-void operator<<=(CORBA::Any& _a, const HepRepActionList& _s)
+void operator<<=(::CORBA::Any& _a, const HepRepActionList& _s)
 {
   HepRepActionList* _p = new HepRepActionList(_s);
   _a.PR_insert(_0RL_tc_HepRepActionList,
@@ -1107,7 +1107,7 @@ void operator<<=(CORBA::Any& _a, const HepRepActionList& _s)
                _0RL_HepRepActionList_destructor_fn,
                _p);
 }
-void operator<<=(CORBA::Any& _a, HepRepActionList* _sp)
+void operator<<=(::CORBA::Any& _a, HepRepActionList* _sp)
 {
   _a.PR_insert(_0RL_tc_HepRepActionList,
                _0RL_HepRepActionList_marshal_fn,
@@ -1115,11 +1115,11 @@ void operator<<=(CORBA::Any& _a, HepRepActionList* _sp)
                _sp);
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRepActionList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRepActionList*& _sp)
 {
   return _a >>= (const HepRepActionList*&) _sp;
 }
-CORBA::Boolean operator>>=(const CORBA::Any& _a, const HepRepActionList*& _sp)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, const HepRepActionList*& _sp)
 {
   void* _v;
   if (_a.PR_extract(_0RL_tc_HepRepActionList,
@@ -1150,7 +1150,7 @@ static void _0RL_HepRep_destructor_fn(void* _v)
     omni::releaseObjRef(_o);
 }
 
-void operator<<=(CORBA::Any& _a, HepRep_ptr _o)
+void operator<<=(::CORBA::Any& _a, HepRep_ptr _o)
 {
   HepRep_ptr _no = HepRep::_duplicate(_o);
   _a.PR_insert(_tc_HepRep,
@@ -1158,7 +1158,7 @@ void operator<<=(CORBA::Any& _a, HepRep_ptr _o)
                _0RL_HepRep_destructor_fn,
                _no->_PR_getobj());
 }
-void operator<<=(CORBA::Any& _a, HepRep_ptr* _op)
+void operator<<=(::CORBA::Any& _a, HepRep_ptr* _op)
 {
   _a.PR_insert(_tc_HepRep,
                _0RL_HepRep_marshal_fn,
@@ -1167,7 +1167,7 @@ void operator<<=(CORBA::Any& _a, HepRep_ptr* _op)
   *_op = HepRep::_nil();
 }
 
-CORBA::Boolean operator>>=(const CORBA::Any& _a, HepRep_ptr& _o)
+::CORBA::Boolean operator>>=(const ::CORBA::Any& _a, HepRep_ptr& _o)
 {
   void* _v;
   if (_a.PR_extract(_tc_HepRep,

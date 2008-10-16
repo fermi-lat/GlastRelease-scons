@@ -38,7 +38,7 @@ void
 HepRepAttValue::operator>>= (cdrStream &_n) const
 {
   _n.marshalString(name,0);
-  (const CORBA::Any&) value >>= _n;
+  (const ::CORBA::Any&) value >>= _n;
   showLabel >>= _n;
 
 }
@@ -47,8 +47,8 @@ void
 HepRepAttValue::operator<<= (cdrStream &_n)
 {
   name = _n.unmarshalString(0);
-  (CORBA::Any&)value <<= _n;
-  (CORBA::Long&)showLabel <<= _n;
+  (::CORBA::Any&)value <<= _n;
+  (::CORBA::Long&)showLabel <<= _n;
 
 }
 
@@ -65,9 +65,9 @@ HepRepPoint::operator>>= (cdrStream &_n) const
 void
 HepRepPoint::operator<<= (cdrStream &_n)
 {
-  (CORBA::Double&)x <<= _n;
-  (CORBA::Double&)y <<= _n;
-  (CORBA::Double&)z <<= _n;
+  (::CORBA::Double&)x <<= _n;
+  (::CORBA::Double&)y <<= _n;
+  (::CORBA::Double&)z <<= _n;
   (HepRepAttValueList&)attValues <<= _n;
 
 }
@@ -188,13 +188,13 @@ HepRep_ptr HepRep_Helper::_nil() {
   return ::HepRep::_nil();
 }
 
-CORBA::Boolean HepRep_Helper::is_nil(::HepRep_ptr p) {
-  return CORBA::is_nil(p);
+::CORBA::Boolean HepRep_Helper::is_nil(::HepRep_ptr p) {
+  return ::CORBA::is_nil(p);
 
 }
 
 void HepRep_Helper::release(::HepRep_ptr p) {
-  CORBA::release(p);
+  ::CORBA::release(p);
 }
 
 void HepRep_Helper::marshalObjRef(::HepRep_ptr obj, cdrStream& s) {
@@ -217,7 +217,7 @@ HepRep::_duplicate(::HepRep_ptr obj)
 }
 
 HepRep_ptr
-HepRep::_narrow(CORBA::Object_ptr obj)
+HepRep::_narrow(::CORBA::Object_ptr obj)
 {
   if( !obj || obj->_NP_is_nil() || obj->_NP_is_pseudo() ) return _nil();
   _ptr_type e = (_ptr_type) obj->_PR_getobj()->_realNarrow(_PD_repoId);
@@ -226,7 +226,7 @@ HepRep::_narrow(CORBA::Object_ptr obj)
 
 
 HepRep_ptr
-HepRep::_unchecked_narrow(CORBA::Object_ptr obj)
+HepRep::_unchecked_narrow(::CORBA::Object_ptr obj)
 {
   if( !obj || obj->_NP_is_nil() || obj->_NP_is_pseudo() ) return _nil();
   _ptr_type e = (_ptr_type) obj->_PR_getobj()->_uncheckedNarrow(_PD_repoId);
@@ -306,9 +306,9 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var arg_0_;
+  ::CORBA::String_var arg_0_;
   const char* arg_0;
-  CORBA::String_var arg_1_;
+  ::CORBA::String_var arg_1_;
   const char* arg_1;
   HepRepInstanceTree_var result;
 };
@@ -383,9 +383,9 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var arg_0_;
+  ::CORBA::String_var arg_0_;
   const char* arg_0;
-  CORBA::String_var arg_1_;
+  ::CORBA::String_var arg_1_;
   const char* arg_1;
   HepRepTypeTree_var result;
 };
@@ -460,9 +460,9 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var arg_0_;
+  ::CORBA::String_var arg_0_;
   const char* arg_0;
-  CORBA::String_var arg_1_;
+  ::CORBA::String_var arg_1_;
   const char* arg_1;
   StringArray_var arg_2_;
   const StringArray* arg_2;
@@ -544,17 +544,17 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var arg_0_;
+  ::CORBA::String_var arg_0_;
   const char* arg_0;
-  CORBA::String_var arg_1_;
+  ::CORBA::String_var arg_1_;
   const char* arg_1;
   StringArray_var arg_2_;
   const StringArray* arg_2;
   HepRepActionList_var arg_3_;
   const HepRepActionList* arg_3;
-  CORBA::Boolean arg_4;
-  CORBA::Boolean arg_5;
-  CORBA::Boolean arg_6;
+  ::CORBA::Boolean arg_4;
+  ::CORBA::Boolean arg_5;
+  ::CORBA::Boolean arg_6;
   StringArray_var arg_7_;
   const StringArray* arg_7;
   HepRepInstanceTree_var result;
@@ -618,7 +618,7 @@ _0RL_lcfn_05fda001c74a4a06_70000000(omniCallDescriptor* cd, omniServant* svnt)
 
 }
 
-HepRepInstanceTree* _objref_HepRep::getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, CORBA::Boolean getPoints, CORBA::Boolean getDrawAtts, CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts)
+HepRepInstanceTree* _objref_HepRep::getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts)
 {
   _0RL_cd_05fda001c74a4a06_60000000 _call_desc(_0RL_lcfn_05fda001c74a4a06_70000000, "getInstancesAfterAction", 24);
   _call_desc.arg_0 = instanceTreeName;
@@ -706,7 +706,7 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
-  CORBA::String_var result;
+  ::CORBA::String_var result;
 };
 
 void _0RL_cd_05fda001c74a4a06_a0000000::marshalReturnedValues(cdrStream& _n)
@@ -752,7 +752,7 @@ _pof_HepRep::newObjRef(omniIOR* ior, omniIdentity* id)
 }
 
 
-CORBA::Boolean
+::CORBA::Boolean
 _pof_HepRep::is_a(const char* id) const
 {
   if( omni::ptrStrMatch(id, ::HepRep::_PD_repoId) )
@@ -766,7 +766,7 @@ const _pof_HepRep _the_pof_HepRep;
 _impl_HepRep::~_impl_HepRep() {}
 
 
-CORBA::Boolean
+::CORBA::Boolean
 _impl_HepRep::_dispatch(omniCallHandle& _handle)
 {
   const char* op = _handle.operation_name();

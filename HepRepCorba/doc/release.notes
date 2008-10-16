@@ -18,4 +18,5 @@
  * v1r7     27-03-06 HMK Merge DC2 branch - prepare for tag
  * v1r8     07-12-06 CL  Modifications to handle new gcr ROOT file
  * v2r0     14-07-08 HMK Moving to Omniorb 4.1.0
+ * v3r0     16-10-08 HMK Moving to OminOrb 4.1.2
 */
