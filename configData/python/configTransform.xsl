@@ -59,11 +59,6 @@
                Alias=<xsl:value-of select="@Alias"/>)
         </h1>
         <p>&nbsp;</p>
-        <p>Precinct <xsl:value-of select="@Name"/> from MOOT configuration key
-           <xsl:value-of select="@ConfigKey"/> was compared
-           to baseline configuration <xsl:value-of select="@BaselineKey"/>
-        </p>
-        <hr/>
         <xsl:apply-templates/>
       </BODY>
     </HTML>

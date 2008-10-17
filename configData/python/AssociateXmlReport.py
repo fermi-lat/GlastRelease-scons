@@ -16,7 +16,7 @@ __version__  = "$Revision$"
 __release__  = "$Name$"
 __credits__  = "SLAC"
 
-import logging, os
+import logging, os, operator
 
 from ConfigXmlReport import *
 
@@ -26,6 +26,11 @@ LPA_MODENAMES = ("NORM", "TOO", "GRB0", "GRB1", "GRB2",
 class AssociateXmlReport(PrecinctXmlReport):
     def __init__(self, precinctInfo, configData):
         PrecinctXmlReport.__init__(self, precinctInfo, configData)
+        if not self._PrecinctReport__path:
+            baseDir = os.path.join(self.data.configBase, self.PDIRSTR, self.info.getPrecinct())
+            relDir = ("%s-%s" % (self.info.getPrecinct(), self.info.getKey()) +
+                      "-sbsKey-%d" % int(self.data.configInfo.getSbsKey()))
+            self._PrecinctReport__path = os.path.join(baseDir, relDir)
         
     def createReport(self, rebuild=False):
         self.createHeader()
@@ -90,8 +95,13 @@ class AssociateXmlReport(PrecinctXmlReport):
         cdmSec = self.addSection('FSW Constituents (CDM)')
         constInfoList = self.data.configInfo.fswConstituents
         # break constituents into 'rel' and 'cdm'
-        relInfoList = [r for r in constInfoList if r.getDir() == 'rel']
-        cdmInfoList = [c for c in constInfoList if c.getDir() == 'cdm']
+        relInfoList = [(r.getPkg(), r.getName(), r) for r in constInfoList if r.getDir() == 'rel']
+        relInfoList.sort()
+        relInfoList = [r for _, _, r in relInfoList]
+        cdmInfoList = [(c.getPkg(), c.getSchemaId(), c.getSchemaVersionId(), c.getInstanceId(), c) for c in constInfoList if c.getDir() == 'cdm']
+        cdmInfoList.sort()
+        cdmInfoList = [c for _, _, _, _, c in cdmInfoList]
+        
         relTable = self.addTable(relSec)
         cdmTable = self.addTable(cdmSec)
         # relocatables are pretty much dir/pkg/ver/name/logical
@@ -128,20 +138,16 @@ class AssociateXmlReport(PrecinctXmlReport):
             self.addTableData(row, cdm.getSchemaId())
             self.addTableData(row, cdm.getSchemaVersionId())
             self.addTableData(row, cdm.getInstanceId())
-        
-        
-        
 
 
-
-
-        
+     
 
             
 if __name__ == '__main__':
     from ConfigReport import *
-    configKey = 100
-    baseKey   = 136
+    import sys
+    configKey = int(sys.argv[1])
+    baseKey   = int(sys.argv[2])
 
     cr = ConfigDataHolder(configKey, baseKey, './')
     pInfo = cr.precinctInfo['Filter_Associate']

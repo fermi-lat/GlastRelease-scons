@@ -36,9 +36,6 @@ class AcdXmlReport(PrecinctXmlReport):
     def createReport(self, rebuild=False):
         self.createHeader()
         summary = self.addSection("%s_Summary" %(self.__precinctName))
-
-        self.addIntent(summary)  # blank intent node for later?
-
         self.shortSummary(self.path, rebuild)
         self.includeText(summary, self.__builtName, nLines=10)
         for info in self.__pngFileInfos:
@@ -46,7 +43,7 @@ class AcdXmlReport(PrecinctXmlReport):
             caption = info.caption
             title = info.title
             self.addImage(summary, file, title, caption)
-        self.addComment(summary, "empty comment")
+        self.longReport(rebuild)
 
     def shortSummary(self, path, rebuild=False):
         self.__builtName = os.path.join(path, FN_SHORTSUM % (self.__precinctName))
@@ -56,6 +53,10 @@ class AcdXmlReport(PrecinctXmlReport):
             fp.close()
             acdPlotChecker = AcdPlotChecker(self.__precinctName, self.__compRootFile)
             self.__pngFileInfos = acdPlotChecker.makePngs(path)
+
+    def longReport(self, rebuild=False):
+        #longSec = self.addSection("Details")
+        pass
             
 class AcdBiasXmlReport(AcdXmlReport):
     def __init__(self, precinctInfo, configData):
