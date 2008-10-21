@@ -33,86 +33,96 @@ namespace Event {
 class CalDigi : virtual public ContainedObject { 
     
 public:
-    
-/** @class CalXtalReadout
- * @brief Nested class in CalDigi for holding ACD values and gain ranges
- * from the two crystal ends.
- *
- * Author:  E.Grove
- *
-*/
-        /// Retrieve reference to class definition structure
-        virtual const CLID& clID() const   { return CalDigi::classID(); }
-        static const CLID& classID()       { return CLID_CalDigi; }
-          
+    /** @class CalXtalReadout
+      * @brief Nested class in CalDigi for holding ACD values and gain ranges
+      * from the two crystal ends.
+      *
+      * Author:  E.Grove
+      *
+    */
 
+    /// Retrieve reference to class definition structure
+    virtual const CLID& clID() const   { return CalDigi::classID(); }
+    static const CLID& classID()       { return CLID_CalDigi; }
+          
     class CalXtalReadout {  // : virtual public ContainedObject  { 
         
     public:
-        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM,
-			unsigned short status) :
-	  m_adcP(adcP), 
-	  m_adcM(adcM),
-          m_rangeP(rangeP), 
-	  m_rangeM(rangeM),
-	  m_status(status)
+        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM, unsigned short status) :
+                m_adcP(adcP), 
+                m_adcM(adcM),
+                m_rangeP(rangeP), 
+                m_rangeM(rangeM),
+                m_status(status)
           {};
 
-        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, 
-		       unsigned short adcM) :
-	  m_adcP(adcP), 
-	  m_adcM(adcM),
-          m_rangeP(rangeP), 
-	  m_rangeM(rangeM){
-	  m_status = 0;
-	};
+        CalXtalReadout(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM) :
+                m_adcP(adcP), 
+                m_adcM(adcM),
+                m_rangeP(rangeP), 
+                m_rangeM(rangeM),
+                m_status(0)
+          {};
           
-          ~CalXtalReadout() {};
+        ~CalXtalReadout() {};
+
+        /// Initialization routine (primarily used by overlay)
+        void initialize(char rangeP, unsigned short adcP, char rangeM, unsigned short adcM, unsigned short status)
+        {
+            m_rangeP = rangeP;
+            m_adcP   = adcP;
+            m_rangeM = rangeM;
+            m_adcM   = adcM;
+            m_status = status;
+        }
           
-          /// retrieve pulse height from specified face
-          inline unsigned short getAdc(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_adcP : m_adcM;};
+        /// retrieve pulse height from specified face
+        inline unsigned short getAdc(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_adcP : m_adcM;};
           
-          /// retrieve energy range from specified face
-          inline char getRange(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;};
+        /// retrieve energy range from specified face
+        inline char getRange(idents::CalXtalId::XtalFace face) const {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;};
  
-		  /// retrieve status word
-		  inline const unsigned short getStatus() const {return m_status;}
+        /// retrieve status word
+        inline const unsigned short getStatus() const {return m_status;}
 
-		  enum StatusBits{  
-			  OK_P =1 ,    //! channel ok
-			  NOISY_P=1<<1,  //! channel noisy
-			  DEAD_P=  1<<2,  //! channel dead
-			  OK_N =1<<8 ,    //! channel ok
-			  NOISY_N=1<<9,  //! channel noisy
-			  DEAD_N=  1<<10,  //! channel dead
-		  };
-
+        enum StatusBits{  OK_P    = 1 ,     //! channel ok
+                          NOISY_P = 1<<1,   //! channel noisy
+                          DEAD_P  = 1<<2,   //! channel dead
+                          OK_N    = 1<<8 ,  //! channel ok
+                          NOISY_N = 1<<9,   //! channel noisy
+                          DEAD_N  = 1<<10,  //! channel dead
+        };
     private:
-        
         /// ADC value from POSitive face
         unsigned short m_adcP;
         /// ADC value from NEGative face
         unsigned short m_adcM;
         /// gain range from POSitive face
-        char m_rangeP;
+        char           m_rangeP;
         /// gain range from NEGative face
-        char m_rangeM;
+        char           m_rangeM;
         /// status bits for readouts
-        unsigned short m_status;
-        
+        unsigned short m_status;    
     };
 
     typedef std::vector<CalXtalReadout> CalXtalReadoutCol;
     
     /// shifts and masks for packed readout of energy range and Adc value
-    enum {POS_OFFSET = 14,						// shift for POSitive face
-        RANGE_OFFSET = 12, RANGE_MASK = 0x3000,		// energy range bits
-        ADC_VAL_MASK = 0xfff};						// Adc value bits
+    enum {POS_OFFSET   = 14,                      // shift for POSitive face
+          RANGE_OFFSET = 12, RANGE_MASK = 0x3000, // energy range bits
+          ADC_VAL_MASK = 0xfff};                  // Adc value bits
+
+    /// Status bit definitions
+    enum DigiStatusBits {
+          DIGI_MC      = 1<<28,   // This digi is from Monte Carlo
+          DIGI_DATA    = 1<<30,   // This digi is from data 
+          DIGI_OVERLAY = 1<<31    // This digi contains overlay info
+    };
     
-    CalDigi() {};
+    CalDigi() : m_status(0) {};
     
-    CalDigi(idents::CalXtalId::CalTrigMode mode, idents::CalXtalId xtalId) : 
-        m_mode(mode), m_xtalId(xtalId) {};
+    CalDigi(idents::CalXtalId::CalTrigMode mode, idents::CalXtalId xtalId, unsigned int status=0) : 
+        m_status(status), m_mode(mode), m_xtalId(xtalId) {};
     
     virtual ~CalDigi() { };
     
@@ -123,12 +133,12 @@ public:
     inline const idents::CalXtalId getPackedId() const { return m_xtalId; }
 
     /// initialize object all at once
-    inline void initialize(idents::CalXtalId::CalTrigMode m, idents::CalXtalId id)
-	{ m_mode = m;  m_xtalId = id;}
+    inline void initialize(idents::CalXtalId::CalTrigMode m, idents::CalXtalId id, unsigned int status=0)
+    { m_mode = m;  m_xtalId = id; m_status = status;}
 
     /// add readout to CalXtalReadout collection
     inline void addReadout(CalXtalReadout r) { m_readout.push_back(r); } 
-	const CalXtalReadoutCol& getReadoutCol() const { return m_readout;}	
+    const CalXtalReadoutCol& getReadoutCol() const { return m_readout;} 
     
     /// Retrieve energy range for selected face and readout
     inline char getRange(short readoutIndex, idents::CalXtalId::XtalFace face) const
@@ -162,12 +172,20 @@ public:
             return ((m_readout[(nRanges + range - ((m_readout[0])).getRange(face)) % nRanges])).getAdc(face);
     }
 
+    /// Retrieve the status word
+    inline unsigned int getStatus() const {return m_status;}
+
+    /// Allow status word to be modified
+    inline void setStatus(unsigned int status)       {m_status  = status;}
+    inline void addToStatus(DigiStatusBits bitToAdd) {m_status |= bitToAdd;}
+
     /// Fill the ASCII output stream
     virtual std::ostream& fillStream( std::ostream& s ) const;
 
 
 private:
-    
+    /// Status bits to keep track of conditions affecting this digi
+    unsigned int m_status;
     /// Cal readout mode is based on trigger type
     idents::CalXtalId::CalTrigMode m_mode;
     /// Cal ID

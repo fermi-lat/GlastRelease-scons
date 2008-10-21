@@ -47,6 +47,28 @@ std::string EventModel::Digi::CalDigiCol              = EventModel::Digi::Event 
 std::string EventModel::Digi::CalDigiHitTab           = EventModel::Digi::Event + "/CalDigiHitTab";
 std::string EventModel::Digi::TkrDigiHitTab           = EventModel::Digi::Event + "/TkrDigiHitTab";
 std::string EventModel::Digi::TkrClusterHitTab        = EventModel::Digi::Event + "/TkrClusterHitTab";
+
+// Digi Overlay 
+std::string EventModel::Overlay::Event                = EventModel::EventHeader + "/Overlay";
+std::string EventModel::Overlay::EventHeader          = EventModel::Overlay::Event + "/EventHeader";
+std::string EventModel::Overlay::TriRowBits           = EventModel::Overlay::Event + "/TriRowBits";
+std::string EventModel::Overlay::Time                 = EventModel::Overlay::Event + "/Time";
+std::string EventModel::Overlay::EventSummary         = EventModel::Overlay::Event + "/EventSummary";
+std::string EventModel::Overlay::Gem                  = EventModel::Overlay::Event + "/Gem";
+std::string EventModel::Overlay::Error                = EventModel::Overlay::Event + "/Error";
+std::string EventModel::Overlay::Diagnostic           = EventModel::Overlay::Event + "/Diagnostic";
+std::string EventModel::Overlay::ObfFilterStatus      = EventModel::Overlay::Event + "/ObfFilterStatus";
+std::string EventModel::Overlay::ObfFilterTrack       = EventModel::Overlay::Event + "/ObfFilterTrack";
+std::string EventModel::Overlay::MetaEvent            = EventModel::Overlay::Event + "/MetaEvent";
+std::string EventModel::Overlay::Ccsds                = EventModel::Overlay::Event + "/Ccsds";
+std::string EventModel::Overlay::AncillaryEvent       = EventModel::Overlay::Event + "/AncillaryEvent";
+std::string EventModel::Overlay::AncillaryEventDigi   = EventModel::Overlay::Event + "/AncillaryEventDigi";
+std::string EventModel::Overlay::AcdDigiCol           = EventModel::Overlay::Event + "/AcdDigiCol";
+std::string EventModel::Overlay::TkrDigiCol           = EventModel::Overlay::Event + "/TkrDigiCol";
+std::string EventModel::Overlay::CalDigiCol           = EventModel::Overlay::Event + "/CalDigiCol";
+std::string EventModel::Overlay::CalDigiHitTab        = EventModel::Overlay::Event + "/CalDigiHitTab";
+std::string EventModel::Overlay::TkrDigiHitTab        = EventModel::Overlay::Event + "/TkrDigiHitTab";
+std::string EventModel::Overlay::TkrClusterHitTab     = EventModel::Overlay::Event + "/TkrClusterHitTab";
       
 // reconstructed data (Tracker)
 std::string EventModel::TkrRecon::Event               = EventModel::EventHeader + "/TkrRecon";

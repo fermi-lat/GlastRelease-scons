@@ -89,6 +89,34 @@ public:
         static std::string TkrClusterHitTab;
     };
 
+    class DLL_EXPORT_EVT Overlay
+    {
+    public:
+        Overlay() {}
+       ~Overlay() {}
+
+        static std::string Event;
+        static std::string EventHeader;
+        static std::string TriRowBits;
+        static std::string Time;
+        static std::string EventSummary;
+        static std::string Gem;
+        static std::string Error;
+        static std::string Diagnostic;
+        static std::string ObfFilterStatus;
+        static std::string ObfFilterTrack;
+        static std::string MetaEvent;
+        static std::string Ccsds;
+        static std::string AncillaryEvent;
+        static std::string AncillaryEventDigi;
+        static std::string AcdDigiCol;
+        static std::string TkrDigiCol;
+        static std::string CalDigiCol;
+        static std::string CalDigiHitTab;
+        static std::string TkrDigiHitTab;
+        static std::string TkrClusterHitTab;
+    };
+
 
     class DLL_EXPORT_EVT TkrRecon
     {

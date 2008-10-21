@@ -40,7 +40,7 @@ namespace Event {
 * The digis are produced either from MC hit output or from the actual data
 */
 
-    class TkrDigi : virtual public ContainedObject {
+    class TkrDigi : public std::vector<int>, virtual public ContainedObject {
 
     public:
         //! typedefs
@@ -82,22 +82,35 @@ namespace Event {
         //! Get ToT for a given strip
         int getToTForStrip(int strip){ return m_tot[(strip<=m_lastController0Strip ? 0 : 1 )]; }
         //! number of hits
-        int getNumHits() const{ return m_hits.size(); }
+        int getNumHits() const{ return size();} //m_hits.size(); }
         //! Get the pointer to the ith hit strip
-        int getHit( int i ) const { return m_hits[i];}
+        int getHit( int i ) const { return (*this)[i];}
 
         //! Add a controller 0 hit to the hit list (keeps track of highest strip)
         void addC0Hit( int strip, int ToT=0 ) {
-            m_hits.push_back(strip);
+            //m_hits.push_back(strip);
+            push_back(strip);
             m_lastController0Strip = std::max(strip, m_lastController0Strip);
             m_tot[0] = std::max(m_tot[0], ToT);
         }
 
         //! Add a controller 1 hit to the hit list
         void addC1Hit( int strip, int ToT=0 ) {
-            m_hits.push_back(strip);
+            //m_hits.push_back(strip);
+            push_back(strip);
             m_tot[1] = std::max(m_tot[1], ToT);
         }
+
+        //! Set value of ToT
+        void setToT(int i, int ToT) {
+            if (i == 0 || i == 1) m_tot[i] = ToT;
+        }
+
+        //! Set value of lastController0
+        void setLastController0Strip(int stripId) {
+            m_lastController0Strip = stripId;
+        }
+
         //! returns integer for sorting order
         operator int() const {
             return m_view + 2*m_bilayer + 64*m_tower.id();
@@ -111,9 +124,9 @@ namespace Event {
         };        
 
         //! begin iterator
-        const_iterator begin()const {return m_hits.begin();}
+        //const_iterator begin()const {return m_hits.begin();}
         //! end iterator
-        const_iterator end()const {return m_hits.end();}
+        //const_iterator end()const {return m_hits.end();}
 
         //! Serialize the object for reading
         virtual StreamBuffer& serialize( StreamBuffer& s );
@@ -125,8 +138,10 @@ namespace Event {
         /// remove a hit from the digi, using the strip number
         void removeHit(int strip) {
             // find the strip in the digi, remove if present
-            HitList::iterator it = std::find(m_hits.begin(), m_hits.end(), strip);
-            if (it!=m_hits.end()) m_hits.erase(it);
+            //HitList::iterator it = std::find(m_hits.begin(), m_hits.end(), strip);
+            //if (it!=m_hits.end()) m_hits.erase(it);
+            HitList::iterator it = std::find(begin(), end(), strip);
+            if (it!=end()) erase(it);
         }
 
     private:
@@ -136,7 +151,7 @@ namespace Event {
         idents::GlastAxis::axis m_view;
         int m_tot[2];
         int m_lastController0Strip;
-        HitList m_hits;
+        //HitList m_hits;
     };
 
 
@@ -149,9 +164,9 @@ namespace Event {
           << m_tot[0]
           << m_tot[1]
           << m_lastController0Strip
-          << m_hits.size();
+          << size();
         const_iterator ih;
-        for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
+        for (ih = begin(); ih!=end(); ih++) {
             s << *ih;
         }
 
@@ -174,9 +189,9 @@ namespace Event {
         m_tower = idents::TowerId(tower);
         m_view  = (view==0 ? idents::GlastAxis::X : idents::GlastAxis::Y);
 
-        m_hits.resize( size, 0);
+        resize( size, 0);
         std::vector<int>::iterator ih;
-        for (ih = m_hits.begin(); ih!=m_hits.end(); ih++) {
+        for (ih = begin(); ih!=end(); ih++) {
             s >> *ih;
         }
 
@@ -187,7 +202,7 @@ namespace Event {
 
     inline std::ostream& TkrDigi::fillStream( std::ostream& s ) const {
         int j;
-        int size = m_hits.size();
+        int hitSize = size();
         s << "class TkrDigi :" << std::endl
           << "Layer: " << m_bilayer 
           << " view: " << (int)m_view
@@ -195,10 +210,10 @@ namespace Event {
           << " ToT: " << m_tot[0] << " " << m_tot[1]
           << " last controller 0 strip " << m_lastController0Strip
           << std::endl
-          << " Number of hits strips: " << size << std::endl;
+          << " Number of hits strips: " << hitSize << std::endl;
 
         const_iterator ih;
-        for(ih = m_hits.begin(), j=0; ih != m_hits.end();ih++,j++) {
+        for(ih = begin(), j=0; ih != end();ih++,j++) {
             if (j==10) {j = 0; s << std::endl;}
             s << *ih << " ";
         }
