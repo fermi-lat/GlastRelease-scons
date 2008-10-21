@@ -5,15 +5,18 @@
 ApplicationMgr.DLLs   = 
 { 
     "GlastSvc", "HepRepSvc", "HepRepXml", "FluxSvc", 
-    "TkrUtil", 
+    "AcdUtil", "TkrUtil", 
     "G4Propagator", "G4Generator",
-    "CalibSvc"
+    "CalibSvc",
+    "ntupleWriterSvc"
 };
 
 ApplicationMgr.ExtSvc = { 
     "EventCnvSvc", 
     "GlastDetSvc",
-    "HepRepSvc"};
+    "HepRepSvc",
+    "RootTupleSvc"
+    };
 
 
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
