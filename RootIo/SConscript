@@ -17,11 +17,12 @@ RootIo = libEnv.SharedLibrary('RootIo', listFiles(['src/*.cxx','src/Dll/*.cxx'])
 progEnv.Tool('RootIoLib')
 
 if baseEnv['PLATFORM'] == 'win32':
-	progEnv.AppendUnique(CPPDEFINES = 'GLEAM')
-	progEnv.AppendUnique(CPPDEFINES = '__i386')
-	progEnv.AppendUnique(CPPDEFINES = 'EFC_FILTER')
-	progEnv.AppendUnique(CPPDEFINES = '_WIN32')
+	progEnv.AppendUnique(CPPDEFINES = ['GLEAM'])
+	progEnv.AppendUnique(CPPDEFINES = ['__i386'])
+	progEnv.AppendUnique(CPPDEFINES = ['EFC_FILTER'])
+	progEnv.AppendUnique(CPPDEFINES = ['_WIN32'])
 
 test_RootIo = progEnv.GaudiProgram('test_RootIo', listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'RootIo', libraries = [RootIo], testApps = [test_RootIo])
+progEnv.Tool('registerObjects', package = 'RootIo', libraries = [RootIo], testApps = [test_RootIo], 
+	includes = listFiles(['RootIo/*.h']))
