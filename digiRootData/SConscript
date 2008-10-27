@@ -34,14 +34,13 @@ digiRootDataRootcint = libEnv.Rootcint('digiRootData/digiRootData_rootcint',['di
                                         'digiRootData/FilterStatus.h',
                                         'digiRootData/ObfFilterStatus.h',
                                         'digiRootData/AdfDigi.h',
-                                        'digiRootData/EventSummaryData.h'], includes = [''])
+                                        'digiRootData/EventSummaryData.h', 'digiRootData/LinkDef.h'], includes = [''])
 
                                        
-libEnv.PrependUnique(CPPPATH = ['#enums/enums'])
 digiRootData = libEnv.SharedLibrary('digiRootData', listFiles(['src/*.cxx']) + ['digiRootData/digiRootData_rootcint.cxx'])
 
 progEnv.Tool('digiRootDataLib')
-test_digiRootData = progEnv.Program('test_digiRootData', ['src/test/DigiClasses.cxx'])
+test_digiRootData = progEnv.Program('test_digiRootData', ['src/test/testDigiClasses.cxx'])
 progEnv.Tool('addLibrary', library = baseEnv['ldfLibs'])
 progEnv.Tool('lsfDataLib')
 ReadFilterStats = progEnv.Program('ReadFilterStats', ['apps/ReadFilterStats.cxx'])
