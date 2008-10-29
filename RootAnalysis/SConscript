@@ -6,12 +6,8 @@ Import('baseEnv')
 Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
-libEnv = baseEnv.Clone()
 
-# libEnv.Tool('RootAnalysisLib', depsOnly = 1)
 
-# progEnv.Tool('RootAnalysisLib')
-progEnv.AppendUnique(CPPPATH=['#RootAnalysis/build/redhat4-i686-32bit/src/RootTreeAnalysis/'])
 progEnv.Tool('addLibrary', library = baseEnv['rootLibs'])
 progEnv.Tool('addLibrary', library = baseEnv['rootGuiLibs'])
 progEnv.Tool('commonRootDataLib')
