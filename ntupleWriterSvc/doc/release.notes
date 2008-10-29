@@ -3,6 +3,7 @@
  *    * EOH *
 
  @verbatim
+ * v4r2    29-Oct-2008  HMK  add new method to retrieve list of input tuples
  * v4r1    14-Oct-2008  HMK  Return number of entries from getOutputTreePtr
  *         and getInputTreePtr
  * v4r0    07-Oct-2008  HMK  Add RootTupleSvc::getInputTreePtr and 
