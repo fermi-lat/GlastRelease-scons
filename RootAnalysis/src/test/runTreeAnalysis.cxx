@@ -10,7 +10,7 @@
  *
  */
 
-#include "RootTreeAnalysis.h"
+#include "../RootTreeAnalysis/RootTreeAnalysis.h"
 #include "TSystem.h"
 #include <iostream>
 #include <string>
