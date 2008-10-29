@@ -21,6 +21,7 @@ DECLARE_FACTORY_ENTRIES(RootIo) {
     DECLARE_ALGORITHM( relationRootWriterAlg );
     DECLARE_ALGORITHM( relationRootReaderAlg );
     DECLARE_ALGORITHM( gcrSelectRootWriterAlg );
+    DECLARE_ALGORITHM( ntupleRootReaderAlg );
     DECLARE_TOOL( FhTool );
 #if 0 //THB: not needed if no use of random numbers
     DECLARE_TOOL( RootIoRandom );

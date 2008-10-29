@@ -337,7 +337,7 @@ StatusCode RootIoSvc::initialize ()
 
     // Retrieve tuple info an set up
     // get a pointer to RootTupleSvc
-    status = service("RootTupleSvc", m_rootTupleSvc);       
+    status = service("RootTupleSvc", m_rootTupleSvc, true);       
     if( status.isFailure() ) 
     {
         MsgStream log( msgSvc(), name() );
