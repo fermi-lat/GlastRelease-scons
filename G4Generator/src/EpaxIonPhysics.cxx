@@ -124,11 +124,10 @@ void EpaxIonPhysics::ConstructProcess()
   G4HadronElasticProcess*      theAElasticProcess = new G4HadronElasticProcess();
   theAElasticProcess->RegisterMe(theIonElasticModel);
   G4AlphaInelasticProcess*     fAlphaProcess = new G4AlphaInelasticProcess();
-  //G4LEAlphaInelastic*         fAlphaModel = new G4LEAlphaInelastic();
+  //  G4LEAlphaInelastic*         fAlphaModel = new G4LEAlphaInelastic();
   EpaxInelasticModel* theAlphaModel = new  EpaxInelasticModel();
-  //fAlphaModel->SetMinEnergy(theMin);
-  //fAlphaModel->SetMaxEnergy(theMax);
-  //fAlphaProcess->RegisterMe(fAlphaModel);
+  //theIonModel->SetMinEnergy(theMin);
+  //theIonModel->SetMaxEnergy(theMax);
   fAlphaProcess->RegisterMe(theAlphaModel);
   fAlphaProcess->AddDataSet(theIonXSec);  
   
