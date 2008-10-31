@@ -6,6 +6,7 @@ ApplicationMgr.ExtSvc           += {"G4GeometrySvc"};
 G4Generator.defaultCutValue      = 0.7; 
 G4Generator.defaultTkrCutValue   = 0.1;
 G4Generator.defaultCalCutValue   = 0.7;
+G4Generator.he_cut=0;
 // ===================================================================
 
 

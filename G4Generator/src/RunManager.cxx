@@ -67,6 +67,7 @@ RunManager::RunManager(std::ostream& log,
                        double defaultCutValue, 
                        double defaultTkrCutValue,
                        double defaultCalCutValue,
+		       double defaultHeCutValue,
                        std::string& physics_choice, 
                        std::string& physics_table,
                        std::string&  physics_dir,
@@ -88,6 +89,7 @@ RunManager::RunManager(std::ostream& log,
  defaultCut(defaultCutValue),
  TkrCutValue(defaultTkrCutValue),
  CalCutValue(defaultCalCutValue),
+ HeCutValue(defaultHeCutValue),
  storeRandomNumberStatus(0),
  m_gsv(gsv)
 {
@@ -267,7 +269,7 @@ void RunManager::Initialize()
   if(!cutoffInitialized) InitializeCutOff();
   if(!initializedAtLeastOnce) initializedAtLeastOnce = true;
 
-  userPrimaryGeneratorAction = new PrimaryGeneratorAction;
+  userPrimaryGeneratorAction = new PrimaryGeneratorAction(HeCutValue);
 
   // Set the TrackingAction to track the McParticle
   eventManager->SetUserAction(new TrackingAction(m_gsv));

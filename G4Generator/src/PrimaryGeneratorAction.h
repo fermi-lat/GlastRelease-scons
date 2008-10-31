@@ -29,7 +29,7 @@ class IParticlePropertySvc;
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
-    PrimaryGeneratorAction();
+    PrimaryGeneratorAction(G4double HeCut);
     ~PrimaryGeneratorAction();
 
   public:
@@ -97,6 +97,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4PrimaryVertex* m_primaryVertex; // This for collections
 
     std::vector<G4PrimaryVertex*> m_secondaryVertexVec;
+
+    G4double HeCutValue;
 };
 
 #endif
