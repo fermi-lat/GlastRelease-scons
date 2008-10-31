@@ -51,6 +51,7 @@
 #include "G4eplusAnnihilation.hh"
 
 #include "G4eBremsstrahlungModel.hh"
+#include "G4eBremsstrahlungHEModel.hh"
 #include "G4VEnergyLossProcess.hh"
 
 #include "G4MuIonisation.hh"
@@ -158,12 +159,18 @@ void G4EmStandardPhysics::ConstructProcess()
 	m_eLossFactory(GlastMS::EnergyLossFactory::ELECTRON, GlastMS::EnergyLossFactory::BREMSSTRAHLUNG);
       
 
-      G4eBremsstrahlungModel* bm = new G4eBremsstrahlungModel();
-      bm->SetLPMflag(false);
-      
       G4VEnergyLossProcess* ebrem = reinterpret_cast<G4VEnergyLossProcess*>(theElectronBremsStrahlung);
-      ebrem->AddEmModel(0,bm);
-
+      if (verbose==1) 
+	{
+	  G4eBremsstrahlungModel* bm = new G4eBremsstrahlungModel();
+	  bm->SetLPMflag(false);
+	  ebrem->AddEmModel(0,bm);	  
+	}
+      else if (verbose == 2)
+	{
+	  G4VEmModel* bm = new G4eBremsstrahlungHEModel();
+	  ebrem->AddEmModel(0,bm);
+	}
 
       pmanager->AddProcess(theElectronMultipleScattering, -1, 1, 1);
       pmanager->AddProcess(theElectronIonisation,         -1, 2, 2);
@@ -188,12 +195,21 @@ void G4EmStandardPhysics::ConstructProcess()
       G4eplusAnnihilation*          theAnnihilation               = new G4eplusAnnihilation();
 
 
-      G4eBremsstrahlungModel* bp = new G4eBremsstrahlungModel();
-      bp->SetLPMflag(false);
       G4VEnergyLossProcess* epbrem =
 	reinterpret_cast<G4VEnergyLossProcess*>(thePositronBremsStrahlung);
-      epbrem->AddEmModel(0,bp);
-      
+
+      if (verbose==1)
+        {
+          G4eBremsstrahlungModel* bp = new G4eBremsstrahlungModel();
+          bp->SetLPMflag(false);
+	  epbrem->AddEmModel(0,bp);
+	}
+      else if (verbose == 2)
+        {
+	  G4VEmModel* bp = new G4eBremsstrahlungHEModel();
+	  epbrem->AddEmModel(0,bp);
+	}
+
       pmanager->AddProcess(thePositronMultipleScattering, -1,  1, 1);
       pmanager->AddProcess(thePositronIonisation,         -1,  2, 2);
       pmanager->AddProcess(thePositronBremsStrahlung,     -1,  3, 3);
