@@ -4,6 +4,7 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+   01-nov-08  v6r55   THB  remove TU changes: v6r53 plus CMT changes
    28-jul-08  v6r54p2 THB  CMT env var changes
    15-May-08  v6r54p1 TU   Fix faux pas where forgot to retrieve tool
    15-May-08  v6r54p0 TU   Introduce FluxPointingInfoTool (see file commit notes)
