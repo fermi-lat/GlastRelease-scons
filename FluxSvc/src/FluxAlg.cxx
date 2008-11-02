@@ -33,7 +33,7 @@ $Header$
 #include "astro/GPS.h"
 
 //flux
-#include "FluxSvc/IPointingInfo.h"
+#include "FluxSvc/PointingInfo.h"
 #include "FluxSvc/IFluxSvc.h"
 #include "flux/IFlux.h"
 #include "flux/Spectrum.h"
@@ -111,8 +111,9 @@ private:
     double m_currentTime;
     int m_SAAreject;
 
-    IPointingInfo* m_pointingInfo;
+    PointingInfo m_pointing_info;
 
+    
     StringArrayProperty m_pointingHistory;///< history file name and launch date
 
     StringProperty m_root_tree;
@@ -335,21 +336,14 @@ StatusCode FluxAlg::initialize(){
         return StatusCode::FAILURE;
     }
 
-    // Retrieve pointer to the Pointing Info tool
-    if ((sc = toolSvc()->retrieveTool("FluxPointingInfoTool", m_pointingInfo)).isFailure())
-    {
-        log << MSG::ERROR << " could not retrieve the FluxPointingInfoTool" << endreq;
-    }
-
     // get a pointer to RootTupleSvc, use only if available 
     if( (service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
         log << MSG::WARNING << " RootTupleSvc is not available, will not write Pt tuple" << endreq;
         m_rootTupleSvc=0;
+    }else if( !m_root_tree.value().empty() ) {
+        
+        m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
     }
-    //else if( !m_root_tree.value().empty() ) {
-    //    
-    //    m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
-    //}
 
 
     // attach an observer to be notified when orbital position changes
@@ -414,7 +408,7 @@ StatusCode FluxAlg::execute()
 
         //if it's a clock then ExposureAlg will take care of it, and no othe algorithms should care about it.
         if(particleName == "TimeTick" || particleName == "Clock"){
-            m_pointingInfo->set();
+            m_pointing_info.set();
 
             setFilterPassed( false );
             return sc;
@@ -528,7 +522,7 @@ StatusCode FluxAlg::execute()
     m_currentTime=m_flux->time();
 
     // is this proper here?
-    m_pointingInfo->set();
+    m_pointing_info.set();
     
     // put pointing stuff into the root tree
     if( m_rootTupleSvc!=0 && !m_root_tree.value().empty()){
