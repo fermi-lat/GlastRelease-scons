@@ -3,6 +3,8 @@
 
 $Id$
 @verbatim
+04-Nov-08  v0r0p1 Add "sequential" option to BackgroundSelectTool
+                  xml for new PeriodicTrigger files: McIlwain_L_434K.xml
 15-Oct-08  v0     Initial checkin.
 
 @endverbatim
