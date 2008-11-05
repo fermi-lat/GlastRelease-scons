@@ -8,6 +8,8 @@ def generate(env, **kw):
     env.Tool('EventLib')
     env.Tool('commonRootDataLib')
     env.Tool('calibRootDataLib')
-
+    env.Tool('addLibrary', library = env['rootLibs'])
+    env.Tool('addLibrary', library = env['rootGuiLibs'])
+    env.Tool('LdfEventLib')
 def exists(env):
     return  1;
