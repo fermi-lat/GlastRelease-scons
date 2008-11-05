@@ -5,8 +5,14 @@ def generate(env, **kw):
     env.Tool('addLibrary', library = env['rootLibs'])
     env.Tool('addLibrary', library = env['rootGuiLibs'])
     env.Tool('addLibrary', library = env['minuitLibs'])
-#If the Minuit library above causes any problems, try replacing the previous statement with env.Tool('minuitLibs') because it contains a Minuit2 library.
-
+    env.Tool('CalUtilLib')
+    env.Tool('calibUtilLib')
+    env.Tool('gcrSelectRootDataLib')
+    env.Tool('addLibrary', library = env['clhepLibs'])
+    env.Tool('reconRootDataLib')
+    env.Tool('digiRootDataLib')
+    env.Tool('mcRootDataLib')
+    env.Tool('addLibrary', library = env['pythonLibs'])
 
 def exists(env):
     return 1;
