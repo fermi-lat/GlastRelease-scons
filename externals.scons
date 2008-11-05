@@ -25,7 +25,7 @@ externalLibraries = {
                   'includes' : ['RVersion.h'],
                   'libraries' : {'rootLibs' : ['Tree', 'Net', 'Gpad', 'Graf', 'RIO', 'Hist', 'Physics', 'Matrix', 'Core', 'Cint', 'pthread', 'm', 'dl'],
                                  'rootGuiLibs' : ['Rint', 'Postscript', 'TreePlayer', 'Tree', 'Net', 'Graf3d', 'Gui', 'HistPainter', 'Gpad'],
-                                 'minuitLibs'  : ['Minuit2', 'Graf', 'RIO', 'Hist', 'Matrix', 'Core', 'Cint']},
+                                 'minuitLibs'  : ['Minuit','Minuit2', 'Graf', 'RIO', 'Hist', 'Matrix', 'Core', 'Cint']},
                   'binaries' : ['rootcint'], 'include-path' : os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER','include'), 
                   'lib-path' : os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER','lib'),
                   'bin-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'bin'),
@@ -38,7 +38,7 @@ externalLibraries = {
     
     'xerces'   : {'version' : '2.7.0',
                   'includes' : ['xercesc/util/XercesVersion.hpp'],
-                  'libraries' : {'xercesLibs'  : ['xerces-c', 'pthread']},
+                  'libraries' : {'xercesLibs'  : ['xerces-c','pthread']},
                   'include-path' : os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER', 'lib'),
                   'bin-path' : os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER', 'bin'),
@@ -62,7 +62,7 @@ externalLibraries = {
                   'libraries' : {'f2cLibs' : ['g2c']}},
     
     'gaudi'    : {'version' : 'v18r1-gl4',
-                  'includes' : ['GaudiAlg/GaudiAlg.h', 'GaudiKernel/Kernel.h', 'GaudiKernel/DataObject.h'],
+                  'includes' : ['GaudiAlg/GaudiAlg.h', 'GaudiKernel/Kernel.h'],
                   'libraries' : {'gaudiLibs' : ['GaudiHistory', 'GaudiSvc', 'boost_filesystem-gcc', 'GaudiAud', 'GaudiAlg', 'GaudiAlgLib', 'GaudiKernel']},
                   'include-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
@@ -76,7 +76,7 @@ externalLibraries = {
                   'ld-path' : '$LIB-PATH'},
     
     'ldf'      : {'version' : 'v06-02-00',
-                  'includes' : ['LDFversion.h'],
+                  'includes' : ['LDFversion.h', 'EBFeventIterator.h'],
                   'libraries' : {'ldfLibs' : ['ldf']},
                   'include-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
@@ -104,15 +104,56 @@ externalLibraries = {
                   'ld-path' : '$LIB-PATH'},
     
     'extFiles' : {'version' : 'v0r7',
-                  'cppdefines' : ['extFiles=$VERSION']}
-}
+                  'cppdefines' : ['extFiles=$VERSION']},
 
+    'obf'      :{'version' : 'B1-1-3',
+                  'includes' : ['CAB/CAB_asBuiltPub.h', 'EFC_DB/EFC_DB_mode.h'],
+                  'libraries' : {'obfLibs' : ['cdm','cmx_asBuilt',
+					                                                                   'lser',
+					                                                                   'mdb',
+					                                                                   'zlib_inflate',
+					                                                                   'zlib_compress',
+					                                                                   'pbs',
+					                                                                   'fbs_rtos',
+					                                                                   'fbs_swap',
+					                                                                   'eds',
+					                                                                   'ebfio',
+					                                                                   'efc',
+					                                                                   'asc',
+					                                                                   'imm',
+					                                                                   'msg_mt',
+					                                                                   'msg_st',
+					                                                                   'itc',
+					                                                                   'ccsds_pkt',
+					                                                                   'ccsds_swap',
+					                                                                   'lcbd',
+					                                                                   'trace',
+					                                                                   'ths',
+					                                                                   'lem',
+					                                                                   'lem_lists',
+					                                                                   'cpu_db_server',
+					                                                                   'lem_db_server']},
+                  'include-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
+                  'lib-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
+                  'ld-path' : '$LIB-PATH'},
+   
+    'OmniOrb'  :{'version' : '4.1.2',
+                  'includes' : ['omniconfig.h'],
+                  'libraries' : {'OmniOrbLibs' : ['']},
+		  'include-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
+                  'lib-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
+                  'ld-path' : '$LIB-PATH'}
+}
 ##############################################################
 # Override above default values for platform specific values #
 ##############################################################
+if baseEnv['PLATFORM'] != "win32":
+	externalLibraries['OmniOrb']['libraries']['OmniOrbLibs']=['omniDynamic4','omniORB4','omnithread']    
+
+							    
 if baseEnv['PLATFORM'] == "win32":
     externalLibraries['ldf']['cppdefines'] = ['_WIN32_LDF_STATIC']
-
+    externalLibraries['OmniOrb']['libraries']['OmniOrbLibs']=['omniDynamic4d','omnithreadd','omniORB4d']
     externalLibraries['geant4']['lib-path'] = os.path.join(os.path.dirname(externalLibraries['geant4']['lib-path']), 'WIN32-VC')
     externalLibraries['geant4']['libraries']['geant4Libs'] = [ 'libG4readout', 'libG4run', 'libG4event', 'libG4tracking', 'libG4processes',
                                                                'libG4digits_hits', 'libG4track', 'libG4particles', 'libG4geometry',
@@ -151,6 +192,7 @@ if baseEnv['PLATFORM'] == "win32":
     externalLibraries['python']['include-path']=os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER', 'include')
     externalLibraries['python']['lib-path']  = os.path.join('$GLAST_EXT','$NAME','$VERSION','$COMPILER', 'libs')
     externalLibraries['python']['libraries']['pythonLibs'] = ['python25']
+    externalLibraries['obf']['libraries']['obfLibs']=['flight_cdm', 'cmx_asBuilt', 'lser','eds', 'ebfio', 'efc']
     
 ############################################################################
 # Set the correct compiler version, name, and library version in the paths #
@@ -254,7 +296,7 @@ if baseEnv.GetOption('rm'):
 for lib in externalLibraries.keys():
     if 'libraries' in externalLibraries[lib]:
         for libGroup in externalLibraries[lib]['libraries'].keys():
-            baseEnv[libGroup] = externalLibraries[lib]['libraries'][libGroup]
+		baseEnv[libGroup] = externalLibraries[lib]['libraries'][libGroup]
     if 'cppdefines' in externalLibraries[lib]:
         for define in externalLibraries[lib]['cppdefines']:
             if baseEnv.GetOption('GLAST-EXT'):
@@ -276,11 +318,11 @@ if not baseEnv.GetOption('help') and not baseEnv.GetOption('clean'):
         if 'libraries' in externalLibraries[lib] and 'lib-path' in externalLibraries[lib]:
             for libGroup in externalLibraries[lib]['libraries'].keys():
                 for library in reversed(externalLibraries[lib]['libraries'][libGroup]):
-                    if not conf.CheckLib(library, language = 'C++'):
-                        print 'Unable to find a library for '+lib+'. See config.log for more details.'
-                        Exit(1)
+			if not conf.CheckLib(library, language = 'C++'):
+                        	print 'Unable to find a library for '+lib+'. See config.log for more details.'
+				if lib != 'obf':
+                        		Exit(1)
     conf.Finish()
-
 ############################
 # Set up rootcint for ROOT #
 ############################
