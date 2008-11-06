@@ -444,7 +444,7 @@ StatusCode EvtValsTool::calculate()
 	// Vtx kinematic variable:  angle * event energy / Track_1 energy fraction
     float vtxAngle;
     if (m_pVtxTool->getVal("VtxAngle", vtxAngle, nextCheck).isSuccess()) {
-        if (tkr1ConE>0.0) EvtVtxKin = vtxAngle*EvtEnergyCorr/EvtTkr1EFrac;
+        if (EvtTkr1EFrac>0.0) EvtVtxKin = vtxAngle*EvtEnergyCorr/EvtTkr1EFrac;
     }
 
 	// Vtx angle x event energy  ~ constant
