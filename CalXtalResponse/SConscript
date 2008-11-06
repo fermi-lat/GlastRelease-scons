@@ -10,11 +10,19 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('CalXtalResponseLib', depsOnly = 1)
 
-CalXtalResponse = libEnv.SharedLibrary('CalXtalResponse', listFiles(['src/*.cxx','src/CalCalib/*.cxx','src/CalDigi/*.cxx','src/CalRecon/*.cxx',
-                                       'src/CalRecon/*.cxx','src/CalTuple/*.cxx','src/CalFailureMode/*.cxx','src/xtalk/*.cxx']))
+CalXtalResponse = libEnv.SharedLibrary('CalXtalResponse', listFiles(['src/*.cxx',
+					'src/CalCalib/*.cxx',
+					'src/CalDigi/*.cxx',
+					'src/CalRecon/*.cxx',
+                                        'src/CalTuple/*.cxx',
+					'src/CalFailureMode/*.cxx',
+					'src/Xtalk/*.cxx',
+					'src/CalTrig/*.cxx',
+					'src/Dll/*.cxx']))
 
 progEnv.Tool('CalXtalResponseLib')
 test_CalXtalResponse = progEnv.GaudiProgram('test_CalXtalResponse', listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'CalXtalResponse', libraries = [CalXtalResponse], testApps = [test_CalXtalResponse], includes = listFiles(['CalXtalResponse/*.h']))
+progEnv.Tool('registerObjects', package = 'CalXtalResponse', libraries = [CalXtalResponse], testApps = [test_CalXtalResponse], 
+	includes = listFiles(['CalXtalResponse/*.h']))
 
