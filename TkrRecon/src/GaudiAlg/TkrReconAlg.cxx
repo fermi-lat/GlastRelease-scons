@@ -27,9 +27,10 @@
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "LdfEvent/EventSummaryData.h"
 #include "TkrRecon/Services/TkrInitSvc.h"
-#include "Track/TkrGhostTool.h"
 
-#include "GaudiKernel/Algorithm.h"
+#include "TkrUtil/ITkrGhostTool.h"
+
+#include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
