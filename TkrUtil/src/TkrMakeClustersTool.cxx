@@ -236,7 +236,7 @@ StatusCode TkrMakeClustersTool::makeClusters(
                     //}
                     pClus->push_back(cl);
                     nclusters++;
-                    (*clusMap)[hitId].push_back(cl);
+                    if(clusMap!=0) (*clusMap)[hitId].push_back(cl);
                     // for tests
                     //std::cout << rawToT << " " << ToT << std::endl;
                 } 

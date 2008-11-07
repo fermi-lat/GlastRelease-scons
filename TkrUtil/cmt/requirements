@@ -13,6 +13,7 @@ use CalibData    v*
 use CalibSvc     v*
 use G4Propagator v*
 use xmlBase      v*
+use LdfEvent     v*
 
 apply_pattern packageShr
 

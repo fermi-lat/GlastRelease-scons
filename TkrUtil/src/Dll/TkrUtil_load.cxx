@@ -23,6 +23,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_ALGORITHM ( TkrCalibAlg      );
 
     DECLARE_TOOL(    TkrFlagHitsTool     );
+    DECLARE_TOOL(    TkrGhostTool        );
 } 
 
 
