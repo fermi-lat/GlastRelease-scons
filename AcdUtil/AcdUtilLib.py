@@ -6,6 +6,7 @@ def generate(env, **kw):
     env.Tool('CalibDataLib')
     env.Tool('geometryLib')
     env.Tool('xmlBaseLib')
-
+    env.Tool('EventLib')
+    env.Tool('GlastSvcLib')
 def exists(env):
     return 1;
