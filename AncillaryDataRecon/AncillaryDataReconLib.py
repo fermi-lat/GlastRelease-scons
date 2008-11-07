@@ -6,5 +6,9 @@ def generate(env, **kw):
     env.Tool('CalibDataLib')
     env.Tool('AncillaryDataEventLib')
     env.Tool('AncillaryDataUtilLib')
+    env.Tool('AdfReaderLib')
+    env.Tool('addLibrary', library = env['rootLibs'])
+    env.Tool('addLibrary', library = env['rootGuiLibs'])
+    env.Tool('addLibrary', library = env['clhepLibs'])
 def exists(env):
     return 1;
