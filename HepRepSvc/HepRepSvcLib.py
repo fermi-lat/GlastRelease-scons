@@ -5,6 +5,6 @@ def generate(env, **kw):
     env.Tool('CalUtilLib')
     env.Tool('CalibDataLib')
     env.Tool('GlastSvcLib')
-
+    env.Tool('AcdUtilLib')
 def exists(env):
     return 1;
