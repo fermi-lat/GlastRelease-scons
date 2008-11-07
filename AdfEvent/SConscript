@@ -15,4 +15,7 @@ AdfEvent = libEnv.StaticLibrary('AdfEvent',listFiles(['src/*.cxx']))
 progEnv.Tool('AdfEventLib')
 test_AdfEvent = progEnv.Program('test_AdfEvent', ['src/test/testMain.cxx'])
 
-progEnv.Tool('registerObjects', package = 'AdfEvent', libraries = [AdfEvent], testApps = [test_AdfEvent], includes = listFiles(['AdfEvent/*.h']))
+progEnv.Tool('registerObjects', package = 'AdfEvent',
+             libraries = [AdfEvent],
+             testApps = [test_AdfEvent],
+             includes = listFiles(['AdfEvent/*.h']))
