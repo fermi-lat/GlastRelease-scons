@@ -30,7 +30,7 @@ namespace ldfReader {
 //        virtual int EBF(const EBFevent *start, const EBFevent *end);
 
         unsigned int iterate2(const unsigned char* buf, unsigned int len, 
-                              bool swap=!DFC_BIG_ENDIAN);
+                              bool swap=DFC_BIG_ENDIAN);
 
 //        virtual unsigned int status() { return 0; } //EBFeventIterator.status(); };
 

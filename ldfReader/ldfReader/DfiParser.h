@@ -11,7 +11,8 @@
 #include "lsfData/LsfCcsds.h"
 #include "eventFile/EBF_Data.h"
 
-#include "../src/iterators/LdfDataParser.h"
+//#include "../src/iterators/LdfDataParser.h"
+#include "../src/iterators/EbfDataParser.h"
 
 #include <vector>
 
@@ -79,7 +80,7 @@ namespace ldfReader {
 
         EBFevent *m_end, *m_start;
 
-        LdfDataParser m_dataParser;
+        EbfDataParser m_dataParser;
 
         lsfData::LsfCcsds   m_ccsds;
         lsfData::MetaEvent  m_meta;

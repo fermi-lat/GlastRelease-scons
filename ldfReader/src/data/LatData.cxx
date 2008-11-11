@@ -146,6 +146,7 @@ namespace ldfReader {
             foundFirst = true;
         }
 
+
         if ( (getAem().exist()) && !foundFirst) {
             firstEvtSeq = getAem().summary().eventSequence(); 
             foundFirst = true;
@@ -154,6 +155,7 @@ namespace ldfReader {
                       << getAem().summary().eventSequence() << std::endl;
             return false;
         }
+
 
         if ( (getOsw().exist()) && !foundFirst ){
             firstEvtSeq = getOsw().summary().eventSequence();
@@ -178,6 +180,7 @@ namespace ldfReader {
                 return false;
             }
         }
+
 
         // Assuming ADF will not be the only or first contribution found
         // ADF event number will be one more than EBF contributions
