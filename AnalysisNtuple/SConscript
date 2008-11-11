@@ -16,7 +16,6 @@ libEnv.AppendUnique(CPPDEFINES = ['__i386'])
 libEnv.AppendUnique(CPPDEFINES = ['EFC_FILTER'])
 libEnv.AppendUnique(CPPDEFINES= ['f2cFortran'])
 libEnv.AppendUnique(FORTRANFLAGS = ['-Wno-globals'])
-ctype_fix=tempEnv.Object(target = 'ctype_fix.o', source = ['src/flux_c_type_fix.cxx'])
 
 if baseEnv['PLATFORM'] != 'win32':
 	libEnv.AppendUnique(CPPDEFINES = ['MSG_ST'])
