@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 @verbatim
 
+v4r8    12-Nov-2008 LSR New method to set tkrVector
 v4r7    30-Jul-2008 HMK Handle new compressionLevel and compressedSize
 v4r6    27-Jul-2008 HMK Upgrade to new CHS/eventFile 
 v4r5    12-Jun-2008 HMK Add mootKey member to MetaEvent
