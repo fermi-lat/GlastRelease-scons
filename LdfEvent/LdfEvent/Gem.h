@@ -199,6 +199,8 @@ private:
                          unsigned short missed,
                          const GemTileList &tileList);
 
+        void setTkrVector( unsigned short tkr);
+
         void initSummary(unsigned liveTime, unsigned prescaled, 
                          unsigned discarded, GemDataCondArrivalTime condArr,
                          unsigned triggerTime, const GemOnePpsTime &time, 
@@ -264,7 +266,8 @@ private:
                   unsigned short calLE, unsigned short calHE, 
                   unsigned short cno, unsigned short conditionSummary, 
                   unsigned short missed,
-                  const GemTileList &tileList) {
+                  const GemTileList &tileList) 
+   {
         m_tkrVector = tkr;
         m_roiVector = roi;
         m_cal_LE_Vector = calLE;
@@ -273,7 +276,12 @@ private:
         m_conditionSummary = conditionSummary;
         m_missed = missed;
         m_tileList = tileList;
-    }
+   }
+
+   inline void Gem::setTkrVector( unsigned short tkr)
+   {
+       m_tkrVector = tkr;
+   }
 
 /*
     inline void Gem::initSummary(unsigned liveTime, unsigned prescaled, 
