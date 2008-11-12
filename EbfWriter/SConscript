@@ -21,4 +21,4 @@ if baseEnv['PLATFORM'] != 'win32':
 
 if baseEnv['PLATFORM'] == 'win32':
 	progEnv.Tool('registerObjects', package = 'EbfWriter', libraries = [EbfWriter], testApps = [test_EbfWriter], 
-	includes = listFiles(['EbfWriter/*.h']))
+	includes = listFiles(['EbfWriter/*.h', 'src/*.h']))
