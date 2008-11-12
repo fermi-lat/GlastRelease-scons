@@ -10,7 +10,7 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('DetDisplayLib', depsOnly = 1)
 
-DetDisplay = libEnv.SharedLibrary('DetDisplay', listFiles(['src/*.cxx']) + listFiles(['src/Dll/*.cxx']))
+DetDisplay = libEnv.SharedLibrary('DetDisplay', listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 progEnv.Tool('DetDisplayLib')
 progEnv.Tool('GuiSvcLib')
@@ -23,4 +23,4 @@ if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(LINKFLAGS=['/include:_GuiSvc_loadRef'])
 	progEnv.AppendUnique(LINKFLAGS=['/subsystem:windows'])  #from macro guiapp_linkopts in ../gui/cmt/requirements
 
-progEnv.Tool('registerObjects', package = 'DetDisplay', libraries = [DetDisplay], includes = ['DetDisplay/IDetDisplay.h'])
+progEnv.Tool('registerObjects', package = 'DetDisplay', libraries = [DetDisplay])
