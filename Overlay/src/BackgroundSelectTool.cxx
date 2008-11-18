@@ -168,7 +168,7 @@ StatusCode BackgroundSelectTool::finalize ()
 {
     StatusCode  status = StatusCode::SUCCESS;
 
-    delete m_fetch;
+    // note that m_fetch is deleted in the destructor!
 
     return status;
 }
