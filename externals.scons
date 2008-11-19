@@ -107,32 +107,11 @@ externalLibraries = {
                   'cppdefines' : ['extFiles=$VERSION']},
 
     'obf'      :{'version' : 'B1-1-3',
-                  'includes' : ['CAB/CAB_asBuiltPub.h', 'EFC_DB/EFC_DB_mode.h'],
-                  'libraries' : {'obfLibs' : ['cdm','cmx_asBuilt',
-					                                                                   'lser',
-					                                                                   'mdb',
-					                                                                   'zlib_inflate',
-					                                                                   'zlib_compress',
-					                                                                   'pbs',
-					                                                                   'fbs_rtos',
-					                                                                   'fbs_swap',
-					                                                                   'eds',
-					                                                                   'ebfio',
-					                                                                   'efc',
-					                                                                   'asc',
-					                                                                   'imm',
-					                                                                   'msg_mt',
-					                                                                   'msg_st',
-					                                                                   'itc',
-					                                                                   'ccsds_pkt',
-					                                                                   'ccsds_swap',
-					                                                                   'lcbd',
-					                                                                   'trace',
-					                                                                   'ths',
-					                                                                   'lem',
-					                                                                   'lem_lists',
-					                                                                   'cpu_db_server',
-					                                                                   'lem_db_server']},
+		 'includes' : ['CAB/CAB_asBuiltPub.h', 'EFC_DB/EFC_DB_mode.h'],
+		 'libraries' : {'obfLibs' : ['cdm','cmx_asBuilt', 'lser', 'mdb', 'zlib_inflate', 'zlib_compress',
+					     'pbs', 'fbs_rtos', 'fbs_swap', 'eds', 'ebfio', 'efc', 'asc', 'imm',
+					     'msg_mt', 'msg_st', 'itc', 'ccsds_pkt','ccsds_swap', 'lcbd', 'trace',
+					     'ths', 'lem', 'lem_lists', 'cpu_db_server', 'lem_db_server']},
                   'include-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'include'),
                   'lib-path' : os.path.join('$GLAST_EXT', '$NAME', '$VERSION', '$COMPILER', 'lib'),
                   'ld-path' : '$LIB-PATH'},
@@ -370,5 +349,5 @@ if baseEnv['PLATFORM'] == "win32":
 ##############
 baseEnv.PrependENVPath('PATH', [externalLibraries['swig']['bin-path']])
 baseEnv.Tool('swig')
-baseEnv.AppendUnique(SWIGPATH = [os.path.join(externalLibraries['swig']['include-path'], 'python'), externalLibraries['swig']['include-path'], baseEnv['INCDIR'], '.'])
+baseEnv.AppendUnique(SWIGPATH = [baseEnv['CPPPATH'], os.path.join(externalLibraries['swig']['include-path'], 'python'), externalLibraries['swig']['include-path'], baseEnv['INCDIR'], '.'])
 baseEnv.AppendUnique(SWIGFLAGS = ['-w401', '-w402', '-w503', '-w362', '-w389', '-w509', '-python', '-c++'])
