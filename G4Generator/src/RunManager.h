@@ -119,7 +119,6 @@ class RunManager
              double defaultCutValue, 
              double defaultTkrCutValue,
              double defaultCalCutValue,
-             double defaultHeCutValue,
              std::string& physics_choice, 
              std::string& physics_table,
              std::string&  physics_dir,
@@ -218,10 +217,6 @@ class RunManager
 
     /// Keep the geometry service for now
     IG4GeometrySvc* m_gsv;
-
-    /// he cuts
-
-    G4double HeCutValue;
 
   public:
     virtual void StoreRandomNumberStatus(G4int eventID=-1);

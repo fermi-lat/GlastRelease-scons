@@ -28,8 +28,7 @@
 typedef HepGeom::Point3D<double>  HepPoint3D;
 typedef HepGeom::Vector3D<double> HepVector3D;
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(G4double HeCut)
-  : HeCutValue(HeCut)
+PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
   
   // A new Geant4 particle gun is created (with just one particle to be
@@ -65,7 +64,7 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     // Inputs: ppsvc is the pointer to the IParticlePropertySvc
     // Inputs: dz is an optional z offset of the particle, to match LAT offset
         
-    // Count the number of particles inputs
+    // Count the number of particles input
 
     // First particle is the "generator" particle... 
     // This particle defines the event vertex
@@ -73,36 +72,9 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     HepPoint3D         primVtxPos = primary->initialPosition();
 
     // Look for sources with energy over the limit
-    double maxAllowedEnergy = 20001000.; // Temporary until I remember how to extract this from G4!
-    //    double minAllowedEnergy = 101000.; // Temporary until I remember how to extract this from G4!
-
-    G4double minAllowedEnergy = HeCutValue;
-
-    Event::McParticle::StdHepId hepid   = primary->particleProperty();
-    double particle_nucleon;
-
-    if (isIon(hepid))
-      {
-	particle_nucleon = (double) (hepid - 1e9)/1e6;
-	//	G4cout << "particle nucleon " << particle_nucleon <<  " ion" << G4endl;
-      }
-    else
-      {
-	ParticleProperty* ppty = ppsvc->findByStdHepID( hepid );
-	G4ParticleDefinition* partDef = G4ParticleTable::GetParticleTable()->FindParticle(ppty->pdgID());
-	particle_nucleon =  (double) (abs (partDef->GetPDGCharge()));
-	if (particle_nucleon == 0) particle_nucleon = 1;
-	//G4cout << "charge " << partDef->GetPDGCharge() << " particle nucleon " << particle_nucleon <<  " particle" << G4endl;
-      }
-
-    //    double rigidity = (primary->initialFourMomentum().e())/particle_nucleon;
-    //    G4cout << "rigidity " << rigidity << " " << primary->initialFourMomentum().e() << G4endl;
-    //G4cout << "min " << minAllowedEnergy << "max " << maxAllowedEnergy << G4endl; 
-
-    double rigidity = (primary->initialFourMomentum().e());
-    if ((rigidity > maxAllowedEnergy) || ( rigidity < minAllowedEnergy))
+    double maxAllowedEnergy = 5001000.; // Temporary until I remember how to extract this from G4!
+    if (primary->initialFourMomentum().e() > maxAllowedEnergy)
     {
-      //      G4cout << "ci sono" << G4endl;
         std::stringstream errorStr(" ");
         errorStr << "PrimaryGeneratorAction found energy over maximum allowed: " 
             << primary->initialFourMomentum().e() << ", source: "  

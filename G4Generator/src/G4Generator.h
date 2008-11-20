@@ -89,10 +89,6 @@ class G4Generator : public Algorithm {
   /// for material printout
   BooleanProperty m_printRadLen;
 
-  /// cut in energy
-  
-  DoubleProperty m_defaultHeCut;
-
 };
 
 #endif

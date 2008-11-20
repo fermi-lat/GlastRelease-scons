@@ -16,7 +16,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "SVC='DbEvtSelector'";
 
 // Stuff for detModel
-GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // select one of the following for a top volume 
@@ -66,7 +66,6 @@ G4Generator.mcTreeMode = "pruneCal";
 //G4Generator.physics_choice = "LowEnergy";
 G4Generator.physics_choice = "GLAST";
 G4Generator.defaultCutValue= 0.7;		
-G4Generator.he_cut=100000;
 G4Generator.physics_tables = "store";	
 G4Generator.physics_dir = "G4cuts/700micron";
 
