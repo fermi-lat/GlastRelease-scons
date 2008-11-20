@@ -72,7 +72,7 @@ void PrimaryGeneratorAction::init(Event::McParticleCol* pcol, IParticlePropertyS
     HepPoint3D         primVtxPos = primary->initialPosition();
 
     // Look for sources with energy over the limit
-    double maxAllowedEnergy = 5001000.; // Temporary until I remember how to extract this from G4!
+    double maxAllowedEnergy = 20001000.; // Temporary until I remember how to extract this from G4!
     if (primary->initialFourMomentum().e() > maxAllowedEnergy)
     {
         std::stringstream errorStr(" ");
