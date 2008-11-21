@@ -119,7 +119,7 @@ int main()
   vIdCal.append(xNum);        // xnum
   vIdCal.append(0);        // towerObject = Calorimeter
   vIdCal.append(layer);        // layer
-  vIdCal.append(0);        // orientation
+  vIdCal.append(1);        // orientation. In real LAT layer 5 is y-measuring
   vIdCal.append(column);       // column
 
   std::cout << "Value of vIdCal.isAcd() is " << vIdCal.isAcd() 
@@ -154,6 +154,9 @@ int main()
   }
   else {
     std::cout << "Built CalXtalId properly from vIdCal" << std::endl;
+    idents::VolumeIdentifier* loopVid = xtalOk.makeVolumeId();
+    std::cout << "Original vIdCal has name " << vIdCal.name() << std::endl;
+    std::cout << "loop vid has name " << loopVid->name() << std::endl;
   }
   
   try {

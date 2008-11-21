@@ -9,9 +9,9 @@
  *
  * @brief This class encapsulates volume identifiers.
  *
- * This class encapsulates volume identifiers defined in the xml files describing 
- * the detector. The volume identifiers are transformed into a 64 bit integer for 
- * efficiency purpose.
+ * This class encapsulates volume identifiers defined in the xml files 
+ * describing the detector. The volume identifiers are transformed into a 
+ * 64 bit integer for efficiency purpose.
  *  
  * @author Toby Burnett
  * @author Marco Frailis
@@ -34,9 +34,9 @@ public:
     VolumeIdentifier();
 
     /** 
-     * This method initialize the VolumeIdentifier with a 64 bit integer and a size
-     * and is used by the overloaded operator<< to build an identifier reading from
-     * a persistent data store
+     * This method initialize the VolumeIdentifier with a 64 bit integer 
+     * and a size and is used by the overloaded operator<< to build an 
+     * identifier reading from a persistent data store
      */
     void init(int64 , unsigned int); 
 
