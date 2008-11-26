@@ -3,6 +3,7 @@
 @verbatim
     $Id$
 
+ v1r4p0 25-Nov-08 TU  Tag to include LPM effect but leave alpha interactions off (from Franz)
  v1r3p0  8-May-08 TU  Mods to turn off LPM effect in em physics
  v1r2p0 20-Sep-07 MK  fix bug in alongStep of LowEnergyBrem
  v1r2   14-Aug-07 TU  Update as per Francesco Longo...
