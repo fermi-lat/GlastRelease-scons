@@ -4,7 +4,6 @@
 #include <map>
 
 #include "GaudiKernel/ConversionSvc.h"
-#include "IEventCnvSvc.h"
 
 template <class TYPE> class SvcFactory;
 
@@ -19,14 +18,9 @@ template <class TYPE> class SvcFactory;
  * $Header$
  */
 
-class EventCnvSvc  : virtual public ConversionSvc, virtual public IEventCnvSvc	{
+class EventCnvSvc  : virtual public ConversionSvc	{
 
   friend class SvcFactory<EventCnvSvc>;
-
-  /// Map with leaf entries
-  typedef std::map<std::string, Leaf*> LeafMap;
-  LeafMap m_leaves;
-
 
 public:
 
@@ -38,9 +32,6 @@ public:
 
   /// Override inherited queryInterface due to enhanced interface
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
-
-  /// Associates a path on TDS with a particular converter
-  virtual StatusCode declareObject(const IEventCnvSvc::Leaf& leaf);
 
   /** IAddressCreator implementation: Address creation.
     Create an address using the link infotmation together with

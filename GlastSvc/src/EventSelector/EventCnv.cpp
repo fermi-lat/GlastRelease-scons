@@ -1,50 +1,100 @@
 // File and Version Information:
-//      $Header$
+// $Header$
 //
 // Description:
-//      EventCnv is the concrete converter for the event header on the TDS /Event
-//
-// Author(s):
+// Concrete converter for the McEvent header on the TDS /Event/MC
 
-#define EVENTCNV_CPP 
+#define CNV_EventCnv_CPP 
 
-#include "GaudiKernel/RegistryEntry.h"
-#include "EventCnv.h"
+#include "GaudiKernel/Converter.h"
+#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 
+#include "GlastSvc/EventSelector/IGlastCnv.h"
+
+#include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
+
+class  EventCnv : virtual public IGlastCnv, public Converter 
+{
+public:
+
+    /**
+        Constructor for this converter
+        @param svc a ISvcLocator interface to find services
+        @param clid the type of object the converter is able to convert
+    */
+    EventCnv(ISvcLocator* svc);
+
+    virtual ~EventCnv();
+
+    /// Query interfaces of Interface
+    //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    static const CLID&         classID()     {return CLID_Event;}
+    static const unsigned char storageType() {return SICB_StorageType;}
+
+    /// Initialize the converter
+    virtual StatusCode initialize();
+
+    /// Initialize the converter
+    virtual StatusCode finalize();
+
+    /// Retrieve the class type of objects the converter produces. 
+    virtual const CLID& objType() const {return CLID_Event;}
+
+    /// Retrieve the class type of the data store the converter uses.
+    // MSF: Masked to generate compiler error due to interface change
+    virtual long repSvcType() const {return Converter::i_repSvcType();}
+
+    /// Create the transient representation of an object.
+    virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
+
+    /// Methods to set and return the path in TDS for output of this converter
+    virtual void setPath(const std::string& path) {m_path = path;}
+    virtual const std::string& getPath() const    {return m_path;}
+
+private:
+
+    std::string m_path;
+
+};
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 static CnvFactory<EventCnv> s_factory;
 const ICnvFactory& EventCnvFactory = s_factory;
 
-EventCnv::EventCnv(ISvcLocator* svc)
-: BaseCnv(classID(), svc)
+ EventCnv::EventCnv( ISvcLocator* svc) : Converter (SICB_StorageType, CLID_Event, svc) 
 {
-    // Here we associate this converter with the /Event path on the TDS.
-    declareObject("/Event", objType(), "PASS");
+    m_path="/Event";
+
+    return;
 }
 
+EventCnv::~EventCnv() 
+{
+    return;
+}
 
-StatusCode EventCnv::createObj(IOpaqueAddress* pAddress, 
-                               DataObject*& refpObject) {
-    // Purpose and Method:  This converter will create an empty EventHeader on
-    //   the TDS.
+StatusCode EventCnv::initialize() 
+{
+    StatusCode status = Converter::initialize();
+
+    return status;
+}
+
+StatusCode EventCnv::finalize() 
+{
+    return Converter::finalize();
+}
+
+// (To TDS) Conversion stuff
+StatusCode EventCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+{
+    StatusCode ret = StatusCode::SUCCESS;
+
     refpObject = new Event::EventHeader();
-    return StatusCode::SUCCESS;
-};
 
-StatusCode EventCnv::updateObj(int* iarray, Event::EventHeader* pEvent) {
-    // Purpose and Method:  This method does nothing other than announce it has
-    //   been called.
-
-    MsgStream log(msgSvc(), "EventCnv");
-    log << MSG::DEBUG << "EventCnv::updateObj" << endreq;
-    return StatusCode::SUCCESS;
-}
-
-const CLID& EventCnv::classID()
-{
-    return Event::EventHeader::classID();
+    return ret;
 }
