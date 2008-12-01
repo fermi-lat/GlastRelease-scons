@@ -1,0 +1,36 @@
+package OverlayEvent
+version v0r0p0
+
+author T.Usher <usher@slac.stanford.edu>
+
+branches OverlayEvent cmt doc src
+
+use geometry       v3r*
+use idents         v2r*
+use enums          v*
+use CLHEP          v3r* IExternal
+use GaudiInterface v*   IExternal 
+
+apply_pattern shared_library
+
+private
+
+apply_pattern package_headers
+
+macro_append OverlayEvent_headers "" WIN32 " \
+        ../OverlayEvent/*.h  
+
+library OverlayEvent \
+        -s=../src *.cpp        \
+        -s=../OverlayEvent *.h
+
+
+###  non-standard definition -- why is it needed?
+#macro GlastEvent_stamps   "${Event_root}/${BINDIR}/Event.stamp"
+
+# simple test program
+# use this when we want to make a Gaudi test program apply_pattern package_test
+
+application test_OverlayEvent    test/testmain.cxx
+
+# done?
