@@ -1,0 +1,29 @@
+package overlayRootData
+version v0r0p0
+
+author Tracy Usher <usher@slac.stanford.edu>
+# $Id$
+
+use RootcintPolicy v* GlastPolicy
+use commonRootData v2r*
+use enums v*
+
+# See RootPolicy for discussion of this pattern
+apply_pattern root_package headers="\
+ ../overlayRootData/AcdOverlay.h\
+ ../overlayRootData/CalOverlay.h\
+ ../overlayRootData/EventOverlay.h\
+ ../overlayRootData/GlastAxis.h\
+ ../overlayRootData/TkrOverlay.h"\
+ includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
+ libs="libcommonRootData"\
+ test_source="test/testOverlayClasses.cxx"
+
+private
+
+use facilities *
+apply_pattern use_facilities_symbols
+
+#application ReadFilterStats ../apps/ReadFilterStats.cxx
+
+

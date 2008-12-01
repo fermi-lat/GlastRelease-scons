@@ -1,0 +1,12 @@
+# Activate memory statistics (size and cnt is used to trap allocation of
+# blocks of a certain size after cnt times)
+Root.MemStat:            1
+Root.MemStat.size:      -1
+Root.MemStat.cnt:       -1
+Root.ObjectStat:         1
+
+# Activate memory leak checker (use in conjunction with $ROOTSYS/bin/memprobe)
+# Currently only works on Linux with gcc.
+Root.MemCheck:           1
+Root.MemCheckFile:       memcheck.out
+
