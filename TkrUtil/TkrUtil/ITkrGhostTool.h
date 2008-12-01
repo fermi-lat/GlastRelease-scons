@@ -36,9 +36,9 @@ public:
           (view==0 ? setXBit(layer) : setYBit(layer));
       }
 
-      int setXBit(int layer)  {m_xBits |= (1<<layer);}
+      void setXBit(int layer)  {m_xBits |= (1<<layer);}
 
-      int setYBit(int layer)  {m_yBits |= (1<<layer);}
+      void setYBit(int layer)  {m_yBits |= (1<<layer);}
 
       bool isTriggered() {
           bool ret = true;
