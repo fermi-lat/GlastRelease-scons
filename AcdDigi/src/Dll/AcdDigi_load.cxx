@@ -11,7 +11,6 @@
 DECLARE_FACTORY_ENTRIES(AcdDigi) {
     DECLARE_ALGORITHM( AcdDigiAlg );
     DECLARE_ALGORITHM( AcdDigiOrgAlg );
-    DECLARE_ALGORITHM( AcdDigiMergeAlg );
     DECLARE_TOOL( AcdDigiRandom );
 } 
 
