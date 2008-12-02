@@ -143,12 +143,8 @@ StatusCode CalOverlayMergeAlg::execute()
     for(Event::McIntegratingHitCol::iterator calIter = calMcHitCol->begin(); calIter != calMcHitCol->end(); calIter++)
     {
         Event::McIntegratingHit*calMcHit = *calIter;
-//        const idents::CalXtalId calXtalId(calMcHit->volumeID());
-
-//        const idents::VolumeIdentifier tempId = calMcHit->volumeID();
 
         // Add this McIntegratingHit to our map
-//        idToMcHitMap[calXtalId] = calMcHit;
         idToMcHitMap[calMcHit->volumeID()] = calMcHit;
     }
 
@@ -178,9 +174,8 @@ StatusCode CalOverlayMergeAlg::execute()
         {
             Event::McIntegratingHit* newMcHit = new Event::McIntegratingHit();
 
-//            idents::VolumeIdentifier id = makeVolId(overId);
-
             newMcHit->setVolumeID(overId);
+            newMcHit->setPackedFlags(Event::McIntegratingHit::overlayHit);
             newMcHit->addEnergyItem(calOverlay->getEnergy(), particle, calOverlay->getPosition());
 
             calMcHitCol->push_back(newMcHit);
@@ -190,6 +185,7 @@ StatusCode CalOverlayMergeAlg::execute()
         {
             Event::McIntegratingHit* mcHit = calIter->second;
 
+            mcHit->addPackedMask(Event::McIntegratingHit::overlayHit);
             mcHit->addEnergyItem(calOverlay->getEnergy(), particle, calOverlay->getPosition());
         }
     }

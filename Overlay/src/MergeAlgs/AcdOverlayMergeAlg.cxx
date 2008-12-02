@@ -189,7 +189,13 @@ StatusCode AcdOverlayMergeAlg::execute()
             // Create a new McPositionHit for this 
             Event::McPositionHit* mcHit = new Event::McPositionHit();
 
-            mcHit->init(energyDep, volumeId, locEntryPoint, locExitPoint, entryPoint, exitPoint);
+            mcHit->init(energyDep, 
+                        volumeId, 
+                        locEntryPoint, 
+                        locExitPoint, 
+                        entryPoint, 
+                        exitPoint, 
+                        Event::McPositionHit::overlayHit);
 
             mcPosHitCol->push_back(mcHit);
         }
