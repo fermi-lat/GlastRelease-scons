@@ -78,10 +78,11 @@ int EbfDataParser::OSW_time(const EBFevent*            /*event*/,
 
 int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
 {
+    //(LATcontribution*) eventString = const_cast<LATcontribution*>event;
   if (event->identity().getPrimary() == Pri_Id_BtAncEvt) {
     if (EbfDebug::getDebug())
         printf("Found BtAncEvt, 0x%08X\n", event->identity().value());
-    unsigned char* buf = event->string(false);
+    const unsigned char* buf = (const_cast<LATcontribution*>(event))->string(false);
     int status = m_adf.parseEvent(buf);
 
     //unsigned int *h = &((unsigned int*)buf)[0];
@@ -98,7 +99,7 @@ int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
   } else if (event->identity().getPrimary() == Pri_Id_BtAncHdr) {
       if (EbfDebug::getDebug())
           printf("Found BtAncHdr, 0x%08X\n", event->identity().value());
-      unsigned char* buf = event->string(false);
+      const unsigned char* buf = (const_cast<LATcontribution*>(event))->string(false);
       int status = m_adf.parseHeader(buf);
 
       //unsigned int *h = &((unsigned int*)buf)[0];
@@ -110,7 +111,7 @@ int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
   } else if (event->identity().getPrimary() == Pri_Id_BtAncTlr) {
       if (EbfDebug::getDebug())
           printf("Found BtAncTlr, 0x%08X\n", event->identity().value());
-      unsigned char* buf = event->string(false);
+      const unsigned char* buf = (const_cast<LATcontribution*>(event))->string(false);
       int status = m_adf.parseTrailer(buf);
   } else {
       fprintf(stderr, "EbfDataParser::UDF: "
@@ -133,7 +134,7 @@ int EbfDataParser::UDF(const EBFevent* event, const EBFcontribution* contributio
 
 int EbfDataParser::GLT(const EBFevent* event, const EBFcontribution* ebf)
 {
-  const GLTcontribution *glt = ebf;
+  const GLTcontribution *glt = (const GLTcontribution*)ebf;
   //if (EbfDebug::getDebug())  printf("\nGLT:\n");
   ldfReader::LatData::instance()->setSummary(event->summary());
 
@@ -162,7 +163,7 @@ int EbfDataParser::GLT(const EBFevent* event, const EBFcontribution* ebf)
 
 int EbfDataParser::GEM(const EBFevent *event, const EBFcontribution *ebf_contribution) {
 
-    const GEMcontribution *contribution = ebf_contribution;
+    const GEMcontribution *contribution = (const GEMcontribution*) ebf_contribution;
     if (EbfDebug::getDebug())  printf("\nEbfDataParser::GEM:\n");
     ldfReader::GemData gem;
 
