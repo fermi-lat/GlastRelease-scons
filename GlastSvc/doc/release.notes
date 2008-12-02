@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ v9r27p2   2-Dec-2008 TU  Spell MCEvent correctly
  v9r27p1   2-Dec-2008 TU  Add in the conversion service interface
  v9r27p0   1-Dec-2008 TU  Small modification of converter stuff to allow use with Overlay
  v9r26p1  28-Jul-2008 THB tag change to avoid CMT-generated env var XMLGEODBSROOT
