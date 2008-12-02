@@ -13,7 +13,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 
 #include "Event/TopLevel/EventModel.h"
-#include "Event/Digi/Acddigi.h"
+#include "Event/Digi/AcdDigi.h"
 #include "Event/Recon/AcdRecon/AcdRecon.h"
 
 #include "OverlayEvent/OverlayEventModel.h"
