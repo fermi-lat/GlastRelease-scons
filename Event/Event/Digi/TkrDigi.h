@@ -47,17 +47,26 @@ namespace Event {
         typedef std::vector<int> HitList;
         typedef HitList::const_iterator const_iterator;
 
+        /// Status bit definitions
+        enum DigiStatusBits {
+             DIGI_NULL    = 0,
+             DIGI_MC      = 1<<28,   // This digi is from Monte Carlo
+             DIGI_DATA    = 1<<30,   // This digi is from data 
+             DIGI_OVERLAY = 1<<31    // This digi contains overlay info
+        };
+
         //! Constructors
         //! Null constructor
         TkrDigi() {};
 
         //! constructor with layer, tower and ToT, but with an empty list of strips
-        TkrDigi(int l, idents::GlastAxis::axis v, idents::TowerId t, int* tot) {
+        TkrDigi(int l, idents::GlastAxis::axis v, idents::TowerId t, int* tot, DigiStatusBits status=DIGI_NULL) {
             m_bilayer = l;
             m_view = v;
             m_tower = t;
             m_tot[0] = *tot;
             m_tot[1] = *(++tot);
+            m_status = status;
 
             m_lastController0Strip =  -1;
         };
@@ -144,14 +153,21 @@ namespace Event {
             if (it!=end()) erase(it);
         }
 
+        /// Retrieve the status word
+        inline unsigned int getStatus() const {return m_status;}
+
+        /// Allow status word to be modified
+        inline void setStatus(unsigned int status)       {m_status  = status;}
+        inline void addToStatus(DigiStatusBits bitToAdd) {m_status |= bitToAdd;}
+
     private:
 
-        idents::TowerId m_tower;
-        int m_bilayer;
+        idents::TowerId         m_tower;
+        int                     m_bilayer;
         idents::GlastAxis::axis m_view;
-        int m_tot[2];
-        int m_lastController0Strip;
-        //HitList m_hits;
+        int                     m_tot[2];
+        int                     m_lastController0Strip;
+        unsigned int            m_status;
     };
 
 

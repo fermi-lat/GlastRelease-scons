@@ -39,24 +39,34 @@ static const CLID& CLID_McIntegratingHit = InterfaceID("McIntegratingHit", 1, 0)
 
 namespace Event {  // NameSpace
 
-class McIntegratingHit : virtual public ContainedObject {
-  public:
+class McIntegratingHit : virtual public ContainedObject 
+{
+public:
+    /// This enumerative is used to aid in the fill of the m_energyArray member
+    enum Particle{primary,electron,positron,overlay};
+   
+    enum HitType {simulation = 0x40000000,
+                  overlayHit = 0x80000000 
+                 };
 
-  /// This enumerative is used to aid in the fill of the m_energyArray member
-  enum Particle{primary,electron,positron};
+    virtual const CLID& clID() const   { return McIntegratingHit::classID(); }
+    static const CLID& classID()       { return CLID_McIntegratingHit; }
 
-  virtual const CLID& clID() const   { return McIntegratingHit::classID(); }
-  static const CLID& classID()       { return CLID_McIntegratingHit; }
-  /// McParticle -> deposited energy map
-  // Here I needed to takeout SmartRef<McParticle> because the 
-  // template library was not giving a compile error.
-  typedef std::vector< std::pair<McParticle*, double> > energyDepositMap;
-  /// McParticleID -> deposited energy map
-  typedef std::vector< std::pair<McParticle::StdHepId, double> > energyDepositMapId;
+    /// McParticle -> deposited energy map
+    // Here I needed to takeout SmartRef<McParticle> because the 
+    // template library was not giving a compile error.
+    typedef std::vector< std::pair<McParticle*, double> > energyDepositMap;
+    /// McParticleID -> deposited energy map
+    typedef std::vector< std::pair<McParticle::StdHepId, double> > energyDepositMapId;
 
-    McIntegratingHit() : m_totalEnergy(0),m_moment1seed(0.),
-        m_moment2seed(0.),m_packedFlags(0)
-    {m_energyArray[0]=m_energyArray[1]=m_energyArray[2]=0;}
+    McIntegratingHit() : m_volumeID(),
+                         m_totalEnergy(0),
+                         m_moment1seed(0.),
+                         m_moment2seed(0.),
+                         m_packedFlags(simulation)
+    {
+        m_energyArray[0]=m_energyArray[1]=m_energyArray[2]=m_energyArray[3]=0;
+    }
 
     ~McIntegratingHit(){}
 
@@ -107,6 +117,11 @@ class McIntegratingHit : virtual public ContainedObject {
     /// Update whether this hit should be digitized
     void setNeedDigi( bool value );
 
+    /// Provide access to setting/retrieving the "packed flags"
+    unsigned long getPackedFlags() const {return m_packedFlags;}
+    void setPackedFlags(unsigned long flags) {m_packedFlags  = flags;}
+    void addPackedMask(unsigned long mask)   {m_packedFlags |= mask;}
+
     /// Serialize the object for reading
     virtual StreamBuffer& serialize( StreamBuffer& s );
     /// Serialize the object for writing
@@ -116,23 +131,22 @@ class McIntegratingHit : virtual public ContainedObject {
        
   private:
       /// Cell identifier
-      idents::VolumeIdentifier      m_volumeID;
+      idents::VolumeIdentifier m_volumeID;
       /// Vector of Energy information that consists of deposited energy and the mother McParticle
-      energyDepositMap              m_energyItem;
+      energyDepositMap         m_energyItem;
       /// Vector of Energy information that consists of deposited energy and the mother McParticleId
-      energyDepositMapId            m_energyItemId;
+      energyDepositMapId       m_energyItemId;
       /// total deposited energy: set automatically when m_energyInfo is modified.
-      double                        m_totalEnergy;
+      double                   m_totalEnergy;
       /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
-      HepPoint3D           m_moment1seed;
+      HepPoint3D               m_moment1seed;
       /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
-      HepPoint3D           m_moment2seed;
+      HepPoint3D               m_moment2seed;
       /// Packed flags for particle property
-      unsigned long                 m_packedFlags;
-
+      unsigned long            m_packedFlags;
       /// This is an array that holds energy contribution to the hit from the
-      /// primary particle, the electron and the postitron
-      double m_energyArray[3];
+      /// primary particle, the electron and the postitron, and the overlay contribution
+      double                   m_energyArray[4];
 };
 
 /// Serialize the object for writing
@@ -144,7 +158,7 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s ) const
       << m_totalEnergy
       << m_moment1seed
       << m_moment2seed
-//    << m_energyItem(this)	// The operator<< has not implemented yet. FIX ME!!
+//    << m_energyItem(this) // The operator<< has not implemented yet. FIX ME!!
       << m_energyItem.size();
     energyDepositMap::const_iterator it;
     for (it = m_energyItem.begin(); it != m_energyItem.end(); it++){
@@ -166,7 +180,7 @@ inline StreamBuffer& McIntegratingHit::serialize( StreamBuffer& s )
       >> m_totalEnergy
       >> m_moment1seed
       >> m_moment2seed
-//    >> m_energyItem(this)	// The operator<< has not implemented yet. FIX ME!!
+//    >> m_energyItem(this) // The operator<< has not implemented yet. FIX ME!!
       >> m_energyItem_size;
     m_energyItem.clear();
     energyDepositMap::size_type i;

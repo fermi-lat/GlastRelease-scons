@@ -49,12 +49,24 @@ namespace Event { // NameSpace
 
 class McPositionHit : virtual public ContainedObject {
   public:
+   
+      enum HitType {simulation = 0x40000000,
+                    overlayHit = 0x80000000 
+                   };
 
     virtual const CLID& clID() const   { return McPositionHit::classID(); }
     static const CLID& classID()       { return CLID_McPositionHit; }
+
     /// Constructors
     McPositionHit()
-      : m_depositedEnergy(0.),
+      : m_volumeID(),
+        m_entry(),
+        m_exit(),
+        m_globalEntry(),
+        m_globalExit(),
+        m_depositedEnergy(0.),
+        m_particleEnergy(0.),
+        m_particleFourMomentum(),
         m_timeOfFlight(0.),
         m_packedFlags(0)
     {}
@@ -62,12 +74,17 @@ class McPositionHit : virtual public ContainedObject {
     virtual ~McPositionHit() { }
 
     /// special set
-    void init(double edep, idents::VolumeIdentifier id, const HepPoint3D& entry, const HepPoint3D& exit);
+    void init(double edep, 
+              idents::VolumeIdentifier id, 
+              const HepPoint3D& entry, 
+              const HepPoint3D& exit, 
+              HitType hitType=simulation);
 
     /// init methods with both local and global coordinates
     void init(double edep, idents::VolumeIdentifier id, 
               const HepPoint3D& entry, const HepPoint3D& exit,
-              const HepPoint3D& gEntry, const HepPoint3D& gExit);
+              const HepPoint3D& gEntry, const HepPoint3D& gExit,
+              HitType hitType=simulation);
 
     /// Retrieve cell identifier
     idents::VolumeIdentifier volumeID() const;
@@ -158,7 +175,8 @@ class McPositionHit : virtual public ContainedObject {
 
     /// Provide access to setting/retrieving the "packed flags"
     unsigned long getPackedFlags() const {return m_packedFlags;}
-    void setPackedFlags(unsigned long flags) {m_packedFlags = flags;}
+    void setPackedFlags(unsigned long flags) {m_packedFlags  = flags;}
+    void addPackedMask(unsigned long mask)   {m_packedFlags |= mask;}
 
     /// Serialize the object for writing
     virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -184,37 +202,44 @@ class McPositionHit : virtual public ContainedObject {
     double                   m_particleEnergy;
     CLHEP::HepLorentzVector  m_particleFourMomentum;
     /// Time of flight
-    double                  m_timeOfFlight;
+    double                   m_timeOfFlight;
     /// ID of the McParticle causing the hit
-    McParticle::StdHepId    m_mcParticleId;
+    McParticle::StdHepId     m_mcParticleId;
     /// ID of the ancestor McParticle
-    McParticle::StdHepId    m_originMcParticleId;
+    McParticle::StdHepId     m_originMcParticleId;
     /// Pointer to McParticle causing the hit
-    SmartRef<McParticle>    m_mcParticle;
+    SmartRef<McParticle>     m_mcParticle;
     /// Pointer to the ancestor McParticle
-    SmartRef<McParticle>    m_originMcParticle;
+    SmartRef<McParticle>     m_originMcParticle;
     /// Packed flags for the internal use.
-    unsigned long           m_packedFlags;
+    unsigned long            m_packedFlags;
 };
 
-inline void McPositionHit::init(double edep, idents::VolumeIdentifier id, const HepPoint3D& entry, const HepPoint3D& exit)
+inline void McPositionHit::init(double edep, 
+                                idents::VolumeIdentifier id, 
+                                const HepPoint3D& entry, 
+                                const HepPoint3D& exit,
+                                HitType type)
 {
     m_depositedEnergy = edep;
-    m_volumeID=id;
-    m_entry = entry;
-    m_exit = exit;
+    m_volumeID        = id;
+    m_entry           = entry;
+    m_exit            = exit;
+    m_packedFlags     = type;
 }
 
 inline void McPositionHit::init(double edep, idents::VolumeIdentifier id, 
                                 const HepPoint3D& entry, const HepPoint3D& exit,
-                                const HepPoint3D& gEntry, const HepPoint3D& gExit)
+                                const HepPoint3D& gEntry, const HepPoint3D& gExit,
+                                HitType type)
 {
     m_depositedEnergy = edep;
-    m_volumeID=id;
-    m_entry = entry;
-    m_exit = exit;
-    m_globalEntry = gEntry;
-    m_globalExit = gExit;
+    m_volumeID        = id;
+    m_entry           = entry;
+    m_exit            = exit;
+    m_globalEntry     = gEntry;
+    m_globalExit      = gExit;
+    m_packedFlags     = type;
 }
 
 /// Serialize the object for writing

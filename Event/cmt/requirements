@@ -32,7 +32,7 @@ library Event \
         MonteCarlo/*.cxx \
         Recon/TkrRecon/*.cxx \
         Recon/CalRecon/*.cxx \
-	Recon/AcdRecon/*.cxx \
+	  Recon/AcdRecon/*.cxx \
         Digi/*.cxx \
         TopLevel/*.cpp \
         Utilities/*.cxx\
