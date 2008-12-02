@@ -14,7 +14,7 @@
 #include "GlastSvc/EventSelector/IGlastCnv.h"
 
 #include "Event/TopLevel/EventModel.h"
-#include "Event/TopLevel/McEvent.h"
+#include "Event/TopLevel/MCEvent.h"
 
 class  MCEventCnv : virtual public IGlastCnv, public Converter 
 {
