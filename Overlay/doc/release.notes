@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+ 1-Dec-08  v1r0p0  TU First "version 1" tag
 19-Nov-08  v0r0p2 LSR Fix bug in BackgroundSelectTool
 04-Nov-08  v0r0p1 Add "sequential" option to BackgroundSelectTool
                   xml for new PeriodicTrigger files: McIlwain_L_434K.xml
