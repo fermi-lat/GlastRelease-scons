@@ -219,34 +219,38 @@ StatusCode EventCnvSvc::updateServiceState(IOpaqueAddress* pAddress)
         // Find the list of possible daughter paths
         SubPathMap::iterator pathIter = m_subPathMap.find(path);
 
-        // Loop over the list of daughter paths
-        for(std::vector<std::string>::iterator subIter = pathIter->second.begin(); subIter != pathIter->second.end(); subIter++)
+        // Check to be sure something was found
+        if (pathIter != m_subPathMap.end())
         {
-            // Now look up the pointer to the converter
-            PathToCnvMap::iterator cnvIter  = m_pathToCnvMap.find(*subIter);
-            IGlastCnv*             glastCnv = cnvIter->second;
-
-            if (glastCnv->getPath() == path) continue;
-
-            if (glastCnv)
+            // Loop over the list of daughter paths
+            for(std::vector<std::string>::iterator subIter = pathIter->second.begin(); subIter != pathIter->second.end(); subIter++)
             {
-                IOpaqueAddress* newAddr = 0;
-                unsigned long ipars[2] = {0, 0}; //{(*il)->userParameter, new_rid};
-                const std::string spars[2] = {"", ""}; //{par[0], (*il)->bank};
-                StatusCode ir =
-            
-                addressCreator()->createAddress(SICB_StorageType, 
-                                                glastCnv->objType(), 
-                                                spars, 
-                                                ipars,
-                                                newAddr);
-                if ( ir.isSuccess() )   
+                // Now look up the pointer to the converter
+                PathToCnvMap::iterator cnvIter  = m_pathToCnvMap.find(*subIter);
+                IGlastCnv*             glastCnv = cnvIter->second;
+
+                if (glastCnv->getPath() == path) continue;
+
+                if (glastCnv)
                 {
-                    ir = iaddrReg->registerAddress(glastCnv->getPath(), newAddr);
-                    if ( !ir.isSuccess() )    
+                    IOpaqueAddress* newAddr = 0;
+                    unsigned long ipars[2] = {0, 0}; //{(*il)->userParameter, new_rid};
+                    const std::string spars[2] = {"", ""}; //{par[0], (*il)->bank};
+                    StatusCode ir =
+            
+                    addressCreator()->createAddress(SICB_StorageType, 
+                                                    glastCnv->objType(), 
+                                                    spars, 
+                                                    ipars,
+                                                    newAddr);
+                    if ( ir.isSuccess() )   
                     {
-                        newAddr->release();
-                        status = ir;
+                        ir = iaddrReg->registerAddress(glastCnv->getPath(), newAddr);
+                        if ( !ir.isSuccess() )    
+                        {
+                            newAddr->release();
+                            status = ir;
+                        }
                     }
                 }
             }
