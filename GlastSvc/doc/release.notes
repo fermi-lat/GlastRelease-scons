@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ v9r27p3   3-Dec-2008 TU  Fix test program crash in EventCnvSvc....
  v9r27p2   2-Dec-2008 TU  Spell MCEvent correctly
  v9r27p1   2-Dec-2008 TU  Add in the conversion service interface
  v9r27p0   1-Dec-2008 TU  Small modification of converter stuff to allow use with Overlay
