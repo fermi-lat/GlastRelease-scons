@@ -332,7 +332,12 @@ const unsigned LdfParser::BufferSize = 64*1024;
         //m_dataParser.iterate(m_rowBuf, m_maxSize);
 
         // Parse the data buffer
-        unsigned int status = m_dataParser.iterate2(m_rowBuf, m_maxSize, m_swap);
+        unsigned int count = m_dataParser.iterate2(m_rowBuf, m_maxSize, m_swap);
+
+        EBFeventIterator *ebfIt = dynamic_cast<EBFeventIterator*>(&m_dataParser);
+        //unsigned int status = m_dataParser.status();
+        unsigned int status = ebfIt->status();
+
         if (status) {
             std::ostringstream errMsg;
             errMsg.str("LDF dataParser reported a bad status 0x");
