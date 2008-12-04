@@ -79,6 +79,9 @@ namespace rdbModel{
     unsigned getMaxRetry() const {return m_maxRetry;}
     void setMaxRetry(unsigned maxRetry) { m_maxRetry = maxRetry;}
 
+    unsigned getMaxOpenTry() const {return m_maxOpenTry;}
+    void setMaxOpenTry(unsigned maxOpenTry) { m_maxOpenTry = maxOpenTry;}
+
     /** Get/set avg wait in milliseconds between retries 
      */
     unsigned getAvgWait() const {return m_avgWait;}
@@ -276,6 +279,7 @@ namespace rdbModel{
 
     unsigned      m_maxRetry;
     unsigned      m_avgWait;   // milliseconds
+    unsigned      m_maxOpenTry;   // 1 means no retries
 
     static void compileInit();
     static bool compileComparison(Assertion::Operator* op, 
