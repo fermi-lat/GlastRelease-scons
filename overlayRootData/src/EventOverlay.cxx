@@ -58,6 +58,9 @@ void EventOverlay::Clear(Option_t *option)
     m_timeStamp = 0.0;
     m_liveTime = 0.0;
 
+    m_acdOverlayCol->Delete();
+    m_calOverlayCol->Delete();
+    m_tkrOverlayCol->Delete();
     m_acdOverlayCol->Clear();
     m_calOverlayCol->Clear();
     m_tkrOverlayCol->Clear();
