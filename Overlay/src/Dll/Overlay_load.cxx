@@ -21,6 +21,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_TOOL( TkrDigiToOverlayTool );
     DECLARE_TOOL( AcdHitToOverlayTool );
     DECLARE_TOOL( GemToOverlayTool );
+    DECLARE_TOOL( OverlayRandom);
     DECLARE_CONVERTER( SrcOverlayCnv );
     DECLARE_CONVERTER( EventOverlayCnv );
     DECLARE_CONVERTER( TkrOverlayCnv );

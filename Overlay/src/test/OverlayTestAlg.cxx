@@ -75,7 +75,7 @@ StatusCode OverlayTestAlg::initialize()
     }
 
     // Now look for the output data service
-    if (service("OverlayOutputSvc", tmpService, true).isFailure())
+    if (service("OverlayOutputSvc", tmpService).isFailure())
     {
         log << MSG::INFO << "No OverlayOutputSvc available, no output conversion will be performed" << endreq;
     }

@@ -8,12 +8,20 @@
 ApplicationMgr.DLLs   = {  "Overlay", "RootIo"};
 //ApplicationMgr.ExtSvc += {"OverlayInputSvc"};
 
-// For test
-OverlayOutputSvc.overlayRootFile = "overlay.root";
+OverlayInputSvc.InputXmlFilePath="$(OVERLAYROOT)/src/test";
 
-ApplicationMgr.ExtSvc = { 
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { "EventSelector/EventSelector" };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "SVC='DbEvtSelector'";
+EventSelector.PrintFreq = -1;
+
+//ApplicationMgr.ExtSvc = { 
 //    "GlastEventSelector/EventSelector" , 
-    "EventCnvSvc"};
+//    "EventCnvSvc"};
 
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { 
@@ -34,7 +42,7 @@ OverlayTestAlg.OutputLevel = 1;
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
 
-ApplicationMgr.EvtMax =10;
+ApplicationMgr.EvtMax =1000;
 
 //==============================================================
 //
