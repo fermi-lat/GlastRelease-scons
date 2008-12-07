@@ -32,11 +32,11 @@ RootInputDesc::RootInputDesc( const StringArrayProperty& fileList,
      m_rebuildIndex(rebuildIndex), 
      m_runEvtIndex(0)
  {
-    // Set up the input file list
-    m_numEvents = setFileList(fileList, m_verbose) ;
-
     // Check ownership of data object
     if (branchPtr) m_myDataObject = false;
+
+    // Set up the input file list
+    m_numEvents = setFileList(fileList, m_verbose) ;
 
     return;
  }
@@ -58,10 +58,10 @@ RootInputDesc::RootInputDesc( const StringArrayProperty& fileList,
        m_rebuildIndex(rebuildIndex), 
        m_runEvtIndex(0) 
  {
-    m_numEvents = setEventCollection();
-
     // Check ownership of data object
     if (branchPtr) m_myDataObject = false;
+
+    m_numEvents = setEventCollection();
 
     return;
  }
