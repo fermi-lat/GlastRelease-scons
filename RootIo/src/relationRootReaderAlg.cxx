@@ -186,7 +186,7 @@ StatusCode relationRootReaderAlg::initialize()
 
     // Set up new school system...
     // Use treeName as key type
-    m_rootIoSvc->prepareRootInput("rel", m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput("rel", m_treeName, m_branchName, 0, m_fileList);
 
     return sc;
     

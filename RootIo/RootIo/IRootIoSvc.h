@@ -81,10 +81,11 @@ class  IRootIoSvc : virtual public IInterface
     virtual bool appendFileList( StringArrayProperty & fileList, const std::string & fileName ) = 0 ;
 
     virtual StatusCode prepareRootInput
-     ( const std::string & type, 
-       const std::string & tree,
-       const std::string & branch,
-       const StringArrayProperty & fileList) = 0 ;
+     ( const std::string&         type, 
+       const std::string&         tree,
+       const std::string&         branch,
+       TObject**                  branchPtr,
+       const StringArrayProperty& fileList) = 0 ;
 
     virtual StatusCode closeInput(const std::string& type) = 0;
        

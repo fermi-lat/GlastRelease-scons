@@ -197,7 +197,7 @@ StatusCode digiRootReaderAlg::initialize()
 
     // Set up new school system...
     // Use the TTree name as the key type 
-    m_rootIoSvc->prepareRootInput("digi", m_treeName, m_branchName, m_fileList);
+    m_rootIoSvc->prepareRootInput("digi", m_treeName, m_branchName, 0, m_fileList);
 
     return sc;
     
