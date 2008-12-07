@@ -62,7 +62,10 @@ public:
     };
 
     //! Destructor
-    virtual ~TkrOverlay() {};
+    virtual ~TkrOverlay() 
+    {
+        clear();
+    }
 
     //! Retrieve pointer to class defininition structure
     virtual const CLID& clID()    const { return TkrOverlay::classID(); }
