@@ -17,4 +17,9 @@ progEnv.Tool('xmlUtilLib')
 progEnv.Tool('identsLib')
 test_detModel = progEnv.Program('test_detModel',[ 'src/main.cxx'])
 
-progEnv.Tool('registerObjects', package = 'detModel', libraries = [detModel], testApps = [test_detModel], includes = listFiles(['detModel/*'], recursive = 1))
+progEnv.Tool('registerObjects', package = 'detModel', libraries = [detModel],
+             testApps = [test_detModel],
+             includes = listFiles(['detModel/*'], recursive = 1))
+
+
+
