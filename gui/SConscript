@@ -26,3 +26,6 @@ progEnv.Tool('guiLib')
 testGui = progEnv.Program('testGui', listFiles(['src/test/*.cxx']))
 
 progEnv.Tool('registerObjects', package = 'gui', libraries = [gui, guiSystem], testApps = [testGui], includes = listFiles(['gui/*.h']))
+
+
+
