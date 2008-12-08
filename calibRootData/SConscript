@@ -22,4 +22,11 @@ progEnv.Tool('facilitiesLib')
 test_calibRootData = progEnv.Program('test_calibRootData', listFiles(['src/test/*.cxx']))
 makeTot = progEnv.Program('makeTot',[ 'src/test/makeTot.cxx'])
 
-progEnv.Tool('registerObjects', package = 'calibRootData', libraries = [calibRootData], testApps = [test_calibRootData, makeTot], includes = listFiles(['calibRootData/*'], recursive = 1))
+progEnv.Tool('registerObjects', package = 'calibRootData',
+             libraries = [calibRootData],
+             testApps = [test_calibRootData],
+             binaries = [makeTot],
+             includes = listFiles(['calibRootData/*'], recursive = 1))
+
+
+
