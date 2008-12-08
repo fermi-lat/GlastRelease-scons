@@ -18,6 +18,8 @@ DECLARE_FACTORY_ENTRIES(TkrDigi)
   DECLARE_ALGORITHM(TkrDigiHitRemovalAlg);
   DECLARE_ALGORITHM(TkrDigiHitToDigiAlg);
   DECLARE_ALGORITHM(TkrDigiChargeAlg);
+  DECLARE_ALGORITHM(TkrDigiMergeTruncationAlg);
+
   DECLARE_TOOL     (BariMcToHitTool);
   DECLARE_TOOL     (SimpleMcToHitTool);
   DECLARE_TOOL     (GeneralNoiseTool);
