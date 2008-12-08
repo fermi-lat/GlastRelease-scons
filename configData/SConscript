@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: M. Kocian <kocian@slac.stanford.edu>
-# Version: configData-01-10-04
+# Version: configData-01-10-02
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -33,4 +33,6 @@ progEnv.Tool('registerObjects', package = 'configData', libraries = [configData]
 	     binaries = [ConfigXml2Root,RootConfigCompare,findConfigs,
 			 dumpGemConfiguration,testdb],
 	     includes = listFiles(['configData/*'], recursive = 1))
+
+
 
