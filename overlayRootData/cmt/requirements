@@ -1,5 +1,5 @@
 package overlayRootData
-version v0r0p1
+version v0r0p2
 
 author Tracy Usher <usher@slac.stanford.edu>
 # $Id$
@@ -21,8 +21,8 @@ apply_pattern root_package headers="\
 
 private
 
-use facilities *
-apply_pattern use_facilities_symbols
+#use facilities *
+#apply_pattern use_facilities_symbols
 
 #application ReadFilterStats ../apps/ReadFilterStats.cxx
 

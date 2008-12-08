@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+ 8-Dec-08  v0r0p2  TU   Remove explicit dependence on facilities
  4-Dec-08  v0r0p1  TU   Fix (small) memory leak, still looking for the big one
  1-Dec-08  v0r0p0  TU   Initial checkin.
 
