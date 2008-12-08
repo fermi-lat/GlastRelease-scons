@@ -11,3 +11,6 @@ libEnv = baseEnv.Clone()
 
 
 progEnv.Tool('registerObjects', package = 'xmlGeoDbs')
+
+
+
