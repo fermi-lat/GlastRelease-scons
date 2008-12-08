@@ -1,8 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Heather Kelly <heather@milkyway.gsfc.nasa.gov>,David Chamont <chamont@poly.in2p3.fr>
-# Version: mcRootData-00-22-00
-
+# Version: mcRootData-02-22-00
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -22,3 +21,6 @@ test_mcRootData = progEnv.Program('test_mcRootData', ['src/test/testMcClasses.cx
 
 progEnv.Tool('registerObjects', package = 'mcRootData', libraries = [mcRootData], testApps = [test_mcRootData], 
 	includes = listFiles(['mcRootData/*.h']))
+
+
+
