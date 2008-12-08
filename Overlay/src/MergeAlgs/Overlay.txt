@@ -4,13 +4,14 @@
 // $Header$
 
 // Include the Overlay package library
-ApplicationMgr.DLLs+= { "Overlay"};
+ApplicationMgr.DLLs += { "Overlay"};
 ApplicationMgr.ExtSvc += {"OverlayInputSvc"};
 
 // Modify the Digitization sequencer to include background overlay
 Digitization.Members = { 
     "TkrDigiAlg",
-    "TkrOverlayMergeAlg", 
+    "TkrOverlayMergeAlg",
+    "TkrDigiMergeTruncationAlg",
     "AcdOverlayMergeAlg",
     "AcdDigiAlg",
     "CalOverlayMergeAlg"
