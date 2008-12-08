@@ -13,3 +13,6 @@ MootSvc = libEnv.SharedLibrary('MootSvc', listFiles(['src/*.cxx','src/Dll/*.cxx'
 
 progEnv.Tool('MootSvcLib')
 progEnv.Tool('registerObjects', package = 'MootSvc', libraries = [MootSvc], includes = listFiles(['MootSvc/*.h']))
+
+
+
