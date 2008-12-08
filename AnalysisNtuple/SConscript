@@ -1,6 +1,8 @@
 # -*-python-*-
 # $Header$
 # Authors: Leon Rochester <lsrea@slac.stanford.edu>
+# Version: AnalysisNtuple-02-52-02
+
 import platform
 
 Import('baseEnv')
@@ -36,3 +38,6 @@ test_AnalysisNtuple = progEnv.GaudiProgram('test_AnalysisNtuple', ['src/Analysis
 
 progEnv.Tool('registerObjects', package = 'AnalysisNtuple', libraries = [AnalysisNtuple],
 	     testApps = [test_AnalysisNtuple], includes = listFiles(['AnalysisNtuple/*.h']))
+
+
+
