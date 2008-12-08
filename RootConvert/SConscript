@@ -29,5 +29,7 @@ if baseEnv['PLATFORM'] == 'win32':
 progEnv.Tool('RootConvertLib')
 test_RootConvert = progEnv.Program('test_RootConvert', ['src/test/test_RootConvert.cxx'])
 
-progEnv.Tool('registerObjects', package = 'RootConvert', libraries = [RootConvert], testApps = [test_RootConvert], 
-	includes = listFiles(['RootConvert/*'], recursive = 1))
+progEnv.Tool('registerObjects', package = 'RootConvert', libraries = [RootConvert], testApps = [test_RootConvert], includes = listFiles(['RootConvert/*'], recursive = True))
+
+
+
