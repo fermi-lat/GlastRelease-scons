@@ -17,3 +17,6 @@ geometryLib = libEnv.StaticLibrary('geometry', ['src/Box.cxx', 'src/Cone.cxx', '
                                                 'src/Tube.cxx', 'src/Tubs.cxx', 'src/Vector.cxx', 'src/Volume.cxx', 'src/Wedge.cxx'])
 
 baseEnv.Tool('registerObjects', package = 'geometry', libraries = [geometryLib], includes = listFiles(['geometry/*.h']))
+
+
+
