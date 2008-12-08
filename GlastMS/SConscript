@@ -2,7 +2,6 @@
 # $Header$
 # Authors: Tracy Usher <usher@slac.stanford.edu>
 # Version: GlastMS-00-03-00
-
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -17,3 +16,6 @@ GlastMS = libEnv.StaticLibrary('GlastMS', listFiles(['src/*.cxx']) + listFiles([
 progEnv.Tool('GlastMSLib')
 
 progEnv.Tool('registerObjects', package = 'GlastMS', libraries = [GlastMS], includes = listFiles(['GlastMS/*.h']))
+
+
+
