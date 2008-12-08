@@ -1,8 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Tracy Usher <usher@slac.stanford.edu>
-# Version: GlastClassify-06-05-01
-
+# Version: GlastClassify-06-05-02
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -26,3 +25,6 @@ progEnv.Tool('registerObjects', package = 'GlastClassify',
 	libraries = [ClassificationTree, GlastClassify], 
 	binaries = [apply], 
 	includes = listFiles(['GlastClassify/*.h']))
+
+
+
