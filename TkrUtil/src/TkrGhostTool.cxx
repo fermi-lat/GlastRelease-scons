@@ -49,7 +49,7 @@ public:
     StatusCode calculateTkrVector(
         Event::TkrDigiCol* pCol, unsigned short& towerBits);
     StatusCode flagSingles();
-    StatusCode flagEarlyHits(Event::TkrClusterCol* col);
+    StatusCode flagEarlyHits(Event::TkrClusterCol* col=0);
     StatusCode flagEarlyTracks();
 
     /// @brief Tool for identifying and flagging ghost clusters
