@@ -140,7 +140,7 @@ StatusCode TkrOverlayMergeAlg::execute()
 
     // Now recover the digis for this event
     SmartDataPtr<Event::TkrDigiCol> tkrDigiCol(eventSvc(), EventModel::Digi::TkrDigiCol);
-
+/*
     // do the TkrVector shenanigans
     // make the tkrVector
     unsigned short towerBits = 0;
@@ -174,7 +174,7 @@ StatusCode TkrOverlayMergeAlg::execute()
 
     // store the result in the event
     gem->setTkrVector( tkrVector );
-
+*/
     // Create a map of the simulation digis, indexing by identifier
     std::map<int, Event::TkrDigi*> idToDigiMap;
 

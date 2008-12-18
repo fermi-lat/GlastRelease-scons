@@ -145,6 +145,9 @@ StatusCode AcdOverlayMergeAlg::execute()
         // Energy deposited
         double energyDep = acdOverlay->getEnergyDep();
 
+        //***TEST***
+        //if (energyDep < 0.03) continue;
+
         // Position
         HepPoint3D position = acdOverlay->getPosition();
 

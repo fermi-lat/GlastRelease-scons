@@ -7,14 +7,19 @@
 ApplicationMgr.DLLs += { "Overlay"};
 ApplicationMgr.ExtSvc += {"OverlayInputSvc"};
 
+// Reset the basic Trigger sequence so we can call TriggerInfoAlg in Digitization
+TriggerTest.Members = {"TriggerAlg", "Count/trigger", "TriRowBitsAlg" };
+
 // Modify the Digitization sequencer to include background overlay
 Digitization.Members = { 
     "TkrDigiAlg",
-    "TkrOverlayMergeAlg",
-    "TkrDigiMergeTruncationAlg",
     "AcdOverlayMergeAlg",
     "AcdDigiAlg",
-    "CalOverlayMergeAlg"
+    "CalOverlayMergeAlg",
+    "TriggerInfoAlg",
+    "GemOverlayMergeAlg",
+    "TkrOverlayMergeAlg",
+    "TkrDigiMergeTruncationAlg"
     };
     
 // Also modify the CalDigitization sequencer

@@ -12,6 +12,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_ALGORITHM( AcdOverlayMergeAlg );
     DECLARE_ALGORITHM( CalOverlayMergeAlg );
     DECLARE_ALGORITHM( TkrOverlayMergeAlg );
+    DECLARE_ALGORITHM( GemOverlayMergeAlg );
     DECLARE_ALGORITHM( DigiToOverlayAlg );
     DECLARE_SERVICE( OverlayInputSvc );
     DECLARE_SERVICE( OverlayOutputSvc );
