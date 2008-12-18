@@ -26,6 +26,7 @@ macro_append Event_headers "" WIN32 " \
         ../Event/Recon/AcdRecon/*.h \
         ../Event/Recon/TkrRecon/*.h\
         ../Event/Recon/CalRecon/*.h\
+        ../Event/Trigger/*.h\
         ../Event/RelTable/*.h
 
 library Event \
