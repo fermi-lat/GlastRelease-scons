@@ -47,6 +47,10 @@ class ICalSignalTool : virtual public IInterface {
   /// crystal diode.
   virtual StatusCode getDiodeSignal(CalUtil::DiodeIdx, float &signal) = 0;
 
+  /// \brief return signal in charge-injection DAC units for single
+  /// crystal diode.
+  virtual StatusCode getTrigDiodeSignal(CalUtil::DiodeIdx, float &signal) = 0;
+
   /// map used to associate Cal MCIntegrating hits with crystals
   typedef std::multimap<CalUtil::XtalIdx, Event::McIntegratingHit* > CalRelationMap;
   typedef CalRelationMap::value_type CalRelation;

@@ -64,6 +64,9 @@ public:
 
   /// get signal level for given cal diode.
   StatusCode getDiodeSignal(CalUtil::DiodeIdx diodeIdx, float &signal);
+
+  /// get signal level for given cal diode.
+  StatusCode getTrigDiodeSignal(CalUtil::DiodeIdx diodeIdx, float &signal);
  
   /// get map bewteen McIntegrating hits and crystals
   const CalRelationMap *getCalRelationMap();
@@ -72,6 +75,10 @@ public:
   void handle ( const Incident& inc );
 
 private:
+  
+  /// map diodes to electronic signal levels
+  typedef CalUtil::CalVec<CalUtil::DiodeIdx, float> CalSignalMap;
+
   /// clear internal tables
   void newEvent();
 
@@ -85,7 +92,7 @@ private:
   StatusCode calcNoise();
 
   /// apply poissonic noise (based on electron count) calculation to single crystal
-  StatusCode calcPoissonicNoiseXtal(const CalUtil::XtalIdx xtalIdx);
+  StatusCode calcPoissonicNoiseXtal(const CalUtil::XtalIdx xtalIdx, CalSignalMap& signalMap);
 
   /// apply electronic noise (pedestal width) calculation to single crystal
   StatusCode calcElectronicNoiseXtal(const CalUtil::XtalIdx xtalIdx);
@@ -99,16 +106,29 @@ private:
   /// sum hit signal to all applicable diodes in private store
   StatusCode sumHit(const Event::McIntegratingHit &hit);
 
+  /// sum hit signal for the trigger to all applicable diodes in private store
+  StatusCode sumHit4Trig(const Event::McIntegratingHit &hit);
+
   /////////////////////////
   //-- PRIVATE MEMBERS --//
   /////////////////////////
-
   
-  /// map diodes to electronic signal levels
-  typedef CalUtil::CalVec<CalUtil::DiodeIdx, float> CalSignalMap;
+  /// map crystals to a bit mask for determining energy source
+  typedef CalUtil::CalVec<CalUtil::XtalIdx, unsigned short> CalSourceMap;
+
+  /// enumerate some source possibilities
+  enum CalSourceType { simulation = 1 << 0,
+                       overlay    = 1 << 1
+                     };
 
   /// map diodes to electronic signal levels
   CalSignalMap m_calSignalMap;
+
+  /// map diodes to electronic signal levels for trigger
+  CalSignalMap m_calTrigSignalMap;
+
+  /// map crystals to McIntegratingHit source
+  CalSourceMap m_calSourceMap;
 
   /// map crystals to MCIntegratingHits
   CalRelationMap m_calRelMap;

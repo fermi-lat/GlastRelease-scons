@@ -215,7 +215,12 @@ StatusCode CalTrigTool::calcXtalTrigSignalTool(const XtalIdx xtalIdx) {
     sc = m_calSignalTool->getDiodeSignal(diodeIdx, signal);
     if (sc.isFailure()) return sc;
 
-    if (signal >= thresh)
+    /// get signal level
+    float trigSignal;
+    sc = m_calSignalTool->getTrigDiodeSignal(diodeIdx, trigSignal);
+    if (sc.isFailure()) return sc;
+
+    if (trigSignal >= thresh)
       setSingleBit(diodeIdx);
   }
   
