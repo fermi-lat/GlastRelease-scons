@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r7    17-Dec-2008  TU Update AcdDigi's to include a status word (useful in overlay)
  v3r6     1-Dec-2008  TU Merging has moved into the Overlay package
  v3r5    12-Nov-2008 LSR Mods for Digi merging
  v3r4    27-Jul-2008 HMK Modify use of Event to accept any version
