@@ -100,10 +100,10 @@ public:
     void setAnalysisNtupleError() { m_gleamEventFlags |= enums::Gleam::ANALYSISNTUPLE; }
     bool goodEvent() { return (m_gleamEventFlags == 0); }
     bool badEvent()  { return (m_gleamEventFlags != 0); }
-    bool badTkrRecon() { return (m_gleamEventFlags & enums::Gleam::TKRRECON); }
-    bool badAcdRecon() { return (m_gleamEventFlags & enums::Gleam::ACDRECON); }
-    bool badCalRecon() { return (m_gleamEventFlags & enums::Gleam::CALRECON); }
-    bool badAnalysisNtuple() { return (m_gleamEventFlags & enums::Gleam::ANALYSISNTUPLE); }
+    bool badTkrRecon() { return (m_gleamEventFlags & enums::Gleam::TKRRECON) != 0; }
+    bool badAcdRecon() { return (m_gleamEventFlags & enums::Gleam::ACDRECON) != 0; }
+    bool badCalRecon() { return (m_gleamEventFlags & enums::Gleam::CALRECON) != 0; }
+    bool badAnalysisNtuple() { return (m_gleamEventFlags & enums::Gleam::ANALYSISNTUPLE) != 0; }
  
     
     /// Serialize the object for writing

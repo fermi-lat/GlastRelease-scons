@@ -10,7 +10,7 @@
 #include "Event/TopLevel/EventModel.h"
 
 #include <iostream>
-#include <vector>
+#include <map>
 
 /**
 * @class TriggerInfo
@@ -27,8 +27,8 @@ namespace Event {
 class TriggerInfo : public DataObject
 {
 public:
-    /// Define the TileList vector
-    typedef std::vector<unsigned int> TileList;
+    /// Define the TileList map
+    typedef std::map<std::string, unsigned int> TileList;
 
     TriggerInfo() { clear(); };
     virtual ~TriggerInfo() { clear(); };
