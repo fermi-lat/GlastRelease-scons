@@ -35,14 +35,16 @@ public:
 protected:
 
   StatusCode fillEnergyAndPeMaps( const Event::McPositionHitCol& mcHits,
-				 std::map<idents::AcdId, double>& energyIdMap,
-				 std::map<idents::AcdId, std::pair<double, double> >& peMap);
+                 std::map<idents::AcdId, double>& energyIdMap,
+                 std::map<idents::AcdId, std::pair<double, double> >& peMap,
+                 std::map<idents::AcdId, unsigned int>& statusMap);
   
   StatusCode convertPeToMips( const std::map<idents::AcdId, std::pair<double, double> >& peMap,
-			      std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
+                  std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
   
   StatusCode makeDigis(const std::map<idents::AcdId, std::pair<double,double> >& mipsMap,
-		       Event::AcdDigiCol& digiCol);
+                       const std::map<idents::AcdId, unsigned int>& statusMap,
+                       Event::AcdDigiCol& digiCol);
   
   /// Clear the local paramaters
   void clear();  
@@ -83,6 +85,7 @@ private:
   std::map<idents::AcdId, double>                     m_energyDepMap;
   std::map<idents::AcdId, std::pair<double, double> > m_peMap;
   std::map<idents::AcdId, std::pair<double, double> > m_mipsMap;
+  std::map<idents::AcdId, unsigned int>               m_statusMap;
 
 };
 
