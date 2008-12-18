@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v13r4p1 17-Dec-08  TU Introduce TriggerInfo class, add status word to AcdDigi
  * v13r4    1-Dec-08  TU "final" updates for Overlay version 1
  * v13r3   12-Nov-08 LSR new status word in TkrDigi
                          new methods in Digis to handle merging
