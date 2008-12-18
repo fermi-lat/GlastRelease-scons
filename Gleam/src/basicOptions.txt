@@ -69,7 +69,7 @@ Digitization.Members = {
     };
 
 // this sequence contains the trigger test
-TriggerTest.Members = {"TriggerAlg", "Count/trigger", "TriRowBitsAlg" };
+TriggerTest.Members = {"TriggerInfoAlg", "TriggerAlg", "Count/trigger", "TriRowBitsAlg" };
 
 // We'll reactivate this later once EbfWriter is updated a bit for 4 ranges
 CalDigitization.Members = { "CalDigiAlg" };
