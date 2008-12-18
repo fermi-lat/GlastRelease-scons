@@ -12,5 +12,6 @@ DECLARE_FACTORY_ENTRIES(Trigger) {
     DECLARE_ALGORITHM( TriggerAlg );
     DECLARE_ALGORITHM( TriRowBitsAlg );
     DECLARE_SERVICE( LivetimeSvc );
+    DECLARE_ALGORITHM( TriggerInfoAlg );
 } 
 

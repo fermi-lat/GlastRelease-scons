@@ -28,6 +28,7 @@ private
 use CalibSvc *
 
 use Event *
+use OverlayEvent *
 use GlastSvc *
 use LdfEvent *
 use gr_app *
