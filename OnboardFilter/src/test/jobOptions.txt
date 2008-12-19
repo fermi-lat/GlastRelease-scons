@@ -47,7 +47,7 @@ Digitization.Members = {
     };
 
 // this sequence contains the trigger test
-TriggerTest.Members = {"TriggerAlg" };
+TriggerTest.Members = {"TriggerInfoAlg", "TriggerAlg" };
 
 // this sequence runs if the event passes the trigger
 Triggered.Members={
