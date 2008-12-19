@@ -68,6 +68,7 @@ use MootSvc v*
 
 use ConfigSvc v*
 
+use Overlay v*
 
 # beamtest 2006 ancillary data
 use AncillaryDataEvent v*
