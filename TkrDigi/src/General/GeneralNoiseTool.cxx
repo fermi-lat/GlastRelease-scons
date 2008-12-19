@@ -43,7 +43,9 @@ GeneralNoiseTool::GeneralNoiseTool(const std::string& type,
     declareProperty("dataThreshold",    m_noiseThreshold = 0.03875);
     declareProperty("triggerThreshold", m_trigThreshold = 0.03875);
     declareProperty("sigma",            m_noiseSigma = 0.00698);
-    declareProperty("occupancy",        m_noiseOccupancy = 5.e-5);
+    // set occupancy to a more realistic level
+    // but the real fix is overlays
+    declareProperty("occupancy",        m_noiseOccupancy = 5.e-6);
     declareProperty("fullThreshold",    m_fullThreshold = false);
 }
 
