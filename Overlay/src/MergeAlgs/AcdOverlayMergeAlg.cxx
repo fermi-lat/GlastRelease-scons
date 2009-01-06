@@ -67,7 +67,8 @@ AcdOverlayMergeAlg::AcdOverlayMergeAlg(const std::string& name, ISvcLocator* pSv
 
     // Declare the properties that may be set in the job options file
 //    declareProperty("FirstRangeReadout",   m_firstRng= "autoRng");
-    declareProperty("AcdHitEnergyThreshold", m_energyThreshold = 0.03);
+    // default setting means that the energy cut is not applied
+    declareProperty("AcdHitEnergyThreshold", m_energyThreshold = -1.0);
 }
 
 /// initialize the algorithm. retrieve helper tools & services
