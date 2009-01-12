@@ -62,7 +62,7 @@ class  IRootIoSvc : virtual public IInterface
     
     virtual bool setRootFile
      ( const char * mc, const char * digi, 
-       const char * rec, const char * gcr="" ) = 0 ;
+       const char * rec, const char* relation="", const char * gcr="" ) = 0 ;
        
     virtual bool setIndex( Long64_t ) = 0 ;
     virtual Long64_t index() = 0 ;
