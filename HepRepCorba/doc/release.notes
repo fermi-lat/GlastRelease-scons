@@ -1,22 +1,27 @@
-//$Header$
-/*
- * v0r1     07-07-03 RG Inital release of the package
- * v0r2     17-07-03 RG Preparing for Latest release
- * v0r5     02-04-04 RG Last release with ACETAO
- * v0r7     04-06-04 RG First stable tag with OmniOrb
- * v0r8     20-07-04 RG Tag with support for random access to Root files
- * v1r0     29-09-04 RG Support for HepEventServer CORBA interface and full types
- * v1r1     06-12-04 RG Increased the maximum lenght of CORBA messages; cleaned the code
- * v1r2     11-01-05 RG Added support for step backward in a root file
- * v1r3     24-01-05 RG Added support to let Gleam start automatically FRED
- * v1r4     08-03-05 RG Improved support to let Gleam start automatically FRED
- * v1r5     22-03-05 RG Fixed bugs that prevent FRED starting on Linux
- * v1r5p1   31-03-05 RG Fixed a bug that prevent FRED to start on Windows.
- * v1r5p2   03-04-05 THB set TMP to %TEMP% on windows
- * v1r6     07-07-05 RG Set some env variables in the requirements file to fix Linux problems
- * v1r6dc2  21-02-06 RG A tag for the DC2 branch with changes for wired
- * v1r7     27-03-06 HMK Merge DC2 branch - prepare for tag
- * v1r8     07-12-06 CL  Modifications to handle new gcr ROOT file
- * v2r0     14-07-08 HMK Moving to Omniorb 4.1.0
+/** @file release.notes
+ * Package HepRepCorba
+ *
+ * $Header$
+ *   EOH
+
+ * v3r1     12-01-09 HMK Allow input relation files
  * v3r0     16-10-08 HMK Moving to OminOrb 4.1.2
+ * v2r0     14-07-08 HMK Moving to Omniorb 4.1.0
+ * v1r8     07-12-06 CL  Modifications to handle new gcr ROOT file
+ * v1r7     27-03-06 HMK Merge DC2 branch - prepare for tag
+ * v1r6dc2  21-02-06 RG A tag for the DC2 branch with changes for wired
+ * v1r6     07-07-05 RG Set some env variables in the requirements file to fix Linux problems
+ * v1r5p2   03-04-05 THB set TMP to %TEMP% on windows
+ * v1r5p1   31-03-05 RG Fixed a bug that prevent FRED to start on Windows.
+ * v1r5     22-03-05 RG Fixed bugs that prevent FRED starting on Linux
+ * v1r4     08-03-05 RG Improved support to let Gleam start automatically FRED
+ * v1r3     24-01-05 RG Added support to let Gleam start automatically FRED
+ * v1r2     11-01-05 RG Added support for step backward in a root file
+ * v1r1     06-12-04 RG Increased the maximum lenght of CORBA messages; cleaned the code
+ * v1r0     29-09-04 RG Support for HepEventServer CORBA interface and full types
+ * v0r8     20-07-04 RG Tag with support for random access to Root files
+ * v0r7     04-06-04 RG First stable tag with OmniOrb
+ * v0r5     02-04-04 RG Last release with ACETAO
+ * v0r2     17-07-03 RG Preparing for Latest release
+ * v0r1     07-07-03 RG Inital release of the package
 */
