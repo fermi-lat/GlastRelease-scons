@@ -42,6 +42,14 @@ public:
     /** @brief Register a path with an output data service
     */
     virtual StatusCode registerOutputPath(const std::string& path) = 0;
+
+    /** @brief For output service, set store events flag
+    */
+    virtual void storeEvent(bool flag) = 0;
+
+    /** @brief For output service, return current value of store events flag
+    */
+    virtual bool getStoreEventFlag() = 0;
 };
 
 

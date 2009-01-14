@@ -46,6 +46,12 @@ public:
     /// Register an output path with us
     virtual StatusCode registerOutputPath(const std::string& path) {return StatusCode::SUCCESS;}
 
+    /// For output service, set store events flag
+    virtual void storeEvent(bool flag) {return;}
+
+    /// For output service, return current value of store events flag
+    virtual bool getStoreEventFlag() {return true;}
+
     /// Handles incidents, implementing IIncidentListener interface
     virtual void handle( const Incident & ) ;    
 
