@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+15-Jan-09  v0r1p1  TU   bump OverlayEvent version number
 14-Jan-09  v0r1p0  TU   Remove unused elements from OverlayEvent class
  8-Dec-08  v0r0p2  TU   Remove explicit dependence on facilities
  4-Dec-08  v0r0p1  TU   Fix (small) memory leak, still looking for the big one
