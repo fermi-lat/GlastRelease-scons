@@ -113,11 +113,6 @@ void McParticle::removeDaughter(const SmartRef<McParticle> mcPart)
         if (mcPart == *daughtIter)
         {
             SmartRefVector<Event::McParticle>::iterator forwardIter = (++daughtIter).base();
-            // but are they they same?
-            if (*daughtIter != *forwardIter)
-            {
-                int j = 0;
-            }
             m_daughters.erase(forwardIter);
             break;
         }
