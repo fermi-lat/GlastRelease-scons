@@ -96,16 +96,13 @@ private:
 
     /// data members to store ACD data
     TObjArray* m_acdOverlayCol;  
-    Int_t      m_numAcdOverlays;
 
     /// data members to store CAL data
     // Avoid re-use of m_calDigiCol name that used to be a TObjArray*
     TObjArray* m_calOverlayCol; 
-    Int_t      m_numCalOverlays;
 
     /// data members to store TKR data
     TObjArray* m_tkrOverlayCol; //-> List of Tracker layers
-    Int_t      m_numTkrOverlays;
 
     /// Storage for gem information
     GemOverlay m_gemOverlay;

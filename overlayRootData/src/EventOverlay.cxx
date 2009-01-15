@@ -12,14 +12,11 @@ ClassImp(EventOverlay)
 EventOverlay::EventOverlay() 
 {
     m_calOverlayCol  = new TObjArray();
-    m_numCalOverlays = -1;
 
     m_tkrOverlayCol  = new TObjArray();
-    m_numTkrOverlays = -1;
 
     // Assign default values to members
     m_acdOverlayCol  = new TObjArray();
-    m_numAcdOverlays = -1;
 
     Clear();
 }
@@ -64,9 +61,6 @@ void EventOverlay::Clear(Option_t *option)
     m_acdOverlayCol->Clear();
     m_calOverlayCol->Clear();
     m_tkrOverlayCol->Clear();
-    m_numAcdOverlays = -1;
-    m_numCalOverlays = -1;
-    m_numTkrOverlays = -1;
 }
 
 void EventOverlay::Print(Option_t *option) const {
@@ -76,7 +70,7 @@ void EventOverlay::Print(Option_t *option) const {
     cout << "Run, Event: " << m_runId << ", " << m_eventId
         << " Time: " << m_timeStamp << " LiveTime: " << m_liveTime << endl;
       
-    cout << "Number of CalOverlays " << (m_numCalOverlays+1) << endl;
+    cout << "Number of CalOverlays " << (m_calOverlayCol->GetEntries()) << endl;
     if (m_tkrOverlayCol) 
       cout << "Number of TkrOverlays " << m_tkrOverlayCol->GetEntries() << endl;
     else 
@@ -88,7 +82,6 @@ void EventOverlay::Print(Option_t *option) const {
 void EventOverlay::addAcdOverlay(AcdOverlay *acdOverlay)
 {
     m_acdOverlayCol->Add(acdOverlay);
-    m_numAcdOverlays = m_acdOverlayCol->GetEntries();
 
     return;
 }
@@ -101,9 +94,7 @@ const AcdOverlay* EventOverlay::getAcdOverlay(UInt_t i) const
 
 void EventOverlay::addTkrOverlay(TkrOverlay *tkrOverlay)
 {
-    //printf(" add TkrOverlay, %d entries\n",m_tkrOverlayCol->GetEntries());fflush(stdout);
     m_tkrOverlayCol->Add(tkrOverlay);
-    m_numTkrOverlays = m_tkrOverlayCol->GetEntries();
 
     return;
 }
@@ -118,14 +109,12 @@ void EventOverlay::addCalOverlay(CalOverlay* calOverlay)
 {
     // Add the new CalOverlay object to our array
     m_calOverlayCol->Add(calOverlay);
-    m_numCalOverlays = m_calOverlayCol->GetEntries();
 
     return;
 }
 
 const CalOverlay* EventOverlay::getCalOverlay(UInt_t i) const 
 {
-    //if ((m_calOverlayCol) && (m_calOverlayCol->GetEntries()>0)) return (CalOverlay*)m_calOverlayCol->At(i);
-    if (Int_t(i) > m_numCalOverlays) return 0;
+    if (Int_t(i) >= m_calOverlayCol->GetEntries()) return 0;
     return (CalOverlay*)m_calOverlayCol->At(i);
 }
