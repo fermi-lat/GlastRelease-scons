@@ -107,7 +107,7 @@ private:
     /// Storage for gem information
     GemOverlay m_gemOverlay;
 
-    ClassDef(EventOverlay,1) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(EventOverlay,2) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif
