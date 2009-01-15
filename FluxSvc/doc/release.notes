@@ -4,6 +4,8 @@
 @verbatim
  * Coordinator: T.Burnett, S. Robinson
 
+            * EOH *
+   15-jan-09  v6r55p2 JRB  Remove reference to f2c lib from requirements
    10-nov-08  v6r55p1 THB  remove TU changes: v6r53 plus CMT changes
    28-jul-08  v6r54p2 THB  CMT env var changes
    15-May-08  v6r54p1 TU   Fix faux pas where forgot to retrieve tool
