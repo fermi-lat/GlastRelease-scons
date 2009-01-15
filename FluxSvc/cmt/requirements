@@ -55,7 +55,7 @@ macro  source  "*.cxx"  WIN32 "*.h *.cxx *.txt"
 
 
 library  FluxSvc \
-    -import=flux -import=GRB  -import=tip -import=celestialSources -import=f2c \
+    -import=flux -import=GRB  -import=tip -import=celestialSources  \
      -s=../FluxSvc $(source) \
      -s=Dll *.cxx\
      -s=../src $(source)
