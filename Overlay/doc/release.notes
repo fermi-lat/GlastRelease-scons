@@ -4,6 +4,7 @@
 $Id$
 @verbatim
 
+15-Jan-09  v1r1p4 LSR Add Task folder, and SkimOverlayEventsAlg, and jO
 06-Jan-09  v1r1p3 LSR Set ZS threshold to -1, which turns off the test;
                         More properly done while generating the overlay files
                         Leave the option in for tests and further development
