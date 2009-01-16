@@ -24,7 +24,10 @@ class GleamMessageHandler : public TMessageHandler
                  ROOT_FATAL = 1004
     } MessageIds;
   
-    GleamMessageHandler(const GleamMessageHandler& other) : TMessageHandler(other) {  m_warningCount = other.m_warningCount;
+/*
+    GleamMessageHandler(const GleamMessageHandler& other) //: TMessageHandler(other) {  
+    {
+     m_warningCount = other.m_warningCount;
      m_errorCount = other.m_errorCount;
      m_syserrorCount = other.m_syserrorCount;
      m_fatalCount = other.m_fatalCount;
@@ -33,6 +36,7 @@ class GleamMessageHandler : public TMessageHandler
      m_syserror = other.m_syserror;
      m_fatal = other.m_fatal;
    };
+*/
 
     GleamMessageHandler(const TClass* cl, Bool_t derived = kTRUE) :
        TMessageHandler(cl, derived),
