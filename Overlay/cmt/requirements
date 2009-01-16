@@ -45,6 +45,7 @@ library Overlay  \
         -s=../src/MergeAlgs $(source) \
         -s=../src/InputControl $(source) \
         -s=../src/Translation $(source) \
+        -s=../src/Tasks $(source) \
         -s=Dll *.cxx
 
 
