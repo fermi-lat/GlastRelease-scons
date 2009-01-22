@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Tracy Usher <usher@slac.stanford.edu>
-# Version: GlastClassify-06-05-02
+# Version: GlastClassify-07-00-00
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
