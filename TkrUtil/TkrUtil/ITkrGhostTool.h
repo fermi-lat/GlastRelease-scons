@@ -13,7 +13,7 @@
 
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_ITkrGhostTool("ITkrGhostTool", 2 , 0);
+static const InterfaceID IID_ITkrGhostTool("ITkrGhostTool", 3 , 0);
 
 class TkrTowerBits
 {
