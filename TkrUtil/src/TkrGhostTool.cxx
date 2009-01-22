@@ -17,6 +17,7 @@
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/TkrRecon/TkrEventParams.h"
 #include "Event/TopLevel/DigiEvent.h"
 #include "Event/Digi/TkrDigi.h"
@@ -51,6 +52,7 @@ public:
     StatusCode flagSingles();
     StatusCode flagEarlyHits(Event::TkrClusterCol* col=0);
     StatusCode flagEarlyTracks();
+    StatusCode flagEarlyVertices();
 
     /// @brief Tool for identifying and flagging ghost clusters
 
@@ -162,7 +164,7 @@ StatusCode TkrGhostTool::calculateTkrVector(
     int clusSize = clusterCol->size();
     for (i=0;i<clusSize;++i) {
         Event::TkrCluster* clus = (*clusterCol)[i];
-        clus->clearStatusBits(Event::TkrCluster::maskZAPPED);
+        clus->clearStatusBits(Event::TkrCluster::maskZAPGHOSTS);
         int tower = clus->tower();
         clusterTrigger[tower]->setBit(clus);
     }
@@ -386,6 +388,36 @@ StatusCode TkrGhostTool::flagEarlyTracks()
             } 
         }
     }
+    return sc;
+}
 
+StatusCode TkrGhostTool::flagEarlyVertices()
+{
+
+    MsgStream log(msgSvc(), name());
+    StatusCode sc = StatusCode::SUCCESS;
+
+    // Flag the hits on tracks containing ghosts or 255's
+    //get the tracks
+    SmartDataPtr<Event::TkrVertexCol> 
+        vertexCol(m_dataSvc, EventModel::TkrRecon::TkrVertexCol);
+
+    int vertexCount = 0;
+    Event::TkrVertexConPtr tcolIter = vertexCol->begin();
+    for(tcolIter; tcolIter!=vertexCol->end();++tcolIter,++vertexCount) {
+        Event::TkrVertex* vertex = *tcolIter;
+        vertex->clearStatusBits(Event::TkrVertex::GHOST);
+        SmartRefVector<Event::TkrTrack>::const_iterator trackIter;
+        SmartRefVector<Event::TkrTrack>::const_iterator trackBegin = vertex->getTrackIterBegin();
+        SmartRefVector<Event::TkrTrack>::const_iterator trackEnd = vertex->getTrackIterEnd();
+
+        for(trackIter=trackBegin;trackIter!=trackEnd;++trackIter) {
+            const Event::TkrTrack* track = *(trackIter);
+            if((track->getStatusBits())&Event::TkrTrack::GHOST) {
+                vertex->setStatusBit(Event::TkrVertex::GHOST);
+                continue;
+            }
+        }
+    }
     return sc;
 }
