@@ -91,11 +91,7 @@ typedef std::map<std::string,PredNodeInfo>::iterator PredNodeMapItr;
 void newPredictEngineNode::execute()
 {
     // Loop through the forest evaluating the trees
-    //double weightSum   = 0.;
-    //double runningWght = 0.;
-
-    //int treeNum = 0;
-    std::string predict;
+    std::string predict = "";
 
     PredNodeMap predNodeMap;
 

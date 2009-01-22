@@ -133,12 +133,14 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllOutputVars(GlastClassify::Tree
             sNewType = getNextWord(sType, iDelim);
         }
 
-        // Do we have the right node?
-//        if (sNewType == "CreateColumnsEngineNode")
-//        {
-            numVars += varFinder(xmlActivityNode);
-//        }
+        numVars += varFinder(xmlActivityNode);
     }
+
+    // Output of Prediction nodes is PREDICT.class
+    std::string               predClass = "PREDICT.class";
+    XTcolumnVal<std::string>* predict   = new XTcolumnVal<std::string>(predClass, "categorical");
+    predict->setDataValue("");
+    parser.getXtTupleVars()[predClass] = predict;
 
     //done
     return numVars;

@@ -88,7 +88,7 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
         }
             
         // Pointer to expression node
-        IXTExprsnNode* xprsn = XprsnParser().parseExpression(sExpression);
+        IXTExprsnNode* xprsn = XprsnParser().parseExpression(sExpression, sVarType);
 
         // Get the tuple column value pointer
         XTcolumnValBase*     xtColumnVal = 0;

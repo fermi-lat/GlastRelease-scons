@@ -77,7 +77,7 @@ public:
         return m_data;
     }
 
-    void setDataValue(const T data) {m_data = data; setValidFlag();}
+    void setDataValue(const T& data) {m_data = data; setValidFlag();}
 private:
     T           m_data;
 

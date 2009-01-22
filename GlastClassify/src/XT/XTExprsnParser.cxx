@@ -73,9 +73,9 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
     m_delimMap["-"]  = "D";
 }
 
-IXTExprsnNode* XTExprsnParser::parseExpression(std::string& expression)
+IXTExprsnNode* XTExprsnParser::parseExpression(std::string& expression, std::string type)
 {
-    std::string type = "";
+    //std::string type = "";
 
     expression = trimTrailing(expression);
     expression = trimCharacters(expression, ' ');
@@ -271,9 +271,16 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
         std::string funcCand = expression.substr(0,leftPos);
 
         // Special case of IM asking to retrieve data from tuple
-        if (funcCand == "get" || funcCand == "\"Pr" || funcCand == "Pr")
+        if (funcCand == "get" || funcCand == "getNew" || funcCand == "\"Pr" || funcCand == "Pr")
         {
             std::string funcType = "";
+
+            // Strip the quotes off the "getNew" operand, if there
+            if (funcCand == "getNew" && operand.find("\"",0) == 0)
+            {
+                int opLen = operand.length();
+                operand = operand.substr(1,opLen-2);
+            }
 
             expression = operand;
             pNode = parseFunction(expression, funcType);

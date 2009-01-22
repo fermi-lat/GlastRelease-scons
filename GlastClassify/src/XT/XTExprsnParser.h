@@ -21,7 +21,7 @@ public:
     ~XTExprsnParser() {} 
 
     // Parse and expression
-    IXTExprsnNode* parseExpression(std::string& expression);
+    IXTExprsnNode* parseExpression(std::string& expression, std::string type = "");
 
     // Provide access mechanism to local tuple
     XTtupleMap& getXtTupleVars() {return m_tuple;}

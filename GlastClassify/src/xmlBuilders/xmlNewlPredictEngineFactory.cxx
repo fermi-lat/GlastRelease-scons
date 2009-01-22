@@ -93,6 +93,7 @@ IImActivityNode* xmlNewPredictEngineFactory::operator()(const DOMElement* xmlAct
     else
     {
         predict = new XTcolumnVal<std::string>(predClass, "categorical");
+        predict->setDataValue("");
         XprsnParser().getXtTupleVars()[predClass] = predict;
     }
 
