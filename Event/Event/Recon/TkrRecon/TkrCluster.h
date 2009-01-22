@@ -54,25 +54,26 @@ namespace Event {
         //
         // |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
         //
-        //            A   A     E   T   S   G                 R        {Cntlr}  U
-        //            l   l     x   o   a   h                 e          0=0    s
-        //            n   o     t   T   m   o                 m          1=1    e
-        //            E   n     r   2   e   s                 o         2=1+2   d
-        //            n   e     a   5   T   t                 v            
-        //            d         s   5   k                     d         
-        // 
+        //            A   A         T   S   G                 R        {Cntlr}  U
+        //            l   l         o   a   h                 e          0=0    s
+        //            o   o         T   m   o                 m          1=1    e
+        //            n   n         2   e   s                 o         2=1+2   d
+        //            E   e         5   T   t                 v            
+        //            n             5   k                     e         
+        //            d                                       d
+        //
         // High-order bits (16-31, right to left):
         //
         // |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-        //
-        //        L   P                                 
-        //        y   l                                
-        //        r   n                                
-        //        O   O                                
-        //        f   f                                
-        //        f   f                                
-
-
+        //                                                                  
+        //        L   P                                                     S   G
+        //        y   l                                                     m   h
+        //        r   n                                                     e   o
+        //        O   O                                                     T   s
+        //        f   f                                                     r   t
+        //        f   f                                                     k   D
+        //                                                                  D    
+                                                                            
         enum { 
             fieldUSED        = 1,    // tells whether cluster is used on a track
             fieldEND         = 3,    // identifies controller, 0, 1, 2=mixed
@@ -80,9 +81,10 @@ namespace Event {
             fieldGHOST       = 1,    // cluster is marked as a ghost
             fieldSAMETRACK   = 1,    // This cluster belongs to a track with a 255 or ghost
             field255         = 1,    // cluster is marked as a ToT==255
-            fieldEXTRA       = 1,    // extra hits found somehow
             fieldALONE       = 1,    // cluster is alone in its plane
             fieldALONEEND    = 1,    // cluster is alone in its readout end
+            fieldDIAGNOSTIC  = 1,    // ghost cluster discovered from TEM diags
+            fieldSAMETRACKD  = 1,    // This cluster from a track with a 255 or a diagnostic ghost
             fieldPLANEOFFSET = 1,    // to calculate Plane number from Tray/Face (1 for LAT)
             fieldLAYEROFFSET = 1     // to calculate Layer number from Plane (0 for LAT)
         };
@@ -93,9 +95,10 @@ namespace Event {
             shiftGHOST       =  8,
             shiftSAMETRACK   =  9,
             shift255         = 10,
-            shiftEXTRA       = 11,
             shiftALONE       = 12,
             shiftALONEEND    = 13,
+            shiftDIAGNOSTIC  = 16,
+            shiftSAMETRACKD  = 17,
             shiftPLANEOFFSET = 29,
             shiftLAYEROFFSET = 30 
         };
@@ -106,12 +109,13 @@ namespace Event {
             maskGHOST       = fieldGHOST<<shiftGHOST,
             maskSAMETRACK   = fieldSAMETRACK<<shiftSAMETRACK,
             mask255         = field255<<shift255,
-            maskEXTRA       = fieldEXTRA<<shiftEXTRA,
             maskALONE       = fieldALONE<<shiftALONE,
             maskALONEEND    = fieldALONEEND<<shiftALONEEND,
+            maskDIAGNOSTIC  = fieldDIAGNOSTIC<<shiftDIAGNOSTIC,
+            maskSAMETRACKD  = fieldSAMETRACKD<<shiftSAMETRACKD,
             maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
             maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
-            maskZAPPED      = mask255|maskGHOST|maskSAMETRACK
+            maskZAPGHOSTS   = mask255|maskGHOST|maskSAMETRACK|maskDIAGNOSTIC|maskSAMETRACKD
         };
 
         TkrCluster(): m_tkrId(0,0,0,false) {}

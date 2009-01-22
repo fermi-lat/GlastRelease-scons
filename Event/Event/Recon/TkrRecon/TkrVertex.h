@@ -58,7 +58,7 @@ namespace Event { //Namespace
 
         // Status word bits organized like:
         //        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-        //                                             [Track Topology ] [Track composition]
+        //                     Ghost                   [Track Topology ] [Track composition]
         enum StatusBits {
             ONETKRVTX  = 0x0001,  //Set if single track vertex
             TWOTKRVTX  = 0x0002,  //Set if 2 track vertex
@@ -67,7 +67,10 @@ namespace Event { //Namespace
             DOCAVTX    = 0x0010,  //Set if vertex location set by DOCA point
             FIRSTHIT   = 0x0020,  //Set if two tracks share first hit
             STAGVTX    = 0x0040,  //Set if tracks don't start in same plane (staggered)
-            CROSSTKR   = 0x0080}; //Set if DOCA location lies inside track hits
+            CROSSTKR   = 0x0080,  //Set if DOCA location lies inside track hits
+
+            GHOST      = 0x1000   //Set if at least one track in the vertex is a ghost
+        };
 
         /// Utility 
         std::ostream& fillStream( std::ostream& s ) const;
@@ -104,7 +107,8 @@ namespace Event { //Namespace
         inline void   setTkrID(idents::TkrId& tkrID)      {m_vtxID      = tkrID;}
         inline void   setParams(TkrTrackParams& params)   {m_params     = params;}
         inline void   setStatusBit(unsigned int status)   {m_statusBits |= status;}
-        inline void   clearStatusBits()                   {m_statusBits = 0;}
+        inline void   clearStatusBits(unsigned int bits= 0xffffffff)            
+                                                          {m_statusBits &= ~bits;}
 
         // Add tracks to the list
         void addTrack(const Event::TkrTrack* pTrack)      {m_tracks.push_back(pTrack);}
