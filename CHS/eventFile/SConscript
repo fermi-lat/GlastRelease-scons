@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Bryson Lee <blee@slac.stanford.edu>
-# Version: CHS/eventFile-09-00-00
+# Version: eventFile-09-00-00
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
