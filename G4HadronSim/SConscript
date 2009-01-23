@@ -1,8 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Francesco Longo <Francesco.Longo@ts.infn.it>, Tracy Usher <usher@slac.stanford.edu>
-# Version: G4HadronSim-01-04-00
-
+# Version: G4HadronSim-01-03-00
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -32,6 +31,7 @@ progEnv.Tool('G4HadronSimLib')
 
 progEnv.Tool('registerObjects', package = 'G4HadronSim', libraries = [G4HadronSim], 
 	includes = listFiles(['G4HadronSim/src/*'], recursive = 1))
+
 
 
 

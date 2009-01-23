@@ -2,7 +2,7 @@
 # @file SConscript
 # @brief build info
 #
-# $Id
+# $Id$
 # Authors: Heather Kelly <heather@milkyway.gsfc.nasa.gov>,David Chamont <chamont@poly.in2p3.fr>
 # Version: rootTestData-04-02-00
 Import('baseEnv')
@@ -13,6 +13,7 @@ progEnv.Tool('registerObjects',
              package = 'rootTestData',
              data = listFiles(['data/*'],recursive=True))
 	
+
 
 
 

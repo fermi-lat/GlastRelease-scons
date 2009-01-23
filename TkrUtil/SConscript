@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Leon Rochester <lsrea@slac.stanford.edu>
-# Version: TkrUtil-03-17-00
+# Version: TkrUtil-03-15-00
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -17,6 +17,7 @@ test_TkrUtil = progEnv.GaudiProgram('test_TkrUtil', ['src/test/test_TkrUtil.cxx'
 test_IndexedVector = progEnv.Program('test_IndexedVector',[ 'src/test/testIndexedVector.cxx'])
 
 progEnv.Tool('registerObjects', package = 'TkrUtil', libraries = [TkrUtil], testApps = [test_TkrUtil, test_IndexedVector], includes = listFiles(['TkrUtil/*.h']))
+
 
 
 
