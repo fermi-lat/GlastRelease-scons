@@ -17,7 +17,7 @@
 
 
 // Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_ITkrMakeClustersTool("ITkrMakeClustersTool", 0 , 0); 
+static const InterfaceID IID_ITkrMakeClustersTool("ITkrMakeClustersTool", 1 , 0); 
 
 /** @class ITkrMakeClustersTool
 * @brief Abstract interface for methods to query TkrClusters
@@ -34,6 +34,7 @@ public:
         Event::TkrIdClusterMap* clusMap,
         Event::TkrDigiCol* pTkrDigiCol,
         ITkrBadStripsSvc::clusterType clType=ITkrBadStripsSvc::STANDARDCLUSTERS) = 0;
+    virtual StatusCode calculateToT() = 0;
 
 };
 
