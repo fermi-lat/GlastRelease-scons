@@ -264,9 +264,6 @@ class calibMIP:
       GSigma = func.GetParameter(3)
     except:
       self.logMessage( "error in fit function access for chargeAll" )
-      func.Delete()
-      hist.Reset()
-      hist.Delete()
       rf.Close()
       return      
     self.hists["LWidth"].Fill( LWidth )
