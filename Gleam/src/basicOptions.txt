@@ -48,7 +48,7 @@ Event.BranchMembers = {"Generation", "ExposureAlg"};
 Generation.Members = {
     "FluxAlg", 
     "CurrentEventAlg",
-    "PointInfoAlg", 
+    //"PointInfoAlg",  // this will be handled by PtValsAlg now
     "G4Generator" };
   
 
@@ -180,6 +180,7 @@ ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClas
 AuditorSvc.Auditors += {"EventAuditor"}; // For event-by-event timing
 
 NtupleMaker.Members = {
+    "PtValsAlg",         // pointing info
     "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
     "ClassifyAlg",       // Atwood's Insightful Miner analysis
     "FT1Alg",            // generate stuff to go into FT1 // version from AnaTup
