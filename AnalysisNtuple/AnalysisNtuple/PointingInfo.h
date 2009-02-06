@@ -44,6 +44,12 @@ private:
     float B; ///< magnetic field
     float zenith_scz; ///< space craft zenith angle
 
+    float lambda;
+    float R;
+    float bEast;
+    float bNorth;
+    float bUp;
+
 };
 
 }
