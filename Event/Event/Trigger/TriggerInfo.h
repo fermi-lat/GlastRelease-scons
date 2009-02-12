@@ -46,25 +46,31 @@ public:
                          unsigned short  calLE,
                          unsigned short  calHE,
                          unsigned short  cno,
+                         unsigned short  deltaEventTime,
+                         unsigned short  deltaWindowTime,
                          const TileList& tileList);
 
     /// Setindividual members
-    void setTriggerBits(unsigned int triggerBits) {m_triggerBits = triggerBits;}
-    void setTkrVector(unsigned short tkrVector)   {m_tkrVector   = tkrVector;}
-    void setRoiVector(unsigned short roi)         {m_roiVector   = roi;}
-    void setCalLeVector(unsigned short calLE)     {m_calLeVector = calLE;}
-    void setCalHeVector(unsigned short calHE)     {m_calHeVector = calHE;}
-    void setCnoVector(unsigned short cno)         {m_cnoVector   = cno;}
-    void setTileList(const TileList& tileList)    {m_tileList    = tileList;}
+    void setTriggerBits(unsigned int triggerBits)    {m_triggerBits         = triggerBits;}
+    void setTkrVector(unsigned short tkrVector)      {m_tkrVector           = tkrVector;}
+    void setRoiVector(unsigned short roi)            {m_roiVector           = roi;}
+    void setCalLeVector(unsigned short calLE)        {m_calLeVector         = calLE;}
+    void setCalHeVector(unsigned short calHE)        {m_calHeVector         = calHE;}
+    void setCnoVector(unsigned short cno)            {m_cnoVector           = cno;}
+    void setDeltaEventTime(unsigned short time)      {m_deltaEventTime      = time;}
+    void setDeltaWindowOpenTime(unsigned short time) {m_deltaWindowOpenTime = time;}
+    void setTileList(const TileList& tileList)       {m_tileList            = tileList;}
 
     /// Retrieve values
-    unsigned int    getTriggerBits() const {return m_triggerBits;}
-    unsigned short  getTkrVector()   const {return m_tkrVector;}
-    unsigned short  getRoiVector()   const {return m_roiVector;}
-    unsigned short  getCalLeVector() const {return m_calLeVector;}
-    unsigned short  getCalHeVector() const {return m_calHeVector;}
-    unsigned short  getCnoVector()   const {return m_cnoVector;}
-    const TileList& getTileList()    const {return m_tileList;}
+    unsigned int    getTriggerBits()         const {return m_triggerBits;}
+    unsigned short  getTkrVector()           const {return m_tkrVector;}
+    unsigned short  getRoiVector()           const {return m_roiVector;}
+    unsigned short  getCalLeVector()         const {return m_calLeVector;}
+    unsigned short  getCalHeVector()         const {return m_calHeVector;}
+    unsigned short  getCnoVector()           const {return m_cnoVector;}
+    unsigned short  getDeltaEventTime()      const {return m_deltaEventTime;}
+    unsigned short  getDeltaWindowOpenTime() const {return m_deltaWindowOpenTime;}
+    const TileList& getTileList()            const {return m_tileList;}
 
     virtual std::ostream& fillStream(std::ostream &s) const;
     friend std::ostream& operator << (std::ostream &s, const TriggerInfo &obj);
@@ -77,6 +83,8 @@ private:
     unsigned short m_calLeVector;
     unsigned short m_calHeVector;
     unsigned short m_cnoVector;
+    unsigned short m_deltaEventTime;
+    unsigned short m_deltaWindowOpenTime;
     TileList       m_tileList;
 };
 
@@ -87,28 +95,34 @@ inline void TriggerInfo::initTriggerInfo(unsigned int    triggerBits,
                                          unsigned short  calLE,
                                          unsigned short  calHE,
                                          unsigned short  cno,
+                                         unsigned short  deltaEventTime,
+                                         unsigned short  deltaWindowTime,
                                          const TileList& tileList)
 {
-    m_triggerBits = triggerBits;
-    m_tkrVector   = tkrVector;
-    m_roiVector   = roi;
-    m_calLeVector = calLE;
-    m_calHeVector = calHE;
-    m_cnoVector   = cno;
+    m_triggerBits         = triggerBits;
+    m_tkrVector           = tkrVector;
+    m_roiVector           = roi;
+    m_calLeVector         = calLE;
+    m_calHeVector         = calHE;
+    m_cnoVector           = cno;
+    m_deltaEventTime      = deltaEventTime;
+    m_deltaWindowOpenTime = deltaWindowTime;
 
-    m_tileList    = tileList;
+    m_tileList            = tileList;
 
     return;
 }
 
 inline void TriggerInfo::clear() 
 {
-    m_triggerBits = 0;
-    m_tkrVector   = 0;
-    m_roiVector   = 0;
-    m_calLeVector = 0;
-    m_calHeVector = 0;
-    m_cnoVector   = 0;
+    m_triggerBits         = 0;
+    m_tkrVector           = 0;
+    m_roiVector           = 0;
+    m_calLeVector         = 0;
+    m_calHeVector         = 0;
+    m_cnoVector           = 0;
+    m_deltaEventTime      = 0xffff;
+    m_deltaWindowOpenTime = 0xffff;
 
     m_tileList.clear();
 
