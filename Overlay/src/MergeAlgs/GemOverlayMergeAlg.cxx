@@ -169,8 +169,12 @@ StatusCode GemOverlayMergeAlg::execute()
     // Reset the tile list in the TriggerInfo object
     triggerInfo->setTileList(tileList);
 
-    // Rest the trigger bits
+    // Reset the trigger bits
     triggerInfo->setTriggerBits(triggerBits);
+
+    // Update the delta event and window open times
+    triggerInfo->setDeltaEventTime(gemOverlay->getDeltaEventTime());
+    triggerInfo->setDeltaWindowOpenTime(gemOverlay->getDeltaWindowOpenTime());
 
     return sc;
 }
