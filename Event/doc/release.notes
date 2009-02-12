@@ -3,6 +3,7 @@
 @verbatim
  * package manager:T.Burnett
  *
+ * v13r5p0 12-Feb-09  TU Modify TriggerInfo to include deltaEventTime and deltaWindowOpenTime
  * v13r4p4 21-Jan-09  TU Add an enum to the TkrVertex status word
  * v13r4p3 15-Jan-09  TU Remove faulty comparison that may have been causing opt crash
  * v13r4p2 18-Dec-08  TU Minor change to Event for compiler warnings, change TileList in TriggerInfo
