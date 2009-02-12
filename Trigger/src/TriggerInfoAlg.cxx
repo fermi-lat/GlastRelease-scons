@@ -193,11 +193,13 @@ StatusCode TriggerInfoAlg::execute()
     MsgStream   log( msgSvc(), name() );
 
     // set bits in the trigger word
-    unsigned short tkrVector   = 0;
-    unsigned short cnoVector   = 0;
-    unsigned short roiVector   = 0;
-    unsigned short calLoVector = 0;
-    unsigned short calHiVector = 0;
+    unsigned short tkrVector           = 0;
+    unsigned short cnoVector           = 0;
+    unsigned short roiVector           = 0;
+    unsigned short calLoVector         = 0;
+    unsigned short calHiVector         = 0;
+    unsigned short deltaEventTime      = 0xffff;
+    unsigned short deltaWindowOpenTime = 0xffff;
 
     std::vector<unsigned int> tileList;
 
@@ -236,7 +238,15 @@ StatusCode TriggerInfoAlg::execute()
     // Create and fill the TriggerInfo TDS object
     Event::TriggerInfo* triggerInfo = new Event::TriggerInfo();
 
-    triggerInfo->initTriggerInfo(trigger_bits, tkrVector, roiVector, calLoVector, calHiVector, cnoVector, tileListMap);
+    triggerInfo->initTriggerInfo(trigger_bits, 
+                                 tkrVector, 
+                                 roiVector, 
+                                 calLoVector, 
+                                 calHiVector, 
+                                 cnoVector, 
+                                 deltaEventTime,
+                                 deltaWindowOpenTime, 
+                                 tileListMap);
 
     sc = eventSvc()->registerObject("/Event/TriggerInfo", triggerInfo);
 
