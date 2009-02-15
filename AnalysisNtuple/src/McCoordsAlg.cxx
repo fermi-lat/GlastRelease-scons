@@ -22,6 +22,8 @@ class McCworker;
 namespace { // anonymous namespace for file-global
     std::string treename("MeritTuple");
     astro::GPS* gps;
+    const double R2D = 180./M_PI;
+
 #include "Item.h"
 }
 
@@ -180,8 +182,8 @@ void McCworker::evaluate()
     double earth_azimuth=atan2( mcdir().dot(east_dir), mcdir().dot(north_dir) );
     if( earth_azimuth <0) earth_azimuth += 2*M_PI; // to 0-360 deg.
     if( fabs(earth_azimuth)<1e-8) earth_azimuth=0;
-    m_mcZen  = zenith_theta*180/M_PI;;
-    m_mcAzim = earth_azimuth*180/M_PI;
+    m_mcZen  = zenith_theta*R2D;;
+    m_mcAzim = earth_azimuth*R2D;
 
     return;
 }
