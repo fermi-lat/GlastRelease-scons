@@ -3,6 +3,8 @@
  * $Header$
  *           EOH
 
+ * v0r31p1 16-Feb-2009 LSR  Fix the representation of the status words
+                              in MeritTupleFiller. 
  * v0r31   12-Jan-09   HMK  Add support for input relation files
  * v0r30   10-Nov-08   LSR  Add saturation and ghost info to ToT thermometer
                             Mods for WIRED:
