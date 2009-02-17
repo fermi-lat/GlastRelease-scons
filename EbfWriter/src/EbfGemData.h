@@ -2,8 +2,9 @@
 #define EBF_GEM_DATA_H
 
 
-#include "Event/TopLevel/Event.h"
-
+//#include "Event/TopLevel/Event.h"
+#include "GaudiKernel/IInterface.h"
+#include "LdfEvent/Gem.h"
 
 class EbfAcdData;
 class EbfTkrData;
@@ -64,7 +65,7 @@ class EbfGemData
       
     inline void         initialize  ()                 { return; }
     
-    void                fill        (Event::EventHeader *header,
+    void                fill        (LdfEvent::Gem*        gemTds,
                                      unsigned int       mc_number,
                                      double               mc_time,
                                      EbfGemCounters *lat_counters,

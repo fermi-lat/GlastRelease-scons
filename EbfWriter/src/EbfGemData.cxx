@@ -84,7 +84,7 @@ static unsigned int formThrottleByFace (int                        tiles,
  *                     a format that can be easily used to form
  *                     the GEM information.
  */
-void EbfGemData::fill (Event::EventHeader *header,
+void EbfGemData::fill (LdfEvent::Gem*        gemTds,
                        unsigned int       mc_number,
                        double               mc_time,
                        EbfGemCounters *lat_counters,
@@ -92,22 +92,24 @@ void EbfGemData::fill (Event::EventHeader *header,
                        const EbfTkrData        *tkr,
                        const EbfCalData        *cal)
 {
-    unsigned int            xz;
-    unsigned int            yz;
-    unsigned int            xy;
-    unsigned int            ru;
-    unsigned short threeInARow;
-    unsigned short   throttled;
-    unsigned short       calHi;
-    unsigned short       calLo;
-    unsigned short         cno;
-    unsigned short      reqVec;  
+    const LdfEvent::GemTileList& tileList = gemTds->tileList();
+
+    unsigned int            xz = tileList.xzp() << 16 | tileList.xzm();
+    unsigned int            yz = tileList.yzp() << 16 | tileList.yzm();
+    unsigned int            xy = tileList.xy();
+    unsigned int            ru = tileList.rbn() << 16;
+    unsigned short threeInARow = gemTds->tkrVector();
+    unsigned short   throttled = 0;
+    unsigned short       calHi = gemTds->calHEvector();
+    unsigned short       calLo = gemTds->calLEvector();
+    unsigned short         cno = gemTds->cnoVector();
+    unsigned short      reqVec = gemTds->conditionSummary();  
 
 
-    xz = acd->vetoesXZ ();
-    yz = acd->vetoesYZ ();
-    xy = acd->vetoesXY ();
-    ru = acd->vetoesRU ();
+    //xz = acd->vetoesXZ ();
+    //yz = acd->vetoesYZ ();
+    //xy = acd->vetoesXY ();
+    //ru = acd->vetoesRU ();
     
 /*    printf("xz: 0x%8.8x\n",xz);
     printf("yz: 0x%8.8x\n",yz);
@@ -123,11 +125,11 @@ void EbfGemData::fill (Event::EventHeader *header,
      |    4. ACD CNO                                (global   )
      |
     */
-    threeInARow = tkr->threeInARow ();
+    //threeInARow = tkr->threeInARow ();
     throttled   = formThrottle (xz, yz, xy);
-    calHi       = cal->hiTrigger ();
-    calLo       = cal->loTrigger ();
-    cno         = acd->cno ();
+    //calHi       = cal->hiTrigger ();
+    //calLo       = cal->loTrigger ();
+    //cno         = acd->cno ();
 
 /*
    printf("Ebf Alg Threshold \n");
@@ -146,7 +148,7 @@ void EbfGemData::fill (Event::EventHeader *header,
                 | ((cno)                      ? (1 << CNO)            : 0);
 
 
-    unsigned int dif = (reqVec&0xff^( (header->trigger()&0xff00)>>8) ); 
+//    unsigned int dif = (reqVec&0xff^( (header->trigger()&0xff00)>>8) ); 
 //    if(dif>0) printf("Cond. Sum Difference:  EBF 0x%2.2x    Header 0x%2.2x  HeaderGlt 0x%2.2x  XOR 0x%2.2x\n",reqVec,header->trigger(),(header->trigger()&0xff00)>>8,dif);
 
     /* Copy the trigger information to the GEM */

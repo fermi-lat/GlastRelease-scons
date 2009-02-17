@@ -39,6 +39,8 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 
+#include "LdfEvent/Gem.h"
+
 #include "Event/Digi/TkrDigi.h"
 #include "Event/Digi/CalDigi.h"
 #include "Event/Digi/AcdDigi.h"
@@ -261,7 +263,7 @@ StatusCode EbfWriter::execute()
     // Grab event header to pass event info
     SmartDataPtr<Event::EventHeader>header(eventSvc(), 
                                            EventModel::EventHeader);
-    
+
     //
     // TKR
     // ---
@@ -319,9 +321,15 @@ StatusCode EbfWriter::execute()
     // GEM
     // ---
     // 
-    if (!header) return StatusCode::FAILURE;
+    // Retrieve the LdfEvent::Gem.h object from the TDS
+    SmartDataPtr<LdfEvent::Gem> gemTds(eventSvc(), "/Event/Gem");
+    if(!gemTds) 
+    {
+        log << MSG::INFO << "Could not retrieve the Gem object from the TDS" << endreq; 
+        return StatusCode::FAILURE;
+    }
     
-    gem.fill (header,
+    gem.fill (gemTds,
               header->event(),
               header->time(),
               &m_latcounters,
