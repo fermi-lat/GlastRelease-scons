@@ -110,7 +110,7 @@ private:
 DECLARE_ALGORITHM_FACTORY(GcrReconAlg) ;
 
 
-GcrReconAlg::GcrReconAlg( const std::string & name, ISvcLocator * pSvcLocator ) : Algorithm(name,pSvcLocator)
+GcrReconAlg::GcrReconAlg( const std::string & name, ISvcLocator * pSvcLocator ) : Algorithm(name,pSvcLocator), m_initDir(0.,0.,0.) 
 {   
     // Declare the properties with these defaults
     declareProperty("GcrReconToolName", m_gcrReconToolName = "GcrReconTool");
@@ -348,8 +348,10 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 
 	    }
 	    else
-        	log << MSG::INFO << "no TkrTrackCol found" << endreq;
-
+	{
+        	log << MSG::WARNING << "no TkrTrackCol found : no subsequent processing" << endreq;
+		return StatusCode::FAILURE;
+	}
   }
   else if(m_initAxis=="MOM")
     {
