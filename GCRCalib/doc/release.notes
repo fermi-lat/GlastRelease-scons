@@ -1,3 +1,4 @@
+v1r6p2      18/02/09 jct  Fix two bugs in the way m_initDir is initialized, and the case of no track in TDS
 v1r6p1      30/06/08 jct  redux....
 v1r6        30/06/08 jct  fix release of the threshold setting
 v1r5p1      26/06/08 jct  fix an oops
