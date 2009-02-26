@@ -137,10 +137,18 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllOutputVars(GlastClassify::Tree
     }
 
     // Output of Prediction nodes is PREDICT.class
-    std::string               predClass = "PREDICT.class";
-    XTcolumnVal<std::string>* predict   = new XTcolumnVal<std::string>(predClass, "categorical");
-    predict->setDataValue("");
-    parser.getXtTupleVars()[predClass] = predict;
+    std::string predClass = "PREDICT.class";
+    
+    // But make sure it doesn't already exist!
+    XTtupleMap::iterator dataIter = parser.getXtTupleVars().find(predClass);
+  
+    // Doesn't exist, add it
+    if (dataIter == parser.getXtTupleVars().end())
+    {
+        XTcolumnVal<std::string>* predict   = new XTcolumnVal<std::string>(predClass, "categorical");
+        predict->setDataValue("");
+        parser.getXtTupleVars()[predClass] = predict;
+    }
 
     //done
     return numVars;

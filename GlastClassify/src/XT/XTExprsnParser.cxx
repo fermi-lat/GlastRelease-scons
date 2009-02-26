@@ -25,21 +25,6 @@ XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple)
 {
     m_delimiters.clear();
 
-    //m_delimiters.push_back(DelimPair("|",7));
-    //m_delimiters.push_back(DelimPair("&",6));
-    //m_delimiters.push_back(DelimPair("==",5));
-    //m_delimiters.push_back(DelimPair("!=",5));
-    //m_delimiters.push_back(DelimPair(">=",4));
-    //m_delimiters.push_back(DelimPair("<=",4));
-    //m_delimiters.push_back(DelimPair(">",4));
-    //m_delimiters.push_back(DelimPair("<",4));
-    //m_delimiters.push_back(DelimPair("!",3));
-    //m_delimiters.push_back(DelimPair("+",3));
-    //m_delimiters.push_back(DelimPair("-",3));
-    //m_delimiters.push_back(DelimPair("*",2));
-    //m_delimiters.push_back(DelimPair("/",2));
-    //m_delimiters.push_back(DelimPair("^",1));
-
     m_delimiters.push_back(DelimPair("|",10));
     m_delimiters.push_back(DelimPair("&",9));
     m_delimiters.push_back(DelimPair("==",8));
@@ -367,29 +352,29 @@ IXTExprsnNode* XTExprsnParser::parseVariable(std::string& expression, std::strin
     // Assumption is that this is an ntuple variable which may or may not have been declared
     XTcolumnValBase* tupleVal = 0;
 
-    // Are we looking for a result that is a categorical variable?
-    if (type == "categorical")
+    // Try to find variable in the current list
+    XTtupleMap::iterator dataIter = m_tuple.find(expression);
+
+    // Was it already declared?
+    if (dataIter != m_tuple.end())
     {
-        XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(expression,"categorical");
-        newValue->setDataValue(expression);
-        tupleVal = newValue;
+        tupleVal = dataIter->second;
     }
+    // Otherwise, we declare it here
     else
     {
-        XTtupleMap::iterator dataIter = m_tuple.find(expression);
-
-        // Was it already declared?
-        if (dataIter != m_tuple.end())
+        if (type == "categorical")
         {
-            tupleVal = dataIter->second;
+            XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(expression,"categorical");
+            newValue->setDataValue(expression); // Initialize to name to allow for constants
+            tupleVal = newValue;
         }
-        // We declare it here
         else
         {
-            tupleVal            = new XTcolumnVal<REALNUM>(expression);
-            m_tuple[expression] = tupleVal;
+            tupleVal = new XTcolumnVal<REALNUM>(expression);
         }
 
+        m_tuple[expression] = tupleVal;
     }
 
     IXTExprsnNode* pNode = 0;

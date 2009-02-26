@@ -142,12 +142,19 @@ int xmlFindOutputVars::numPredictEngineVars(const DOMElement* xmlActivityNode)
                 if (propertyName == "specifiedCategory")
                 {
                     std::string sName = xmlBase::Dom::getAttribute(xmlProperty, "value");
+    
+                    // But make sure it doesn't already exist!
+                    XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(sName);
+  
+                    // Doesn't exist, add it
+                    if (dataIter == XprsnParser().getXtTupleVars().end())
+                    {
+                        XTcolumnValBase* xtColumnVal = new XTcolumnVal<REALNUM>(sName);
 
-                    XTcolumnValBase* xtColumnVal = new XTcolumnVal<REALNUM>(sName);
+                        XprsnParser().getXtTupleVars()[sName] = xtColumnVal;
 
-                    XprsnParser().getXtTupleVars()[sName] = xtColumnVal;
-
-                    numVars++;
+                        numVars++;
+                    }
                 }
             }
 
