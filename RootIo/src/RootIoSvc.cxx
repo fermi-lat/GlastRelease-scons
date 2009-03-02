@@ -260,7 +260,7 @@ RootIoSvc::RootIoSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("MaxTreeSize", m_treeSize=0);
     declareProperty("TupleName", m_tupleName="MeritTuple");
     declareProperty("NoFailure", m_noFailure=0);
-    declareProperty("RebuildIndex", m_rebuildIndex=true);
+    declareProperty("RebuildIndex", m_rebuildIndex=false);
     
     // 
     declareProperty("CelRootFileWrite", m_celFileNameWrite="");

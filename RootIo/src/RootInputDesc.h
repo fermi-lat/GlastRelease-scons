@@ -12,6 +12,7 @@
 
 #include "GaudiKernel/Property.h"
 #include "TChain.h"
+#include "TChainIndex.h"
 #include "TFile.h"
 #include "TObject.h"
 #include <string>
@@ -48,7 +49,7 @@ public:
     TObject*                   getTObject()          { return *m_dataObject ; }
 
     /// Methods to handle reading and clearing events
-    TObject*                   getEvent( int index ) ;
+    TObject*                   getEvent( Long64_t index ) ;
     TObject*                   getEvent( int runNum, int evtNum ) ;
     bool                       checkEventAvailability( Long64_t index );
     bool                       checkEventAvailability( int runNum, int evtNum );
@@ -80,6 +81,7 @@ public:
     bool                m_rebuildIndex; ///Flag denoting that we should force 
                                         /// the rebuild of the input files' index
     TVirtualIndex*      m_runEvtIndex;  /// Save the RunId/EventId Index in case other indices are in use such as CompositeEventList
+    TChainIndex*        m_chainIndex;
     
  } ;
 
