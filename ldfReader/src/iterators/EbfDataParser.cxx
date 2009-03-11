@@ -219,6 +219,43 @@ int EbfDataParser::handleError(const EBFevent* e, unsigned  code,
 int EbfDataParser::handleError(const EBFcontribution* c, unsigned code,
                            unsigned p1, unsigned p2) const
 {
+
+  ldfReader::LatData* latData = ldfReader::LatData::instance();
+  switch (code) {
+      case EBFcontributionIterator::ERR_TrgParityError:
+      {
+          latData->setTrgParityErrorFlag();
+          break;
+      }
+      case EBFcontributionIterator::ERR_PacketError:
+      {
+          latData->setPacketErrorFlag();
+ /* ERR_PacketError gets an additional parameter */
+//      char *type;
+//
+//      switch (p1)
+//      {
+//        case EBFcontribution::Parity:      type = "parity";       break;
+//        case EBFcontribution::Truncated:   type = "truncated";    break;
+//        case EBFcontribution::WriteFault:  type = "write fault";  break;
+//        case EBFcontribution::TimedOut:    type = "timed out";    break;
+//        default:                           type = "unknown";      break;
+//     }
+//      fprintf(stream(),
+//              "EBFcontributionIterator: For EBFcontribution at %p:\n"
+//              "  Skipping contribution with source ID %d "
+//              "and 'packet %s' (%d) error\n",
+//              c, p2, type, p1);
+
+          break;
+      }
+      default:
+      {
+        break;
+      }
+  }
+
+  // Call base method
   int rc = EBFiteratorBase::handleError(c, code, p1, p2);
   _handleErrorCommon();
   return rc;
