@@ -3,6 +3,8 @@
  * @verbatim
  * package manager:T.Burnett
  * $Id$
+* EOH
+* v7r4     HMK 11-Mar-09 Add TriggerInfoAlg to ldf2digi.txt
 * v7r3p2   LSR 06-Feb-09 Rearranged basicOptions to use PtValsAlg
                             PointInfoAlg is no longer called
 * v7r3p1    TU 19-Dec-08 Added in the forgotten "use Overlay" in the req file...

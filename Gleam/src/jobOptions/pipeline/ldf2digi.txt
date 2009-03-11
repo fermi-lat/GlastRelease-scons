@@ -65,7 +65,7 @@ TriggerAlg.failOnFmxKeyMismatch = false;
 // Define the Trigger sequence:
 //
 ApplicationMgr.DLLs   += {"Trigger"};
-Trigger.Members        = {"TriggerAlg","TriRowBitsAlg"};
+Trigger.Members        = {"TriggerInfoAlg","TriggerAlg","TriRowBitsAlg"};
 ApplicationMgr.ExtSvc += {"LivetimeSvc"};
 LivetimeSvc.Deadtime   = 0; // disable this for real data!
 
