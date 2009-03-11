@@ -118,6 +118,8 @@ namespace LdfEvent{
             return ((m_flags & enums::TRGPARITYERROR) != 0); };
         bool badLdfStatus() const { 
             return ( (m_flags & enums::BADLDFSTATUS) != 0); };
+        bool temBug() const {
+            return ( (m_flags & enums::TEMBUG) != 0); };
 
         //unsigned int eventSequence() const { return m_evtSequence; }
  

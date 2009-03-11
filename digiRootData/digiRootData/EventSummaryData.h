@@ -143,6 +143,8 @@ public:
          return (m_flags & enums::MISSINGCALREADOUT);}
     Bool_t ldfWarning() const {
          return (m_flags & enums::LDFWARNING); }
+    Bool_t temBug() const {
+         return (m_flags & enums::TEMBUG); }
     
     
     /// Returns the length in bytes of the TEM contribution identified by 

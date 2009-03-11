@@ -2,8 +2,8 @@
 Package digiRootData
 Coordinator:H.Kelly
 
-@verbatim
-
+EOH
+v11r13    11-Mar-2009 HMK Add TemBug check in EventSummary
 v11r12    18-Sep-2008 HMK Add GammaFilterV3 for FSW B1-1-2
 v11r11    12-Aug-2008 HMK Provide char option parameter to DigiObjectManager's
           Delete routine.  If "ALL" is passed in, the lists maintained will be
@@ -258,7 +258,6 @@ v2r7      21-aug-2001 HMK add in CNO bit for AcdTile class
 
 v1r1      april-2001 HMK 
 
-@endverbatim
 
 */
 
