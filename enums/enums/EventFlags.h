@@ -26,7 +26,8 @@ namespace enums {
             TIMEOUTERROR   = 0x20000, //131072,
             MISSINGCALREADOUT 
                            = 0x40000, //262144,
-            LDFWARNING     = 0x80000  //524288
+            LDFWARNING     = 0x80000, //524288,
+            TEMBUG         = 0x10000  // 1048576
         } EventFlags;
 
 namespace Gleam {
