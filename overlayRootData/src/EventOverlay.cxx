@@ -61,6 +61,8 @@ void EventOverlay::Clear(Option_t *option)
     m_acdOverlayCol->Clear();
     m_calOverlayCol->Clear();
     m_tkrOverlayCol->Clear();
+    m_gemOverlay.Clear();
+    m_ptOverlay.Clear();
 }
 
 void EventOverlay::Print(Option_t *option) const {

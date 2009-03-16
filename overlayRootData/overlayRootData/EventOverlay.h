@@ -9,6 +9,7 @@
 #include "CalOverlay.h"
 #include "TkrOverlay.h"
 #include "GemOverlay.h"
+#include "PtOverlay.h"
 
 /** @class EventOverlay
  * @brief This is the top-level event class to store the Overlay data.
@@ -27,6 +28,8 @@ public:
         Double_t liveTime, Bool_t fromMc);
 
     void setGemOverlay(const GemOverlay& gem)  {m_gemOverlay = gem;}
+
+    void setPtOverlay(const PtOverlay& pt)     {m_ptOverlay  = pt;}
 
     void Clear(Option_t *option="");
  
@@ -50,6 +53,9 @@ public:
 
     /// Returns a reference to the Gem
     const GemOverlay& getGemOverlay() const    { return m_gemOverlay; };
+
+    /// Returns a reference to the Pt values
+    const PtOverlay&  getPtOverlay() const     { return m_ptOverlay; };
 
     /// retrieve the whole TClonesArray of Acd Digi data
     const TObjArray*  getAcdOverlayCol() const { return m_acdOverlayCol; };
@@ -106,6 +112,9 @@ private:
 
     /// Storage for gem information
     GemOverlay m_gemOverlay;
+
+    /// Storage for the Pt values
+    PtOverlay  m_ptOverlay;
 
     ClassDef(EventOverlay,2) // Storage for Raw(Digi) event and subsystem data
 }; 
