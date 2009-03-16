@@ -9,6 +9,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(Overlay) {
+    DECLARE_ALGORITHM( DoMergeAlg );
     DECLARE_ALGORITHM( AcdOverlayMergeAlg );
     DECLARE_ALGORITHM( CalOverlayMergeAlg );
     DECLARE_ALGORITHM( TkrOverlayMergeAlg );
@@ -23,6 +24,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_TOOL( TkrDigiToOverlayTool );
     DECLARE_TOOL( AcdHitToOverlayTool );
     DECLARE_TOOL( GemToOverlayTool );
+    DECLARE_TOOL( PtToOverlayTool );
     DECLARE_TOOL( OverlayRandom);
     DECLARE_CONVERTER( SrcOverlayCnv );
     DECLARE_CONVERTER( EventOverlayCnv );
@@ -30,6 +32,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_CONVERTER( CalOverlayCnv );
     DECLARE_CONVERTER( AcdOverlayCnv );
     DECLARE_CONVERTER( GemOverlayCnv );
+    DECLARE_CONVERTER( PtOverlayCnv );
 //    DECLARE_CONVERTER( LdfGemCnv );
 }
   

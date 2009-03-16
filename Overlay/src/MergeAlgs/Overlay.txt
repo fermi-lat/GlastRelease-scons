@@ -11,7 +11,8 @@ ApplicationMgr.ExtSvc += {"OverlayInputSvc"};
 TriggerTest.Members = {"TriggerAlg", "Count/trigger", "TriRowBitsAlg" };
 
 // Modify the Digitization sequencer to include background overlay
-Digitization.Members = { 
+Digitization.Members = {
+    "DoMergeAlg", 
     "TkrDigiAlg",
     "AcdOverlayMergeAlg",
     "AcdDigiAlg",
@@ -20,6 +21,13 @@ Digitization.Members = {
     "GemOverlayMergeAlg",
     "TkrOverlayMergeAlg",
     "TkrDigiMergeTruncationAlg"
+    };
+
+Digitization.BranchMembers = {
+    "DoMergeAlg", 
+    "TkrDigiAlg",
+    "AcdDigiAlg",
+    "TriggerInfoAlg"
     };
     
 // Also modify the CalDigitization sequencer
