@@ -56,6 +56,7 @@ public:
         static std::string TkrOverlayCol;
         static std::string CalOverlayCol;
         static std::string GemOverlay;
+        static std::string PtOverlay;
     };
 
     OverlayEventModel() {}

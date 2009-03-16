@@ -23,4 +23,5 @@ std::string OverlayEventModel::Overlay::AcdOverlayCol = OverlayEventModel::Overl
 std::string OverlayEventModel::Overlay::TkrOverlayCol = OverlayEventModel::Overlay::EventOverlay + "/TkrOverlayCol";
 std::string OverlayEventModel::Overlay::CalOverlayCol = OverlayEventModel::Overlay::EventOverlay + "/CalOverlayCol";
 std::string OverlayEventModel::Overlay::GemOverlay    = OverlayEventModel::Overlay::EventOverlay + "/GemOverlay";
+std::string OverlayEventModel::Overlay::PtOverlay     = OverlayEventModel::Overlay::EventOverlay + "/PtOverlay";
 
