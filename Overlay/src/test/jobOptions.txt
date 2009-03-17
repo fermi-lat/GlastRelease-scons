@@ -133,6 +133,11 @@ ApplicationMgr.ExtSvc += {"RootIoSvc"};
 ApplicationMgr.Runable = "RootIoSvc"; 
 
 //
+// ntupleWriterSvc
+//
+ApplicationMgr.DLLs += {"ntupleWriterSvc"};
+
+//
 // Geometry: Use flight geometry!
 //
 GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
