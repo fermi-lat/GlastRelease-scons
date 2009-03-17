@@ -85,7 +85,7 @@ TriggerAlg.engine = "ConfigSvc";
 //
 // Define the Output sequence:
 //
-ApplicationMgr.DLLs += {"RootIo"}; 
+ApplicationMgr.DLLs += {"ntupleWriterSvc","RootIo"}; 
 Output.Members       = {"FhSetAlg","digiRootWriterAlg"};
 
 //
