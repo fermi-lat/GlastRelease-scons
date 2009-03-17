@@ -30,6 +30,7 @@ class DoMergeAlg : public Algorithm
     StatusCode finalize();
 
  private:
+     bool m_mergeAll;
 
 };
 
@@ -40,6 +41,8 @@ const IAlgFactory& DoMergeAlgFactory = Factory;
 DoMergeAlg::DoMergeAlg(const std::string& name, ISvcLocator* pSvcLocator)
     : Algorithm(name, pSvcLocator) 
 {
+    // variable to bypass if not wanted
+    declareProperty("MergeAll", m_mergeAll = false);
 }
 
 
@@ -77,6 +80,12 @@ StatusCode DoMergeAlg::execute()
     StatusCode sc = StatusCode::SUCCESS; 
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG << "execute" << endreq;
+
+    if (m_mergeAll)
+    {
+        log << MSG::DEBUG << "Merging all events, skipping DoMergeAlg" << endreq;
+        return sc;
+    }
 
     // How many hits in ACD, TKR or CAL?
     int numPosHits = 0;
