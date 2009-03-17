@@ -277,8 +277,12 @@ int EbfDataParser::handleError(const TEMcontribution* c, unsigned code,
                            unsigned p1, unsigned p2) const
 {
   ErrParser::handleError(c,code,p1,p2);
-  int rc = EBFiteratorBase::handleError(c, code, p1, p2);
-  _handleErrorCommon();
+  int rc=code;
+  // Always print out log messages that are not TEMbug
+  if ((EbfDebug::getDebug() >= EbfDebug::ERRMSG) || (code != ERR_TEMbug)) {
+      rc = EBFiteratorBase::handleError(c, code, p1, p2);
+      _handleErrorCommon();
+  }
   return rc;
 }
 
