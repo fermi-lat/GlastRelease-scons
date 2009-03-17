@@ -422,6 +422,8 @@ StatusCode AcdValsTool::calculate()
             const idents::AcdId& id = aHit->getAcdId();
             if ( id.na() ) {
                 continue;
+            } else if ( !aHit->getAcceptMapBit(Event::AcdHit::A) && !aHit->getAcceptMapBit(Event::AcdHit::B) ) {
+			    continue;
             } else if ( id.ribbon() ) {
                 float MeV_A = aHit->mips(Event::AcdHit::A) * MeVMipRibbon;
                 float MeV_B = aHit->mips(Event::AcdHit::B) * MeVMipRibbon;
