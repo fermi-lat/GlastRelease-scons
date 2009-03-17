@@ -32,7 +32,8 @@ xx/** @mainpage package LdfConverter
   the data) as the stating event.
   @param LdfEventSelector.EbfDebugLevel
   Integer.  Defaults to 0 (no debug output).  Anything else enables 
-  debug output
+  debug output, where 1 will print error messages and a setting of 4
+  results in ALL possible output, including detailed detector info per event
   @param LdfEventSelector.SweepEventSearch
   Integer.  Defaults to 1 (search for first sweep event).  Setting to zero
   skips this search.
