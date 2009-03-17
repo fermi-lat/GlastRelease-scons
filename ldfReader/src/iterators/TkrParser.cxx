@@ -98,7 +98,7 @@ namespace ldfReader {
         unsigned myPlane = layerEnd >> 1;
         unsigned  myLowHigh = layerEnd & 1;
         const char* myXy = xyByPlane[myPlane % 4];
-        if (EbfDebug::getDebug()) {
+        if (EbfDebug::getDebug()==EbfDebug::ALL) {
             printf("%s  %d   %d   %s  %d   %02d    %02d  0x%03x = %4d\n",
                 m_prefix, tower, myPlane, myXy, myLowHigh,
                 TKRstrip::gtfe(hit), TKRstrip::strip(hit), hit, hit);
@@ -133,7 +133,7 @@ namespace ldfReader {
 
         using namespace ldfReader;
 
-        if (EbfDebug::getDebug()) {
+        if (EbfDebug::getDebug()==EbfDebug::ALL) {
             printf("%s %2d %2d 0x%02x = %3d\n", m_prefix, tower, layerEnd, tot, tot);
         }
 

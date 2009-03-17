@@ -14,11 +14,18 @@ class EbfDebug {
 public:
 
     /// Turn on or off debug output.  Returns old value of flag
-    static bool setDebug(bool debugOn);
-    static bool getDebug() {return m_debug;}
+    static int setDebug(int debugOn);
+
+    static int getDebug() {return m_debug;}
+
+    typedef enum {
+       NONE = 0,
+       ERRMSG = 1,
+       ALL = 4
+    } Verbosity;
 
 private:
-    static bool m_debug;
+    static int m_debug;
 };
 
 #endif

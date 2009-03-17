@@ -42,7 +42,8 @@ namespace ldfReader {
         virtual int gtrcSummaryError   (unsigned twr, unsigned cc, unsigned rc);
         virtual int gtccDataParityError(unsigned twr, unsigned cc, unsigned rc);
 
-        virtual int handleError(TEMcontribution* contribution, unsigned code,
+        virtual int handleError(const TEMcontribution* contribution, 
+                                unsigned code,
                                 unsigned p1=0, unsigned p2=0) const;
 
    protected :

@@ -40,7 +40,7 @@ namespace ldfReader {
 
         char name[10];
         sprintf(name, "  %1d    %2s ", gccc[layer], layerTag[layer]);
-        if (EbfDebug::getDebug()) {
+        if (EbfDebug::getDebug()==EbfDebug::ALL) {
             printf("%s     %2d   %10s   %2d   0x%03x   %1d   0x%03x   %1d\n",
                 m_prefix, tower, name, theLog.column(),
                 theLog.positive().value(), theLog.positive().range(),
