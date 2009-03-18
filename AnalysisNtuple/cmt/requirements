@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v2r54p3
+version v2r54p2
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -26,6 +26,7 @@ use facilities       v*
 use RootIo           v*
 use AcdUtil          v*
 use OnboardFilterTds v*
+use OverlayEvent     v*
 use gr_app           v*
 
 macro AnalysisNtuple_cppflags "" \

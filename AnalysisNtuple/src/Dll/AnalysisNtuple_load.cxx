@@ -27,6 +27,7 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_TOOL(      TkrHitValsTool   );
     DECLARE_TOOL(      VtxValsTool      );
     DECLARE_TOOL(      EvtValsTool      );
+    DECLARE_TOOL(      OverlayValsTool  );
     //@@@FP 07/08/05
     DECLARE_TOOL(      CalMipValsTool   );
     DECLARE_TOOL(      ObfValsTool      );   //@@@LSR 03/14/07
