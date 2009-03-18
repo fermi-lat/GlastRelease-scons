@@ -44,6 +44,9 @@ public:
     /// Returns the status word
     UInt_t getStatus() const {return m_status;}
 
+    /// Set the status word
+    void setStatus(UInt_t status) {m_status = status;}
+
     /// Root >= 3.0 is now const correct for the Compare function
     Int_t Compare(const TObject *obj) const; 
     Bool_t IsSortable() const;
@@ -61,7 +64,7 @@ private:
     /// status word
     UInt_t           m_status;
 
-    ClassDef(AcdOverlay,1) // Digitization for a single ACD entity
+    ClassDef(AcdOverlay,2) // Digitization for a single ACD entity
 };
 
 #endif
