@@ -36,10 +36,24 @@ public:
 
     /// Status bit definitions
     enum DigiStatusBits {
-         DIGI_NULL    = 0,
-         DIGI_MC      = 1<<28,   // This digi is from Monte Carlo
-         DIGI_DATA    = 1<<30,   // This digi is from data 
-         DIGI_OVERLAY = 1<<31    // This digi contains overlay info
+         PMTA_ACCEPT_BIT              = 0x1,    // channel is above zero suppresion threshold (applied to digital data)
+         PMTA_VETO_BIT                = 0x2,    // channel fired veto discriminator (applied to analog data)
+         PMTA_RANGE_BIT               = 0x4,    // channel was read out in high range
+         PMTA_CNO_BIT                 = 0x8,    // could be any channel on that GARC
+         PMTA_ODD_PARITY_ERROR_BIT    = 0x10,   // PHA data transmission had parity error
+         PMTA_HEADER_PARITY_ERROR_BIT = 0x20,   // header data transmission had parity error 
+         PMTA_DEAD_BIT                = 0x40,   // PMT was flagged as dead by offline calibration
+         PMTA_HOT_BIT                 = 0x80,   // PMT was flagged as hot by offline calibration
+         PMTA_ANY_ERROR_MASK          = 0xF0,   // PMT has any error
+         PMTB_ACCEPT_BIT              = 0x100,  // channel is above zero suppresion threshold (applied to digital data)
+         PMTB_VETO_BIT                = 0x200,  // channel fired veto discriminator (applied to analog data)
+         PMTB_RANGE_BIT               = 0x400,  // channel was read out in high range
+         PMTB_CNO_BIT                 = 0x800,  // could be any channel on that GARC
+         PMTB_ODD_PARITY_ERROR_BIT    = 0x1000, // PHA data transmission had parity error
+         PMTB_HEADER_PARITY_ERROR_BIT = 0x2000, // header data transmission had parity error 
+         PMTB_DEAD_BIT                = 0x4000, // PMT was flagged as dead by offline calibration
+         PMTB_HOT_BIT                 = 0x8000, // PMT was flagged as hot by offline calibration
+         PMTB_ANY_ERROR_MASK          = 0xF000  // PMT has any error
     };
 
     //! Constructors
