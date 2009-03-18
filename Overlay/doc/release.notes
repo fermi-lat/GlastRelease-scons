@@ -4,7 +4,8 @@
 $Id$
 @verbatim
 
-St. Patty's Day '09 v1r4p2  TU  Add bypass option to DoMergeAlg
+St. Patty's Day '09 v1r5p0  TU AcdHit status bits now in AcdOverlay object 
+St. Patty's Day '09 v1r4p2  TU Add bypass option to DoMergeAlg
 16-Mar-09           v1r4p1  TU Fix test program JO file so it will find ntupleWriterSvc
 16-Mar-09           v1r4p0  TU New code to handle Pt* variables, not read overlay when sim event does not interact
  3-Mar-09           v1r3p0  TU Modify to keep open all input streams during length of job
