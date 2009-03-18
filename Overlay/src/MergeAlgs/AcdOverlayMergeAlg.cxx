@@ -197,6 +197,7 @@ StatusCode AcdOverlayMergeAlg::execute()
             // Create a new McPositionHit for this 
             Event::McPositionHit* mcHit = new Event::McPositionHit();
 
+            // Initalize
             mcHit->init(energyDep, 
                         volumeId, 
                         locEntryPoint, 
@@ -204,6 +205,9 @@ StatusCode AcdOverlayMergeAlg::execute()
                         entryPoint, 
                         exitPoint, 
                         Event::McPositionHit::overlayHit);
+
+            // Since this is from overlay, add the acdOverlay status mask to the packed flags
+            mcHit->addPackedMask(acdOverlay->getStatus());
 
             mcPosHitCol->push_back(mcHit);
         }
