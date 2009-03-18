@@ -36,24 +36,24 @@ public:
 
     /// Status bit definitions
     enum DigiStatusBits {
-         PMTA_ACCEPT_BIT              = 0x1,    // channel is above zero suppresion threshold (applied to digital data)
-         PMTA_VETO_BIT                = 0x2,    // channel fired veto discriminator (applied to analog data)
-         PMTA_RANGE_BIT               = 0x4,    // channel was read out in high range
-         PMTA_CNO_BIT                 = 0x8,    // could be any channel on that GARC
-         PMTA_ODD_PARITY_ERROR_BIT    = 0x10,   // PHA data transmission had parity error
-         PMTA_HEADER_PARITY_ERROR_BIT = 0x20,   // header data transmission had parity error 
-         PMTA_DEAD_BIT                = 0x40,   // PMT was flagged as dead by offline calibration
-         PMTA_HOT_BIT                 = 0x80,   // PMT was flagged as hot by offline calibration
-         PMTA_ANY_ERROR_MASK          = 0xF0,   // PMT has any error
-         PMTB_ACCEPT_BIT              = 0x100,  // channel is above zero suppresion threshold (applied to digital data)
-         PMTB_VETO_BIT                = 0x200,  // channel fired veto discriminator (applied to analog data)
-         PMTB_RANGE_BIT               = 0x400,  // channel was read out in high range
-         PMTB_CNO_BIT                 = 0x800,  // could be any channel on that GARC
-         PMTB_ODD_PARITY_ERROR_BIT    = 0x1000, // PHA data transmission had parity error
-         PMTB_HEADER_PARITY_ERROR_BIT = 0x2000, // header data transmission had parity error 
-         PMTB_DEAD_BIT                = 0x4000, // PMT was flagged as dead by offline calibration
-         PMTB_HOT_BIT                 = 0x8000, // PMT was flagged as hot by offline calibration
-         PMTB_ANY_ERROR_MASK          = 0xF000  // PMT has any error
+         PMTA_ACCEPT_BIT              = 0x00000001, // channel is above zero suppresion threshold (applied to digital data)
+         PMTA_VETO_BIT                = 0x00000002, // channel fired veto discriminator (applied to analog data)
+         PMTA_RANGE_BIT               = 0x00000004, // channel was read out in high range
+         PMTA_CNO_BIT                 = 0x00000008, // could be any channel on that GARC
+         PMTA_ODD_PARITY_ERROR_BIT    = 0x00000010, // PHA data transmission had parity error
+         PMTA_HEADER_PARITY_ERROR_BIT = 0x00000020, // header data transmission had parity error 
+         PMTA_DEAD_BIT                = 0x00000040, // PMT was flagged as dead by offline calibration
+         PMTA_HOT_BIT                 = 0x00000080, // PMT was flagged as hot by offline calibration
+         PMTA_ANY_ERROR_MASK          = 0x000000F0, // PMT has any error
+         PMTB_ACCEPT_BIT              = 0x00010000, // channel is above zero suppresion threshold (applied to digital data)
+         PMTB_VETO_BIT                = 0x00020000, // channel fired veto discriminator (applied to analog data)
+         PMTB_RANGE_BIT               = 0x00040000, // channel was read out in high range
+         PMTB_CNO_BIT                 = 0x00080000, // could be any channel on that GARC
+         PMTB_ODD_PARITY_ERROR_BIT    = 0x00100000, // PHA data transmission had parity error
+         PMTB_HEADER_PARITY_ERROR_BIT = 0x00200000, // header data transmission had parity error 
+         PMTB_DEAD_BIT                = 0x00400000, // PMT was flagged as dead by offline calibration
+         PMTB_HOT_BIT                 = 0x00800000, // PMT was flagged as hot by offline calibration
+         PMTB_ANY_ERROR_MASK          = 0x00F00000  // PMT has any error
     };
 
     //! Constructors
