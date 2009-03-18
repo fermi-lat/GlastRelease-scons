@@ -182,6 +182,8 @@ StatusCode AcdOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObjec
         
         Event::AcdOverlay* acdOverlayTds = new Event::AcdOverlay(volIdTds, acdIdTds, energyTds, positionTds);
 
+        acdOverlayTds->setStatus(acdOverlayRoot->getStatus());
+
         acdOverlayTdsCol->push_back(acdOverlayTds);
     }
 
@@ -223,6 +225,8 @@ StatusCode AcdOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAd
         TVector3   positionRoot(positionTds.x(), positionTds.y(), positionTds.z());
         
         AcdOverlay* acdOverlayRoot = new AcdOverlay(volIdRoot, acdIdRoot, energyRoot, positionRoot);
+
+        acdOverlayRoot->setStatus((*acdOverlayTds)->getStatus());
 
         overlayRoot->addAcdOverlay(acdOverlayRoot);
     }

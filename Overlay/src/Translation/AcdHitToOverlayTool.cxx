@@ -243,6 +243,11 @@ StatusCode AcdHitToOverlayTool::translate()
         // Create the AcdOverlay object
         Event::AcdOverlay* acdOverlay = new Event::AcdOverlay(volId, acdId, eDep, center);
 
+        // Get the status bits
+        unsigned int statusBits = acdHit->getFlags(Event::AcdHit::A) | (acdHit->getFlags(Event::AcdHit::B) << 16);
+
+        acdOverlay->setStatus(statusBits);
+
         // Dump the AcdHit we made
         delete acdHit;
 
