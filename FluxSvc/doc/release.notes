@@ -6,6 +6,7 @@
 
             * EOH *
 
+   18-Mar-09  v6r55p4 LSR  remove DECLARE statement in FluxSvc_load
    17-Mar-09  v6r55p3 LSR  remove PointInfoAlg, and that part of FluxAlg that did Pt* variables
    10-nov-08  v6r55p1 THB  remove TU changes: v6r53 plus CMT changes
    28-jul-08  v6r54p2 THB  CMT env var changes
