@@ -58,6 +58,8 @@
  * @param RootTupleSvc.JobInfoTreeName 
  * Default ["jobinfo"]
  * Name of the tree to contain the jobinfo data
+ * @param RootTupleSvc.MeritVersion
+ * Default 0 which results in using the initialized value set in RootTupleSvc
  * @param RootTupleSvc.JobInfo  
  * Default "" (empty string)
  * string of the form "a=99, b=100" of names, values to add to the jobinfo tree

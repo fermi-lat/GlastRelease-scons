@@ -108,6 +108,8 @@ public:
 
     //! Returns merit version
     virtual int getMeritVersion() = 0;
+    //! Set merit version
+    virtual void setMeritVersion(int v) = 0;
 
     //! Allow clients to set basket size on a per branch basis, or for
     /// all branches by setting branchName="*" or branchName="xxx*"
