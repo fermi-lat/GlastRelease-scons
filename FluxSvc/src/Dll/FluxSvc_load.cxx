@@ -13,7 +13,8 @@ DECLARE_FACTORY_ENTRIES(FluxSvc) {
     DECLARE_SERVICE( OrbitSvc );
     DECLARE_ALGORITHM( FluxAlg );
     DECLARE_ALGORITHM( ExposureAlg );
-    DECLARE_ALGORITHM( PointInfoAlg );
+    // removed 18-Mar-2009
+    // DECLARE_ALGORITHM( PointInfoAlg );
     DECLARE_TOOL( FluxSvcRandom );
 }
 
