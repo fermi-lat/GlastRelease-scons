@@ -110,6 +110,20 @@ public:
     /// access to the current read-only gcr header
     virtual const FileHeader * constGcrHeader() =0 ;
 
+    /// create a writable mc header
+    virtual StatusCode newMeritHeader() =0 ;
+    
+    /// access to the current writable mc file header
+    virtual FileHeader * meritHeader() =0 ;
+    
+    /// write the mc header
+    virtual StatusCode writeMeritHeader( TFile * ) =0 ;
+    
+    /// if the file is new, extract its header
+    virtual StatusCode readConstMeritHeader( TFile * ) =0 ;
+
+    /// access to the current read-only mc file header
+    virtual const FileHeader * constMeritHeader() =0 ;
     
 } ; 
  
@@ -151,6 +165,12 @@ public:
     StatusCode readConstGcrHeader( TFile * ) ;
     const FileHeader * constGcrHeader() ;
 
+    StatusCode newMeritHeader() ;
+    FileHeader * meritHeader() ;
+    StatusCode writeMeritHeader( TFile * ) ;
+    StatusCode readConstMeritHeader( TFile * ) ;
+    const FileHeader * constMeritHeader() ;
+    
     
 private:
 
@@ -161,11 +181,13 @@ private:
     FileHeader * m_digiHeader ;
     FileHeader * m_reconHeader ;
     FileHeader * m_gcrHeader ;
+    FileHeader * m_meritHeader ;
 
     const FileHeader * m_constMcHeader ;
     const FileHeader * m_constDigiHeader ;
     const FileHeader * m_constReconHeader ;
     const FileHeader * m_constGcrHeader ;
+    const FileHeader * m_constMeritHeader ;
 
 } ; 
  
