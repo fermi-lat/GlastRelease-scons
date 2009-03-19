@@ -106,6 +106,8 @@ public:
     //! Save the row in the output file
     virtual void saveRow(const std::string& tupleName)=0; 
 
+    //! Returns merit version
+    virtual int getMeritVersion() = 0;
 
     //! Allow clients to set basket size on a per branch basis, or for
     /// all branches by setting branchName="*" or branchName="xxx*"
