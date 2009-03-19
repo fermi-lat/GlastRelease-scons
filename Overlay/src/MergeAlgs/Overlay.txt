@@ -36,6 +36,9 @@ Digitization.BranchMembers = {
 // Turn off the random noise hit backgrounds in the Tracker
 ToolSvc.GeneralNoiseTool.occupancy = 0.;
 
+// Make sure the Overlay information goes to the ntuple
+AnalysisNtupleAlg.toolList = {"+", "Overlay"};
+
 //==============================================================
 //
 // End of job options file
