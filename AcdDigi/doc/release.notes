@@ -2,6 +2,7 @@
  Package AcdDigi\n
  Coordinator:H.Kelly
  @verbatim
+ v3r8    19-Mar-2009  TU Use input overlay accept/veto/cno bits for pure overlay event
  v3r7    17-Dec-2008  TU Update AcdDigi's to include a status word (useful in overlay)
  v3r6     1-Dec-2008  TU Merging has moved into the Overlay package
  v3r5    12-Nov-2008 LSR Mods for Digi merging
