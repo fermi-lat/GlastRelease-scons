@@ -176,7 +176,7 @@ StatusCode AcdDigiAlg::execute() {
             return sc;
         }  
       
-        sc = convertPeToMips(m_peMap, m_mipsMap);
+        sc = convertPeToMips(m_peMap, m_statusMap, m_mipsMap);
         if( sc.isFailure() ) 
         {
             log << MSG::ERROR << "Failed to convert energy to mips" << endreq;
@@ -266,8 +266,13 @@ StatusCode AcdDigiAlg::fillEnergyAndPeMaps( const Event::McPositionHitCol& mcHit
 
         // Set the status bits
         unsigned int statusWord = 0;
-        if ((*hit)->getPackedFlags() & ~Event::McPositionHit::overlayHit) statusWord |= Event::AcdDigi::DIGI_MC;
-        if ((*hit)->getPackedFlags() &  Event::McPositionHit::overlayHit) statusWord |= Event::AcdDigi::DIGI_OVERLAY;
+        
+        // If overlay bit not set (and in this code) then must be MC
+        if (!((*hit)->getPackedFlags() & Event::McPositionHit::overlayHit)) 
+             statusWord = Event::AcdDigi::DIGI_MC;
+
+        // If overlay bit is set, copy entire packed word (note that top bits have same def digi<->McPositionHit
+        else statusWord = (*hit)->getPackedFlags();
 
         if (statusMap.find(id) != statusMap.end())
         {
@@ -283,7 +288,8 @@ StatusCode AcdDigiAlg::fillEnergyAndPeMaps( const Event::McPositionHitCol& mcHit
 
 
 StatusCode AcdDigiAlg::convertPeToMips( const std::map<idents::AcdId, std::pair<double, double> >& peMap,
-                        std::map<idents::AcdId, std::pair<double, double> >& mipsMap) 
+                                        const std::map<idents::AcdId, unsigned int>&               statusMap,
+                                              std::map<idents::AcdId, std::pair<double, double> >& mipsMap) 
 {
     MsgStream log( msgSvc(), name() );
 
@@ -294,13 +300,26 @@ StatusCode AcdDigiAlg::convertPeToMips( const std::map<idents::AcdId, std::pair<
         double pe_pmtA_mean = itr->second.first;
         double pe_pmtB_mean = itr->second.second;
 
-        // Throw the Poisson stats on the expected # of PE.
-        double pe_pmtA = AcdDigiUtil::simulateDynodeChain(pe_pmtA_mean);
-        double pe_pmtB = AcdDigiUtil::simulateDynodeChain(pe_pmtB_mean);    
+        // initialize correct responses
+        double pe_pmtA = pe_pmtA_mean;
+        double pe_pmtB = pe_pmtB_mean;
 
-        // Adjust the light yield
-        pe_pmtA /= m_lightYeildRatio;
-        pe_pmtB /= m_lightYeildRatio;
+        // Retrieve the status bits 
+        unsigned int status = 0;
+        
+        if (statusMap.find(itr->first) != statusMap.end()) status = statusMap.find(itr->first)->second;
+
+        // If not a pure overlay hit then do the dynode simulation
+        if ((status & 0xF0000000) != Event::AcdDigi::DIGI_OVERLAY)
+        {
+            // Throw the Poisson stats on the expected # of PE.
+            pe_pmtA = AcdDigiUtil::simulateDynodeChain(pe_pmtA_mean);
+            pe_pmtB = AcdDigiUtil::simulateDynodeChain(pe_pmtB_mean);
+
+            // Adjust the light yield
+            pe_pmtA /= m_lightYeildRatio;
+            pe_pmtB /= m_lightYeildRatio;
+        }
 
         double mipA(0.); 
         double mipB(0.);
@@ -385,20 +404,36 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
 
         sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,log,makeDigi,phaThreshArr,vetoArr,highArr);
         if ( sc.isFailure() ) return sc;
-    
-        // Ok, kill PHA below ZS threshold
-        phaArr[0] = phaThreshArr[0] ? phaArr[0] : 0;
-        phaArr[1] = phaThreshArr[1] ? phaArr[1] : 0;
+
+        // Now do special handling for pure Overlay events
+        // Recover the status word for this digi
+        unsigned int statusWord = Event::AcdDigi::DIGI_MC;
+        if (statusMap.find(acdId) != statusMap.end()) statusWord = statusMap.find(acdId)->second;
+
+        // Pure overlay?
+        if ((statusWord & (Event::AcdDigi::DIGI_OVERLAY | Event::AcdDigi::DIGI_MC)) == Event::AcdDigi::DIGI_OVERLAY)
+        {
+            // Use the Overlay event's bits to attempt to reproduce ghost event behavior
+            // NOTE: bit definions in OverlayEvent::AcdOverlay - need to define in better location... (upgrade!)
+            phaThreshArr[Event::AcdDigi::A] = (statusWord & 0x00000001) != 0;
+            vetoArr[Event::AcdDigi::A]      = (statusWord & 0x00000002) != 0;
+            highArr[Event::AcdDigi::A]      = (statusWord & 0x00000008) != 0;
+            phaThreshArr[Event::AcdDigi::B] = (statusWord & 0x00010000) != 0;
+            vetoArr[Event::AcdDigi::B]      = (statusWord & 0x00020000) != 0;
+            highArr[Event::AcdDigi::B]      = (statusWord & 0x00080000) != 0;
+        }
+        else
+        {   
+            // Ok, kill PHA below ZS threshold
+            phaArr[0] = phaThreshArr[0] ? phaArr[0] : 0;
+            phaArr[1] = phaThreshArr[1] ? phaArr[1] : 0;
+        }
 
         bool gemBit = vetoArr[0] || vetoArr[1];
         bool ninjaBit = gemBit && ( ! ( phaThreshArr[0] || phaThreshArr[1] ) );               
 
         if ( makeDigi ) 
         {
-            // Recover the status word for this digi
-            unsigned int statusWord = 0;
-            if (statusMap.find(acdId) != statusMap.end()) statusWord = statusMap.find(acdId)->second;
-
             // Create the digi 
             Event::AcdDigi* aDigi = new Event::AcdDigi(acdId, 
                                                        volId,

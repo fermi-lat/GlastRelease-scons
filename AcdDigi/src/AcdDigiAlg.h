@@ -40,7 +40,8 @@ protected:
                  std::map<idents::AcdId, unsigned int>& statusMap);
   
   StatusCode convertPeToMips( const std::map<idents::AcdId, std::pair<double, double> >& peMap,
-                  std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
+                              const std::map<idents::AcdId, unsigned int>&               statusMap,
+                                    std::map<idents::AcdId, std::pair<double, double> >& mipsMap);
   
   StatusCode makeDigis(const std::map<idents::AcdId, std::pair<double,double> >& mipsMap,
                        const std::map<idents::AcdId, unsigned int>& statusMap,
