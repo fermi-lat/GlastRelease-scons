@@ -811,8 +811,15 @@ StatusCode RootIoSvc::finalize ()
         TTree *theTree = (TTree*)treePtr;
         if (theTree) { 
             FileHeader *meritHeader = m_headersTool->meritHeader();
-            meritHeader->setInteger("MeritVersion", m_rootTupleSvc->getMeritVersion());
-            m_headersTool->writeMeritHeader(theTree->GetCurrentFile());
+            if (meritHeader) {
+                meritHeader->setInteger("MeritVersion", m_rootTupleSvc->getMeritVersion());
+                m_headersTool->writeMeritHeader(theTree->GetCurrentFile());
+            } else {
+                MsgStream log(msgSvc(),name()) ;
+                log << MSG::WARNING << "MeritHeader object is NULL, not writing"
+                    << " Merit Header, even though an output file exists"
+                    << endreq;
+            }
         }
 
     }
