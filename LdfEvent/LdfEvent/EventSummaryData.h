@@ -121,6 +121,32 @@ namespace LdfEvent{
         bool temBug() const {
             return ( (m_flags & enums::TEMBUG) != 0); };
 
+        bool gtrcPhase() const {
+            return (m_flags & enums::GTRCPHASE); }
+        bool gtfePhase() const {
+            return (m_flags & enums::GTFEPHASE); }
+        bool gtccFifo() const {
+            return (m_flags & enums::GTCCFIFO); }
+        bool gtccHdrParity() const {
+            return (m_flags & enums::GTCCHDRPARITY); }
+        bool gtccWcParity() const {
+            return (m_flags & enums::GTCCWCPARITY); }
+        bool gtrcSummary() const {
+            return (m_flags & enums::GTRCSUMMARY); }
+        bool gtccDataParity() const {
+            return (m_flags & enums::GTCCDATAPARITY); }
+        bool gtccTimeout() const {
+            return (m_flags & enums::GTCCTIMEOUT); }
+        bool gcccError() const {
+            return (m_flags & enums::GCCCERROR); }
+        bool gtccError() const {
+            return (m_flags & enums::GTCCERROR); }
+        bool phaseError() const {
+            return (m_flags & enums::PHASEERROR); }
+        bool timeoutError() const {
+            return (m_flags & enums::TIMEOUTERROR); }
+
+
         //unsigned int eventSequence() const { return m_evtSequence; }
  
         unsigned int summary() { return m_summary; };

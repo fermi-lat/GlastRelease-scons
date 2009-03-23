@@ -2,6 +2,7 @@
 Package LdfEvent
 Coordinator:H.Kelly
 EOH
+v4r10   23-Mar-2009 HMK add methods for all error flags
 v4r9    11-Mar-2009 HMK Add check for TemBug in eventFlags
 v4r8    12-Nov-2008 LSR New method to set tkrVector
 v4r7    30-Jul-2008 HMK Handle new compressionLevel and compressedSize
