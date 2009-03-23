@@ -134,6 +134,11 @@ StatusCode EventIntegrityAlg::execute()
                              << summary->temBug() << endreq;
         
         }
+        if (summary->phaseError()) {
+           setFilterPassed(false);
+            log << MSG::INFO << "Phase Error set - skipping "
+                             << summary->phaseError() << endreq;
+        }
       
     } 
 
