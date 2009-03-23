@@ -96,7 +96,7 @@ private:
 
  PtOverlayCnv::PtOverlayCnv( ISvcLocator* svc) : Converter (SICB_StorageType, Event::PtOverlay::classID(), svc) 
 {
-    m_path = OverlayEventModel::Overlay::GemOverlay;
+    m_path = OverlayEventModel::Overlay::PtOverlay;
 
     return;
 }
@@ -155,7 +155,7 @@ StatusCode PtOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject
     // Extract GEM information from input digis
     const PtOverlay &ptRoot = overlayRoot->getPtOverlay();
 
-    // Create the new GemOverlay event to put in the TDS
+    // Create the new PtOverlay event to put in the TDS
     Event::PtOverlay* ptTds = new Event::PtOverlay();
 
     float sc_position[3];
