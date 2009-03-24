@@ -126,18 +126,18 @@ StatusCode EventIntegrityAlg::execute()
         if (summary->trgParityError()) {
             setFilterPassed(false);
             log << MSG::INFO << "Trigger Parity Error bit set - skipping "
-                             << summary->trgParityError() << endreq;
+                             << evtTds->event() << endreq;
         }
         if (summary->temBug()) {
             setFilterPassed(false);
             log << MSG::INFO << "TEM bug set - skipping "
-                             << summary->temBug() << endreq;
+                             << evtTds->event() << endreq;
         
         }
         if (summary->phaseError()) {
            setFilterPassed(false);
             log << MSG::INFO << "Phase Error set - skipping "
-                             << summary->phaseError() << endreq;
+                             << evtTds->event() << endreq;
         }
       
     } 
