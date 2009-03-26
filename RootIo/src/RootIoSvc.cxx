@@ -121,17 +121,17 @@ class RootIoSvc :
 
     virtual StatusCode closeInput(const std::string& type);
        
-    virtual TObject * getNextEvent( const std::string & type) ;
+    virtual TObject * getNextEvent( const std::string & type, long long inputIndex) ;
 
     /// Max Event for event loop for read jobs
-    virtual long long getEvtMax() const { return m_evtMax ; }
+    virtual long long getEvtMax() const {return m_evtMax;}
 
-    virtual long long getRootEvtMax() const { return m_rootEvtMax; }
+    virtual long long getRootEvtMax(const std::string& type) const;
 
     /// Allows reader algorithms to register the number of events in their
     /// input ROOT files
     virtual void setEvtMax(Long64_t max) ;
-    virtual void setRootEvtMax(Long64_t max) { setEvtMax(max); }
+    virtual void setRootEvtMax(Long64_t max) {setEvtMax(max);}
 
 
     //====================
@@ -635,7 +635,28 @@ StatusCode RootIoSvc::closeInput(const std::string& type)
     return sc;
 }
 
-TObject* RootIoSvc::getNextEvent(const std::string& type)
+long long RootIoSvc::getRootEvtMax(const std::string& type) const
+{ 
+    long long nEventsMax = -1;
+
+    // Standard mode is to return the cached number
+    if (type == "")
+    {
+        nEventsMax = m_rootEvtMax;
+    }
+    // Otherwise, we want the number of events from a specific file (useful for Overlays)
+    else
+    {
+        if (const RootInputDesc* rootInputDesc = getRootInputDesc(type))
+        {
+            nEventsMax = rootInputDesc->getNumEvents();
+        }
+    }
+
+    return nEventsMax; 
+}
+
+TObject* RootIoSvc::getNextEvent(const std::string& type, long long inputIndex)
 {
     MsgStream log( msgSvc(), name() );
 
@@ -655,7 +676,8 @@ TObject* RootIoSvc::getNextEvent(const std::string& type)
 
         } else if (m_useIndex)  // typical serial reading
         {
-            pData = rootInputDesc->getEvent(index());
+            if (inputIndex < 0) pData = rootInputDesc->getEvent(index());
+            else                pData = rootInputDesc->getEvent(inputIndex);
         }
         // Otherwise we get by run/event number
         else
