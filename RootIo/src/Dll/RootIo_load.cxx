@@ -10,6 +10,7 @@
 
 DECLARE_FACTORY_ENTRIES(RootIo) {
     DECLARE_ALGORITHM( FhSetAlg );
+    DECLARE_ALGORITHM( FhSetMeritAlg );
     DECLARE_ALGORITHM( FhDemoGetAlg );
     DECLARE_ALGORITHM( FhDemoCaloSetAlg );
     DECLARE_ALGORITHM( mcRootWriterAlg );
