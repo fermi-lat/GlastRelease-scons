@@ -25,7 +25,7 @@
 
 @section Attributes for job options:
 @param run [0] For setting the run number
-@param mask [-1] mask to apply to trigger word. -1 means any, 0 means all.
+@param mask [-1] mask to apply to error flag. -1 means any, 0 means all.
 
 */
 
@@ -110,34 +110,46 @@ StatusCode EventIntegrityAlg::execute()
         // Ignoring TkrRecon Error bit
         if ( summary->badLdfStatus()) {
             setFilterPassed(false);
-            log << MSG::INFO << "Event Flag contains Bad LDF Status skipping " 
-                             << evtTds->event() << endreq;
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+	         << " contains Bad LDF Status skipping " 
+                 << std::dec << evtTds->event() << endreq;
          }
-        if ( (summary->packetError()) || (summary->temError()) ) {
+        if (summary->packetError()) {
             setFilterPassed( false );
-            log << MSG::INFO << "Event Flag contains Error bits - skipping " 
-                             << evtTds->event() << endreq;
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+                << " contains Packet Error - skipping " 
+                << std::dec << evtTds->event() << endreq;
+        }
+        if ( summary->temError() ) {
+            setFilterPassed( false );
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+                << " contains TEM Error - skipping " 
+                << std::dec << evtTds->event() << endreq;
         }
         if (summary->badEventSeq()) {
             setFilterPassed(false);
-            log << MSG::INFO << "Event Flag contains Bad Event Seq - skipping " 
-                             << evtTds->event() << endreq;
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+                << " contains Bad Event Seq - skipping " 
+                << std::dec << evtTds->event() << endreq;
         }
         if (summary->trgParityError()) {
             setFilterPassed(false);
-            log << MSG::INFO << "Trigger Parity Error bit set - skipping "
-                             << evtTds->event() << endreq;
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+                << " contains Trigger Parity Error bit set - skipping "
+                << std::dec << evtTds->event() << endreq;
         }
         if (summary->temBug()) {
             setFilterPassed(false);
-            log << MSG::INFO << "TEM bug set - skipping "
-                             << evtTds->event() << endreq;
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+                << " TEM bug set - skipping "
+                << std::dec << evtTds->event() << endreq;
         
         }
         if (summary->phaseError()) {
            setFilterPassed(false);
-            log << MSG::INFO << "Phase Error set - skipping "
-                             << evtTds->event() << endreq;
+            log << MSG::INFO << "Event Flag 0x" << std::hex << flags
+                << " Phase Error set - skipping "
+                << std::dec << evtTds->event() << endreq;
         }
       
     } 
