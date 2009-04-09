@@ -3,6 +3,10 @@
  * $Header$
  *           EOH
 
+ * v0r31p1 09-Apr-2009 LSR  1) color CAL Edep boxes yellow for "saturated" xtals
+                            2) New HepRepInitSvc param: MonteCarloFiller_useMcInfo
+                                  (default is true)
+                               This should help with really big MC events
  * v0r31p1 16-Feb-2009 LSR  Fix the representation of the status words
                               in MeritTupleFiller. 
  * v0r31   12-Jan-09   HMK  Add support for input relation files
