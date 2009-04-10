@@ -1,6 +1,6 @@
 package G4HadronSim
 
-version v1r4p0
+version v1r5p0
 
 author  Francesco Longo <Francesco.Longo@ts.infn.it>
 author  Tracy Usher <usher@slac.stanford.edu>
@@ -13,7 +13,7 @@ apply_pattern package_include
 apply_pattern package_linkopts
 apply_pattern package_stamps
 
-set G4tableDir                "${Geant4Runtime_DIR}/tables"
+set G4tableDir                "${Geant4Runtime_PATH}/tables"
 set G4LEVELGAMMADATA	      "${G4tableDir}/PhotonEvaporation2.0"
 set NeutronHPCrossSections    "${G4tableDir}/G4NDL3.8"
 set G4RADIOACTIVEDATA         "${G4tableDir}/RadiativeDecay3.0"
