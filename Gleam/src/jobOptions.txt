@@ -23,8 +23,8 @@ TriggerAlg.applyPrescales = false;
 // Don't use Moot for out-of-the-box Gleam
 OnboardFilter.useMootConfig = false;
 
-// turn off output
-Output.Members = {};
+// turn off output, except headers
+Output.Members = {"FhSetAlg","FhSetMeritAlg"};
 
 //==============================================================
 //

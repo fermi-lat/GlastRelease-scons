@@ -9,7 +9,7 @@
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel=3;
 
-Output.Members={}; // turn off any root ouptut
+Output.Members={"FhSetAlg","FhSetMeritAlg"}; // turn off any root ouptut
 
 // mix in ticks to generate pointing and livetime tree
 FluxAlg.sources={"gamma_1_gev_normal","clock"};

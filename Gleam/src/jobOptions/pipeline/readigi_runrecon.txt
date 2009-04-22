@@ -215,7 +215,7 @@ NtupleMaker.Members += {"ObfCoordsAlg"};
 //
 // Define the output sequence:
 //
-Output.Members  = {"FhSetAlg","reconRootWriterAlg"};
+Output.Members  = {"FhSetAlg","FhSetMeritAlg","reconRootWriterAlg"};
 Output.Members += {"CalTupleAlg"};
 Output.Members += {"gcrSelectRootWriterAlg"};
 
