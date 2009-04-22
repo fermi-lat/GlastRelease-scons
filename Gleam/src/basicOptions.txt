@@ -155,6 +155,7 @@ EventDisplay.Members = {};
 ApplicationMgr.DLLs +={"RootIo"}; 
 Output.Members = {     
     "FhSetAlg",
+    "FhSetMeritAlg",
     "mcRootWriterAlg", 
     "digiRootWriterAlg", 
     "reconRootWriterAlg",
