@@ -183,7 +183,12 @@ StatusCode mcRootReaderAlg::execute()
     // use name of TTree as key type
     m_mcEvt = dynamic_cast<McEvent*>(m_rootIoSvc->getNextEvent("mc"));
 
-    if (!m_mcEvt) return StatusCode::FAILURE;
+    if (!m_mcEvt) {
+        // Do not fail if there was no MC data to read - this may be an Event Display run - where the user 
+        // did not provide an MC input file
+        log << MSG::INFO << "No MC Data Available" << endreq;
+        return StatusCode::SUCCESS;
+    }
 
     sc = readMcEvent();
     if (sc.isFailure()) {
