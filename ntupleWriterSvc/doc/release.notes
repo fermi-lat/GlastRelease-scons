@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v5r1    01-May-2009  HMK  Provide new JO for setting branches to read o
+ *         not to read
  * v5r0p1  19-Mar-2009  HMK  Add mechanism to set merit version if necessary
  * v5r0    19-Mar-2009  HMK  Add meritVersion initially set to 1
  * v4r2    29-Oct-2008  HMK  add new method to retrieve list of input tuples

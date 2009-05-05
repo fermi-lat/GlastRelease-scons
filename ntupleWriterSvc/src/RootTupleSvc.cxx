@@ -227,6 +227,11 @@ private:
     StringProperty m_jobInfoTreeName;
     StringProperty m_jobInfo;
 
+    /// List of branches to turn on for reading
+    StringArrayProperty m_includeBranchList;
+    /// List of branches to exclude from reading
+    StringArrayProperty m_excludeBranchList;
+
     /// the ROOT stuff: a file and a a set of trees to put into it
     // replaced with m_fileCol, so we can handle multiple ROOT output files
     std::map<std::string, TFile*> m_fileCol;
@@ -315,6 +320,8 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("BufferSize",m_bufferSize=32000);
     declareProperty("StartingIndex",m_nextEvent=0);
     declareProperty("MeritVersion",m_joMeritVersion=0);
+    declareProperty("IncludeBranches",m_includeBranchList=initList);
+    declareProperty("ExcludeBranches",m_excludeBranchList=initList);
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -356,6 +363,14 @@ StatusCode RootTupleSvc::initialize ()
     // Split here depending on whether we are reading an input ntuple
     // and augmenting its output
     TDirectory* curdir = gDirectory; // will prevent unauthorized use
+
+    // check to see if both the include and exclude lists are specified in the
+    // JO, we cannot work with both lists, only one
+    if ((m_includeBranchList.value().size() > 0) && (m_excludeBranchList.value().size()) ) {
+      log << MSG::ERROR << "Both the include and exclude branch lists are "
+          << "specified, please use one or the other, not both." << endreq;
+      return StatusCode::FAILURE;
+    }
 
     /* HMK Not adding input TFiles to the m_fileCol, since they will 
        be apart of the TChain.
@@ -438,6 +453,7 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
                         log << MSG::INFO << "Added File: " << fileName << endreq;
 
             }  // end for loop TChain initialized
+
             // add new TChain to the map
             m_inChain[treeName] = ch;
             // call GetEntries to load the headers of the TFiles
@@ -453,8 +469,8 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             if (numbytes <= 0) 
                 log << MSG::WARNING << "Unable to read tuple event, "
                     << m_nextEvent << endreq;
-            // Here is our chance to set up branch pointers for the whole input TChain, so that
-            // no elements are missed
+            // Here is our chance to set up branch pointers for the whole 
+            // input TChain, so that no elements are missed
             TObjArray *brCol = ch->GetListOfBranches();
             int numBranches = brCol->GetEntries();
             int iBranch;
@@ -500,15 +516,55 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
                     log << MSG::WARNING << "type: " << type_name <<" not found" << endreq;
                 }
                 ch->SetBranchAddress(branchName.c_str(), m_itemPool[branchName]);
+            } // end for branch list
+
+            if (m_includeBranchList.value().size() > 0) {
+                ch->SetBranchStatus("*",0);
+                std::vector<std::string>::const_iterator includeListItr;
+                for (includeListItr = m_includeBranchList.value().begin();
+                 includeListItr != m_includeBranchList.value().end();
+                 includeListItr++ ) {
+ 
+                     std::string branchName = *includeListItr;
+                     unsigned int foundFlag;
+                     ch->SetBranchStatus(branchName.c_str(),1,&foundFlag);
+                     if (foundFlag == 0)
+                         log << MSG::WARNING << "Did not find any matching"
+                             << " branch names for: " << branchName << endreq;
+                     else
+                         log << MSG::INFO << "Set BranchStatus to 1 (on) for"                                << " branch " << branchName << endreq;
+
+                 }
+            }
+
+            if (m_excludeBranchList.value().size() > 0) {
+                ch->SetBranchStatus("*",1);
+                std::vector<std::string>::const_iterator excludeListItr;
+                for (excludeListItr = m_excludeBranchList.value().begin();
+                 excludeListItr != m_excludeBranchList.value().end();
+                 excludeListItr++ ) {
+ 
+                     std::string branchName = *excludeListItr;
+                     unsigned int foundFlag;
+                     ch->SetBranchStatus(branchName.c_str(),0,&foundFlag);
+                     if (foundFlag == 0)
+                         log << MSG::WARNING << "Did not find any matching"
+                             << " branch names for: " << branchName << endreq;
+                     else
+                         log << MSG::INFO << "Set BranchStatus to 0 (off) for"                                << " branch " << branchName << endreq;
+
+                 }
             }
 
             inIter = m_inChain.find(treeName);
 
         } // end if for initialization first time 
+
         // copy the current tree to allow access to its branches
         // zero is the number of entries to copy - so we're just 
         // copying the TTree structure not contents
         t=inIter->second->CloneTree(0);
+
     } // end check for input files
 
     // Back to regular situation, where we are setting up an output file
@@ -965,7 +1021,8 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
         // Create a new object to store this leaf pointer
         // This is necessary when we move to a new TTree in the TChain, otherwise, this address will be lost
         // and unusable by the clients that are relying on a stable address
-        log << MSG::DEBUG << "item: " << itemName << " type: " << type_name << " dim: " << leaf->GetNdata() << endreq;
+        log << MSG::DEBUG << "item: " << itemName << " type: " << type_name 
+            << " dim: " << leaf->GetNdata() << endreq;
         if (itemIt == m_itemPool.end()) {
             if (type_name == "Float_t")
             {
@@ -998,6 +1055,17 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
             inputChain->second->SetBranchAddress(itemName.c_str(), m_itemPool[itemName]);
             leaf = inputChain->second->GetLeaf(itemName.c_str());
             pval = leaf->GetValuePointer();
+        }
+        // Checking the branch status, if not set to read this branch
+        // return a null value for the variable
+        if (!inputChain->second->GetBranchStatus(itemName.c_str())) {
+            log << MSG::WARNING << "Looking for branch with status 0 "
+                << itemName << " returning null value for this branch"
+                << endreq;
+            pval = 0;
+            saveDir->cd();
+            type_name="";
+            return(type_name);
         }
     }
     saveDir->cd();

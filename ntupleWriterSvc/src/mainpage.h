@@ -65,6 +65,16 @@
  * string of the form "a=99, b=100" of names, values to add to the jobinfo tree
  * some use this string to store the tag of GR, such as 
  * "version=13, revision=2, patch=3"
+ * @param RootTupleSvc.IncludeBranchList
+ * Default "" (empty string)
+ * A list of merit branch names to read when reading an input set of merit files
+ * this list may use wildcards, and must conform to the case-sensitive names
+ * of the actual branches in the ROOT file
+ * @param RootTupleSvc.ExcludeBranchList
+ * Default "" (empty string)
+ * A list of merit branch names to exclude when reading an input set of merit 
+ * files this list may use wildcards, and must conform to the case-sensitive 
+ * names of the actual branches in the ROOT file
  * <hr>
  * @section notes release notes
  * release.notes
