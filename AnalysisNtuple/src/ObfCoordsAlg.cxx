@@ -131,9 +131,9 @@ StatusCode ObfCoordsAlg::finalize()
 
 <table>
 <tr><th> Variable <th> Type <th> Description
-<tr><td> FilterRa, FilterDec 
+<tr><td> GrbRa, GrbDec 
 <td>F<td>  (deg) reconstructed direction in equatorial coordinates       
-<tr><td> FilterL, FilterB 
+<tr><td> GrbL, GrbB 
 <td>F<td>  (deg) galactic longitude and latitude of reconstructed direction
 </table> 
 */

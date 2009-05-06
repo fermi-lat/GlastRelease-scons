@@ -76,7 +76,7 @@ private:
     float EvtECalXtalRatio;
     float EvtECalXtalTrunc;
     float EvtECalTrackDoca;
-    float EvtECalTrackSep;
+    //float EvtECalTrackSep;
 	float EvtECalTransRms;
 	float EvtECalLongRms;
 	float EvtECalLRmsAsym;
@@ -200,7 +200,7 @@ NOTE
 <tr><td> EvtECalTrackDoca 
 <td>F<td>   CalTrackDoca, compensated for energy and angle 
 <tr><td> EvtECalTrackSep 
-<td>F<td>   CalTrackSep, compensated for energy and angle 
+<td>F<td>   REMOVED! CalTrackSep, compensated for energy and angle 
 <tr><td> EvtEVtxAngle 
 <td>F<td>   EvtVtxEAngle, compensated for energy and angle 
 <tr><td> EvtEVtxDoca 
@@ -318,7 +318,7 @@ StatusCode EvtValsTool::initialize()
     addItem("EvtECalXtalRatio", &EvtECalXtalRatio);
     addItem("EvtECalXtalTrunc", &EvtECalXtalTrunc);
     addItem("EvtECalTrackDoca", &EvtECalTrackDoca);
-    addItem("EvtECalTrackSep",  &EvtECalTrackSep);
+    //addItem("EvtECalTrackSep",  &EvtECalTrackSep);
 	addItem("EvtECalTransRms",  &EvtECalTransRms);
     addItem("EvtECalLongRms",   &EvtECalLongRms);
 	addItem("EvtECalLRmsAsym",  &EvtECalLRmsAsym);
