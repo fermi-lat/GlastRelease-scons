@@ -17,7 +17,7 @@ $Header$
 class XTExprsnParser
 {
 public:
-    XTExprsnParser(XTtupleMap& tuple);
+    XTExprsnParser(XTtupleMap& tuple, XTtupleMap& constants);
     ~XTExprsnParser() {} 
 
     // Parse and expression
@@ -25,6 +25,7 @@ public:
 
     // Provide access mechanism to local tuple
     XTtupleMap& getXtTupleVars() {return m_tuple;}
+    XTtupleMap& getXtConstants() {return m_constants;}
 
 private:
     typedef std::pair<std::string,int>         DelimPair;
@@ -49,6 +50,7 @@ private:
     IXTExprsnNode* parseFunction(std::string& expression, std::string& type);
 
     XTtupleMap&   m_tuple;
+    XTtupleMap&   m_constants;
 
     DelimVector   m_delimiters;
     DelimMap      m_delimMap;

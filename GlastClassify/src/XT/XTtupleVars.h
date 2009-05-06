@@ -34,7 +34,7 @@ template <class T> std::ostream& operator <<(std::ostream& stream, const XTcolum
 class XTcolumnValBase
 {
 public:
-    XTcolumnValBase(const std::string& name, const std::string& type) : m_name(name), m_type(type), m_valid(false) {}
+    XTcolumnValBase(const std::string& name, const std::string& type) : m_name(name), m_type(type), m_valid(false) { }
     virtual ~XTcolumnValBase() {}
 
     const bool         dataIsValid() const {return m_valid;}
@@ -56,7 +56,7 @@ typedef std::map<std::string,XTcolumnValBase* > XTtupleMap;
 template <class T> class XTcolumnVal : public XTcolumnValBase
 {
 public: 
-    XTcolumnVal(const std::string& name, const std::string& type="continuous") : XTcolumnValBase(name,type) {}
+    XTcolumnVal(const std::string& name, const std::string& type="continuous") : XTcolumnValBase(name,type) { }
     ~XTcolumnVal() {} //delete T;}
 
     const T*           operator()()  const

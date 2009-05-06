@@ -131,31 +131,74 @@ newPredictEngineNode::TreePairVector xmlNewPredictEngineFactory::parseForest(con
     m_numProbVals = 0;
     m_catIndex.clear();
 
-    // Loop through Info nodes to find output tags
+    // Loop through Info nodes to find the list of dependent/independent variables
     for(std::vector<DOMElement*>::iterator colInfoIter = xmlColInfoVec.begin(); 
         colInfoIter != xmlColInfoVec.end(); colInfoIter++)
     {
         DOMElement* xmlColInfo = *colInfoIter;
 
         std::string sName = xmlBase::Dom::getAttribute(xmlColInfo, "name");
+        std::string sType = xmlBase::Dom::getAttribute(xmlColInfo, "type");
         std::string sRole = xmlBase::Dom::getAttribute(xmlColInfo, "role");
 
-        if (sRole == "dependent")
-        {
-            DOMElement* xmlLevel = xmlBase::Dom::findFirstChildByName(xmlColInfo, "Level");
+        // Check to see if this exists in our list already
+        XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(sName);
 
-            while(xmlLevel != 0)
+        // If already there then we can skip
+        if (dataIter == XprsnParser().getXtTupleVars().end())
+        {
+            // Add variable to list
+            XTcolumnValBase* basePtr = 0;
+
+            if (sType == "continuous") basePtr = new XTcolumnVal<REALNUM>(sName);
+            else
             {
-                std::string sLevelName = xmlBase::Dom::getAttribute(xmlLevel, "value");
+                XTcolumnVal<std::string>* xtColumnVal = new XTcolumnVal<std::string>(sName, "categorical");
+
+                xtColumnVal->setDataValue("");
+                basePtr = xtColumnVal;
+            }
+
+            XprsnParser().getXtTupleVars()[sName] = basePtr;
+        }
+
+        DOMElement* xmlLevel = xmlBase::Dom::findFirstChildByName(xmlColInfo, "Level");
+
+        while(xmlLevel != 0)
+        {
+            std::string sLevelName = xmlBase::Dom::getAttribute(xmlLevel, "value");
                 
+            if (sRole == "dependent")
+            {
                 if (sLevelName == m_specCatName) m_yProbIndex = m_numProbVals;
 
                 m_catIndex[sLevelName] = m_numProbVals;
                 
-                xmlLevel = xmlBase::Dom::getSiblingElement(xmlLevel);
                 m_numProbVals++;
             }
-            break;
+        
+            // Check to see if this exists in our list already
+            XTtupleMap::iterator dataIter = XprsnParser().getXtConstants().find(sLevelName);
+
+            // If already there then we can skip
+            if (dataIter == XprsnParser().getXtTupleVars().end())
+            {
+                // Add variable to list
+                XTcolumnValBase* basePtr = 0;
+
+                if (sType == "continuous") basePtr = new XTcolumnVal<REALNUM>(sLevelName);
+                else
+                {
+                    XTcolumnVal<std::string>* xtColumnVal = new XTcolumnVal<std::string>(sLevelName, sType);
+
+                    xtColumnVal->setDataValue(sLevelName);
+                    basePtr = xtColumnVal;
+                }
+
+                XprsnParser().getXtConstants()[sLevelName] = basePtr;
+            }
+            
+            xmlLevel = xmlBase::Dom::getSiblingElement(xmlLevel);
         }
     }
     

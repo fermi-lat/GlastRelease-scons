@@ -21,7 +21,7 @@ namespace XTExprsnTypes
     std::string continuousType  = "continuous";
 };
     
-XTExprsnParser::XTExprsnParser(XTtupleMap& tuple) : m_tuple(tuple) 
+XTExprsnParser::XTExprsnParser(XTtupleMap& tuple, XTtupleMap& constants) : m_tuple(tuple), m_constants(constants) 
 {
     m_delimiters.clear();
 
@@ -218,10 +218,13 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression, std::string& 
     // Not a constant, ends up here
     catch(facilities::WrongType&)
     {
-        // Check here for string variables 
+        // null base pointer
+        XTcolumnVal<std::string>* basePtr = 0;
+
+        // Check here for string variables enclosed in quotes
         int firstQuote = expression.find("\"", 0);
 
-        if (firstQuote == 0)
+        if (firstQuote == 0 && type == "categorical")
         {
             int stringLen  = expression.length();
             int secndQuote = expression.find("\"", firstQuote+1);
@@ -230,11 +233,40 @@ IXTExprsnNode* XTExprsnParser::parseValue(std::string& expression, std::string& 
             if (secndQuote == stringLen-1) 
             {
                 std::string exprsnVal = expression.substr(firstQuote+1,secndQuote-1);
-                XTcolumnVal<std::string>* newValue = new XTcolumnVal<std::string>(exprsnVal,"categorical");
-                newValue->setDataValue(exprsnVal);
-                pNode = new XTExprsnTupleVal<XTcolumnVal<std::string> >(expression, newValue);
+
+                // Try to find the constant in the constants map
+                XTtupleMap::iterator dataIter = m_constants.find(exprsnVal);
+
+                // If it is there then we have a constant
+                if (dataIter == m_constants.end())
+                {
+                    basePtr = new XTcolumnVal<std::string>(exprsnVal,"categorical");
+                    basePtr->setDataValue(exprsnVal);
+
+                    m_constants[exprsnVal] = basePtr;
+                }
+                else
+                    basePtr = dynamic_cast<XTcolumnVal<std::string>*>(dataIter->second);
             }
         }
+
+        // Check for defined constants
+        else
+        {
+            // Try to find the constant in the constants map
+            XTtupleMap::iterator dataIter = m_constants.find(expression);
+
+            // If it is there then we have a constant
+            if (dataIter != m_constants.end())
+            {
+                // Constants can have same name as variables, use type to help check
+                if (type == "" || type == dataIter->second->getType()) 
+                    basePtr = dynamic_cast<XTcolumnVal<std::string>*>(dataIter->second);
+            }
+        }
+
+        // If base pointer is not null we have a constant
+        if (basePtr) pNode = new XTExprsnTupleVal<XTcolumnVal<std::string> >(expression, basePtr);
     }
 
     return pNode;
@@ -258,8 +290,6 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
         // Special case of IM asking to retrieve data from tuple
         if (funcCand == "get" || funcCand == "getNew" || funcCand == "\"Pr" || funcCand == "Pr")
         {
-            std::string funcType = "";
-
             // Strip the quotes off the "getNew" operand, if there
             if (funcCand == "getNew" && operand.find("\"",0) == 0)
             {
@@ -268,7 +298,7 @@ IXTExprsnNode* XTExprsnParser::parseFunction(std::string& expression, std::strin
             }
 
             expression = operand;
-            pNode = parseFunction(expression, funcType);
+            pNode = parseFunction(expression, type);
         }
         // Special case of an IM "ifelse" clause
         else if (funcCand == "ifelse")

@@ -24,6 +24,7 @@ TreeAnalysis::TreeAnalysis(ITupleInterface& tuple)
     m_iNodeVec.clear();
     m_typeToINodeVecMap.clear();
     m_xtTupleMap.clear();
+    m_xtConstants.clear();
 
     return;
 }
@@ -97,7 +98,12 @@ void TreeAnalysis::execute()
     }
 
     // Execute the sheet
+    try {
     m_headNode->execute();
+    } catch(...)
+    {
+        int j = 0;
+    }
 
     // Done
     return;
@@ -112,20 +118,28 @@ void TreeAnalysis::zeroCTvals()
         // Recover the variable name
         const std::string& varName = dataIter->first;
 
-        // De-reference to continuous tuple type
-        XTcolumnValBase* basePtr = dataIter->second;
-
-        // Only continuous variables for now...
-        if (basePtr->getType() != "continuous") continue;
-
-        XTcolumnVal<REALNUM>* valPtr = dynamic_cast<XTcolumnVal<REALNUM>*>(basePtr);
-
-        // If the cross reference exists, set the local value
-        //if (nTupleIter != m_nTupleMap.end()) valPtr->setDataValue(*(nTupleIter->second));
-        if (varName.substr(0,3) == "CTB") 
+        // Only dealing with "CTB" variables here
+        if (varName.substr(0,3) == "CTB")
         {
-            valPtr->setDataValue(0.);
-            valPtr->clearValidFlag();
+            // De-reference to continuous tuple type
+            XTcolumnValBase* basePtr = dataIter->second;
+
+            // Null depending on variable type
+            if (basePtr->getType() == "continuous")
+            {
+                XTcolumnVal<REALNUM>* valPtr = dynamic_cast<XTcolumnVal<REALNUM>*>(basePtr);
+
+                valPtr->setDataValue(0.);
+                valPtr->clearValidFlag();
+            }
+            else if (basePtr->getType() == "categorical")
+            {
+                XTcolumnVal<std::string>* valPtr = dynamic_cast<XTcolumnVal<std::string>*>(basePtr);
+
+                std::string null = "null";
+                valPtr->setDataValue(null);
+                valPtr->clearValidFlag();
+            }
         }
     }
 
@@ -158,6 +172,17 @@ void TreeAnalysis::storeCTvals()
                     // what do we do here?
                     int j = 0;
                 }
+            }
+            else if (dataIter->second->getType() == "categorical")
+            {
+                XTcolumnVal<std::string>* colVal = dynamic_cast<XTcolumnVal<std::string>*>(dataIter->second);
+                std::string               result = "";
+
+                if (colVal->dataIsValid()) result = *(*colVal)();
+
+                char* charData = const_cast<char*>(result.c_str());
+
+                const_cast<GlastClassify::Item*>(m_nTupleMap[dataIter->first])->setDataValue(charData);
             }
         }
     }
@@ -192,22 +217,35 @@ void TreeAnalysis::crossRefNtupleVars()
             if (item != 0) m_nTupleMap[varName] = item;
         }
         // If variable doesn't exist then an exception is thrown, we catch it here
-        catch (std::invalid_argument& arg)
+        catch (std::invalid_argument&)
         {
             // if this is a CTB variable then we want to add it to the ntuple
-            if (varName.substr(0,3) == "CTB" && dataIter->second->getType() != "categorical")
+            if (varName.substr(0,3) == "CTB")
             {
-                // Create a new data object and add to the vector
-                float* newVar = new float;
+                if (dataIter->second->getType() == "continuous")
+                {
+                    // Create a new data object and add to the vector
+                    float* newVar = new float;
 
-                // Initialize it to zero just to make sure
-                *newVar = 0.;
+                    // Initialize it to zero just to make sure
+                    *newVar = 0.;
 
-                // Add it to the ntuple
-                m_lookup.addItem(varName, *newVar);
+                    // Add it to the ntuple
+                    m_lookup.addItem(varName, *newVar);
 
-                // Now add it to the list
-                m_nTupleMap[varName] = m_lookup.getItem(varName);
+                    // Now add it to the list
+                    m_nTupleMap[varName] = m_lookup.getItem(varName);
+                }
+                else if (dataIter->second->getType() == "categorical")
+                {
+                    char* newVar = new char[80];
+
+                    memset(newVar, ' ', 80);
+
+                    m_lookup.addItem(varName, *newVar);
+
+                    m_nTupleMap[varName] = m_lookup.getItem(varName);
+                }
             }
         }
     }

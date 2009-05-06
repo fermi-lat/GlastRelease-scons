@@ -43,6 +43,7 @@ namespace GlastClassify{
         virtual void addItem(const std::string& name, float & value)=0;
         virtual void addItem(const std::string& name, double & value)=0;
         virtual void addItem(const std::string& name, unsigned long long & value)=0;
+        virtual void addItem(const std::string& name, char & value)=0;
     protected:
         ITupleInterface(){};
     };

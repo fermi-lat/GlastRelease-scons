@@ -107,7 +107,7 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllOutputVars(GlastClassify::Tree
     // Root...    
     DOMElement* domRoot = m_domDocument->getDocumentElement();
 
-    XTExprsnParser parser(tree->xtTupleMap());
+    XTExprsnParser parser(tree->xtTupleMap(), tree->xtConstants());
 
     xmlFindOutputVars varFinder(parser);
 
@@ -163,7 +163,7 @@ int GlastClassify::xmlTreeAnalysisFactory::findAllActivityNodes(GlastClassify::T
     // Build map between types and implementation of that type
     std::map<std::string, IxmlEngineFactory*> nodeFactoryMap;
 
-    XTExprsnParser parser(tree->xtTupleMap());
+    XTExprsnParser parser(tree->xtTupleMap(), tree->xtConstants());
 
     nodeFactoryMap["AppendEngineNode"]                  = new xmlAppendEngineFactory(parser);
     nodeFactoryMap["ClassificationAgreementEngineNode"] = new xmlClassificationAgreementEngineFactory(parser);

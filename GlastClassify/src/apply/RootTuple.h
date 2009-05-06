@@ -25,6 +25,7 @@ public:
     void addItem(const std::string& name, float& value);
     void addItem(const std::string& name, double& value);
     void addItem(const std::string& name, unsigned long long& value);
+    void addItem(const std::string& name, char & value);
 
     //! return false when no more events
     bool nextEvent();

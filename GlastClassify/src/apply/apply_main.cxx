@@ -85,6 +85,9 @@ int main(int argc, char* argv[])
         // create the ct: pass in the tuple.
         AtwoodTrees ctrees(tuple, std::cout, CTFilePath);
 
+        // set up the output Root file, branch
+        tuple.setOutputFile(output_filename);
+
         // Are we pruning as well?
         bool keepAllRows = true; // Eventually provide ability to set this true/false...
 
@@ -95,9 +98,6 @@ int main(int argc, char* argv[])
 
             if (pruneEm == "true") keepAllRows = false;
         }
-
-        // set up the output Root file, branch
-        tuple.setOutputFile(output_filename);
 
         int numInputRows  = 0;
         int numOutputRows = 0;

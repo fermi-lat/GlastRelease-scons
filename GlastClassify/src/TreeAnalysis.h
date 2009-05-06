@@ -61,6 +61,12 @@ public:
     */
     XTtupleMap& xtTupleMap() {return m_xtTupleMap;}
 
+    /** @brief This gives full access to the XTtupleMap used to hold constants
+               This is really intended to be used by the TreeAnalysis "Builder"
+               not by casual users!
+    */
+    XTtupleMap& xtConstants() {return m_xtConstants;}
+
     /** @brief Used by the TreeAnalysisBuilder to add a new node to our structure
     */
     void addNewNode(IImActivityNode* node);
@@ -90,6 +96,9 @@ private:
 
     // Class needed to calcluate local variables used in CT's
     XTtupleMap    m_xtTupleMap;
+
+    // Another to hold constants used in CT's
+    XTtupleMap    m_xtConstants;
 
     // Provide map between "local" variables in analysis and 
     // those existing in the input ntuple

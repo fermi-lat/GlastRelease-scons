@@ -515,6 +515,7 @@ public:
         else if (name == "cos")   mathOp = &XTExprsnFunction<T>::cos;   // cosine
         else if (name == "acos")  mathOp = &XTExprsnFunction<T>::acos;  // arc-cosine
         else if (name == "tan")   mathOp = &XTExprsnFunction<T>::tan;   // tangent
+        else if (name == "atan")  mathOp = &XTExprsnFunction<T>::atan;  // tangent
         else if (name == "exp")   mathOp = &XTExprsnFunction<T>::exp;   // e raised to power x
         else if (name == "abs")   mathOp = &XTExprsnFunction<T>::abs;   // absolute value
         else if (name == "min")   mathOp = &XTExprsnFunction<T>::min;   // smallest
@@ -622,6 +623,12 @@ private:
         REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
         *m_value = std::tan(left);
         //*m_value = std::tan(*(reinterpret_cast<const double*>(arg())));
+        return m_value;
+    }
+    const T* atan(IXTExprsnNode& arg) const 
+    {
+        REALNUM left = *(reinterpret_cast<const REALNUM*>(arg()));
+        *m_value = std::atan(left);
         return m_value;
     }
     const T* exp(IXTExprsnNode& arg) const 

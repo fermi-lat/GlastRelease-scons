@@ -69,10 +69,22 @@ public:
         {
             *(reinterpret_cast<double*>(m_pdata)) = *(reinterpret_cast<double*>(data));
         }
-        else if (m_type == "UChar_t")
+        else if (m_type == "UChar_t" || m_type == "Char_t")
         {
-            *(reinterpret_cast<std::string*>(m_pdata)) = 
-                 *((reinterpret_cast<std::string*>(data))->data());
+            memset(reinterpret_cast<char*>(m_pdata), ' ', 80);
+            int dataLen = strlen(reinterpret_cast<char*>(data));
+            if (dataLen > 0)
+            {
+                strncpy(reinterpret_cast<char*>(m_pdata), reinterpret_cast<char*>(data),80);
+            }
+            else
+            {
+                std::string novalue = "none";
+                strncpy(reinterpret_cast<char*>(m_pdata), novalue.c_str(), 80);
+            }
+
+            std::string test(reinterpret_cast<char*>(m_pdata));
+            int stop = 0;
         }
         else
         {
@@ -128,7 +140,7 @@ RootTuple::RootTuple( std::string file, std::string treeName)
     m_numEvents = m_tree->GetEntries();
 
     // Prime the pump to set memory locations...
-    m_tree->GetEvent(0);
+    //m_tree->GetEvent(0);
 
     // Use this to define max tree size (apparantly a "bazillion" is not really a number...)
     Long64_t maxTreeSize=50000000000;
@@ -194,6 +206,21 @@ void RootTuple::addItem(const std::string& name, unsigned long long& value)
         leaf->SetAddress(&value);
     }else {
         m_tree->Branch(name.c_str(), (void*)&value, (name+"/l").c_str());
+    }
+}
+
+void RootTuple::addItem(const std::string& name, char& value)
+{
+    TLeaf* leaf = m_tree->GetLeaf(name.c_str());
+    if( leaf!=0) {
+        std::cout << "Adding item "<< name << ", which already exists" << std::endl;
+        if( std::string(leaf->GetTypeName()) != "UChar_t" && std::string(leaf->GetTypeName()) != "Char_t") 
+        {
+            throw std::invalid_argument("RootTuple::addItem replacing wrong type");
+        }
+        leaf->SetAddress(&value);
+    }else {
+        m_tree->Branch(name.c_str(), (void*)&value, (name+"/C").c_str());
     }
 }
 

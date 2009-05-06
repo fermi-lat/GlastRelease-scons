@@ -101,6 +101,79 @@ int xmlFindOutputVars::numPredictEngineVars(const DOMElement* xmlActivityNode)
     // Searches the input document for output variables created by the "Predict" nodes
     int numVars = 0;
 
+    // Use this to decode the order of probabilities we'll encounter
+    std::vector<DOMElement *> xmlColInfoVec;
+    xmlBase::Dom::getDescendantsByTagName(xmlActivityNode, "ColumnInfo", xmlColInfoVec);
+
+    // Loop through Info nodes to find the list of dependent/independent variables
+    for(std::vector<DOMElement*>::iterator colInfoIter = xmlColInfoVec.begin(); 
+        colInfoIter != xmlColInfoVec.end(); colInfoIter++)
+    {
+        DOMElement* xmlColInfo = *colInfoIter;
+
+        std::string sName = xmlBase::Dom::getAttribute(xmlColInfo, "name");
+        std::string sType = xmlBase::Dom::getAttribute(xmlColInfo, "type");
+        std::string sRole = xmlBase::Dom::getAttribute(xmlColInfo, "role");
+
+        // Check to see if this exists in our list already
+        XTtupleMap::iterator dataIter = XprsnParser().getXtTupleVars().find(sName);
+
+        // If already there then we can skip
+        if (dataIter == XprsnParser().getXtTupleVars().end())
+        {
+            // Add variable to list
+            XTcolumnValBase* basePtr = 0;
+
+            if (sType == "continuous") basePtr = new XTcolumnVal<REALNUM>(sName);
+            else
+            {
+                XTcolumnVal<std::string>* xtColumnVal = new XTcolumnVal<std::string>(sName, "categorical");
+
+                xtColumnVal->setDataValue(sName);
+                basePtr = xtColumnVal;
+            }
+
+            XprsnParser().getXtTupleVars()[sName] = basePtr;
+
+            numVars++;
+        }
+
+        DOMElement* xmlLevel = xmlBase::Dom::findFirstChildByName(xmlColInfo, "Level");
+
+        while(xmlLevel != 0)
+        {
+            std::string sLevelName = xmlBase::Dom::getAttribute(xmlLevel, "value");
+        
+            // Check to see if this exists in our list already
+            XTtupleMap::iterator dataIter = XprsnParser().getXtConstants().find(sLevelName);
+
+            // If already there then we can skip
+            if (dataIter == XprsnParser().getXtConstants().end())
+            {
+                // Add variable to list
+                XTcolumnValBase* basePtr = 0;
+
+                if (sType == "continuous") basePtr = new XTcolumnVal<REALNUM>(sLevelName);
+                else
+                {
+                    XTcolumnVal<std::string>* xtColumnVal = new XTcolumnVal<std::string>(sLevelName, sType);
+
+                    xtColumnVal->setDataValue(sLevelName);
+                    basePtr = xtColumnVal;
+                }
+
+                XprsnParser().getXtConstants()[sLevelName] = basePtr;
+
+                numVars++;
+            }
+            
+            xmlLevel = xmlBase::Dom::getSiblingElement(xmlLevel);
+        }
+    }
+
+
+
+
     // Create path to Argument output list in the node
     std::vector<std::string> path2Arguments;
     path2Arguments.push_back("ArgumentList");
@@ -112,7 +185,7 @@ int xmlFindOutputVars::numPredictEngineVars(const DOMElement* xmlActivityNode)
     // Obtain the list of properties
     std::vector<DOMElement*> xmlArgListVec;
     xmlBase::Dom::getChildrenByTagName(argumentList, "Property", xmlArgListVec);
-        
+
     // Search through the list of properties for the "NewColumns" property 
     // (which is probably the first property?)
     for(std::vector<DOMElement*>::iterator xmlArgListVecItr = xmlArgListVec.begin();
