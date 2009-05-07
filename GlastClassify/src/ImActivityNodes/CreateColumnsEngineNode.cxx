@@ -31,7 +31,7 @@ void CreateColumnsEngineNode::print(std::ostream& out, int depth) const
     // Output our node ID, type and name
     out << indent(depth) << "ID: " << m_id << ", Type: " << m_type << ", Label: " << m_name << std::endl;
 
-    for(XprsnNodeMap::const_iterator nodeIter = m_xprsnNodeMap.begin(); nodeIter != m_xprsnNodeMap.end(); nodeIter++)
+    for(XprsnNodeVec::const_iterator nodeIter = m_xprsnNodeVec.begin(); nodeIter != m_xprsnNodeVec.end(); nodeIter++)
     {
         out << indent(depth) << indent(2) << nodeIter->first->getName() << " = ";
 
@@ -54,7 +54,7 @@ void CreateColumnsEngineNode::print(std::ostream& out, int depth) const
 void CreateColumnsEngineNode::execute()
 {
     // Iterate over the "action" nodes and execute them
-    for(XprsnNodeMap::const_iterator nodeIter = m_xprsnNodeMap.begin(); nodeIter != m_xprsnNodeMap.end(); nodeIter++)
+    for(XprsnNodeVec::const_iterator nodeIter = m_xprsnNodeVec.begin(); nodeIter != m_xprsnNodeVec.end(); nodeIter++)
     {
         XTcolumnValBase* xtTuplBase = nodeIter->first;
         IXTExprsnNode*   xprsnNode  = nodeIter->second;

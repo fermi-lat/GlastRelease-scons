@@ -48,7 +48,7 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
     StringList columnNames;
     StringList colExpressions;
     std::vector<StringList> parsedColExps;
-    CreateColumnsEngineNode::XprsnNodeMap xprsnNodeMap;
+    CreateColumnsEngineNode::XprsnNodeVec xprsnNodeVec;
 
     DOMEvector xmlColumnsVec = getXTSubPropVec(xmlActivityNode, "newColumns");
 
@@ -106,14 +106,14 @@ IImActivityNode* xmlCreateColumnsEngineFactory::operator()(const DOMElement* xml
             XprsnParser().getXtTupleVars()[sVarName] = xtColumnVal;
         }
 
-        xprsnNodeMap[xtColumnVal] = xprsn;
+        xprsnNodeVec.push_back(CreateColumnsEngineNode::XprsnPair(xtColumnVal,xprsn));
     }
 
     // Set the expressions
     if (!columnNames.empty())
     {
         node->setColumnNames(columnNames);
-        node->setXprsnNodeMap(xprsnNodeMap);
+        node->setXprsnNodeVec(xprsnNodeVec);
     }
 
     return node;

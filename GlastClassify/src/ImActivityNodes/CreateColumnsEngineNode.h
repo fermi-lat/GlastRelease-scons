@@ -19,12 +19,13 @@ class XTcolumnValBase;
 class CreateColumnsEngineNode : public IImActivityNode
 {
 public:
-    typedef std::vector<std::string>                   StringList;
-    typedef std::map<XTcolumnValBase*, IXTExprsnNode*> XprsnNodeMap;
+    typedef std::vector<std::string>                    StringList;
+    typedef std::pair<XTcolumnValBase*, IXTExprsnNode*> XprsnPair;
+    typedef std::vector<XprsnPair >                     XprsnNodeVec;
 
     CreateColumnsEngineNode(const std::string& type, const std::string& name, const std::string& id) :
                      m_type(type), m_name(name), m_id(id) 
-                     {m_nodeMap.clear(); m_columnNames.clear(); m_xprsnNodeMap.clear();}
+                     {m_nodeMap.clear(); m_columnNames.clear(); m_xprsnNodeVec.clear();}
     virtual ~CreateColumnsEngineNode() {}
 
     // 
@@ -38,8 +39,8 @@ public:
 
     virtual void setNodeLink(int port, IImActivityNode* linkToNode) {m_nodeMap[port] = linkToNode;}
 
-    void setColumnNames(StringList& colNames)     {m_columnNames  = colNames;}
-    void setXprsnNodeMap(XprsnNodeMap& nodeMap)   {m_xprsnNodeMap = nodeMap;}
+    void setColumnNames(StringList& colNames)   {m_columnNames  = colNames;}
+    void setXprsnNodeVec(XprsnNodeVec& nodeVec) {m_xprsnNodeVec = nodeVec;}
 
     virtual void print(std::ostream& out=std::cout, int depth=0) const;
 
@@ -50,7 +51,7 @@ private:
     IImActivityNodeMap m_nodeMap;
 
     StringList         m_columnNames;
-    XprsnNodeMap       m_xprsnNodeMap;
+    XprsnNodeVec       m_xprsnNodeVec;
 };
 
 #endif // ifdef CreateColumnsEngineNode_h
