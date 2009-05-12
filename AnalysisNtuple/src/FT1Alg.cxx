@@ -373,7 +373,8 @@ void FT1worker::evaluate()
         else if(classLevel == 300) {m_ft1eventclass = 8;}  // 3.0
         else  {m_ft1eventclass = _invalidEventClass;}  // shouldn't happen
     } else if (particleType>=-1 && particleType<=4){
-        if(classLevel==100||classLevel==200||classLevel==300) { // only levels for these types
+        if(classLevel==100||classLevel==200||classLevel==300 ||
+            (particleType==-1&&classLevel==400)) { // only levels for these types
             m_ft1eventclass = particleType*100 + classLevel/100;
         }
     }
