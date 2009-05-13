@@ -507,21 +507,23 @@ public:
                     : m_name(name), m_value(new T), m_left(left), m_right(right) 
     {
         // Set the function pointer to the type of operation we define
-        if      (name == "^")     mathOp = &XTExprsnFunction<T>::pow;   // x to power y
-        else if (name == "log")   mathOp = &XTExprsnFunction<T>::log10; // log base 10
-        else if (name == "loge")  mathOp = &XTExprsnFunction<T>::loge;  // natural log
-        else if (name == "sqrt")  mathOp = &XTExprsnFunction<T>::sqrt;  // square root
-        else if (name == "sin")   mathOp = &XTExprsnFunction<T>::sin;   // sine
-        else if (name == "cos")   mathOp = &XTExprsnFunction<T>::cos;   // cosine
-        else if (name == "acos")  mathOp = &XTExprsnFunction<T>::acos;  // arc-cosine
-        else if (name == "tan")   mathOp = &XTExprsnFunction<T>::tan;   // tangent
-        else if (name == "atan")  mathOp = &XTExprsnFunction<T>::atan;  // tangent
-        else if (name == "exp")   mathOp = &XTExprsnFunction<T>::exp;   // e raised to power x
-        else if (name == "abs")   mathOp = &XTExprsnFunction<T>::abs;   // absolute value
-        else if (name == "min")   mathOp = &XTExprsnFunction<T>::min;   // smallest
-        else if (name == "max")   mathOp = &XTExprsnFunction<T>::max;   // largest
-        else if (name == "floor") mathOp = &XTExprsnFunction<T>::floor; // largest int not greater than x
-        else if (name == "-")     mathOp = &XTExprsnFunction<T>::minus; // unary minus in front of parens
+        if      (name == "^")      mathOp = &XTExprsnFunction<T>::pow;    // x to power y
+        else if (name == "log")    mathOp = &XTExprsnFunction<T>::log10;  // log base 10
+        else if (name == "loge")   mathOp = &XTExprsnFunction<T>::loge;   // natural log
+        else if (name == "sqrt")   mathOp = &XTExprsnFunction<T>::sqrt;   // square root
+        else if (name == "sin")    mathOp = &XTExprsnFunction<T>::sin;    // sine
+        else if (name == "cos")    mathOp = &XTExprsnFunction<T>::cos;    // cosine
+        else if (name == "acos")   mathOp = &XTExprsnFunction<T>::acos;   // arc-cosine
+        else if (name == "tan")    mathOp = &XTExprsnFunction<T>::tan;    // tangent
+        else if (name == "atan")   mathOp = &XTExprsnFunction<T>::atan;   // tangent
+        else if (name == "exp")    mathOp = &XTExprsnFunction<T>::exp;    // e raised to power x
+        else if (name == "abs")    mathOp = &XTExprsnFunction<T>::abs;    // absolute value
+        else if (name == "min")    mathOp = &XTExprsnFunction<T>::min;    // smallest
+        else if (name == "max")    mathOp = &XTExprsnFunction<T>::max;    // largest
+        else if (name == "floor")  mathOp = &XTExprsnFunction<T>::floor;  // largest int not greater than x
+        else if (name == "-")      mathOp = &XTExprsnFunction<T>::minus;  // unary minus in front of parens
+        else if (name == "bitAND") mathOp = &XTExprsnFunction<T>::bitand; // bit-wise AND operation
+        else if (name == "bitOR")  mathOp = &XTExprsnFunction<T>::bitor;  // bit-wise OR operation
         else throw XTENexception("XTExprsnFunction: Invalid function requested");
     }
     virtual ~XTExprsnFunction() {delete m_value;}
@@ -668,6 +670,22 @@ private:
     {
         T temp = *(reinterpret_cast<const T*>(arg()));
         *m_value = -(temp);
+        return m_value;
+    }
+    const T* bitand(IXTExprsnNode& arg) const 
+    {
+        unsigned int arg1 = *(reinterpret_cast<const T*>(arg()));
+        unsigned int arg2 = *(reinterpret_cast<const T*>(m_right()));
+        unsigned int rslt = arg1 & arg2;
+        *m_value = rslt;
+        return m_value;
+    }
+    const T* bitor(IXTExprsnNode& arg) const 
+    {
+        unsigned int arg1 = *(reinterpret_cast<const T*>(arg()));
+        unsigned int arg2 = *(reinterpret_cast<const T*>(m_right()));
+        unsigned int rslt = arg1 | arg2;
+        *m_value = rslt;
         return m_value;
     }
     
