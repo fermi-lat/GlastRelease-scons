@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+13-May-09  v7r2p1 JRB Patch to rename bit fuctions to avoid conflict on linux
 12-May-09  v7r2p0 TU  Version 16 of Pass 7, include bit functions and error trapping
  9-May-09  v7r1p1 TU  New xml file to add a couple of CTB variables for Bill
  9-May-09  v7r1p0 TU  First working tag for Pass 7
