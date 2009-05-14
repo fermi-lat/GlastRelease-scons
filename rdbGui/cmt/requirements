@@ -6,7 +6,7 @@ author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use GlastPolicy  v*
-use FOX v0r125p*  IExternal
+use FOX v0r1434p*  IExternal
 use rdbModel v2r*
 use facilities v2r*
 
