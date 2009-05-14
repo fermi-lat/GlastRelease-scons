@@ -70,30 +70,45 @@ protected:
     DISABLED  = 4,
     DRAGGABLE = 8,
     ICONOWNED = 16,
-    CHECKED   = 32
+    CHECKED   = 32,
+    VISIBLE_CHECKBOX = 64
     };
 public:
   FXCheckListItem(const FXString& text,FXIcon* ic=NULL,void* ptr=NULL):label(text),icon(ic),data(ptr),state(0), tipText(""){}
+
   virtual void setText(const FXString& txt){ label=txt; }
   FXString getText() const { return label; }
+
   virtual void setIcon(FXIcon* icn){ icon=icn; }
   FXIcon* getIcon() const { return icon; }
+
   void setData(void* ptr){ data=ptr; }
   void* getData() const { return data; }
+
   void setTipText(FXString tip) {tipText = tip;}
   FXString getTipText() {return tipText;}
+
   virtual void setFocus(FXbool focus);
   FXbool hasFocus() const { return (state&FOCUS)!=0; }
+
   virtual void setSelected(FXbool selected);
   FXbool isSelected() const { return (state&SELECTED)!=0; }
+
   virtual void setChecked(FXbool checked);
   FXbool isChecked() const { return (state&CHECKED)!=0; }
+
   virtual void setEnabled(FXbool enabled);
   FXbool isEnabled() const { return (state&DISABLED)==0; }
+
+  virtual void setCheckboxVisible(FXbool visible);
+  FXbool isCheckboxVisible() const { return (state&VISIBLE_CHECKBOX)!=0; }
+
   virtual void setDraggable(FXbool draggable);
   FXbool isDraggable() const { return (state&DRAGGABLE)!=0; }
+
   virtual void setIconOwned(FXuint owned=ICONOWNED);
   FXuint isIconOwned() const { return (state&ICONOWNED); }
+
   virtual FXint getWidth(const FXCheckList* list) const;
   virtual FXint getHeight(const FXCheckList* list) const;
   virtual void create();
@@ -106,7 +121,8 @@ public:
 
 
 /// List item collate function
-typedef FXint (*FXCheckListSortFunc)(const FXCheckListItem*,const FXCheckListItem*);
+typedef FXint (*FXCheckListSortFunc)(const FXCheckListItem*,
+                                     const FXCheckListItem*);
 
 
 /// List Widget
@@ -131,8 +147,12 @@ protected:
   FXint          grabx;             // Grab point x
   FXint          graby;             // Grab point y
   FXString       lookup;            // Lookup string
+
+#if FOX_MAJOR >=1 && FOX_MINOR < 4
   FXTimer       *timer;             // Tip hover timer
   FXTimer       *lookuptimer;       // Lookup timer
+#endif
+
   FXbool         state;             // State of item
 protected:
   FXCheckList();
@@ -212,7 +232,11 @@ public:
   virtual void recalc();
 
   /// List widget can receive focus
+#if FOX_MAJOR >=1 && FOX_MINOR < 6
   virtual FXbool canFocus() const;
+#elif FOX_MAJOR >=1 && FOX_MINOR >=6
+  virtual bool canFocus() const;
+#endif
 
   /// Return the number of items in the list
   FXint getNumItems() const { return nitems; }
@@ -230,25 +254,29 @@ public:
   FXint replaceItem(FXint index,FXCheckListItem* item,FXbool notify=FALSE);
 
   /// Replace items text, icon, and user-data pointer
-  FXint replaceItem(FXint index,const FXString& text,FXIcon *icon=NULL,void* ptr=NULL,FXbool notify=FALSE);
+  FXint replaceItem(FXint index,const FXString& text,FXIcon *icon=NULL,
+                    void* ptr=NULL,FXbool notify=FALSE);
 
   /// Insert a new [possibly subclassed] item at the give index
   FXint insertItem(FXint index,FXCheckListItem* item,FXbool notify=FALSE);
 
   /// Insert item at index with given text, icon, and user-data pointer
-  FXint insertItem(FXint index,const FXString& text,FXIcon *icon=NULL,void* ptr=NULL,FXbool notify=FALSE);
+  FXint insertItem(FXint index,const FXString& text,FXIcon *icon=NULL,
+                   void* ptr=NULL,FXbool notify=FALSE);
 
   /// Append a [possibly subclassed] item to the list
   FXint appendItem(FXCheckListItem* item,FXbool notify=FALSE);
 
   /// Append new item with given text and optional icon, and user-data pointer
-  FXint appendItem(const FXString& text,FXIcon *icon=NULL,void* ptr=NULL,FXbool notify=FALSE);
+  FXint appendItem(const FXString& text,FXIcon *icon=NULL,void* ptr=NULL,
+                   FXbool notify=FALSE);
 
   /// Prepend a [possibly subclassed] item to the list
   FXint prependItem(FXCheckListItem* item,FXbool notify=FALSE);
 
   /// Prepend new item with given text and optional icon, and user-data pointer
-  FXint prependItem(const FXString& text,FXIcon *icon=NULL,void* ptr=NULL,FXbool notify=FALSE);
+  FXint prependItem(const FXString& text,FXIcon *icon=NULL,void* ptr=NULL,
+                    FXbool notify=FALSE);
 
   /// Remove item from list
   void removeItem(FXint index,FXbool notify=FALSE);
@@ -273,7 +301,8 @@ public:
   * Search items for item by name, starting from start item; the
   * flags argument controls the search direction, and case sensitivity.
   */
-  FXint findItem(const FXString& text,FXint start=-1,FXuint flags=SEARCH_FORWARD|SEARCH_WRAP) const;
+  FXint findItem(const FXString& text,FXint start=-1,
+                 FXuint flags=SEARCH_FORWARD|SEARCH_WRAP) const;
 
   /// Scroll to bring item into view
   void makeItemVisible(FXint index);
@@ -319,6 +348,24 @@ public:
 
   /// Disable item
   FXbool disableItem(FXint index);
+
+  /// Mark all the items 'enabled'
+  void enableAllItems();
+
+  /// Mark all the items 'disabled'
+  void disableAllItems();
+
+  /// Make checkbox visible
+  FXbool setItemCheckboxVisible(FXint index);
+
+  /// Make checkbox hidden
+  FXbool setItemCheckboxHidden(FXint index);
+
+  /// Make all checkbox visible
+  void setAllCheckboxVisible();
+
+  /// Make all checkbox hidden
+  void setAllCheckboxHidden();
 
   /// Select item
   FXbool selectItem(FXint index,FXbool notify=FALSE);
