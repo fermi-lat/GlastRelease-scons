@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v5r2    14-May-2009  HMK  Throw an exception when attempting a disabled
+ *         branch via RootTupleSvc::getItem
  * v5r1    01-May-2009  HMK  Provide new JO for setting branches to read o
  *         not to read
  * v5r0p1  19-Mar-2009  HMK  Add mechanism to set merit version if necessary

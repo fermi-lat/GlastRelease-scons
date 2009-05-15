@@ -1061,11 +1061,14 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
         if (!inputChain->second->GetBranchStatus(itemName.c_str())) {
             log << MSG::WARNING << "Looking for branch with status 0 "
                 << itemName << " returning null value for this branch"
+                << " and throwing exception"
                 << endreq;
             pval = 0;
             saveDir->cd();
             type_name="";
-            return(type_name);
+            throw std::runtime_error(std::string("Disabled Branch ")+itemName);
+            //type_name="";
+            //return(type_name);
         }
     }
     saveDir->cd();
