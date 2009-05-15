@@ -1066,7 +1066,7 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
             pval = 0;
             saveDir->cd();
             type_name="";
-            throw std::runtime_error(std::string("Disabled Branch ")+itemName);
+            throw std::invalid_argument(std::string("Disabled Branch ")+itemName);
             //type_name="";
             //return(type_name);
         }
