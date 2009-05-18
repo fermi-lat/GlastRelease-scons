@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v5r3    18-May-2009  HMK  check output tree, if input tree does not
+ *         provide access to leaf accessed via RootTupleSvc::getItem
  * v5r2p1  14-May-2009  HMK  throwing invalid_argument instead
  * v5r2    14-May-2009  HMK  Throw an exception when attempting a disabled
  *         branch via RootTupleSvc::getItem

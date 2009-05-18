@@ -1004,7 +1004,10 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
         leaf = inputChain->second->GetLeaf(itemName.c_str());
     
 
-    if (leaf == 0) 
+    // if the input branch is disabled, or we did not find the leaf, 
+    // look in the output tree
+    if ( (!inputChain->second->GetBranchStatus(itemName.c_str())) ||
+         (leaf == 0) )
         leaf = t->GetLeaf(itemName.c_str());
     else
         foundInChain = true;
@@ -1055,20 +1058,6 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
             inputChain->second->SetBranchAddress(itemName.c_str(), m_itemPool[itemName]);
             leaf = inputChain->second->GetLeaf(itemName.c_str());
             pval = leaf->GetValuePointer();
-        }
-        // Checking the branch status, if not set to read this branch
-        // return a null value for the variable
-        if (!inputChain->second->GetBranchStatus(itemName.c_str())) {
-            log << MSG::WARNING << "Looking for branch with status 0 "
-                << itemName << " returning null value for this branch"
-                << " and throwing exception"
-                << endreq;
-            pval = 0;
-            saveDir->cd();
-            type_name="";
-            throw std::invalid_argument(std::string("Disabled Branch ")+itemName);
-            //type_name="";
-            //return(type_name);
         }
     }
     saveDir->cd();
