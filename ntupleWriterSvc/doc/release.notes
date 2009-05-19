@@ -3,6 +3,8 @@
  *    * EOH *
 
  @verbatim
+ * v5r3p1  19-May-2009  HMK  Make sure input file ptr exists before testing
+ *         branch status
  * v5r3    18-May-2009  HMK  check output tree, if input tree does not
  *         provide access to leaf accessed via RootTupleSvc::getItem
  * v5r2p1  14-May-2009  HMK  throwing invalid_argument instead

@@ -1006,7 +1006,8 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
 
     // if the input branch is disabled, or we did not find the leaf, 
     // look in the output tree
-    if ( (!inputChain->second->GetBranchStatus(itemName.c_str())) ||
+    if ( ( (inputChain != m_inChain.end()) && 
+           (!inputChain->second->GetBranchStatus(itemName.c_str())) ) ||
          (leaf == 0) )
         leaf = t->GetLeaf(itemName.c_str());
     else
