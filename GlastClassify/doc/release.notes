@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+21-May-09  v7r2p2 TU  Version 16.2 of the xml analysis file
 13-May-09  v7r2p1 JRB Patch to rename bit fuctions to avoid conflict on linux
 12-May-09  v7r2p0 TU  Version 16 of Pass 7, include bit functions and error trapping
  9-May-09  v7r1p1 TU  New xml file to add a couple of CTB variables for Bill
