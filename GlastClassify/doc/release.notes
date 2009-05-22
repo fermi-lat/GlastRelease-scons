@@ -3,6 +3,7 @@
 
 $Id$
 @verbatim
+22-May-09  v7r2p4 TU  Update to latest xml file (Pass7_v16.3.imw on Pass7 confluence page)
 22-May-09  v7r2p3 TU  Obtain output TTree ptr to force RootTupleSvc::getItem
                       to use the TTree we want to obtain branch pointers
 21-May-09  v7r2p2 TU  Version 16.2 of the xml analysis file
