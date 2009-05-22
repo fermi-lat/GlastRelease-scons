@@ -165,7 +165,8 @@ public:
 
     // Had to remove const due to reprocessing needs, and the requirement to store branch pointers in some cases
     virtual std::string getItem(const std::string & tupleName, 
-        const std::string& itemName, void*& pval);
+        const std::string& itemName, void*& pval,
+        const void* treePtr = 0);
 
     /** store row flag by tuple Name option, retrive currrent
     @param tupleName Name of the tuple (TTree for RootTupleSvc implemetation)
@@ -972,7 +973,8 @@ long long RootTupleSvc::getOutputTreePtr(void*& pval, const std::string & tupleN
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 std::string RootTupleSvc::getItem(const std::string & tupleName, 
-                                   const std::string& itemName, void*& pval)
+                                  const std::string& itemName, void*& pval,
+                                  const void* treePtr)
 {
     // Hack for inputChain required for reprocessing option
 
@@ -998,20 +1000,30 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
 
     TLeaf *leaf = 0;
     bool foundInChain = false;
-    // Check potential input tree 
     std::map<std::string, TChain*>::const_iterator inputChain = m_inChain.find(treename);
-    if (inputChain != m_inChain.end()) 
-        leaf = inputChain->second->GetLeaf(itemName.c_str());
-    
 
-    // if the input branch is disabled, or we did not find the leaf, 
-    // look in the output tree
-    if ( ( (inputChain != m_inChain.end()) && 
-           (!inputChain->second->GetBranchStatus(itemName.c_str())) ) ||
-         (leaf == 0) )
-        leaf = t->GetLeaf(itemName.c_str());
+    // If we supplied a tree pointer, use that
+    if (treePtr)
+    {
+        const TTree* tempConstPtr = reinterpret_cast<const TTree*>(treePtr);
+        TTree*       tempPtr      = const_cast<TTree*>(tempConstPtr);
+        leaf = tempPtr->GetLeaf(itemName.c_str());
+    }
     else
-        foundInChain = true;
+    {
+        // Check potential input tree 
+        if (inputChain != m_inChain.end()) 
+            leaf = inputChain->second->GetLeaf(itemName.c_str());
+    
+        // if the input branch is disabled, or we did not find the leaf, 
+        // look in the output tree
+        if ( ( (inputChain != m_inChain.end()) && 
+            (!inputChain->second->GetBranchStatus(itemName.c_str())) ) ||
+            (leaf == 0) )
+            leaf = t->GetLeaf(itemName.c_str());
+        else
+            foundInChain = true;
+    }
 
     if( leaf==0)
         throw std::invalid_argument(std::string("RootTupleSvc::getItem: did not find tuple or leaf: ")+ itemName);

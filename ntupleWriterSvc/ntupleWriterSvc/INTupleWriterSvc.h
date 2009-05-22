@@ -93,7 +93,8 @@ public:
     
     */
     virtual std::string getItem(const std::string & tupleName, 
-        const std::string& itemName, void*& pointer) =0;
+                                const std::string& itemName, void*& pointer,
+                                const void* treePtr = 0) = 0;
 
     //! Provide access to input TTree pointer given tuple name
     virtual long long getInputTreePtr(void*& treePtr, 
