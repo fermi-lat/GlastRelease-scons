@@ -379,9 +379,6 @@ void FT1worker::evaluate()
         }
     }
 
-
-    m_ft1convlayer   = Tkr1FirstLayer;
-
     // CTBBest[X/Y/Z]Dir can be set even if there's no track, 
     // by Cal-only events, for example!
 
@@ -399,6 +396,8 @@ void FT1worker::evaluate()
     }
 
     // instrument coords
+
+    m_ft1convlayer   = Tkr1FirstLayer;
 
     m_ft1theta = (-glastDir).theta()*R2D;
     double phi_deg = (-glastDir).phi(); 
