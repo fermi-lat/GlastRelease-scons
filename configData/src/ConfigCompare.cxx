@@ -74,7 +74,7 @@ ConfigCompare::compare(ConfigBase& one, ConfigBase& other, TList& l,
     TH1* hv_hld = new TH1S("delta_hld_dac_v","delta_hld_dac_v",512,-216.,216.);
     l.Add(h_hld); l.Add(hv_hld); 
 
-    TH1* h_veto = new TH1I("delta_veto_dac","delta_veto_dac",1024,-0.5,63.5);
+    TH1* h_veto = new TH1I("delta_veto_dac","delta_veto_dac",1024,-63.5,63.5);
     TH1* hv_veto = new TH1F("delta_veto_dac_v","delta_veto_dac_v",512,-216.,216.);
     l.Add(h_veto); l.Add(hv_veto); 
 
