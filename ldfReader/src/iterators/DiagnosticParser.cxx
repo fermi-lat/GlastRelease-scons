@@ -32,11 +32,11 @@ namespace ldfReader {
         ldfReader::DiagnosticData* diagData = twrData->getTem().getDiagnostic();
         diagData->setExist();
 
-        unsigned long diagSize = diagData->lenInBytes();
-
         const ldfReader::CalDiagnosticData calDiagData(cal.datum(), tower, layer);
         diagData->addCalDiagnostic(calDiagData);
         diagData->initLength(DIAGcontributionIterator::size());
+
+        unsigned long diagSize = diagData->lenInBytes();
 
         if (DIAGcontributionIterator::size() != diagSize)
           printf("WARNING - Diagnostic data size is not %d, it is %d\n",
