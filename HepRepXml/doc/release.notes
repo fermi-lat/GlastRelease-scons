@@ -1,5 +1,8 @@
 //$Header$
-/*
+/** @file release.notes
+ Package HepRepXml
+ * EOH *
+
  * v0r1     07-07-03 RG Inital release of the package
  * v0r2     17-07-03 RG Prepare for Latest
  * v0r5     04-06-04 RG Updated for new HepRepSvc features

@@ -2,7 +2,8 @@
  * @brief Package GuiSvc release notes
  * Manager T Burnett
  * @verbatim
- *
+ * EOH *
+
  * v3r8p1  30-oct-2007 HMK patch for using gr_app due to local macro for GuiMain
  * v3r8    30-oct-2007 HMK Use gr_app
  * v3r7    29-mar-2006 THB Reversion to prevous library strategy for Windows

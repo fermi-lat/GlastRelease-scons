@@ -2,6 +2,7 @@
 Package LdfConverter
 Coordinator:H.Kelly
 @verbatim
+ * EOH *
 
 v4r3p3  17-Mar-2009 HMK Update mainpage.h for modified use of EbfDebug
 v4r3p2  29-Jul-2008 NG  Tagging Navid's update to remove CMT env vars
