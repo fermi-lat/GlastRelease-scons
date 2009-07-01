@@ -5,6 +5,7 @@ Package commonRootData
 Coordinator:H.Kelly
 
 @verbatim
+ * EOH *
 
 v2r15p5 28-Sep-2007 HMK include string, seems required now that we're moving
                     to ROOT v5.16.00

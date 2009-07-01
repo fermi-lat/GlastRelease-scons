@@ -2,6 +2,7 @@
  * Package gui 
  * Coordinator: T.Burnett
  @verbatim
+ * EOH *
    v3r7p2   THB 24-mar-06   CLHEP change
    v3r6p7 NG  29-aug-05   Carry forward changes in GlastPoicy until we have a pattern
    v3r6p6 NG  25-aug-05   Linking against correct version of libguisystem

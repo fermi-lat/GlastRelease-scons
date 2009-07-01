@@ -1,7 +1,7 @@
 /** @file release.notes
  * @brief package geomrep
 @verbatim
-
+ * EOH *
  v4r3 24-mar-06 THB  New CLHEP 
 ! 20060131    - TU : Tag development branch for new externals
 ! 20050715    - NG : Added author line fixed version number

@@ -2,8 +2,8 @@
  * @brief package configData
 @verbatim
  * package manager:M. Kocian
- *
- *
+ * EOH *
+
  * v1r10p2 13-Jun-08 EAC Use "line" attribute in xml to allow for prescaler lines to be
                          in BigEndian order
  * v1r10p1 12-Jun-08 EAC Added FswEfcPrescaler::prescaleFactor() function

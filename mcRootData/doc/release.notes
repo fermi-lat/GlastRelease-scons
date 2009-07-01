@@ -1,12 +1,10 @@
 /** @file release.notes
-
  package mcRootData
-
  package manager:H.Kelly
-
  @verbatim
 
 $Header$
+* EOH *
 
 v2r22     31-Mar-2008 TU  HMK tagging Tracy's update to McObjectManager that
           uses min now rather than max when determining pool size
