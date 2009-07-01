@@ -2,10 +2,10 @@
  
  @brief Package CalRecon
  @verbatim
-
 package CalRecon
-
 package manager: David Chamont
+
+  * EOH *
 
   v6r7       15-Jul-08 LSR (for Philippe B.)
                            Modified of the full profile to optimize processing time

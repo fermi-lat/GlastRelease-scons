@@ -3,6 +3,8 @@
 
 $Id$
 @verbatim
+ * EOH *
+
  * Package CalDigi
  * v3r7        1-Dec-2008  TU Moving CalDigiMergeAlg to the Overlay package
  * v3r6       12-Nov-2008 LSR Mods for Digi merging

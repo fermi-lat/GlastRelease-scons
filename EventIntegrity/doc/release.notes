@@ -2,6 +2,8 @@
  * @brief package EventIntegrity 
  * package manager:H.Kelly 
   <pre>
+ * EOH *
+
  * v0r8p2 2009-Mar-31  HMK JIRA GRINF-51
  * v0r8p1 2009-Mar-24  HMK Print out event id when errors are found
  * v0r8   2009-Mar-21  HMK add check for Phasing Error

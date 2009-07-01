@@ -2,6 +2,7 @@
     @brief package G4Propagator
     $Id$
  @verbatim
+ * EOH *
 
  v2r5p1   13-Aug-08 TU   Beef up the exception handling to make sure the messages are output
  v2r5p0   13-Aug-08 TU   Change, again, handling of the stuck tracks, returning to using local exit normals

@@ -4,6 +4,8 @@
 
 @verbatim
  * package manager:T.Burnett
+ * EOH *
+
  30-Oct-2007  v3r3   HMK use gr_app
  28-Jun-2007  v3r2p1 LSR Kludge to get around drawing spheres... 
                            I tried to implement this, but didn't quite make it.

@@ -3,6 +3,8 @@
 
 $Id$
 @verbatim
+ * EOH *
+
 23-May-09  v7r2p5 TU  Update to latest xml file (Pass7_v16.4.imw on Pass7 confluence page)
 22-May-09  v7r2p4 TU  Update to latest xml file (Pass7_v16.3.imw on Pass7 confluence page)
 22-May-09  v7r2p3 TU  Obtain output TTree ptr to force RootTupleSvc::getItem

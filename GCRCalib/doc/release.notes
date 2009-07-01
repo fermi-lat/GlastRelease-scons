@@ -1,3 +1,7 @@
+/** @file release.notes
+ Package GCRCalib
+ EOH
+
 v1r6p2      18/02/09 jct  Fix two bugs in the way m_initDir is initialized, and the case of no track in TDS
 v1r6p1      30/06/08 jct  redux....
 v1r6        30/06/08 jct  fix release of the threshold setting
@@ -72,3 +76,4 @@ v0r0p3           fewtrell  changed int adc values to floats earlier in calculati
 v0r0p2           fewtrell  better checking for ADC values which are too low & cause ugly results.
 v0r0p1           fewtrell  got it to build w/out errors on linux
 v0r0             fewtrell  initial release of CalXtalResponse - uses v3 calibGenCAL calibration to do single crystal response calculation & simulation for both CalRecon & CalDigi
+*/

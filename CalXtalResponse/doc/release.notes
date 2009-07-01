@@ -1,3 +1,7 @@
+/** @file release.notes
+ * Package CalXtalResponse
+* EOH *
+
 v0r23   12/17/08 usher     - Updates to help separate trigger for overlay events
 v0r22   09/23/08 fewtrell  - ideal calib files moved to CalUtil (can be shared w/ non-gaudi pkg calibGenCAL)
 v0r21p8 07/31/08 fewtrell  - Removed all references to Event::GltDigi (I guess it's being purged entirely).
@@ -85,3 +89,4 @@ v0r0p3           fewtrell  changed int adc values to floats earlier in calculati
 v0r0p2           fewtrell  better checking for ADC values which are too low & cause ugly results.
 v0r0p1           fewtrell  got it to build w/out errors on linux
 v0r0             fewtrell  initial release of CalXtalResponse - uses v3 calibGenCAL calibration to do single crystal response calculation & simulation for both CalRecon & CalDigi
+*/
