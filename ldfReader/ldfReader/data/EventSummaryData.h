@@ -43,6 +43,14 @@ namespace ldfReader {
         void setPpcTimeBase(unsigned upperWord, unsigned lowerWord) { 
             m_upperPpcTimeBase = upperWord; m_lowerPpcTimeBase = lowerWord; 
         };
+        
+        /// Allow ldfReader to set diagnostic bit after taking OR across
+        ///  all contributions
+        void setDiagnostic() { m_summary |= (1 << 20); };
+
+        /// Allow ldfReader to set diagnostic bit after taking OR across
+        ///  all contributions
+        void setError() { m_summary |= (1<<21); };
 
         long timeSec() { return m_timeSec; }
         long timeNanoSec() { return m_timeNanoSec; }

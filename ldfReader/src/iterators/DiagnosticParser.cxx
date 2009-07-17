@@ -49,10 +49,31 @@ namespace ldfReader {
         // Retrieve the tower or create a new TowerData object if necessary
         ldfReader::LatData* curLatData = ldfReader::LatData::instance();
         ldfReader::TowerData* twrData = curLatData->getTower(tower);
-        ldfReader::DiagnosticData* diagData = twrData->getTem().getDiagnostic();
+        if (!twrData) {
+            twrData = new TowerData(tower);
+            curLatData->addTower(twrData);
+         }
+         ldfReader::TemData &tem = twrData->getTem();
+         
+    //     tem.setExist();
 
+        if (!tem.exist()) {
+             ldfReader::EventSummaryCommon summary(((EBFcontribution*)contribution())->summary());
+             //ldfReader::TemData temNew(summary);
+             tem.initSummary(summary);
+             tem.initPacketError(((EBFcontribution*)contribution())->packetError());
+             tem.initLength(((EBFcontribution*)contribution())->length());
+             //summary.print();
+             //twrData->setTem(temNew);
+             //printf("TKRdiag creating TEM for tower %d %u\n", tower, tkr.datum());
+         }
+         tem.setExist();
+        ldfReader::DiagnosticData* diagData = twrData->getTem().getDiagnostic();
+        diagData->setExist();
+    
         // - 8 16 bit contributions for GTCC
         const ldfReader::TkrDiagnosticData tkrDiagData(tkr.datum(), tower, gtcc);
+        diagData->initLength(DIAGcontributionIterator::size());
         diagData->addTkrDiagnostic(tkrDiagData);
         return 0;
     }

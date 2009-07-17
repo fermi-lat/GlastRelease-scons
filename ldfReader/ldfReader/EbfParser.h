@@ -32,7 +32,7 @@ namespace ldfReader {
         virtual unsigned long long eventCount() const = 0;
 
         /// Turn on or off debug output.  Returns old value of flag
-        virtual bool setDebug(bool on);
+        virtual int setDebug(int on);
 
         virtual int setAcdRemap(const std::string &filename) ;
 

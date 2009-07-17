@@ -41,8 +41,8 @@ namespace ldfReader {
         char name[10];
         sprintf(name, "  %1d    %2s ", gccc[layer], layerTag[layer]);
         if (EbfDebug::getDebug()==EbfDebug::ALL) {
-            printf("%s     %2d   %10s   %2d   0x%03x   %1d   0x%03x   %1d\n",
-                m_prefix, tower, name, theLog.column(),
+            printf("%s  %s   %2d   %10s   %2d   0x%03x   %1d   0x%03x   %1d\n",
+                m_prefix, "CalParser::log", tower, name, theLog.column(),
                 theLog.positive().value(), theLog.positive().range(),
                 theLog.negative().value(), theLog.negative().range());
         }  
@@ -53,15 +53,18 @@ namespace ldfReader {
         if (!tData) {
             tData = new ldfReader::TowerData(tower);
             curLatData->addTower(tData);
+        }
+        TemData &tem = tData->getTem();
+        if (!tem.exist()) {
             ldfReader::EventSummaryCommon summary(((EBFcontribution*)contribution())->summary());
-            ldfReader::TemData tem(summary);
+            //ldfReader::TemData tem(summary);
+             tem.initSummary(summary);
             //printf("Summary in TEM in CAL\n");
             //tem.summary().print();
             tem.setExist();
             tem.initPacketError(((EBFcontribution*)contribution())->packetError());
             tem.initLength(((EBFcontribution*)contribution())->length());
-            tData->setTem(tem);
-
+            //tData->setTem(tem);
         }
 
         // Get the Layer and Column 

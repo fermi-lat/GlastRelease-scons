@@ -13,7 +13,7 @@ $Header$
 #include "ldfReader/EbfParser.h"
 namespace ldfReader {
 
-bool EbfParser::setDebug(bool on) {
+int EbfParser::setDebug(int on) {
     return EbfDebug::setDebug(on);
 }
 

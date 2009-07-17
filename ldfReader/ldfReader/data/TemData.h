@@ -58,6 +58,7 @@ namespace ldfReader {
 
         const EventSummaryCommon& summary() const { return m_summary; };
         void initSummary(unsigned summary) { m_summary.setSummary(summary);};
+        void initSummary(const EventSummaryCommon& summary) { m_summary = summary;};
 
 //       void setDiagnostic(const DiagnosticData& diag) { m_diag = diag; };
        DiagnosticData* getDiagnostic() { return &m_diag; };
