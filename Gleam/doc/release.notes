@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * $Id$
 * EOH
+
 * v7r4p2   HMK 22-Apr-09 Add FhSetMeritAlg to basicOptions and tests
 * v7r4p1   HMK 17-Mar-09 Add ntupleWriterSvc Dll to ldf2digi to avoid 
 *          warning from RootIo
