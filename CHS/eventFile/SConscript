@@ -24,7 +24,10 @@ progEnv.Tool('eventFileLib')
 writeMerge = progEnv.Program('writeMerge', 'src/writeMerge.cxx')
 test_LSEReader = progEnv.Program('test_LSEReader', 'src/test/test_LSEReader.cxx')
 
-progEnv.Tool('registerObjects', package = 'eventFile', libraries = [eventFile], binaries = [writeMerge], testApps = [test_LSEReader], includes = listFiles(['eventFile/*.h']))
+progEnv.Tool('registerTargets', package = 'eventFile',
+             libraryCxts = [[eventFile, libEnv]],
+             binaries = [[writeMerge, progEnv]], testApps = [[test_LSEReader, progEnv]],
+             includes = listFiles(['eventFile/*.h']))
 
                                                                 
 
