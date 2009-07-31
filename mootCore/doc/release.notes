@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+ mootCore-01-24-03 30-Jul-2009    jrb Update SConscript
  mootCore-01-24-02 20-May-2009    jrb Make a new pattch tag so that tag in SConscript matches CVS's idea
    v1r24p1 25-Sep-2008 panetta  Add new ACD HLD calibrations to init-mood.xml.
    v1r24   25-Sep-2008 panetta  Add new ACD HLD calibrations to intent.xsd.  
