@@ -37,7 +37,7 @@ libEnv['rootcint_node'] = commonRootDataRootcint
 
 libEnv.Tool('registerTargets', package = 'commonRootData',
             rootcintSharedCxts = [[commonRootDataLib, libEnv]],
-            includes = listFiles(['commonRootData/*.h'], recursive = True)
+            includes = listFiles(['commonRootData/*'], recursive = True)
             )
 
 
