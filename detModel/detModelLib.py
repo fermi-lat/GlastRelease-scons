@@ -4,5 +4,8 @@ def generate(env, **kw):
         env.Tool('addLibrary', library = ['detModel'])
     env.Tool('addLibrary', library = env['clhepLibs'])
     env.Tool('xmlUtilLib')
+    env.Tool('xmlBaseLib')
+    env.Tool('identsLib')
+    env.Tool('addLibrary', library = env['xercesLibs'])
 def exists(env):
     return 1;
