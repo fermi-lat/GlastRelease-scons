@@ -36,17 +36,23 @@ digiRootDataRootcint = libEnv.Rootcint('digiRootData/digiRootData_rootcint',['di
                                         'digiRootData/AdfDigi.h',
                                         'digiRootData/EventSummaryData.h', 'digiRootData/LinkDef.h'], includes = [''])
 
+libEnv['rootcint_node'] = digiRootDataRootcint
                                        
 digiRootData = libEnv.SharedLibrary('digiRootData', listFiles(['src/*.cxx']) + ['digiRootData/digiRootData_rootcint.cxx'])
 
 progEnv.Tool('digiRootDataLib')
-test_digiRootData = progEnv.Program('test_digiRootData', ['src/test/testDigiClasses.cxx'])
+test_digiRootData = progEnv.Program('test_digiRootData',
+                                    ['src/test/testDigiClasses.cxx'])
 progEnv.Tool('addLibrary', library = baseEnv['ldfLibs'])
 progEnv.Tool('lsfDataLib')
-ReadFilterStats = progEnv.Program('ReadFilterStats', ['apps/ReadFilterStats.cxx'])
+ReadFilterStats = progEnv.Program('ReadFilterStats',
+                                  ['apps/ReadFilterStats.cxx'])
 
-progEnv.Tool('registerObjects', package = 'digiRootData', libraries = [digiRootData], 
-	testApps = [test_digiRootData], binaries=[ReadFilterStats], includes = listFiles(['digiRootData/*.h']))
+progEnv.Tool('registerTargets', package = 'digiRootData',
+             rootcintSharedCxts = [[digiRootData, libEnv]], 
+             testAppCxts = [[test_digiRootData, progEnv]],
+             binaryCxts=[[ReadFilterStats, progEnv]],
+             includes = listFiles(['digiRootData/*.h']))
 
 
 
