@@ -8,3 +8,5 @@ Win32*
 Visual
 setup.*
 *.mak*
+*.pyc
+build
