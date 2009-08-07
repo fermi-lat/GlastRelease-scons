@@ -15,7 +15,10 @@ identsLib = libEnv.StaticLibrary('idents', listFiles(['src/*.cxx']))
 progEnv.Tool('identsLib')
 test_idents = progEnv.Program('test_idents',[ 'src/test/test_idents.cxx'])
 
-progEnv.Tool('registerObjects', package = 'idents', libraries = [identsLib], testApps = [test_idents], includes = listFiles(['idents/*.h']))
+progEnv.Tool('registerTargets', package = 'idents',
+             staticLibraryCxts = [[identsLib, libEnv]],
+             testAppCxts = [[test_idents, progEnv]],
+             includes = listFiles(['idents/*.h']))
 
 
 

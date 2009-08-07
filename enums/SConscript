@@ -9,7 +9,9 @@ progEnv = baseEnv.Clone()
 
 test_enums = progEnv.Program('test_enums',[ 'src/test/test_enums.cxx'])
 
-progEnv.Tool('registerObjects', package = 'enums', testApps = [test_enums], includes = listFiles(['enums/*.h']))
+progEnv.Tool('registerTargets', package = 'enums',
+             testAppCxts = [[test_enums,progEnv]],
+             includes = listFiles(['enums/*.h']))
 
 
 
