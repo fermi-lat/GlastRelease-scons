@@ -27,6 +27,7 @@ commonRootDataRootcint =libEnv.Rootcint('commonRootData/commonRootData_rootcint'
                                          'commonRootData/LinkDef.h'],
                                          includes = ['.'])
 
+libEnv['rootcint_node'] = commonRootDataRootcint
 
 commonRootDataLib = libEnv.SharedLibrary('commonRootData',
                                          listFiles(['src/*.cxx',
