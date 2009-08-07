@@ -5,6 +5,8 @@ def generate(env, **kw):
     env.Tool('EventLib')
     env.Tool('xmlUtilLib')
     env.Tool('detModelLib')
+    env.Tool('identsLib')
+    env.Tool('facilitiesLib')
 
 def exists(env):
     return 1;
