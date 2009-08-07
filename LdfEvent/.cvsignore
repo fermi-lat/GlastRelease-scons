@@ -6,3 +6,5 @@ Linux*
 VC7*
 rh*
 VC8*
+build
+*.pyc
