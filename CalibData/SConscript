@@ -8,11 +8,16 @@ Import('packages')
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('CalibDataLib', depsOnly = 1)
-CalibDataLib  = libEnv.SharedLibrary('CalibData', listFiles(['src/*.cxx', 'src/Cal/*.cxx', 'src/Tkr/*.cxx',
-                                                             'src/Acd/*.cxx', 'src/Moot/*.cxx', 'src/Anc/*.cxx',
-                                                             'src/Nas/*.cxx']))
+CalibDataLib = libEnv.SharedLibrary('CalibData',
+                                    listFiles(['src/*.cxx', 'src/Cal/*.cxx',
+                                               'src/Tkr/*.cxx','src/Acd/*.cxx',
+                                               'src/Moot/*.cxx',
+                                               'src/Anc/*.cxx',
+                                               'src/Nas/*.cxx']))
 
-baseEnv.Tool('registerObjects', package = 'CalibData', libraries = [CalibDataLib], includes = listFiles(['CalibData/*'], recursive = True))
+libEnv.Tool('registerTargets', package = 'CalibData',
+            libraryCxts = [[CalibDataLib, libEnv]],
+            includes = listFiles(['CalibData/*'], recursive = True))
 
 
 
