@@ -13,11 +13,13 @@ libEnv.Tool('geomrepLib', depsOnly = 1)
 geomrep = libEnv.StaticLibrary('geomrep', listFiles(['src/*.cxx']))
 
 progEnv.Tool('geomrepLib')
-progEnv.Tool('guiLib')
+
 test_geomrep = progEnv.Program('testgeom', listFiles(['src/test/*.cxx']))
 
-progEnv.Tool('registerObjects', package = 'geomrep', libraries = [geomrep], testApps = [test_geomrep], 
-	includes = listFiles(['geomrep/*.h']))
+progEnv.Tool('registerTargets', package = 'geomrep',
+             staticLibraryCxts = [[geomrep, libEnv]],
+             testAppCxts = [[test_geomrep, progEnv]], 
+             includes = listFiles(['geomrep/*.h']))
 
 
 
