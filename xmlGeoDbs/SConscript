@@ -7,10 +7,9 @@ Import('baseEnv')
 Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
-libEnv = baseEnv.Clone()
 
-
-progEnv.Tool('registerObjects', package = 'xmlGeoDbs')
+progEnv.Tool('registerTargets', package = 'xmlGeoDbs',
+             xml=listFiles(files = ['xml/*'], recursive = True))
 
 
 
