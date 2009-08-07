@@ -44,12 +44,17 @@ reconRootDataRootcint = libEnv.Rootcint('reconRootData/reconRootData_rootcint', 
 					 'reconRootData/LinkDef.h'], 
 					  includes = [''])
 
-reconRootData = libEnv.SharedLibrary('reconRootData', listFiles(['src/*.cxx']) + ['reconRootData/reconRootData_rootcint.cxx'])
+libEnv['rootcint_node'] = reconRootDataRootcint
+reconRootData = libEnv.SharedLibrary('reconRootData',
+                                     listFiles(['src/*.cxx']) + ['reconRootData/reconRootData_rootcint.cxx'])
 progEnv.Tool('reconRootDataLib')
 
-test_reconRootData = progEnv.Program('test_reconRootData', ['src/test/testReconClasses.cxx'])
-progEnv.Tool('registerObjects', package = 'reconRootData', libraries = [reconRootData], 
-	testApps = [test_reconRootData], includes = listFiles(['reconRootData/*.h']))
+test_reconRootData = progEnv.Program('test_reconRootData',
+                                     ['src/test/testReconClasses.cxx'])
+progEnv.Tool('registerTargets', package = 'reconRootData',
+             rootcintSharedCxts = [[reconRootData, libEnv]], 
+             testAppCxts = [[test_reconRootData, progEnv]],
+             includes = listFiles(['reconRootData/*.h']))
 
 
 
