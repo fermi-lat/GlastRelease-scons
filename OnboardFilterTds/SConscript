@@ -21,7 +21,8 @@ if baseEnv['PLATFORM'] == 'Linux':
 	libEnv.AppendUnique(CPPDEFINES = ['__unix__'])
 	libEnv.AppendUnique(CPPDEFINES = ['WUT_IMPLEMENTATION_PX'])	
 
-OnboardFilterTds = libEnv.SharedLibrary('OnboardFilterTds', listFiles(['src/*.cxx']))
+OnboardFilterTds = libEnv.SharedLibrary('OnboardFilterTds',
+                                        listFiles(['src/*.cxx']))
 
 progEnv.Tool('OnboardFilterTdsLib')
 
@@ -30,9 +31,10 @@ if baseEnv['PLATFORM'] == 'Linux':
 	progEnv.Tool('addLibrary', library = ['pthread'])
 
 test_OnboardFilterTds = progEnv.Program('test_OnboardFilterTds', listFiles(['src/test/*.cxx']))
-progEnv.Tool('registerObjects', package = 'OnboardFilterTds', libraries = [OnboardFilterTds], 
-	testApps = [test_OnboardFilterTds], 
-	includes = listFiles(['OnboardFilterTds/*'], recursive=True))
+progEnv.Tool('registerTargets', package = 'OnboardFilterTds',
+             libraryCxts = [[OnboardFilterTds, libEnv]], 
+             testAppCxts = [[test_OnboardFilterTds, progEnv]], 
+             includes = listFiles(['OnboardFilterTds/*'], recursive=True))
 
 
 

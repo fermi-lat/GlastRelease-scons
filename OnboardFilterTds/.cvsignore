@@ -8,3 +8,5 @@ setup.*
 rh*
 VC8Debug
 VC8
+*.pyc
+build
