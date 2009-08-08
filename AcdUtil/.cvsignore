@@ -8,3 +8,5 @@ rhel*
 setup.*
 *.mak*
 *.root
+*.pyc
+build
