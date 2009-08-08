@@ -8,3 +8,5 @@ setup.*
 *.root
 "VC7*" 
 VC8*
+*.pyc
+build
