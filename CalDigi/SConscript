@@ -12,7 +12,9 @@ libEnv.Tool('CalDigiLib', depsOnly = 1)
 CalDigi = libEnv.SharedLibrary('CalDigi', listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 progEnv.Tool('CalDigiLib')
-test_CalDigi = progEnv.GaudiProgram('test_CalDigi', listFiles(['src/test/*.cxx']), test = 1)
+test_CalDigi = progEnv.GaudiProgram('test_CalDigi',
+                                    listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'CalDigi', libraries = [CalDigi], testApps = [test_CalDigi])
+progEnv.Tool('registerTargets', package = 'CalDigi',
+             libraryCxts = [[CalDigi, libEnv]], testAppCxts = [[test_CalDigi, progEnv]])
 

@@ -6,5 +6,6 @@ def generate(env, **kw):
     env.Tool('EventLib')
     env.Tool('CalUtilLib')
     env.Tool('xmlBaseLib')
+    env.Tool('addLibrary', library = env['gaudiLibs'])
 def exists(env):
     return 1;
