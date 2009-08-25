@@ -1,13 +1,15 @@
 
 #include "configData/db/LatcDBImplFile.h"
 #include "configData/db/TrgConfigDB.h"
+#include "facilities/commonUtilities.h"
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
 
 
 int main(int argc, char **argv){
-  std::string xmlfile=std::string(getenv("CONFIGDATAROOT"))+"/src/defaultTrgConfig.xml";
+  // std::string xmlfile=std::string(getenv("CONFIGDATAROOT"))+"/src/defaultTrgConfig.xml";
+  std::string xmlfile=facilities::commonUtilities::getXmlPath("configData")+"/src/defaultTrgConfig.xml";
   std::cout<<"=================================="<<std::endl;
   std::cout<<"File "<<xmlfile<<std::endl;
   std::cout<<"=================================="<<std::endl<<std::endl;
