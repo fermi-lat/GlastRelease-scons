@@ -15,8 +15,10 @@ CalUtil = libEnv.SharedLibrary('CalUtil', listFiles(['src/*.cxx']) + listFiles([
 progEnv.Tool('CalUtilLib')
 test_CalUtil = progEnv.Program('test_CalUtil', ['src/test/test_CalUtil.cxx'])
 
-progEnv.Tool('registerObjects', package = 'CalUtil', libraries = [CalUtil], testApps = [test_CalUtil], 
-		includes = listFiles(['CalUtil/*'], recursive = 1))
+progEnv.Tool('registerTargets', package = 'CalUtil',
+             libraryCxts = [[CalUtil, libEnv]],
+             testAppCxts = [[test_CalUtil, progEnv]], 
+             includes = listFiles(['CalUtil/*'], recursive = 1))
 
 
 
