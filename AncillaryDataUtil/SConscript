@@ -14,9 +14,9 @@ AncillaryDataUtil = libEnv.StaticLibrary('AncillaryDataUtil', listFiles(['src/*.
 progEnv.Tool('AncillaryDataUtilLib')
 test_AncillaryDataUtil = progEnv.Program('test_AncillaryDataUtil',['src/test/testMain.cxx'])
 
-progEnv.Tool('registerObjects', package = 'AncillaryDataUtil',
-             libraries = [AncillaryDataUtil],
-             testApps = [test_AncillaryDataUtil],
+progEnv.Tool('registerTargets', package = 'AncillaryDataUtil',
+             libraryCxts = [[AncillaryDataUtil, libEnv]],
+             testAppCxts = [[test_AncillaryDataUtil, progEnv]],
              includes = listFiles(['AncillaryDataUtil/*.h']),
              data = listFiles(['data/*'],recursive=True))
 
