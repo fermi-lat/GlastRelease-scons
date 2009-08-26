@@ -7,14 +7,11 @@ Import('baseEnv')
 Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
-libEnv = baseEnv.Clone()
-
-libEnv.Tool('rdbGuiLib', depsOnly = 1)
 
 if baseEnv['PLATFORM'] != 'win32':
 	progEnv.AppendUnique(CCFLAGS = '-g')
 	progEnv.AppendUnique(CCFLAGS = '-pipe')
-	progEnv.AppendUnique(CCFLAGS = 'ansi')
+	progEnv.AppendUnique(CCFLAGS = '-ansi')
 	progEnv.AppendUnique(CCFLAGS = '-W')
 	progEnv.AppendUnique(CCFLAGS = '-fPIC')
 	progEnv.AppendUnique(CCFLAGS = '-shared')
@@ -22,17 +19,21 @@ if baseEnv['PLATFORM'] != 'win32':
 	progEnv.AppendUnique(CPPDEFINES = 'unix')
 	progEnv.AppendUnique(SHLINKFLAGS = '-Wl,-Bdynamic')
 
-rdbGui = libEnv.SharedLibrary('rdbGui', listFiles(['src/*.cxx']) + listFiles(['src/Dll/*.cxx']))
+progEnv.Tool('rdbModelLib')
+progEnv.Tool('facilitiesLib')
+progEnv.Tool('addLibrary', library = progEnv['foxLibs'])
 
-progEnv.Tool('rdbGuiLib')
-rdbGUI = progEnv.Program('rdbGUI', ['rdbFullGui.cxx','RdbGuiWindow.cxx', 
-					'FXCheckList.cxx','TableColumnList.cxx',
-					'QueryFrame.cxx', 'SQLBuffer.cxx','LogText.cxx', 
-					'ResultTable.cxx','ConnectionDialog.cxx','InsertDialog.cxx',
-					'StringWidget.cxx','ColWidgetFactory.cxx','DateWidget.cxx', 
-					'EnumWidget.cxx', 'RealWidget.cxx', 'IntWidget.cxx', 'FXDate.cxx', 
-					'FXDatePicker.cxx'])
+rdbGUI = progEnv.Program('rdbGUI',
+                         ['src/rdbFullGui.cxx','src/RdbGuiWindow.cxx', 
+                          'src/FXCheckList.cxx','src/TableColumnList.cxx',
+                          'src/QueryFrame.cxx', 'src/SQLBuffer.cxx',
+                          'src/LogText.cxx', 'src/ResultTable.cxx',
+                          'src/ConnectionDialog.cxx','src/InsertDialog.cxx',
+                          'src/StringWidget.cxx','src/ColWidgetFactory.cxx',
+                          'src/DateWidget.cxx', 'src/EnumWidget.cxx',
+                          'src/RealWidget.cxx', 'src/IntWidget.cxx',
+                          'src/FXDate.cxx', 'src/FXDatePicker.cxx'])
 
-progEnv.Tool('registerObjects', package = 'rdbGui', libraries = [rdbGui], 
-	binaries = [rdbGUI], 
-	includes = listFiles(['rdbGui/*.h']))
+progEnv.Tool('registerTargets', package = 'rdbGui',
+             binaryCxts = [[rdbGUI, progEnv]], 
+             includes = listFiles(['rdbGui/*.h']))

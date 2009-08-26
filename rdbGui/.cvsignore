@@ -9,8 +9,10 @@ libtool
 Makefile
 Makefile.in
 stamp-h*
+*.pyc
 
 msdev
 Win32
 Win32Debug
 Visual
+build
