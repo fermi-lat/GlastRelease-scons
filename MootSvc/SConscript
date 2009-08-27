@@ -5,14 +5,16 @@
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
-progEnv = baseEnv.Clone()
+#progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('MootSvcLib', depsOnly = 1)
 MootSvc = libEnv.SharedLibrary('MootSvc', listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
-progEnv.Tool('MootSvcLib')
-progEnv.Tool('registerObjects', package = 'MootSvc', libraries = [MootSvc], includes = listFiles(['MootSvc/*.h']))
+#progEnv.Tool('MootSvcLib')
+libEnv.Tool('registerTargets', package = 'MootSvc',
+            libraryCxts = [[MootSvc, libEnv]],
+            includes = listFiles(['MootSvc/*.h']))
 
 
 
