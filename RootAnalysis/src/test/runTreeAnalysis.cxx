@@ -14,7 +14,7 @@
 #include "TSystem.h"
 #include <iostream>
 #include <string>
-
+#include "facilities/commonUtilities.h"
 int main(int argn, char** argc) {
 
 #ifdef WIN32
@@ -23,14 +23,15 @@ int main(int argn, char** argc) {
     gSystem->Load("reconRootData.dll");
 #endif
     Long64_t numEvents = 25;
-    const char* path = ::getenv("ROOTTESTDATAROOT");
+    std::string dataPath = 
+      facilities::commonUtilities::getDataPath("rootTestData");
     if ( argn > 5) numEvents = atoi(argc[5]);
-    std::string digiFileName(path);
-    digiFileName += "/data/default/digi.root";
-    std::string mcFileName(path);
-    mcFileName += "/data/default/mc.root";
-    std::string reconFileName(path);
-    reconFileName += "/data/default/recon.root";
+    std::string digiFileName(dataPath);
+    digiFileName += "/default/digi.root";
+    std::string mcFileName(dataPath);
+    mcFileName += "/default/mc.root";
+    std::string reconFileName(dataPath);
+    reconFileName += "/default/recon.root";
     if (argn > 1) mcFileName = argc[1];
     if (argn > 2) digiFileName = argc[2];
     if (argn > 3) reconFileName = argc[3];
