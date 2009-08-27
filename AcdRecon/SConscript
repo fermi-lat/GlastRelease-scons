@@ -20,9 +20,12 @@ if baseEnv['PLATFORM'] != 'win32':
 if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(LINKFLAGS = ' /include:_GuiSvc_loadRef')
 
-test_AcdRecon = progEnv.GaudiProgram('test_AcdRecon', listFiles(['src/test/*.cxx']), test = 1)
+test_AcdRecon = progEnv.GaudiProgram('test_AcdRecon',
+                                     listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'AcdRecon', libraries = [AcdRecon], testApps = [test_AcdRecon],includes = listFiles(['AcdRecon/*.h']))
+progEnv.Tool('registerTargets', package = 'AcdRecon',
+             libraryCxts=[[AcdRecon, libEnv]],testAppCxts=[[test_AcdRecon,progEnv]],
+             includes = listFiles(['AcdRecon/*.h']))
 
 
 
