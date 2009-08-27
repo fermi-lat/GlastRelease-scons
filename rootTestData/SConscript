@@ -9,7 +9,7 @@ Import('baseEnv')
 Import('listFiles')
 progEnv = baseEnv.Clone()
 
-progEnv.Tool('registerObjects', 
+progEnv.Tool('registerTargets', 
              package = 'rootTestData',
              data = listFiles(['data/*'],recursive=True))
 	
