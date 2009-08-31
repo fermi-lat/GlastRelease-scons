@@ -13,7 +13,8 @@ $Header$
 #include <assert.h>
 
 // ldfReader includes
-#include "AcdParser.h"
+//#include "AcdParser.h"
+#include "ldfReader/iterators/AcdParser.h"
 #include "ldfReader/data/LatData.h"
 #include "ldfReader/LdfException.h"
 #include "../EbfDebug.h"

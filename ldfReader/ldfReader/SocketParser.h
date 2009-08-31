@@ -13,7 +13,8 @@
 #include <netinet/in.h>
 #endif
 
-#include "../src/iterators/LdfDataParser.h"
+//#include "../src/iterators/LdfDataParser.h"
+#include "ldfReader/iterators/LdfDataParser.h"
 
 
 /** @class SocketParser

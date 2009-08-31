@@ -2,8 +2,10 @@
 #define LDFDATAPARSER_CXX 1
 
 #include "LDFiteratorBase.h"
-#include "EbfDataParser.h"
-#include "LdfDataParser.h"
+//#include "EbfDataParser.h"
+#include "ldfReader/iterators/EbfDataParser.h"
+//#include "LdfDataParser.h"
+#include "ldfReader/iterators/LdfDataParser.h"
 
 /** @class LdfDataParser
 @brief Provides callbacks for each component.

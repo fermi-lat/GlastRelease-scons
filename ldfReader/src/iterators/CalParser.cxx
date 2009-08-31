@@ -16,7 +16,8 @@ $Header$
 #include <assert.h>
 
 // ldfReader includes
-#include "CalParser.h"
+//#include "CalParser.h"
+#include "ldfReader/iterators/CalParser.h"
 #include "ldfReader/data/LatData.h"
 #include "ldfReader/LdfException.h"
 #include "../EbfDebug.h"

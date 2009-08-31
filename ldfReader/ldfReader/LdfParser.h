@@ -4,7 +4,8 @@
 #include "ldfReader/EbfParser.h"
 #include <string>
 #include "data/LatData.h"
-#include "../src/iterators/LdfDataParser.h"
+//#include "../src/iterators/LdfDataParser.h"
+#include "ldfReader/iterators/LdfDataParser.h"
 
 
 /** @class LdfParser

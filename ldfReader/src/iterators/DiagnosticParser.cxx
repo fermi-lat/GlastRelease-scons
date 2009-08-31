@@ -7,7 +7,8 @@
 $Header$
 */
 
-#include "DiagnosticParser.h"
+//#include "DiagnosticParser.h"
+#include "ldfReader/iterators/DiagnosticParser.h"
 
 //#include "ldfReader/EbfException.h"
 #include "ldfReader/data/LatData.h"

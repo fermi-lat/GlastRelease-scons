@@ -10,7 +10,8 @@ $Header$
 // Online EBF library includes
 #include "TKRstrip.h"
 // ldfReader includes
-#include "TkrParser.h"
+//#include "TkrParser.h"
+#include "ldfReader/iterators/TkrParser.h"
 #include "ldfReader/LdfException.h"
 #include "ldfReader/data/LatData.h"
 #include "../EbfDebug.h"

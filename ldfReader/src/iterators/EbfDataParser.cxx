@@ -7,7 +7,8 @@ $Header$
 */
 
 // ldfReader includes
-#include "EbfDataParser.h"
+//#include "EbfDataParser.h"
+#include "ldfReader/iterators/EbfDataParser.h"
 #include "ldfReader/data/LatData.h"
 #include "ldfReader/LdfException.h"
 #include "../EbfDebug.h"
