@@ -5,5 +5,6 @@ def generate(env, **kw):
     env.Tool('ldfReaderLib')	
     env.Tool('GlastSvcLib')
     env.Tool('EventLib')
+    env.Tool('addLibrary', library = env['gaudiLibs'])
 def exists(env):
     return 1;
