@@ -2,6 +2,8 @@
  * Package CalXtalResponse
 * EOH *
 
+v0r23p1 09/04/09 hmk       - remove private use of IExternal/obf should no 
+                             longer be necessary given changes in RootIo req
 v0r23   12/17/08 usher     - Updates to help separate trigger for overlay events
 v0r22   09/23/08 fewtrell  - ideal calib files moved to CalUtil (can be shared w/ non-gaudi pkg calibGenCAL)
 v0r21p8 07/31/08 fewtrell  - Removed all references to Event::GltDigi (I guess it's being purged entirely).

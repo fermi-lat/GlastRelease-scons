@@ -1,5 +1,5 @@
 package CalXtalResponse
-version v0r23
+version v0r23p1
 author zachary.fewtrell@nrl.navy.mil
 
 branches src cmt doc
@@ -40,7 +40,7 @@ private
 use CalibSvc
 use CalDigi
 use gr_app
-use obf * IExternal
+#use obf * IExternal
 
 apply_pattern package_Cshlibflags 
 
