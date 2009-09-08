@@ -6,6 +6,8 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+v3r0p1  08-Sep-2009 HMK set TEMBUG flag to 0x100000 so it is distinct from
+        PHASEERROR
 v3r0    06-Mar-2009 HMK Finally add handling for TEMbug
 v2r2p1  14-Aug-2008 LSR Added a bit to GleamEventFlags
                         Changed EventFlags bits from decimal to hex (sorry, couldn't resist!)
