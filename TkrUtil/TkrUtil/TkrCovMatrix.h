@@ -28,7 +28,7 @@ public:
     TkrCovMatrix(int p, int q, int i) : CLHEP::HepMatrix(p,q,i) {}
     TkrCovMatrix(int p, int q, CLHEP::HepRandom &r) : CLHEP::HepMatrix(p,q,r) {}
     TkrCovMatrix(const CLHEP::HepMatrix &m1) : CLHEP::HepMatrix(m1) {}
-    TkrCovMatrix(const TkrCovMatrix &m1) : CLHEP::HepMatrix(m1) {}
+    TkrCovMatrix(const TkrCovMatrix &m1) : ITkrTrackParamsAccess(), CLHEP::HepMatrix(m1) {}
     // Copy constructor.
 
     TkrCovMatrix(const CLHEP::HepSymMatrix &m1) : CLHEP::HepMatrix(m1) {}
