@@ -124,14 +124,14 @@ StatusCode GeneralChargeTool::execute() {
 
     SiPlaneMapContainer::SiPlaneMap::iterator itMap=siPlaneMap.begin();
     for ( ; itMap!=siPlaneMap.end(); ++itMap ) { 
-        idents::VolumeIdentifier id = itMap->first;
+        //idents::VolumeIdentifier id = itMap->first;
         SiStripList* sList = itMap->second;
         SiStripList::iterator itStrip=sList->begin();
         eStrip.assign(nStrips, 0.0);
         iStrip.assign(nStrips, false);
         //std::cout << "Setting strips: " ;
         for (itStrip=sList->begin(); itStrip!=sList->end(); ++itStrip ) {
-            int status = itStrip->stripStatus();
+            //int status = itStrip->stripStatus();
             double energy = itStrip->energy();
             int stripNum = itStrip->index();
             iStrip[stripNum] = true;

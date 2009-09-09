@@ -296,7 +296,7 @@ void SiStripList::addElectronicNoise(const double sigma)
     iterator iter = begin();
     while ( iter != end() ) {
         // check for the electronic noise flag
-        double eDep = iter->energy();
+        //double eDep = iter->energy();
         
         //if(printEdep&&!iter->electronicNoise()) std::cout << eDep << std::endl;
 
@@ -312,7 +312,7 @@ void SiStripList::addElectronicNoise(const double sigma)
 
 int SiStripList::addNoiseStrips(const double occupancy,
                                 const double threshold,
-                                const double trigThreshold) 
+                                const double /* trigThreshold */) 
 {
     // Purpose and Method: adds noise hits to the strip list
     // Inputs: strip occupancy fraction, and energy threshold

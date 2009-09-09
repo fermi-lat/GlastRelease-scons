@@ -18,6 +18,8 @@ class XMLBuilder : public IBuilder{
  public:
   XMLBuilder(gzFile file){m_file = file;};
 
+  virtual ~XMLBuilder();
+
   virtual void addAttDef(std::string name,
                            std::string desc,
                            std::string type,

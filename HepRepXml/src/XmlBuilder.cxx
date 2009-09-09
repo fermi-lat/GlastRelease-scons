@@ -109,8 +109,8 @@ void XMLBuilder::addInstance(std::string father,
 
 void XMLBuilder::addType(std::string father, 
                            std::string name, 
-                           std::string desc, 
-                           std::string info)
+                           std::string /* desc */,
+                           std::string /* info */)
 {  
   if (m_actualType.size() != 0)
     {

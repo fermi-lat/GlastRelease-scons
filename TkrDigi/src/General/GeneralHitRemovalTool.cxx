@@ -119,11 +119,11 @@ StatusCode GeneralHitRemovalTool::execute() {
 
     // full treatment...
     m_doFailed = m_doBad = m_doTrunc = true;
-    int hitsRemoved = doBadHitsLoop(siPlaneMap);
+    /* int hitsRemoved = */ doBadHitsLoop(siPlaneMap);
 
     // next, the cable buffers
-    bool towersOutOfOrder, planesOutOfOrder;
-    int removedHits = doCableBufferLoop(siPlaneMap, 
+    bool towersOutOfOrder=false, planesOutOfOrder=false;
+    /* int removedHits  = */ doCableBufferLoop(siPlaneMap, 
         towersOutOfOrder, planesOutOfOrder);
 
     if(towersOutOfOrder || planesOutOfOrder) {
