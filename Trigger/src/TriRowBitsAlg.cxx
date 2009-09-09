@@ -158,7 +158,7 @@ StatusCode TriRowBitsAlg::execute()
         return StatusCode::SUCCESS;
     }
 
-	bool tkr_trig_flag = false;
+	//bool tkr_trig_flag = false;
     // now look for a three in a row in x-y coincidence
     for( Map::iterator itr = layer_bits.begin(); itr !=layer_bits.end(); ++ itr){
 

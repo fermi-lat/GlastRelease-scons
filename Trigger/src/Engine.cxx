@@ -27,7 +27,7 @@ Engine::Engine( std::string condition_summary ,  int marker, int prescale)
 {
     int k(7);
     m_condition.resize(8);
-    for( int i=0; i< condition_summary.size(); ++i){
+    for( unsigned int i=0; i< condition_summary.size(); ++i){
         char c=condition_summary[i];
         switch (c){
             case ' ': break;
