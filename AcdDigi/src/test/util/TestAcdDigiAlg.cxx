@@ -143,7 +143,7 @@ StatusCode TestAcdDigiAlg::execute() {
     log << MSG::DEBUG << "20.0 MeV = " << range[0] << ':' << pha[0] << ","
 	<< range[1] << ':' << pha[1] << " PHA." << endreq;
 
-    m_poisson.push_back(m_util.shootPoisson(5));
+    m_poisson.push_back((long)floor(m_util.shootPoisson(5)));
 
     m_gauss.push_back(m_util.shootGaussian(1.0));
 

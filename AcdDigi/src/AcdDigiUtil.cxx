@@ -489,7 +489,7 @@ StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigne
     if ( -1 * deltaPed > pha[i] ) {
       pha[i] = 0;
     } else {
-      pha[i] += deltaPed;
+      pha[i] += (unsigned int)(floor(deltaPed));
     }
   }
   return StatusCode::SUCCESS;
