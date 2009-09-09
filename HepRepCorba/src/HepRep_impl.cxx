@@ -117,7 +117,7 @@ void HepRep_impl::setRegistry(IRegistry* r)
 }
 
 HepRepTypeTree* HepRep_impl::getTypeTree(const char* typeTreeName,
-           const char* typeTreeVersion)
+           const char* /* typeTreeVersion */)
 {
   //  std::cout << "HepRep_impl::getTypeTree called for name " 
   //      << typeTreeName << ", version " 
@@ -138,7 +138,7 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
   m_registry->useBuilder(m_builder);
   typedef std::vector<IFiller*> fillerCol;
   
-  int nTypes = typeNames.length();
+  //int nTypes = typeNames.length();
 
   HepRepInstanceTree* instanceTree = new HepRepInstanceTree;
 
@@ -178,11 +178,11 @@ HepRepInstanceTree* HepRep_impl::getInstances(const char* instanceTreeName,
 HepRepInstanceTree* HepRep_impl::getInstancesAfterAction(const char* instanceTreeName,
                                                          const char* instanceTreeVersion,
                                                          const StringArray& typeNames,
-                                                         const HepRepActionList& actions,
-                                                         CORBA::Boolean getPoints,
-                                                         CORBA::Boolean getDrawAtts,
-                                                         CORBA::Boolean getNonDrawAtts,
-                                                         const StringArray& invertAtt)
+                                                         const HepRepActionList& /* actions */,
+                                                         CORBA::Boolean /* getPoints */,
+                                                         CORBA::Boolean /* getDrawAtts */,
+                                                         CORBA::Boolean /* getNonDrawAtts */,
+                                                         const StringArray& /* invertAtt */)
 {
   return getInstances(instanceTreeName, instanceTreeVersion, typeNames);
 }

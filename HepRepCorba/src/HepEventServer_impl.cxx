@@ -51,7 +51,7 @@ char* HepEventServer_impl::attach(const char* clientDesc)
     _clientDesc = new char[strlen(clientDesc) + 1];
     strcpy(_clientDesc, clientDesc);
 
-    int descLength = 96;
+    //int descLength = 96;
 
     std::string serverDesc;
     serverDesc = 
@@ -267,7 +267,7 @@ CORBA::Any* HepEventServer_impl::getEventData (const char* dataFormat)
 
   CORBA::Any* _dupEventData_var = new CORBA::Any();
 
-  if (dataFormat = "HepRep")
+  if ((dataFormat = "HepRep"))
     *_dupEventData_var <<= HepRep::_duplicate (_hepRep_var);
   else
     *_dupEventData_var <<= "error: unsupported data format";

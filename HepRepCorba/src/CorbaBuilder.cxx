@@ -25,7 +25,7 @@ void CorbaBuilder::addAttDef(std::string name,
 
 void CorbaBuilder::addAttValue(std::string name,
                                std::string value,
-                               std::string showlabel)
+                               std::string /* showlabel */)
 {
   if (isInType)
     {
@@ -57,7 +57,7 @@ void CorbaBuilder::addAttValue(std::string name,
 
 void CorbaBuilder::addAttValue(std::string name,
                                int value,
-                               std::string showlabel)
+                               std::string /* showlabel */)
 {
   if (isInType)
     {
@@ -89,7 +89,7 @@ void CorbaBuilder::addAttValue(std::string name,
 
 void CorbaBuilder::addAttValue(std::string name,
                                float value,
-                               std::string showlabel)
+                               std::string /* showlabel */)
 {
   if (isInType)
     {
@@ -157,7 +157,7 @@ void CorbaBuilder::addInstance(std::string father,
     {
       std::vector<int> temp2 = m_instances[father];
 
-      HepRepInstance* instance;
+      HepRepInstance* instance = 0;
 
 
       if(temp2.size())
@@ -217,7 +217,7 @@ void CorbaBuilder::addType(std::string father,
 
       std::vector<int> temp2 = m_types[father];
 
-      HepRepType* type;
+      HepRepType* type = 0;
 
       if(temp2.size())
         {
