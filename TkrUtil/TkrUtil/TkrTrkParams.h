@@ -30,7 +30,7 @@ public:
     TkrTrkParams(int p) : CLHEP::HepVector(p) {}
     TkrTrkParams(int p, int i) : CLHEP::HepVector(p, i) {}
 
-    TkrTrkParams(const TkrTrkParams &m1) : CLHEP::HepVector(m1) {}
+    TkrTrkParams(const TkrTrkParams &m1) : ITkrTrackParamsAccess(), CLHEP::HepVector(m1) {}
     // Constructor. Gives vector of length p.
 
 #ifdef HEP_USE_RANDOM
