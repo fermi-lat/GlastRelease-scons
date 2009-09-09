@@ -87,10 +87,10 @@ public:
 
 private:
 
-    // Centroid of the moments
-    Point  m_centroid;
     // Vector of Tkrculated moments
     Vector m_moment;
+    // Centroid of the moments
+    Point  m_centroid;
     // Axis corresponding to the longest principal moment
     Vector m_axis[3];
 
