@@ -289,7 +289,7 @@ void TkrBadStripsSvc::readFromFile(std::ifstream* file)
         int layer, view;
         m_tkrGeom->planeToLayer(plane, layer, view);
 
-        stripCol* v;
+        stripCol* v = 0;
         // my private use of getBadStrips requires non-const pointer
         // to build the vector of bad strips...
         // but public uses should return const pointer, so...

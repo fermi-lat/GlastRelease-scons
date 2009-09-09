@@ -486,7 +486,7 @@ StatusCode TkrMakeClustersTool::calculateToT()
     // map the clusters
     std::map<int, Event::TkrDigi*> digiMap;
     int index;
-    Event::TkrDigi* digi;
+    Event::TkrDigi* digi = 0;
     int tower, layer, view;
     Event::TkrDigiCol::const_iterator digiIter;
     for(digiIter=digiCol->begin();digiIter!=digiCol->end();++digiIter) {
@@ -507,7 +507,7 @@ StatusCode TkrMakeClustersTool::calculateToT()
         Event::TkrCluster* clus = (*clusterCol)[i];
         int strip0 = clus->firstStrip();
         int stripf = clus->lastStrip();
-        int rawToT = clus->getRawToT();
+        int rawToT = (int)clus->getRawToT();
         int nBad   = clus->getNBad();
         tower = clus->tower();
         layer  = clus->getLayer();
