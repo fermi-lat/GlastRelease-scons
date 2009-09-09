@@ -62,8 +62,8 @@ protected:
 
     void ClusterUtil::buildClusterInstance(IBuilder* builder, Event::TkrCluster* pClus);
 
-    IGlastDetSvc* m_gdsvc;
     HepRepInitSvc* m_hrisvc;
+    IGlastDetSvc* m_gdsvc;
     
     double m_siStripPitch; 
     double m_stripLength;

@@ -57,7 +57,7 @@ HepRepGeometry::HepRepGeometry(unsigned int depth, Filler* filler, std::string m
 HepRepGeometry::~HepRepGeometry() {}
 
 IGeometry::VisitorRet 
-HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec, 
+HepRepGeometry::pushShape(ShapeType s, const UintVector& /*idvec*/, 
                           std::string name, std::string material, 
                           const DoubleVector& params, VolumeType type,
                           SenseType sense)
@@ -249,7 +249,7 @@ HepRepGeometry::pushShape(ShapeType s, const UintVector& idvec,
             else if (s == Tube)
             {
                 double dz = params[6]/2;
-                double rin = params[7];
+                //double rin = params[7];
                 double rout = params[8];
 
                 HepPoint3D v;

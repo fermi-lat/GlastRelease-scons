@@ -47,7 +47,7 @@ public:
 
     Filler();
     
-    ~Filler();
+    virtual ~Filler();
 
     virtual bool hasType(std::vector<std::string>& list, std::string type); 
     virtual std::string getTripleString(int precis, double x, double y, double z);
