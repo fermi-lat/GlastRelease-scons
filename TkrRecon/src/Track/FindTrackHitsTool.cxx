@@ -81,7 +81,7 @@ private:
     TkrCluster* findNearestCluster(int plane, TkrTrackParams* param);
 
     /// Method to filter the ith step
-    void filterStep(int i) {return;} 
+    void filterStep(int /* i */) {return;} 
 
     /// Pointer to the local Tracker geometry service
     ITkrGeometrySvc*     m_tkrGeom;

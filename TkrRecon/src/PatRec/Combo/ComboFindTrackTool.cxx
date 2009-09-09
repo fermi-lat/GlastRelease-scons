@@ -611,7 +611,7 @@ void ComboFindTrackTool::loadOutput()
                 Event::TkrTrackHit* hit = (*newTrack)[i];
                 // flag the hit
                 Event::TkrClusterPtr clus = hit->getClusterPtr();
-                if(clus!=NULL) {
+                if(clus!=0) {
                     clus->flag();
                 }
                 trackHitCol->push_back(hit);

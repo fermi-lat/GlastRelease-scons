@@ -22,11 +22,11 @@ LineFit2D::LineFit2D(std::vector<double> measCoords, std::vector<double> measErr
 
     for (int idx = 0; idx < numPoints; idx++)
     {
-//#ifdef DEBUG
-        double z = zCoords[idx];
-        double e = measErrs[idx];
-        double m = measCoords[idx];
-//#endif
+#ifdef DEBUG
+        //double z = zCoords[idx];
+        //double e = measErrs[idx];
+        //double m = measCoords[idx];
+#endif
 
         A(idx+1,1)        = zCoords[idx];
         A(idx+1,2)        = 1.;
