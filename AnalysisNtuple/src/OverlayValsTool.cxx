@@ -281,7 +281,7 @@ StatusCode OverlayValsTool::initialize()
 //! process an event
 StatusCode OverlayValsTool::calculate()
 {
-    StatusCode  sc = StatusCode::SUCCESS;
+    //StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     //
     // Purpose: set tuple items

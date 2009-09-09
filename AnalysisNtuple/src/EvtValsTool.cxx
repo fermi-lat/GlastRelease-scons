@@ -350,7 +350,7 @@ StatusCode EvtValsTool::calculate()
 
     // we may want to add TDS stuff to this method, but we haven't needed it yet.
 
-    int firstCheck = m_check;
+    //int firstCheck = m_check;
     int nextCheck = NOCALC;
 
 

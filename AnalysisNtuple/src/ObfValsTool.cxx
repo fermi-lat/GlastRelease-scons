@@ -271,8 +271,8 @@ StatusCode ObfValsTool::calculate()
     MsgStream log(msgSvc(), name());
 
     // We'll use these when copying to the deprecated variables
-    unsigned int filterStatusHi = 0;
-    unsigned int filterStatusLo = 0;
+    //unsigned int filterStatusHi = 0;
+    //unsigned int filterStatusLo = 0;
 
 
     // Obf variables
@@ -281,10 +281,10 @@ StatusCode ObfValsTool::calculate()
     // Fsw variables
     SmartDataPtr<LsfEvent::MetaEvent>  
         metaEventTds(m_pEventSvc, "/Event/MetaEvent");
-    const lsfData::GammaHandler* gamma;
-    const lsfData::DgnHandler*   dgn;
-    const lsfData::HipHandler*   hip;       
-    const lsfData::MipHandler*   mip;
+    const lsfData::GammaHandler* gamma = 0;
+    const lsfData::DgnHandler*   dgn = 0;
+    const lsfData::HipHandler*   hip = 0;       
+    const lsfData::MipHandler*   mip = 0;
     if(metaEventTds) {
         gamma = metaEventTds->gammaFilter();
         dgn   = metaEventTds->dgnFilter();
@@ -324,8 +324,8 @@ StatusCode ObfValsTool::calculate()
         const OnboardFilterTds::IObfStatus* obfResult = 0;
 
         // Start with Gamma Filter
-        if (obfResult   = 
-                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter))
+        if ((obfResult   = 
+                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter)))
         {
             m_gamStatus    = obfResult->getStatusWord();
             m_gamState     = obfResult->getState();
@@ -336,26 +336,26 @@ StatusCode ObfValsTool::calculate()
         }
 
         // HFC Filter results
-        if (obfResult   = 
-                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter))
+        if ((obfResult   = 
+                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter)))
         {
             m_hipStatus    = obfResult->getStatusWord();
             m_hipState     = obfResult->getState();
         }
 
         // MIP Filter results
-        if (obfResult   = 
-                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter))
+        if ((obfResult   = 
+                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter)))
         {
             m_mipStatus    = obfResult->getStatusWord();
             m_mipState     = obfResult->getState();
         }
 
         // DFC Filter results
-        if (obfResult   = 
-                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter))
+        if ((obfResult   = 
+                obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter)))
         {
-            m_dgnStatus    = obfResult ? obfResult->getStatusWord() : -1;
+            m_dgnStatus    = obfResult ? obfResult->getStatusWord() : 0xffffffff;
             m_dgnState     = obfResult->getState();
         }
     }

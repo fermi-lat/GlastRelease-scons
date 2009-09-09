@@ -424,7 +424,7 @@ StatusCode McTkrHitValsTool::calculate()
 }
 
 
-void McTkrHitValsTool::CntTotalHits(const Event::McParticle* primary)
+void McTkrHitValsTool::CntTotalHits(const Event::McParticle* /* primary */)
 {
     m_totalTkrHits     = 0;
     m_totalPrimTkrHits = 0;

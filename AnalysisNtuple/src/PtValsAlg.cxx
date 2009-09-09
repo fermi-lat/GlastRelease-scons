@@ -170,7 +170,7 @@ StatusCode PtValsAlg::initialize(){
 //! process an event
 StatusCode PtValsAlg::execute()
 {
-    StatusCode  sc = StatusCode::SUCCESS;
+    //StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     //
     // Purpose: set tuple items

@@ -325,7 +325,7 @@ StatusCode CalMipValsTool::calculate()
       {
 	// Count number of tracks
 	int nTracks = pTracks->size();
-	int Tkr_No_Tracks   = nTracks;
+	//int Tkr_No_Tracks   = nTracks;
 	
 	if(nTracks < 1) return sc;
 	
