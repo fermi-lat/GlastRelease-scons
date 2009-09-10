@@ -93,7 +93,7 @@ void VolumeIdentifier::append( unsigned int id)
   // the first id appended becomes the most significant digit in the internal
   // rappresentation. In this way I can obtain an equivalent of the lexicographic order
   // between volume identifiers
-  if (m_size >= s_maxSize) {
+  if (m_size >= (int) s_maxSize) {
     std::string 
       errtxt("VolumeIdentifier::append: id is already of maximum size");
     throw std::range_error(errtxt);
