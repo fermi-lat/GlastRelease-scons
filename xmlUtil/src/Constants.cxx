@@ -51,7 +51,8 @@ namespace {
       if (isInt = (typeAtt == std::string("int"))) {
         // New style:  it had better be an int!  If not, it's an error
         try {
-          int intVal = Dom::getIntAttribute(elt, "value");
+          /*int intVal = */
+          Dom::getIntAttribute(elt, "value");
         }
         catch (xmlBase::DomException ex) {
           std::cerr << "from xmlBase::Constants::normPrim " << ex.getMsg() 
@@ -168,7 +169,8 @@ namespace xmlUtil {
       //      DOMNode* parent = elt->getParentNode();
       m_walker->setCurrentNode(elt);
       DOMNode* parent = m_walker->parentNode();
-      DOMNode* oldChild =  parent->replaceChild(prim, elt);
+      /*DOMNode* oldChild =  */
+      parent->replaceChild(prim, elt);
     }
   }
 
@@ -277,7 +279,8 @@ namespace xmlUtil {
       while (curConst != 0) {
         try {
           Arith curArith(curConst);
-          double evalValue = curArith.evaluate();
+          /* double evalValue = */
+          curArith.evaluate();
 
           /*
                 for debug

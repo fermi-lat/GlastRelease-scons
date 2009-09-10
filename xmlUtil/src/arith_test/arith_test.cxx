@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
   using XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType;
   using XERCES_CPP_NAMESPACE_QUALIFIER XMLString;
 
-  std::ostream *out;
+  // std::ostream *out;
   if (argc < 2) {  // instructions
     std::cout << "Required first argument is xml file to be parsed" 
               << std::endl;
@@ -64,8 +64,8 @@ int main(int argc, char* argv[]) {
   // Else successful.   Open output
   //  out = openOut(argv[2]);
 
-  DOMElement* docElt = doc->getDocumentElement();
-  DOMDocumentType*  doctype = doc->getDoctype(); //  check for gdd?? 
+  //  DOMElement* docElt = doc->getDocumentElement();
+  //  DOMDocumentType*  doctype = doc->getDoctype(); //  check for gdd?? 
 
   // Just try something very simple, using minimal code outside Xerces,
   //  to see if getElementById is screwed up 
