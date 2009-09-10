@@ -3,6 +3,8 @@
  * Coordinator: J. Bogart
  *    EOH
 
+ xmlUtil-03-04-02 10-Sep-2009    jrb Fix compiler warnings
+    Upgrades to SConscript, xmlUtilLib.py
    v3r4p1 23-Jul-2008 jrb Tag Navid's last changes for SCons, new RM
    v3r4   15-Aug-2007 jrb Add support for trig functions
    v3r3p1 9-Aug-2007  jrb Throw exceptions instead of asserts
