@@ -8,10 +8,10 @@
 namespace AcdUtil {
 
 IGeometry::VisitorRet 
-AcdDetectorList::pushShape(ShapeType s, const UintVector& idvec, 
-                       std::string name, std::string material, 
-                       const DoubleVector& params, 
-                       VolumeType type, SenseType sense)
+AcdDetectorList::pushShape(ShapeType /*s*/, const UintVector& idvec, 
+                       std::string name, std::string /*material*/, 
+                       const DoubleVector& /*params*/, 
+                       VolumeType /*type*/, SenseType /*sense*/)
 {
     // concatenate the id for this node to current id.
     m_idcount.push_back(idvec.size());
