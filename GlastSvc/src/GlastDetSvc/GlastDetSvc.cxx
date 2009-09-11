@@ -187,7 +187,7 @@ GlastDetSvc::getNamedId(const idents::VolumeIdentifier& vid) {
   // first create an xmlUtil::Identifier - vector of unsigned - from
   // the volume identifier.
   xmlUtil::Identifier identifier;
-  unsigned iField;
+  int iField;
   for (iField = 0; iField < vid.size(); iField++) {
     identifier.append(vid[iField]);
   }

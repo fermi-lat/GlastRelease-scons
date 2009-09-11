@@ -37,30 +37,30 @@ BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
 }
 
 
-StatusCode BaseCnv::createRep(DataObject* pObject, 
-                              IOpaqueAddress*& refpAddress)   {
+StatusCode BaseCnv::createRep(DataObject* /*pObject*/, 
+                              IOpaqueAddress*& /*refpAddress*/)   {
     // Purpose and Method: Convert the transient object to the requested 
     //     representation.  It is expected that derived classes will override
     //     this method.
     return StatusCode::FAILURE;
 }
 
-StatusCode BaseCnv::fillRepRefs(IOpaqueAddress* pAddress,
-                                DataObject* pObject)    {
+StatusCode BaseCnv::fillRepRefs(IOpaqueAddress* /*pAddress*/,
+                                DataObject* /*pObject*/)    {
     // Purpose and Method:  Resolve the references of the converted object.
     //     It is expected that derived classes will override this method.
     return StatusCode::FAILURE;
 }
 
-StatusCode BaseCnv::updateRep(IOpaqueAddress* pAddress, 
-                              DataObject* pObject)   {
+StatusCode BaseCnv::updateRep(IOpaqueAddress* /*pAddress*/, 
+                              DataObject* /*pObject*/)   {
     // Purpose and Method:  Update the converted representation of a transient 
     //     object.  It is expected that derived classes will override this.
     return StatusCode::FAILURE;
 }
 
-StatusCode BaseCnv::updateRepRefs(IOpaqueAddress* pAddress, 
-                                  DataObject* pObject) {
+StatusCode BaseCnv::updateRepRefs(IOpaqueAddress* /*pAddress*/, 
+                                  DataObject* /*pObject*/) {
     // Purpose and Method:  Update the references of an already converted object.
     //   It is expected that derived classes will override this method.
     return StatusCode::FAILURE;

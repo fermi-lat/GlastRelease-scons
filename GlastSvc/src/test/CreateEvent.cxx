@@ -201,7 +201,7 @@ StatusCode CreateEvent::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     log << MSG::DEBUG <<"Initial RandGauss status: " << RandGauss::getFlag() << endreq;
-    double test = RandGauss::shoot();
+    // HMK Unused double test = RandGauss::shoot();
     log << MSG::DEBUG << "RandGauss status after a shoot: " << RandGauss::getFlag() << endreq;
     
     //TODO: put something in here to get data???

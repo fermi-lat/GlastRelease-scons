@@ -6,6 +6,7 @@
 // that traverses the geometry.
 
 #include <string>
+#include <cmath>
 
 #include "GeometryVisitor.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
@@ -231,7 +232,7 @@ void  GeometryVisitor::visitAxisMPos(detModel::AxisMPos* pos)
 void GeometryVisitor::cacheId(const detModel::IdField* id, int step )
 {
     //m_geom.id(id->getName(), id->getValue() + id->getStep()*step);
-    m_idvec.push_back(id->getValue() + id->getStep()*step);
+    m_idvec.push_back((unsigned int) floor(id->getValue() + id->getStep()*step));
 }
 
 void GeometryVisitor::cacheTransform(double x, double y, double z, double rx, double ry, double rz)

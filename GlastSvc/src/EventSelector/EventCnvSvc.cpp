@@ -118,7 +118,7 @@ StatusCode EventCnvSvc::initialize()     {
 
     if ( status.isSuccess() )   
     {
-        ISvcLocator* svclocator = serviceLocator();
+        // HMK Unused ISvcLocator* svclocator = serviceLocator();
         IDataProviderSvc *pIDP = 0;
         // Set event data service
         status = service("EventDataSvc", pIDP, true);
@@ -183,7 +183,7 @@ StatusCode EventCnvSvc::initialize()     {
             // An orphan?
             if (orphan)
             {
-                int j = 0;
+                // HMK Unused int j = 0;
             }
         }
     }
@@ -274,7 +274,7 @@ StatusCode EventCnvSvc::queryInterface(const InterfaceID& riid, void** ppvInterf
 StatusCode EventCnvSvc::createAddress( long svc_type,
                                        const CLID& clid,
                                        const std::string* par, 
-                                       const unsigned long* ip,
+                                       const unsigned long* /*ip*/,
                                        IOpaqueAddress*& refpAddress)
 {
     if ( svc_type == repSvcType() )   

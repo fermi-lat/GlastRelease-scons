@@ -21,9 +21,9 @@ public:
     std::string bank;
     CLID        clid;
     Leaf(const std::string& p, const CLID& c, const std::string& b, long u)
-      : path(p), bank(b), clid(c), userParameter(u) {}
+      : userParameter(u), path(p), bank(b), clid(c) {}
     Leaf(const Leaf& copy) 
-      : path(copy.path), bank(copy.bank), clid(copy.clid), userParameter(copy.userParameter) {}
+      : userParameter(copy.userParameter), path(copy.path), bank(copy.bank), clid(copy.clid) {}
     Leaf& operator=(const Leaf& copy)   {
       path = copy.path;
       bank = copy.bank;
