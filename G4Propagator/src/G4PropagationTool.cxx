@@ -463,7 +463,7 @@ Event::TkrFitMatrix G4PropagationTool::getTrackCov(int propDir, double momentum,
 }
 */
 //! Return multiple scattering matrix after stepping, arcLen can be less than step taken
-HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool forward) const
+HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool) const
 {
     // Purpose and Method: Calculates Q, the 4x4 covariance matrix due to multiple
     //                     scattering

@@ -45,6 +45,7 @@ G4bool G4PropagatorExceptionHandler::Notify(const char*  originOfException,
     G4cerr << G4endl;
     G4cerr << "*** G4Exception : " << exceptionCode << G4endl;
     G4cerr << "      issued by : " << originOfException << G4endl;
+    G4cerr << "      severity  : " << severity << G4endl;
     G4cerr << description << G4endl;
 
     std::string exceptString = "G4Exception: " + std::string(exceptionCode) + "\n"
