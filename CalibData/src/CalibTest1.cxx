@@ -28,11 +28,6 @@ namespace CalibData {
     return StatusCode::SUCCESS;
   }
 
-  CalibTest1::CalibTest1(const CalibTest1& other) : CalibBase(other),
-                                                    m_name(other.m_name), 
-                                                    m_value(other.m_value) {
-  }
-    
   std::string CalibTest1::getValueName() const {
     return m_name;
   }

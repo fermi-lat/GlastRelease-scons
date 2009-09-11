@@ -50,6 +50,7 @@ namespace CalibData {
                                const std::string& instanceIdStr) :
     m_keyStr(keyStr), m_name(name), m_pkg(pkg), m_pkgVersion(pkgVersion),
     m_fmxPath(fmxPath), m_srcPath(srcPath), m_fswIdStr(fswIdStr), 
+    m_status(status),
     m_schemaIdStr(schemaIdStr), m_schemaVersionIdStr(schemaVersionIdStr), 
     m_instanceIdStr(instanceIdStr) {
     

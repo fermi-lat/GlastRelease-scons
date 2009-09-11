@@ -12,7 +12,6 @@
 
 #include "CalibData/CalibBase.h"
 #include "CalibData/CalibModel.h"
-// extern const CLID& CLID_Calib_CalibTest1;
 
 
 namespace CalibData {
@@ -20,8 +19,6 @@ namespace CalibData {
   public:
     CalibTest1(const std::string& name, int value, 
                const ITime& since, const ITime& till, int serNo = -1);
-
-    CalibTest1(const CalibTest1& other);
 
     virtual ~CalibTest1() {}
 
