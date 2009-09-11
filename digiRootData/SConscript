@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
-# Authors: T. Burnett <tburnett@u.washington.edu>, David Chamont <chamont@poly.in2p3.fr>
-# Version: digiRootData-11-13-00
+# Authors: H. Kelly <heather@slac.stanford.edu>, David Chamont <chamont@poly.in2p3.fr>
+# Version: digiRootData-11-13-01
 Import('baseEnv')
 Import('listFiles')
 Import('packages')

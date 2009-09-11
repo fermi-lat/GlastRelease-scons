@@ -85,8 +85,9 @@ public:
         m_idx   = idx;
     }
 
-    void Clear(Option_t *option ="")
+    void Clear(Option_t* option ="")
     {
+        TObject::Clear(option);
         m_strip = 0;
         m_tower = 0;
         m_idx   = 0;
@@ -141,8 +142,9 @@ public:
         m_blnk = blnk;
     }
 
-    void Clear(Option_t *option ="")
+    void Clear(Option_t* option ="")
     {
+        TObject::Clear(option);
         m_flnk = 0;
         m_blnk = 0;
     }
@@ -199,8 +201,9 @@ public:
         m_layer = layer;
     }
 
-    void Clear(Option_t *option ="")
+    void Clear(Option_t* option ="")
     {
+        TObject::Clear(option);
         m_xy0   = 0;
         m_dxy   = 0;
         m_dz    = 0;

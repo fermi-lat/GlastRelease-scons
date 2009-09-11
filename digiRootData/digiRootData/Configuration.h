@@ -37,7 +37,7 @@ public:
   }
 
   /// Assignment operator.  Nothing fancy, just copy all values.
-  Configuration& operator=(const Configuration& other) {
+  Configuration& operator=(const Configuration& /*other*/) {
       return *this;
   }
   

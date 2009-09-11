@@ -50,7 +50,7 @@ void AcdDigi::initLdfParameters(const char *name, Int_t number, Range *rangeCol,
     initPackedLdfWord(pmt, rangeCol[pmt], errCol[pmt], headerParityCol[pmt]);
 }
 
-void AcdDigi::Clear(Option_t *option) {
+void AcdDigi::Clear(Option_t* /*option*/) {
 
 }
 

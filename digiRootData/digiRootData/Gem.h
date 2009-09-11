@@ -34,7 +34,8 @@ public:
                m_na = na;
                };
 
-  void Clear(Option_t *option="") {
+  void Clear(Option_t* option="") {
+               TObject::Clear(option);
                m_xzp = 0;
                m_xzm = 0;
                m_yzp = 0;
@@ -94,7 +95,8 @@ public:
  
   void Print(Option_t *option="") const;
 
-  void Clear(Option_t *option="") { 
+  void Clear(Option_t* option="") { 
+     TObject::Clear(option);
      m_timebase = 0; 
      m_seconds = 0; 
   };

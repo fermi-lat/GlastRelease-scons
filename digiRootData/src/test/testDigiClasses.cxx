@@ -179,7 +179,7 @@ int checkL1T(const L1T &level1) {
     return 0;
 }
 
-int checkCalDigi(CalDigi *digi, UInt_t ievent) {
+int checkCalDigi(CalDigi *digi, UInt_t /*ievent*/) {
     // Checks the contents of one CalDigi object
 
     CalXtalId id = digi->getPackedId();
@@ -262,7 +262,7 @@ int checkCalDigi(CalDigi *digi, UInt_t ievent) {
     return 0;
 }
 
-int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
+int checkTkrDigi(TkrDigi *digi, UInt_t /*ievent*/, UInt_t idigi) {
 
     TowerId id = digi->getTower();
     if ((id.ix() != 3) || (id.iy() != 2) ) {
@@ -292,16 +292,16 @@ int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
         std::cout << "TkrDigi number of hit strip is wrong: " << digi->getNumHits() << std::endl;
         return -1;
     }
-    Int_t istrip;
+    UInt_t istrip;
     for (istrip = 0; istrip < idigi; istrip++) {
         Int_t strip = digi->getHit(istrip);
-        if (strip != istrip) {
+        if ((UInt_t)strip != istrip) {
             std::cout << "TkrDigi strip is wrong: " << strip << std::endl;
             return -1;
         }
     }
     Int_t strip = digi->getHit(idigi);
-    if (strip != idigi*2) {
+    if ((UInt_t)strip != idigi*2) {
         std::cout << "TkrDigi strip is wrong: " << strip << std::endl;
         return -1;
     }
@@ -312,12 +312,12 @@ int checkTkrDigi(TkrDigi *digi, UInt_t ievent, Int_t idigi) {
         return -1;
     }
     
-    if (digi->getToT(0) != idigi) {
+    if (digi->getToT(0) != (Int_t)idigi) {
         std::cout << "TkrDigi ToT 0 is wrong: " << digi->getToT(0) << std::endl;
         return -1;
     }
     
-    if (digi->getToT(1) != idigi+1) {
+    if (digi->getToT(1) != (Int_t)idigi+1) {
         std::cout << "TkrDigi ToT 1 is wrong: " << digi->getToT(1) << std::endl;
         return -1;
     }
@@ -361,9 +361,9 @@ int checkGem(const Gem &gem) {
    return 0; 
 }
 
-int checkAcdDigi(AcdDigi *digi, UInt_t ievent, UInt_t idigi) {
+int checkAcdDigi(AcdDigi *digi, UInt_t ievent, UInt_t /*idigi*/) {
 
-    Float_t f = ievent;
+    // HMK Unused? Float_t f = ievent;
 
     if (!floatInRange(digi->getEnergy(), ievent*randNum) ) {
         std::cout << "AcdDigi Energy is wrong " << digi->getEnergy() << std::endl;
@@ -471,7 +471,8 @@ int read(char* fileName, int numEvents) {
         Gem gemData = evt->getGem();
         if (checkGem(gemData) < 0) return -1;
 
-        UInt_t numCalDigi = evt->getCalDigiCol()->GetEntries();
+        // HMK Unused? UInt_t numCalDigi = evt->getCalDigiCol()->GetEntries();
+
         const TObjArray *calDigiCol = evt->getCalDigiCol();
         TIter calDigiIt(calDigiCol);
         CalDigi *digi = 0;
@@ -526,7 +527,9 @@ int read(char* fileName, int numEvents) {
         }
 
         MetaEvent meta = evt->getMetaEvent();
-        const LciAcdConfiguration *acd = meta.lciAcdConfiguration();
+
+        // HMK Unused? const LciAcdConfiguration *acd = meta.lciAcdConfiguration();
+
         const LpaKeys *keys = meta.lpaKeys();
         if (!keys) return -1;
         LpaKeys keysRef;

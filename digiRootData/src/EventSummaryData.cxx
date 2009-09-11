@@ -23,8 +23,9 @@ void EventSummaryData::initialize(UInt_t summary) {
     m_summary = summary;
 }
 
-void EventSummaryData::Clear(Option_t *option) {
+void EventSummaryData::Clear(Option_t* option) {
 
+    TObject::Clear(option);
     m_summary = 0;
     m_flags = 0;
     UInt_t i;

@@ -14,7 +14,7 @@ ClassImp(TfcProjectionCol)
 ClassImp(ObfTrack)
 ClassImp(FilterStatus)
 
-void CalLogInfo::Clear(Option_t *option) {
+void CalLogInfo::Clear(Option_t* /*option*/) {
     m_tower = 0;
     m_layer = 0;
     m_column = 0;
@@ -41,15 +41,15 @@ void CalLogInfo::Print(Option_t *option) const {
     cout << "CalLogInfo: " << endl;
 }
 
-void TfcHit::Print(Option_t* option) const
+void TfcHit::Print(Option_t* /*option*/) const
 {
 }
 
-void TfcPrjList::Print(Option_t *option) const
+void TfcPrjList::Print(Option_t* /*option*/) const
 {
 }
 
-void TfcPrjPrms::Print(Option_t *option) const
+void TfcPrjPrms::Print(Option_t* /*option*/) const
 {
 }
 
@@ -110,7 +110,7 @@ void TfcPrj::initialize(const TfcPrjPrms& top, const TfcPrjPrms& bot, Int_t acdT
     }
 }
 
-void TfcPrj::Clear(Option_t *option) 
+void TfcPrj::Clear(Option_t* /*option*/) 
 {
     m_top        = TfcPrjPrms();
     m_bot        = TfcPrjPrms();
@@ -168,7 +168,7 @@ void TfcPrjDir::initialize(UShort_t idx, UChar_t x, UChar_t y) {
     m_yCnt = y;
 }
 
-void TfcPrjDir::Clear(Option_t *option) {
+void TfcPrjDir::Clear(Option_t* /*option*/) {
     m_idx = 0;
     m_xCnt = '0';
     m_yCnt = '0';
@@ -243,7 +243,7 @@ TfcProjectionCol::~TfcProjectionCol() {
     Clear("");
 
 }
-void TfcProjectionCol::Clear(Option_t *option) {
+void TfcProjectionCol::Clear(Option_t* /*option*/) {
 
     if (m_curCnt && m_prjs) {
         delete [] m_prjs;
@@ -271,7 +271,7 @@ void TfcProjectionCol::Print(Option_t *option) const {
     }
 }
 
-void TfcProjectionCol::Fake( Int_t ievent, Float_t randNum ) {
+void TfcProjectionCol::Fake( Int_t /*ievent*/, Float_t /*randNum*/ ) {
 
     std::cout << "Called TfcProjectionColFake" << std::endl;
     m_curCnt = 5;
@@ -330,7 +330,7 @@ void ObfTrack::initialize(Int_t numHits, Double_t phi, Double_t theta,
 
 }
 
-void ObfTrack::Clear(Option_t *option) {
+void ObfTrack::Clear(Option_t* /*option*/) {
     m_numHits =0;
     m_phi_rad = 0.0;
     m_theta_rad = 0.0;
@@ -526,7 +526,7 @@ void FilterStatus::initTracks(const TObjArray &tracks)
 
 //void FilterStatus::initCalLogInfo(const CalLogInfo *logData); 
 
-void FilterStatus::Clear(Option_t *option) 
+void FilterStatus::Clear(Option_t* /*option*/) 
 {
     m_status = 0;
     m_stageEnergy = 0;

@@ -47,8 +47,8 @@ public:
   MetaEvent( const RunInfo& run, const DatagramInfo& datagram, 
 	     const GemScalers& scalers,
 	     const LsfTime& time,
-	     const Configuration& configuration,
-             const LsfKeys& keys )
+	     const Configuration& /*configuration*/,
+             const LsfKeys& /*keys*/ )
     :m_run(run),m_datagram(datagram),
      m_scalers(scalers),
      m_time(time),
@@ -225,7 +225,7 @@ public:
   inline void initialize(const RunInfo& run, const DatagramInfo& datagram, 
 			 const GemScalers& scalers,
 			 const LsfTime& time,
-			 const Configuration& configuration) {
+			 const Configuration& /*configuration*/) {
     Clear("");
     m_run = run;
     m_datagram = datagram;

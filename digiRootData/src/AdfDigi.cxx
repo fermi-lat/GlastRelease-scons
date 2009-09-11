@@ -47,6 +47,7 @@ AdfDigi::~AdfDigi() {
 
 void AdfDigi::Clear(Option_t *option) {
 
+    TObject::Clear(option);
     m_eventNumber = 0;
     m_spillNumber = 0;
 
@@ -128,7 +129,7 @@ const commonRootData::ScalerHit* AdfDigi::getScalerHit(UInt_t ind) const {
 }
 
 
-void AdfDigi::Fake( Int_t ievent, Float_t randNum ) {
+void AdfDigi::Fake( Int_t ievent, Float_t /*randNum*/ ) {
     setEventNumber(ievent);
     setSpillNumber(5);
     // Add 2 TaggerHits

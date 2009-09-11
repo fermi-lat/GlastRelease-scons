@@ -28,7 +28,7 @@ void ILpaHandler::initialize(UInt_t masterKey, UInt_t cfgKey, UInt_t cfgId,
             setPrescaleFactor(prescaleFactor);
         }
 
- void ILpaHandler::Clear(Option_t *option) {
+ void ILpaHandler::Clear(Option_t* /*option*/) {
      m_type = enums::Lsf::Unknown;
      m_masterKey = 0xFFFFFFFF;
      m_cfgKey = 0xFFFFFFFF; 
@@ -109,14 +109,14 @@ void LpaHandler::Clear(Option_t *)
 }
 
 // dummy data, just for tests
-void LpaHandler::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
+void LpaHandler::Fake( Int_t /*ievent*/, UInt_t /*rank*/, Float_t /*randNum*/ ) {
 
     Clear() ;
 }
 
 //#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
 
-Bool_t LpaHandler::CompareInRange( const LpaHandler & ref, const std::string & name ) const {
+Bool_t LpaHandler::CompareInRange( const LpaHandler & /*ref*/, const std::string & /*name*/ ) const {
 
     Bool_t result = true ;
    
@@ -124,7 +124,7 @@ Bool_t LpaHandler::CompareInRange( const LpaHandler & ref, const std::string & n
 
 }
 
-void LpaHandler::Print(Option_t* option) const 
+void LpaHandler::Print(Option_t* /*option*/) const 
 {
 }
 
@@ -198,7 +198,7 @@ Int_t ILpaHandler::prescalerIndex() const {
 ClassImp(LpaGammaFilter)
 
 // root Clear...
-void LpaGammaFilter::Clear(Option_t *option)
+void LpaGammaFilter::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -228,7 +228,7 @@ ClassImp(LpaGammaFilterV3)
 ClassImp(LpaHipFilter)
 
 // root Clear...
-void LpaHipFilter::Clear(Option_t *option)
+void LpaHipFilter::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -254,7 +254,7 @@ ClassImp(LpaMipFilter)
 
 
 // root Clear...
-void LpaMipFilter::Clear(Option_t *option)
+void LpaMipFilter::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -278,7 +278,7 @@ ClassImp(LpaMipFilterV0)
 ClassImp(LpaDgnFilter)
 
 // root Clear...
-void LpaDgnFilter::Clear(Option_t *option)
+void LpaDgnFilter::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -301,7 +301,7 @@ ClassImp(LpaDgnFilterV0)
 ClassImp(LpaPassthruFilter)
 
 // root Clear...
-void LpaPassthruFilter::Clear(Option_t *option)
+void LpaPassthruFilter::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;

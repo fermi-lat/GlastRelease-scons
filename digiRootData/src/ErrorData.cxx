@@ -46,7 +46,7 @@ void ErrorData::setTkrFifoFull(UInt_t gtcc, UChar_t val) {
         m_tkrFifoFullCol[gtcc] = val;
 }
 
-void ErrorData::Clear(Option_t *option) {
+void ErrorData::Clear(Option_t* /*option*/) {
     m_cal = 0;
     m_tkr = 0;
     m_phs = kFALSE; 

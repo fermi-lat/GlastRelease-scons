@@ -21,7 +21,7 @@ void LsfKeys::Fake( Int_t ievent, Float_t /* randNum */ ) {
 }
 
 Bool_t LsfKeys::CompareInRange( const LsfKeys& ref, 
-			        const std::string & name ) const {
+			        const std::string & /*name*/ ) const {
   /// FIXME
   bool result = true ;
  result = rootdatautil::CompareInRange(LATC_master(),ref.LATC_master(),"LATC_master") && result;
@@ -47,7 +47,7 @@ void LpaKeys::Fake( Int_t ievent, Float_t randNum ) {
 }
 
 Bool_t LpaKeys::CompareInRange( const LpaKeys& ref, 
-			        const std::string & name ) const {
+			        const std::string & /*name*/ ) const {
   bool result = true ;
   result = rootdatautil::CompareInRange(sbs(),ref.sbs(),"SBS") && result;
   result = rootdatautil::CompareInRange(lpa_db(),ref.lpa_db(),"LPA_DB") && result;
@@ -73,7 +73,7 @@ void LciKeys::Fake( Int_t ievent, Float_t randNum ) {
 }
 
 Bool_t LciKeys::CompareInRange( const LciKeys& ref, 
-        const std::string & name ) const {
+        const std::string & /*name*/ ) const {
   bool result = true ;
   result = rootdatautil::CompareInRange(LCI_script(),ref.LCI_script(),"LCI_script") && result;
  result = rootdatautil::CompareInRange(LATC_master(),ref.LATC_master(),"LATC_master") && result;

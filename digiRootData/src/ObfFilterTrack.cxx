@@ -13,7 +13,7 @@ ClassImp(ObfFilterTrack)
 
 
 /// Fill the ASCII output stream
-void ObfFilterTrack::Print(Option_t *option) const
+void ObfFilterTrack::Print(Option_t* /*option*/) const
 {
     std::cout << "class ObfFilterTrack"
     << " :"
@@ -48,7 +48,7 @@ void ObfFilterTrack::Clear(Option_t *)
 }
 
 // dummy data, just for tests
-void ObfFilterTrack::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
+void ObfFilterTrack::Fake( Int_t /*ievent*/, UInt_t /*rank*/, Float_t /*randNum*/ ) {
 
     Clear() ;
 /*    
@@ -67,7 +67,7 @@ void ObfFilterTrack::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
 
 //#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
 
-Bool_t ObfFilterTrack::CompareInRange( const ObfFilterTrack & ref, const std::string & name ) const {
+Bool_t ObfFilterTrack::CompareInRange( const ObfFilterTrack & /*ref*/, const std::string & /*name*/ ) const {
 
     Bool_t result = true ;
     

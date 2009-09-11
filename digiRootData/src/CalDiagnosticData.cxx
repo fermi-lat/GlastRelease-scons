@@ -31,7 +31,8 @@ void CalDiagnosticData::initialize(UInt_t datum, UShort_t tower, UShort_t layer)
 
     
 
-void CalDiagnosticData::Clear(Option_t *option) {
+void CalDiagnosticData::Clear(Option_t* option) {
+    TObject::Clear(option);
     m_datum = 0;
     m_tower = 0;
     m_layer = 0;

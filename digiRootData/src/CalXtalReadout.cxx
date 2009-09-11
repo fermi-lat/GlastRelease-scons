@@ -33,7 +33,7 @@ void CalXtalReadout::initialize(Char_t rangeP, UShort_t adcP, Char_t rangeM,
     m_adcM = adcM;
 }
 
-void CalXtalReadout::Clear(Option_t *option) {
+void CalXtalReadout::Clear(Option_t* /*option*/) {
     m_rangeP = 0;
     m_adcP = 0;
     m_rangeM = 0;

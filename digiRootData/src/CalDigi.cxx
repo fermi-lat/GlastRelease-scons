@@ -25,7 +25,7 @@ void CalDigi::initialize(CalXtalId::CalTrigMode m, const CalXtalId &id) {
     m_xtalId = id;
 }
 
-void CalDigi::Clear(Option_t *option) {
+void CalDigi::Clear(Option_t* /*option*/) {
     m_numReadouts = 0;
     m_xtalId.Clear();
     for(int i=0;i<4;i++)(m_readoutArr[i]).Clear();

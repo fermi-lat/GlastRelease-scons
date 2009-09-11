@@ -17,7 +17,7 @@ void TkrDiagnosticData::initialize(UInt_t datum, UShort_t tower, UShort_t gtcc)
     m_gtcc = gtcc;
 }
 
-void TkrDiagnosticData::Clear(Option_t *option) {
+void TkrDiagnosticData::Clear(Option_t* /*option*/) {
     m_datum = 0;
     m_tower = 0;
     m_gtcc = 0;

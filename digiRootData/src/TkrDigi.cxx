@@ -13,7 +13,7 @@ TkrDigi::~TkrDigi (){
     Clear();
 }
 
-void TkrDigi::Clear(Option_t *option) {
+void TkrDigi::Clear(Option_t* /*option*/) {
     m_bilayer = 0;
     m_tower = 0;
     m_tot[0] = 0;
@@ -46,12 +46,20 @@ void TkrDigi::initialize(Int_t l, GlastAxis::axis v, TowerId t, Int_t* tot)
 
 Int_t TkrDigi::getHit(UInt_t i) const
 {
-    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+    if (i < m_hitCol.size()) 
+        return m_hitCol[i];
+    else
+        return -1;
+    //return ((i < m_hitCol.size()) ? m_hitCol[i] : -1);
 }
 
 Int_t TkrDigi::getStrip(UInt_t i) const
 {
-    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+    if (i < m_hitCol.size()) 
+        return m_hitCol[i];
+    else
+        return -1;
+    //return ((i < m_hitCol.size()) ? m_hitCol[i] : -1);
 }
 
 Int_t TkrDigi::getToT(UInt_t i) const {
@@ -85,7 +93,7 @@ void TkrDigi::addC1Hit( UInt_t strip )
 }
 
 
-void* TkrDigi::operator new(size_t size)
+void* TkrDigi::operator new(size_t /*size*/)
 {
     TkrDigi* temp = DigiObjectManager::getPointer()->getNewTkrDigi();
 
@@ -95,12 +103,12 @@ void* TkrDigi::operator new(size_t size)
     return temp;
 }
 
-void* TkrDigi::operator new(size_t size, void* vp)
+void* TkrDigi::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
 
-void TkrDigi::operator delete(void* p)
+void TkrDigi::operator delete(void* /*p*/)
 {
     // Since we let DigiObjectManager handle memory, nothing to do here
     return;
