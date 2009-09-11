@@ -1,5 +1,5 @@
-/// An HepEvent server; mainly derived from Joseph Perl one .. adapted for GLAST and
-/// GAUDI framework
+// An HepEvent server; mainly derived from Joseph Perl one .. 
+/// adapted for GLAST and GAUDI framework
 /// This is a test server; needs lot of work
 //
 #include "HepRep_impl.hh"
@@ -89,7 +89,7 @@ char* HepEventServer_impl::setEvent(const char* command)
   static int temp = 0;
   std::string cmd(command);
     
-  static unsigned int i = 0;
+  //static unsigned int i = 0;
   
   std::string nextEventMsg; 
   

@@ -5,7 +5,7 @@
 #include <iostream>
 
 // no idea what this was for!
-extern int done = 1;
+//extern int done = 1;
 
 void CorbaServer::run()
 {  
