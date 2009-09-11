@@ -52,7 +52,7 @@ private:
 
   facilities::Timestamp m_ts;
   std::string    m_table;
-  unsigned m_overlap;
+  int m_overlap;
   std::vector<std::string> m_selects;
   std::vector<std::string> m_orderBy;
 
