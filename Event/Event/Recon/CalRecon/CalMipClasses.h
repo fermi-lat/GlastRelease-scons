@@ -38,7 +38,7 @@ public:
     CalMipXtal(Event::CalXtalRecData* xtalData, double d2C, bool free, bool freeC0, double ecor) : 
                 m_xtalData(xtalData), m_d2C(d2C), m_free(free), m_freeC0(freeC0), m_ecor(ecor) {};
 
-    ~CalMipXtal() {};
+    virtual ~CalMipXtal() {};
 
     void                   initialize(Event::CalXtalRecData* xtalData, double d2C, bool free, bool freC0, double ecor);
 

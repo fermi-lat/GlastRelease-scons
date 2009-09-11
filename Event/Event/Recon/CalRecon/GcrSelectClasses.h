@@ -39,7 +39,7 @@ namespace Event
 	    GcrSelectedXtal(idents::CalXtalId xtalId, double rawEnergy, double pathLength, double corrEnergy, int selectGrade, double closestFaceDist, int crossedFaces, Point entryPoint, Point exitPoint) : 
                 	GcrXtal(xtalId, pathLength, closestFaceDist, crossedFaces, entryPoint, exitPoint), m_rawEnergy(rawEnergy), m_corrEnergy(corrEnergy), m_selectGrade(selectGrade){};
 
-	    ~GcrSelectedXtal() {};
+	    virtual ~GcrSelectedXtal() {};
 
 	    void                   initialize(idents::CalXtalId xtalId, float rawEnergy, float pathLength, float corrEnergy, int selectGrade, double closestFaceDist, int crossedFaces, Point entryPoint, Point exitPoint);
 

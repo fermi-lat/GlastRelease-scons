@@ -50,7 +50,7 @@ namespace Event { //Namespace
         TkrVertex(idents::TkrId tkrID, double energy, double quality, double chisq, 
                    double rad_len, double doca, double s1, double s2, double z,
                    TkrTrackParams params);
-        ~TkrVertex() {}
+        virtual ~TkrVertex() {}
 
         //! Retrieve pointer to class defininition structure
         virtual const CLID& clID() const   { return TkrVertex::classID(); }

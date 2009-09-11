@@ -53,7 +53,7 @@ namespace Event
 	    GcrXtal(idents::CalXtalId xtalId, double pathLength,double closestFaceDist, int crossedFaces, Point entryPoint, Point exitPoint) : 
                 	m_xtalId(xtalId), m_pathLength(pathLength), m_closestFaceDist(closestFaceDist), m_crossedFaces(crossedFaces), m_entryPoint(entryPoint), m_exitPoint(exitPoint) {};
 
-	    ~GcrXtal() {};
+	    virtual ~GcrXtal() {};
 
 	    void                   initialize(idents::CalXtalId xtalId, double pathLength, double closestFaceDist, int crossedFaces, Point entryPoint, Point exitPoint);
 

@@ -128,7 +128,6 @@ template <class T1, class T2> inline RelTable<T1,T2>::RelTable(ObjectList < Rela
                               m_relations(0), m_ownRelationList(false), 
                                   m_firstMMap(0), m_secondMMap(0), m_ownMaps(true)
 {
-//    init();
     // We are given a RelationList to work with
     m_relations  = dynamic_cast<Event::RelationList<T1,T2>*>(rels);
 
@@ -142,7 +141,8 @@ template <class T1, class T2> inline RelTable<T1,T2>::RelTable(ObjectList < Rela
     {
         Relation<T1,T2>* relation = *relIter;
 
-        relation->insertInList(m_relations);
+//        relation->insertInList(m_relations);  // Not necessary to do this since we have set pointer to it
+        relation->m_listIter = relIter;
         relation->insertFirst(m_firstMMap);
         relation->insertSecond(m_secondMMap);
     }
@@ -209,11 +209,22 @@ template <class T1,class T2> bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* 
     //          In the latter case the user has to delete the relation
     bool addedToList = false;
 
-    typedef typename RelationList<T1,T2>::RelationListIter RelListIter;
-    RelListIter listIter = std::find_if(m_relations->begin(),m_relations->end(),CompareRelations<T1,T2>(rel));
+    // First search to see if this relation is already in the list
+    Relation<T1,T2>* locRel = 0;
+
+    // Use MMap to get vector of relations to test against
+    mapT1RelIterPair iterPair = m_firstMMap->equal_range(rel->getFirst());
+
+    // Loop through to find match on second
+    for(mapT1RelIter mapIter = iterPair.first; mapIter != iterPair.second; mapIter++)
+    {
+        typename RelationList<T1,T2>::RelationListIter relIter = (*mapIter).second;
+        Relation<T1,T2>* relation = *relIter;
+        if (relation->getSecond() == rel->getSecond()) locRel = relation;
+    }
 
     // If not in list then add it
-    if (listIter == m_relations->end())
+    if (!locRel)
     {
         // This adds the relation to the list
         rel->insertInList(m_relations);
@@ -227,7 +238,7 @@ template <class T1,class T2> bool RelTable<T1,T2>::addRelation(Relation<T1,T2>* 
     // Otherwise, update the "info" vector 
     else if (!rel->getInfos().empty())
     {
-        (*listIter)->addInfo(rel->getInfos().front());
+        locRel->addInfo(rel->getInfos().front());
     }
 
     return addedToList;
@@ -334,12 +345,13 @@ template <class T1,class T2> void RelTable<T1,T2>::clear()
     m_firstMMap->clear();
     m_secondMMap->clear();
 
-    for(typename RelationList<T1,T2>::RelationListIter 
-          relIter = m_relations->begin(); 
-        relIter != m_relations->end(); relIter++)
-    {
-        delete *relIter;
-    }
+    // Gaudi "owns" the relations so it will delete them
+    //for(typename RelationList<T1,T2>::RelationListIter 
+    //      relIter = m_relations->begin(); 
+    //    relIter != m_relations->end(); relIter++)
+    //{
+    //    delete *relIter;
+    //}
 
     m_relations->clear();
 
@@ -363,5 +375,5 @@ template <class T1,class T2> inline RelationList<T1,T2>* RelTable<T1,T2>::getAll
     return m_relations;
 }
 
-}
+}; // Namespace
 #endif // RELTABLE_H 

@@ -45,7 +45,7 @@ public:
     Relation(T1* obj1, T2* obj2, std::string info);
     Relation(T1* obj1, T2* obj2, std::vector<std::string> infos);
 
-    ~Relation();
+    virtual ~Relation();
 
     const T1* getFirst()  const { return m_first.getData(); } 
     T1* getFirst()              { return m_first.getData(); }
@@ -127,17 +127,14 @@ template <class T1, class T2> std::vector<std::string> Relation<T1,T2>::getInfos
 
 template <class T1, class T2> void Relation<T1,T2>::insertInList(RelationList<T1,T2>* list)
 {
-    //RelListIter listIter = list->end();
-    //listIter   = list->insert(listIter, this);
-    RelListIter listIter = std::find(list->begin(),list->end(),this);
-    if (listIter == list->end()) listIter = list->insert(listIter, this);
-    m_listIter = listIter;
+    m_listIter = list->insert(list->end(), this);
 
     return;
 }     
 
 template <class T1, class T2> void Relation<T1,T2>::removeFromList(RelationList<T1,T2>* list)
 {
+    this->setParent(0);
     list->erase(m_listIter);
     m_listIter = 0;
 

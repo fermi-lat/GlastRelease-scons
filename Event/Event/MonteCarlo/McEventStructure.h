@@ -63,7 +63,7 @@ public:
     }
 
     //McEventStructure(Event::McParticle* mcPart, unsigned long classBits);
-   ~McEventStructure() {}
+   virtual ~McEventStructure() {}
 
     virtual const CLID& clID() const   { return McEventStructure::classID(); }
     static const CLID& classID()       { return CLID_McEventStructure; }

@@ -44,7 +44,7 @@ public:
     McTrajectoryPoint() : m_energy(0.), m_point(0.,0.,0.) {}
     McTrajectoryPoint(idents::VolumeIdentifier vId, float energy, CLHEP::Hep3Vector& point) :
         m_volumeID(vId), m_energy(energy), m_point(point) {}
-    ~McTrajectoryPoint() {}
+    virtual ~McTrajectoryPoint() {}
 
     /// Retrieve cell identifier
     idents::VolumeIdentifier getVolumeID() const {return m_volumeID;}

@@ -61,7 +61,7 @@ namespace Event {
             m_truncationMap.clear();
         }
 
-        TkrTruncationInfo::~TkrTruncationInfo() {
+        virtual ~TkrTruncationInfo() {
             m_truncationMap.clear();
         }
 

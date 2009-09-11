@@ -68,7 +68,7 @@ public:
         m_energyArray[0]=m_energyArray[1]=m_energyArray[2]=m_energyArray[3]=0;
     }
 
-    ~McIntegratingHit(){}
+    virtual ~McIntegratingHit(){}
 
     /// Retrieve cell identifier
     const idents::VolumeIdentifier volumeID() const;
