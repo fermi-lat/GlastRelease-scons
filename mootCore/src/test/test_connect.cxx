@@ -8,7 +8,7 @@
 #include <vector>
 #include "mootCore/MoodConnection.h"
 
-int main(int nargs, char**)    {
+int main(int, char**)    {
 
   MOOT::MoodConnection* moodCon = 
     new MOOT::MoodConnection(false);  // read only

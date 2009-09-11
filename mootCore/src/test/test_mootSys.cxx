@@ -8,7 +8,7 @@
 #include "mootCore/MootSys.h"
 
 
-int main(int nargs, char**)    {
+int main(int, char**)    {
 
   MOOT::MootSys  myUtil;
   std::string out;
@@ -99,8 +99,8 @@ int main(int nargs, char**)    {
   std::string master;
   std::string local;
   std::string cmdOut;
-  int cmdStatus;
   /*  Move to mootCore for meaningful response
+  int cmdStatus;
   ok = MOOT::MootSys::sysCmd("fmx show connection", cmdOut, cmdStatus);
   if (ok) {
     ok = MOOT::MootSys::getParmValue(cmdOut, std::string("Database"), dbtype);

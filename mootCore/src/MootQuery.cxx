@@ -782,10 +782,10 @@ namespace MOOT {
                                      getCols, getCols, where);
 
     if (!res) return false;  // shouldn't happen even if none are found
-    int nRows = res->getNRows();
+    unsigned nRows = (unsigned) res->getNRows();
     std::vector<std::string> vals;
     std::set<unsigned>::iterator hint=keys.begin();
-    for (unsigned ix = 0; ix < nRows; ix++) {
+    for (unsigned ix = 0; ix <  nRows; ix++) {
       res->getRow(vals, ix);
       unsigned key = facilities::Util::stringToUnsigned(vals[0]);
       hint = keys.insert(hint, key);
@@ -816,7 +816,7 @@ namespace MOOT {
                                      getCols, getCols, where);
 
     if (!res) return false;  // shouldn't happen even if none are found
-    int nRows = res->getNRows();
+    unsigned nRows = (unsigned) res->getNRows();
     std::vector<std::string> vals;
     std::set<unsigned>::iterator hint=keys.begin();
     for (unsigned ix = 0; ix < nRows; ix++) {
@@ -847,7 +847,7 @@ namespace MOOT {
                                      getCols, getCols, where);
 
     if (!res) return false;  // shouldn't happen even if none are found
-    int nRows = res->getNRows();
+    unsigned nRows = (unsigned) res->getNRows();
     std::vector<std::string> vals;
     std::set<unsigned>::iterator hint=keys.begin();
     for (unsigned ix = 0; ix < nRows; ix++) {
@@ -1750,7 +1750,7 @@ namespace MOOT {
       return -1;
     }
 
-    unsigned nRows = res->getNRows();
+    int nRows = (int) res->getNRows();
 
     std::vector<std::string> fields;
     fields.reserve(2);    // will hold precinct_fk followed by v_alias
