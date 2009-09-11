@@ -452,7 +452,7 @@ StatusCode ValBase::getVal(std::string varName, std::string& value, int flag)
             *(reinterpret_cast<double*>(vPtr)+element));}
         else if (type==INT)     { sprintf(buffer, "%i", 
             *(reinterpret_cast<int*>(vPtr)+element));}
-        else if (type==UINT)    { sprintf(buffer, "%llu", 
+        else if (type==UINT)    { sprintf(buffer, "%u", 
             *(reinterpret_cast<unsigned int*>(vPtr)+element));}
         else if (type==ULONG64)    { sprintf(buffer, "%llu", 
             *(reinterpret_cast<unsigned long long*>(vPtr)+element));}
