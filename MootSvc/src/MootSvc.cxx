@@ -265,7 +265,7 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
     // Check to see if MOOT_ARCHIVE has a value.  
     const char *transEnv = ::getenv(archEnv.c_str());
     if (transEnv) {
-      int nExpand = facilities::Util::expandEnvVar(&archEnv);
+      facilities::Util::expandEnvVar(&archEnv);
       envSet = true;
     }
       // If not, set m_archive to 
