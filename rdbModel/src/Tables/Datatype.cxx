@@ -100,7 +100,8 @@ namespace rdbModel {
     switch (m_type) {
       case TYPEint: {
         if (isUnsigned) {
-          m_maxIntUnsigned = 4294967295;
+          // m_maxIntUnsigned = 4294967295;
+          m_maxIntUnsigned = 0xffffffff;
           m_minInt = 0;
           m_isUnsigned = true;
           m_type = TYPEintUnsigned;

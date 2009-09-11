@@ -39,7 +39,8 @@ int main(int, char**) {
     return errcode;
   }
   
-  rdbModel::Table* t = rdb->getTable("metadata_v2r1");
+  /* rdbModel::Table* t = */
+  rdb->getTable("metadata_v2r1");
 
 
   // mostly don't want to run code doing an insert.  For times
@@ -123,8 +124,8 @@ int main(int, char**) {
   std::string where(" WHERE ser_no >=<  7");
   getCols.push_back("flavor");
   try {
-    rdbModel::ResultHandle* res =
-      con->select("metadata_v2r1", getCols, orderCols, where);
+    // rdbModel::ResultHandle* res =
+    con->select("metadata_v2r1", getCols, orderCols, where);
   }
   catch (rdbModel::RdbException ex) {
     std::cerr << "select failed with error: " << ex.getMsg() << std::endl;

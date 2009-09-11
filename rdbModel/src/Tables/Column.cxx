@@ -24,7 +24,6 @@ namespace rdbModel {
     *pInt = m_default;
     // Special handling if interp is time
     if (m_defaultInterp.size() > 0  ) {
-      Datatype::TYPES dtype = m_type->getType();
       interpret(m_defaultInterp, *pInt);
     }
     return m_default;

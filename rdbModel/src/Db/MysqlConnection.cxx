@@ -104,7 +104,8 @@ void addArg(bool literal, const std::string arg, std::string& sqlString) {
   std::string mysqlEscape(MYSQL* my, std::string const& s)
   {
     char * asciiz = new char[s.size()*2+1];
-    unsigned sz = mysql_real_escape_string(my, asciiz, s.c_str(), s.size());
+    unsigned sz = (unsigned) 
+      mysql_real_escape_string(my, asciiz, s.c_str(), s.size());
     std::string result(asciiz, sz);
     delete [] asciiz;
     return result;
@@ -1014,7 +1015,7 @@ namespace rdbModel {
         // compare sql size to enum value sizes
         sqlSize = extractSize(sqlType);
         for (unsigned i = 0; i < choices.size(); i++) {
-          if (sqlSize < choices[i].size() ) {
+          if ((unsigned) sqlSize < choices[i].size() ) {
             m_matchReturn = MATCHfail;
             (*m_err) << "sql type " << sqlType << " too small for this Enum "
                     << std::endl;
