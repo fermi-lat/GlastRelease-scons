@@ -456,7 +456,7 @@ void GcrSelectTool::buildLayMatchMultCrit(){
 	       
 	  m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][1]," << "m_cluArr[" << itow<<"]["<<ilay<<"]["<< iClu <<"][2] = " << m_cluArr[itow][ilay][iClu][1]<<","<< m_cluArr[itow][ilay][iClu][2]<< endreq;	     
 
-          nbHitsInCluster =  m_cluArr[itow][ilay][iClu][2] -  m_cluArr[itow][ilay][iClu][1] + 1;
+          nbHitsInCluster =  (int)(m_cluArr[itow][ilay][iClu][2] -  m_cluArr[itow][ilay][iClu][1] + 1);
 
 	  m_log << MSG::VERBOSE << "nbHitsInCluster= " << nbHitsInCluster << endreq;
 		 
@@ -1517,7 +1517,8 @@ void GcrSelectTool::verifyExpectedEdep (){
 
 
 //-----------------------------------------------------------------------------------------------------------------
-int GcrSelectTool::inferZ(double correctedEnergy, int layerNum){
+//int GcrSelectTool::inferZ(double correctedEnergy, int layerNum){
+int GcrSelectTool::inferZ(double correctedEnergy){
 
   m_log << MSG::INFO << "GcrSelectTool BEGIN inferZ(double,int)" << endreq ; 
 
