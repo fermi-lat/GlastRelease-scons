@@ -140,8 +140,8 @@ public:
         return s;
     }
 private:
-    unsigned int  m_status;
     unsigned char m_id;
+    unsigned int  m_status;
     unsigned char m_sb;
     unsigned int  m_prescaler;
     unsigned int  m_energy;
@@ -200,8 +200,8 @@ public:
         return s;
     }
 private:
-    unsigned int  m_status;
     unsigned char m_id;
+    unsigned int  m_status;
     unsigned char m_sb;
     unsigned int  m_prescaler;
 };
@@ -230,8 +230,8 @@ public:
         return s;
     }
 private:
-    unsigned int  m_status;
     unsigned char m_id;
+    unsigned int  m_status;
     unsigned char m_sb;
     unsigned int  m_prescaler;
 };
