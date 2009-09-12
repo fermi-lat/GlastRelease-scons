@@ -313,7 +313,7 @@ StatusCode relationRootReaderAlg::readTkrDigiRelations(Relation* relation)
 
     // Get the list of related objects
     const TRefArray& relArrRoot = relation->getValueCol();
-    int              numRel     = relArrRoot.GetEntries();
+    /*int              numRel     =*/ relArrRoot.GetEntries();
 
     // Loop over the list
     for(int idx = 0; idx < relArrRoot.GetEntries(); idx++)
@@ -357,7 +357,7 @@ StatusCode relationRootReaderAlg::readCalDigiRelations(Relation* relation)
 
     // Get the list of related objects
     const TRefArray& relArrRoot = relation->getValueCol();
-    int              numRel     = relArrRoot.GetEntries();
+    /*int              numRel     =*/ relArrRoot.GetEntries();
 
     // Loop over the list
     for(int idx = 0; idx < relArrRoot.GetEntries(); idx++)
@@ -470,7 +470,7 @@ StatusCode relationRootReaderAlg::readMcParticleRelations(Relation* relation)
 
     // Get the list of related objects
     const TRefArray& relArrRoot = relation->getValueCol();
-    int              numRel     = relArrRoot.GetEntries();
+    /*int              numRel     =*/ relArrRoot.GetEntries();
 
     // Loop over the list
     for(int idx = 0; idx < relArrRoot.GetEntries(); idx++)
@@ -510,7 +510,7 @@ StatusCode relationRootReaderAlg::readMcTrajectoryPointRelations(Relation* relat
 
     // Get the list of related objects
     const TRefArray& relArrRoot = relation->getValueCol();
-    int              numRel     = relArrRoot.GetEntries();
+    /*int              numRel     =*/ relArrRoot.GetEntries();
 
     // Loop over the list
     for(int idx = 0; idx < relArrRoot.GetEntries(); idx++)

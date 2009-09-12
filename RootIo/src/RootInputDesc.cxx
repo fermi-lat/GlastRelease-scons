@@ -161,7 +161,7 @@ Long64_t RootInputDesc::setEventCollection( )
     // If necessary, set up the TChainIndex
     if (m_rebuildIndex)
     {
-        for (unsigned int iTree = 0; iTree < m_chain->GetNtrees(); iTree++) 
+        for (int iTree = 0; iTree < m_chain->GetNtrees(); iTree++) 
         {
             m_chain->LoadTree((m_chain->GetTreeOffset())[iTree]);
             m_chain->GetTree()->SetTreeIndex(0);
@@ -309,7 +309,7 @@ Long64_t RootInputDesc::setFileList( const StringArrayProperty & fileList, bool 
     // If necessary, set up the TChainIndex
     if (m_rebuildIndex) 
     {
-        unsigned int iTree;
+        int iTree;
         for (iTree = 0; iTree < m_chain->GetNtrees(); iTree++) 
         {
             m_chain->LoadTree((m_chain->GetTreeOffset())[iTree]);
@@ -407,7 +407,7 @@ TObject * RootInputDesc::getEvent( int runNum, int evtNum )
 
  bool RootInputDesc::checkEventAvailability( Long64_t index ) 
  {
-    TDirectory * saveDir = gDirectory ;	
+    //TDirectory * saveDir = gDirectory ;	
     if (!m_chain) return false;
     if (index < 0) return false;
     if (index > m_chain->GetEntries()) return false;

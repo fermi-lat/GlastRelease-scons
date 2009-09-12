@@ -136,7 +136,7 @@ StatusCode ntupleRootReaderAlg::initialize()
        if (m_rootTupleSvc) {
          log << MSG::INFO << "looking to RootTupleSvc for input file list" 
              << endreq;
-         bool stat = m_rootTupleSvc->getInputFileList(m_fileList);
+         /*bool stat =*/ m_rootTupleSvc->getInputFileList(m_fileList);
          if (m_fileList.size() <= 0) {
              log << MSG::ERROR << "No input files specified" << endreq;
              return StatusCode::FAILURE; 
@@ -190,7 +190,7 @@ StatusCode ntupleRootReaderAlg::initialize()
     for (iBranch=0;iBranch<numBranches;iBranch++) {
         std::string branchName(((TBranch*)(brCol->At(iBranch)))->GetName());
         std::string leafName = branchName;
-        int index = leafName.find("[");
+        size_t index = leafName.find("[");
         if(index!=std::string::npos) leafName = leafName.substr(0,index); 
         log << MSG::DEBUG << "setting branch: " << branchName
             << " and Leaf: " << leafName << endreq;

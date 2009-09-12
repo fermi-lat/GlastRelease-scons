@@ -108,15 +108,15 @@ StatusCode testReadAlg::readEvtHeader() {
 
     if (!evtTds) return sc;
 
-    int evtId = evtTds->event();
-    int runId = evtTds->run();
+    /*int evtId =*/ evtTds->event();
+    /*int runId =*/ evtTds->run();
 
     SmartDataPtr<Event::MCEvent> mcEvt(eventSvc(), EventModel::MC::Event);
     if (!mcEvt) return sc;
 
-    int sourceid = mcEvt->getSourceId();
-    int seq = mcEvt->getSequence();
-    double t = mcEvt->time();
+    /*int sourceid =*/ mcEvt->getSourceId();
+    /*int seq =*/ mcEvt->getSequence();
+    /*double t =*/ mcEvt->time();
 
     return sc;
 }
