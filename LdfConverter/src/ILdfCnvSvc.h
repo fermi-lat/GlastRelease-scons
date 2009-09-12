@@ -23,7 +23,8 @@ public:
     Leaf(const std::string& p, const CLID& c, const std::string& b, long u)
       : userParameter(u), path(p), bank(b), clid(c) {}
     Leaf(const Leaf& copy) 
-      : userParameter(copy.userParameter), path(copy.path), bank(copy.bank), 
+      : std::vector<Leaf*>(copy),userParameter(copy.userParameter), 
+        path(copy.path), bank(copy.bank), 
         clid(copy.clid) {}
     Leaf& operator=(const Leaf& copy)   {
       path = copy.path;
