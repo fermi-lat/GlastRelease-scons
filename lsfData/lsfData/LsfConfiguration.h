@@ -40,7 +40,7 @@ namespace lsfData {
     virtual void clear() {
     }
 
-    virtual void print(const std::string &str="") const {printf("%s\n",str); }
+    virtual void print(const std::string &str="") const {printf("%s\n",str.c_str()); }
 
     friend std::ostream& operator<< ( std::ostream& s, const Configuration& /*o*/) {        return s;
     }

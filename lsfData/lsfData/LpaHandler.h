@@ -41,7 +41,7 @@ namespace lsfData {
     enums::Lsf::HandlerId id() const { return m_id; }    
 
 
-    void print(const std::string &str="") const { printf("%s\n", str);}
+    void print(const std::string &str="") const { printf("%s\n", str.c_str());}
 
     friend std::ostream& operator<< ( std::ostream& s, const LpaHandler& /*o*/) { return s; };
     
