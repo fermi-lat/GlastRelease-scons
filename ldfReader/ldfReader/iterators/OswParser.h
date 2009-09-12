@@ -55,13 +55,13 @@ namespace ldfReader {
 
         }
 
-        virtual int OSW_UDF(EBFevent* event, OSWcontribution* contribution)const {
+        virtual int OSW_UDF(EBFevent* /*event*/, OSWcontribution* contribution)const {
             fprintf(stderr, "Undefined OSW contribution encountered with identity %08x\n", contribution->identity().value());
             return 0;
         } ;
 
 
-        virtual int handleError(OSWcontribution *contribution, unsigned code,
+        virtual int handleError(OSWcontribution* /*contribution*/, unsigned code,
                                 unsigned p1=0, unsigned p2=0) const {
             fprintf(stderr, "MyOSWiterator::handleError:  Somehow an error occured. \n ");
             fprintf(stderr, "  code=%d, p1=%d, p2=%d\n", code, p1, p2);

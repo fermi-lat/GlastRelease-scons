@@ -575,7 +575,7 @@ double LdfParser::timeForTds() {
     double ppcSeconds =  upper + lower;
     float ppcWholeSeconds = floor(ppcSeconds);
     double frac = ppcSeconds - ppcWholeSeconds;
-    int ppcNanoSec = frac / 0.000000001;
+    int ppcNanoSec = (int)floor(frac / 0.000000001);
 
     // To eliminate duplicate times, we make use of the PPC time as suggested
     // by Jim Panetta.  Here we ignore the fractional seconds from the "real"

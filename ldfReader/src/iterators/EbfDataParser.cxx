@@ -77,14 +77,14 @@ int EbfDataParser::OSW_time(const EBFevent*            /*event*/,
 
 
 
-int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
+int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* /*end*/)
 {
     //(LATcontribution*) eventString = const_cast<LATcontribution*>event;
   if (event->identity().getPrimary() == Pri_Id_BtAncEvt) {
     if (EbfDebug::getDebug()==EbfDebug::ALL)
         printf("Found BtAncEvt, 0x%08X\n", event->identity().value());
     const unsigned char* buf = (const_cast<LATcontribution*>(event))->string(false);
-    int status = m_adf.parseEvent(buf);
+    /*int status = */m_adf.parseEvent(buf);
 
     //unsigned int *h = &((unsigned int*)buf)[0];
     //unsigned int ver =(h[0] >> 20) & 0xfff;
@@ -101,7 +101,7 @@ int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
       if (EbfDebug::getDebug()==EbfDebug::ALL)
           printf("Found BtAncHdr, 0x%08X\n", event->identity().value());
       const unsigned char* buf = (const_cast<LATcontribution*>(event))->string(false);
-      int status = m_adf.parseHeader(buf);
+      /*int status =*/m_adf.parseHeader(buf);
 
       //unsigned int *h = &((unsigned int*)buf)[0];
       //unsigned int ver =(h[0] >> 20) & 0xfff;
@@ -113,7 +113,7 @@ int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
       if (EbfDebug::getDebug()==EbfDebug::ALL)
           printf("Found BtAncTlr, 0x%08X\n", event->identity().value());
       const unsigned char* buf = (const_cast<LATcontribution*>(event))->string(false);
-      int status = m_adf.parseTrailer(buf);
+      /*int status = */m_adf.parseTrailer(buf);
   } else {
       fprintf(stderr, "EbfDataParser::UDF: "
           "Found unrecognized LATdatagram contribution type 0x%08X\n",
@@ -125,7 +125,7 @@ int EbfDataParser::UDF(const LATcontribution* event, const LATcontribution* end)
 
 }
 
-int EbfDataParser::UDF(const EBFevent* event, const EBFcontribution* contribution)
+int EbfDataParser::UDF(const EBFevent* /*event*/, const EBFcontribution* /*contribution*/)
 {
     printf("Found UDF in EbfDataParser\n");
     //fprintf (stderr, "\nUndefined EBF component\n");
@@ -206,12 +206,12 @@ int EbfDataParser::GEM(const EBFevent *event, const EBFcontribution *ebf_contrib
 }
 
 int EbfDataParser::commonComponentData(EBFcontribution *contribution) {
-        int len = contribution->length();
+        /*int len =*/ contribution->length();
         // printed in hex
-        int error = contribution->packetError();
-        int seqNum = contribution->sequence();
+        /*int error =*/ contribution->packetError();
+        /*int seqNum =*/ contribution->sequence();
         // LCB header  printed in hex
-        int header = contribution->header();
+        /*int header =*/ contribution->header();
         return 0;
     }
 

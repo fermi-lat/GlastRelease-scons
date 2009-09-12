@@ -70,12 +70,12 @@ namespace ldfReader {
         void initTmo(unsigned short tmo) { m_tmo = tmo; };
 
         void setTkrFifoFull(unsigned int gtcc, unsigned char val=1) {
-           if((gtcc >= 0) && (gtcc < enums::numGtcc))
+           if (gtcc < enums::numGtcc)
                m_tkrFifoFullCol[gtcc] = val;
         }
         const unsigned char* tkrFifoFull() const { return m_tkrFifoFullCol; };
         unsigned int tkrFifoFull(unsigned gtcc) const { 
-            if ((gtcc >= 0) && (gtcc < enums::numGtcc) ) 
+            if (gtcc < enums::numGtcc)  
                 return ((unsigned int)m_tkrFifoFullCol[gtcc]); 
         }
 

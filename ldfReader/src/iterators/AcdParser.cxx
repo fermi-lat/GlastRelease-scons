@@ -223,7 +223,7 @@ void AcdParser::pha(unsigned cable, unsigned channel, ACDpha p)
 
   AcdDigi::PmtSide digiSide = (side == 'A') ? AcdDigi::A : AcdDigi::B;
 
-  char *pEnd;
+  // HMK Unused? char *pEnd;
 
   // Retrieve the AcdDigi or create a new AcdDigi object if necessary
   AcdDigi* acd = curLatData->getAcd(tileName.c_str());
@@ -280,7 +280,7 @@ int AcdParser::gaemTMOerror(unsigned cable)
   return 0;
 }
 
-int AcdParser::gaemHDRParityError(unsigned cable, AEMheader hdr)
+int AcdParser::gaemHDRParityError(unsigned cable, AEMheader /*hdr*/)
 {
   fprintf(stream(), "AcdParser:"
                     "Header parity error for cable %d\n",
@@ -288,7 +288,7 @@ int AcdParser::gaemHDRParityError(unsigned cable, AEMheader hdr)
   return 0;
 }
 
-int AcdParser::gaemPHAParityError(unsigned cable, unsigned channel, ACDpha p)
+int AcdParser::gaemPHAParityError(unsigned cable, unsigned channel, ACDpha /*p*/)
 {
   fprintf(stream(), "AcdParser:"
                     "PHA parity error for cable %d, channel %d\n",

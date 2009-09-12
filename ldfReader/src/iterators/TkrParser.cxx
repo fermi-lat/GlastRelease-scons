@@ -75,7 +75,7 @@ namespace ldfReader {
         using namespace ldfReader;
 
         // Retrieve the tower object we wish to update with this TKR data
-        unsigned int towerId = LATPcellHeader::source(contribution()->header());
+        /* unsigned int towerId =*/ LATPcellHeader::source(contribution()->header());
         LatData* curLatData = LatData::instance();
         TowerData* tData = curLatData->getTower(tower);
         if (!tData) {

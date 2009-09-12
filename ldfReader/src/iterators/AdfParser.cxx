@@ -52,8 +52,8 @@ int AdfParser::parseEvent(const unsigned char* buf ) {
     adf->initLength(evtLen);
     unsigned int evtNum = h[2] & 0xfffffff;
     adf->initEventNum(evtNum);
-    unsigned int spillNum = (h[3] >> 12) & 0xffff;
-    unsigned int spillSize = h[3] & 0xfff;
+    // HMK Unused? unsigned int spillNum = (h[3] >> 12) & 0xffff;
+    // HMK Unused? unsigned int spillSize = h[3] & 0xfff;
     adf->initBuffer(buf,evtLen);
     if (EbfDebug::getDebug()) {
         printf("ver: 0x%08X %u, len: 0x%08X %u\n", ver, ver, evtLen, evtLen);
@@ -62,7 +62,7 @@ int AdfParser::parseEvent(const unsigned char* buf ) {
     return 0;
 }
 
-int AdfParser::parseTrailer(const unsigned char* buf) {
+int AdfParser::parseTrailer(const unsigned char* /*buf*/) {
 
     ldfReader::LatData* curLatData = ldfReader::LatData::instance();
     curLatData->setAdfHdrTlr(true);
