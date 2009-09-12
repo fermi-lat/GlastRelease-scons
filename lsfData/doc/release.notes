@@ -5,6 +5,7 @@ Coordinator:H.Kelly
 @verbatim
 * EOH *
 
+v4r3p1  11-Sep-2009 HMK fix warnings
 v4r3    03-Oct-2008 HMK Comment out dumpEvent for now, until LDF v7 shakes out
 v4r2p1  19-Sep-2008 HMK Really completely handle GammaRsdV3
 v4r2    18-Sep-2008 HMK Add GammaRsdV3 to LpaHandlers in anticipation of new

@@ -41,9 +41,9 @@ namespace lsfData {
     enums::Lsf::HandlerId id() const { return m_id; }    
 
 
-    void print(const std::string &str="") const { }
+    void print(const std::string &str="") const { printf("%s\n", str);}
 
-    friend std::ostream& operator<< ( std::ostream& s, const LpaHandler& o) { return s; };
+    friend std::ostream& operator<< ( std::ostream& s, const LpaHandler& /*o*/) { return s; };
     
 
     void set(unsigned int masterKey, unsigned int cfgKey, unsigned int cfgId, 
