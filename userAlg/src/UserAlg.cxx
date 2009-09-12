@@ -169,10 +169,14 @@ StatusCode UserAlg::execute()
     if (particles) {
         
         Event::McParticleCol::const_iterator piter;
-        
-        for (piter = particles->begin(); piter != particles->end(); piter++) {
+        int count = 0;
+        for (piter = particles->begin(); piter != particles->end(); piter++, count++) {
             const Event::McParticle& mcp = **piter;
-            
+            log << MSG::DEBUG ;
+            if(log.isActive()) {
+                log << "Particle ", << count << ", 4Momentum: " 
+                    << mcp.initialFourMomentum() << endl;
+            }
         }
     }
 
