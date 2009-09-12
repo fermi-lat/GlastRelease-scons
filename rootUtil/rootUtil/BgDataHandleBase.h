@@ -44,7 +44,7 @@ public:
   // Default c'tor
   BgDataHandleBase(){;}
   // Copy c'tor
-  BgDataHandleBase(const BgDataHandleBase& other){;}
+  BgDataHandleBase(const BgDataHandleBase& /*other*/){;}
   // D'tor
   virtual ~BgDataHandleBase();
 

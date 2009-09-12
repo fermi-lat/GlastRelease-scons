@@ -46,11 +46,11 @@ int main(int argn, char** argc)
 # endif
 
   std::string printFlags;
-  UInt_t optval_s(0);
-  UInt_t optval_n(10);
+  // HMK Unused UInt_t optval_s(0);
+  // HMK Unused UInt_t optval_n(10);
 
   // parse options
-  char* endPtr;  
+  // HMK Unused char* endPtr;  
   int opt;
   while ( (opt = getopt(argn, argc, "hp:n:s:")) != EOF )
    {
