@@ -174,8 +174,8 @@ StatusCode UserAlg::execute()
             const Event::McParticle& mcp = **piter;
             log << MSG::DEBUG ;
             if(log.isActive()) {
-                log << "Particle ", << count << ", 4Momentum: " 
-                    << mcp.initialFourMomentum() << endl;
+                log << "Particle " << count << ", 4Momentum: " 
+                    << mcp.initialFourMomentum() << endreq;
             }
         }
     }
