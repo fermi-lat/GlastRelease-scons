@@ -30,14 +30,14 @@ void McPositionHit::Clear(Option_t *)
     m_volumeId.Clear();
 }
 
-void* McPositionHit::operator new(size_t size)
+void* McPositionHit::operator new(size_t /*size*/)
 {
     McPositionHit* temp = McObjectManager::getPointer()->getNewMcPositionHit();
 
     return temp;
 }
 
-void* McPositionHit::operator new(size_t size, void* vp)
+void* McPositionHit::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }

@@ -47,7 +47,7 @@ McParticle::~McParticle() {
     Clear();
 }
 
-void* McParticle::operator new(size_t size)
+void* McParticle::operator new(size_t /*size*/)
 {
     McParticle* temp = McObjectManager::getPointer()->getNewMcParticle();
 
@@ -58,7 +58,7 @@ void* McParticle::operator new(size_t size)
     return temp;
 }
 
-void* McParticle::operator new(size_t size, void* vp)
+void* McParticle::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }

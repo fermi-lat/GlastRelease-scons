@@ -23,7 +23,7 @@ void McIntegratingHit::initialize(const VolumeIdentifier& id) {
 }
 
 
-void* McIntegratingHit::operator new(size_t size)
+void* McIntegratingHit::operator new(size_t /*size*/)
 {
     McIntegratingHit* temp = McObjectManager::getPointer()->getNewMcIntegratingHit();
 
@@ -34,7 +34,7 @@ void* McIntegratingHit::operator new(size_t size)
     return temp;
 }
 
-void* McIntegratingHit::operator new(size_t size, void* vp)
+void* McIntegratingHit::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }

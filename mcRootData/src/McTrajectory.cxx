@@ -37,7 +37,7 @@ void McTrajectory::initialize()
 }
 
 
-void* McTrajectory::operator new(size_t size)
+void* McTrajectory::operator new(size_t /*size*/)
 {
     McTrajectory* temp = McObjectManager::getPointer()->getNewMcTrajectory();
 
@@ -49,7 +49,7 @@ void* McTrajectory::operator new(size_t size)
     return temp;
 }
 
-void* McTrajectory::operator new(size_t size, void* vp)
+void* McTrajectory::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
@@ -77,7 +77,7 @@ void McTrajectory::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
     Clear() ;
     
     Float_t f = Float_t(rank) ;
-    Float_t fr = f*randNum ;
+    // HMK Unused? Float_t fr = f*randNum ;
 
     McTrajectoryPoint* point = new McTrajectoryPoint();
     point->Fake(0, rank, randNum);
@@ -147,19 +147,20 @@ void McTrajectoryPoint::initialize(VolumeIdentifier id, Float_t energy, const TV
 
 void McTrajectoryPoint::Clear(Option_t *option)
 {
+    TObject::Clear(option);
     m_volumeID.Clear();
     m_energy = 0.;
     m_point = TVector3(0.,0.,0.);
 }
 
-void* McTrajectoryPoint::operator new(size_t size)
+void* McTrajectoryPoint::operator new(size_t /*size*/)
 {
     McTrajectoryPoint* temp = McObjectManager::getPointer()->getNewMcTrajectoryPoint();
 
     return temp;
 }
 
-void* McTrajectoryPoint::operator new(size_t size, void* vp)
+void* McTrajectoryPoint::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
@@ -173,7 +174,7 @@ McTrajectoryPoint& McTrajectoryPoint::operator =(const McTrajectoryPoint& rhs)
     return *this;
 }
 
-void McTrajectoryPoint::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) 
+void McTrajectoryPoint::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) 
 {
     Clear() ;
     
@@ -187,7 +188,7 @@ void McTrajectoryPoint::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
     initialize(id,f,position);
 }
 
-Bool_t McTrajectoryPoint::CompareInRange( const McTrajectoryPoint & ref, const std::string & name ) const
+Bool_t McTrajectoryPoint::CompareInRange( const McTrajectoryPoint & ref, const std::string & /*name*/ ) const
 {
     bool result = true;
 
@@ -198,6 +199,6 @@ Bool_t McTrajectoryPoint::CompareInRange( const McTrajectoryPoint & ref, const s
     return result;
 }
 
-void McTrajectoryPoint::Print(Option_t *option) const
+void McTrajectoryPoint::Print(Option_t* /*option*/) const
 {
 }
