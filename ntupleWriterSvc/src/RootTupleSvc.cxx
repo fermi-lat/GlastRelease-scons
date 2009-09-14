@@ -478,7 +478,7 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             for (iBranch=0;iBranch<numBranches;iBranch++) {
                 std::string branchName(((TBranch*)(brCol->At(iBranch)))->GetName());
                 std::string leafName = branchName;
-                int index = leafName.find("[");
+                size_t index = leafName.find("[");
                 if(index!=std::string::npos) leafName = leafName.substr(0,index); 
                 log << MSG::DEBUG << "setting branch: " << branchName
                     << " and Leaf: " << leafName << endreq;
@@ -790,7 +790,7 @@ StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
         TLeaf* leaf = (TLeaf*)(*b->GetListOfLeaves())[0]; 
         double val = leaf->GetValue();
         log << MSG::DEBUG << leaf->GetName() << " val: " << val << endreq;
-        void* valpointer = leaf->GetValuePointer();
+        // HMK Unused? void* valpointer = leaf->GetValuePointer();
         if( ! isFinite(val) ){
             log << MSG::DEBUG  << "Tuple item " << leaf->GetName() << " is not finite!" << endreq;
             m_badMap[leaf->GetName()]++;

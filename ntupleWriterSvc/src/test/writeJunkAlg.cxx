@@ -12,6 +12,7 @@
 #include "GaudiKernel/StatusCode.h"
 
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
+#include <cmath>
 
 /**
  * @class writeJunkAlg
@@ -126,7 +127,8 @@ StatusCode writeJunkAlg::execute() {
     ++m_count;
     m_square= m_count*m_count;
     // test int value
-    m_int=m_uint=m_count;
+    m_int=(int)floor(m_count);
+    m_uint=(unsigned int)floor(m_count);
     // see that array really works
     m_array[0]= m_int;
     m_array[1]= 2*m_int;
