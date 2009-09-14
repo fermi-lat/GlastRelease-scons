@@ -374,7 +374,7 @@ void convert( const OnboardFilterTds::IObfStatus& tdsObj, ObfGammaStatus& rootOb
 {
     const OnboardFilterTds::ObfGammaStatus& gamObj = dynamic_cast<const OnboardFilterTds::ObfGammaStatus&>(tdsObj);
 
-    rootObj = ObfGammaStatus(gamObj.getFilterId(), gamObj.getStatusWord(), gamObj.getFiltersb(), gamObj.getPrescalerWord(), gamObj.getEnergy());
+    rootObj = ObfGammaStatus(gamObj.getFilterId(), gamObj.getStatusWord(), gamObj.getFiltersb(), gamObj.getPrescalerWord(), gamObj.getEnergyInLeus());
 
     return;
 }
@@ -384,7 +384,7 @@ void convert( const IObfStatus& rootObj, OnboardFilterTds::ObfGammaStatus& tdsOb
 {
     const ObfGammaStatus& gamObj = dynamic_cast<const ObfGammaStatus&>(rootObj);
 
-    tdsObj = OnboardFilterTds::ObfGammaStatus(gamObj.getFilterId(), gamObj.getStatusWord(), gamObj.getFiltersb(), gamObj.getPrescalerWord(), gamObj.getEnergy());
+    tdsObj = OnboardFilterTds::ObfGammaStatus(gamObj.getFilterId(), gamObj.getStatusWord(), gamObj.getFiltersb(), gamObj.getPrescalerWord(), gamObj.getEnergyInLeus());
 
     return;
 }
