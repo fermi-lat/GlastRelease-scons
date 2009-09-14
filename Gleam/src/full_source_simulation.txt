@@ -40,7 +40,7 @@ FluxAlg.AvoidSAA   = true;          // no events if in SAA
 //         Trigger, filter
 //
 LiveTimeAlg.deadtime        = 26e-6;// deadtime per trigger
-TriggerAlg.mask             = 26;   // TKR(2) + HICAL(8) + CNO(16) 
+TriggerAlg.mask             = "26";   // TKR(2) + HICAL(8) + CNO(16) 
 TriggerAlg.throttle         = true; // ignore if TKR + Throttle
 OnboardFilter.RejectEvents  = true; // set the filter to reject events, 
                                     // turn on all bits (only low 16 count)
