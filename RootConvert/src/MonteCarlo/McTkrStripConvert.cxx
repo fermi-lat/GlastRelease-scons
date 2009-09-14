@@ -19,7 +19,7 @@ void convert( const Event::McTkrStrip & tdsStrip, McTkrStrip & rootStrip )
     return;
 }
  
-void convert( const McTkrStrip & rootstrip, Event::McTkrStrip & tdsstrip ) 
+void convert( const McTkrStrip & /*rootstrip*/, Event::McTkrStrip & /*tdsstrip*/ ) 
 {
     return;
 }

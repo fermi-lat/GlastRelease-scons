@@ -2,6 +2,7 @@
 #include <RootConvert/GcrSelect/GcrSelectValsConvert.h>
 //#include <RootConvert/Recon/CalParamsConvert.h>
 #include <RootConvert/Utilities/Toolkit.h>
+#include <cmath>
 
 namespace RootPersistence {
 
@@ -13,7 +14,7 @@ void convert( const Event::GcrSelectVals& gcrSelectValsTds, GcrSelectVals& gcrSe
     
     Int_t inferedZ=gcrSelectValsTds.getInferedZ();
     Int_t acdZ=gcrSelectValsTds.getAcdZ();
-    Int_t interactionParams=gcrSelectValsTds.getInteractionParams();
+    Int_t interactionParams=(Int_t)floor(gcrSelectValsTds.getInteractionParams());
     UInt_t gcrOBFStatusWord=gcrSelectValsTds.getGcrOBFStatusWord();
 
     gcrSelectValsRoot.setInferedZ(inferedZ);

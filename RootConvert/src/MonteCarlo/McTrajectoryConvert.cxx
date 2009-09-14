@@ -4,7 +4,7 @@
 
 namespace RootPersistence {
 
-void convert( const Event::McTrajectory & tdsTrajectory, McTrajectory & rootTrajectory ) 
+void convert( const Event::McTrajectory & /*tdsTrajectory*/, McTrajectory & rootTrajectory ) 
 {
     // Initialize data members
     rootTrajectory.initialize();
@@ -13,7 +13,7 @@ void convert( const Event::McTrajectory & tdsTrajectory, McTrajectory & rootTraj
     return;
 }
  
-void convert( const McTrajectory & rootTrajectory, Event::McTrajectory & tdsTrajectory ) 
+void convert( const McTrajectory & /*rootTrajectory*/, Event::McTrajectory & /*tdsTrajectory*/ ) 
 {
     return;
 }
