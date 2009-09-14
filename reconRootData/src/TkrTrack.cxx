@@ -139,7 +139,7 @@ Bool_t TkrTrack::CompareInRange( const TkrTrack & ref, const std::string & name 
 
 }
 
-void* TkrTrack::operator new(size_t size)
+void* TkrTrack::operator new(size_t /*size*/)
 {
     TkrTrack* temp = ReconObjectManager::getPointer()->getNewTkrTrack();
 
@@ -149,12 +149,12 @@ void* TkrTrack::operator new(size_t size)
     return temp;
 }
 
-void* TkrTrack::operator new(size_t size, void* vp)
+void* TkrTrack::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
 
-void TkrTrack::operator delete(void* p)
+void TkrTrack::operator delete(void* /*p*/)
 {
     // Since we let ReconObjectManager handles memory, nothing to do here
     return;

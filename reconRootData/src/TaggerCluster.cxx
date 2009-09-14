@@ -49,6 +49,7 @@ void TaggerCluster::initXyz(Double_t x, Double_t y, Double_t z) {
 }
 
 void TaggerCluster::Clear(Option_t *option) {
+    TObject::Clear(option);
 
     if (m_taggerHitCol) m_taggerHitCol->Clear("C");
     m_numTaggerHit = -1;
@@ -96,7 +97,7 @@ commonRootData::TaggerHit* TaggerCluster::addTaggerHit(UInt_t moduleId,
 }
 
 
-void TaggerCluster::Fake( Int_t ievent, Float_t randNum ) {
+void TaggerCluster::Fake( Int_t /*ievent*/, Float_t /*randNum*/ ) {
     initialize(1.1, 2.2, 3.3);
     initXyz(4.4, 5.5, 6.6);
     // Add 2 TaggerHits

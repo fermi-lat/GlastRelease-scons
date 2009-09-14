@@ -94,7 +94,7 @@ void ReconEvent::Fake( Int_t /*ievent*/, Float_t /*randNum*/ ) {
 
 #define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
 
-Bool_t ReconEvent::CompareInRange( const ReconEvent & ref, const std::string & name ) const {
+Bool_t ReconEvent::CompareInRange( const ReconEvent & /*ref*/, const std::string & name ) const {
 
     bool result = true ;
 

@@ -14,7 +14,7 @@ void GcrXtal::print() const
  
 }
 
-void GcrXtal::Print(Option_t *option) const
+void GcrXtal::Print(Option_t* /*option*/) const
 {
   std::cout << "---> writeOutPrint GcrXtal" << std::endl;
   std::cout << "---> xtalID =" << getXtalId() << std::endl;
@@ -26,7 +26,7 @@ void GcrXtal::Print(Option_t *option) const
 // dummy data, just for tests
 //===================================================
 
-void GcrXtal::Fake( Int_t ievent, Int_t ixtal, Float_t randNum) 
+void GcrXtal::Fake( Int_t /*ievent*/, Int_t ixtal, Float_t /*randNum*/) 
 {
     setXtalId(CalXtalId(0,1,2)) ;
     setPathLength(1.*ixtal) ;

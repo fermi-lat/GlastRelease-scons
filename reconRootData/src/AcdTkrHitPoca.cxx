@@ -71,6 +71,6 @@ void AcdTkrHitPoca::Print(Option_t *option) const
 void AcdTkrHitPoca::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */) {
 }
 
-Bool_t AcdTkrHitPoca::CompareInRange( const AcdTkrHitPoca&, const std::string & name ) const {
+Bool_t AcdTkrHitPoca::CompareInRange( const AcdTkrHitPoca&, const std::string & /*name*/ ) const {
   return kTRUE;
 }

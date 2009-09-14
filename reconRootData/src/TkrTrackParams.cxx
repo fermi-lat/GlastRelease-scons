@@ -25,7 +25,7 @@ TkrTrackParams::TkrTrackParams(Double_t xPosition, Double_t xSlope, Double_t yPo
                ySlpySlp);
 }
 
-TkrTrackParams::TkrTrackParams(const TkrTrackParams& params)
+TkrTrackParams::TkrTrackParams(const TkrTrackParams& params) : TObject(params)
 {
     initialize(params);
 }
@@ -221,7 +221,7 @@ Bool_t TkrTrackParams::CompareInRange( const TkrTrackParams & ref, const std::st
 }
 
 
-void* TkrTrackParams::operator new(size_t size)
+void* TkrTrackParams::operator new(size_t /*size*/)
 {
     TkrTrackParams* temp = ReconObjectManager::getPointer()->getNewTkrTrackParams();
 
@@ -231,12 +231,12 @@ void* TkrTrackParams::operator new(size_t size)
     return temp;
 }
 
-void* TkrTrackParams::operator new(size_t size, void* vp)
+void* TkrTrackParams::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
 
-void TkrTrackParams::operator delete(void* p)
+void TkrTrackParams::operator delete(void* /*p*/)
 {
     // Since we let ReconObjectManager handles memory, nothing to do here
     return;

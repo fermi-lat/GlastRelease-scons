@@ -264,13 +264,13 @@ const double TkrTrackHit::getCoordinate(const TkrTrackParams& params, int coord)
 // For Unit Tests
 //======================================================
 
-void TkrTrackHit::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
+void TkrTrackHit::Fake( Int_t /*ievent*/, UInt_t /*rank*/, Float_t /*randNum*/ ) {
 
 }
 
 #define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
 
-Bool_t TkrTrackHit::CompareInRange( const TkrTrackHit & ref, const std::string & name ) const {
+Bool_t TkrTrackHit::CompareInRange( const TkrTrackHit & /*ref*/, const std::string & name ) const {
 
     bool result = true ;
 
@@ -288,7 +288,7 @@ Bool_t TkrTrackHit::CompareInRange( const TkrTrackHit & ref, const std::string &
 
 }
 
-void* TkrTrackHit::operator new(size_t size)
+void* TkrTrackHit::operator new(size_t /*size*/)
 {
     TkrTrackHit* temp = ReconObjectManager::getPointer()->getNewTkrTrackHit();
 
@@ -298,12 +298,12 @@ void* TkrTrackHit::operator new(size_t size)
     return temp;
 }
 
-void* TkrTrackHit::operator new(size_t size, void* vp)
+void* TkrTrackHit::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
 
-void TkrTrackHit::operator delete(void* p)
+void TkrTrackHit::operator delete(void* /*p*/)
 {
     // Since we let ReconObjectManager handles memory, nothing to do here
     return;

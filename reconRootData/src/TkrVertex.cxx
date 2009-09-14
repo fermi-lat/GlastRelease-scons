@@ -111,7 +111,7 @@ Bool_t TkrVertex::CompareInRange( const TkrVertex & ref, const std::string & nam
 }
 
 
-void* TkrVertex::operator new(size_t size)
+void* TkrVertex::operator new(size_t /*size*/)
 {
     TkrVertex* temp = ReconObjectManager::getPointer()->getNewTkrVertex();
 
@@ -121,12 +121,12 @@ void* TkrVertex::operator new(size_t size)
     return temp;
 }
 
-void* TkrVertex::operator new(size_t size, void* vp)
+void* TkrVertex::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
 
-void TkrVertex::operator delete(void* p)
+void TkrVertex::operator delete(void* /*p*/)
 {
     // Since we let ReconObjectManager handles memory, nothing to do here
     return;

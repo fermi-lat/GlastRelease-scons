@@ -71,6 +71,6 @@ void AcdTkrGapPoca::Print(Option_t *option) const
 void AcdTkrGapPoca::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */) {
 }
 
-Bool_t AcdTkrGapPoca::CompareInRange( const AcdTkrGapPoca&, const std::string & name ) const {
+Bool_t AcdTkrGapPoca::CompareInRange( const AcdTkrGapPoca&, const std::string & /*name*/ ) const {
   return kTRUE;
 }

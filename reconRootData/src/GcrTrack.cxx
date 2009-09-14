@@ -6,7 +6,7 @@
 ClassImp(GcrTrack)
 
 //-----------------------------------------------------------------------------------------------------------------
-void GcrTrack::Print(Option_t *option) const
+void GcrTrack::Print(Option_t */*option*/) const
 {
   std::cout << "---> writeOutPrint GcrTrack" << std::endl;
  
@@ -17,7 +17,7 @@ void GcrTrack::Print(Option_t *option) const
 // dummy data, just for tests
 //===================================================
 
-void GcrTrack::Fake( Int_t ievent, Float_t randNum) {
+void GcrTrack::Fake( Int_t /*ievent*/, Float_t /*randNum*/) {
     setDirection(TVector3(1.0,1.5, 1.9)) ;
     setDirError(TVector3(2.0, 2.5, 2.9)) ;
     setCalEntryPoint(TVector3(3.0, 4.0, 5.0));

@@ -37,7 +37,7 @@ void TkrRecon::initialize() {
 }
 
 void TkrRecon::Clear(Option_t* option) {
-    static Int_t limitTruncationData = 100;
+    // HMK Unused? static Int_t limitTruncationData = 100;
 
     // Tell the RECON object manager to reset its iterators
     ReconObjectManager::getPointer()->Delete(option);
@@ -68,7 +68,7 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
     const UInt_t NUM_CLUSTERS = 20;
     const UInt_t NUM_TRACKS = 15;
     const UInt_t NUM_VERTICES = 11;
-    const UInt_t NUM_TRUNCATION = 1;
+    // HMK Unused? const UInt_t NUM_TRUNCATION = 1;
 
     UInt_t icluster;
     for ( icluster = 0 ; icluster < NUM_CLUSTERS ; icluster++ ) 

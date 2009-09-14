@@ -92,6 +92,6 @@ void AcdSplashVars::Print(Option_t *option) const
 void AcdSplashVars::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */) {
 }
 
-Bool_t AcdSplashVars::CompareInRange( const AcdSplashVars&, const std::string & name ) const {
+Bool_t AcdSplashVars::CompareInRange( const AcdSplashVars&, const std::string& /* name*/ ) const {
   return kTRUE;
 }

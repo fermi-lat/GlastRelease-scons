@@ -68,7 +68,7 @@ void AcdPocaData::clear()
 }
 
 /// Print out this structure
-void AcdPocaData::print(Option_t *option) const 
+void AcdPocaData::print(Option_t* /*option*/) const 
 {
   using namespace std;    
   cout << "s: " << m_arcLength << "  d: " << m_doca << " +- " << m_docaErr 

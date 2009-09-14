@@ -115,7 +115,7 @@ Bool_t TkrCluster::CompareInRange( const TkrCluster & ref, const std::string & n
 
 }
 
-void* TkrCluster::operator new(size_t size)
+void* TkrCluster::operator new(size_t /*size*/)
 {
     TkrCluster* temp = ReconObjectManager::getPointer()->getNewTkrCluster();
 
@@ -125,12 +125,12 @@ void* TkrCluster::operator new(size_t size)
     return temp;
 }
 
-void* TkrCluster::operator new(size_t size, void* vp)
+void* TkrCluster::operator new(size_t /*size*/, void* vp)
 {
     return vp;
 }
 
-void TkrCluster::operator delete(void* p)
+void TkrCluster::operator delete(void* /*p*/)
 {
     // Since we let ReconObjectManager handles memory, nothing to do here
     return;

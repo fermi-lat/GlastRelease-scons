@@ -156,7 +156,7 @@ void CalRecon::Fake( Int_t ievent, Float_t randNum ) {
     }
 
     const int NUM_GCRXTALS = 3;
-    unsigned int igcrxtal;
+    int igcrxtal;
     for (igcrxtal=0; igcrxtal < NUM_GCRXTALS; igcrxtal++) {
         GcrXtal *xtal=addGcrXtal();
         xtal->Fake(ievent,igcrxtal,randNum);
