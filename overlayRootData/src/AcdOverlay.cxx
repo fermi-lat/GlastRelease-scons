@@ -39,6 +39,7 @@ AcdOverlay::AcdOverlay(const VolumeIdentifier& volId,
 
 void AcdOverlay::Clear(Option_t *option) 
 {
+    TObject::Clear(option);
     return;
 }
 

@@ -14,6 +14,7 @@ TkrOverlay::~TkrOverlay (){
 }
 
 void TkrOverlay::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_bilayer = 0;
     m_tower = 0;
     m_tot[0] = 0;
@@ -46,12 +47,20 @@ void TkrOverlay::initialize(Int_t l, GlastAxis::axis v, TowerId t, Int_t* tot)
 
 Int_t TkrOverlay::getHit(UInt_t i) const
 {
-    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+//    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+    if (i < m_hitCol.size())
+        return m_hitCol[i];
+    else
+        return -1;
 }
 
 Int_t TkrOverlay::getStrip(UInt_t i) const
 {
-    return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+    //return (i < m_hitCol.size() ? m_hitCol[i] : -1);
+    if (i < m_hitCol.size())
+        return m_hitCol[i];
+    else
+        return -1;
 }
 
 Int_t TkrOverlay::getToT(UInt_t i) const {

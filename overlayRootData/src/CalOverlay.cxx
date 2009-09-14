@@ -30,6 +30,7 @@ void CalOverlay::initialize(const CalXtalId &id, const TVector3& position, const
 }
 
 void CalOverlay::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_xtalId.Clear();
     m_position = TVector3(0.,0.,0.);
     m_energy   = 0.;

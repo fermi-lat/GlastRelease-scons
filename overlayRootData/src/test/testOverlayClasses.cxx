@@ -72,7 +72,7 @@ int checkEventOverlay(EventOverlay *evt, UInt_t ievent)
     return 0;
 }
 
-int checkCalOverlay(CalOverlay *digi, UInt_t ievent) 
+int checkCalOverlay(CalOverlay *digi, Int_t ievent) 
 {
     // Checks the contents of one CalOverlay object
 
@@ -100,7 +100,7 @@ int checkCalOverlay(CalOverlay *digi, UInt_t ievent)
     return 0;
 }
 
-int checkTkrOverlay(TkrOverlay *digi, UInt_t ievent, Int_t idigi) 
+int checkTkrOverlay(TkrOverlay *digi, UInt_t /*ievent*/, UInt_t idigi) 
 {
     TowerId id = digi->getTower();
     if ((id.ix() != 3) || (id.iy() != 2) ) 
@@ -136,11 +136,11 @@ int checkTkrOverlay(TkrOverlay *digi, UInt_t ievent, Int_t idigi)
         return -1;
     }
 
-    Int_t istrip;
+    UInt_t istrip;
     for (istrip = 0; istrip < idigi; istrip++) 
     {
         Int_t strip = digi->getHit(istrip);
-        if (strip != istrip) {
+        if (strip != (Int_t)istrip) {
             std::cout << "TkrOverlay strip is wrong: " << strip << std::endl;
             return -1;
         }
@@ -160,13 +160,13 @@ int checkTkrOverlay(TkrOverlay *digi, UInt_t ievent, Int_t idigi)
         return -1;
     }
     
-    if (digi->getToT(0) != idigi) 
+    if (digi->getToT(0) != (Int_t)idigi) 
     {
         std::cout << "TkrOverlay ToT 0 is wrong: " << digi->getToT(0) << std::endl;
         return -1;
     }
     
-    if (digi->getToT(1) != idigi+1) 
+    if (digi->getToT(1) != (Int_t)idigi+1) 
     {
         std::cout << "TkrOverlay ToT 1 is wrong: " << digi->getToT(1) << std::endl;
         return -1;
@@ -215,9 +215,9 @@ int checkGem(const GemOverlay &gem)
     return 0; 
 }
 
-int checkAcdOverlay(AcdOverlay *digi, UInt_t ievent, UInt_t idigi) 
+int checkAcdOverlay(AcdOverlay *digi, UInt_t ievent, UInt_t /*idigi*/) 
 {
-    Float_t f = ievent;
+    // HMK Unused? Float_t f = ievent;
 
     if (!floatInRange(digi->getEnergyDep(), ievent*randNum) ) 
     {
@@ -281,7 +281,7 @@ int read(char* fileName, int numEvents)
         GemOverlay gemData = evt->getGemOverlay();
         if (checkGem(gemData) < 0) return -1;
 
-        UInt_t numCalOverlay = evt->getCalOverlayCol()->GetEntries();
+        /*UInt_t numCalOverlay =*/ evt->getCalOverlayCol()->GetEntries();
         const TObjArray *CalOverlayCol = evt->getCalOverlayCol();
         TIter CalOverlayIt(CalOverlayCol);
         CalOverlay *digi = 0;

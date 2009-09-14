@@ -31,8 +31,8 @@ void PtOverlay::initialize(const Double_t  start,
                            const Float_t   rad_geo,
                            const Float_t   ra_scz,
                            const Float_t   dec_scz,
-                           const Float_t   ra_scx,
-                           const Float_t   dec_scx,
+                           const Float_t   /*ra_scx*/,
+                           const Float_t   /*dec_scx*/,
                            const Float_t   zenith_scz,
                            const Float_t   B,
                            const Float_t   L,
@@ -61,6 +61,7 @@ void PtOverlay::initialize(const Double_t  start,
 }
 
 void PtOverlay::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_start       = 0.;
     m_sc_position = TVector3(0.,0.,0.);
     m_lat_geo     = 0.;

@@ -50,6 +50,7 @@ void EventOverlay::initialize(UInt_t eventId, UInt_t runId, Double_t time,
 
 void EventOverlay::Clear(Option_t *option) 
 {
+    TObject::Clear(option);
     m_eventId = 0;
     m_runId = 0;
     m_timeStamp = 0.0;
