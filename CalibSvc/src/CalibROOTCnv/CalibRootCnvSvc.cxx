@@ -122,7 +122,7 @@ StatusCode CalibRootCnvSvc::createAddress(long svc_type,
 
   MsgStream log( msgSvc(), name() );
 
-  if (svc_type != CALIBROOT_StorageType) {
+  if ((unsigned) svc_type != CALIBROOT_StorageType) {
     log << MSG::ERROR << "bad storage type" << (int)svc_type << endreq;
     return StatusCode::FAILURE;
   }

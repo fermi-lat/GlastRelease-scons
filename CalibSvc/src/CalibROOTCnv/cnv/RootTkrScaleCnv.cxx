@@ -154,11 +154,12 @@ StatusCode RootTkrScaleCnv::readUnis(TTree* tree, int iTow,
     dest->resize(nObjs, rootUni->childIsStrip() );
 
     if (nObjs > 0) {   // copy strip or gtfe info
-      for (unsigned iObj = 0;  iObj < nObjs; iObj++) {
+      for (unsigned iObj = 0;  iObj < (unsigned) nObjs; iObj++) {
         const calibRootData::ChargeScaleObj* rObj = rootUni->getObj(iObj);
         TkrScaleObj tdsObj(rObj->getId(), rObj->getScale(),
                              rObj->getError(), rObj->getChi2(), rObj->getDf());
-        bool ok = dest->putObj(tdsObj);
+        // bool ok = 
+        dest->putObj(tdsObj);
       }
     }    
     delete rootUni;  // is this required or forbidden?

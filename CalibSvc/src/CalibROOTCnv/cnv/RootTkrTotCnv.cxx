@@ -152,12 +152,13 @@ StatusCode RootTkrTotCnv::readUnis(TTree* tree, int iTow,
     dest->resize(nStrips);
 
     if (nStrips > 0) {   // copy strip info
-      for (unsigned iStrip = 0;  iStrip < nStrips; iStrip++) {
+      for (unsigned iStrip = 0;  iStrip < (unsigned) nStrips; iStrip++) {
         const calibRootData::TotStrip* rStrip = rootUni->getStrip(iStrip);
         TkrTotStrip tdsStrip(rStrip->getStripId(), rStrip->getSlope(),
                              rStrip->getIntercept(), rStrip->getQuad(),
                              rStrip->getChi2(), rStrip->getDf());
-        bool ok = dest->putStrip(tdsStrip);
+        // bool ok = 
+        dest->putStrip(tdsStrip);
       }
     }    
     delete rootUni;
