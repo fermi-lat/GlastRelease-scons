@@ -102,7 +102,8 @@ public:
     UChar_t getFiltersb()      const {return m_sb;}
     UInt_t  getPrescalerWord() const {return m_prescaler;}
 
-    UInt_t  getEnergy()        const {return m_energy & 0x00FFFFFF;}
+    UInt_t  getEnergyInLeus()  const;
+    Float_t getEnergy()        const {return getEnergyInLeus() / 4.;}
     UInt_t  getStage()         const {return (m_energy & 0xFF000000) >> 24;}
     
     void Clear(Option_t *option ="");
@@ -115,7 +116,7 @@ private:
     UInt_t  m_prescaler;
     UInt_t  m_energy;
 
-    ClassDef(ObfGammaStatus,5) // Gamma Filter output
+    ClassDef(ObfGammaStatus,6) // Gamma Filter output
 };
 
 class ObfHipStatus : virtual public IObfStatus, public TObject
