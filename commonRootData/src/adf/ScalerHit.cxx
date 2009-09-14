@@ -42,6 +42,7 @@ ScalerHit& ScalerHit::operator=(const ScalerHit& copy) {
 
 
 void ScalerHit::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_channel = 0;
     m_value = 0;
 }

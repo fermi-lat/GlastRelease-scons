@@ -55,6 +55,7 @@ const Relation* RelTable::getRelByFirst(const TObject *key) const {
 }
 
 void RelTable::Clear(Option_t *option) {
+    TObject::Clear(option);
     if (m_table) 
     {
         m_table->Clear();

@@ -51,6 +51,7 @@ TaggerHit& TaggerHit::operator=(const TaggerHit& copy) {
 
 
 void TaggerHit::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_moduleId = 0;
     m_layerId = 0;
     m_stripId = 0;

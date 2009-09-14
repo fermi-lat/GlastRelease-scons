@@ -36,6 +36,7 @@ void Relation::initialize(TRef key, const TRefArray& valueCol) {
 }}
 
 void Relation::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_key = 0;
     m_valueCol.Clear();
 }

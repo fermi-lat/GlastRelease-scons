@@ -48,6 +48,7 @@ QdcHit& QdcHit::operator=(const QdcHit& copy) {
 
 
 void QdcHit::Clear(Option_t *option) {
+    TObject::Clear(option);
     m_channel = 0;
     m_module = 0;
     m_pulseHeight = 0.0;

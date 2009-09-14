@@ -13,6 +13,7 @@ TowerId::TowerId (UInt_t ix, UInt_t iy):m_id(ix+xNum*iy)
 }
 
 void TowerId::Clear(Option_t *option) {
+    TObject::Clear(option);
 
 }
 
