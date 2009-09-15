@@ -4,6 +4,8 @@ Coordinator:H.Kelly
 
 EOH
 
+v11r14p0  15-Sep-2009 TU  HMK Tag Tracy's updates to ObfFilterStatus.h to 
+          store energy in LEUs and return methods to the TDS
 v11r13p1  10-Sep-2009 HMK Fix up warnings
 v11r13    11-Mar-2009 HMK Add TemBug check in EventSummary
 v11r12    18-Sep-2008 HMK Add GammaFilterV3 for FSW B1-1-2

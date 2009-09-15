@@ -56,7 +56,7 @@ void ObfFilterStatus::Clear(Option_t *)
 }
 
 // dummy data, just for tests
-void ObfFilterStatus::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
+void ObfFilterStatus::Fake( Int_t /*ievent*/, UInt_t /*rank*/, Float_t /*randNum*/ ) {
 
     Clear() ;
 /*    
@@ -75,7 +75,7 @@ void ObfFilterStatus::Fake( Int_t /*ievent*/, UInt_t rank, Float_t randNum ) {
 
 //#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)
 
-Bool_t ObfFilterStatus::CompareInRange( const ObfFilterStatus & ref, const std::string & name ) const {
+Bool_t ObfFilterStatus::CompareInRange( const ObfFilterStatus & /*ref*/, const std::string & /*name*/ ) const {
 
     Bool_t result = true ;
     
@@ -124,7 +124,7 @@ void ObfFilterStatus::addFilterStatus(FilterKeys key, TObject* status)
 const IObfStatus* ObfFilterStatus::getFilterStatus(FilterKeys key) const
 {
     IObfStatus* status  = 0;
-    TObject*    statObj = m_obfStatusCol[key];
+// HMK Unused?    TObject*    statObj = m_obfStatusCol[key];
     if (m_obfStatusCol[key]) status = dynamic_cast<IObfStatus*>(m_obfStatusCol[key]);
 
     return status;
@@ -140,7 +140,7 @@ UInt_t ObfGammaStatus::getStatusWord() const {return m_status;}
 UInt_t ObfGammaStatus::getVetoMask() const {return enums::GFC_STATUS_M_VETOES;}
 UInt_t ObfGammaStatus::getVetoBit()  const {return enums::GFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfGammaStatus::Clear(Option_t *option)
+void ObfGammaStatus::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -189,7 +189,7 @@ UInt_t ObfHipStatus::getStatusWord() const {return m_status;}
 UInt_t ObfHipStatus::getVetoMask() const {return enums::HFC_STATUS_M_VETO_DEF;}
 UInt_t ObfHipStatus::getVetoBit()  const {return enums::HFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfHipStatus::Clear(Option_t *option)
+void ObfHipStatus::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -225,7 +225,7 @@ UInt_t ObfHFCStatus::getStatusWord() const {return m_status;}
 UInt_t ObfHFCStatus::getVetoMask() const {return enums::HFC_STATUS_M_VETO_DEF;}
 UInt_t ObfHFCStatus::getVetoBit()  const {return enums::HFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfHFCStatus::Clear(Option_t *option)
+void ObfHFCStatus::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -263,7 +263,7 @@ UInt_t ObfMipStatus::getStatusWord() const {return m_status;}
 UInt_t ObfMipStatus::getVetoMask() const {return enums::MFC_STATUS_M_VETO_DEF;}
 UInt_t ObfMipStatus::getVetoBit()  const {return enums::MFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfMipStatus::Clear(Option_t *option)
+void ObfMipStatus::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -302,7 +302,7 @@ UInt_t ObfDgnStatus::getStatusWord() const {return m_status;}
 UInt_t ObfDgnStatus::getVetoMask() const {return enums::DFC_STATUS_M_VETO_DEF;}
 UInt_t ObfDgnStatus::getVetoBit()  const {return enums::DFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfDgnStatus::Clear(Option_t *option)
+void ObfDgnStatus::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
@@ -337,7 +337,7 @@ UInt_t ObfDFCStatus::getStatusWord() const {return m_status;}
 UInt_t ObfDFCStatus::getVetoMask() const {return enums::DFC_STATUS_M_VETO_DEF;}
 UInt_t ObfDFCStatus::getVetoBit()  const {return enums::DFC_STATUS_M_VETOED;}
 // root Clear...
-void ObfDFCStatus::Clear(Option_t *option)
+void ObfDFCStatus::Clear(Option_t* /*option*/)
 {
     m_status = 0;
     return;
