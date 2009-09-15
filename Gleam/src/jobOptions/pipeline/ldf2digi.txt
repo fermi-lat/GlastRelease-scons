@@ -71,9 +71,8 @@ LivetimeSvc.Deadtime   = 0; // disable this for real data!
 
 
 //
-// Trigger mask: Accept all events!
+// No longer setting TriggerAlg.mask due to use of ConfigSvc 
 //
-TriggerAlg.mask = "0"; 
 
 
 //
