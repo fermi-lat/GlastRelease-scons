@@ -123,7 +123,7 @@ inline G4double G4MultipleScattering::GetContinuousStepLimit(
 }
 
 inline G4double G4MultipleScattering::GetMeanFreePath(
-                                            const G4Track& track,
+                                            const G4Track&,
                                             G4double,
                                             G4ForceCondition* condition)
 
@@ -137,7 +137,7 @@ inline G4double G4MultipleScattering::GetMeanFreePath(
   }
 
 inline G4VParticleChange* G4MultipleScattering::AlongStepDoIt(
-                                       const G4Track& track,const G4Step& Step)          
+                                       const G4Track& track,const G4Step&)          
  //   only a geom path->true path transformation is performed
 {
   static const G4double tfacmx = 10. ;

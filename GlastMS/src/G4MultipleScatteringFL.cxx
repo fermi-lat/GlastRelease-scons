@@ -700,7 +700,6 @@ G4VParticleChange* G4MultipleScatteringFL::PostStepDoIt(
       else
       {
        const G4double amax=25. ;
-       const G4double tau0 = 0.02  ;
        const G4double c_highland = 13.6*MeV, corr_highland=0.038 ;
        
        const G4double x1fac1 = exp(-xsi) ;
@@ -709,7 +708,7 @@ G4VParticleChange* G4MultipleScatteringFL::PostStepDoIt(
        
        G4double a,x0,c,xmean1,xmean2,
                  xmeanth,prob,qprob ;
-       G4double ea,eaa,b1,bx,eb1,ebx,cnorm1,cnorm2,f1x0,f2x0,w ;
+       G4double ea,eaa,b1,bx,eb1,ebx,cnorm1,cnorm2,f1x0,f2x0 ;
 
        // for heavy particles take the width of the cetral part
        //  from the Highland formula 
@@ -720,7 +719,7 @@ G4VParticleChange* G4MultipleScatteringFL::PostStepDoIt(
 
        //       if(Mass > electron_mass_c2) // + other conditions (beta, x/X0,...?)
        //{
-         G4double Q = abs(aParticle->GetDefinition()->GetPDGCharge()) ;
+         G4double Q = fabs(aParticle->GetDefinition()->GetPDGCharge()) ;
          G4double X0 = trackData.GetMaterialCutsCouple()->
                        GetMaterial()->GetRadlen() ;
          G4double xx0 = truestep/X0 ;
@@ -832,7 +831,7 @@ G4VParticleChange* G4MultipleScatteringFL::PostStepDoIt(
          if(pr)
          {
            const G4double prlim = 0.10 ;
-           if((abs((xmeanth-xmean2)/(xmean1-xmean2)-prob)/prob > prlim) ||
+           if((fabs((xmeanth-xmean2)/(xmean1-xmean2)-prob)/prob > prlim) ||
               ((xmeanth-xmean2)/(xmean1-xmean2) > 1.) ||
               ((xmeanth-xmean2)/(xmean1-xmean2) < 0.) )
            {
