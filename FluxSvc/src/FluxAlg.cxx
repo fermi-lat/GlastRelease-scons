@@ -152,7 +152,7 @@ const IAlgFactory& FluxAlgFactory = Factory;
 //! ctor
 FluxAlg::FluxAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) , m_sequence(0), m_initialTime(0)
-, m_SAAreject(0), m_insideSAA(false)
+, m_SAAreject(0), m_rootTupleSvc(0), m_insideSAA(false)
 {
     
     // declare properties with setProperties calls
@@ -338,13 +338,13 @@ StatusCode FluxAlg::initialize(){
 
     // get a pointer to RootTupleSvc, use only if available 
     // this is done in PtValsAlg now
-    //if( (service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
-    //    log << MSG::WARNING << " RootTupleSvc is not available, will not write Pt tuple" << endreq;
-    //    m_rootTupleSvc=0;
-    //}else if( !m_root_tree.value().empty() ) {
-    //    
-    //    m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
-    //}
+    if( (service("RootTupleSvc", m_rootTupleSvc, true) ). isFailure() ) {
+        //log << MSG::WARNING << " RootTupleSvc is not available, will not write Pt tuple" << endreq;
+        m_rootTupleSvc=0;
+    }//else if( !m_root_tree.value().empty() ) {
+        
+   //     m_pointing_info.setPtTuple(m_rootTupleSvc, m_root_tree.value());
+   // }
 
 
     // attach an observer to be notified when orbital position changes

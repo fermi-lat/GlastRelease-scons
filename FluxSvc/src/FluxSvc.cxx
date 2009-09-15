@@ -43,6 +43,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
+#include <iostream>
 
 using astro::GPS;
 /** 
@@ -723,7 +724,8 @@ StatusCode FluxSvc::run(){
 		    
                     log << MSG::INFO 
 		        << " [" << tstamp.getString() << "]  "
-                        <<  std::setprecision(12)<< std::resetiosflags(4096) // scientific??
+                        //<<  std::setprecision(12)<< std::resetiosflags(4096) // scientific??
+                        <<  std::setprecision(12)<< std::resetiosflags(std::ios::scientific) // scientific??
                         << percent_complete << "% complete: "
                         << " event "<< eventNumber<<",  time= " 
                         <<  m_times.current() << "= launch+ "
@@ -769,7 +771,7 @@ StatusCode FluxSvc::run(){
 
 
  
-    void FluxSvc::setSAABoundary(const std::vector<std::pair<double, double> > & boundary)
+    void FluxSvc::setSAABoundary(const std::vector<std::pair<double, double> > & /*boundary*/)
     {
     }
 
