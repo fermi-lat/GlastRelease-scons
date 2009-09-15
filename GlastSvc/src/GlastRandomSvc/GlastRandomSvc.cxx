@@ -76,7 +76,7 @@ GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Servi
     declareProperty("SeedFile", m_seedFile="");
     declareProperty("EndSeedFile", m_endSeedFile="");
 #endif
-    declareProperty("autoSeed", m_autoSeed=true); // allow turn off
+    declareProperty("autoSeed", m_autoSeed=false); // allow turn off
     s_instance=this; // for access local to GlastSvc
 }
 
@@ -285,6 +285,12 @@ StatusCode GlastRandomSvc::initialize ()
 
     log << MSG::DEBUG << "initialize(): calling applySeeds(" << m_RunNumber
         << ", " << m_InitialSequenceNumber << ')' <<endreq;
+    if ((m_autoSeed) && (m_RunNumber > 20000)) {
+        log << MSG::WARNING << "Should not set run number > 20000 when setting "
+            << "seeds event by event.  RunNo is set to " << m_RunNumber
+            << " this will result in events that duplicate some run number < "
+            << " 20000" << endreq;
+    }
     applySeeds(m_RunNumber, m_InitialSequenceNumber);
 
     return StatusCode::SUCCESS;

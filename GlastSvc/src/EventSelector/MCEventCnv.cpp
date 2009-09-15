@@ -90,7 +90,7 @@ StatusCode MCEventCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode MCEventCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode MCEventCnv::createObj(IOpaqueAddress* /*addr*/, DataObject*& refpObject) 
 {
     StatusCode ret = StatusCode::SUCCESS;
 

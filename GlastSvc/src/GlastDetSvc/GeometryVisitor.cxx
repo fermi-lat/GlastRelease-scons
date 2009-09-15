@@ -111,7 +111,7 @@ void  GeometryVisitor::visitBox(detModel::Box* b)
   else if (b->getSensitive() == 1) sense = IGeometry::posSensitive;
   else sense = IGeometry::intSensitive;
   // No possibility of subtree here so can ignore return
-  IGeometry::VisitorRet vRet =
+  /* Avoiding unused var warning IGeometry::VisitorRet vRet = */
     m_geom.pushShape(IGeometry::Box, m_idvec, b->getName(), b->getMaterial(), 
                      m_params, type, sense);
   m_params.clear();
@@ -130,7 +130,7 @@ void  GeometryVisitor::visitTube(detModel::Tube* t)
   else if (t->getSensitive() == 1) sense = IGeometry::posSensitive;
   else sense = IGeometry::intSensitive;
   // No possibility of subtree here so can ignore return
-  IGeometry::VisitorRet vRet =
+  /*Avoiding unused var warning IGeometry::VisitorRet vRet = */
     m_geom.pushShape(IGeometry::Tube, m_idvec, t->getName(), t->getMaterial(),
                      m_params, type, sense);
   m_params.clear();
@@ -150,7 +150,7 @@ void  GeometryVisitor::visitTrap(detModel::Trap* t)
   else if (t->getSensitive() == 1) sense = IGeometry::posSensitive;
   else sense = IGeometry::intSensitive;
   // No possibility of subtree here so can ignore return
-  IGeometry::VisitorRet vRet =
+  /* Avoiding unused var warning IGeometry::VisitorRet vRet = */
     m_geom.pushShape(IGeometry::Trap, m_idvec, t->getName(), t->getMaterial(),
                      m_params, type, sense);
   m_params.clear();
@@ -174,7 +174,7 @@ void  GeometryVisitor::visitSphere(detModel::Sphere* s)
   else if (s->getSensitive() == 1) sense = IGeometry::posSensitive;
   else sense = IGeometry::intSensitive;
   // No possibility of subtree here so can ignore return
-  IGeometry::VisitorRet vRet =
+  /* Avoiding unused var warning IGeometry::VisitorRet vRet = */
     m_geom.pushShape(IGeometry::Sphere, m_idvec, s->getName(), s->getMaterial(),
                      m_params, type, sense);
   m_params.clear();

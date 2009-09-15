@@ -5,6 +5,9 @@
  package manager:T.Burnett
            EOH
 
+ v9r28     15-Sep-2009 HMK set m_autoSeed to false by default to avoid
+           setting seeds event by event.  Provide warning if run > 20k when   
+           setting seeds event by event.
  v9r27p4   10-Sep-2009 HMK Fix up warnings
  v9r27p3   3-Dec-2008 TU  Fix test program crash in EventCnvSvc....
  v9r27p2   2-Dec-2008 TU  Spell MCEvent correctly
