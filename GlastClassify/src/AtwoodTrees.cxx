@@ -198,15 +198,6 @@ bool AtwoodTrees::execute()
     m_CORE              = 0.;
     m_evtLogEnergyRaw   = 0.;
 
-    double tkrNumTracks = *m_TkrNumTracks;
-    double calenergy    = *m_CalEnergyRaw;
-    double calCsiRln    = *m_CalCsIRLn;
-
-// LSR 14-Jul-08 code for ntuple types; potential changes here!
-
-    unsigned long long eventId = *m_eventId;
-    int                run     = *m_run;
-
     // Always zero the CTB output values in case cuts below fail
     m_treeAnalysis->zeroCTvals();
 

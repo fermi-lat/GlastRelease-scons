@@ -193,12 +193,6 @@ void TreeAnalysis::storeCTvals()
                 const_cast<GlastClassify::Item*>(m_nTupleMap[dataIter->first])->setDataValue(&result);
 
                 REALNUM test = *(m_nTupleMap[dataIter->first]);
-
-                if (test != result)
-                {
-                    // what do we do here?
-                    int j = 0;
-                }
             }
             else if (dataIter->second->getType() == "categorical")
             {
