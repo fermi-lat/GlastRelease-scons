@@ -129,7 +129,7 @@ double XmlFetchEvents::getAttributeValue(const std::string& elemName, double bin
 }
 
 
-std::vector<std::string> XmlFetchEvents::getFiles(double binVal, bool verbose) 
+std::vector<std::string> XmlFetchEvents::getFiles(double binVal, bool) 
 {
     /// Purpose and Method:  Returns a "fileList" associated with the bin found using binVal.
     /// Returns the input file list if completely successful

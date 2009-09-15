@@ -44,10 +44,10 @@ public:
     virtual StatusCode selectNextEvent();
 
     /// Register an output path with us
-    virtual StatusCode registerOutputPath(const std::string& path) {return StatusCode::SUCCESS;}
+    virtual StatusCode registerOutputPath(const std::string&) {return StatusCode::SUCCESS;}
 
     /// For output service, set store events flag
-    virtual void storeEvent(bool flag) {return;}
+    virtual void storeEvent(bool) {return;}
 
     /// For output service, return current value of store events flag
     virtual bool getStoreEventFlag() {return true;}

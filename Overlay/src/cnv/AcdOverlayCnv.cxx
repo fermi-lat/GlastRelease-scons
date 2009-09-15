@@ -144,7 +144,7 @@ StatusCode AcdOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode AcdOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode AcdOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -193,7 +193,7 @@ StatusCode AcdOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObjec
     return status;
 }
     
-StatusCode AcdOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode AcdOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 

@@ -144,7 +144,7 @@ StatusCode CalOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode CalOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode CalOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -188,7 +188,7 @@ StatusCode CalOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObjec
     return status;
 }
     
-StatusCode CalOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode CalOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 

@@ -142,7 +142,7 @@ StatusCode PtOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode PtOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode PtOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -190,7 +190,7 @@ StatusCode PtOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject
     return status;
 }
     
-StatusCode PtOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode PtOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 

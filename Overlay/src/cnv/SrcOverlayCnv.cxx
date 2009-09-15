@@ -141,7 +141,7 @@ StatusCode SrcOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode SrcOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode SrcOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -163,7 +163,7 @@ StatusCode SrcOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObjec
     return status;
 }
     
-StatusCode SrcOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode SrcOverlayCnv::createRep(DataObject*, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 

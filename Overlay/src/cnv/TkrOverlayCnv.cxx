@@ -143,7 +143,7 @@ StatusCode TkrOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode TkrOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode TkrOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -209,7 +209,7 @@ StatusCode TkrOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObjec
     return status;
 }
     
-StatusCode TkrOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode TkrOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 

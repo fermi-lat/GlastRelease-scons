@@ -142,7 +142,7 @@ StatusCode GemOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode GemOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode GemOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -188,7 +188,7 @@ StatusCode GemOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObjec
     return status;
 }
     
-StatusCode GemOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode GemOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 

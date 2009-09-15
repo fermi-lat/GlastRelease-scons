@@ -154,6 +154,8 @@ inline void PtOverlay::initPtOverlay(const double start,
     m_rad_geo        = rad_geo;
     m_ra_scz         = ra_scz;
     m_dec_scz        = dec_scz;
+    m_ra_scx         = ra_scx;
+    m_dec_scx        = dec_scx;
     m_zenith_scz     = zenith_scz;
     m_B              = B;
     m_L              = L;

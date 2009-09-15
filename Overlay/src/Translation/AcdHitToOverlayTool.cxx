@@ -213,8 +213,6 @@ StatusCode AcdHitToOverlayTool::translate()
         idents::AcdId            acdId = acdDigi->getId();
 
         // Extract deposited energy
-        double energy = acdDigi->getEnergy();
-
         float  eDep   = acdHit->mips() / m_mipsPerMeV;
 
         // Our entry/exit point

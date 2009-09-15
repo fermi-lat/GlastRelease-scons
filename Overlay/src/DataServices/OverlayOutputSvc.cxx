@@ -148,8 +148,6 @@ StatusCode OverlayOutputSvc::initialize()
         return status;
     }
 
-    IToolSvc* toolSvc = dynamic_cast<IToolSvc*>(tmpToolSvc);
-
     // Find a pointer to the event data service
     status = service("EventDataSvc", m_eventDataSvc, true);
     if (status .isFailure() ) 

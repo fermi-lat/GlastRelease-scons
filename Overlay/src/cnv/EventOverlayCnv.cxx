@@ -147,7 +147,7 @@ StatusCode EventOverlayCnv::finalize()
 }
 
 // (To TDS) Conversion stuff
-StatusCode EventOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObject) 
+StatusCode EventOverlayCnv::createObj(IOpaqueAddress*, DataObject*& refpObject) 
 {
     StatusCode status = StatusCode::SUCCESS;
 
@@ -186,7 +186,7 @@ StatusCode EventOverlayCnv::createObj(IOpaqueAddress* addr, DataObject*& refpObj
     return status;
 }
     
-StatusCode EventOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress)
+StatusCode EventOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
 {
     StatusCode status = StatusCode::SUCCESS;
 
