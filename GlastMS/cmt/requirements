@@ -1,5 +1,5 @@
 package GlastMS
-version v0r3
+version v0r3p1
 author Tracy Usher <usher@slac.stanford.edu>
 
 use GlastPolicy   v*      
