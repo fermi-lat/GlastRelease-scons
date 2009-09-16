@@ -34,7 +34,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4IonPhysics.hh"
+#include "G4HadronSim/G4IonPhysics.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4LElastic.hh"
 

@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4EmLowEnergyPhysics.hh"
+#include "G4HadronSim/G4EmLowEnergyPhysics.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
 #include "G4LossTableManager.hh"

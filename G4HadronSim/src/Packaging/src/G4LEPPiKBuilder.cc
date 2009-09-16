@@ -20,7 +20,7 @@
 // * statement, and all its terms.                                    *
 // ********************************************************************
 //
-#include "G4LEPPiKBuilder.hh"
+#include "G4HadronSim/G4LEPPiKBuilder.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"

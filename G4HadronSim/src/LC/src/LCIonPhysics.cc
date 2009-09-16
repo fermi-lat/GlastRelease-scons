@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
 
-#include "LCIonPhysics.hh"
+#include "G4HadronSim/LCIonPhysics.hh"
 
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"

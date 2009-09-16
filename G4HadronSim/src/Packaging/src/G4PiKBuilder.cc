@@ -34,7 +34,7 @@
 //
 //----------------------------------------------------------------------------
 //
-#include "G4PiKBuilder.hh"
+#include "G4HadronSim/G4PiKBuilder.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"

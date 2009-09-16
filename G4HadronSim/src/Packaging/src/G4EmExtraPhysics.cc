@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4EmExtraPhysics.hh"
+#include "G4HadronSim/G4EmExtraPhysics.hh"
 
 #include "G4SynchrotronRadiation.hh"
 

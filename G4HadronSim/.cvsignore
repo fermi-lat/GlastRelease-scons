@@ -2,3 +2,5 @@ Visual
 Win32*
 Linux*
 VC* 
+build
+*.pyc

@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4EmStandardPhysics.hh"
+#include "G4HadronSim/G4EmStandardPhysics.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
 #include "G4LossTableManager.hh"
@@ -51,7 +51,7 @@
 #include "G4eplusAnnihilation.hh"
 
 #include "G4eBremsstrahlungModel.hh"
-#include "G4eBremsstrahlungHEModel.hh"
+#include "G4HadronSim/G4eBremsstrahlungHEModel.hh"
 #include "G4VEnergyLossProcess.hh"
 
 #include "G4MuIonisation.hh"

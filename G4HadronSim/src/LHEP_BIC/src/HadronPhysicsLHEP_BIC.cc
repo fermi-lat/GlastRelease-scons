@@ -34,7 +34,7 @@
 //
 //----------------------------------------------------------------------------
 //
-#include "HadronPhysicsLHEP_BIC.hh"
+#include "G4HadronSim/HadronPhysicsLHEP_BIC.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"

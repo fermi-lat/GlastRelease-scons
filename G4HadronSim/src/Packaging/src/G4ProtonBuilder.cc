@@ -20,7 +20,7 @@
 // * statement, and all its terms.                                    *
 // ********************************************************************
 //
- #include "G4ProtonBuilder.hh"
+ #include "G4HadronSim/G4ProtonBuilder.hh"
  #include "G4ParticleDefinition.hh"
  #include "G4ParticleTable.hh"
  #include "G4ProcessManager.hh"

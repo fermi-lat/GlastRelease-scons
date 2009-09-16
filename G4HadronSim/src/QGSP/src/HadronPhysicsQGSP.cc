@@ -33,7 +33,7 @@
 // Modified:
 // 21.11.2005 G.Folger:  migration to non static particles
 //
-#include "HadronPhysicsQGSP.hh"
+#include "G4HadronSim/HadronPhysicsQGSP.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"

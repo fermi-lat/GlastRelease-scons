@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////
 //
 
-#include "LCDecayPhysics.hh"
+#include "G4HadronSim/LCDecayPhysics.hh"
 
 // #include "globals.hh"
 // #include "G4ios.hh"

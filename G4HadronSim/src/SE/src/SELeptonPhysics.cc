@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
 
-#include "SELeptonPhysics.hh"
+#include "G4HadronSim/SELeptonPhysics.hh"
 
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"

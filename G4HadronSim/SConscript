@@ -9,28 +9,31 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('G4HadronSimLib', depsOnly = 1)
-libEnv.AppendUnique(CPPPATH = ['#G4HadronSim/src/Packaging/include', '#G4HadronSim/src/LHEP/include',
-             '#G4HadronSim/src/LHEP_BERT/include',
-             '#G4HadronSim/src/LHEP_BIC/include',
-             '#G4HadronSim/src/QGSP/include',
-             '#G4HadronSim/src/QGSP_BERT/include',
-             '#G4HadronSim/src/QGSP_BIC/include',
-             '#G4HadronSim/src/QGSC/include',
-             '#G4HadronSim/src/QGSC_LEAD/include',
-             '#G4HadronSim/src/LC/include',
-             '#G4HadronSim/src/SE/include'])
+#libEnv.AppendUnique(CPPPATH = ['#G4HadronSim/src/Packaging/include', <-- to do
+#                               '#G4HadronSim/src/LHEP/include',
+#                               '#G4HadronSim/src/LHEP_BERT/include',
+#                               '#G4HadronSim/src/LHEP_BIC/include',
+#                               '#G4HadronSim/src/QGSP/include',
+#                               '#G4HadronSim/src/QGSP_BERT/include',
+#                               '#G4HadronSim/src/QGSP_BIC/include',
+#                               '#G4HadronSim/src/QGSC/include',
+#                               '#G4HadronSim/src/QGSC_LEAD/include',
+#                               '#G4HadronSim/src/LC/include',
+#                               '#G4HadronSim/src/SE/include'])
 if baseEnv['PLATFORM'] != 'win32':
-	G4HadronSim = libEnv.StaticLibrary('G4HadronSim', listFiles(['src/Packaging/src/*.cc','src/LHEP/src/*.cc',
-                                                             'src/LHEP_BERT/src/*.cc','src/LHEP_BIC/src/*.cc',
-                                                             'src/LHEP_BIC/src/*.cc','src/QGSP/src/*.cc',
-                                                             'src/QGSP_BERT/src/*.cc','src/QGSP_BIC/src/*.cc',
-                                                             'src/QGSC/src/*.cc','src/QGSC_LEAD/src/*.cc',
-                                                             'src/LC/src/*.cc','src/SE/src/*.cc']))
+    G4HadronSim = libEnv.StaticLibrary('G4HadronSim',
+                                       listFiles(['src/Packaging/src/*.cc','src/LHEP/src/*.cc',
+                                                  'src/LHEP_BERT/src/*.cc','src/LHEP_BIC/src/*.cc',
+                                                  'src/LHEP_BIC/src/*.cc','src/QGSP/src/*.cc',
+                                                  'src/QGSP_BERT/src/*.cc','src/QGSP_BIC/src/*.cc',
+                                                  'src/QGSC/src/*.cc','src/QGSC_LEAD/src/*.cc',
+                                                  'src/LC/src/*.cc','src/SE/src/*.cc']))
 
 progEnv.Tool('G4HadronSimLib')
 
-progEnv.Tool('registerObjects', package = 'G4HadronSim', libraries = [G4HadronSim], 
-	includes = listFiles(['G4HadronSim/src/*'], recursive = 1))
+progEnv.Tool('registerTargets', package = 'G4HadronSim',
+             staticLibraryCxts = [[G4HadronSim, libEnv]], 
+             includes = listFiles(['G4HadronSim/*.hh'], recursive = 1))
 
 
 

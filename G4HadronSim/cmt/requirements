@@ -23,22 +23,23 @@ set G4ELASTICDATA             "${G4tableDir}/G4ELASTIC1.1"
 # path to the combined include folder
 macro G4HadronSimSrcDir "${G4HADRONSIMROOT}/src"
 
-include_dirs "$(G4HadronSimSrcDir)/Packaging/include" \
-             "$(G4HadronSimSrcDir)/LHEP/include"      \
-             "$(G4HadronSimSrcDir)/LHEP_BERT/include" \
-             "$(G4HadronSimSrcDir)/LHEP_BIC/include"  \
-             "$(G4HadronSimSrcDir)/QGSP/include"      \
-             "$(G4HadronSimSrcDir)/QGSP_BERT/include" \
-             "$(G4HadronSimSrcDir)/QGSP_BIC/include"  \
-             "$(G4HadronSimSrcDir)/QGSC/include"      \
-             "$(G4HadronSimSrcDir)/QGSC_LEAD/include" \
-             "$(G4HadronSimSrcDir)/LC/include"        \
-             "$(G4HadronSimSrcDir)/SE/include"
+#include_dirs "$(G4HadronSimSrcDir)/Packaging/include" \
+#             "$(G4HadronSimSrcDir)/LHEP/include"      \
+#             "$(G4HadronSimSrcDir)/LHEP_BERT/include" \
+#             "$(G4HadronSimSrcDir)/LHEP_BIC/include"  \
+#             "$(G4HadronSimSrcDir)/QGSP/include"      \
+#             "$(G4HadronSimSrcDir)/QGSP_BERT/include" \
+#             "$(G4HadronSimSrcDir)/QGSP_BIC/include"  \
+#             "$(G4HadronSimSrcDir)/QGSC/include"      \
+#             "$(G4HadronSimSrcDir)/QGSC_LEAD/include" \
+#             "$(G4HadronSimSrcDir)/LC/include"        \
+#             "$(G4HadronSimSrcDir)/SE/include"
 
 private
 #this is private to avoid passing on build info to clients
 use Geant4   v3r80* IExternal
 use GlastMS  v*
+
 
 macro src "src/*.cc " WIN32 "include/*.hh include/*.icc src/*.cc"
 library  G4HadronSim -no_share  \

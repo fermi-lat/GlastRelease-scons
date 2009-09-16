@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////
 //
 
-#include "SEDecayPhysics.hh"
+#include "G4HadronSim/SEDecayPhysics.hh"
 #include "G4ProcessManager.hh"
 
 

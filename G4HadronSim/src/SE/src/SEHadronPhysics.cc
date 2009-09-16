@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
 
-#include "SEHadronPhysics.hh"
+#include "G4HadronSim/SEHadronPhysics.hh"
 #include "G4MesonConstructor.hh"
 #include "G4BaryonConstructor.hh"
 #include "G4ShortLivedConstructor.hh"

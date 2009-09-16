@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4StoppingHadronBuilder.hh"
+#include "G4HadronSim/G4StoppingHadronBuilder.hh"
 
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"

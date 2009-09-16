@@ -35,8 +35,8 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4EmMessenger.hh"
-#include "G4EmExtraPhysics.hh"
+#include "G4HadronSim/G4EmMessenger.hh"
+#include "G4HadronSim/G4EmExtraPhysics.hh"
 
 G4EmMessenger::G4EmMessenger(G4EmExtraPhysics* ab)
 {

@@ -20,7 +20,7 @@
 // * statement, and all its terms.                                    *
 // ********************************************************************
 //
-#include "G4MiscLHEPBuilder.hh"
+#include "G4HadronSim/G4MiscLHEPBuilder.hh"
 
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"

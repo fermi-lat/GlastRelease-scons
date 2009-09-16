@@ -34,7 +34,7 @@
 //
 //----------------------------------------------------------------------------
 //
-#include "HadronPhysicsQGSP_BERT.hh"
+#include "G4HadronSim/HadronPhysicsQGSP_BERT.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"

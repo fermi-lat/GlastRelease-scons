@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
 
-#include "SENeutronPhysics.hh"
+#include "G4HadronSim/SENeutronPhysics.hh"
 
 #include "G4ParticleTable.hh"
 

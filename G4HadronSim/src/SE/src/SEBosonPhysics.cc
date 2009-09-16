@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////
 //
 
-#include "SEBosonPhysics.hh"
+#include "G4HadronSim/SEBosonPhysics.hh"
 
 #include "G4ProcessManager.hh"
 

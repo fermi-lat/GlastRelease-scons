@@ -20,7 +20,7 @@
 // * statement, and all its terms.                                    *
 // ********************************************************************
 //
-#include "HadronPhysicsQGSC_LEAD.hh"
+#include "G4HadronSim/HadronPhysicsQGSC_LEAD.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"

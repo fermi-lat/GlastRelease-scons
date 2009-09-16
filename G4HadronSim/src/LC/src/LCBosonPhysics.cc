@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////
 //
 
-#include "LCBosonPhysics.hh"
+#include "G4HadronSim/LCBosonPhysics.hh"
 
 #include "G4ProcessManager.hh"
 

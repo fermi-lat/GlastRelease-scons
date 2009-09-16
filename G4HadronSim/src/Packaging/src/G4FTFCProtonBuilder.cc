@@ -20,11 +20,11 @@
 // * statement, and all its terms.                                    *
 // ********************************************************************
 //
-#include "G4FTFCProtonBuilder.hh"
+#include "G4HadronSim/G4FTFCProtonBuilder.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "TheoModelFactory.hh"
+#include "G4HadronSim/TheoModelFactory.hh"
 
 G4FTFCProtonBuilder::
 G4FTFCProtonBuilder() 

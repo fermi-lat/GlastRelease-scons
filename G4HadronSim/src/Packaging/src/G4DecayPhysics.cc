@@ -36,7 +36,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4DecayPhysics.hh"
+#include "G4HadronSim/G4DecayPhysics.hh"
 
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
