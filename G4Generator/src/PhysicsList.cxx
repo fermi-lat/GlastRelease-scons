@@ -30,36 +30,36 @@
 
 // LC 
 
-#include "LCBosonPhysics.hh"
-#include "LCDecayPhysics.hh"
-#include "LCHadronPhysics.hh"
-#include "LCIonPhysics.hh"
-#include "LCLeptonPhysics.hh"
+#include "G4HadronSim/LCBosonPhysics.hh"
+#include "G4HadronSim/LCDecayPhysics.hh"
+#include "G4HadronSim/LCHadronPhysics.hh"
+#include "G4HadronSim/LCIonPhysics.hh"
+#include "G4HadronSim/LCLeptonPhysics.hh"
 
 // Space
 
-#include "SEBosonPhysics.hh"
-#include "SEDecayPhysics.hh"
-#include "SEHadronPhysics.hh"
-#include "SEIonPhysics.hh"
-#include "SELeptonPhysics.hh"
-#include "SENeutronPhysics.hh"
+#include "G4HadronSim/SEBosonPhysics.hh"
+#include "G4HadronSim/SEDecayPhysics.hh"
+#include "G4HadronSim/SEHadronPhysics.hh"
+#include "G4HadronSim/SEIonPhysics.hh"
+#include "G4HadronSim/SELeptonPhysics.hh"
+#include "G4HadronSim/SENeutronPhysics.hh"
 
 // others
 
-#include "HadronPhysicsLHEP.hh"
-#include "HadronPhysicsLHEP_BIC.hh"
-#include "HadronPhysicsLHEP_BERT.hh"
-#include "HadronPhysicsQGSP.hh"
-#include "HadronPhysicsQGSP_BIC.hh"
-#include "HadronPhysicsQGSP_BERT.hh"
-#include "HadronPhysicsQGSC.hh"
-#include "HadronPhysicsQGSC_LEAD.hh"
-#include "G4EmStandardPhysics.hh"
-#include "G4EmExtraPhysics.hh"
-#include "G4EmLowEnergyPhysics.hh"
-#include "G4DecayPhysics.hh"
-#include "G4IonPhysics.hh"
+#include "G4HadronSim/HadronPhysicsLHEP.hh"
+#include "G4HadronSim/HadronPhysicsLHEP_BIC.hh"
+#include "G4HadronSim/HadronPhysicsLHEP_BERT.hh"
+#include "G4HadronSim/HadronPhysicsQGSP.hh"
+#include "G4HadronSim/HadronPhysicsQGSP_BIC.hh"
+#include "G4HadronSim/HadronPhysicsQGSP_BERT.hh"
+#include "G4HadronSim/HadronPhysicsQGSC.hh"
+#include "G4HadronSim/HadronPhysicsQGSC_LEAD.hh"
+#include "G4HadronSim/G4EmStandardPhysics.hh"
+#include "G4HadronSim/G4EmExtraPhysics.hh"
+#include "G4HadronSim/G4EmLowEnergyPhysics.hh"
+#include "G4HadronSim/G4DecayPhysics.hh"
+#include "G4HadronSim/G4IonPhysics.hh"
 #include "EpaxIonPhysics.h"
 
 
