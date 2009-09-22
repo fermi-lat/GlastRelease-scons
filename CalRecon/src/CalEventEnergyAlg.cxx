@@ -89,9 +89,11 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
       corrToolVec.push_back("CalValsCorrTool");
       // Ph. Bruel : old profile method, not used anymore 
       //        corrToolVec.push_back("CalProfileTool");
-      corrToolVec.push_back("CalLastLayerLikelihoodTool");
+      // Philippe Bruel reminds us this isn't used anymore, so remove 9/22/09
+      //corrToolVec.push_back("CalLastLayerLikelihoodTool");
       corrToolVec.push_back("CalFullProfileTool");
-      corrToolVec.push_back("CalTkrLikelihoodTool");
+      // Philippe Bruel reminds us this isn't used anymore, so remove 9/22/09
+      //corrToolVec.push_back("CalTkrLikelihoodTool");
       corrToolVec.push_back("CalLikelihoodManagerTool"); //POL
 // DC: probably useless
 //        corrToolVec.push_back("CalTransvOffsetTool");
