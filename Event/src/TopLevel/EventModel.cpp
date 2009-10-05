@@ -82,6 +82,10 @@ std::string EventModel::TkrRecon::TkrDiagnostics      = EventModel::TkrRecon::Ev
 std::string EventModel::TkrRecon::TkrEventParams      = EventModel::TkrRecon::Event + "/TkrEventParams";
 std::string EventModel::TkrRecon::TkrTruncatedPlane   = EventModel::TkrRecon::Event + "/TkrTruncatedPlane";
 std::string EventModel::TkrRecon::TkrTruncationInfo   = EventModel::TkrRecon::Event + "/TkrTruncationInfo";
+std::string EventModel::TkrRecon::TkrVecPointCol          = EventModel::TkrRecon::Event + "/TkrVecPointCol";
+std::string EventModel::TkrRecon::TkrVecPointsLinkCol     = EventModel::TkrRecon::Event + "/TkrVecPointsLinkCol";
+std::string EventModel::TkrRecon::TkrTrackElementsCol     = EventModel::TkrRecon::Event + "/TkrTrackElementsCol";
+std::string EventModel::TkrRecon::TkrTrackElemsToLinksTab = EventModel::TkrRecon::Event + "/TkrTrackElemsToLinksTab";
 
 //reconstructed Cal data
 std::string EventModel::CalRecon::Event               = EventModel::EventHeader + "/CalRecon";

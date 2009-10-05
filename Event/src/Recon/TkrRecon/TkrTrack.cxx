@@ -16,30 +16,31 @@ using namespace Event;
 // be inherited from a class which actually does the track fit. 
 TkrTrack::TkrTrack()
 {
-    m_statusBits       = 0;
+    m_statusBits        = 0;
 
-    m_initialEnergy    = 0.;
-    m_initialPosition  = Point(0.,0.,0.);
-    m_initialDirection = Vector(0.,0.,0.);
+    m_initialEnergy     = 0.;
+    m_initialPosition   = Point(0.,0.,0.);
+    m_initialDirection  = Vector(0.,0.,0.);
 
-    m_chiSquareFilter  = 0.;
-    m_chiSquareSmooth  = 0.;
-    m_rmsResid         = 0.;
-    m_Quality          = 0.;
+    m_chiSquareFilter   = 0.;
+    m_chiSquareSmooth   = 0.;
+    m_nDegreesOfFreedom = 0;
+    m_rmsResid          = 0.;
+    m_Quality           = 0.;
 
-    m_KalmanEnergy     = 0.;
-    m_KalmanThetaMS    = 0.;
-    m_Xgaps            = 0;
-    m_Ygaps            = 0;
-    m_XistGaps         = 0;
-    m_YistGaps         = 0;
+    m_KalmanEnergy      = 0.;
+    m_KalmanThetaMS     = 0.;
+    m_Xgaps             = 0;
+    m_Ygaps             = 0;
+    m_XistGaps          = 0;
+    m_YistGaps          = 0;
 
-    m_numSegmentPoints = 0;
-    m_chisqSegment     = 0.;
-    m_nxHits           = 0;
-    m_nyHits           = 0;
-    m_KalmanEnergyErr  = 0.;
-    m_TkrCal_radlen    = 0.; 
+    m_numSegmentPoints  = 0;
+    m_chisqSegment      = 0.;
+    m_nxHits            = 0;
+    m_nyHits            = 0;
+    m_KalmanEnergyErr   = 0.;
+    m_TkrCal_radlen     = 0.; 
 
 
     clear();

@@ -135,6 +135,10 @@ public:
         static std::string TkrEventParams;
         static std::string TkrTruncatedPlane;
         static std::string TkrTruncationInfo;
+        static std::string TkrVecPointCol;
+        static std::string TkrVecPointsLinkCol;
+        static std::string TkrTrackElementsCol;
+        static std::string TkrTrackElemsToLinksTab;
     };
 
 
