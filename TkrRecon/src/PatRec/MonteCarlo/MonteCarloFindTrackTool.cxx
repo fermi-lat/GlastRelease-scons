@@ -506,7 +506,7 @@ Event::TkrTrack* MonteCarloFindTrackTool::createNewTrack(ClusMcPosHitRelVec&    
     Point             trackPos(startX,startY,measHitPos.z());
     Vector            trackDir = mcHitVec.unit();
 
-    std::vector<const Event::TkrCluster*> clusVec;
+    BuildTkrTrack::CandTrackHitVec clusVec;
     clusVec.clear();
 
     // Create the candidate track
@@ -523,7 +523,9 @@ Event::TkrTrack* MonteCarloFindTrackTool::createNewTrack(ClusMcPosHitRelVec&    
         cluster =  (*hitIter)->getFirst();
         energy  =  posHit->particleEnergy() - partProp->mass();
 
-        Event::TkrTrackHit* hit = m_trackBuilder->makeTkrTrackHit(cluster);
+        BuildTkrTrack::CandTrackHitPair candTrackHit(cluster->getTkrId(), cluster);
+
+        Event::TkrTrackHit* hit = m_trackBuilder->makeTkrTrackHit(candTrackHit);
 
         hit->setEnergy(energy);
 

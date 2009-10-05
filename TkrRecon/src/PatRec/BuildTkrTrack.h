@@ -18,6 +18,9 @@
 class BuildTkrTrack 
 {
 public:
+    // typedef for the vector containing the hits
+    typedef std::pair<idents::TkrId, const Event::TkrCluster*> CandTrackHitPair;
+    typedef std::vector<CandTrackHitPair >                     CandTrackHitVec;
     // Constructors
     BuildTkrTrack(const ITkrGeometrySvc* tkrGeo);
 
@@ -26,10 +29,13 @@ public:
     Event::TkrTrack* makeNewTkrTrack(Point  startPos, 
                                      Vector startDir, 
                                      double energy, 
-                                     std::vector<const Event::TkrCluster*>& clusterVec);
+                                     CandTrackHitVec& candTrackHitVec);
 
     /// This for adding a single TkrTrackHit given a cluster
-    Event::TkrTrackHit* makeTkrTrackHit(const Event::TkrCluster* cluster);
+    Event::TkrTrackHit* makeTkrTrackHit(CandTrackHitPair& candTrackHit);
+
+    Event::TkrTrackHit* makeTkrTrackHit(CandTrackHitPair& candTrackHit,
+                                        Event::TkrTrackHit* lastTrackHit);
 
     /// This sets the first hit parameters AFTER track has been constructed
     bool                setFirstHitParams(Event::TkrTrack* track);
