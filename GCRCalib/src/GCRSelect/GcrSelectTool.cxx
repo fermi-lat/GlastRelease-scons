@@ -93,7 +93,7 @@ private:
   void fillExpectedEdep();
   void verifyExpectedEdep();
  
-  int inferZ(double correctedEnergy, int layerNumber);
+  int inferZ(double correctedEnergy);
      
   int buildHitsMap();
   void verifyHitsMap();
@@ -1128,7 +1128,7 @@ void GcrSelectTool::fillDataVectors(){
 	      
 	      //INFER Z
 	      /**if((xtalCorrEnergy>0) && (ilay==0))
-                 inferedZ = inferZ(xtalCorrEnergy,0); /// ATTENTION: Il ne faut pas calculer le Z par Xtal, mais par cluster.
+                 inferedZ = inferZ(xtalCorrEnergy); /// ATTENTION: Il ne faut pas calculer le Z par Xtal, mais par cluster.
                  /// Voir diagrammes des traces sur le papier 
 						     
               */
@@ -1517,10 +1517,9 @@ void GcrSelectTool::verifyExpectedEdep (){
 
 
 //-----------------------------------------------------------------------------------------------------------------
-//int GcrSelectTool::inferZ(double correctedEnergy, int layerNum){
 int GcrSelectTool::inferZ(double correctedEnergy){
 
-  m_log << MSG::INFO << "GcrSelectTool BEGIN inferZ(double,int)" << endreq ; 
+  m_log << MSG::INFO << "GcrSelectTool BEGIN inferZ(double)" << endreq ; 
 
   m_log << MSG::INFO << "correctedEnergy=" << correctedEnergy << endreq ;  
 
@@ -1553,7 +1552,7 @@ int GcrSelectTool::inferZ(double correctedEnergy){
 
   
   
-  m_log << MSG::INFO << "GcrSelectTool END inferZ(double,int)" << endreq ; 
+  m_log << MSG::INFO << "GcrSelectTool END inferZ(double)" << endreq ; 
   return -700;
 }
     
@@ -1701,7 +1700,7 @@ int GcrSelectTool::buildSelectedXtalsVec (){
               m_log << MSG::INFO << "Cluster TotalRawEnergy=" << currentCluster.getTotalRawEnergy()<< endreq;
               m_log << MSG::INFO << "Cluster TotalPathLength=" << currentCluster.getTotalPathLength()<< endreq;
             }
-            m_inferedZ = inferZ(m_xtalHeight*(currentCluster.getTotalRawEnergy() / currentCluster.getTotalPathLength()),0);
+            m_inferedZ = inferZ(m_xtalHeight*(currentCluster.getTotalRawEnergy() / currentCluster.getTotalPathLength()));
 		 
           }
 	    
