@@ -29,7 +29,7 @@
 class MomentsClusterInfo : virtual public ICalClusterFiller
 {
 public:
-    MomentsClusterInfo(ICalReconSvc* calReconSvc, double transScaleFactor = 1.5);
+    MomentsClusterInfo(ICalReconSvc* calReconSvc, double transScaleFactor = 1.0);
     virtual ~MomentsClusterInfo() {};
     
     Event::CalCluster* fillClusterInfo(const XtalDataVec* xtalVec);
@@ -66,8 +66,8 @@ private:
 
     // in order to handle saturation
     float m_saturationadc;
-    int m_Nsaturated;
-    bool m_saturated[16][8][12];
+    int   m_Nsaturated;
+    bool  m_saturated[16][8][12];
 
     // 
     TMinuit* m_minuit;

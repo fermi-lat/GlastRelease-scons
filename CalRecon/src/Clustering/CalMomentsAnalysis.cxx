@@ -130,7 +130,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         }
 
         // Scale by number of data points
-        chisq /= dataVec.size();
+        chisq /= weightSum * dataVec.size();
 
         // Final calculations to return moment of principal axis and average of other two
         double longMag1 = fabs(m_moment[0]);
