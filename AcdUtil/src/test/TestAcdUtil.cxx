@@ -22,6 +22,9 @@
 #include "AcdUtil/AcdRibbonDim.h"
 #include "AcdUtil/AcdTileDim.h"
 #include "AcdUtil/AcdFrameUtil.h"
+#include "AcdUtil/IAcdFailureModeSvc.h"
+
+#include "idents/AcdId.h"
 
 
 /** @class TestAcdUtil
@@ -48,6 +51,8 @@ private:
 
   IGlastDetSvc    *m_glastDetSvc;
   IAcdGeometrySvc *m_acdGeoSvc;
+  IAcdFailureModeSvc *m_acdFailureSvc;
+
   void writeTileFrame(unsigned face, unsigned row, unsigned col, 
                       bool bent = false);
   void writeRibbonFrame(unsigned face, unsigned orient, unsigned rib, 
@@ -82,6 +87,24 @@ StatusCode TestAcdUtil::initialize() {
         log << MSG::ERROR << "  Unable to find ACD Geometry service" << endreq;
         return sc;
     }
+
+    sc = service("AcdFailureModeSvc", m_acdFailureSvc, true);
+    if (sc.isFailure() ){
+        log << MSG::ERROR << " Unable to find ACD Failure Mode service" << endreq;
+        return sc;
+    }
+
+    // Testing AcdFailureModeSvc
+    idents::AcdId id500(0,5,0,0);
+    idents::AcdId id600(0,6,0,0);
+    idents::AcdId id310(0,3,1,0);
+    if (m_acdFailureSvc->matchAcdId(id500))
+        log << MSG::INFO << "AcdId 500 found in AcdFailureModeSvc" << endreq;
+    if (m_acdFailureSvc->matchAcdId(id600))
+        log << MSG::INFO << "AcdId 600 found in AcdFailureModeSvc" << endreq;
+    if (!m_acdFailureSvc->matchAcdId(id310)) 
+        log << MSG::INFO << "AcdId 310 not found in AcdFailureModeSvc" << endreq;
+
 
     //m_acdGeoSvc->findCornerGaps();
 
@@ -241,6 +264,7 @@ StatusCode TestAcdUtil::execute() {
     writeRibbonFrame(4, 0, 1, 6);
     writeRibbonFrame(4, 0, 1, 7);
     writeRibbonFrame(4, 0, 1, 8);
+
 
     return sc;
 }

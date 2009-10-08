@@ -1,5 +1,5 @@
 package AcdUtil
-version v2r8p10
+version v3r0p0
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
 # $Id$
@@ -36,7 +36,9 @@ library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx
 apply_pattern package_headers
 
 library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx \
-	        AcdCalib.cxx AcdCalibMgr.cxx AcdCalibSvcBase.cxx AcdCalibSvc.cxx  AcdSimCalibSvc.cxx \
+	        AcdCalib.cxx AcdCalibMgr.cxx AcdCalibSvcBase.cxx \
+                AcdCalibSvc.cxx  AcdSimCalibSvc.cxx \
+                AcdFailureModeSvc.cxx \
 	        IAcdCalibSvc.cxx \
                 Dll/*.cxx \
                 test/*.cxx \
