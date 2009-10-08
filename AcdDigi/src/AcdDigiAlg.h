@@ -13,6 +13,8 @@
 #include "Event/Digi/AcdDigi.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 
+#include "AcdUtil/IAcdFailureModeSvc.h"
+
 /** @class AcdDigiAlg
 * @brief Algorithm to convert from hit data stored as McPositionHits into digitization data 
 * for the ACD.
@@ -51,6 +53,8 @@ protected:
   void clear();  
         
 private:
+
+  IAcdFailureModeSvc *m_acdFailureSvc;
 
   /// input XML file containing parameters for Digitization
   std::string m_xmlFileName;
