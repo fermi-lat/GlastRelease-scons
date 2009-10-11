@@ -85,5 +85,7 @@ void MediaVisitor::visitComposite(detModel::Composite* composite)
     }
   
   m_media.addComposite(name, type, density, components, qty);
-  m_materials.push_back(name);
+  if(std::find(m_materials.begin(),m_materials.end(), name)==m_materials.end()) {
+      m_materials.push_back(name);
+  }
 }
