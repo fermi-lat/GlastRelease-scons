@@ -60,10 +60,14 @@ void G4Media::addComposite(std::string name,
   G4Material* ptMaterial = 0;
   
   G4Material* mat = new G4Material(name, density*g/cm3, components.size());
+  // Turn off the warning from GetElement, since part 
+  // of the function of the call is to test
+  //  for the existence of the element.
+  G4bool warning = false;
   
   for(unsigned int i=0;i<components.size();i++)
     {
-      if (!(ptElement = G4Element::GetElement(components[i])))
+      if (!(ptElement = G4Element::GetElement(components[i], warning)))
         {
           ptMaterial = G4Material::GetMaterial(components[i]);
         }

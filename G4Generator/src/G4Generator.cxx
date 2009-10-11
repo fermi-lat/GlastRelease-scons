@@ -244,8 +244,9 @@ StatusCode G4Generator::initialize()
       << endreq;
 
   if(m_printRadLen) {
-      std::cout << std::endl << std::left 
-          << std::setw(20) << "Name" 
+      std::cout << std::endl << std::left
+          << std::setw(10) << "Index"
+          << std::setw(16) << "Name" 
           << std::setw(9) << "Density" 
           << std::setw(15) << "RadLength (cm)" 
           << std::setw(8) << "(g/cm3)" << std::endl << std::endl;
@@ -257,8 +258,17 @@ StatusCode G4Generator::initialize()
           double density = mat->GetDensity()/(g/cm3);
           double radlen  = mat->GetRadlen()/cm;
           double radlenG = radlen*density;
+          G4Material* matName = G4Material::GetMaterial(mat->GetName());
+          int indName = matName->GetIndex();
+          if(i!=indName) continue;
           std::cout << std::left << std::setprecision(4) 
-              << std::setw(20) << mat->GetName() 
+              << std::setw(2) << i; 
+          //if(i!=indName) {
+          //    std::cout << "(" << std::setw(2) << indName << ") ";
+          //} else {
+              std::cout << "     "; 
+          //}
+          std::cout << std::left   << std::setw(20) << mat->GetName() 
               << std::setw(12) << density
               << std::setw(13) << radlen
               << std::setw(8) << radlenG << std::endl;
