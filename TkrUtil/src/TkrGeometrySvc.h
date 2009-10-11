@@ -347,6 +347,8 @@ private:
     StatusCode getTestTower();
     /// find the legal volumes and store the info
     StatusCode getVolumeInfo();
+    /// print out some mass statistics
+    StatusCode printMassStatistics();
 
     /// pointer to the detector service
     IGlastDetSvc * m_pDetSvc;
@@ -380,6 +382,8 @@ private:
     idents::VolumeIdentifier m_testTowerId;
     /// pointer to the ToT service
     ITkrToTSvc*         m_tkrToT;
+    
+    bool                m_doXray;
 
 };
 
