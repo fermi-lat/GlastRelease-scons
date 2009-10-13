@@ -23,7 +23,8 @@ progEnv.Tool('registerTargets', package = 'mootCore',
              libraryCxts = [[mootCore, libEnv]],
              testAppCxts = [[test_mootConnect, progEnv], [test_mootSys,progEnv],
                             [test_queries,progEnv]],
-             includes = listFiles(['mootCore/*.h']))
+             includes = listFiles(['mootCore/*.h']),
+             xml = listFiles(['xml/*'], recursive=True))
 
 
 
