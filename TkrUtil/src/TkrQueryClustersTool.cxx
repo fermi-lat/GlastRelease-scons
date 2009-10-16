@@ -162,7 +162,6 @@ TkrQueryClustersTool::TkrQueryClustersTool(const std::string& type,
 
     declareProperty("towerFactor",              m_towerFactor = 0.55 );
 
-
     //m_pClus     = 0;
     m_idClusMap = 0;
     m_nullVec   = 0;
@@ -543,4 +542,5 @@ double TkrQueryClustersTool::clusterWidth(Event::TkrCluster* cluster) const
     double width = size*m_tkrGeom->siStripPitch() 
         + nGaps*(2*m_tkrGeom->siDeadDistance() + m_tkrGeom->ladderGap());
     return width;
+
 }

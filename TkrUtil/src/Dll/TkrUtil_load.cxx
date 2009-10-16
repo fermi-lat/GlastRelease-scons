@@ -24,6 +24,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
 
     DECLARE_TOOL(    TkrFlagHitsTool     );
     DECLARE_TOOL(    TkrGhostTool        );
+    DECLARE_TOOL(    TkrDiagnosticTool   );
 } 
 
 
