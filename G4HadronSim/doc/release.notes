@@ -4,6 +4,7 @@
     $Id$
  * EOH *
 
+ G4HadronSim-01-06-00 17-Oct-2009    jrb Reorganize includes so that those that need to be public *are* public
  v1r5p0 10-Apr-09 TU  change to use Geant4Runtime_PATH in order to be able to find tables
  v1r4p0 25-Nov-08 TU  Tag to include LPM effect but leave alpha interactions off (from Franz)
  v1r3p0  8-May-08 TU  Mods to turn off LPM effect in em physics
