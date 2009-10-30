@@ -108,29 +108,48 @@ inline const bool TkrTrackElements::operator<(const TkrTrackElements& right) con
 //            //}
 //        }
 //    }
-    // if big difference in length then take longer track
+    // Get start z coordinate for this track element
+    double myPosZ = m_firstLink->getPosition().z();
+    double rtPosZ = right.getFirstLink()->getPosition().z();
+
+    // *******
+    // Rule 1: If one track is more than 2 layers "higher" than the other, take it
+    if (myPosZ - rtPosZ > 35.) return true;
+    if (rtPosZ - myPosZ > 35.) return false;
+
+    // *******
+    // Rule 2: if big difference in length then take longer track
     if (m_numBiLayers - right.getNumBiLayers() > 3) return true;
     if (right.getNumBiLayers() - m_numBiLayers > 3) return false;
 
+    // Calculate the "weight" of the track
     double myRmsAngle = std::max(0.000001, m_rmsAngle);
     double myWeight   = m_numBiLayers * m_numBiLayers / myRmsAngle;
 
     double rtRmsAngle = std::max(0.000001, right.getRmsAngle());
     double rtWeight   = right.getNumBiLayers() * right.getNumBiLayers() / rtRmsAngle;
 
+    // And the ratio between the two
     double wghtRatio  = rtWeight / myWeight;
 
-    // if the straightness is ~ the same, prefer the one starting higher up
-    if (wghtRatio > 0.9 && wghtRatio < 1.1)
+    if (wghtRatio > 0.85 && wghtRatio < 1.15)
     {
-        // Get start z coordinate for this track element
-        double myPosZ = m_firstLink->getPosition().z();
-        double rtPosZ = right.getFirstLink()->getPosition().z();
-
+        // *******
+        // Rule 3: if the straightness is ~ the same, prefer the one starting higher up
         if      (myPosZ > rtPosZ) return true;
         else if (rtPosZ > myPosZ) return false;
+
+        // *******
+        // Rule 4: If both same number of bilayers hit, take one with most links
+        if (m_numBiLayers == right.getNumBiLayers())
+        {
+            if      (m_numLinks > right.getNumLinks() + 1) return true;
+            else if (m_numLinks < right.getNumLinks() - 1) return false;
+        }
     }
 
+    // *******
+    // Rule 5: Highest weight wins
     if (myWeight > rtWeight) return true;
 
     return false;

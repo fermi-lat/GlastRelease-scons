@@ -128,8 +128,8 @@ inline TkrVecPointsLink::TkrVecPointsLink(const TkrVecPoint* firstPoint, const T
 
     // Now get the position which we'll set to be the bilayer z, between the two clusters
     double linkZ   = 0.5 * (firstPoint->getXCluster()->position().z() + firstPoint->getYCluster()->position().z());
-    double linkX   = firstPoint->getXCluster()->position().x() + slopeX * (firstPoint->getXCluster()->position().z() - linkZ);
-    double linkY   = firstPoint->getYCluster()->position().y() + slopeY * (firstPoint->getYCluster()->position().z() - linkZ);
+    double linkX   = firstPoint->getXCluster()->position().x() + slopeX * (linkZ - firstPoint->getXCluster()->position().z());
+    double linkY   = firstPoint->getYCluster()->position().y() + slopeY * (linkZ - firstPoint->getYCluster()->position().z());
 
     m_position     = Point(linkX, linkY, linkZ);
 }
