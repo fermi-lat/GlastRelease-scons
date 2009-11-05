@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v2r55p9
+version v2r55p10
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -23,6 +23,7 @@ apply_pattern package_include
 private
 use GlastSvc         v*
 use facilities       v*
+use RootConvert v* -no_auto_imports
 use RootIo           v*
 use AcdUtil          v*
 use OnboardFilterTds v*

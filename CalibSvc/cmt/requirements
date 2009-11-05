@@ -4,7 +4,7 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r40p1
+version v0r40p2
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -42,6 +42,7 @@ use LdfEvent v*
 ## because GlastSvc and RootIo already drag in Event
 
 use GlastSvc v9r* -no_auto_imports
+use RootConvert v* -no_auto_imports
 use RootIo v* -no_auto_imports
 
 use Event v* -no_auto_imports
