@@ -26,7 +26,8 @@ test_LSEReader = progEnv.Program('test_LSEReader', 'src/test/test_LSEReader.cxx'
 
 progEnv.Tool('registerTargets', package = 'eventFile',
              libraryCxts = [[eventFile, libEnv]],
-             binaries = [[writeMerge, progEnv]], testApps = [[test_LSEReader, progEnv]],
+             binaryCxts  = [[writeMerge, progEnv]],
+             testAppCxts = [[test_LSEReader, progEnv]],
              includes = listFiles(['eventFile/*.h']))
 
                                                                 
