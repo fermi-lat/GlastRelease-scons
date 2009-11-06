@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+ xmlGeoDbs-01-47-06 05-Nov-2009    jrb Updates for SCons
    v1r47p5 20-Aug-2008 jrb  1. Correctly locate side tiles by using composition
                                rather than stack
                             2. Assume higher (more realistic) operating temp.

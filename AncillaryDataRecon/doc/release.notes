@@ -4,6 +4,7 @@
  @verbatim
      * EOH *
 
+ AncillaryDataRecon-01-00-03 05-Nov-2009    jrb Updates for SCons
  v1r1     28-Jul-2008 jrb Finally tag use of ICalibPathSvc.  Also pick up
                           Navid's fix for new-style path references
  v1r0p2   13-Apr-2007 HMK Add use of IExternal/ROOT, was probably picking it

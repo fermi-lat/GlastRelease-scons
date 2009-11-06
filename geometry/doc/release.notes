@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * $Id$
  * EOH *
+
+ geometry-03-02-01 05-Nov-2009    jrb Updates for SCons
 * v3r2   THB  24-mar-06   (For Tracy: CLHEP update)
 * v3r1p2 NG   15-jul-05   Added author line
 * v3r1p1 THB  09-sep-04   Removed strstream includes

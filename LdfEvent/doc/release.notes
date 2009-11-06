@@ -2,6 +2,8 @@
 Package LdfEvent
 Coordinator:H.Kelly
 EOH
+
+ LdfEvent-04-10-01 05-Nov-2009    jrb Updates for SCons
 v4r10   23-Mar-2009 HMK add methods for all error flags
 v4r9    11-Mar-2009 HMK Add check for TemBug in eventFlags
 v4r8    12-Nov-2008 LSR New method to set tkrVector

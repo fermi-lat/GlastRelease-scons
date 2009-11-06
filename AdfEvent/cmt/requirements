@@ -1,5 +1,5 @@
 package AdfEvent
-version v0r5
+version v0r5p2
 author N.Omodei <nicola.omodei@pi.infn.it>
 
 use GaudiInterface * IExternal

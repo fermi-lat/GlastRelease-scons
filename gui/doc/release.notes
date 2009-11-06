@@ -3,6 +3,8 @@
  * Coordinator: T.Burnett
  @verbatim
  * EOH *
+
+ gui-03-07-03 05-Nov-2009    jrb updates for SCons
    v3r7p2   THB 24-mar-06   CLHEP change
    v3r6p7 NG  29-aug-05   Carry forward changes in GlastPoicy until we have a pattern
    v3r6p6 NG  25-aug-05   Linking against correct version of libguisystem
