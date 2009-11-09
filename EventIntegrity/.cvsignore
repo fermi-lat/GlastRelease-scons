@@ -6,4 +6,6 @@ i386_linux*
 setup.*
 *.mak*
 rh*
+build
+*.pyc
 

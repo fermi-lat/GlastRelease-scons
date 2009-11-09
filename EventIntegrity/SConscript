@@ -15,8 +15,7 @@ EventIntegrity = libEnv.SharedLibrary('EventIntegrity', listFiles(['src/*.cxx','
 progEnv.Tool('EventIntegrityLib')
 test_EventIntegrity = progEnv.GaudiProgram('test_EventIntegrity', listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'EventIntegrity', libraries = [EventIntegrity], testApps = [test_EventIntegrity], includes = listFiles(['EventIntegrity/*.h']))
-
-
-
-
+progEnv.Tool('registerTargets', package = 'EventIntegrity',
+             libraryCxts = [[EventIntegrity,libEnv]],
+             testAppCxts = [[test_EventIntegrity, progEnv]],
+             includes = listFiles(['EventIntegrity/*.h']))
