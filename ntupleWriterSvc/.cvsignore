@@ -6,3 +6,5 @@ setup.*
 *.mak*
 VC*
 rh*
+build
+*.pyc
