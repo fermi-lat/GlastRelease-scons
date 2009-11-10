@@ -2,6 +2,7 @@
  * Package CalXtalResponse
 * EOH *
 
+ CalXtalResponse-00-23-02 10-Nov-2009    jrb Updates for SCons
 v0r23p1 09/04/09 hmk       - remove private use of IExternal/obf should no 
                              longer be necessary given changes in RootIo req
 v0r23   12/17/08 usher     - Updates to help separate trigger for overlay events
