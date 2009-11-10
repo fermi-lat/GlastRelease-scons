@@ -5,3 +5,6 @@ Visual
 setup.*
 *.mak*
 rh*
+Makefile
+*.pyc
+build
