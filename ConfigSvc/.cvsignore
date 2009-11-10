@@ -1,0 +1,10 @@
+Linux-i686
+i386_linux*
+
+msdev
+Win32
+Win32Debug
+Visual
+VC*
+*.pyc
+build
