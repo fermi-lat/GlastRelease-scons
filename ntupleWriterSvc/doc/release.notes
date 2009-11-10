@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-05-04-02 09-Nov-2009    jrb Updates for SCons
  @verbatim
  * v5r4p1  13-Sep-2009 HMK   Warnings
  * v5r4    22-May-2009  TU   Add treePtr parameter to getItem to force the

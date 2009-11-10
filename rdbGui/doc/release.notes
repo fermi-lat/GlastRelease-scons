@@ -5,6 +5,7 @@
    Coordinators: M. Frailis, R. Giannitrapani and J. Bogart 
               EOH
 
+ rdbGui-01-13-01 09-Nov-2009    jrb Updates for SCons
    v1r13   14-May-2009  jrb      Accommodate changed fox 1.4 interface
    v1r12   28-Jul-2008  jrb      New-style reference to xml directory
    v1r11   23-Aug-2006  jrb      Add "copy latest" function to context menu in
