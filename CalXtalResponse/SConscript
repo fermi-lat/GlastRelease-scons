@@ -21,10 +21,18 @@ CalXtalResponse = libEnv.SharedLibrary('CalXtalResponse', listFiles(['src/*.cxx'
 					'src/Dll/*.cxx']))
 
 progEnv.Tool('CalXtalResponseLib')
-test_CalXtalResponse = progEnv.GaudiProgram('test_CalXtalResponse', listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'CalXtalResponse', libraries = [CalXtalResponse], testApps = [test_CalXtalResponse], 
-	includes = listFiles(['CalXtalResponse/*.h']))
+progEnv.Tool('CalibSvcLib')
+progEnv.Tool('CalDigiLib')
+#progEnv.Tool('addLibrary', library = progEnv['obfLibs'])
+
+test_CalXtalResponse = progEnv.GaudiProgram('test_CalXtalResponse', listFiles(['src/test/*.cxx']),
+                                            test = 1)
+
+progEnv.Tool('registerTargets', package = 'CalXtalResponse',
+             libraryCxts = [[CalXtalResponse, libEnv]],
+             testAppCxts = [[test_CalXtalResponse, progEnv]], 
+             includes = listFiles(['CalXtalResponse/*.h']))
 
 
 
