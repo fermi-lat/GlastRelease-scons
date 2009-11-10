@@ -770,6 +770,11 @@ StatusCode LdfEventSelector::getMaxEvent()
     status = appPropMgr->getProperty( &evtMax );
     if (status.isFailure()) return status;
 
+    // If JO sets EvtMax to zero, set to INT_MAX, and allow the input
+    // file determine when to terminate the event loop
+    if (evtMax == 0) 
+        evtMax = INT_MAX;
+
     int max_event = evtMax.value();
 
     status = appPropMgr->setProperty( evtMax );
