@@ -15,7 +15,9 @@ GlastMS = libEnv.StaticLibrary('GlastMS', listFiles(['src/*.cxx']) + listFiles([
 
 progEnv.Tool('GlastMSLib')
 
-progEnv.Tool('registerObjects', package = 'GlastMS', libraries = [GlastMS], includes = listFiles(['GlastMS/*.h']))
+progEnv.Tool('registerTargets', package = 'GlastMS',
+             staticLibraryCxts = [[GlastMS, libEnv]],
+             includes = listFiles(['GlastMS/*.h']))
 
 
 

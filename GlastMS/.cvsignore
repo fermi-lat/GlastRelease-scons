@@ -3,3 +3,5 @@ VC8*
 Visual 
 rh*
 Linux*
+build
+*.pyc
