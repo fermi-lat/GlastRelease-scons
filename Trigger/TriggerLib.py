@@ -5,7 +5,11 @@ def generate(env, **kw):
     env.Tool('addLibrary', library = env['gaudiLibs'])
     env.Tool('addLibrary', library = env['clhepLibs'])
     env.Tool('EventLib')
+    env.Tool('GlastSvcLib')
     env.Tool('configDataLib')
+    env.Tool('ConfigSvcLib')
     env.Tool('CalXtalResponseLib')
+    env.Tool('LdfEventLib')
+    env.Tool('identsLib')
 def exists(env):
     return 1;
