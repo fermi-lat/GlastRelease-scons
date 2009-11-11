@@ -4,7 +4,7 @@
 #include "TObject.h"
 #include "TVector3.h"
 
-#include <commonRootData/idents/CalXtalId.h>
+#include "commonRootData/idents/CalXtalId.h"
 
 /** @class GcrSelectedXtal
  * 

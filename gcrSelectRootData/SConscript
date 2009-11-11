@@ -2,26 +2,29 @@
 # $Header$
 # Authors:  Claudia Lavalley
 # Version: gcrSelectRootData-02-02-03
+import os
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
-
-gcrSelectRootDataRootcint = libEnv.Rootcint('gcrSelectRootData/gcrSelectRootData_rootcint', ['gcrSelectRootData/GcrSelect.h',
-                                                                                             'gcrSelectRootData/GcrSelectedXtal.h',
-                                                                                             'gcrSelectRootData/GcrSelectEvent.h',
-                                                                                             'gcrSelectRootData/GcrSelectVals.h'],
-											     includes = [''])
-
 libEnv.Tool('gcrSelectRootDataLib', depsOnly = 1)
-gcrSelectRootData = libEnv.SharedLibrary('gcrSelectRootData', listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
+gcrSelectRootDataRootcint=libEnv.Rootcint('gcrSelectRootData/gcrSelectRootData_rootcint',
+                                          ['gcrSelectRootData/GcrSelectedXtal.h',
+                                           'gcrSelectRootData/GcrSelectEvent.h',   
+                                           'gcrSelectRootData/GcrSelect.h',   
+                                           'gcrSelectRootData/GcrSelectVals.h',
+                                           'gcrSelectRootData/LinkDef.h'],
+                                          includes=[''])
+gcrSelectRootData = libEnv.SharedLibrary('gcrSelectRootData',
+                                         listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
 progEnv.Tool('gcrSelectRootDataLib')
-test_gcrSelectRootData  = progEnv.Program('test_gcrSelectRootData',['src/test/testGcrClasses.cxx'])
+test_gcrSelectRootData  = progEnv.Program('test_gcrSelectRootData',
+                                          ['src/test/testGcrClasses.cxx'])
 
-progEnv.Tool('registerObjects', package = 'gcrSelectRootData',
-             libraries = [gcrSelectRootData],
-             testApps = [test_gcrSelectRootData],
+progEnv.Tool('registerTargets', package = 'gcrSelectRootData',
+             libraryCxts = [[gcrSelectRootData, libEnv]],
+             testAppCxts = [[test_gcrSelectRootData, libEnv]],
              includes = listFiles(['gcrSelectRootData/*.h']))
 
 
