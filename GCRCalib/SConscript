@@ -16,9 +16,8 @@ if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(CPPDEFINES = ['__i386'])
 
 progEnv.Tool('GCRCalibLib')
-test_GCRCalib = progEnv.GaudiProgram('test_GCRCalib', listFiles(['src/test/*.cxx']), test=1)
-progEnv.Tool('registerObjects', package = 'GCRCalib', libraries = [GCRCalib], testApps = [test_GCRCalib])
-
-
-
-
+test_GCRCalib = progEnv.GaudiProgram('test_GCRCalib',
+                                     listFiles(['src/test/*.cxx']), test=1)
+progEnv.Tool('registerTargets', package = 'GCRCalib',
+             libraryCxts = [[GCRCalib, libEnv]],
+             testAppCxts = [[test_GCRCalib, progEnv]])

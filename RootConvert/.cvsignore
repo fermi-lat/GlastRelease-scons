@@ -7,3 +7,5 @@ VC8debug
 setup.*
 *.mak*
 rh*
+build
+*.pyc

@@ -3,6 +3,7 @@ def generate(env, **kw):
     if not kw.get('depsOnly', 0):
         env.Tool('addLibrary', library = ['RootConvert'])
     env.Tool('EventLib')
+    env.Tool('LdfEventLib')
     env.Tool('OnboardFilterTdsLib')
     env.Tool('addLibrary', library = env['obfLibs'])
     env.Tool('addLibrary', library = env['rootLibs'])
@@ -10,5 +11,8 @@ def generate(env, **kw):
     env.Tool('reconRootDataLib')
     env.Tool('digiRootDataLib')
     env.Tool('mcRootDataLib')
+    env.Tool('commonRootDataLib')
+    env.Tool('gcrSelectRootDataLib')
+    env.Tool('AncillaryDataEventLib')
 def exists(env):
     return 1;
