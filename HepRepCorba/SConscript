@@ -5,16 +5,17 @@
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
-progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
+# no progEnv because no programs
 
 libEnv.Tool('HepRepCorbaLib', depsOnly = 1)
-HepRepCorba = libEnv.SharedLibrary('HepRepCorba', listFiles(['src/*.cxx','src/*.cpp']))
+HepRepCorba = libEnv.SharedLibrary('HepRepCorba',
+                                   listFiles(['src/*.cxx','src/*.cpp']))
 
 
-progEnv.Tool('HepRepCorbaLib')
-
-progEnv.Tool('registerObjects', package = 'HepRepCorba', libraries = [HepRepCorba], includes = listFiles(['HepRepCorba/*.h']))
+libEnv.Tool('registerTargets', package = 'HepRepCorba',
+             libraryCxts = [[HepRepCorba, libEnv]],
+            includes = listFiles(['HepRepCorba/*.h']))
 
 
 

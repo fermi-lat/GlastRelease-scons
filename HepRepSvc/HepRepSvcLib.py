@@ -6,5 +6,6 @@ def generate(env, **kw):
     env.Tool('CalibDataLib')
     env.Tool('GlastSvcLib')
     env.Tool('AcdUtilLib')
+    env.Tool('addLibrary', library = env['clhepLibs'])
 def exists(env):
     return 1;
