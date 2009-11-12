@@ -6,6 +6,7 @@
 
             * EOH *
 
+ FluxSvc-06-55-06 11-Nov-2009    jrb Updates for SCons
    15-Sep-09  v6r55p5 HMK  Patch to reenable m_rootTupleSvc in FluxAlg and fix
                            up some warnings
    18-Mar-09  v6r55p4 LSR  remove DECLARE statement in FluxSvc_load

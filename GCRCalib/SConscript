@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Claudia.Lavalley@lpta.in2p3.fr
-# Version: GCRCalib-01-06-03
+# Version: GCRCalib-01-06-04
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
