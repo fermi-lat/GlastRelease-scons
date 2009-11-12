@@ -13,9 +13,12 @@ HepRepXml = libEnv.SharedLibrary('HepRepXml', listFiles(['src/*.cxx']))
 
 
 progEnv.Tool('HepRepXmlLib')
-test_HepRepXml = progEnv.GaudiProgram('test_HepRepXml', listFiles(['src/test/*.cxx']), test = 1)
+test_HepRepXml = progEnv.GaudiProgram('test_HepRepXml',
+                                      listFiles(['src/test/*.cxx']), test = 1)
 
-progEnv.Tool('registerObjects', package = 'HepRepXml', libraries = [HepRepXml], testApps = [test_HepRepXml])
+progEnv.Tool('registerTargets', package = 'HepRepXml',
+             libraryCxts = [[HepRepXml, libEnv]],
+             testAppCxts = [[test_HepRepXml, progEnv]])
 
 
 
