@@ -16,7 +16,8 @@ if baseEnv['PLATFORM'] == 'win32':
 	libEnv.AppendUnique(CPPDEFINES = '__i386')
 
 progEnv.Tool('meritLib')
-progEnv.Tool('registerObjects', package = 'merit', libraries = [merit], includes = listFiles(['merit/*.h']))
+progEnv.Tool('registerTargets', package='merit', libraryCxts=[[merit,libEnv]],
+             includes = listFiles(['merit/*.h']))
 
 
 
