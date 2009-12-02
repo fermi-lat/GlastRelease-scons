@@ -441,3 +441,12 @@ void RootInputDesc::clearEvent()
         dataPtr->Clear() ; 
     }
 }
+
+bool RootInputDesc::setBranchStatus(const std::string& branch, int status) {
+    if (!m_chain) return false;
+    TDirectory * saveDir = gDirectory ;	
+    unsigned int foundFlag;
+    m_chain->SetBranchStatus(branch.c_str(),status,&foundFlag);
+    saveDir->cd();
+    return ((foundFlag==0) ? false : true);
+}

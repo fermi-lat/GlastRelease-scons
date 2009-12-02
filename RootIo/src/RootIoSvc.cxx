@@ -119,6 +119,12 @@ class RootIoSvc :
        TObject**                  branchPtr,
        const StringArrayProperty& fileList ) ;
 
+    virtual bool setBranchStatus
+     ( const std::string&         type,
+       const std::string&         branch,
+       int                        status );
+
+
     virtual StatusCode closeInput(const std::string& type);
        
     virtual TObject * getNextEvent( const std::string & type, long long inputIndex) ;
@@ -615,6 +621,20 @@ StatusCode RootIoSvc::prepareRootInput
 
 
     return sc;
+}
+
+bool RootIoSvc::setBranchStatus(const std::string& type,
+  const std::string& branch, int status) {
+
+    MsgStream log( msgSvc(), name() );
+
+    RootInputDesc* rootInputDesc = getRootInputDesc(type);
+    if (rootInputDesc) {
+        return rootInputDesc->setBranchStatus(branch,status);
+    }
+    log << MSG::WARNING << "Did not find RootInputDesc type " << type << endreq;
+    return false;
+
 }
 
 StatusCode RootIoSvc::closeInput(const std::string& type)

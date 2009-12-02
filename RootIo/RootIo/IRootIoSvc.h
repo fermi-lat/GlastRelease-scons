@@ -87,6 +87,11 @@ class  IRootIoSvc : virtual public IInterface
        TObject**                  branchPtr,
        const StringArrayProperty& fileList) = 0 ;
 
+    virtual bool setBranchStatus
+     ( const std::string&         type,
+       const std::string&         branch,
+       int                        status) = 0;
+
     virtual StatusCode closeInput(const std::string& type) = 0;
        
     virtual TObject * getNextEvent( const std::string & type, long long inputIndex = -1 ) = 0 ;

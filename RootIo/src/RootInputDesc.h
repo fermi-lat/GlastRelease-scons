@@ -61,6 +61,8 @@ public:
     /// Setup to read from an event collection
     Long64_t setEventCollection( );
 
+    bool setBranchStatus(const std::string& branch, int status);
+
   private :
 
     /// Checks to see if the filename exists and can be opened
