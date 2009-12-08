@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-05-01 07-Dec-2009    jrb Add stuff for SCons build
 16-Oct-09  v7r5p0 TU  Update xml file to match v17.8 on the Pass 7 confluence page
  6-Oct-09  v7r4p0 TU  Update xml file to match v17.7 on the Pass 7 confluence page
 15-Sep-09  v7r3p2 TU  Fixing linux compiler warnings
