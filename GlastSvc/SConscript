@@ -24,7 +24,7 @@ test_GlastSvc = progEnv.GaudiProgram('test_GlastSvc',
                                      listFiles(['src/test/*.cxx']), test = 1)
 
 progEnv.Tool('registerTargets', package = 'GlastSvc',
-             sharedLibraryCxts = [[GlastSvcLib, libEnv]],
+             libraryCxts = [[GlastSvcLib, libEnv]],
              testAppCxts = [[test_GlastSvc, progEnv]],
              includes = listFiles(['GlastSvc/*'], recursive = True))
 
