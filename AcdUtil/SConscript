@@ -20,7 +20,8 @@ AcdUtil = libEnv.SharedLibrary('AcdUtil',
                                 'src/AcdDetectorList.cxx',
                                 'src/AcdCalib.cxx', 'src/AcdCalibMgr.cxx',
                                 'src/AcdCalibSvcBase.cxx','src/AcdCalibSvc.cxx',
-                                'src/AcdSimCalibSvc.cxx','src/IAcdCalibSvc.cxx']
+                                'src/AcdSimCalibSvc.cxx', 'src/IAcdCalibSvc.cxx',
+                                'src/AcdFailureModeSvc.cxx']
                                + listFiles(['src/Dll/*.cxx']) + [testAcdUtilObj])
 
 progEnv.Tool('AcdUtilLib')
