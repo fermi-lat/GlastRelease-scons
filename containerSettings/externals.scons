@@ -1,0 +1,44 @@
+# -*- python -*-
+import os,platform
+Import('baseEnv')
+
+usedExternals = []
+usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '1.9.2.2' })
+usedExternals.append({ 'name' : 'cfitsio', 'iversion' : 'v3060A' })
+usedExternals.append({ 'name' : 'swig', 'iversion' : '1.3.31' })
+usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-gl1' })
+usedExternals.append({ 'name' : 'cppunit', 'iversion' : '1.10.2' })
+
+# Probably can't actually use python 2.5.1-gl1 for all OS's, archs, etc.
+usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1' })
+
+if baseEnv['OSNAME'] == 'tiger':
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.20.00-gl1'})
+else:
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.20.00-gl4'})
+
+
+#Don't have any of the following for RHEL5 yet
+usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v18r1-gl4' })
+usedExternals.append({ 'name' : 'geant4', 'iversion' : '8.0.p01-gl2' })
+#usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v06-02-00' })
+usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01' })
+usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
+
+# Do we really need these?
+usedExternals.append({ 'name' : 'zlib', 'iversion' : '1.1.4' })
+usedExternals.append({ 'name' : 'x11', 'iversion' : '1.0.0' })
+
+usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r7' })
+
+# and also need obf B1-1-3
+usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3' })
+
+#   OmniOrb 4.1.2
+usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.2' })
+
+#   Fox 1.4.34
+usedExternals.append({ 'name' : 'fox', 'iversion' : '1.4.34' })
+
+
+Return("usedExternals")
