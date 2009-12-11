@@ -6,7 +6,7 @@ Import('baseEnv')
 Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
-libEnv = baseEnv.Clone()
+#libEnv = baseEnv.Clone()   #  doesn't build a lib
 
 
 progEnv.Tool('addLibrary', library = baseEnv['rootGuiLibs'])
@@ -21,11 +21,15 @@ progEnv.Tool('digiRootDataLib')
 progEnv.Tool('reconRootDataLib')
 progEnv.Tool('calibTkrUtilLib')
 
-doBadStripsCalib = progEnv.Program('doBadStripsCalib', listFiles(['src/badStripsCalib/*.cxx']))
-doMuonCalibTot = progEnv.Program('doMuonCalibTot',listFiles(['src/muonCalibTot/*.cxx']))
+doBadStripsCalib = progEnv.Program('doBadStripsCalib',
+                                   listFiles(['src/badStripsCalib/*.cxx']))
+doMuonCalibTot = progEnv.Program('doMuonCalibTot',
+                                 listFiles(['src/muonCalibTot/*.cxx']))
 doXml2root = progEnv.Program('doXml2root',listFiles(['src/xml2root/*.cxx']))
 
-progEnv.Tool('registerObjects', package = 'calibGenTKR', binaries = [doMuonCalibTot,doXml2root,doBadStripsCalib])
+progEnv.Tool('registerTargets', package = 'calibGenTKR',
+             binaryCxts = [[doMuonCalibTot,progEnv], [doXml2root,progEnv],
+                           [doBadStripsCalib,progEnv]])
 
 
 
