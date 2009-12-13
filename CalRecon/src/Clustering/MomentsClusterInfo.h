@@ -32,19 +32,19 @@ public:
     MomentsClusterInfo(ICalReconSvc* calReconSvc, double transScaleFactor = 1.0);
     virtual ~MomentsClusterInfo() {};
     
-    Event::CalCluster* fillClusterInfo(const XtalDataVec* xtalVec);
+    Event::CalCluster* fillClusterInfo(const XtalDataList* xtalVec);
 private:
     // Use this to fill the layer data, returns total energy
-    double fillLayerData(const XtalDataVec* xtalVec, Event::CalCluster* cluster);
+    double fillLayerData(const XtalDataList* xtalVec, Event::CalCluster* cluster);
 
     // Use this to fill the moments information
-    void fillMomentsData(const XtalDataVec* xtalVec, Event::CalCluster* cluster, double energy);
+    void fillMomentsData(const XtalDataList* xtalVec, Event::CalCluster* cluster, double energy);
 
     // calculate the centroid of the shower from the hits using only the transverse position information (Philippe Bruel : needed when dealing with saturated crystals)
-    int getCentroidTransverseInfoOnly(const XtalDataVec* xtalVec);
+    int getCentroidTransverseInfoOnly(const XtalDataList* xtalVec);
 
     // calculate the direction and centroid of the shower from the hits using only the transverse position information (Philippe Bruel : using minuit)
-    int fitDirectionCentroid(const XtalDataVec* xtalVec) ;
+    int fitDirectionCentroid(const XtalDataList* xtalVec) ;
 
     // Correct the longitudinal position using output of fitDirectionCentroid (Philippe Bruel : used for saturated crystals)
     Point GetCorrectedPosition(Point pcrystal, int itower, int ilayer, int icolumn);

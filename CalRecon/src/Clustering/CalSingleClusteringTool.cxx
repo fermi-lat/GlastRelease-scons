@@ -81,7 +81,7 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     // TDS input: CalXtalRecCol
     // TDS output: CalClustersCol
     // prepare the initital set of xtals
-    XtalDataVec* xTalClus = new XtalDataVec();
+    XtalDataList* xTalClus = new XtalDataList();
 
     xTalClus->clear();
     for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 

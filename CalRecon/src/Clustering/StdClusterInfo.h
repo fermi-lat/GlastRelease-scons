@@ -28,7 +28,7 @@ public:
     StdClusterInfo(const ICalReconSvc* calReconSvc) : m_calReconSvc(calReconSvc) {};
    virtual ~StdClusterInfo() {};
     
-   Event::CalCluster* fillClusterInfo(const XtalDataVec* xtalVec);
+   Event::CalCluster* fillClusterInfo(const XtalDataList* xtalVec);
 private:
 
     // calculate the direction of the shower from the hits

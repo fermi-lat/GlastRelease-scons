@@ -60,7 +60,7 @@ MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, double transSc
 }
 
 /// This makes CalClusters out of associated CalXtalRecData pointers
-Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
+Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
 {
     // Create an output cluster
     Event::CalCluster* cluster = 0;
@@ -86,7 +86,7 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataVec* xTalVe
     return cluster;
 }
 
-double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalCluster* cluster)
+double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCluster* cluster)
 {
     //Initialize local variables
     double              ene = 0;                      // Total energy in this cluster
@@ -104,7 +104,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
 
     // Compute barycenter and various moments
     // loop over all crystals in the current cluster
-    XtalDataVec::const_iterator xTalIter;
+    XtalDataList::const_iterator xTalIter;
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
@@ -236,7 +236,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataVec* xTalVec, Event::CalC
     return ene;
 }
 
-void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalCluster* cluster, double energy)
+void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::CalCluster* cluster, double energy)
 {
     // Try new utility class
     // Begin by building a Moments Data vector
@@ -245,13 +245,13 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
     Point  centroid = cluster->getCalParams().getCentroid();
     Vector axis     = cluster->getCalParams().getAxis();
 
-    XtalDataVec::const_iterator xTalMax = xTalVec->end();
+    XtalDataList::const_iterator xTalMax = xTalVec->end();
 
     double rmsDist   = 0.;
     double weightSum = 0.;
 
     // Loop through the xtals setting the hits to analyze
-    for(XtalDataVec::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    for(XtalDataList::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         if (xTalIter == xTalMax) continue;
 
@@ -373,7 +373,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataVec* xTalVec, Event::CalC
     return;
 }
 
-int MomentsClusterInfo::getCentroidTransverseInfoOnly(const XtalDataVec* xTalVec)
+int MomentsClusterInfo::getCentroidTransverseInfoOnly(const XtalDataList* xTalVec)
 {
     //
     // Purpose and Method:
@@ -390,7 +390,7 @@ int MomentsClusterInfo::getCentroidTransverseInfoOnly(const XtalDataVec* xTalVec
         myenergy[i] = 0;
     }
 
-    XtalDataVec::const_iterator xTalIter;
+    XtalDataList::const_iterator xTalIter;
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
@@ -479,7 +479,7 @@ void MomentsClusterInfo::fcncal(int & , double *, double &f, double *par, int )
 }
 
 
-int MomentsClusterInfo::fitDirectionCentroid(const XtalDataVec* xTalVec)
+int MomentsClusterInfo::fitDirectionCentroid(const XtalDataList* xTalVec)
 {
     //
     // Purpose and Method:
@@ -515,7 +515,7 @@ int MomentsClusterInfo::fitDirectionCentroid(const XtalDataVec* xTalVec)
         myenergy[i] = 0;
     }
 
-    XtalDataVec::const_iterator xTalIter;
+    XtalDataList::const_iterator xTalIter;
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal

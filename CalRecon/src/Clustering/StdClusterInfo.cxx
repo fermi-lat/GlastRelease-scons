@@ -2,7 +2,7 @@
 #include "StdClusterInfo.h"
  
 /// This makes CalClusters out of associated CalXtalRecData pointers
-Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
+Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
 {
     int   calnLayers = m_calReconSvc->getCalNLayers() ;
     const Point p0(0.,0.,0.);  
@@ -17,7 +17,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataVec* xTalVec)
     // Compute barycenter and various moments
     
     // loop over all crystals in the current cluster
-    XtalDataVec::const_iterator xTalIter;
+    XtalDataList::const_iterator xTalIter;
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal

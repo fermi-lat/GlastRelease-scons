@@ -16,9 +16,9 @@
 
 static const InterfaceID IID_ICalClusteringTool("ICalClusteringTool",1,0) ;
     
-//! Typedefs to define associated Xtal's in cluster analysis (not the best place for this?)
-typedef  std::vector<Event::CalXtalRecData *> XtalDataVec ;
-typedef  std::vector<XtalDataVec *>           XtalDataVecVec ;
+//! Typedefs to define associated Xtal's in cluster analysis
+typedef  std::list<Event::CalXtalRecData *> XtalDataList ;
+typedef  std::vector<XtalDataList *>        XtalDataListVec ;
 
 class ICalClusteringTool : virtual public IAlgTool {
 

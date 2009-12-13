@@ -16,7 +16,7 @@ class ICalClusterFiller
 {
 public:
     //* Defines the method for filling cluster info into CalCluster TDS objects
-    virtual Event::CalCluster* fillClusterInfo(const XtalDataVec* xtalVec) = 0;
+    virtual Event::CalCluster* fillClusterInfo(const XtalDataList* xtalVec) = 0;
 };
 
 #endif
