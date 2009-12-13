@@ -233,9 +233,9 @@ typedef CalClusterCol::iterator       CalClusterColItr;
 typedef CalClusterCol::const_iterator CalClusterColConItr;
 
 // Define the relational table taking us back to CalXtalRecData objects
-typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster>               CalClusterHitTab;
-typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster>               CalClusterHitRel;
-typedef ObjectList< Event::Relation<Event::CalXtalRecData, Event::CalCluster> > CalClusterHitTabList;
+typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster> CalClusterHitTab;
+typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster> CalClusterHitRel;
+typedef RelationList<CalXtalRecData, CalCluster>                  CalClusterHitTabList;
 
 }
 
