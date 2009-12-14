@@ -97,6 +97,10 @@ Event::CalCorToolResult* CalRawEnergyTool::doEnergyCorr(Event::CalClusterCol* ca
     // Do the loop and accumulate information
     for(Event::CalClusterCol::iterator clusIter = calClusters->begin(); clusIter != calClusters->end(); clusIter++)
     {
+        // Note that if we are doing "clustering" (ie multiple clusters) then the first cluster is the "uber" cluster
+        // So... right now, break out if after the first cluster
+        if (clusIter != calClusters->begin()) break;
+
         Event::CalCluster*       cluster = *clusIter;
         const Event::CalParams&  params  = cluster->getCalParams();
 
