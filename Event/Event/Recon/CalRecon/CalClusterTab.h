@@ -20,9 +20,9 @@
 
 namespace Event
 {
-    typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster>               CalClusterHitTab;
-    typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster>               CalClusterHitRel;
-    typedef ObjectList< Event::Relation<Event::CalXtalRecData, Event::CalCluster> > CalClusterHitTabList;
+    typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster> CalClusterHitTab;
+    typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster> CalClusterHitRel;
+    typedef RelationList<Event::CalXtalRecData, Event::CalCluster>    CalClusterHitTabList;
 };
 
 #endif
