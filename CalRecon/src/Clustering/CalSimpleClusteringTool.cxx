@@ -77,13 +77,14 @@ private:
     //! Event Service member directly useable by concrete classes.
     IDataProviderSvc*        m_dataSvc;
 
-    // make this data members
+    // Keep trackk of crystals locally
     XtalDataList             m_xTals;
-
     LyrRow2XtalDataMap       m_lyrRow2XtalDataMap;
-
     Event::CalClusterHitTab* m_xTal2ClusTab;
 
+    // Scale factor for searching neighboring rows
+    double                   m_nextRowSclFctr;
+    double                   m_nextLyrSclFctr;
  } ;
 
 
@@ -96,7 +97,9 @@ DECLARE_TOOL_FACTORY(CalSimpleClusteringTool) ;
 CalSimpleClusteringTool::CalSimpleClusteringTool(const std::string & type,
                                                  const std::string & name,
                                                  const IInterface * parent )
-                                               : AlgTool(type, name, parent)
+                                               : AlgTool(type, name, parent),
+                                                 m_nextRowSclFctr(0.75),
+                                                 m_nextLyrSclFctr(0.5)
 { 
     m_xTals.clear();
     m_lyrRow2XtalDataMap.clear();
@@ -315,13 +318,13 @@ void CalSimpleClusteringTool::removeXTal(Event::CalXtalRecData* xTal)
 void CalSimpleClusteringTool::makeSets(XtalDataListVec& clusters)
 {
     // The first set is the set of ALL crystals from which we will construct the "uber" cluster
+    // Note that this cluster will be added to the end of our list, at the end of this method
     XtalDataList* uber = new XtalDataList(m_xTals);
-    clusters.push_back(uber);
 
     // Now make the "proper" clusters
     while (m_xTals.size()>0)
     {
-        XtalDataList * cluster = new XtalDataList;
+        XtalDataList* cluster = new XtalDataList;
 
         // The highest energy crystal in our list is the first one. 
         XtalDataList::iterator xTalBestIter = m_xTals.begin();
@@ -364,7 +367,6 @@ void CalSimpleClusteringTool::makeSets(XtalDataListVec& clusters)
             bestXtal = getNearestXtalInDiffLayer(bestXtal, layer);
 
             if (bestXtal == 0) break;
-            //if (bestXtal == 0) continue;
 
             removeXTal(bestXtal);
             cluster->push_back(bestXtal);
@@ -374,8 +376,13 @@ void CalSimpleClusteringTool::makeSets(XtalDataListVec& clusters)
 
         clusters.push_back(cluster) ;
     }
-    // Finished! 
 
+    // Now add the uber cluster to the end of our list
+    // But only do so if more than one cluster found
+    if (clusters.size() > 1) clusters.push_back(uber);
+    else                     delete uber;
+
+    // Finished! 
     return;
 }
 
@@ -524,7 +531,7 @@ Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInNextRow(XtalData
         XtalDataList& xTalDataList = lyrRow2XtalIter->second;
 
         //Keep track of the best match
-        double  bestDist = 10.;   //************ THIS SHOULD BE ADJUSTABLE 
+        double  bestDist = m_nextRowSclFctr * m_calReconSvc->getCalCsILength();  
         
         //Loop through input vector of Xtals looking for a nearest neighbor match
         XtalDataListIterator xTalVecIter = xTalDataList.begin();
@@ -575,7 +582,7 @@ Event::CalXtalRecData* CalSimpleClusteringTool::getNearestXtalInDiffLayer(Event:
     if (lyrRow2XtalIter != m_lyrRow2XtalDataMap.end())
     {
         //Keep track of the best match
-        double  bestDist = 10.;   //************ THIS SHOULD BE ADJUSTABLE 
+        double  bestDist = m_nextLyrSclFctr * m_calReconSvc->getCalCsILength();   
 
         //Loop through input vector of Xtals looking for a nearest neighbor match
         std::list<Event::CalXtalRecData*>::iterator xTalVecIter = lyrRow2XtalIter->second.begin();
