@@ -337,7 +337,7 @@ private:
     /// downward pocas
     vector<Double_t> m_rowActDistCol_down;
 
-    ClassDef(AcdRecon,15) // Acd Reconstruction data
+    ClassDef(AcdRecon,16) // Acd Reconstruction data
 };
 
 #endif

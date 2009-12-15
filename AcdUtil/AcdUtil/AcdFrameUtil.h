@@ -3,6 +3,8 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Matrix/SymMatrix.h"
 
 #include <vector>
 
@@ -172,6 +174,13 @@ namespace AcdFrameUtil {
    *
    */
   void buildRotations();
+
+
+  /**
+   *
+   *
+   **/
+  void getErrorAxes(const HepGeom::Transform3D& toGlobal, const HepSymMatrix& cov, HepVector3D& v1, HepVector3D& v2);
 
 }
 

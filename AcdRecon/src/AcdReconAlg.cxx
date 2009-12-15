@@ -1178,8 +1178,9 @@ StatusCode AcdReconAlg::extrapolateTrack(const Event::TkrTrack& aTrack,
     AcdRecon::PocaData& pocaData = *(itr->second);
     float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
     try {
+      Vector voca(pocaData.m_voca.x(),pocaData.m_voca.y(),pocaData.m_voca.z());
       AcdRecon::propagateToArcLength(*m_G4PropTool,trackData,pocaArcLength,next_params,paramsAtArcLength);
-      AcdRecon::projectErrorToPocaVector(paramsAtArcLength,pocaData.m_pocaVector,pocaData.m_active3DErr);
+      AcdRecon::projectErrorToPocaVector(paramsAtArcLength,voca,pocaData.m_active3DErr_proj);
     } catch (...) {
        log << MSG::ERROR << "Caught exception using propagator make POCAs with track " << trackData.m_index 
 	<< ".  No ACD POCAs calculated for that track." <<   endreq;
@@ -1257,7 +1258,7 @@ StatusCode AcdReconAlg::extrapolateVertex(const AcdRecon::TrackData& trackData,
     AcdRecon::PocaData& pocaData = *(itr->second);
     //float pocaArcLength = forward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
     //Event::TkrTrackParams next_params = m_G4PropTool->getTrackParams(pocaArcLength,startEnergy,true);
-    //AcdRecon::projectErrorAtPoca(trackData,next_params,pocaData.m_poca,pocaData.m_pocaVector,pocaData.m_active3DErr);
+    //AcdRecon::projectErrorAtPoca(trackData,next_params,pocaData.m_poca,pocaData.m_voca,pocaData.m_active3DErr);
     Event::AcdTkrHitPoca* aPoca(0);
     if ( m_pocaTool != 0 ) {
       sc = m_pocaTool->makePoca(trackData,pocaData,aPoca);
@@ -1335,7 +1336,7 @@ StatusCode AcdReconAlg::calcCornerDoca(const HepPoint3D &x0, const HepVector3D &
   
 }
 
-StatusCode AcdReconAlg::doBacksplash(const Event::AcdDigiCol& digiCol, Event::AcdSplashVarsCol& acdSplashVars) {
+StatusCode AcdReconAlg::doBacksplash(const Event::AcdDigiCol& /* digiCol */, Event::AcdSplashVarsCol& acdSplashVars) {
 
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream   log( msgSvc(), name() );

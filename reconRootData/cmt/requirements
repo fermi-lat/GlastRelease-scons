@@ -1,5 +1,5 @@
 package reconRootData
-version v9r20p1
+version v9r21p1
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -12,6 +12,7 @@ use enums v*
 apply_pattern root_package headers="\
  ../reconRootData/AdfRecon.h\
  ../reconRootData/AcdRecon.h\
+ ../reconRootData/AcdReconV2.h\
  ../reconRootData/CalParams.h\
  ../reconRootData/CalClusterLayerData.h\
  ../reconRootData/CalCluster.h\
@@ -21,6 +22,7 @@ apply_pattern root_package headers="\
  ../reconRootData/CalRangeRecData.h\
  ../reconRootData/CalXtalRecData.h\
  ../reconRootData/ReconEvent.h\
+ ../reconRootData/AcdEventTopology.h\
  ../reconRootData/AcdTkrIntersection.h\
  ../reconRootData/AcdTkrPoca.h\
  ../reconRootData/AcdHit.h\
@@ -30,6 +32,12 @@ apply_pattern root_package headers="\
  ../reconRootData/AcdTkrHitPoca.h\
  ../reconRootData/AcdTkrGapPoca.h\
  ../reconRootData/AcdSplashVars.h\
+ ../reconRootData/AcdPocaDataV2.h\
+ ../reconRootData/AcdTkrLocalCoordsV2.h\
+ ../reconRootData/AcdTkrPointV2.h\
+ ../reconRootData/AcdTkrHitPocaV2.h\
+ ../reconRootData/AcdTkrGapPocaV2.h\
+ ../reconRootData/AcdTkrAssoc.h\
  ../reconRootData/TkrCluster.h\
  ../reconRootData/TkrTrack.h\
  ../reconRootData/TkrTrackHit.h\

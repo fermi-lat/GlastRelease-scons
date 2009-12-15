@@ -4,10 +4,17 @@ package manager:H.Kelly
 
 EOH
 
- AcdRecon-04-03-04 05-Nov-2009    jrb Updates for SCons
+AcdRecon-05-01-01 14-Dec-2009    hmk Merge in Eric's mods from 
+    GlastReleasev17r31p1 branch
+AcdRecon-04-03-04 05-Nov-2009    jrb Updates for SCons
 v4r3p3    03-Sep-2008 EAC Don't try to get mip equivalent for NA channels
 v4r3p2    14-Jul-2008 EAC Put call to run G4Propagator in try-catch to protect against bad tracks
 v4r3p1    09-Jul-2008 EAC Put call to start G4Propagator in try-catch to protect against bad tracks
+GlastReleasev17r31p1 branch
+v5r0p0gr3 23-Jun-2009 HMK Patch for Windows to avoid ambiguous sqrt call
+v5r0p0gr2 08-Jun-2009 EAC Minor Changes to compile with latest tag of AcdUtil
+v5r0p0gr1 08-Jun-2009 EAC Commit new version of AcdRecon
+End GlastReleasev17r31p1 branch
 v4r3      08-May-2008 EAC Update AcdPha2Mips to be able to use coherent noise calibration
 v4r2p2    06-May-2008 EAC Update AcdPha2Mips to set a minimum value for hits with the GEM bit set
 v4r2p1    21-Dec-2007 EAC Bug fix in AcdPha2Mips tool to consider anything with PHA or Veto bits

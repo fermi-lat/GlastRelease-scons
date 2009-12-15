@@ -22,7 +22,16 @@
 #pragma link C++ class AcdTkrGapPoca+;
 #pragma link C++ class AcdSplashVars+;
 
+#pragma link C++ class AcdPocaDataV2+;
+#pragma link C++ class AcdTkrLocalCoordsV2+;
+#pragma link C++ class AcdTkrPointV2+;
+#pragma link C++ class AcdTkrHitPocaV2+;
+#pragma link C++ class AcdTkrGapPocaV2+;
+#pragma link C++ class AcdTkrAssoc+;
+#pragma link C++ class AcdEventTopology+;
+
 #pragma link C++ class AcdRecon+;
+#pragma link C++ class AcdReconV2+;
 
 #pragma link C++ class CalRecon+;
 #pragma link C++ class CalParams+;

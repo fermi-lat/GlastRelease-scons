@@ -21,6 +21,7 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_TOOL(      TkrValsTool      );
     DECLARE_TOOL(      CalValsTool      );
     DECLARE_TOOL(      AcdValsTool      );
+    DECLARE_TOOL(      Acd2ValsTool     );
     DECLARE_TOOL(      McValsTool       );
     DECLARE_TOOL(      McAnalValsTool   );
     DECLARE_TOOL(      GltValsTool      );

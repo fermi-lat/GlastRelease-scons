@@ -13,10 +13,25 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 
+AcdRibbonSegment::AcdRibbonSegment(float halfWidth, 
+				   const HepPoint3D& start, const HepPoint3D& end, 
+				   const HepTransform3D& trans )
+  :m_halfWidth(halfWidth),
+   m_start(start),
+   m_end(end),
+   m_vect(end-start),
+   m_trans(trans),
+   m_invTrans(trans.inverse()){
+}
+
+
 /// Constructor: takes the ribbon id, the volume id, and the detector service
 AcdRibbonDim::AcdRibbonDim(const idents::AcdId& acdId, IAcdGeometrySvc& acdGeomSvc) 
   :m_acdId(acdId),
-   m_acdGeomSvc(acdGeomSvc){
+   m_acdGeomSvc(acdGeomSvc),
+   m_halfLength(0.),
+   m_topIdx(-1),
+   m_plusIdx(-1){
   m_sc = getVals();
 }  
 
@@ -26,100 +41,101 @@ StatusCode AcdRibbonDim::getVals() {
   StatusCode sc = StatusCode::SUCCESS;
 
   // First we load up the rays
-  m_minusSideRays.clear();
-  m_topRays.clear();
-  m_plusSideRays.clear();
-  m_halfWidth = m_acdGeomSvc.ribbonHalfWidth();
-  bool isOk = m_acdGeomSvc.fillRibbonData(m_acdId,m_minusSideRays,m_topRays,m_plusSideRays,
-					  m_minusSideTransform,m_topTransform,m_plusSideTransform);
+  bool isOk = m_acdGeomSvc.fillRibbonData(m_acdId,m_segments,m_topIdx,m_plusIdx);
   if ( ! isOk ) {
     return StatusCode::FAILURE;
   }
   double fullLength = calcRibbonLength();
   if ( fullLength <= 0. ) {
     return StatusCode::FAILURE;
-      }
+  }
   m_halfLength = fullLength/2.;
+
   return sc;
 }
 
 
 void AcdRibbonDim::toLocal(const HepPoint3D& global, int isegment, HepPoint3D& local) const {
-  switch (isegment) {
-  case 0: 
-    local = m_minusSideTransform * global;
-    break;
-  case 1: 
-    local = m_topTransform * global;
-    break;
-  case 2: 
-    local = m_plusSideTransform * global;
-    break;    
-  }
-}
-
-bool AcdRibbonDim::setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) const {
-  const Ray* firstRay(0);
-  const Ray* lastRay(0);
-  switch (iSeg) {
-  case 0: 
-    firstRay = &(m_minusSideRays[0]);
-    lastRay = &(m_minusSideRays.back());
-    break;
-  case 1: 
-    firstRay =  &(m_topRays[0]);
-    lastRay = &(m_topRays.back());
-    break;
-  case 2: 
-    firstRay = &(m_plusSideRays[0]);
-    lastRay = &(m_plusSideRays.back());
-    break;    
-  }
-  const Point& startPos = firstRay->position();
-  Point endPos = lastRay->position(lastRay->getArcLength());
-  start.set(startPos.x(),startPos.y(),startPos.z());
-  switch (iSeg) {
-  case 0: 
-  case 2:
-    // up the sides.  only z counts
-    vector.set(0.,0.,endPos.z()-startPos.z());
-    break;
-  case 1: 
-    // across the top. only x or y count
-    vector.set(endPos.x()-startPos.x(),endPos.y()-startPos.y(),0);
-    break;    
-  }
-  return true;
-}
-
-const HepTransform3D& AcdRibbonDim::transform(int iVol) const {
-  switch ( iVol ) {
-  case 0:
-    return m_minusSideTransform;
-  case 1:
-    return m_topTransform;
-  case 2:
-    return m_plusSideTransform;
-  }
-  static const HepTransform3D nullTrans;
-  return nullTrans;
+  const AcdRibbonSegment* seg = getSegment(isegment);
+  if ( seg == 0 ) return;
+  local = seg->m_trans * global;
 }
 
 
 double AcdRibbonDim::calcRibbonLength() {
-   double len(0);
-   std::vector<Ray>::const_iterator itr = m_minusSideRays.begin();
-   
-   for ( itr = m_minusSideRays.begin(); itr != m_minusSideRays.end(); itr++ ) {
-     len += itr->getArcLength();
+   double len(0);   
+   m_segStarts.resize( m_segments.size() + 1 );
+   unsigned i(0);
+   for ( std::vector<AcdRibbonSegment*>::const_iterator itr = m_segments.begin(); itr != m_segments.end(); itr++, i++ ) {
+     float segLen = (*itr)->m_vect.mag();
+     m_segStarts[i] = len;
+     len += segLen;
    }
-   for ( itr = m_topRays.begin(); itr != m_topRays.end(); itr++ ) {
-     len += itr->getArcLength();
-   }
-   for ( itr = m_plusSideRays.begin(); itr != m_plusSideRays.end(); itr++ ) {
-     len += itr->getArcLength();
-   }
+   // Total length
+   m_segStarts[m_segments.size()] = len;
    return len;  
+}
+
+float AcdRibbonDim::getRibbonLength(unsigned iSeg, float segLength) const {
+  float retVal(0.);
+  if ( (int)iSeg < m_plusIdx ) { 
+    // -side or top: Segment frame runs along ribbon, add the segment length to start point for this segment
+    retVal = m_segStarts[iSeg] + segLength;
+  } else {    
+    // +side: Segment frame runs against ribbon, subtract the segment length from start point of next segment
+    retVal = m_segStarts[iSeg] + segLength;
+  }
+  retVal -= m_halfLength;
+  return retVal;
+}
+
+
+bool AcdRibbonDim::setEdgeRay(const int& side, HepPoint3D& start, HepVector3D& vect) const{
+  HepPoint3D end;
+  switch ( side ) {
+  case -1:
+    start = m_segments[0]->m_start;
+    end = m_segments[m_topIdx-1]->m_end;
+    break;
+  case 0:
+    start = m_segments[m_topIdx]->m_start;
+    end = m_segments[m_plusIdx-1]->m_end;
+    break;
+  case 1:
+    start = m_segments[m_plusIdx]->m_start;
+    end = m_segments.back()->m_end;
+    break;
+  default:
+    return false;
+  }
+  vect = end - start;
+  return true;
+}
+
+
+void AcdRibbonDim::getSegmentsIndices(const HepVector3D& tkDir, bool upward, int& start, int& end, int& dir) const {
+  
+  switch ( m_acdId.ribbonOrientation() ) {
+  case 5:
+    dir = tkDir.x() > 0 ? 1 : -1;
+    break;
+  case 6:
+    dir = tkDir.y() > 0 ? 1 : -1;
+    break;
+  }
+  
+  switch ( dir ) {
+  case -1:
+    start = upward ? m_plusIdx - 1 : m_topIdx - 1;
+    end = -1;
+    break;
+  case 1:
+    start = upward ? m_topIdx : m_plusIdx;
+    end = m_segments.size();
+    break;
+  }
+  
+
 }
 
 

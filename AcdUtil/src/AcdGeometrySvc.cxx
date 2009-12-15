@@ -362,8 +362,8 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
 
     // Determine the extent of all corner gap rays in Z, using the a top corner
     // tile and a bottom side row tile.
-    double zMax = tile040->tileCenter().z();
-    double zMin = tile430->corner()[0].z();    
+    double zMax = tile040->getSection(0)->m_center.z();
+    double zMin = tile430->getSection(0)->m_corners[0].z();    
 
     // Always use the top corner.  In local frame this is either -x,+y[1] or +x,+y[2]
 
@@ -371,7 +371,8 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // Use corners:  tile 100 +x,  tile 200 -x
     HepPoint3D corner0ref;
 
-    AcdFrameUtil::getMidpoint(tile100->corner()[2],tile200->corner()[1],corner0ref);
+    AcdFrameUtil::getMidpoint(tile100->getSection(0)->m_corners[2],
+			      tile200->getSection(0)->m_corners[1],corner0ref);
 
     m_cornerGapStartPoint[0] = Point(corner0ref.x(),corner0ref.y(),zMin);
     m_cornerGapEndPoint[0] = Point(corner0ref.x(),corner0ref.y(),zMax);
@@ -386,7 +387,9 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // Construct Ray for 2nd Corner Gap, -x, +y corner
     // Use corners:  tile 204 +x,  tile 300 -x
     HepPoint3D corner1ref;
-    AcdFrameUtil::getMidpoint(tile204->corner()[2],tile300->corner()[1],corner1ref);
+    AcdFrameUtil::getMidpoint(tile204->getSection(0)->m_corners[2],
+			      tile300->getSection(0)->m_corners[1],
+			      corner1ref);
 
     m_cornerGapStartPoint[1] = Point(corner1ref.x(),corner1ref.y(),zMin);
     m_cornerGapEndPoint[1] = Point(corner1ref.x(),corner1ref.y(),zMax);
@@ -402,7 +405,9 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // Construct Ray for 3rd Corner Gap. +x, +y
     // Use corners:  tile 304 +x,  tile 404 -x
     HepPoint3D corner2ref;
-    AcdFrameUtil::getMidpoint(tile304->corner()[2],tile404->corner()[1],corner2ref);
+    AcdFrameUtil::getMidpoint(tile304->getSection(0)->m_corners[2],
+			      tile404->getSection(0)->m_corners[1],
+			      corner2ref);
 
     m_cornerGapStartPoint[2] = Point(corner2ref.x(),corner2ref.y(),zMin);
     m_cornerGapEndPoint[2] = Point(corner2ref.x(),corner2ref.y(),zMax);
@@ -418,7 +423,8 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
     // Construct Ray for 4th Corner Gap, +x. -y
     // Use corners:  tile 400 -x,  tile 104 +x
     HepPoint3D corner3ref;
-    AcdFrameUtil::getMidpoint(tile400->corner()[2],tile104->corner()[1],corner3ref);
+    AcdFrameUtil::getMidpoint(tile400->getSection(0)->m_corners[2],
+			      tile104->getSection(0)->m_corners[1],corner3ref);
 
     m_cornerGapStartPoint[3] = Point(corner3ref.x(),corner3ref.y(),zMin);
     m_cornerGapEndPoint[3] = Point(corner3ref.x(),corner3ref.y(),zMax);
@@ -434,22 +440,133 @@ StatusCode AcdGeometrySvc::findCornerGaps( ) {
 }
 
 
+StatusCode AcdGeometrySvc::getNextTileCorners(const idents::AcdId& id, int dir, 
+					      HepPoint3D& c1, HepPoint3D& c2, bool& isRealGap) {
+
+  if ( ! id.tile() ) return StatusCode::FAILURE;
+  short face = id.face();
+  short row = id.row();
+  short col = id.column();
+
+  short outCol(-1), outFace(-1);
+  int localDir(0);
+  int nCol(5);
+  int ic(-1);
+
+  switch (face) {
+  case 0:
+    localDir = 1;
+    break;
+  case 1:
+  case 2:
+    if ( row == 3 ) nCol = 1;
+    localDir = -1;
+    break;
+  case 3:
+  case 4:
+    if ( row == 3 ) nCol = 1;
+    localDir = 1;
+    break;
+  }
+
+  outCol = col + (localDir * dir);
+  
+  if ( outCol < 0 ) {
+    switch ( face ) {
+    case 0:
+      isRealGap = false;
+      return StatusCode::SUCCESS;
+    case 1:
+      outCol = 0;
+      outFace = 2;
+      ic = 2;
+      break;
+    case 2:
+      outCol = 0;
+      outFace = 1;
+      ic = 2;
+      break;
+    case 3:
+      outCol = nCol - 1;
+      outFace = 2;
+      ic = 0;
+      break;
+    case 4:
+      outCol = nCol - 1;
+      outFace = 1;
+      ic = 0;
+      break;
+    }
+  } else if ( outCol >= nCol ) {
+    switch ( face ) {
+    case 0:
+      isRealGap = false;
+      return StatusCode::SUCCESS;
+    case 1:
+      outCol = 0;
+      outFace = 4;
+      ic = 0;
+      break;
+    case 2:
+      outCol = 0;
+      outFace = 3;
+      ic = 0;
+      break;
+    case 3:
+      outCol = nCol - 1;
+      outFace = 4;
+      ic = 2;
+      break;
+    case 4:
+      outCol = nCol - 1;
+      outFace = 3;
+      ic = 2;
+      break;
+    } 
+  } else {
+    // doesn't change face
+    outFace = face;
+    switch ( face ) {
+    case 0:
+    case 1:
+    case 3:
+      ic = dir > 0 ? 0 : 2;
+      break;
+    case 2:
+    case 4:
+      ic = dir > 0 ? 2 : 0;
+      break;      
+    }
+
+  }
+
+  
+  idents::AcdId nId(0,outFace,row,outCol);
+
+  const AcdTileDim* tile = m_geomMap.getTile(nId,*this);
+  if ( tile == 0 ) {
+    std::cout << "Failed to fine tile for " << nId.id() << std::endl;
+    return StatusCode::FAILURE;
+  }
+
+  const AcdTileSection* sect = tile->getSection(0);
+  c1 = sect->m_corners[ic];
+  c2 = sect->m_corners[ic+1];
+  isRealGap = true;
+  return StatusCode::SUCCESS;
+}
+
 bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
-				    std::vector<Ray>& minusSideRays,
-				    std::vector<Ray>& topRays,
-				    std::vector<Ray>& plusSideRays, 
-				    HepTransform3D& minusSideTransform,
-				    HepTransform3D& topTransform,
-				    HepTransform3D& plusTransform) {
+				    std::vector<AcdRibbonSegment*>& segs,
+				    int& topIdx, int& plusIdx) {
+
   // Purpose and Method:  Fill the three supplied vector of Rays.  The Rays are constructed from the ribbon segments
   //    associated with AcdId id.  
   MsgStream   log( msgSvc(), name() );
   
   log << MSG::DEBUG << "Filling data from ribbon " << id.id() << endreq;
 
-  minusSideRays.clear();
-  topRays.clear();
-  plusSideRays.clear();
+  segs.clear();
 
   typedef enum {
     ribbonX = 5,
@@ -479,24 +596,15 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
   static const unsigned int xFaces[3] = { 1,0,3 }; // which faces of the detector the segment lie along
   static const unsigned int yFaces[3] = { 2,0,4 };
 
-  static const unsigned int xRefSeg[3] = { 4,0,0 }; // reference segements for "ribbon frame"
-  static const unsigned int yRefSeg[3] = { 4,2,2 }; 
-
   // orientation of ribbon 
   bool xOrient = ribbonOrientation == ribbonX ? true : false;
 
-  static const Point nullPoint;
-  static const Vector nullVector;
-  static const Ray nullRay(nullPoint,nullVector);
- 
   if ( xOrient ) {
-    minusSideRays.resize(nRibbonXSideSegsUsed,nullRay);
-    topRays.resize(nRibbonXTopSegsUsed,nullRay);
-    plusSideRays.resize(nRibbonXSideSegsUsed,nullRay);
+    topIdx = nRibbonXSideSegsUsed;
+    plusIdx = nRibbonXSideSegsUsed + nRibbonXTopSegsUsed;
   } else {
-    minusSideRays.resize(nRibbonYSideSegsUsed,nullRay);
-    topRays.resize(nRibbonYTopSegsUsed,nullRay);
-    plusSideRays.resize(nRibbonYSideSegsUsed,nullRay);
+    topIdx = nRibbonYSideSegsUsed;
+    plusIdx = nRibbonYSideSegsUsed + nRibbonYTopSegsUsed;    
   }
 
   // Loops over set of faces
@@ -506,7 +614,6 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
     std::vector<idents::VolumeIdentifier> ribbonSegmentVolIds;
     m_glastDetSvc->orderRibbonSegments(ribbonSegmentVolIds,
 				       xOrient ? xFaces[iFace] : yFaces[iFace], ribbonNum, xOrient, true);
-
     
     // OK, now loop over the relevent segments, first we need to figure out which they are
     const unsigned int* segmentIndex = xOrient ? 
@@ -515,8 +622,6 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
     unsigned int nSegment = xOrient ? 
       ( iFace == 1 ? nRibbonXTopSegsUsed : nRibbonXSideSegsUsed ) :
       ( iFace == 1 ? nRibbonYTopSegsUsed : nRibbonYSideSegsUsed );
-
-    unsigned int checkRefSegment = xOrient ? xRefSeg[iFace] : yRefSeg[iFace];
 
     for ( unsigned int iSeg(0); iSeg < nSegment; iSeg++ ) {
 
@@ -538,55 +643,16 @@ bool AcdGeometrySvc::fillRibbonData(const idents::AcdId& id,
 	return sc;
       } 
 
+      float halfWidth = xVectorGlobal.mag() / 2.;
       HepPoint3D start = center - yVectorGlobal;
       HepPoint3D end = center + yVectorGlobal;
-      HepVector3D vect = 2 * yVectorGlobal;
-
-      Point startPoint(start.x(),start.y(),start.z());
-      Vector rayVector(vect.x(),vect.y(),vect.z());
-
-      unsigned rayIndex(0);
-      switch (iFace) {
-      case 0: 
-	rayIndex = iSeg;
-	minusSideRays[rayIndex] = Ray(startPoint,rayVector);
-	minusSideRays[rayIndex].setArcLength(rayVector.mag());
-	break;
-      case 1: 
-	rayIndex = iSeg;
-	topRays[rayIndex] = Ray(startPoint,rayVector);
-	topRays[rayIndex].setArcLength(rayVector.mag());
-	break;
-      case 2: 
-	rayIndex = nSegment - (iSeg+1);
-	plusSideRays[rayIndex] = Ray(startPoint,rayVector);
-	plusSideRays[rayIndex].setArcLength(rayVector.mag());
-	break;
-      default:
-	return false;
-      }
-     
-      if ( iSeg == checkRefSegment ) {
-	switch (iFace) {
-	case 0:
-	  minusSideTransform = transformToLocal;
-	  break;
-	case 1:
-	  topTransform = transformToLocal;
-	  break;
-	case 2:
-	  plusTransform = transformToLocal;
-	  break;
-	default:
-	  return false;	  
-	}
-      }
-      
+      segs.push_back( new AcdRibbonSegment( halfWidth, start, end, transformToLocal ) );
+		      
       log << MSG::DEBUG << volId.name() << ' ' << (xOrient ? xFaces[iFace] : yFaces[iFace]) << ' ' << iSeg << ' ' << (xOrient ? 'X' : 'Y') 
-	  << ' ' << ribbonNum << ' ' << (iSeg == checkRefSegment ? "REF" : "") << std::endl
+	  << ' ' << ribbonNum << ' ' << std::endl
 	  << "cen: " << center << ", " << std::endl
 	  << "dim: " << dim[0] << ", " << dim[1] << ", " << dim[2] << std::endl
-	  << "startPos: (" << startPoint.x() << ", " << startPoint.y() << ", " << startPoint.z() << ")" 
+	  << "startPos: (" << start.x() << ", " << start.y() << ", " << start.z() << ")" 
 	  << " endPos: ( " << end.x() << ", " << end.y() << ", " << end.z() << ")" << endreq;
       
 
@@ -634,7 +700,7 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
   if ( sc.isFailure() ) {        
     log << MSG::ERROR << "Failed to handle transformations for tile volume: " 
       	<< volId.name() << endreq;
-    return sc;
+    return false;
   } 
 
   double x2(0.), xdelta(0.);
@@ -654,6 +720,10 @@ bool AcdGeometrySvc::fillTileData(const idents::AcdId& id, int iVol,
       << "x1v: " << x1VectorGlobal << std::endl
       << "x2v: " << x2VectorGlobal << std::endl
       << "yv: "  << yVectorGlobal << std::endl
+      << transformToLocal.xx() << ' ' <<  transformToLocal.xy() << ' ' <<  transformToLocal.xz() << ' ' << std::endl
+      << transformToLocal.yx() << ' ' <<  transformToLocal.yy() << ' ' <<  transformToLocal.yz() << ' ' << std::endl
+      << transformToLocal.zx() << ' ' <<  transformToLocal.zy() << ' ' <<  transformToLocal.zz() << ' ' << std::endl
+      << transformToLocal.dx() << ' ' <<  transformToLocal.dy() << ' ' <<  transformToLocal.dz() << ' ' << std::endl
       << "corner: (" << corner[0] << ',' << corner[1] << ',' << corner[2] << ',' <<  corner[3] << ',' << ")" << endreq;      
 
   return true;

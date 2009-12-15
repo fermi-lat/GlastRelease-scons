@@ -4,6 +4,8 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+reconRootData-09-21-01 HMK Merge in Eric's updates for AcdRecon from 
+        branch GlastReleasev17r5 tagged v9r20gr2
 v9r20p1   14-Sep-09  : HMK Fix up some warnings
 v9r20     12-Sep-08  : HMK provide delete ALL option
 v9r19     05-Aug-08  : Add GleamEventFlags to ReconEvent

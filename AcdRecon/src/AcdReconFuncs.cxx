@@ -148,7 +148,7 @@ namespace AcdRecon {
     for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {      
       
       double testArcLength(-1.);
-      AcdRecon::crossesPlane(track,tile.transform(iVol),testArcLength, testHitPoint);      
+      AcdRecon::crossesPlane(track,tile.getSection(iVol)->m_trans,testArcLength, testHitPoint);      
 
       // If arcLength is negative... had to go backwards to hit plane... 
       if ( testArcLength < 0 ) continue;
@@ -175,9 +175,9 @@ namespace AcdRecon {
   
   void tilePlaneActiveDistance(const AcdTileDim& tile, int iVol, const HepPoint3D& globalPoint,
 			       HepPoint3D& localPoint, double& activeX, double& activeY) {
-
-    tile.toLocal(globalPoint,localPoint,iVol);
-    tile.activeDistance(localPoint,iVol,activeX,activeY);
+    const AcdTileSection* sect = tile.getSection(iVol);
+    localPoint = sect->m_trans * globalPoint;
+    sect->activeDistance(localPoint,iVol,activeX,activeY);
   }
 
 
@@ -196,11 +196,13 @@ namespace AcdRecon {
     // loop over volumes of tile
     for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
 
-      const HepPoint3D* corner = tile.corner(iVol);
+      const AcdTileSection* sect = tile.getSection(iVol);
+
+      const HepPoint3D* corner = sect->m_corners;
       for (int iCorner = 0; iCorner<4; iCorner++) {
 
 	// ignored shared edges
-	if ( iCorner == tile.sharedEdge(iVol) ) continue;
+	if ( iCorner == sect->m_shared ) continue;
 
 	//  WBA: Naively I thought one could limit the edges investigated - not so!
 	//	if(iCorner != i_near_corner && (iCorner+1)%4 != i_near_corner) continue;
@@ -253,7 +255,8 @@ namespace AcdRecon {
     // loop over volumes of tile
     for (int iVol = 0; iVol < tile.nVol(); iVol++ ) {
 
-      const HepPoint3D* corner = tile.corner(iVol);
+      const AcdTileSection* sect = tile.getSection(iVol);
+      const HepPoint3D* corner = sect->m_corners;
 
       // First find the nearest corner and the distance to it. 
       double arclen(-1.);    
@@ -302,10 +305,12 @@ namespace AcdRecon {
     HepPoint3D testHitPoint, testLocal;
 
     // loop over segments
-    for ( int segment = 0; segment < 3; segment++ ) {
+    for ( unsigned segment = 0; segment < ribbon.nSegments(); segment++ ) {
 
       double testArcLength(-1.);
-      const HepTransform3D& toFacePlane = ribbon.transform(segment);
+
+      const AcdRibbonSegment* seg = ribbon.getSegment(segment);
+      const HepTransform3D& toFacePlane = seg->m_trans;
       AcdRecon::crossesPlane(aTrack, toFacePlane, testArcLength, testHitPoint);      
 	
       if (testArcLength < 0) continue;
@@ -315,7 +320,7 @@ namespace AcdRecon {
       double test_dist = fabs(testLocal.x());
       
       // Make this an Active Distance calculation 
-      test_dist = ribbon.halfWidth() - test_dist;
+      test_dist = seg->m_halfWidth - test_dist;
 
       // test against the best value
       if ( test_dist > best_dist ) {
@@ -335,16 +340,9 @@ namespace AcdRecon {
     // 
    
     // First, does this ribbon extend along x or y axix
-    static const int ribbonX = 5;
-    const idents::AcdId& acdId = ribbon.acdId();  
-    int dir = 0;
-    if ( acdId.ribbonOrientation() == ribbonX ) {
-      // extends along x.  Want to know if it is going towards +-Y sides  
-      dir = track.m_dir.x() > 0 ? 1 : -1;
-    } else {
-      // extends along y.  Want to know if it is going towards +-X sides  
-      dir = track.m_dir.y() > 0 ? 1 : -1;
-    }
+    int start(0), end(0), dir(0);
+    
+    ribbon.getSegmentsIndices(track.m_dir,track.m_upward,start,end,dir);
 
     dist = -2000.;
     double arcLengthTest(0.);
@@ -353,53 +351,23 @@ namespace AcdRecon {
     Vector v_test;
     int regionTest(0);
     double dist_last(-500000.);
-    std::vector<const Ray*> raysInOrder;    
-    
-    int iRay(0);
-    
-    // Now, look over the relevent rays.
-    if ( dir == 1 ) {
-      // Going to + side
-      for ( iRay = 0; iRay < (int)ribbon.plusSideRays().size(); iRay++ ) {
-	const Ray& aRay = ribbon.plusSideRays()[iRay];
-	raysInOrder.push_back(&aRay);
-      }
-      if ( track.m_upward ) {
-	for ( iRay = ribbon.topRays().size() -1; iRay >= 0; iRay-- ) {
-	  const Ray& aRay = ribbon.topRays()[iRay];
-	  raysInOrder.push_back(&aRay);
-	}
-      }
-    } else if ( dir == -1 ) {
-      // Going to - side
-       for ( iRay = 0; iRay < (int)ribbon.minusSideRays().size(); iRay++ ) {
-	const Ray& aRay = ribbon.minusSideRays()[iRay];
-	raysInOrder.push_back(&aRay);
-       }
-       if ( track.m_upward ) {
-	 for ( iRay =0; iRay < (int)ribbon.topRays().size(); iRay++ ) {
-	   const Ray& aRay = ribbon.topRays()[iRay];
-	   raysInOrder.push_back(&aRay);
-	 }
-       }
-    } else {
-      return;
-    }
 
     double ribbonLen(0);
     double rayLen(0);
 
-    for ( iRay = 0; iRay < (int)raysInOrder.size(); iRay++ ) {
-      const Ray& aRay = *(raysInOrder[iRay]);
+    for ( int iSeg(start); iSeg != end; iSeg += dir) {
+
+      const AcdRibbonSegment* seg = ribbon.getSegment(iSeg);
+      Point rayStart( seg->m_start.x(), seg->m_start.y(), seg->m_start.z());
+      Vector rayDir( seg->m_vect.x(), seg->m_vect.y(), seg->m_vect.z());
+      Ray aRay(rayStart,rayDir);
+      HepVector3D segLen = seg->m_end - seg->m_start;
+      aRay.setArcLength( segLen.mag() );
       AcdRecon::rayDoca_withCorner(track,aRay,arcLengthTest,rayLen,distTest,x_test,v_test,regionTest);      
 
-      // flip the ray length to top rays and +x,+y going.
-      if ( dir == 1 && iRay >= (int)ribbon.plusSideRays().size() ) {
-	rayLen = aRay.getArcLength() - rayLen;
-      }
 
       // Make this an Active Distance calculation 
-      distTest = ribbon.halfWidth() - distTest;
+      distTest = seg->m_halfWidth - distTest;
 
       if ( distTest < dist_last ) {
 	// going wrong direction. stop
@@ -522,20 +490,24 @@ namespace AcdRecon {
 	// hits X side
 	data.m_arcLength = sToXIntersection;
 	data.m_face = initialDirection.x() > 0 ? 1 : 3;
+	data.m_arcTol = slopeToXIntersection * acdVol.m_sideTol;
       } else {
 	// hits Z side
 	data.m_arcLength = sToZIntersection;
 	data.m_face = trackData.m_upward ? 0 : 5;
+	data.m_arcTol = trackData.m_upward ? (slopeToZIntersection * acdVol.m_topTol) : 0;
       }     
     } else {
       if ( sToYIntersection < sToZIntersection ) {
 	// hits Y side
 	data.m_arcLength = sToYIntersection;
 	data.m_face = initialDirection.y() > 0 ? 2 : 4;
+	data.m_arcTol = slopeToYIntersection * acdVol.m_sideTol;
       } else {
 	// hits Z side
 	data.m_arcLength = sToZIntersection;
 	data.m_face =  trackData.m_upward ? 0 : 5;
+	data.m_arcTol = trackData.m_upward ? (slopeToZIntersection * acdVol.m_topTol) : 0;
       }     
     }
     
@@ -726,8 +698,9 @@ namespace AcdRecon {
     const HepVector3D direction(entryVector.x(),entryVector.y(),entryVector.z());
 
     // get the tile center and corner
-    const HepPoint3D& center = tile.tileCenter();
-    const HepPoint3D& lowCorner = (tile.corner(0))[0];
+    const AcdTileSection* sect = tile.getSection(0);
+    const HepPoint3D& center = sect->m_center;
+    const HepPoint3D& lowCorner = sect->m_corners[0];
 
     // define the step vectors
     double halfX = (center.x() - lowCorner.x()) / (double)nxstep;
@@ -751,7 +724,7 @@ namespace AcdRecon {
       stepVector2 = HepVector3D(0.,halfY*2.,0.);
       normalVector = HepVector3D(0.,0.,1.);
       surfaceElementArea = halfX * halfY * 4.;
-      width = tile.dim()[2];
+      width = sect->m_dim[2];
       nstep1 = nxstep;
       nstep2 = nystep;
       break;
@@ -763,7 +736,7 @@ namespace AcdRecon {
       stepVector2 = HepVector3D(0.,0.,halfZ*2.);
       normalVector = HepVector3D(1.,0.,0.);
       surfaceElementArea = halfY * halfZ * 4.;      
-      width = tile.dim()[0];
+      width = sect->m_dim[0];
       nstep1 = nystep;
       nstep2 = nzstep;
       break;
@@ -775,7 +748,7 @@ namespace AcdRecon {
       stepVector2 = HepVector3D(0.,0.,halfZ*2.);
       normalVector = HepVector3D(0.,1.,0.);
       surfaceElementArea = halfX * halfZ * 4.;
-      width = tile.dim()[1];
+      width = sect->m_dim[1];
       nstep1 = nxstep;
       nstep2 = nzstep;
       break;
@@ -837,7 +810,7 @@ namespace AcdRecon {
       currentSurfacePoint += stepVector1;
     }
 
-    float meanSolid = solidAngle / (float)(iPoint);
+    //float meanSolid = solidAngle / (float)(iPoint);
 
     // divide by the total weight = the total solid angle
     if(solidAngle>0) {

@@ -145,7 +145,10 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
       // query the detector service for the local frame    
       // was this tile hit or not
       AcdRecon::AcdHitMap::const_iterator findHit = hitMap.find(acdId);
-      hitMask = findHit != hitMap.end() ? (unsigned char)(findHit->second) : 0; 
+      if ( findHit != hitMap.end() ) {
+	hitMask |= findHit->second->getFlags(Event::AcdHit::A);
+	hitMask |= findHit->second->getFlags(Event::AcdHit::B);
+      }
     } else {
       if ( istep == numSteps-1 ) {
 	nPocaCrossed = pocaSorter.getPocasToArclength(arcLength,pocasCrossed);    
@@ -167,11 +170,12 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 	;
       } else if ( nextPoca->m_id.tile() ) {	
 
-	const AcdTileDim* tile = geomMap.getTile(nextPoca->m_id,*m_acdGeomSvc);
+	// const AcdTileDim* tile = geomMap.getTile(nextPoca->m_id,*m_acdGeomSvc);
 	// propgate the postion and error matrix to the intersection
 	AcdRecon::propagateToArcLength(prop,track,arcLength,next_params,paramsAtISect);	
-	AcdRecon::projectErrorToPlane(paramsAtISect,tile->localFrameVectors(nextPoca->m_volume),nextPoca->m_planeError);
-	AcdRecon::projectErrorToPocaVector(paramsAtISect,nextPoca->m_pocaVector,nextPoca->m_active3DErr);	
+	//AcdRecon::projectErrorToPlane(paramsAtISect,tile->getSection(nextPoca->m_volume)->,nextPoca->m_planeError_prop);
+	Vector pocaVector(nextPoca->m_voca.x(),nextPoca->m_voca.y(),nextPoca->m_voca.z());	
+	AcdRecon::projectErrorToPocaVector(paramsAtISect,pocaVector,nextPoca->m_active3DErr_prop);	
       }    
     }
     
@@ -191,8 +195,8 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
 
       // Check to see if this is the Tile to use for getting the distance to the 
       // closest gap
-      float testDist = face == 0 ? pocaData->m_activeY : pocaData->m_activeX;
-      if ( testDist > bestTileActDist ) {
+      float testDist = pocaData->m_activeX;
+      if ( testDist > bestTileActDist && pocaData->m_activeX > 0 && pocaData->m_activeY > 0 ) {
 	tileDataForGap = pocaData;
 	bestTileActDist = testDist;
       }    
@@ -202,13 +206,14 @@ StatusCode  AcdTkrIntersectTool::makeIntersections(IPropagator& prop,
     localPosition[0] = pocaData->m_inPlane.x();
     localPosition[1] = pocaData->m_inPlane.y();
     
+    Point hitPlane(pocaData->m_hitsPlane.x(),pocaData->m_hitsPlane.y(),pocaData->m_hitsPlane.z());
     // ok, we have everything we need, build the AcdTkrIntersection 
     Event::AcdTkrIntersection* iSect = 
       new Event::AcdTkrIntersection(acdId,track.m_index,
-				    pocaData->m_hitsPlane,
-				    localPosition,pocaData->m_planeError,
-				    (forward ? arcLength : -1.*arcLength), pathLength,
-				    hitMask, pocaData->m_cosTheta);
+				    hitPlane,localPosition,
+				    pocaData->m_planeError_proj,
+				    (forward ? arcLength : -1.*arcLength),pathLength,
+				    hitMask,pocaData->m_cosTheta);
     
     // print to the log if debug level is set
     iSect->writeOut(log);
@@ -362,6 +367,10 @@ StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, c
     
   } else {            
     // haven't done this tile yet.  
+    
+    Point pocaPoint;
+    Vector pocaVector;
+  
     ownedPocaData.push_back( AcdRecon::PocaData() );
     pocaData = &( ownedPocaData.back() );
     pocaData->m_id = acdId;
@@ -376,22 +385,26 @@ StatusCode AcdTkrIntersectTool::fillPocaData(const AcdRecon::TrackData& track, c
       AcdRecon::ribbonPlane(track,*ribbon,*pocaData);
       AcdRecon::ribbonPoca(track,*ribbon,
 			     pocaData->m_arcLength,pocaData->m_activeY,
-			     pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,pocaData->m_region);
-      } else if ( acdId.tile() ) {
-	const AcdTileDim* tile = geomMap.getTile(acdId,*m_acdGeomSvc);
-	if ( tile->statusCode().isFailure() ) {
-	  MsgStream log(msgSvc(),name()) ;
-	  log << MSG::ERROR << "Tile statusCode is failure" << endreq;
-	  return StatusCode::FAILURE;
-	}
-	HepPoint3D p;
-	AcdRecon::tilePlane(track,*tile,*pocaData);
-	AcdRecon::tileEdgePoca(track,*tile,
-			       pocaData->m_arcLength,pocaData->m_active3D,pocaData->m_poca,pocaData->m_pocaVector,
-			       pocaData->m_region);
-	
+			     pocaData->m_active3D,pocaPoint,pocaVector,pocaData->m_region);
+    } else if ( acdId.tile() ) {
+      const AcdTileDim* tile = geomMap.getTile(acdId,*m_acdGeomSvc);
+      if ( tile->statusCode().isFailure() ) {
+	MsgStream log(msgSvc(),name()) ;
+	log << MSG::ERROR << "Tile statusCode is failure" << endreq;
+	return StatusCode::FAILURE;
       }
-    }    
+      HepPoint3D p;
+      AcdRecon::tilePlane(track,*tile,*pocaData);
+      AcdRecon::tileEdgePoca(track,*tile,
+			     pocaData->m_arcLength,pocaData->m_active3D,pocaPoint,pocaVector,
+			     pocaData->m_region);
+	
+    }
+    
+    pocaData->m_poca = HepPoint3D(pocaPoint.x(),pocaPoint.y(),pocaPoint.z());
+    pocaData->m_voca = HepVector3D(pocaVector.x(),pocaVector.y(),pocaVector.z());    
+
+  }    
 
   return StatusCode::SUCCESS;
 }
@@ -409,27 +422,29 @@ StatusCode AcdTkrIntersectTool::gapPocaRibbon(const AcdRecon::TrackData& track, 
   AcdRecon::AcdGapType gapType(AcdRecon::None);  
   int face = data.m_face;
   unsigned gap = 0;
+  unsigned row = 0;
+  unsigned col = pocaData.m_id.ribbonNum();
   switch ( face ) {
   case 0:
     gapType = AcdRecon::Y_RibbonTop;
-    gap = 2;
+    gap = 0;
+    row = 6;
     break;
   case 1:
   case 3:
     gapType = AcdRecon::Y_RibbonSide;
-    gap = 2;
+    gap = 0;
+    row = 6;
     break;
   case 2:
   case 4:
     gapType = AcdRecon::X_RibbonSide;
-    gap = 2;
+    gap = 0;
+    row = 5;
     break;
   case 5:
     return StatusCode::SUCCESS;
   }
-
-  unsigned col = pocaData.m_id.ribbonNum();
-  unsigned row = 0;
   
   idents::AcdGapId gapId(gapType,gap,face,row,col);
 
@@ -464,12 +479,11 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
     if ( pocaData.m_inPlane.x() > 0 ) { gap = 1; }    
     distance = -1.*pocaData.m_activeX;
   } else {
-    if ( pocaData.m_inPlane.y() > 0 ) { row++; }    
+    //if ( pocaData.m_inPlane.y() > 0 ) { row++; }    
     switch ( face ) {
     case 0: // TOP, Normal col and row counting 
-      if ( pocaData.m_inPlane.x() > 0 ) { col++; }
+      if ( pocaData.m_inPlane.x() > 0 ) { col++; gap = 1; }
       gapType = ( col == 0 || col == 5 ) ?  AcdRecon::TopCornerEdge : AcdRecon::Y_RibbonTop;    
-      if ( pocaData.m_inPlane.y() > 0 ) gap = 1;
       distance = -1.*pocaData.m_activeX;
       break;
     case 1:  // -Y face, column go opposite of local x
@@ -519,8 +533,12 @@ StatusCode AcdTkrIntersectTool::gapPocaTile(const AcdRecon::TrackData& track, co
 
     if ( whichRibbon.ribbon() ) {
       const AcdRibbonDim* ribbon = geomMap.getRibbon(whichRibbon,*m_acdGeomSvc);      
-      AcdRecon::ribbonPoca(track,*ribbon,ribbonPocaData.m_arcLength,ribbonPocaData.m_ribbonLength,
-			   ribbonPocaData.m_active3D,ribbonPocaData.m_poca,ribbonPocaData.m_pocaVector,ribbonPocaData.m_region);
+      Point pocaPoint;
+      Vector pocaVector;
+      AcdRecon::ribbonPoca(track,*ribbon,ribbonPocaData.m_arcLength,ribbonPocaData.m_rayLength,
+			   ribbonPocaData.m_active3D,pocaPoint,pocaVector,ribbonPocaData.m_region);
+      ribbonPocaData.m_poca = HepPoint3D(pocaPoint.x(),pocaPoint.y(),pocaPoint.z());
+      ribbonPocaData.m_voca = HepVector3D(pocaVector.x(),pocaVector.y(),pocaVector.z());      
     }
   }
    
@@ -565,7 +583,7 @@ StatusCode AcdTkrIntersectTool::gapPocaCorner(const AcdRecon::TrackData& track, 
       float sign = ( (track.m_point.x() * track.m_dir.y()) - (track.m_point.y() * track.m_dir.x()) ) > 0 ? 1. : -1;
       pocaData.m_active3D = testDist * sign;
       pocaData.m_poca = testPoint;
-      pocaData.m_pocaVector = testDir;
+      pocaData.m_voca = testDir;
       pocaData.m_region = testRegion;
       whichCorner = iCorner;
     }
@@ -588,13 +606,16 @@ StatusCode AcdTkrIntersectTool::makeGapPoca(idents::AcdGapId& gapId, const AcdRe
   double arcLength = track.m_upward ? pocaData.m_arcLength : -1* pocaData.m_arcLength;
     
   float local[2];
+  float active[2];
+  active[0] = pocaData.m_activeX;
+  active[1] = pocaData.m_activeY;
   switch ( gapId.gapType() ) {
   case AcdRecon::X_RibbonSide:
   case AcdRecon::Y_RibbonSide: 
   case AcdRecon::Y_RibbonTop: 
     // this gap has been calculated from a ribbon
     local[0] = pocaData.m_active3D;
-    local[1] = pocaData.m_ribbonLength;
+    local[1] = pocaData.m_rayLength;
     break;
   default:
     // this gap has been calculated from a tile or a corner ray
@@ -602,22 +623,65 @@ StatusCode AcdTkrIntersectTool::makeGapPoca(idents::AcdGapId& gapId, const AcdRe
     local[1] = pocaData.m_activeY;
   }
 
-  // temp storage
-  static Event::AcdTkrLocalCoords localCoords;
-  static Event::AcdPocaData pd;
-
-  localCoords.set(local,pocaData.m_path,pocaData.m_cosTheta,pocaData.m_region,pocaData.m_planeError);
-  pd.set(arcLength,distance,pocaData.m_active3DErr,pocaData.m_poca,pocaData.m_pocaVector);
-  poca = new Event::AcdTkrGapPoca(gapId,track.m_index,localCoords,pd);
-
+  HepPoint3D hitPlane(pocaData.m_hitsPlane.x(),pocaData.m_hitsPlane.y(),pocaData.m_hitsPlane.z()); 
+  Point pocaPoint(pocaData.m_poca.x(),pocaData.m_poca.y(),pocaData.m_poca.z());
+  Vector pocaVector(pocaData.m_voca.x(),pocaData.m_voca.y(),pocaData.m_voca.z());
+  poca = new Event::AcdTkrGapPoca(gapId,track.m_index,
+				  active,
+				  0.,0.,0.,
+				  pocaData.m_volume,pocaData.m_arcLengthPlane,pocaData.m_cosTheta,
+				  hitPlane,local,
+				  pocaData.m_planeError_proj,pocaData.m_planeError_prop,
+				  pocaData.m_volume,pocaData.m_region,arcLength,
+				  distance,pocaData.m_active3DErr_proj,pocaData.m_active3DErr_prop,
+				  pocaPoint,pocaVector);
   return StatusCode::SUCCESS;
 }
 
-StatusCode AcdTkrIntersectTool::makeTkrPoint(const AcdRecon::TrackData& /*track*/, const AcdRecon::ExitData& data,
-					     const Event::TkrTrackParams& params, Event::AcdTkrPoint*& tkrPoint ) {
-  tkrPoint = 0;
-  
-  tkrPoint = new Event::AcdTkrPoint(/* track.m_index, */ data.m_arcLength,data.m_face,data.m_x,params);
+StatusCode AcdTkrIntersectTool::makeTkrPoint(const AcdRecon::TrackData& track, const AcdRecon::ExitData& data,
+					     const Event::TkrTrackParams& /* params */, Event::AcdTkrPoint*& tkrPoint ) {
+  tkrPoint = 0;  
+  HepPoint3D hitPlane(data.m_x.x(),data.m_x.y(),data.m_x.z()); 
+  float local[2];
+  float cosTheta(0.);
+  static const HepSymMatrix noError(2,0);
+  switch (data.m_face) {
+  case 0:
+    local[0] = data.m_x.x();
+    local[1] = data.m_x.y(); 
+    cosTheta = track.m_dir.z();
+    break;
+  case 1:
+    local[0] = data.m_x.y();
+    local[1] = data.m_x.z(); 
+    cosTheta = -1. * track.m_dir.x();
+    break;
+  case 2:
+    local[0] = data.m_x.x();
+    local[1] = data.m_x.z(); 
+    cosTheta = -1. * track.m_dir.y();
+    break;
+  case 3:
+    local[0] = data.m_x.y();
+    local[1] = data.m_x.z(); 
+    cosTheta = track.m_dir.x();
+    break;
+  case 4:
+    local[0] = data.m_x.x();
+    local[1] = data.m_x.z(); 
+    cosTheta = track.m_dir.y();
+    break;
+  case 5:
+    local[0] = data.m_x.x();
+    local[1] = data.m_x.y(); 
+    cosTheta = -1. * track.m_dir.z();
+    break;
+  }
+
+  tkrPoint = new Event::AcdTkrPoint(track.m_index,
+				    data.m_face,data.m_arcLength,cosTheta,
+				    hitPlane,local,
+				    noError,noError);
   return StatusCode::SUCCESS;
 }
 

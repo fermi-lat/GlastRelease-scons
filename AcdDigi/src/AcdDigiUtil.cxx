@@ -489,7 +489,7 @@ StatusCode AcdDigiUtil::applyCoherentNoiseToPha(const idents::AcdId& id, unsigne
     if ( -1 * deltaPed > pha[i] ) {
       pha[i] = 0;
     } else {
-      pha[i] += (unsigned int)(floor(deltaPed));
+      pha[i] += (short unsigned int)(deltaPed);
     }
   }
   return StatusCode::SUCCESS;
@@ -519,7 +519,8 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, MsgStrea
   double activeX(0.);
   double activeY(0.);
   
-  tileDim->activeDistance(local_x0, volId[6], activeX, activeY );
+  const AcdTileSection* sect = tileDim->getSection(volId[6]);
+  sect->activeDistance(local_x0, volId[6], activeX, activeY );
   double dist = activeX > activeY ? activeY : activeX;
   
     // Apply edge correction if within m_max_edge_dist (mm) of the edge

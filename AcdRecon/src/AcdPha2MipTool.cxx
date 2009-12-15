@@ -86,14 +86,13 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
     if ( ! aDigi->getId().tile() && ! aDigi->getId().ribbon() ) continue;
 
     // get the hit mask bits
-    unsigned int hitMask = 0;
-    hitMask |= aDigi->getAcceptMapBit(Event::AcdDigi::A) ? AcceptMapBit_AMask : 0;
-    hitMask |= aDigi->getAcceptMapBit(Event::AcdDigi::B) ? AcceptMapBit_BMask : 0;
-    hitMask |= aDigi->getVeto(Event::AcdDigi::A) ? VetoBit_AMask : 0;
-    hitMask |= aDigi->getVeto(Event::AcdDigi::B) ? VetoBit_BMask : 0;
-    hitMask |= aDigi->getCno(Event::AcdDigi::A) ? CNO_AMask : 0;
-    hitMask |= aDigi->getCno(Event::AcdDigi::B) ? CNO_BMask : 0;	
-    hitMap[aDigi->getId()] = hitMask;
+    //unsigned int hitMask = 0;
+    //hitMask |= aDigi->getAcceptMapBit(Event::AcdDigi::A) ? AcceptMapBit_AMask : 0;
+    //hitMask |= aDigi->getAcceptMapBit(Event::AcdDigi::B) ? AcceptMapBit_BMask : 0;
+    //hitMask |= aDigi->getVeto(Event::AcdDigi::A) ? VetoBit_AMask : 0;
+    //hitMask |= aDigi->getVeto(Event::AcdDigi::B) ? VetoBit_BMask : 0;
+    //hitMask |= aDigi->getCno(Event::AcdDigi::A) ? CNO_AMask : 0;
+    //hitMask |= aDigi->getCno(Event::AcdDigi::B) ? CNO_BMask : 0;	
     
     Event::AcdHit* newHit(0);
     StatusCode sc = makeAcdHit(*aDigi,periodicEvent,newHit);
@@ -102,6 +101,9 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
     if ( newHit != 0 ) {
       hits.push_back(newHit);
     }
+
+    hitMap[aDigi->getId()] = newHit;
+
   } 
   return StatusCode::SUCCESS ;
 }

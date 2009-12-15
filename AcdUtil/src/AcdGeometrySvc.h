@@ -80,12 +80,8 @@ public:
 
     /// Given an AcdId, provide three vectors of Rays.  Each vector pertains to one set of ribbon segments
     bool fillRibbonData(const idents::AcdId& id,
-			std::vector<Ray>& minusSideRays,
-			std::vector<Ray>& topRays,
-			std::vector<Ray>& plusSideRays, 
-			HepTransform3D& minusSideTransform,
-			HepTransform3D& topTransform,
-			HepTransform3D& plusTransform);
+			std::vector<AcdRibbonSegment*>& segs,
+			int& topIdx, int& plusIdx);
     
     /// Return half ribbon width
     virtual double ribbonHalfWidth() const;
@@ -110,6 +106,10 @@ public:
     AcdFrameUtil::AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier &volId) const;
 
     StatusCode findCornerGaps();
+
+    virtual StatusCode getNextTileCorners(const idents::AcdId& id, int dir, 
+					  HepPoint3D& c1, HepPoint3D& c2, bool& isRealGap);
+
 
 protected:
 

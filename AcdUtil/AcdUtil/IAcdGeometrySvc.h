@@ -25,6 +25,8 @@ typedef HepGeom::Point3D<double> HepPoint3D;
 #include "AcdUtil/AcdFrameUtil.h"
 
 class AcdGeomMap;
+class AcdRibbonSegment;
+
 #include <string>
 #include <map>
 #include <vector>
@@ -85,12 +87,8 @@ public:
 
     /// Given an AcdId, provide three vectors of Rays.  Each vector pertains to one set of ribbon segments
     virtual bool fillRibbonData(const idents::AcdId& id,
-				std::vector<Ray>& minusSideRays,
-				std::vector<Ray>& topRays,
-				std::vector<Ray>& plusSideRays, 
-				HepTransform3D& minusSideTransform,
-				HepTransform3D& topTransform,
-				HepTransform3D& plusTransform) = 0;
+				std::vector<AcdRibbonSegment*>& segs,
+				int& topIdx, int& plusIdx) = 0;
 
     // Return half ribbon width
     virtual double ribbonHalfWidth() const = 0;    
@@ -115,6 +113,9 @@ public:
     virtual AcdFrameUtil::AcdReferenceFrame getReferenceFrame(const idents::VolumeIdentifier &volId) const = 0;
 
     virtual StatusCode findCornerGaps() = 0;
+
+    virtual StatusCode getNextTileCorners(const idents::AcdId& id, int dir, 
+					  HepPoint3D& c1, HepPoint3D& c2, bool& isRealGap) = 0;
 
 
 };

@@ -568,7 +568,7 @@ void McValsTool::getAcdReconVars() {
     MC_AcdXEnter = MC_AcdYEnter = MC_AcdZEnter = -2000.;
   } else {
     const Event::AcdTkrPoint* entryPoint = (*acdPoints)[0];
-    const Point& thePoint = entryPoint->point();
+    const HepPoint3D& thePoint = entryPoint->getGlobalPosition();
     
     // latch values
     MC_AcdXEnter = thePoint.x(); 

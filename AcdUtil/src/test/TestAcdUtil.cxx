@@ -146,12 +146,12 @@ StatusCode TestAcdUtil::execute() {
 	  int section = volid[5];
 
 	  log << MSG::INFO << "AcdId: " << acdId.id() << " Dimensions: " 
-	      << aTile.dim(section)[0] << ", " << aTile.dim(section)[1] << ", " << aTile.dim(section)[2] << endreq;
+	      << aTile.getSection(0)->m_dim[0] << ", " << aTile.getSection(0)->m_dim[1] << ", " << aTile.getSection(0)->m_dim[2] << endreq;
 
 	  unsigned int iCorner;
 	  for (iCorner = 0; iCorner<4; iCorner++) {
-            log << "Corner " << iCorner << " " << aTile.corner(section)[iCorner].x() 
-                << ", " << aTile.corner(section)[iCorner].y() << ", " << aTile.corner(section)[iCorner].z()
+            log << "Corner " << iCorner << " " << aTile.getSection(0)->m_corners[iCorner].x() 
+                << ", " << aTile.getSection(0)->m_corners[iCorner].y() << ", " << aTile.getSection(0)->m_corners[iCorner].z()
                 << endreq;
 	  }	  
 	} else if (acdId.ribbon()) {
@@ -167,41 +167,16 @@ StatusCode TestAcdUtil::execute() {
               //  << ") end:(" << end[1].x() << "," << end[1].y() << ","
               //  << end[1].z() << ") halfWid: " << halfWidth[1] << std::endl;
 
-            std::vector<Ray> minusSideRays, topRays, plusSideRays;
-	    HepTransform3D minusSideTransform, topTransform, plusSideTransform;
-            m_acdGeoSvc->fillRibbonData(acdId, minusSideRays, topRays, plusSideRays, minusSideTransform, topTransform, plusSideTransform);
-            std::vector<Ray>::const_iterator rayIt;
-            Point pos;
-            Vector dir;
-            double len;
-            log << MSG::DEBUG << "MinusSideRays: " << endreq;
-            for (rayIt = minusSideRays.begin(); rayIt != minusSideRays.end(); rayIt++) {
-                pos = (*rayIt).position();
-                dir = (*rayIt).direction();
-                len = (*rayIt).getArcLength();
+	    std::vector<AcdRibbonSegment*> segs;
+	    int topIdx(0), plusIdx(0);
+            m_acdGeoSvc->fillRibbonData(acdId, segs, topIdx, plusIdx);
+            log << MSG::DEBUG << "Trays: " << endreq;
+            for ( std::vector<AcdRibbonSegment*>::const_iterator segIt = segs.begin(); segIt != segs.end(); segIt++) {
+  	        const HepPoint3D& pos = (*segIt)->m_start;
+	        const HepVector3D& dir = (*segIt)->m_vect;
                 log << MSG::DEBUG << "Pos: ( " << pos.x() << ", " << pos.y() << ", " << pos.z() << ")" << endreq;
                 log << MSG::DEBUG << "Dir: ( " << dir.x() << ", " << dir.y() << ", " << dir.z() << ")" << endreq;
-                log << MSG::DEBUG << "ArcLength: " << len << endreq;
             }
-            log << MSG::DEBUG << "TopRays: " << endreq;
-            for (rayIt = topRays.begin(); rayIt != topRays.end(); rayIt++) {
-                pos = (*rayIt).position();
-                dir = (*rayIt).direction();
-                len = (*rayIt).getArcLength();
-                log << MSG::DEBUG << "Pos: ( " << pos.x() << ", " << pos.y() << ", " << pos.z() << ")" << endreq;
-                log << MSG::DEBUG << "Dir: ( " << dir.x() << ", " << dir.y() << ", " << dir.z() << ")" << endreq;
-                log << MSG::DEBUG << "ArcLength: " << len << endreq;
-            }
-            log << MSG::DEBUG << "PlusSideRays: " << endreq;
-            for (rayIt = plusSideRays.begin(); rayIt != plusSideRays.end(); rayIt++) {
-                pos = (*rayIt).position();
-                dir = (*rayIt).direction();
-                len = (*rayIt).getArcLength();
-                log << MSG::DEBUG << "Pos: ( " << pos.x() << ", " << pos.y() << ", " << pos.z() << ")" << endreq;
-                log << MSG::DEBUG << "Dir: ( " << dir.x() << ", " << dir.y() << ", " << dir.z() << ")" << endreq;
-                log << MSG::DEBUG << "ArcLength: " << len << endreq;
-            }
-
         }
 
     }

@@ -14,6 +14,21 @@
 #include "geometry/Ray.h"
 
 
+// A ribbon segment
+
+class AcdRibbonSegment {
+public:
+  AcdRibbonSegment(float halfWidth, const HepPoint3D& start, const HepPoint3D& end, const HepTransform3D& trans);
+  ~AcdRibbonSegment(){;}
+  float          m_halfWidth;
+  HepPoint3D     m_start;
+  HepPoint3D     m_end;
+  HepVector3D    m_vect;
+  HepTransform3D m_trans;
+  HepTransform3D m_invTrans;
+};
+
+
 /**
 *  @class AcdRibbonDim
 *
@@ -37,6 +52,10 @@ class AcdRibbonDim {
   
 public:
     
+  typedef enum RibbonSide { MinusSide = -1,
+			    Top = 0,
+			    PlusSide = 1 };
+
   /// Constructor: takes the tile id, the volume id, and the detector service
   AcdRibbonDim(const idents::AcdId& acdId, IAcdGeometrySvc& acdGeomSvc);
   
@@ -57,15 +76,8 @@ public:
   inline IAcdGeometrySvc& acdGeomSvc() const { return m_acdGeomSvc; }
   inline const idents::AcdId& acdId() const { return m_acdId; }
 
-  inline double halfWidth() const { return m_halfWidth; }
   inline double halfLength() const { return m_halfLength; }
   inline StatusCode statusCode() const { return m_sc; }
-  inline const std::vector<Ray>& minusSideRays() const { return m_minusSideRays; }     
-  inline const std::vector<Ray>& topRays() const { return m_topRays; }      
-  inline const std::vector<Ray>& plusSideRays() const { return m_plusSideRays; }        
-
-
-  bool setEdgeRay(int iSeg, HepPoint3D& start, HepVector3D& vector) const;
 
   /**
    * @brief Convert a point for global to local coords
@@ -76,14 +88,29 @@ public:
    */
   void toLocal(const HepPoint3D& global, int segment, HepPoint3D& local) const;
 
-  /**
-   * @brief get the transformation from global to local coords
-   *
-   * @param iVol which ribbon segment
-   * @return the transformation
-   */
-  const HepTransform3D& transform(int iVol) const;
 
+  /**
+   **/
+  const AcdRibbonSegment* getSegment(unsigned iSeg) const {
+    return m_segments[iSeg];
+  }
+  
+  inline float getSegmentStart(unsigned iSeg) const {
+    return m_segStarts[iSeg];
+  }
+
+  float getRibbonLength(unsigned iSeg, float segLength) const;
+
+
+  inline unsigned int nSegments() const {
+    return m_segments.size();
+  }
+
+  bool setEdgeRay(const int& side, HepPoint3D& start, HepVector3D& end) const;
+
+  /**
+   **/  
+  void getSegmentsIndices(const HepVector3D& tkDir, bool upward, int& start, int& end, int& dir) const;
 
   /**
    * @brief Get the length along the ribbon given a volId and a local point
@@ -116,20 +143,22 @@ private:
   /// This show the status of the access to the detector service, should be checked before using data
   StatusCode                m_sc;
 
-  /// the transformations to local coords
-  HepTransform3D            m_minusSideTransform;  
-  HepTransform3D            m_topTransform;
-  HepTransform3D            m_plusSideTransform;
-
   /// size of the ribbons
-  double                    m_halfWidth;  
   double                    m_halfLength;
 
+  /// The index of the first top segment
+  int                       m_topIdx;
+  
+  /// The index of the first +side segement
+  int                       m_plusIdx;
+
   /// The various rays
-  std::vector<Ray>          m_minusSideRays;
-  std::vector<Ray>          m_topRays;
-  std::vector<Ray>          m_plusSideRays;         
+  std::vector<AcdRibbonSegment*> m_segments;
+
+  /// The starting points of the segments
+  std::vector<float>        m_segStarts;
  
+
 };
    
 

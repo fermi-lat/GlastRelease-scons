@@ -74,49 +74,46 @@ AcdPocaSorter::AcdPocaSorter(TrackDirection dir, const AcdRecon::PocaDataPtrMap&
 
 unsigned AcdPocaSorter::getPocasToArclength(const double& stop, std::vector<AcdPocaSorter::AcdPocaHolder>& pocas) {
   pocas.clear();
-  bool done(false);
-  switch ( m_dir ) {
-  case Upward: done = (m_cache == m_pocas.end() ? true : false);  break;    
-  case Downward: done = (m_rcache == m_pocas.rend() ? true : false);  break;
-  }  
-
+  bool done = m_cache == m_pocas.end() ? true : false;
   while ( ! done ) {
-    switch ( m_dir ) {
-    case Upward: 
-      if ( m_cache->arclength() < stop ) { 
-	pocas.push_back(*m_cache);
-	m_cache++;
-	done = (m_cache == m_pocas.end() ? true : false);
-      } else { 
-	done = true;
-      }
-      break;
-    case Downward: 
-      if ( m_rcache->arclength() > stop ) {
-	pocas.push_back(*m_rcache);
-	m_rcache++;
-	done = (m_rcache == m_pocas.rend() ? true : false);
-      } else {
-	done = true;
-      }
-      break;
-    default:
-      break;
+    if ( m_cache->arclength() < stop ) { 
+      pocas.push_back(*m_cache);
+      m_cache++;
+      done = (m_cache == m_pocas.end() ? true : false);
+    } else { 
+      done = true;
     }
   }  
   return pocas.size();
 }
 
 void AcdPocaSorter::resetArcCache() {
-  switch ( m_dir ) {
-  case Upward:  m_cache = m_pocas.begin();  break;
-  case Downward:  m_rcache = m_pocas.rbegin();  break;
-  }        
+  m_cache = m_pocas.begin();  
+}
+
+
+bool AcdPocaSorter::isDone() {
+  return m_cache == m_pocas.end();  
+}
+
+double AcdPocaSorter::finalArc() {
+  if ( m_pocas.size() == 0 ) return 0.;
+  return m_pocas.back().arclength();
+}
+
+
+
+void AcdPocaSorter::runOut() {
+  std::vector<AcdPocaSorter::AcdPocaHolder> left;
+  unsigned n = getPocasToArclength( 1e6,  left );
+  for ( unsigned i(0); i < n; i++ ) {
+    std::cout << "Left " << i << ' ' << left[i].arclength() << ' ' << left[i].type() << std::endl;
+  }
 }
 
 
 void AcdPocaSorter::sort() {
-    std::sort(m_pocas.begin(),m_pocas.end());
+  std::sort(m_pocas.begin(),m_pocas.end());
   resetArcCache();
 }
 
@@ -125,3 +122,4 @@ void AcdPocaSorter::addPoca(const AcdRecon::PocaData* pocaData) {
   m_pocas.push_back( AcdPocaSorter::AcdPocaHolder(AcdPocaSorter::PlanePoca,ncP));
   m_pocas.push_back( AcdPocaSorter::AcdPocaHolder(AcdPocaSorter::RayPoca,ncP));  
 }
+

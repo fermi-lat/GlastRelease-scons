@@ -59,6 +59,21 @@ public:
   /// Reset the current search start point
   void resetArcCache();
 
+  /// check to see if this is done
+  bool isDone();
+
+  /// get the last arcLength
+  double finalArc();
+
+  /// for debugging
+  void runOut();
+
+  /// the direction
+  inline TrackDirection dir() const { return m_dir; }
+
+  /// the number of poca
+  inline unsigned size() const { return m_pocas.size(); }
+
 protected:
   /// Sort the poca by path length
   void sort();
@@ -68,7 +83,6 @@ protected:
 private:
 
   std::vector<AcdPocaSorter::AcdPocaHolder>::iterator m_cache;
-  std::vector<AcdPocaSorter::AcdPocaHolder>::reverse_iterator m_rcache;
   std::vector<AcdPocaSorter::AcdPocaHolder> m_pocas;
   TrackDirection m_dir;
   

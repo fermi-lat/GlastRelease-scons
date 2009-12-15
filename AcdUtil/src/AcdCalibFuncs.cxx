@@ -48,7 +48,7 @@ namespace AcdCalib {
   StatusCode mipEquivalent_lowRange(unsigned short  PHA, const double& pedestal, const double& mipPeak, double& mips) {
     if ( mipPeak <= 0. ) {
       mips = 0.;
-      return StatusCode::SUCCESS;
+      return StatusCode::FAILURE;
     }
     double PHApedReduced = (double)PHA - pedestal;
     mips = PHApedReduced / mipPeak;

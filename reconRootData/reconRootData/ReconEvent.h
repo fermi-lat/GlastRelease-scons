@@ -5,6 +5,7 @@
 #include "CalRecon.h"
 #include "TkrRecon.h"
 #include "AcdRecon.h"
+#include "AcdReconV2.h"
 #include "AdfRecon.h"
 
 #include "enums/EventFlags.h"
@@ -39,7 +40,7 @@ public:
 
     virtual ~ReconEvent();
 
-    void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdRecon *acd);
+    void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdRecon *acd, AcdReconV2* acdv2);
 
     void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
    
@@ -57,6 +58,8 @@ public:
     UInt_t getRunId() { return m_runId; };
 
     AcdRecon* getAcdRecon() { return m_acd; };
+
+    AcdReconV2* getAcdReconV2() { return m_acdV2; };
 
     /// provide access to the CAL recon data
     CalRecon* getCalRecon() { return m_cal; };
@@ -88,6 +91,9 @@ private:
     UInt_t m_runId;
     /// ACD reconstruction data
     AcdRecon *m_acd;
+    /// ACD reconstruction data (new version
+    AcdReconV2 *m_acdV2;
+
     /// CAL reconstruction data
     CalRecon *m_cal; 
     /// TKR reconstruction data
@@ -101,7 +107,7 @@ private:
     // Gleam Event Flags
     UInt_t m_gleamEventFlags;
 
-    ClassDef(ReconEvent,5)
+    ClassDef(ReconEvent,6)
 };
 
 #endif

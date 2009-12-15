@@ -155,6 +155,9 @@ int write(const char* fileName, int numEvents) {
         AcdRecon * acdRec = new AcdRecon() ;
         acdRec->Fake(ievent,randomNumber->value()) ;
 
+        AcdReconV2 * acdRecV2 = new AcdReconV2() ;
+        acdRecV2->Fake(ievent,randomNumber->value()) ;
+
         CalRecon * calRec = new CalRecon() ;
         calRec->Fake(ievent,randomNumber->value()) ;
 
@@ -164,7 +167,7 @@ int write(const char* fileName, int numEvents) {
         reconRootData::AdfRecon * adfRec = new reconRootData::AdfRecon();
         adfRec->Fake(ievent,randomNumber->value());
 
-        ev->initialize(ievent, RUN_NUM, tkrRec, calRec, acdRec);
+        ev->initialize(ievent, RUN_NUM, tkrRec, calRec, acdRec, acdRecV2);
         ev->initAdf(adfRec);
         ev->initEventFlags(1) ;
         
