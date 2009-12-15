@@ -5,6 +5,7 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+#include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 
@@ -32,10 +33,13 @@ public :
 
 private:
     //! Service for basic Cal info
-    ICalReconSvc*     m_calReconSvc;
+    ICalReconSvc*      m_calReconSvc;
+
+    //! Event Service member directly useable by concrete classes.
+    IDataProviderSvc*  m_dataSvc;
 
     //! Utility for filling clusters
-    ICalClusterFiller*   m_clusterInfo;
+    ICalClusterFiller* m_clusterInfo;
 } ;
 
 DECLARE_TOOL_FACTORY(CalSingleClusteringTool) ;
@@ -56,6 +60,11 @@ StatusCode CalSingleClusteringTool::initialize()
     if ((sc = service("CalReconSvc",m_calReconSvc,true)).isFailure())
     {
         throw GaudiException("Service [CalReconSvc] not found", name(), sc);
+    }
+
+    if(service( "EventDataSvc", m_dataSvc, true ).isFailure()) 
+    {
+        throw GaudiException("Service [EventDataSvc] not found", name(), sc);
     }
 
     // Cluster filling utility
@@ -83,6 +92,16 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
     // prepare the initital set of xtals
     XtalDataList* xTalClus = new XtalDataList();
 
+    // Create a Xtal to Cluster relations list
+    Event::CalClusterHitTabList* xTal2ClusTabList = new Event::CalClusterHitTabList();
+    xTal2ClusTabList->clear();
+
+    // Register the list in the TDS (which will assume ownership of the list, but not the table)
+    if (m_dataSvc->registerObject(EventModel::CalRecon::CalClusterHitTab, xTal2ClusTabList).isFailure())
+    {
+        throw GaudiException("Unable to register xTal to Cluster table in TDS", name(), StatusCode::FAILURE);
+    }
+
     xTalClus->clear();
     for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
                 it != m_calReconSvc->getXtalRecs()->end(); ++it )
@@ -94,12 +113,27 @@ StatusCode CalSingleClusteringTool::findClusters(Event::CalClusterCol* calCluste
 
     calClusterCol->clear() ;
 
+    // Get the cluster instance
     Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
+
     std::string producerName("CalSingleClusteringTool/") ;
     producerName += cluster->getProducerName() ;
     cluster->setProducerName(producerName) ;
     cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
     calClusterCol->push_back(cluster);
+
+    // Loop through again to make the relations
+    for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
+                it != m_calReconSvc->getXtalRecs()->end(); ++it )
+    {
+        // get pointer to the reconstructed data for given crystal
+        Event::CalXtalRecData * recData = *it ;
+
+        // Even though only one cluster, we still need to make the relations!
+        Event::CalClusterHitRel* xTal2ClusRel = new Event::CalClusterHitRel(recData,cluster);
+
+        xTal2ClusTabList->push_back(xTal2ClusRel);
+    }
 
     delete xTalClus;
   
