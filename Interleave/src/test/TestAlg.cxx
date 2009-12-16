@@ -52,6 +52,7 @@ private:
     // event id stuff to set, since normally done in AnalysisNtuple.
     unsigned int   EvtRun;
     unsigned int EvtEventId;
+    unsigned long long EvtEventId64;
     double EvtElapsedTime;
     float EvtLiveTime;
 
@@ -66,6 +67,8 @@ private:
         , Tkr1FirstLayer
         , CTBBestEnergy
         , CTBBestXDir, CTBBestYDir, CTBBestZDir
+        , CTBBestEnergyProb, CTBBestEnergyRatio, CTBCORE
+        , CTBClassLevel, CTBParticleType
         ;
 
 
@@ -81,6 +84,7 @@ TestAlg::TestAlg(const std::string& name, ISvcLocator* pSvcLocator)
 : Algorithm(name, pSvcLocator)
 , EvtRun(99)
 , EvtEventId(0)
+, EvtEventId64(0)
 , EvtElapsedTime(0)
 , EvtLiveTime(0)
 , McSourceId(0)
@@ -119,29 +123,36 @@ StatusCode TestAlg::initialize() {
     // a minimal set of items to test mechanism.
     m_rootTupleSvc->addItem(treename, "EvtRun",         &EvtRun );
     m_rootTupleSvc->addItem(treename, "EvtEventId",     &EvtEventId );
+    m_rootTupleSvc->addItem(treename, "EvtEventId64",   &EvtEventId64);
     m_rootTupleSvc->addItem(treename, "EvtElapsedTime", &EvtElapsedTime );
     m_rootTupleSvc->addItem(treename, "EvtLiveTime",    &EvtLiveTime );
     m_rootTupleSvc->addItem(treename, "McSourceId",     &McSourceId );
     m_rootTupleSvc->addItem(treename, "EvtEnergyCorr" , &EvtEnergyCorr );
     m_rootTupleSvc->addItem(treename, "TkrNumTracks",   &TkrNumTracks);
 
-    m_rootTupleSvc->addItem(treename,"VtxXDir",       &VtxXDir     );
-    m_rootTupleSvc->addItem(treename,"VtxYDir",       &VtxYDir     );    
-    m_rootTupleSvc->addItem(treename,"VtxZDir",       &VtxZDir     );
-    m_rootTupleSvc->addItem(treename,"VtxX0",         &VtxX0       );
-    m_rootTupleSvc->addItem(treename,"VtxY0",         &VtxY0       );
-    m_rootTupleSvc->addItem(treename,"VtxZ0",         &VtxZ0       );
-    m_rootTupleSvc->addItem(treename,"Tkr1XDir",      &Tkr1XDir    );
-    m_rootTupleSvc->addItem(treename,"Tkr1YDir",      &Tkr1YDir    );
-    m_rootTupleSvc->addItem(treename,"Tkr1ZDir",      &Tkr1ZDir    );
-    m_rootTupleSvc->addItem(treename,"Tkr1X0",        &Tkr1X0      );
-    m_rootTupleSvc->addItem(treename,"Tkr1Y0",        &Tkr1Y0      );
-    m_rootTupleSvc->addItem(treename,"Tkr1Z0",        &Tkr1Z0      );
-    m_rootTupleSvc->addItem(treename,"Tkr1FirstLayer",&Tkr1FirstLayer);
-    m_rootTupleSvc->addItem(treename,"CTBBestEnergy", &CTBBestEnergy);
-    m_rootTupleSvc->addItem(treename,"CTBBestXDir",   &CTBBestXDir );  
-    m_rootTupleSvc->addItem(treename,"CTBBestYDir",   &CTBBestYDir );  
-    m_rootTupleSvc->addItem(treename,"CTBBestZDir",   &CTBBestZDir );
+    m_rootTupleSvc->addItem(treename,"VtxXDir",            &VtxXDir     );
+    m_rootTupleSvc->addItem(treename,"VtxYDir",            &VtxYDir     );    
+    m_rootTupleSvc->addItem(treename,"VtxZDir",            &VtxZDir     );
+    m_rootTupleSvc->addItem(treename,"VtxX0",              &VtxX0       );
+    m_rootTupleSvc->addItem(treename,"VtxY0",              &VtxY0       );
+    m_rootTupleSvc->addItem(treename,"VtxZ0",              &VtxZ0       );
+    m_rootTupleSvc->addItem(treename,"Tkr1XDir",           &Tkr1XDir    );
+    m_rootTupleSvc->addItem(treename,"Tkr1YDir",           &Tkr1YDir    );
+    m_rootTupleSvc->addItem(treename,"Tkr1ZDir",           &Tkr1ZDir    );
+    m_rootTupleSvc->addItem(treename,"Tkr1X0",             &Tkr1X0      );
+    m_rootTupleSvc->addItem(treename,"Tkr1Y0",             &Tkr1Y0      );
+    m_rootTupleSvc->addItem(treename,"Tkr1Z0",             &Tkr1Z0      );
+    m_rootTupleSvc->addItem(treename,"Tkr1FirstLayer",     &Tkr1FirstLayer);
+    m_rootTupleSvc->addItem(treename,"CTBBestEnergy",      &CTBBestEnergy);
+    m_rootTupleSvc->addItem(treename,"CTBBestXDir",        &CTBBestXDir );  
+    m_rootTupleSvc->addItem(treename,"CTBBestYDir",        &CTBBestYDir );  
+    m_rootTupleSvc->addItem(treename,"CTBBestZDir",        &CTBBestZDir );  
+    m_rootTupleSvc->addItem(treename,"CTBBestEnergyProb",  &CTBBestEnergyProb );  
+    m_rootTupleSvc->addItem(treename,"CTBBestEnergyRatio", &CTBBestEnergyRatio );
+    m_rootTupleSvc->addItem(treename,"CTBCORE",            &CTBCORE );
+    m_rootTupleSvc->addItem(treename,"CTBClassLevel",      &CTBClassLevel );
+    m_rootTupleSvc->addItem(treename,"CTBParticleType",    &CTBParticleType );
+
     return sc;
 }
 

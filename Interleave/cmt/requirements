@@ -23,6 +23,7 @@ private
 # for the test program?
 
 use Event *
+use OverlayEvent *
 use Trigger *
 use GlastSvc *
 use CalibSvc *
@@ -34,6 +35,7 @@ use flux *
 use facilities *
 use AnalysisNtuple *
 use OnboardFilterTds *
+use RootConvert *
 use RootIo *
 
 

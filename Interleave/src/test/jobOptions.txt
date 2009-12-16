@@ -45,7 +45,7 @@ Top.Members={"Sequencer/Dummy",
 //Dummy.BranchMembers = { "AnalysisNtupleAlg", "FT1Alg", "McCoordsAlg"}; 
 
 
-Generator.Members       = {"FluxAlg", "PointInfoAlg", "TestAlg", "Count/events"};
+Generator.Members       = {"FluxAlg", "PtValsAlg", "TestAlg", "Count/events"};
 Generator.BranchMembers = {"FluxAlg", "Count/clocks", "ExposureAlg"};
 
 Simulator.Members       = {"InterleaveAlg", "Count/simulated"}; 
@@ -56,7 +56,7 @@ Simulator.BranchMembers = {"InterleaveAlg", "Count/interleaved", "FT1Alg", "Filt
 FluxSvc.source_lib =  {"$(FLUXXMLPATH)/source_library.xml"};
 FluxAlg.sources =  {"clock"};
 
-FluxSvc.source_lib += {"$(INTERLEAVEXMLPATH)/xml/source_library.xml"};
+FluxSvc.source_lib += {"$(INTERLEAVEXMLPATH)/source_library.xml"};
 FluxAlg.sources += {"sampled_background"};
 FluxAlg.sources += {"sampled_EarthAlbedo"};
 
