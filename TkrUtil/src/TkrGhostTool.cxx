@@ -93,7 +93,7 @@ AlgTool(type, name, parent)
     //Declare the additional interface
     declareInterface<ITkrGhostTool>(this);
     
-    declareProperty("UseDiagnosticInfo", m_useDiagInfo=false);
+    declareProperty("UseDiagnosticInfo", m_useDiagInfo=true);
 
     return;
 }
@@ -479,7 +479,7 @@ int TkrGhostTool::flagHitsFromDiag(Event::TkrClusterCol* clusterCol)
         int view  = tkrid.getView();
         int end   = clus->getEnd();
         int index = towerMult*tower + planeMult*plane + end;
-        // I would think we'd want to set the bit if the diagnostic trigger is set!!
+        // If trigger bit is not set, hit is a ghost!
         if(!m_pDiagTool->isSetTrigger(tower, plane, end)) {
             clus->setStatusBits(Event::TkrCluster::maskDIAGNOSTIC);
             log << MSG::VERBOSE;
