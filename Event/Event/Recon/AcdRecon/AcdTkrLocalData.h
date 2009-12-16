@@ -1,14 +1,14 @@
 #ifndef Event_ACDTKRLOCALCOORDS_H
 #define Event_ACDTKRLOCALCOORDS_H
 
-#include <vector>
-#include "geometry/Point.h"
-#include "geometry/Vector.h"
-
 #include "Event/TopLevel/Definitions.h"
+#include "Event/Recon/TkrRecon/TkrTrackParams.h"
 #include "idents/AcdId.h"
 
-#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Geometry/Point3D.h"
+
+class Point;
 
 class MsgStream;
 
@@ -52,8 +52,18 @@ namespace Event
     
     AcdTkrLocalCoords();
     
-    AcdTkrLocalCoords(const float localPosition[2], float pathLength, float cosTheta, 
-		      int region, const CLHEP::HepMatrix& localCovMatrix);
+    AcdTkrLocalCoords(int volume, float arcLength, 
+		      const HepPoint3D& global);
+
+    AcdTkrLocalCoords(int volume, float arcLength, float cosTheta, 
+		      const HepPoint3D& global, 
+		      const float localPosition[2], const float active[2], 
+		      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+
+    AcdTkrLocalCoords(float arcLength, float cosTheta, 
+		      const HepPoint3D& global, 
+		      const double localPosition[2], 
+		      const HepSymMatrix& planeError);
 
     AcdTkrLocalCoords(const AcdTkrLocalCoords& other);
 
@@ -63,45 +73,54 @@ namespace Event
       
     /// Direct access to parameters
 
+    /// Which Volume of the tile or ribbon is this w.r.t.
+    inline int   getLocalVolume()           const {return m_volume; }
+
+    /// Location of hit in global coordinates
+    inline const HepPoint3D& getGlobalPosition() const {return m_global; };
+
+    /// Location (and errors) of hit in active distances
+    inline float  getActiveX()               const {return m_active[0]; };
+    inline float  getActiveY()               const {return m_active[1]; };
+
     /// Location (and errors) of hit in tile coordinates
-    inline float  getActiveX()             const {return m_activeX; };
-    inline float  getActiveY()             const {return m_activeY; };
-    inline float  getLocalXXCov()          const {return m_localXXCov; };
-    inline float  getLocalYYCov()          const {return m_localYYCov; };
-    inline float  getLocalXYCov()          const {return m_localXYCov; };
+    inline float  getLocalX()               const {return m_local[0]; };
+    inline float  getLocalY()               const {return m_local[1]; };
+
+    inline const HepSymMatrix& getLocalCovProj() const {return m_localCovProj; };
+    inline const HepSymMatrix& getLocalCovProp() const {return m_localCovProp; };
+
+    /// For backwards compatibility
+    inline float getLocalXXCov() const { return m_localCovProj(1,1); }
+    inline float getLocalXYCov() const { return m_localCovProj(1,2); }
+    inline float getLocalYYCov() const { return m_localCovProj(2,2); }
+
+    /// For backwards compatibility
+    inline float getPathLength() const { return 0.; }
+
+    /// Arclength along track to the detector plane
+    inline float getArclengthToPlane()     const {return m_arcLengthPlane; }
 
     /// Angle of track relative to detector plane
     inline float  getCosTheta()            const {return m_cosTheta; }
 
-    /// Pathlength of track in detector element
-    inline float  getPathLength()          const {return m_pathLength; }
-
-    /// A code which tells which region of the tile was hit
-    inline int    getRegion()              const {return m_region; }
-
     /// set everything at once
-    void set(const float localPosition[2], float pathLength, float cosTheta, 
-	     int region, const CLHEP::HepMatrix& localCovMatrix);
+    void setLocalData(int volume, float arcLength, float cosTheta, 
+		      const HepPoint3D& global, 
+		      const float localPosition[2], const float active[2], 
+		      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+    
+    /// set everything at once, old version
+    void setLocalData(const float localPosition[2],
+		      float pathLength, float cosTheta, 
+		      int region, const HepSymMatrix& planeError);
+    
+    /// set stuff from old version of AcdTkrPoint
+    void setLocalData(float arcLength, int face, const Point& point, const Event::TkrTrackParams& params);
 
     /// copy in everything at once
     void copy(const AcdTkrLocalCoords& other);
     
-    // set the individual values (uncomment as needed)
-    //inline void setLocalPosition(const float localPosition[2]) {
-    //  m_localX = localPosition[0];
-    //  m_localY = localPosition[1];
-    //};
-    //inline void setRegion(int val) {m_region = val;}
-    //inline void setCosTheta(float val) { m_cosTheta = val; }
-    //inline void setPathLength(float val) { m_pathLength = val; }
-
-    /// set the covarience terms
-    inline void setCovTerms(float XX, float YY, float XY) {
-      m_localXXCov = XX;
-      m_localYYCov = YY;
-      m_localXYCov = XY;      
-    }
-
     virtual void writeOut(MsgStream& stream) const;
     
   protected:
@@ -110,24 +129,29 @@ namespace Event
     
   private:
     
-    ///  X Position of the expected hit in Local Coords
-    float    m_activeX;
-    ///  Y Position of the expected hit in Local Coords
-    float    m_activeY;
+    ///  Which volume of the Tile or Ribbon does this occur in 
+    int      m_volume;
     
-    ///  Pathlength of track through tile
-    float    m_pathLength;
+    ///  Arclength to plane
+    float    m_arcLengthPlane;
 
     ///  Angle of track w.r.t. detector plane
     float    m_cosTheta;
 
-    ///  Code that tells which part of tile was hit
-    int      m_region;    
+    /// Global position of expected hit 
+    HepPoint3D m_global;
+
+    ///  Position of the hit in Local Coords
+    float    m_local[2];
+
+    ///  Active distance of the hit 
+    float    m_active[2];
 
     ///  Covariance terms in expected LocalCoords
-    float    m_localXXCov;        // local X Error squared  (x for Top, x for +-y planes, y for +- x plane) 
-    float    m_localYYCov;        // local Y Error squared  (y for Top, z for +-x and +-y planes)
-    float    m_localXYCov;        // correlation term of local X-Y error   
+    HepSymMatrix m_localCovProj;
+ 
+        ///  Covariance terms in expected intersection
+    HepSymMatrix m_localCovProp;
 
   };
 

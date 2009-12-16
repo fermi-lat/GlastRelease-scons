@@ -72,6 +72,7 @@ public:
         static std::string McPartToTkrTrackTab;
 	static std::string McAcdTkrPointCol;
 	static std::string McAcdTkrHitPocaCol;
+	static std::string McAcdTkrAssocCol;
     };
 
     class DLL_EXPORT_EVT Digi
@@ -180,6 +181,15 @@ public:
     public:
         AcdRecon() {}
        ~AcdRecon() {}
+
+        static std::string Event;
+    };
+
+    class DLL_EXPORT_EVT AcdReconV2
+    {
+    public:
+        AcdReconV2() {}
+       ~AcdReconV2() {}
 
         static std::string Event;
     };

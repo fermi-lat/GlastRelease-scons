@@ -1,9 +1,14 @@
 #ifndef Event_ACDTKRPOINT_H
 #define Event_ACDTKRPOINT_H
 
+#include "Event/Recon/AcdRecon/AcdTkrLocalData.h"
+#include "Event/Recon/TkrRecon/TkrTrackParams.h"
+
 #include <vector>
 
 #include "Event/TopLevel/Definitions.h"
+
+#include "Event/Recon/TkrRecon/TkrTrackParams.h"
 
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/DataObject.h"
@@ -12,7 +17,6 @@
 #include "idents/AcdId.h"
 #include "geometry/Point.h"
 
-#include "Event/Recon/TkrRecon/TkrTrackParams.h"
 
 class MsgStream;
 
@@ -45,51 +49,63 @@ static const CLID& CLID_AcdTkrPointCol = InterfaceID("AcdTkrPointCol", 1, 0);
 namespace Event
 {
   
-  class AcdTkrPoint : virtual public ContainedObject {
+  class AcdTkrPoint : virtual public ContainedObject, public AcdTkrLocalCoords {
 
   public:
     
     /// Default constructor.  
     AcdTkrPoint();
     
+    /// Copy c'tor
+    AcdTkrPoint(const AcdTkrPoint& other);
+
     /// Constructor for use in persistent -> transient conversion and reconstruction
     /// Takes arguements as they are stored in ROOT and caluclated by AcdReconAlg
-    AcdTkrPoint(double arcLength, int face, 
-		const Point& point, const Event::TkrTrackParams& paramsAtPoint);
+    AcdTkrPoint( int trackIndex,
+		 int volume, float arcLength, float cosTheta, 
+		 const HepPoint3D& global, const float localPosition[2], 
+		 const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
 
+    /// Old Constructor for backwards compatiblity
+    AcdTkrPoint( float arcLength, int volume,
+		 const HepPoint3D& global, const Event::TkrTrackParams& params );
+    
     /// Destructor is trivial
     virtual ~AcdTkrPoint() {;}
 
-    /// Return the arclength along the track at which the track cross the nominal ACD volume
-    /// This is calculated in 3D.  
-    inline float arcLength() const {
-      return m_arcLength;
+    /// Assignment operator
+    Event::AcdTkrPoint& operator=(const Event::AcdTkrPoint& other);
+
+    /// Return the track index
+    inline int getTrackIndex() const {
+      return m_trackIndex;
     }
 
-    /// Return the point (in global coordinates)
-    const Point& point() const {
-      return m_point;
-    }
+    /// for backwards compatibility
+    Point point() const { 
+      return Point(AcdTkrLocalCoords::getGlobalPosition().x(), 
+		   AcdTkrLocalCoords::getGlobalPosition().y(),
+		   AcdTkrLocalCoords::getGlobalPosition().z()); }
 
-    /// Which side of the ACD did we exited (0=Top, 1=-X, 2=-Y, 3=+X, 4=+Y, 5=Bottom)
-    inline int face() const {
-      return m_face;
-    }
-
-    /// Return the kalman propagated track parameters at the POINT
+    /// for backwards compatibility
     const Event::TkrTrackParams& paramsAtPoint() const {
-      return m_paramsAtPoint;
+      static const Event::TkrTrackParams nullParams;
+      return nullParams;
     }
+
+    /// for backwards compatibility
+    inline float arcLength() const {
+      return AcdTkrLocalCoords::getArclengthToPlane();
+    }
+
+    /// for backwards compatibility
+    inline int face() const {
+      return AcdTkrLocalCoords::getLocalVolume();
+    }
+ 
 
     /// set all the values at once
-    void set(double arcLength, int face, 
-	     const Point& point, const Event::TkrTrackParams& paramsAtPoint);
-    
-    // set the individual values
-    inline void setArcLength(float val) { m_arcLength = val; };
-    inline void setFace(int val) { m_face = val; };
-    inline void setPoint(const Point& val) { m_point = val; };
-    inline void setParams(const Event::TkrTrackParams& val) { m_paramsAtPoint = val; };
+    void set( int trackIndex );
     
     /// Print out this structure on a stream
     virtual void writeOut(MsgStream& stream) const;
@@ -101,17 +117,8 @@ namespace Event
     
   private:
     
-    /// The arclength at which this track crosses the nominal ACD volume
-    float m_arcLength;
-
-    /// which face of the ACD does the track leave by
-    int m_face;
-    
-    /// The point of closest approach of the track to the tile or ribbon
-    Point m_point;
-
-    /// The track parameters (and covarience matrix) at the POINT
-    Event::TkrTrackParams m_paramsAtPoint;
+    /// Which Track
+    int   m_trackIndex;
     
   };
 

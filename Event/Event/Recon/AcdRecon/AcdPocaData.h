@@ -45,8 +45,9 @@ namespace Event {
     
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
-    AcdPocaData(float arcLength, float doca, float docaErr, 
-		const Point& poca, const Vector& pocaVector);
+    AcdPocaData(int volume, int region, float arcLength, 
+		float doca, float docaErrProj, float docaErrProp,
+		const Point& poca, const Vector& voca);
     
     /// Copy constructor
     AcdPocaData(const AcdPocaData& other);
@@ -56,6 +57,16 @@ namespace Event {
     /// Assignment operator
     virtual AcdPocaData& operator=(const AcdPocaData& other);
     
+    /// Return the sub-volume of the tile or ribbon associated with this poca
+    inline int getVolume() const {
+      return m_volume;
+    }
+
+    /// Region the region of the sub-volume associated with the poca
+    inline int getRegion() const {
+      return m_region;
+    }
+
     /// Return the arcLength along the track at which the POCA occurs
     /// This is calculated in 3D.  See AcdPocaTool for details  
     inline float getArcLength() const {
@@ -68,12 +79,23 @@ namespace Event {
       return m_doca;
     }
     
+    /// Return the distance of closest approach (doca)
+    /// This is calculated in 3D.  See AcdPocaTool for details  
+    inline float getDocaErr() const {
+      return m_docaErr_proj;
+    }
+
+    /// Return the error on distance of closest approach (doca)
+    inline float getDocaErrProj() const {
+      return m_docaErr_proj;
+    }
+
     /// Return the error on distance of closest approach (doca)
     /// This is calulated the full Kalman Filter propagation of the track
     /// to the POCA and the projection of the propagated covarience matrix 
     /// along the line of the doca.
-    inline float getDocaErr() const {
-      return m_docaErr;
+    inline float getDocaErrProp() const {
+      return m_docaErr_prop;
     }
     
     /// Return the POCA (in global coordinates)
@@ -83,27 +105,23 @@ namespace Event {
     
     /// Return vector between the POCA and the closest edge of the detector element or GAP 
     inline const Vector& getPocaVector() const {
-      return m_pocaVector;
+      return m_voca;
     }
     
     
     /// set all the values
-    void set(float arcLength, float doca, float docaErr, 
-		    const Point& poca, const Vector& pocaVector);
+    void setPocaData(int volume, int region, float arcLength, 
+	     float doca, float docaErrProj, float docaErrProp,
+	     const Point& poca, const Vector& pocaVector);
+
+    /// set all the values, old version
+    void setPocaData(float arcLength, float doca, float docaErr, 
+	     const Point& poca, const Vector& pocaVector);
     
-    void set(const AcdPocaData& other);
+    void setPocaData(const AcdPocaData& other);
     
     /// set individaul values
-    inline void setArcLength(float val) { m_arcLength = val; }
-    inline void setDoca(float val) { m_doca = val; }
-    inline void setDocaErr(float val) { m_docaErr = val; }
-    inline void setPoca(const Point& val) { m_poca = val; }
-    inline void setPocaVector(const Vector& val) { m_pocaVector = val; }
     
-    /// direct acces to members (to set them quickly)
-    inline Point& accessPoca() { return m_poca; }
-    inline Vector& accessPocaVector() { return m_pocaVector; }
-
     virtual void writeOut(MsgStream& stream ) const;
     
   protected:
@@ -113,6 +131,12 @@ namespace Event {
     
   private:
     
+    /// Which volume of the Tile or Ribbon does this occur w.r..t
+    int   m_volume;
+
+    /// Which region of the poca occur w.r.t. (ie, which edge or corner of the tile or ribbon)
+    int   m_region;
+
     /// The arclength at which the poca occurs
     float m_arcLength;
     
@@ -120,13 +144,16 @@ namespace Event {
     float m_doca;                 
     
     /// The Error on the DOCA, this is the track error ellipsoid project along the doca direction
-    float m_docaErr;
+    float m_docaErr_proj;
+
+    /// The Error on the DOCA, this is the track error ellipsoid project along the doca direction
+    float m_docaErr_prop;
     
     /// The Point of Closest Approach
     Point m_poca;
     
     /// The vector from the POCA to the Detector Element edge
-    Vector m_pocaVector;
+    Vector m_voca;
     
   };
     

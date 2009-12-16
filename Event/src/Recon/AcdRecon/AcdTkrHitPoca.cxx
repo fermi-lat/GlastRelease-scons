@@ -14,38 +14,95 @@ namespace Event {
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdTkrHitPoca::AcdTkrHitPoca(const idents::AcdId& acdId, int trackIndex,
-			       const Event::AcdTkrLocalCoords& local,
-			       const Event::AcdPocaData& pocaData)
-    :AcdTkrLocalCoords(),AcdPocaData()
-  {
-    set(acdId,trackIndex,local,pocaData);
+			       const float active2d[2], const float mips[2], 
+			       float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+			       int volumePlane, float arcLengthToPlane, float cosTheta, 
+			       const HepPoint3D& global, const float localPosition[2], 
+			       const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+			       int volume, int region, float arcLength, 
+			       float doca, float docaErrProj, float docaErrProp,
+			       const Point& poca, const Vector& voca)
+    :AcdTkrLocalCoords(volumePlane,arcLengthToPlane,cosTheta,
+		       global,localPosition,active2d,
+		       localCovProj,localCovProp),
+     AcdPocaData(volume,region,arcLength,doca,docaErrProj,docaErrProp,poca,voca),
+     m_id(acdId),
+     m_trackIndex(trackIndex),
+     m_vetoSigmaHit(vetoSigmaHit),
+     m_vetoSigmaProj(vetoSigmaProj),
+     m_vetoSigmaProp(vetoSigmaProp){
+    m_mips[0] = mips[0];
+    m_mips[1] = mips[1];
   }
   
+  AcdTkrHitPoca::AcdTkrHitPoca( const idents::AcdId& acdId, int trackIndex, 
+				const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData ) 
+    :AcdTkrLocalCoords(local),
+     AcdPocaData(pocaData),
+     m_id(acdId),
+     m_trackIndex(trackIndex),     
+     m_vetoSigmaHit(-1.),
+     m_vetoSigmaProj(-1.),
+     m_vetoSigmaProp(-1.){
+    m_mips[0] = -1.;
+    m_mips[1] = -1.;
+  }
+
+
+  
+
   /// Copy constructor
   AcdTkrHitPoca::AcdTkrHitPoca(const Event::AcdTkrHitPoca& other)
-    :AcdTkrLocalCoords(),AcdPocaData()
+    :AcdTkrLocalCoords(other),AcdPocaData(other)
   {
-    set(other.getId(),other.trackIndex(),other,other);
+    set(other.getId(),other.trackIndex(),other.m_mips,
+	other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
   }
 
   /// Assignment operator
   AcdTkrHitPoca& AcdTkrHitPoca::operator=(const Event::AcdTkrHitPoca& other)
   {
     if ( this == &other ) return *this;
-    set(other.getId(),other.trackIndex(),other,other);
+    set(other.getId(),other.trackIndex(),other.m_mips,
+	other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+    AcdTkrLocalCoords::copy(other);
+    AcdPocaData::setPocaData(other);
     return *this;
+  }
+
+
+  /// Comparison operator, requires identity
+  bool AcdTkrHitPoca::operator<(const Event::AcdTkrHitPoca& other) const {
+    if ( this == &other ) return false;
+
+    if ( this->hasHit() != other.hasHit() ) {      
+      return this->hasHit();
+    }
+
+    float vs2 = vetoSigma2();
+    float ovs2 = other.vetoSigma2();      
+    if ( vs2 < ovs2 ) return true;
+    if ( vs2 > ovs2 ) return false;
+
+    if ( m_id.id() < other.getId().id() ) return true;
+    if ( m_id.id() > other.getId().id() ) return false;
+    
+    return false;    
   }
 
 
   /// set all the values
   void AcdTkrHitPoca::set(const idents::AcdId& acdId, int trackIndex,
-			  const Event::AcdTkrLocalCoords& local,
-			  const Event::AcdPocaData& pocaData)
+			  const float mips[2], 
+			  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp)
   {
     m_id = acdId;
     m_trackIndex = trackIndex;
-    AcdTkrLocalCoords::copy(local);
-    AcdPocaData::set(pocaData);
+    m_mips[0] = mips[0];
+    m_mips[1] = mips[1];
+    m_vetoSigmaHit = vetoSigmaHit;
+    m_vetoSigmaProj = vetoSigmaProj;
+    m_vetoSigmaProp = vetoSigmaProp;
   }  
   
   
@@ -54,6 +111,11 @@ namespace Event {
   {
     m_id = idents::AcdId();
     m_trackIndex = -1;
+    m_mips[0] = 0.;
+    m_mips[1] = 0.;
+    m_vetoSigmaHit = 0.;
+    m_vetoSigmaProj = 0.;
+    m_vetoSigmaProp = 0.;
     AcdTkrLocalCoords::ini();
     AcdPocaData::ini();
   }
@@ -62,9 +124,10 @@ namespace Event {
   void AcdTkrHitPoca::writeOut(MsgStream& stream) const 
   {
     stream << MSG::DEBUG
-	   << "AcdTkrHitPoca.  Tile: " << m_id.id() 
-	   << ".  Track: " << (int)m_trackIndex
-	   << ".  ";
+	   << "AcdTkrHitPoca.  Tile: " << m_id.id()  
+	   << ".  Track: " << ((int)m_trackIndex) 
+	   << ".  Mips:  " << m_mips[0] << ',' << m_mips[1] << std::endl
+	   << "Sigma " << m_vetoSigmaHit << ' ' << m_vetoSigmaProj << ' ' << m_vetoSigmaProp << std::endl;
     AcdTkrLocalCoords::writeOut(stream);
     AcdPocaData::writeOut(stream);
     stream << endreq;
@@ -78,7 +141,7 @@ namespace Event {
       add(onePoca);
     }
   }
-  
+ 
   void AcdTkrHitPocaCol::delTkrHitPocas() 
     //Purpose: delete all AcdTkrIntersection object from memory    
   {

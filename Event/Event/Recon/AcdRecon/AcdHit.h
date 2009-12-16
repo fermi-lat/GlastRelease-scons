@@ -6,6 +6,7 @@
 #include "Event/TopLevel/Definitions.h"
 #include "idents/AcdId.h"
 
+#include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IInterface.h"
 
@@ -88,8 +89,8 @@ namespace Event
     
     // masks used to test conditions
     typedef enum { 
-      PMT_VETO_MASK = 0x1,                // channel is above zero suppresion threshold (applied to digital data)
-      PMT_ACCEPT_MASK = 0x2,              // channel fired veto discriminator (applied to analog data)
+      PMT_ACCEPT_MASK = 0x1,              // channel is above zero suppresion threshold (applied to digital data)
+      PMT_VETO_MASK = 0x2,                // channel fired veto discriminator (applied to analog data)
       PMT_RANGE_MASK = 0x4,               // just a trick to split the errors into the higher byte
       PMT_CNO_MASK = 0x8,                 // could be any channel on that GARC
       PMT_ODD_PARITY_ERROR_MASK = 0x10,   // PHA data transmission had parity error
@@ -148,6 +149,23 @@ namespace Event
       case 2: val /= 2.; break;
       }
       return val;
+    }
+
+
+    /// Return the Energy for tiles
+    float tileEnergy() const {
+      if ( ! m_acdId.tile() ) return -1.;
+      static const float MeVMipTile10 = 1.9;
+      static const float MeVMipTile12 = 2.28;
+      float MeVMip = m_acdId.top() && m_acdId.row() == 2 ? MeVMipTile12 : MeVMipTile10;
+      return mips() * MeVMip;
+    }
+
+    /// Return the Energy for either PMT on ribbons
+    inline float ribbonEnergy(PmtId id) const {
+      static const float MeVMipRibbon = 0.5;
+      if ( ! m_acdId.ribbon() ) return -1;
+      return mips(id) * MeVMipRibbon;	    
     }
 
     /// Returns the raw PHA value.  
@@ -259,6 +277,13 @@ namespace Event
     static const CLID& classID() {return CLID_AcdHitCol;}
     virtual const CLID& clID() const {return classID();}
     
+    // take ownership
+    void init(std::vector<AcdHit*>& other) {
+      for ( std::vector<AcdHit*>::iterator itr = other.begin(); itr != other.end(); itr++ ) {
+	push_back(*itr);
+      }
+    }
+
     /// Add a new hit
     void add(AcdHit* cl) {push_back(cl);}
     

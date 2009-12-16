@@ -12,57 +12,132 @@
 #include "Event/Recon/AcdRecon/AcdTkrLocalData.h"
 
 #include "GaudiKernel/MsgStream.h"
-#include "CLHEP/Matrix/Matrix.h"
+
+#include "geometry/Point.h"
 
 
 using namespace Event;
 
-AcdTkrLocalCoords::AcdTkrLocalCoords() {
-  ini();
+AcdTkrLocalCoords::AcdTkrLocalCoords():
+  m_volume(-1),
+  m_arcLengthPlane(0.),
+  m_cosTheta(0),
+  m_global(0.,0.,0.),
+  m_localCovProj(2,0),
+  m_localCovProp(2,0){
+  m_local[0] = m_local[1] = 0.;
+  m_active[0] = m_active[1] = 0.;
 }
 
-AcdTkrLocalCoords::AcdTkrLocalCoords(const float localPosition[2], float pathLength, float cosTheta, 
-				     int region, const CLHEP::HepMatrix& localCovMatrix) {
-  set(localPosition,pathLength,cosTheta,region,localCovMatrix);
+AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, 
+				     const HepPoint3D& global )
+  :m_volume(volume),
+   m_arcLengthPlane(arcLengthPlane),
+   m_cosTheta(0),
+   m_global(global),
+   m_localCovProj(2,0),
+   m_localCovProp(2,0){
+  m_local[0] = m_local[1] = 0.;
+  m_active[0] = m_active[1] = 0.;
+}
+      
+AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, float cosTheta, 
+				     const HepPoint3D& global, 
+				     const float localPosition[2], const float active[2], 
+				     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp)
+  :m_volume(volume),
+   m_arcLengthPlane(arcLengthPlane),
+   m_cosTheta(cosTheta),
+   m_global(global),
+   m_localCovProj(localCovProj),
+   m_localCovProp(localCovProp){
+  m_local[0] = localPosition[0];
+  m_local[1] = localPosition[1];  
+  m_active[0] = active[0];
+  m_active[1] = active[1];
+}
+    
+AcdTkrLocalCoords::AcdTkrLocalCoords(float arcLength, float cosTheta, 
+				     const HepPoint3D& global, 
+				     const double localPosition[2], 
+				     const HepSymMatrix& planeError)
+  :m_volume(-1),
+   m_arcLengthPlane(arcLength),
+   m_cosTheta(cosTheta),
+   m_global(global),
+   m_localCovProj(planeError),
+   m_localCovProp(planeError){
+  m_local[0] = localPosition[0];
+  m_local[1] = localPosition[1];  
+  m_active[0] = localPosition[0];
+  m_active[1] = localPosition[1];
+}
+    
+
+
+AcdTkrLocalCoords::AcdTkrLocalCoords(const AcdTkrLocalCoords& other)
+  :m_volume(other.m_volume),
+   m_arcLengthPlane(other.m_arcLengthPlane),
+   m_cosTheta(other.m_cosTheta),
+   m_global(other.m_global),
+   m_localCovProj(other.m_localCovProj),
+   m_localCovProp(other.m_localCovProp){
+  m_local[0] = other.m_local[0];
+  m_local[1] = other.m_local[1]; 
+  m_active[0] = other.m_active[0];
+  m_active[1] = other.m_active[1];
 }
 
-AcdTkrLocalCoords::AcdTkrLocalCoords(const AcdTkrLocalCoords& other) {
-  CLHEP::HepMatrix localCov(2,2);
-  localCov[0][0] = m_localXXCov;
-  localCov[1][1] = m_localYYCov;
-  localCov[0][1] = localCov[1][0] = m_localXYCov;
-  float position[2];
-  position[0] = other.m_activeX; position[0] = other.m_activeY;
-  set(position,other.m_pathLength,other.m_cosTheta,other.m_region,localCov);
-}
-
-void AcdTkrLocalCoords::set(const float localPosition[2], float pathLength, float cosTheta, 
-			    int region, const CLHEP::HepMatrix& localCov) {
-
-  m_activeX = localPosition[0];
-  m_activeY = localPosition[1];
+void AcdTkrLocalCoords::setLocalData(int volume, float arcLengthPlane, float cosTheta, 
+				     const HepPoint3D& global, const float localPosition[2], const float active[2],
+				     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp) {
   
-  m_pathLength = pathLength;  
-  m_cosTheta = cosTheta;  
-  m_region = region;    
-  
-  m_localXXCov = localCov[0][0];
-  m_localYYCov = localCov[1][1]; 
-  m_localXYCov = localCov[1][0]; 
+  m_volume =  volume;
+  m_arcLengthPlane = arcLengthPlane;
+  m_cosTheta = cosTheta;
+  m_global = global;
+  m_local[0] = localPosition[0];
+  m_local[1] = localPosition[1];
+  m_active[0] = active[0];
+  m_active[1] = active[1];
+  m_localCovProj = localCovProj;
+  m_localCovProp = localCovProp;
+}
+
+/// set everything at once, old version
+void AcdTkrLocalCoords::setLocalData(const float localPosition[2],  
+				     float /* pathLength */, float cosTheta, 
+				     int region, const HepSymMatrix& planeError) {
+  m_volume = region;
+  m_local[0] = localPosition[0];
+  m_local[1] = localPosition[1];
+  m_active[0] = localPosition[0];
+  m_active[1] = localPosition[1];
+  m_cosTheta = cosTheta;
+  m_localCovProj = planeError;
+  m_localCovProp = planeError;
+}
+
+/// set stuff from old version of AcdTkrPoint
+void AcdTkrLocalCoords::setLocalData(float arcLength, int face, 
+				     const Point& point, const Event::TkrTrackParams& /*params*/) {
+  m_volume = face;
+  m_arcLengthPlane = arcLength;
+  m_global.set( point.x(), point.y(), point.z());
 }
 
 
 void AcdTkrLocalCoords::copy(const AcdTkrLocalCoords& other) {
-  m_activeX = other.getActiveX();
-  m_activeY = other.getActiveY();
-  
-  m_pathLength = other.getPathLength();
+  m_volume = other.getLocalVolume();
+  m_arcLengthPlane = other.getArclengthToPlane();
   m_cosTheta = other.getCosTheta();
-  m_region = other.getRegion();    
-  
-  m_localXXCov = other.getLocalXXCov();
-  m_localYYCov = other.getLocalYYCov();
-  m_localXYCov = other.getLocalXYCov();
+  m_global = other.getGlobalPosition();
+  m_local[0] = other.getLocalX();
+  m_local[1] = other.getLocalY();
+  m_active[0] = other.getActiveX();
+  m_active[1] = other.getActiveY();
+  m_localCovProj = other.getLocalCovProj();
+  m_localCovProp = other.getLocalCovProp();
 }
 
 
@@ -73,15 +148,14 @@ void AcdTkrLocalCoords::writeOut(MsgStream& stream ) const
 //        stream - Gaudi message stream
 {
 
-  double localXErr = sqrt(m_localXXCov);
-  double localYErr = sqrt(m_localYYCov);
-  double correl =  m_localXYCov / ( localXErr * localYErr );
-  stream << "Active: [" << m_activeX << ',' << m_activeY 
-	 << "].  Cov: {" << localXErr << ',' << localYErr << ',' << correl 
-	 << "}.  Path: " << m_pathLength 
-	 << ".  Normal: " << m_cosTheta
-	 << ".  Region: " << m_region
-	 << ".  ";
+  stream << "  LocalVol: " << m_volume 
+	 << "  Global. [" << m_global.x() << ',' << m_global.y() << ',' << m_global.z() 
+	 << "]. Local: [" << m_local[0] << ',' << m_local[1] 
+	 << "].  S: " << m_arcLengthPlane
+	 << ".   Angle: " << m_cosTheta
+	 << ".   CovProjected:  {" << m_localCovProj
+	 << "}.   CovPropagated:  {" << m_localCovProp
+	 << "}.";
 }
 
 
@@ -90,14 +164,13 @@ void AcdTkrLocalCoords::ini()
 // Purpose: reset all data members to 0
 //
 {
-  m_activeX = 0.;
-  m_activeY = 0.;
-  
-  m_pathLength = 0.;
+  m_arcLengthPlane = 0.;
   m_cosTheta = 0.;
-  m_region = 0;
-  
-  m_localXXCov = 0.;
-  m_localYYCov = 0.;
-  m_localXYCov = 0.;
+  m_global.set(0.,0.,0.);
+  m_local[0] = 0.;
+  m_local[1] = 0.;
+  m_active[0] = 0.;
+  m_active[1] = 0.;
+  m_localCovProj = HepSymMatrix(2,0);
+  m_localCovProp = HepSymMatrix(2,0);  
 }

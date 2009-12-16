@@ -42,14 +42,33 @@ namespace Event {
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
     AcdTkrHitPoca(const idents::AcdId& acdId, int trackIndex,
-		  const Event::AcdTkrLocalCoords& local,
-		  const Event::AcdPocaData& pocaData);
+		  const float active2d[2], const float mips[2],
+		  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+		  int volumePlane, float arcLengthToPlane, float cosTheta, 
+		  const HepPoint3D& global, const float localPosition[2], 
+		  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+		  int volume, int region, float arcLength, 
+		  float doca, float docaErrProj, float docaErrProp,
+		  const Point& poca, const Vector& voca);
+
+    /// Old Constructor for backwards compatiblity
+    AcdTkrHitPoca( const idents::AcdId& acdId, int trackIndex, 
+		   const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData );
+
     
     /// Copy constructor
     AcdTkrHitPoca(const Event::AcdTkrHitPoca& params);
     
     /// Assignment operator
     Event::AcdTkrHitPoca& operator=(const Event::AcdTkrHitPoca& params);
+
+    /// Equality test operator, requires identity
+    bool operator==(const Event::AcdTkrHitPoca& other) const {
+      return this == &other;
+    }
+
+    /// Comparison operator, sorts by vetoSigma
+    bool operator<(const Event::AcdTkrHitPoca& other) const;    
 
     /// Return the AcdId of the hit tile or ribbon
     inline const idents::AcdId& getId() const { return m_id; }
@@ -58,12 +77,46 @@ namespace Event {
     inline int trackIndex() const {
       return m_trackIndex;
     }
-    
+
+    /// Return the mips associated with PMT A
+    inline float mipsPmtA() const { 
+      return m_mips[0];
+    }
+
+    /// Return the mips associated with PMT B
+    inline float mipsPmtB() const { 
+      return m_mips[1];
+    }
+
+    inline bool hasHit() const {
+      return ( m_mips[0] > 0.001 || m_mips[1] > 0.001 );
+    }
+
+    /// combine the sigma from the hit with the sigma from the track
+    inline float vetoSigma2() const {
+      return ((m_vetoSigmaHit*m_vetoSigmaHit) + (m_vetoSigmaProj*m_vetoSigmaProj));
+    }
+
+    /// An estimator of the number of sigma needed for this track to be a true MIP signal
+    inline float vetoSigmaHit() const {
+      return m_vetoSigmaHit;
+    }
+
+    /// An estimator of the number of sigma needed for this track to hit this element
+    inline float vetoSigmaProj() const {
+      return m_vetoSigmaProj;
+    }
+
+    /// An estimator of the number of sigma needed for this track to hit this element
+    inline float vetoSigmaProp() const {
+      return m_vetoSigmaProp;
+    }
+        
     /// set all the values
     void set(const idents::AcdId& acdId, int trackIndex,
-	     const Event::AcdTkrLocalCoords& local,
-	     const Event::AcdPocaData& pocaData);
-    
+	     const float mips[2],
+	     float vetoHit, float vetoProj, float vetoProp);	        
+
     /// reset all the values to their default
     virtual void ini();
     
@@ -77,7 +130,19 @@ namespace Event {
     
     /// The index of the associated track
     int m_trackIndex;
+       
+    /// The mip values associated with the two pmts
+    float m_mips[2];
+
+    ///  An estimator of the number of sigma needed for this hit to be a true MIP signal
+    float m_vetoSigmaHit;
     
+    ///  An estimator of the number of sigma needed for this track to hit this element
+    float m_vetoSigmaProj;
+
+    ///  An estimator of the number of sigma needed for this track to hit this element
+    float m_vetoSigmaProp;
+
   };
 
 

@@ -42,15 +42,34 @@ namespace Event {
     
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
-    AcdTkrGapPoca(const idents::AcdGapId& acdId, int trackIndex,
-		  const Event::AcdTkrLocalCoords& local,
-		  const Event::AcdPocaData& pocaData);
-    
+    AcdTkrGapPoca(const idents::AcdGapId& acdId, int trackIndex, 
+		  const float active[2], 
+		  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+		  int volumePlane, float arcLengthToPlane, float cosTheta, 
+		  const HepPoint3D& global, const float localPosition[2], 
+		  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+		  int volume, int region, float arcLength, 
+		  float doca, float docaErrProj, float docaErrProp,
+		  const Point& poca, const Vector& voca);
+
+    /// Old Constructor for backwards compatiblity
+    AcdTkrGapPoca( const idents::AcdGapId& acdId, int trackIndex, 
+		   const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData );
+
+  
     /// Copy constructor
     AcdTkrGapPoca(const Event::AcdTkrGapPoca& params);
     
     /// Assignment operator
     Event::AcdTkrGapPoca& operator=(const Event::AcdTkrGapPoca& params);
+
+    /// Equality test operator, requires identity
+    bool operator==(const Event::AcdTkrGapPoca& other) const {
+      return this == &other;
+    }
+
+    /// Comparison operator, sorts by vetoSigma
+    bool operator<(const Event::AcdTkrGapPoca& other) const;     
 
     /// Return the AcdId of the Gap 
     inline const idents::AcdGapId& getId() const { return m_id; }
@@ -59,15 +78,32 @@ namespace Event {
     inline int trackIndex() const {
       return m_trackIndex;
     }
+
+    /// combine the sigma from the hit with the sigma from the track
+    inline float vetoSigma2() const {
+      return ((m_vetoSigmaHit*m_vetoSigmaHit) + (m_vetoSigmaProj*m_vetoSigmaProj));
+    }
     
-    /// set all the values
-    void set(const idents::AcdGapId& acdId, int trackIndex,
-	     const Event::AcdTkrLocalCoords& local,
-	     const Event::AcdPocaData& pocaData);
-    
+    /// An estimator of the the chance that a track in this gap would produce no signal
+    inline float vetoSigmaHit() const {
+      return m_vetoSigmaHit;
+    }
+
+    /// An estimator of the chance that a track went into this gap
+    inline float vetoSigmaProj() const {
+      return m_vetoSigmaProj;
+    }
+
+    /// An estimator of the chance that a track went into this gap
+    inline float vetoSigmaProp() const {
+      return m_vetoSigmaProp;
+    }
+
     /// set only the data at this level
-    inline void set(const idents::AcdGapId& gapId, int trackIndex) {
-      m_id = gapId; m_trackIndex = trackIndex;
+    inline void set(const idents::AcdGapId& gapId, int trackIndex, 
+		    float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp) {
+      m_id = gapId; m_trackIndex = trackIndex; 
+      m_vetoSigmaHit = vetoSigmaHit; m_vetoSigmaProj = vetoSigmaProj; m_vetoSigmaProp = vetoSigmaProp;
     }
 
     /// reset all the values to their default
@@ -84,6 +120,15 @@ namespace Event {
     /// The index of the associated track
     int m_trackIndex;
     
+    /// An estimator of the chance that a track in this gap would produce no signal
+    float m_vetoSigmaHit;
+
+    /// An estimator of the chance that a track went into this gap
+    float m_vetoSigmaProj;
+
+    /// An estimator of the chance that a track went into this gap
+    float m_vetoSigmaProp;
+
   };
  
 

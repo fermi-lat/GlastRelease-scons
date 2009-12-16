@@ -37,6 +37,7 @@ std::string EventModel::MC::McPartToTkrTrackTab       = EventModel::MC::Event  +
 
 std::string EventModel::MC::McAcdTkrPointCol          = EventModel::MC::Event  + "/AcdTkrPointCol";
 std::string EventModel::MC::McAcdTkrHitPocaCol        = EventModel::MC::Event  + "/AcdTkrHitPocaCol";
+std::string EventModel::MC::McAcdTkrAssocCol          = EventModel::MC::Event  + "/AcdTkrAssocCol";
 
 
 // Digi event
@@ -112,4 +113,6 @@ std::string EventModel::CalRecon::GcrSelectVals     = EventModel::CalRecon::Even
 
 // reconstructed ACD data
 std::string EventModel::AcdRecon::Event               = EventModel::EventHeader + "/AcdRecon";
+
+std::string EventModel::AcdReconV2::Event             = EventModel::EventHeader + "/AcdReconV2";
 

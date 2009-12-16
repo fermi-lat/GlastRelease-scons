@@ -21,17 +21,38 @@ AcdTkrPoint::AcdTkrPoint(){
   ini();
 }
 
-AcdTkrPoint::AcdTkrPoint(double arcLength, int face, 
-			 const Point& point, const Event::TkrTrackParams& paramsAtPoint){
-  set(arcLength,face,point,paramsAtPoint);
+AcdTkrPoint::AcdTkrPoint(const AcdTkrPoint& other)
+  :AcdTkrLocalCoords(other),
+   m_trackIndex(other.m_trackIndex){
 }
 
-void AcdTkrPoint::set(double arcLength, int face, 
-		      const Point& point, const Event::TkrTrackParams& paramsAtPoint) {
-  m_arcLength = arcLength;
-  m_face = face;
-  m_point = point;
-  m_paramsAtPoint = paramsAtPoint;
+/// Assignment operator
+Event::AcdTkrPoint& 
+AcdTkrPoint::operator=(const Event::AcdTkrPoint& other) {
+  m_trackIndex = other.getTrackIndex();
+  AcdTkrLocalCoords::copy(other);
+  return *this;
+}
+
+AcdTkrPoint::AcdTkrPoint( float arcLength, int volume,
+			  const HepPoint3D& global, const Event::TkrTrackParams& /* params */ )
+  :AcdTkrLocalCoords(volume,arcLength,global),
+   m_trackIndex(-1){
+}
+
+
+AcdTkrPoint::AcdTkrPoint(int trackIndex,
+			 int volumePlane, float arcLengthToPlane, float cosTheta, 
+			 const HepPoint3D& global, const float localPosition[2], 
+			 const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp)
+  :AcdTkrLocalCoords(volumePlane,arcLengthToPlane,cosTheta,
+		     global,localPosition,localPosition,
+		     localCovProj,localCovProp),
+   m_trackIndex(trackIndex){
+}
+
+void AcdTkrPoint::set(int trackIndex) {
+  m_trackIndex = trackIndex;
 }
         
 
@@ -44,12 +65,9 @@ void AcdTkrPoint::writeOut(MsgStream& stream) const
 {
 
   stream << MSG::DEBUG
-	 << "AcdTkrPoint." 
-	 << "  Arc: " << m_arcLength  
-	 << ".  Face: " << m_face
-	 << ".  Global: (" << m_point.x() << ',' << m_point.y() << ',' << m_point.z() << ")"
-    /* << m_paramsAtPoint */
-	 << endreq;
+	 << "AcdTkrPoint:  " << m_trackIndex << std::endl;
+  AcdTkrLocalCoords::writeOut(stream);
+  stream << endreq;
 }
 
 
@@ -58,10 +76,8 @@ void AcdTkrPoint::ini()
 // Purpose: reset all data members to 0
 //
 {  
-  m_arcLength = 0.;
-  m_face = -1;
-  m_point = Point();
-  m_paramsAtPoint = Event::TkrTrackParams();
+  m_trackIndex = -1;
+  AcdTkrLocalCoords::ini();
 }
 
 AcdTkrPointCol::AcdTkrPointCol(const std::vector<AcdTkrPoint*>& acdTkrPoints) {
