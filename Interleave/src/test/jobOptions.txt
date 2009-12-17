@@ -68,7 +68,7 @@ InterleaveAlg.FilePath = "$(INTERLEAVEXMLPATH)";
 InterleaveAlg.DisableList = {"EvtElapsedTime","EvtLiveTime","Pt*"};
 
 // set these since test program does not define the tuples 
-InterleaveAlg.DisableList = {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*", "Obf*","Grb*"};
+InterleaveAlg.DisableList = {"Filter*", "Tkr*", "Acd*", "Cal*", "CTB*", "FT1*", "Vtx*", "Evt*", "Glt*","Mc*", "Obf*", "Fsw*", "Grb*", "Aud*"};
 
 ApplicationMgr.EvtMax = 1000; 
 
