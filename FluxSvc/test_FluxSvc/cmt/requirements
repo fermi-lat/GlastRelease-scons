@@ -9,7 +9,7 @@ use Event       v*
 use GlastSvc    v*
 use astro       v*
 use rootTestData *
-use ntupleWriterSVc *
+use ntupleWriterSvc *
 
 private
 

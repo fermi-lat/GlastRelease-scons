@@ -51,7 +51,8 @@ ApplicationMgr.EvtMax = 1000000; // needs to be set,
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 3;
 ExposureAlg.OutputLevel=2;
-FluxAlg.sources={"timetick30s","default"};
+//FluxAlg.sources={"timetick30s","default"};
+FluxAlg.sources={"default"};
 // uncomment next to test saving all pointing info entries
 //FluxAlg.save_pointing_info=true;
 
