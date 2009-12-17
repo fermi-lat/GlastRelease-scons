@@ -9,6 +9,7 @@ $Id$
  * EOH *
 
  Interleave-01-06-04 13-Nov-2009    jrb Updates for SCons
+16-Dec-09 v1r6p6  TU  Fix the job options file
 16-Dec-09 v1r6p5  TU  Update test program for changes in other code
 19-Jun-08 v1r6p3  TU  Move Interleave.txt job options file from Gleam to here
 19-Jun-08 v1r6p2  TU  Correct trigger rate by downlink rate when setting rate for LiveTimeSvc
