@@ -365,7 +365,6 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
       }
     }
 
-    Event::AcdReconV2::s_theAcdReconV2Ptr = acdRecon;
     acdRecon->getHitCol().init(acdHits);
     acdRecon->getTkrAssocCol().init(acdTkrAssocs);
     
