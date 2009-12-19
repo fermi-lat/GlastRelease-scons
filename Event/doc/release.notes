@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ * Event-14-01-02 19-Dec-09 EC remove static version of AcdReconV2
  * Event-14-01-01 14-Dec-09 TU and EC Merge in Eric's AcdRecon updates from
             branch GlastReleasev17r5
  * v13r5p1 12-Sep-09  TU Fix warnings on linux
