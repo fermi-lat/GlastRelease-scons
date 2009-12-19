@@ -34,10 +34,6 @@ namespace Event {
     
   public:
     
-    static AcdReconV2* s_theAcdReconV2Ptr;
-    
-  public:
-
     AcdReconV2(){};
     
     virtual ~AcdReconV2(){};
