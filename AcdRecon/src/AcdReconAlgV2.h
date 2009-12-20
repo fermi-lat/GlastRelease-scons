@@ -190,6 +190,10 @@ class AcdReconAlgV2 : public Algorithm
       StatusCode trackDistances(const Event::AcdHitCol& acdHits, 
 				Event::AcdTkrAssocCol& tkrAssocs);
 
+      /// try and do the same thing with the CAL cluster(s)
+      StatusCode calClusterDistances(const Event::AcdHitCol& acdHits, 
+				     Event::AcdTkrAssocCol& tkrAssocs);
+
       /// retrieves event vertex and calls the DOCA and Active Distance routines
       StatusCode vertexDistances(const Event::AcdHitCol& acdHits, 
 				 Event::AcdTkrAssocCol& tkrAssocs);
@@ -208,7 +212,7 @@ class AcdReconAlgV2 : public Algorithm
 			       AcdRecon::PocaData& pocaData);
 
       /// Extrapolate track as far as needed, add error to AcdTkrPoca, make AcdTkrIntersections
-      StatusCode extrapolateTrack(const Event::TkrTrack& aTrack,
+      StatusCode extrapolateTrack(const Event::TkrTrackParams& trackParams,
 				  const AcdRecon::TrackData& trackData,
 				  const AcdRecon::ExitData& isectData,
 				  AcdRecon::PocaDataPtrMap& pocaDataMap,

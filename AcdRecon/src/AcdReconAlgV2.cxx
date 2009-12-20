@@ -26,6 +26,8 @@
 
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/Recon/AcdRecon/AcdTkrIntersection.h"
 #include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
@@ -333,6 +335,13 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
       return sc;
     }    
 
+    // disable calClusterDistances for now
+    //sc = calClusterDistances(acdHits,acdTkrAssocs);
+    if (sc.isFailure()) {
+      log << MSG::ERROR << "AcdReconAlgV2::calClusterDistances failed" << endreq;
+      return sc;
+    }  
+
     sc = vertexDistances(acdHits,acdTkrAssocs);
     if (sc.isFailure()) {
       log << MSG::ERROR << "AcdReconAlgV2::vertexDistances failed" << endreq;
@@ -543,7 +552,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 	Event::AcdTkrPoint* upPoint(0);
 
 	// extrapolate the track upwards
-	sc = extrapolateTrack(*trackTds, upwardExtend, upwardExit, 
+	const Event::TkrTrackParams& trackParsUp = firstHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
+	sc = extrapolateTrack(trackParsUp, upwardExtend, upwardExit, 
 			      upPocasCut, ssdVetoUp, upHitPocae, upGapPocae, upPoint);
 	if (sc.isFailure()) {
 	  log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(up) failed" << endreq;
@@ -566,7 +576,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 	Event::AcdTkrPoint* downPoint(0);		
 
 	// extrapolate the track downwards
-	sc = extrapolateTrack(*trackTds, downwardExtend, downwardExit, 
+	const Event::TkrTrackParams& trackParsDown = lastHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
+	sc = extrapolateTrack(trackParsDown, downwardExtend, downwardExit, 
 			      downPocasCut, ssdVetoDown, downHitPocae, downGapPocae, downPoint);
 	if (sc.isFailure()){
 	  log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(down) failed" << endreq;
@@ -1005,9 +1016,138 @@ StatusCode AcdReconAlgV2::elemDistances(const AcdRecon::TrackData& aTrack,
 }
 
 
+StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits, 
+					      Event::AcdTkrAssocCol& tkrAssocs) {
+
+    // Purpose and Method: TBD
+	
+    StatusCode sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
+     
+    // Retrieve the information on the CAL cluster(s)
+    SmartDataPtr<Event::CalClusterCol> calClustersTds(eventSvc(), 
+						     EventModel::CalRecon::CalClusterCol);
+	
+    if (!calClustersTds) {
+      log << MSG::DEBUG << "No reconstructed cluster(s) found on the TDS" << std::endl
+	  << endreq;
+      return StatusCode::SUCCESS;
+    } else {
+      log << MSG::DEBUG << "AcdReconAlgV2::calClusterDistances using " << calClustersTds->size() << " clusters." << endreq;
+    }	
+
+    // Places to store the track endpoint and direction
+    AcdRecon::TrackData upwardExtend;
+    
+    // where does this track leave the LAT?
+    AcdRecon::ExitData upwardExit;
+
+    int iCluster(-1);
+    Event::CalClusterColItr calItr = calClustersTds->begin();
+    while(calItr != calClustersTds->end())
+      {
+	const Event::CalCluster* calClusterTds = *calItr++;       // The TDS track
+	std::cout << "--------------------------->" << std::endl;
+ 	iCluster++;
+
+ 	// grab the cluster direction information
+	upwardExtend.m_energy = calClusterTds->getCalParams().getEnergy();
+ 	upwardExtend.m_index = 11 + iCluster;
+ 	upwardExtend.m_upward = true;
+	std::cout << "Energy for index " << upwardExtend.m_index << ": " << upwardExtend.m_energy << std::endl;
+	AcdRecon::ReconFunctions::convertToAcdRep(calClusterTds->getCalParams(), upwardExtend);
+ 	
+	// get the LAT exit points
+ 	if ( ! AcdRecon::ReconFunctions::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {
+ 	  log << MSG::WARNING << "AcdRecon::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
+	  return StatusCode::SUCCESS;
+ 	}
+		
+ 	// keep track of all the pocas to hit tiles
+ 	AcdRecon::PocaDataMap upwardPocas;
+
+ 	// calculate all the distances to the hit tiles at once
+ 	sc = hitDistances(upwardExtend,acdHits,upwardExit,upwardPocas);
+ 	if (sc.isFailure()) {
+ 	  log << MSG::ERROR << "AcdReconAlgV2::hitDistances(up) failed" << endreq;
+ 	  return sc;
+	}
+	
+ 	// filter the lists for further procsessing
+ 	AcdRecon::PocaDataPtrMap upPocasCut;
+	
+ 	if ( m_pocaTool != 0 ) {
+ 	  sc = m_pocaTool->filter(upwardPocas,upPocasCut);
+ 	  if (sc.isFailure()) {
+ 	    log << MSG::ERROR << "AcdPocaTool::filter(up) failed" << endreq;
+ 	    return sc;	  
+ 	  }
+	}
+       
+ 	if ( log.level() <= MSG::DEBUG ) {
+ 	  log << MSG::DEBUG << "AcdReconAlgV2::calClusterDistances(" << iCluster << ") poca calculations finished." << std::endl << endreq;
+ 	}
+	
+ 	// Now extrapolate the track as far as needed, 
+ 	// this makes the AcdTkrHitPoca, AcdTkrGapPoca, AcdTkrPoint objects	
+ 	std::vector<Event::AcdTkrHitPoca*> upHitPocae;
+ 	std::vector<Event::AcdTkrGapPoca*> upGapPocae;
+	int ssdVetoUp(0);
+ 	float cornerDocaUp(0.);
+ 	Event::AcdTkrPoint* upPoint(0);
+
+ 	// extrapolate the track upwards
+	sc = m_intersectionTool->makeTkrPoint(upwardExtend,upwardExit,upPoint);
+	if ( sc.isFailure() ){
+	  log << MSG::ERROR << "AcdTkrIntersectionTool::makeTkrPoint failed" << endreq;
+	  return sc;
+	}
+
+	if ( upPoint != 0 ) {
+	  if ( log.level() <= MSG::DEBUG ) {    
+	    upPoint->writeOut(log);
+	  }
+	}
+
+	static Event::TkrTrackParams trackParams;
+	AcdRecon::ReconFunctions::convertToTkrRep(upwardExtend, trackParams);
+ 	sc = extrapolateTrack(trackParams, upwardExtend, upwardExit, 
+ 			      upPocasCut, ssdVetoUp, upHitPocae, upGapPocae, upPoint);
+ 	if (sc.isFailure()) {
+	  log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(up) failed" << endreq;
+ 	  return sc;
+ 	}
+
+ 	sc = calcCornerDoca(upwardExtend,cornerDocaUp,"Tkr(up)");
+ 	if (sc.isFailure()){
+ 	  log << MSG::ERROR << "AcdPocaTool::calcCornerDoca(down) failed" << endreq;
+ 	  return sc;
+ 	}
+
+ 	// sort the POCAe
+ 	sortPocae(upHitPocae,upGapPocae);
+
+ 	HepVector3D propVect = upwardExtend.m_current - upwardExtend.m_point;
+	
+  	Event::AcdTkrAssoc* upAssoc = 
+ 	  new Event::AcdTkrAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
+ 				 upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
+ 				 upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
+ 				 ssdVetoUp,cornerDocaUp);
+
+ 	sc = fillTkrAssoc(*upAssoc,upHitPocae,upGapPocae,upPoint);
+ 	if (sc.isFailure()){
+ 	  log << MSG::ERROR << "AcdPocaTool::fillTkrAssoc(up) failed" << endreq;
+ 	  return sc;
+ 	}
+ 	tkrAssocs.push_back(upAssoc);   
+      }
+
+    return sc;   
+}
 
 
-StatusCode AcdReconAlgV2::extrapolateTrack(const Event::TkrTrack& aTrack,
+StatusCode AcdReconAlgV2::extrapolateTrack(const Event::TkrTrackParams& trackParams,
 					 const AcdRecon::TrackData& trackData,
 					 const AcdRecon::ExitData& isectData,
 					 AcdRecon::PocaDataPtrMap& pocaDataMap,
@@ -1033,7 +1173,7 @@ StatusCode AcdReconAlgV2::extrapolateTrack(const Event::TkrTrack& aTrack,
   // build all the intersections
   if ( m_intersectionTool != 0 ) {
     try {
-      sc = m_intersectionTool->makeIntersections(*m_G4PropTool,aTrack,trackData,isectData,m_hitMap,
+      sc = m_intersectionTool->makeIntersections(*m_G4PropTool,trackParams,trackData,isectData,m_hitMap,
 						 *m_geomMap,pocaDataMap,ownedPocaData,gapPocae);
     } catch (...) {
       log << MSG::ERROR << "Caught exception using propagator to make intersection with track " << trackData.m_index 
