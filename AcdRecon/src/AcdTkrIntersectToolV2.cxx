@@ -78,7 +78,7 @@ StatusCode AcdTkrIntersectToolV2::initialize()
  }
 
 StatusCode  AcdTkrIntersectToolV2::makeIntersections(IPropagator& prop, 
-						     const Event::TkrTrack& aTrack,
+						     const Event::TkrTrackParams& trackParams,
 						     const AcdRecon::TrackData& track,
 						     const AcdRecon::ExitData& data,
 						     const AcdRecon::AcdHitMap& hitMap,
@@ -118,7 +118,7 @@ StatusCode  AcdTkrIntersectToolV2::makeIntersections(IPropagator& prop,
     return StatusCode::FAILURE;
   }
   
-  AcdRecon::ReconFunctions::startPropagator(prop,aTrack,track,maxArcLength);
+  AcdRecon::ReconFunctions::startPropagator(prop,trackParams,track,maxArcLength);
 
   // storage inside the loop
   double arcLength(0.);

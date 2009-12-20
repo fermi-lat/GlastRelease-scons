@@ -103,7 +103,7 @@ class AcdTkrIntersectToolV2 : public AcdITkrIntersectToolV2,  public AlgTool {
    *  @return Success or Failure
    **/
   virtual StatusCode makeIntersections(IPropagator& prop,
-				       const Event::TkrTrack& aTrack,
+				       const Event::TkrTrackParams& trackParams,
 				       const AcdRecon::TrackData& track,
 				       const AcdRecon::ExitData& data,	
 				       const AcdRecon::AcdHitMap& hitMap,

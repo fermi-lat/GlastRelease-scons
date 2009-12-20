@@ -30,7 +30,7 @@ class AcdGeomMap;
  * $Header$
  **/
 
-static const InterfaceID IID_AcdITkrIntersectToolV2("AcdITkrIntersectToolV2",1,1) ;
+static const InterfaceID IID_AcdITkrIntersectToolV2("AcdITkrIntersectToolV2",1,2) ;
 
 class AcdITkrIntersectToolV2 : virtual public IAlgTool {
 
@@ -57,7 +57,7 @@ class AcdITkrIntersectToolV2 : virtual public IAlgTool {
    *  @return Success or Failure
    **/
   virtual StatusCode makeIntersections(IPropagator& prop,
-				       const Event::TkrTrack& aTrack,
+				       const Event::TkrTrackParams& trackParams,
 				       const AcdRecon::TrackData& track,
 				       const AcdRecon::ExitData& data,	
 				       const AcdRecon::AcdHitMap& hitMap,
