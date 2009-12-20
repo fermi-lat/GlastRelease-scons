@@ -44,6 +44,40 @@ namespace AcdRecon {
   }
 
   /**
+   * @brief fill the 5 x 4 derivative matrix to get from Tkr covariance form to Acd covariance form
+   *
+   * @param trackDir the directional cosines
+   * @param cov the new covariance matrix
+   **/
+  void ReconFunctions::fillAcdToTkrCovTranslation(const HepVector3D& dir, HepMatrix& covTrans) {
+
+    double zVal = fabs(dir.z()) > 1e-9 ? dir.z() : 1.e-9;
+    covTrans(1,1) = 0.;
+    covTrans(1,2) = 0.;
+    covTrans(1,3) = 0.;
+    covTrans(1,4) = 1.;
+    covTrans(1,5) = 0.;
+    
+    covTrans(2,1) = 1. / zVal;
+    covTrans(2,2) = 0.;
+    covTrans(2,3) = -1. * dir.x() / (zVal*zVal);
+    covTrans(2,4) = 0.;
+    covTrans(2,5) = 0.;
+
+    covTrans(3,1) = 0.;
+    covTrans(3,2) = 0.;
+    covTrans(3,3) = 0.;
+    covTrans(3,4) = 0.;
+    covTrans(3,5) = 1.;
+
+    covTrans(4,1) = 0.;
+    covTrans(4,2) = 1. / zVal;
+    covTrans(4,3) = -1. * dir.y() / (zVal*zVal);
+    covTrans(4,4) = 0.;
+    covTrans(4,5) = 0.;
+  }
+
+  /**
    * @brief fill the 4 x 4 covariance matrix from TrkTrackParams
    *
    * @param tkrParams the directional cosines
@@ -57,7 +91,7 @@ namespace AcdRecon {
     }
   }
 
-  void ReconFunctions::convertToAcdRep(const Event::TkrTrackParams trackParams,
+  void ReconFunctions::convertToAcdRep(const Event::TkrTrackParams& trackParams,
 				       double zRef, 
 				       AcdRecon::TrackData& acdParams) {
 
@@ -97,6 +131,94 @@ namespace AcdRecon {
 
     // make the covariance matrix in ACD params.
     acdParams.m_cov_orig = tkrCov.similarity(covTrans);
+    acdParams.m_cov_prop = acdParams.m_cov_orig;
+  }
+
+  void ReconFunctions::convertToTkrRep(const AcdRecon::TrackData& acdParams,
+				       Event::TkrTrackParams& trackParams) {
+
+    // Set the reference point
+    trackParams.setxPosition(acdParams.m_point.x());
+    trackParams.setyPosition(acdParams.m_point.y());
+ 
+    // get the direction
+    // start with the slopes.  Aka tangent vectors
+    double zVal = fabs(acdParams.m_dir.z()) > 1.e-9 ? acdParams.m_dir.z() : 1.e-9;
+    double Sx = acdParams.m_dir.x() / zVal;
+    double Sy = acdParams.m_dir.y() / zVal;
+
+    // if this is downgoing flip the direction
+    if ( !acdParams.m_upward ) {
+      Sx *= -1.;
+      Sy *= -1.;
+    }
+   
+    trackParams.setxSlope(Sx);
+    trackParams.setySlope(Sy);
+
+    HepMatrix covTrans(4,5,0);
+    fillAcdToTkrCovTranslation( acdParams.m_dir, covTrans );   
+    HepSymMatrix tkrCov(4,0);
+    // make the covariance matrix in TKR params.
+    tkrCov = acdParams.m_cov_orig.similarity(covTrans);
+    for (int i=1; i<5; i++){
+      for (int j=1; j<i+1; j++){
+	trackParams(i, j) = tkrCov(i, j);
+      }
+    }
+
+    /* useful print-out
+    std::cout << "Converting from acd to track rep " << std::endl
+    << "Acd Rep:  p=" << acdParams.m_point << " v=" << acdParams.m_dir << std::endl
+    << "          cov orig=" << std::endl
+    << acdParams.m_cov_orig << std::endl
+    << "Tkr Rep:  " << std::endl << trackParams << std::endl
+    << "zVal is " << zVal << std::endl
+    << "By the way, the jacobian is:" << std::endl
+    << covTrans << std::endl;
+    */
+      
+  }
+
+  void ReconFunctions::convertToAcdRep(const Event::CalParams& calParams,
+				       AcdRecon::TrackData& acdParams) {
+    // get the direction first
+    acdParams.m_dir.set(calParams.getAxis().x(), 
+			calParams.getAxis().y(), 
+			calParams.getAxis().z());
+
+    // pathlength to get to z=0
+    double pathLength = fabs(calParams.getAxis().z()) > 1.e-9 ? 
+      -1. * calParams.getCentroid().z() / calParams.getAxis().z() : 0.;      
+    double delX = pathLength * calParams.getAxis().x();
+    double delY = pathLength * calParams.getAxis().y();
+    double delZ = pathLength * calParams.getAxis().z();
+
+    // get the direction first
+    acdParams.m_point.set(calParams.getCentroid().x() + delX, 
+			  calParams.getCentroid().y() + delY,
+			  calParams.getCentroid().z() + delZ);
+    
+    // Set the reference point
+    acdParams.m_current = acdParams.m_point;    
+
+    // make the covariance matrix in ACD params.
+    // CalParams is a liar!!
+    // Let's make something up, Say acos(0.1) and 1 mm.
+    //acdParams.m_cov_orig(1, 1) = calParams.getxDirxDir();
+    //acdParams.m_cov_orig(1, 2) = calParams.getxDiryDir();
+    //acdParams.m_cov_orig(1, 3) = calParams.getxDirzDir();
+    //acdParams.m_cov_orig(2, 2) = calParams.getyDiryDir();
+    //acdParams.m_cov_orig(2, 3) = calParams.getyDirzDir();
+    //acdParams.m_cov_orig(3, 3) = calParams.getzDirzDir();
+    //acdParams.m_cov_orig(4, 4) = calParams.getxPosxPos();
+    //acdParams.m_cov_orig(4, 5) = calParams.getxPosyPos();
+    //acdParams.m_cov_orig(5, 5) = calParams.getyPosyPos();
+    acdParams.m_cov_orig(1, 1) = 0.01;
+    acdParams.m_cov_orig(2, 2) = 0.01;
+    acdParams.m_cov_orig(3, 3) = 0.01;
+    acdParams.m_cov_orig(4, 4) = 1.;
+    acdParams.m_cov_orig(5, 5) = 1.;
     acdParams.m_cov_prop = acdParams.m_cov_orig;
   }
 
@@ -573,20 +695,28 @@ namespace AcdRecon {
   }
 
   // initiliaze the kalman propagator
-  void ReconFunctions::startPropagator(IPropagator& prop, const Event::TkrTrack& track, const AcdRecon::TrackData& trackData,
-				       const double& maxArcLength ) {
-    
-    // Get the start point & direction of the track & the params & energy also
-    const unsigned int hitIndex = trackData.m_upward ? 0 : track.getNumHits() - 1;
-    const Event::TkrTrackHit* theHit = track[hitIndex];
-    const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
-    const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
-    
+  //void ReconFunctions::startPropagator(IPropagator& prop, const Event::TkrTrack& track, const AcdRecon::TrackData& trackData,
+  //				       const double& maxArcLength ) {
+  //  
+  //  // Get the start point & direction of the track & the params & energy also
+  //  const unsigned int hitIndex = trackData.m_upward ? 0 : track.getNumHits() - 1;
+  //  const Event::TkrTrackHit* theHit = track[hitIndex];
+  //  const Point initialPosition = theHit->getPoint(Event::TkrTrackHit::SMOOTHED);
+  //  const Event::TkrTrackParams& trackPars = theHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
+  //  
+  //  // setup the propagator
+  //  prop.setStepStart(trackPars,initialPosition.z(),trackData.m_upward); 
+  //  prop.step(maxArcLength);  
+  //}
+
+  // initiliaze the kalman propagator
+  void ReconFunctions::startPropagator(IPropagator& prop, const Event::TkrTrackParams& trackParams,
+				       const AcdRecon::TrackData& trackData, const double& maxArcLength ) {
+        
     // setup the propagator
-    prop.setStepStart(trackPars,initialPosition.z(),trackData.m_upward); 
+    prop.setStepStart(trackParams,trackData.m_point.z(),trackData.m_upward); 
     prop.step(maxArcLength);  
   }
-
 
   // run the propagtor out to a specified arclength
   void ReconFunctions::propagateToArcLength(IPropagator& prop,

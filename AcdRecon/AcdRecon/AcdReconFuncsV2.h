@@ -15,6 +15,8 @@
 
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrTrackParams.h"
+#include "Event/Recon/CalRecon/CalParams.h"
+
 
 class AcdTileDim;
 class AcdTkrParams;
@@ -41,6 +43,14 @@ namespace AcdRecon {
     void fillTkrToAcdCovTranslation(const HepVector3D& dir, HepMatrix& covTrans);
 
     /**
+     * @brief fill the 4 x 5 derivative matrix to get from Acd covariance form to Tkr covariance form
+     *
+     * @param dir the directional cosines
+     * @param covTrans the new covariance matrix
+     **/
+    void fillAcdToTkrCovTranslation(const HepVector3D& dir, HepMatrix& covTrans);
+
+    /**
      * @brief fill the 4 x 4 covariance matrix from TrkTrackParams
      *
      * @param tkrParams the directional cosines
@@ -58,8 +68,28 @@ namespace AcdRecon {
      * @param up true if projection is upgoing
      * @param acdParams the same, in AcdRecon::TrackData rep
      **/
-    void convertToAcdRep(const Event::TkrTrackParams,
+    void convertToAcdRep(const Event::TkrTrackParams& trackParams,
 			 double zRef,
+			 AcdRecon::TrackData& acdParams);
+
+    /**
+     * @brief Convert from AcdRecon::TrackData to TrkTrackParams
+     *
+     * @param acdParams the AcdRecon::TrackData rep
+     * @param trackParams the tracker params
+     **/
+    void convertToTkrRep(const AcdRecon::TrackData& acdParams,
+			 Event::TkrTrackParams& trackParams);
+
+
+    /**
+     * @brief Convert from CalParams to AcdRecon::TrackData
+     *
+     * @param calParams the cal cluster params
+     * @param zRef value of z at ref point
+     * @param acdParams the same, in AcdRecon::TrackData rep
+     **/
+    void convertToAcdRep(const Event::CalParams& calParams,
 			 AcdRecon::TrackData& acdParams);
     
     /**
@@ -213,7 +243,18 @@ namespace AcdRecon {
      * @param trackData the minimal ACD track representation
      * @param maxArcLength furthers arcLength we want to extend the track to
      */
-    void startPropagator(IPropagator& prop, const Event::TkrTrack& aTrack, const AcdRecon::TrackData& trackData,
+    //void startPropagator(IPropagator& prop, const Event::TkrTrack& aTrack, const AcdRecon::TrackData& trackData,
+    //		 const double& maxArcLength);
+
+    /**
+     * @brief initiliaze the kalman propagator
+     *
+     * @param prop the propagator
+     * @param trackParams the track parameters
+     * @param trackData the minimal ACD track representation
+     * @param maxArcLength furthers arcLength we want to extend the track to
+     */
+    void startPropagator(IPropagator& prop, const Event::TkrTrackParams& trackParams, const AcdRecon::TrackData& trackData,
 			 const double& maxArcLength);
     
     /**
