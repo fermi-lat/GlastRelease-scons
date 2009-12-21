@@ -435,8 +435,7 @@ StatusCode Acd2ValsTool::calculate()
   StatusCode sc = StatusCode::SUCCESS;
   
   // Recover pointers to ACD Recon results
-  //SmartDataPtr<Event::AcdRecon> pACD(m_pEventSvc,EventModel::AcdRecon::Event);
-  Event::AcdReconV2* pACD = Event::AcdReconV2::s_theAcdReconV2Ptr;
+  SmartDataPtr<Event::AcdReconV2> pACD(m_pEventSvc,EventModel::AcdReconV2::Event);
 
   // Recover pointers to CalClusters and Xtals(not currently used)
   //SmartDataPtr<Event::CalClusterCol>   pCals(m_pEventSvc,EventModel::CalRecon::CalClusterCol);
