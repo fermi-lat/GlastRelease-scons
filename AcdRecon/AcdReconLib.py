@@ -6,6 +6,7 @@ def generate(env, **kw):
     env.Tool('guiLib')
     env.Tool('identsLib')
     env.Tool('AcdUtilLib')
+    env.Tool('addLibrary', library = env['rootLibs'])
 
 def exists(env):
     return 1;
