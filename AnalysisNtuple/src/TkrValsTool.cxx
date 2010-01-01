@@ -403,10 +403,14 @@ in which case the usual DOCA is poorly measured.
 <td>F<td>   Track chisquared for first Tkr[1/2]FirstHits layers  
 <tr><td> Tkr[1/2]Hits  
 <td>F<td>   Number of clusters in track  
-<tr><td> Tkr[1/2]GhostFrac
-<td>F<td>   Fraction of good hits on track that are ghosts
 <tr><td> Tkr[1/2]ToT255Frac
 <td>F<td>   Fraction of good hits on track that have ToT==255
+<tr><td> Tkr[1/2]BothFrac
+<td>F<td>   Fraction of good hits on track that are both regular and diagnostic ghosts
+<tr><td> Tkr[1/2]GhostFrac
+<td>F<td>   Fraction of good hits on track that are regular ghosts
+<tr><td> Tkr[1/2]DiagFrac
+<td>F<td>   Fraction of good hits on track that are diagnostic ghosts
 <tr><td> Tkr[1/2]SaturatedFrac
 <td>F<td>   Fraction of good hits on track that are saturated
 <tr><td> Tkr[1/2]WideFrac

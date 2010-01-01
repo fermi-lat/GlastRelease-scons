@@ -162,7 +162,6 @@ positive if inside.
 
 <table>
 <tr><th> Variable <th> Type <th> Description					
-
 <tr><td> AcdTileCount 
 <td>U<td>   Number of tiles fired
 <tr><td> AcdRibbonCount 
