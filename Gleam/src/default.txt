@@ -25,7 +25,7 @@ RootTupleSvc.filename="merit.root";
 CalClustersAlg.OutputLevel=4; // too much info
 
 // no MOOT in unit test for now
-#include "$CONFIGSVCROOT/src/configOptions_moot.txt"
+#include "$CONFIGSVCROOT/src/configOptions_noMoot.txt"
 
 MootSvc.noMoot = false;
 MootSvc.MootConfigKey=2225;
