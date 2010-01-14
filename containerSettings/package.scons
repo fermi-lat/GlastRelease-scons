@@ -9,14 +9,20 @@ baseEnv.AppendUnique(CPPDEFINES = ['GlastRelease'])
 #########################                                                                                                                                                                                
 def GaudiProgram(env, name, source, test):
         env.Tool('facilitiesLib')
-	testObject = baseEnv.Object('#gr_app/src/TestGlastMain.cxx')
-        mainObject = baseEnv.Object('#gr_app/src/GlastMain.cxx')
+	#testObject = baseEnv.Object('#gr_app/src/TestGlastMain.cxx')
+        #mainObject = baseEnv.Object('#gr_app/src/GlastMain.cxx')
         setPriorityObject = ''
         if baseEnv['PLATFORM'] == 'win32':
                 setPriorityObject = baseEnv.Object('#gr_app/src/setPriority.cxx')
         if test == 1:
+		env.Install(target='src',
+			    source='#gr_app/src/TestGlastMain.cxx')
+		testObject = env.Object('src/TestGlastMain.cxx')
                 return env.Program(name, source + testObject + setPriorityObject)
 	else:
+		env.Install(target='src',
+			    source='#gr_app/src/GlastMain.cxx')
+		mainObject = env.Object('src/GlastMain.cxx')
                 return env.Program(name, source + mainObject + setPriorityObject)
 
 baseEnv.AddMethod(GaudiProgram)
