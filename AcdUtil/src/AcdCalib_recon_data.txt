@@ -1,0 +1,14 @@
+// This JO fragment is for the ACD calibrations to be 
+// used for real data:
+
+// The default is vanilla
+AcdCalibSvc.DefaultFlavor = "vanilla";
+
+// Don't have High Range or Coherent Noise calibrations yet
+// use "ideal"
+AcdCalibSvc.FlavorHighRange = "ideal";
+AcdCalibSvc.FlavorCoherentNoise = "ideal";
+
+// If this isn't already included
+CalibDataSvc.CalibFlavorList += "ideal";
+
