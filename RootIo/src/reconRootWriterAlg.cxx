@@ -626,11 +626,15 @@ void reconRootWriterAlg::fillCalCluster(CalRecon *calRec, Event::CalClusterCol* 
     unsigned int numClusters = clusterColTds->size();   
     unsigned int iCluster;   
     for (iCluster = 0; iCluster < numClusters; iCluster++)
-     {
-      Event::CalCluster * clusterTds = (*clusterColTds)[iCluster] ;
-      CalCluster * clusterRoot = new CalCluster ;
-      RootPersistence::convert(*clusterTds,*clusterRoot) ;
-      calRec->addCalCluster(clusterRoot) ;   
+    {
+        Event::CalCluster * clusterTds = (*clusterColTds)[iCluster] ;
+        CalCluster * clusterRoot = new CalCluster ;
+        RootPersistence::convert(*clusterTds,*clusterRoot) ;
+        calRec->addCalCluster(clusterRoot) ;   
+
+        // Keep the relationship between the TDS and root objects
+        TRef ref = clusterRoot;
+        m_common.m_calClusterMap[clusterTds] = ref;
     }   
     
     return;   
@@ -664,6 +668,11 @@ void reconRootWriterAlg::fillCalXtalRec(CalRecon *calRec, Event::CalXtalRecCol* 
         CalXtalRecData * xtalRoot = new CalXtalRecData() ;
         RootPersistence::convert(**xtalTds,*xtalRoot) ;        
         calRec->addXtalRecData(xtalRoot) ;   
+
+        // Keep the relationship between the TDS and root objects
+        TRef ref = xtalRoot;
+        const Event::CalXtalRecData* xtalRecData = *xtalTds;
+        m_common.m_calXtalRecDataMap[xtalRecData] = ref;
     }   
     
     return;   

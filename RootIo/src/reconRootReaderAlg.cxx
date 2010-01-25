@@ -798,6 +798,8 @@ StatusCode reconRootReaderAlg::storeCalXtalRecDataCol(CalRecon *calRecRoot) {
         RootPersistence::convert(*calXtalRecRoot,*calXtalRecDataTds) ;
         
         calXtalRecColTds->push_back(calXtalRecDataTds);
+
+        m_common.m_rootCalXtalRecDataMap[calXtalRecRoot] = calXtalRecDataTds;
     }
     
     //register output data collection as a TDS object
@@ -827,6 +829,8 @@ StatusCode reconRootReaderAlg::storeCalClusterCol(CalRecon *calRecRoot) {
         Event::CalCluster * calClusterTds = new Event::CalCluster() ;
         RootPersistence::convert(*calClusterRoot,*calClusterTds) ;
         calClusterColTds->push_back(calClusterTds) ;
+
+        m_common.m_rootCalClusterMap[calClusterRoot] = calClusterTds;
     }
     
     sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol, calClusterColTds);
