@@ -1,5 +1,6 @@
 
 #include <RootConvert/Recon/CalClusterConvert.h>
+#include <RootConvert/Recon/CalFitParamsConvert.h>
 #include <RootConvert/Recon/CalParamsConvert.h>
 #include <RootConvert/Utilities/Toolkit.h>
 
@@ -23,27 +24,36 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
         rootLayers.push_back(layerRoot) ;
     }
       
+    CalFitParams rootFitParams ;
+    convert(tdsCluster.getFitParams(),rootFitParams) ;
+      
     CalParams rootParams ;
     convert(tdsCluster.getCalParams(),rootParams) ;
 
     rootCluster.init
-      ( rootLayers, rootParams,
+      ( rootLayers, rootFitParams, rootParams,
         tdsCluster.getRmsLong(),
         tdsCluster.getRmsLongAsym(),
         tdsCluster.getRmsTrans(),
+        (Int_t)tdsCluster.getNumSaturatedXtals(),
         (Int_t)tdsCluster.getNumTruncXtals(),
         tdsCluster.getStatusBits() ) ;
  }
  
 void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
 {
+    Event::CalFitParams tdsFitParams;
+    convert(rootCluster.getFitParams(),tdsFitParams) ;    
     Event::CalParams tdsParams ;
     convert(rootCluster.getParams(),tdsParams) ;    
+
     tdsCluster.initialize
-      ( tdsParams,
+      ( tdsFitParams,
+        tdsParams,
         rootCluster.getRmsLong(),
         rootCluster.getRmsTrans(),
         rootCluster.getRmsLongAsym(),
+        rootCluster.getNumSaturatedXtals(),
         rootCluster.getNumTruncXtals() ) ;
     
     UInt_t rootStatusBits = rootCluster.getStatusBits() ;
