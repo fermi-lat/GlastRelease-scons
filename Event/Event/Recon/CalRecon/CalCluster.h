@@ -9,6 +9,7 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/RelTable/RelTable.h"
+#include "Event/Recon/CalRecon/CalFitParams.h"
 #include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 
@@ -120,45 +121,55 @@ public:
     *   @param rms_long RMS of longitudinal position measurements 
     *   @param rms_trans RMS of transversal position measurements 
     */
-    void initialize(const CalParams& params,
-                    double rms_long,
-                    double rms_trans,
-					double long_asym,
-					int num_TruncXtals)
+    void initialize(const CalFitParams& fitParams,
+                    const CalParams&    params,
+                    double              rms_long,
+                    double              rms_trans,
+					double              long_asym,
+                    int                 numSaturatedXtals,
+					int                 numTruncXtals)
     {
-        m_params   = params;
-        m_rmslong  = rms_long;
-        m_rmstrans = rms_trans;
-		m_rmslongAsym = long_asym;
-		m_numTruncXtals = num_TruncXtals;
+        m_fitParams         = fitParams;
+        m_params            = params;
+        m_rmslong           = rms_long;
+        m_rmstrans          = rms_trans;
+		m_rmslongAsym       = long_asym;
+        m_numSaturatedXtals = numSaturatedXtals;
+		m_numTruncXtals     = numTruncXtals;
     }
 
     /*
      *   Define individual set methods here for all variables
      */
-    void setCalParams(const CalParams& params) {m_params        = params;  }
-    void setRmsLong(double rmsLong)            {m_rmslong       = rmsLong; }
-	void setRmsLongAsym(double rmsLongAsym)    {m_rmslongAsym   = rmsLongAsym;}
-    void setRmsTrans(double rmsTrans)          {m_rmstrans      = rmsTrans;}
-    void setNumXtals(int numXtals)             {m_numTruncXtals = numXtals;}
+    void setFitParams(const CalFitParams& params) {m_fitParams         = params;}
+    void setCalParams(const CalParams& params)    {m_params            = params;  }
+    void setRmsLong(double rmsLong)               {m_rmslong           = rmsLong; }
+	void setRmsLongAsym(double rmsLongAsym)       {m_rmslongAsym       = rmsLongAsym;}
+    void setRmsTrans(double rmsTrans)             {m_rmstrans          = rmsTrans;}
+    void setNumSaturatedXtals(int nSat)           {m_numSaturatedXtals = nSat;}
+    void setNumXtals(int numXtals)                {m_numTruncXtals     = numXtals;}
 
     /*
      * Provide access to the data
      */
+    /// Direct access to the CalFitParams
+    const CalFitParams& getFitParams() const {return m_fitParams;}
     /// Direct access to the CalParams
-    const CalParams& getCalParams() const {return m_params;}
+    const CalParams& getCalParams()    const {return m_params;}
     /// get RMS of longitudinal position measurements
-    double getRmsLong()		const {return m_rmslong;} 
+    double getRmsLong()		           const {return m_rmslong;} 
     /// get RMS of transverse position measurements
-	double getRmsLongAsym()   const {return m_rmslongAsym;} 
+	double getRmsLongAsym()            const {return m_rmslongAsym;} 
     /// get RMS of transverse position measurements
-    double getRmsTrans()	    const {return m_rmstrans;}
+    double getRmsTrans()	           const {return m_rmstrans;}
+    /// get number of saturated Xtals in Cluster
+    int getNumSaturatedXtals()         const {return m_numSaturatedXtals;}
 	/// get Number of Truncated Xtals in Cluster
-    int getNumTruncXtals()	const {return m_numTruncXtals;}
+    int getNumTruncXtals()	           const {return m_numTruncXtals;}
     /// get reconstructed position
-    const Point & getPosition()             const {return m_params.getCentroid();}
+    const Point & getPosition()        const {return m_params.getCentroid();}
     /// get reconstructed direction
-    const Vector & getDirection()           const {return m_params.getAxis();}
+    const Vector & getDirection()      const {return m_params.getAxis();}
 
 	/// Access individual status bits
     inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
@@ -183,7 +194,9 @@ private:
     inline void iniCluster();
         
     //! name of the producer
-    std::string m_producerName ;
+    std::string m_producerName;
+    //! Results of the "fit" to the cluster parameters
+    CalFitParams m_fitParams;
     //! Cal Parameters
     CalParams m_params;
     //! RMS of longitudinal position measurement
@@ -192,6 +205,8 @@ private:
     double m_rmslongAsym;
     //! RMS of transverse position measurement
     double m_rmstrans;
+	//! number of "saturated" Xtals
+	int m_numSaturatedXtals;
 	//! number of Xtals with > 1% Total Cluster Energy
 	int m_numTruncXtals;
 	//! Status Bits
@@ -201,12 +216,14 @@ private:
 
 inline void CalCluster::iniCluster()
 {
-    m_params         = CalParams();
-    m_rmslong        = 0.;
-	m_rmslongAsym    = 0.;
-    m_rmstrans       = 0.;
-	m_statusBits     = 0;
-	m_numTruncXtals  = 0; 
+    m_fitParams         = CalFitParams();
+    m_params            = CalParams();
+    m_rmslong           = 0.;
+	m_rmslongAsym       = 0.;
+    m_rmstrans          = 0.;
+	m_statusBits        = 0;
+    m_numSaturatedXtals = 0;
+	m_numTruncXtals     = 0; 
 }
 
 inline void CalCluster::writeOut(MsgStream& stream) const
