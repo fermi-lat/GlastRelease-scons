@@ -222,16 +222,19 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
     Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
                                                0., 0., 1.,   1.,0.,0.,1.,0.,1.);
 
+    // Initial fit parameters
+    Event::CalFitParams fitParams(m_fit_nlayers, 0., pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
+                                               0., 0., 1.,   1.,0.,0.,1.,0.,1.);
+
     // Use the fit centroid/direction to see moments analysis
     if (m_fit_nlayers > 8 && m_fit_zdirection > 0.)
     {
-//        params = Event::CalParams(ene, 10*ene, m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid, 1.,0.,0.,1.,0.,1.,
-//                                               m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,   1.,0.,0.,1.,0.,1.);
-        params = Event::CalParams(ene, 10*ene, pCluster.x(),     pCluster.y(),     pCluster.z(),     1.,0.,0.,1.,0.,1.,
-                                               m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1.,0.,0.,1.,0.,1.);
+        fitParams = Event::CalFitParams(m_fit_nlayers, m_fit_chisq, 
+                                        m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1.,0.,0.,1.,0.,1.,
+                                        m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1.,0.,0.,1.,0.,1.);
     }
 
-    cluster->initialize(params, 0., 0., 0., num_TruncXtals);
+    cluster->initialize(fitParams, params, 0., 0., 0., m_Nsaturated, num_TruncXtals);
 
     return ene;
 }
@@ -361,12 +364,14 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
 
         // Store all this information away in the cluster
         Event::CalParams params(energy, 10*energy,
-                centroid.x(), centroid.y(), centroid.z(),
-                m_fit_xcentroid, m_fit_chisq, (double)m_fit_nlayers, m_fit_ycentroid, (double)m_Nsaturated, m_fit_zcentroid,
-                axis.x(),     axis.y(),     axis.z(),
-                m_fit_xdirection, 0., 0., m_fit_ydirection, 0., m_fit_zdirection);
+                centroid.x(), centroid.y(), centroid.z(), 1., 0., 0., 1., 0., 1.,
+                axis.x(),     axis.y(),     axis.z(),     1., 0., 0., 1., 0., 1.);
 
-        cluster->initialize(params, rms_long, rms_trans, long_asym, num_TruncXtals);
+        Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq, 
+                                      m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1., 0., 0., 1., 0., 1.,
+                                      m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1., 0., 0., 1., 0., 1.);
+
+        cluster->initialize(fitParams, params, rms_long, rms_trans, long_asym, m_Nsaturated, num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS); 
     }
 

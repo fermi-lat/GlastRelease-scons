@@ -131,9 +131,12 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
 
     Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
                                          caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
+    // Initial fit parameters
+    Event::CalFitParams fitParams(4, 0., pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
+                                         caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
 
     // Fill CalCluster data
-    cl->initialize(params, 0., 0., 0., 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
+    cl->initialize(fitParams, params, 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
 
     for( i = 0; i < calnLayers; i++)
     {
