@@ -16,7 +16,7 @@
 
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
-#include "Event/Recon/CalRecon/calClusterTab.h"
+#include "Event/Recon/CalRecon/CalClusterTab.h"
 
 #include "Event/RelTable/RelTable.h"
 
