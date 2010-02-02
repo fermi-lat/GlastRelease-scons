@@ -4,6 +4,8 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-01-04 02-Feb-2010    hmk add use of RootConvert for win version of
+                                  unit test
  AcdRecon-05-01-03 21-Dec-2009    jrb add explicit rootLibs dependence for SCons build
 AcdRecon-05-01-02 19-Dec-2009    eac remove static pointer stuff for windows 
 AcdRecon-05-01-01 14-Dec-2009    hmk Merge in Eric's mods from 

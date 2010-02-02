@@ -1,5 +1,5 @@
 package AcdRecon
-version v5r1p3
+version v5r1p4
 
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
@@ -25,7 +25,8 @@ apply_pattern component_library library=AcdRecon
 #=============================================================
 private
 use gr_app v*
-use RootIo  v*
+use RootConvert v* -no_auto_imports
+use RootIo  v* -no_auto_imports
 
 public
 apply_pattern declare_joboptions files="-s=../src/test  *.txt"
