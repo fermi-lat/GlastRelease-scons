@@ -1,5 +1,5 @@
 package AcdRecon
-version v5r1p4
+version v5r1p5
 
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
@@ -13,6 +13,7 @@ use Event    v*
 use GuiSvc   v3*
 use AcdUtil  v*
 use LdfEvent  v*
+use ROOT v* IExternal
 
 # no use of default_include_path (no public headers)
 

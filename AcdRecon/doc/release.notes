@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-01-05 03-Feb-2010    hmk add explicit use of IExternal/ROOT
  AcdRecon-05-01-04 02-Feb-2010    hmk add use of RootConvert for win version of
                                   unit test
  AcdRecon-05-01-03 21-Dec-2009    jrb add explicit rootLibs dependence for SCons build
