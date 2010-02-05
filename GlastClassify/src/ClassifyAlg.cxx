@@ -16,6 +16,14 @@ $Header$
 #include "AtwoodTrees.h"
 #include "GlastClassify/ITupleInterface.h"
 
+// EAC Mods
+#include <TDirectory.h>
+#include <TTree.h>
+#include "TMine/TMiner.h"
+#include "TMine/base/Parasite.h"
+#include "TMine/util/Messages.h"
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 template <class T> class GleamItem : public GlastClassify::Item {
 public:
@@ -83,6 +91,15 @@ public:
         if (!m_treePtr) 
             throw std::invalid_argument("GleamTuple constructor: can not get pointer to output tree!");
 
+    }
+
+    // EAC mods
+    TTree* getTTree( ) 
+    {  
+        void* thePtr(0);
+        if ( m_tuple == 0 ) return 0;
+        m_tuple->getItem(m_treename,"",thePtr);
+        return (TTree*)(thePtr);
     }
 
 // LSR 14-Jul-08 code for ntuple types
@@ -182,9 +199,17 @@ private:
     StringProperty m_treename;
     StringProperty m_infoPath;
     StringProperty m_xmlFileName;
+    /// EAC mods
+    bool           m_useTMine;
+    StringProperty m_TMineSelection;
+    bool           m_TMineTrace;
 
     /// this guy does the work!
     GlastClassify::AtwoodTrees * m_ctree;
+    /// EAC mods or these guys
+    TMine::Manager*              m_tMine;
+    TMine::Parasite*             m_tMiner;
+
     GleamTuple*                  m_tuple;
     bool                         m_treeInfo;
 
@@ -200,12 +225,18 @@ const IAlgFactory& ClassifyAlgFactory = Factory;
 ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator) 
 : Algorithm(name, pSvcLocator)
 ,  m_ctree(0)
+,  m_tMine(0)
+,  m_tMiner(0)
 ,  m_events(0)
 
 {
     declareProperty("TreeName",      m_treename="MeritTuple");
     declareProperty("xmlFileName",   m_xmlFileName="");
     declareProperty("PrintTreeInfo", m_treeInfo=false);
+    // EAC mods
+    declareProperty("UseTMine",      m_useTMine=false);
+    declareProperty("TMineSelection",m_TMineSelection="");
+    declareProperty("TMineTrace",    m_TMineTrace=false);    
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode ClassifyAlg::initialize()
@@ -231,9 +262,54 @@ StatusCode ClassifyAlg::initialize()
     // create the classification object if requested
     try { 
         std::string path( m_xmlFileName.value()); 
-        log << MSG::INFO;
-        m_ctree = new  GlastClassify::AtwoodTrees(*m_tuple, log.stream(), path, m_treeInfo);
-        log << endreq;
+	if ( m_useTMine ) {
+            TTree* tree = m_tuple->getTTree();
+            if ( tree == 0 ) {
+                log << MSG::ERROR << "No input TTree by name " << m_treename.value() << endreq;
+                sc = StatusCode::FAILURE;
+                return sc;
+            }
+	    m_tMine = TMiner::Init();
+	    switch ( log.level() ) {
+	    case MSG::VERBOSE:
+	    case MSG::DEBUG:
+	    case MSG::ALWAYS:
+	      log << MSG::DEBUG << "Setting TMine::Messages::DEBUG" << endreq;
+	      TMine::Messages::SetDefaultSeverity(TMine::Messages::DEBUG);
+	      break;
+	    case MSG::INFO:
+	      log << MSG::DEBUG << "Setting TMine::Messages::INFO" << endreq;
+	      TMine::Messages::SetDefaultSeverity(TMine::Messages::INFO);
+	      break;
+	    case MSG::WARNING:
+	      log << MSG::DEBUG << "Setting TMine::Messages::WARNING" << endreq;
+	      TMine::Messages::SetDefaultSeverity(TMine::Messages::WARNING);
+	      break;
+	    case MSG::NIL:
+	    case MSG::ERROR:
+	    case MSG::FATAL:
+	      log << MSG::DEBUG << "Setting TMine::Messages::ERROR" << endreq;
+	      TMine::Messages::SetDefaultSeverity(TMine::Messages::ERROR);
+	      break;
+	    defaut:
+	      break;
+	    }
+	    if ( m_TMineTrace ) {
+	      TMine::Messages::SetMessageStatus(TMine::Messages::TraceExec,TMine::Messages::Always);
+	    }
+            m_tMiner = m_tMine->MakeParasite(*tree,
+					     path.c_str(),
+					     m_TMineSelection.value().c_str());
+            if ( m_tMiner == 0 ) {
+                log << MSG::ERROR << "Failed to load TMine from XML " << path << endreq;
+                sc = StatusCode::FAILURE;
+                return sc;
+            }
+        } else {
+	     log << MSG::INFO;
+	     m_ctree = new  GlastClassify::AtwoodTrees(*m_tuple, log.stream(), path, m_treeInfo);
+	     log << endreq;
+	}
         
     }catch ( std::exception& e){
         log << MSG::ERROR << "Exception caught, class  "<< typeid( e ).name( ) << ", message:"
@@ -249,9 +325,19 @@ StatusCode ClassifyAlg::initialize()
 StatusCode ClassifyAlg::execute() 
 {
     MsgStream log(msgSvc(), name());
-    if( m_ctree!=0){
-        m_ctree->execute();
-        ++m_events;
+    
+    if ( m_useTMine ) {
+        bool passedSelection(false);
+        if ( m_tMiner->DoEvent(passedSelection) ){
+            ++m_events;
+        } else {
+  	    return StatusCode::FAILURE;
+        }
+    } else {
+        if( m_ctree!=0){
+            m_ctree->execute();
+            ++m_events;
+        }
     }
     return StatusCode::SUCCESS;
 }
@@ -261,6 +347,7 @@ StatusCode ClassifyAlg::finalize()
     MsgStream log(msgSvc(), name());
 
     log << MSG::INFO << "Processed " << m_events << " events." << endreq;
+    delete m_tMiner;
     delete m_ctree;
     delete m_tuple;
     setFinalized(); //  prevent being called again

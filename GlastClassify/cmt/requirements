@@ -19,6 +19,7 @@ macro source "*.cxx " WIN32 "*.h *.cxx"
 
 use classifier *
 use xmlBase v5r*
+use TMine * rootExtensions
 
 use ntupleWriterSvc v*
 
