@@ -255,6 +255,13 @@ private:
     int m_fileFlag;
     /// maximum allowed delta (sqrt(deltaX**2 + sqrt(deltaY**2)
     double m_maxDelta;
+    /// scale for sim file (for testing)
+    double m_simScale;
+    /// scale for rec file (for testing)
+    double m_recScale;
+    /// same for each component;
+    std::vector<double> m_simScaleVec;
+    std::vector<double> m_recScaleVec;
         
     /* Although the information about the alignment is developed in terms of trays and faces,
        it's stored in the arrays by layer and view, since this is the preferred set of
