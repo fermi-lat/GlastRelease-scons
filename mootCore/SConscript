@@ -32,7 +32,7 @@ progEnvKwArgs = { 'package' : 'mootCore',
 if 'CHS' in progEnv.Dictionary()['CPPDEFINES']:
     swigEnv = baseEnv.Clone()
     swigEnv.Tool("mootCoreLib")
-    lib_py_mootCore = swigEnv.SharedLibrary("lib_py_mootCore", 'src/py_mootCore.i')
+    lib_py_mootCore = swigEnv.SwigLibrary("_py_mootCore", 'src/py_mootCore.i')
     progEnvKwArgs['swigLibraryCxts'] = [[lib_py_mootCore, swigEnv]]
 
 progEnv.Tool('registerTargets', **progEnvKwArgs)
