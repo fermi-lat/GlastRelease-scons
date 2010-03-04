@@ -9,7 +9,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('mootCoreLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='mootCore', toBuild='shared')
 mootCore = libEnv.SharedLibrary('mootCore', ['src/MoodConnection.cxx','src/MootSys.cxx','src/DbUtil.cxx', 
 		'src/MootQuery.cxx','src/filterConfig.cxx'])
 

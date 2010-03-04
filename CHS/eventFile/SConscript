@@ -15,7 +15,7 @@ else:
 libEnv.AppendUnique(CPPDEFINES = ['HAVE_FACILITIES'])
 progEnv = libEnv.Clone()
 
-libEnv.Tool('eventFileLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='eventFile', toBuild='shared')
 eventFile = libEnv.SharedLibrary('eventFile', ['src/EBF_Data.cxx', 'src/LSE_Context.cxx', 'src/LSE_GemTime.cxx',
                                                'src/LSE_Info.cxx', 'src/LSEHeader.cxx', 'src/LSEReader.cxx',
                                                'src/LSEWriter.cxx', 'src/LSE_Keys.cxx', 'src/LPA_Handler.cxx'])
