@@ -5,10 +5,11 @@
 
 void Event::TkrTrackHit::clean()
 {
-    m_hitPred     = Event::TkrTrackParams();
-    m_hitFit      = Event::TkrTrackParams();
-    m_hitSmooth   = Event::TkrTrackParams();
-    m_Qmaterial   = Event::TkrTrackParams();
+    Event::TkrTrackParams measParams = m_tkrParams[MEASURED];
+
+    m_tkrParams.clear();
+
+    m_tkrParams[MEASURED] = measParams;
 
     m_statusBits &= HITONFIT | HASMEASURED | HASVALIDTKR;
 
@@ -18,11 +19,7 @@ void Event::TkrTrackHit::clean()
 
 void Event::TkrTrackHit::clear()
 {
-    m_hitMeas     = Event::TkrTrackParams();
-    m_hitPred     = Event::TkrTrackParams();
-    m_hitFit      = Event::TkrTrackParams();
-    m_hitSmooth   = Event::TkrTrackParams();
-    m_Qmaterial   = Event::TkrTrackParams();
+    m_tkrParams.clear();
 
     m_statusBits &= HITONFIT | HASVALIDTKR;
 
@@ -71,52 +68,14 @@ const Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::Par
     // Access via this method presumes the track parameters are set. So, REQUIRE the
     // status bits to be valid before returning the hit information
     //
-    switch(type)
+    TkrParamsMap::const_iterator mapIter = m_tkrParams.find(type);
+
+    if (mapIter == m_tkrParams.end()) 
     {
-        case MEASURED:  
-        {
-            if (!validMeasuredHit()) throw std::invalid_argument("Invalid Measured TkrTrackParams requested");
-            return m_hitMeas;
-        }
-        case PREDICTED: 
-        {
-            if (!validPredictedHit()) throw std::invalid_argument("Invalid Predicted TkrTrackParams requested");
-            return m_hitPred;
-        }
-        case FILTERED:  
-        {
-            if (!validFilteredHit()) throw std::invalid_argument("Invalid Filtered TkrTrackParams requested");
-            return m_hitFit;
-        }
-        case REVFIT:  
-        {
-            if (!validFilteredHit()) throw std::invalid_argument("Invalid Filtered TkrTrackParams requested");
-            return m_hitRevFit;
-        }
-        case SMOOTHED:  
-        {
-            if (!validSmoothedHit()) 
-            {
-                throw std::invalid_argument("Invalid Smoothed TkrTrackParams requested");
-            }
-            return m_hitSmooth;
-        }
-        case QMATERIAL: 
-        {
-            if (!validMaterial()) throw std::invalid_argument("Invalid Material TkrTrackParams requested");
-            return m_Qmaterial;
-        }
-        case UNKNOWN:
-        {
-            throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
-        }
-        default:
-        {
-            throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
-        }
+        throw std::invalid_argument("Invalid Measured TkrTrackParams requested");
     }
 
-    return m_hitMeas;
+    return mapIter->second;
 }
 
 Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::ParamType type)
@@ -125,23 +84,19 @@ Event::TkrTrackParams& Event::TkrTrackHit::getTrackParams(TkrTrackHit::ParamType
     // Access to track parameters via this method does not require valid status bit 
     // (since this might be need to set them)
     // 
-    switch(type)
+    TkrParamsMap::iterator mapIter = m_tkrParams.find(type);
+
+    if (mapIter == m_tkrParams.end()) 
     {
-        case MEASURED:  return m_hitMeas;
-        case PREDICTED: return m_hitPred;
-        case FILTERED:  return m_hitFit;
-        case REVFIT:    return m_hitRevFit;
-        case SMOOTHED:  return m_hitSmooth;
-        case QMATERIAL: return m_Qmaterial;
-        case UNKNOWN:
-        default:
-            {
-                // If here then something is wrong
-                throw std::invalid_argument("Invalid type of TkrTrackParams hit requested");
-            }
+        // They don't yet exist so create them
+        Event::TkrTrackParams params = Event::TkrTrackParams();
+
+        m_tkrParams[type] = params;
+
+        mapIter = m_tkrParams.find(type);
     }
 
-    return m_hitMeas;
+    return mapIter->second;
 }
 
 void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackHit::ParamType type) 
@@ -149,6 +104,15 @@ void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackH
     // Don't forget to update the status bits...
     unsigned int statusBits = 0;
 
+    Event::TkrTrackParams& params = getTrackParams(type);
+
+    access.setParams(&params);
+
+    m_tkrParams[type] = params;
+
+    statusBits = 1 << (type + 1);
+
+/*
     // Switch on the type of hit to set
     switch(type)
     {
@@ -190,6 +154,7 @@ void Event::TkrTrackHit::setTrackParams(ITkrTrackParamsAccess& access, TkrTrackH
         case UNKNOWN:
         default: {}
     }
+*/
 
     m_statusBits |= statusBits;
 

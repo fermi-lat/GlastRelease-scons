@@ -211,13 +211,6 @@ private:
     typedef std::map<ParamType, TkrTrackParams> TkrParamsMap;
 
     TkrParamsMap   m_tkrParams;
-        
-//    TkrTrackParams m_hitMeas;
-//    TkrTrackParams m_hitPred;
-//    TkrTrackParams m_hitFit;
-//    TkrTrackParams m_hitRevFit;
-//    TkrTrackParams m_hitSmooth;
-//    TkrTrackParams m_Qmaterial;  // holds the covariance matrix of the material effects 
 };
 
 //typedef for the Container (to be stored in the TDS)
