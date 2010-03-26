@@ -18,6 +18,8 @@
 
 #include "idents/TkrId.h"
 
+#include <map>
+
 static const CLID& CLID_TkrTrackHit = InterfaceID("TkrTrackHit",  1, 1);
 
 namespace Event { // Namespace
@@ -51,39 +53,45 @@ public:
    * - QMATERIAL = For access to the contribution from scattering
    * - UNKNOWN}  = Unknown
    */
-    enum ParamType  {MEASURED,               // Measured values from the tracker Si planes
-                     PREDICTED,              // Projected estimated values from previous plane
-                     FILTERED,               // Parameters from track fit (KF filter stage)
-                     REVFIT,                 // Parameters from track fit (KF filter stage)
-                     SMOOTHED,               // Parameters from Kalman Filter smoothing stage
-                     QMATERIAL,              // For access to the contribution from scattering
-                     UNKNOWN};               // Unknown
+    enum ParamType  {MEASURED,                    // Measured values from the tracker Si planes
+                     PREDICTED,                   // Projected estimated values from previous plane
+                     FILTERED,                    // Parameters from track fit (KF filter stage)
+                     SMOOTHED,                    // Parameters from Kalman Filter smoothing stage
+                     QMATERIAL,                   // For access to the contribution from scattering
+                     REVFIT,                      // Parameters from track fit (KF filter stage)
+                     MONTECARLO,                  // Monte Carlo parameters
+                     USER,                        // Parameters defined by some user action
+                     UNKNOWN};                    // Unknown
 
     // Status word bits organized like:
     // low:   |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     //         < volume info  >  <   hit type    > <    track fitting status          >
     // high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     //                                                                < more hit type >
-    enum StatusBits {HITONFIT     = 0x0001,  // Hit is used in the fit
-                     HASMEASURED  = 0x0002,  // Hit has valid measured parameters
-                     HASPREDICTED = 0x0004,  // Hit has valid predicted parameters
-                     HASFILTERED  = 0x0008,  // Hit has valid filtered parameters
-                     HASSMOOTHED  = 0x0010,  // Hit has valid smoothed parameters
-                     HASMATERIAL  = 0x0020,  // Hit has valid material matrix
-                     UPWARDS      = 0x0040,  // Track direction is upwards (tz > 0)
+    enum StatusBits {HITONFIT       = 0x0000001,  // Hit is used in the fit
+                     HASMEASURED    = 0x0000002,  // Hit has valid measured parameters
+                     HASPREDICTED   = 0x0000004,  // Hit has valid predicted parameters
+                     HASFILTERED    = 0x0000008,  // Hit has valid filtered parameters
+                     HASSMOOTHED    = 0x0000010,  // Hit has valid smoothed parameters
+                     HASMATERIAL    = 0x0000020,  // Hit has valid material matrix
+                     HASREVFIT      = 0x0000040,  // Hit has "revfit" parameters 
+                     HASMONTECARLO  = 0x0000080,  // Hit has "Monte Carlo" parameters 
+                     HASUSER        = 0x0000100,  // Hit has user defined parameters
 
-                     HITISSSD     = 0x0100,  // Hit comes from a SSD
-                     HITISDEADST  = 0x0200,  // Hit coresponds to a dead SSD Strip
-                     HITISGAP     = 0x0400,  // Hit comes from gap between SSDs
-                     HITISTWR     = 0x0800,  // Hit comes outside live SSD plane
+                     HITISSSD       = 0x0001000,  // Hit comes from a SSD
+                     HITISDEADST    = 0x0002000,  // Hit coresponds to a dead SSD Strip
+                     HITISGAP       = 0x0004000,  // Hit comes from gap between SSDs
+                     HITISTWR       = 0x0008000,  // Hit comes outside live SSD plane
 
-                     MEASURESX    = 0x1000,  // Plane measures in X direction
-                     MEASURESY    = 0x2000,  // Plane measures in Y direction
-                     HASVALIDTKR  = 0x8000,  // Valid track volume identifier
+                     MEASURESX      = 0x0010000,  // Plane measures in X direction
+                     MEASURESY      = 0x0020000,  // Plane measures in Y direction
+                     HASVALIDTKR    = 0x0080000,  // Valid track volume identifier
 
-                     HITISUNKNOWN   = 0x10000, // Missing cluster, but fails all tests
-                     HITISDEADPLN   = 0x20000, // Entire plane is dead
-                     HITISTRUNCATED = 0x40000  // Hit is in a truncated region
+                     HITISUNKNOWN   = 0x0100000,  // Missing cluster, but fails all tests
+                     HITISDEADPLN   = 0x0200000,  // Entire plane is dead
+                     HITISTRUNCATED = 0x0400000,  // Hit is in a truncated region
+
+                     UPWARDS        = 0x1000000   // Track direction is upwards (tz > 0)
     };
 
 
@@ -121,13 +129,16 @@ public:
 
     /// Answer quick questions based on status bits
     inline const bool validCluster()      const {return  m_cluster != 0;}
-    inline const bool hitUsedOnFit()      const {return (m_statusBits & HITONFIT    ) == HITONFIT;}
-    inline const bool validMeasuredHit()  const {return (m_statusBits & HASMEASURED ) == HASMEASURED;}
-    inline const bool validPredictedHit() const {return (m_statusBits & HASPREDICTED) == HASPREDICTED;}
-    inline const bool validFilteredHit()  const {return (m_statusBits & HASFILTERED ) == HASFILTERED;}
-    inline const bool validSmoothedHit()  const {return (m_statusBits & HASSMOOTHED ) == HASSMOOTHED;}
-    inline const bool validMaterial()     const {return (m_statusBits & HASMATERIAL ) == HASMATERIAL;}
-    inline const bool upwards()         const {return (m_statusBits & UPWARDS ) == UPWARDS;}
+    inline const bool hitUsedOnFit()      const {return (m_statusBits & HITONFIT     ) == HITONFIT;}
+    inline const bool validMeasuredHit()  const {return (m_statusBits & HASMEASURED  ) == HASMEASURED;}
+    inline const bool validPredictedHit() const {return (m_statusBits & HASPREDICTED ) == HASPREDICTED;}
+    inline const bool validFilteredHit()  const {return (m_statusBits & HASFILTERED  ) == HASFILTERED;}
+    inline const bool validSmoothedHit()  const {return (m_statusBits & HASSMOOTHED  ) == HASSMOOTHED;}
+    inline const bool validMaterial()     const {return (m_statusBits & HASMATERIAL  ) == HASMATERIAL;}
+    inline const bool validRevFit()       const {return (m_statusBits & HASREVFIT    ) == HASREVFIT;}
+    inline const bool validMonteCarlo()   const {return (m_statusBits & HASMONTECARLO) == HASMONTECARLO;}
+    inline const bool validUser()         const {return (m_statusBits & HASUSER      ) == HASUSER;}
+    inline const bool upwards()           const {return (m_statusBits & UPWARDS      ) == UPWARDS;}
 
     /// Access the hit's associated information
     inline const TkrClusterPtr getClusterPtr()      const {return m_cluster;   }
@@ -147,28 +158,28 @@ public:
     const int getParamIndex(TkrTrackHit::SSDDirection meas, TkrTrackParams::ParamType type) const; 
     int       getParamIndex(TkrTrackHit::SSDDirection meas, TkrTrackParams::ParamType type); 
 
-    const Point                getPoint(TkrTrackHit::ParamType type)      const;
+    const Point                getPoint(TkrTrackHit::ParamType type)               const;
     Point                      getPoint(TkrTrackHit::ParamType type);
-    const Vector               getDirection(TkrTrackHit::ParamType type)  const;
+    const Vector               getDirection(TkrTrackHit::ParamType type)           const;
     Vector                     getDirection(TkrTrackHit::ParamType type);
-    const double               getMeasuredPosition(TkrTrackHit::ParamType type) const;
-    const double               getMeasuredSlope(TkrTrackHit::ParamType type) const;
+    const double               getMeasuredPosition(TkrTrackHit::ParamType type)    const;
+    const double               getMeasuredSlope(TkrTrackHit::ParamType type)       const;
     const double               getNonMeasuredPosition(TkrTrackHit::ParamType type) const;
-    const double               getNonMeasuredSlope(TkrTrackHit::ParamType type) const;
+    const double               getNonMeasuredSlope(TkrTrackHit::ParamType type)    const;
 
     /// Direct access to track params
     const TkrTrackParams& getTrackParams(ParamType type) const;
 
     /// Set methods used during pattern recognition/track fit stages
-    inline void setClusterPtr(Event::TkrClusterPtr cluster) {m_cluster         = cluster;}
-    inline void setTkrID(idents::TkrId& tkrID)              {m_hitID           = tkrID;  }
-    inline void setEnergy(const double energy)              {m_energy          = energy; }
-    inline void setZPlane(const double z)                   {m_zPlane          = z;}
-    inline void setRadLen(const double rl)                  {m_radLen          = rl;}
-    inline void setActiveDist(const double d)               {m_activeDist      = d;}
-    inline void setChiSquareFilter(const double c)          {m_chiSquareFilter = c;}
-    inline void setChiSquareRevFit(const double c)          {m_chiSquareRevFit = c;}
-    inline void setChiSquareSmooth(const double c)          {m_chiSquareSmooth = c;}
+    inline void setClusterPtr(Event::TkrClusterPtr cluster) {m_cluster          = cluster;}
+    inline void setTkrID(idents::TkrId& tkrID)              {m_hitID            = tkrID;  }
+    inline void setEnergy(const double energy)              {m_energy           = energy; }
+    inline void setZPlane(const double z)                   {m_zPlane           = z;}
+    inline void setRadLen(const double rl)                  {m_radLen           = rl;}
+    inline void setActiveDist(const double d)               {m_activeDist       = d;}
+    inline void setChiSquareFilter(const double c)          {m_chiSquareFilter  = c;}
+    inline void setChiSquareRevFit(const double c)          {m_chiSquareRevFit  = c;}
+    inline void setChiSquareSmooth(const double c)          {m_chiSquareSmooth  = c;}
 
     inline void setStatusBit(unsigned int bitToSet)         {m_statusBits      |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear)       {m_statusBits      &= ~bitToClear;}
@@ -196,13 +207,17 @@ private:
     double          m_chiSquareFilter; // hit chi-square at filter stage of fit
     double          m_chiSquareRevFit; // hit chi-square at filter stage of fit
     double          m_chiSquareSmooth; // hit chi-square at smooth stage of fit
+
+    typedef std::map<ParamType, TkrTrackParams> TkrParamsMap;
+
+    TkrParamsMap   m_tkrParams;
         
-    TkrTrackParams m_hitMeas;
-    TkrTrackParams m_hitPred;
-    TkrTrackParams m_hitFit;
-    TkrTrackParams m_hitRevFit;
-    TkrTrackParams m_hitSmooth;
-    TkrTrackParams m_Qmaterial;  // holds the covariance matrix of the material effects 
+//    TkrTrackParams m_hitMeas;
+//    TkrTrackParams m_hitPred;
+//    TkrTrackParams m_hitFit;
+//    TkrTrackParams m_hitRevFit;
+//    TkrTrackParams m_hitSmooth;
+//    TkrTrackParams m_Qmaterial;  // holds the covariance matrix of the material effects 
 };
 
 //typedef for the Container (to be stored in the TDS)
