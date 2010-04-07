@@ -206,6 +206,9 @@ Long64_t RootInputDesc::setFileList( const StringArrayProperty & fileList, bool 
     // Check to see if we are changing files (which means a TChain exists)
     if (m_chain)
     {
+        if (m_chainIndex) delete m_chainIndex;
+        m_chainIndex = 0; 
+
         m_chain->GetFile()->Close() ;
         delete m_chain ;
         m_chain = 0;

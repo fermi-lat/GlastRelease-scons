@@ -3,6 +3,9 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
+
 
 #include "Event/TopLevel/Event.h"
 #include "Event/TopLevel/EventModel.h"
@@ -42,7 +45,7 @@
  * $Header$
  */
 
-class relationRootReaderAlg : public Algorithm
+class relationRootReaderAlg : public Algorithm, virtual public IIncidentListener
 {	
 public:
     
@@ -54,6 +57,15 @@ public:
     /// Orchastrates reading from ROOT file and storing the data on the TDS for each event
     StatusCode execute();
     
+    /// handle "incidents"
+    void handle(const Incident &inc) {
+        if( inc.type()=="BeginEvent")beginEvent();
+        else if(inc.type()=="EndEvent")endEvent();
+    }
+
+    void beginEvent() {};
+    void endEvent();
+
     /// Closes the ROOT file and cleans up
     StatusCode finalize();
             
@@ -240,15 +252,8 @@ StatusCode relationRootReaderAlg::execute()
     //   data on the TDS.
 
     MsgStream log(msgSvc(), name());
-
     StatusCode sc = StatusCode::SUCCESS; 
     
-    if (m_relTab) 
-    {
-        m_relTab->Clear(m_clearOption.c_str());
-    }
-    m_relTab = 0;
-
     // Try reading the event this way... 
     // use treeName as key type
     m_relTab = dynamic_cast<RelTable*>(m_rootIoSvc->getNextEvent("rel"));
@@ -639,6 +644,11 @@ void relationRootReaderAlg::close()
 {
     // Purpose and Method:  Closes the ROOT file at the end of the run.
 
+}
+ 
+void relationRootReaderAlg::endEvent() {
+    if (m_relTab)  m_relTab->Clear(m_clearOption.c_str());
+    m_relTab = 0;
 }
 
 StatusCode relationRootReaderAlg::finalize()
