@@ -29,6 +29,7 @@
 #include "TkrUtil/ITkrGhostTool.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrDiagnosticTool.h"
+#include "TkrUtil/ItkrMapTool.h"
 
 #include <iomanip>
 #include <map>

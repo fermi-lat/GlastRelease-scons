@@ -9,6 +9,9 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(TkrUtil) {
+
+    DECLARE_ALGORITHM ( TkrFillTDInfoAlg  );
+    
     DECLARE_SERVICE( TkrFailureModeSvc   );
     DECLARE_SERVICE( TkrBadStripsSvc     );
     DECLARE_SERVICE( TkrGeometrySvc      );
@@ -25,6 +28,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_TOOL(    TkrFlagHitsTool     );
     DECLARE_TOOL(    TkrGhostTool        );
     DECLARE_TOOL(    TkrDiagnosticTool   );
+    DECLARE_TOOL(    TkrMapTool          );
 } 
 
 

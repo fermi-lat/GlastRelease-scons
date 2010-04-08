@@ -12,20 +12,12 @@
 #define ITkrDiagnosticTool_h
 
 namespace {
-    // assign the ends to the 8 cables
-    const int endArray[8] = {0, 1, 1, 0, 1, 0, 0, 1};
-
+ 
     // set the fields in the indices
-    const int planeMult = 2;
     const int viewMult  = 1;
     const int layerMult = 2;
-    const int geoMult   = 2;
     const int towerMult = 1000;
-    const int gtccMult  = 10;
-
-    const int nRc       = 9;
 }
-
 
 #include "GaudiKernel/IAlgTool.h"
 

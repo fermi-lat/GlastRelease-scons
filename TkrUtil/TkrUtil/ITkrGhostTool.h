@@ -11,6 +11,13 @@
 #ifndef ITkrGhostTool_h
 #define ITkrGhostTool_h
 
+//namespace {
+//    // set the fields in the indices
+//    const int viewMult  = 1;
+//    const int layerMult = 2;
+//    const int towerMult = 1000;
+//}
+
 #include "GaudiKernel/IAlgTool.h"
 
 #include "TkrUtil/TkrTowerBits.h"
