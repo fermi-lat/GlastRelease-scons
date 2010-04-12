@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 EOH
 
+ LdfEvent-04-11-00 12-Apr-2010  lsrea methods to allow write access to the TkrDiagnosticsData dataWord
  LdfEvent-04-10-01 05-Nov-2009    jrb Updates for SCons
 v4r10   23-Mar-2009 HMK add methods for all error flags
 v4r9    11-Mar-2009 HMK Add check for TemBug in eventFlags
