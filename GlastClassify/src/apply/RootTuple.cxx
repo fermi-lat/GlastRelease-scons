@@ -71,20 +71,29 @@ public:
         }
         else if (m_type == "UChar_t" || m_type == "Char_t")
         {
-            memset(reinterpret_cast<char*>(m_pdata), ' ', 80);
-            int dataLen = strlen(reinterpret_cast<char*>(data));
-            if (dataLen > 0)
+            char* pString   = reinterpret_cast<char*>(m_pdata);
+            int   stringLen = strlen(pString);
+            char* pData     = reinterpret_cast<char*>(data);
+            int   dataLen   = strlen(pData);
+
+            // Check if new result is longer than the old result
+            // It might happen in a reprocessing job that the input buffer is smaller
+            // than what we want to write back out. If so then we need to increase
+            // the size of the buffer. Good news is that is should be a one time op
+            if (dataLen > stringLen)
             {
-                strncpy(reinterpret_cast<char*>(m_pdata), reinterpret_cast<char*>(data),80);
-            }
-            else
-            {
-                std::string novalue = "none";
-                strncpy(reinterpret_cast<char*>(m_pdata), novalue.c_str(), 80);
+                pString   = new char[80];
+                stringLen = strlen(pString);
+
+                m_leaf->SetAddress(pString);
+
+                m_pdata = reinterpret_cast<void*>(pString);
             }
 
-            std::string test(reinterpret_cast<char*>(m_pdata));
-            int stop = 0;
+            // Clear the current string
+            memset(pString, ' ', stringLen);
+
+            if (dataLen > 0) strncpy(pString, pData, stringLen);
         }
         else
         {
@@ -101,7 +110,7 @@ private:
 using namespace GlastClassify;
 
 RootTuple::RootTuple( std::string file, std::string treeName)
-:  m_event(0), m_output_tree(0), m_output_file(0) {
+:  m_output_tree(0), m_output_file(0), m_event(0) {
 
     // Initialize Root
     if ( 0 == gROOT )   {
@@ -143,15 +152,21 @@ RootTuple::RootTuple( std::string file, std::string treeName)
     //m_tree->GetEvent(0);
 
     // Use this to define max tree size (apparantly a "bazillion" is not really a number...)
-    Long64_t maxTreeSize=50000000000;
+    Long64_t maxTreeSize=5000000000;
 
     TTree::SetMaxTreeSize(maxTreeSize);
 }
 
 RootTuple::~RootTuple()
 {
-    if( m_output_file) m_output_file->Write();
-    delete m_output_file;
+//    if( m_output_file) m_output_file->Write();
+    if( m_output_file) 
+    {
+        m_output_file->cd();
+        m_output_tree->Write();
+        m_output_file->Close();
+        delete m_output_file;
+    }
 }
 
 const Item* RootTuple::getItem(const std::string& name)const

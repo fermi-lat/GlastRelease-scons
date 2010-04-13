@@ -5,8 +5,11 @@ $Id$
 @verbatim
  * EOH *
 
- GlastClassify-07-06-00 09-Feb-2009  TU Update to Pass7_v17.10.xml with Anders' request to change FswGamState
+ GlastClassify-07-06-01 13-Apr-2010  TU Update to Pass7_v17.10.xml with Anders' request to change FswGamState
  GlastClassify-07-05-01 07-Dec-2009    jrb Add stuff for SCons build
+12-Feb-10  v7r5p0gr03 TU Fix categorical variable buffer overwrite problem
+10-Feb-10  v7r5p0gr02 TU Update xml file to fix problems with cat vars Vertex and HeavyOrAlpha
+09-Feb-10  v7r5p0gr01 TU update xml file to 17.10 on Pass 7 Confluence page
 16-Oct-09  v7r5p0 TU  Update xml file to match v17.8 on the Pass 7 confluence page
  6-Oct-09  v7r4p0 TU  Update xml file to match v17.7 on the Pass 7 confluence page
 15-Sep-09  v7r3p2 TU  Fixing linux compiler warnings
