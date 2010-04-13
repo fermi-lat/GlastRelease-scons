@@ -5,7 +5,9 @@
  * $Id$
 * EOH
 
- Gleam-07-04-05 06-Jan-2010  lsrea Fix default.txt so that test_Gleam will run without a central connection
+* Gleam-07-04-06 13-Apr-2010 HMK patch fredOptions.txt to use new env variable
+*                Fred_EXE_DIR
+* Gleam-07-04-05 06-Jan-2010  lsrea Fix default.txt so that test_Gleam will run without a central connection
 * v7r4p4   HMK 15-Sep-09 Remove TriggerAlg.mask from src/jobOptions/pipeline
            ldf2digi.txt JO
 * v7r4p3   HMK 14-Sep-09 Use strings to set TriggerAlg.mask
