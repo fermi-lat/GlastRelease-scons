@@ -59,7 +59,7 @@ GlastDetSvc.topVolume="LAT"; // the whole schebang
 ApplicationMgr.EvtMax = 100000;
 
 // tell it to automatically start the version of FRED 
-HepRepSvc.startFred = "$Fred_DIR";
+HepRepSvc.startFred = "$Fred_EXE_DIR";
 
 //##############################################################
 // Names of input ROOT files - note that you can supply a list of input files
