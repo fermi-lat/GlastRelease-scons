@@ -22,7 +22,7 @@ from difflib import context_diff
 from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 
-CMD_SHORTSUM = "dumpGemConfiguration.exe -r -m -M -o %s %d" # (outputStub, configKey)
+CMD_SHORTSUM = "dumpGemConfiguration -r -m -M -o %s %d" # (outputStub, configKey)
 FN_SHORTSUM = "TRG_ROI_shortSum_%d.txt"
 FN_SHORTDIFF = "TRG_ROI_shortDiff.txt"
 

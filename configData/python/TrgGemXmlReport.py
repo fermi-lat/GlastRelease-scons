@@ -22,11 +22,11 @@ from difflib import context_diff
 from ConfigXmlReport import *
 from RootRptGenerator import SystemCommand
 
-CMD_SHORTSUM = "dumpGemConfiguration.exe -m -M -o %s %d" # (outputStub, configKey)
+CMD_SHORTSUM = "dumpGemConfiguration -m -M -o %s %d" # (outputStub, configKey)
 FN_SHORTSUM = "TRG_GEM_shortSum_%s.txt"
 FN_SHORTDIFF = "TRG_GEM_shortDiff.txt"
 
-CMD_LONGSUM = "dumpGemConfiguration.exe -g -f -m -M -o %s %d" # (outputStub, configKey)
+CMD_LONGSUM = "dumpGemConfiguration -g -f -m -M -o %s %d" # (outputStub, configKey)
 FN_LONGSUM = "TRG_GEM_longSum_%s.txt"
 FN_LONGDIFF = "TRG_GEM_longDiff.txt"
 

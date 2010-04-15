@@ -39,6 +39,8 @@ public :
 		  std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
   void reportV3(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, 
 		std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
+  void reportV3(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
+		std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);
   void reportMask(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
 		  std::ostream& os = std::cout, TH1* h = 0, TH1* hv = 0);  
   void reportV4(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, int size4, 

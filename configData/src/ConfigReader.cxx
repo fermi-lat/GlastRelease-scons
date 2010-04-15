@@ -449,7 +449,7 @@ Bool_t ConfigReader::read_TRC(DOMElement& elem){
   Dom::getChildrenByTagName( &elem, "*", eltList );
   //std::cout << Dom::getTagName(&elem) << std::endl;
   for ( std::vector<DOMElement*>::iterator itr = eltList.begin(); itr != eltList.end(); itr++ ) {
-    if ( ! readUInt(**itr,key) ) {
+    if ( ! readULong(**itr,key) ) {
       continue;
     }
   }

@@ -23,8 +23,8 @@ import os
 _log = logging.getLogger()
 
 # system commands we are using inside SystemCommand
-CMD_XML2ROOT = "ConfigXml2Root.exe -M -o %s %d"  # (outputStub, configKey)
-CMD_COMPLATC = "RootConfigCompare.exe -f -r -o %s %s %s"  # (outputStub, configName, baselineName)
+CMD_XML2ROOT = "ConfigXml2Root -M -o %s %d"  # (outputStub, configKey)
+CMD_COMPLATC = "RootConfigCompare -f -r -o %s %s %s"  # (outputStub, configName, baselineName)
 
 # file name formats for above commands
 FN_XML2ROOT  = "%sMootConfig_%d.root"  # (outputStub, configKey)

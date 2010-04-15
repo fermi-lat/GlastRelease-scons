@@ -35,7 +35,7 @@ g_nChannels = tkrUtils.g_nChannels
 tem_tkr_trgseqArray = array.array( 'I', [0]*g_nTowers )
 tcc_configurationArray = array.array( 'I', [0]*g_nTowers*g_nTCC )
 tcc_trg_alignmentArray = array.array( 'I', [0]*g_nTowers*g_nTCC )
-trc_csrArray = array.array( 'I', [0]*g_nTowers*g_nTCC*g_nTRC )
+trc_csrArray = array.array( 'd', [0]*g_nTowers*g_nTCC*g_nTRC )
 tfe_thrdacArray = array.array( 'I', [0]*g_nTowers*g_nUniPlanes*g_nTFE )
 tfe_calibdacArray = array.array( 'I', [0]*g_nTowers*g_nUniPlanes*g_nTFE )
 tfe_data_maskArray = array.array( 'd', [0L]*g_nTowers*g_nUniPlanes*g_nTFE )
@@ -102,17 +102,17 @@ def decodeTCC_CONFIGURATION( value ):
 # decode TRC CSR register
 #
 def decodeTRC_CSR( value ):
-  LD_FT = (value & 0x200000000) >> 33
-  LD_delay = (value & 0x100000000) >> 32
-  LD_stretch = (value & 0x80000000) >> 31
-  LD_CNT = (value & 0x40000000) >> 30
-  LD_size = (value & 0x20000000) >> 29
-  TOT_EN = (value & 0x200000) >> 21
-  force_no_ERR = (value & 0x100000) >> 20
-  read_delay = ( value & 0xe0000) >> 17
-  OR_stretch = ( value & 0x1f000) >> 12
-  TFE_CNT = ( value & 0xf80 ) >> 7
-  size = value & 0x7f
+  LD_FT        = (value & 0x200000000L) >> 33
+  LD_delay     = (value & 0x100000000L) >> 32
+  LD_stretch   = (value & 0x080000000L) >> 31
+  LD_CNT       = (value & 0x040000000L) >> 30
+  LD_size      = (value & 0x020000000L) >> 29
+  TOT_EN       = (value & 0x000200000L) >> 21
+  force_no_ERR = (value & 0x000100000L) >> 20
+  read_delay   = (value & 0x0000e0000L) >> 17
+  OR_stretch   = (value & 0x00001f000L) >> 12
+  TFE_CNT      = (value & 0x000000f80L) >> 7
+  size         = (value & 0x00000007fL)
   return (LD_FT, LD_delay, LD_stretch, LD_CNT, LD_size, TOT_EN, force_no_ERR, \
           read_delay, OR_stretch, TFE_CNT, size)
 
@@ -172,8 +172,7 @@ class TkrRegisterChecker(object):
         name = regMethod.__name__
         branch = tree.GetBranch( key )
         branch.GetEntry( 0 )
-        if name=="tfe_data_mask" or name=="tfe_trg_mask" \
-               or name=="tfe_calib_mask":
+        if name in ("tfe_data_mask", "tfe_trg_mask","tfe_calib_mask","trc_csr"):
           narray = numarray.array( varray, numarray.UInt64 )
           for i in range(len(varray)):
             st = struct.pack( 'd', varray[i] ) # convert double to unsigned int64
@@ -374,7 +373,7 @@ class TkrRegisterChecker(object):
     (LD_FT, LD_delay, LD_stretch, LD_CNT, LD_size, TOT_EN, force_no_ERR, \
      read_delay, OR_stretch, TFE_CNT, size) = decodeTRC_CSR( value )
     ID = getTRCid( index )
-    if LD_FT != 0:
+    if LD_FT != 1:
       self.errors.append( "ERR: LD_FT of CSR in %s is not 0: %d (%X)" \
                           % (ID, LD_FT, value) )
     if LD_delay != 0:

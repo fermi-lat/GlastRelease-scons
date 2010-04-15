@@ -91,7 +91,7 @@ void LatConfig::initConfig() {
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("input_mask",'i',tccSize)));
 
   // TRC
-  m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("trc_csr",'i',trcSize)));
+  m_config.addBranch( *(new ConfigBranchImpl<ULong64_t>("trc_csr",'l',trcSize)));
 
   // CCC
   m_config.addBranch( *(new ConfigBranchImpl<UInt_t>("ccc_trg_alignment",'i',cccSize)));

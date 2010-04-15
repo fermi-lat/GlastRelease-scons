@@ -106,7 +106,7 @@ ConfigReport::report(ConfigBase& c, TList& l, Option_t* options, std::ostream& o
   l.Add(h_thresh); l.Add(hv_thresh); 
 
   reportV3("threshold",c.threshold_bcast,(UInt_t*)c.threshold,16,36,24,os,h_thresh,hv_thresh);
-  reportV3("trc_csr",c.trc_csr_bcast,(UInt_t*)c.trc_csr,16,8,9,os);
+  reportV3("trc_csr",c.trc_csr_bcast,(ULong64_t*)c.trc_csr,16,8,9,os);
   
   reportV4("config_0",c.config_0_bcast,(UInt_t*)c.config_0,16,4,4,12,os);
   reportV4("config_1",c.config_1_bcast,(UInt_t*)c.config_1,16,4,4,12,os);
@@ -227,6 +227,27 @@ void ConfigReport::reportVeto(const char* name, UShort_t* veto, UShort_t* vernie
 }
 
 void ConfigReport::reportV3(const char* name, UInt_t bcast, UInt_t* val, int size1, int size2, int size3, 
+			     std::ostream& os, TH1* h, TH1* hv) {
+  os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
+  Int_t idx(0);
+  for (int i(0); i < size1; i++ ) {
+    for (int j(0); j < size2; j++ ) {
+      for (int k(0); k < size3; k++ ) {      
+	if ( h == 0 ) {
+	  if ( val[idx] != bcast ) {
+	    printf("%s[%i,%i,%i] 0x%0x\n",name,i,j,k,val[idx]);
+	  }
+	} else {
+	  h->Fill(val[idx]);
+	  hv->SetBinContent(idx+1,val[idx]);
+	}
+	idx++;
+      }
+    }
+  }
+}
+
+void ConfigReport::reportV3(const char* name, ULong64_t bcast, ULong64_t* val, int size1, int size2, int size3, 
 			     std::ostream& os, TH1* h, TH1* hv) {
   os << "\t" << name << " BCAST: 0x" << std::hex << bcast << std::endl;
   Int_t idx(0);

@@ -112,7 +112,7 @@ ConfigCompare::compare(ConfigBase& one, ConfigBase& other, TList& l,
     latch &= compareV3("threshold",(UInt_t*)one.threshold,(UInt_t*)other.threshold,16,36,24,onlyOne);
   }
 
-  latch &= compareV3("trc_csr",(UInt_t*)one.trc_csr,(UInt_t*)other.trc_csr,16,8,9,onlyOne);
+  latch &= compareV3("trc_csr",(ULong64_t*)one.trc_csr,(ULong64_t*)other.trc_csr,16,8,9,onlyOne);
   
   latch &= compareV4("config_0",(UInt_t*)one.config_0,(UInt_t*)other.config_0,16,4,4,12,onlyOne);
   latch &= compareV4("config_1",(UInt_t*)one.config_1,(UInt_t*)other.config_1,16,4,4,12,onlyOne);

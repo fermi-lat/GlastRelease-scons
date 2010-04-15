@@ -96,8 +96,8 @@ public :
    UInt_t          tcc_configuration[16][8];
    UInt_t          input_mask_bcast;
    UInt_t          input_mask[16][8];
-   UInt_t          trc_csr_bcast;
-   UInt_t          trc_csr[16][8][9];
+   ULong64_t       trc_csr_bcast;
+   ULong64_t       trc_csr[16][8][9];
    UInt_t          ccc_trg_alignment_bcast;
    UInt_t          ccc_trg_alignment[16][4];
    UInt_t          ccc_configuration_bcast;
