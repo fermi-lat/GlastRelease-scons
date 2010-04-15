@@ -4,6 +4,8 @@
  * package manager:M. Kocian
  * EOH *
 
+ configData-01-11-00 15-Apr-2010 panetta Allow ULong64_t trg_csr
+    Change executable names in python (remove '.exe')
  configData-01-10-04 05-Nov-2009    jrb Updates for SCons, including fix to test program
  * v1r10p2 13-Jun-08 EAC Use "line" attribute in xml to allow for prescaler lines to be
                          in BigEndian order
