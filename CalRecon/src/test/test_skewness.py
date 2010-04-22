@@ -30,9 +30,9 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option('-e', '--energy', type = float, dest = 'e', default = 1,
                   help = 'the initial particle energy (in GeV)')
-parser.add_option('-m', '--tmin', type = float, dest = 'm', default = 0,
+parser.add_option('-m', '--tmin', type = float, dest = 'm', default = 0.0,
                   help = 'the minimum t for sampling (in X0)')
-parser.add_option('-M', '--tmax', type = float, dest = 'M', default = 50,
+parser.add_option('-M', '--tmax', type = float, dest = 'M', default = 50.0,
                   help = 'the maximum t for sampling (in X0)')
 parser.add_option('-p', '--particle-type', type = str, dest = 'p',
                   default = 'e',
@@ -45,9 +45,9 @@ import sys
 from math import sqrt, log, exp
 
 
-INITIAL_ENERGY = opts.e
-T_MIN          = opts.m
-T_MAX          = opts.M
+INITIAL_ENERGY = float(opts.e)
+T_MIN          = float(opts.m)
+T_MAX          = float(opts.M)
 if opts.p == 'e':
     C = -0.5
 elif opts.p == 'gamma':
@@ -125,7 +125,7 @@ def integrateMoment(order = 3, center = 0, nsteps = 10):
 
 # Numerical integration to get the skewness.
 #
-# Uses the trapezium rule with n steps, meant to test the code to the put
+# Uses the trapezium rule with n steps, meant to test the code to be put
 # in the AnalysisTuple.
 def integrateSkewness(nsteps = 10):
     tmin   = T_MIN
@@ -148,6 +148,84 @@ def integrateSkewness(nsteps = 10):
         mom1 += 0.5*(p1*t1 + p2*t2)
         mom2 += 0.5*(p1*t1*t1 + p2*t2*t2)
         mom3 += 0.5*(p1*t1*t1*t1 + p2*t2*t2*t2)
+        t1 = t2
+    norm *= stepSize
+    mom1 *= stepSize
+    mom2 *= stepSize
+    mom3 *= stepSize
+    mom1 /= norm
+    mom2 /= norm
+    mom3 /= norm
+    mom2 = mom2 - mom1*mom1
+    gamma = (mom3 - 3*mom1*mom2 - mom1*mom1*mom1)/(mom2**1.5)
+    return gamma
+
+
+# Numerical integration to get the skewness.
+#
+# Uses a different method (discrete sampling), meant to test the code to be
+# put in the AnalysisTuple.
+def integrateSkewness2(nsteps = 8):
+    tmin   = T_MIN
+    tmax   = T_MAX
+    energy = INITIAL_ENERGY
+    b      = B
+    c      = C
+    a      = b*(log(energy/CRITICAL_ENERGY) + c)
+    t1     = tmin
+    norm   = 0.0
+    mom1   = 0.0
+    mom2   = 0.0
+    mom3   = 0.0
+    stepSize = (tmax - tmin)/nsteps
+    for i in xrange(nsteps):
+        t2 = tmin + (i + 1)*stepSize
+        t = 0.5*(t1 + t2)
+        p = (t**a)*exp(-b*t)
+        norm += p
+        mom1 += p*t
+        mom2 += p*t*t
+        mom3 += p*t*t*t
+        t1 = t2
+    norm *= stepSize
+    mom1 *= stepSize
+    mom2 *= stepSize
+    mom3 *= stepSize
+    mom1 /= norm
+    mom2 /= norm
+    mom3 /= norm
+    mom2 = mom2 - mom1*mom1
+    gamma = (mom3 - 3*mom1*mom2 - mom1*mom1*mom1)/(mom2**1.5)
+    return gamma
+
+
+# Numerical integration to get the skewness.
+#
+# Uses the trapezium rule with n steps, meant to test the code to be put
+# in the AnalysisTuple.
+def integrateSkewness3(nsteps = 10):
+    tmin   = T_MIN
+    tmax   = T_MAX
+    energy = INITIAL_ENERGY
+    b      = B
+    c      = C
+    a      = b*(log(energy/CRITICAL_ENERGY) + c)
+    t1     = tmin
+    norm   = 0.0
+    mom1   = 0.0
+    mom2   = 0.0
+    mom3   = 0.0
+    stepSize = (tmax - tmin)/nsteps
+    for i in xrange(nsteps):
+        t2 = tmin + (i + 1)*stepSize
+        p1 = (t1**a)*exp(-b*t1)
+        p2 = (t2**a)*exp(-b*t2)
+        t  = 0.5*(t1 + t2)
+        p  = 0.5*(p1 + p2)
+        norm += p
+        mom1 += p*t
+        mom2 += p*t*t
+        mom3 += p*t*t*t
         t1 = t2
     norm *= stepSize
     mom1 *= stepSize
@@ -210,6 +288,10 @@ gammaNum = integrateMoment(3, m1Num)/(m2Num**1.5)
 for numSteps in [100, 50, 25, 10, 8, 7, 6, 5]:
     print 'Numerical skewness (%d steps): %.3f' %\
           (numSteps, integrateSkewness(numSteps))
+    print 'Numerical skewness 2 (%d steps): %.3f' %\
+          (numSteps, integrateSkewness2(numSteps))
+    print 'Numerical skewness 3 (%d steps): %.3f' %\
+          (numSteps, integrateSkewness3(numSteps))
 print 
 
 
