@@ -1,0 +1,433 @@
+\documentclass[a4paper,11pt]{article}
+
+\title{Calorimeter moments analysis}
+\author{Luca Baldini (luca.baldini@pi.infn.it)}
+
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage[margin=2cm,bottom=3cm,top=4cm,marginparsep=0pt,marginparwidth=0pt]%
+	   {geometry}
+\usepackage[margin=1cm, font=small, labelfont=bf, labelsep=endash]{caption}
+
+\newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\pdersec}[3]{\frac{\partial^2#1}{\partial#2\partial#3}}
+\newcommand{\itm}{\mathbbm I}
+\newcommand{\itc}[1]{\itm_{#1}}
+\newcommand{\firstder}[2]{\frac{{\rm d}#1}{{\rm d}#2}}
+\newcommand{\secder}[2]{\frac{{\rm d}^2#1}{{\rm d}#2^2}}
+\newcommand{\tmax}{t_{\rm max}}
+
+\begin{document}
+
+\maketitle
+
+\abstract{These are some (more or less) random notes about the calorimeter
+  moments analysis. The first part is a brief description of the basic
+  code that I put together while trying to understand it.
+  There's also some stuff dealing with possible improvements of the
+  moments analysis, namely the measurement of the shower skeweness and the
+  the error analysis aimed at the projection of the calorimeter clusters
+  into the ACD.
+}
+
+
+\section{Basics of the CAL moments analysis}
+
+The code for the moments analysis basically calculates the moment of inertia
+tensor (using energy as the weight instead of mass) and then diagonalizes this
+to get the three principal axes. The basic definitions can be found in
+\cite{goldstein,landau} and in our case they read:
+\begin{align}
+  \itc{xx}  = \sum_{i=1}^n w_i(r_i^2 - x_i^2),\quad
+  \itc{yy} &= \sum_{i=1}^n w_i(r_i^2 - y_i^2),\quad
+  \itc{zz}  = \sum_{i=1}^n w_i(r_i^2 - z_i^2)\\
+  \itc{xy}  = -\sum_{i=1}^n w_ix_iy_i,\quad
+  \itc{xz} &= -\sum_{i=1}^n w_ix_iz_i,\quad
+  \itc{yz}  = -\sum_{i=1}^n w_iy_iz_i
+\end{align}
+where the index $i$ runs over the $n$ hits in the calorimeter and the $w_i$ are
+the weights associated with the hits (essentially the energy release).
+In addition to the moment of inertia, the sum of weights and the coordinates
+of the energy centroids are also used:
+\begin{align}
+  W &= \sum_{i=1}^n w_i\\
+  \mathbf{r}_c &= \frac{\sum_{i=1}^n w_i\mathbf{r}_i}{W}
+\end{align}
+
+In order to reduce the tensor of inertia to the principal axes we do have to
+solve the secular equation:
+\begin{equation}
+  \det(\itm - \lambda{\mathbbm 1}) =
+  \det\begin{pmatrix}
+  \itc{xx} - \lambda & \itc{xy} & \itc{xz}\\
+  \itc{xy} & \itc{yy} - \lambda & \itc{yz}\\
+  \itc{xz} & \itc{yz} & \itc{zz} - \lambda
+  \end{pmatrix} = 0
+\end{equation}
+which is a cubic equation  in $\lambda$ yielding the three eigenvalues.
+By working out the tedious algebra we can write the equation as:
+$$
+\lambda^3 + c_2\lambda^2 + c_1\lambda + c_0 = 0
+$$
+where:
+\begin{align}
+  c_2 &= -(\itc{xx} + \itc{yy} + \itc{zz})\\
+  c_1 &= \itc{xx}\itc{yy} + \itc{yy}\itc{zz} + \itc{xx}\itc{zz} -
+  (\itc{xy}^2 + \itc{yz}^2 + \itc{xz}^2)\\
+  c_0 &= -\itc{xx}\itc{yy}\itc{zz} - 2\itc{xy}\itc{yz}\itc{xz} +
+  \itc{xx}\itc{yz}^2 + \itc{yy}\itc{xz}^2 + \itc{zz}\itc{xy}^2
+\end{align}
+If we now define a new variable $\lambda' = \lambda + c_2/3$, the previous
+equation becomes:
+$$
+\lambda'^3 + a\lambda' + b = 0
+$$
+where:
+\begin{align}
+  a &= \left(\frac{3c_1 - c_2^2}{3}\right)\\
+  b &= \left(\frac{27c_0 + 2c_2^2 - 9c_1c_2}{27}\right)
+\end{align}
+(the algebra is fully worked out in \cite{wolfram}).
+We now set:
+\begin{align}
+  m &= 2\sqrt{\frac{-a}{3}}\\
+  \psi &= \frac{1}{3}\arccos\left(\frac{3b}{am}\right)
+\end{align}
+and, finally we get the three real solutions (guranteed by the fact that the
+tensor of inertia is symmetruc):
+\begin{align}
+  \lambda_0 &= m\cos(\psi) - c_2/3\\
+  \lambda_1 &= m\cos(\psi + 2\pi/3) - c_2/3\\
+  \lambda_2 &= m\cos(\psi + 4\pi/3) - c_2/3
+\end{align}
+Once we have the three eigenvalues we can work out the calcultaion of the
+eigenvectors $\mathbf{e}^i$ ($i = 1\ldots3$) defined by:
+$$
+\itm\mathbf{e}^i = \lambda_i\mathbf{e}^i
+$$
+Following these conventions, $\lambda_1$ is the largest eigenvalue and,
+as a consequence, $\mathbf{e}^1$ is the principal axis of the cluster.
+
+Once the three principal axis of the cluster have been found, the
+cluster $\chi^2$ (normalized to the number of \emph{degree of freedom}) is
+calculated as:
+\begin{equation}
+  \chi^2 = \frac{\sum_{i=1}^n w_i d_i^2}{nW}
+\end{equation}
+where $d_i$ are the distances from each of the calorimeter hits to the
+axis parallel to $\mathbf{e}^1$ and passing throught the cluster
+centroid. Finally the some well know Merit quantities are calculated:
+\begin{align}
+  \texttt{CalTransRms} &= \sqrt{\frac{|\lambda_1|}{W}}\\
+  \texttt{CalLongRms}  &= \sqrt{\frac{|\lambda_0| + |\lambda_2|}{2W\log L}}\\
+  \texttt{CalLRmsAsym} &= \sqrt{\frac{|\lambda_0| - |\lambda_2|}
+    {|\lambda_0| + |\lambda_2|}}
+\end{align}
+where $L$ is the number of radiation lengths transversed.
+
+
+\section{Shower development: basic formul\ae}
+
+The longitudinal profile of an electromagnetic shower is described by:
+\begin{equation}
+\firstder{E}{t} = E_0 p(t) = E_0 k t^\alpha e^{-bt}
+\end{equation}
+where
+$$
+k = \frac{b^{\alpha + 1}}{\Gamma(\alpha + 1)}
+$$
+(with this definition $p(t)$ is normalized to 1 and is therefore a probability
+density) and the Euler $\Gamma$ function, defined by:
+$$
+\Gamma(\alpha) = \int_{0}^\infty t^{\alpha - 1} e^{-t} {\rm d}t
+$$
+satisfies the well know relation:
+$$
+\Gamma(\alpha + 1) = \alpha \Gamma(\alpha)
+$$
+The position of the shower maximum is given by the condition:
+$$
+\left.\firstder{p}{t}\right|_{\tmax} =
+k \tmax^{\alpha - 1} e^{-b\tmax} (\alpha  - b\tmax) = 0
+$$
+and therefore:
+\begin{equation}
+\tmax = \frac{\alpha}{b}
+\end{equation}
+The other two pieces of necessary information are the dependences of $\alpha$
+and $b$ on the energy. These are given by the relations:
+\begin{equation}
+b \approx 0.5
+\end{equation}
+and:
+\begin{equation}
+\tmax = \frac{\alpha}{b} = \ln\left(\frac{E_0}{E_c}\right) + C
+\end{equation}
+where $C=0.5$ for photons and $C=-0.5$ for electrons and $E_c$ is the critical
+energy for the material.
+
+
+\section{Longitudinal moments}
+
+Let's start from the calculation of the lowest order moments of the shower
+longitudinal profile around $t=0$. The first one is the mean:
+\begin{align}
+\left< t \right> &= \mu = \int_{0}^\infty t p(t) {\rm d}t =
+k \int_{0}^\infty t^{\alpha + 1} e^{-bt} {\rm d}t =\nonumber\\
+&= \frac{b^{\alpha + 1}}{\Gamma(\alpha + 1)}
+\frac{\Gamma(\alpha + 2)}{b^{\alpha + 2}} = \frac{(\alpha + 1)}{b}
+\end{align}
+(i.e. the mean of the profile is exactly $1/b$ radiation lengths to the
+right of the shower maximum). Along the same lines:
+\begin{align}
+\left< t^2 \right> = \frac{b^{\alpha + 1}}{\Gamma(\alpha + 1)}
+\frac{\Gamma(\alpha + 3)}{b^{\alpha + 3}} =
+\frac{(\alpha + 2)(\alpha + 1)}{b^2}
+\end{align}
+and:
+\begin{align}
+\left< t^3 \right> = \frac{b^{\alpha + 1}}{\Gamma(\alpha + 1)}
+\frac{\Gamma(\alpha + 4)}{b^{\alpha + 4}} =
+\frac{(\alpha + 3)(\alpha + 2)(\alpha + 1)}{b^3}
+\end{align}
+
+We can apply the usual formul\ae\ for the moments $M_n$ centered around the
+mean (as opposed to the ones centered around 0):
+\begin{equation}
+M_2 = \sigma^2 = \left< t^2 \right> - \mu^2 =
+\frac{(\alpha + 1)}{b^2}
+\end{equation}
+and
+\begin{equation}
+M_3 = \left< t^3 \right> - 3\mu\sigma^2 - \mu^3 = \frac{2(\alpha + 1)}{b^3}
+\end{equation}
+The skewness $\gamma$ is given by:
+\begin{equation}
+\gamma = \frac{M_3}{\sigma^3} = \frac{2}{\sqrt{\alpha + 1}}
+\end{equation}
+
+Let's look at the problem from a different perspective, which will hopefully
+turn out to be handy in the following. Integrating by parts, we get:
+\begin{align*}
+\left< t^n \right> & = k \int_{0}^\infty t^n \cdot t^\alpha e^{-bt} {\rm d}t =
+k \int_{0}^\infty t^\alpha e^{-bt} {\rm d}\left(\frac{t^{n+1}}{n+1}\right) =\\
+&= k\left.\frac{t^{n+1}}{n+1}  t^\alpha e^{-bt}\right|_0^\infty -
+k \int_0^\infty \frac{t^{n+1}}{n+1} \left(
+\alpha t^{\alpha - 1}e^{-bt} - bt^\alpha e^{-bt}
+\right) {\rm d}t =\\
+&= \frac{kb}{n+1} \int_{0}^\infty  t^{\alpha + n + 1} e^{-bt} {\rm d}t -
+\frac{k\alpha}{n+1} \int_{0}^\infty  t^{\alpha + n} e^{-bt} {\rm d}t =
+\frac{b \left< t^{n+1} \right> - \alpha\left< t^n \right>}{n+1}
+\end{align*}
+from which it follows that:
+\begin{equation}
+\left< t^{n+1} \right> = \frac{(\alpha + n + 1)}{b}\left< t^n \right>
+\end{equation}
+For $n = 1$ we get:
+$$
+\left< t^2 \right> = \frac{(\alpha + 2)}{b}\left< t \right>
+$$
+or:
+\begin{equation}
+\sigma^2 = \frac{(\alpha + 2)}{b}\mu - \mu^2
+\end{equation}
+Whereas for $n = 2$:
+$$
+\left< t^3 \right> = \frac{(\alpha + 3)}{b}\left< t^2 \right>
+$$
+which translates into:
+\begin{equation}
+\gamma = \frac{\mu}{\sigma^3}\left[
+  \frac{(\alpha + 3)(\alpha + 2)}{b^2} - 3\sigma^2 - \mu^2
+  \right]
+\end{equation}
+
+All this equations can be directly verified by plugging in the expressions
+for $\mu$, $\sigma$ and $\gamma$ explicitly obtained before, but the hope is
+to generalize them to the case in which we don't sample the entire shower
+(see the following section).
+
+
+\section{Longitudinal moments over a finite interval}
+
+We can generalize the previous relations to the case in which we only
+sample a finite fraction of the longitudinal shower development,
+say between $t_1$ and $t_2$. The formalism is essentially identical, except
+for the fact that now we're dealing with a probability density function
+over a finite interval:
+$$
+p_{\rm f}(t) = k_{\rm f} t^\alpha e^{-bt}
+$$
+with $k_{\rm f}$ being:
+$$
+k_{\rm f} = \frac{1}{\int_{t_1}^{t_2} t^\alpha e^{-bt} {\rm d}t}
+$$
+(physically $k_{\rm f}$ is the ratio between the raw energy deposited in the
+calorimeter and the true energy of the particle). So now we have:
+\begin{equation}
+\left< t^{n+1} \right> = \frac{(\alpha + n + 1)}{b}\left< t^n \right> -
+\left.\frac{k_{\rm f}}{b} t^{(\alpha + n + 1)} e^{-bt}\right|_{t_1}^{t_2}
+\end{equation}
+and therefore:
+\begin{equation}
+\left< t^2 \right> = \frac{(\alpha + 2)}{b}\left< t \right> -
+\frac{k_{\rm f}}{b}
+\left[t_2^{(\alpha + 2)} e^{-bt_2} - t_1^{(\alpha + 2)} e^{-bt_1}\right]
+\end{equation}
+and:
+\begin{equation}
+\left< t^3 \right> = \frac{(\alpha + 3)}{b}\left< t^2 \right> -
+\frac{k_{\rm f}}{b}
+\left[t_2^{(\alpha + 3)} e^{-bt_2} - t_1^{(\alpha + 3)} e^{-bt_1}\right]
+\end{equation}
+
+
+\clearpage
+\appendix
+
+\emph{Caution: the stuff in the appendix is mostly crap, at this time.
+I'll move it into appropriate sections as soon as it's in a reasonable shape
+(and, of course, this does not mean that people should not take a look).}
+
+\section{Tentative error analysis}
+
+This is an attempt to work out the error analysis for the calorimeter moments
+analysis. Let's start out with with the derivatives of the components of the
+inertia tensor:
+\begin{align}
+\pder{\itc{xx}}{x_i} &= 0,\quad
+\pder{\itc{xx}}{y_i}  = 2w_iy_i,\quad
+\pder{\itc{xx}}{z_i}  = 2w_iz_i,\quad
+\pder{\itc{xx}}{w_i}  = (y_i^2 + z_i^2)\\
+\pder{\itc{yy}}{x_i} &= 2w_ix_i,\quad
+\pder{\itc{yy}}{y_i}  = 0,\quad
+\pder{\itc{yy}}{z_i}  = 2w_iz_i,\quad
+\pder{\itc{yy}}{w_i}  = (x_i^2 + z_i^2)\\
+\pder{\itc{zz}}{x_i} &= 2w_ix_i,\quad
+\pder{\itc{zz}}{y_i}  = 2w_iy_i,\quad
+\pder{\itc{zz}}{z_i}  = 0,\quad
+\pder{\itc{zz}}{w_i}  = (x_i^2 + y_i^2)\\
+\pder{\itc{xy}}{x_i} &= -w_iy_i,\quad
+\pder{\itc{xy}}{y_i}  = -w_ix_i,\quad
+\pder{\itc{xy}}{z_i}  = 0,\quad
+\pder{\itc{xy}}{w_i}  = -x_iy_i\\
+\pder{\itc{xz}}{x_i} &= -w_iz_i,\quad
+\pder{\itc{xz}}{y_i}  = 0,\quad
+\pder{\itc{xz}}{z_i}  = -w_ix_i,\quad
+\pder{\itc{xz}}{w_i}  = -x_iz_i\\
+\pder{\itc{yz}}{x_i} &= 0,\quad
+\pder{\itc{yz}}{y_i}  = -w_iz_i,\quad
+\pder{\itc{yz}}{z_i}  = -w_iy_i,\quad
+\pder{\itc{yz}}{w_i}  = -y_iz_i
+\end{align}
+
+Assuming that the errors on the spatial coordinates and the energy are
+independent from each other, and dropping (for the time being) the term
+depending on the derivative with respect to $w_i$ we get:
+\begin{align*}
+(\Delta \itc{xx})^2 &=
+\sum_{i=1}^n \left( \pder{\itc{xx}}{x_i} \right)^2(\Delta x_i)^2 +
+\sum_{i=1}^n \left( \pder{\itc{xx}}{y_i} \right)^2(\Delta y_i)^2 +
+\sum_{i=1}^n \left( \pder{\itc{xx}}{z_i} \right)^2(\Delta z_i)^2 =\\
+&= 4\sum_{i=1}^n w_i^2\left[y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2\right]
+\end{align*}
+And the same thing for all the others:
+\begin{align}
+\Delta \itc{xx} &= \sqrt{
+  \sum_{i=1}^n 4w_i^2\left[y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2\right]
+}\\
+\Delta \itc{yy} &= \sqrt{
+  \sum_{i=1}^n 4w_i^2\left[x_i^2(\Delta x_i)^2 + z_i^2(\Delta z_i)^2\right]
+}\\
+\Delta \itc{zz} &= \sqrt{
+  \sum_{i=1}^n 4w_i^2\left[x_i^2(\Delta x_i)^2 + y_i^2(\Delta y_i)^2\right]
+}\\
+\Delta \itc{xy} &= \sqrt{
+  \sum_{i=1}^n w_i^2\left[y_i^2(\Delta x_i)^2 + x_i^2(\Delta y_i)^2\right]
+}\\
+\Delta \itc{xz} &= \sqrt{
+  \sum_{i=1}^n w_i^2\left[z_i^2(\Delta x_i)^2 + x_i^2(\Delta z_i)^2\right]
+}\\
+\Delta \itc{yz} &= \sqrt{
+  \sum_{i=1}^n w_i^2\left[z_i^2(\Delta y_i)^2 + y_i^2(\Delta z_i)^2\right]
+}
+\end{align}
+
+We now bravely carry on to $c_2$, $c_1$ and $c_0$ defined earlier:
+\begin{align}
+\pder{c_2}{x_i} &= -4w_ix_i\\
+\pder{c_2}{y_i} &= -4w_iy_i\\
+\pder{c_2}{z_i} &= -4w_iz_i\\
+\end{align}
+and therefore it follows that:
+\begin{align}
+(\Delta c_2)^2 &=
+\sum_{i=1}^n \left( \pder{c_2}{x_i} \right)^2(\Delta x_i)^2 +
+\sum_{i=1}^n \left( \pder{c_2}{y_i} \right)^2(\Delta y_i)^2 +
+\sum_{i=1}^n \left( \pder{c_2}{z_i} \right)^2(\Delta z_i)^2 =\\ 
+&=\sum_{i=1}^n 16w_i^2\left[
+  x_i^2(\Delta x_i)^2 + y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2
+  \right]
+\end{align}
+Along the same lines:
+\begin{align}
+\pder{c_1}{x_i} &= 2w_i\left[
+  (2\itc{xx} + \itc{yy} + \itc{zz})x_i + \itc{xy}y_i + \itc{xz}z_i
+  \right]\\
+\pder{c_1}{y_i} &= 2w_i\left[
+  \itc{xy}x_i + (\itc{xx} + 2\itc{yy} + \itc{zz})y_i + \itc{yz}z_i
+  \right]\\
+\pder{c_1}{z_i} &= 2w_i\left[
+  \itc{xz}x_i + \itc{yz}y_i + (\itc{xx} + \itc{yy} + 2\itc{zz})z_i
+  \right]
+\end{align}
+and just like before:
+\begin{align}
+(\Delta c_1)^2 &=
+\sum_{i=1}^n \left( \pder{c_1}{x_i} \right)^2(\Delta x_i)^2 +
+\sum_{i=1}^n \left( \pder{c_1}{y_i} \right)^2(\Delta y_i)^2 +
+\sum_{i=1}^n \left( \pder{c_1}{z_i} \right)^2(\Delta z_i)^2
+\end{align}
+which is now too long to fit in one row.
+
+Let's go back to the basic equation for the principal eigenvector:
+$$
+\itm\mathbf{e}^1 = \lambda_1\mathbf{e}^1
+$$
+Doing a full error propagation is not easy, since in this equation we do have
+error on the six independent components of the inertia tensor, as well as on
+the eigenvalue $\lambda_1$ we've just calculated. The errors on the
+$\itc{ij}$ are reasonably easy to calculate, starting from the errors
+associated with the finite dimensions of the crystals. On the other side
+the propagation of the errors to $\lambda_1$ is not trivial, as the
+expression is complicated. On top of that, these different error are not
+indipendent from each other, as $\lambda_1$ is calculated starting from the
+component of the inertia tensor.
+
+The solution to this equation is:
+\begin{align}
+e^1_x &= \frac{1}{\sqrt{1 + \frac{A^2}{B^2} + \frac{A^2}{C^2}}}\\
+e^1_y &= \frac{1}{\sqrt{1 + \frac{B^2}{A^2} + \frac{B^2}{C^2}}}\\
+e^1_z &= \frac{1}{\sqrt{1 + \frac{C^2}{A^2} + \frac{C^2}{B^2}}}
+\end{align}
+where:
+\begin{align}
+A &= \itc{yz}(\itc{xx} - \lambda_1) - \itc{xy}\itc{xz}\\
+B &= \itc{xz}(\itc{yy} - \lambda_1) - \itc{xy}\itc{yz}\\
+C &= \itc{xy}(\itc{zz} - \lambda_1) - \itc{xz}\itc{yz}
+\end{align}
+
+
+
+\begin{thebibliography}{100}
+\bibitem{goldstein}H.~Goldstein, \emph{Classical mechanics}.
+\bibitem{landau}L.~D.~Landau, E.~M.~Lif\^sic, \emph{Mechanics}.
+\bibitem{wolfram}\url{http://mathworld.wolfram.com/CubicFormula.html}
+\end{thebibliography}
+
+
+
+\end{document}
