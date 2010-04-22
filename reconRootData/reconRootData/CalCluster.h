@@ -36,11 +36,11 @@ public:
      { Clear() ; }
     CalCluster
      ( const std::vector<CalClusterLayerData> &, const CalFitParams&, const CalParams &,
-       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans,
+       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     void init
      ( const std::vector<CalClusterLayerData> &, const CalFitParams&, const CalParams &,
-       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans,
+       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     virtual ~CalCluster()
      {}
@@ -57,6 +57,8 @@ public:
      { return m_rmsLongAsym ; }
     Double_t getRmsTrans() const
      { return m_rmsTrans ; }
+    Double_t getSkewnessLong() const
+     { return m_skewnessLong ; }
     Int_t getNumSaturatedXtals() const
      { return m_numSaturatedXtals;}
     Int_t getNumTruncXtals() const
@@ -77,6 +79,7 @@ private:
     Double32_t m_rmsLong ;
     Double32_t m_rmsLongAsym ;
     Double32_t m_rmsTrans ;
+    Double32_t m_skewnessLong ;
     Int_t m_numSaturatedXtals;
     Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;

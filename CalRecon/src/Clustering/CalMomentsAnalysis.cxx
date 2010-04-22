@@ -8,6 +8,7 @@
 
 #include <algorithm>
 
+
 CalMomentsAnalysis::CalMomentsAnalysis() : m_centroid(0.,0.,0.), 
                                            m_moment(0.,0.,0.), 
                                            m_rmsLong(0.),
@@ -41,8 +42,9 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
            Ixz       = 0.,  
            Iyz       = 0.;
     double weightSum = 0.;
+    double skewness  = -9999.;
     Point  centroid(0.,0.,0.);
-
+ 
     // Loop through the data points
     for(CalMomentsDataVec::iterator vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
     {
@@ -66,7 +68,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         Ixy -= xprm*yprm * weight;
         Ixz -= xprm*zprm * weight;
         Iyz -= yprm*zprm * weight;
-
+	
         weightSum += weight;
         centroid  += weight * dataPoint.getPoint();
     }
@@ -120,13 +122,17 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
 
         // "Chi-squared" = sum of residuals about principal axis, through centroid, using input weight
         chisq = 0.;
+	// Skewness = third moment along the main axis w.r.t. the energy centroid.
+	skewness = 0.;
         for(CalMomentsDataVec::iterator vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
         {
             CalMomentsData& dataPoint = *vecIter;
 
             double distToAxis = dataPoint.calcDistToAxis(m_centroid,m_axis[1]);
+	    double coordAlongAxis = dataPoint.calcCoordAlongAxis(m_centroid,m_axis[1]);
 
             chisq += dataPoint.getWeight() * distToAxis * distToAxis;
+	    skewness += dataPoint.getWeight() * coordAlongAxis * coordAlongAxis * coordAlongAxis;
         }
 
         // Scale by number of data points
@@ -134,11 +140,12 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
 
         // Final calculations to return moment of principal axis and average of other two
         double longMag1 = fabs(m_moment[0]);
-	    double longMag2 = fabs(m_moment[2]); 
+	double longMag2 = fabs(m_moment[2]); 
 	
         m_rmsLong     = (longMag1 + longMag2) / 2.;
-	    m_rmsTrans    =  fabs(m_moment[1]);
-	    m_rmsLongAsym = (longMag1 - longMag2)/(longMag1 + longMag2); 
+	m_rmsTrans    =  fabs(m_moment[1]);
+	m_rmsLongAsym = (longMag1 - longMag2)/(longMag1 + longMag2);
+	m_skewnessLong = skewness;
     }
     else chisq = -1.;
 
@@ -222,4 +229,10 @@ double CalMomentsData::calcDistToAxis(const Point& centroid, const Vector& axis)
     Vector crossProd = axis.cross(diffVec);
 
     return m_distToAxis = crossProd.mag();
+}
+
+double CalMomentsData::calcCoordAlongAxis(const Point& centroid, const Vector& axis)
+{
+  // We explicitly assume that the axis is normalized, here.
+  return m_coordAlongAxis = (m_point - centroid).dot(axis);
 }

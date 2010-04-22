@@ -31,6 +31,7 @@ public:
     const Point&  getPoint()      const {return m_point;}
     const double  getWeight()     const {return m_weight;}
     const double  getDistToAxis() const {return m_distToAxis;}
+    const double  getCoordAlongAxis() const {return m_coordAlongAxis;}
     bool          useIt()               {return m_useFlag;}
 
     //@brief Provides "set" functions
@@ -40,6 +41,9 @@ public:
 
     //@brief Determine distance to given axis
     double calcDistToAxis(const Point& centroid, const Vector& axis);
+
+    //@brief Determine the coordinate along a given axis
+    double calcCoordAlongAxis(const Point& centroid, const Vector& axis);
 
     // Define how to sort
     const bool operator<(const CalMomentsData& right)  const {return m_distToAxis < right.getDistToAxis();}
@@ -53,6 +57,8 @@ private:
     double m_weight;
     // The distance from the "axis" of this point
     double m_distToAxis;
+    // The position along the "axis" of this point (with sign, used to calculate the skewness)
+    double m_coordAlongAxis;
 };
 
 typedef std::vector<CalMomentsData> CalMomentsDataVec;
@@ -82,6 +88,7 @@ public:
     const double getTransverseRms()         const {return m_rmsTrans;}
     const double getLongAsymmetry()         const {return m_rmsLongAsym;}
     const double getWeightSum()             const {return m_weightSum;}
+    const double getLongSkewness()          const {return m_skewnessLong;}
     const double getNumIterations()         const {return m_numIterations;}
     const double getNumDroppedPoints()      const {return m_numDroppedPoints;}
 
@@ -102,6 +109,8 @@ private:
     double m_rmsLongAsym;
     // Sum of weights in moments analysis 
     double m_weightSum;
+    // Skewness in the moments analysis
+    double m_skewnessLong;
     // Statistics on iterations (if done)
     int    m_numIterations;
     int    m_numDroppedPoints;

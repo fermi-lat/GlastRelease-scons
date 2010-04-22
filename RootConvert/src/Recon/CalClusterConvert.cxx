@@ -35,6 +35,7 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
         tdsCluster.getRmsLong(),
         tdsCluster.getRmsLongAsym(),
         tdsCluster.getRmsTrans(),
+	tdsCluster.getSkewnessLong(),
         (Int_t)tdsCluster.getNumSaturatedXtals(),
         (Int_t)tdsCluster.getNumTruncXtals(),
         tdsCluster.getStatusBits() ) ;
@@ -53,6 +54,7 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
         rootCluster.getRmsLong(),
         rootCluster.getRmsTrans(),
         rootCluster.getRmsLongAsym(),
+	rootCluster.getSkewnessLong(),
         rootCluster.getNumSaturatedXtals(),
         rootCluster.getNumTruncXtals() ) ;
     

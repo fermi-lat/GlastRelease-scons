@@ -234,7 +234,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
                                         m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1.,0.,0.,1.,0.,1.);
     }
 
-    cluster->initialize(fitParams, params, 0., 0., 0., m_Nsaturated, num_TruncXtals);
+    cluster->initialize(fitParams, params, 0., 0., 0., 0., m_Nsaturated, num_TruncXtals);
 
     return ene;
 }
@@ -345,7 +345,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
         // Extract the values for the moments with all hits present
         double rms_long  = momentsAnalysis.getLongitudinalRms();
         double rms_trans = momentsAnalysis.getTransverseRms();
-        double long_asym = momentsAnalysis.getLongAsymmetry(); 
+        double long_asym = momentsAnalysis.getLongAsymmetry();
+	double long_skew = momentsAnalysis.getLongSkewness();
 
         if (!isFinite(rms_long))
         {
@@ -359,6 +360,10 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
         {
             throw CalException("CalMomentsAnalysis computed infinite value for long_asym") ;
         }
+	if (!isFinite(long_skew))
+	{
+	    throw CalException("CalMomentsAnalysis computed infinite value for long_skew") ;
+        }
     
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
@@ -371,8 +376,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
                                       m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1., 0., 0., 1., 0., 1.,
                                       m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1., 0., 0., 1., 0., 1.);
 
-        cluster->initialize(fitParams, params, rms_long, rms_trans, long_asym, m_Nsaturated, num_TruncXtals);
-        cluster->setStatusBit(Event::CalCluster::MOMENTS); 
+        cluster->initialize(fitParams, params, rms_long, rms_trans, long_asym, long_skew, m_Nsaturated, num_TruncXtals);
+        cluster->setStatusBit(Event::CalCluster::MOMENTS);
     }
 
     return;

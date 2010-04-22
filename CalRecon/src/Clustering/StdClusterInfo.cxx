@@ -136,7 +136,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
                                          caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
 
     // Fill CalCluster data
-    cl->initialize(fitParams, params, 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
+    cl->initialize(fitParams, params, 0., 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
 
     for( i = 0; i < calnLayers; i++)
     {
