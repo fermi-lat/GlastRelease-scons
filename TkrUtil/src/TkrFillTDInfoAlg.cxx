@@ -166,7 +166,7 @@ StatusCode TkrFillTDInfoAlg::execute()
         m_diagTds = new LdfEvent::DiagnosticData();
     }
 
-    int size = m_nTowers*nCc;
+    //int size = m_nTowers*nCc;
     // this is the order that I found the diag objects in real data... 
     // probably doesn't matter but might as well keep them that way
     int order[nCc] =       { 6, 3, 7, 2, 5, 0, 4, 1 };

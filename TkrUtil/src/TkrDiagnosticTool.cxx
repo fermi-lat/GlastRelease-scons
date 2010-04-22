@@ -193,7 +193,7 @@ StatusCode TkrDiagnosticTool::getTkrDiagnosticData()
 
     int ind;
     int numTkrDiag = diagTds->getNumTkrDiagnostic();
-    int numCalDiag = diagTds->getNumCalDiagnostic();
+    //int numCalDiag = diagTds->getNumCalDiagnostic();
     log << MSG::DEBUG;
     if(log.isActive()) {
         int nNonZero = 0;

@@ -379,7 +379,7 @@ Event::TkrClusterVec TkrQueryClustersTool::getFilteredClusters( const Event::Tkr
     if((m_useNormalHits&&m_useGhostHits) || inVecSize==0) { 
         outVec = inVec; 
     } else {
-        int i;
+        unsigned i;
         for (i=0;i<inVecSize;++i) {
             int status = inVec[i]->getStatusWord();
             if((m_useGhostHits && (status&Event::TkrCluster::maskZAPGHOSTS)!=0)
