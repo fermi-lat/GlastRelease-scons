@@ -30,7 +30,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
     // This version lifted directly from code supplied to Bill Atwood by Toby Burnett
     // TU 5/24/2005
     m_weightSum = 0.;
-
+    m_skewnessLong = -9999.;
     // Check that we have enough points to proceed - need at least three
     double chisq = -1.;
     if (dataVec.size() < 2) return chisq;
