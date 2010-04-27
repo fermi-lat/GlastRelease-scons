@@ -19,6 +19,7 @@ from math import acos, sqrt, cos, pi, fabs
 
 
 M_PI = pi
+CAL_TOWER_PITCH = 374.5
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
 
@@ -195,8 +196,8 @@ class CalMomentsAnalysis:
         return centroid
 
     def doMomentsAnalysis(self, dataVec, iniCentroid):
-        print 'Starting original moments analysis (iteration %d)...' %\
-              self.NumIterations
+        print 'Starting moments analysis (iteration %d, %d xtals)...' %\
+              (self.NumIterations, len(dataVec))
         self.WeightSum = 0.
         chiSquare = -1.
         if len(dataVec) < 2:
@@ -295,7 +296,7 @@ class CalMomentsAnalysis:
         return chiSquare
 
     def doIterativeMomentsAnalysis(self, dataVec, inputCentroid = None,
-                                     scaleFactor = 1.0):
+                                   scaleFactor = 1.0):
         chiSq = -1.
         iterate = True
         self.NumIterations = 0
@@ -341,6 +342,7 @@ class CalMomentsAnalysis:
             # Finally, make sure have enough points remaining to proceed!
             if (len(dataVec) < 3):
                 break
+            print self
         return chiSq
 
     def __str__(self):
@@ -348,7 +350,11 @@ class CalMomentsAnalysis:
         text += 'Centroid = %s\n' % self.Centroid
         text += 'Moments  = %s\n' % self.Moment
         for i in range(3):
-            text += 'Axis %d   = %s\n' % (i, self.Axis[i]) 
+            text += 'Axis %d   = %s\n' % (i, self.Axis[i])
+        text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
+        text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
+        text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
+        text += 'Long skewness    = %.3e\n' % self.SkewnessLong
         return text
 
 
@@ -357,15 +363,17 @@ class MomentsClusterInfo:
 
     def __init__(self, calRecon):
         self.CalRecon = calRecon
-        dataVec = self.getCalMomentsDataVec()
+        iniCentroid = self.getInitialCentroid()
+        dataVec = self.getCalMomentsDataVec(iniCentroid)
         momentsAnalysis = CalMomentsAnalysis()
-        chiSq = momentsAnalysis.doIterativeMomentsAnalysis(dataVec)
+        chiSq = momentsAnalysis.doIterativeMomentsAnalysis(dataVec,
+                                                           iniCentroid)
         self.Centroid = None
         self.Axis = None
         self.RmsLong = 0.
         self.RmsTrans = 0.
-        self.LongAsym = 0.
-        self.LongSkew = -9999.
+        self.RmsLongAsym = 0.
+        self.SkewnessLong = -9999.
         if chiSq >= 0.:
             # Get info on iterations
             nIterations = momentsAnalysis.getNumIterations()
@@ -376,21 +384,84 @@ class MomentsClusterInfo:
             # Recalculate the moments going back to using all the data points
             # but with the iterated moments centroid
             if nIterations > 1:
-                dataVec = self.getCalMomentsDataVec()
+                dataVec = self.getCalMomentsDataVec(iniCentroid)
                 chiSq = momentsAnalysis.doMomentsAnalysis(dataVec,
                                                           self.Centroid)
             # Extract the values for the moments with all hits present
             self.RmsLong = momentsAnalysis.getLongitudinalRms()
             self.RmsTrans = momentsAnalysis.getTransverseRms()
-            self.LongAsym = momentsAnalysis.getLongAsymmetry()
-            self.LongSkew = momentsAnalysis.getLongSkewness()
+            self.RmsLongAsym = momentsAnalysis.getLongAsymmetry()
+            self.SkewnessLong = momentsAnalysis.getLongSkewness()
         self.checkMomentsAnalysis()
 
-    def getCalMomentsDataVec(self):
-        dataVec = []
+    def getInitialCentroid(self):
+        # First estimation of the centroid.
+        weightSum = 0.
+        centroid = Point()
         for xtalData in self.CalRecon.getCalXtalRecCol():
-            dataVec.append(CalMomentsData(xtalData))
+            dataPoint = CalMomentsData(xtalData)
+            weight = dataPoint.getWeight()
+            weightSum += weight
+            centroid += vector2point(dataPoint.getPoint()) * weight
+        centroid /= weightSum
+        return centroid
+
+    def getCalMomentsDataVec(self, centroid, preprocess = True):
+        # This is a shortcut avoiding the initial pruning that Tracy does in
+        # order to remove the outlers before the moments analysis.
+        if not preprocess:
+            for xtalData in self.CalRecon.getCalXtalRecCol():
+                dataVec.append(CalMomentsData(xtalData))
+            return dataVec
+        # And this is the (almost) full code in the CalRecon.
+        # Set the initial axis pointing up.
+        axis = Point(0, 0, 1)
+        # Go on with Tracy's code.
+        dataVec = []
+        rmsDist   = 0.
+        weightSum = 0.
+        for xtalData in self.CalRecon.getCalXtalRecCol():
+            momentsData = CalMomentsData(xtalData)
+            # IMPORTANT!!
+            # Portion of code handling the saturated crystals missing, here!
+            distToAxis = momentsData.calcDistToAxis(centroid, axis)
+            rmsDist   += momentsData.getWeight() * distToAxis * distToAxis
+            weightSum += momentsData.getWeight()
+            dataVec.append(momentsData)
+        # Get the quick rms of crystals about fit axis
+        rmsDist = sqrt(rmsDist / weightSum);
+        # Use this to try to remove "isolated" crystals that might otherwise
+        # pull the axis
+        # Start by sorting the data vector according to distance to axis
+        dataVec.sort()
+        # Look for the point where there is a significant gap in distance to
+        # the next xtal
+        envelope = min(5.*rmsDist, CAL_TOWER_PITCH)
+        lastDist = 0.
+        checkit = len(dataVec)
+        tempCounter = 0
+        # Find the point in the vector where the distance to the axis
+        # indicates an outlier
+        for (i, momentsData) in enumerate(dataVec):
+            dist = momentsData.getDistToAxis()
+            distDiff = dist - envelope
+            gapDist  = dist - lastDist
+            if distDiff > 0. and gapDist > 3. * rmsDist:
+                break
+            lastDist = dist
+            tempCounter += 1
+        # Now remove the outlier crystals
+        dataVec = dataVec[:tempCounter]
+        # Make calculated quantities class members.
+        
         return dataVec
+
+    def getFirstCluster(self):
+        return self.CalRecon.getCalClusterCol()[0]
+
+    def getUberCluster(self):
+        # To be implemented.
+        pass
 
     def compare(self, v1, v2, label, threshold = 1e-6):
         if abs(v1 - v2)/abs(v1 + v2) > threshold:
@@ -404,9 +475,9 @@ class MomentsClusterInfo:
         nDiff = 0
         nDiff += self.compare(self.RmsLong, cluster.getRmsLong(), 'RmsLong')
         nDiff += self.compare(self.RmsTrans, cluster.getRmsTrans(), 'RmsTrans')
-        nDiff += self.compare(self.LongAsym, cluster.getRmsLongAsym(),
+        nDiff += self.compare(self.RmsLongAsym, cluster.getRmsLongAsym(),
                               'LongAsym')
-        nDiff += self.compare(self.LongSkew, cluster.getSkewnessLong(),
+        nDiff += self.compare(self.SkewnessLong, cluster.getSkewnessLong(),
                               'LongSkewness')
         reconCentroid = vector2point(cluster.getParams().getCentroid())
         nDiff += self.compare(self.Centroid.x(), reconCentroid.x(), 'Centr. x')
@@ -421,16 +492,30 @@ class MomentsClusterInfo:
         else:
             print 'Done, no differences :-)'
 
+    def __str__(self):
+        text = ''
+        text += 'Centroid         = %s\n' % self.Centroid
+        text += 'Principal axis   = %s\n' % self.Axis
+        text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
+        text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
+        text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
+        text += 'Long skewness    = %.3e\n' % self.SkewnessLong
+        return text
+        
+
 
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
-    (opts, args) = parser.parse_args()
-    
+    (opts, args) = parser.parse_args()    
     reader = ReconReader(args[0])
-    for i in xrange(2):
-        reader.getEntry(i)
+    eventNumber = 0
+    answer = ''
+    while answer != 'q':
+        reader.getEntry(eventNumber)        
         calRecon = reader.getCalRecon()
         m = MomentsClusterInfo(calRecon)
-        print
+        print m
+        eventNumber += 1
+        answer = raw_input('\nType q to quit, enter to continue.')
 
