@@ -19,6 +19,9 @@
 #pragma link C++ class GemOverlayOnePpsTime+;
 #pragma link C++ class GemOverlayCondArrivalTime+;
 #pragma link C++ class GemOverlay+;
+#pragma link C++ class CalDiagDataOverlay+;
+#pragma link C++ class TkrDiagDataOverlay+;
+#pragma link C++ class DiagDataOverlay+;
 #pragma link C++ class PtOverlay+;
 
 #endif

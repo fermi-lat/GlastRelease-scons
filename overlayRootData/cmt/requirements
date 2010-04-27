@@ -16,6 +16,9 @@ apply_pattern root_package headers="\
  ../overlayRootData/GlastAxis.h\
  ../overlayRootData/PtOverlay.h\
  ../overlayRootData/GemOverlay.h\
+ ../overlayRootData/CalDiagDataOverlay.h\
+ ../overlayRootData/TkrDiagDataOverlay.h\
+ ../overlayRootData/DiagDataOverlay.h\
  ../overlayRootData/TkrOverlay.h"\
  includes="-I${COMMONROOTDATAROOT} -I${ENUMSROOT}"\
  libs="libcommonRootData"\

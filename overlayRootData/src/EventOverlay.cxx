@@ -50,7 +50,6 @@ void EventOverlay::initialize(UInt_t eventId, UInt_t runId, Double_t time,
 
 void EventOverlay::Clear(Option_t *option) 
 {
-    TObject::Clear(option);
     m_eventId = 0;
     m_runId = 0;
     m_timeStamp = 0.0;
@@ -63,6 +62,7 @@ void EventOverlay::Clear(Option_t *option)
     m_calOverlayCol->Clear();
     m_tkrOverlayCol->Clear();
     m_gemOverlay.Clear();
+    m_diagDataOverlay.Clear();
     m_ptOverlay.Clear();
 }
 

@@ -9,6 +9,7 @@
 #include "CalOverlay.h"
 #include "TkrOverlay.h"
 #include "GemOverlay.h"
+#include "DiagDataOverlay.h"
 #include "PtOverlay.h"
 
 /** @class EventOverlay
@@ -27,9 +28,11 @@ public:
     void initialize(UInt_t eventId, UInt_t runId, Double_t time, 
         Double_t liveTime, Bool_t fromMc);
 
-    void setGemOverlay(const GemOverlay& gem)  {m_gemOverlay = gem;}
+    void setGemOverlay(const GemOverlay& gem)                {m_gemOverlay = gem;}
 
-    void setPtOverlay(const PtOverlay& pt)     {m_ptOverlay  = pt;}
+    void setDiagDataOverlay(const DiagDataOverlay& diagData) {m_diagDataOverlay = diagData;}
+
+    void setPtOverlay(const PtOverlay& pt)                   {m_ptOverlay  = pt;}
 
     void Clear(Option_t *option="");
  
@@ -38,37 +41,40 @@ public:
     /** @defgroup EventOverlayGroup EventOverlay End-User Interface */
     /*@{*/
     /// Access the EventOverlay event ID 
-    inline UInt_t     getEventId() const       { return m_eventId; };
+    inline UInt_t          getEventId() const         { return m_eventId; };
     /// Access the run number
-    inline UInt_t     getRunId() const         { return m_runId; };
+    inline UInt_t          getRunId() const           { return m_runId; };
 
     /// Valid for real or simulated data, in seconds since mission start 
-    inline Double_t   getTimeStamp() const     { return m_timeStamp; };
+    inline Double_t        getTimeStamp() const       { return m_timeStamp; };
 
     /// Currently valid only for simulated data
-    inline Double_t   getLiveTime() const      { return m_liveTime; };
+    inline Double_t        getLiveTime() const        { return m_liveTime; };
 
     /// Flag denoting if this event was generated from a Monte Carlo Simulation
-    inline Bool_t     getFromMc() const        { return m_fromMc; };
+    inline Bool_t          getFromMc() const          { return m_fromMc; };
 
     /// Returns a reference to the Gem
-    const GemOverlay& getGemOverlay() const    { return m_gemOverlay; };
+    const GemOverlay&      getGemOverlay() const      { return m_gemOverlay; };
+
+    /// Returns a reference to the Diagnostic data
+    const DiagDataOverlay& getDiagDataOverlay() const { return m_diagDataOverlay; };
 
     /// Returns a reference to the Pt values
-    const PtOverlay&  getPtOverlay() const     { return m_ptOverlay; };
+    const PtOverlay&       getPtOverlay() const       { return m_ptOverlay; };
 
     /// retrieve the whole TClonesArray of Acd Digi data
-    const TObjArray*  getAcdOverlayCol() const { return m_acdOverlayCol; };
+    const TObjArray*       getAcdOverlayCol() const   { return m_acdOverlayCol; };
     /// retrieve one AcdDigi object from the collection, using the index into the array
-    const AcdOverlay* getAcdOverlay(UInt_t i) const;
+    const AcdOverlay*      getAcdOverlay(UInt_t i) const;
     /// retrieve the whole CalDigi collection
-    const TObjArray*  getCalOverlayCol() const { return m_calOverlayCol;};
+    const TObjArray*       getCalOverlayCol() const   { return m_calOverlayCol;};
     /// retrieve one CalDigi object from the collection, using the index into the array
-    const CalOverlay* getCalOverlay(UInt_t i) const;
+    const CalOverlay*      getCalOverlay(UInt_t i) const;
     /// retrieve the whole TObjArray of TkrDigi Data
-    const TObjArray*  getTkrOverlayCol() const { return m_tkrOverlayCol; };
+    const TObjArray*       getTkrOverlayCol() const   { return m_tkrOverlayCol; };
     /// retrieve a TkrDigi from the collection, using the index into the array
-    const TkrOverlay* getTkrOverlay(UInt_t i) const;
+    const TkrOverlay*      getTkrOverlay(UInt_t i) const;
 
     /// clear the whole array (necessary because of the consts-s)
     void clearTkrOverlayCol() { m_tkrOverlayCol->Clear(); }
@@ -87,34 +93,37 @@ public:
 
 private:
     /// Time in seconds
-    Double_t   m_timeStamp;
+    Double_t        m_timeStamp;
 
     /// Run number
-    UInt_t     m_runId;  
+    UInt_t          m_runId;  
     /// Event Number 
-    UInt_t     m_eventId;  
+    UInt_t          m_eventId;  
     
     /// Denote whether or not this data was simulated
-    Bool_t     m_fromMc;
+    Bool_t          m_fromMc;
 
     /// livetime
-    Double_t   m_liveTime;
+    Double_t        m_liveTime;
 
     /// data members to store ACD data
-    TObjArray* m_acdOverlayCol;  
+    TObjArray*      m_acdOverlayCol;  
 
     /// data members to store CAL data
     // Avoid re-use of m_calDigiCol name that used to be a TObjArray*
-    TObjArray* m_calOverlayCol; 
+    TObjArray*      m_calOverlayCol; 
 
     /// data members to store TKR data
-    TObjArray* m_tkrOverlayCol; //-> List of Tracker layers
+    TObjArray*      m_tkrOverlayCol; //-> List of Tracker layers
 
     /// Storage for gem information
-    GemOverlay m_gemOverlay;
+    GemOverlay      m_gemOverlay;
+
+    /// Storage for the diagnostic data
+    DiagDataOverlay m_diagDataOverlay;
 
     /// Storage for the Pt values
-    PtOverlay  m_ptOverlay;
+    PtOverlay       m_ptOverlay;
 
     ClassDef(EventOverlay,3) // Storage for Raw(Digi) event and subsystem data
 }; 
