@@ -393,7 +393,7 @@ class CalMomentsAnalysis:
                                               dtype = 'd')
             self.PrincipalAxis = numpy.matrix([[self.Axis[1].X()],
                                                [self.Axis[1].Y()],
-                                               [self.Axis[2].Z()]],
+                                               [self.Axis[1].Z()]],
                                               dtype = 'd') 
             self.IterationList.append(CalMomentsAnalysisIteration(self,
                                                                   dataVec))
