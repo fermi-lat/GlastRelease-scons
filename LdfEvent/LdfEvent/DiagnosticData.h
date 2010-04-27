@@ -40,7 +40,8 @@ namespace LdfEvent {
         unsigned dataWord() const { return m_datum; };
         unsigned tower() const { return m_tower; };
         unsigned layer() const { return m_layer; };
-
+        // for overlays
+        void setDataWord( unsigned int datum) { m_datum = datum; };
     private:
         unsigned m_datum;
         unsigned m_tower;
@@ -89,7 +90,10 @@ namespace LdfEvent {
         void setTkrDataWordByIndex( unsigned int ind, unsigned int datum) {
             m_tkr[ind].setDataWord( datum );
         }
-    private:
+        void setCalDataWordByIndex( unsigned int ind, unsigned int datum) {
+            m_cal[ind].setDataWord( datum );
+        }
+private:
         std::vector<CalDiagnosticData> m_cal;
         std::vector<TkrDiagnosticData> m_tkr;
     };
