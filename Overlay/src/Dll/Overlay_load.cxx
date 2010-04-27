@@ -14,6 +14,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_ALGORITHM( CalOverlayMergeAlg );
     DECLARE_ALGORITHM( TkrOverlayMergeAlg );
     DECLARE_ALGORITHM( GemOverlayMergeAlg );
+    DECLARE_ALGORITHM( DiagDataOverlayMergeAlg );
     DECLARE_ALGORITHM( DigiToOverlayAlg );
     DECLARE_ALGORITHM( SkimOverlayEventsAlg );
     DECLARE_SERVICE( OverlayInputSvc );
@@ -24,6 +25,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_TOOL( TkrDigiToOverlayTool );
     DECLARE_TOOL( AcdHitToOverlayTool );
     DECLARE_TOOL( GemToOverlayTool );
+    DECLARE_TOOL( DiagnosticDataToOverlayTool );
     DECLARE_TOOL( PtToOverlayTool );
     DECLARE_TOOL( OverlayRandom);
     DECLARE_CONVERTER( SrcOverlayCnv );
@@ -32,6 +34,7 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_CONVERTER( CalOverlayCnv );
     DECLARE_CONVERTER( AcdOverlayCnv );
     DECLARE_CONVERTER( GemOverlayCnv );
+    DECLARE_CONVERTER( DiagDataOverlayCnv );
     DECLARE_CONVERTER( PtOverlayCnv );
 //    DECLARE_CONVERTER( LdfGemCnv );
 }

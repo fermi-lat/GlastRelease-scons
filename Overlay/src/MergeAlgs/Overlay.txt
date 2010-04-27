@@ -19,6 +19,7 @@ Digitization.Members = {
     "CalOverlayMergeAlg",
     "TriggerInfoAlg",
     "GemOverlayMergeAlg",
+    "DiagDataOverlayMergeAlg",
     "TkrOverlayMergeAlg",
     "TkrDigiMergeTruncationAlg"
     };

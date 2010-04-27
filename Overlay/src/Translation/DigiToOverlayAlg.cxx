@@ -55,6 +55,7 @@ DigiToOverlayAlg::DigiToOverlayAlg(const std::string& name,
     defaultToolNames.push_back("CalXtalToOverlayTool");
     defaultToolNames.push_back("AcdHitToOverlayTool");
     defaultToolNames.push_back("GemToOverlayTool");
+    defaultToolNames.push_back("DiagnosticDataToOverlayTool");
     defaultToolNames.push_back("PtToOverlayTool");
 
     // Property list def
