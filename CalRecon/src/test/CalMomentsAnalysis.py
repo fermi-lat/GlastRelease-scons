@@ -15,6 +15,7 @@ import os
 import sys
 import ROOT
 import copy
+import numpy
 
 from math import acos, sqrt, cos, pi, fabs
 
@@ -151,15 +152,21 @@ class CalMomentsData:
 class CalMomentsAnalysisIteration:
 
     def __init__(self, momentsAnalysis, dataVec):
-        self.Centroid = copy.copy(momentsAnalysis.Centroid)
-        self.Moment = copy.copy(momentsAnalysis.Moment)
-        self.RmsLong = copy.copy(momentsAnalysis.RmsLong)
-        self.RmsTrans = copy.copy(momentsAnalysis.RmsTrans)
-        self.RmsLongAsym = copy.copy(momentsAnalysis.RmsLongAsym)
-        self.SkewnessLong = copy.copy(momentsAnalysis.SkewnessLong)
-        self.NumIterations = copy.copy(momentsAnalysis.NumIterations)
-        self.Axis = copy.copy(momentsAnalysis.Axis)
-        self.WeightSum = copy.copy(momentsAnalysis.WeightSum)
+        self.Centroid = copy.deepcopy(momentsAnalysis.Centroid)
+        self.Centroid = vector2point(self.Centroid)
+        self.Moment = copy.deepcopy(momentsAnalysis.Moment)
+        self.RmsLong = copy.deepcopy(momentsAnalysis.RmsLong)
+        self.RmsTrans = copy.deepcopy(momentsAnalysis.RmsTrans)
+        self.RmsLongAsym = copy.deepcopy(momentsAnalysis.RmsLongAsym)
+        self.SkewnessLong = copy.deepcopy(momentsAnalysis.SkewnessLong)
+        self.NumIterations = copy.deepcopy(momentsAnalysis.NumIterations)
+        self.Axis = copy.deepcopy(momentsAnalysis.Axis)
+        for (i, axis) in enumerate(self.Axis):
+            self.Axis[i] = vector2point(axis)
+        self.WeightSum = copy.deepcopy(momentsAnalysis.WeightSum)
+        self.InertiaTensor = copy.deepcopy(momentsAnalysis.InertiaTensor)
+        self.PrincipalAxis = copy.deepcopy(momentsAnalysis.PrincipalAxis)
+        # Construct the longitudinal profile.
         self.LongProfile = ROOT.TGraph()
         self.LongProfile.SetMarkerStyle(22)
         for (i, dataPoint) in enumerate(dataVec):
@@ -171,10 +178,13 @@ class CalMomentsAnalysisIteration:
 
     def __str__(self):
         text = ''
-        text += 'Centroid = %s\n' % self.Centroid
-        text += 'Moments  = %s\n' % self.Moment
+        text += 'Centroid         = %s\n' % self.Centroid
+        text += '-----------------------------------------------------------\n'
+        text += 'Inertia tensor: \n%s\n' % self.InertiaTensor
+        text += '-----------------------------------------------------------\n'
+        text += 'Moments          = %s\n' % self.Moment
         for i in range(3):
-            text += 'Axis %d   = %s\n' % (i, self.Axis[i])
+            text += 'Axis %d           = %s\n' % (i, self.Axis[i])
         text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
         text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
         text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
@@ -198,6 +208,9 @@ class CalMomentsAnalysis:
                      Vector(0., 0., 1.),
                      Vector(0., 0., 0.)]        
         self.WeightSum = 0.0
+        # New variables, for debugging purposes.
+        self.InertiaTensor = None
+        self.PrincipalAxis = None
         self.IterationList = []
 
     def getNumIterations(self):
@@ -333,6 +346,15 @@ class CalMomentsAnalysis:
             self.RmsTrans =  fabs(self.Moment[1])
             self.RmsLongAsym = (longMag1 - longMag2)/(longMag1 + longMag2)
             self.SkewnessLong = skewness
+            # Fill additional variables for debugging purposes.
+            self.InertiaTensor = numpy.matrix([[Ixx, Ixy, Ixz],
+                                               [Ixy, Iyy, Iyz],
+                                               [Ixz, Iyz, Izz]],
+                                              dtype = 'd')
+            self.PrincipalAxis = numpy.matrix([[self.Axis[1].X()],
+                                               [self.Axis[1].Y()],
+                                               [self.Axis[2].Z()]],
+                                              dtype = 'd') 
             self.IterationList.append(CalMomentsAnalysisIteration(self,
                                                                   dataVec))
         else:
@@ -532,7 +554,9 @@ class MomentsClusterInfo:
         nDiff += self.compare(self.Axis.y(), reconAxis.y(), 'Axis ydir')
         nDiff += self.compare(self.Axis.z(), reconAxis.z(), 'Axis zdir')
         if nDiff:
-            print '** Done, %d difference(s) found.' % nDiff
+            print 'Done, %d difference(s) found.' % nDiff
+            print 'WARNING! Press enter to proceed.'
+            raw_input()
         else:
             print 'Done, no differences :-)'
 
@@ -559,7 +583,10 @@ if __name__ == '__main__':
         reader.getEntry(eventNumber)        
         calRecon = reader.getCalRecon()
         m = MomentsClusterInfo(calRecon)
-        print 'Final parameters after %d iteration(s):\n%s' %\
+        for (i, iteration) in enumerate(m.MomentsAnalysis.IterationList):
+            print '\n** Iteration %d:\n%s' % (i, iteration)
+        print 
+        print '*** Final parameters after %d iteration(s):\n%s' %\
               (m.MomentsAnalysis.getNumIterations(), m)
         eventNumber += 1
         answer = raw_input('\nType q to quit, enter to continue.')
