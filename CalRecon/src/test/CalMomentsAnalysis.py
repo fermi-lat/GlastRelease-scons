@@ -14,6 +14,7 @@
 import os
 import sys
 import ROOT
+import copy
 
 from math import acos, sqrt, cos, pi, fabs
 
@@ -143,6 +144,44 @@ class CalMomentsData:
             return -1
 
 
+# Convenience class to store the information about the single iterations
+# of the moments analysis without changing the too much the code in
+# the CalMomentsAnalysis class.
+
+class CalMomentsAnalysisIteration:
+
+    def __init__(self, momentsAnalysis, dataVec):
+        self.Centroid = copy.copy(momentsAnalysis.Centroid)
+        self.Moment = copy.copy(momentsAnalysis.Moment)
+        self.RmsLong = copy.copy(momentsAnalysis.RmsLong)
+        self.RmsTrans = copy.copy(momentsAnalysis.RmsTrans)
+        self.RmsLongAsym = copy.copy(momentsAnalysis.RmsLongAsym)
+        self.SkewnessLong = copy.copy(momentsAnalysis.SkewnessLong)
+        self.NumIterations = copy.copy(momentsAnalysis.NumIterations)
+        self.Axis = copy.copy(momentsAnalysis.Axis)
+        self.WeightSum = copy.copy(momentsAnalysis.WeightSum)
+        self.LongProfile = ROOT.TGraph()
+        self.LongProfile.SetMarkerStyle(22)
+        for (i, dataPoint) in enumerate(dataVec):
+            self.LongProfile.SetPoint(i, dataPoint.CoordAlongAxis,
+                                      dataPoint.getWeight())
+
+    def draw(self):
+        pass
+
+    def __str__(self):
+        text = ''
+        text += 'Centroid = %s\n' % self.Centroid
+        text += 'Moments  = %s\n' % self.Moment
+        for i in range(3):
+            text += 'Axis %d   = %s\n' % (i, self.Axis[i])
+        text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
+        text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
+        text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
+        text += 'Long skewness    = %.3e' % self.SkewnessLong
+        return text
+
+    
 
 class CalMomentsAnalysis:
 
@@ -153,12 +192,16 @@ class CalMomentsAnalysis:
         self.RmsTrans = 0.
         self.RmsLongAsym = 0.
         self.SkewnessLong = 0.0
-        self.NumIterations= 0
+        self.NumIterations = 0
         self.NumDroppedPoints = 0
         self.Axis = [Vector(0., 0., 0.),
                      Vector(0., 0., 1.),
                      Vector(0., 0., 0.)]        
         self.WeightSum = 0.0
+        self.IterationList = []
+
+    def getNumIterations(self):
+        return len(self.IterationList)
 
     def getMomentsCentroid(self):
         return self.Centroid
@@ -290,6 +333,8 @@ class CalMomentsAnalysis:
             self.RmsTrans =  fabs(self.Moment[1])
             self.RmsLongAsym = (longMag1 - longMag2)/(longMag1 + longMag2)
             self.SkewnessLong = skewness
+            self.IterationList.append(CalMomentsAnalysisIteration(self,
+                                                                  dataVec))
         else:
             chiSquare = -1.
         print 'Done, returning chi square = %.3f.' % chiSquare
@@ -342,7 +387,6 @@ class CalMomentsAnalysis:
             # Finally, make sure have enough points remaining to proceed!
             if (len(dataVec) < 3):
                 break
-            print self
         return chiSq
 
     def __str__(self):
@@ -354,7 +398,7 @@ class CalMomentsAnalysis:
         text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
         text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
         text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
-        text += 'Long skewness    = %.3e\n' % self.SkewnessLong
+        text += 'Long skewness    = %.3e' % self.SkewnessLong
         return text
 
 
@@ -365,9 +409,9 @@ class MomentsClusterInfo:
         self.CalRecon = calRecon
         iniCentroid = self.getInitialCentroid()
         dataVec = self.getCalMomentsDataVec(iniCentroid)
-        momentsAnalysis = CalMomentsAnalysis()
-        chiSq = momentsAnalysis.doIterativeMomentsAnalysis(dataVec,
-                                                           iniCentroid)
+        self.MomentsAnalysis = CalMomentsAnalysis()
+        chiSq = self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
+                                                                iniCentroid)
         self.Centroid = None
         self.Axis = None
         self.RmsLong = 0.
@@ -376,22 +420,22 @@ class MomentsClusterInfo:
         self.SkewnessLong = -9999.
         if chiSq >= 0.:
             # Get info on iterations
-            nIterations = momentsAnalysis.getNumIterations()
-            nDropped = momentsAnalysis.getNumDroppedPoints()
+            nIterations = self.MomentsAnalysis.getNumIterations()
+            nDropped = self.MomentsAnalysis.getNumDroppedPoints()
             # Get the iterative moments centroid and axis from iterations
-            self.Centroid = momentsAnalysis.getMomentsCentroid()
-            self.Axis = momentsAnalysis.getMomentsAxis()
+            self.Centroid = self.MomentsAnalysis.getMomentsCentroid()
+            self.Axis = self.MomentsAnalysis.getMomentsAxis()
             # Recalculate the moments going back to using all the data points
             # but with the iterated moments centroid
             if nIterations > 1:
                 dataVec = self.getCalMomentsDataVec(iniCentroid)
-                chiSq = momentsAnalysis.doMomentsAnalysis(dataVec,
+                chiSq = self.MomentsAnalysis.doMomentsAnalysis(dataVec,
                                                           self.Centroid)
             # Extract the values for the moments with all hits present
-            self.RmsLong = momentsAnalysis.getLongitudinalRms()
-            self.RmsTrans = momentsAnalysis.getTransverseRms()
-            self.RmsLongAsym = momentsAnalysis.getLongAsymmetry()
-            self.SkewnessLong = momentsAnalysis.getLongSkewness()
+            self.RmsLong = self.MomentsAnalysis.getLongitudinalRms()
+            self.RmsTrans = self.MomentsAnalysis.getTransverseRms()
+            self.RmsLongAsym = self.MomentsAnalysis.getLongAsymmetry()
+            self.SkewnessLong = self.MomentsAnalysis.getLongSkewness()
         self.checkMomentsAnalysis()
 
     def getInitialCentroid(self):
@@ -499,7 +543,7 @@ class MomentsClusterInfo:
         text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
         text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
         text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
-        text += 'Long skewness    = %.3e\n' % self.SkewnessLong
+        text += 'Long skewness    = %.3e' % self.SkewnessLong
         return text
         
 
@@ -515,7 +559,8 @@ if __name__ == '__main__':
         reader.getEntry(eventNumber)        
         calRecon = reader.getCalRecon()
         m = MomentsClusterInfo(calRecon)
-        print m
+        print 'Final parameters after %d iteration(s):\n%s' %\
+              (m.MomentsAnalysis.getNumIterations(), m)
         eventNumber += 1
         answer = raw_input('\nType q to quit, enter to continue.')
 
