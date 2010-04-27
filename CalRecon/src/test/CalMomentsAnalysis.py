@@ -24,7 +24,9 @@ M_PI = pi
 CAL_TOWER_PITCH = 374.5
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
-
+MERIT_VARS = ['McEnergy', 'CalEnergyRaw', 'McXDir', 'McYDir', 'McZDir',
+              'CalCsIRLn', 'CalLATRLn', 'TkrNumTracks']
+MIN_NUM_XTALS = 3
 
 print 'Loading necessary libraries...'
 LIB_DIRS = []
@@ -46,7 +48,8 @@ print 'Done.'
 
 class ReconReader:
     
-    def __init__(self, reconFilePath, meritFilePath = None):
+    def __init__(self, reconFilePath, meritFilePath = None,
+                 cut = ''):
         if not os.path.exists(reconFilePath):
             sys.exit('Could not find %s. Abort.' % reconFilePath)
         print 'Creating the recon chain...'
@@ -56,10 +59,47 @@ class ReconReader:
         self.ReconChain.SetBranchAddress('ReconEvent',\
                                          ROOT.AddressOf(self.ReconEvent))
         print 'Done. %d entries found.' % self.ReconChain.GetEntries()
+        print 'Creating the merit chain...'
+        self.MeritArrayDict = {}
+        if meritFilePath is None:
+            meritFilePath = reconFilePath.replace('recon', 'merit')
+            print 'No path specified, trying %s...' % meritFilePath
+        if not os.path.exists(meritFilePath):
+            print 'Could not find the merit, will ignore it.'
+            self.MeritChain = None
+        else:
+            self.MeritChain = ROOT.TChain('MeritTuple')
+            self.MeritChain.Add(meritFilePath)
+            for branchName in MERIT_VARS:
+                a = numpy.array([0.0], dtype = 'f')
+                self.MeritChain.SetBranchAddress(branchName, a)
+                self.MeritArrayDict[branchName] = a
+            self.MeritTreeFormula = ROOT.TTreeFormula('cut', cut,
+                                                      self.MeritChain)
+            print 'Done. %d entries found.' % self.MeritChain.GetEntries()
+
+    def getMeritVariable(self, branchName):
+        try:
+            return self.MeritArrayDict[branchName][0]
+        except KeyError:
+            return 'N/A'
+
+    def getEventInfo(self):
+        if self.MeritChain is None:
+            info = 'Event info not available.'
+        else:
+            info = 'Event info:\n'
+            for var in MERIT_VARS:
+                info += '    %s = %s\n' % (var, self.getMeritVariable(var))
+        return info
 
     def getEntry(self, i):
         print 'ReconReader retriving event %d...' % i
         self.ReconChain.GetEvent(i)
+        if self.MeritChain is not None:
+            self.MeritChain.GetEntry(i)
+            return self.MeritTreeFormula.EvalInstance()
+        return 1
 
     def getCalRecon(self):
         return self.ReconEvent.getCalRecon()
@@ -173,8 +213,8 @@ class CalMomentsAnalysisIteration:
             self.LongProfile.SetPoint(i, dataPoint.CoordAlongAxis,
                                       dataPoint.getWeight())
 
-    def draw(self):
-        pass
+    def draw(self, options = 'ap'):
+        self.LongProfile.Draw(options)
 
     def __str__(self):
         text = ''
@@ -429,8 +469,13 @@ class MomentsClusterInfo:
 
     def __init__(self, calRecon):
         self.CalRecon = calRecon
+        self.isEmpty = False
         iniCentroid = self.getInitialCentroid()
         dataVec = self.getCalMomentsDataVec(iniCentroid)
+        if len(dataVec) < MIN_NUM_XTALS:
+            print 'Not enough xtals found (%d).' % len(dataVec)
+            self.isEmpty = True
+            return
         self.MomentsAnalysis = CalMomentsAnalysis()
         chiSq = self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
                                                                 iniCentroid)
@@ -473,6 +518,7 @@ class MomentsClusterInfo:
         return centroid
 
     def getCalMomentsDataVec(self, centroid, preprocess = True):
+        dataVec = []
         # This is a shortcut avoiding the initial pruning that Tracy does in
         # order to remove the outlers before the moments analysis.
         if not preprocess:
@@ -483,7 +529,6 @@ class MomentsClusterInfo:
         # Set the initial axis pointing up.
         axis = Point(0, 0, 1)
         # Go on with Tracy's code.
-        dataVec = []
         rmsDist   = 0.
         weightSum = 0.
         for xtalData in self.CalRecon.getCalXtalRecCol():
@@ -494,6 +539,8 @@ class MomentsClusterInfo:
             rmsDist   += momentsData.getWeight() * distToAxis * distToAxis
             weightSum += momentsData.getWeight()
             dataVec.append(momentsData)
+        if len(dataVec) < MIN_NUM_XTALS:
+            return dataVec
         # Get the quick rms of crystals about fit axis
         rmsDist = sqrt(rmsDist / weightSum);
         # Use this to try to remove "isolated" crystals that might otherwise
@@ -530,10 +577,13 @@ class MomentsClusterInfo:
         pass
 
     def compare(self, v1, v2, label, threshold = 1e-6):
-        if abs(v1 - v2)/abs(v1 + v2) > threshold:
-            print 'Difference in %s: [%s vs. %s]' % (label, v1, v2)
-            return 1
-        return 0
+        try:
+            if abs(v1 - v2)/abs(v1 + v2) > threshold:
+                print 'Difference in %s: [%s vs. %s]' % (label, v1, v2)
+                return 1
+            return 0
+        except ZeroDivisionError:
+            return 0
 
     def checkMomentsAnalysis(self):
         print 'Cross-checking moments analysis against the original values...'
@@ -575,19 +625,28 @@ class MomentsClusterInfo:
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
-    (opts, args) = parser.parse_args()    
-    reader = ReconReader(args[0])
+    (opts, args) = parser.parse_args()
+    baseCut = 'CalEnergyRaw > 5 && CalCsIRLn > 4 && CalEnergyRaw > 1000'
+    reader = ReconReader(args[0], None, baseCut)
     eventNumber = 0
     answer = ''
     while answer != 'q':
-        reader.getEntry(eventNumber)        
-        calRecon = reader.getCalRecon()
-        m = MomentsClusterInfo(calRecon)
-        for (i, iteration) in enumerate(m.MomentsAnalysis.IterationList):
-            print '\n** Iteration %d:\n%s' % (i, iteration)
-        print 
-        print '*** Final parameters after %d iteration(s):\n%s' %\
-              (m.MomentsAnalysis.getNumIterations(), m)
+        if reader.getEntry(eventNumber):        
+            calRecon = reader.getCalRecon()
+            m = MomentsClusterInfo(calRecon)
+            if not m.isEmpty:
+                for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
+                    print '\n** Iteration %d:\n%s' % (i, iter)
+                print 
+                print '*** Final parameters after %d iteration(s):\n%s' %\
+                      (m.MomentsAnalysis.getNumIterations(), m)
+                print '\n%s' % reader.getEventInfo()
+                c = ROOT.TCanvas()
+                c.Divide(2, 2)
+                for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
+                    c.cd(i + 1); iter.draw()
+                c.Update()
+            answer = raw_input('\nType q to quit, enter to continue.')
         eventNumber += 1
-        answer = raw_input('\nType q to quit, enter to continue.')
+        
 
