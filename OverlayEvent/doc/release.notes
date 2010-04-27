@@ -5,6 +5,7 @@ $Id$
 @verbatim
 * EOH *
 
+27-Apr-10          v0r3p0  TU Add Diagnostic Data to the Overlay
 15-Sep-09          v0r2p2  TU Fix linux compiler warnings
 18-Mar-09          v0r2p1  TU Correct bit definitions in AcdOverlay
 St Patty's Day '09 v0r2p0  TU Changed bit definitions for AcdOverlay
