@@ -100,10 +100,10 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
     if ( sc.isFailure() ) return sc;
     if ( newHit != 0 ) {
       hits.push_back(newHit);
+      hitMap[aDigi->getId()] = newHit;
     }
 
-    hitMap[aDigi->getId()] = newHit;
-
+ 
   } 
   return StatusCode::SUCCESS ;
 }
