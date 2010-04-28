@@ -26,9 +26,9 @@ M_PI = pi
 CAL_TOWER_PITCH = 374.5
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
-MERIT_VARS = ['McEnergy', 'CalEnergyRaw', 'CTBBestEnergy',
-              'McXDir', 'McYDir', 'McZDir',
-              'CalCsIRLn', 'CalLATRLn', 'TkrNumTracks']
+MERIT_VARS = ['McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
+              'McXDir', 'McYDir', 'McZDir', 'CalCsIRLn', 'CalLATRLn',
+              'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
 print 'Loading necessary libraries...'
@@ -60,6 +60,8 @@ def GGamma(a, b, t1, t2):
     return (Gamma(a)/(b**a))*(gamma(a, b*t2) - gamma(a, b*t1))
 
 def getExpectedLongParameters(energy, tmin, tmax, c = -0.5):
+    if energy <= 0 or tmax <= tmin:
+        return (-1, -1, -1)
     b     = 0.5
     a     = b*(log(energy/CSI_CRITICAL_ENERGY) + c)
     mean = GGamma(a+2, b, tmin, tmax)/GGamma(a+1, b, tmin, tmax)
@@ -691,10 +693,23 @@ class MomentsClusterInfo:
 
 if __name__ == '__main__':
     from optparse import OptionParser
+    usage = 'CalMomentsAnalysis.py reconFile <meritFile>'
     parser = OptionParser()
+    parser.add_option('-c', '--skim-cut', type = str, dest = 'c',
+                  default = '1', help = 'a cut to filter the events')
     (opts, args) = parser.parse_args()
-    baseCut = 'CalEnergyRaw > 5 && CalCsIRLn > 4 && CalEnergyRaw > 1000'
-    reader = ReconReader(args[0], None, baseCut)
+    if len(args) == 0:
+        print 'Usage: %s' % usage
+        sys.exit('Please provide a recon input root file.')
+    elif len(args) > 2:
+        print 'Usage: %s' % usage
+        sys.exit('Too many arguments.')
+    reconFilePath = args[0]
+    try:
+        meritFilePath = args[1]
+    except IndexError:
+        meritFilePath = None
+    reader = ReconReader(reconFilePath, meritFilePath, opts.c)
     eventNumber = 0
     answer = ''
     while answer != 'q':
