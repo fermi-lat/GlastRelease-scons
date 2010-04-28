@@ -284,6 +284,33 @@ and:
 \left[t_2^{(\alpha + 3)} e^{-bt_2} - t_1^{(\alpha + 3)} e^{-bt_1}\right]
 \end{equation}
 
+Some more formula that might turn out to be useful for the normalization
+of the skewness to the expected value for electronmagnetic showers.
+The moments of the longitudinal distribution can be written as a function
+of the incomplete gamma function, defined as:
+\begin{equation}
+\gamma(\alpha, t) = \frac{1}{\Gamma(\alpha)}
+\int_{0}^{t} t^{\alpha - 1} e^{-t} {\rm d}t
+\end{equation}
+from which it follows that:
+\begin{equation}
+\int_{t_1}^{t_2} t^{\alpha} e^{-bt} {\rm d}t =
+\frac{\Gamma(\alpha+1)}{b^{\alpha+1}}
+\left( \gamma(\alpha+1, bt_2) - \gamma(\alpha+1, bt_1) \right)
+\end{equation}
+If we define:
+$$
+{\mathcal G}(\alpha, b, t_1, t_2) = \frac{\Gamma(\alpha)}{b^{\alpha}}
+\left( \gamma(\alpha, bt_2) - \gamma(\alpha, bt_1) \right)
+$$
+we have:
+\begin{align}
+\left< t^n \right> =
+\frac{{\mathcal G}(\alpha + n + 1, b, t_1, t_2)}
+     {{\mathcal G}(\alpha + 1, b, t_1, t_2)}
+\end{align}
+
+
 
 \clearpage
 \appendix
