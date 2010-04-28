@@ -17,14 +17,17 @@ import ROOT
 import copy
 import numpy
 
-from math import acos, sqrt, cos, pi, fabs
+from math import acos, sqrt, cos, pi, fabs, log
 
+
+ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 
 M_PI = pi
 CAL_TOWER_PITCH = 374.5
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
-MERIT_VARS = ['McEnergy', 'CalEnergyRaw', 'McXDir', 'McYDir', 'McZDir',
+MERIT_VARS = ['McEnergy', 'CalEnergyRaw', 'CTBBestEnergy',
+              'McXDir', 'McYDir', 'McZDir',
               'CalCsIRLn', 'CalLATRLn', 'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
@@ -45,6 +48,28 @@ for libName in LIBRARIES:
 print 'Done.'
 
 
+CSI_CRITICAL_ENERGY = 11.17
+
+def Gamma(a):
+    return ROOT.TMath.Gamma(a)
+
+def gamma(a, x):
+    return ROOT.TMath.Gamma(a, x)
+
+def GGamma(a, b, t1, t2):
+    return (Gamma(a)/(b**a))*(gamma(a, b*t2) - gamma(a, b*t1))
+
+def getExpectedLongParameters(energy, tmin, tmax, c = -0.5):
+    b     = 0.5
+    a     = b*(log(energy/CSI_CRITICAL_ENERGY) + c)
+    mean = GGamma(a+2, b, tmin, tmax)/GGamma(a+1, b, tmin, tmax)
+    sigma2 = GGamma(a+3, b, tmin, tmax)/GGamma(a+1, b, tmin, tmax) -\
+             mean**2
+    skewness = (GGamma(a+4, b, tmin, tmax)/GGamma(a+1, b, tmin, tmax) -\
+                3*mean*sigma2 - mean**3)/(sigma2**1.5)
+    # Change sign to the skewness, as the axis points up!
+    return (mean, sigma2, -skewness)
+
 
 class ReconReader:
     
@@ -61,6 +86,7 @@ class ReconReader:
         print 'Done. %d entries found.' % self.ReconChain.GetEntries()
         print 'Creating the merit chain...'
         self.MeritArrayDict = {}
+        self.ExpectedSkewness = None
         if meritFilePath is None:
             meritFilePath = reconFilePath.replace('recon', 'merit')
             print 'No path specified, trying %s...' % meritFilePath
@@ -98,6 +124,13 @@ class ReconReader:
         self.ReconChain.GetEvent(i)
         if self.MeritChain is not None:
             self.MeritChain.GetEntry(i)
+            energy = self.getMeritVariable('CTBBestEnergy')
+            tmax = self.getMeritVariable('CalLATRLn')
+            tmin = tmax - self.getMeritVariable('CalCsIRLn')
+            print energy, tmin, tmax
+            (mean, sigma2, skewness) =\
+                   getExpectedLongParameters(energy, tmin, tmax)
+            self.ExpectedSkewness = skewness
             return self.MeritTreeFormula.EvalInstance()
         return 1
 
@@ -192,13 +225,19 @@ class CalMomentsData:
 class CalMomentsAnalysisIteration:
 
     def __init__(self, momentsAnalysis, dataVec):
+        self.IterationNumber = copy.deepcopy(momentsAnalysis.NumIterations)
+        self.NumXtals = len(dataVec)
         self.Centroid = copy.deepcopy(momentsAnalysis.Centroid)
         self.Centroid = vector2point(self.Centroid)
         self.Moment = copy.deepcopy(momentsAnalysis.Moment)
         self.RmsLong = copy.deepcopy(momentsAnalysis.RmsLong)
         self.RmsTrans = copy.deepcopy(momentsAnalysis.RmsTrans)
         self.RmsLongAsym = copy.deepcopy(momentsAnalysis.RmsLongAsym)
+        self.WeightSum = copy.deepcopy(momentsAnalysis.WeightSum)
         self.SkewnessLong = copy.deepcopy(momentsAnalysis.SkewnessLong)
+        # Normalize the skewness.
+        sigma = sqrt(self.RmsLong/self.WeightSum)
+        self.SkewnessLong = self.SkewnessLong/((sigma**3)*self.WeightSum)
         self.NumIterations = copy.deepcopy(momentsAnalysis.NumIterations)
         self.Axis = copy.deepcopy(momentsAnalysis.Axis)
         for (i, axis) in enumerate(self.Axis):
@@ -208,16 +247,31 @@ class CalMomentsAnalysisIteration:
         self.PrincipalAxis = copy.deepcopy(momentsAnalysis.PrincipalAxis)
         # Construct the longitudinal profile.
         self.LongProfile = ROOT.TGraph()
-        self.LongProfile.SetMarkerStyle(22)
+        self.LongProfile.SetMarkerStyle(24)
+        self.LongProfile.SetMarkerSize(0.8)
         for (i, dataPoint) in enumerate(dataVec):
             self.LongProfile.SetPoint(i, dataPoint.CoordAlongAxis,
                                       dataPoint.getWeight())
 
-    def draw(self, options = 'ap'):
-        self.LongProfile.Draw(options)
+    def draw(self, expSkewness = None):
+        self.LongProfile.Draw('ap')
+        self.LongProfile.GetXaxis().SetTitle('Position along princ. axis (mm)')
+        self.LongProfile.GetYaxis().SetTitle('Energy (MeV)')
+        self.TextBox = ROOT.TPaveText(0.6, 0.75, 0.99, 0.99, 'NDC')
+        self.TextBox.SetTextAlign(12)
+        self.TextBox.AddText('Iteration %d (%d xtals)' % (self.IterationNumber,
+                                                          self.NumXtals))
+        self.TextBox.AddText('Skewness = %.3f' % self.SkewnessLong)
+        if expSkewness is not None:
+            normSkewness = self.SkewnessLong/expSkewness
+            self.TextBox.AddText('Exp. Skewness = %.3f' % expSkewness)
+            self.TextBox.AddText('Norm. skewness = %.3f' % normSkewness)
+        self.TextBox.Draw()
+        ROOT.gPad.Update()
 
     def __str__(self):
-        text = ''
+        text = '** Iteration %d (%d xtals) **\n' % (self.IterationNumber,
+                                                    self.NumXtals)
         text += 'Centroid         = %s\n' % self.Centroid
         text += '-----------------------------------------------------------\n'
         text += 'Inertia tensor: \n%s\n' % self.InertiaTensor
@@ -468,13 +522,14 @@ class CalMomentsAnalysis:
 class MomentsClusterInfo:
 
     def __init__(self, calRecon):
+        self.RootCanvas = None
         self.CalRecon = calRecon
-        self.isEmpty = False
+        self.NotEnoughXtals = False
         iniCentroid = self.getInitialCentroid()
         dataVec = self.getCalMomentsDataVec(iniCentroid)
         if len(dataVec) < MIN_NUM_XTALS:
             print 'Not enough xtals found (%d).' % len(dataVec)
-            self.isEmpty = True
+            self.NotEnoughXtals = True
             return
         self.MomentsAnalysis = CalMomentsAnalysis()
         chiSq = self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
@@ -610,6 +665,18 @@ class MomentsClusterInfo:
         else:
             print 'Done, no differences :-)'
 
+    def draw(self, expSkewness = None):
+        if self.RootCanvas is None:
+            self.RootCanvas = ROOT.TCanvas('cmoments', 'Moments analysis',
+                                           1100, 600)
+        self.RootCanvas.Clear()
+        self.RootCanvas.Divide(3, 2)
+        for (i, iteration) in enumerate(self.MomentsAnalysis.IterationList):
+            self.RootCanvas.cd(i + 1)
+            iteration.draw(expSkewness)
+        self.RootCanvas.cd()
+        self.RootCanvas.Update()
+
     def __str__(self):
         text = ''
         text += 'Centroid         = %s\n' % self.Centroid
@@ -634,18 +701,14 @@ if __name__ == '__main__':
         if reader.getEntry(eventNumber):        
             calRecon = reader.getCalRecon()
             m = MomentsClusterInfo(calRecon)
-            if not m.isEmpty:
-                for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
-                    print '\n** Iteration %d:\n%s' % (i, iter)
+            if not m.NotEnoughXtals:
+                for iter in m.MomentsAnalysis.IterationList:
+                    print '\n%s' % iter
                 print 
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
                 print '\n%s' % reader.getEventInfo()
-                c = ROOT.TCanvas()
-                c.Divide(2, 2)
-                for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
-                    c.cd(i + 1); iter.draw()
-                c.Update()
+                m.draw(reader.ExpectedSkewness)
             answer = raw_input('\nType q to quit, enter to continue.')
         eventNumber += 1
         

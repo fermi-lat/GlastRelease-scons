@@ -97,6 +97,22 @@ print '*** sigma = %.3f' % sigma
 print '*** gamma = %.3f' % gamma
 print
 
+def Gamma(a):
+    return ROOT.TMath.Gamma(a)
+
+def gamma(a, x):
+    return ROOT.TMath.Gamma(a, x)
+
+def GGamma(a, b, t1, t2):
+    return (Gamma(a)/(b**a))*(gamma(a, b*t2) - gamma(a, b*t1))
+
+
+
+print 'Using the incomplete gamma function...'
+print GGamma(a+2, b, T_MIN, T_MAX)/GGamma(a+1, b, T_MIN, T_MAX), expt1
+print GGamma(a+3, b, T_MIN, T_MAX)/GGamma(a+1, b, T_MIN, T_MAX), expt2
+print GGamma(a+4, b, T_MIN, T_MAX)/GGamma(a+1, b, T_MIN, T_MAX), expt3
+print 
 
 # Integrate to get the expectation value of t^n with arbitrary center and
 # order.
