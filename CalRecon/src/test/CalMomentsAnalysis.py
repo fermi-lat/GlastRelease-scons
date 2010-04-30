@@ -1,6 +1,7 @@
 
-# Author:
+# Author(s):
 # Luca Baldini (luca.baldini@pi.infn.it)
+# Johan Bregeon (johan.bregeon@pi.infn.it)
 #
 # Purpose:
 # This is essentially a python wrapper of the CAL moments analysy which
@@ -71,6 +72,12 @@ def getExpectedLongParameters(energy, tmin, tmax, c = -0.5):
                 3*mean*sigma2 - mean**3)/(sigma2**1.5)
     # Change sign to the skewness, as the axis points up!
     return (mean, sigma2, -skewness)
+
+
+M_IDENTITY_3_3 = numpy.identity(3)
+M_ZEROS_3_3    = numpy.zeros((3,3))
+M_ZEROS_9_3    = numpy.zeros((9,3))
+
 
 
 class ReconReader:
@@ -507,6 +514,127 @@ class CalMomentsAnalysis:
                 break
         return chiSq
 
+    def getCovarianceMatrix(self, dataVec):
+        (L0, L1, L2) = self.Moment
+        print 'Moments: %s' % self.Moment
+        print 'Inertia tensor:\n%s' % self.InertiaTensor
+        #print self.Moment
+	S = numpy.matrix([ [self.Axis[j][i] for i in range(3)] \
+                           for j in range(3) ], dtype = 'd')
+        #print self.InertiaTensor
+        #print S * self.InertiaTensor * S.I
+        #raw_input()
+	# Starting to define things
+        print 'S =\n%s' % S
+        S_p = numpy.matrix([ [ 0     ,  S[2,0], -S[1,0]],
+                             [-S[2,0],  0     ,  S[0,0]],
+                             [ S[1,0], -S[0,0],  0     ],
+                             [ 0     ,  S[2,1], -S[1,1]],
+                             [-S[2,1],  0     ,  S[0,1]],
+                             [ S[1,1], -S[0,1],  0     ],
+                             [ 0     ,  S[2,2], -S[1,2]],
+                             [-S[2,2],  0     ,  S[0,2]],
+                             [ S[1,2], -S[0,2],  0     ] ], dtype = 'd')
+        print 'Sp =\n%s' % S_p
+        D = numpy.matrix([ [1, 0, 0, 0, 0, 0, 0, 0, 0],\
+                           [0, 0, 0, 0, 1, 0, 0, 0, 0],\
+                           [0, 0, 0, 0, 0, 0, 0, 0, 1],\
+                           [0, 0, 0, 1, 0, 0, 0, 0, 0],\
+                           [0, 0, 1, 0, 0, 0, 0, 0, 0],\
+                           [0, 0, 0, 0, 0, 0, 0, 1, 0] ], dtype = 'd')
+        print 'D =\n%s' % D
+	# Defining Q
+	Q66High = numpy.c_[M_IDENTITY_3_3, M_ZEROS_3_3]
+	Q66Low  = numpy.c_[M_ZEROS_3_3   , S]
+	Q66     = numpy.c_['0', Q66High  , Q66Low]
+        print 'Q66 =\n%s' % Q66
+	Q       = Q66 * D
+        print 'Q =\n%s' % Q
+	# Defining G+
+        g1 = 0.5/(L2 - L1)
+        g2 = 0.5/(L0 - L2)
+        g3 = 0.5/(L1 - L0)
+	Gplus = numpy.matrix([ [1, 0 , 0 , 0 , 0, 0 , 0 , 0 , 0],
+                               [0, 0 , 0 , 0 , 1, 0 , 0 , 0 , 0],
+                               [0, 0 , 0 , 0 , 0, 0 , 0 , 0 , 1],
+                               [0, 0 , 0 , 0 , 0, g1, 0 , g1, 0],
+                               [0, 0 , g2, 0 , 0, 0 , g2, 0 , 0],
+                               [0, g3, 0 , g3, 0, 0 , 0 , 0 , 0] ],
+                             dtype = 'd')
+        print 'Gplus =\n%s' % Gplus
+	# Defining F^-1
+        #Finverse = Gplus * numpy.outer(S, S) * Q.transpose()
+        Finverse = Gplus * numpy.kron(S, S) * Q.transpose()
+
+	# Derive the error propagation matrix K
+        K_left = numpy.c_['0', numpy.c_['1', M_ZEROS_9_3, S_p], Q66High]
+        print 'Kleft =\n%s' % K_left
+	K = K_left * Finverse
+        print 'K =\n%s' % K
+        
+	## Define the covariance matrix of the errors on the inertia tensor
+        dIxx2 = 0.0  
+        dIyy2 = 0.0  
+        dIzz2 = 0.0
+        dIxy2 = 0.0  
+        dIxz2 = 0.0  
+        dIyz2 = 0.0
+        for dataPoint in dataVec:
+            weight = dataPoint.getWeight()
+            hit = vector2point(dataPoint.getPoint()) - self.Centroid
+            xprm = hit.x()
+            yprm = hit.y()
+            zprm = hit.z()
+	    # Need something smarter, here!
+	    dx = 8.0
+	    dy = 8.0
+	    dz = 8.0
+	    dw = 0.1*weight
+            dIxx2 += 4*weight**2*(yprm**2*dy**2+zprm**2*dz**2) +\
+                     dw**2*(yprm**2+zprm**2)**2
+            dIyy2 += 4*weight**2*(xprm**2*dx**2+zprm**2*dz**2) +\
+                     dw**2*(xprm**2+zprm**2)**2
+            dIzz2 += 4*weight**2*(xprm**2*dx**2+yprm**2*dy**2) +\
+                     dw**2*(xprm**2+yprm**2)**2
+            dIxy2 += weight**2*(yprm**2*dx**2+xprm**2*dy**2) +\
+                     dw**2*xprm**2*yprm**2
+            dIxz2 += weight**2*(zprm**2*dx**2+xprm**2*dz**2) +\
+                     dw**2*xprm**2*zprm**2
+            dIyz2 += weight**2*(yprm**2*dz**2+zprm**2*dy**2) +\
+                     dw**2*yprm**2*zprm**2
+            #print xprm, yprm, zprm, weight, dIxx2
+        #print sqrt(dIxx2), self.InertiaTensor[0, 0],\
+        #      sqrt(dIxx2)/self.InertiaTensor[0, 0]
+        #raw_input()
+	# Define the vector and get the square root of errors
+        # (that are squared)
+        vecdI = numpy.matrix([dIxx2, dIyy2, dIzz2,
+                              dIxy2, dIxz2, dIyz2], dtype = 'd')
+	vecdI = numpy.sqrt(vecdI)
+        print vecdI
+        kgka = K * vecdI.transpose()
+        print kgka
+        print kgka[1], kgka[4], kgka[7]
+        print Finverse * vecdI.transpose()
+	# Estimate the covariance matrix as the product of the dI vector
+	#covdI = vecdI.transpose() * vecdI
+        covdI = numpy.zeros((6, 6))
+        covdI[0, 0] = dIxx2
+        covdI[1, 1] = dIyy2
+        covdI[2, 2] = dIzz2
+        covdI[3, 3] = dIxy2
+        covdI[4, 4] = dIxz2
+        covdI[5, 5] = dIyz2
+        print covdI
+	# Thought to "normalize" it at some point with
+	# covdINorm = numpy.sqrt(covdI)
+	# Propagate errors, i.e.
+	# Calculate the covariance matrix of Eigen values and vectors
+	# Covariance matrix of:
+        # [de0x, de0y, de0z, de1x, de1y, de1z, de2x, de2y, de2z, dL0, dL1, dL2]
+	covariancematrix = K * covdI * K.transpose()
+        return covariancematrix
+
     def __str__(self):
         text = ''
         text += 'Centroid = %s\n' % self.Centroid
@@ -561,6 +689,12 @@ class MomentsClusterInfo:
             self.RmsLongAsym = self.MomentsAnalysis.getLongAsymmetry()
             self.SkewnessLong = self.MomentsAnalysis.getLongSkewness()
         self.checkMomentsAnalysis()
+        self.CovMatrix = self.MomentsAnalysis.getCovarianceMatrix(dataVec)
+        # Print something of the covariance matrix.
+        print 'dxdir = %f' % sqrt(self.CovMatrix[1,1])
+        print 'dydir = %f' % sqrt(self.CovMatrix[4,4])
+        print 'dzdir = %f' % sqrt(self.CovMatrix[7,7])
+        raw_input()
 
     def getInitialCentroid(self):
         # First estimation of the centroid.
