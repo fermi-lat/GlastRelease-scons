@@ -128,6 +128,88 @@ centroid. Finally the some well know Merit quantities are calculated:
 \end{align}
 where $L$ is the number of radiation lengths transversed.
 
+\subsection{Outline of the iterative moments analysis}
+
+Put here some details about the iteration scheme, as they are
+relevant for the calculation of the skewness (i.e. you get significantly
+different answers at different steps).
+
+
+
+\section{The (toy) problem in 2D}
+
+I thought the problem of the diagonalization of the inertia tensor in 2D
+could be useful for working out the error analysis, so here is a quick look at
+it. The basic definitions read as:
+\begin{align}
+  \itc{xx}  = \sum_{i=1}^n w_i y_i^2,\quad
+  \itc{yy}  = \sum_{i=1}^n w_i x_i^2,\quad
+  \itc{xy}  = -\sum_{i=1}^n w_ix_iy_i
+\end{align}
+and the secular equation is:
+\begin{equation}
+  \det(\itm - \lambda{\mathbbm 1}) =
+  \det\begin{pmatrix}
+  \itc{xx} - \lambda & \itc{xy}\\
+  \itc{xy} & \itc{yy} - \lambda
+  \end{pmatrix} = 0
+\end{equation}
+The eigenvalues are readily found:
+\begin{align}
+  \lambda_0 &= \frac{(\itc{xx} + \itc{yy}) +
+    \sqrt{(\itc{xx} - \itc{yy})^2 + 4\itc{xy}^2}}{2}\\
+  \lambda_1 &= \frac{(\itc{xx} + \itc{yy}) -
+    \sqrt{(\itc{xx} - \itc{yy})^2 + 4\itc{xy}^2}}{2}\\
+\end{align}
+
+At this point, assuming that $\lambda_1$ is the smallest eigenvalue, we're
+left with the problem of calculating the corresponding eigenvector
+$\mathbf{e}^1$, obeying the equation:
+$$
+\itm \mathbf{e}^1 = \lambda_1\mathbf{e}^1
+$$
+Being the problem bi-dimensional, the principal axis can be parametrized in
+terms of a single rotation angle $\phi$ (to be determined), i.e.:
+\begin{equation}
+  \begin{pmatrix}
+    e^1_x\\
+    e^1_y
+  \end{pmatrix} = 
+  \begin{pmatrix}
+    \sin \phi\\
+    \cos \phi
+  \end{pmatrix}
+\end{equation}
+By putting everything together, we get:
+$$
+\begin{pmatrix}
+  \itc{xx} & \itc{xy}\\
+  \itc{xy} & \itc{yy}
+\end{pmatrix} 
+\begin{pmatrix}
+  \sin \phi\\
+  \cos \phi
+\end{pmatrix} = \lambda_1
+\begin{pmatrix}
+  \sin \phi\\
+  \cos \phi
+\end{pmatrix}
+$$
+The first of the two equations in the system can be squared, yielding:
+$$
+\frac{(\itc{xx} - \itc{yy})}{\itc{xy}}\tan\phi = \tan^2\phi - 1 
+$$
+Eventually, through the trigonometric equation:
+$$
+\tan(2\phi) = \frac{2\tan\phi}{1 - \tan^2\phi}
+$$
+we get:
+\begin{equation}
+  \phi = \frac{1}{2}
+  \arctan \left( \frac{2\itc{xy}}{\itc{yy} - \itc{xx}} \right)
+\end{equation}
+
+
 
 \section{Shower development: basic formul\ae}
 
