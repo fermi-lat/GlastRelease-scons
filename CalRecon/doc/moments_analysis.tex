@@ -156,58 +156,259 @@ and the secular equation is:
 \end{equation}
 The eigenvalues are readily found:
 \begin{align}
-  \lambda_0 &= \frac{(\itc{xx} + \itc{yy}) +
+  \lambda_0 &= \frac{(\itc{xx} + \itc{yy}) -
     \sqrt{(\itc{xx} - \itc{yy})^2 + 4\itc{xy}^2}}{2}\\
-  \lambda_1 &= \frac{(\itc{xx} + \itc{yy}) -
+  \lambda_1 &= \frac{(\itc{xx} + \itc{yy}) +
     \sqrt{(\itc{xx} - \itc{yy})^2 + 4\itc{xy}^2}}{2}\\
 \end{align}
 
-At this point, assuming that $\lambda_1$ is the smallest eigenvalue, we're
+At this point, assuming that $\lambda_0$ is the smallest eigenvalue, we're
 left with the problem of calculating the corresponding eigenvector
-$\mathbf{e}^1$, obeying the equation:
+$\mathbf{e}^0$, obeying the equation:
 $$
-\itm \mathbf{e}^1 = \lambda_1\mathbf{e}^1
+\itm \mathbf{e}^0 = \lambda_0\mathbf{e}^0
 $$
-Being the problem bi-dimensional, the principal axis can be parametrized in
-terms of a single rotation angle $\phi$ (to be determined), i.e.:
+Being the problem bi-dimensional, the two eigenvectors can be parametrized in
+terms of a single rotation angle $\phi$ (to be determined), representing the
+angle of the principal axis with respect to the original reference frame i.e.:
 \begin{equation}
+  \begin{pmatrix}
+    e^0_x\\
+    e^0_y
+  \end{pmatrix} = 
+  \begin{pmatrix}
+    \cos\phi\\
+    \sin\phi
+  \end{pmatrix},\quad
   \begin{pmatrix}
     e^1_x\\
     e^1_y
   \end{pmatrix} = 
   \begin{pmatrix}
-    \sin \phi\\
-    \cos \phi
+    -\sin\phi\\
+    \cos\phi
   \end{pmatrix}
 \end{equation}
-By putting everything together, we get:
+By putting everything together, from the definition of the principal axis
+we get:
 $$
 \begin{pmatrix}
   \itc{xx} & \itc{xy}\\
   \itc{xy} & \itc{yy}
 \end{pmatrix} 
 \begin{pmatrix}
-  \sin \phi\\
-  \cos \phi
+  \cos\phi\\
+  \sin\phi
 \end{pmatrix} = \lambda_1
 \begin{pmatrix}
-  \sin \phi\\
-  \cos \phi
+  \cos\phi\\
+  \sin\phi
 \end{pmatrix}
 $$
 The first of the two equations in the system can be squared, yielding:
 $$
 \frac{(\itc{xx} - \itc{yy})}{\itc{xy}}\tan\phi = \tan^2\phi - 1 
 $$
-Eventually, through the trigonometric equation:
+and eventually, through the trigonometric equation
 $$
 \tan(2\phi) = \frac{2\tan\phi}{1 - \tan^2\phi}
 $$
 we get:
 \begin{equation}
-  \phi = \frac{1}{2}
+  \phi = -\frac{1}{2}
   \arctan \left( \frac{2\itc{xy}}{\itc{yy} - \itc{xx}} \right)
 \end{equation}
+The rotation matrix between the original system and the one defined by the
+principal axis has the (transpose of) the two eigenvectors as its rows:
+\begin{equation}
+  R =
+  \begin{pmatrix}
+    e^0_x & e^0_y\\
+    e^1_x & e^1_y
+  \end{pmatrix} = 
+  \begin{pmatrix}
+    \cos\phi & \sin\phi\\
+    -\sin\phi & \cos\phi
+  \end{pmatrix}
+\end{equation}
+and obviously we have:
+\begin{equation}\label{eq:rotation}
+  \lambda = 
+  \begin{pmatrix}
+    \lambda_0 & 0\\
+    0 & \lambda_1
+  \end{pmatrix} = R\;\itm\;R^{-1} = R\;\itm\;R^{\rm T}
+\end{equation}
+
+
+\subsection{Error analysis in 2 dimensions}
+
+As a first ingredient we'll need the derivatives of the components of the
+tensor of inertia with respect to the coordinates and the weights:
+\begin{align}
+\pder{\itc{xx}}{x_i} &= 0,\quad
+\pder{\itc{xx}}{y_i}  = 2w_iy_i,\quad
+\pder{\itc{xx}}{w_i}  = y_i^2\\
+\pder{\itc{yy}}{x_i} &= 2w_ix_i,\quad
+\pder{\itc{yy}}{y_i}  = 0,\quad
+\pder{\itc{yy}}{w_i}  = x_i^2\\
+\pder{\itc{xy}}{x_i} &= -w_iy_i,\quad
+\pder{\itc{xy}}{y_i}  = -w_ix_i,\quad
+\pder{\itc{xy}}{w_i}  = -x_iy_i
+\end{align}
+We can then calculate the full covariance matrix of the errors using the
+usual formula (see \cite{pdg}, section 32.1.4 for instance). Assuming that
+the errors on the two positions and on the weights are mutually not correlated
+(i.e. their covariance matrix is diagonal), we have:
+\begin{equation}
+  \Sigma_{k-l} = \sum_{i=1}^n 
+  \pder{\itc{k}}{x_i}\pder{\itc{l}}{x_i}(\Delta x_i)^2 +
+  \pder{\itc{k}}{y_i}\pder{\itc{l}}{y_i}(\Delta y_i)^2 +
+  \pder{\itc{k}}{w_i}\pder{\itc{l}}{w_i}(\Delta w_i)^2
+\end{equation}
+where $k$ and $l$ run over the three (double) indexes $xx$, $yy$ and $zz$.
+We're ready to work out the details:
+\begin{align}
+  \Sigma_{xx-xx} &= (\Delta\itc{xx})^2 =
+  \sum_{i=1}^n \left[4w^2_iy^2_i(\Delta y_i)^2 + y_i^4(\Delta w_i)^2\right]\\
+  \Sigma_{yy-yy} &= (\Delta\itc{yy})^2 =
+  \sum_{i=1}^n \left[4w^2_ix^2_i(\Delta x_i)^2 + x_i^4(\Delta w_i)^2\right]\\
+  \Sigma_{xy-xy} &= (\Delta\itc{xy})^2 =
+  \sum_{i=1}^n \left[w_i^2y_i^2(\Delta x_i)^2 + w_i^2x_i^2(\Delta y_i)^2 +
+    x_i^2y_i^2(\Delta w_i)^2 \right]\\
+  \Sigma_{xx-yy} &= 
+  \sum_{i=1}^n \left[ x_i^2y_i^2 (\Delta w_i)^2\right]\\
+  \Sigma_{xx-xy} &= 
+  -\sum_{i=1}^n \left[ 2w_i^2x_iy_i(\Delta y_i)^2 +
+    x_iy_i^3(\Delta w_i)^2 \right]\\
+  \Sigma_{xy-yy} &= 
+  -\sum_{i=1}^n \left[ 2w_i^2x_iy_i(\Delta x_i)^2 +
+    x_i^3y_i(\Delta w_i)^2 \right]
+\end{align}
+And eventually the covariance matrix of $(\itc{xx}, \itc{yy}, \itc{xy})$
+reads:
+\begin{equation}
+  \Sigma_\itm = 
+  \begin{pmatrix}
+    \Sigma_{xx-xx} & \Sigma_{xx-yy} & \Sigma_{xx-xy}\\
+    \Sigma_{xx-yy} & \Sigma_{yy-yy} & \Sigma_{xy-yy}\\
+    \Sigma_{xx-xy} & \Sigma_{xy-yy} & \Sigma_{xy-xy}
+  \end{pmatrix}
+\end{equation}
+
+The rest of this section follows closely the prescription described in
+\cite{errors} for the error propagation. We can slice the $2 \times 2$ tensor
+of inertia and define a 4-component vector with the two columns one on top 
+of the other (this is what we call the $vec$ operator):
+\begin{equation}
+  vec(\itm) = 
+  \begin{pmatrix}
+    \itc{xx}\\
+    \itc{xy}\\
+    \itc{xy}\\
+    \itc{yy}
+  \end{pmatrix}
+\end{equation}
+That said, we can rewite the equation (\ref{eq:rotation}) using the
+Kronecker product of the rotation matrix
+$$
+T = R \otimes R
+$$
+as:
+\begin{equation}\label{eq:tensor_transform}
+  vec(\lambda) = 
+  \begin{pmatrix}
+    \lambda_0\\
+    0\\
+    0\\
+    \lambda_1
+  \end{pmatrix} = T vec(\itm)
+\end{equation}
+It is useful to rearrange the the elements of the $vec$ operator in such a way
+that the diagonal elements of the tensor come first, followed by the
+non-diagonal ones, getting rid of the duplicated terms.
+This is accomplished by introducing the matrix:
+\begin{equation}
+  D = 
+  \begin{pmatrix}
+    1 & 0 & 0 & 0\\
+    0 & 0 & 0 & 1\\
+    0 & 1 & 0 & 0
+  \end{pmatrix}
+\end{equation}
+which allows to define a new operator $v_d$:
+\begin{equation}
+  v_d(\itm) = D vec(\itm) =
+  \begin{pmatrix}
+    1 & 0 & 0 & 0\\
+    0 & 0 & 0 & 1\\
+    0 & 1 & 0 & 0
+  \end{pmatrix}
+  \begin{pmatrix}
+    \itc{xx}\\
+    \itc{xy}\\
+    \itc{xy}\\
+    \itc{yy}
+  \end{pmatrix} = 
+  \begin{pmatrix}
+    \itc{xx}\\
+    \itc{yy}\\
+    \itc{xy}
+  \end{pmatrix}
+\end{equation}
+In order to go back from the $v_d$ to the $vec$ representation we need
+yet another matrix:
+\begin{equation}
+  D_t = 
+  \begin{pmatrix}
+    1 & 0 & 0\\
+    0 & 0 & 1\\
+    0 & 0 & 1\\
+    0 & 1 & 0
+  \end{pmatrix}
+\end{equation}
+Interesting to note that, though it's surely true that\
+$DD^{\rm T} = I_{3\times3}$,
+$$
+D^{\rm T}D = 
+\begin{pmatrix}
+  1 & 0 & 0 & 0\\
+  0 & 1 & 0 & 0\\
+  0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 1
+\end{pmatrix}
+\neq I_{4\times4}
+$$
+so we can't use $D^{\rm T}$ to pass from $v_d$ to $vec$, as the third row is
+identically zero and $D^{\rm T}v_d(\itm) \neq vec(\itm)$.
+The paper \cite{errors} seems to be wrong to this respect.
+Using these definitions, equation (\ref{eq:tensor_transform}) can be rewritten
+as:
+\begin{equation}
+  v_d(\lambda) =
+  \begin{pmatrix}
+    \lambda_0\\
+    \lambda_1\\
+    0
+  \end{pmatrix} =
+  D vec(\lambda) = DT vec(\itm) = DTD_t v_d(\itm)
+\end{equation}
+If we define:
+\begin{equation}
+  V = DTD_t
+\end{equation}
+we can rewrite the previous equation as:
+\begin{equation}
+  v_d(\lambda) = V v_d(\itm)
+\end{equation}
+It follows that:
+\begin{equation}
+\Sigma_\lambda = V \Sigma_\itm V^{-1}
+\end{equation}
+which can be used to estimate the errors (and the full covariance) on the
+eigenvalues. Interestingly enough, the paper seems wrong again here, in that
+it quotes $\Sigma_\lambda = V \Sigma_\itm V^{\rm T}$, though $V$ is not
+orthogonal and therefore I do think we need the matrix inverse, here.
 
 
 
@@ -535,6 +736,10 @@ C &= \itc{xy}(\itc{zz} - \lambda_1) - \itc{xz}\itc{yz}
 \bibitem{goldstein}H.~Goldstein, \emph{Classical mechanics}.
 \bibitem{landau}L.~D.~Landau, E.~M.~Lif\^sic, \emph{Mechanics}.
 \bibitem{wolfram}\url{http://mathworld.wolfram.com/CubicFormula.html}
+\bibitem{pdg}PDG Review of Particle Physics,
+  \emph{Physics Letters B.} (2004) {\bf 592}
+\bibitem{errors}T.~Soler and B.~H.~W.~van~Gelder,
+  \emph{Geophys. J. Int.} (1991) {\bf 105}, 537--546.
 \end{thebibliography}
 
 
