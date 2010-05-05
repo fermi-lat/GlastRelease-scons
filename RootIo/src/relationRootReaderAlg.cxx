@@ -230,6 +230,15 @@ StatusCode relationRootReaderAlg::initialize()
          }
     }
 
+    // use the incident service to register begin, end events
+    IIncidentSvc* incsvc = 0;
+    sc = service ("IncidentSvc", incsvc, true);
+
+    if( sc.isFailure() ) return sc;
+
+    incsvc->addListener(this, "BeginEvent", 100);
+    incsvc->addListener(this, "EndEvent", 0);
+
     // Set up the map between relation key types and the actual conversion routine
     m_convFuncMap["TkrDigi"]           = &relationRootReaderAlg::readTkrDigiRelations;
     m_convFuncMap["CalDigi"]           = &relationRootReaderAlg::readCalDigiRelations;
@@ -328,6 +337,11 @@ StatusCode relationRootReaderAlg::readRelations() {
         Relation* relation = dynamic_cast<Relation*>(relObj);
 
         const TObject* key = relation->getKey();
+
+        if (!key)
+        {
+            continue;
+        }
 
         std::string className = key->ClassName();
 
