@@ -286,16 +286,6 @@ We're ready to work out the details:
   -\sum_{i=1}^n \left[ 2w_i^2x_iy_i(\Delta x_i)^2 +
     x_i^3y_i(\Delta w_i)^2 \right]
 \end{align}
-And eventually the covariance matrix of $(\itc{xx}, \itc{yy}, \itc{xy})$
-reads:
-\begin{equation}
-  \Sigma_\itm = 
-  \begin{pmatrix}
-    \Sigma_{xx-xx} & \Sigma_{xx-yy} & \Sigma_{xx-xy}\\
-    \Sigma_{xx-yy} & \Sigma_{yy-yy} & \Sigma_{xy-yy}\\
-    \Sigma_{xx-xy} & \Sigma_{xy-yy} & \Sigma_{xy-xy}
-  \end{pmatrix}
-\end{equation}
 
 The rest of this section follows closely the prescription described in
 \cite{errors} for the error propagation. We can slice the $2 \times 2$ tensor
@@ -334,7 +324,7 @@ This is accomplished by introducing the matrix:
   \begin{pmatrix}
     1 & 0 & 0 & 0\\
     0 & 0 & 0 & 1\\
-    0 & 1 & 0 & 0
+    0 & \frac{1}{2} & \frac{1}{2} & 0
   \end{pmatrix}
 \end{equation}
 which allows to define a new operator $v_d$:
@@ -343,7 +333,7 @@ which allows to define a new operator $v_d$:
   \begin{pmatrix}
     1 & 0 & 0 & 0\\
     0 & 0 & 0 & 1\\
-    0 & 1 & 0 & 0
+    0 & \frac{1}{2} & \frac{1}{2} & 0
   \end{pmatrix}
   \begin{pmatrix}
     \itc{xx}\\
@@ -357,10 +347,20 @@ which allows to define a new operator $v_d$:
     \itc{xy}
   \end{pmatrix}
 \end{equation}
-In order to go back from the $v_d$ to the $vec$ representation we need
-yet another matrix:
+Talking about which, the covariance matrix of $v_d(\itm)$ reads:
 \begin{equation}
-  D_t = 
+  \Sigma_{v_d(\itm)} = 
+  \begin{pmatrix}
+    \Sigma_{xx-xx} & \Sigma_{xx-yy} & \Sigma_{xx-xy}\\
+    \Sigma_{xx-yy} & \Sigma_{yy-yy} & \Sigma_{xy-yy}\\
+    \Sigma_{xx-xy} & \Sigma_{xy-yy} & \Sigma_{xy-xy}
+  \end{pmatrix}
+\end{equation}
+in terms of the quantities we have calculated a few lines above.
+In order to go back from the $v_d$ to the $vec$ representation we need
+the so called pseudo-inverse of $D$:
+\begin{equation}
+  D^+ = 
   \begin{pmatrix}
     1 & 0 & 0\\
     0 & 0 & 1\\
@@ -368,21 +368,7 @@ yet another matrix:
     0 & 1 & 0
   \end{pmatrix}
 \end{equation}
-Interesting to note that, though it's surely true that\
-$DD^{\rm T} = I_{3\times3}$,
-$$
-D^{\rm T}D = 
-\begin{pmatrix}
-  1 & 0 & 0 & 0\\
-  0 & 1 & 0 & 0\\
-  0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 1
-\end{pmatrix}
-\neq I_{4\times4}
-$$
-so we can't use $D^{\rm T}$ to pass from $v_d$ to $vec$, as the third row is
-identically zero and $D^{\rm T}v_d(\itm) \neq vec(\itm)$.
-The paper \cite{errors} seems to be wrong to this respect.
+The paper \cite{errors} is wrong to this respect (see \cite{errors_corr}).
 Using these definitions, equation (\ref{eq:tensor_transform}) can be rewritten
 as:
 \begin{equation}
@@ -392,27 +378,19 @@ as:
     \lambda_1\\
     0
   \end{pmatrix} =
-  D vec(\lambda) = DT vec(\itm) = DTD_t v_d(\itm)
+  D vec(\lambda) = DT vec(\itm) = DTD^+ v_d(\itm)
 \end{equation}
 If we define:
 \begin{equation}
-  V = DTD_t
+  V = DTD^+
 \end{equation}
 we can rewrite the previous equation as:
 \begin{equation}
   v_d(\lambda) = V v_d(\itm)
 \end{equation}
-It follows that:
-\begin{equation}
-\Sigma_\lambda = V \Sigma_\itm V^{-1}
-\end{equation}
-which can be used to estimate the errors (and the full covariance) on the
-eigenvalues. Interestingly enough, the paper seems wrong again here, in that
-it quotes $\Sigma_\lambda = V \Sigma_\itm V^{\rm T}$, though $V$ is not
-orthogonal and therefore I do think we need the matrix inverse, here.
 
-The infinitesimal change $\diff S$ in the rotation matrix $S$ when we change the
-rotation angle $\phi$ by an infinitesimal amount $\diff\phi$ can be easily
+The infinitesimal change $\diff S$ in the rotation matrix $S$ when we change
+the rotation angle $\phi$ by an infinitesimal amount $\diff\phi$ can be easily
 calculated by differentiating $S$ itself:
 $$
 \diff S =
@@ -491,18 +469,12 @@ it without a $\diff$ in front). Further on through the paper:
     d\itc{xy}
   \end{pmatrix} =
   D (S^{\rm T} \otimes S^{\rm T}) vec(d\mu) =
-  D (S^{\rm T} \otimes S^{\rm T}) G\beta
+  D (S^{\rm T} \otimes S^{\rm T}) G\beta = F\beta
 \end{equation}
-I'm not sure whether we need eq.~37 in \cite{errors}, here---I suspect we don't
-in the two-dimensional case. For the time being we'll stick to the
-definition:
+where we have defined:
 \begin{equation}
   F = D (S^{\rm T} \otimes S^{\rm T}) G
 \end{equation}
-using which we get:
-$$
-v_d(\diff\itm) = F\beta
-$$
 All we have to do is invert this equation, namely find $F^{-1}$. If we were
 dealing with square matrices, all we had to do would be:
 $$
@@ -510,17 +482,9 @@ F^{-1} = \left( D (S^{\rm T} \otimes S^{\rm T}) G \right)^{-1} =
 G^{-1} \left( S^{\rm T} \otimes S^{\rm T} \right)^{-1} D^{-1} = 
 G^{-1} \left( S \otimes S \right) D^{-1} = G^{-1} T D^{-1}
 $$
-But in fact $G$ and $D$ are rectangular matrices, so we need what's called
-a \emph{pseudo-inverse} in the paper. For $D$ we have already introduced
-$D_t$ satisfying:
-$$
-D_tD = I_{4\times4}
-$$
-and we need the same thing for $G$, namely a $G^+$ for which the relation
-$$
-G^+G = I_{3\times3}
-$$
-holds. The solution is obviously:
+But in fact $G$ and $D$ are rectangular matrices, so we need again the pseudo
+inverses. We have already the one for $D$, while for $G$, since
+$G^TG$ is not singular, the solution is even easier:
 \begin{equation}
   G^+ = \left( G^{\rm T}G \right)^{-1} G^{\rm T} =
   \begin{pmatrix}
@@ -529,10 +493,15 @@ holds. The solution is obviously:
     0 & \frac{1}{2(\lambda_1-\lambda_0)} & \frac{1}{2(\lambda_1-\lambda_0)} & 0
   \end{pmatrix}
 \end{equation}
-as can be easily verified by direct multiplication. Summarizing:
+(this satisfies $G^+G = I_{3\times3}$, as can be easily verified by direct
+multiplication). Summarizing:
 \begin{equation}
-  \beta = F^{-1}v_d(\diff\itm) = G^+ (S \otimes S) D_t v_d(\diff\itm) =
-  G^+ T D_t v_d(\diff\itm)
+  \beta = F^{-1}v_d(\diff\itm)
+\end{equation}
+and, more important, we get the full covariance matrix of the eigenvalues
+and rotation angle:
+\begin{equation}
+  \Sigma_\beta = F^{-1} \Sigma_{v_d(\itm)} (F^{-1})^T
 \end{equation}
 
 
@@ -865,6 +834,8 @@ C &= \itc{xy}(\itc{zz} - \lambda_1) - \itc{xz}\itc{yz}
   \emph{Physics Letters B.} (2004) {\bf 592}
 \bibitem{errors}T.~Soler and B.~H.~W.~van~Gelder,
   \emph{Geophys. J. Int.} (1991) {\bf 105}, 537--546.
+\bibitem{errors_corr}T.~Soler and B.~H.~W.~van~Gelder,
+  \emph{Geophys. J. Int.} (2006) {\bf 165}, 382.
 \end{thebibliography}
 
 
