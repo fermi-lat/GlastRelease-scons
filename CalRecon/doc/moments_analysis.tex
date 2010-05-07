@@ -19,6 +19,7 @@
 \newcommand{\firstder}[2]{\frac{{\rm d}#1}{{\rm d}#2}}
 \newcommand{\secder}[2]{\frac{{\rm d}^2#1}{{\rm d}#2^2}}
 \newcommand{\tmax}{t_{\rm max}}
+\newcommand{\diff}{{\rm d}}
 
 \begin{document}
 
@@ -221,7 +222,7 @@ we get:
 The rotation matrix between the original system and the one defined by the
 principal axis has the (transpose of) the two eigenvectors as its rows:
 \begin{equation}
-  R =
+  S =
   \begin{pmatrix}
     e^0_x & e^0_y\\
     e^1_x & e^1_y
@@ -237,7 +238,7 @@ and obviously we have:
   \begin{pmatrix}
     \lambda_0 & 0\\
     0 & \lambda_1
-  \end{pmatrix} = R\;\itm\;R^{-1} = R\;\itm\;R^{\rm T}
+  \end{pmatrix} = S\;\itm\;S^{-1} = S\;\itm\;S^{\rm T}
 \end{equation}
 
 
@@ -266,7 +267,7 @@ the errors on the two positions and on the weights are mutually not correlated
   \pder{\itc{k}}{y_i}\pder{\itc{l}}{y_i}(\Delta y_i)^2 +
   \pder{\itc{k}}{w_i}\pder{\itc{l}}{w_i}(\Delta w_i)^2
 \end{equation}
-where $k$ and $l$ run over the three (double) indexes $xx$, $yy$ and $zz$.
+where $k$ and $l$ run over the three (double) indexes $xx$, $yy$ and $xy$.
 We're ready to work out the details:
 \begin{align}
   \Sigma_{xx-xx} &= (\Delta\itc{xx})^2 =
@@ -312,7 +313,7 @@ of the other (this is what we call the $vec$ operator):
 That said, we can rewite the equation (\ref{eq:rotation}) using the
 Kronecker product of the rotation matrix
 $$
-T = R \otimes R
+T = S \otimes S
 $$
 as:
 \begin{equation}\label{eq:tensor_transform}
@@ -410,6 +411,130 @@ eigenvalues. Interestingly enough, the paper seems wrong again here, in that
 it quotes $\Sigma_\lambda = V \Sigma_\itm V^{\rm T}$, though $V$ is not
 orthogonal and therefore I do think we need the matrix inverse, here.
 
+The infinitesimal change $\diff S$ in the rotation matrix $S$ when we change the
+rotation angle $\phi$ by an infinitesimal amount $\diff\phi$ can be easily
+calculated by differentiating $S$ itself:
+$$
+\diff S =
+\begin{pmatrix}
+  -\sin\phi\;\diff\phi & \cos\phi\;\diff\phi\\
+  -\cos\phi\;\diff\phi & -\sin\phi\;\diff\phi\\
+\end{pmatrix}
+$$
+If we introduce the antisimmetric tensor:
+\begin{equation}
+  \Omega = 
+  \begin{pmatrix}
+    0 & -\diff\phi\\
+    \diff\phi & 0
+  \end{pmatrix}
+\end{equation}
+we can rewrite the previous equation as:
+\begin{equation}
+  \diff S = -S\Omega
+\end{equation}
+and, along the same lines, we have:
+\begin{equation}
+  \diff S^{\rm T} = \Omega S^{\rm T}
+\end{equation}
+as can be verified by direct matrix multiplication. It seems a bit odd, here,
+to call $\Omega$ an infinitesimal quantity (I would have rather named it
+$\diff\Omega$), but we'll bravely follow the conventions used in the paper to
+avoid confusion.
+We now define the quantity:
+\begin{equation}
+  \Omega^p = S\Omega S^{\rm T} =
+\begin{pmatrix}
+  0 & -\diff\phi\\
+  \diff\phi & 0\\
+\end{pmatrix} = \Omega
+\end{equation}
+By putting all together we have:
+\begin{equation}
+  S \diff \itm S^{\rm T} = \diff\mu =
+  \Omega^p\lambda - \lambda\Omega^p + \diff\lambda = 
+  \begin{pmatrix}
+    \diff\lambda_0 & (\lambda_0 - \lambda_1)\diff\phi\\
+    (\lambda_0 - \lambda_1)\diff\phi & \diff\lambda_1
+  \end{pmatrix}
+\end{equation}
+and we can write:
+\begin{equation}
+  vec(\diff\mu) = G\beta
+\end{equation}
+where:
+\begin{equation}
+  G =
+  \begin{pmatrix}
+    1 & 0 & 0\\
+    0 & 0 & (\lambda_1 - \lambda_0)\\
+    0 & 0 & (\lambda_1 - \lambda_0)\\
+    0 & 1 & 0
+  \end{pmatrix}
+\end{equation}
+and
+\begin{equation}
+  \beta =
+  \begin{pmatrix}
+    \diff\lambda_0\\
+    \diff\lambda_1\\
+    -\diff\phi
+  \end{pmatrix}
+\end{equation}
+(again, $\beta$ is a differential quantities, so it is a bit odd to name
+it without a $\diff$ in front). Further on through the paper:
+\begin{equation}
+  v_d(\diff\itm) =
+  \begin{pmatrix}
+    d\itc{xx}\\
+    d\itc{yy}\\
+    d\itc{xy}
+  \end{pmatrix} =
+  D (S^{\rm T} \otimes S^{\rm T}) vec(d\mu) =
+  D (S^{\rm T} \otimes S^{\rm T}) G\beta
+\end{equation}
+I'm not sure whether we need eq.~37 in \cite{errors}, here---I suspect we don't
+in the two-dimensional case. For the time being we'll stick to the
+definition:
+\begin{equation}
+  F = D (S^{\rm T} \otimes S^{\rm T}) G
+\end{equation}
+using which we get:
+$$
+v_d(\diff\itm) = F\beta
+$$
+All we have to do is invert this equation, namely find $F^{-1}$. If we were
+dealing with square matrices, all we had to do would be:
+$$
+F^{-1} = \left( D (S^{\rm T} \otimes S^{\rm T}) G \right)^{-1} =
+G^{-1} \left( S^{\rm T} \otimes S^{\rm T} \right)^{-1} D^{-1} = 
+G^{-1} \left( S \otimes S \right) D^{-1} = G^{-1} T D^{-1}
+$$
+But in fact $G$ and $D$ are rectangular matrices, so we need what's called
+a \emph{pseudo-inverse} in the paper. For $D$ we have already introduced
+$D_t$ satisfying:
+$$
+D_tD = I_{4\times4}
+$$
+and we need the same thing for $G$, namely a $G^+$ for which the relation
+$$
+G^+G = I_{3\times3}
+$$
+holds. The solution is obviously:
+\begin{equation}
+  G^+ = \left( G^{\rm T}G \right)^{-1} G^{\rm T} =
+  \begin{pmatrix}
+    1 & 0 & 0 & 0\\
+    0 & 0 & 0 & 1\\
+    0 & \frac{1}{2(\lambda_1-\lambda_0)} & \frac{1}{2(\lambda_1-\lambda_0)} & 0
+  \end{pmatrix}
+\end{equation}
+as can be easily verified by direct multiplication. Summarizing:
+\begin{equation}
+  \beta = F^{-1}v_d(\diff\itm) = G^+ (S \otimes S) D_t v_d(\diff\itm) =
+  G^+ T D_t v_d(\diff\itm)
+\end{equation}
+
 
 
 \section{Shower development: basic formul\ae}
@@ -425,7 +550,7 @@ $$
 (with this definition $p(t)$ is normalized to 1 and is therefore a probability
 density) and the Euler $\Gamma$ function, defined by:
 $$
-\Gamma(\alpha) = \int_{0}^\infty t^{\alpha - 1} e^{-t} {\rm d}t
+\Gamma(\alpha) = \int_{0}^\infty t^{\alpha - 1} e^{-t} \diff t
 $$
 satisfies the well know relation:
 $$
@@ -458,8 +583,8 @@ energy for the material.
 Let's start from the calculation of the lowest order moments of the shower
 longitudinal profile around $t=0$. The first one is the mean:
 \begin{align}
-\left< t \right> &= \mu = \int_{0}^\infty t p(t) {\rm d}t =
-k \int_{0}^\infty t^{\alpha + 1} e^{-bt} {\rm d}t =\nonumber\\
+\left< t \right> &= \mu = \int_{0}^\infty t p(t) ] \diff t =
+k \int_{0}^\infty t^{\alpha + 1} e^{-bt} \diff t =\nonumber\\
 &= \frac{b^{\alpha + 1}}{\Gamma(\alpha + 1)}
 \frac{\Gamma(\alpha + 2)}{b^{\alpha + 2}} = \frac{(\alpha + 1)}{b}
 \end{align}
@@ -495,14 +620,14 @@ The skewness $\gamma$ is given by:
 Let's look at the problem from a different perspective, which will hopefully
 turn out to be handy in the following. Integrating by parts, we get:
 \begin{align*}
-\left< t^n \right> & = k \int_{0}^\infty t^n \cdot t^\alpha e^{-bt} {\rm d}t =
-k \int_{0}^\infty t^\alpha e^{-bt} {\rm d}\left(\frac{t^{n+1}}{n+1}\right) =\\
+\left< t^n \right> & = k \int_{0}^\infty t^n \cdot t^\alpha e^{-bt} \diff t =
+k \int_{0}^\infty t^\alpha e^{-bt} \diff\left(\frac{t^{n+1}}{n+1}\right) =\\
 &= k\left.\frac{t^{n+1}}{n+1}  t^\alpha e^{-bt}\right|_0^\infty -
 k \int_0^\infty \frac{t^{n+1}}{n+1} \left(
 \alpha t^{\alpha - 1}e^{-bt} - bt^\alpha e^{-bt}
-\right) {\rm d}t =\\
-&= \frac{kb}{n+1} \int_{0}^\infty  t^{\alpha + n + 1} e^{-bt} {\rm d}t -
-\frac{k\alpha}{n+1} \int_{0}^\infty  t^{\alpha + n} e^{-bt} {\rm d}t =
+\right) \diff t =\\
+&= \frac{kb}{n+1} \int_{0}^\infty  t^{\alpha + n + 1} e^{-bt} \diff t -
+\frac{k\alpha}{n+1} \int_{0}^\infty  t^{\alpha + n} e^{-bt} \diff t =
 \frac{b \left< t^{n+1} \right> - \alpha\left< t^n \right>}{n+1}
 \end{align*}
 from which it follows that:
@@ -546,7 +671,7 @@ p_{\rm f}(t) = k_{\rm f} t^\alpha e^{-bt}
 $$
 with $k_{\rm f}$ being:
 $$
-k_{\rm f} = \frac{1}{\int_{t_1}^{t_2} t^\alpha e^{-bt} {\rm d}t}
+k_{\rm f} = \frac{1}{\int_{t_1}^{t_2} t^\alpha e^{-bt} \diff t}
 $$
 (physically $k_{\rm f}$ is the ratio between the raw energy deposited in the
 calorimeter and the true energy of the particle). So now we have:
@@ -573,11 +698,11 @@ The moments of the longitudinal distribution can be written as a function
 of the incomplete gamma function, defined as:
 \begin{equation}
 \gamma(\alpha, t) = \frac{1}{\Gamma(\alpha)}
-\int_{0}^{t} t^{\alpha - 1} e^{-t} {\rm d}t
+\int_{0}^{t} t^{\alpha - 1} e^{-t} \diff t
 \end{equation}
 from which it follows that:
 \begin{equation}
-\int_{t_1}^{t_2} t^{\alpha} e^{-bt} {\rm d}t =
+\int_{t_1}^{t_2} t^{\alpha} e^{-bt} \diff t =
 \frac{\Gamma(\alpha+1)}{b^{\alpha+1}}
 \left( \gamma(\alpha+1, bt_2) - \gamma(\alpha+1, bt_1) \right)
 \end{equation}
