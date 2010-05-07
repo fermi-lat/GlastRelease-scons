@@ -18,15 +18,17 @@ POS_ERR   = 1.0
 W_REL_ERR = 0.0
 
 
-D_3_4    = numpy.array([ [1., 0., 0., 0.],
-                         [0., 0., 0., 1.],
-                         [0., 1., 0., 0.] ],
-                       dtype = 'd')
-D_3_4_T  = numpy.array([ [1., 0., 0.],
-                         [0., 0., 1.],
-                         [0., 0., 1.],
-                         [0., 1., 0.] ],
-                       dtype = 'd')
+D = numpy.array([ [1., 0. , 0. , 0.],
+                  [0., 0. , 0. , 1.],
+                  [0., 0.5, 0.5, 0.] ],
+                dtype = 'd')
+D_PLUS = numpy.array([ [1., 0., 0.],
+                       [0., 0., 1.],
+                       [0., 0., 1.],
+                       [0., 1., 0.] ],
+                     dtype = 'd')
+
+
 
 
 class Point2D:
@@ -145,14 +147,23 @@ class Cluster2D:
                                   [Ixy],
                                   [Iyy] ],
                                 dtype = 'd')
-        self.VdI = numpy.dot(D_3_4, self.VecI)
-        self.ICovMatrix = numpy.array([ [cIxx_xx, cIxx_yy, cIxx_xy],
-                                        [cIxx_yy, cIyy_yy, cIxy_yy],
-                                        [cIxx_xy, cIxy_yy, cIxy_xy] ],
-                                      dtype = 'd')
+        self.VdI = numpy.dot(D, self.VecI)
+        self.VdICovMatrix = numpy.array([ [cIxx_xx, cIxx_yy, cIxx_xy],
+                                          [cIxx_yy, cIyy_yy, cIxy_yy],
+                                          [cIxx_xy, cIxy_yy, cIxy_xy] ],
+                                        dtype = 'd')
         delta = sqrt((Ixx - Iyy)**2 + 4*Ixy**2)
         l0 = 0.5*(Ixx + Iyy - delta)
         l1 = 0.5*(Ixx + Iyy + delta)
+        self.Lambda = numpy.array( [ [l0, 0.],
+                                     [0., l1] ],
+                                   dtype = 'd')
+        self.VecLambda = numpy.array([ [l0],
+                                       [0.],
+                                       [0.],
+                                       [l1] ],
+                                     dtype = 'd')
+        self.VdLambda = numpy.dot(D, self.VecLambda)
         self.Eigenvalues = numpy.array([ [l0],
                                          [l1] ],
                                        dtype = 'd')
@@ -163,12 +174,24 @@ class Cluster2D:
         e1y = cos(phi)
         self.MajorAxis = Vector2D(e0x, e0y, self.Baricenter)
         self.MinorAxis = Vector2D(e1x, e1y, self.Baricenter)
-        self.R = numpy.array([ [e0x, e0y],
+        self.S = numpy.array([ [e0x, e0y],
                                [e1x, e1y] ],
                              dtype = 'd')
-        self.T = numpy.kron(self.R, self.R)
-        self.V = numpy.dot(numpy.dot(D_3_4, self.T), D_3_4_T)
-        self.Phi = RAD_TO_DEG*phi 
+        self.T = numpy.kron(self.S, self.S)
+        self.V = numpy.dot(numpy.dot(D, self.T), D_PLUS)
+        self.G = numpy.array([ [1., 0., 0.],
+                               [0., 0., (l1-l0)],
+                               [0., 0., (l1-l0)],
+                               [0., 1., 0.] ],
+                             dtype = 'd')
+        self.TT = numpy.kron(self.S.T, self.S.T)
+        self.F = numpy.dot(numpy.dot(D, self.TT), self.G)
+        self.GPlus = numpy.array([ [1., 0., 0., 0.],
+                                   [0., 0., 0., 1.],
+                                   [0., 0.5/(l1-l0), 0.5/(l1-l0), 0.] ],
+                                 dtype = 'd')
+        self.FInv = numpy.dot(numpy.dot(self.GPlus, self.T), D_PLUS)
+        self.Phi = RAD_TO_DEG*phi
  
     def draw(self):
         self.Canvas = ROOT.TCanvas('c', 'c', 500, 500)
@@ -191,7 +214,7 @@ class Cluster2D:
             text += '%s\n' % hit
         text += 'Baricenter    : %s\n' % self.Baricenter
         text += 'Inertia tensor:\n%s\n' % self.I
-        text += 'Inertia tensor covariance matrix:\n%s\n' % self.ICovMatrix
+        text += 'Inertia tensor covariance matrix:\n%s\n' % self.VdICovMatrix
         text += 'Eigenvalues   :\n%s\n' % self.Eigenvalues
         text += 'Rotation angle: %.3f deg\n' % self.Phi
         text += 'Major axis    : %s\n' % self.MajorAxis
@@ -202,7 +225,7 @@ class Cluster2D:
 
 ## Small test routines.
 
-def mcICovMatrix(numTrials = 1000):
+def mcVdICovMatrix(numTrials = 1000):
     meanIxx = 0.
     meanIyy = 0.
     meanIxy = 0.
@@ -244,28 +267,63 @@ def mcICovMatrix(numTrials = 1000):
     return m
 
 
+def testPaperEqs(cluster):
+    print '*** Testing D...'
+    print 'D+ D =\n%s' % numpy.dot(D_PLUS, D)
+    print
+    print '*** Testing equation (1), (18), (19)...'
+    print 'I =\n%s' % c.I
+    print 'Lambda =\n%s' % c.Lambda
+    print 'S I S^T =\n%s' %  (numpy.dot(c.S, numpy.dot(c.I, c.S.T)))
+    print 'S^T Lambda S =\n%s' % (numpy.dot(c.S.T, numpy.dot(c.Lambda, c.S)))
+    print
+    print '*** Testing equation (3)...'
+    print 'vec(I) =\n%s' % c.VecI
+    print
+    print '*** Testing equation (4)...'
+    print 'vec(Lambda) =\n%s' % c.VecLambda
+    print 'T vec(I) =\n%s' % (numpy.dot(c.T, c.VecI))
+    print
+    print '*** Testing equation (10)...'
+    print 'v_d(I) =\n%s' % c.VdI
+    print 'D vec(I) =\n%s' % numpy.dot(D, c.VecI)
+    print 
+    print '*** Testing equation (12)...'
+    print 'v_d(Lambda) =\n%s' % c.VdLambda
+    print 'V v_d(I) =\n%s' % numpy.dot(c.V, c.VdI)
+    print
+    print '*** Testing equation (15)...'
+    print 'Sigma(v_d(I)) =\n%s' % c.VdICovMatrix
+    s = numpy.dot(numpy.dot(c.V, c.VdICovMatrix), c.V.T)
+    print 'V v_d(Lambda) V^T =\n%s' % s
+    print 'Diagonal terms (square roots): (%.3f, %.3f, %.3f)' %\
+          (sqrt(s[0,0]), sqrt(s[1,1]), sqrt(s[2,2]))
+    print 
+    print 'Testing equation 41...'
+    print 'G+ G =\n%s' % numpy.dot(c.GPlus, c.G)
+    print
+    print 'Testing F inverse...'
+    print 'F-1 F =\n%s' % numpy.dot(c.FInv, c.F)
+    print
+    print 'Testing equation (45)...'
+    s = numpy.dot(numpy.dot(c.FInv, c.VdICovMatrix), c.FInv.T)
+    print 'Finv VdICovMatrix Finv^T =\n%s' % s
+    print 'Diagonal terms (square roots): (%.3f, %.3f, %.3f)' %\
+          (sqrt(s[0,0]), sqrt(s[1,1]), RAD_TO_DEG*sqrt(s[2,2]))
+
 
 if __name__ == '__main__':
     c = Cluster2D()
     print c
-    #c.draw()
-    print '** R * I * Rt **\n%s\n' % (numpy.dot(c.R, numpy.dot(c.I, c.R.T)))
-    print '** T * vec(I) **\n%s\n' % (numpy.dot(c.T, c.VecI))
-    print '** vec(I)     **\n%s\n' % c.VecI
-    print '** v_d(I)     **\n%s\n' % c.VdI
-    print '** V * v_d(I) **\n%s\n' % numpy.dot(c.V, c.VdI)
-    print '** V * V^T    **\n%s\n' % numpy.dot(c.V, c.V.T)
-    print '** V * V^{-1} **\n%s\n' % numpy.dot(c.V, numpy.linalg.inv(c.V))
+    c.draw()
+    testPaperEqs(c)
 
     # The following done with 100,000 events gives:
     #[[  654306.79366708     2046.95299436  -444317.33476658]
     # [    2046.95299436  1410589.74012409  -445804.20738293]
     # [ -444317.33476658  -445804.20738293   514830.77784087]]
     #
-    #m = mcICovMatrix(100000)
+    #m = mcVdICovMatrix(100000)
     #print 'Mc I covariance matrix:\n%s\n' % m
-    
-    #s = numpy.dot(numpy.dot(c.V, c.ICovMatrix), numpy.linalg.inv(c.V))
-    #print s
-    #print sqrt(s[0,0]), sqrt(s[1,1]), sqrt(s[2,2])
+
     
