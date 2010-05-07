@@ -503,6 +503,25 @@ and rotation angle:
 \begin{equation}
   \Sigma_\beta = F^{-1} \Sigma_{v_d(\itm)} (F^{-1})^T
 \end{equation}
+Once we have the error on the rotation angle:
+\begin{equation}
+  (\Delta\phi)^2 = (\Sigma_\beta)_{33}
+\end{equation}
+the covariance matrix of the two components of the principal axis is:
+\begin{equation}
+  \Sigma_{\mathbf{e}^0} =
+  \begin{pmatrix}
+    \pder{e^0_x}{\phi}\pder{e^0_x}{\phi}(\Delta\phi)^2 &
+    \pder{e^0_x}{\phi}\pder{e^0_y}{\phi}(\Delta\phi)^2\\
+    \pder{e^0_x}{\phi}\pder{e^0_y}{\phi}(\Delta\phi)^2 &
+    \pder{e^0_y}{\phi}\pder{e^0_y}{\phi}(\Delta\phi)^2
+  \end{pmatrix} =
+  \begin{pmatrix}
+    \sin^2\phi & -\sin\phi\cos\phi\\
+    -\sin\phi\cos\phi & \cos^2\phi
+  \end{pmatrix}(\Delta\phi)^2
+\end{equation}
+
 
 
 
