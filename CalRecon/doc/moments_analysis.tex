@@ -523,6 +523,123 @@ the covariance matrix of the two components of the principal axis is:
 \end{equation}
 
 
+\subsection{Error analysis in 3 dimensions}
+
+Along the same lines of the previous subsection the derivatives of the
+components of the inertia tensor are:
+\begin{align}
+\pder{\itc{xx}}{x_i} &= 0,\quad
+\pder{\itc{xx}}{y_i}  = 2w_iy_i,\quad
+\pder{\itc{xx}}{z_i}  = 2w_iz_i,\quad
+\pder{\itc{xx}}{w_i}  = (y_i^2 + z_i^2)\\
+\pder{\itc{yy}}{x_i} &= 2w_ix_i,\quad
+\pder{\itc{yy}}{y_i}  = 0,\quad
+\pder{\itc{yy}}{z_i}  = 2w_iz_i,\quad
+\pder{\itc{yy}}{w_i}  = (x_i^2 + z_i^2)\\
+\pder{\itc{zz}}{x_i} &= 2w_ix_i,\quad
+\pder{\itc{zz}}{y_i}  = 2w_iy_i,\quad
+\pder{\itc{zz}}{z_i}  = 0,\quad
+\pder{\itc{zz}}{w_i}  = (x_i^2 + y_i^2)\\
+\pder{\itc{xy}}{x_i} &= -w_iy_i,\quad
+\pder{\itc{xy}}{y_i}  = -w_ix_i,\quad
+\pder{\itc{xy}}{z_i}  = 0,\quad
+\pder{\itc{xy}}{w_i}  = -x_iy_i\\
+\pder{\itc{xz}}{x_i} &= -w_iz_i,\quad
+\pder{\itc{xz}}{y_i}  = 0,\quad
+\pder{\itc{xz}}{z_i}  = -w_ix_i,\quad
+\pder{\itc{xz}}{w_i}  = -x_iz_i\\
+\pder{\itc{yz}}{x_i} &= 0,\quad
+\pder{\itc{yz}}{y_i}  = -w_iz_i,\quad
+\pder{\itc{yz}}{z_i}  = -w_iy_i,\quad
+\pder{\itc{yz}}{w_i}  = -y_iz_i
+\end{align}
+The elements of the covariance matrix are:
+\begin{equation}
+  \Sigma_{k-l} = \sum_{i=1}^n 
+  \pder{\itc{k}}{x_i}\pder{\itc{l}}{x_i}(\Delta x_i)^2 +
+  \pder{\itc{k}}{y_i}\pder{\itc{l}}{y_i}(\Delta y_i)^2 +
+  \pder{\itc{k}}{z_i}\pder{\itc{l}}{z_i}(\Delta z_i)^2 +
+  \pder{\itc{k}}{w_i}\pder{\itc{l}}{w_i}(\Delta w_i)^2
+\end{equation}
+where now $k$ and $l$ run over the 6 independent (double) indexes of the
+indertia tensor $xx$, $yy$, $zz$, $xy$, $xz$ and $yz$. Therefore the
+$6\times6$ covariancewe will have $6(6+1)/2 = 21$ components:
+\begin{align}
+  \Sigma_{xx-xx} &= \sum_{i=1}^n \left\{
+  4w_i^2 \left[ y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2 \right] +
+  \left(y_i^2 + z_i^2\right)^2(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xx-yy} &= \sum_{i=1}^n \left\{
+  4w_i^2z_i^2 (\Delta z_i)^2 + (x_i^2 + z_i^2)(y_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xx-zz} &= \sum_{i=1}^n \left\{
+  4w_i^2y_i^2 (\Delta y_i)^2 + (x_i^2 + y_i^2)(y_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xx-xy} &= -\sum_{i=1}^n x_iy_i  \left\{
+  2w_i^2 (\Delta y_i)^2 + (y_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xx-xz} &= -\sum_{i=1}^n x_iz_i \left\{
+  2w_i^2 (\Delta z_i)^2 + (y_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xx-yz} &= -\sum_{i=1}^n y_iz_i \left\{
+  2w_i^2 (\Delta y_i)^2 + (y_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{yy-yy} &= \sum_{i=1}^n \left\{
+  4w_i^2 \left[ x_i^2(\Delta x_i)^2 + z_i^2(\Delta z_i)^2 \right] +
+  \left(x_i^2 + z_i^2\right)^2(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{yy-zz} &= \sum_{i=1}^n \left\{
+  4w_i^2x_i^2 (\Delta x_i)^2 + (x_i^2 + y_i^2)(x_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{yy-xy} &= -\sum_{i=1}^n x_iy_i \left\{
+  2w_i^2 (\Delta x_i)^2 + (x_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{yy-xz} &= -\sum_{i=1}^n x_iz_i \left\{
+  2w_i^2 (\Delta x_i)^2 + 2w_i^2 (\Delta z_i)^2 +
+  (x_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}
+\end{align}
+\begin{align}
+  \Sigma_{yy-yz} &= -\sum_{i=1}^n y_iz_i \left\{
+  2w_i^2 (\Delta z_i)^2 + (x_i^2 + z_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{zz-zz} &= \sum_{i=1}^n \left\{
+  4w_i^2 \left[ x_i^2(\Delta x_i)^2 + y_i^2(\Delta y_i)^2 \right] +
+  \left(x_i^2 + y_i^2\right)^2(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{zz-xy} &= -\sum_{i=1}^n x_iy_i \left\{
+  2w_i^2 \left[ (\Delta x_i)^2 + (\Delta y_i)^2 \right] +
+  (x_i^2 + y_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{zz-xz} &= -\sum_{i=1}^n x_iz_i \left\{
+  2w_i^2 (\Delta x_i)^2 + (x_i^2 + y_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{zz-yz} &= -\sum_{i=1}^n y_iz_i \left\{
+  2w_i^2 (\Delta y_i)^2 + (x_i^2 + y_i^2)(\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xy-xy} &= \sum_{i=1}^n \left\{
+  w_i^2 \left[ y_i^2 (\Delta x_i)^2 + x_i^2 (\Delta y_i)^2 \right] +
+  x_i^2y_i^2 (\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xy-xz} &= \sum_{i=1}^n y_iz_i \left\{
+  w_i^2 (\Delta x_i)^2 + x_i^2 (\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xy-yz} &= \sum_{i=1}^n x_iz_i \left\{
+  w_i^2 (\Delta y_i)^2 + y_i^2 (\Delta w_i)^2
+  \right\}\\
+  \Sigma_{yz-yz} &= \sum_{i=1}^n \left\{
+  w_i^2 \left[ z_i^2 (\Delta y_i)^2 + y_i^2 (\Delta z_i)^2 \right] +
+  y_i^2z_i^2 (\Delta w_i)^2
+  \right\}\\
+  \Sigma_{yz-xz} &= \sum_{i=1}^n x_iy_i \left\{
+  w_i^2 (\Delta z_i)^2 + z_i^2 (\Delta w_i)^2
+  \right\}\\
+  \Sigma_{xz-xz} &= \sum_{i=1}^n \left\{
+  w_i^2 \left[ z_i^2 (\Delta x_i)^2 + x_i^2 (\Delta z_i)^2 \right] +
+  x_i^2z_i^2 (\Delta w_i)^2
+  \right\}
+\end{align}
+
 
 
 \section{Shower development: basic formul\ae}
