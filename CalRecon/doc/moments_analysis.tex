@@ -1,7 +1,8 @@
 \documentclass[a4paper,11pt]{article}
 
 \title{Calorimeter moments analysis}
-\author{Luca Baldini (luca.baldini@pi.infn.it)}
+\author{Luca Baldini (luca.baldini@pi.infn.it),
+  Johan Bregeon (johan.bregeon@pi.infn.it)}
 
 
 \usepackage{graphicx}
@@ -832,106 +833,7 @@ we have:
 I'll move it into appropriate sections as soon as it's in a reasonable shape
 (and, of course, this does not mean that people should not take a look).}
 
-\section{Tentative error analysis}
 
-This is an attempt to work out the error analysis for the calorimeter moments
-analysis. Let's start out with with the derivatives of the components of the
-inertia tensor:
-\begin{align}
-\pder{\itc{xx}}{x_i} &= 0,\quad
-\pder{\itc{xx}}{y_i}  = 2w_iy_i,\quad
-\pder{\itc{xx}}{z_i}  = 2w_iz_i,\quad
-\pder{\itc{xx}}{w_i}  = (y_i^2 + z_i^2)\\
-\pder{\itc{yy}}{x_i} &= 2w_ix_i,\quad
-\pder{\itc{yy}}{y_i}  = 0,\quad
-\pder{\itc{yy}}{z_i}  = 2w_iz_i,\quad
-\pder{\itc{yy}}{w_i}  = (x_i^2 + z_i^2)\\
-\pder{\itc{zz}}{x_i} &= 2w_ix_i,\quad
-\pder{\itc{zz}}{y_i}  = 2w_iy_i,\quad
-\pder{\itc{zz}}{z_i}  = 0,\quad
-\pder{\itc{zz}}{w_i}  = (x_i^2 + y_i^2)\\
-\pder{\itc{xy}}{x_i} &= -w_iy_i,\quad
-\pder{\itc{xy}}{y_i}  = -w_ix_i,\quad
-\pder{\itc{xy}}{z_i}  = 0,\quad
-\pder{\itc{xy}}{w_i}  = -x_iy_i\\
-\pder{\itc{xz}}{x_i} &= -w_iz_i,\quad
-\pder{\itc{xz}}{y_i}  = 0,\quad
-\pder{\itc{xz}}{z_i}  = -w_ix_i,\quad
-\pder{\itc{xz}}{w_i}  = -x_iz_i\\
-\pder{\itc{yz}}{x_i} &= 0,\quad
-\pder{\itc{yz}}{y_i}  = -w_iz_i,\quad
-\pder{\itc{yz}}{z_i}  = -w_iy_i,\quad
-\pder{\itc{yz}}{w_i}  = -y_iz_i
-\end{align}
-
-Assuming that the errors on the spatial coordinates and the energy are
-independent from each other, and dropping (for the time being) the term
-depending on the derivative with respect to $w_i$ we get:
-\begin{align*}
-(\Delta \itc{xx})^2 &=
-\sum_{i=1}^n \left( \pder{\itc{xx}}{x_i} \right)^2(\Delta x_i)^2 +
-\sum_{i=1}^n \left( \pder{\itc{xx}}{y_i} \right)^2(\Delta y_i)^2 +
-\sum_{i=1}^n \left( \pder{\itc{xx}}{z_i} \right)^2(\Delta z_i)^2 =\\
-&= 4\sum_{i=1}^n w_i^2\left[y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2\right]
-\end{align*}
-And the same thing for all the others:
-\begin{align}
-\Delta \itc{xx} &= \sqrt{
-  \sum_{i=1}^n 4w_i^2\left[y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2\right]
-}\\
-\Delta \itc{yy} &= \sqrt{
-  \sum_{i=1}^n 4w_i^2\left[x_i^2(\Delta x_i)^2 + z_i^2(\Delta z_i)^2\right]
-}\\
-\Delta \itc{zz} &= \sqrt{
-  \sum_{i=1}^n 4w_i^2\left[x_i^2(\Delta x_i)^2 + y_i^2(\Delta y_i)^2\right]
-}\\
-\Delta \itc{xy} &= \sqrt{
-  \sum_{i=1}^n w_i^2\left[y_i^2(\Delta x_i)^2 + x_i^2(\Delta y_i)^2\right]
-}\\
-\Delta \itc{xz} &= \sqrt{
-  \sum_{i=1}^n w_i^2\left[z_i^2(\Delta x_i)^2 + x_i^2(\Delta z_i)^2\right]
-}\\
-\Delta \itc{yz} &= \sqrt{
-  \sum_{i=1}^n w_i^2\left[z_i^2(\Delta y_i)^2 + y_i^2(\Delta z_i)^2\right]
-}
-\end{align}
-
-We now bravely carry on to $c_2$, $c_1$ and $c_0$ defined earlier:
-\begin{align}
-\pder{c_2}{x_i} &= -4w_ix_i\\
-\pder{c_2}{y_i} &= -4w_iy_i\\
-\pder{c_2}{z_i} &= -4w_iz_i\\
-\end{align}
-and therefore it follows that:
-\begin{align}
-(\Delta c_2)^2 &=
-\sum_{i=1}^n \left( \pder{c_2}{x_i} \right)^2(\Delta x_i)^2 +
-\sum_{i=1}^n \left( \pder{c_2}{y_i} \right)^2(\Delta y_i)^2 +
-\sum_{i=1}^n \left( \pder{c_2}{z_i} \right)^2(\Delta z_i)^2 =\\ 
-&=\sum_{i=1}^n 16w_i^2\left[
-  x_i^2(\Delta x_i)^2 + y_i^2(\Delta y_i)^2 + z_i^2(\Delta z_i)^2
-  \right]
-\end{align}
-Along the same lines:
-\begin{align}
-\pder{c_1}{x_i} &= 2w_i\left[
-  (2\itc{xx} + \itc{yy} + \itc{zz})x_i + \itc{xy}y_i + \itc{xz}z_i
-  \right]\\
-\pder{c_1}{y_i} &= 2w_i\left[
-  \itc{xy}x_i + (\itc{xx} + 2\itc{yy} + \itc{zz})y_i + \itc{yz}z_i
-  \right]\\
-\pder{c_1}{z_i} &= 2w_i\left[
-  \itc{xz}x_i + \itc{yz}y_i + (\itc{xx} + \itc{yy} + 2\itc{zz})z_i
-  \right]
-\end{align}
-and just like before:
-\begin{align}
-(\Delta c_1)^2 &=
-\sum_{i=1}^n \left( \pder{c_1}{x_i} \right)^2(\Delta x_i)^2 +
-\sum_{i=1}^n \left( \pder{c_1}{y_i} \right)^2(\Delta y_i)^2 +
-\sum_{i=1}^n \left( \pder{c_1}{z_i} \right)^2(\Delta z_i)^2
-\end{align}
-which is now too long to fit in one row.
 
 Let's go back to the basic equation for the principal eigenvector:
 $$
