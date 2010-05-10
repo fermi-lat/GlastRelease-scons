@@ -555,13 +555,9 @@ class CalMomentsAnalysis:
 		    	       [ 0.,  0.,  0.,  0.,  0.,  1.],
 		    	       [ 0.,  0.,  1.,  0.,  0.,  0.]], dtype = 'd')
         print 'D =\n%s' % D
-	# Defining Q
-	Q66High = numpy.c_[M_IDENTITY_3_3, M_ZEROS_3_3]
-	Q66Low  = numpy.c_[M_ZEROS_3_3   , S]
-	Q66     = numpy.c_['0', Q66High  , Q66Low]
-        print 'Q66 =\n%s' % Q66
-	Q       = Q66 * D
-        print 'Q =\n%s' % Q
+        print 'Dplus =\n%s' % Dplus
+        print 'D*Dplus =\n%s' % D*Dplus
+
 	# Defining G+
         g1 = 0.5/(L2 - L1)
         g2 = 0.5/(L0 - L2)
@@ -574,78 +570,113 @@ class CalMomentsAnalysis:
                                [0, g3, 0 , g3, 0, 0 , 0 , 0 , 0] ],
                              dtype = 'd')
         print 'Gplus =\n%s' % Gplus
+
 	# Defining F^-1
-        #Finverse = Gplus * numpy.outer(S, S) * Q.transpose()
-        Finverse = Gplus * numpy.kron(S, S) * Q.transpose()
+        Finverse = Gplus * numpy.kron(S, S) * Dplus
 
 	# Derive the error propagation matrix K
-        K_left = numpy.c_['0', numpy.c_['1', M_ZEROS_9_3, S_p], Q66High]
-        print 'Kleft =\n%s' % K_left
+	K_low   = numpy.c_[M_IDENTITY_3_3, M_ZEROS_3_3]
+        K_left = numpy.c_['0', numpy.c_['1', M_ZEROS_9_3, S_p], K_low]
+        print 'K_left =\n%s' % K_left
 	K = K_left * Finverse
         print 'K =\n%s' % K
         
 	## Define the covariance matrix of the errors on the inertia tensor
-        dIxx2 = 0.0  
-        dIyy2 = 0.0  
-        dIzz2 = 0.0
-        dIxy2 = 0.0  
-        dIxz2 = 0.0  
-        dIyz2 = 0.0
+        cIxx_xx = 0.0
+	cIxx_yy = 0.0
+	cIxx_zz = 0.0
+	cIxx_xy = 0.0
+	cIxx_xz = 0.0
+	cIxx_yz = 0.0
+	
+        cIyy_yy = 0.0
+        cIyy_zz = 0.0
+        cIyy_xy = 0.0
+        cIyy_xz = 0.0
+        cIyy_yz = 0.0
+
+	cIzz_zz = 0.0
+	cIzz_xy = 0.0
+	cIzz_xz = 0.0
+	cIzz_yz = 0.0	
+
+	cIxy_xy = 0.0
+	cIxy_xz = 0.0
+	cIxy_yz = 0.0
+
+	cIxz_xz = 0.0
+	cIxz_yz = 0.0
+
+	cIyz_yz = 0.0
+	
         for dataPoint in dataVec:
-            weight = dataPoint.getWeight()
             hit = vector2point(dataPoint.getPoint()) - self.Centroid
-            xprm = hit.x()
-            yprm = hit.y()
-            zprm = hit.z()
+            x = hit.x()
+            y = hit.y()
+            z = hit.z()
+            w    = dataPoint.getWeight()
 	    # Need something smarter, here!
 	    dx = 8.0
 	    dy = 8.0
 	    dz = 8.0
-	    dw = 0.1*weight
-            dIxx2 += 4*weight**2*(yprm**2*dy**2+zprm**2*dz**2) +\
-                     dw**2*(yprm**2+zprm**2)**2
-            dIyy2 += 4*weight**2*(xprm**2*dx**2+zprm**2*dz**2) +\
-                     dw**2*(xprm**2+zprm**2)**2
-            dIzz2 += 4*weight**2*(xprm**2*dx**2+yprm**2*dy**2) +\
-                     dw**2*(xprm**2+yprm**2)**2
-            dIxy2 += weight**2*(yprm**2*dx**2+xprm**2*dy**2) +\
-                     dw**2*xprm**2*yprm**2
-            dIxz2 += weight**2*(zprm**2*dx**2+xprm**2*dz**2) +\
-                     dw**2*xprm**2*zprm**2
-            dIyz2 += weight**2*(yprm**2*dz**2+zprm**2*dy**2) +\
-                     dw**2*yprm**2*zprm**2
-            #print xprm, yprm, zprm, weight, dIxx2
-        #print sqrt(dIxx2), self.InertiaTensor[0, 0],\
-        #      sqrt(dIxx2)/self.InertiaTensor[0, 0]
-        #raw_input()
-	# Define the vector and get the square root of errors
-        # (that are squared)
-        vecdI = numpy.matrix([dIxx2, dIyy2, dIzz2,
-                              dIxy2, dIxz2, dIyz2], dtype = 'd')
-	vecdI = numpy.sqrt(vecdI)
-        print vecdI
-        kgka = K * vecdI.transpose()
-        print kgka
-        print kgka[1], kgka[4], kgka[7]
-        print Finverse * vecdI.transpose()
-	# Estimate the covariance matrix as the product of the dI vector
-	#covdI = vecdI.transpose() * vecdI
-        covdI = numpy.zeros((6, 6))
-        covdI[0, 0] = dIxx2
-        covdI[1, 1] = dIyy2
-        covdI[2, 2] = dIzz2
-        covdI[3, 3] = dIxy2
-        covdI[4, 4] = dIxz2
-        covdI[5, 5] = dIyz2
-        print covdI
-	# Thought to "normalize" it at some point with
-	# covdINorm = numpy.sqrt(covdI)
+	    dw = 0.1*w
+	    
+            # Ixx-Others
+            cIxx_xx +=  4*w**2 * (y**2 * dy**2 + z**2 * dz**2) + (y**2 + z**2)**2  * dw**2 
+            cIxx_yy +=  4*w**2 * z**2 * dz**2         + (y**2 + z**2)*(x**2 + z**2) * dw**2
+            cIxx_zz +=  4*w**2 * y**2 * dy**2         + (y**2 + z**2)*(x**2 + y**2) * dw**2
+            cIxx_xy += -2*w**2 * x*y  * dy**2         + (y**2 + z**2)*(-x*y)        * dw**2
+            cIxx_xz += -2*w**2 * x*z  * dz**2         + (y**2 + z**2)*(-x*z)        * dw**2
+            cIxx_yz += -2*w**2 * y*z  * (dy**2+dz**2) + (y**2 + z**2)*(-y*z)        * dw**2
+
+            # Iyy-Others
+            cIyy_yy +=  4*w**2 * (x**2 * dx**2 + z**2 * dz**2) + (x**2 + z**2)**2   * dw**2
+            cIyy_zz +=  4*w**2 * x**2 * dx**2	      + (x**2 + z**2)*(x**2 + y**2) * dw**2    
+            cIyy_xy += -2*w**2 * x*y  * dx**2	      + (x**2 + z**2)*(-x*y)	    * dw**2	   
+            cIyy_xz += -2*w**2 * x*z  * (dx**2+dz**2) + (x**2 + z**2)*(-x*z)	    * dw**2	    
+            cIyy_yz += -2*w**2 * y*z  * dz**2	      + (x**2 + z**2)*(-y*z)	    * dw**2
+
+             # Iyy-Others
+            cIzz_zz += 4*w**2 * (x**2 * dx**2 + y**2 * dy**2) + (x**2 + y**2)**2    * dw**2
+	    cIzz_xy += -2*w**2 * x*y  * (dx**2+dy**2) + (x**2 + y**2)*(-x*y)	    * dw**2
+            cIzz_xz += -2*w**2 * x*z  * dx**2	      + (x**2 + z**2)*(-x*z)	    * dw**2
+            cIzz_yz += -2*w**2 * y*z  * dy**2	      + (x**2 + z**2)*(-y*z)	    * dw**2
+
+            # Ixy-Others
+            cIxy_xy += w**2 * (y**2 * dx**2 + x**2 * dy**2)   + x**2 * y**2         * dw**2
+            cIxy_xz += w**2 * y*z * dx**2                     + x**2 * y*z          * dw**2
+            cIxy_yz += w**2 * x*z * dy**2                     + x * y**2 * z        * dw**2
+
+            # Ixz-Others
+            cIxz_xz += w**2 * (z**2 * dx**2 + x**2 * dz**2)   + x**2 * z**2         * dw**2
+	    cIxz_yz += w**2 * x*y * dz**2                     + x * y * z**2        * dw**2
+	    
+            # Iyz-Iyz
+            cIyz_yz += w**2 * (y**2 * dz**2 + z**2 * dy**2)   + y**2 * z**2         * dw**2
+	    
+
+        self.VdICovMatrix = numpy.array([\
+	     [cIxx_xx, cIxx_yy, cIxx_zz, cIxx_xy, cIxx_xz, cIxx_yz],
+	     
+             [cIxx_yy, cIyy_yy, cIyy_zz, cIyy_xy, cIyy_xz, cIyy_yz],
+	     
+             [cIxx_zz, cIyy_zz, cIzz_zz, cIzz_xy, cIzz_xz, cIzz_yz],
+	     
+	     [cIxx_xy, cIyy_xy, cIzz_xy, cIxy_xy, cIxy_xz, cIxy_yz],
+	     
+             [cIxx_xz, cIyy_xz, cIzz_xz, cIxy_xz, cIxz_xz, cIxz_yz],
+	     
+	     [cIxx_yz, cIyy_yz, cIzz_yz, cIxy_yz, cIxz_yz, cIyz_yz]],
+             dtype = 'd')
+        
+	print 'VdI covariance matrix'
+	print self.VdICovMatrix
 	# Propagate errors, i.e.
 	# Calculate the covariance matrix of Eigen values and vectors
 	# Covariance matrix of:
         # [de0x, de0y, de0z, de1x, de1y, de1z, de2x, de2y, de2z, dL0, dL1, dL2]
-	covariancematrix = K * covdI * K.transpose()
-        return covariancematrix
+	self.ErrorCovarianceMatrix = K * self.VdICovMatrix * K.transpose()
+        return self.ErrorCovarianceMatrix
 
     def __str__(self):
         text = ''
