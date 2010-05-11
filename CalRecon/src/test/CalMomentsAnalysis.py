@@ -639,8 +639,8 @@ class CalMomentsAnalysis:
              # Iyy-Others
             cIzz_zz += 4*w**2 * (x**2 * dx**2 + y**2 * dy**2) + (x**2 + y**2)**2    * dw**2
 	    cIzz_xy += -2*w**2 * x*y  * (dx**2+dy**2) + (x**2 + y**2)*(-x*y)	    * dw**2
-            cIzz_xz += -2*w**2 * x*z  * dx**2	      + (x**2 + z**2)*(-x*z)	    * dw**2
-            cIzz_yz += -2*w**2 * y*z  * dy**2	      + (x**2 + z**2)*(-y*z)	    * dw**2
+            cIzz_xz += -2*w**2 * x*z  * dx**2	      + (x**2 + y**2)*(-x*z)	    * dw**2
+            cIzz_yz += -2*w**2 * y*z  * dy**2	      + (x**2 + y**2)*(-y*z)	    * dw**2
 
             # Ixy-Others
             cIxy_xy += w**2 * (y**2 * dx**2 + x**2 * dy**2)   + x**2 * y**2         * dw**2
