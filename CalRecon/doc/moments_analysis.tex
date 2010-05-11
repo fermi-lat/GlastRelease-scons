@@ -583,7 +583,8 @@ $6\times6$ covariancewe will have $6(6+1)/2 = 21$ components:
   2w_i^2 (\Delta z_i)^2 + (y_i^2 + z_i^2)(\Delta w_i)^2
   \right\}\\
   \Sigma_{xx-yz} &= -\sum_{i=1}^n y_iz_i \left\{
-  2w_i^2 (\Delta y_i)^2 + (y_i^2 + z_i^2)(\Delta w_i)^2
+  2w_i^2 \left[ (\Delta y_i)^2 + (\Delta z_i)^2 \right] +
+  (y_i^2 + z_i^2)(\Delta w_i)^2
   \right\}\\
   \Sigma_{yy-yy} &= \sum_{i=1}^n \left\{
   4w_i^2 \left[ x_i^2(\Delta x_i)^2 + z_i^2(\Delta z_i)^2 \right] +
@@ -596,7 +597,7 @@ $6\times6$ covariancewe will have $6(6+1)/2 = 21$ components:
   2w_i^2 (\Delta x_i)^2 + (x_i^2 + z_i^2)(\Delta w_i)^2
   \right\}\\
   \Sigma_{yy-xz} &= -\sum_{i=1}^n x_iz_i \left\{
-  2w_i^2 (\Delta x_i)^2 + 2w_i^2 (\Delta z_i)^2 +
+  2w_i^2 \left[ (\Delta x_i)^2 + (\Delta z_i)^2 \right] +
   (x_i^2 + z_i^2)(\Delta w_i)^2
   \right\}
 \end{align}
