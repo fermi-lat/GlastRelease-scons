@@ -524,7 +524,7 @@ the covariance matrix of the two components of the principal axis is:
 \end{equation}
 
 
-\subsection{Error analysis in 3 dimensions}
+\section{Error analysis in 3 dimensions}
 
 Along the same lines of the previous subsection the derivatives of the
 components of the inertia tensor are:
@@ -641,6 +641,118 @@ $6\times6$ covariancewe will have $6(6+1)/2 = 21$ components:
   x_i^2z_i^2 (\Delta w_i)^2
   \right\}
 \end{align}
+In analogy with the two-dimensional case we define:
+\begin{equation}
+  D = 
+  \begin{pmatrix}
+    1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\
+    0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & \frac{1}{2} & 0 & 0 & 0 & \frac{1}{2} & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} & 0
+  \end{pmatrix}
+\end{equation}
+so that 
+\begin{equation}
+  v_d(\itm) = D vec(\itm) =
+  \begin{pmatrix}
+    \itc{xx}\\
+    \itc{yy}\\
+    \itc{zz}\\
+    \itc{xy}\\
+    \itc{xz}\\
+    \itc{yz}
+  \end{pmatrix}
+\end{equation}
+and the $6\times6$ covariance matrix of the components of the inertia tensor
+is:
+\begin{equation}
+  \Sigma_{v_d(\itm)} = 
+  \begin{pmatrix}
+    \Sigma_{xx-xx} & \Sigma_{xx-yy} & \Sigma_{xx-zz} &
+    \Sigma_{xx-xy} & \Sigma_{xx-xz} & \Sigma_{xx-yz}\\
+    \Sigma_{xx-yy} & \Sigma_{yy-yy} & \Sigma_{yy-zz} &
+    \Sigma_{yy-xy} & \Sigma_{yy-xz} & \Sigma_{yy-yz}\\
+    \Sigma_{xx-zz} & \Sigma_{yy-zz} & \Sigma_{zz-zz} &
+    \Sigma_{zz-xy} & \Sigma_{zz-xz} & \Sigma_{zz-yz}\\
+    \Sigma_{xx-xy} & \Sigma_{yy-xy} & \Sigma_{zz-xy} &
+    \Sigma_{xy-xy} & \Sigma_{xy-xz} & \Sigma_{xy-yz}\\
+    \Sigma_{xx-xz} & \Sigma_{yy-xz} & \Sigma_{zz-xz} &
+    \Sigma_{xy-xz} & \Sigma_{xz-xz} & \Sigma_{xz-yz}\\
+    \Sigma_{xx-yz} & \Sigma_{yy-yz} & \Sigma_{zz-yz} &
+    \Sigma_{xy-yz} & \Sigma_{xz-yz} & \Sigma_{yz-yz}\\
+  \end{pmatrix}
+\end{equation}
+In the three-dimensional case $D^+$ reads:
+\begin{equation}
+  D^+ =
+  \begin{pmatrix}
+    1 & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 1 & 0 & 0\\
+    0 & 0 & 0 & 0 & 1 & 0\\
+    0 & 0 & 0 & 1 & 0 & 0\\
+    0 & 1 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & 1\\
+    0 & 0 & 0 & 0 & 1 & 0\\
+    0 & 0 & 0 & 0 & 0 & 1\\
+    0 & 0 & 1 & 0 & 0 & 0
+  \end{pmatrix}
+\end{equation}
+and the rotation matrix is obviously:
+\begin{equation}
+  S =
+  \begin{pmatrix}
+    e^0_x & e^0_y & e^0_z\\
+    e^1_x & e^1_y & e^1_z\\
+    e^2_x & e^2_y & e^2_z
+  \end{pmatrix}
+\end{equation}
+The last pieces of information that we need are:
+\begin{equation}
+  S_p =
+  \begin{pmatrix}
+    0 & S_{20} & -S_{10}\\
+    -S_{20} & 0 & S_{00}\\
+    S_{10} & -S_{00} & 0\\
+    0 & S_{21} & -S_{11}\\
+    -S_{21} & 0 & S_{01}\\
+    S_{11} & -S_{01} & 0\\
+    0 & S_{22} & -S_{12}\\
+    -S_{22} & 0 & S_{02}\\
+    S_{12} & -S_{02} & 0
+  \end{pmatrix}
+\end{equation}
+and:
+\begin{equation}
+  G^+ =
+  \begin{pmatrix}
+    1 & 0  & 0  & 0  & 0 & 0  & 0  & 0  & 0\\
+    0 & 0  & 0  & 0  & 1 & 0  & 0  & 0  & 0\\
+    0 & 0  & 0  & 0  & 0 & 0  & 0  & 0  & 1\\
+    0 & 0  & 0  & 0  & 0 & \frac{1}{2(\lambda_2 - \lambda_1)} &
+    0  & \frac{1}{2(\lambda_2 - \lambda_1)} & 0\\
+    0 & 0  & \frac{1}{2(\lambda_0 - \lambda_2)} &
+    0  & 0 & 0  & \frac{1}{2(\lambda_0 - \lambda_2)} & 0  & 0\\
+    0 & \frac{1}{2(\lambda_1 - \lambda_0)} & 0 &
+    \frac{1}{2(\lambda_1 - \lambda_0)} & 0 & 0  & 0  & 0  & 0
+  \end{pmatrix}
+\end{equation}
+And at this point we just follow the paper (the new one, not the old one):
+\begin{align}
+  F^{-1} &= G^+ (S \otimes S) D^+\\
+  K &=
+  \begin{pmatrix}
+    0_{9\times3} & S_p\\
+    I_{3\times3} & 0_{3\times3}
+  \end{pmatrix}
+  F^{-1}
+\end{align}
+and eventually:
+\begin{equation}
+  \Sigma_{vec(S), \lambda} = K \Sigma_{v_d(\itm)} K^T
+\end{equation}
+
 
 
 
