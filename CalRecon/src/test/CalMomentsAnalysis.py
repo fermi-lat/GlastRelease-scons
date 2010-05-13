@@ -97,7 +97,7 @@ class ReconReader:
         self.MeritArrayDict = {}
         self.ExpectedSkewness = None
         if meritFilePath is None:
-            meritFilePath = reconFilePath.replace('recon', 'merit')
+            meritFilePath = reconFilePath.replace('recon.root', 'merit.root')
             print 'No path specified, trying %s...' % meritFilePath
         if not os.path.exists(meritFilePath):
             print 'Could not find the merit, will ignore it.'
@@ -516,8 +516,8 @@ class CalMomentsAnalysis:
 
     def getCovarianceMatrix(self, dataVec):
         (L0, L1, L2) = self.Moment
-        print 'Moments: %s' % self.Moment
-        print 'Inertia tensor:\n%s' % self.InertiaTensor
+        #print 'Moments: %s' % self.Moment
+        #print 'Inertia tensor:\n%s' % self.InertiaTensor
         #print self.Moment
 	S = numpy.matrix([ [self.Axis[j][i] for i in range(3)] \
                            for j in range(3) ], dtype = 'd')
@@ -525,7 +525,7 @@ class CalMomentsAnalysis:
         #print S * self.InertiaTensor * S.I
         #raw_input()
 	# Starting to define things
-        print 'S =\n%s' % S
+        #print 'S =\n%s' % S
         S_p = numpy.matrix([ [ 0     ,  S[2,0], -S[1,0]],
                              [-S[2,0],  0     ,  S[0,0]],
                              [ S[1,0], -S[0,0],  0     ],
@@ -536,7 +536,7 @@ class CalMomentsAnalysis:
                              [-S[2,2],  0     ,  S[0,2]],
                              [ S[1,2], -S[0,2],  0     ] ], dtype = 'd')
 
-        print 'Sp =\n%s' % S_p
+        #print 'Sp =\n%s' % S_p
         D = numpy.matrix([ [1, 0,   0,   0,  0, 0,   0, 0,   0],\
                            [0, 0,   0,   0,  1, 0,   0, 0,   0],\
                            [0, 0,   0,   0,  0, 0,   0, 0,   1],\
@@ -554,9 +554,9 @@ class CalMomentsAnalysis:
 		    	       [ 0.,  0.,  0.,  0.,  1.,  0.],
 		    	       [ 0.,  0.,  0.,  0.,  0.,  1.],
 		    	       [ 0.,  0.,  1.,  0.,  0.,  0.]], dtype = 'd')
-        print 'D =\n%s' % D
-        print 'Dplus =\n%s' % Dplus
-        print 'D*Dplus =\n%s' % D*Dplus
+        #print 'D =\n%s' % D
+        #print 'Dplus =\n%s' % Dplus
+        #print 'D*Dplus =\n%s' % (D*Dplus)
 
 	# Defining G+
         g1 = 0.5/(L2 - L1)
@@ -569,7 +569,7 @@ class CalMomentsAnalysis:
                                [0, 0 , g2, 0 , 0, 0 , g2, 0 , 0],
                                [0, g3, 0 , g3, 0, 0 , 0 , 0 , 0] ],
                              dtype = 'd')
-        print 'Gplus =\n%s' % Gplus
+        #print 'Gplus =\n%s' % Gplus
 
 	# Defining F^-1
         Finverse = Gplus * numpy.kron(S, S) * Dplus
@@ -577,9 +577,9 @@ class CalMomentsAnalysis:
 	# Derive the error propagation matrix K
 	K_low   = numpy.c_[M_IDENTITY_3_3, M_ZEROS_3_3]
         K_left = numpy.c_['0', numpy.c_['1', M_ZEROS_9_3, S_p], K_low]
-        print 'K_left =\n%s' % K_left
+        #print 'K_left =\n%s' % K_left
 	K = K_left * Finverse
-        print 'K =\n%s' % K
+        #print 'K =\n%s' % K
         
 	## Define the covariance matrix of the errors on the inertia tensor
         cIxx_xx = 0.0
@@ -616,9 +616,9 @@ class CalMomentsAnalysis:
             z = hit.z()
             w    = dataPoint.getWeight()
 	    # Need something smarter, here!
-	    dx = 8.0
-	    dy = 8.0
-	    dz = 8.0
+	    dx = 5.0
+	    dy = 5.0
+	    dz = 5.0
 	    dw = 0.1*w
 	    
             # Ixx-Others
@@ -669,14 +669,21 @@ class CalMomentsAnalysis:
 	     [cIxx_yz, cIyy_yz, cIzz_yz, cIxy_yz, cIxz_yz, cIyz_yz]],
              dtype = 'd')
         
-	print 'VdI covariance matrix'
-	print self.VdICovMatrix
+	#print 'VdI covariance matrix'
+	#print self.VdICovMatrix
 	# Propagate errors, i.e.
 	# Calculate the covariance matrix of Eigen values and vectors
 	# Covariance matrix of:
         # [de0x, de0y, de0z, de1x, de1y, de1z, de2x, de2y, de2z, dL0, dL1, dL2]
-	self.ErrorCovarianceMatrix = K * self.VdICovMatrix * K.transpose()
-        return self.ErrorCovarianceMatrix
+	errorCovarianceMatrix = K * self.VdICovMatrix * K.transpose()
+        #print 'Sigma(dvec(S), dLambda)\n%s' % errorCovarianceMatrix
+        print 'dxdir = %s' % sqrt(errorCovarianceMatrix[1,1])
+        print 'dydir = %s' % sqrt(errorCovarianceMatrix[4,4])
+        print 'dzdir = %s' % sqrt(errorCovarianceMatrix[7,7])
+        print 'dLambda1 = %.3e' % sqrt(errorCovarianceMatrix[9,9])
+        print 'dLambda2 = %.3e' % sqrt(errorCovarianceMatrix[10,10])
+        print 'dLambda3 = %.3e' % sqrt(errorCovarianceMatrix[11,11])
+        return errorCovarianceMatrix
 
     def __str__(self):
         text = ''
@@ -720,24 +727,24 @@ class MomentsClusterInfo:
             # Get the iterative moments centroid and axis from iterations
             self.Centroid = self.MomentsAnalysis.getMomentsCentroid()
             self.Axis = self.MomentsAnalysis.getMomentsAxis()
+            self.Moment = copy.copy(self.MomentsAnalysis.Moment)
             # Recalculate the moments going back to using all the data points
             # but with the iterated moments centroid
             if nIterations > 1:
+                self.CovMatrix = self.MomentsAnalysis.getCovarianceMatrix(dataVec)
                 dataVec = self.getCalMomentsDataVec(iniCentroid)
                 chiSq = self.MomentsAnalysis.doMomentsAnalysis(dataVec,
                                                           self.Centroid)
+            else:
+                pass
+                self.CovMatrix = self.MomentsAnalysis.getCovarianceMatrix(dataVec)
             # Extract the values for the moments with all hits present
             self.RmsLong = self.MomentsAnalysis.getLongitudinalRms()
             self.RmsTrans = self.MomentsAnalysis.getTransverseRms()
             self.RmsLongAsym = self.MomentsAnalysis.getLongAsymmetry()
             self.SkewnessLong = self.MomentsAnalysis.getLongSkewness()
         self.checkMomentsAnalysis()
-        self.CovMatrix = self.MomentsAnalysis.getCovarianceMatrix(dataVec)
-        # Print something of the covariance matrix.
-        print 'dxdir = %f' % sqrt(self.CovMatrix[1,1])
-        print 'dydir = %f' % sqrt(self.CovMatrix[4,4])
-        print 'dzdir = %f' % sqrt(self.CovMatrix[7,7])
-        raw_input()
+        
 
     def getInitialCentroid(self):
         # First estimation of the centroid.
