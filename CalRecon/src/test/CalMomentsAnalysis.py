@@ -27,9 +27,9 @@ M_PI = pi
 CAL_TOWER_PITCH = 374.5
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
-MERIT_VARS = ['McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
-              'McXDir', 'McYDir', 'McZDir', 'CalCsIRLn', 'CalLATRLn',
-              'TkrNumTracks']
+MERIT_VARS = ['EvtEventId', 'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy',
+              'CalEnergyCorr', 'McXDir', 'McYDir', 'McZDir', 'CalCsIRLn',
+              'CalLATRLn', 'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
 print 'Loading necessary libraries...'
@@ -106,7 +106,10 @@ class ReconReader:
             self.MeritChain = ROOT.TChain('MeritTuple')
             self.MeritChain.Add(meritFilePath)
             for branchName in MERIT_VARS:
-                a = numpy.array([0.0], dtype = 'f')
+                if branchName == 'EvtEventId':
+                    a = numpy.array([0.0], dtype = 'l')
+                else:
+                    a = numpy.array([0.0], dtype = 'f')
                 self.MeritChain.SetBranchAddress(branchName, a)
                 self.MeritArrayDict[branchName] = a
             self.MeritTreeFormula = ROOT.TTreeFormula('cut', cut,
@@ -266,6 +269,7 @@ class CalMomentsAnalysisIteration:
         self.LongProfile.Draw('ap')
         self.LongProfile.GetXaxis().SetTitle('Position along princ. axis (mm)')
         self.LongProfile.GetYaxis().SetTitle('Energy (MeV)')
+        self.LongProfile.GetYaxis().SetTitleOffset(1.4)
         self.TextBox = ROOT.TPaveText(0.6, 0.75, 0.99, 0.99, 'NDC')
         self.TextBox.SetTextAlign(12)
         self.TextBox.AddText('Iteration %d (%d xtals)' % (self.IterationNumber,
