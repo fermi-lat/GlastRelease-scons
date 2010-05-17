@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 EOH
 
+v11r14p1  17-May-2010 TU  Fix memory leak in TkrDigi found on linux only
 v11r14p0  15-Sep-2009 TU  HMK Tag Tracy's updates to ObfFilterStatus.h to 
           store energy in LEUs and return methods to the TDS
 v11r13p1  10-Sep-2009 HMK Fix up warnings
