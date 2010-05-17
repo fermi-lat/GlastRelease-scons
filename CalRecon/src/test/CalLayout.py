@@ -1,4 +1,10 @@
 
+# Author(s):
+# Luca Baldini (luca.baldini@pi.infn.it)
+#
+# Utility class to display clusters in the CAL.
+
+
 import ROOT
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 ROOT.gStyle.SetOptStat(0)
