@@ -40,6 +40,11 @@ MODULE_COLOR = ROOT.kGray
 LOG_COLOR = ROOT.kGray
 
 
+CAL_VIEW_DICT = {'xz': [False, False, False, False],
+                 'yz': [True, True, True, True]
+                 }
+
+
 
 def getCanvas(name, title = None):
     title = title or name
@@ -75,29 +80,35 @@ class Box(ROOT.TBox):
 
 class CalModule:
 
-    def __init__(self, xcenter, index):
+    def __init__(self, xcenter, index, view):
         self.ModuleBox = Box(xcenter, CAL_MODULE_VCENTER, CAL_MODULE_WIDTH,
                              CAL_MODULE_HEIGHT, MODULE_COLOR)
-        self.Index = index
         self.Logs = []
-        for i in range(8):
-            yc = CAL_MODULE_CSI_TOP - i*CELL_VERT_PITCH
-            if (i % 2 != 0 and self.even()) or (i % 2 == 0 and self.odd()):
-                xc = xcenter
-                log = Box(xc, yc, CSI_LENGTH, CSI_HEIGHT, LOG_COLOR)
-                self.Logs.append(log)
-            else:
-                for j in range(12):
-                    xc = xcenter + (j - 5.5)*CELL_HOR_PITCH
-                    log = Box(xc, yc, CSI_WIDTH, CSI_HEIGHT, LOG_COLOR)
-                    self.Logs.append(log)                
+        if CAL_VIEW_DICT[view][index]:
+            for i in range(8):
+                yc = CAL_MODULE_CSI_TOP - i*CELL_VERT_PITCH
+                if i % 2 != 0:
+                    xc = xcenter
+                    log = Box(xc, yc, CSI_LENGTH, CSI_HEIGHT, LOG_COLOR)
+                    self.Logs.append(log)
+                else:
+                    for j in range(12):
+                        xc = xcenter + (j - 5.5)*CELL_HOR_PITCH
+                        log = Box(xc, yc, CSI_WIDTH, CSI_HEIGHT, LOG_COLOR)
+                        self.Logs.append(log)
+        else:
+            for i in range(8):
+                yc = CAL_MODULE_CSI_TOP - i*CELL_VERT_PITCH
+                if i % 2 == 0:
+                    xc = xcenter
+                    log = Box(xc, yc, CSI_LENGTH, CSI_HEIGHT, LOG_COLOR)
+                    self.Logs.append(log)
+                else:
+                    for j in range(12):
+                        xc = xcenter + (j - 5.5)*CELL_HOR_PITCH
+                        log = Box(xc, yc, CSI_WIDTH, CSI_HEIGHT, LOG_COLOR)
+                        self.Logs.append(log)
 
-    def even(self):
-        return (self.Index % 2 == 0)
-
-    def odd(self):
-        return not self.even()
-            
     def draw(self):
         self.ModuleBox.draw()
         for log in self.Logs:
@@ -115,18 +126,22 @@ class CalLayout:
         self.BaseHistogramXZ.GetYaxis().SetLabelSize(0.08)
         self.BaseHistogramYZ = self.BaseHistogramXZ.Clone('hyz')
         self.BaseHistogramYZ.SetTitle('YZ view')
-        self.Modules = []
+        self.Modules = {'xz': [],
+                        'yz': []}
         for i in range(4):
             xcenter = (i - 1.5)*TOWER_PITCH
-            self.Modules.append(CalModule(xcenter, i))
+            for view in ['xz', 'yz']:
+                self.Modules[view].append(CalModule(xcenter, i, view))
 
     def draw(self, view = 'xz'):
         if view == 'xz':
             self.BaseHistogramXZ.Draw()
+            for module in self.Modules['xz']:
+                module.draw()
         else:
             self.BaseHistogramYZ.Draw()
-        for module in self.Modules:
-            module.draw()
+            for module in self.Modules['yz']:
+                module.draw()
 
 
 

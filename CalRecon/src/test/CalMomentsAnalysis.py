@@ -209,9 +209,13 @@ class CalMomentsData:
         self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25)
 
     def setMaxWeight(self, maxWeight):
-        markerSize = max(0.15, 1.8*sqrt(self.getWeight()/maxWeight))
-        self.XZMarker.SetMarkerSize(markerSize)
-        self.YZMarker.SetMarkerSize(markerSize)
+        markerSize = 1.8*sqrt(self.getWeight()/maxWeight)
+        if markerSize > 0.15:
+            self.XZMarker.SetMarkerSize(markerSize)
+            self.YZMarker.SetMarkerSize(markerSize)
+        else:
+            self.XZMarker.SetMarkerStyle(7)
+            self.YZMarker.SetMarkerStyle(7)
 
     def getPoint(self):
         return self.XtalData.getPosition()
@@ -282,6 +286,12 @@ class CalMomentsAnalysisIteration:
             self.MomentsDataList.append(copy.deepcopy(dataPoint))
 
     def draw(self):
+        dx = self.Axis[1].x()
+        dy = self.Axis[1].y()
+        dz = self.Axis[1].z()
+        xc = self.Centroid.x()
+        yc = self.Centroid.y()
+        zc = self.Centroid.z()
         cName = 'cMomIter%d' % self.IterationNumber
         cTitle = 'Moments analysis---iteration %d' % self.IterationNumber
         self.Canvas = getCanvas(cName, cTitle)
@@ -289,10 +299,30 @@ class CalMomentsAnalysisIteration:
         CAL_LAYOUT.draw('xz')
         for dataPoint in  self.MomentsDataList:
             dataPoint.XZMarker.Draw()
+        self.XZCentrMarker = ROOT.TMarker(xc, zc, 20)
+        self.XZCentrMarker.SetMarkerColor(ROOT.kRed)
+        self.XZCentrMarker.Draw()
+        x1 = xc - (zc - Y_MIN)*(dx/dz)
+        z1 = Y_MIN
+        x2 = xc + (Y_MAX - zc)*(dx/dz)
+        z2 = Y_MAX
+        self.XZDirection = ROOT.TLine(x1, z1, x2, z2)
+        self.XZDirection.SetLineColor(ROOT.kRed)
+        self.XZDirection.SetLineWidth(1)
+        self.XZDirection.Draw()
         self.Canvas.cd(2)
         CAL_LAYOUT.draw('yz')
         for dataPoint in  self.MomentsDataList:
             dataPoint.YZMarker.Draw()
+        self.YZCentrMarker = ROOT.TMarker(yc, zc, 20)
+        self.YZCentrMarker.SetMarkerColor(ROOT.kRed)
+        self.YZCentrMarker.Draw()
+        y1 = yc - (zc - Y_MIN)*(dy/dz)
+        y2 = yc + (Y_MAX - zc)*(dy/dz)
+        self.YZDirection = ROOT.TLine(y1, z1, y2, z2)
+        self.YZDirection.SetLineColor(ROOT.kRed)
+        self.YZDirection.SetLineWidth(1)
+        self.YZDirection.Draw()
         self.Canvas.cd()
         self.Canvas.Update()
 
