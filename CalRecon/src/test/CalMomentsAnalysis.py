@@ -20,6 +20,8 @@ import numpy
 
 from math import acos, sqrt, cos, pi, fabs, log
 
+from CalLayout import *
+
 
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 
@@ -203,6 +205,13 @@ class CalMomentsData:
         self.Point = vector2point(self.getPoint())
         self.DistToAxis = 0.
         self.CoordAlongAxis = 0.
+        self.XZMarker = ROOT.TMarker(self.Point.x(), self.Point.z(), 25)
+        self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25)
+
+    def setMaxWeight(self, maxWeight):
+        markerSize = max(0.15, 1.8*sqrt(self.getWeight()/maxWeight))
+        self.XZMarker.SetMarkerSize(markerSize)
+        self.YZMarker.SetMarkerSize(markerSize)
 
     def getPoint(self):
         return self.XtalData.getPosition()
@@ -221,7 +230,7 @@ class CalMomentsData:
 
     def calcCoordAlongAxis(self, centroid, axis):
         self.CoordAlongAxis = (self.Point - centroid).Dot(axis)
-        return self.CoordAlongAxis 
+        return self.CoordAlongAxis
 
     def __cmp__(self, other):
         if self.DistToAxis > other.DistToAxis:
@@ -233,6 +242,9 @@ class CalMomentsData:
 # Convenience class to store the information about the single iterations
 # of the moments analysis without changing the too much the code in
 # the CalMomentsAnalysis class.
+
+CAL_LAYOUT = CalLayout()
+
 
 class CalMomentsAnalysisIteration:
 
@@ -257,15 +269,34 @@ class CalMomentsAnalysisIteration:
         self.WeightSum = copy.deepcopy(momentsAnalysis.WeightSum)
         self.InertiaTensor = copy.deepcopy(momentsAnalysis.InertiaTensor)
         self.PrincipalAxis = copy.deepcopy(momentsAnalysis.PrincipalAxis)
-        # Construct the longitudinal profile.
+        # Construct the longitudinal profile
+        # (and store the CAL moments data)
         self.LongProfile = ROOT.TGraph()
         self.LongProfile.SetMarkerStyle(24)
         self.LongProfile.SetMarkerSize(0.8)
+        self.MomentsDataList = []
         for (i, dataPoint) in enumerate(dataVec):
             self.LongProfile.SetPoint(i, dataPoint.CoordAlongAxis,
                                       dataPoint.getWeight())
+            dataPoint.setMaxWeight(momentsAnalysis.MaxWeight)
+            self.MomentsDataList.append(copy.deepcopy(dataPoint))
 
-    def draw(self, expSkewness = None):
+    def draw(self):
+        cName = 'cMomIter%d' % self.IterationNumber
+        cTitle = 'Moments analysis---iteration %d' % self.IterationNumber
+        self.Canvas = getCanvas(cName, cTitle)
+        self.Canvas.cd(1)
+        CAL_LAYOUT.draw('xz')
+        for dataPoint in  self.MomentsDataList:
+            dataPoint.XZMarker.Draw()
+        self.Canvas.cd(2)
+        CAL_LAYOUT.draw('yz')
+        for dataPoint in  self.MomentsDataList:
+            dataPoint.YZMarker.Draw()
+        self.Canvas.cd()
+        self.Canvas.Update()
+
+    def drawLongProfile(self, expSkewness = None):
         self.LongProfile.Draw('ap')
         self.LongProfile.GetXaxis().SetTitle('Position along princ. axis (mm)')
         self.LongProfile.GetYaxis().SetTitle('Energy (MeV)')
@@ -315,6 +346,7 @@ class CalMomentsAnalysis:
                      Vector(0., 0., 1.),
                      Vector(0., 0., 0.)]        
         self.WeightSum = 0.0
+        self.MaxWeight = 0.0
         # New variables, for debugging purposes.
         self.InertiaTensor = None
         self.PrincipalAxis = None
@@ -393,6 +425,8 @@ class CalMomentsAnalysis:
             Ixz -= xprm*zprm * weight
             Iyz -= yprm*zprm * weight
             weightSum += weight
+            if weight > self.MaxWeight:
+                self.MaxWeight = weight
             centroid  += vector2point(dataPoint.getPoint()) * weight
         # Render determinant of Inertia Tensor into cubic form.
         p = - (Ixx + Iyy + Izz)
@@ -855,7 +889,7 @@ class MomentsClusterInfo:
         else:
             print 'Done, no differences :-)'
 
-    def draw(self, expSkewness = None):
+    def drawLongProfile(self, expSkewness = None):
         if self.RootCanvas is None:
             self.RootCanvas = ROOT.TCanvas('cmoments', 'Moments analysis',
                                            1100, 600)
@@ -863,7 +897,7 @@ class MomentsClusterInfo:
         self.RootCanvas.Divide(3, 2)
         for (i, iteration) in enumerate(self.MomentsAnalysis.IterationList):
             self.RootCanvas.cd(i + 1)
-            iteration.draw(expSkewness)
+            iteration.drawLongProfile(expSkewness)
         self.RootCanvas.cd()
         self.RootCanvas.Update()
 
@@ -907,11 +941,12 @@ if __name__ == '__main__':
             if not m.NotEnoughXtals:
                 for iter in m.MomentsAnalysis.IterationList:
                     print '\n%s' % iter
+                    iter.draw()
                 print 
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
                 print '\n%s' % reader.getEventInfo()
-                m.draw(reader.ExpectedSkewness)
+                m.drawLongProfile(reader.ExpectedSkewness)
             answer = raw_input('\nType q to quit, enter to continue.')
         eventNumber += 1
         
