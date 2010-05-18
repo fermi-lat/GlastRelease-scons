@@ -8,6 +8,7 @@
 import ROOT
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 ROOT.gStyle.SetOptStat(0)
+ROOT.gStyle.SetFrameBorderMode(0)
 
 from math import sqrt
 
@@ -48,12 +49,14 @@ CAL_VIEW_DICT = {'xz': [False, False, False, False],
 
 def getCanvas(name, title = None):
     title = title or name
-    c = ROOT.TCanvas(name, title, 1200, 500)
+    rightMargin = 0.01
+    leftMargin = 0.04
+    c = ROOT.TCanvas(name, title, 1200, 480)
     c.Divide(1, 2)
-    c.GetPad(1).SetRightMargin(0)
-    c.GetPad(1).SetLeftMargin(0.04)
-    c.GetPad(2).SetRightMargin(0)
-    c.GetPad(2).SetLeftMargin(0.04)
+    c.GetPad(1).SetRightMargin(rightMargin)
+    c.GetPad(1).SetLeftMargin(leftMargin)
+    c.GetPad(2).SetRightMargin(rightMargin)
+    c.GetPad(2).SetLeftMargin(leftMargin)
     return c
 
 
@@ -119,13 +122,24 @@ class CalModule:
 class CalLayout:
 
     def __init__(self):
+        labelSize = 0.07
+        titleSize = 0.07
+        xTitleOffset = 0.50
+        yTitleOffset = 0.30
         self.BaseHistogramXZ = ROOT.TH1F('hxz', 'XZ view', 100, X_MIN, X_MAX)
         self.BaseHistogramXZ.SetMinimum(Y_MIN)
         self.BaseHistogramXZ.SetMaximum(Y_MAX)
-        self.BaseHistogramXZ.GetXaxis().SetLabelSize(0.08)
-        self.BaseHistogramXZ.GetYaxis().SetLabelSize(0.08)
+        self.BaseHistogramXZ.GetXaxis().SetLabelSize(labelSize)
+        self.BaseHistogramXZ.GetXaxis().SetTitleSize(titleSize)
+        self.BaseHistogramXZ.GetXaxis().SetTitleOffset(xTitleOffset)
+        self.BaseHistogramXZ.GetXaxis().SetTitle('x (mm)')
+        self.BaseHistogramXZ.GetYaxis().SetLabelSize(labelSize)
+        self.BaseHistogramXZ.GetYaxis().SetTitleSize(titleSize)
+        self.BaseHistogramXZ.GetYaxis().SetTitleOffset(yTitleOffset)
+        self.BaseHistogramXZ.GetYaxis().SetTitle('z (mm)')
         self.BaseHistogramYZ = self.BaseHistogramXZ.Clone('hyz')
         self.BaseHistogramYZ.SetTitle('YZ view')
+        self.BaseHistogramYZ.GetXaxis().SetTitle('y (mm)')
         self.Modules = {'xz': [],
                         'yz': []}
         for i in range(4):
