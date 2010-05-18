@@ -29,9 +29,12 @@ M_PI = pi
 CAL_TOWER_PITCH = 374.5
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
-MERIT_VARS = ['EvtEventId', 'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy',
-              'CalEnergyCorr', 'McXDir', 'McYDir', 'McZDir', 'CalCsIRLn',
-              'CalLATRLn', 'TkrNumTracks']
+MERIT_VARS = ['EvtEventId',
+              'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
+              'McXDir', 'McYDir', 'McZDir',
+              'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
+              'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
+              'CalCsIRLn', 'CalLATRLn', 'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
 print 'Loading necessary libraries...'
@@ -285,17 +288,25 @@ class CalMomentsAnalysisIteration:
             dataPoint.setMaxWeight(momentsAnalysis.MaxWeight)
             self.MomentsDataList.append(copy.deepcopy(dataPoint))
 
-    def draw(self):
+    def draw(self, reconReader):
         dx = self.Axis[1].x()
         dy = self.Axis[1].y()
         dz = self.Axis[1].z()
         xc = self.Centroid.x()
         yc = self.Centroid.y()
         zc = self.Centroid.z()
+        if reconReader.MeritChain is not None:
+            tdx = reconReader.getMeritVariable('Tkr1XDir')
+            tdy = reconReader.getMeritVariable('Tkr1YDir')
+            tdz = reconReader.getMeritVariable('Tkr1ZDir')
+            txc = reconReader.getMeritVariable('Tkr1X0')
+            tyc = reconReader.getMeritVariable('Tkr1Y0')
+            tzc = reconReader.getMeritVariable('Tkr1Z0')
         cName = 'cMomIter%d' % self.IterationNumber
         cTitle = 'Moments analysis---iteration %d' % self.IterationNumber
         self.Canvas = getCanvas(cName, cTitle)
         self.Canvas.cd(1)
+        # Draw XZ view.
         CAL_LAYOUT.draw('xz')
         for dataPoint in  self.MomentsDataList:
             dataPoint.XZMarker.Draw()
@@ -310,7 +321,18 @@ class CalMomentsAnalysisIteration:
         self.XZDirection.SetLineColor(ROOT.kRed)
         self.XZDirection.SetLineWidth(1)
         self.XZDirection.Draw()
+        if reconReader.MeritChain is not None:
+            tx1 = txc - (tzc - Y_MIN)*(tdx/tdz)
+            tz1 = Y_MIN
+            tx2 = txc + (Y_MAX - tzc)*(tdx/tdz)
+            tz2 = Y_MAX
+            self.XZTkrDirection = ROOT.TLine(tx1, tz1, tx2, tz2)
+            self.XZTkrDirection.SetLineColor(ROOT.kBlue)
+            self.XZTkrDirection.SetLineWidth(1)
+            self.XZTkrDirection.SetLineStyle(7)
+            self.XZTkrDirection.Draw()
         self.Canvas.cd(2)
+        # Draw YZ view.
         CAL_LAYOUT.draw('yz')
         for dataPoint in  self.MomentsDataList:
             dataPoint.YZMarker.Draw()
@@ -323,6 +345,14 @@ class CalMomentsAnalysisIteration:
         self.YZDirection.SetLineColor(ROOT.kRed)
         self.YZDirection.SetLineWidth(1)
         self.YZDirection.Draw()
+        if reconReader.MeritChain is not None:
+            ty1 = tyc - (tzc - Y_MIN)*(tdy/tdz)
+            ty2 = tyc + (Y_MAX - tzc)*(tdy/tdz)
+            self.YZTkrDirection = ROOT.TLine(ty1, tz1, ty2, tz2)
+            self.YZTkrDirection.SetLineColor(ROOT.kBlue)
+            self.YZTkrDirection.SetLineWidth(1)
+            self.YZTkrDirection.SetLineStyle(7)
+            self.YZTkrDirection.Draw()
         self.Canvas.cd()
         self.Canvas.Update()
 
@@ -971,7 +1001,7 @@ if __name__ == '__main__':
             if not m.NotEnoughXtals:
                 for iter in m.MomentsAnalysis.IterationList:
                     print '\n%s' % iter
-                    iter.draw()
+                    iter.draw(reader)
                 print 
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
