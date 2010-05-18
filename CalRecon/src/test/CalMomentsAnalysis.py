@@ -34,7 +34,9 @@ MERIT_VARS = ['EvtEventId',
               'McXDir', 'McYDir', 'McZDir',
               'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
               'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
-              'CalCsIRLn', 'CalLATRLn', 'TkrNumTracks']
+              'CalCsIRLn', 'CalLATRLn',
+              'CalTrackDoca', 'CTBCORE',
+              'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
 print 'Loading necessary libraries...'
@@ -137,17 +139,17 @@ class ReconReader:
         return info
 
     def getEntry(self, i):
-        print 'ReconReader retriving event %d...' % i
+        print 'ReconReader retrieving event %d...' % i
         self.ReconChain.GetEvent(i)
         if self.MeritChain is not None:
             self.MeritChain.GetEntry(i)
             energy = self.getMeritVariable('CTBBestEnergy')
             tmax = self.getMeritVariable('CalLATRLn')
             tmin = tmax - self.getMeritVariable('CalCsIRLn')
-            print energy, tmin, tmax
             (mean, sigma2, skewness) =\
                    getExpectedLongParameters(energy, tmin, tmax)
             self.ExpectedSkewness = skewness
+            print '\n%s' % self.getEventInfo()
             return self.MeritTreeFormula.EvalInstance()
         return 1
 
@@ -217,8 +219,8 @@ class CalMomentsData:
             self.XZMarker.SetMarkerSize(markerSize)
             self.YZMarker.SetMarkerSize(markerSize)
         else:
-            self.XZMarker.SetMarkerStyle(7)
-            self.YZMarker.SetMarkerStyle(7)
+            self.XZMarker.SetMarkerStyle(1)
+            self.YZMarker.SetMarkerStyle(1)
 
     def getPoint(self):
         return self.XtalData.getPosition()
@@ -799,9 +801,10 @@ class CalMomentsAnalysis:
 
 class MomentsClusterInfo:
 
-    def __init__(self, calRecon):
+    def __init__(self, reader):
         self.RootCanvas = None
-        self.CalRecon = calRecon
+        self.ReconReader = reader
+        self.CalRecon = self.ReconReader.getCalRecon()
         self.NotEnoughXtals = False
         iniCentroid = self.getInitialCentroid()
         dataVec = self.getCalMomentsDataVec(iniCentroid)
@@ -829,13 +832,23 @@ class MomentsClusterInfo:
             # Recalculate the moments going back to using all the data points
             # but with the iterated moments centroid
             if nIterations > 1:
-                self.CovMatrix = self.MomentsAnalysis.getCovarianceMatrix(dataVec)
+                #self.CovMatrix =\
+                #     self.MomentsAnalysis.getCovarianceMatrix(dataVec)
+
+                # One more iteration with the clipped data vec.
+                clipDataVec = self.getClippedDataVec(dataVec)
+                chiSq = self.MomentsAnalysis.doMomentsAnalysis(clipDataVec,
+                                                               self.Centroid)
+                self.MomentsAnalysis.NumIterations += 1
+                # End of the new iteration.
+
                 dataVec = self.getCalMomentsDataVec(iniCentroid)
                 chiSq = self.MomentsAnalysis.doMomentsAnalysis(dataVec,
                                                           self.Centroid)
             else:
                 pass
-                self.CovMatrix = self.MomentsAnalysis.getCovarianceMatrix(dataVec)
+                #self.CovMatrix =\
+                #     self.MomentsAnalysis.getCovarianceMatrix(dataVec)
             # Extract the values for the moments with all hits present
             self.RmsLong = self.MomentsAnalysis.getLongitudinalRms()
             self.RmsTrans = self.MomentsAnalysis.getTransverseRms()
@@ -859,7 +872,7 @@ class MomentsClusterInfo:
     def getCalMomentsDataVec(self, centroid, preprocess = True):
         dataVec = []
         # This is a shortcut avoiding the initial pruning that Tracy does in
-        # order to remove the outlers before the moments analysis.
+        # order to remove the outliers before the moments analysis.
         if not preprocess:
             for xtalData in self.CalRecon.getCalXtalRecCol():
                 dataVec.append(CalMomentsData(xtalData))
@@ -886,7 +899,7 @@ class MomentsClusterInfo:
         # pull the axis
         # Start by sorting the data vector according to distance to axis
         dataVec.sort()
-        # Look for the point where there is a significant gap in distance to
+        # Look for the point wherethere is a significant gap in distance to
         # the next xtal
         envelope = min(5.*rmsDist, CAL_TOWER_PITCH)
         lastDist = 0.
@@ -904,9 +917,31 @@ class MomentsClusterInfo:
             tempCounter += 1
         # Now remove the outlier crystals
         dataVec = dataVec[:tempCounter]
-        # Make calculated quantities class members.
-        
         return dataVec
+
+    def getClippedDataVec(self, dataVec, padding = 0.2):
+        clippedDataVec = []
+        dx = self.MomentsAnalysis.Axis[1].x()
+        dy = self.MomentsAnalysis.Axis[1].y()
+        dz = self.MomentsAnalysis.Axis[1].z()
+        xc = self.MomentsAnalysis.Centroid.x()
+        yc = self.MomentsAnalysis.Centroid.y()
+        zc = self.MomentsAnalysis.Centroid.z()
+        xbot = xc - (zc - CAL_MODULE_CSI_BOTTOM_CORR)*(dx/dz)
+        ybot = yc - (zc - CAL_MODULE_CSI_BOTTOM_CORR)*(dy/dz)
+        zbot = CAL_MODULE_CSI_BOTTOM_CORR
+        xtop = xc + (CAL_MODULE_CSI_TOP_CORR - zc)*(dx/dz)
+        ytop = yc + (CAL_MODULE_CSI_TOP_CORR - zc)*(dy/dz)
+        ztop = CAL_MODULE_CSI_TOP_CORR
+        minCoord = -sqrt((xc - xbot)**2 + (yc - ybot)**2 + (zc - zbot)**2)
+        maxCoord = sqrt((xc - xtop)**2 + (yc - ytop)**2 + (zc - ztop)**2)
+        minCoord *= (1 - padding)
+        maxCoord *= (1 - padding)
+        for momentsData in dataVec:
+            coord = momentsData.CoordAlongAxis
+            if coord > minCoord and coord < maxCoord:
+                clippedDataVec.append(momentsData)
+        return clippedDataVec
 
     def getFirstCluster(self):
         return self.CalRecon.getCalClusterCol()[0]
@@ -944,8 +979,9 @@ class MomentsClusterInfo:
         nDiff += self.compare(self.Axis.z(), reconAxis.z(), 'Axis zdir')
         if nDiff:
             print 'Done, %d difference(s) found.' % nDiff
-            print 'WARNING! Press enter to proceed.'
-            raw_input()
+            print 'WARNING! Press enter to proceed, q to quit.'
+            if raw_input() == 'q':
+                sys.exit()
         else:
             print 'Done, no differences :-)'
 
@@ -995,9 +1031,8 @@ if __name__ == '__main__':
     eventNumber = 0
     answer = ''
     while answer != 'q':
-        if reader.getEntry(eventNumber):        
-            calRecon = reader.getCalRecon()
-            m = MomentsClusterInfo(calRecon)
+        if reader.getEntry(eventNumber):
+            m = MomentsClusterInfo(reader)
             if not m.NotEnoughXtals:
                 for iter in m.MomentsAnalysis.IterationList:
                     print '\n%s' % iter
@@ -1005,7 +1040,6 @@ if __name__ == '__main__':
                 print 
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
-                print '\n%s' % reader.getEventInfo()
                 m.drawLongProfile(reader.ExpectedSkewness)
             answer = raw_input('\nType q to quit, enter to continue.')
         eventNumber += 1
