@@ -442,7 +442,8 @@ class CalMomentsAnalysisIteration:
 
 class CalMomentsAnalysis:
 
-    def __init__(self):
+    def __init__(self, parent):
+        self.Parent = parent
         self.Centroid = Point()
         self.Moment = [0., 0., 0.]
         self.RmsLong = 0.
@@ -659,6 +660,7 @@ class CalMomentsAnalysis:
             # Finally, make sure have enough points remaining to proceed!
             if (len(dataVec) < 3):
                 break
+            #dataVec = self.Parent.getClippedDataVec(dataVec)
         return chiSq
 
     def getCovarianceMatrix(self, dataVec):
@@ -859,7 +861,7 @@ class MomentsClusterInfo:
             print 'Not enough xtals found (%d).' % len(dataVec)
             self.NotEnoughXtals = True
             return
-        self.MomentsAnalysis = CalMomentsAnalysis()
+        self.MomentsAnalysis = CalMomentsAnalysis(self)
         chiSq = self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
                                                                 iniCentroid)
         self.Centroid = None
@@ -916,7 +918,7 @@ class MomentsClusterInfo:
         centroid /= weightSum
         return centroid
 
-    def getCalMomentsDataVec(self, centroid, preprocess = True):
+    def getCalMomentsDataVec(self, centroid, preprocess = True, cut = 0.0):
         dataVec = []
         # This is a shortcut avoiding the initial pruning that Tracy does in
         # order to remove the outliers before the moments analysis.
@@ -937,7 +939,13 @@ class MomentsClusterInfo:
             distToAxis = momentsData.calcDistToAxis(centroid, axis)
             rmsDist   += momentsData.getWeight() * distToAxis * distToAxis
             weightSum += momentsData.getWeight()
-            dataVec.append(momentsData)
+        # New piece of code: apply a cut on the fractional xtal energy
+        cutWeight = weightSum*cut
+        for xtalData in self.CalRecon.getCalXtalRecCol():
+            momentsData = CalMomentsData(xtalData)
+            if momentsData.getWeight() > cutWeight:
+                dataVec.append(momentsData)
+        # End of new code.
         if len(dataVec) < MIN_NUM_XTALS:
             return dataVec
         # Get the quick rms of crystals about fit axis
