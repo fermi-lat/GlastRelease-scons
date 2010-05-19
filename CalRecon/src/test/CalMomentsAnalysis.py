@@ -258,6 +258,7 @@ CAL_LAYOUT = CalLayout()
 class CalMomentsAnalysisIteration:
 
     def __init__(self, momentsAnalysis, dataVec):
+        self.MomentsAnalysis = momentsAnalysis
         self.IterationNumber = copy.deepcopy(momentsAnalysis.NumIterations)
         self.NumXtals = len(dataVec)
         self.Centroid = copy.deepcopy(momentsAnalysis.Centroid)
@@ -297,6 +298,13 @@ class CalMomentsAnalysisIteration:
         xc = self.Centroid.x()
         yc = self.Centroid.y()
         zc = self.Centroid.z()
+        cluster = reconReader.getCalRecon().getCalClusterCol().At(0)
+        rxc = cluster.getParams().getCentroid().x()
+        ryc = cluster.getParams().getCentroid().y()
+        rzc = cluster.getParams().getCentroid().z()
+        rdx = cluster.getParams().getAxis().x()
+        rdy = cluster.getParams().getAxis().y()
+        rdz = cluster.getParams().getAxis().z()
         if reconReader.MeritChain is not None:
             tdx = reconReader.getMeritVariable('Tkr1XDir')
             tdy = reconReader.getMeritVariable('Tkr1YDir')
@@ -310,11 +318,14 @@ class CalMomentsAnalysisIteration:
         self.Canvas.cd(1)
         # Draw XZ view.
         CAL_LAYOUT.draw('xz')
+        # Draw xtals
         for dataPoint in  self.MomentsDataList:
             dataPoint.XZMarker.Draw()
+        # Draw centroid from the python code.
         self.XZCentrMarker = ROOT.TMarker(xc, zc, 20)
         self.XZCentrMarker.SetMarkerColor(ROOT.kRed)
         self.XZCentrMarker.Draw()
+        # Draw direction from the python code.
         x1 = xc - (zc - Y_MIN)*(dx/dz)
         z1 = Y_MIN
         x2 = xc + (Y_MAX - zc)*(dx/dz)
@@ -323,6 +334,24 @@ class CalMomentsAnalysisIteration:
         self.XZDirection.SetLineColor(ROOT.kRed)
         self.XZDirection.SetLineWidth(1)
         self.XZDirection.Draw()
+        # If the numbers are different wrt the recon file, draw the
+        # recon information.
+        if not self.MomentsAnalysis.EqualToRecon:
+            # Draw centroid from the recon file.
+            self.XZReconCentrMarker = ROOT.TMarker(rxc, rzc, 30)
+            self.XZReconCentrMarker.SetMarkerColor(ROOT.kRed)
+            self.XZReconCentrMarker.Draw()
+            # Draw direction from the recon file.
+            rx1 = rxc - (rzc - Y_MIN)*(rdx/rdz)
+            rz1 = Y_MIN
+            rx2 = rxc + (Y_MAX - rzc)*(rdx/rdz)
+            rz2 = Y_MAX
+            self.XZReconDirection = ROOT.TLine(rx1, rz1, rx2, rz2)
+            self.XZReconDirection.SetLineColor(ROOT.kRed)
+            self.XZReconDirection.SetLineStyle(7)
+            self.XZReconDirection.SetLineWidth(1)
+            self.XZReconDirection.Draw()
+        # If we do have the Merit, draw the TKR direction
         if reconReader.MeritChain is not None:
             tx1 = txc - (tzc - Y_MIN)*(tdx/tdz)
             tz1 = Y_MIN
@@ -336,17 +365,35 @@ class CalMomentsAnalysisIteration:
         self.Canvas.cd(2)
         # Draw YZ view.
         CAL_LAYOUT.draw('yz')
+        # Draw xtals
         for dataPoint in  self.MomentsDataList:
             dataPoint.YZMarker.Draw()
+        # Draw centroid from the python code.
         self.YZCentrMarker = ROOT.TMarker(yc, zc, 20)
         self.YZCentrMarker.SetMarkerColor(ROOT.kRed)
         self.YZCentrMarker.Draw()
+        # Draw direction from the python code.
         y1 = yc - (zc - Y_MIN)*(dy/dz)
         y2 = yc + (Y_MAX - zc)*(dy/dz)
         self.YZDirection = ROOT.TLine(y1, z1, y2, z2)
         self.YZDirection.SetLineColor(ROOT.kRed)
         self.YZDirection.SetLineWidth(1)
         self.YZDirection.Draw()
+        # If the numbers are different wrt the recon file, draw the
+        # recon information.
+        if not self.MomentsAnalysis.EqualToRecon:
+            # Draw centroid from the recon file.
+            self.YZReconCentrMarker = ROOT.TMarker(ryc, rzc, 30)
+            self.YZReconCentrMarker.SetMarkerColor(ROOT.kRed)
+            self.YZReconCentrMarker.Draw()
+            # Draw direction from the recon file.
+            ry1 = ryc - (rzc - Y_MIN)*(rdy/rdz)
+            ry2 = ryc + (Y_MAX - rzc)*(rdy/rdz)
+            self.YZReconDirection = ROOT.TLine(ry1, rz1, ry2, rz2)
+            self.YZReconDirection.SetLineColor(ROOT.kRed)
+            self.YZReconDirection.SetLineStyle(7)
+            self.YZReconDirection.SetLineWidth(1)
+            self.YZReconDirection.Draw()
         if reconReader.MeritChain is not None:
             ty1 = tyc - (tzc - Y_MIN)*(tdy/tdz)
             ty2 = tyc + (Y_MAX - tzc)*(tdy/tdz)
@@ -836,10 +883,10 @@ class MomentsClusterInfo:
                 #     self.MomentsAnalysis.getCovarianceMatrix(dataVec)
 
                 # One more iteration with the clipped data vec.
-                clipDataVec = self.getClippedDataVec(dataVec)
-                chiSq = self.MomentsAnalysis.doMomentsAnalysis(clipDataVec,
-                                                               self.Centroid)
-                self.MomentsAnalysis.NumIterations += 1
+                #clipDataVec = self.getClippedDataVec(dataVec)
+                #chiSq = self.MomentsAnalysis.doMomentsAnalysis(clipDataVec,
+                #                                               self.Centroid)
+                #self.MomentsAnalysis.NumIterations += 1
                 # End of the new iteration.
 
                 dataVec = self.getCalMomentsDataVec(iniCentroid)
@@ -978,11 +1025,13 @@ class MomentsClusterInfo:
         nDiff += self.compare(self.Axis.y(), reconAxis.y(), 'Axis ydir')
         nDiff += self.compare(self.Axis.z(), reconAxis.z(), 'Axis zdir')
         if nDiff:
+            self.MomentsAnalysis.EqualToRecon = False
             print 'Done, %d difference(s) found.' % nDiff
             print 'WARNING! Press enter to proceed, q to quit.'
             if raw_input() == 'q':
                 sys.exit()
         else:
+            self.MomentsAnalysis.EqualToRecon = True
             print 'Done, no differences :-)'
 
     def drawLongProfile(self, expSkewness = None):
