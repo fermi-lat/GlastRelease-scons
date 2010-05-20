@@ -35,7 +35,7 @@ MERIT_VARS = ['EvtEventId',
               'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
               'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
               'CalCsIRLn', 'CalLATRLn',
-              'CalTrackDoca', 'CTBCORE',
+              'CalTrackDoca', 'CTBCORE', 'CalTransRms',
               'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
@@ -221,6 +221,9 @@ class CalMomentsData:
         else:
             self.XZMarker.SetMarkerStyle(1)
             self.YZMarker.SetMarkerStyle(1)
+
+    def getDistToPoint(self, point):
+        return (self.Point - point).Mag()
 
     def getPoint(self):
         return self.XtalData.getPosition()
@@ -442,8 +445,9 @@ class CalMomentsAnalysisIteration:
 
 class CalMomentsAnalysis:
 
-    def __init__(self, parent):
+    def __init__(self, parent, clipDataVec):
         self.Parent = parent
+        self.ClipDataVec = clipDataVec
         self.Centroid = Point()
         self.Moment = [0., 0., 0.]
         self.RmsLong = 0.
@@ -660,7 +664,8 @@ class CalMomentsAnalysis:
             # Finally, make sure have enough points remaining to proceed!
             if (len(dataVec) < 3):
                 break
-            #dataVec = self.Parent.getClippedDataVec(dataVec)
+            if self.ClipDataVec:
+                dataVec = self.Parent.getClippedDataVec(dataVec)
         return chiSq
 
     def getCovarianceMatrix(self, dataVec):
@@ -850,18 +855,19 @@ class CalMomentsAnalysis:
 
 class MomentsClusterInfo:
 
-    def __init__(self, reader):
+    def __init__(self, reader, centrDistCut = 5.0*TOWER_PITCH,
+                 clipDataVec = False, lastClipStep = False):
         self.RootCanvas = None
         self.ReconReader = reader
         self.CalRecon = self.ReconReader.getCalRecon()
         self.NotEnoughXtals = False
         iniCentroid = self.getInitialCentroid()
-        dataVec = self.getCalMomentsDataVec(iniCentroid)
+        dataVec = self.getCalMomentsDataVec(iniCentroid, centrDistCut)
         if len(dataVec) < MIN_NUM_XTALS:
             print 'Not enough xtals found (%d).' % len(dataVec)
             self.NotEnoughXtals = True
             return
-        self.MomentsAnalysis = CalMomentsAnalysis(self)
+        self.MomentsAnalysis = CalMomentsAnalysis(self, clipDataVec)
         chiSq = self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
                                                                 iniCentroid)
         self.Centroid = None
@@ -884,12 +890,17 @@ class MomentsClusterInfo:
                 #self.CovMatrix =\
                 #     self.MomentsAnalysis.getCovarianceMatrix(dataVec)
 
-                # One more iteration with the clipped data vec.
-                #clipDataVec = self.getClippedDataVec(dataVec)
-                #chiSq = self.MomentsAnalysis.doMomentsAnalysis(clipDataVec,
-                #                                               self.Centroid)
-                #self.MomentsAnalysis.NumIterations += 1
-                # End of the new iteration.
+                if lastClipStep:
+                    # One more iteration with the clipped data vec.
+                    clippedDataVec = self.getClippedDataVec(dataVec)
+                    chiSq =\
+                       self.MomentsAnalysis.doMomentsAnalysis(clippedDataVec,
+                                                              self.Centroid)
+                    self.MomentsAnalysis.NumIterations += 1
+                    self.Centroid = self.MomentsAnalysis.getMomentsCentroid()
+                    self.Axis = self.MomentsAnalysis.getMomentsAxis()
+                    self.Moment = copy.copy(self.MomentsAnalysis.Moment)
+                    # End of the new iteration.
 
                 dataVec = self.getCalMomentsDataVec(iniCentroid)
                 chiSq = self.MomentsAnalysis.doMomentsAnalysis(dataVec,
@@ -904,7 +915,18 @@ class MomentsClusterInfo:
             self.RmsLongAsym = self.MomentsAnalysis.getLongAsymmetry()
             self.SkewnessLong = self.MomentsAnalysis.getLongSkewness()
         self.checkMomentsAnalysis()
-        
+
+    def cleanup(self):
+        print 'Cleaning up...'
+        for iter in self.MomentsAnalysis.IterationList:
+            try:
+                iter.Canvas.Close()
+            except:
+                pass
+        try:
+            self.RootCanvas.Close()
+        except:
+            pass
 
     def getInitialCentroid(self):
         # First estimation of the centroid.
@@ -918,7 +940,8 @@ class MomentsClusterInfo:
         centroid /= weightSum
         return centroid
 
-    def getCalMomentsDataVec(self, centroid, preprocess = True, cut = 0.0):
+    def getCalMomentsDataVec(self, centroid, maxCentrDist = 5*TOWER_PITCH,
+                             minFracWeight = 0.0, preprocess = True):
         dataVec = []
         # This is a shortcut avoiding the initial pruning that Tracy does in
         # order to remove the outliers before the moments analysis.
@@ -926,6 +949,14 @@ class MomentsClusterInfo:
             for xtalData in self.CalRecon.getCalXtalRecCol():
                 dataVec.append(CalMomentsData(xtalData))
             return dataVec
+
+        # Pre-calculate the weight sum (for the cut on minFracWeight).
+        weightSum = 0.
+        for xtalData in self.CalRecon.getCalXtalRecCol():
+            momentsData = CalMomentsData(xtalData)
+            weightSum += momentsData.getWeight()
+        minWeight = weightSum*minFracWeight
+        
         # And this is the (almost) full code in the CalRecon.
         # Set the initial axis pointing up.
         axis = Point(0, 0, 1)
@@ -938,14 +969,12 @@ class MomentsClusterInfo:
             # Portion of code handling the saturated crystals missing, here!
             distToAxis = momentsData.calcDistToAxis(centroid, axis)
             rmsDist   += momentsData.getWeight() * distToAxis * distToAxis
-            weightSum += momentsData.getWeight()
-        # New piece of code: apply a cut on the fractional xtal energy
-        cutWeight = weightSum*cut
-        for xtalData in self.CalRecon.getCalXtalRecCol():
-            momentsData = CalMomentsData(xtalData)
-            if momentsData.getWeight() > cutWeight:
+            centrDist = momentsData.getDistToPoint(centroid)
+            weight = momentsData.getWeight()
+            weightSum += weight
+            # New if for the two constructor parameters.
+            if (centrDist < maxCentrDist) and (weight > minWeight):
                 dataVec.append(momentsData)
-        # End of new code.
         if len(dataVec) < MIN_NUM_XTALS:
             return dataVec
         # Get the quick rms of crystals about fit axis
@@ -1099,6 +1128,7 @@ if __name__ == '__main__':
                       (m.MomentsAnalysis.getNumIterations(), m)
                 m.drawLongProfile(reader.ExpectedSkewness)
             answer = raw_input('\nType q to quit, enter to continue.')
+            m.cleanup()
         eventNumber += 1
         
 
