@@ -26,7 +26,7 @@ from CalLayout import *
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 
 M_PI = pi
-CAL_TOWER_PITCH = 374.5
+MOLIERE_RADIUS = 35.3
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
 MERIT_VARS = ['EvtEventId',
@@ -666,7 +666,7 @@ class CalMomentsAnalysis:
                 break
             if self.ClipDataVec:
                 dataVec = self.Parent.getClippedDataVec(dataVec)
-        return chiSq
+        return (chiSq, dataVec)
 
     def getCovarianceMatrix(self, dataVec):
         (L0, L1, L2) = self.Moment
@@ -868,7 +868,8 @@ class MomentsClusterInfo:
             self.NotEnoughXtals = True
             return
         self.MomentsAnalysis = CalMomentsAnalysis(self, clipDataVec)
-        chiSq = self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
+        (chiSq, dataVec) =\
+                self.MomentsAnalysis.doIterativeMomentsAnalysis(dataVec,
                                                                 iniCentroid)
         self.Centroid = None
         self.Axis = None
@@ -985,7 +986,7 @@ class MomentsClusterInfo:
         dataVec.sort()
         # Look for the point wherethere is a significant gap in distance to
         # the next xtal
-        envelope = min(5.*rmsDist, CAL_TOWER_PITCH)
+        envelope = min(5.*rmsDist, TOWER_PITCH)
         lastDist = 0.
         checkit = len(dataVec)
         tempCounter = 0
@@ -1003,7 +1004,7 @@ class MomentsClusterInfo:
         dataVec = dataVec[:tempCounter]
         return dataVec
 
-    def getClippedDataVec(self, dataVec, padding = 0.2):
+    def getClippedDataVec(self, dataVec):
         clippedDataVec = []
         dx = self.MomentsAnalysis.Axis[1].x()
         dy = self.MomentsAnalysis.Axis[1].y()
@@ -1019,8 +1020,9 @@ class MomentsClusterInfo:
         ztop = CAL_MODULE_CSI_TOP_CORR
         minCoord = -sqrt((xc - xbot)**2 + (yc - ybot)**2 + (zc - zbot)**2)
         maxCoord = sqrt((xc - xtop)**2 + (yc - ytop)**2 + (zc - ztop)**2)
-        minCoord *= (1 - padding)
-        maxCoord *= (1 - padding)
+        padding = 0.5*MOLIERE_RADIUS*sqrt(1/dz**2 - 1)
+        minCoord += padding
+        maxCoord -= padding
         for momentsData in dataVec:
             coord = momentsData.CoordAlongAxis
             if coord > minCoord and coord < maxCoord:
@@ -1064,9 +1066,9 @@ class MomentsClusterInfo:
         if nDiff:
             self.MomentsAnalysis.EqualToRecon = False
             print 'Done, %d difference(s) found.' % nDiff
-            print 'WARNING! Press enter to proceed, q to quit.'
-            if raw_input() == 'q':
-                sys.exit()
+            #print 'WARNING! Press enter to proceed, q to quit.'
+            #if raw_input() == 'q':
+            #    sys.exit()
         else:
             self.MomentsAnalysis.EqualToRecon = True
             print 'Done, no differences :-)'
@@ -1100,7 +1102,17 @@ if __name__ == '__main__':
     usage = 'CalMomentsAnalysis.py reconFile <meritFile>'
     parser = OptionParser()
     parser.add_option('-c', '--skim-cut', type = str, dest = 'c',
-                  default = '1', help = 'a cut to filter the events')
+                      default = '1',
+                      help = 'a cut to filter the events')
+    parser.add_option('-d', '--max-ctr-dist', type = float, dest = 'd',
+                      default = 5.0,
+                      help = 'pre-cut on the hit distance from the centroid')
+    parser.add_option('-l', '--clip', action = 'store_true', dest = 'l',
+                      default = False,
+                      help = 'clip the data vec at each step')
+    parser.add_option('-L', '--last-clip', action = 'store_true', dest = 'L',
+                      default = False,
+                      help = 'one more iteration after the last clip')
     (opts, args) = parser.parse_args()
     if len(args) == 0:
         print 'Usage: %s' % usage
@@ -1118,7 +1130,7 @@ if __name__ == '__main__':
     answer = ''
     while answer != 'q':
         if reader.getEntry(eventNumber):
-            m = MomentsClusterInfo(reader)
+            m = MomentsClusterInfo(reader, opts.d*TOWER_PITCH, opts.l, opts.L)
             if not m.NotEnoughXtals:
                 for iter in m.MomentsAnalysis.IterationList:
                     print '\n%s' % iter
