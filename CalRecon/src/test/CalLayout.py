@@ -32,6 +32,19 @@ CAL_MODULE_CSI_BOTTOM_CORR = CAL_MODULE_CSI_TOP_CORR - 7*CELL_VERT_PITCH -\
                              CSI_HEIGHT
 
 
+CAL_LAYER_Z_DICT = {0: -58.07,
+                    1: -79.42,
+                    2: -100.77,
+                    3: -122.12,
+                    4: -143.47,
+                    5: -164.82,
+                    6: -186.17,
+                    7: -207.52
+                    }
+
+def getCalLayerZ(layer):
+    return CAL_LAYER_Z_DICT[layer]
+
 
 X_MAX = 2*TOWER_PITCH
 X_MIN = -X_MAX

@@ -35,7 +35,7 @@ MERIT_VARS = ['EvtEventId',
               'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
               'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
               'CalCsIRLn', 'CalLATRLn',
-              'CalTrackDoca', 'CTBCORE', 'CalTransRms',
+              'CalTrackDoca', 'CalTrackAngle', 'CTBCORE', 'CalTransRms',
               'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
@@ -207,7 +207,7 @@ class CalMomentsData:
 
     def __init__(self, xtalData):
         self.XtalData = xtalData
-        self.Point = vector2point(self.getPoint())
+        self.Point = vector2point(self.__getPoint())
         self.DistToAxis = 0.
         self.CoordAlongAxis = 0.
         self.XZMarker = ROOT.TMarker(self.Point.x(), self.Point.z(), 25)
@@ -222,11 +222,35 @@ class CalMomentsData:
             self.XZMarker.SetMarkerStyle(1)
             self.YZMarker.SetMarkerStyle(1)
 
+    def setX(self, x):
+        y = self.Point.y()
+        z = self.Point.z()
+        self.Point = Point(x, y, z)
+        self.XZMarker = ROOT.TMarker(self.Point.x(), self.Point.z(), 25)
+
+    def setY(self, y):
+        x = self.Point.x()
+        z = self.Point.z()
+        self.Point = Point(x, y, z)
+        self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25) 
+
+    def getTower(self):
+        return self.XtalData.getPackedId().getTower()
+
+    def getLayer(self):
+        return self.XtalData.getPackedId().getLayer()
+
+    def getColumn(self):
+        return self.XtalData.getPackedId().getColumn()
+
     def getDistToPoint(self, point):
         return (self.Point - point).Mag()
 
-    def getPoint(self):
+    def __getPoint(self):
         return self.XtalData.getPosition()
+
+    def getPoint(self):
+        return self.Point
 
     def getWeight(self):
         return self.XtalData.getEnergy()
@@ -288,13 +312,114 @@ class CalMomentsAnalysisIteration:
         self.LongProfile.SetMarkerStyle(24)
         self.LongProfile.SetMarkerSize(0.8)
         self.MomentsDataList = []
+        self.MomentsDataListPP = []
         for (i, dataPoint) in enumerate(dataVec):
             self.LongProfile.SetPoint(i, dataPoint.CoordAlongAxis,
                                       dataPoint.getWeight())
             dataPoint.setMaxWeight(momentsAnalysis.MaxWeight)
-            self.MomentsDataList.append(copy.deepcopy(dataPoint))
+            # Need a copy/deepcopy in the following 2 lines?
+            dp = copy.deepcopy(dataPoint)
+            dp.Point = vector2point(dp.Point)
+            self.MomentsDataList.append(dp)
+            dp = copy.deepcopy(dataPoint)
+            dp.Point = vector2point(dp.Point)
+            self.MomentsDataListPP.append(dp)
+        self.CalTkrAngle = -1
+        self.calculateLayerCentroids()
 
-    def draw(self, reconReader):
+    def calculateLayerCentroids(self):
+        # Calculate the layer centroids.
+        self.XZLayerCentrDict = {}
+        self.YZLayerCentrDict = {}
+        self.LayerWeightDict  = {}
+        self.XZLayerCentrMarkerDict = {}
+        self.YZLayerCentrMarkerDict = {}
+        for layer in range(8):
+            self.XZLayerCentrDict[layer] = 0.0
+            self.YZLayerCentrDict[layer] = 0.0
+            self.LayerWeightDict[layer]  = 0.0
+        for momentsData in self.MomentsDataList:
+            layer = momentsData.getLayer()
+            weight = momentsData.getWeight()
+            self.XZLayerCentrDict[layer] += momentsData.Point.x()*weight
+            self.YZLayerCentrDict[layer] += momentsData.Point.y()*weight
+            self.LayerWeightDict[layer]  += weight
+        for layer in range(8):
+            try:
+                self.XZLayerCentrDict[layer] /= self.LayerWeightDict[layer]
+                self.YZLayerCentrDict[layer] /= self.LayerWeightDict[layer]
+                z = getCalLayerZ(layer)
+                mStyle = 5
+                mSize = 1
+                mxz = ROOT.TMarker(self.XZLayerCentrDict[layer], z, mStyle)
+                mxz.SetMarkerSize(mSize)
+                myz = ROOT.TMarker(self.YZLayerCentrDict[layer], z, mStyle)
+                myz.SetMarkerSize(mSize)
+                self.XZLayerCentrMarkerDict[layer] = mxz
+                self.YZLayerCentrMarkerDict[layer] = myz
+            except:
+                pass
+        # Now a look at residuals &Co.
+        resThreshold = 15.0 #mm
+        fitFunc = ROOT.TF1('fitFunc', 'pol1')
+        self.XResDict = {}
+        self.YResDict = {}
+        self.XPPLayerList = []
+        self.YPPLayerList = []
+        for layer in range(8):
+            if self.LayerWeightDict[layer]:
+                # First get the x and y positions that you would expect from
+                # the other layers.
+                gxz = ROOT.TGraphErrors()
+                gyz = ROOT.TGraphErrors()
+                nxz = 0
+                for i in range(8):
+                    w = self.LayerWeightDict[i]
+                    if w > 0 and i != layer:
+                        x = self.XZLayerCentrDict[i]
+                        z = getCalLayerZ(i)
+                        gxz.SetPoint(nxz, z, x)
+                        gxz.SetPointError(nxz, 0, sqrt(w/self.WeightSum))
+                        nxz += 1
+                nyz = 0
+                for i in range(8):
+                    w = self.LayerWeightDict[i]
+                    if w > 0 and i != layer:
+                        y = self.YZLayerCentrDict[i]
+                        z = getCalLayerZ(i)
+                        gyz.SetPoint(nyz, z, y)
+                        gyz.SetPointError(nyz, 0, sqrt(w/self.WeightSum))
+                        nyz += 1
+                x = self.XZLayerCentrDict[layer]
+                y = self.YZLayerCentrDict[layer]
+                z = getCalLayerZ(layer)
+                gxz.Fit('fitFunc', 'Q')
+                xfit = fitFunc.Eval(z)
+                gyz.Fit('fitFunc', 'Q')
+                yfit = fitFunc.Eval(z)
+                self.XResDict[layer] = x - xfit
+                self.YResDict[layer] = y - yfit
+                if abs(self.XResDict[layer]) > resThreshold:
+                    if layer in [0, 2, 4, 6]:
+                        mxz = self.XZLayerCentrMarkerDict[layer]
+                        mxz.SetMarkerColor(ROOT.kRed)
+                        self.XPPLayerList.append(layer)
+                if abs(self.YResDict[layer]) > resThreshold:
+                    if layer in [1, 3, 5, 7]:
+                        myz = self.YZLayerCentrMarkerDict[layer]
+                        myz.SetMarkerColor(ROOT.kRed)
+                        self.YPPLayerList.append(layer)
+        # And eventually postprocess the dataVec.
+        for momentsData in self.MomentsDataListPP:
+            layer = momentsData.getLayer()
+            if layer in self.XPPLayerList:
+                x = momentsData.Point.x() - self.XResDict[layer]
+                momentsData.setX(x)
+            if layer in self.YPPLayerList:
+                y = momentsData.Point.y() - self.YResDict[layer]
+                momentsData.setY(y)
+
+    def draw(self, reconReader, layerCentroids = True):
         dx = self.Axis[1].x()
         dy = self.Axis[1].y()
         dz = self.Axis[1].z()
@@ -315,15 +440,29 @@ class CalMomentsAnalysisIteration:
             txc = reconReader.getMeritVariable('Tkr1X0')
             tyc = reconReader.getMeritVariable('Tkr1Y0')
             tzc = reconReader.getMeritVariable('Tkr1Z0')
+            tkrDir = Vector(tdx, tdy, tdz)
+            calDir = self.Axis[1]
+            self.CalTkrAngle = (180./M_PI)*calDir.Angle(-tkrDir)
         cName = 'cMomIter%d' % self.IterationNumber
         cTitle = 'Moments analysis---iteration %d' % self.IterationNumber
         self.Canvas = getCanvas(cName, cTitle)
         self.Canvas.cd(1)
         # Draw XZ view.
         CAL_LAYOUT.draw('xz')
-        # Draw xtals
+        text = 'CAL-TKR 3d angle: %.2f#circ (original %.2f#circ)' %\
+               (self.CalTkrAngle,
+                (180./M_PI)*reconReader.getMeritVariable('CalTrackAngle'))
+        self.CalTkrAngleLabel = ROOT.TLatex(0.7, 0.92, text)
+        self.CalTkrAngleLabel.SetNDC()
+        self.CalTkrAngleLabel.SetTextSize(0.08)
+        self.CalTkrAngleLabel.Draw()
+        # Draw xtals.
         for dataPoint in  self.MomentsDataList:
             dataPoint.XZMarker.Draw()
+        # Draw layer centroids.
+        if layerCentroids:
+            for marker in self.XZLayerCentrMarkerDict.values():
+                marker.Draw()
         # Draw centroid from the python code.
         self.XZCentrMarker = ROOT.TMarker(xc, zc, 20)
         self.XZCentrMarker.SetMarkerColor(ROOT.kRed)
@@ -368,9 +507,13 @@ class CalMomentsAnalysisIteration:
         self.Canvas.cd(2)
         # Draw YZ view.
         CAL_LAYOUT.draw('yz')
-        # Draw xtals
+        # Draw xtals.
         for dataPoint in  self.MomentsDataList:
             dataPoint.YZMarker.Draw()
+        # Draw layer centroids.
+        if layerCentroids:
+            for marker in self.YZLayerCentrMarkerDict.values():
+                marker.Draw()
         # Draw centroid from the python code.
         self.YZCentrMarker = ROOT.TMarker(yc, zc, 20)
         self.YZCentrMarker.SetMarkerColor(ROOT.kRed)
@@ -425,6 +568,16 @@ class CalMomentsAnalysisIteration:
         self.TextBox.Draw()
         ROOT.gPad.Update()
 
+    def save(self, filePath):
+        epsFilePath = '%s.eps' % filePath
+        pngFilePath = '%s.png' % filePath
+        try:
+            self.Canvas.SaveAs(epsFilePath)
+            os.system('epstopdf %s' % epsFilePath)
+            self.Canvas.SaveAs(pngFilePath)
+        except:
+            pass
+
     def __str__(self):
         text = '** Iteration %d (%d xtals) **\n' % (self.IterationNumber,
                                                     self.NumXtals)
@@ -438,7 +591,8 @@ class CalMomentsAnalysisIteration:
         text += 'Longitudinal RMS = %.3e\n' % self.RmsLong
         text += 'Transverse RMS   = %.3e\n' % self.RmsTrans
         text += 'Long. asymmetry  = %f\n' % self.RmsLongAsym
-        text += 'Long skewness    = %.3e' % self.SkewnessLong
+        text += 'Long skewness    = %.3e\n' % self.SkewnessLong
+        text += 'CalTkrAngle      = %.3f degrees' % self.CalTkrAngle
         return text
 
     
@@ -856,7 +1010,7 @@ class CalMomentsAnalysis:
 class MomentsClusterInfo:
 
     def __init__(self, reader, centrDistCut = 5.0*TOWER_PITCH,
-                 clipDataVec = False, lastClipStep = False):
+                 clipDataVec = False, lastClipStep = False, pruneLong = False):
         self.RootCanvas = None
         self.ReconReader = reader
         self.CalRecon = self.ReconReader.getCalRecon()
@@ -902,6 +1056,17 @@ class MomentsClusterInfo:
                     self.Axis = self.MomentsAnalysis.getMomentsAxis()
                     self.Moment = copy.copy(self.MomentsAnalysis.Moment)
                     # End of the new iteration.
+
+                if pruneLong:
+                    lastIter = self.MomentsAnalysis.IterationList[-1]
+                    ppDataVec = lastIter.MomentsDataListPP
+                    chiSq =\
+                       self.MomentsAnalysis.doMomentsAnalysis(ppDataVec,
+                                                              self.Centroid)
+                    self.MomentsAnalysis.NumIterations += 1
+                    self.Centroid = self.MomentsAnalysis.getMomentsCentroid()
+                    self.Axis = self.MomentsAnalysis.getMomentsAxis()
+                    self.Moment = copy.copy(self.MomentsAnalysis.Moment)
 
                 dataVec = self.getCalMomentsDataVec(iniCentroid)
                 chiSq = self.MomentsAnalysis.doMomentsAnalysis(dataVec,
@@ -1110,6 +1275,9 @@ if __name__ == '__main__':
     parser.add_option('-l', '--clip', action = 'store_true', dest = 'l',
                       default = False,
                       help = 'clip the data vec at each step')
+    parser.add_option('-p', '--prune-long', action = 'store_true', dest = 'p',
+                      default = False,
+                      help = 'fix the xtals with bad long position')
     parser.add_option('-L', '--last-clip', action = 'store_true', dest = 'L',
                       default = False,
                       help = 'one more iteration after the last clip')
@@ -1130,16 +1298,22 @@ if __name__ == '__main__':
     answer = ''
     while answer != 'q':
         if reader.getEntry(eventNumber):
-            m = MomentsClusterInfo(reader, opts.d*TOWER_PITCH, opts.l, opts.L)
+            m = MomentsClusterInfo(reader, opts.d*TOWER_PITCH, opts.l, opts.L,
+                                   opts.p)
             if not m.NotEnoughXtals:
                 for iter in m.MomentsAnalysis.IterationList:
-                    print '\n%s' % iter
                     iter.draw(reader)
+                    print '\n%s' % iter
                 print 
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
                 m.drawLongProfile(reader.ExpectedSkewness)
-            answer = raw_input('\nType q to quit, enter to continue.')
+            answer = raw_input('\nType q to quit, s to save, enter to go on')
+            if answer == 's':
+                for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
+                    evtId = reader.getMeritVariable('EvtEventId')
+                    filePath = 'Event_%s_iter%d' % (evtId, i)
+                    iter.save(filePath)
             m.cleanup()
         eventNumber += 1
         
