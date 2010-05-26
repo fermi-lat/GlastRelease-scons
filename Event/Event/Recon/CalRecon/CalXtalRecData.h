@@ -179,8 +179,8 @@ namespace Event
         /// Retrieve average energy of two faces for the best range
         inline double getEnergy() const
         {
-            return (getEnergy(0,idents::CalXtalId::POS)
-                   +getEnergy(0,idents::CalXtalId::NEG))/2;
+            return (sqrt(getEnergy(0,idents::CalXtalId::POS)*
+                         getEnergy(0,idents::CalXtalId::NEG)));
         }
         
         /// Retrieve the position for the best range (for const objects)
