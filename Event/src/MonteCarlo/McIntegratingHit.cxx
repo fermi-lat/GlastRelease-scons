@@ -161,4 +161,64 @@ void McIntegratingHit::addEnergyItem(const double& energy, SmartRef<Event::McPar
     m_moment2seed += energy * position2;
 }
 
+const McIntegratingHit::XtalEnergyDep& McIntegratingHit::getXtalEnergyDep(const std::string& key) const
+{
+    McIntegratingHit::XtalEnergyDepMap::const_iterator eneDepItr = m_xtalEnergyMap.find(key);
+    return eneDepItr->second;
+}
+
+McIntegratingHit::XtalEnergyDep& McIntegratingHit::getXtalEnergyDep(const std::string& key)
+{
+    McIntegratingHit::XtalEnergyDepMap::iterator eneDepItr = m_xtalEnergyMap.find(key);
+
+    // If no XtalEnergyDep object, then make one
+    if (eneDepItr == m_xtalEnergyMap.end())
+    {
+        m_xtalEnergyMap[key] = McIntegratingHit::XtalEnergyDep();
+        eneDepItr = m_xtalEnergyMap.find(key);
+    }
+
+    return eneDepItr->second;
+}
+
+    
+/// Code for the XtalEnergyDep subclass
+/// Retrieve the energy-weighted first moments of the position
+const HepPoint3D McIntegratingHit::XtalEnergyDep::moment1() const
+{
+    return m_moment1seed * (1./m_totalEnergy);
+}
+
+HepPoint3D McIntegratingHit::XtalEnergyDep::moment1()
+{
+    return m_moment1seed * (1./m_totalEnergy);
+}
+    
+/// Retrieve the energy-weighted second moments of the position
+const HepPoint3D McIntegratingHit::XtalEnergyDep::moment2() const
+{
+    return m_moment2seed * (1./m_totalEnergy);
+}
+
+HepPoint3D McIntegratingHit::XtalEnergyDep::moment2()
+{
+    return m_moment2seed * (1./m_totalEnergy);
+}
+
+// add energy/position for this diode
+void McIntegratingHit::XtalEnergyDep::addEnergyItem(double totalEnergy, double directEnergy, const HepPoint3D& position)
+{
+    /// Increment the energy accumulators
+    m_totalEnergy  += totalEnergy;
+    m_directEnergy += directEnergy;
+
+    /// Get position squared for moments accumulators
+    HepPoint3D position2 = HepPoint3D(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
+
+    /// Accumulate the moments
+    m_moment1seed += totalEnergy * position;
+    m_moment2seed += totalEnergy * position2;
+}
+
+
 }

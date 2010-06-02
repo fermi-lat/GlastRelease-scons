@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <utility>
 #include "CLHEP/Geometry/Point3D.h"
 #include "GaudiKernel/Kernel.h"
@@ -28,6 +29,7 @@
  *                                   Formating of ASCII output
  *              M.Ozaki 2000-12-07 : Modified for GLAST
  *              M.Ozaki 2001-01-05 : MCIntegratingHits -> McIntegratingHit
+ *              T.Usher 2010-06-01 : Add ability to keep track of end responses
  * $Header$
  */
 
@@ -51,6 +53,44 @@ public:
 
     virtual const CLID& clID() const   { return McIntegratingHit::classID(); }
     static const CLID& classID()       { return CLID_McIntegratingHit; }
+
+    // Define sub class to contain energy information for each diode when in a crystal volume
+    class XtalEnergyDep
+    {
+    public:
+        XtalEnergyDep() : m_totalEnergy(0.), m_directEnergy(0.), m_moment1seed(0.,0.,0.), m_moment2seed(0.,0.,0.) {}
+       ~XtalEnergyDep() {}
+
+        /// Get total deposited energy seen by this diode
+        double getTotalEnergy() const {return m_totalEnergy;}
+
+        /// Get the direct deposited energy seen by this diode
+        double getDirectEnergy() const {return m_directEnergy;}
+    
+        /// Retrieve the energy-weighted first moments of the position
+        const HepPoint3D moment1() const;
+              HepPoint3D moment1();
+    
+        /// Retrieve the energy-weighted second moments of the position
+        const HepPoint3D moment2() const;
+              HepPoint3D moment2();
+
+        // add energy/position for this diode
+        void addEnergyItem(double totalEnergy, double directEnergy, const HepPoint3D& position);
+
+    private:
+        /// total deposited energy: set automatically when m_energyInfo is modified.
+        double                   m_totalEnergy;
+        /// "direct" energy seen by diode
+        double                   m_directEnergy;
+        /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
+        HepPoint3D               m_moment1seed;
+        /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
+        HepPoint3D               m_moment2seed;
+    };
+
+    /// Define the map for the deposited energy seen by each diode
+    typedef std::map<std::string, XtalEnergyDep> XtalEnergyDepMap;
 
     /// McParticle -> deposited energy map
     // Here I needed to takeout SmartRef<McParticle> because the 
@@ -93,6 +133,13 @@ public:
     /// Retrieve energy from array for minimal tree
     double energyArray( Particle p ) const;
     const double* energyArray() const { return m_energyArray; };
+
+    /// Retrieve XtalEnergyDep object
+    const XtalEnergyDep& getXtalEnergyDep(const std::string& key) const;
+    XtalEnergyDep& getXtalEnergyDep(const std::string& key);
+
+    /// Direct access to map for filling
+    XtalEnergyDepMap& getXtalEnergyDepMap() {return m_xtalEnergyMap;}
    
     /// Update all energyInfos
     void setEnergyItems( const energyDepositMap& value );
@@ -147,6 +194,8 @@ public:
       /// This is an array that holds energy contribution to the hit from the
       /// primary particle, the electron and the postitron, and the overlay contribution
       double                   m_energyArray[4];
+      /// The crystal energy deposit map
+      XtalEnergyDepMap         m_xtalEnergyMap;
 };
 
 /// Serialize the object for writing
