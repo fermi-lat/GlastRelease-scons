@@ -63,6 +63,11 @@ class CalCluster(ROOT.CalCluster):
     def getTransRms(self):
         return sqrt(ROOT.CalCluster.getRmsTrans(self)/self.getEnergy())
 
+    def distTo(self, cluster):
+        v = self.getCentroid()
+        v -= cluster.getCentroid()
+        return v.Mag()
+
     def __cmp__(self, other):
         return int(1000*(other.getEnergy() - self.getEnergy()))
 
@@ -122,7 +127,6 @@ class ReconReader:
         return info
 
     def getEntry(self, i):
-        print 'ReconReader retrieving event %d...' % i
         self.ReconChain.GetEvent(i)
         if self.MeritChain is not None:
             self.MeritChain.GetEntry(i)
@@ -222,22 +226,28 @@ if __name__ == '__main__':
         meritFilePath = args[1]
     except IndexError:
         meritFilePath = None
-    fmt   = '%14s  '*5
+    fmt   = '%12s '*6
     hline = '*'*79
     reader = ReconReader(reconFilePath, meritFilePath, opts.c)
     for event in xrange(10):
-        reader.getEntry(event)
-        #print reader.getEventInfo()
-        numClusters = reader.getNumClusters()
-        numXtals = reader.getCalTotalNumXtals()
-        print '%d cluster(s) found, %d xtals in total.' %\
-              (numClusters, numXtals)
-        print hline
-        print fmt % ('Cluster ID', 'Energy', 'Trans. rms', 'Trunc. xtals',
-                     'Sat. xtals')
-        print hline
-        for (i, cluster) in enumerate(reader.getCalClusterList()):
-            print fmt % (i, cluster.getEnergy(), cluster.getTransRms(),
-                         cluster.getNumTruncXtals(),
-                         cluster.getNumSaturatedXtals())
-        print hline
+        print 'ReconReader retrieving event %d...' % event
+        if reader.getEntry(event):
+            #print reader.getEventInfo()
+            numClusters = reader.getNumClusters()
+            numXtals = reader.getCalTotalNumXtals()
+            print '%d cluster(s) found, %d xtals in total.' %\
+                  (numClusters, numXtals)
+            print hline
+            print fmt % ('Cluster', 'Energy', 'Trans. rms', 'Trunc. xtals',
+                         'Sat. xtals', 'Dist. to Uber')
+            print hline
+            clusterList = reader.getCalClusterList()
+            uberCluster = clusterList[0]
+            for (i, cluster) in enumerate(clusterList):
+                print fmt % (i,
+                             '%.2f' % cluster.getEnergy(),
+                             '%.2f' % cluster.getTransRms(),
+                             cluster.getNumTruncXtals(),
+                             cluster.getNumSaturatedXtals(),
+                             '%.2f' % cluster.distTo(uberCluster))
+            print hline
