@@ -42,6 +42,31 @@ print 'Done.'
 
 
 
+# Convenience class inheriting from ROOT.CalCluster.
+# Beside wrapping some of the methods in order to save lines of code, it
+# provides a __cmp__ method that allows to sort lists of objects.
+
+class CalCluster(ROOT.CalCluster):
+
+    def __init__(self, cluster):
+        ROOT.CalCluster.__init__(self, cluster)
+
+    def getEnergy(self):
+        return self.getParams().getEnergy()
+
+    def getCentroid(self):
+        return self.getParams().getCentroid()
+
+    def getAxis(self):
+        return self.getParams().getAxis()
+
+    def getTransRms(self):
+        return sqrt(ROOT.CalCluster.getRmsTrans(self)/self.getEnergy())
+
+    def __cmp__(self, other):
+        return int(1000*(other.getEnergy() - self.getEnergy()))
+
+
 
 
 class ReconReader:
@@ -164,6 +189,15 @@ class ReconReader:
         if cluster is not None:
             return cluster.getNumSaturatedXtals()
 
+    # This function is different from the others in that it returns a
+    # (sorted!) python list of CalCluster objects rather than a TCollection
+    # of ROOT.CalCluster objects.
+
+    def getCalClusterList(self):
+        list = [CalCluster(cluster) for cluster in self.getCalClusterCol()]
+        list.sort()
+        return list
+
 
     
 
@@ -202,9 +236,8 @@ if __name__ == '__main__':
         print fmt % ('Cluster ID', 'Energy', 'Trans. rms', 'Trunc. xtals',
                      'Sat. xtals')
         print hline
-        for i in xrange(numClusters):
-            print fmt % (i, reader.getCalClusterEnergy(i),
-                         reader.getCalClusterTransRms(i),
-                         reader.getCalClusterNumTruncXtals(i),
-                         reader.getCalClusterNumSaturatedXtals(i))
+        for (i, cluster) in enumerate(reader.getCalClusterList()):
+            print fmt % (i, cluster.getEnergy(), cluster.getTransRms(),
+                         cluster.getNumTruncXtals(),
+                         cluster.getNumSaturatedXtals())
         print hline
