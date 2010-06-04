@@ -71,12 +71,21 @@ class CalCluster(ROOT.CalCluster):
         return sqrt(ROOT.CalCluster.getRmsTrans(self)/self.getEnergy())
 
     def distToCentroid(self, cluster):
-        v = self.getCentroid()
-        v -= cluster.getCentroid()
-        return v.Mag()
+        diff = cluster.getCentroid()
+        diff -= self.getCentroid()
+        return diff.Mag()
+
+    def distToAxis(self, cluster):
+        diff = cluster.getCentroid()
+        diff -= self.getCentroid()
+        cross = cluster.getAxis().Cross(diff)
+        return cross.Mag()        
 
     def __cmp__(self, other):
-        return int(1000*(other.getEnergy() - self.getEnergy()))
+        if other.getEnergy() - self.getEnergy() > 0:
+            return 1
+        else:
+            return -1
 
 
 
@@ -121,7 +130,7 @@ class ReconReader:
             relFilePath = reconFilePath.replace('recon.root', 'relation.root')
             print 'No path specified, trying %s...' % relFilePath
         if not os.path.exists(relFilePath):
-            print 'Could not find the merit, will ignore it.'
+            print 'Could not find the relations, will ignore it.'
             self.RelationsChain = None
             self.RelTable = None
         else:
@@ -220,14 +229,21 @@ class ReconReader:
     # This function is different from the others in that it returns a
     # (sorted!) python list of CalCluster objects rather than a TCollection
     # of ROOT.CalCluster objects.
+    # If fillXtalList and the relations root file is available, the code
+    # will dig into the relation table and fill the list fo xtals for each
+    # cluster.
 
     def getCalClusterList(self, fillXtalList = True):
+        if self.RelTable is None:
+            fillXtalList = False
         clusterList = []
-        clusterDict = {}
+        if fillXtalList:
+            clusterDict = {}
         for cluster in self.getCalClusterCol():
             calCluster = CalCluster(cluster)
             clusterList.append(calCluster)
-            clusterDict[cluster] = calCluster
+            if fillXtalList:
+                clusterDict[cluster] = calCluster
         clusterList.sort()
         if fillXtalList:
             for relation in self.RelTable.getRelationTable():
