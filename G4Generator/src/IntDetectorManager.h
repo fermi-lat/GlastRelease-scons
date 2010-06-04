@@ -55,5 +55,12 @@ public:
   /// deposited
   std::map<idents::VolumeIdentifier,Event::McIntegratingHit*> m_detectorList;
 
+  /// Indices of refraction for surfaces
+  double m_diodeGlueIndex;
+  double m_crystalIndex;
+
+  /// keep the cosine of the critical angle
+  double m_cosCritical;
+
 };
 #endif
