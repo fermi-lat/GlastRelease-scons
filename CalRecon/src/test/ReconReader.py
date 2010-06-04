@@ -50,6 +50,13 @@ class CalCluster(ROOT.CalCluster):
 
     def __init__(self, cluster):
         ROOT.CalCluster.__init__(self, cluster)
+        self.XtalList = []
+
+    def addXtal(self, xtal):
+        self.XtalList.append(xtal)
+
+    def getTotNumXtals(self):
+        return len(self.XtalList)
 
     def getEnergy(self):
         return self.getParams().getEnergy()
@@ -63,7 +70,7 @@ class CalCluster(ROOT.CalCluster):
     def getTransRms(self):
         return sqrt(ROOT.CalCluster.getRmsTrans(self)/self.getEnergy())
 
-    def distTo(self, cluster):
+    def distToCentroid(self, cluster):
         v = self.getCentroid()
         v -= cluster.getCentroid()
         return v.Mag()
@@ -77,7 +84,7 @@ class CalCluster(ROOT.CalCluster):
 class ReconReader:
     
     def __init__(self, reconFilePath, meritFilePath = None,
-                 cut = ''):
+                 relFilePath = None, cut = ''):
         if not os.path.exists(reconFilePath):
             sys.exit('Could not find %s. Abort.' % reconFilePath)
         print 'Creating the recon chain...'
@@ -109,6 +116,21 @@ class ReconReader:
             self.MeritTreeFormula = ROOT.TTreeFormula('cut', cut,
                                                       self.MeritChain)
             print 'Done. %d entries found.' % self.MeritChain.GetEntries()
+        print 'Opening the relation file...'
+        if relFilePath is None:
+            relFilePath = reconFilePath.replace('recon.root', 'relation.root')
+            print 'No path specified, trying %s...' % relFilePath
+        if not os.path.exists(relFilePath):
+            print 'Could not find the merit, will ignore it.'
+            self.RelationsChain = None
+            self.RelTable = None
+        else:
+            self.RelationsChain = ROOT.TChain('Relations')
+            self.RelationsChain.Add(relFilePath)
+            self.RelTable = ROOT.RelTable()
+            self.RelationsChain.SetBranchAddress('RelTable',\
+                                                 ROOT.AddressOf(self.RelTable))
+            print 'Done. %d entries found.' % self.RelationsChain.GetEntries()
 
     def getMeritVariable(self, branchName):
         try:
@@ -128,6 +150,8 @@ class ReconReader:
 
     def getEntry(self, i):
         self.ReconChain.GetEvent(i)
+        if self.RelationsChain is not None:
+            self.RelationsChain.GetEvent(i)
         if self.MeritChain is not None:
             self.MeritChain.GetEntry(i)
             return self.MeritTreeFormula.EvalInstance()
@@ -197,10 +221,25 @@ class ReconReader:
     # (sorted!) python list of CalCluster objects rather than a TCollection
     # of ROOT.CalCluster objects.
 
-    def getCalClusterList(self):
-        list = [CalCluster(cluster) for cluster in self.getCalClusterCol()]
-        list.sort()
-        return list
+    def getCalClusterList(self, fillXtalList = True):
+        clusterList = []
+        clusterDict = {}
+        for cluster in self.getCalClusterCol():
+            calCluster = CalCluster(cluster)
+            clusterList.append(calCluster)
+            clusterDict[cluster] = calCluster
+        clusterList.sort()
+        if fillXtalList:
+            for relation in self.RelTable.getRelationTable():
+                if isinstance(relation.getKey(), ROOT.CalXtalRecData):
+                    xtal = relation.getKey()
+                    for cluster in relation.getValueCol():
+                        calCluster = clusterDict[cluster]
+                        calCluster.addXtal(xtal)
+        return clusterList
+
+
+        
 
 
     
@@ -209,7 +248,7 @@ class ReconReader:
 
 if __name__ == '__main__':
     from optparse import OptionParser
-    usage = 'ReconReader.py reconFile <meritFile>'
+    usage = 'ReconReader.py reconFile <meritFile> <relFile>'
     parser = OptionParser()
     parser.add_option('-c', '--skim-cut', type = str, dest = 'c',
                       default = '1',
@@ -218,7 +257,7 @@ if __name__ == '__main__':
     if len(args) == 0:
         print 'Usage: %s' % usage
         sys.exit('Please provide a recon input root file.')
-    elif len(args) > 2:
+    elif len(args) > 3:
         print 'Usage: %s' % usage
         sys.exit('Too many arguments.')
     reconFilePath = args[0]
@@ -226,9 +265,13 @@ if __name__ == '__main__':
         meritFilePath = args[1]
     except IndexError:
         meritFilePath = None
-    fmt   = '%12s '*6
+    try:
+        relFilePath = args[2]
+    except IndexError:
+        relFilePath = None
+    fmt   = '%7s %12s %12s %13s %13s %13s'
     hline = '*'*79
-    reader = ReconReader(reconFilePath, meritFilePath, opts.c)
+    reader = ReconReader(reconFilePath, meritFilePath, relFilePath, opts.c)
     for event in xrange(10):
         print 'ReconReader retrieving event %d...' % event
         if reader.getEntry(event):
@@ -238,16 +281,18 @@ if __name__ == '__main__':
             print '%d cluster(s) found, %d xtals in total.' %\
                   (numClusters, numXtals)
             print hline
-            print fmt % ('Cluster', 'Energy', 'Trans. rms', 'Trunc. xtals',
-                         'Sat. xtals', 'Dist. to Uber')
+            print fmt % ('Cluster', 'Energy', 'Trans. rms', 'Tot. xtals',
+                         'Trunc. xtals', 'Sat. xtals')
             print hline
             clusterList = reader.getCalClusterList()
             uberCluster = clusterList[0]
             for (i, cluster) in enumerate(clusterList):
                 print fmt % (i,
-                             '%.2f' % cluster.getEnergy(),
-                             '%.2f' % cluster.getTransRms(),
+                             '%.3f' % cluster.getEnergy(),
+                             '%.3f' % cluster.getTransRms(),
+                             cluster.getTotNumXtals(),
                              cluster.getNumTruncXtals(),
-                             cluster.getNumSaturatedXtals(),
-                             '%.2f' % cluster.distTo(uberCluster))
+                             cluster.getNumSaturatedXtals())
             print hline
+    
+
