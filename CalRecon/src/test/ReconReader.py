@@ -7,7 +7,7 @@ import numpy
 
 from CalLayout import *
 
-from math import sqrt
+from math import sqrt, acos, log10
 
 
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
@@ -17,11 +17,13 @@ MERIT_VARS = ['EvtEventId',
               'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
               'McXDir', 'McYDir', 'McZDir',
               'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
+              'CalXDir', 'CalYDir', 'CalZDir',
+              'CalUberXDir', 'CalUberYDir', 'CalUberZDir',
               'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
               'CalCsIRLn', 'CalLATRLn',
               'CalTrackDoca', 'CalTrackAngle', 'CTBCORE',
               'CalTransRms', 'CalLongRms',
-              'TkrNumTracks']
+              'TkrNumTracks', 'TkrEnergy']
 
 print 'Loading necessary libraries...'
 LIB_DIRS = []
