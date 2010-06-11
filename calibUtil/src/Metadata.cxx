@@ -1,14 +1,9 @@
 // $Header$
 
-/*
-#ifdef  WIN32
-#include <windows.h>
-#endif
-*/
-
 #include "calibUtil/Metadata.h"
 #include "facilities/Util.h"
 #include "facilities/Timestamp.h"
+#include "facilities/commonUtilities.h"
 #include "rdbModel/Management/Manager.h"
 #include "rdbModel/Management/XercesBuilder.h"
 
@@ -33,12 +28,31 @@ namespace calibUtil {
     : m_readCxt(0), m_writeCxt(0), //  m_row(""), m_rowStatus(0), 
       m_host(host), m_table(table), m_dbName(dbName), m_man(0), m_rdb(0),
       m_match(false) {
-    if (table.compare("*") == 0) m_table = std::string("$(MYSQL_METATABLE)");
-    if (host.compare("*") == 0) m_host = std::string("$(MYSQL_HOST)");
 
-    int nsub = facilities::Util::expandEnvVar(&m_table);
+    if (table.compare("*") == 0) m_table = std::string("$(MYSQL_METATABLE)");
+
+    int nsub = 0;
+
+    if (host.compare("*") == 0) {
+      m_host = std::string("$(MYSQL_HOST)");
+      try {
+        nsub = facilities::Util::expandEnvVar(&m_host);
+      }
+      catch (facilities::Untranslatable ex) {
+        nsub = 0;
+      }
+      // If this doesn't work, use default
+      if (nsub <= 0) m_host = std::string("glastCalibDB.slac.stanford.edu");
+    }
+
+    try {
+      nsub = facilities::Util::expandEnvVar(&m_table);
+    }
+    catch (facilities::Untranslatable ex) {
+      nsub = 0;
+    }
     // If this doesn't work, use default
-    if (nsub < 0) m_table = std::string("metadata");
+    if (nsub <= 0) m_table = std::string("metadata_v2r1");
   }
 
   Metadata::~Metadata() {
