@@ -35,9 +35,6 @@ progEnv.Tool('registerTargets', package = 'CalXtalResponse',
              libraryCxts = [[CalXtalResponse, libEnv]],
              testAppCxts = [[test_CalXtalResponse, progEnv]], 
              includes = listFiles(['CalXtalResponse/*.h']),
-             jo = ['src/customOptions.txt', 'src/test/jobOptions.txt'])
-
-
-
-
+             jo = ['src/customOptions.txt', 'src/defaultOptions.txt',
+                   'src/test/jobOptions.txt'])
 
