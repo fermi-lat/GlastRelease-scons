@@ -10,12 +10,9 @@ usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-gl1' })
 usedExternals.append({ 'name' : 'cppunit', 'iversion' : '1.10.2' })
 
 # Probably can't actually use python 2.5.1-gl1 for all OS's, archs, etc.
-usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1' })
+usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
 
-if baseEnv['OSNAME'] == 'tiger':
-    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.20.00-gl1'})
-else:
-    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.20.00-gl4'})
+usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a'})
 
 
 #Don't have any of the following for RHEL5 yet
@@ -29,10 +26,10 @@ usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
 usedExternals.append({ 'name' : 'zlib', 'iversion' : '1.1.4' })
 usedExternals.append({ 'name' : 'x11', 'iversion' : '1.0.0' })
 
-usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r7' })
+usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r9' })
 
 # and also need obf B1-1-3
-usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3' })
+usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3-i1' })
 
 #   OmniOrb 4.1.2
 usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.2' })
