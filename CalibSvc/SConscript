@@ -27,4 +27,5 @@ progEnv.Tool('registerTargets', package = 'CalibSvc',
              libraryCxts = [[CalibSvc, libEnv]],
              testAppCxts = [[test_CalibSvc, progEnv]],
              includes = listFiles(['CalibSvc/*.h']),
-             jo=listFiles(['src/test/*.txt', 'src/defaultOptions.txt'] ))
+             jo=listFiles(['src/test/*.txt', 'src/test/jobOptions.txt.*',
+                           'src/defaultOptions.txt'] ))

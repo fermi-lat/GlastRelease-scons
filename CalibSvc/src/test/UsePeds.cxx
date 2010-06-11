@@ -70,7 +70,7 @@ StatusCode UsePeds::initialize() {
   // So far don't have any properties, but in case we do some day..
   setProperties();
 #ifdef SCons
-  // define CALIBUTILROOT
+  // define CALIBUTILROOT.  It's embedded in metadata for our calib
   std::string calibUtilRoot = 
     facilities::commonUtilities::getPackagePath("calibUtil");
   facilities::commonUtilities::setEnvironment("CALIBUTILROOT", calibUtilRoot);

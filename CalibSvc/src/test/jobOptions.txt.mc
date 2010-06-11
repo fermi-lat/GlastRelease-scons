@@ -20,8 +20,6 @@ ApplicationMgr.Runable= "RootIoSvc";
 ApplicationMgr.TopAlg = {"mcRootReaderAlg", "UsePeds" };
 // digiRootReaderAlg.digiRootFile = "$CALIBSVCROOT/src/test/digi_1409.root";
 mcRootReaderAlg.mcRootFileList = {"$ROOTTESTDATADATAPATH/default/mc.root"};
-// mcRootReaderAlg.mcRootFileList = {"$CALIBSVCROOT/src/test/mc_1409.root"};
-
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel      = 2;
