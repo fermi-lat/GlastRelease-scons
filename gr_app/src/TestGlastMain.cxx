@@ -41,27 +41,37 @@ void setPriority();
 #endif
 void current_time(std::ostream& out=std::cout)
 {   
-        static bool first=true;
-        static time_t start;
-        if(first){ first=false; ::time(&start);}
-        time_t aclock;
-        ::time( &aclock );   
-        char tbuf[25]; ::strncpy(tbuf, asctime( localtime( &aclock ) ),24);
-        tbuf[24]=0;
-        out<<  "Current time: " << tbuf
-            << " ( "<< ::difftime( aclock, start) <<" s elapsed)" << std::endl;
+  static bool first=true;
+  static time_t start;
+  if (first) { first=false; ::time(&start);}
+  time_t aclock;
+  ::time( &aclock );   
+  char tbuf[25]; ::strncpy(tbuf, asctime( localtime( &aclock ) ),24);
+  tbuf[24]=0;
+  out<<  "Current time: " << tbuf
+     << " ( "<< ::difftime( aclock, start) <<" s elapsed)" << std::endl;
 }
 
 int main( int argn, char** argc) {
-
-    facilities::commonUtilities::setupEnvironment();
+  using facilities::commonUtilities;
+  commonUtilities::setupEnvironment();
+  std::string joboptions_file;
+#ifndef SCons    
+  joboptions_file="src/test/jobOptions.txt"; // default
+#else
+#ifdef PACKAGE_NAME
+  std::string pkgName(PACKAGE_NAME); 
+  joboptions_file = commonUtilities::getJobOptionsPath(pkgName) +
+    "/test/jobOptions.txt";
+#else
+  std::cerr << "SCons compile did not specify package name! ";
+  return 1;
+#endif
+#endif
+  const char* job = ::getenv("TESTJOBOPTIONS"); // check for env var
     
-    std::string joboptions_file="src/test/jobOptions.txt"; // default
-    
-    const char* job = ::getenv("TESTJOBOPTIONS"); // check for env var
-    
-    if( argn>1 ) { joboptions_file = argc[1];} // priority to command arg.
-    else if( job ) { joboptions_file = job; }
+  if( argn>1 ) { joboptions_file = argc[1];} // priority to command arg.
+  else if( job ) { joboptions_file = job; }
     std::cerr << "Starting test Glast-Gaudi job with job options file " 
         << joboptions_file << std::endl;
 
