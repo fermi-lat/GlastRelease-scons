@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('calibUtilLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='calibUtil', toBuild='shared')
 calibUtil = libEnv.SharedLibrary('calibUtil',
                                  listFiles(['src/*.cxx', 'src/*.c']))
 
