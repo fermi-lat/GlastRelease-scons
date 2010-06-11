@@ -4,6 +4,8 @@
  *
  *                  EOH
 
+ containerSettings-00-01-00 10-Jun-2010    jrb Bring externals up to date
+    Improve GaudiProgram builder
  containerSettings-00-00-02 13-Jan-2010    jrb modify GaudiProgram so that main or testmain is compiled for each package
 containerSettings-00-00-01  Create "package"
 
