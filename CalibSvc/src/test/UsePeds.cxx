@@ -10,6 +10,7 @@
 #include "CalibData/CalibTime.h"
 #include "idents/CalXtalId.h"                // shouldn't be necessary
 #include "CalibSvc/ICalibPathSvc.h"
+#include "facilities/commonUtilities.h"
 
 /**
    @file UsePeds.cxx
@@ -68,8 +69,12 @@ StatusCode UsePeds::initialize() {
 
   // So far don't have any properties, but in case we do some day..
   setProperties();
-
-
+#ifdef SCons
+  // define CALIBUTILROOT
+  std::string calibUtilRoot = 
+    facilities::commonUtilities::getPackagePath("calibUtil");
+  facilities::commonUtilities::setEnvironment("CALIBUTILROOT", calibUtilRoot);
+#endif
   sc = service("CalibDataSvc", m_pCalibDataSvc, true);
 
   if ( !sc.isSuccess() ) {
