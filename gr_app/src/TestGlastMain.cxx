@@ -17,7 +17,7 @@
 #include <time.h>
 
 #include "facilities/commonUtilities.h"
-
+#include "facilities/Util.h"
 //------------------------------------------------------------------------------
 //
 //  Package    : GlastPolicy
@@ -72,8 +72,17 @@ int main( int argn, char** argc) {
     
   if( argn>1 ) { joboptions_file = argc[1];} // priority to command arg.
   else if( job ) { joboptions_file = job; }
-    std::cerr << "Starting test Glast-Gaudi job with job options file " 
-        << joboptions_file << std::endl;
+  // translate env variables if any
+  try {
+    facilities::Util::expandEnvVar(&joboptions_file);
+  }
+  catch (facilities::Untranslatable ex) {
+    std::cerr << "Unable to expand job options name " << joboptions_file 
+              << std::endl;
+    return 1;
+  }
+  std::cerr << "Starting test Glast-Gaudi job with job options file " 
+            << joboptions_file << std::endl;
 
     current_time(std::cerr);
     const char* newdir = ::getenv("GLEAM_CHDIR");
