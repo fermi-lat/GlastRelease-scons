@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('RootDisplayLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='RootDisplay', toBuild='component')
 
 RootDisplay = libEnv.SharedLibrary('RootDisplay',
                                    listFiles(['src/*.cxx','src/Dll/*.cxx']))
@@ -38,11 +38,14 @@ if baseEnv['PLATFORM'] == 'win32':
 if baseEnv['PLATFORM'] != 'win32':
 	progEnv.AppendUnique(LINKFLAGS = ['-u GuiSvc_loadRef'])
 
-#RootDisplayTest = progEnv.Program('RootDisplayTest',listFiles(['src/test/*.cxx']))
+
+#RootDisplayTest = progEnv.GaudiProgram('RootDisplayTest',listFiles(['src/test/*.cxx']), test=0, package='RootDisplay')
 
 progEnv.Tool('registerTargets', package = 'RootDisplay', 
-	libraryCxts = [[RootDisplay, libEnv]], 
-	includes = listFiles(['RootDisplay/*.h']))
+	     libraryCxts = [[RootDisplay, libEnv]], 
+	     includes = listFiles(['RootDisplay/*.h']),
+	     jo = ['src/defaultRootDisplayOptions.txt',
+		   'src/test/jobOptions.txt'])
 
 
 

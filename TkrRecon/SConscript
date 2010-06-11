@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('TkrReconLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='TkrRecon', toBuild='component')
 TkrRecon=libEnv.SharedLibrary('TkrRecon',
                               listFiles(['src/Dll/*.cxx','src/GaudiAlg/*.cxx',
                                          'src/Display/*.cxx','src/Services/*.cxx',
@@ -33,13 +33,16 @@ TkrRecon=libEnv.SharedLibrary('TkrRecon',
                                          'src/Vertex/Combo/*.cxx',
                                          'src/Vertex/DocaVtx/*.cxx']))
 progEnv.Tool('TkrReconLib')
+
 test_TkrRecon = progEnv.GaudiProgram('test_TkrRecon',
-                                     listFiles(['src/test/*.cxx']), test = 1)
+                                     listFiles(['src/test/*.cxx']),
+                                     test = 1, package='TkrRecon')
 
 progEnv.Tool('registerTargets', package='TkrRecon',
              libraryCxts = [[TkrRecon,libEnv]],
              testAppCxts = [[test_TkrRecon, progEnv]],
-             includes = listFiles(['TkrRecon/*'], recursive = 1))
+             includes = listFiles(['TkrRecon/*'], recursive = 1),
+             jo = ['src/test/jobOptions.txt'])
 
 
 

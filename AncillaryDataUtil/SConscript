@@ -8,7 +8,6 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('AncillaryDataUtilLib', depsOnly = 1)
 AncillaryDataUtil = libEnv.StaticLibrary('AncillaryDataUtil', listFiles(['src/*.cxx']))
 
 progEnv.Tool('AncillaryDataUtilLib')

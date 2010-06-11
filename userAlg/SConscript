@@ -7,7 +7,7 @@ Import('baseEnv')
 Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
-libEnv = baseEnv.Clone()
+##libEnv = baseEnv.Clone()
 
 progEnv.Tool('FluxSvcLib')
 progEnv.Tool('identsLib')
@@ -27,10 +27,13 @@ if baseEnv['PLATFORM'] == 'win32':
         progEnv.AppendUnique(LINKFLAGS=['/subsystem:windows'])  #from macro guiapp_linkopts in ../gui/cmt/requirements
 
 
-userApp = progEnv.GaudiProgram('userApp', listFiles(['src/*.cxx']), test=1)
-test_userAlg = progEnv.GaudiProgram('test_userAlg', ['src/UserAlg.cxx', 'src/RegisterSource.cxx'], test = 1)
+userApp = progEnv.GaudiProgram('userApp', listFiles(['src/*.cxx']), test=1,
+			       package='userAlg')
+test_userAlg = progEnv.GaudiProgram('test_userAlg', ['src/UserAlg.cxx', 'src/RegisterSource.cxx'], test = 1, package='userAlg')
 
-progEnv.Tool('registerObjects', package = 'userAlg', testApps = [test_userAlg,userApp])
+progEnv.Tool('registerTargets', package = 'userAlg',
+	     testAppCxts = [[test_userAlg, progEnv], [userApp,progEnv]],
+	     jo = listFiles(['src/*.txt', 'src/test/jobOptions.txt']))
 
 
 

@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('EventLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='Event', toBuild='shared')
 EventLib = libEnv.SharedLibrary('Event',
                                 listFiles(['src/MonteCarlo/*.cxx',
                                            'src/Recon/TkrRecon/*.cxx',

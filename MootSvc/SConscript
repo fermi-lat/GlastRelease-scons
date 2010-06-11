@@ -8,13 +8,15 @@ Import('packages')
 #progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('MootSvcLib', depsOnly = 1)
-MootSvc = libEnv.SharedLibrary('MootSvc', listFiles(['src/*.cxx','src/Dll/*.cxx']))
+libEnv.Tool('addLinkDeps', package='MootSvc', toBuild='component')
+MootSvc = libEnv.SharedLibrary('MootSvc',
+                               listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 #progEnv.Tool('MootSvcLib')
 libEnv.Tool('registerTargets', package = 'MootSvc',
             libraryCxts = [[MootSvc, libEnv]],
-            includes = listFiles(['MootSvc/*.h']))
+            includes = listFiles(['MootSvc/*.h']),
+            jo = ['src/defaultOptions.txt'])
 
 
 

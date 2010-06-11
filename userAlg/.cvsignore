@@ -12,3 +12,5 @@ msdev
 Win32
 Win32Debug
 Visual
+build
+*.pyc

@@ -8,10 +8,14 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('calibGenCALLib', depsOnly = 1)
-calibGenCAL = libEnv.SharedLibrary('calibGenCAL', listFiles(['src/lib/*.cxx','src/lib/CalibDataTypes/*.cxx',
-                                                             'src/lib/Hists/*.cxx','src/lib/Specs/*.cxx',
-                                                             'src/lib/Util/*.cxx','src/lib/Algs/*.cxx']))
+libEnv.Tool('addLinkDeps', package='calibGenCAL', toBuild='shared')
+calibGenCAL = libEnv.SharedLibrary('calibGenCAL',
+                                   listFiles(['src/lib/*.cxx',
+                                              'src/lib/CalibDataTypes/*.cxx',
+                                              'src/lib/Hists/*.cxx',
+                                              'src/lib/Specs/*.cxx',
+                                              'src/lib/Util/*.cxx',
+                                              'src/lib/Algs/*.cxx']))
 
 progEnv.Tool('calibGenCALLib')
 

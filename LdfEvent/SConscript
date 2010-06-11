@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('LdfEventLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='LdfEvent', toBuild='shared')
 LdfEvent = libEnv.SharedLibrary('LdfEvent', listFiles(['src/*.cxx']))
 
 progEnv.Tool('LdfEventLib')

@@ -8,15 +8,19 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('AncillaryDataReconLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='AncillaryDataRecon', toBuild='component')
 AncillaryDataRecon = libEnv.SharedLibrary('AncillaryDataRecon',
-                                          listFiles(['src/*.cxx']) + listFiles(['src/Dll/*.cxx']))
+                                          listFiles(['src/*.cxx',
+                                                     'src/Dll/*.cxx']))
 
 progEnv.Tool('AncillaryDataReconLib')
+
 test_AncillaryDataRecon = progEnv.Program('test_AncillaryDataRecon',
                                           ['src/test/AncillaryDataReconTest.cxx'] + listFiles(['src/*.cxx']))
 
+# not sure job options are used, but install anyway
 progEnv.Tool('registerTargets', package = 'AncillaryDataRecon',
              libraryCxts = [[AncillaryDataRecon, libEnv]],
              testAppCxts = [[test_AncillaryDataRecon, progEnv]],
-             includes = listFiles(['AncillaryDataRecon/*.h']))
+             includes = listFiles(['AncillaryDataRecon/*.h']),
+             jo = ['src/jobOptions.txt', 'src/test/jobOptions.txt'])

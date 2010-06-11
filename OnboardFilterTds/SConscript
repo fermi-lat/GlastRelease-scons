@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('OnboardFilterTdsLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='OnboardFilterTds', toBuild='shared')
 
 libEnv.AppendUnique(CPPDEFINES = ['GLEAM'])
 libEnv.AppendUnique(CPPDEFINES = ['__i386'])

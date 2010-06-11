@@ -8,7 +8,7 @@ Import('packages')
 libEnv = baseEnv.Clone()
 # no progEnv because no programs
 
-libEnv.Tool('HepRepCorbaLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='HepRepCorba', toBuild='shared')
 HepRepCorba = libEnv.SharedLibrary('HepRepCorba',
                                    listFiles(['src/*.cxx','src/*.cpp']))
 

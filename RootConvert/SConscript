@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('RootConvertLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='RootConvert', toBuild='shared')
 
 RootConvert=libEnv.SharedLibrary('RootConvert',
                                  listFiles(['src/Utilities/*.cxx',

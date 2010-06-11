@@ -8,13 +8,18 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('CalDigiLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='CalDigi', toBuild='component')
+
 CalDigi = libEnv.SharedLibrary('CalDigi', listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 progEnv.Tool('CalDigiLib')
+
 test_CalDigi = progEnv.GaudiProgram('test_CalDigi',
-                                    listFiles(['src/test/*.cxx']), test = 1)
+                                    listFiles(['src/test/*.cxx']),
+                                    test = 1, package='CalDigi')
 
 progEnv.Tool('registerTargets', package = 'CalDigi',
-             libraryCxts = [[CalDigi, libEnv]], testAppCxts = [[test_CalDigi, progEnv]])
+             libraryCxts = [[CalDigi, libEnv]],
+             testAppCxts = [[test_CalDigi, progEnv]],
+             jo = ['src/test/jobOptions.txt'])
 

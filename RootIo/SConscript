@@ -9,9 +9,9 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('RootIoLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='RootIo', toBuild='component')
 
-RootIo = libEnv.SharedLibrary('RootIo', listFiles(['src/*.cxx','src/Dll/*.cxx']))
+RootIo =libEnv.SharedLibrary('RootIo',listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 progEnv.Tool('RootIoLib')
 
@@ -22,8 +22,10 @@ if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(CPPDEFINES = ['_WIN32'])
 
 test_RootIo = progEnv.GaudiProgram('test_RootIo',
-                                   listFiles(['src/test/*.cxx']), test = 1)
+                                   listFiles(['src/test/*.cxx']), test = 1,
+				   package='RootIo')
 
 progEnv.Tool('registerTargets', package = 'RootIo',
              libraryCxts=[[RootIo,libEnv]],testAppCxts=[[test_RootIo,progEnv]],
-             includes = listFiles(['RootIo/*.h']))
+             includes = listFiles(['RootIo/*.h']),
+	     jo = listFiles(['src/*.txt', 'src/test/*.txt']))

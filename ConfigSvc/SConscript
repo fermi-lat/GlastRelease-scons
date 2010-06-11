@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('ConfigSvcLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='ConfigSvc', toBuild='component')
 
 ConfigSvc = libEnv.SharedLibrary('ConfigSvc',
                                  listFiles(['src/*.cxx','src/Dll/*.cxx']))
@@ -17,7 +17,9 @@ progEnv.Tool('ConfigSvcLib')
 
 progEnv.Tool('registerTargets', package = 'ConfigSvc',
              libraryCxts = [[ConfigSvc, libEnv]],
-             includes = ['ConfigSvc/IConfigSvc.h'])
+             includes = ['ConfigSvc/IConfigSvc.h'],
+             jo = ['src/configOptions_moot.txt',
+                   'src/configOptions_noMoot.txt'])
 
 
 

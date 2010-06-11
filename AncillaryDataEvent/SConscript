@@ -8,7 +8,6 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('AncillaryDataEventLib', depsOnly = 1)
 AncillaryDataEvent = libEnv.StaticLibrary('AncillaryDataEvent',
                                           listFiles(['src/*.cxx']))
 

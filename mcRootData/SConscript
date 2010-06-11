@@ -8,19 +8,27 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('mcRootDataLib', depsOnly = 1)
-mcRootDataRootcint = libEnv.Rootcint('mcRootData/mcRootData_rootcint', ['mcRootData/McIntegratingHit.h',
-                                                                        'mcRootData/McParticle.h', 'mcRootData/McPositionHit.h',
-                                                                        'mcRootData/McEvent.h', 'mcRootData/McTrajectory.h','mcRootData/LinkDef.h'],
-									includes = [''])
+libEnv.Tool('addLinkDeps', package='mcRootData', toBuild = 'rootlib')
+mcRootDataRootcint = libEnv.Rootcint('mcRootData/mcRootData_rootcint',
+                                     ['mcRootData/McIntegratingHit.h',
+                                      'mcRootData/McParticle.h',
+                                      'mcRootData/McPositionHit.h',
+                                      'mcRootData/McEvent.h',
+                                      'mcRootData/McTrajectory.h',
+                                      'mcRootData/LinkDef.h'],
+                                     includes = [''])
 
-mcRootData = libEnv.SharedLibrary('mcRootData', listFiles(['src/*.cxx']) + ['mcRootData/mcRootData_rootcint.cxx'])
+mcRootData = libEnv.RootDynamicLibrary('mcRootData',
+                                       listFiles(['src/*.cxx']) + ['mcRootData/mcRootData_rootcint.cxx'])
 progEnv.Tool('mcRootDataLib')
 
-test_mcRootData = progEnv.Program('test_mcRootData', ['src/test/testMcClasses.cxx'])
+test_mcRootData = progEnv.Program('test_mcRootData',
+                                  ['src/test/testMcClasses.cxx'])
 
-progEnv.Tool('registerObjects', package = 'mcRootData', libraries = [mcRootData], testApps = [test_mcRootData], 
-	includes = listFiles(['mcRootData/*.h']))
+progEnv.Tool('registerTargets', package = 'mcRootData',
+             rootcintSharedCxts = [[mcRootData, libEnv]],
+             testAppCxts = [[test_mcRootData, progEnv]], 
+             includes = listFiles(['mcRootData/*.h']))
 
 
 

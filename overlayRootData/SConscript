@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('overlayRootDataLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='overlayRootData', toBuild='rootlib')
 overlayRootDataRootcint = libEnv.Rootcint('overlayRootData/overlayRootData_rootcint',
                                           ['overlayRootData/AcdOverlay.h',
                                            'overlayRootData/CalOverlay.h',
@@ -22,8 +22,8 @@ overlayRootDataRootcint = libEnv.Rootcint('overlayRootData/overlayRootData_rootc
 
 libEnv['rootcint_node'] = overlayRootDataRootcint
                                        
-overlayRootData = libEnv.SharedLibrary('overlayRootData',
-                                       listFiles(['src/*.cxx']) + ['overlayRootData/overlayRootData_rootcint.cxx'])
+overlayRootData = libEnv.RootDynamicLibrary('overlayRootData',
+                                            listFiles(['src/*.cxx']) + ['overlayRootData/overlayRootData_rootcint.cxx'])
 
 progEnv.Tool('overlayRootDataLib')
 test_overlayRootData = progEnv.Program('test_overlayRootData',

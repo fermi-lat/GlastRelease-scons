@@ -7,4 +7,6 @@ Win32Debug
 Visual
 rh*
 VC*
+build
+*.pyc
 

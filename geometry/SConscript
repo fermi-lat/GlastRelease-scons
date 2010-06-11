@@ -7,7 +7,6 @@ Import('listFiles')
 Import('packages')
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('geometryLib', depsOnly = 1)
 geometryLib = libEnv.StaticLibrary('geometry',
                                    ['src/Box.cxx', 'src/Cone.cxx', 'src/Conic.cxx',
                                     'src/CoordTransform.cxx', 'src/Cylinder.cxx',

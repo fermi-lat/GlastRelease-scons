@@ -13,7 +13,7 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 
-libEnv.Tool('ldfReaderLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='ldfReader', toBuild='shared')
 #ebf_file = libEnv.SharedObject('src/EBF_fileIn.os',
 #                              '/afs/slac/g/glast/ground/GLAST_EXT/redhat4-i686-32bit/ldf/v06-02-00/gcc34/test/EBF_fileIn.c')
 

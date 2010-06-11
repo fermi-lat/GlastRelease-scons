@@ -9,7 +9,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('AcdReconLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='AcdRecon', toBuild='component')
 AcdRecon = libEnv.SharedLibrary('AcdRecon', listFiles(['src/*.cxx','src/Dll/*.cxx']))
 
 progEnv.Tool('AcdReconLib')
@@ -21,11 +21,13 @@ if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(LINKFLAGS = ' /include:_GuiSvc_loadRef')
 
 test_AcdRecon = progEnv.GaudiProgram('test_AcdRecon',
-                                     listFiles(['src/test/*.cxx']), test = 1)
+				     listFiles(['src/test/*.cxx']),
+				     test = 1, package='AcdRecon')
 
 progEnv.Tool('registerTargets', package = 'AcdRecon',
              libraryCxts=[[AcdRecon, libEnv]],testAppCxts=[[test_AcdRecon,progEnv]],
-             includes = listFiles(['AcdRecon/*.h']))
+             includes = listFiles(['AcdRecon/*.h']),
+	     jo = ['src/test/jobOptions.txt'])
 
 
 

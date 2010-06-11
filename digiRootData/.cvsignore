@@ -4,3 +4,6 @@ sun4x_*
 i386_linux*
 setup.*
 *.mak*
+
+build
+*.pyc

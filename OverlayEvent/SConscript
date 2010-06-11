@@ -7,7 +7,7 @@ Import('listFiles')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('OverlayEventLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package = 'OverlayEvent', toBuild='shared')
 OverlayEvent = libEnv.SharedLibrary('OverlayEvent', listFiles(['src/*.cpp']))
 
 progEnv.Tool('OverlayEventLib')

@@ -12,3 +12,6 @@ Visual
 setup.*
 *.mak*
 VC8debug
+
+build
+*.pyc

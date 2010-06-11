@@ -9,9 +9,8 @@ staticLibEnv = baseEnv.Clone()    # static library
 staticProgEnv = baseEnv.Clone()   # progs built on static library
 libEnv = baseEnv.Clone()          # gaudi cmp. library 
 
-staticLibEnv.Tool('GlastClassifyLib', depsOnly = 1, noGaudi = 1)
 staticProgEnv.Tool('GlastClassifyLib', depsOnly = 1, noGaudi = 1)
-libEnv.Tool('GlastClassifyLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='GlastClassify', toBuild='component')
 staticProgEnv.Tool('addLibrary', library = ['ClassificationTree'])
 
 ClassificationTree = staticLibEnv.StaticLibrary('ClassificationTree',

@@ -8,16 +8,20 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('GCRCalibLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='GCRCalib', toBuild='component')
 libEnv.AppendUnique(CPPPATH = ['#TkrRecon/','#GCRCalib/'])
-GCRCalib = libEnv.SharedLibrary('GCRCalib', listFiles(['src/Dll/*.cxx']) + listFiles(['src/GCRRecon/*.cxx']) + listFiles(['src/GCRSelect/*.cxx']))
+GCRCalib = libEnv.SharedLibrary('GCRCalib',
+				listFiles(['src/Dll/*.cxx',
+					   'src/GCRRecon/*.cxx',
+					   'src/GCRSelect/*.cxx']))
 
 if baseEnv['PLATFORM'] == 'win32':
 	progEnv.AppendUnique(CPPDEFINES = ['__i386'])
 
 progEnv.Tool('GCRCalibLib')
-test_GCRCalib = progEnv.GaudiProgram('test_GCRCalib',
-                                     listFiles(['src/test/*.cxx']), test=1)
+##test_GCRCalib = progEnv.GaudiProgram('test_GCRCalib',
+##                                     listFiles(['src/test/*.cxx']), test=1,
+##				     package='GCRCalib')
 progEnv.Tool('registerTargets', package = 'GCRCalib',
-             libraryCxts = [[GCRCalib, libEnv]],
-             testAppCxts = [[test_GCRCalib, progEnv]])
+             libraryCxts = [[GCRCalib, libEnv]])
+             ##testAppCxts = [[test_GCRCalib, progEnv]])

@@ -8,12 +8,17 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('CalUtilLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='CalUtil', toBuild='shared')
 
-CalUtil = libEnv.SharedLibrary('CalUtil', listFiles(['src/*.cxx']) + listFiles(['src/SimpleCalCalib/*.cxx']))
+CalUtil = libEnv.SharedLibrary('CalUtil',
+                               listFiles(['src/*.cxx',
+                                          'src/SimpleCalCalib/*.cxx']))
 
 progEnv.Tool('CalUtilLib')
-test_CalUtil = progEnv.Program('test_CalUtil', ['src/test/test_CalUtil.cxx'])
+progEnv.AppendUnique(CPPDEFINES = ['PACKAGE_NAME=\\"CalUtil\\"'])
+
+test_CalUtil = progEnv.Program('test_CalUtil',
+                               ['src/test/test_CalUtil.cxx'])
 
 progEnv.Tool('registerTargets', package = 'CalUtil',
              libraryCxts = [[CalUtil, libEnv]],

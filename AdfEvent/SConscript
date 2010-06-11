@@ -8,7 +8,6 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('AdfEventLib',depsOnly=1)
 AdfEvent = libEnv.StaticLibrary('AdfEvent',listFiles(['src/*.cxx']))
 
 progEnv.Tool('AdfEventLib')

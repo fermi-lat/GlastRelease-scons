@@ -7,7 +7,7 @@ Import('listFiles')
 Import('packages')
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('CalibDataLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='CalibData', toBuild='shared')
 CalibDataLib = libEnv.SharedLibrary('CalibData',
                                     listFiles(['src/*.cxx', 'src/Cal/*.cxx',
                                                'src/Tkr/*.cxx','src/Acd/*.cxx',

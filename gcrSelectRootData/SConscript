@@ -8,7 +8,7 @@ Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
-libEnv.Tool('gcrSelectRootDataLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='gcrSelectRootData', toBuild='rootlib')
 gcrSelectRootDataRootcint=libEnv.Rootcint('gcrSelectRootData/gcrSelectRootData_rootcint',
                                           ['gcrSelectRootData/GcrSelectedXtal.h',
                                            'gcrSelectRootData/GcrSelectEvent.h',   
@@ -16,8 +16,8 @@ gcrSelectRootDataRootcint=libEnv.Rootcint('gcrSelectRootData/gcrSelectRootData_r
                                            'gcrSelectRootData/GcrSelectVals.h',
                                            'gcrSelectRootData/LinkDef.h'],
                                           includes=[''])
-gcrSelectRootData = libEnv.SharedLibrary('gcrSelectRootData',
-                                         listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
+gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData',
+                                              listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
 progEnv.Tool('gcrSelectRootDataLib')
 test_gcrSelectRootData  = progEnv.Program('test_gcrSelectRootData',
                                           ['src/test/testGcrClasses.cxx'])

@@ -8,7 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('xmlUtilLib', depsOnly = 1)
+libEnv.Tool('addLinkDeps', package='xmlUtil', toBuild='shared')
 xmlUtil = libEnv.SharedLibrary('xmlUtil',
                                ['src/Arith.cxx', 'src/Substitute.cxx',
                                 'src/Constants.cxx', 'src/Source.cxx',

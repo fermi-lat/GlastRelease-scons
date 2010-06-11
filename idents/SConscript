@@ -9,7 +9,6 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
-libEnv.Tool('identsLib', depsOnly = 1)
 identsLib = libEnv.StaticLibrary('idents', listFiles(['src/*.cxx']))
 
 progEnv.Tool('identsLib')
@@ -19,7 +18,4 @@ progEnv.Tool('registerTargets', package = 'idents',
              staticLibraryCxts = [[identsLib, libEnv]],
              testAppCxts = [[test_idents, progEnv]],
              includes = listFiles(['idents/*.h']))
-
-
-
 
