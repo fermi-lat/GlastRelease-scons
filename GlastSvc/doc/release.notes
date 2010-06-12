@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ GlastSvc-09-28-03 12-Jun-2010    jrb upgrades for SCons builds
  GlastSvc-09-28-02 07-Dec-2009    jrb Little bug fix in SConscsript
  GlastSvc-09-28-01 11-Oct-2009  lsrea add each composite name only once
  v9r28p0   15-Sep-2009 HMK set m_autoSeed to false by default to avoid

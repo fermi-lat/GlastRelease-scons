@@ -4,10 +4,12 @@
  @verbatim
      * EOH *
 
+ AdfReader-00-03-02 12-Jun-2010    jrb upgrades for SCons builds
  AdfReader-00-03-01 05-Nov-2009    jrb Updates for SCons
  v0r3p1 28-Jul-2008 jrb Tag Navid's upgrades for new env var. handling; add
                         EOH line to this file
 
+ AdfReader-00-03-02 12-Jun-2010    jrb upgrades for SCons builds
  AdfReader-00-03-01 05-Nov-2009    jrb Updates for SCons
  v0r2p1 31-Jul-2006 HMK Make sure missing AdfEvent does not result in run
                     termination

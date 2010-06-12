@@ -3,6 +3,7 @@
  Coordinator:N.Omodei
  EOH
 
+ AdfEvent-00-05-03 12-Jun-2010    jrb upgrades for SCons builds
  AdfEvent-00-05-02 05-Nov-2009    jrb Updates for SCons
  v0r5   25-Jul-2006 HMK Add CLID for /Event/AncillaryEvent on TDS
  v0r4p1   21-Jul-2006 NO  Forgot a parameter

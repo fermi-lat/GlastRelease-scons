@@ -4,6 +4,7 @@
   <pre>
  * EOH *
 
+ EventIntegrity-00-08-04 12-Jun-2010    jrb upgrades for SCons builds
  EventIntegrity-00-08-03 09-Nov-2009    jrb Updates for SCons
  * v0r8p2 2009-Mar-31  HMK JIRA GRINF-51
  * v0r8p1 2009-Mar-24  HMK Print out event id when errors are found

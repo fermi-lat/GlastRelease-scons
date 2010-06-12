@@ -1,5 +1,5 @@
 package AdfReader
-version v0r3p1
+version v0r3p2
 author N.Omodei <nicola.omodei@pi.infn.it>
 
 use GaudiInterface * IExternal

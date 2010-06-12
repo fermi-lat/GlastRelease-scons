@@ -1,5 +1,5 @@
 package CalXtalResponse
-version v0r23p2
+version v0r24p1
 author zachary.fewtrell@nrl.navy.mil
 
 branches src cmt doc

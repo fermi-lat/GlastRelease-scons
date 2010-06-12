@@ -1,5 +1,5 @@
 package GuiSvc
-version v3r8p2
+version v3r8p3
 author T.Burnett <tburnett@u.washington.edu>
 
 branches GuiSvc cmt doc src

@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ CalDigi-03-07-02 12-Jun-2010    jrb upgrades for SCons builds
  * Package CalDigi
  * CalDigi-03-07-01 HMK Add use of RootConvert for unit test
  * v3r7        1-Dec-2008  TU Moving CalDigiMergeAlg to the Overlay package

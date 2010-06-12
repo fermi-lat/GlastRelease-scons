@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-06-02 12-Jun-2010    jrb upgrades for SCons builds
  GlastClassify-07-06-01 13-Apr-2010  TU Update to Pass7_v17.10.xml with Anders' request to change FswGamState
  GlastClassify-07-05-01 07-Dec-2009    jrb Add stuff for SCons build
 12-Feb-10  v7r5p0gr03 TU Fix categorical variable buffer overwrite problem
