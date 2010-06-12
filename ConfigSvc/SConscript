@@ -18,6 +18,7 @@ progEnv.Tool('ConfigSvcLib')
 progEnv.Tool('registerTargets', package = 'ConfigSvc',
              libraryCxts = [[ConfigSvc, libEnv]],
              includes = ['ConfigSvc/IConfigSvc.h'],
+             xml =listFiles(['xml/*.xml']),
              jo = ['src/configOptions_moot.txt',
                    'src/configOptions_noMoot.txt'])
 
