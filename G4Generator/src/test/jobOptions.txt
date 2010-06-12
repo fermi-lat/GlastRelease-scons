@@ -30,7 +30,7 @@ GlastDetSvc.topVolume="LAT";         // the whole schebang
 GlastDetSvc.visitorMode="recon";
 
 
-#include "$FLUXSVCJOBOPTIONS/defaultOptions.txt"
+#include "$FLUXSVCJOBOPTIONSPATH/defaultOptions.txt"
 // Append (no replace) the list of source library documents
 FluxSvc.source_lib = {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
 
