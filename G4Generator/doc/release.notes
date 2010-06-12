@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ G4Generator-05-26-02 12-Jun-2010    jrb typo in job options
  G4Generator-05-26-01 12-Jun-2010    jrb upgrades for SCons builds
  G4Generator-05-26-00 04-Jun-2010 burnett Tracy's changes for CAL
  G4Generator-05-25-01 11-Oct-2009  lsrea upgrades to handle composites of composites
