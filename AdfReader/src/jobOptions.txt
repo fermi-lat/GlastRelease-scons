@@ -4,7 +4,7 @@
 // Job options file for user algorithm development
 //
 
-#include "$GLEAMROOT/src/basicOptions.txt"
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 ApplicationMgr.DLLs   += { "AdfReader" };
 
@@ -13,8 +13,8 @@ AdfReaderAlg.dataFilePath="$(ADFREADERDATAPATH)/CR_DAQBARI_330000723.bin";
 
 // choose one or the other below for old Gui or FRED
 // note that FRED should start up automatically
-//#include "$GLEAMROOT/src/guiOptions.txt"
-//#include "$GLEAMROOT/src/fredOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"
 
 // add the local source library definitions and specify our test source
 //FluxSvc.source_lib += {"$(USERALGXMLPATH)/user_sources.xml"};

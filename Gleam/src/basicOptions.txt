@@ -251,10 +251,10 @@ ApplicationMgr.ExtSvc += { "GlastRandomSvc"};
 //  Generation and simulation
 //
 //  get the parameters for simulation -- misnamed the file :-(
-#include "$G4GENERATORROOT/src/basicOptions.txt"
+#include "$G4GENERATORJOBOPTIONSPATH/basicOptions.txt"
 ApplicationMgr.DLLs +={ "G4Propagator"};
 
-#include "$FLUXSVCROOT/src/defaultOptions.txt"
+#include "$FLUXSVCJOBOPTIONSPATH/defaultOptions.txt"
 FluxAlg.source_name="default";
 
 // add in CRflux option
@@ -275,21 +275,21 @@ TkrFilterFirst.FilterToolName="TkrCalFilterTool";
 // -------------------------------------------
 //  Calibration sevices
 //
-#include "$CALIBSVCROOT/src/defaultOptions.txt"
+#include "$CALIBSVCJOBOPTIONSPATH/defaultOptions.txt"
 
 // -------------------------------------------
 //  MOOT services
 //
-#include "$MOOTSVCROOT/src/defaultOptions.txt"
+#include "$MOOTSVCJOBOPTIONSPATH/defaultOptions.txt"
 // Configuration.  This gets the configuration from files in the release
-#include "$CONFIGSVCROOT/src/configOptions_noMoot.txt"
+#include "$CONFIGSVCJOBOPTIONSPATH/configOptions_noMoot.txt"
 //MootSvc.noMoot = true;  // turn off MOOT access by default for now
 
 // -------------------------------------------
 //  Calorimeter services
 //
 ApplicationMgr.Dlls += {"CalXtalResponse"};
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
+#include "$CALXTALRESPONSEJOBOPTIONSPATH/defaultOptions.txt"
 
 // -------------------------------------------
 

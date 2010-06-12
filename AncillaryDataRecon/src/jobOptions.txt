@@ -4,13 +4,13 @@
 // Job options file for user algorithm development
 //
 
-#include "$GLEAMROOT/src/basicOptions.txt"
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 
 // choose one or the other below for old Gui or FRED
 // note that FRED should start up automatically
-//#include "$GLEAMROOT/src/guiOptions.txt"
-//#include "$GLEAMROOT/src/fredOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"
 
 ApplicationMgr.DLLs   += { "AdfReader" };
 ApplicationMgr.DLLs   += { "AncillaryDataRecon" };

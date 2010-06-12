@@ -41,7 +41,7 @@ GlastDetSvc.visitorMode="recon";
 GlastDetSvc.topVolume="LAT";         // the whole schebang 
 GlastDetSvc.visitorMode="recon";
 
-#include "$FLUXSVCROOT/src/defaultOptions.txt"
+#include "$FLUXSVCJOBOPTIONSPATH/defaultOptions.txt"
 
 // add in CRflux option
 //ApplicationMgr.DLLs +={ "CRflux" };

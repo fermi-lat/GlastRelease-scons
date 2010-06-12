@@ -3,7 +3,8 @@
 //$Header$
 
 // start with the basic program defined in Gleam
-#include "$GLEAMROOT/src/basicOptions.txt"
+//#include "$GLEAMROOT/src/basicOptions.txt"
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 // Needed for EventIntegrityAlg sequence breaking, where we skip recon but
 // continue to write to our output file

@@ -52,7 +52,7 @@ GlastDetSvc.visitorMode = "recon";
 
 
 // Configuration.  This get the configuration from MOOT
-#include "$CONFIGSVCROOT/src/configOptions_moot.txt"
+#include "$CONFIGSVCJOBOPTIONSPATH/configOptions_moot.txt"
 
 // Crash on FATAL:
 MootSvc.ExitOnFatal = true;
@@ -116,7 +116,7 @@ EventSelector.GemZeroCheck = 1;
 //
 ApplicationMgr.DLLs += {"CalXtalResponse"};
 
-#include "$GLEAMROOT/src/jobOptions/pipeline/calibrations.txt"
+#include "$GLEAMJOBOPTIONSPATH/jobOptions/pipeline/calibrations.txt"
 
 //
 // Start up a CalFailureModeSvc:

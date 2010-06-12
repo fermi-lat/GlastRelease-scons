@@ -5,7 +5,7 @@
 // Should be used within a Gleam package.
 //==============================================================
 
-#include "$CALRECONROOT/src/test/common.txt"
+#include "$CALRECONJOBOPTIONSPATH/test/common.txt"
 
 // flux svc
 ApplicationMgr.DLLs   += { "FluxSvc" } ; 

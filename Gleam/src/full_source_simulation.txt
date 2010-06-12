@@ -12,7 +12,7 @@
 //          $(reconRootFileName)
 //          $(relationRootFileName)
 
-#include "$GLEAMROOT/src/basicOptions.txt"
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 
 //   ---------------------------------------------
@@ -47,7 +47,7 @@ OnboardFilter.RejectEvents  = true; // set the filter to reject events,
 OnboardFilter.FailNoEbfData = true; // if no EBF data (error anyway) reject the event
 // --------------------------------------------
 //         calibration
-#include "$GLEAMROOT/src/calibration.txt"
+#include "$GLEAMJOBOPTIONSPATH/calibration.txt"
 
 
 // --------------------------------------------

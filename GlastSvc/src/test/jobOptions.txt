@@ -2,7 +2,7 @@
 //
 // Job options file for CreateEvent
 //
-// #include "$GLEAMROOT/src/default.txt"
+// #include "$GLEAMJOBOPTIONSPATH/default.txt"
 
 // List of required services
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc" ,

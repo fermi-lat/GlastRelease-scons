@@ -236,7 +236,7 @@ TkrFilterFirst.FilterToolName = "TkrCalFilterTool";
 //
 // Calibrations:
 //
-#include "$GLEAMROOT/src/jobOptions/pipeline/calibrations.txt"
+#include "$GLEAMJOBOPTIONSPATH/jobOptions/pipeline/calibrations.txt"
 
 
 //

@@ -14,7 +14,7 @@ ApplicationMgr.ExtSvc = {
     "GlastDetSvc" 
     };
 
-#include "$CALIBSVCROOT/src/defaultOptions.txt"
+#include "$CALIBSVCJOBOPTIONSPATH/defaultOptions.txt"
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";

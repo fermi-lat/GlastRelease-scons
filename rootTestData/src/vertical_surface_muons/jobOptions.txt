@@ -5,11 +5,11 @@
 //$Header$
 
 // start with the basic program defined in Gleam
-#include "$GLEAMROOT/src/basicOptions.txt"
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 // following, if uncommented, will run the GUI
-//#include "$GLEAMROOT/src/guiOptions.txt"
-//#include "$GLEAMROOT/src/fredOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"
 
 FluxAlg.source_name="vertical_surface_muons";
 

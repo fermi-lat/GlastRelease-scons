@@ -1,5 +1,5 @@
 
-#include "$CALRECONROOT/src/test/common.txt"
+#include "$CALRECONJOBOPTIONSROOT/test/common.txt"
 
 // read back simulation and reconstruction first pass
 Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  

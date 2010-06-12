@@ -4,7 +4,7 @@
 // $Header$
 
 // just run the "default" job with mods below
-#include "$GLEAMROOT/src/default.txt"
+#include "$GLEAMJOBOPTIONSPATH/default.txt"
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel=3;
@@ -25,7 +25,7 @@ MeritAlg.generated = 1000;
 
 OnboardFilter.RejectEvents = true;      // enable OBF
 
-#include "$GLEAMROOT/src/calibration.txt"
+#include "$GLEAMJOBOPTIONSPATH/calibration.txt"
 
 // test saa boundary mechanism
 //#include "$FLUXSVCROOT/src/SAAboundary.txt"

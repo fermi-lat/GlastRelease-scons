@@ -2,7 +2,7 @@
 // Job Option file containing calibration stuff 
 // to be included by recon and mc:
 //
-#include "$CALIBSVCROOT/src/defaultOptions.txt"
+#include "$CALIBSVCJOBOPTIONSPATH/defaultOptions.txt"
 
 //
 // Name of calibration database:
