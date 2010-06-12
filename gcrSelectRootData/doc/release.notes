@@ -4,6 +4,7 @@ package manager:C.Lavalley
 @verbatim
 * EOH *
 
+ gcrSelectRootData-02-02-05 12-Jun-2010    jrb upgrades for SCons builds
  gcrSelectRootData-02-02-04 11-Nov-2009    jrb Updates for SCons
 v2r2p1     JCT add filter status to GCR persistent objects
 v2r1p3   HMK Introduce Doxygen tables for use in the workbook

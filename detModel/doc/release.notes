@@ -3,6 +3,7 @@
  * Coordinator: R.Giannitrapani
  *               EOH
 
+ detModel-02-21-02 12-Jun-2010    jrb upgrades for SCons builds
  detModel-02-21-01 05-Nov-2009    jrb Updates for SCons
    v2r21   26-Oct-2007 jrb Add support for trapezoidal prisms
    v2r20   15-Jun-2007 jrb Add method IDmapBuilder::orderSensitive

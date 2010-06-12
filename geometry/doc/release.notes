@@ -5,6 +5,7 @@
  * $Id$
  * EOH *
 
+ geometry-03-02-02 12-Jun-2010    jrb upgrades for SCons builds
  geometry-03-02-01 05-Nov-2009    jrb Updates for SCons
 * v3r2   THB  24-mar-06   (For Tracy: CLHEP update)
 * v3r1p2 NG   15-jul-05   Added author line

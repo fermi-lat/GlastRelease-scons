@@ -4,6 +4,7 @@
  @verbatim
  * EOH *
 
+ gui-03-07-04 12-Jun-2010    jrb upgrades for SCons builds
  gui-03-07-03 05-Nov-2009    jrb updates for SCons
    v3r7p2   THB 24-mar-06   CLHEP change
    v3r6p7 NG  29-aug-05   Carry forward changes in GlastPoicy until we have a pattern
