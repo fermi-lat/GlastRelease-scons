@@ -17,6 +17,7 @@
 #include <stdio.h>
 
 #include "facilities/commonUtilities.h"
+#include "facilities/Util.h"
 
 //------------------------------------------------------------------------------
 //
@@ -55,47 +56,71 @@ void current_time(std::ostream& out=std::cout)
 
 int main( int argn, char** argc) {
 
-    facilities::commonUtilities::setupEnvironment();
+  facilities::commonUtilities::setupEnvironment();
     
-    std::string joboptions_file="src/jobOptions.txt"; // default
-    
-    const char* job = ::getenv("JOBOPTIONS"); // check for env var
-    
-    if( argn>1 ) { joboptions_file = argc[1];} // priority to command arg.
-    else if( job ) { joboptions_file = job; }
-    std::cerr << "Starting Glast-Gaudi job with job options file " 
-        << joboptions_file << std::endl;
-    current_time(std::cerr);
-    const char* newdir = ::getenv("GLEAM_CHDIR");
-    if( newdir !=0) {
-        std::cerr << "Changing default directory to: " << newdir << std::endl;
-        ::chdir(newdir);
-    }
-    
-    
-    // Create an instance of an application manager
-    IInterface* iface = Gaudi::createApplicationMgr();
-    
-    SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
-    SmartIF<IAppMgrUI>     appMgr  ( IID_IAppMgrUI, iface );
-
-    if( !appMgr.isValid() || !propMgr.isValid() ) {
-        std::cout << "Fatal error while creating the ApplicationMgr " << std::endl;
-        return 1;
-    }
-
-  
-    // Set properties of algorithms and services
-    propMgr->setProperty( "JobOptionsPath", joboptions_file );
-        
-    // Run the application manager and process events
-#ifdef WIN32
-    setPriority();
+    //    std::string joboptions_file="src/jobOptions.txt"; // default
+  std::string joboptions_file;
+#ifndef SCons    
+  joboptions_file="src/test/jobOptions.txt"; // default
+#else
+#ifdef PACKAGE_NAME
+  std::string pkgName(PACKAGE_NAME); 
+  joboptions_file = facilities::commonUtilities::getJobOptionsPath(pkgName) +
+    "/test/jobOptions.txt";
+#else
+  std::cerr << "SCons compile did not specify package name! ";
+  return 1;
 #endif
-    StatusCode status = appMgr->run();
+#endif
+    
+  const char* job = ::getenv("JOBOPTIONS"); // check for env var
+    
+  if( argn>1 ) { joboptions_file = argc[1];} // priority to command arg.
+  else if( job ) { joboptions_file = job; }
 
-    // All done - exit with 0 if success.
-    current_time(std::cerr);
-    return (status.isFailure()? 1 : 0);
+  // translate env variables if any
+  try {
+    facilities::Util::expandEnvVar(&joboptions_file);
+  }
+  catch (facilities::Untranslatable ex) {
+    std::cerr << "Unable to expand job options name " << joboptions_file 
+              << std::endl;
+    return 1;
+  }
+
+  std::cerr << "Starting Glast-Gaudi job with job options file " 
+            << joboptions_file << std::endl;
+  current_time(std::cerr);
+  const char* newdir = ::getenv("GLEAM_CHDIR");
+  if( newdir !=0) {
+    std::cerr << "Changing default directory to: " << newdir << std::endl;
+    ::chdir(newdir);
+  }
+  
+  
+  // Create an instance of an application manager
+  IInterface* iface = Gaudi::createApplicationMgr();
+  
+  SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
+  SmartIF<IAppMgrUI>     appMgr  ( IID_IAppMgrUI, iface );
+  
+  if( !appMgr.isValid() || !propMgr.isValid() ) {
+    std::cout << "Fatal error while creating the ApplicationMgr " << std::endl;
+    return 1;
+  }
+  
+  
+  // Set properties of algorithms and services
+  propMgr->setProperty( "JobOptionsPath", joboptions_file );
+  
+  // Run the application manager and process events
+#ifdef WIN32
+  setPriority();
+#endif
+  StatusCode status = appMgr->run();
+
+  // All done - exit with 0 if success.
+  current_time(std::cerr);
+  return (status.isFailure()? 1 : 0);
     
 }
