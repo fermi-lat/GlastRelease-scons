@@ -1,0 +1,38 @@
+#ifndef ANCILLARYDATAEVENT_HH
+#define ANCILLARYDATAEVENT_HH
+
+#include "AncillaryDataWord.h"
+#include <vector>
+#include "GaudiKernel/DataObject.h"
+
+class AncillaryDataEvent : public DataObject
+{
+ public:
+ 
+  AncillaryDataEvent(){;}
+  AncillaryDataEvent(int length);
+  ~AncillaryDataEvent();
+  int    getLength();
+  int    getEventNumber();
+  void   setEventNumber(int eventNumber);
+  int    getSpillNumber();
+  void   setSpillNumber(int spillNumber);
+  std::vector<AncillaryDataWord> getQdcDataWords();
+  std::vector<AncillaryDataWord> getFadcDataWords();  
+  void   appendQdcDataWord(AncillaryDataWord dataWord);
+  void   appendFadcDataWord(AncillaryDataWord dataWord);
+  void   clear();
+  void   printInformation();
+  // These will be removed, here for debug purposes...
+  double m_thetaXZ;
+  double m_thetaYZ;
+   
+ private:
+  
+  int m_length;
+  int m_eventNumber;
+  int m_spillNumber;
+  std::vector<AncillaryDataWord> m_qdcDataWords;
+  std::vector<AncillaryDataWord> m_fadcDataWords;
+};
+#endif

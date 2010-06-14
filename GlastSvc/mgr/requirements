@@ -1,0 +1,48 @@
+package GlastSvc
+version v1
+
+branches src mgr doc
+
+use instrument v1r2
+use Gaudi v7
+
+# these only needed for the test executable: comment out otherwise
+use GlastEvent v1
+use GaudiSvc v3
+
+
+library GlastSvc ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
+                 GlastDetSvc/*.h  GlastDetSvc/*.cpp \
+                 EventSelector/*.h  EventSelector/*.cpp \
+                 Dll/*.cpp
+
+macro GlastSvcDir  "$(GLASTSVCROOT)/$(DEBUGDIR)"
+
+macro GlastSvc_linkopts   " " \
+      LinuxStatic         "$(GlastSvcDir)/libGlastSvc.a -u GlastSvc_loadRef" \
+      VisualCStatic       "$(GlastSvcDir)/libGlastSvc.lib /include:_GlastSvc_loadRef"
+
+macro GlastSvc_stamps     ""                              \
+      LinuxStatic         "$(GlastSvcDir)/GlastSvc.stamp" \
+      LinuxStaticdbx      "$(GlastSvcDir)/GlastSvc.stamp" \
+      VisualCStatic       "$(GlastSvcDir)/GlastSvc.stamp"
+
+
+set   GlastSvcShr           "${GLASTSVCROOT}/${DEBUGDIR}/libGlastSvc"
+
+private
+include_path $(GLASTSVCROOT)
+
+# note that the debug versions of the used libraries are inserted below
+
+macro GlastSvc_shlibflags   "$(componentshr_linkopts) $(use_linkopts) $(Win32Debug)"
+
+# build this for non-shareable testing
+
+application test ../GlastSvc/GlastDetSvc/*.h ../GlastSvc/*.h \
+                 GlastDetSvc/*.h  GlastDetSvc/*.cpp \
+                 EventSelector/*.h  EventSelector/*.cpp \
+                 Dll/*.cpp \
+                 test/*.cpp test/*.h test/*.txt
+
+

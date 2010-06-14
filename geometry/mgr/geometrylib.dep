@@ -1,0 +1,333 @@
+# Microsoft Developer Studio Generated Dependency File, included by geometrylib.mak
+
+../src/Box.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\Box.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Hexahedron.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Cone.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\Cone.h"\
+	"..\geometry\Conic.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Conic.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\Conic.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/CoordTransform.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.inl"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\CoordTransform.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Cylinder.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\Cylinder.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/GeomObject.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.inl"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\CoordTransform.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Helix.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Helix.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Ray.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Hexahedron.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Hexahedron.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Hype.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Hype.h"\
+	"..\geometry\Hyperbolic.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Hyperbolic.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Hyperbolic.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Intersection.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Intersection.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Ray.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Plane.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Point.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.inl"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\CoordTransform.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Ray.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Ray.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Shape.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Sphe.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Sphe.h"\
+	"..\geometry\Sphere.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Sphere.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Sphere.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Surface.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Track.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Ray.h"\
+	"..\geometry\Track.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Tube.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\Cylinder.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Tube.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Vector.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\clhep\clhep\config\templatefunctions.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.h"\
+	"..\..\CLHEP\CLHEP\Vector\Rotation.inl"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\CoordTransform.h"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Vector.h"\
+	".\nt_config.h"\
+	
+
+../src/Volume.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Intersection.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Ray.h"\
+	"..\geometry\Shape.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Volume.h"\
+	".\nt_config.h"\
+	
+
+../src/Wedge.cxx : \
+	"..\..\clhep\clhep\config\clhep-default.h"\
+	"..\..\clhep\clhep\config\clhep.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.h"\
+	"..\..\CLHEP\CLHEP\Vector\ThreeVector.inl"\
+	"..\geometry\GeomObject.h"\
+	"..\geometry\Plane.h"\
+	"..\geometry\Point.h"\
+	"..\geometry\Surface.h"\
+	"..\geometry\Vector.h"\
+	"..\geometry\Wedge.h"\
+	".\nt_config.h"\
+	

@@ -1,0 +1,35 @@
+ApplicationMgr.DLLs={"GaudiAlg","GaudiAud","GlastSvc"};
+
+ApplicationMgr.ExtSvc={
+	"GlastEventSelector/EventSelector",
+	"EventCnvSvc"};
+AuditorSvc.Auditors = {"ChronoAuditor"};
+
+EventPersistencySvc.CnvServices={"EventCnvSvc"};
+
+EventSelector.Input="NONE";
+
+ApplicationMgr.TopAlg = { "Sequencer/Top" };
+
+Top.Members={
+	"Sequencer/Generator",
+	"Sequencer/Digitization"};
+
+//Generation
+ApplicationMgr.DLLs+= {"G4Generator","G4Propagator"};
+ApplicationMgr.ExtSvc+={"G4GeometrySvc"};
+Generator.Members = {"FluxAlg","G4Generator"};
+G4Generator.defaultCutValue=0.7;
+FluxSvc.source_lib+={"$(G4GENERATORROOT}/src/test/test_sources.xml"};
+FluxAlg.source_name="muon_pencil_angle";
+
+//Digitization
+ApplicationMgr.DLLs +={"TkrDigi","CalDigi","AcdDigi"};
+Digitization.Members = {
+		     "TkrSimpleDigiAlg",
+		     "CalDigiAlg",
+		     "AcdDigiAlg"};
+
+ApplicationMgr.TopAlg +={ "EbfWriter" };
+
+ApplicationMgr.EvtMax=100;

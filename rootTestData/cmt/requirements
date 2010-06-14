@@ -1,0 +1,9 @@
+package rootTestData
+version v0
+# $Id$
+
+branches data
+
+# Dummy requirements file
+# This package is a central repository for test data in ROOT files.
+

@@ -1,0 +1,9 @@
+fincludes
+nt_settings.h
+*.make*
+*.sh
+*.csh
+cleanup
+*.dsp*
+*.dsw*
+nt_config.h

@@ -1,0 +1,34 @@
+package OnboardFilterTds
+version v0
+# $Header$
+
+author Richard Hughes <HUGHES@mps.ohio-state.edu>
+
+branches OnboardFilterTds cmt doc src
+
+use obf v* IExternal 
+use GaudiInterface v* IExternal
+use Event v*
+use GlastPolicy v*
+
+apply_pattern shared_library
+
+private
+
+apply_pattern package_headers
+
+#macro OnboardFilter_cppflags "" \
+#   Linux "-DGLEAM -D__i386 -DEFC_FILTER -DMSG_ST -D__unix__  -DWUT_IMPLEMENTATION_PX "\
+#   WIN32 " /D GLEAM /D__i386 /DEFC_FILTER  /D_WIN32"
+
+#macro OnboardFilter_cflags $(OnboardFilter_cppflags)
+
+#macro_append cpplinkflags "" Linux " -ldl -lpthread " WIN32 ""
+
+library OnboardFilterTds \
+ ${OnboardFilterTds_headers} \
+ -s=../src *.cxx 
+ 
+
+application test_OnboardFilterTds test/testmain.cxx
+

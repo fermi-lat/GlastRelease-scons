@@ -1,0 +1,12 @@
+i686
+Linux
+aclocal.m4
+config
+config.*
+configure
+libtool
+Makefile
+Makefile.in
+stamp-h*
+
+msdev

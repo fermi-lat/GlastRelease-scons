@@ -1,0 +1,9 @@
+Visual
+VC*
+Win32*
+sun4x_*
+i386_linux*
+rh9*
+setup.*
+*.mak*
+*.root

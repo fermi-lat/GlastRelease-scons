@@ -1,0 +1,11 @@
+package enums
+version v0
+
+use GlastPolicy v*
+
+apply_pattern package_include
+apply_pattern package_headers
+#apply_pattern package_linkopts
+
+private
+application test_enum test/test_enums.cxx ${enums_headers}

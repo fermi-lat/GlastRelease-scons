@@ -1,0 +1,39 @@
+package AcdUtil
+version v0r0
+author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
+# $Id$
+
+use GlastSvc v*
+use Event v*
+
+use facilities v*
+use geometry v*
+
+use xmlBase v*         
+
+use GlastPolicy v*
+
+apply_pattern packageShr
+
+apply_pattern package_include
+
+
+apply_pattern package_headers
+
+#=============================================================
+private
+
+
+library AcdUtil *.cxx \
+                Dll/*.cxx \
+                test/*.cxx \
+                ${AcdUtil_headers}               
+
+apply_pattern package_Cshlibflags
+
+public
+
+apply_pattern package_test
+
+#application test_AcdUtil test/*.cxx \
+#                         $(TestGlastMain) ${AcdUtil_headers}

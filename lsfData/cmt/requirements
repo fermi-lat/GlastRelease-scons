@@ -1,0 +1,21 @@
+package lsfData 
+version v0
+
+author Heather Kelly <heather@lheapop@gsfc.nasa.gov>
+
+use GlastPolicy v*
+
+#use facilities  v*
+use enums v*
+
+apply_pattern package_include
+apply_pattern package_linkopts
+apply_pattern package_headers
+
+
+private
+library lsfData -no_share *.cxx ${lsfData_headers} 
+
+
+application test_lsfData test/test_lsfData.cxx
+

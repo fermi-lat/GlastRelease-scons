@@ -1,0 +1,45 @@
+package GlastClassify
+
+version v0
+author T. Burnett <tburnett@u.washington.edu>
+
+use GlastPolicy *
+
+apply_pattern package_include
+apply_pattern package_linkopts
+apply_pattern package_stamps
+
+
+private
+#-----------------------------------------------------------------
+macro source "*.cxx " WIN32 "*.h *.cxx"
+library  GlastClassify -no_share  -s=../GlastClassify $(source) -s=../src $(source)
+
+use classifier *
+
+use ROOT * IExternal
+macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
+macro_append ROOT_cppflags "" WIN32 " /wd4800 "
+
+macro DATA "d:/common/IRF/root_files"
+set all_gamma_data "$(DATA)/ag-v4r2-merituple-180GeV-prune-20040427-fulltup.root"
+
+macro OUTPUT "$(GlastClassify_root)/data"
+
+# this app creates the classification trees
+# application run -s=../src/classify $(source) $(classify_files)
+
+macro classify_files    -s=$(OUTPUT) *.txt\
+    -s=$(OUTPUT)/goodcal *.txt\
+    -s=$(OUTPUT)/vertex_thin *.txt\
+    -s=$(OUTPUT)/vertex_thick *.txt\
+    -s=$(OUTPUT)/core_vertex_thin *.txt\
+    -s=$(OUTPUT)/core_vertex_thick *.txt\
+    -s=$(OUTPUT)/core_track_thin *.txt\
+    -s=$(OUTPUT)/core_track_thick *.txt
+
+#application rgui -s=rgui *.h *.cxx *.cpp
+
+# app to run tests on the training data
+application test_GlastClassify -s=../src/test $(source)
+

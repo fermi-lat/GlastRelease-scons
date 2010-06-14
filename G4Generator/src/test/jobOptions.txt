@@ -1,0 +1,39 @@
+//##############################################################
+//
+// Job options file for GismoGenerator test
+//
+
+ApplicationMgr.DLLs   = { "GaudiAlg", "FluxSvc", "GlastSvc", "G4Generator"};
+
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc", 
+    "FluxSvc", "GlastDetSvc" 
+    };
+
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+ApplicationMgr.TopAlg = { 
+    "G4Generator",
+    "G4TestAlg"};
+
+// make sure that this service does not try to instantatiate the (gismo) detector
+GlastDetSvc.PersistencyFile="(none)";
+
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel      = 2;
+
+G4Generator.source_name="vertical_muons";
+
+
+ApplicationMgr.EvtMax = 20;
+
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+

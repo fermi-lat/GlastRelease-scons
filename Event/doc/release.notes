@@ -1,0 +1,8 @@
+package GlastEvent
+
+package manager:T.Burnett (original author: H. Gillespie)
+
+
+20000826  THB many things copied from LHCbEvent, all of the TopLevel directory!
+          Start fixing source comments to be picked up by doxygen. Put in reference to 
+          Traudl's Raw data definition.

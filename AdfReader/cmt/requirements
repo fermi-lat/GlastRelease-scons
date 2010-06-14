@@ -1,0 +1,36 @@
+package AdfReader
+version v0
+author N.Omodei <nicola.omodei@pi.infn.it>
+
+use GaudiInterface * IExternal
+use GlastPolicy *
+
+use AdfEvent *
+use AncillaryDataEvent *
+use AncillaryDataUtil *
+use facilities *
+
+apply_pattern package_include
+apply_pattern package_linkopts
+apply_pattern package_headers
+
+#apply_pattern packageShr
+#apply_pattern shared_library
+#apply_pattern package_include
+#macro_append package_linkopts
+
+private
+# this build a static library:
+#library AdfReader -no_share \
+#	*.cxx ${AdfReader_headers}
+
+# this build the component dynamic library
+library AdfReader \
+	Dll/*.cxx *.cxx \
+        ${AdfReader_headers}
+
+# this build only the library, no component dynamic library
+#library AdfReader *.cxx \
+#        ${AdfReader_headers}
+
+application test_AdfReader test/testMain.cxx *.cxx

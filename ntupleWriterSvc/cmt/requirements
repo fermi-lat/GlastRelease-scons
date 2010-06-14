@@ -1,0 +1,38 @@
+package ntupleWriterSvc
+version v0
+
+branches src mgr doc
+
+use GlastSvc v2
+use GlastEvent v2
+use ROOT v3r0p7
+use RootHistCnv
+
+
+library ntupleWriterSvc  *.cxx ../ntupleWriterSvc/*.h Dll/*.cxx
+
+# I put these in from GlastDigi...not sure I need them
+ignore_pattern package_stamps
+ignore_pattern include_none
+apply_pattern package_include
+
+apply_pattern ld_library_path 
+
+
+#=============================================================
+
+# define link options
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+private
+# get flags to build shared library
+
+apply_pattern package_Cshlibflags
+
+# build this for testing, console only 
+
+macro WinJobOptions  "" VisualC "test/jobOptions.txt"
+
+application test \
+    test/*.cxx ${WinJobOptions}

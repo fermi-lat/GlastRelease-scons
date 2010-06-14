@@ -1,0 +1,56 @@
+package GlastEvent
+version v1
+
+branches GlastEvent mgr doc src
+
+use instrument v1r2
+use Gaudi v7
+
+library GlastEvent \
+        Hits/*.cpp \
+        ../GlastEvent/*.h \ 
+        ../GlastEvent/Hits/*.h \
+        ../GlastEvent/TopLevel/*.h \
+        ../GlastEvent/GsimImp/*.h \
+        TopLevel/*.cpp \
+        GsimImp/*.cpp
+
+library GlastEventFactories \
+        ../src/TopLevel/EventModel.cpp \
+        ../src/Factories/*.cpp
+
+include_path ${GLASTEVENTROOT}
+
+macro GlastEventDir     "$(GLASTEVENTROOT)/$(DEBUGDIR)"
+
+macro GlastEvent_stamps   "$(GlastEventDir)/GlastEvent.stamp"
+
+macro GlastEvent_linkopts "$(GlastEventDir)/libGlastEvent.so" \
+ LinuxStatic             "$(GlastEventDir)/libGlastEventFactories.a $(GlastEventDir)/libGlastEvent.a -u GlastEventFactories_loadRef" \
+ VisualC                 "$(GlastEventDir)/libGlastEvent.lib" \
+ VisualCStatic           "$(GlastEventDir)/libGlastEventFactories.lib $(GlastEventDir)/libGlastEvent.lib /include:GlastEventFactories_loadRef"
+#
+# Macro to define shared libraries
+#
+set GlastEventFactoriesShr "${GLASTEVENTROOT}/${DEBUGDIR}/libGlastEventFactories"
+
+private
+macro GlastEvent_shlibflags "$(GlastEventDir)/libGlastEvent.a $(libraryshr_linkopts) $(CLHEP_linkopts)" \
+ VisualC                  "$(GlastEventDir)/libGlastEvent.lib $(libraryshr_linkopts) $(CLHEP_linkopts) /def:$(GlastEventDir)/libGlastEvent.def"
+
+# note that dependent libs are debug
+
+macro GlastEventFactories_shlibflags "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts)"\
+        VisualC   "$(componentshr_linkopts) $(Gaudi_linkopts) $(use_linkopts) $(Win32Debug)"
+
+
+
+
+
+
+
+
+
+
+
+

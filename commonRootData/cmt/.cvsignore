@@ -1,0 +1,5 @@
+setup.*
+cleanup.*
+*.make
+*.bak
+NMake

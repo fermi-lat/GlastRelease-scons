@@ -1,0 +1,18 @@
+package AncillaryDataEvent
+version v0
+author N.Omodei <nicola.omodei@pi.infn.it>
+
+use GaudiInterface * IExternal
+use GlastPolicy *
+use AdfEvent *
+
+apply_pattern package_include
+apply_pattern package_linkopts
+apply_pattern package_headers
+
+private
+
+library AncillaryDataEvent -no_share \
+	*.cxx ${AncillaryDataEvent_headers}
+
+application test_AncillaryDataEvent test/testMain.cxx

@@ -1,0 +1,20 @@
+package GlastMS
+version v2r51p4
+
+use GlastPolicy   v*      
+use CLHEP         v2*     IExternal
+
+# We need to make a local library (no share) for our versions of code
+apply_pattern package_include
+apply_pattern package_linkopts
+
+#------------------------------------------------------------------------------
+private
+use Geant4 v2r51p* IExternal
+
+macro headers "" WIN32 "-s=../GlastMS *.hh *.h *.icc "
+
+
+# define the local library here
+library GlastMS -no_share  *.cc  *.cxx  $(headers) 
+
