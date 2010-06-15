@@ -31,7 +31,8 @@ GlastClassify = libEnv.SharedLibrary('GlastClassify',
 staticProgEnv.Tool('registerTargets', package = 'GlastClassify',
                    staticLibraryCxts = [[ClassificationTree, staticLibEnv]],
                    libraryCxts = [[GlastClassify, libEnv]], 
-                   binaryCxts = [[apply, staticProgEnv]], 
+                   binaryCxts = [[apply, staticProgEnv]],
+                   xml = listFiles(['xml/*.xml']),
                    includes = listFiles(['GlastClassify/*.h']))
 
 
