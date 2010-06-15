@@ -35,6 +35,7 @@ progEnv.Tool('registerTargets', package = 'CalXtalResponse',
              libraryCxts = [[CalXtalResponse, libEnv]],
              testAppCxts = [[test_CalXtalResponse, progEnv]], 
              includes = listFiles(['CalXtalResponse/*.h']),
+             data = ['data/Xtalk/CU06_Neighbor_xtalk.txt'],
              jo = ['src/customOptions.txt', 'src/defaultOptions.txt',
                    'src/test/jobOptions.txt'])
 

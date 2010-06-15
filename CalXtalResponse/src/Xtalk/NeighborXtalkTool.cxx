@@ -44,7 +44,7 @@ static const short INVALID_ADC = -5000;
     \note currently only deals w/ cross-talk listed as he_diode->he_diode
 
     jobOptions:
-    - txtFile - (default="$(CALXTALRESPONSEROOT)/src/Xtalk/CU06_Neighbor_xtalk.txt") input xtalk coefficients
+    - txtFile - (default="$(CALXTALRESPONSEDATAPATH)/Xtalk/CU06_Neighbor_xtalk.txt") input xtalk coefficients
     - CalCalibSvc - (default="CalCalibSvc") - source for Cal Calibrations
 */
 class NeighborXtalkTool : public AlgTool, 
@@ -121,7 +121,7 @@ NeighborXtalkTool::NeighborXtalkTool( const string& type,
 {
   declareInterface<INeighborXtalkTool>(this);
 
-  declareProperty("txtFile", m_txtFilename="$(CALXTALRESPONSEROOT)/src/Xtalk/CU06_Neighbor_xtalk.txt");
+  declareProperty("txtFile", m_txtFilename="$(CALXTALRESPONSEDATAPATH)//Xtalk/CU06_Neighbor_xtalk.txt");
   declareProperty("CalCalibSvc", m_calCalibSvcName="CalCalibSvc");
   
 }
