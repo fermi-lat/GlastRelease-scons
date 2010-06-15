@@ -10,7 +10,8 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='merit', toBuild='component')
-merit = libEnv.SharedLibrary('merit', listFiles(['src/analysis/*.cxx',
+merit = libEnv.SharedLibrary('merit', listFiles(['src/*.cxx',
+						 'src/analysis/*.cxx',
 						 'src/meritAlg/*.cxx',
 						 'src/Dll/*.cxx']))
 
