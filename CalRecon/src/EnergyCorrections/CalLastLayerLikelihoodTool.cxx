@@ -53,7 +53,7 @@ CalLastLayerLikelihoodTool::CalLastLayerLikelihoodTool( const std::string& type,
     // declare base interface for all consecutive concrete classes
     declareInterface<ICalEnergyCorr>(this);
     declareProperty("dataFile",
-                    m_dataFile="$(CALRECONROOT)/xml/CalLastLayerLikelihood.data");
+                    m_dataFile="$(CALRECONXMLPATH)/CalLastLayerLikelihood.data");
 };
 
 StatusCode CalLastLayerLikelihoodTool::initialize()
