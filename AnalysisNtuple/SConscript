@@ -42,4 +42,5 @@ progEnv.Tool('registerTargets', package = 'AnalysisNtuple',
              libraryCxts = [[AnalysisNtuple,libEnv]],
 	     testAppCxts = [[test_AnalysisNtuple, progEnv]],
              includes = listFiles(['AnalysisNtuple/*.h']),
+	     data = listFiles(['data/*.txt']),
 	     jo = ['src/test/jobOptions.txt'])

@@ -330,7 +330,8 @@ StatusCode EvtValsTool::initialize()
  
     zeroVals();
 
-    m_ubInterpolate = new UBinterpolate("$(ANALYSISNTUPLEROOT)/calib/BiasMapEvtEnergyCorr.txt");
+    //m_ubInterpolate = new UBinterpolate("$(ANALYSISNTUPLEROOT)/calib/BiasMapEvtEnergyCorr.txt");
+    m_ubInterpolate = new UBinterpolate("$(ANALYSISNTUPLEDATAPATH)/BiasMapEvtEnergyCorr.txt");
 
     return sc;
 }
