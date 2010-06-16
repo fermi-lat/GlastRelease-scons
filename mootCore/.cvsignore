@@ -9,3 +9,5 @@ setup.*
 *.mak*
 LATC
 notes
+build
+*.pyc
