@@ -32,7 +32,8 @@ progEnv.Tool('registerTargets', package = 'G4Generator',
              libraryCxts = [[G4Generator, libEnv]],
              testAppCxts = [[test_G4Generator, progEnv]],
              includes = listFiles(['G4Generator/*.h','src/RunManager.h']),
-             jo = listFiles(['src/test/*.txt', 'src/*.txt']))
+             jo = listFiles(['src/test/*.txt', 'src/*.txt']),
+             xml = ['xml/test_sources.xml'])
 
 
 

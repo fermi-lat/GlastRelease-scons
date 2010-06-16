@@ -263,8 +263,14 @@ void PhysicsList::ConstructProcess()
 
 void PhysicsList::SetCuts()
 {
-
+#ifndef SCons
   std::string physics_basedir = getenv("G4GENERATORROOT");
+#else
+  // Shouldn't matter since this routine is normally called with
+  // m_physicsTable = "build"
+  std::string physics_basedir("stuffAndNonsense");
+#endif
+
   std::string physics_Dir = physics_basedir + "/" + m_physicsDir;
   if (m_physicsTable=="retrieve")
     {  

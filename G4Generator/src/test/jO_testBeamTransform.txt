@@ -13,7 +13,7 @@
 // the environment variable Fred_DIR, which is set by default in the
 // interface package IExternal/Fred
 
-FluxSvc.source_lib += {"$(G4GENERATORROOT)/src/test/test_sources.xml"};
+FluxSvc.source_lib += {"$(G4GENERATORXMLPATH)/test_sources.xml"};
 
 // 20-GeV muon along beamtest06 beamline
 FluxAlg.source_name = "beamtest_muon";
