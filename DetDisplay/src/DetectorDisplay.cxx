@@ -23,7 +23,7 @@
 #include <sstream>
 namespace {
     gui::DisplayControl* pdisplay;
-    const int nLevels = 7;
+    const int nLevels = 9;
 }
 /** 
 * @class DetectorDisplay
