@@ -6,6 +6,7 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ enums-03-00-02 16-Jun-2010    jrb updates for SCons builds
 v3r0p1  08-Sep-2009 HMK set TEMBUG flag to 0x100000 so it is distinct from
         PHASEERROR
 v3r0    06-Mar-2009 HMK Finally add handling for TEMbug

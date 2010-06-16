@@ -2,6 +2,7 @@
  * Package CalXtalResponse
 * EOH *
 
+ CalXtalResponse-00-24-02 16-Jun-2010    jrb updates for SCons builds
  CalXtalResponse-00-24-01 12-Jun-2010    jrb upgrades for SCons builds
  CalXtalResponse-00-24-00 04-Jun-2010 burnett Tracy's changes for CAL
  CalXtalResponse-00-23-02 10-Nov-2009    jrb Updates for SCons
