@@ -65,7 +65,7 @@ StatusCode BariMcToHitTool::initialize()
     // Set a default current file
     // new file currents is more compact
     declareProperty("CurrentsFile",
-		    m_CurrentsFile="$(TKRDIGIROOT)/src/Bari/cariche");
+		    m_CurrentsFile="$(TKRDIGIDATAPATH)/Bari_charge.txt");
     // Do the currents file (once) - LSR
     facilities::Util::expandEnvVar(&m_CurrentsFile);
     // trying to eliminate memory leak candidates
