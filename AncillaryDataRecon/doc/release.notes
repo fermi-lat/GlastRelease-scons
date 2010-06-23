@@ -4,6 +4,7 @@
  @verbatim
      * EOH *
 
+ AncillaryDataRecon-01-00-05 22-Jun-2010    jrb Eliminate SCons duplicate target complaints
  AncillaryDataRecon-01-00-04 12-Jun-2010    jrb upgrades for SCons builds
  AncillaryDataRecon-01-00-03 05-Nov-2009    jrb Updates for SCons
  v1r1     28-Jul-2008 jrb Finally tag use of ICalibPathSvc.  Also pick up
