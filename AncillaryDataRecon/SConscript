@@ -16,7 +16,8 @@ AncillaryDataRecon = libEnv.SharedLibrary('AncillaryDataRecon',
 progEnv.Tool('AncillaryDataReconLib')
 
 test_AncillaryDataRecon = progEnv.Program('test_AncillaryDataRecon',
-                                          ['src/test/AncillaryDataReconTest.cxx'] + listFiles(['src/*.cxx']))
+                                          ['src/test/AncillaryDataReconTest.cxx'])
+#+ listFiles(['src/*.cxx']))
 
 # not sure job options are used, but install anyway
 progEnv.Tool('registerTargets', package = 'AncillaryDataRecon',
