@@ -1,5 +1,5 @@
 # -*- python -*-
-import os,platform
+import os,sys,platform
 Import('baseEnv')
 
 usedExternals = []
@@ -24,7 +24,10 @@ usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
 
 # Do we really need these?
 usedExternals.append({ 'name' : 'zlib', 'iversion' : '1.1.4' })
-usedExternals.append({ 'name' : 'x11', 'iversion' : '1.0.0' })
+
+### hoping we don't actually need this for Windows
+if sys.platform != 'win32':
+    usedExternals.append({ 'name' : 'x11', 'iversion' : '1.0.0' })
 
 usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r9' })
 
