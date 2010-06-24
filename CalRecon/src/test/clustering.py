@@ -34,8 +34,7 @@ ANALYSIS_BIN_LIST = ['McEnergy < 100',
                      'McEnergy >= 5000 && McEnergy<20000',
                      'McEnergy >= 20000'
                      ]
-ANALYSIS_BIN_LIST = ['McEnergy > 100'
-                     ]
+
 
 reader = ReconReader(reconFilePath, meritFilePath, None, opts.c)
 numEvents = 10000
@@ -112,8 +111,8 @@ for (i, cut) in enumerate(ANALYSIS_BIN_LIST):
     hDist_vs_EnergyList.append(h)
     hName = 'CalAngle_vs_UberAngle_%d' % i
     h = ROOT.TH2F(hName, hTitle, 50, -3, 2, 50, -3, 2)
-    h.GetXaxis().SetTitle('log10(First cluster - McDir angle)')
-    h.GetYaxis().SetTitle('log10(Uber cluster - McDir angle)')
+    h.GetXaxis().SetTitle('log10(First cluster - Tkr1Dir angle)')
+    h.GetYaxis().SetTitle('log10(Uber cluster - Tkr1Dir angle)')
     hCluAngle_vs_UberAngle.append(h)
 
 
@@ -159,9 +158,9 @@ for event in xrange(numEvents):
                                     uberCluster.getTotNumXtals()
                 distSecondClu = cluster2.distToAxis(cluster1)
 
-                RefXDir = reader.getMeritVariable("McXDir")
-                RefYDir = reader.getMeritVariable("McYDir")
-                RefZDir = reader.getMeritVariable("McZDir")
+                RefXDir = reader.getMeritVariable("Tkr1XDir")
+                RefYDir = reader.getMeritVariable("Tkr1YDir")
+                RefZDir = reader.getMeritVariable("Tkr1ZDir")
                 CalXDir = reader.getMeritVariable("CalXDir")
                 CalYDir = reader.getMeritVariable("CalYDir")
                 CalZDir = reader.getMeritVariable("CalZDir")
