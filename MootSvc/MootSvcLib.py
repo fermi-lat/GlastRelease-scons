@@ -9,5 +9,6 @@ def generate(env, **kw):
     env.Tool('EventLib')
     env.Tool('LdfEventLib')
     env.Tool('mootCoreLib')
+    env.Tool('CalibDataLib')
 def exists(env):
     return 1;
