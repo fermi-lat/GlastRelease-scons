@@ -57,12 +57,6 @@ MODULE_COLOR = ROOT.kGray
 LOG_COLOR = ROOT.kGray
 
 
-CAL_VIEW_DICT = {'xz': [False, False, False, False],
-                 'yz': [True, True, True, True]
-                 }
-
-
-
 def getCanvas(name, title = None):
     title = title or name
     rightMargin = 0.01
@@ -99,11 +93,11 @@ class Box(ROOT.TBox):
 
 class CalModule:
 
-    def __init__(self, xcenter, index, view):
+    def __init__(self, xcenter, view):
         self.ModuleBox = Box(xcenter, CAL_MODULE_VCENTER, CAL_MODULE_WIDTH,
                              CAL_MODULE_HEIGHT, MODULE_COLOR)
         self.Logs = []
-        if CAL_VIEW_DICT[view][index]:
+        if view == 'yz':
             for i in range(8):
                 yc = CAL_MODULE_CSI_TOP - i*CELL_VERT_PITCH
                 if i % 2 != 0:
@@ -115,7 +109,7 @@ class CalModule:
                         xc = xcenter + (j - 5.5)*CELL_HOR_PITCH
                         log = Box(xc, yc, CSI_WIDTH, CSI_HEIGHT, LOG_COLOR)
                         self.Logs.append(log)
-        else:
+        elif view == 'xz':
             for i in range(8):
                 yc = CAL_MODULE_CSI_TOP - i*CELL_VERT_PITCH
                 if i % 2 == 0:
@@ -161,7 +155,7 @@ class CalLayout:
         for i in range(4):
             xcenter = (i - 1.5)*TOWER_PITCH
             for view in ['xz', 'yz']:
-                self.Modules[view].append(CalModule(xcenter, i, view))
+                self.Modules[view].append(CalModule(xcenter, view))
 
     def draw(self, view = 'xz'):
         if view == 'xz':
