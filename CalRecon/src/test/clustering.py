@@ -2,6 +2,7 @@
 from ReconReader import *
 
 ROOT.gStyle.SetOptStat(111111)
+ROOT.gStyle.SetPalette(1)
 
 from optparse import OptionParser
 parser = OptionParser()
@@ -10,7 +11,7 @@ parser.add_option('-c', '--skim-cut', type = str, dest = 'c',
                   help = 'a cut to filter the events')
 parser.add_option('-s', '--save-canvas', type = str, dest = 's',
                   default = None,
-                  help = 'a path to save all canvas in .png format')
+                  help = 'a path to save all canvas in .pdf format')
 (opts, args) = parser.parse_args()
 if len(args) == 0:
     sys.exit('Please provide a recon input root file.')
@@ -35,9 +36,9 @@ ANALYSIS_BIN_LIST = ['McEnergy < 100',
                      'McEnergy >= 20000'
                      ]
 
-
 reader = ReconReader(reconFilePath, meritFilePath, None, opts.c)
-numEvents = 10000
+
+numEvents = min(10000, reader.getEntries())
 
 # BAD MAIN Clster Solution TTreeFourmula
 BAD_ANGLE_VALUE = -0.1
@@ -111,8 +112,8 @@ for (i, cut) in enumerate(ANALYSIS_BIN_LIST):
     hDist_vs_EnergyList.append(h)
     hName = 'CalAngle_vs_UberAngle_%d' % i
     h = ROOT.TH2F(hName, hTitle, 50, -3, 2, 50, -3, 2)
-    h.GetXaxis().SetTitle('log10(First cluster - Tkr1Dir angle)')
-    h.GetYaxis().SetTitle('log10(Uber cluster - Tkr1Dir angle)')
+    h.GetXaxis().SetTitle('log10(First cluster--Tkr1Dir angle)')
+    h.GetYaxis().SetTitle('log10(Uber cluster--Tkr1Dir angle)')
     hCluAngle_vs_UberAngle.append(h)
 
 
@@ -208,7 +209,7 @@ cFirstCluFracEne.cd()
 cFirstCluFracEne.Update()
 if SaveAllCanvas:
     cFirstCluFracEne.Print(os.path.join(savedCanvasPath,
-                                              cFirstCluFracEne.GetName()+".png"))
+                                        cFirstCluFracEne.GetName()+".pdf"))
 
 cSecondCluFracEne = ROOT.TCanvas('SecondCluFracEne', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -221,7 +222,7 @@ cSecondCluFracEne.cd()
 cSecondCluFracEne.Update()
 if SaveAllCanvas:
     cSecondCluFracEne.Print(os.path.join(savedCanvasPath,
-                                         cSecondCluFracEne.GetName()+".png"))
+                                         cSecondCluFracEne.GetName()+".pdf"))
 
 cFirstAndSecondCluFracEne = ROOT.TCanvas('FirstAndSecondCluFracEne', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -234,7 +235,7 @@ cFirstAndSecondCluFracEne.cd()
 cFirstAndSecondCluFracEne.Update()
 if SaveAllCanvas:
     cFirstAndSecondCluFracEne.Print(os.path.join(savedCanvasPath,
-                                                 cFirstAndSecondCluFracEne.GetName()+".png"))
+                                                 cFirstAndSecondCluFracEne.GetName()+".pdf"))
 
 cSecondCluEne = ROOT.TCanvas('SecondCluEne', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -247,7 +248,7 @@ cSecondCluEne.cd()
 cSecondCluEne.Update()
 if SaveAllCanvas:
     cSecondCluEne.Print(os.path.join(savedCanvasPath,
-                                     cSecondCluEne.GetName()+".png"))
+                                     cSecondCluEne.GetName()+".pdf"))
     
 cFirstCluFracXtals = ROOT.TCanvas('FirstCluFracXtals', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -260,22 +261,30 @@ cFirstCluFracXtals.cd()
 cFirstCluFracXtals.Update()
 if SaveAllCanvas:
     cFirstCluFracXtals.Print(os.path.join(savedCanvasPath,
-                                          cFirstCluFracXtals.GetName()+".png"))
+                                          cFirstCluFracXtals.GetName()+".pdf"))
     
 cNumClu = ROOT.TCanvas('NumClu', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
 cNumClu.Divide(3, 2)
+labIsolated = ROOT.TLatex(0.4, 0.82, 'Isolated clusters')
+labIsolated.SetTextColor(ROOT.kRed)
+labIsolated.SetNDC()
+labAll = ROOT.TLatex(0.4, 0.75, 'All clusters')
+labAll.SetTextColor(ROOT.kBlack)
+labAll.SetNDC()
 for (i, cut) in enumerate(ANALYSIS_BIN_LIST):
     cNumClu.cd(i + 1)
     ROOT.gPad.SetLogy(True)
-    hNumCluList[i].Draw()
     hNumIsolatedCluList[i].SetLineColor(ROOT.kRed)
-    hNumIsolatedCluList[i].Draw('sames')
+    hNumIsolatedCluList[i].Draw()
+    hNumCluList[i].Draw('sames')
+    labIsolated.Draw()
+    labAll.Draw()
 cNumClu.cd()
 cNumClu.Update()
 if SaveAllCanvas:
     cNumClu.Print(os.path.join(savedCanvasPath,
-                               cNumClu.GetName()+".png"))
+                               cNumClu.GetName()+".pdf"))
     
 cDistIsolatedClu = ROOT.TCanvas('DistIsolatedClu', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -288,7 +297,7 @@ cDistIsolatedClu.cd()
 cDistIsolatedClu.Update()
 if SaveAllCanvas:
     cDistIsolatedClu.Print(os.path.join(savedCanvasPath,
-                                        cDistIsolatedClu.GetName()+".png"))
+                                        cDistIsolatedClu.GetName()+".pdf"))
     
 cDistSecondClu = ROOT.TCanvas('DistSecondClu', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -301,7 +310,7 @@ cDistSecondClu.cd()
 cDistSecondClu.Update()
 if SaveAllCanvas:
     cDistSecondClu.Print(os.path.join(savedCanvasPath,
-                                      cDistSecondClu.GetName()+".png"))
+                                      cDistSecondClu.GetName()+".pdf"))
     
 cDist_vs_Energy = ROOT.TCanvas('Dist_vs_Energy', '', 1100, 600)
 ROOT.gPad.SetTitle(ROOT.gPad.GetName())
@@ -313,7 +322,7 @@ cDist_vs_Energy.cd()
 cDist_vs_Energy.Update()
 if SaveAllCanvas:
     cDist_vs_Energy.Print(os.path.join(savedCanvasPath,
-                                       cDist_vs_Energy.GetName()+".png"))
+                                       cDist_vs_Energy.GetName()+".pdf"))
     
 #f = ROOT.TF1("f", "x", -5, 5)
 cCluAngle_vs_UberAngle = ROOT.TCanvas('CluAngle_vs_UberAngle', '', 1100, 600)
@@ -321,10 +330,10 @@ ROOT.gPad.SetTitle(ROOT.gPad.GetName())
 cCluAngle_vs_UberAngle.Divide(3, 2)
 for (i, cut) in enumerate(ANALYSIS_BIN_LIST):
     cCluAngle_vs_UberAngle.cd(i + 1)
-    hCluAngle_vs_UberAngle[i].Draw()
+    hCluAngle_vs_UberAngle[i].Draw('colz')
     #f.Draw("same")
 cCluAngle_vs_UberAngle.cd()
 cCluAngle_vs_UberAngle.Update()
 if SaveAllCanvas:
     cCluAngle_vs_UberAngle.Print(os.path.join(savedCanvasPath,
-                                              cCluAngle_vs_UberAngle.GetName()+".png"))
+                                              cCluAngle_vs_UberAngle.GetName()+".pdf"))
