@@ -118,7 +118,7 @@ class ReconReader:
             self.MeritChain = ROOT.TChain('MeritTuple')
             self.MeritChain.Add(meritFilePath)
             for branchName in MERIT_VARS:
-                if branchName == 'EvtEventId':
+                if branchName in ['EvtEventId', 'EvtRun']:
                     a = numpy.array([0.0], dtype = 'l')
                 else:
                     a = numpy.array([0.0], dtype = 'f')

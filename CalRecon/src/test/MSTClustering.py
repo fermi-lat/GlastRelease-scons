@@ -245,17 +245,20 @@ class MST:
 class MSTClustering:
 
     def __init__(self, xtalCol, threshold):
-        print 'Creating minimum spanning tree...'
         self.LengthThreshold = threshold
         self.TopCanvasUber = None
         self.TopCanvasClusters = None
+        self.UberTree = MST()
         self.ClusterCol = []
+        if xtalCol.GetEntries() == 0:
+            print "No CAL xtals hit."
+            return
+        print 'Creating minimum spanning tree...'
         setA = MSTNodeSet([MSTNode(xtalCol[0])])
         setB = MSTNodeSet()
         for (i, xtal) in enumerate(xtalCol):
             if i != 0:
                 setB.addNode(MSTNode(xtal))
-        self.UberTree = MST()
         while not setB.isEmpty():
             (node1, node2) = setA.getMSTNodes(setB)
             edge = MSTEdge(node1, node2)
@@ -267,8 +270,14 @@ class MSTClustering:
         print 'Done, %d node(s) found.' % self.UberTree.getNumNodes()
         self.findClusters()
 
+    def getTotalWeightSum(self):
+        return self.UberTree.WeightSum
+
     def getNumClusters(self):
         return len(self.ClusterCol)
+
+    def getCluster(self, index):
+        return self.ClusterCol[index]
 
     def findClusters(self):
         print 'Clustering...'
