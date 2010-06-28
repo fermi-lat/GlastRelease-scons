@@ -178,7 +178,7 @@ class ReconReader:
         return self.getCalRecon().getCalXtalRecCol()
 
     def getNumCalXtals(self):
-        return len(self.getCalXtalRecCol())
+        return self.getCalXtalRecCol().GetEntries()
 
     def getNumClusters(self):
         return self.getCalClusterCol().GetEntries()

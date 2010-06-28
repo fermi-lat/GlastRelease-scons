@@ -251,24 +251,32 @@ class MSTClustering:
         self.UberTree = MST()
         self.ClusterCol = []
         if xtalCol.GetEntries() == 0:
-            print "No CAL xtals hit."
+            print "No nodes found."
             return
-        print 'Creating minimum spanning tree...'
-        setA = MSTNodeSet([MSTNode(xtalCol[0])])
-        setB = MSTNodeSet()
-        for (i, xtal) in enumerate(xtalCol):
-            if i != 0:
-                setB.addNode(MSTNode(xtal))
-        while not setB.isEmpty():
-            (node1, node2) = setA.getMSTNodes(setB)
-            edge = MSTEdge(node1, node2)
-            self.UberTree.addEdge(edge)
-            if edge.Length > self.LengthThreshold:
-                edge.setLineStyle(7)
-            setA.addNode(node2)
-            setB.removeNode(node2)
-        print 'Done, %d node(s) found.' % self.UberTree.getNumNodes()
+        elif xtalCol.GetEntries() == 1:
+            print 'Single node found, creating minimum spanning tree...'
+            self.UberTree.addNode(MSTNode(xtalCol[0]))
+        else:
+            print 'Multiple nodes found, creating minimum spanning tree...'
+            setA = MSTNodeSet([MSTNode(xtalCol[0])])
+            setB = MSTNodeSet()
+            for (i, xtal) in enumerate(xtalCol):
+                if i != 0:
+                    setB.addNode(MSTNode(xtal))
+            while not setB.isEmpty():
+                (node1, node2) = setA.getMSTNodes(setB)
+                edge = MSTEdge(node1, node2)
+                self.UberTree.addEdge(edge)
+                if edge.Length > self.LengthThreshold:
+                    edge.setLineStyle(7)
+                setA.addNode(node2)
+                setB.removeNode(node2)
+        print 'Done, %d node(s) in the uber tree, total energy = %.2f MeV.' %\
+              (self.getTotalNumNodes(), self.getTotalWeightSum())
         self.findClusters()
+
+    def getTotalNumNodes(self):
+        return self.UberTree.getNumNodes()
 
     def getTotalWeightSum(self):
         return self.UberTree.WeightSum
@@ -282,6 +290,8 @@ class MSTClustering:
     def findClusters(self):
         print 'Clustering...'
         tree = MST()
+        if self.getTotalNumNodes() == 1:
+            tree.addNode(self.UberTree.NodeList[0])
         for edge in self.UberTree.getEdges():
             if edge.Length > self.LengthThreshold:
                 tree.addNode(edge.Node1)
@@ -321,14 +331,15 @@ class MSTClustering:
 if __name__ == '__main__':
     MAX_NUM_XTALS = 100
     LENGTH_THRESHOLD = 250
-    fp = '/data/mc/allGamma-GR-v18r4p2-OVRLY-L/skimPhilippe_OVRLY_recon.root'
+    #fp = '/data/mc/allGamma-GR-v18r4p2-OVRLY-L/skimPhilippe_OVRLY_recon.root'
+    fp = '/data/mc/allGamma-GR-v18r4p2-FAKEOVRLY/skimPhilippe_FAKEOVRLY_recon.root'
     reader = ReconReader(fp)
     answer = ''
     evtNumber = 0
     while answer != 'q':
         reader.getEntry(evtNumber)
         xtalCol = reader.getCalXtalRecCol()
-        numXtals = len(xtalCol)
+        numXtals = reader.getNumCalXtals()
         print '\nAnalyzing event %d, %d xtal(s) found.' % (evtNumber, numXtals)
         print 'Id = %d-%d, CalEnergyRaw = %.2f' %\
               (reader.getMeritVariable('EvtRun'),
