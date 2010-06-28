@@ -80,9 +80,13 @@ def getSideCanvas(name, title = None, width = 1200, height = 480):
     c.GetPad(2).SetLeftMargin(leftMargin)
     return c
 
-def getTopCanvas(name, title = None, width = 620, height = 600):
+def getTopCanvas(name, title = None, width = 620, height = 600,
+                 topx = None, topy = None):
     title = title or name
-    c = ROOT.TCanvas(name, title, width, height)
+    if topx is None or topy is None:
+        c = ROOT.TCanvas(name, title, width, height)
+    else:
+        c = ROOT.TCanvas(name, title, topx, topy, width, height)
     c.SetRightMargin(0.01)
     c.SetBottomMargin(0.08)
     c.SetTopMargin(0.025)

@@ -13,7 +13,7 @@ from math import sqrt, acos, log10
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 
 LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
-MERIT_VARS = ['EvtEventId',
+MERIT_VARS = ['EvtEventId', 'EvtRun',
               'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
               'McXDir', 'McYDir', 'McZDir',
               'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
@@ -143,6 +143,9 @@ class ReconReader:
                                                  ROOT.AddressOf(self.RelTable))
             print 'Done. %d entries found.' % self.RelationsChain.GetEntries()
 
+    def getEntries(self):
+        return self.ReconChain.GetEntries()
+
     def getMeritVariable(self, branchName):
         try:
             return self.MeritArrayDict[branchName][0]
@@ -173,6 +176,9 @@ class ReconReader:
 
     def getCalXtalRecCol(self):
         return self.getCalRecon().getCalXtalRecCol()
+
+    def getNumCalXtals(self):
+        return len(self.getCalXtalRecCol())
 
     def getNumClusters(self):
         return self.getCalClusterCol().GetEntries()
