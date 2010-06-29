@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ G4Generator-05-26-03 29-Jun-2010  lsrea Added jO param to make debugging of geometry easier
  G4Generator-05-26-02 12-Jun-2010    jrb typo in job options
  G4Generator-05-26-01 12-Jun-2010    jrb upgrades for SCons builds
  G4Generator-05-26-00 04-Jun-2010 burnett Tracy's changes for CAL
