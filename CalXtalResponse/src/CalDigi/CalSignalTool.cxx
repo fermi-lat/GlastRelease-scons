@@ -55,7 +55,10 @@ CalSignalTool::CalSignalTool(const std::string& type,
 
     declareProperty("CalCalibSvc",         m_calCalibSvcName    = "CalCalibSvc");
     declareProperty("XtalSignalToolName",  m_xtalSignalToolName = "XtalSignalTool");
-    declareProperty("enableNoise",         m_enableNoise = true);
+    declareProperty("enableNoise",         m_enableNoise        = true);
+	declareProperty("electronicNoiseGain", m_electronicNoiseGain   = .33);
+    declareProperty("enableXtalNoise",     m_enableXtalNoise    = true);
+    declareProperty("enableElecNoise",     m_enableElecNoise    = true);
     declareProperty("PrecalcCalibTool",    m_precalcCalibName   = "PrecalcCalibTool");
 }
 
@@ -361,23 +364,30 @@ StatusCode CalSignalTool::calcNoise() {
         unsigned short sourceWord = m_calSourceMap[xtalIdx];
         if (m_calSourceMap[xtalIdx] == overlay) continue;
 
-        // Apply poissonic noise to the energy in the crystals
-        StatusCode sc = calcPoissonicNoiseXtal(xtalIdx, m_calSignalMap);
-        if (sc.isFailure())
-          return sc;
+        // Apply poissonic noise to energy in the crystals
+        if (m_enableXtalNoise)
+        {
+            // Apply poissonic noise to the energy in the crystals
+            StatusCode sc = calcPoissonicNoiseXtal(xtalIdx, m_calSignalMap);
+            if (sc.isFailure())
+                return sc;
 
-        // Apply poissonic noise to the energy in the crystals - that for the trigger
-        sc = calcPoissonicNoiseXtal(xtalIdx, m_calTrigSignalMap);
-        if (sc.isFailure())
-          return sc;
+            // Apply poissonic noise to the energy in the crystals - that for the trigger
+            sc = calcPoissonicNoiseXtal(xtalIdx, m_calTrigSignalMap);
+            if (sc.isFailure())
+                return sc;
+        }
         
         // Don't apply pedestal fluctuations if overlay data contribution
         if (m_calSourceMap[xtalIdx] & overlay) continue;
 
         // Apply random electronics noise
-        sc = calcElectronicNoiseXtal(xtalIdx);
-        if (sc.isFailure())
-          return sc;
+        if (m_enableElecNoise)
+        {
+            StatusCode sc = calcElectronicNoiseXtal(xtalIdx);
+            if (sc.isFailure())
+                return sc;
+        }
 
         
       } // xtal loop
@@ -407,8 +417,8 @@ StatusCode CalSignalTool::calcElectronicNoiseXtal(const CalUtil::XtalIdx xtalIdx
     // since the X1 & X8 noise
     const float rnd = CLHEP::RandGauss::shoot();
     
-    m_calSignalMap[DiodeIdx(xtalIdx,xtalDiode)]     += pedSig*rnd;
-    m_calTrigSignalMap[DiodeIdx(xtalIdx,xtalDiode)] += pedSig*rnd;
+    m_calSignalMap[DiodeIdx(xtalIdx,xtalDiode)]     += pedSig*rnd*m_electronicNoiseGain;
+    m_calTrigSignalMap[DiodeIdx(xtalIdx,xtalDiode)] += pedSig*rnd*m_electronicNoiseGain;
   } // for (XtalDiode)
   
   return StatusCode::SUCCESS;

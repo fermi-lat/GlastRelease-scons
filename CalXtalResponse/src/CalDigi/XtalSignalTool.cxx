@@ -211,22 +211,30 @@ StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
   const Event::McIntegratingHit::XtalEnergyDep& xtalDepDSN = hit.getXtalEnergyDep("diodeSNEG");
   double diodeSNTotE = xtalDepDSN.getTotalEnergy();
   double diodeSNDirE = xtalDepDSN.getDirectEnergy();
-  double cidacSN     = (diodeSNTotE + diodeSNDirE) / m_dat.mpd[CalUtil::SM_DIODE];
+  //double cidacSN     = (diodeSNTotE + diodeSNDirE) / m_dat.mpd[CalUtil::SM_DIODE];
+  double cidacSN     = diodeSNTotE / m_dat.mpd[CalUtil::SM_DIODE];
+  double cidacSNDir  = diodeSNDirE / m_dat.mpd[CalUtil::SM_DIODE];
 
   const Event::McIntegratingHit::XtalEnergyDep& xtalDepDLN = hit.getXtalEnergyDep("diodeLNEG");
   double diodeLNTotE = xtalDepDLN.getTotalEnergy();
   double diodeLNDirE = xtalDepDLN.getDirectEnergy();
-  double cidacLN     = (diodeLNTotE + diodeLNDirE) / m_dat.mpd[CalUtil::LRG_DIODE];
+//  double cidacLN     = (diodeLNTotE + diodeLNDirE) / m_dat.mpd[CalUtil::LRG_DIODE];
+  double cidacLN     = diodeLNTotE / m_dat.mpd[CalUtil::LRG_DIODE];
+  double cidacLNDir    = diodeLNDirE / m_dat.mpd[CalUtil::LRG_DIODE];
 
   const Event::McIntegratingHit::XtalEnergyDep& xtalDepDSP = hit.getXtalEnergyDep("diodeSPOS");
   double diodeSPTotE = xtalDepDSP.getTotalEnergy();
   double diodeSPDirE = xtalDepDSP.getDirectEnergy();
-  double cidacSP     = (diodeSPTotE + diodeSPDirE) / m_dat.mpd[CalUtil::SM_DIODE];
+//  double cidacSP     = (diodeSPTotE + diodeSPDirE) / m_dat.mpd[CalUtil::SM_DIODE];
+  double cidacSP     = diodeSPTotE / m_dat.mpd[CalUtil::SM_DIODE];
+  double cidacSPDir     = diodeSPDirE / m_dat.mpd[CalUtil::SM_DIODE];
 
   const Event::McIntegratingHit::XtalEnergyDep& xtalDepDLP = hit.getXtalEnergyDep("diodeLPOS");
   double diodeLPTotE = xtalDepDLP.getTotalEnergy();
   double diodeLPDirE = xtalDepDLP.getDirectEnergy();
-  double cidacLP     = (diodeLPTotE + diodeLPDirE) / m_dat.mpd[CalUtil::LRG_DIODE];
+//  double cidacLP     = (diodeLPTotE + diodeLPDirE) / m_dat.mpd[CalUtil::LRG_DIODE];
+  double cidacLP     = diodeLPTotE / m_dat.mpd[CalUtil::LRG_DIODE];
+  double cidacLPDir     = diodeLPDirE / m_dat.mpd[CalUtil::LRG_DIODE];
 
   //-- DETERMINE MEAN CIDAC SIGNAL LEVEL --//
 //  const float meanCIDACS = ene/m_dat.mpd[CalUtil::SM_DIODE];
@@ -245,10 +253,10 @@ StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
 //  cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * meanCIDACL;
 //  cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * meanCIDACS;
 //  cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * meanCIDACS;
-  cidacArray[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * cidacLP;
-  cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * cidacLN;
-  cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * cidacSP;
-  cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * cidacSN;
+  cidacArray[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * cidacLP + 5.*cidacLPDir;
+  cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * cidacLN + 5.*cidacLNDir;
+  cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * cidacSP + 5.*cidacSPDir;
+  cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * cidacSN + 5.*cidacSNDir;
 
 #if 0 // debug printing
   cout << "XtalSignalTool::sumCsIHit(): " << m_dat.xtalIdx.toStr() 

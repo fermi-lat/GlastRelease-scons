@@ -152,7 +152,10 @@ private:
   int m_eXtal;
 
   /// gain - electrons/MeV 1=Sm, 0=Large
-  int m_ePerMeV[2];                      
+  int m_ePerMeV[2];       
+
+  /// parameter to control amount of electronic noise (WBA - 2010)
+  float m_electronicNoiseGain;
 
   /// name of Tool for calculating single xtal signal response.
   StringProperty m_xtalSignalToolName;
@@ -162,6 +165,12 @@ private:
 
   /// enable noise simulation
   BooleanProperty m_enableNoise;
+
+  /// enable crystal noise simulation
+  BooleanProperty m_enableXtalNoise;
+
+  /// enable electronics noise simulation
+  BooleanProperty m_enableElecNoise;
 
   /// name of precalc calib tool
   StringProperty m_precalcCalibName;
