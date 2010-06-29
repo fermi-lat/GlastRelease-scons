@@ -1,5 +1,6 @@
 
 import array
+import os
 
 from MSTClustering import *
 
@@ -33,6 +34,8 @@ elif len(args) > 2:
     
 inputFilePath = args[0]
 outputFilePath = opts.o or inputFilePath.replace('recon.root', 'MSTClu.root')
+if os.path.exists(outputFilePath):
+    sys.exit('Output file %s exists, remove it first.' % outputFilePath)
 MAX_NUM_XTALS    = opts.x
 WEIGHT_THRESHOLD = opts.w
 MAX_NUM_CLUSTERS = opts.m

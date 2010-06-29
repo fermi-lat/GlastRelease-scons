@@ -329,6 +329,7 @@ class MSTClustering:
         CAL_LAYOUT.draw('xy')
         self.UberTree.draw('xy')
         self.TopCanvasUber.Update()
+        self.TopCanvasUber.SaveAs('mst-uber.pdf')
         self.TopCanvasClusters.cd()
         self.TopCanvasClusters.Clear()
         CAL_LAYOUT.draw('xy')
@@ -336,7 +337,7 @@ class MSTClustering:
             cluster.setColor(COLOR_LIST[i])
             cluster.draw('xy')
         self.TopCanvasClusters.Update()
-            
+        self.TopCanvasClusters.SaveAs('mst-clusters.pdf')
 
 
 
@@ -367,10 +368,10 @@ if __name__ == '__main__':
         xtalCol = reader.getCalXtalRecCol()
         numXtals = reader.getNumCalXtals()
         print '\nAnalyzing event %d, %d xtal(s) found.' % (evtNumber, numXtals)
+        runId = reader.getMeritVariable('EvtRun')
+        evtId = reader.getMeritVariable('EvtEventId')
         print 'Id = %d-%d, CalEnergyRaw = %.2f' %\
-              (reader.getMeritVariable('EvtRun'),
-               reader.getMeritVariable('EvtEventId'),
-               reader.getMeritVariable('CalEnergyRaw'))
+              (runId, evtId, reader.getMeritVariable('CalEnergyRaw'))
         if numXtals <= opts.x:
             clustering = MSTClustering(xtalCol, opts.w)
             clustering.draw()
@@ -378,9 +379,13 @@ if __name__ == '__main__':
                 print '* Cluster %d: %s' % (i, c)
         else:
             print 'Too many xtals (%d), skipping...' % opts.x
-        answer = raw_input('Press q to quit or type an event number...')
+        answer = raw_input('Press q to quit, s to save or type a number...')
         try:
             evtNumber = int(answer)
         except:
             evtNumber += 1
-
+        if answer == 's':
+            filePath = 'mst_%d-%d_uber.pdf' % (runId, evtId)
+            os.system('mv %s %s' % ('mst-uber.pdf', filePath))
+            filePath = 'mst_%d-%d_clusters.pdf' % (runId, evtId)
+            os.system('mv %s %s' % ('mst-clusters.pdf', filePath))
