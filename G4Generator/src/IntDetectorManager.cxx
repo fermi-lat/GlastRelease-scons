@@ -36,7 +36,7 @@ IntDetectorManager::IntDetectorManager(DetectorConstruction *det,
   :DetectorManager(det->idMap(), esv, gsv, "IntegratingDetectorManager")
 {
     // See the father class DetectorManager
-    m_diodeGlueIndex = 1.5;
+    m_diodeGlueIndex = 1.46;  // From Eric Grove 10-Jun-2010
     m_crystalIndex   = 1.8;
 
     double criticalAngle = asin(m_diodeGlueIndex / m_crystalIndex);
@@ -223,19 +223,24 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
                         double fracAngle = asin(aSinArg) / M_PI;
 
                         // Does angle to surface normal put us in the range of surface reflection? 
-                        if (cosTheta < m_cosCritical) 
+                        if (cosTheta < m_cosCritical*1.1) 
                         {
                             // Its clearly not right to only check angle to center of diode. To handle 
                             // reflection one should consider entire diode surface and develop some sort
                             // of transmission coefficient. But until then try to allow some transmission...
                             // So, idea here is to "transition" between the brewster angle and zero
-                            double angleCoeff = (m_cosCritical - cosTheta) / m_cosCritical;
+                            //double angleCoeff = (m_cosCritical - cosTheta) / m_cosCritical;
+							double angleCoeff = std::max(0., (cosTheta - m_cosCritical) / (.1*m_cosCritical));
+							if(cosTheta > 1.15*m_cosCritical) angleCoeff = 1.;
 
                             // Attempt to attenuate the "direct" light...
-                            directFrac += (1. - angleCoeff) * (1. - angleCoeff) * fracAngle;
+                            directFrac +=(angleCoeff * angleCoeff) * fracAngle;
 
                             // And now attenuate the deposited energy
-                            totalDep   += 1. - 0.4 * angleCoeff; 
+							double thetaCrt = acos(1.15*m_cosCritical);
+							double theta    = acos(cosTheta);
+							double angleDiff = std::max(0., (theta - thetaCrt)/theta)/(3.141596/2.-thetaCrt);
+                            totalDep   += 1.0 - 1.*angleDiff*angleDiff*angleDiff*angleDiff;// - 0.2* angleCoeff; // was .4*...
                         }
                         // Otherwise, all light "seen" by diode and all energy deposited in crystal
                         else
@@ -333,4 +338,3 @@ void IntDetectorManager::EndOfEvent(G4HCofThisEvent*)
               << " integrating hits stored in the TDS" << std::endl;
 #endif
 }
-
