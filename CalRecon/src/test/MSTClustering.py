@@ -37,6 +37,11 @@ def getNextEdge(set1, set2):
                 node2 = n2
     return MSTEdge(node1, node2, math.sqrt(minWeight))
 
+def getWeigthThreshold(energy):
+    if energy > 1000.0:
+        return 200.0
+    else:
+        return 500.0 - 150.0*(math.log10(energy) - 1)
 
 
 
@@ -241,7 +246,7 @@ class MST:
 
 class MSTClustering:
 
-    def __init__(self, xtalCol, threshold):
+    def __init__(self, xtalCol, threshold = None):
         startTime = time.time()
         self.WeightThreshold = threshold
         self.TopCanvasUber = None
@@ -266,8 +271,6 @@ class MSTClustering:
             while not setB.isEmpty():
                 edge = getNextEdge(setA, setB)
                 self.UberTree.addEdge(edge)
-                if edge.Weight > self.WeightThreshold:
-                    edge.setLineStyle(7)
                 setA.addNode(edge.Node2)
                 setB.removeNode(edge.Node2)
         elapsedTime = time.time() - startTime
@@ -291,13 +294,17 @@ class MSTClustering:
         return self.UberTree
 
     def findClusters(self):
-        print 'Doing clustering...',
         startTime = time.time()
+        self.WeightThreshold = self.WeightThreshold or \
+                               getWeigthThreshold(self.getTotalEnergySum())
+        print 'Doing clustering (weight threshold = %.2f mm)...' %\
+              self.WeightThreshold
         tree = MST()
         if self.getTotalNumNodes() == 1:
             tree.addNode(self.UberTree.NodeList[0])
         for edge in self.UberTree.getEdges():
             if edge.Weight > self.WeightThreshold:
+                edge.setLineStyle(7)
                 tree.addNode(edge.Node1)
                 self.ClusterCol.append(tree)
                 tree = MST()
@@ -342,7 +349,7 @@ if __name__ == '__main__':
                       default = 10000,
                       help = 'maximum number of xtal for running the MST')
     parser.add_option('-w', '--max-edge-weight', type = float, dest = 'w',
-                      default = 250.0,
+                      default = None,
                       help = 'threshold length for the MST clustering (in mm)')
     (opts, args) = parser.parse_args()
     if len(args) == 0:
@@ -370,7 +377,7 @@ if __name__ == '__main__':
             for (i, c) in enumerate(clustering.ClusterCol):
                 print '* Cluster %d: %s' % (i, c)
         else:
-            print 'Too many xtals, skipping...'
+            print 'Too many xtals (%d), skipping...' % opts.x
         answer = raw_input('Press q to quit or type an event number...')
         try:
             evtNumber = int(answer)

@@ -17,7 +17,7 @@ parser.add_option('-m', '--max-num-clusters', type = int, dest = 'm',
                   default = 5,
                   help = 'maximum number of clusters in the output tree')
 parser.add_option('-w', '--max-edge-weight', type = float, dest = 'w',
-                  default = 250.0,
+                  default = None,
                   help = 'threshold length for the MST clustering (in mm)')
 parser.add_option('-n', '--num-events', type = int, dest = 'n',
                   default = 10000000,
