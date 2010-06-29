@@ -35,7 +35,7 @@ def getNextEdge(set1, set2):
                 minWeight = weight
                 node1 = n1
                 node2 = n2
-    return MSTEdge(node1, node2, minWeight)
+    return MSTEdge(node1, node2, math.sqrt(minWeight))
 
 
 
@@ -103,10 +103,10 @@ class MSTNodeSet:
 
 class MSTEdge:
 
-    def __init__(self, node1, node2, weight = None):
+    def __init__(self, node1, node2, weight):
         self.Node1 = node1
         self.Node2 = node2
-        self.Weight = weight or nodeDist(node1, node2)
+        self.Weight = weight
         self.LineXY = ROOT.TLine(node1.X, node1.Y, node2.X, node2.Y)
         self.LineXZ = ROOT.TLine(node1.X, node1.Z, node2.X, node2.Z)
         self.LineYZ = ROOT.TLine(node1.Y, node1.Z, node2.Y, node2.Z)
@@ -243,7 +243,7 @@ class MSTClustering:
 
     def __init__(self, xtalCol, threshold):
         startTime = time.time()
-        self.WeightThreshold = threshold*threshold
+        self.WeightThreshold = threshold
         self.TopCanvasUber = None
         self.TopCanvasClusters = None
         self.UberTree = MST()
