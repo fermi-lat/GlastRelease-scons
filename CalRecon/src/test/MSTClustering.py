@@ -233,7 +233,7 @@ class MST:
             return -1
 
     def __str__(self):
-        return  '%d xtals, E = %.2f MeV, mean w = %.2f mm, rms w = %.2f mm' %\
+        return  '%d xtals, E = %.1f MeV, mean w = %.1f mm, rms w = %.1f mm' %\
                (self.getNumNodes(), self.EnergySum, self.getMeanEdgeWeight(),
                 self.getRmsEdgeWeight())
 
@@ -248,14 +248,16 @@ class MSTClustering:
         self.TopCanvasClusters = None
         self.UberTree = MST()
         self.ClusterCol = []
-        if xtalCol.GetEntries() == 0:
+        numXtals = xtalCol.GetEntries()
+        if numXtals == 0:
             print "No nodes found."
             return
-        elif xtalCol.GetEntries() == 1:
-            print 'Single node found, creating minimum spanning tree...'
+        elif numXtals == 1:
+            print 'Single node found, that was easy.'
             self.UberTree.addNode(MSTNode(xtalCol[0]))
         else:
-            print 'Multiple nodes found, creating minimum spanning tree...'
+            print '%d nodes found, creating minimum spanning tree...' %\
+                  numXtals
             setA = MSTNodeSet([MSTNode(xtalCol[0])])
             setB = MSTNodeSet()
             for (i, xtal) in enumerate(xtalCol):
@@ -269,7 +271,7 @@ class MSTClustering:
                 setA.addNode(edge.Node2)
                 setB.removeNode(edge.Node2)
         elapsedTime = time.time() - startTime
-        print 'Done in %.3f s, %d node(s) in the uber tree, E = %.2f MeV.' %\
+        print 'Done in %.3f s, %d node(s) in the uber tree, E = %.1f MeV.' %\
               (elapsedTime, self.getTotalNumNodes(), self.getTotalEnergySum())
         self.findClusters()
 
