@@ -95,7 +95,7 @@ class CalCluster(ROOT.CalCluster):
 class ReconReader:
     
     def __init__(self, reconFilePath, meritFilePath = None,
-                 relFilePath = None, cut = ''):
+                 relFilePath = None, cut = '1'):
         if not os.path.exists(reconFilePath):
             sys.exit('Could not find %s. Abort.' % reconFilePath)
         print 'Creating the recon chain...'
