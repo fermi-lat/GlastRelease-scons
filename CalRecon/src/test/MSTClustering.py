@@ -4,6 +4,7 @@ import os
 import sys
 import ROOT
 import math
+import time
 
 from CalLayout   import *
 from ReconReader import *
@@ -17,14 +18,39 @@ for i in range(100):
 
 
 
+def nodeDist2(node1, node2):
+    return (node1.X - node2.X)*(node1.X - node2.X) +\
+           (node1.Y - node2.Y)*(node1.Y - node2.Y) +\
+           (node1.Z - node2.Z)*(node1.Z - node2.Z)
+
+def nodeDist(node1, node2):
+    return math.sqrt(nodeDist2(node1, node2))
+
+def getNextEdge(set1, set2):
+    minWeight = 100000000000
+    for n1 in set1.NodeList:
+        for n2 in set2.NodeList:
+            weight = nodeDist2(n1, n2)
+            if weight < minWeight:
+                minWeight = weight
+                node1 = n1
+                node2 = n2
+    return MSTEdge(node1, node2, minWeight)
+
+
+
+
 class MSTNode:
 
     def __init__(self, xtal):
         self.Position = xtal.getPosition()
-        self.Weight = xtal.getEnergy()
-        self.MarkerXY = ROOT.TMarker(self.x(), self.y(), 20)
-        self.MarkerXZ = ROOT.TMarker(self.x(), self.z(), 20)
-        self.MarkerYZ = ROOT.TMarker(self.y(), self.z(), 20)
+        self.X = self.Position.X()
+        self.Y = self.Position.Y()
+        self.Z = self.Position.Z()
+        self.Energy = xtal.getEnergy()
+        self.MarkerXY = ROOT.TMarker(self.X, self.Y, 20)
+        self.MarkerXZ = ROOT.TMarker(self.X, self.Z, 20)
+        self.MarkerYZ = ROOT.TMarker(self.Y, self.Z, 20)
         self.setMarkerSize(0.75)
 
     def setMarkerColor(self, color):
@@ -37,23 +63,6 @@ class MSTNode:
         self.MarkerXZ.SetMarkerSize(size)
         self.MarkerYZ.SetMarkerSize(size)
 
-    def x(self):
-        return self.Position.X()
-
-    def y(self):
-        return self.Position.Y()
-
-    def z(self):
-        return self.Position.Z()
-
-    def w(self):
-        return self.Weight
-
-    def distToNode(self, other):
-        return math.sqrt((self.x() - other.x())**2 +\
-                         (self.y() - other.y())**2 +\
-                         (self.z() - other.z())**2)
-
     def draw(self, view = 'xy'):
         if view == 'xy':
             self.MarkerXY.Draw()
@@ -63,7 +72,7 @@ class MSTNode:
             self.MarkerYZ.Draw()
 
     def __str__(self):
-        return '(%.2f, %.2f, %.2f)' % (self.x(), self.y(), self.z())
+        return '(%.2f, %.2f, %.2f)' % (self.X, self.Y, self.Z)
 
 
 
@@ -90,30 +99,17 @@ class MSTNodeSet:
     def isEmpty(self):
         return self.getNumNodes() == 0
 
-    def getMSTNodes(self, nodeSet):
-        minDist = 100000000000
-        mstNode1 = None
-        mstNode2 = None
-        for node1 in self.NodeList:
-            for node2 in nodeSet.NodeList:
-                dist = node1.distToNode(node2)
-                if dist < minDist:
-                    minDist = dist
-                    mstNode1 = node1
-                    mstNode2 = node2
-        return (mstNode1, mstNode2)
-
 
 
 class MSTEdge:
 
-    def __init__(self, node1, node2):
+    def __init__(self, node1, node2, weight = None):
         self.Node1 = node1
         self.Node2 = node2
-        self.Length = node1.distToNode(node2)
-        self.LineXY = ROOT.TLine(node1.x(), node1.y(), node2.x(), node2.y())
-        self.LineXZ = ROOT.TLine(node1.x(), node1.z(), node2.x(), node2.z())
-        self.LineYZ = ROOT.TLine(node1.y(), node1.z(), node2.y(), node2.z())
+        self.Weight = weight or nodeDist(node1, node2)
+        self.LineXY = ROOT.TLine(node1.X, node1.Y, node2.X, node2.Y)
+        self.LineXZ = ROOT.TLine(node1.X, node1.Z, node2.X, node2.Z)
+        self.LineYZ = ROOT.TLine(node1.Y, node1.Z, node2.Y, node2.Z)
 
     def setLineColor(self, color):
         self.LineXY.SetLineColor(color)
@@ -139,13 +135,13 @@ class MSTEdge:
             self.LineYZ.Draw()
 
     def __cmp__(self, other):
-        if self.Length > other.Length:
+        if self.Weight > other.Weight:
             return 1
         else:
             return -1
 
     def __str__(self):
-        return '%s--%s, l = %.2f mm' % (self.Node1, self.Node2, self.Length)
+        return '%s--%s, l = %.2f mm' % (self.Node1, self.Node2, self.Weight)
 
 
 
@@ -154,33 +150,34 @@ class MST:
     def __init__(self):
         self.EdgeList = []
         self.NodeList = []
-        self.WeightSum = 0.0
-        self.__MeanEdgeLength = 0.0
-        self.__RmsEdgeLength = 0.0
+        self.EnergySum = 0.0
+        self.__MeanEdgeWeight = 0.0
+        self.__RmsEdgeWeight = 0.0
 
     def addEdge(self, edge):
         for node in [edge.Node1, edge.Node2]:
             self.addNode(node)
         self.EdgeList.append(edge)
-        self.__MeanEdgeLength += edge.Length
-        self.__RmsEdgeLength += (edge.Length)**2
+        weight = edge.Weight
+        self.__MeanEdgeWeight += weight
+        self.__RmsEdgeWeight += weight*weight
 
-    def getMeanEdgeLength(self):
-        return self.__MeanEdgeLength/max(1, self.getNumEdges())
+    def getMeanEdgeWeight(self):
+        return self.__MeanEdgeWeight/max(1, self.getNumEdges())
 
-    def getRmsEdgeLength(self):
+    def getRmsEdgeWeight(self):
         numEdges = self.getNumEdges()
         if numEdges < 2:
             return 0
         else:
-            var = self.__RmsEdgeLength/numEdges -\
-                  (self.__MeanEdgeLength/numEdges)**2
+            var = self.__RmsEdgeWeight/numEdges -\
+                  (self.__MeanEdgeWeight/numEdges)**2
             return math.sqrt(var)
 
     def addNode(self, node):
         if node not in self.NodeList:
             self.NodeList.append(node)
-            self.WeightSum += node.w()
+            self.EnergySum += node.Energy
 
     def sortEdges(self):
         self.EdgeList.sort()
@@ -200,10 +197,10 @@ class MST:
         else:
             return None
 
-    def getMaxEdgeLength(self):
+    def getMaxEdgeWeight(self):
         longestEdge = self.getLongestEdge()
         if longestEdge is not None:
-            return longestEdge.Length
+            return longestEdge.Weight
         else:
             return 0.0
 
@@ -230,22 +227,23 @@ class MST:
             node.draw(view)
 
     def __cmp__(self, other):
-        if self.WeightSum > other.WeightSum:
+        if self.EnergySum > other.EnergySum:
             return 1
         else:
             return -1
 
     def __str__(self):
-        return  '%d xtals, E = %.2f MeV, mean l = %.2f mm, rms l = %.2f mm' %\
-               (self.getNumNodes(), self.WeightSum, self.getMeanEdgeLength(),
-                self.getRmsEdgeLength())
+        return  '%d xtals, E = %.2f MeV, mean w = %.2f mm, rms w = %.2f mm' %\
+               (self.getNumNodes(), self.EnergySum, self.getMeanEdgeWeight(),
+                self.getRmsEdgeWeight())
 
 
 
 class MSTClustering:
 
     def __init__(self, xtalCol, threshold):
-        self.LengthThreshold = threshold
+        startTime = time.time()
+        self.WeightThreshold = threshold*threshold
         self.TopCanvasUber = None
         self.TopCanvasClusters = None
         self.UberTree = MST()
@@ -264,22 +262,22 @@ class MSTClustering:
                 if i != 0:
                     setB.addNode(MSTNode(xtal))
             while not setB.isEmpty():
-                (node1, node2) = setA.getMSTNodes(setB)
-                edge = MSTEdge(node1, node2)
+                edge = getNextEdge(setA, setB)
                 self.UberTree.addEdge(edge)
-                if edge.Length > self.LengthThreshold:
+                if edge.Weight > self.WeightThreshold:
                     edge.setLineStyle(7)
-                setA.addNode(node2)
-                setB.removeNode(node2)
-        print 'Done, %d node(s) in the uber tree, total energy = %.2f MeV.' %\
-              (self.getTotalNumNodes(), self.getTotalWeightSum())
+                setA.addNode(edge.Node2)
+                setB.removeNode(edge.Node2)
+        elapsedTime = time.time() - startTime
+        print 'Done in %.3f s, %d node(s) in the uber tree, E = %.2f MeV.' %\
+              (elapsedTime, self.getTotalNumNodes(), self.getTotalEnergySum())
         self.findClusters()
 
     def getTotalNumNodes(self):
         return self.UberTree.getNumNodes()
 
-    def getTotalWeightSum(self):
-        return self.UberTree.WeightSum
+    def getTotalEnergySum(self):
+        return self.UberTree.EnergySum
 
     def getNumClusters(self):
         return len(self.ClusterCol)
@@ -287,13 +285,17 @@ class MSTClustering:
     def getCluster(self, index):
         return self.ClusterCol[index]
 
+    def getUberCluster(self):
+        return self.UberTree
+
     def findClusters(self):
-        print 'Clustering...'
+        print 'Doing clustering...',
+        startTime = time.time()
         tree = MST()
         if self.getTotalNumNodes() == 1:
             tree.addNode(self.UberTree.NodeList[0])
         for edge in self.UberTree.getEdges():
-            if edge.Length > self.LengthThreshold:
+            if edge.Weight > self.WeightThreshold:
                 tree.addNode(edge.Node1)
                 self.ClusterCol.append(tree)
                 tree = MST()
@@ -302,7 +304,9 @@ class MSTClustering:
                 tree.addEdge(edge)
         self.ClusterCol.append(tree)
         self.ClusterCol.sort(reverse = True)
-        print 'Done, %d cluster(s) found.' % self.getNumClusters()
+        elapsedTime = time.time() - startTime
+        print 'Done in %.3f s, %d cluster(s) found.' %\
+              (elapsedTime, self.getNumClusters())
 
     def draw(self):
         if self.TopCanvasUber is None:
@@ -329,11 +333,24 @@ class MSTClustering:
 
 
 if __name__ == '__main__':
-    MAX_NUM_XTALS = 100
-    LENGTH_THRESHOLD = 250
-    #fp = '/data/mc/allGamma-GR-v18r4p2-OVRLY-L/skimPhilippe_OVRLY_recon.root'
-    fp = '/data/mc/allGamma-GR-v18r4p2-FAKEOVRLY/skimPhilippe_FAKEOVRLY_recon.root'
-    reader = ReconReader(fp)
+    from optparse import OptionParser
+    usage = 'MSTClustering.py reconFile [opt] <reconFile>'
+    parser = OptionParser()
+    parser.add_option('-x', '--max-num-xtals', type = int, dest = 'x',
+                      default = 10000,
+                      help = 'maximum number of xtal for running the MST')
+    parser.add_option('-w', '--max-edge-weight', type = float, dest = 'w',
+                      default = 250.0,
+                      help = 'threshold length for the MST clustering (in mm)')
+    (opts, args) = parser.parse_args()
+    if len(args) == 0:
+        print 'Usage: %s' % usage
+        sys.exit('Please provide a recon input root file.')
+    elif len(args) > 2:
+        print 'Usage: %s' % usage
+        sys.exit('Too many arguments.')
+    inputFilePath = args[0]
+    reader = ReconReader(inputFilePath)
     answer = ''
     evtNumber = 0
     while answer != 'q':
@@ -345,8 +362,8 @@ if __name__ == '__main__':
               (reader.getMeritVariable('EvtRun'),
                reader.getMeritVariable('EvtEventId'),
                reader.getMeritVariable('CalEnergyRaw'))
-        if numXtals <= MAX_NUM_XTALS:
-            clustering = MSTClustering(xtalCol, LENGTH_THRESHOLD)
+        if numXtals <= opts.x:
+            clustering = MSTClustering(xtalCol, opts.w)
             clustering.draw()
             for (i, c) in enumerate(clustering.ClusterCol):
                 print '* Cluster %d: %s' % (i, c)
