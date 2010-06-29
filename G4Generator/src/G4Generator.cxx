@@ -104,6 +104,8 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("eLossCurrent", m_eLossCurrent = true);  // default is to use the current, not 5.2.
 
   declareProperty("printRadLen",  m_printRadLen  = true);
+  // if printRadLen is true, print all elements, including duplicates
+  declareProperty("printAll",     m_printAll     = false);
 }
     
 ////////////////////////////////////////////////////////////////////////////
@@ -260,7 +262,7 @@ StatusCode G4Generator::initialize()
           double radlenG = radlen*density;
           G4Material* matName = G4Material::GetMaterial(mat->GetName());
           int indName = matName->GetIndex();
-          if(i!=indName) continue;
+          if(!m_printAll&&i!=indName) continue;
           std::cout << std::left << std::setprecision(4) 
               << std::setw(2) << i; 
           //if(i!=indName) {

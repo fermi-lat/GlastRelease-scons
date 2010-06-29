@@ -88,6 +88,7 @@ class G4Generator : public Algorithm {
 
   /// for material printout
   BooleanProperty m_printRadLen;
+  BooleanProperty m_printAll;
 
 };
 
