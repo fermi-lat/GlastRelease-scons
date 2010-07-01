@@ -6,9 +6,12 @@ import ROOT
 import math
 import time
 
-from CalLayout   import *
-from ReconReader import *
+from CalLayout          import *
+from ReconReader        import *
+from CalMomentsAnalysis import *
 
+
+#ROOT.gStyle.SetOptStat(111111)
 
 
 CAL_LAYOUT = CalLayout()
@@ -53,6 +56,7 @@ class MSTNode:
         self.Y = self.Position.Y()
         self.Z = self.Position.Z()
         self.Energy = xtal.getEnergy()
+        self.PackedId = xtal.getPackedId()
         self.MarkerXY = ROOT.TMarker(self.X, self.Y, 20)
         self.MarkerXZ = ROOT.TMarker(self.X, self.Z, 20)
         self.MarkerYZ = ROOT.TMarker(self.Y, self.Z, 20)
@@ -75,6 +79,17 @@ class MSTNode:
             self.MarkerXZ.Draw()
         elif view == 'yz':
             self.MarkerYZ.Draw()
+
+    # Basic interface to plug the moments analysis.
+
+    def getPosition(self):
+        return self.Position
+
+    def getEnergy(self):
+        return self.Energy
+
+    def getPackedId(self):
+        return self.PackedId
 
     def __str__(self):
         return '(%.2f, %.2f, %.2f)' % (self.X, self.Y, self.Z)
@@ -158,6 +173,7 @@ class MST:
         self.EnergySum = 0.0
         self.__MeanEdgeWeight = 0.0
         self.__RmsEdgeWeight = 0.0
+        self.MomentsClusterInfo = None
 
     def addEdge(self, edge):
         for node in [edge.Node1, edge.Node2]:
@@ -231,6 +247,14 @@ class MST:
         for node in self.NodeList:
             node.draw(view)
 
+    # Stuff related to the moments analysis
+
+    def getTransRms(self):
+        if self.MomentsClusterInfo is None:
+            return None
+        else:
+            return math.sqrt(self.MomentsClusterInfo.RmsTrans/self.EnergySum)
+
     def __cmp__(self, other):
         if self.EnergySum > other.EnergySum:
             return 1
@@ -238,19 +262,24 @@ class MST:
             return -1
 
     def __str__(self):
-        return  '%d xtals, E = %.1f MeV, mean w = %.1f mm, rms w = %.1f mm' %\
+        text = '%d xtals, E = %.1f MeV, mean w = %.1f mm, rms w = %.1f mm' %\
                (self.getNumNodes(), self.EnergySum, self.getMeanEdgeWeight(),
                 self.getRmsEdgeWeight())
+        transRms = self.getTransRms()
+        if transRms is not None:
+            text += '\n  -> TransRms = %.2f mm' % transRms
+        return text
 
 
 
 class MSTClustering:
 
-    def __init__(self, xtalCol, threshold = None):
+    def __init__(self, xtalCol, threshold = None, doMomentAnalysis = True):
         startTime = time.time()
         self.WeightThreshold = threshold
         self.TopCanvasUber = None
         self.TopCanvasClusters = None
+        self.EdgeWeightCanvas = None
         self.UberTree = MST()
         self.ClusterCol = []
         numXtals = xtalCol.GetEntries()
@@ -276,7 +305,7 @@ class MSTClustering:
         elapsedTime = time.time() - startTime
         print 'Done in %.3f s, %d node(s) in the uber tree, E = %.1f MeV.' %\
               (elapsedTime, self.getTotalNumNodes(), self.getTotalEnergySum())
-        self.findClusters()
+        self.findClusters(doMomentAnalysis)
 
     def getTotalNumNodes(self):
         return self.UberTree.getNumNodes()
@@ -293,7 +322,7 @@ class MSTClustering:
     def getUberCluster(self):
         return self.UberTree
 
-    def findClusters(self):
+    def findClusters(self, doMomentAnalysis):
         startTime = time.time()
         self.WeightThreshold = self.WeightThreshold or \
                                getWeigthThreshold(self.getTotalEnergySum())
@@ -316,6 +345,13 @@ class MSTClustering:
         elapsedTime = time.time() - startTime
         print 'Done in %.3f s, %d cluster(s) found.' %\
               (elapsedTime, self.getNumClusters())
+        if doMomentAnalysis:
+            startTime = time.time()
+            print 'Doing moment analysis...'
+            for c in self.ClusterCol:
+                c.MomentsClusterInfo = MomentsClusterInfo(c.NodeList)
+            elapsedTime = time.time() - startTime
+            print 'Done in %.3f s.' % elapsedTime
 
     def draw(self):
         if self.TopCanvasUber is None:
@@ -324,6 +360,8 @@ class MSTClustering:
         if self.TopCanvasClusters is None:
             self.TopCanvasClusters = getTopCanvas('Top (all clusters)',
                                                   topx = 680, topy = 10)
+        #if self.EdgeWeightCanvas is None:
+        #    self.EdgeWeightCanvas = ROOT.TCanvas('canvas_edge', 'Edge length')
         self.TopCanvasUber.cd()
         self.TopCanvasUber.Clear()
         CAL_LAYOUT.draw('xy')
@@ -338,7 +376,13 @@ class MSTClustering:
             cluster.draw('xy')
         self.TopCanvasClusters.Update()
         self.TopCanvasClusters.SaveAs('mst-clusters.pdf')
-
+        #self.EdgeWeightCanvas.Clear()
+        #self.EdgeWeightHist = ROOT.TH1F('hist_edge', 'Edge weight',
+        #                                100, 0, 400)
+        #for edge in self.getUberCluster().getEdges():
+        #    self.EdgeWeightHist.Fill(edge.Weight)
+        #self.EdgeWeightHist.Draw()
+        #self.EdgeWeightCanvas.Update()
 
 
 
@@ -352,6 +396,9 @@ if __name__ == '__main__':
     parser.add_option('-w', '--max-edge-weight', type = float, dest = 'w',
                       default = None,
                       help = 'threshold length for the MST clustering (in mm)')
+    parser.add_option('-M', '--moments-analysis', action = 'store_true',
+                      dest = 'M', default = False,
+                      help = 'run the moments analysis on the clusters')
     (opts, args) = parser.parse_args()
     if len(args) == 0:
         print 'Usage: %s' % usage
@@ -373,7 +420,7 @@ if __name__ == '__main__':
         print 'Id = %d-%d, CalEnergyRaw = %.2f' %\
               (runId, evtId, reader.getMeritVariable('CalEnergyRaw'))
         if numXtals <= opts.x:
-            clustering = MSTClustering(xtalCol, opts.w)
+            clustering = MSTClustering(xtalCol, opts.w, opts.M)
             clustering.draw()
             for (i, c) in enumerate(clustering.ClusterCol):
                 print '* Cluster %d: %s' % (i, c)
