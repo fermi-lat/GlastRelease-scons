@@ -445,7 +445,7 @@ class CalMomentsAnalysisIteration:
             self.CalTkrAngle = (180./M_PI)*calDir.Angle(-tkrDir)
         cName = 'cMomIter%d' % self.IterationNumber
         cTitle = 'Moments analysis---iteration %d' % self.IterationNumber
-        self.Canvas = getCanvas(cName, cTitle)
+        self.Canvas = getSideCanvas(cName, cTitle)
         self.Canvas.cd(1)
         # Draw XZ view.
         CAL_LAYOUT.draw('xz')
@@ -468,10 +468,10 @@ class CalMomentsAnalysisIteration:
         self.XZCentrMarker.SetMarkerColor(ROOT.kRed)
         self.XZCentrMarker.Draw()
         # Draw direction from the python code.
-        x1 = xc - (zc - Y_MIN)*(dx/dz)
-        z1 = Y_MIN
-        x2 = xc + (Y_MAX - zc)*(dx/dz)
-        z2 = Y_MAX
+        x1 = xc - (zc - Z_MIN)*(dx/dz)
+        z1 = Z_MIN
+        x2 = xc + (Z_MAX - zc)*(dx/dz)
+        z2 = Z_MAX
         self.XZDirection = ROOT.TLine(x1, z1, x2, z2)
         self.XZDirection.SetLineColor(ROOT.kRed)
         self.XZDirection.SetLineWidth(1)
@@ -484,10 +484,10 @@ class CalMomentsAnalysisIteration:
             self.XZReconCentrMarker.SetMarkerColor(ROOT.kRed)
             self.XZReconCentrMarker.Draw()
             # Draw direction from the recon file.
-            rx1 = rxc - (rzc - Y_MIN)*(rdx/rdz)
-            rz1 = Y_MIN
-            rx2 = rxc + (Y_MAX - rzc)*(rdx/rdz)
-            rz2 = Y_MAX
+            rx1 = rxc - (rzc - Z_MIN)*(rdx/rdz)
+            rz1 = Z_MIN
+            rx2 = rxc + (Z_MAX - rzc)*(rdx/rdz)
+            rz2 = Z_MAX
             self.XZReconDirection = ROOT.TLine(rx1, rz1, rx2, rz2)
             self.XZReconDirection.SetLineColor(ROOT.kRed)
             self.XZReconDirection.SetLineStyle(7)
@@ -495,10 +495,10 @@ class CalMomentsAnalysisIteration:
             self.XZReconDirection.Draw()
         # If we do have the Merit, draw the TKR direction
         if reconReader.MeritChain is not None:
-            tx1 = txc - (tzc - Y_MIN)*(tdx/tdz)
-            tz1 = Y_MIN
-            tx2 = txc + (Y_MAX - tzc)*(tdx/tdz)
-            tz2 = Y_MAX
+            tx1 = txc - (tzc - Z_MIN)*(tdx/tdz)
+            tz1 = Z_MIN
+            tx2 = txc + (Z_MAX - tzc)*(tdx/tdz)
+            tz2 = Z_MAX
             self.XZTkrDirection = ROOT.TLine(tx1, tz1, tx2, tz2)
             self.XZTkrDirection.SetLineColor(ROOT.kBlue)
             self.XZTkrDirection.SetLineWidth(1)
@@ -519,8 +519,8 @@ class CalMomentsAnalysisIteration:
         self.YZCentrMarker.SetMarkerColor(ROOT.kRed)
         self.YZCentrMarker.Draw()
         # Draw direction from the python code.
-        y1 = yc - (zc - Y_MIN)*(dy/dz)
-        y2 = yc + (Y_MAX - zc)*(dy/dz)
+        y1 = yc - (zc - Z_MIN)*(dy/dz)
+        y2 = yc + (Z_MAX - zc)*(dy/dz)
         self.YZDirection = ROOT.TLine(y1, z1, y2, z2)
         self.YZDirection.SetLineColor(ROOT.kRed)
         self.YZDirection.SetLineWidth(1)
@@ -533,16 +533,16 @@ class CalMomentsAnalysisIteration:
             self.YZReconCentrMarker.SetMarkerColor(ROOT.kRed)
             self.YZReconCentrMarker.Draw()
             # Draw direction from the recon file.
-            ry1 = ryc - (rzc - Y_MIN)*(rdy/rdz)
-            ry2 = ryc + (Y_MAX - rzc)*(rdy/rdz)
+            ry1 = ryc - (rzc - Z_MIN)*(rdy/rdz)
+            ry2 = ryc + (Z_MAX - rzc)*(rdy/rdz)
             self.YZReconDirection = ROOT.TLine(ry1, rz1, ry2, rz2)
             self.YZReconDirection.SetLineColor(ROOT.kRed)
             self.YZReconDirection.SetLineStyle(7)
             self.YZReconDirection.SetLineWidth(1)
             self.YZReconDirection.Draw()
         if reconReader.MeritChain is not None:
-            ty1 = tyc - (tzc - Y_MIN)*(tdy/tdz)
-            ty2 = tyc + (Y_MAX - tzc)*(tdy/tdz)
+            ty1 = tyc - (tzc - Z_MIN)*(tdy/tdz)
+            ty2 = tyc + (Z_MAX - tzc)*(tdy/tdz)
             self.YZTkrDirection = ROOT.TLine(ty1, tz1, ty2, tz2)
             self.YZTkrDirection.SetLineColor(ROOT.kBlue)
             self.YZTkrDirection.SetLineWidth(1)
