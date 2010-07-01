@@ -1009,11 +1009,12 @@ class CalMomentsAnalysis:
 
 class MomentsClusterInfo:
 
-    def __init__(self, reader, centrDistCut = 5.0*TOWER_PITCH,
-                 clipDataVec = False, lastClipStep = False, pruneLong = False):
+    def __init__(self, xtalCol, calRecon = None,
+                 centrDistCut = 5.0*TOWER_PITCH, clipDataVec = False,
+                 lastClipStep = False, pruneLong = False):
         self.RootCanvas = None
-        self.ReconReader = reader
-        self.CalRecon = self.ReconReader.getCalRecon()
+        self.XtalCol = xtalCol
+        self.CalRecon = calRecon
         self.NotEnoughXtals = False
         iniCentroid = self.getInitialCentroid()
         dataVec = self.getCalMomentsDataVec(iniCentroid, centrDistCut)
@@ -1080,7 +1081,8 @@ class MomentsClusterInfo:
             self.RmsTrans = self.MomentsAnalysis.getTransverseRms()
             self.RmsLongAsym = self.MomentsAnalysis.getLongAsymmetry()
             self.SkewnessLong = self.MomentsAnalysis.getLongSkewness()
-        self.checkMomentsAnalysis()
+        if self.CalRecon is not None:
+            self.checkMomentsAnalysis()
 
     def cleanup(self):
         print 'Cleaning up...'
@@ -1098,7 +1100,7 @@ class MomentsClusterInfo:
         # First estimation of the centroid.
         weightSum = 0.
         centroid = Point()
-        for xtalData in self.CalRecon.getCalXtalRecCol():
+        for xtalData in self.XtalCol:
             dataPoint = CalMomentsData(xtalData)
             weight = dataPoint.getWeight()
             weightSum += weight
@@ -1112,13 +1114,13 @@ class MomentsClusterInfo:
         # This is a shortcut avoiding the initial pruning that Tracy does in
         # order to remove the outliers before the moments analysis.
         if not preprocess:
-            for xtalData in self.CalRecon.getCalXtalRecCol():
+            for xtalData in self.XtalCol:
                 dataVec.append(CalMomentsData(xtalData))
             return dataVec
 
         # Pre-calculate the weight sum (for the cut on minFracWeight).
         weightSum = 0.
-        for xtalData in self.CalRecon.getCalXtalRecCol():
+        for xtalData in self.XtalCol:
             momentsData = CalMomentsData(xtalData)
             weightSum += momentsData.getWeight()
         minWeight = weightSum*minFracWeight
@@ -1129,7 +1131,7 @@ class MomentsClusterInfo:
         # Go on with Tracy's code.
         rmsDist   = 0.
         weightSum = 0.
-        for xtalData in self.CalRecon.getCalXtalRecCol():
+        for xtalData in self.XtalCol:
             momentsData = CalMomentsData(xtalData)
             # IMPORTANT!!
             # Portion of code handling the saturated crystals missing, here!
@@ -1194,13 +1196,6 @@ class MomentsClusterInfo:
                 clippedDataVec.append(momentsData)
         return clippedDataVec
 
-    def getFirstCluster(self):
-        return self.CalRecon.getCalClusterCol()[0]
-
-    def getUberCluster(self):
-        # To be implemented.
-        pass
-
     def compare(self, v1, v2, label, threshold = 1e-6):
         try:
             if abs(v1 - v2)/abs(v1 + v2) > threshold:
@@ -1212,6 +1207,8 @@ class MomentsClusterInfo:
 
     def checkMomentsAnalysis(self):
         print 'Cross-checking moments analysis against the original values...'
+        #cluster = self.CalRecon.getCalClusterCol().At(0)
+        #cluster = self.XtalCol.At(0)
         cluster = self.CalRecon.getCalClusterCol().At(0)
         nDiff = 0
         nDiff += self.compare(self.RmsLong, cluster.getRmsLong(), 'RmsLong')
@@ -1298,8 +1295,10 @@ if __name__ == '__main__':
     answer = ''
     while answer != 'q':
         if reader.getEntry(eventNumber):
-            m = MomentsClusterInfo(reader, opts.d*TOWER_PITCH, opts.l, opts.L,
-                                   opts.p)
+            calRecon = reader.getCalRecon()
+            xtalCol = calRecon.getCalXtalRecCol()
+            m = MomentsClusterInfo(xtalCol, calRecon, opts.d*TOWER_PITCH,
+                                   opts.l, opts.L, opts.p)
             if not m.NotEnoughXtals:
                 for iter in m.MomentsAnalysis.IterationList:
                     iter.draw(reader)
