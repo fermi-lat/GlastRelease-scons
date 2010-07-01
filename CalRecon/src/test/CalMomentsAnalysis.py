@@ -20,7 +20,8 @@ import numpy
 
 from math import acos, sqrt, cos, pi, fabs, log
 
-from CalLayout import *
+from CalLayout   import *
+from ReconReader import *
 
 
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
@@ -84,80 +85,6 @@ def getExpectedLongParameters(energy, tmin, tmax, c = -0.5):
 M_IDENTITY_3_3 = numpy.identity(3)
 M_ZEROS_3_3    = numpy.zeros((3,3))
 M_ZEROS_9_3    = numpy.zeros((9,3))
-
-
-
-class ReconReader:
-    
-    def __init__(self, reconFilePath, meritFilePath = None,
-                 cut = ''):
-        if not os.path.exists(reconFilePath):
-            sys.exit('Could not find %s. Abort.' % reconFilePath)
-        print 'Creating the recon chain...'
-        self.ReconChain = ROOT.TChain('Recon')
-        self.ReconChain.Add(reconFilePath)
-        self.ReconEvent = ROOT.ReconEvent()
-        self.ReconChain.SetBranchAddress('ReconEvent',\
-                                         ROOT.AddressOf(self.ReconEvent))
-        print 'Done. %d entries found.' % self.ReconChain.GetEntries()
-        print 'Creating the merit chain...'
-        self.MeritArrayDict = {}
-        self.ExpectedSkewness = None
-        if meritFilePath is None:
-            meritFilePath = reconFilePath.replace('recon.root', 'merit.root')
-            print 'No path specified, trying %s...' % meritFilePath
-        if not os.path.exists(meritFilePath):
-            print 'Could not find the merit, will ignore it.'
-            self.MeritChain = None
-        else:
-            self.MeritChain = ROOT.TChain('MeritTuple')
-            self.MeritChain.Add(meritFilePath)
-            for branchName in MERIT_VARS:
-                if branchName == 'EvtEventId':
-                    a = numpy.array([0.0], dtype = 'l')
-                else:
-                    a = numpy.array([0.0], dtype = 'f')
-                self.MeritChain.SetBranchAddress(branchName, a)
-                self.MeritArrayDict[branchName] = a
-            self.MeritTreeFormula = ROOT.TTreeFormula('cut', cut,
-                                                      self.MeritChain)
-            print 'Done. %d entries found.' % self.MeritChain.GetEntries()
-
-    def getMeritVariable(self, branchName):
-        try:
-            return self.MeritArrayDict[branchName][0]
-        except KeyError:
-            return 'N/A'
-
-    def getEventInfo(self):
-        if self.MeritChain is None:
-            info = 'Event info not available.'
-        else:
-            info = 'Event info:\n'
-            for var in MERIT_VARS:
-                info += '    %s = %s\n' % (var, self.getMeritVariable(var))
-        return info
-
-    def getEntry(self, i):
-        print 'ReconReader retrieving event %d...' % i
-        self.ReconChain.GetEvent(i)
-        if self.MeritChain is not None:
-            self.MeritChain.GetEntry(i)
-            energy = self.getMeritVariable('CTBBestEnergy')
-            tmax = self.getMeritVariable('CalLATRLn')
-            tmin = tmax - self.getMeritVariable('CalCsIRLn')
-            (mean, sigma2, skewness) =\
-                   getExpectedLongParameters(energy, tmin, tmax)
-            self.ExpectedSkewness = skewness
-            print '\n%s' % self.getEventInfo()
-            return self.MeritTreeFormula.EvalInstance()
-        return 1
-
-    def getCalRecon(self):
-        return self.ReconEvent.getCalRecon()
-
-    def getCalXtalRecCol(self):
-        return self.getCalRecon().getCalXtalRecCol()
 
 
 
