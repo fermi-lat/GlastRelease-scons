@@ -27,10 +27,10 @@
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/TopLevel/Event.h"
 
-#include "Event/MonteCarlo/McIntegratingHit.h"
-#include "Event/MonteCarlo/McPositionHit.h"
-#include "Event/MonteCarlo/McTrajectory.h"
-#include "Event/MonteCarlo/McParticle.h"
+//#include "Event/MonteCarlo/McIntegratingHit.h"
+//#include "Event/MonteCarlo/McPositionHit.h"
+//#include "Event/MonteCarlo/McTrajectory.h"
+//#include "Event/MonteCarlo/McParticle.h"
 
 //needed to get CALEnergyRaw:
 #include "Event/Recon/CalRecon/CalCluster.h"
@@ -56,8 +56,11 @@
 #include "OnboardFilterTds/ObfFilterStatus.h"
 #include "OnboardFilterTds/FilterAlgTds.h"
 
+#include "LdfEvent/LsfMetaEvent.h"
+
 #include "enums/TriggerBits.h"
 
+#include "Event/TopLevel/DigiEvent.h"
 
 /**   
  * @class GcrReconTool
@@ -366,46 +369,76 @@ bool GcrReconTool::checkFilters(){
   int filtersbGamma=-1, filtersbHIP=-1, filtersbDGN=-1, filtersbMIP=-1;
   bool passFilter=0;
   
-  // get calEnergyRaw from TDS, to be considered for OBFGamma and OBFHFC cuts
-  //float calEnergyRaw =getCALEnergyRaw();
-
+  SmartDataPtr<LsfEvent::MetaEvent>  metaEventTds(m_dataSvc, "/Event/MetaEvent");
   SmartDataPtr<OnboardFilterTds::ObfFilterStatus> obfStatus(m_dataSvc, "/Event/Filter/ObfFilterStatus");
-  if (obfStatus)
-   {
-       // Pointer to our retrieved objects
-       const OnboardFilterTds::IObfStatus* obfResultGamma = 0;
-       const OnboardFilterTds::IObfStatus* obfResultHIP = 0;
-       const OnboardFilterTds::IObfStatus* obfResultDGN = 0;
-       const OnboardFilterTds::IObfStatus* obfResultMIP = 0;
-       
-       obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
-       if(obfResultGamma)
-	 filtersbGamma = obfResultGamma->getFiltersb() >> 4;
-       else
-           m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
+  SmartDataPtr<Event::DigiEvent> digiTds(m_dataSvc, EventModel::Digi::Event);
 
+  if ((!metaEventTds)&&(!obfStatus)){
+    m_log << MSG::INFO << "no OBF or FSW filter status found"<< endreq;
+  }
+  else {
+    if ( digiTds->fromMc() )
+      {
+        m_log << MSG::DEBUG << "Using OBF filter status"<< endreq;
+        const OnboardFilterTds::IObfStatus* obfResultGamma = 0;
+        const OnboardFilterTds::IObfStatus* obfResultHIP = 0;
+        const OnboardFilterTds::IObfStatus* obfResultDGN = 0;
+        const OnboardFilterTds::IObfStatus* obfResultMIP = 0;
+        
+        obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
+        if(obfResultGamma)
+          filtersbGamma = obfResultGamma->getFiltersb() >> 4;
+        else
+          m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
+        
+        obfResultHIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter);      
+        if(obfResultHIP)
+          filtersbHIP = obfResultHIP->getFiltersb() >> 4;
+        else
+          m_log << MSG::INFO <<  "no obfResultHIP" << endreq;
+        
+        obfResultMIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter);
+        if(obfResultMIP)
+          filtersbMIP = obfResultMIP->getFiltersb() >> 4;
+        else
+          m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
+        
+        obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter); 
+        if(obfResultDGN)
+          filtersbDGN = obfResultDGN->getFiltersb() >> 4;
+        else
+          m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
+      }
+    else 
+      {
+        m_log << MSG::DEBUG << "Using FSW filter"<< endreq;
+        const lsfData::GammaHandler* gamma = metaEventTds->gammaFilter();
+        const lsfData::DgnHandler*   dgn = metaEventTds->dgnFilter();
+        const lsfData::HipHandler*   hip = metaEventTds->hipFilter();       
+        const lsfData::MipHandler*   mip = metaEventTds->mipFilter();
+        
+        if(gamma->rsd()) 
+          filtersbGamma = gamma->rsd()->status() >> 4;
+        else 
+          m_log << MSG::INFO <<  "no FSW GAMMA rsd" << endreq;
+        
+        if(dgn->rsd())
+          filtersbDGN = dgn->rsd()->status() >> 4;
+        else
+          m_log << MSG::INFO <<  "no FSW DGN rsd" << endreq;
+        
+        if(hip->rsd())
+          filtersbHIP = hip->rsd()->status() >> 4;
+        else
+          m_log << MSG::INFO <<  "no FSW HIP rsd" << endreq;
+        
+        if(mip->rsd())
+          filtersbMIP = mip->rsd()->status() >> 4;
+        else
+          m_log << MSG::INFO <<  "no FSW MIP rsd" << endreq;         
+      }
 
-       obfResultHIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter);      
-       if(obfResultHIP)
-	 filtersbHIP = obfResultHIP->getFiltersb() >> 4;
-       else
-           m_log << MSG::INFO <<  "no obfResultHIP" << endreq;
-
-
-       obfResultMIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter);
-       if(obfResultMIP)
-	 filtersbMIP = obfResultMIP->getFiltersb() >> 4;
-       else
-           m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
-
-
-       obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter); 
-       //DFCFilter is the old name of DgnFilter, as suggested in method initialize in OnboardFilter.cxx	  
-       if(obfResultDGN)
-	 filtersbDGN = obfResultDGN->getFiltersb() >> 4;
-       else
-           m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
-
+ 
        bool cutGamma = ((filtersbGamma==0) || (filtersbGamma==6));
        bool cutHIP = ((filtersbHIP==0) || (filtersbHIP==6));
        bool cutMIP = (filtersbMIP==0) || (filtersbMIP==6);
@@ -418,8 +451,6 @@ bool GcrReconTool::checkFilters(){
 
        passFilter = cutGamma || cutHIP || cutMIP || cutDGN;
    }
-   else
-     m_log << MSG::INFO << "no obfStatus"<< endreq;
 
    m_log << MSG::INFO << "passFilter:" << passFilter << endreq;
    m_log << MSG::INFO << "m_gcrOBFStatusWord= " << m_gcrOBFStatusWord <<endreq;
