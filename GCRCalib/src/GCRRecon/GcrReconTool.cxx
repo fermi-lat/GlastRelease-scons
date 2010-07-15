@@ -241,7 +241,7 @@ StatusCode GcrReconTool::initialize()
 
   m_log.setLevel(outputLevel());
 
-  m_log << MSG::INFO << "GcrReconTool BEGIN initialize()" << endreq ;
+  m_log << MSG::VERBOSE << "GcrReconTool BEGIN initialize()" << endreq ;
    
   //Locate and store a pointer to the data service
   IService* iService = 0;
@@ -270,7 +270,7 @@ StatusCode GcrReconTool::initialize()
   // read geometry
   readGlastDet();
 
-  //m_log << MSG::INFO << "GcrReconTool END initialize()" << endreq ;  
+  m_log << MSG::VERBOSE << "GcrReconTool END initialize()" << endreq ;  
     
   
 
@@ -282,11 +282,7 @@ StatusCode GcrReconTool::initialize()
 /// clears variable gcrXtalVec given in parameter.  This should always correspond to m_gcrXtalVec member variable
 void GcrReconTool::clearGcrXtalVec(Event::GcrXtalVec *gcrXtalVec)
 {
-  //    m_log << MSG::DEBUG << "clearGcrXtalVec in GcrReconTool" << endreq;
-    
   gcrXtalVec->clear();
-    
-  //    m_log << MSG::DEBUG << "clearGcrXtalVec -end-" << endreq;
   return;
 }
 
@@ -325,7 +321,7 @@ StatusCode GcrReconTool::readGlastDet()
   m_detSvc->getNumericConstByName("eLATTowers",&m_eLATTowers);
   m_detSvc->getNumericConstByName("eTowerCAL" ,&m_eTowerCAL );
   m_detSvc->getNumericConstByName("eXtal"	 ,&m_eXtal  );
- m_detSvc->getNumericConstByName("nCsISeg"	 ,&m_nCsISeg   );
+  m_detSvc->getNumericConstByName("nCsISeg"	 ,&m_nCsISeg   );
 
      // m_calZTop,m_calZBot= -48.12,-217.47
      // m_calXLo,m_calXHi=  -728.22, 728.22
@@ -361,7 +357,7 @@ float GcrReconTool::getCALEnergyRaw()
 
 
 bool GcrReconTool::checkFilters(){
-  m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters Begin"<<endreq ;
+  m_log<<MSG::VERBOSE<<"GcrReconTool::checkFilters Begin"<<endreq ;
   
   // determine if HFC, DGN, MIP vetos are set.  Returns true if any of them is NOT set, false if the event is vetoed by all these filters.
   // Transfert of statusWord to TDS needs still to be added at the end of this method 
@@ -387,25 +383,25 @@ bool GcrReconTool::checkFilters(){
         
         obfResultGamma = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::GammaFilter);      
         if(obfResultGamma)
-          filtersbGamma = obfResultGamma->getFiltersb() >> 4;
+          filtersbGamma = obfResultGamma->getState();
         else
           m_log << MSG::INFO <<  "no obfResultGAM" << endreq;
         
         obfResultHIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::HIPFilter);      
         if(obfResultHIP)
-          filtersbHIP = obfResultHIP->getFiltersb() >> 4;
+          filtersbHIP = obfResultHIP->getState();
         else
           m_log << MSG::INFO <<  "no obfResultHIP" << endreq;
         
         obfResultMIP = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::MIPFilter);
         if(obfResultMIP)
-          filtersbMIP = obfResultMIP->getFiltersb() >> 4;
+          filtersbMIP = obfResultMIP->getState();
         else
           m_log << MSG::INFO <<  "no obfResultMIP" << endreq;
         
         obfResultDGN = obfStatus->getFilterStatus(OnboardFilterTds::ObfFilterStatus::DGNFilter); 
         if(obfResultDGN)
-          filtersbDGN = obfResultDGN->getFiltersb() >> 4;
+          filtersbDGN = obfResultDGN->getState();
         else
           m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
       }
@@ -417,32 +413,32 @@ bool GcrReconTool::checkFilters(){
         const lsfData::HipHandler*   hip = metaEventTds->hipFilter();       
         const lsfData::MipHandler*   mip = metaEventTds->mipFilter();
         
-        if(gamma->rsd()) 
-          filtersbGamma = gamma->rsd()->status() >> 4;
-        else 
-          m_log << MSG::INFO <<  "no FSW GAMMA rsd" << endreq;
-        
-        if(dgn->rsd())
-          filtersbDGN = dgn->rsd()->status() >> 4;
-        else
-          m_log << MSG::INFO <<  "no FSW DGN rsd" << endreq;
-        
-        if(hip->rsd())
-          filtersbHIP = hip->rsd()->status() >> 4;
-        else
-          m_log << MSG::INFO <<  "no FSW HIP rsd" << endreq;
-        
-        if(mip->rsd())
-          filtersbMIP = mip->rsd()->status() >> 4;
-        else
-          m_log << MSG::INFO <<  "no FSW MIP rsd" << endreq;         
-      }
 
- 
-       bool cutGamma = ((filtersbGamma==0) || (filtersbGamma==6));
-       bool cutHIP = ((filtersbHIP==0) || (filtersbHIP==6));
-       bool cutMIP = (filtersbMIP==0) || (filtersbMIP==6);
-       bool cutDGN = ((filtersbDGN==0) || (filtersbDGN==6));
+        if(gamma)
+          filtersbGamma = gamma->state();
+        else 
+          m_log << MSG::INFO <<  "no FSW GAMMA" << endreq;
+
+        if(dgn)
+          filtersbDGN = dgn->state();
+        else 
+          m_log << MSG::INFO <<  "no FSW DGN rsd" << endreq;
+
+        if(hip)
+          filtersbHIP = hip->state();
+        else 
+          m_log << MSG::INFO <<  "no FSW HIP rsd" << endreq;
+
+        if(mip)
+          filtersbMIP = mip->state();
+        else 
+          m_log << MSG::DEBUG <<  "no FSW MIP rsd" << endreq;         
+      }
+    
+       bool cutGamma = (filtersbGamma==0);
+       bool cutHIP = (filtersbHIP==0);
+       bool cutMIP = (filtersbMIP==0);
+       bool cutDGN = (filtersbDGN==3);
 
        m_gcrOBFStatusWord=cutGamma<<0;
        m_gcrOBFStatusWord|=cutHIP<<1;
@@ -457,7 +453,7 @@ bool GcrReconTool::checkFilters(){
    // store gcrOBFStatus Word in TDS:
    storeGcrReconVals();
 
-   m_log<<MSG::DEBUG<<"GcrReconTool::checkFilters End"<<endreq ;
+   m_log<<MSG::VERBOSE<<"GcrReconTool::checkFilters End"<<endreq ;
 
    return(passFilter);
 
@@ -472,7 +468,7 @@ bool GcrReconTool::checkFilters(){
 */
 StatusCode GcrReconTool::findGcrXtals(std::string initAxis, Point calEntryPoint, Point calExitPoint, Vector initDir){
 
-      m_log << MSG::INFO << "BEGIN findGcrXtals in GcrReconTool" << endreq;
+      m_log << MSG::VERBOSE << "BEGIN findGcrXtals in GcrReconTool" << endreq;
       m_initDir = initDir;
       m_log << MSG::DEBUG << "m_initDir=" << m_initDir << endreq;
       
@@ -521,7 +517,7 @@ StatusCode GcrReconTool::findGcrXtals(std::string initAxis, Point calEntryPoint,
   //Task #6: clean up gcrXtalVec
   clearGcrXtalVec(&m_gcrXtalVec);
 
-  m_log << MSG::INFO << "END findGcrXtals in GcrReconTool" << endreq;
+  m_log << MSG::VERBOSE << "END findGcrXtals in GcrReconTool" << endreq;
   
   return sc;
 
@@ -942,7 +938,7 @@ StatusCode GcrReconTool::storeGcrReconVals () {
   StatusCode sc = StatusCode::SUCCESS;
  
   
-  m_log << MSG::INFO << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
+  m_log << MSG::DEBUG << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
   
   m_gcrReconVals = SmartDataPtr<Event::GcrReconVals>(m_dataSvc,EventModel::CalRecon::GcrReconVals);
 
@@ -980,7 +976,7 @@ StatusCode GcrReconTool::storeGcrReconVals () {
 StatusCode GcrReconTool::storeGcrXtals () {
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_log << MSG::INFO << "BEGIN storeGcrXtals in GcrReconAlg" << endreq;
+  m_log << MSG::DEBUG << "BEGIN storeGcrXtals in GcrReconAlg" << endreq;
 
   m_gcrXtalCol = SmartDataPtr<Event::GcrXtalCol>(m_dataSvc,EventModel::CalRecon::GcrXtalCol);
 
@@ -1030,7 +1026,7 @@ StatusCode GcrReconTool::storeGcrTrack () {
 
   StatusCode sc = StatusCode::SUCCESS;
  
-  m_log << MSG::INFO << "BEGIN storeGcrTrack in GcrReconTool" << endreq;
+  m_log << MSG::DEBUG << "BEGIN storeGcrTrack in GcrReconTool" << endreq;
   
  /**m_log << MSG::INFO << "m_initDir=" << m_initDir << endreq;
 m_log << MSG::INFO << "m_calEntryPoint=" << m_calEntryPoint << endreq;
