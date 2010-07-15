@@ -1725,7 +1725,6 @@ int GcrSelectTool::buildSelectedXtalsVec (){
    
    
   m_log << MSG::INFO << "m_gcrSelectedXtalsVec.size()" << m_gcrSelectedXtalsVec.size()<< endreq;
-  m_log << MSG::INFO << "GcrSelectTool END buildSelectedXtalsVec(), m_gcrSelectedXtalsVec.size()= " << m_gcrSelectedXtalsVec.size()<< endreq ;  
    
   return m_gcrSelectedXtalsVec.size();
   
@@ -1741,7 +1740,7 @@ int GcrSelectTool::buildSelectedXtalsVec (){
 StatusCode GcrSelectTool::storeGcrSelectedXtals () {
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_log << MSG::INFO << "BEGIN storeGcrSelectedXtals in GcrSelectTool" << endreq;
+  m_log << MSG::DEBUG << "BEGIN storeGcrSelectedXtals in GcrSelectTool" << endreq;
 
   m_gcrSelectedXtalsCol = SmartDataPtr<Event::GcrSelectedXtalsCol>(m_dataSvc,EventModel::CalRecon::GcrSelectedXtalsCol);
 
@@ -1780,7 +1779,6 @@ StatusCode GcrSelectTool::storeGcrSelectedXtals () {
   }
 
   m_log << MSG::INFO << "nbStoredSelGcrXtals=" << nbStoredSelGcrXtals  << endreq;
-  m_log << MSG::INFO << "END storeGcrSelectedXtals in GcrSelectTool,  nbStoredSelGcrXtals=" << nbStoredSelGcrXtals  << endreq;
 
   return sc;
 
@@ -1796,10 +1794,7 @@ StatusCode GcrSelectTool::storeGcrSelectedXtals () {
 StatusCode GcrSelectTool::storeGcrSelectVals () {
   StatusCode sc = StatusCode::SUCCESS;
  
-  
-    m_log << MSG::DEBUG << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
-  
- 
+  m_log << MSG::VERBOSE << "BEGIN storeGcrSelectVals in GcrSelectTool" << endreq;
 
   m_gcrSelectVals = SmartDataPtr<Event::GcrSelectVals>(m_dataSvc,EventModel::CalRecon::GcrSelectVals);
 
@@ -1824,7 +1819,7 @@ StatusCode GcrSelectTool::storeGcrSelectVals () {
 
   m_log << MSG::DEBUG << "In storeGcrSelectVals, gcrOBFStatusWord =" << m_gcrOBFStatusWord << endreq;
   
-    m_log << MSG::DEBUG << "END storeGcrSelectVals in GcrSelectTool" << endreq;
+  m_log << MSG::VERBOSE << "END storeGcrSelectVals in GcrSelectTool" << endreq;
  
   return sc;
 
