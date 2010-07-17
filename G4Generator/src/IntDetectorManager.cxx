@@ -180,7 +180,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
 
                     // Make a unit normal pointing into the crystal, start by assuming 
                     // we are at the positive face 
-                    G4ThreeVector xTalFaceNrm(-1.,0.,0.);
+                    G4ThreeVector xTalFaceNrm(-1.,0.,0.); 
                     G4String      endName = volName + "POS";
                     
                     // Swap if we are at the negative face
@@ -195,7 +195,7 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
 
                     // Poor man's integration over trajectory of particle through crystal
                     // Divide into steps of 0.5 mm, though we need to make at least one step
-                    int           nSteps     = std::max(1., 2. * trackLen);
+                    int           nSteps     = 1; //std::max(1., 2. * trackLen);
                     G4ThreeVector stepPos    = localEntry + 0.5 * (trackLen / double(nSteps)) * trackAxis;
                     double        directFrac = 0.;
                     double        totalDep   = 0.;
@@ -223,24 +223,44 @@ G4bool IntDetectorManager::ProcessHits(G4Step* aStep,
                         double fracAngle = asin(aSinArg) / M_PI;
 
                         // Does angle to surface normal put us in the range of surface reflection? 
-                        if (cosTheta < m_cosCritical*1.1) 
+                        if (distToCntr < 30.) 
                         {
                             // Its clearly not right to only check angle to center of diode. To handle 
                             // reflection one should consider entire diode surface and develop some sort
                             // of transmission coefficient. But until then try to allow some transmission...
                             // So, idea here is to "transition" between the brewster angle and zero
                             //double angleCoeff = (m_cosCritical - cosTheta) / m_cosCritical;
-							double angleCoeff = std::max(0., (cosTheta - m_cosCritical) / (.1*m_cosCritical));
-							if(cosTheta > 1.15*m_cosCritical) angleCoeff = 1.;
+							//double angleCoeff = std::max(0., (cosTheta - m_cosCritical) / (.1*m_cosCritical));
+							//if(cosTheta > 1.15*m_cosCritical) angleCoeff = 1.;
 
                             // Attempt to attenuate the "direct" light...
-                            directFrac +=(angleCoeff * angleCoeff) * fracAngle;
+                            //directFrac +=(angleCoeff * angleCoeff) * fracAngle;
 
                             // And now attenuate the deposited energy
-							double thetaCrt = acos(1.15*m_cosCritical);
-							double theta    = acos(cosTheta);
-							double angleDiff = std::max(0., (theta - thetaCrt)/theta)/(3.141596/2.-thetaCrt);
-                            totalDep   += 1.0 - 1.*angleDiff*angleDiff*angleDiff*angleDiff;// - 0.2* angleCoeff; // was .4*...
+						//	double thetaCrt = .428; //= acos(.91) .... was acos(1.15*m_cosCritical);
+						//	double theta    = acos(cosTheta);
+						//	double angleDiff = std::max(0., (theta - thetaCrt)/theta)/(3.141596/2.-thetaCrt);
+                        //    totalDep   += 1.0 - angleDiff*angleDiff;// - 0.2* angleCoeff; // was .4*...
+						//	double attenFactor = (30. - distToCntr)/30.;
+						//	totalDep += 1. - .25*attenFactor*attenFactor; 
+
+						// The following is based on patterns extracted from flight data
+							double dist2Side = std::max(0., 13.5 -fabs(stepPos.y()));
+							double dist2End   = std::max(0., 165.-fabs(stepPos.x()));
+
+						// No angle factor for direct light - probably due to end roughening...
+							directFrac += fracAngle;
+
+						// Total light attenuation governed by location - strong dependence side to side, 
+						// as well as dependencce with distance from end
+							if(dist2End < 30) {
+								double attenFactor = ((30. - dist2End) * (std::max(0., 13.5-dist2Side)))/ (30.*13.5);
+								totalDep += 1. - .33*attenFactor * attenFactor;
+							}
+							else {
+								totalDep += 1.;
+								directFrac += fracAngle;
+							}
                         }
                         // Otherwise, all light "seen" by diode and all energy deposited in crystal
                         else
