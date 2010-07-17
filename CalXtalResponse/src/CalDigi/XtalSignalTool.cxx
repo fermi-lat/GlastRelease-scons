@@ -253,10 +253,10 @@ StatusCode XtalSignalTool::sumCsIHit(const Event::McIntegratingHit &hit,
 //  cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * meanCIDACL;
 //  cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * meanCIDACS;
 //  cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * meanCIDACS;
-  cidacArray[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * cidacLP + 5.*cidacLPDir;
-  cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * cidacLN + 5.*cidacLNDir;
-  cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * cidacSP + 5.*cidacSPDir;
-  cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * cidacSN + 5.*cidacSNDir;
+  cidacArray[XtalDiode(POS_FACE, LRG_DIODE)] += exp(   asymL/2) * cidacLP + 1.5*cidacLPDir;
+  cidacArray[XtalDiode(NEG_FACE, LRG_DIODE)] += exp(-1*asymL/2) * cidacLN + 1.5*cidacLNDir;
+  cidacArray[XtalDiode(POS_FACE, SM_DIODE)]  += exp(   asymS/2) * cidacSP + 1.5*cidacSPDir;
+  cidacArray[XtalDiode(NEG_FACE, SM_DIODE)]  += exp(-1*asymS/2) * cidacSN + 1.5*cidacSNDir;
 
 #if 0 // debug printing
   cout << "XtalSignalTool::sumCsIHit(): " << m_dat.xtalIdx.toStr() 
