@@ -460,7 +460,8 @@ unsigned int RootInputDesc::getIndexByEventID( int runNum, int evtNum )
 
         return ind;
     }
-}
+    return noIndex;
+ }
 
 
 void RootInputDesc::clearEvent()

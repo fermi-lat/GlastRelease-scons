@@ -739,9 +739,8 @@ Long64_t RootIoSvc::getIndexByEventID(int run, int event)
             unsigned index = rootInputDesc->getIndexByEventID(run, event);
             return index;
         }
-
-        return (unsigned)-1;
     }
+    return (unsigned)-1;
 }
 
 //============================================================================
