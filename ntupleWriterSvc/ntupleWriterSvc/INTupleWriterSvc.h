@@ -122,6 +122,10 @@ public:
 
     virtual bool getInputFileList(std::vector<std::string> &fileList) = 0;
 
+
+    virtual bool setIndex( long long ) = 0 ;
+    virtual long long index() = 0 ;
+
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_INTupleWriterSvc; }
 

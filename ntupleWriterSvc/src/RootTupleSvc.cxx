@@ -199,6 +199,10 @@ public:
           return false;
     }
 
+    virtual bool setIndex( Long64_t i );
+    virtual Long64_t index();
+
+
 private:
     /// Allow only SvcFactory to instantiate the service.
     friend class SvcFactory<RootTupleSvc>;
@@ -1129,4 +1133,14 @@ bool RootTupleSvc::fileExists( const std::string & filename )
    }
   saveDir->cd();
   return fileExists ;
- }  
+ } 
+
+ bool RootTupleSvc::setIndex( Long64_t i ) {
+      m_nextEvent = i;
+      return true;
+  }
+
+ Long64_t RootTupleSvc::index() { return m_nextEvent ; }
+ 
+
+
