@@ -24,6 +24,7 @@ class IAppMgrUI;
 class SvcAdapter;
 class IFluxSvc;
 class IRootIoSvc;
+class INTupleWriterSvc;
 class IDataProviderSvc;
 class IAlgManager;
 
@@ -159,6 +160,9 @@ private:
     /// The RootIoSvc used to set event Run/Event for random access from Root
     ///files
     IRootIoSvc* m_rootIoSvc;
+
+    /// for the RootTupleSvc
+    INTupleWriterSvc* m_rtsvc;
 
     /// The Data Provider Service Interface.
     IDataProviderSvc* m_idpsvc;
