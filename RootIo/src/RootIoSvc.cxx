@@ -102,6 +102,8 @@ class RootIoSvc :
     virtual bool setRunEventPair(std::pair<int,int> ids) ;
     virtual std::pair<int,int> runEventPair() { return m_runEventPair ; }
 
+    virtual Long64_t getIndexByEventID(int run, int event);
+
     
     //====================
     // For readers
@@ -727,6 +729,20 @@ TObject* RootIoSvc::getNextEvent(const std::string& type, long long inputIndex)
     return pData;
 }
 
+Long64_t RootIoSvc::getIndexByEventID(int run, int event)
+{
+    std::map<std::string,RootInputDesc *>::iterator typeItr ;
+    for ( typeItr = m_rootIoMap.begin() ; typeItr != m_rootIoMap.end() ; ++typeItr )
+    {
+        RootInputDesc * rootInputDesc = typeItr->second ;
+        if(rootInputDesc->checkEventAvailability(run, event)) {
+            unsigned index = rootInputDesc->getIndexByEventID(run, event);
+            return index;
+        }
+
+        return (unsigned)-1;
+    }
+}
 
 //============================================================================
 //

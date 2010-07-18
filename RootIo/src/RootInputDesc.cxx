@@ -437,6 +437,32 @@ TObject * RootInputDesc::getEvent( int runNum, int evtNum )
     return true;
 }
 
+unsigned int RootInputDesc::getIndexByEventID( int runNum, int evtNum ) 
+ {
+    // Save the current directory for the ntuple writer service
+    TDirectory * saveDir = gDirectory ;	
+
+    unsigned int noIndex = (unsigned)-1;
+
+    if (m_chain) 
+    {
+        if (!m_chainIndex) {
+            m_chainIndex = new TChainIndex(m_chain,"m_runId","m_eventId");
+            if (!m_chainIndex) {
+                std::cout << "RootInputDes::checkEventAvailability "
+                          << "Failed to create TChainIndex" << std::endl;
+                saveDir->cd();
+                return noIndex;
+            }
+        }
+        Long64_t ind  = m_chainIndex->GetEntryNumberWithIndex(runNum,evtNum) ;
+        saveDir->cd();
+
+        return ind;
+    }
+}
+
+
 void RootInputDesc::clearEvent()
 {
     if (TObject* dataPtr = *m_dataObject)

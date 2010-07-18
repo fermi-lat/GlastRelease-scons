@@ -68,6 +68,9 @@ class  IRootIoSvc : virtual public IInterface
     
     virtual bool setRunEventPair( std::pair<int,int> ) = 0 ;
     virtual std::pair<int,int> runEventPair() = 0 ;
+
+    virtual Long64_t getIndexByEventID(int run, int event) = 0;
+
   
   
     //====================
