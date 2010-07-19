@@ -612,7 +612,8 @@
 
 <!ELEMENT fractionmass EMPTY>
 <!ATTLIST fractionmass
-          fraction      NMTOKEN #REQUIRED
+          fraction NMTOKEN "0"
+          fractionREF IDREF #IMPLIED
 >
 
 <!ELEMENT natoms EMPTY>
@@ -883,6 +884,7 @@
                                          dYREF     IDREF    #IMPLIED
                                          dZREF     IDREF    #IMPLIED
                                          rotation  NMTOKEN    "0"
+                                         rotationREF IDREF  #IMPLIED
                                          %units; '>
 
 <!ELEMENT  axisPos (idField*) >
