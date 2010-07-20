@@ -27,6 +27,9 @@
 // A useful typedef 
 typedef  XtalDataList::iterator XtalDataListIterator;
 
+// Define the map between the layer/row index and the crystals
+// typedef std::map <int, XtalDataList> LyrRow2XtalDataMap; // Tracy stuff
+
 //
 // Define a class for MSTEdge
 // An Edge is a weight and two xtals (connected by the line with a weight)
@@ -50,6 +53,7 @@ public:
   double getWeight(){return weight;};
   // stupid-useless function that I use for debug
   double getSumEnergy() { return (node1->getEnergy() + node2->getEnergy()) ;} 
+  void printSumEnergy() {std::cout << " Ene1 = " << node1->getEnergy() << " Ene2 = " << node2->getEnergy() << std::endl;};
 
 private:
   const Event::CalXtalRecData* node1;
@@ -75,16 +79,20 @@ public:
   MSTTree( ) ;
   ~MSTTree( )  {};
   
-  void addEdge(MSTEdge) ; // I would like a list of pointers to avoid memory duplication.
-  void addNode(const Event::CalXtalRecData* _node) {node = _node;}; // to be implemented using a set or a map
+  //void addEdge(MSTEdge &_edg) {edges.push_back(&_edg);}; // this works
+  void addEdge(MSTEdge &);
+  void addNode(const Event::CalXtalRecData* _node) ; // implemented using a map
   int size () {return (edges.size());}
-  void clear() {edges.clear();};
-  std::list<MSTEdge> getEdges() {return edges;}; 
+  void clear() {edges.clear(); nodemap.clear();};
+  std::list<MSTEdge*> getEdges() {return edges;}; 
+  void printNodes();
   
 private:
-  std::list<MSTEdge> edges;
+  int  getXtalUniqueId(const Event::CalXtalRecData *);
+  std::list<MSTEdge*> edges;
   double totalEnergy;
-  const Event::CalXtalRecData* node;
+  //const Event::CalXtalRecData* node;
+  std::map<int, const  Event::CalXtalRecData*> nodemap;
   
 };
 
@@ -93,14 +101,49 @@ MSTTree::MSTTree ()
   
   edges.clear(); // make sure with know the initial state.
   totalEnergy = 0.;
-  node = NULL;
+  //node = NULL;
+  nodemap.clear();
 }
 
-void MSTTree::addEdge(MSTEdge _edg) 
+void MSTTree::addEdge(MSTEdge &_edg) 
 {
-  edges.push_back(_edg);
-  // implement add node
+  edges.push_back(&_edg);
+  // add nodes
+  //addNode(_edg.getNode1()); // Segmentation fault
+  //addNode(_edg.getNode2()); // Segmentation fault
+  
+  addNode(edges.back()->getNode1()); // Segmentation fault at 2nd evt
+  addNode(edges.back()->getNode1()); // Segmentation fault at 2nd evt
+}
 
+void MSTTree::addNode(const Event::CalXtalRecData *_node) 
+{
+  //std::cout << "xtal LyrRow " << getXtalUniqueId(_node) << std::endl;
+  nodemap[getXtalUniqueId(_node)] = _node;
+}
+
+void MSTTree::printNodes() 
+{
+  // example of show content:
+  std::map<int, const  Event::CalXtalRecData*>::iterator it;
+  for ( it=nodemap.begin() ; it != nodemap.end(); it++ )
+    std::cout << "--------> MAP: "<< (*it).first << " => " << (*it).second->getEnergy() << " MeV"<< std::endl;
+}
+
+
+// a unique Id to avodi duplication in the nodemap
+int  MSTTree::getXtalUniqueId(const Event::CalXtalRecData * xTal)
+{
+  idents::CalXtalId xTalId = xTal->getPackedId();
+        
+    //    int curLayer  = xTalId.getLayer();
+    //int curTower  = xTalId.getTower();
+    //int row       = xTalId.isX() ? curTower % 4 : curTower / 4;
+    // int layerRow  = 4 * curLayer + row;
+   
+  //int layerRow  = *xTal+1000;
+  //return layerRow;
+  return xTalId.getPackedId();
 }
 
 
@@ -127,15 +170,17 @@ private:
   
   // calculate thw weight between two xtals
   double xtalsWeight(Event::CalXtalRecData* xTal1, Event::CalXtalRecData* xTal2 );
-
-    //! Service for basic Cal info
-    ICalReconSvc*      m_calReconSvc;
-
-    //! Event Service member directly useable by concrete classes.
-    IDataProviderSvc*  m_dataSvc;
-
-    //! Utility for filling clusters
-    ICalClusterFiller* m_clusterInfo;
+  // uses the Xtal identifier to build a layer/row index
+  int  getXtalLayerRow(Event::CalXtalRecData* xTal);
+  
+  //! Service for basic Cal info
+  ICalReconSvc*      m_calReconSvc;
+  
+  //! Event Service member directly useable by concrete classes.
+  IDataProviderSvc*  m_dataSvc;
+  
+  //! Utility for filling clusters
+  ICalClusterFiller* m_clusterInfo;
 
   // Keep trackk of crystals locally
   XtalDataList             m_xTals;
@@ -144,6 +189,7 @@ private:
   // MSTtree as list of edges
   //std::list<MSTEdge> m_uberTree;
   MSTTree m_uberTree;
+  std::list<MSTEdge>  m_uberEdges;
 
   // Clusters are based on a list of trees
   std::list<MSTTree> m_clusterTree;
@@ -164,6 +210,7 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   m_xTals.clear();
   m_xTals_setA.clear();
   m_clusterTree.clear();
+  m_uberEdges.clear();
   declareInterface<ICalClusteringTool>(this) ; 
 }
     
@@ -222,6 +269,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
     m_xTals_setA.clear();
     m_uberTree.clear();
     m_clusterTree.clear();
+    m_uberEdges.clear();
 
     // get list of xtals
     xTalClus->clear();
@@ -272,7 +320,11 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	      }
 	      
 	    // Fill the uber tree
-	    m_uberTree.addEdge( MSTEdge(*bestXtal1,*bestXtal2, sqrt(minWeight)) ); 
+	    m_uberEdges.push_back( MSTEdge(*bestXtal1,*bestXtal2, sqrt(minWeight)) ); 
+	    m_uberEdges.back().printSumEnergy();
+	    m_uberTree.addEdge( m_uberEdges.back());
+
+	    m_uberTree.printNodes();
 	    std::cout << "WWWWWWWWWWW Filling the Uber Tree with weight: " << sqrt(minWeight) << std::endl;
 
 	    // add best xtal2 to m_xTals and remove it from m_xTal_setA
@@ -290,8 +342,8 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	      {
 		int j = 0; 
 	      }
-			      
-	    std::cout << "WWWWWWWWWWW Check that setA size is decreasing: " <<  m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
+	    // just a test output to check we do not have an infinite loop. 
+	    //std::cout << "WWWWWWWWWWW Check that setA size is decreasing: " <<  m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
 	  }
 	std::cout << "WWWWWWWWWWWSSSSSSSSSSS Final Uber Tree size: " << m_uberTree.size() << std::endl;
 
@@ -299,20 +351,23 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	// and remove those above threshold;
 	
 	m_clusterTree.push_back(MSTTree());
-	std::list<MSTEdge>  uberEdges = m_uberTree.getEdges(); // ??? This create a duplicate the list of objects in memory
-	for (std::list<MSTEdge>::iterator it=uberEdges.begin();  it != uberEdges.end(); it++ )
+	
+
+	std::list<MSTEdge*> uberEdges = m_uberTree.getEdges(); // 
+	for (std::list<MSTEdge*>::iterator it=uberEdges.begin();  it != uberEdges.end(); it++ )
 	{
-	 
-	  if (it->getWeight() > m_maxEdgeWeight)
+	  MSTEdge* thisEdge = *it;
+	  if (thisEdge->getWeight() > m_maxEdgeWeight)
 	    {
-	      std::cout << "WWWWWWWWWWWCCCCCCCC Found a large weight: " << it->getWeight() << std::endl;
-	      m_clusterTree.back().addNode(it->getNode1());
+	      std::cout << "WWWWWWWWWWWCCCCCCCC Found a large weight: " << thisEdge->getWeight() << std::endl;
+	      m_clusterTree.back().addNode(thisEdge->getNode1());
+	      // a new tree is created
 	      m_clusterTree.push_back(MSTTree());
-	      m_clusterTree.back().addEdge(*it); // not what I want to do, just for testing...
+	      m_clusterTree.back().addNode(thisEdge->getNode2()); 
 	    }
 	  else
 	    {
-	      m_clusterTree.back().addEdge(*it); // ??? Am I duplicating the memory usage?
+	      m_clusterTree.back().addEdge(*thisEdge); // ??? Am I duplicating the memory usage?
 	    }
 	  
 	}
@@ -354,6 +409,18 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
     return StatusCode::SUCCESS ;
 }
 
+// from Tracy simple clustering tool
+int  CalMSTClusteringTool::getXtalLayerRow(Event::CalXtalRecData* xTal)
+{
+    idents::CalXtalId xTalId = xTal->getPackedId();
+        
+    int curLayer  = xTalId.getLayer();
+    int curTower  = xTalId.getTower();
+    int row       = xTalId.isX() ? curTower % 4 : curTower / 4;
+    int layerRow  = 4 * curLayer + row;
+
+    return layerRow;
+}
 
 double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::CalXtalRecData* xTal2 )
 {
