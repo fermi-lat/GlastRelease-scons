@@ -85,6 +85,7 @@ public:
   int size () {return (edges.size());}
   void clear() {edges.clear(); nodemap.clear();};
   std::list<MSTEdge*> getEdges() {return edges;}; 
+  std::map<int, const  Event::CalXtalRecData*> getNodeMap() {return nodemap;};
   void printNodes();
   
 private:
@@ -109,11 +110,11 @@ void MSTTree::addEdge(MSTEdge &_edg)
 {
   edges.push_back(&_edg);
   // add nodes
-  //addNode(_edg.getNode1()); // Segmentation fault
-  //addNode(_edg.getNode2()); // Segmentation fault
+  //addNode(_edg.getNode1()); // Segmentation fault?
+  //addNode(_edg.getNode2()); //
   
-  addNode(edges.back()->getNode1()); // Segmentation fault at 2nd evt
-  addNode(edges.back()->getNode1()); // Segmentation fault at 2nd evt
+  addNode(edges.back()->getNode1()); 
+  addNode(edges.back()->getNode1()); 
 }
 
 void MSTTree::addNode(const Event::CalXtalRecData *_node) 
@@ -128,6 +129,7 @@ void MSTTree::printNodes()
   std::map<int, const  Event::CalXtalRecData*>::iterator it;
   for ( it=nodemap.begin() ; it != nodemap.end(); it++ )
     std::cout << "--------> MAP: "<< (*it).first << " => " << (*it).second->getEnergy() << " MeV"<< std::endl;
+
 }
 
 
@@ -367,15 +369,22 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    }
 	  else
 	    {
-	      m_clusterTree.back().addEdge(*thisEdge); // ??? Am I duplicating the memory usage?
+	      m_clusterTree.back().addEdge(*thisEdge);
 	    }
 	  
 	}
 
-	// just for fun
+	// print all the nodes in the tree to check that is works.
+	int count = 0;
 	std::cout << "WWWWWWWWWWWCCCCCCCC Number of trees " << m_clusterTree.size() << std::endl;
+	for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
+	  {
+	    std::cout << "WWWWWWWWWWWCCCCCCCC Tree number " << count << std::endl;
+	    count++;
+	    MSTTree thisTree = *it;
+	    thisTree.printNodes();
+	  }
 	
-
       };
 
 
