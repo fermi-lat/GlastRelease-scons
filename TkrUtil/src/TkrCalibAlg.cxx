@@ -400,10 +400,10 @@ StatusCode TkrCalibAlg::execute( ) {
     type = "internal alignment";
     CalibData::TkrInternalAlignCalib* pInternalAlign = 0;
 
-    if(m_towerAlignFlavor!="ideal" && m_towerAlignFlavor!="") {
+    if(m_internalAlignFlavor!="ideal" && m_internalAlignFlavor!="") {
 
         fullPath = m_pCalibPathSvc->getCalibPath(
-            ICalibPathSvc::Calib_TKR_InternalAlign, m_towerAlignFlavor );
+            ICalibPathSvc::Calib_TKR_InternalAlign, m_internalAlignFlavor );
         m_pCalibDataSvc->retrieveObject(fullPath, pObject);
         pInternalAlign = dynamic_cast<CalibData::TkrInternalAlignCalib*> (pObject);
         if (!pInternalAlign) { return failedAccess(type); }
