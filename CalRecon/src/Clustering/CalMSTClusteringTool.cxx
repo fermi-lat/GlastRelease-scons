@@ -114,7 +114,7 @@ void MSTTree::addEdge(MSTEdge &_edg)
   //addNode(_edg.getNode2()); //
   
   addNode(edges.back()->getNode1()); 
-  addNode(edges.back()->getNode1()); 
+  addNode(edges.back()->getNode2()); 
 }
 
 void MSTTree::addNode(const Event::CalXtalRecData *_node) 
@@ -145,6 +145,8 @@ int  MSTTree::getXtalUniqueId(const Event::CalXtalRecData * xTal)
    
   //int layerRow  = *xTal+1000;
   //return layerRow;
+  
+  // is this packedId unique?
   return xTalId.getPackedId();
 }
 
@@ -299,12 +301,13 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	m_xTals_setA.pop_front();
 	std::cout << "RRRRRRRRRRRRRRRRRRR We start the loop with setA size = " 
 		  << m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
+	std::cout << "WWWWWWWWWWW Filling the Uber Tree:" << std::endl;
 	// loop until there are unassociated xtals
 	while(! m_xTals_setA.empty())
 	  {
 	    double minWeight = 100000000000; // init to a very long number
-	    Event::CalXtalRecData * bestXtal1;
-	    Event::CalXtalRecData * bestXtal2;
+	    Event::CalXtalRecData * bestXtal1 = 0;
+	    Event::CalXtalRecData * bestXtal2 = 0;
 	    // loop over m_xTals
 	    for (XtalDataList::iterator it=m_xTals.begin() ; it != m_xTals.end(); it++ )
 	      {
@@ -323,11 +326,20 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	      
 	    // Fill the uber tree
 	    m_uberEdges.push_back( MSTEdge(*bestXtal1,*bestXtal2, sqrt(minWeight)) ); 
-	    m_uberEdges.back().printSumEnergy();
 	    m_uberTree.addEdge( m_uberEdges.back());
 
-	    m_uberTree.printNodes();
-	    std::cout << "WWWWWWWWWWW Filling the Uber Tree with weight: " << sqrt(minWeight) << std::endl;
+	    // debug print
+
+	    idents::CalXtalId xTalId1 = bestXtal1->getPackedId();
+	    idents::CalXtalId xTalId2 = bestXtal2->getPackedId();	    
+	    std::cout << "++ Node1: Map " << xTalId1.getPackedId() << " E="<<   bestXtal1->getEnergy();
+	    std::cout << " -- Node2: Map " << xTalId2.getPackedId() << " E="<<   bestXtal2->getEnergy();
+	    std::cout << " -- weight: " << sqrt(minWeight) << std::endl;
+
+	    //std::cout << "WWWWWWWWWWW Filling the Uber Tree with weight: " << sqrt(minWeight) << std::endl;
+	      //m_uberEdges.back().printSumEnergy();
+	    //m_uberTree.printNodes();
+	    
 
 	    // add best xtal2 to m_xTals and remove it from m_xTal_setA
 	    m_xTals.push_back(bestXtal2);
@@ -343,6 +355,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    else
 	      {
 		int j = 0; 
+		std::cout << "Error in removing xtals. this should never happen" << std::endl;
 	      }
 	    // just a test output to check we do not have an infinite loop. 
 	    //std::cout << "WWWWWWWWWWW Check that setA size is decreasing: " <<  m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
@@ -361,7 +374,14 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	  MSTEdge* thisEdge = *it;
 	  if (thisEdge->getWeight() > m_maxEdgeWeight)
 	    {
+	      idents::CalXtalId xTalId1 = thisEdge->getNode1()->getPackedId();
+	      idents::CalXtalId xTalId2 = thisEdge->getNode2()->getPackedId();
+
 	      std::cout << "WWWWWWWWWWWCCCCCCCC Found a large weight: " << thisEdge->getWeight() << std::endl;
+	      std::cout << "WWWWWWWWWWWCCCCCCCC Node1: Map " << xTalId1.getPackedId() << " E="<<  thisEdge->getNode1()->getEnergy() << std::endl;
+	      std::cout << "WWWWWWWWWWWCCCCCCCC Node2: Map " << xTalId2.getPackedId() << " E="<<  thisEdge->getNode2()->getEnergy() << std::endl;
+
+
 	      m_clusterTree.back().addNode(thisEdge->getNode1());
 	      // a new tree is created
 	      m_clusterTree.push_back(MSTTree());
@@ -439,8 +459,16 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
   // so it must be as fast as possible.
 
   //Compute distance to this xTal
-  Vector distVec = xTal1->getPosition() - xTal2->getPosition();
-  double dist2 = distVec.square();
-  
+  // this looks like different from the python test script.
+  //Vector distVec = xTal1->getPosition() - xTal2->getPosition();
+  //double dist2 = distVec.square();
+
+  Point xTalPoint1 = xTal1->getPosition();
+  Point xTalPoint2 = xTal2->getPosition();
+
+  double dist2 = (xTalPoint1.x() - xTalPoint2.x())*(xTalPoint1.x() - xTalPoint2.x()) +
+    (xTalPoint1.y() - xTalPoint2.y())*(xTalPoint1.y() - xTalPoint2.y()) +
+    (xTalPoint1.z() - xTalPoint2.z())*(xTalPoint1.z() - xTalPoint2.z());
+
   return dist2 ;
 }

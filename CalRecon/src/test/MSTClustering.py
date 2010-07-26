@@ -302,6 +302,9 @@ class MSTClustering:
                 self.UberTree.addEdge(edge)
                 setA.addNode(edge.Node2)
                 setB.removeNode(edge.Node2)
+                print "Node 1 MAP ", edge.Node1.getPackedId().getPackedId(), "E", edge.Node1.getEnergy()
+                print "Node 2 MAP ", edge.Node2.getPackedId().getPackedId(), "E", edge.Node2.getEnergy()
+                print "with weight", edge.Weight
         elapsedTime = time.time() - startTime
         print 'Done in %.3f s, %d node(s) in the uber tree, E = %.1f MeV.' %\
               (elapsedTime, self.getTotalNumNodes(), self.getTotalEnergySum())
@@ -324,8 +327,9 @@ class MSTClustering:
 
     def findClusters(self, doMomentAnalysis):
         startTime = time.time()
-        self.WeightThreshold = self.WeightThreshold or \
-                               getWeigthThreshold(self.getTotalEnergySum())
+        self.WeightThreshold = 300.
+        #self.WeightThreshold = self.WeightThreshold or \
+        #                       getWeigthThreshold(self.getTotalEnergySum())
         print 'Doing clustering (weight threshold = %.2f mm)...' %\
               self.WeightThreshold
         tree = MST()
@@ -333,6 +337,10 @@ class MSTClustering:
             tree.addNode(self.UberTree.NodeList[0])
         for edge in self.UberTree.getEdges():
             if edge.Weight > self.WeightThreshold:
+                print "Found a large weight", edge.Weight
+                print "Node 1 MAP ", edge.Node1.getPackedId().getPackedId(), "E", edge.Node1.getEnergy()
+                print "Node 2 MAP ", edge.Node2.getPackedId().getPackedId(), "E", edge.Node2.getEnergy()
+                
                 edge.setLineStyle(7)
                 tree.addNode(edge.Node1)
                 self.ClusterCol.append(tree)
