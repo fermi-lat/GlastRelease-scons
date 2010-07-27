@@ -291,7 +291,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
     std::cout << "RRRRRRRRRRRRRRRRRRR Total number of xtals: " <<m_xTals_setA.size() << std::endl;
 
     // case of 1 xtal will be handled separately...TBD
-    if (m_xTals_setA.size()>1 && m_xTals_setA.size()<100)
+    if (m_xTals_setA.size()>1)
       {
 
 	// Loop to fill the Uber MST
@@ -302,6 +302,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	std::cout << "RRRRRRRRRRRRRRRRRRR We start the loop with setA size = " 
 		  << m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
 	std::cout << "WWWWWWWWWWW Filling the Uber Tree:" << std::endl;
+	std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl;
 	// loop until there are unassociated xtals
 	while(! m_xTals_setA.empty())
 	  {
@@ -332,9 +333,15 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
 	    idents::CalXtalId xTalId1 = bestXtal1->getPackedId();
 	    idents::CalXtalId xTalId2 = bestXtal2->getPackedId();	    
-	    std::cout << "++ Node1: Map " << xTalId1.getPackedId() << " E="<<   bestXtal1->getEnergy();
-	    std::cout << " -- Node2: Map " << xTalId2.getPackedId() << " E="<<   bestXtal2->getEnergy();
-	    std::cout << " -- weight: " << sqrt(minWeight) << std::endl;
+	    Point xTalPoint1 = bestXtal1->getPosition();
+	    Point xTalPoint2 = bestXtal2->getPosition();
+	    //std::cout << "++ Node1: Map " << xTalId1.getPackedId() << " E="<<   bestXtal1->getEnergy();
+	    //std::cout << " -- Node2: Map " << xTalId2.getPackedId() << " E="<<   bestXtal2->getEnergy();
+	    //std::cout << " -- weight: " << sqrt(minWeight) << std::endl;
+	    /* std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl; */
+	    std::cout <<  xTalId1.getPackedId() <<"\t" << bestXtal1->getEnergy()  <<"\t"<< xTalPoint1.x()  <<"\t"<< xTalPoint1.y()  <<"\t"<< xTalPoint1.z()  <<"\t";
+	    std::cout <<  xTalId2.getPackedId() <<"\t" << bestXtal2->getEnergy()  <<"\t"<< xTalPoint2.x()  <<"\t"<< xTalPoint2.y()  <<"\t"<< xTalPoint2.z()  <<"\t";
+	    std::cout << sqrt(minWeight) << std::endl;
 
 	    //std::cout << "WWWWWWWWWWW Filling the Uber Tree with weight: " << sqrt(minWeight) << std::endl;
 	      //m_uberEdges.back().printSumEnergy();
@@ -369,6 +376,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	
 
 	std::list<MSTEdge*> uberEdges = m_uberTree.getEdges(); // 
+	int myEdgeCounter = 0;
 	for (std::list<MSTEdge*>::iterator it=uberEdges.begin();  it != uberEdges.end(); it++ )
 	{
 	  MSTEdge* thisEdge = *it;
@@ -381,8 +389,9 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	      std::cout << "WWWWWWWWWWWCCCCCCCC Node1: Map " << xTalId1.getPackedId() << " E="<<  thisEdge->getNode1()->getEnergy() << std::endl;
 	      std::cout << "WWWWWWWWWWWCCCCCCCC Node2: Map " << xTalId2.getPackedId() << " E="<<  thisEdge->getNode2()->getEnergy() << std::endl;
 
+	      // Add node ONLY if splitting the very first edge.
+	      if (myEdgeCounter == 0){m_clusterTree.back().addNode(thisEdge->getNode1());}
 
-	      m_clusterTree.back().addNode(thisEdge->getNode1());
 	      // a new tree is created
 	      m_clusterTree.push_back(MSTTree());
 	      m_clusterTree.back().addNode(thisEdge->getNode2()); 
@@ -391,7 +400,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    {
 	      m_clusterTree.back().addEdge(*thisEdge);
 	    }
-	  
+	  myEdgeCounter+=1;
 	}
 
 	// print all the nodes in the tree to check that is works.
@@ -459,7 +468,8 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
   // so it must be as fast as possible.
 
   //Compute distance to this xTal
-  // this looks like different from the python test script.
+
+  // is this faster? 
   //Vector distVec = xTal1->getPosition() - xTal2->getPosition();
   //double dist2 = distVec.square();
 
