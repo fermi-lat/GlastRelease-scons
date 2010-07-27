@@ -52,7 +52,7 @@ public:
   const Event::CalXtalRecData* getNode2(){return node2;};
   double getWeight(){return weight;};
   // stupid-useless function that I use for debug
-  double getSumEnergy() { return (node1->getEnergy() + node2->getEnergy()) ;} 
+  //double getSumEnergy() { return (node1->getEnergy() + node2->getEnergy()) ;} 
   void printSumEnergy() {std::cout << " Ene1 = " << node1->getEnergy() << " Ene2 = " << node2->getEnergy() << std::endl;};
 
 private:
@@ -70,8 +70,6 @@ void MSTEdge::setEdge(const Event::CalXtalRecData* _node1, const  Event::CalXtal
 }
 
 // MST Tree: a list of edges + something that may be useful later
-// should I use pointers?
-// should I define a destructor and explicitely kill all the objects?
 class MSTTree
 {
 
@@ -86,12 +84,17 @@ public:
   void clear() {edges.clear(); nodemap.clear();};
   std::list<MSTEdge*> getEdges() {return edges;}; 
   std::map<int, const  Event::CalXtalRecData*> getNodeMap() {return nodemap;};
+  double getTotalEnergy() {return totalEnergy;};
+  double getMaxEnergy() {return maxXtalEnergy;};  
   void printNodes();
+  void evalStats();
+  
   
 private:
   int  getXtalUniqueId(const Event::CalXtalRecData *);
-  std::list<MSTEdge*> edges;
   double totalEnergy;
+  double maxXtalEnergy;
+  std::list<MSTEdge*> edges;
   //const Event::CalXtalRecData* node;
   std::map<int, const  Event::CalXtalRecData*> nodemap;
   
@@ -102,6 +105,7 @@ MSTTree::MSTTree ()
   
   edges.clear(); // make sure with know the initial state.
   totalEnergy = 0.;
+  maxXtalEnergy = 0.;
   //node = NULL;
   nodemap.clear();
 }
@@ -110,9 +114,6 @@ void MSTTree::addEdge(MSTEdge &_edg)
 {
   edges.push_back(&_edg);
   // add nodes
-  //addNode(_edg.getNode1()); // Segmentation fault?
-  //addNode(_edg.getNode2()); //
-  
   addNode(edges.back()->getNode1()); 
   addNode(edges.back()->getNode2()); 
 }
@@ -121,6 +122,21 @@ void MSTTree::addNode(const Event::CalXtalRecData *_node)
 {
   //std::cout << "xtal LyrRow " << getXtalUniqueId(_node) << std::endl;
   nodemap[getXtalUniqueId(_node)] = _node;
+}
+
+// collect some statistics for sorting, print info etc...
+void MSTTree::evalStats()
+{
+
+  totalEnergy = 0.;
+  maxXtalEnergy = 0.;
+  std::map<int, const  Event::CalXtalRecData*>::iterator it;
+  for ( it=nodemap.begin() ; it != nodemap.end(); it++ )
+    {
+      double xtalEnergy = (*it).second->getEnergy();
+      totalEnergy += xtalEnergy;
+      if (xtalEnergy>=maxXtalEnergy) maxXtalEnergy = xtalEnergy;
+    }
 }
 
 void MSTTree::printNodes() 
@@ -133,25 +149,25 @@ void MSTTree::printNodes()
 }
 
 
-// a unique Id to avodi duplication in the nodemap
+// a unique Id to avoid duplication in the nodemap
 int  MSTTree::getXtalUniqueId(const Event::CalXtalRecData * xTal)
 {
   idents::CalXtalId xTalId = xTal->getPackedId();
         
-    //    int curLayer  = xTalId.getLayer();
-    //int curTower  = xTalId.getTower();
-    //int row       = xTalId.isX() ? curTower % 4 : curTower / 4;
-    // int layerRow  = 4 * curLayer + row;
-   
-  //int layerRow  = *xTal+1000;
-  //return layerRow;
-  
   // is this packedId unique?
   return xTalId.getPackedId();
 }
 
 
-// end of my test classes
+// MST tree comparison based on total energy
+bool compare_total_energy (MSTTree first, MSTTree second)
+{
+  
+  if (first.getTotalEnergy()>second.getTotalEnergy()) return true;
+  else return false;
+}
+
+// end of my clustering classes
 
 class CalMSTClusteringTool : public AlgTool, virtual public ICalClusteringTool
 {
@@ -176,6 +192,8 @@ private:
   double xtalsWeight(Event::CalXtalRecData* xTal1, Event::CalXtalRecData* xTal2 );
   // uses the Xtal identifier to build a layer/row index
   int  getXtalLayerRow(Event::CalXtalRecData* xTal);
+  // return a energy-dependent max weigth
+  double getWeightThreshold(double energy);
   
   //! Service for basic Cal info
   ICalReconSvc*      m_calReconSvc;
@@ -335,9 +353,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    idents::CalXtalId xTalId2 = bestXtal2->getPackedId();	    
 	    Point xTalPoint1 = bestXtal1->getPosition();
 	    Point xTalPoint2 = bestXtal2->getPosition();
-	    //std::cout << "++ Node1: Map " << xTalId1.getPackedId() << " E="<<   bestXtal1->getEnergy();
-	    //std::cout << " -- Node2: Map " << xTalId2.getPackedId() << " E="<<   bestXtal2->getEnergy();
-	    //std::cout << " -- weight: " << sqrt(minWeight) << std::endl;
 	    /* std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl; */
 	    std::cout <<  xTalId1.getPackedId() <<"\t" << bestXtal1->getEnergy()  <<"\t"<< xTalPoint1.x()  <<"\t"<< xTalPoint1.y()  <<"\t"<< xTalPoint1.z()  <<"\t";
 	    std::cout <<  xTalId2.getPackedId() <<"\t" << bestXtal2->getEnergy()  <<"\t"<< xTalPoint2.x()  <<"\t"<< xTalPoint2.y()  <<"\t"<< xTalPoint2.z()  <<"\t";
@@ -369,6 +384,11 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	  }
 	std::cout << "WWWWWWWWWWWSSSSSSSSSSS Final Uber Tree size: " << m_uberTree.size() << std::endl;
 
+
+	// calculate stats for uber tree
+	m_uberTree.evalStats();
+	m_maxEdgeWeight = getWeightThreshold(m_uberTree.getTotalEnergy());
+	std::cout << "WWWWWWWWWWWSSSSSSSSSSS Max weight for this event is: " << m_maxEdgeWeight << " for E= " << m_uberTree.getTotalEnergy() << std::endl;
 	// Now we have the uber tree, need to loop over its edges 
 	// and remove those above threshold;
 	
@@ -403,6 +423,17 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	  myEdgeCounter+=1;
 	}
 
+
+	// Sorting Trees - required since there is no intrinsic ordering in the MST algorithm
+	// First eval some stats
+	for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
+	  {
+	    it->evalStats();	    
+	  }
+	// Second, real sorting.
+	m_clusterTree.sort(compare_total_energy);
+
+
 	// print all the nodes in the tree to check that is works.
 	int count = 0;
 	std::cout << "WWWWWWWWWWWCCCCCCCC Number of trees " << m_clusterTree.size() << std::endl;
@@ -411,10 +442,14 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    std::cout << "WWWWWWWWWWWCCCCCCCC Tree number " << count << std::endl;
 	    count++;
 	    MSTTree thisTree = *it;
+	    std::cout << "WWWWWWWWWWWCCCCCCCC TotalEnergy " << thisTree.getTotalEnergy() << " MaxEnergy " << thisTree.getMaxEnergy() << std::endl;
 	    thisTree.printNodes();
 	  }
 	
-      };
+	
+	
+	
+      }; // end of clustering
 
 
 
@@ -482,3 +517,14 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
 
   return dist2 ;
 }
+
+
+double CalMSTClusteringTool::getWeightThreshold(double energy)
+{
+  // Implement a max weight per events that is energy dependent.
+  // must find a way to pass this function from JobOptions...
+  if (energy>1000.) return 200.0;
+  else return ( 500.0 - 150.0*(log10(energy) - 1));
+  
+}
+
