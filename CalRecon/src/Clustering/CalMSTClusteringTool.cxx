@@ -303,7 +303,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
     // DEBUG Print
     // take a look at list of clusters.
-    std::cout << "RRRRRRRRRRRRRRRRRRR Total number of xtals: " <<m_xTals_setA.size() << std::endl;
+    //std::cout << "RRRRRRRRRRRRRRRRRRR Total number of xtals: " <<m_xTals_setA.size() << std::endl;
     // End of DEBUG Print
 
     // case of 0 and 1 xtal will be handled separately...TBD
@@ -317,10 +317,10 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	m_xTals_setA.pop_front();
 
 	// DEBUG Print
-	std::cout << "RRRRRRRRRRRRRRRRRRR We start the loop with setA size = " 
-		  << m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
-	std::cout << "WWWWWWWWWWW Filling the Uber Tree:" << std::endl;
-	std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl;
+	//std::cout << "RRRRRRRRRRRRRRRRRRR We start the loop with setA size = " 
+	//	  << m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
+	//std::cout << "WWWWWWWWWWW Filling the Uber Tree:" << std::endl;
+	//std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl;
 	// End of DEBUG Print
 
 	// loop until there are unassociated xtals
@@ -351,14 +351,14 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    m_uberTree.addEdge( m_uberEdges.back());
 
 	    // DEBUG Print
-	    idents::CalXtalId xTalId1 = bestXtal1->getPackedId();
-	    idents::CalXtalId xTalId2 = bestXtal2->getPackedId();	    
-	    Point xTalPoint1 = bestXtal1->getPosition();
-	    Point xTalPoint2 = bestXtal2->getPosition();
-	    /* std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl; */
-	    std::cout <<  xTalId1.getPackedId() <<"\t" << bestXtal1->getEnergy()  <<"\t"<< xTalPoint1.x()  <<"\t"<< xTalPoint1.y()  <<"\t"<< xTalPoint1.z()  <<"\t";
-	    std::cout <<  xTalId2.getPackedId() <<"\t" << bestXtal2->getEnergy()  <<"\t"<< xTalPoint2.x()  <<"\t"<< xTalPoint2.y()  <<"\t"<< xTalPoint2.z()  <<"\t";
-	    std::cout << sqrt(minWeight) << std::endl;
+	    //idents::CalXtalId xTalId1 = bestXtal1->getPackedId();
+	    //idents::CalXtalId xTalId2 = bestXtal2->getPackedId();	    
+	    //Point xTalPoint1 = bestXtal1->getPosition();
+	    //Point xTalPoint2 = bestXtal2->getPosition();
+	    ///* std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl; */
+	    //std::cout <<  xTalId1.getPackedId() <<"\t" << bestXtal1->getEnergy()  <<"\t"<< xTalPoint1.x()  <<"\t"<< xTalPoint1.y()  <<"\t"<< xTalPoint1.z()  <<"\t";
+	    //std::cout <<  xTalId2.getPackedId() <<"\t" << bestXtal2->getEnergy()  <<"\t"<< xTalPoint2.x()  <<"\t"<< xTalPoint2.y()  <<"\t"<< xTalPoint2.z()  <<"\t";
+	    //std::cout << sqrt(minWeight) << std::endl;
 	    // end of DEBUG Print
 
 	    
@@ -375,7 +375,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    else
 	      {
 		int j = 0; 
-		std::cout << "Error in removing xtals. this should never happen" << std::endl;
 	      }
 	  }
 
@@ -385,8 +384,8 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	m_maxEdgeWeight = getWeightThreshold(m_uberTree.getTotalEnergy());
 
 	// DEBUG Print
-	std::cout << "WWWWWWWWWWWSSSSSSSSSSS Final Uber Tree size: " << m_uberTree.size() << std::endl;
-	std::cout << "WWWWWWWWWWWSSSSSSSSSSS Max weight for this event is: " << m_maxEdgeWeight << " for E= " << m_uberTree.getTotalEnergy() << std::endl;
+	//std::cout << "WWWWWWWWWWWSSSSSSSSSSS Final Uber Tree size: " << m_uberTree.size() << std::endl;
+	//std::cout << "WWWWWWWWWWWSSSSSSSSSSS Max weight for this event is: " << m_maxEdgeWeight << " for E= " << m_uberTree.getTotalEnergy() << std::endl;
 	// end of DEBUG Print
 
 	// Now we have the uber tree, need to loop over its edges 
@@ -403,11 +402,11 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	  if (thisEdge->getWeight() > m_maxEdgeWeight) // time to split the tree.
 	    {
 	      // DEBUG Print
-	      idents::CalXtalId xTalId1 = thisEdge->getNode1()->getPackedId();
-	      idents::CalXtalId xTalId2 = thisEdge->getNode2()->getPackedId();
-	      std::cout << "WWWWWWWWWWWCCCCCCCC Found a large weight: " << thisEdge->getWeight() << std::endl;
-	      std::cout << "WWWWWWWWWWWCCCCCCCC Node1: Map " << xTalId1.getPackedId() << " E="<<  thisEdge->getNode1()->getEnergy() << std::endl;
-	      std::cout << "WWWWWWWWWWWCCCCCCCC Node2: Map " << xTalId2.getPackedId() << " E="<<  thisEdge->getNode2()->getEnergy() << std::endl;
+	      //idents::CalXtalId xTalId1 = thisEdge->getNode1()->getPackedId();
+	      //idents::CalXtalId xTalId2 = thisEdge->getNode2()->getPackedId();
+	      //std::cout << "WWWWWWWWWWWCCCCCCCC Found a large weight: " << thisEdge->getWeight() << std::endl;
+	      //std::cout << "WWWWWWWWWWWCCCCCCCC Node1: Map " << xTalId1.getPackedId() << " E="<<  thisEdge->getNode1()->getEnergy() << std::endl;
+	      //std::cout << "WWWWWWWWWWWCCCCCCCC Node2: Map " << xTalId2.getPackedId() << " E="<<  thisEdge->getNode2()->getEnergy() << std::endl;
 	      // end of DEBUG Print
 
 	      // Add node ONLY if splitting the very first edge.
@@ -436,16 +435,16 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
 	// DEBUG Print
 	// print all the nodes in the tree to check that is works.
-	int count = 0;
-	std::cout << "WWWWWWWWWWWCCCCCCCC Number of trees " << m_clusterTree.size() << std::endl;
-	for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
-	  {
-	    std::cout << "WWWWWWWWWWWCCCCCCCC Tree number " << count << std::endl;
-	    count++;
-	    MSTTree thisTree = *it;
-	    std::cout << "WWWWWWWWWWWCCCCCCCC TotalEnergy " << thisTree.getTotalEnergy() << " MaxEnergy " << thisTree.getMaxEnergy() << std::endl;
-	    thisTree.printNodes();
-	  }
+	//int count = 0;
+	//std::cout << "WWWWWWWWWWWCCCCCCCC Number of trees " << m_clusterTree.size() << std::endl;
+	//for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
+	//  {
+	//    std::cout << "WWWWWWWWWWWCCCCCCCC Tree number " << count << std::endl;
+	//    count++;
+	//    MSTTree thisTree = *it;
+	//    std::cout << "WWWWWWWWWWWCCCCCCCC TotalEnergy " << thisTree.getTotalEnergy() << " MaxEnergy " << thisTree.getMaxEnergy() << std::endl;
+	//    thisTree.printNodes();
+	//  }
 	// end of DEBUG Print
 	
       
@@ -471,7 +470,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 		xTalClus->push_back(recData);
 
 		// end of DEBUG Print	
-		std::cout << "--------> FILLING CLUSTERS MAP: "<< (*mapIter).first << " => " << recData->getEnergy() << " MeV"<< std::endl;
+		//std::cout << "--------> FILLING CLUSTERS MAP: "<< (*mapIter).first << " => " << recData->getEnergy() << " MeV"<< std::endl;
 
 	      }
 
