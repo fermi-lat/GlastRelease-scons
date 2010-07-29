@@ -50,20 +50,29 @@ namespace Event
  	    virtual const CLID& clID() const   {return CalXtalRecData::classID(); }
 	    static const CLID& classID()       {return  CLID_CalXtalRecData; }
 
+        /* enum to define status bits in status word
+        ** XTAL_BAD_POSITION   - bad position information for this crystal
+        */
+        enum statusBits {
+            XTAL_BAD_POSITION    = 0x00000001,    // When set indicates position information is "bad" for this xtal
+                                                  // INSERT NEW BITS IN THIS AREA (with trailing comma)
+            XTAL_BAD             = 0x80000000     // When set indicates all crystal information is not good
+        };
+
         
-    /** @class   CalRangeRecData        
-    * 
-    * @brief   This is teh nested class in CalXtalRecData,
-    *          holding reconstructed data for one readout range.
-    *
-    *          The class contains reconstructed position
-    *          and for both POSitive and NEGative faces of a crystal
-    *          the reconstructed energy and the range number used
-    *          to obtain this energy.           
-    *
-    *
-    * @author  A.Chekhtman
-    */
+        /** @class   CalRangeRecData        
+        * 
+        * @brief   This is teh nested class in CalXtalRecData,
+        *          holding reconstructed data for one readout range.
+        *
+        *          The class contains reconstructed position
+        *          and for both POSitive and NEGative faces of a crystal
+        *          the reconstructed energy and the range number used
+        *          to obtain this energy.           
+        *
+        *
+        * @author  A.Chekhtman
+        */
         class CalRangeRecData {  
             
         public:
@@ -129,20 +138,33 @@ namespace Event
         };
         
         /// default constructor
-        CalXtalRecData() {};
+        CalXtalRecData() : m_statusBits(0) {};
         
         /// constructor with parameters initializing crystal
         /// identification and readout mode
         CalXtalRecData(const idents::CalXtalId::CalTrigMode mode,
                        const idents::CalXtalId CalXtalId) : 
-                       m_mode(mode), m_xtalId(CalXtalId){};
+                       m_statusBits(0), m_mode(mode), m_xtalId(CalXtalId){};
         
         virtual ~CalXtalRecData() { };
         
         /// function initializing crystal identification, readout mode, and clearing rec data
-        void initialize (const idents::CalXtalId::CalTrigMode m,
+        void initialize (const unsigned int bits,
+                         const idents::CalXtalId::CalTrigMode m,
                          const idents::CalXtalId id)
-        {m_mode = m; m_xtalId = id; m_recData.clear() ; }
+        {m_statusBits = bits; m_mode = m; m_xtalId = id; m_recData.clear() ; }
+
+        /// Retrieve entire status word
+        inline const unsigned int getStatusWord() const    {return m_statusBits;}
+
+        /// Is position information good?
+        inline const bool isPositionGood() const {return !(m_statusBits & XTAL_BAD_POSITION);}
+
+        /// Set status bit
+        inline void setStatusBit(const statusBits& bit)    {m_statusBits |= bit;}
+
+        /// Set entire status word
+        inline void setStatusBits(const unsigned int bits) {m_statusBits = bits;}
         
         /// Retrieve readout mode
         inline const idents::CalXtalId::CalTrigMode getMode() const
@@ -227,15 +249,18 @@ namespace Event
                 
         
 private:
+
+    /// Bit mask to contain status information
+    unsigned int                   m_statusBits;
     
     /// Cal readout mode is based on trigger type
     idents::CalXtalId::CalTrigMode m_mode;
 
     /// crystal ID
-    idents::CalXtalId m_xtalId;
+    idents::CalXtalId              m_xtalId;
 
     /// ranges and pulse heights
-    std::vector<CalRangeRecData> m_recData;
+    std::vector<CalRangeRecData>   m_recData;
     
 };
 
