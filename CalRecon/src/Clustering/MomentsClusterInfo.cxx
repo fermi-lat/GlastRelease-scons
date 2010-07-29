@@ -102,6 +102,9 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
     // If the linear fit was performed then use the centroid from that for a first guess
     //if (m_fit_nlayers > 3 && m_fit_zdirection > 0.) m_p0 = Point(m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid);
 
+    // Keep track of any energy in crystals with a bad position measurement (resulting from a bad/dead readout)
+    double badPosXtalEne = 0.;
+
     // Compute barycenter and various moments
     // loop over all crystals in the current cluster
     XtalDataList::const_iterator xTalIter;
@@ -114,6 +117,13 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
         double eneXtal = recData->getEnergy();                 // crystal energy
         Vector pXtal   = recData->getPosition();               // Vector of crystal position
         int    layer   = (recData->getPackedId()).getLayer();  // layer number
+
+        // Check if bad position measurement
+        if (!recData->isPositionGood())
+        {
+            badPosXtalEne += eneXtal;
+            continue;
+        }
 
         // Offset the position to be closer to actual cluster center
         pXtal -= m_p0;
@@ -200,6 +210,9 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
 
         cluster->push_back(layerData);
     }
+
+    // Total energy in cluster includes energy in bad position crystals
+    ene += badPosXtalEne;
 
     // loop over all crystals in the current cluster again to compute the number of Truncated Xtals
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
