@@ -29,18 +29,34 @@ using namespace std;
 class CalXtalRecData :  public TObject { 
     
 public:
-    
-    
-    CalXtalRecData() {};
+    /* enum to define status bits in status word
+    ** XTAL_BAD_POSITION   - bad position information for this crystal
+    */
+    enum statusBits {
+        XTAL_BAD_POSITION    = 0x00000001,    // When set indicates position information is "bad" for this xtal
+                                              // INSERT NEW BITS IN THIS AREA (with trailing comma)
+        XTAL_BAD             = 0x80000000     // When set indicates all crystal information is not good
+    };
+
+    CalXtalRecData() : m_statusBits(0) {};
         
     virtual ~CalXtalRecData() { };
     
-    void initialize(CalXtalId::CalTrigMode m, CalXtalId id);
+    void initialize(const UInt_t& bits, CalXtalId::CalTrigMode m, CalXtalId id);
 
     void Clear(Option_t *option="");
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalXtalRecData &, const std::string & name = "" ) const ; // for tests
     void Print(Option_t *option="") const;
+
+    /// Retrieve entire status word
+    inline const unsigned int getStatusWord() const    {return m_statusBits;}
+
+    /// Set status bit
+    inline void setStatusBit(const statusBits& bit)    {m_statusBits |= bit;}
+
+    /// Set entire status word
+    inline void setStatusBits(const unsigned int bits) {m_statusBits = bits;}
 
     /// Retrieve readout mode
     const CalXtalId::CalTrigMode getMode() const { return m_mode; };
@@ -76,11 +92,14 @@ public:
     
     
 private:
-    
+
+    /// Bit mask to contain status information
+    UInt_t                  m_statusBits;
+
     /// Cal readout mode is based on trigger type
-    CalXtalId::CalTrigMode m_mode;
+    CalXtalId::CalTrigMode  m_mode;
     /// Cal ID
-    CalXtalId m_xtalId;
+    CalXtalId               m_xtalId;
     /// ranges and pulse heights
     vector<CalRangeRecData> m_recData;
     

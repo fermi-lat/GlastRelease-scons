@@ -11,9 +11,10 @@ ClassImp(CalXtalRecData)
 // Author: A.Chekhtman
 
 
-void CalXtalRecData::initialize(CalXtalId::CalTrigMode m, CalXtalId id) {
-    m_mode = m;
-    m_xtalId = id;
+void CalXtalRecData::initialize(const UInt_t& bits, CalXtalId::CalTrigMode m, CalXtalId id) {
+    m_statusBits = bits;
+    m_mode       = m;
+    m_xtalId     = id;
 }
 
 void CalXtalRecData::Clear(Option_t* /* option */) {
@@ -80,7 +81,7 @@ void CalXtalRecData::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
     Clear() ;
     CalXtalId id;
     id.init(1, 2, 3);
-    initialize(CalXtalId::BESTRANGE,id) ;
+    initialize(0,CalXtalId::BESTRANGE,id) ;
     CalRangeRecData rec ;
     rec.Fake(ievent,rank,randNum) ;
     addRangeRecData(rec) ;
