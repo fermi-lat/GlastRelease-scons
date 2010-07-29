@@ -7,11 +7,12 @@ namespace RootPersistence {
 void convert( const Event::CalXtalRecData & tdsXtalRecData, CalXtalRecData & rootXtalRecData ) {
    
     rootXtalRecData.Clear() ;
-    CalXtalId rootId = RootPersistence::convert(tdsXtalRecData.getPackedId()) ; 
+    UInt_t    statusBits = tdsXtalRecData.getStatusWord();
+    CalXtalId rootId     = RootPersistence::convert(tdsXtalRecData.getPackedId()) ; 
     idents::CalXtalId::CalTrigMode tdsMode = tdsXtalRecData.getMode() ;   
     if ( tdsMode == idents::CalXtalId::BESTRANGE ) {
         
-        rootXtalRecData.initialize(CalXtalId::BESTRANGE,rootId) ;   
+        rootXtalRecData.initialize(statusBits,CalXtalId::BESTRANGE,rootId) ;   
         const Event::CalXtalRecData::CalRangeRecData * tdsXtalRange  
          = tdsXtalRecData.getRangeRecData(0) ;   
         CalRangeRecData rootRangeRecData(   
@@ -25,7 +26,7 @@ void convert( const Event::CalXtalRecData & tdsXtalRecData, CalXtalRecData & roo
         
     } else {
            
-        rootXtalRecData.initialize(CalXtalId::ALLRANGE,rootId) ;         
+        rootXtalRecData.initialize(statusBits,CalXtalId::ALLRANGE,rootId) ;         
         int range ;   
         for ( range = idents::CalXtalId::LEX8 ;
               range <= idents::CalXtalId::HEX1 ;
@@ -49,10 +50,11 @@ void convert( const Event::CalXtalRecData & tdsXtalRecData, CalXtalRecData & roo
  
 void convert( const CalXtalRecData & rootXtalRecData, Event::CalXtalRecData & tdsXtalRecData ) {
 
-        idents::CalXtalId tdsId = RootPersistence::convert(rootXtalRecData.getPackedId()) ;        
+        unsigned int      statusBits = rootXtalRecData.getStatusWord();
+        idents::CalXtalId tdsId      = RootPersistence::convert(rootXtalRecData.getPackedId()) ;        
         if (rootXtalRecData.getMode()==CalXtalId::ALLRANGE) {
             
-            tdsXtalRecData.initialize(idents::CalXtalId::ALLRANGE,tdsId) ;
+            tdsXtalRecData.initialize(statusBits,idents::CalXtalId::ALLRANGE,tdsId) ;
             unsigned int range ;
             for ( range = idents::CalXtalId::LEX8 ;
                   range < idents::CalXtalId::HEX1 ;
@@ -74,7 +76,7 @@ void convert( const CalXtalRecData & rootXtalRecData, Event::CalXtalRecData & td
             
         } else if (rootXtalRecData.getMode() == CalXtalId::BESTRANGE) {
             
-            tdsXtalRecData.initialize(idents::CalXtalId::BESTRANGE,tdsId) ;
+            tdsXtalRecData.initialize(statusBits,idents::CalXtalId::BESTRANGE,tdsId) ;
             const CalRangeRecData * rootXtalRange
               = rootXtalRecData.getRangeRecData(0) ;   
             
