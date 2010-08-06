@@ -7,6 +7,7 @@ Import('listFiles')
 Import('packages')
 libEnv = baseEnv.Clone()
 
+locInc = listFiles(['commonRootData/*'], recursive=True)
 libEnv.Tool('addLinkDeps', package='commonRootData', toBuild='rootlib')
 commonRootDataRootcint = libEnv.Rootcint('commonRootData/commonRootData_rootcint.cxx',
                                          ['commonRootData/RelTable.h',
@@ -25,6 +26,8 @@ commonRootDataRootcint = libEnv.Rootcint('commonRootData/commonRootData_rootcint
                                           'commonRootData/adf/ScalerHit.h',
                                           'commonRootData/adf/QdcHit.h',
                                           'commonRootData/LinkDef.h'],
+                                         localIncludes=locInc,
+                                         packageName='commonRootData',
                                          includes = ['.'])
 
 libEnv['rootcint_node'] = commonRootDataRootcint

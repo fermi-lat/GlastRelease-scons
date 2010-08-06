@@ -8,8 +8,10 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+locIncs = listFiles(['digiRootData/*'])
 libEnv.Tool('addLinkDeps', package='digiRootData', toBuild='rootlib')
-digiRootDataRootcint = libEnv.Rootcint('digiRootData/digiRootData_rootcint',['digiRootData/AcdDigi.h',
+digiRootDataRootcint = libEnv.Rootcint('digiRootData/digiRootData_rootcint',
+                                       ['digiRootData/AcdDigi.h',
                                         'digiRootData/CalDiagnosticData.h',
                                         'digiRootData/CalDigi.h',
                                         'digiRootData/CalXtalReadout.h',
@@ -34,7 +36,10 @@ digiRootDataRootcint = libEnv.Rootcint('digiRootData/digiRootData_rootcint',['di
                                         'digiRootData/FilterStatus.h',
                                         'digiRootData/ObfFilterStatus.h',
                                         'digiRootData/AdfDigi.h',
-                                        'digiRootData/EventSummaryData.h', 'digiRootData/LinkDef.h'], includes = [''])
+                                        'digiRootData/EventSummaryData.h',
+                                        'digiRootData/LinkDef.h'],
+                                       includes = [''], localIncludes=locIncs,
+                                       packageName='digiRootData')
 
 libEnv['rootcint_node'] = digiRootDataRootcint
                                        

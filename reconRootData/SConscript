@@ -8,8 +8,10 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+locIncs = listFiles(['reconRootData/*.h'])
 libEnv.Tool('addLinkDeps', package='reconRootData', toBuild='rootlib')
-reconRootDataRootcint = libEnv.Rootcint('reconRootData/reconRootData_rootcint', ['reconRootData/AdfRecon.h',
+reconRootDataRootcint = libEnv.Rootcint('reconRootData/reconRootData_rootcint',
+                                        ['reconRootData/AdfRecon.h',
                                          'reconRootData/AcdRecon.h',
                                          'reconRootData/AcdReconV2.h',
                                          'reconRootData/CalParams.h',
@@ -49,7 +51,9 @@ reconRootDataRootcint = libEnv.Rootcint('reconRootData/reconRootData_rootcint', 
                                          'reconRootData/GcrXtal.h',
                                          'reconRootData/GcrTrack.h',
 					 'reconRootData/LinkDef.h'], 
-					  includes = [''])
+                                        includes = [''],
+                                        localIncludes = locIncs,
+                                        packageName = "reconRootData")
 
 libEnv['rootcint_node'] = reconRootDataRootcint
 reconRootData = libEnv.SharedLibrary('reconRootData',

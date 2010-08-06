@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+locIncs = listFiles(['overlayRootData/*.h'])
 libEnv.Tool('addLinkDeps', package='overlayRootData', toBuild='rootlib')
 overlayRootDataRootcint = libEnv.Rootcint('overlayRootData/overlayRootData_rootcint',
                                           ['overlayRootData/AcdOverlay.h',
@@ -18,7 +19,9 @@ overlayRootDataRootcint = libEnv.Rootcint('overlayRootData/overlayRootData_rootc
                                            'overlayRootData/GemOverlay.h',
                                            'overlayRootData/TkrOverlay.h',
                                            'overlayRootData/LinkDef.h'],
-                                          includes = [''])
+                                          includes = [''],
+                                          localIncludes = locIncs,
+                                          packageName = 'overlayRootData')
 
 libEnv['rootcint_node'] = overlayRootDataRootcint
                                        

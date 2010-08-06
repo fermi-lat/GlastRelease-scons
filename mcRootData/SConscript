@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+locIncs = listFiles(['mcRootData/*.h'])
 libEnv.Tool('addLinkDeps', package='mcRootData', toBuild = 'rootlib')
 mcRootDataRootcint = libEnv.Rootcint('mcRootData/mcRootData_rootcint',
                                      ['mcRootData/McIntegratingHit.h',
@@ -16,7 +17,8 @@ mcRootDataRootcint = libEnv.Rootcint('mcRootData/mcRootData_rootcint',
                                       'mcRootData/McEvent.h',
                                       'mcRootData/McTrajectory.h',
                                       'mcRootData/LinkDef.h'],
-                                     includes = [''])
+                                     includes = [''], localIncludes = locIncs,
+                                     packageName = 'mcRootData')
 
 mcRootData = libEnv.RootDynamicLibrary('mcRootData',
                                        listFiles(['src/*.cxx']) + ['mcRootData/mcRootData_rootcint.cxx'])

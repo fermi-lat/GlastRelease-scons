@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+locIncs = listFiles(['calibRootData/*'], recursive=True)
 libEnv.Tool('addLinkDeps', package='calibRootData', toBuild='rootlib')
 calibRootDataRootcint = libEnv.Rootcint('calibRootData/calibRootData_rootcint.cxx',
                                         ['calibRootData/DacCol.h',
@@ -20,7 +21,9 @@ calibRootDataRootcint = libEnv.Rootcint('calibRootData/calibRootData_rootcint.cx
                                          'calibRootData/Tkr/Tot.h',
                                          'calibRootData/LinkDef.h'],
                                         includes = ['src/Cal', 'src/Acd',
-                                                    'src/Tkr'])
+                                                    'src/Tkr'],
+                                        localIncludes=locIncs,
+                                        packageName='calibRootData')
 calibRootData = libEnv.RootDynamicLibrary('calibRootData',
                                           listFiles(['src/*.cxx',
                                                      'src/Cal/*.cxx',
