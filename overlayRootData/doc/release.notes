@@ -5,6 +5,7 @@ $Id$
 @verbatim
 EOH
 
+ overlayRootData-00-03-02 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows
  overlayRootData-00-03-01 13-Jun-2010    jrb upgrades for SCons builds
  overlayRootData-00-03-00 27-Apr-2010  TU  Add the Diagnostic data to overlay
  overlayRootData-00-02-04 07-Dec-2009  jrb Add stuff for SCons build
