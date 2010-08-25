@@ -37,6 +37,8 @@ void CorbaServer::run()
   
   // We get from the HepRepSvc adapter the fredStart option
   std::string fredStart = m_svcAdapter->getStartFred();
+  std::string wiredStart = m_svcAdapter->getStartWired();
+
   if (fredStart != "")
     std::cout << "CORBA will try to use FRED installed in " << fredStart << std::endl;
   
@@ -45,7 +47,7 @@ void CorbaServer::run()
   // the ior file is than saved in the TMP directory if defined; otherwise the
   // ior file is saved in the actual directory of execution
   std::string iorFileName;  
-  if ((fredStart != "") && (::getenv("TMP") != NULL))
+  if ((fredStart != ""||wiredStart != "") && (::getenv("TMP") != NULL))
   {
     iorFileName = std::string(::getenv("TMP")) + separator;
   }
@@ -76,6 +78,13 @@ void CorbaServer::run()
     std::string root("ruby ");
     root = root + fredStart;
     root = root + separator + std::string("fred.rb -s ");
+    system((root + iorFileName).c_str());
+  }
+  else if ((wiredStart != "")&& (::getenv("TMP") != NULL))
+  {    
+    std::string root("javaws ");
+    root = root + wiredStart;
+    root += " -open ";
     system((root + iorFileName).c_str());
   }
 
