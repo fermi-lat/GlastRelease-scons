@@ -208,8 +208,11 @@ Cal1.Members = {
 
 // First pass of Tkr Recon
 Tkr.Members = {
+    "TkrReconAlg/TkrCluster",
     "TkrReconAlg/FirstPass"
     };
+
+FirstPass.firstStage = 2;
 
 // Second pass of Cal Recon - energy corrections only
 Cal2.Members = {

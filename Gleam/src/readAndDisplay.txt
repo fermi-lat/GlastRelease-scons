@@ -61,6 +61,13 @@ ApplicationMgr.EvtMax = 100000;
 // tell it to automatically start the version of FRED 
 HepRepSvc.startFred = "$Fred_EXE_DIR";
 
+//or WIRED
+//HepRepSvc.startWired = 
+//  "http://glast-ground.slac.stanford.edu/DataPortalWired/wired4.jnlp";
+
+// to start a local copy of WIRED, substitute your own path
+//HepRepSvc.startWired = "C:/Extlibs/WIRED/wired4.jnlp";
+
 //##############################################################
 // Names of input ROOT files - note that you can supply a list of input files
 // as a comma delimited list

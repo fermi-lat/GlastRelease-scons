@@ -5,9 +5,13 @@
 
 #include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
-// choose one or the other below for old integrated Gui or FRED
+// choose one or the other below for old integrated Gui, FRED or WIRED
 //#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt" 
 //#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt" 
+//#include "$GLEAMJOBOPTIONSPATH/wiredOptions.txt" 
+// to start WIRED from a local copy, uncomment and substitute your own path
+//HepRepSvc.startWired = "C:/Extlibs/WIRED/wired4.jnlp";
+ 
 // for FRED, the Fred program is expected to be in the path given by
 // the environment variable Fred_DIR, which is set by default in the
 // interface package IExternal/Fred
