@@ -66,6 +66,7 @@ HepRepSvc::HepRepSvc(const std::string& name,ISvcLocator* svc)
   declareProperty("autoStream" , m_autoStream=""); 
   declareProperty("streamPath"   , m_streamPath="");
   declareProperty("startFred"   , m_startFred="");
+  declareProperty("startWired"  , m_startWired="");
   declareProperty("geometryDepth", m_geomDepth=4);
   declareProperty("geometryType", m_geomType="FullGeom");
   
