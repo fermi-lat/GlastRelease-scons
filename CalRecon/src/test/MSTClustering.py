@@ -250,10 +250,16 @@ class MST:
     # Stuff related to the moments analysis
 
     def getTransRms(self):
-        if self.MomentsClusterInfo is None:
-            return None
-        else:
+        try:
             return math.sqrt(self.MomentsClusterInfo.RmsTrans/self.EnergySum)
+        except AttributeError:
+            return None
+
+    def getLongRmsAsym(self):
+        try:
+            return self.MomentsClusterInfo.RmsLongAsym
+        except AttributeError:
+            return None
 
     def __cmp__(self, other):
         if self.EnergySum > other.EnergySum:
@@ -266,8 +272,10 @@ class MST:
                (self.getNumNodes(), self.EnergySum, self.getMeanEdgeWeight(),
                 self.getRmsEdgeWeight())
         transRms = self.getTransRms()
+        longRmsAsym = self.getLongRmsAsym()
         if transRms is not None:
-            text += '\n  -> TransRms = %.2f mm' % transRms
+            text += '\n  -> Trans. RMS = %.2f mm, long RMS asym = %.3f' %\
+                    (transRms, longRmsAsym)
         return text
 
 
