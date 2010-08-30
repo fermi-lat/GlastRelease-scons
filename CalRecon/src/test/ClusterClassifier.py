@@ -30,17 +30,29 @@ class ClusterVariable:
 
 VARIABLE_LIST  = [ClusterVariable('CalTransRms', 0, 100),
                   ClusterVariable('CalLRmsAsym', 0, 0.25),
-                  ClusterVariable('CalNumXtals/log10(CalEnergyRaw)',
-                                  0, 150, label = 'NumXtals')]
-
-FILE_PATH_DICT = {'gamma': '/data/mc/allGamma-GR-v18r4p2-FAKEOVRLY/allGamma-GR-v18r4p2-FAKEOVRLY-Simple_merit.root',
-                  'had'  : '/data/mc/bkg-GR-v17r31/Bkg_1_v17r31_merit.root'
-                  #'had'  : '/data44/mc/backgnd-GR-v15r39p1-Day-NoP/backgnd-GR-v15r39p1-Day-NoP-merit_04900_05000-100-QualityCut-unbiased-CREClassMCv1p12-fix2-merit.root'
-                  #'mip'  : 'mips_*_merit.root'
+                  ClusterVariable('CalBkHalfRatio', 0, 1.01),
+                  #ClusterVariable('CalXtalMaxEne/CalEnergyRaw', 0, 1,
+                  #                label = 'XtalMaxEneRatio'),
+                  #ClusterVariable('CalXtalsTrunc/CalNumXtals', 0, 1,
+                  #                label = 'XtalTruncRatio'),
+                  ClusterVariable('CalNumXtals/log10(CalEnergyRaw)', 0, 150,
+                                  label = 'NumXtals')
+                  ]
+FILE_PATH_DICT = {'gam': '/data/mc/allGamma-GR-v15r39-Lyon/allGamma-GR-v15r39-Lyon_merit.root',
+                  'had': '/data/mc/allPro-GR-v15r39p1-Lyon/allPro-GR-v15r39p1-Lyon_merit.root',
+                  'mip': '/data/mc/allMuon-GR-v15r35/allMuon-GR-v15r35_merit.root'
                   }
-COLORS_DICT = {'gamma': ROOT.kRed,
-               'had'  : ROOT.kBlue,
-               'mip'  : ROOT.kBlack
+TOPOLOGY_DICT = {'gam': 0,
+                 'had': 1,
+                 'mip': 2
+                 }
+PRE_CUT_DICT = {'gam': None,
+                'had': 'abs(CalMIPRatio - 1) > 0.75',
+                'mip': None
+                }
+COLORS_DICT = {'gam': ROOT.kRed,
+               'had': ROOT.kBlue,
+               'mip': ROOT.kBlack
                }
 
 
@@ -52,6 +64,54 @@ def getColor(topology):
         return COLORS_DICT[topology]
     except KeyError:
         return ROOT.kBlack
+
+def getCut(topology):
+    try:
+        cut = PRE_CUT_DICT[topology]
+    except KeyError:
+        return PRE_CUT
+    if cut is None or cut.strip() == '':
+        return PRE_CUT
+    return '(%s) && (%s)' % (PRE_CUT, cut)
+
+def getTopologyIndex(topology):
+    try:
+        return TOPOLOGY_DICT[topology]
+    except KeyError:
+        return -1
+
+def normalizeHist(hist1d, miny = 0, maxy = 1):
+    numBinsX = hist1d.GetNbinsX()
+    sum = 0.0
+    for i in xrange(1, numBinsX + 1):
+        sum += hist1d.GetBinContent(i)
+    for i in xrange(1, numBinsX + 1):
+        try:
+            value = hist1d.GetBinContent(i)/sum
+            hist1d.SetBinContent(i, value)
+        except ZeroDivisionError:
+            pass
+    hist1d.SetMinimum(miny)
+    hist1d.SetMaximum(maxy)
+
+def normalizeSlices(hist2d, minz = 1e-3, maxz = 1):
+    numBinsX = hist2d.GetNbinsX()
+    numBinsY = hist2d.GetNbinsY()
+    for i in xrange(1, numBinsX + 1):
+        sum = 0.0
+        for j in xrange(1, numBinsY + 1):
+            sum += hist2d.GetBinContent(i, j)
+        for j in xrange(1, numBinsY + 1):
+            try:
+                value = hist2d.GetBinContent(i, j)/sum
+                hist2d.SetBinContent(i, j, value)
+            except ZeroDivisionError:
+                pass
+        hist2d.SetBinContent(i, 0, 0.0)
+        hist2d.SetBinContent(i, numBinsY + 1, 0.0)
+    hist2d.SetMinimum(minz)
+    hist2d.SetMaximum(maxz)
+
 
 
 OBJECT_POOL = {}
@@ -82,12 +142,14 @@ class ClusterClassifier:
     def __createPdfHist(self, var, topology):
         # Create the two-dimensional histogram...
         hName = hname(var.Label, topology)
-        hTitle = '%s p.d.f. (%s)' % (var.Expression, topology)
+        hTitle = '%s P.D.F. (%s)' % (var.Expression, topology)
         h = ROOT.TH2F(hName, hTitle, NUM_E_BINS, LOG_E_MIN, LOG_E_MAX,
                       var.NumBins, var.MinValue, var.MaxValue)
+        h.SetXTitle('log10(CalEnergyRaw)')
+        h.SetYTitle(var.Expression)
         self.PdfHistDict[topology][var.Label] = h
         expr = '%s:log10(CalEnergyRaw)' % var.Expression
-        cut = PRE_CUT
+        cut = getCut(topology)
         self.RootTreeDict[topology].Project(hName, expr, cut)
         # ... then normalize the vertical slices.
         for i in xrange(1, NUM_E_BINS + 1):
@@ -104,13 +166,16 @@ class ClusterClassifier:
             h.SetBinContent(i, var.NumBins + 1, 0.0)
         h.SetMinimum(1e-3)
         h.SetMaximum(1)
-        # ... finally create a TH1 for ewach slice.
+        # ... finally create a TH1 for each slice.
         self.PdfHistSliceDict[topology][var.Label] = {}
         for i in range(NUM_E_BINS):
             hSlice = h.ProjectionY('%s_slice%d' % (h.GetName(), i), i+1, i+1)
+            hSlice.SetTitle('P.D.F.')
             hSlice.SetLineColor(getColor(topology))
-            hSlice.GetXaxis().SetLabelSize(0.07)
-            hSlice.GetYaxis().SetLabelSize(0.07)
+            hSlice.GetXaxis().SetLabelSize(0.06)
+            hSlice.GetYaxis().SetLabelSize(0.06)
+            hSlice.GetXaxis().SetTitleSize(0.06)
+            hSlice.GetXaxis().SetTitleOffset(0.80)
             self.PdfHistSliceDict[topology][var.Label][i] = hSlice
 
     def drawAllPdfHists(self):
@@ -120,18 +185,19 @@ class ClusterClassifier:
     def drawPdfHists(self, var):
         cName  = '%s_2d' % var.Label
         cTitle = '%s (2d)' % var.Expression
-        c = ROOT.TCanvas(cName, cTitle, 1000, 500)
+        c = ROOT.TCanvas(cName, cTitle, 1000, 800)
         toPool(c)
-        c.Divide(2, 1)
+        c.Divide(2, 2)
         for (i, topology) in enumerate(FILE_PATH_DICT.keys()):
             c.cd(i + 1)
+            ROOT.gPad.SetRightMargin(0.15)
             self.getPdfHist(topology, var).Draw('colz,text')
             ROOT.gPad.SetLogz(True)
         c.cd()
         c.Update()
         cName = '%s_slices' % var.Label
         cTitle = '%s (slices)' % var.Expression
-        c = ROOT.TCanvas(cName, cTitle, 1000, 500)
+        c = ROOT.TCanvas(cName, cTitle, 1000, 600)
         toPool(c)
         c.Divide(4, 3)
         for i in range(NUM_E_BINS):
@@ -165,7 +231,7 @@ class ClusterClassifier:
             label = ROOT.TLatex(0.15, 0.8, '%.d--%d MeV' %\
                                 (emin, emax))
             label.SetName('%s_label_slice%d' % (var.Label, i))
-            label.SetTextSize(0.07)
+            label.SetTextSize(0.06)
             label.SetNDC()
             toPool(label)
             label.Draw()

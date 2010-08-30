@@ -79,19 +79,57 @@ class ClusterPredictor:
                 self.ProbDict[topology] /= probSum
             except ZeroDivisionError:
                 pass
-
+        maxProb = 0
+        classTopology = None
+        for topology in FILE_PATH_DICT.keys():
+            if self.ProbDict[topology] > maxProb:
+                maxProb = self.ProbDict[topology]
+                classTopology = topology
+        return getTopologyIndex(classTopology)
 
 
 
 if __name__ == '__main__':
-    dataFilePath = FILE_PATH_DICT['had']
+    dataFilePath = FILE_PATH_DICT['mip']
+    numEvents = 20000
     cut = PRE_CUT
     p = ClusterPredictor('cluclass.root', dataFilePath, cut)
-    h = ROOT.TH2F('pgamma', 'gamma prob.', NUM_E_BINS, LOG_E_MIN, LOG_E_MAX,
-                  50, 0, 1.01)
-    for i in xrange(10000):
-        p.classifyEvent(i)
+    hDict = {}
+    for topology in FILE_PATH_DICT.keys():
+        hName  = 'hProb_%s' % topology
+        hTitle = '%s probability' % topology
+        h = ROOT.TH2F(hName, hTitle, NUM_E_BINS, LOG_E_MIN, LOG_E_MAX,
+                      50, 0, 1.01)
+        h.SetXTitle('log10(CalEnergyRaw)')
+        h.GetXaxis().SetTitleOffset(1.55)
+        h.SetYTitle(hTitle)
+        h.GetYaxis().SetTitleOffset(1.55)
+        h.SetZTitle('Normalized # events')
+        h.GetZaxis().SetTitleOffset(1.25)
+        hDict[topology] = h
+    hClass = ROOT.TH1F('hClass', 'hClass', 3, 0, 3)
+    hClass.SetXTitle('Predicted topology')
+    hClass.SetYTitle('Normalized # events')
+    for (key, value) in TOPOLOGY_DICT.items():
+        hClass.GetXaxis().SetBinLabel(value + 1, key)
+    for i in xrange(numEvents):
+        classTopologyIndex = p.classifyEvent(i)
         if p.cutPassed():
-            h.Fill(log10(p.getVar('CalEnergyRaw')), p.ProbDict['gamma'])
-    h.Draw('lego')
-    ROOT.gPad.Update()
+            hClass.Fill(classTopologyIndex)
+            logE = log10(p.getVar('CalEnergyRaw'))
+            for topology in FILE_PATH_DICT.keys():
+                hDict[topology].Fill(logE, p.ProbDict[topology])
+    for topology in FILE_PATH_DICT.keys():
+        normalizeSlices(hDict[topology])
+    cName = 'cClass'
+    cTitle = 'Classification of test dataset' 
+    c = ROOT.TCanvas(cName, cTitle, 1000, 800)
+    c.Divide(2, 2)
+    for (i, topology) in enumerate(FILE_PATH_DICT.keys()):
+        c.cd(i + 1)
+        hDict[topology].Draw('lego')
+    c.cd(4)
+    normalizeHist(hClass)
+    hClass.Draw()
+    c.cd()
+    c.Update()
