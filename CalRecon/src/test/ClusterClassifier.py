@@ -30,11 +30,9 @@ class ClusterVariable:
 
 VARIABLE_LIST  = [ClusterVariable('CalTransRms', 0, 100),
                   ClusterVariable('CalLRmsAsym', 0, 0.25),
-                  ClusterVariable('CalBkHalfRatio', 0, 1.01),
-                  #ClusterVariable('CalXtalMaxEne/CalEnergyRaw', 0, 1,
-                  #                label = 'XtalMaxEneRatio'),
-                  #ClusterVariable('CalXtalsTrunc/CalNumXtals', 0, 1,
-                  #                label = 'XtalTruncRatio'),
+                  #ClusterVariable('CalBkHalfRatio', 0, 1.01),
+                  ClusterVariable('log10(CalLongRms/CalTransRms)', 0, 2.5,
+                                  label = 'MomentRatio'),
                   ClusterVariable('CalNumXtals/log10(CalEnergyRaw)', 0, 150,
                                   label = 'NumXtals')
                   ]
