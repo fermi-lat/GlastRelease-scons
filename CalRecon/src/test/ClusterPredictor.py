@@ -7,11 +7,9 @@ from math              import log10
 
 class ClusterPredictor:
 
-    def __init__(self, pdfFilePath, dataFilePath, cut = '1'):
-        self.PdfFile = ROOT.TFile(pdfFilePath)
-        self.RootTree = ROOT.TChain('MeritTuple')
-        self.RootTree.Add(dataFilePath)
+    def __init__(self, pdfFilePath, dataFilePath = None, cut = '1'):
         print 'Retrieving histograms for pdfs...'
+        self.PdfFile = ROOT.TFile(pdfFilePath)
         self.PdfHistDict = {}
         for topology in FILE_PATH_DICT.keys():
             self.PdfHistDict[topology] = {}
@@ -20,7 +18,13 @@ class ClusterPredictor:
                 hName = hname(var.Label, topology)
                 self.PdfHistDict[topology][var.Label] = self.PdfFile.Get(hName)
         print 'Done.'
+        if dataFilePath is not None:
+            self.__setupDataTree()
+
+    def __setupDataTree(self):
         print 'Creating the TTreeFormula objects...'
+        self.RootTree = ROOT.TChain('MeritTuple')
+        self.RootTree.Add(dataFilePath)
         self.TreeFormulaDict = {}
         self.addTreeFormula('cut', cut)
         self.addTreeFormula('CalEnergyRaw', 'CalEnergyRaw')
