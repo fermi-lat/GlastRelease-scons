@@ -55,7 +55,10 @@ class ClusterPredictor:
         else:
             biny = 1 + int(var.NumBins*(float(value - var.MinValue)/\
                                         (var.MaxValue - var.MinValue))) 
-        return h.GetBinContent(binx, biny)
+        pdfValue = h.GetBinContent(binx, biny)
+        print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
+              (topology, logE, var.Label, value, pdfValue)
+        return pdfValue
 
     def getEntry(self, entry):
         self.RootTree.GetEntry(entry)
@@ -82,7 +85,8 @@ class ClusterPredictor:
             self.ProbDict[topology] = 1.0
         for topology in FILE_PATH_DICT.keys():
             for var in VARIABLE_LIST:
-                self.ProbDict[topology] *= self.getPdfValue(topology, var)
+                pdfValue = self.getPdfValue(topology, var)
+                self.ProbDict[topology] *= pdfValue
         probSum = sum(self.ProbDict.values())
         for topology in FILE_PATH_DICT.keys():
             try:

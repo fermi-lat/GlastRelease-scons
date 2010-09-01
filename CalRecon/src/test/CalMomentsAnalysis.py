@@ -949,6 +949,8 @@ class MomentsClusterInfo:
         if len(dataVec) < MIN_NUM_XTALS:
             print 'Not enough xtals found (%d).' % len(dataVec)
             self.NotEnoughXtals = True
+            self.MomentsAnalysis = CalMomentsAnalysis(self, clipDataVec)
+            self.Centroid = self.MomentsAnalysis.estimateCentroid(dataVec)
             return
         self.MomentsAnalysis = CalMomentsAnalysis(self, clipDataVec)
         (chiSq, dataVec) =\

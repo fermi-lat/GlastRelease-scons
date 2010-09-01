@@ -173,9 +173,13 @@ class MST:
         self.EdgeList = []
         self.NodeList = []
         self.EnergySum = 0.0
+        self.ProbDict = {}
+        self.Color = ROOT.kBlack
         self.__MeanEdgeWeight = 0.0
         self.__RmsEdgeWeight = 0.0
         self.MomentsClusterInfo = None
+        self.ScrewedUp = False
+        self.OrigNumXtals = None
 
     def addEdge(self, edge):
         for node in [edge.Node1, edge.Node2]:
@@ -234,6 +238,7 @@ class MST:
         return len(self.NodeList)
 
     def setColor(self, color):
+        self.Color = color
         for node in self.NodeList:
             node.setMarkerColor(color)
         for edge in self.EdgeList:
@@ -242,6 +247,14 @@ class MST:
     def setMarkerSize(self, size):
         for node in self.NodeList:
             node.setMarkerSize(size)
+
+    def checkAgainstFake(self):
+        if FAKE_READER is not None:
+            self.OrigNumXtals = FAKE_READER.getMeritVariable('CalNumXtals')
+            if abs(self.getNumNodes() - self.OrigNumXtals) > 3:
+                self.ScrewedUp = True
+                for edge in self.EdgeList:
+                    edge.setLineStyle(3)
 
     def draw(self, view = 'xy'):
         for edge in self.EdgeList:
@@ -269,7 +282,44 @@ class MST:
         except AttributeError:
             return None
 
+    def getCentroid(self):
+        try:
+            return self.MomentsClusterInfo.Centroid
+        except AttributeError:
+            return None
+
+    def getProb(self, topology):
+        try:
+            return self.ProbDict[topology]
+        except KeyError:
+            return '-'
+
+    def getProbsText(self):
+        text = ''
+        if self.ProbDict == {}:
+            return text
+        for topology in FILE_PATH_DICT.keys():
+            text += 'P(%s) = %.3f\n' % (topology, self.getProb(topology))
+        return text.strip('\n')
+
     def __cmp__(self, other):
+        if FAKE_READER is not None and self.getCentroid() is not None and \
+               other.getCentroid() is not None:
+            x0 = FAKE_READER.getMeritVariable('CalXEcntr')
+            y0 = FAKE_READER.getMeritVariable('CalYEcntr')
+            z0 = FAKE_READER.getMeritVariable('CalZEcntr')
+            x1 = self.getCentroid().X()
+            y1 = self.getCentroid().Y()
+            z1 = self.getCentroid().Z()
+            x2 = other.getCentroid().X()
+            y2 = other.getCentroid().Y()
+            z2 = other.getCentroid().Z()
+            dist1 = (x1 - x0)**2 + (y1 - y0)**2  + (z1 - z0)**2
+            dist2 = (x2 - x0)**2 + (y2 - y0)**2  + (z2 - z0)**2
+            if dist1 < dist2:
+                return 1
+            else:
+                return -1
         if self.EnergySum > other.EnergySum:
             return 1
         else:
@@ -282,10 +332,12 @@ class MST:
         transRms = self.getTransRms()
         longRms = self.getLongRms()
         longRmsAsym = self.getLongRmsAsym()
+        centroid = self.getCentroid()
         if transRms is not None:
             text += '\n  -> Trans. RMS = %.2f mm' % transRms
             text += ', long RMS = %.2f mm' % longRms
             text += ', long RMS asym = %.3f' % longRmsAsym
+            text += '\n  -> Centroid at %s' % centroid
         return text
 
 
@@ -318,7 +370,8 @@ class MSTPredictor(ClusterPredictor):
         elif varLabel == 'NumXtals':
             # 'CalNumXtals/log10(CalEnergyRaw)'
             try:
-                return self.Cluster.getNumNodes()/self.Cluster.EnergySum
+                return self.Cluster.getNumNodes()/\
+                       math.log10(self.Cluster.EnergySum)
             except:
                 return 0
 
@@ -401,7 +454,6 @@ class MSTClustering:
             else:
                 tree.addEdge(edge)
         self.ClusterCol.append(tree)
-        self.ClusterCol.sort(reverse = True)
         elapsedTime = time.time() - startTime
         print 'Done in %.3f s, %d cluster(s) found.' %\
               (elapsedTime, self.getNumClusters())
@@ -421,7 +473,7 @@ class MSTClustering:
                 c.ProbDict = CLASSIFIER.ProbDict
             elapsedTime = time.time() - startTime
             print 'Done in %.3f s.' % elapsedTime
-            
+        self.ClusterCol.sort(reverse = True)    
 
     def draw(self):
         if self.TopCanvasUber is None:
@@ -430,8 +482,6 @@ class MSTClustering:
         if self.TopCanvasClusters is None:
             self.TopCanvasClusters = getTopCanvas('Top (all clusters)',
                                                   topx = 680, topy = 10)
-        #if self.EdgeWeightCanvas is None:
-        #    self.EdgeWeightCanvas = ROOT.TCanvas('canvas_edge', 'Edge length')
         self.TopCanvasUber.cd()
         self.TopCanvasUber.Clear()
         CAL_LAYOUT.draw('xy')
@@ -444,21 +494,55 @@ class MSTClustering:
         for (i, cluster) in enumerate(self.ClusterCol):
             cluster.setColor(COLOR_LIST[i])
             cluster.draw('xy')
+        self.TextList = []
+        for c in self.ClusterCol:
+            try:
+                x0 = c.getCentroid().X()
+                y0 = c.getCentroid().Y()
+                if x0 < 400:
+                    x = x0 + 100
+                else:
+                    x = x0 - 400
+                if y0 < 400:
+                    y = y0 + 100
+                else:
+                    y = y0 - 200
+                if c.ScrewedUp:
+                    screwText = ' (were %d)' % c.OrigNumXtals
+                else:
+                    screwText = ''
+                l = ROOT.TLatex(x, y + 50, '%d xtals%s, E = %d MeV' %\
+                                (c.getNumNodes(), screwText, c.EnergySum))
+                l.SetTextColor(c.Color)
+                l.SetTextSize(15)
+                l.Draw()
+                self.TextList.append(l)
+                l = ROOT.TLatex(x, y, 'P(gam) = %.2f' % c.getProb('gam'))
+                l.SetTextColor(c.Color)
+                l.SetTextSize(15)
+                l.Draw()
+                self.TextList.append(l)
+                l = ROOT.TLatex(x, y - 50, 'P(had) = %.2f' % c.getProb('had'))
+                l.SetTextColor(c.Color)
+                l.SetTextSize(15)
+                l.Draw()
+                self.TextList.append(l)
+                l = ROOT.TLatex(x, y - 100, 'P(mip) = %.2f' % c.getProb('mip'))
+                l.SetTextColor(c.Color)
+                l.SetTextSize(15)
+                l.Draw()
+                self.TextList.append(l)
+            except:
+                pass
         self.TopCanvasClusters.Update()
         self.TopCanvasClusters.SaveAs('mst-clusters.pdf')
-        #self.EdgeWeightCanvas.Clear()
-        #self.EdgeWeightHist = ROOT.TH1F('hist_edge', 'Edge weight',
-        #                                100, 0, 400)
-        #for edge in self.getUberCluster().getEdges():
-        #    self.EdgeWeightHist.Fill(edge.Weight)
-        #self.EdgeWeightHist.Draw()
-        #self.EdgeWeightCanvas.Update()
+
 
 
 
 if __name__ == '__main__':
     from optparse import OptionParser
-    usage = 'MSTClustering.py reconFile [opt] <reconFile>'
+    usage = 'MSTClustering.py reconFile [opt] <reconFile> [fakeOvrlyFile]'
     parser = OptionParser()
     parser.add_option('-x', '--max-num-xtals', type = int, dest = 'x',
                       default = 10000,
@@ -476,10 +560,16 @@ if __name__ == '__main__':
     if len(args) == 0:
         print 'Usage: %s' % usage
         sys.exit('Please provide a recon input root file.')
-    elif len(args) > 2:
+    elif len(args) > 3:
         print 'Usage: %s' % usage
         sys.exit('Too many arguments.')
     inputFilePath = args[0]
+    try:
+        fakeOvrlyFile = args[1]
+        FAKE_READER = ReconReader(fakeOvrlyFile)
+    except IndexError:
+        fakeOvrlyFile = None
+        FAKE_READER = None
     reader = ReconReader(inputFilePath)
     if opts.C:
         CLASSIFIER = MSTPredictor()
@@ -487,6 +577,8 @@ if __name__ == '__main__':
     evtNumber = 0
     while answer != 'q':
         reader.getEntry(evtNumber)
+        if FAKE_READER is not None:
+            FAKE_READER.getEntry(evtNumber)
         xtalCol = reader.getCalXtalRecCol()
         numXtals = reader.getNumCalXtals()
         print '\nAnalyzing event %d, %d xtal(s) found.' % (evtNumber, numXtals)
@@ -501,10 +593,14 @@ if __name__ == '__main__':
         #print longRms, latRLn, cntRLn, longRms*logRLn
         if numXtals <= opts.x:
             clustering = MSTClustering(xtalCol, opts.w, opts.M, opts.C)
+            try:
+                clustering.ClusterCol[0].checkAgainstFake()
+            except IndexError:
+                pass
             clustering.draw()
             for (i, c) in enumerate(clustering.ClusterCol):
                 print '* Cluster %d: %s' % (i, c)
-                print c.ProbDict
+                print c.getProbsText()
         else:
             print 'Too many xtals (%d), skipping...' % opts.x
         answer = raw_input('Press q to quit, s to save or type a number...')

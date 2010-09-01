@@ -56,7 +56,8 @@ VARIABLE_LIST  = [ClusterVariable('CalTransRms', 0, 100),
                   ]
 FILE_PATH_DICT = {'gam': '/data/mc/allGamma-GR-v15r39-Lyon/allGamma-GR-v15r39-Lyon_merit.root',
                   'had': '/data/mc/allPro-GR-v15r39p1-Lyon/allPro-GR-v15r39p1-Lyon_merit.root',
-                  'mip': '/data/mc/allMuon-GR-v15r35/allMuon-GR-v15r35_merit.root'
+                  #'mip': '/data/mc/allMuon-GR-v15r35/allMuon-GR-v15r35_merit.root'
+                  'mip': '/data/mc/allPro-GR-v15r39p1-Lyon/allPro-GR-v15r39p1-Lyon_merit.root',
                   }
 TOPOLOGY_DICT = {'gam': 0,
                  'had': 1,
@@ -64,7 +65,8 @@ TOPOLOGY_DICT = {'gam': 0,
                  }
 PRE_CUT_DICT = {'gam': None,
                 'had': 'abs(CalMIPRatio - 1) > 0.75',
-                'mip': None
+                #'mip': None
+                'mip': 'abs(CalMIPRatio - 1) < 0.75',
                 }
 COLORS_DICT = {'gam': ROOT.kRed,
                'had': ROOT.kBlue,
