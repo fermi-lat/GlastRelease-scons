@@ -9,7 +9,7 @@ import time
 from CalLayout          import *
 from ReconReader        import *
 from CalMomentsAnalysis import *
-
+from ClusterPredictor   import *
 
 #ROOT.gStyle.SetOptStat(111111)
 
@@ -45,6 +45,8 @@ def getWeigthThreshold(energy):
         return 200.0
     else:
         return 500.0 - 150.0*(math.log10(energy) - 1)
+
+
 
 
 
@@ -255,6 +257,12 @@ class MST:
         except AttributeError:
             return None
 
+    def getLongRms(self):
+        try:
+            return math.sqrt(self.MomentsClusterInfo.RmsLong/self.EnergySum)
+        except AttributeError:
+            return None
+
     def getLongRmsAsym(self):
         try:
             return self.MomentsClusterInfo.RmsLongAsym
@@ -280,9 +288,51 @@ class MST:
 
 
 
+class MSTPredictor(ClusterPredictor):
+
+    def __init__(self):
+        ClusterPredictor.__init__(self, 'cluclass.root')
+
+    def setCluster(self, cluster):
+        self.Cluster = cluster
+
+    def cutPassed(self):
+        return True
+
+    def getVar(self, varLabel):
+        if varLabel == 'CalEnergyRaw':
+            return self.Cluster.EnergySum
+        elif varLabel == 'CalTransRms':
+            return self.Cluster.getTransRms()
+        elif varLabel == 'CalLRmsAsym':
+            return self.Cluster.getLongRmsAsym()
+        elif varLabel == 'MomentRatio':
+            # 'log10(CalLongRms/CalTransRms)'
+            try:
+                return math.log10(self.Cluster.getLongRms()/\
+                                  self.Cluster.getTransRms())
+            except:
+                return 0
+        elif varLabel == 'NumXtals':
+            # 'CalNumXtals/log10(CalEnergyRaw)'
+            try:
+                return self.Cluster.getNumNodes()/self.Cluster.EnergySum
+            except:
+                return 0
+
+    def classifyEvent(self):
+        try:
+            ClusterPredictor.classifyEvent(self)
+        except:
+            print 'Could not classify event.'
+            for topology in FILE_PATH_DICT.keys():
+                self.ProbDict[topology] = 0.0
+
+
 class MSTClustering:
 
-    def __init__(self, xtalCol, threshold = None, doMomentAnalysis = True):
+    def __init__(self, xtalCol, threshold = None, doMomentAnalysis = True,
+                 classify = False):
         startTime = time.time()
         self.WeightThreshold = threshold
         self.TopCanvasUber = None
@@ -310,13 +360,10 @@ class MSTClustering:
                 self.UberTree.addEdge(edge)
                 setA.addNode(edge.Node2)
                 setB.removeNode(edge.Node2)
-                print "Node 1 MAP ", edge.Node1.getPackedId().getPackedId(), "E", edge.Node1.getEnergy()
-                print "Node 2 MAP ", edge.Node2.getPackedId().getPackedId(), "E", edge.Node2.getEnergy()
-                print "with weight", edge.Weight
         elapsedTime = time.time() - startTime
         print 'Done in %.3f s, %d node(s) in the uber tree, E = %.1f MeV.' %\
               (elapsedTime, self.getTotalNumNodes(), self.getTotalEnergySum())
-        self.findClusters(doMomentAnalysis)
+        self.findClusters(doMomentAnalysis, classify)
 
     def getTotalNumNodes(self):
         return self.UberTree.getNumNodes()
@@ -333,11 +380,10 @@ class MSTClustering:
     def getUberCluster(self):
         return self.UberTree
 
-    def findClusters(self, doMomentAnalysis):
+    def findClusters(self, doMomentAnalysis, classify):
         startTime = time.time()
-        self.WeightThreshold = 300.
-        #self.WeightThreshold = self.WeightThreshold or \
-        #                       getWeigthThreshold(self.getTotalEnergySum())
+        self.WeightThreshold = self.WeightThreshold or \
+                               getWeigthThreshold(self.getTotalEnergySum())
         print 'Doing clustering (weight threshold = %.2f mm)...' %\
               self.WeightThreshold
         tree = MST()
@@ -345,10 +391,6 @@ class MSTClustering:
             tree.addNode(self.UberTree.NodeList[0])
         for edge in self.UberTree.getEdges():
             if edge.Weight > self.WeightThreshold:
-                print "Found a large weight", edge.Weight
-                print "Node 1 MAP ", edge.Node1.getPackedId().getPackedId(), "E", edge.Node1.getEnergy()
-                print "Node 2 MAP ", edge.Node2.getPackedId().getPackedId(), "E", edge.Node2.getEnergy()
-                
                 edge.setLineStyle(7)
                 tree.addNode(edge.Node1)
                 self.ClusterCol.append(tree)
@@ -368,6 +410,17 @@ class MSTClustering:
                 c.MomentsClusterInfo = MomentsClusterInfo(c.NodeList)
             elapsedTime = time.time() - startTime
             print 'Done in %.3f s.' % elapsedTime
+        if classify:
+            startTime = time.time()
+            print 'Doing classification...'
+            print 'Not implemented, yet.'
+            for c in self.ClusterCol:
+                CLASSIFIER.setCluster(c)
+                CLASSIFIER.classifyEvent()
+                c.ProbDict = CLASSIFIER.ProbDict
+            elapsedTime = time.time() - startTime
+            print 'Done in %.3f s.' % elapsedTime
+            
 
     def draw(self):
         if self.TopCanvasUber is None:
@@ -415,6 +468,9 @@ if __name__ == '__main__':
     parser.add_option('-M', '--moments-analysis', action = 'store_true',
                       dest = 'M', default = False,
                       help = 'run the moments analysis on the clusters')
+    parser.add_option('-C', '--classification', action = 'store_true',
+                      dest = 'C', default = False,
+                      help = 'run the classification')
     (opts, args) = parser.parse_args()
     if len(args) == 0:
         print 'Usage: %s' % usage
@@ -424,6 +480,8 @@ if __name__ == '__main__':
         sys.exit('Too many arguments.')
     inputFilePath = args[0]
     reader = ReconReader(inputFilePath)
+    if opts.C:
+        CLASSIFIER = MSTPredictor()
     answer = ''
     evtNumber = 0
     while answer != 'q':
@@ -436,10 +494,11 @@ if __name__ == '__main__':
         print 'Id = %d-%d, CalEnergyRaw = %.2f' %\
               (runId, evtId, reader.getMeritVariable('CalEnergyRaw'))
         if numXtals <= opts.x:
-            clustering = MSTClustering(xtalCol, opts.w, opts.M)
+            clustering = MSTClustering(xtalCol, opts.w, opts.M, opts.C)
             clustering.draw()
             for (i, c) in enumerate(clustering.ClusterCol):
                 print '* Cluster %d: %s' % (i, c)
+                print c.ProbDict
         else:
             print 'Too many xtals (%d), skipping...' % opts.x
         answer = raw_input('Press q to quit, s to save or type a number...')

@@ -67,8 +67,9 @@ class ClusterPredictor:
     def getVar(self, varLabel):
         return self.getTreeFormulaValue(varLabel)
 
-    def classifyEvent(self, entry):
-        self.getEntry(entry)
+    def classifyEvent(self, entry = None):
+        if entry is not None:
+            self.getEntry(entry)
         self.ProbDict = {}
         if not self.cutPassed():
             return
