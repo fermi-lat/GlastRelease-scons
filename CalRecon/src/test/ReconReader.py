@@ -20,9 +20,9 @@ MERIT_VARS = ['EvtEventId', 'EvtRun',
               'CalXDir', 'CalYDir', 'CalZDir',
               'CalUberXDir', 'CalUberYDir', 'CalUberZDir',
               'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
-              'CalCsIRLn', 'CalLATRLn',
+              'CalCsIRLn', 'CalLATRLn', 'CalCntRLn',
               'CalTrackDoca', 'CalTrackAngle', 'CTBCORE',
-              'CalTransRms', 'CalLongRms',
+              'CalTransRms', 'CalLongRms', 'CalLRmsAsym',
               'TkrNumTracks', 'TkrEnergy']
 
 print 'Loading necessary libraries...'

@@ -36,7 +36,8 @@ MERIT_VARS = ['EvtEventId',
               'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
               'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
               'CalCsIRLn', 'CalLATRLn',
-              'CalTrackDoca', 'CalTrackAngle', 'CTBCORE', 'CalTransRms',
+              'CalTrackDoca', 'CalTrackAngle', 'CTBCORE',
+              'CalTransRms', 'CalLongRms', 'CalLRmsAsym',
               'TkrNumTracks']
 MIN_NUM_XTALS = 3
 

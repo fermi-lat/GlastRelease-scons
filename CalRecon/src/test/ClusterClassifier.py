@@ -26,13 +26,31 @@ class ClusterVariable:
         return 'Variable "%s" (%.3f--%.3f in %d bins)' %\
                (self.Expression, self.MinValue, self.MaxValue, self.NumBins)
         
-    
+# There's a subtle thing in the AnalysisTuple package that need to be
+# taken into account!
+#
+#float logRLn = 0; 
+#    if ((CAL_LAT_RLn - CAL_Cntr_RLn) > 0.0) {
+#        logRLn = log(CAL_LAT_RLn - CAL_Cntr_RLn);
+#    }
+#    if (logRLn > 0.0) {
+#        CAL_Long_Rms  = sqrt(calCluster->getRmsLong()/CAL_EnergyRaw) / logRLn;
+#    }
+#
+# where:
+#
+# addItem("CalLATRLn",     &CAL_LAT_RLn);
+# addItem("CalCntRLn",     &CAL_Cntr_RLn);
+
+
+CAL_LONG_EXP = 'CalLongRms*log(CalLATRLn - CalCntRLn)*((CalLATRLn - CalCntRLn) != 0)'
 
 VARIABLE_LIST  = [ClusterVariable('CalTransRms', 0, 100),
                   ClusterVariable('CalLRmsAsym', 0, 0.25),
-                  #ClusterVariable('CalBkHalfRatio', 0, 1.01),
-                  ClusterVariable('log10(CalLongRms/CalTransRms)', 0, 2.5,
-                                  label = 'MomentRatio'),
+                  ClusterVariable('log10(%s/CalTransRms)' % CAL_LONG_EXP,
+                                  0, 2.5, label = 'MomentRatio'),
+                  #ClusterVariable('log10(CalLongRms/CalTransRms)',
+                  #                0, 2.5, label = 'MomentRatio2'),
                   ClusterVariable('CalNumXtals/log10(CalEnergyRaw)', 0, 150,
                                   label = 'NumXtals')
                   ]

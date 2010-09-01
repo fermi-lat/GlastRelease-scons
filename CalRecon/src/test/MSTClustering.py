@@ -494,6 +494,11 @@ if __name__ == '__main__':
         evtId = reader.getMeritVariable('EvtEventId')
         print 'Id = %d-%d, CalEnergyRaw = %.2f' %\
               (runId, evtId, reader.getMeritVariable('CalEnergyRaw'))
+        #longRms = reader.getMeritVariable('CalLongRms')
+        #latRLn  = reader.getMeritVariable('CalLATRLn')
+        #cntRLn  = reader.getMeritVariable('CalCntRLn')
+        #logRLn  = math.log(latRLn - cntRLn)
+        #print longRms, latRLn, cntRLn, longRms*logRLn
         if numXtals <= opts.x:
             clustering = MSTClustering(xtalCol, opts.w, opts.M, opts.C)
             clustering.draw()
