@@ -97,16 +97,14 @@ def normalizeSlices(hist2d, minz = 1e-3, maxz = 1):
     numBinsY = hist2d.GetNbinsY()
     for i in xrange(1, numBinsX + 1):
         sum = 0.0
-        for j in xrange(1, numBinsY + 1):
+        for j in xrange(0, numBinsY + 2):
             sum += hist2d.GetBinContent(i, j)
-        for j in xrange(1, numBinsY + 1):
+        for j in xrange(0, numBinsY + 2):
             try:
                 value = hist2d.GetBinContent(i, j)/sum
                 hist2d.SetBinContent(i, j, value)
             except ZeroDivisionError:
                 pass
-        hist2d.SetBinContent(i, 0, 0.0)
-        hist2d.SetBinContent(i, numBinsY + 1, 0.0)
     hist2d.SetMinimum(minz)
     hist2d.SetMaximum(maxz)
 
@@ -150,20 +148,7 @@ class ClusterClassifier:
         cut = getCut(topology)
         self.RootTreeDict[topology].Project(hName, expr, cut)
         # ... then normalize the vertical slices.
-        for i in xrange(1, NUM_E_BINS + 1):
-            sum = 0.0
-            for j in xrange(1, var.NumBins + 1):
-                sum += h.GetBinContent(i, j)
-            for j in xrange(1, var.NumBins + 1):
-                try:
-                    value = h.GetBinContent(i, j)/sum
-                    h.SetBinContent(i, j, value)
-                except ZeroDivisionError:
-                    pass
-            h.SetBinContent(i, 0, 0.0)
-            h.SetBinContent(i, var.NumBins + 1, 0.0)
-        h.SetMinimum(1e-3)
-        h.SetMaximum(1)
+        normalizeSlices(h)
         # ... finally create a TH1 for each slice.
         self.PdfHistSliceDict[topology][var.Label] = {}
         for i in range(NUM_E_BINS):

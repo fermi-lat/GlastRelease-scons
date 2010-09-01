@@ -280,10 +280,12 @@ class MST:
                (self.getNumNodes(), self.EnergySum, self.getMeanEdgeWeight(),
                 self.getRmsEdgeWeight())
         transRms = self.getTransRms()
+        longRms = self.getLongRms()
         longRmsAsym = self.getLongRmsAsym()
         if transRms is not None:
-            text += '\n  -> Trans. RMS = %.2f mm, long RMS asym = %.3f' %\
-                    (transRms, longRmsAsym)
+            text += '\n  -> Trans. RMS = %.2f mm' % transRms
+            text += ', long RMS = %.2f mm' % longRms
+            text += ', long RMS asym = %.3f' % longRmsAsym
         return text
 
 
@@ -413,7 +415,6 @@ class MSTClustering:
         if classify:
             startTime = time.time()
             print 'Doing classification...'
-            print 'Not implemented, yet.'
             for c in self.ClusterCol:
                 CLASSIFIER.setCluster(c)
                 CLASSIFIER.classifyEvent()

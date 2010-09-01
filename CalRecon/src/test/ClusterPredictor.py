@@ -47,9 +47,14 @@ class ClusterPredictor:
             return 0.0
         binx = 1 + int(NUM_E_BINS*(float(logE - LOG_E_MIN)/\
                                        (LOG_E_MAX - LOG_E_MIN)))
-        biny = 1 + int(var.NumBins*(float(self.getVar(var.Label) -\
-                                          var.MinValue)/\
-                                    (var.MaxValue - var.MinValue))) 
+        value = self.getVar(var.Label)
+        if value < var.MinValue:
+            biny = 0
+        elif value >= var.MaxValue:
+            biny = var.NumBins + 1
+        else:
+            biny = 1 + int(var.NumBins*(float(value - var.MinValue)/\
+                                        (var.MaxValue - var.MinValue))) 
         return h.GetBinContent(binx, biny)
 
     def getEntry(self, entry):
