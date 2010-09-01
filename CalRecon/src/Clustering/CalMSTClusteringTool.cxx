@@ -209,8 +209,15 @@ private:
   // Clusters are based on this list of trees
   std::list<MSTTree> m_clusterTree;
 
-  // Parameter to separate trees
-  double       m_maxEdgeWeight;
+  // single value overwritten by model
+  float    m_maxEdgeWeight;
+  // above that we do not grow a tree
+  int      m_maxNumXtals;
+  // Parameters to separate trees
+  float    m_maxEdgeWeightModel_thrLE;     // (mm) @ 10 MeV
+  float    m_maxEdgeWeightModel_thrPivEne; // (MeV)
+  float    m_maxEdgeWeightModel_thrHE;     // (mm) above the pivot
+
 } ;
 
 DECLARE_TOOL_FACTORY(CalMSTClusteringTool) ;
@@ -219,7 +226,7 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
                                                  const std::string & name, 
                                                  const IInterface* parent)
   : AlgTool(type,name,parent),
-    m_maxEdgeWeight(300.)
+    m_maxEdgeWeight(300.) // Overwritten by jobOption
 { 
 
   m_xTals.clear();
@@ -227,6 +234,13 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   m_clusterTree.clear();
   m_uberEdges.clear();
   declareInterface<ICalClusteringTool>(this) ; 
+  
+  // jobOptions declaration
+  declareProperty ("m_maxNumXtals"                 , m_maxEdgeWeight               =1536.) ;
+  declareProperty ("m_maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE    =500.) ;
+  declareProperty ("m_maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne=1000.) ;
+  declareProperty ("m_maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE    =200.) ;
+
 }
     
 StatusCode CalMSTClusteringTool::initialize()
@@ -243,6 +257,12 @@ StatusCode CalMSTClusteringTool::initialize()
     {
         throw GaudiException("Service [EventDataSvc] not found", name(), sc);
     }
+    
+    // check if jobOptions were passed
+    log<<MSG::DEBUG<<"m_maxNumXtals                  set to "<<m_maxEdgeWeight  	     <<endreq;
+    log<<MSG::DEBUG<<"m_maxEdgeWeightModel_thrLE     set to "<<m_maxEdgeWeightModel_thrLE    <<endreq;
+    log<<MSG::DEBUG<<"m_maxEdgeWeightModel_thrPivEne set to "<<m_maxEdgeWeightModel_thrPivEne<<endreq;
+    log<<MSG::DEBUG<<"m_maxEdgeWeightModel_thrHE     set to "<<m_maxEdgeWeightModel_thrHE    <<endreq;
 
     // Cluster filling utility
     // -- To be replaced with a generic version soon
@@ -453,6 +473,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	// But only do so if more than one cluster found
 	if (m_clusterTree.size() > 1) m_clusterTree.push_back(m_uberTree);
     
+	//-------------------------------------
 	// Convert the results into CalClusters
 	calClusterCol->clear() ;
 
@@ -561,10 +582,15 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
 
 double CalMSTClusteringTool::getWeightThreshold(double energy)
 {
-  // Implement a max weight per events that is energy dependent.
-  // must find a way to pass this function from JobOptions...
-  if (energy>1000.) return 200.0;
-  else return ( 500.0 - 150.0*(log10(energy) - 1));
+  // Implement a max weight per events that is energy dependent, defaults:
+  //  m_maxEdgeWeightModel_thrLE    =500. 
+  //  m_maxEdgeWeightModel_thrPivEne=1000.
+  //  m_maxEdgeWeightModel_thrHE    =200. 
+
+  if (energy>m_maxEdgeWeightModel_thrPivEne)
+      return m_maxEdgeWeightModel_thrHE;
+  else
+      return ( m_maxEdgeWeightModel_thrLE - 150.0*(log10(energy) - 1));
   
 }
 
