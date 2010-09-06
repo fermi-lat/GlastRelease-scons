@@ -16,6 +16,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalMSTreeParams.h"
 
 #include <CalRecon/ICalReconSvc.h>
 #include <CalRecon/ICalClusteringTool.h>
@@ -82,8 +83,13 @@ public:
   void clear() {edges.clear(); nodemap.clear();}; // useful reset
   std::list<MSTEdge*> getEdges() {return edges;}; 
   std::map<int, Event::CalXtalRecData*> getNodeMap() {return nodemap;};
-  double getTotalEnergy() {return totalEnergy;};
-  double getMaxEnergy() {return maxXtalEnergy;};  
+
+  // Get methods to parameters
+  double getTotalEnergy() {return totalEnergy;}
+  double getMaxEnergy()   {return maxXtalEnergy;}  
+  int getNumEdges()       {return (edges.size());}
+
+  // Other methods
   void printNodes();
   void evalStats();
   
@@ -132,6 +138,8 @@ void MSTTree::evalStats()
       totalEnergy += xtalEnergy;
       if (xtalEnergy>=maxXtalEnergy) maxXtalEnergy = xtalEnergy;
     }
+  // Add tree length = sum of edges
+  // Add mean and length of edges
 }
 
 void MSTTree::printNodes() 
@@ -236,10 +244,10 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   declareInterface<ICalClusteringTool>(this) ; 
   
   // jobOptions declaration
-  declareProperty ("m_maxNumXtals"                 , m_maxEdgeWeight               =1536.) ;
-  declareProperty ("m_maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE    =500.) ;
-  declareProperty ("m_maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne=1000.) ;
-  declareProperty ("m_maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE    =200.) ;
+  declareProperty ("m_maxNumXtals"                 , m_maxEdgeWeight               = 1536.);
+  declareProperty ("m_maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE    = 500. );
+  declareProperty ("m_maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne= 1000.);
+  declareProperty ("m_maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE    = 200. );
 
 }
     
@@ -346,7 +354,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	// loop until there are unassociated xtals
 	while(! m_xTals_setA.empty())
 	  {
-	    double minWeight = 100000000000; // init to a very long number
+	    double minWeight = 100000000.; // init to a very long number
 	    Event::CalXtalRecData * bestXtal1 = 0;
 	    Event::CalXtalRecData * bestXtal2 = 0;
 	    // loop over m_xTals
@@ -502,6 +510,25 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    cluster->setProducerName(producerName) ;
 	    cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
 	    
+	    // Put this into a separate method of this class: MSTTree:getCalMSTParams()
+	    // Set the CalMSTreeParams for the cluster and associated status bit
+	    double treeTotalEnergy  =treeIter->getTotalEnergy();
+            double treeMaxXtalEnergy=treeIter->getMaxEnergy();
+	    int    treeNumEdges     =treeIter->getNumEdges();
+	    double treeMinEdgeLength = 0., treeMaxEdgeLength=0.;
+	    double treeMeanEdgeLength = 0., treeMeanEdgeLengthTrunc=0.;
+	    double treeRmsEdgeLength = 0.,  treeRmsEdgeLengthTrunc=0.;
+	    Event::CalMSTreeParams mstreeparams(treeTotalEnergy,
+ 			    treeMaxXtalEnergy,  treeNumEdges,
+ 			    treeMinEdgeLength,  treeMaxEdgeLength,
+ 			    treeMeanEdgeLength, treeMeanEdgeLengthTrunc,
+ 			    treeRmsEdgeLength,  treeRmsEdgeLengthTrunc);
+	    cluster->setMSTreeParams(mstreeparams);
+	    cluster->setStatusBit(Event::CalCluster::MSTTREE);
+	    // Raw debugging -- works
+	    //std::cout<<"Number of edges "<<cluster->getMSTreeNumEdges()<<std::endl;
+	    
+	    // Add cluster into the collection
 	    calClusterCol->push_back(cluster);
 
 	    // Loop through the xtals to make the relational table (hmmm... this could be done better...)  - from Tracy
