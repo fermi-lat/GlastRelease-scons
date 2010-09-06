@@ -89,8 +89,8 @@ public:
     const double getLongAsymmetry()         const {return m_rmsLongAsym;}
     const double getWeightSum()             const {return m_weightSum;}
     const double getLongSkewness()          const {return m_skewnessLong;}
-    const double getNumIterations()         const {return m_numIterations;}
-    const double getNumDroppedPoints()      const {return m_numDroppedPoints;}
+    const int    getNumIterations()         const {return m_numIterations;}
+    const int    getNumDroppedPoints()      const {return m_numDroppedPoints;}
 
 private:
 
