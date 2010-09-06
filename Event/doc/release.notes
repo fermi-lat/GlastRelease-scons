@@ -4,6 +4,8 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-04-02 06-Sep-2010    jrb Pick up latest CalXtalRecData.h for
+                               compat. with reconRootData 09-23-02
  Event-14-04-01 12-Jun-2010    jrb upgrades for SCons builds
  Event-14-04-00 04-Jun-2010 burnett Tracy's changes for CAL
  * Event-14-03-00 16-May-10 TU Tag change to Tkr stuff to get Cosmic bit, also must tag Luca's additions to CalCluster
