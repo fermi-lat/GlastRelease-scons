@@ -9,7 +9,8 @@
 
 int main(int argc, char **argv){
   // std::string xmlfile=std::string(getenv("CONFIGDATAROOT"))+"/src/defaultTrgConfig.xml";
-  std::string xmlfile=facilities::commonUtilities::getXmlPath("configData")+"/src/defaultTrgConfig.xml";
+  std::string xmlfile=
+    facilities::commonUtilities::joinPath(facilities::commonUtilities::getXmlPath("configData"), "defaultTrgConfig.xml");
   std::cout<<"=================================="<<std::endl;
   std::cout<<"File "<<xmlfile<<std::endl;
   std::cout<<"=================================="<<std::endl<<std::endl;

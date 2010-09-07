@@ -38,7 +38,8 @@ progEnv.Tool('registerTargets', package = 'configData',
 	     binaryCxts =[[ConfigXml2Root,progEnv],[RootConfigCompare,progEnv],
                           [findConfigs,progEnv],[dumpGemConfiguration,progEnv],
                            [testdb,progEnv]],
-	     includes = listFiles(['configData/*'], recursive = 1))
+	     includes = listFiles(['configData/*'], recursive = 1),
+	     xml = ['xml/defaultTrgConfig.xml'])
 
 
 
