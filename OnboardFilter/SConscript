@@ -25,7 +25,7 @@ OnboardFilter = libEnv.SharedLibrary('OnboardFilter', listFiles(['src/*.cxx',
 						'src/Dll/*.cxx']))
 
 progEnv.Tool('OnboardFilterLib')
-test_OnboardFilter = progEnv.GaudiProgram('test_OnboardFilter', listFiles(['src/test/*.cxx']), test=1, package='OnboardBilter')
+test_OnboardFilter = progEnv.GaudiProgram('test_OnboardFilter', listFiles(['src/test/*.cxx']), test=1, package='OnboardFilter')
 
 progEnv.Tool('registerTargets', package = 'OnboardFilter',
 	     libraryCxts = [[OnboardFilter, libEnv]], 
