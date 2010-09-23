@@ -8,6 +8,11 @@ def generate(env, **kw):
     env.Tool('addLibrary', library = env['obfLibs'])
     env.Tool('addLibrary', library = env['gaudiLibs'])
     env.Tool('OnboardFilterTdsLib')
+    env.Tool('MootSvcLib')
+    env.Tool('CalibDataLib')
+    env.Tool('LdfEventLib')
+    env.Tool('EventLib')
+    env.Tool('facilitiesLib')
     env.Tool('addLibrary', library = env['rootLibs'])
 def exists(env):
     return 1;
