@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-05-01 23-Sep-2010    jrb 1. temp. revert changes in basicOptions causing test_Gleam failure 2. Add dependencies on shared, non-component libraries
  Gleam-07-05-00 25-Aug-2010  lsrea mods to start WIRED
  Gleam-07-04-09 13-Jun-2010    jrb upgrades for SCons builds
  Gleam-07-04-08 21-Apr-2010  lsrea Add TkrFillTDInfoAlg to the digitization sequence
