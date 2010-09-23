@@ -17,7 +17,7 @@ usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a'})
 
 #Don't have any of the following for RHEL5 yet
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v18r1-gl4' })
-usedExternals.append({ 'name' : 'geant4', 'iversion' : '8.0.p01-gl2' })
+usedExternals.append({ 'name' : 'geant4', 'iversion' : '8.0.p01-gl4' })
 #usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v06-02-00' })
 usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01' })
 usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
@@ -31,8 +31,8 @@ if sys.platform != 'win32':
 
 usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r9' })
 
-# and also need obf B1-1-3
-usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3-i1' })
+# and also need obf B1-1-3, SCons arrangement
+usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3-i2' })
 
 #   OmniOrb 4.1.2
 usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.2' })
