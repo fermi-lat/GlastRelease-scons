@@ -340,19 +340,13 @@ template <class T1,class T2>
   
 template <class T1,class T2> void RelTable<T1,T2>::clear() 
 {
-    // Purpose: This method remove the given relation from the table
+    // Purpose: This method removes all relations from the table
 
     m_firstMMap->clear();
     m_secondMMap->clear();
 
-    // Gaudi "owns" the relations so it will delete them
-    //for(typename RelationList<T1,T2>::RelationListIter 
-    //      relIter = m_relations->begin(); 
-    //    relIter != m_relations->end(); relIter++)
-    //{
-    //    delete *relIter;
-    //}
-
+    // Note that this calls ObjectList's clear which will delete
+    // the relations... 
     m_relations->clear();
 
     return;

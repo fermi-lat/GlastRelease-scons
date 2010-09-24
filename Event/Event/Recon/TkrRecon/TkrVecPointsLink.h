@@ -56,30 +56,41 @@ public:
     void setSkip2Layer()                {m_statusBits      |=  SKIP2LAYER;}
     void setMaxScatAngle(double ang)    {m_maxScatAngle     =  ang;}
     void setAngleToNextLink(double ang) {m_angleToNextLink  =  ang;}
+    void setDistToNextLink(double dist) {m_distToNextLink   =  dist;}
     void setRmsAngleSum(double ang)     {m_rmsAngleSum      =  ang;}
+    void setRmsDistSum(double dist)     {m_rmsDistSum       =  dist;}
     void setNumAnglesInSum(int num)     {m_numAnglesInSum   =  num;}
+    void setNumDistsInSum(int num)      {m_numDistsInSum    =  num;}
     void addAngleToRmsSum(double ang);
+    void addDistToRmsSum(double dist);
 
-    const bool         associated()         const {return (m_statusBits & ASSOCIATED) == ASSOCIATED;}
-    const bool         firstLink()          const {return (m_statusBits & FIRSTLINK)  == FIRSTLINK;}
-    const bool         sameTower()          const {return (m_statusBits & SAMETOWER)  == SAMETOWER;}
-    const bool         skip1Layer()         const {return (m_statusBits & SKIP1LAYER) == SKIP1LAYER;}
-    const bool         skip2Layer()         const {return (m_statusBits & SKIP2LAYER) == SKIP2LAYER;}
-    const unsigned int getStatusBits()      const {return m_statusBits;}
-    const Point&       getPosition()        const {return m_position;}
-    const Vector&      getVector()          const {return m_vector;}
-    const TkrVecPoint* getFirstVecPoint()   const {return m_firstVecPoint;}
-    const TkrVecPoint* getSecondVecPoint()  const {return m_secondVecPoint;}
-    const double       getMaxScatAngle()    const {return m_maxScatAngle;}
-    const double       getAngleToNextLink() const {return m_angleToNextLink;}
-    const double       getRmsAngleSum()     const {return m_rmsAngleSum;}
-    const int          getNumAnglesInSum()  const {return m_numAnglesInSum;}
+    const bool         associated()          const {return (m_statusBits & ASSOCIATED) == ASSOCIATED;}
+    const bool         firstLink()           const {return (m_statusBits & FIRSTLINK)  == FIRSTLINK;}
+    const bool         sameTower()           const {return (m_statusBits & SAMETOWER)  == SAMETOWER;}
+    const bool         skipsLayers()         const {return (m_statusBits & (SKIP1LAYER | SKIP2LAYER)) != 0;}
+    const bool         skip1Layer()          const {return (m_statusBits & SKIP1LAYER) == SKIP1LAYER;}
+    const bool         skip2Layer()          const {return (m_statusBits & SKIP2LAYER) == SKIP2LAYER;}
+    const unsigned int getStatusBits()       const {return m_statusBits;}
+    const Point&       getPosition()         const {return m_position;}
+    const Point        getPosition(double z) const;
+    const Point        getBotPosition()      const {return getPosition(m_secondVecPoint->getPosition().z());}
+    const Vector&      getVector()           const {return m_vector;}
+    const TkrVecPoint* getFirstVecPoint()    const {return m_firstVecPoint;}
+    const TkrVecPoint* getSecondVecPoint()   const {return m_secondVecPoint;}
+    const double       getMaxScatAngle()     const {return m_maxScatAngle;}
+    const double       getAngleToNextLink()  const {return m_angleToNextLink;}
+    const double       getDistToNextLink()   const {return m_distToNextLink;}
+    const double       getRmsAngleSum()      const {return m_rmsAngleSum;}
+    const double       getRmsDistSum()       const {return m_rmsDistSum;}
+    const int          getNumAnglesInSum()   const {return m_numAnglesInSum;}
+    const int          getNumDistsInSum()    const {return m_numDistsInSum;}
 
     // This used to match links
     const bool         matchFirst( const TkrVecPointsLink& linkToMatch) {return linkToMatch.getSecondVecPoint() == m_firstVecPoint;}
     const bool         matchSecond(const TkrVecPointsLink& linkToMatch) {return linkToMatch.getFirstVecPoint()  == m_secondVecPoint;}
 
-    double             angleToNextLink(const TkrVecPointsLink& linkToMatch);
+    const double       angleToNextLink(const TkrVecPointsLink& linkToMatch);
+    const double       distToNextLink( const TkrVecPointsLink& linkToMatch);
 
     
     const bool operator<(const TkrVecPointsLink* right) const {return m_position.z() < right->getPosition().z();}
@@ -97,8 +108,11 @@ private:
 
     // warning! a very volatile variables for specific use in the link attachment stage!
     double             m_angleToNextLink;
+    double             m_distToNextLink;
     double             m_rmsAngleSum;
+    double             m_rmsDistSum;
     int                m_numAnglesInSum;
+    int                m_numDistsInSum;
 };
 
 inline TkrVecPointsLink::TkrVecPointsLink(const TkrVecPoint* firstPoint, const TkrVecPoint* secondPoint, double ang) : 
@@ -107,8 +121,11 @@ inline TkrVecPointsLink::TkrVecPointsLink(const TkrVecPoint* firstPoint, const T
                                    m_statusBits(0), 
                                    m_maxScatAngle(ang),
                                    m_angleToNextLink(0.),
+                                   m_distToNextLink(0.),
                                    m_rmsAngleSum(0.),
-                                   m_numAnglesInSum(0)
+                                   m_rmsDistSum(0.),
+                                   m_numAnglesInSum(0),
+                                   m_numDistsInSum(0)
 {
     // Are start and end points in the same tower?
     if (firstPoint->getXCluster()->tower() == secondPoint->getXCluster()->tower())
@@ -133,8 +150,22 @@ inline TkrVecPointsLink::TkrVecPointsLink(const TkrVecPoint* firstPoint, const T
 
     m_position     = Point(linkX, linkY, linkZ);
 }
+    
+inline const Point TkrVecPointsLink::getPosition(double z) const
+{
+    // Set the position to the links position
+    Point position = m_position;
 
-inline double TkrVecPointsLink::angleToNextLink(const TkrVecPointsLink& linkToMatch)
+    // First get the arclength of the step
+    double arcLen = (z - position.z()) / m_vector.z();
+
+    // Advance the link position to the new z
+    position = position + arcLen * m_vector;
+
+    return position;
+}
+
+inline const double TkrVecPointsLink::angleToNextLink(const TkrVecPointsLink& linkToMatch) 
 {
     double cosAng = m_vector.dot(linkToMatch.getVector());
 
@@ -143,10 +174,34 @@ inline double TkrVecPointsLink::angleToNextLink(const TkrVecPointsLink& linkToMa
     return m_angleToNextLink;
 }
 
+inline const double TkrVecPointsLink::distToNextLink(const TkrVecPointsLink& linkToMatch) 
+{
+    // This assumes we are determining distance between point at end of THIS link to
+    // the point at the start of the NEXT link
+    Vector pointDiff = getPosition(m_secondVecPoint->getPosition().z()) - linkToMatch.getPosition();
+
+//    m_distToNextLink = pointDiff.mag();
+
+    double xDiffNorm = fabs(pointDiff.x()) / (0.03291 * m_secondVecPoint->getXCluster()->size());
+    double yDiffNorm = fabs(pointDiff.y()) / (0.03291 * m_secondVecPoint->getYCluster()->size());
+    
+    m_distToNextLink = sqrt(xDiffNorm*xDiffNorm + yDiffNorm*yDiffNorm);
+
+    return m_distToNextLink;
+}
+
 inline void TkrVecPointsLink::addAngleToRmsSum(double ang)   
 {
     m_rmsAngleSum +=  ang * ang;
     m_numAnglesInSum++;
+
+    return;
+}
+
+inline void TkrVecPointsLink::addDistToRmsSum(double dist)   
+{
+    m_rmsDistSum +=  dist * dist;
+    m_numDistsInSum++;
 
     return;
 }

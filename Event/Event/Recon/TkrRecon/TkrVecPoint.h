@@ -33,9 +33,10 @@ class TkrVecPoint: virtual public ContainedObject
 {
 public:
     // Status bit definitions    
-    enum StatusBits {ASSOCIATED = 0x0001,
-                     LINKTOPHIT = 0x0010,
-                     LINKBOTHIT = 0x0020};
+    enum StatusBits {ASSOCIATED       = 0x0001,
+                     LINKTOPHIT       = 0x0010,
+                     LINKBOTHIT       = 0x0020,
+                     ASSOCIATEDTONODE = 0x0100};
 
     // constructors
     TkrVecPoint() : m_layer(-1), m_pXCluster(0), m_pYCluster(0), m_position(0.,0.,0.) 
@@ -44,8 +45,8 @@ public:
     TkrVecPoint(int layer, 
         const Event::TkrCluster* xClus, const Event::TkrCluster* yClus):
          m_status(0), m_layer(layer), m_pXCluster(xClus), m_pYCluster(yClus),
-         m_position(m_pXCluster->position().x(), m_pYCluster->position().y(),
-            0.5*(m_pXCluster->position().z() + m_pYCluster->position().z()))
+         m_position(xClus->position().x(), yClus->position().y(),
+            0.5*(xClus->position().z() + yClus->position().z()))
     {}
 
     //! Retrieve pointer to class defininition structure
@@ -68,18 +69,25 @@ public:
     }
 
     /// Set status bits
-    void setAssociated() {m_status |= ASSOCIATED;}
-    void setLinkTopHit() {m_status |= LINKTOPHIT;}
-    void setLinkBotHit() {m_status |= LINKBOTHIT;}
+    void setAssociated()         {m_status |=  ASSOCIATED;}
+    void clearAssociated()       {m_status &= ~ASSOCIATED;}
+    void setLinkTopHit()         {m_status |=  LINKTOPHIT;}
+    void clearLinkTopHit()       {m_status &= ~LINKTOPHIT;}
+    void setLinkBotHit()         {m_status |=  LINKBOTHIT;}
+    void clearLinkBotHit()       {m_status &= ~LINKBOTHIT;}
+    void setAssociatedToNode()   {m_status |=  ASSOCIATEDTONODE;}
+    void clearAssociatedToNode() {m_status &= ~ASSOCIATEDTONODE;}
 
     /// @name access methods
     //@{
     /// Is this hit associated to a link?
-    const bool isAssociated() const {return (m_status & ASSOCIATED) != 0;}
+    const bool isAssociated()       const {return (m_status & ASSOCIATED) != 0;}
     /// Is this hit used as a top hit in a link?
-    const bool isLinkTopHit() const {return (m_status & LINKTOPHIT) != 0;}
+    const bool isLinkTopHit()       const {return (m_status & LINKTOPHIT) != 0;}
     /// Is this hit used as a bottom hit in a link?
-    const bool isLinkBotHit() const {return (m_status & LINKBOTHIT) != 0;}
+    const bool isLinkBotHit()       const {return (m_status & LINKBOTHIT) != 0;}
+    /// Is this hit associated to a node?
+    const bool isAssociatedToNode() const {return (m_status & ASSOCIATEDTONODE) != 0;}
     /// Pointer to the cluster in the x plane of this layer
     const Event::TkrCluster*   getXCluster()   const {return m_pXCluster;}
     /// Pointer to the cluster of the y plane of this layer
@@ -101,7 +109,7 @@ public:
     /// x/y distance to a reference point
     double getDistanceSquaredTo(Point refPoint) const {
         Vector diff = refPoint - getPosition();
-        return diff.x()*diff.x() + diff.y()*diff.y();    
+        return diff.x()*diff.x() + diff.y()*diff.y() + diff.z()*diff.z();    
     }
 
     //@}

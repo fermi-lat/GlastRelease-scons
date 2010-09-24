@@ -57,26 +57,28 @@ public:
     //        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     //                                                                        [Ghosts]
 
-    enum StatusBits {FOUND      = 0x0001,  //Set if track has been "found" by pat rec
-                     FILTERED   = 0x0002,  //Set if track fit filter stage has been run
-                     SMOOTHED   = 0x0004,  //Set if track fit smoother has been run
-                     REVFILTR   = 0x0008,  //Set if track has been reverse-filtered
-                     CALENERGY  = 0x0010,  //Set if track energy from raw calorimeter info
-                     LATENERGY  = 0x0020,  //Set if track energy from TKR+CAL constrained
-                     USERENERGY = 0x0040, //Set if track energy set by user
-                     MCENERGY   = 0x0080,  //Set if energy from users or from MC truth
-                     RADELOSS   = 0x0100,  //Set if radiative energy loss used (e+/e- fitting)
-                     MIPELOSS   = 0x0200,  //Set if Bethe-Block energy loss used (not e+/e-)
-                     ONEPASS    = 0x0400,  //Set if the full first pass track fit finished
-                     TWOPASS    = 0x0800,  //Set if an iteration of the first fit finished
-                     PRCALSRCH  = 0x1000,  //Set if Pat. Rec. used Cal Energy Centroid
-                     PRBLNSRCH  = 0x2000,  //Set if Pat. Rec. used only Track info.
-                     TOP        = 0x4000,  //Set if track traj. intercepts top tracker plane
-                     BOTTOM     = 0x8000, //Set if track traj. intercepts first Cal layer
+    enum StatusBits {FOUND      = 0x00001,  //Set if track has been "found" by pat rec
+                     FILTERED   = 0x00002,  //Set if track fit filter stage has been run
+                     SMOOTHED   = 0x00004,  //Set if track fit smoother has been run
+                     REVFILTR   = 0x00008,  //Set if track has been reverse-filtered
+                     CALENERGY  = 0x00010,  //Set if track energy from raw calorimeter info
+                     LATENERGY  = 0x00020,  //Set if track energy from TKR+CAL constrained
+                     USERENERGY = 0x00040,  //Set if track energy set by user
+                     MCENERGY   = 0x00080,  //Set if energy from users or from MC truth
+                     RADELOSS   = 0x00100,  //Set if radiative energy loss used (e+/e- fitting)
+                     MIPELOSS   = 0x00200,  //Set if Bethe-Block energy loss used (not e+/e-)
+                     ONEPASS    = 0x00400,  //Set if the full first pass track fit finished
+                     TWOPASS    = 0x00800,  //Set if an iteration of the first fit finished
+                     PRCALSRCH  = 0x01000,  //Set if Pat. Rec. used Cal Energy Centroid
+                     PRBLNSRCH  = 0x02000,  //Set if Pat. Rec. used only Track info.
+                     TOP        = 0x04000,  //Set if track traj. intercepts top tracker plane
+                     BOTTOM     = 0x08000,  //Set if track traj. intercepts first Cal layer
 
-                     GHOST      = 0x10000, // set if track contains ghost clusters
-                     DIAGNOSTIC = 0x20000, // set if track contains diagnostic ghost clusters
-                     COSMICRAY  = 0x40000  // set if the track was found by the cosmic-ray finder (don't use these for gamma-ray analysis!)
+                     GHOST      = 0x010000, // set if track contains ghost clusters
+                     DIAGNOSTIC = 0x020000, // set if track contains diagnostic ghost clusters
+                     COSMICRAY  = 0x040000, // set if the track was found by the cosmic-ray finder (don't use these for gamma-ray analysis!)
+
+                     COMPOSITE  = 0x100000  // set if "hits" are composite positions instead of clusters
     }; 
     
     /// Utility 

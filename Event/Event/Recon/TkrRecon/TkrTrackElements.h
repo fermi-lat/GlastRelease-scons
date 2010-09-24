@@ -113,9 +113,9 @@ inline const bool TkrTrackElements::operator<(const TkrTrackElements& right) con
     double rtPosZ = right.getFirstLink()->getPosition().z();
 
     // *******
-    // Rule 1: If one track is more than 2 layers "higher" than the other, take it
-    if (myPosZ - rtPosZ > 35.) return true;
-    if (rtPosZ - myPosZ > 35.) return false;
+    // Rule 1: If one track is more than 2 bilayers "higher" than the other, take it
+    if (myPosZ - rtPosZ > 70.) return true;
+    if (rtPosZ - myPosZ > 70.) return false;
 
     // *******
     // Rule 2: if big difference in length then take longer track
