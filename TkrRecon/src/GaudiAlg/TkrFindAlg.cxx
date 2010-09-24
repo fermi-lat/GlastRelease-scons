@@ -124,6 +124,11 @@ StatusCode TkrFindAlg::initialize()
         // Neural Net Pat Rec
         sc = toolSvc()->retrieveTool("VectorLinksTool", m_findTool);
     }
+    else if (m_TrackFindType == "TreeBased")
+    {
+        // Neural Net Pat Rec
+        sc = toolSvc()->retrieveTool("TreeBasedTool", m_findTool);
+    }
     else
     {
         log << MSG::FATAL << "Track finding tool " << m_TrackFindType << " doesn't exist" << endreq;

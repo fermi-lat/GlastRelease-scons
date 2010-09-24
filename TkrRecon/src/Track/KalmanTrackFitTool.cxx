@@ -732,6 +732,29 @@ double KalmanTrackFitTool::doFilter(Event::TkrTrack& track)
     // Set up a pair of iterators to go through the track hits
     Event::TkrTrackHitVecItr filtIter = track.begin();
     Event::TkrTrackHitVecItr refIter  = filtIter++;
+
+    // We need to set the measurement error at the first hit
+    Event::TkrTrackHit& firstHit = **refIter;
+
+    // Recover params, error matrix and cluster at this point
+    TkrCovMatrix             measCov(firstHit.getTrackParams(Event::TkrTrackHit::MEASURED));
+    Event::TkrTrackParams&   params  = firstHit.getTrackParams(Event::TkrTrackHit::FILTERED);
+    const Event::TkrCluster* cluster = firstHit.getClusterPtr();
+        
+    // Calulate the new measured error at this hit
+    measCov = m_fitErrs->computeMeasErrs(params, measCov, *cluster );
+
+    // Save this
+    firstHit.setTrackParams(measCov, Event::TkrTrackHit::MEASURED);
+
+    // Update position error for first Filter hit too
+    TkrCovMatrix filterCov(firstHit.getTrackParams(Event::TkrTrackHit::FILTERED));
+    filterCov(1,1) = measCov(1,1);
+    filterCov(3,3) = measCov(3,3);
+    
+    firstHit.setTrackParams(filterCov, Event::TkrTrackHit::FILTERED);
+    firstHit.setTrackParams(filterCov, Event::TkrTrackHit::PREDICTED);
+
     
     // Loop over the track hits running the filter 
     for( ; filtIter != track.end(); filtIter++, refIter++)
