@@ -43,7 +43,7 @@ public:
     TkrVecPointsLinkVecVec& getVecPointsLinkSkip2VecVec() {return m_tkrVecPointsLinkSkip2VecVec;}
 
     // Access to the track elements to points relation table 
-    Event::TkrVecPointToLinksTab& getPointToLinksTab()    {return m_pointToLinksTab;}
+    Event::TkrVecPointToLinksTab* getPointToLinksTab()    {return m_pointToLinksTab;}
 
 private:
 
@@ -86,7 +86,7 @@ private:
 
     /// Define a local relational table which will relate TkrVecPoints
     /// to TkrVecPointLinks
-    Event::TkrVecPointToLinksTab m_pointToLinksTab;
+    Event::TkrVecPointToLinksTab* m_pointToLinksTab;
 };
 
 #endif
