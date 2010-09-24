@@ -177,7 +177,9 @@ gcrSelectRootWriterAlg.gcrSelectRootFile = "$(GLEAMDATAPATH)/gcr.root";
 // ----------------------------
 // ntuple generation 
 
-ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit", "GlastClassify" };
+ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit"
+              //, "GlastClassify" 
+              };
 AuditorSvc.Auditors += {"EventAuditor"}; // For event-by-event timing
 
 NtupleMaker.Members = {
@@ -189,6 +191,7 @@ NtupleMaker.Members = {
     "McCoordsAlg",       // now in AnaTup
     "ObfCoordsAlg"       // now in AnaTup
  };
+ NtupleMaker.Members = {};
 
 AnalysisNtupleAlg.tupleName = "MeritTuple";
 // default output to GLEAMROOT/data
@@ -208,11 +211,11 @@ Cal1.Members = {
 
 // First pass of Tkr Recon
 Tkr.Members = {
-//////    "TkrReconAlg/TkrCluster",
+    "TkrReconAlg/TkrCluster",
     "TkrReconAlg/FirstPass"
     };
 
-//////FirstPass.firstStage = 2;
+FirstPass.firstStage = 2;
 
 // Second pass of Cal Recon - energy corrections only
 Cal2.Members = {
