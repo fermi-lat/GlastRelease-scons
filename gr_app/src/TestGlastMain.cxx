@@ -68,10 +68,18 @@ int main( int argn, char** argc) {
   return 1;
 #endif
 #endif
-  const char* job = ::getenv("TESTJOBOPTIONS"); // check for env var
-    
-  if( argn>1 ) { joboptions_file = argc[1];} // priority to command arg.
-  else if( job ) { joboptions_file = job; }
+  // check for env var
+  std::string jobstring = facilities::commonUtilities::getEnvironment("TESTJOBOPTIONS");
+
+  // If called from wrapper script may see empty first argument 
+  if( argn>1 ) {
+    std::string arg1(argc[1]);
+    if (arg1.size() > 0) {
+      joboptions_file = argc[1]; // priority to command arg.
+    }
+  }
+  else if(jobstring.size() > 0 ) { joboptions_file = jobstring; }
+
   // translate env variables if any
   try {
     facilities::Util::expandEnvVar(&joboptions_file);
