@@ -2,9 +2,9 @@
 def generate(env, **kw):
     if not kw.get('depsOnly', 0):
         env.Tool('addLibrary', library = ['OnboardFilter'])
- 
-    env.Tool('addLibrary', library = ['dl'])
-    env.Tool('addLibrary', library = ['pthread'])
+    if not env['PLATFORM']  == 'win32':
+        env.Tool('addLibrary', library = ['dl'])
+        env.Tool('addLibrary', library = ['pthread'])
     env.Tool('addLibrary', library = env['obfLibs'])
     env.Tool('addLibrary', library = env['gaudiLibs'])
     env.Tool('OnboardFilterTdsLib')
