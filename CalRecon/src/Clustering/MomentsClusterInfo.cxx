@@ -246,8 +246,11 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
                                         m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1.,0.,0.,1.,0.,1.,
                                         m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1.,0.,0.,1.,0.,1.);
     }
-
-    cluster->initialize(fitParams, params, 0., 0., 0., 0., m_Nsaturated, num_TruncXtals);
+    
+    // initialize empty CalMSTreeParams container
+    Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
+    
+    cluster->initialize(treeParams, fitParams, params, 0., 0., 0., 0., m_Nsaturated, num_TruncXtals);
 
     return ene;
 }
@@ -389,7 +392,10 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
                                       m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1., 0., 0., 1., 0., 1.,
                                       m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1., 0., 0., 1., 0., 1.);
 
-        cluster->initialize(fitParams, params, rms_long, rms_trans, long_asym, long_skew, m_Nsaturated, num_TruncXtals);
+        // initialize empty CalMSTreeParams container - CalMSTreePar
+        Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
+    
+        cluster->initialize(treeParams, fitParams, params, rms_long, rms_trans, long_asym, long_skew, m_Nsaturated, num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS);
     }
 
