@@ -3,6 +3,7 @@
 
 #include "CalClusterLayerData.h"
 #include "CalFitParams.h"
+#include "CalMSTreeParams.h"
 #include "CalParams.h"
 #include <TObject.h>
 #include <TVector3.h>
@@ -35,16 +36,20 @@ public:
     CalCluster()
      { Clear() ; }
     CalCluster
-     ( const std::vector<CalClusterLayerData> &, const CalFitParams&, const CalParams &,
+     ( const std::vector<CalClusterLayerData> &, const CalMSTreeParams&,
+       const CalFitParams&, const CalParams &,
        Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     void init
-     ( const std::vector<CalClusterLayerData> &, const CalFitParams&, const CalParams &,
+     ( const std::vector<CalClusterLayerData> &, const CalMSTreeParams&,
+       const CalFitParams&, const CalParams &,
        Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     virtual ~CalCluster()
      {}
 
+    const CalMSTreeParams & getMSTreeParams() const
+     { return m_mstreeParams;}
     const CalClusterLayerData & getLayer( int i ) const
      { return m_layers[i] ; }
     const CalFitParams & getFitParams() const
@@ -74,6 +79,7 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
+    CalMSTreeParams m_mstreeParams;     //! Parameters of the "Minimum Spanning Tree"
     CalFitParams m_fitParams;
     CalParams m_params ;
     Double32_t m_rmsLong ;

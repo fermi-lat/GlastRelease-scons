@@ -6,7 +6,8 @@
 ClassImp(CalCluster)
 
 void CalCluster::init
- ( const std::vector<CalClusterLayerData> & layers, const CalFitParams & fitParams, 
+ ( const std::vector<CalClusterLayerData> & layers, const CalMSTreeParams & treeParams,
+   const CalFitParams & fitParams, 
    const CalParams & params,
    Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t longSkew,
    Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits )
@@ -15,7 +16,8 @@ void CalCluster::init
   int i ;
   for ( i=0, layer=layers.begin() ; layer != layers.end() ; ++i, ++layer )
     m_layers[i] = (*layer) ;
-  m_fitParams = fitParams;
+  m_mstreeParams = treeParams;
+  m_fitParams    = fitParams;
   m_params = params ;
   m_rmsLong = rmsLong ;
   m_rmsLongAsym = rmsLongAsym ;
@@ -31,6 +33,7 @@ void CalCluster::Clear( Option_t * )
   int i ;
   for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i )
     m_layers[i].Clear() ;
+  m_mstreeParams.Clear();
   m_params.Clear() ;
   m_rmsLong = 0.0 ;
   m_rmsLongAsym = 0.0 ;
@@ -41,11 +44,15 @@ void CalCluster::Clear( Option_t * )
  }
 
 CalCluster::CalCluster
- ( const std::vector<CalClusterLayerData> & layers, const CalFitParams& fitParams, 
+ ( const std::vector<CalClusterLayerData> & layers, const CalMSTreeParams & treeParams,
+   const CalFitParams& fitParams, 
    const CalParams & params,
    Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t longSkew,
    Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits )
-{ init(layers,fitParams, params,rmsLong,rmsLongAsym,rmsTrans,longSkew,numSaturatedXtals,numTruncXtals,statusBits) ; }
+ {
+   init(layers,treeParams, fitParams, params,rmsLong,rmsLongAsym,rmsTrans,longSkew,
+        numSaturatedXtals,numTruncXtals,statusBits) ;
+ }
 
 void CalCluster::Print( Option_t * ) const
  {
@@ -60,6 +67,8 @@ void CalCluster::Print( Option_t * ) const
 // dummy data, just for tests
 void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
  {
+    CalMSTreeParams t;
+    t.Fake(ievent,rank,randNum);
     CalFitParams f;
     f.Fake(ievent,rank,randNum);
     CalParams p ;
@@ -71,7 +80,7 @@ void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
         layer.Fake(ievent,rank*ROOT_NUMCALLAYERS+iclusLayer,randNum) ;
         clusLayerData.push_back(layer) ;
     }
-    init(clusLayerData,f,p,1.0,2.0,3.0,3.5,4,4,5) ;
+    init(clusLayerData,t,f,p,1.0,2.0,3.0,3.5,4,4,5) ;
  }
 
 Bool_t CalCluster::CompareInRange( const CalCluster & c, const std::string & name ) const {
