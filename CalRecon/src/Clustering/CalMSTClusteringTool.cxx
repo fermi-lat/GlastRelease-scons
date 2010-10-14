@@ -79,15 +79,33 @@ public:
   
   void addEdge(MSTEdge &);
   void addNode(Event::CalXtalRecData* _node) ; // implemented using a map
-  int size () {return (edges.size());}
-  void clear() {edges.clear(); nodemap.clear();}; // useful reset
-  std::list<MSTEdge*> getEdges() {return edges;}; 
+  int size () {return (m_edges.size());}
+  void clear() {m_edges.clear(); nodemap.clear();}; // useful reset
+  std::list<MSTEdge*> getEdges() {return m_edges;}; 
   std::map<int, Event::CalXtalRecData*> getNodeMap() {return nodemap;};
 
-  // Get methods to parameters
-  double getTotalEnergy() {return totalEnergy;}
-  double getMaxEnergy()   {return maxXtalEnergy;}  
-  int getNumEdges()       {return (edges.size());}
+  ///--------------------------------------------------- 
+  ///--- Get methods
+  /// Retrieve the total enegy
+  double getTotalEnergy() {return m_totalEnergy;}
+  /// Retrieve the energy in the crystal with the maximum enegy
+  double getMaxEnergy()   {return m_maxXtalEnergy;}  
+  /// Retrieve the number of edges
+  int getNumEdges()                  {return (m_edges.size());}
+  /// Retrieve the minimum edge length
+  double  getMinEdgeLength()	     {return m_minEdgeLength;}
+  /// Retrieve the minimum edge length
+  double  getMaxEdgeLength()	     {return m_maxEdgeLength;}
+  /// Retrieve the maximum edge length
+  double  getMeanEdgeLength()	     {return m_meanEdgeLength;}
+  /// Retrieve the average edge length
+  double  getMeanEdgeLengthTrunc()    {return m_meanEdgeLengthTrunc;}
+  /// Retrieve the RMS of edges length
+  double  getRmsEdgeLength()	     {return m_rmsEdgeLength;}
+  /// Retrieve the RMS of edges length  after truncation
+  double  getRmsEdgeLengthTrunc()    {return m_rmsEdgeLengthTrunc;}
+  /// Check if stats are available
+  double getStatsBit() {return m_statsAvailable;}
 
   // Other methods
   void printNodes();
@@ -95,29 +113,48 @@ public:
   
   
 private:
-  int  getXtalUniqueId(Event::CalXtalRecData *);
-  double totalEnergy;
-  double maxXtalEnergy;
-  std::list<MSTEdge*> edges;
+  // Internal methods
+  std::list<MSTEdge*> m_edges;
   std::map<int, Event::CalXtalRecData*> nodemap;
+  int  getXtalUniqueId(Event::CalXtalRecData *);
+  bool m_statsAvailable;
+  // Members for MSTree properties -- length means weight in term of MSTree
+  // Note that numberOfEdges is directly available via m_edges.size()
+  double m_totalEnergy;
+  double m_maxXtalEnergy;
+  
+  double m_minEdgeLength;
+  double m_maxEdgeLength;
+  double m_meanEdgeLength;
+  double m_meanEdgeLengthTrunc;
+  double m_rmsEdgeLength;
+  double m_rmsEdgeLengthTrunc;
+  
   
 };
 
 MSTTree::MSTTree () 
 {
   
-  edges.clear(); // make sure with know the initial state.
-  totalEnergy = 0.;
-  maxXtalEnergy = 0.;
+  m_edges.clear(); // make sure with know the initial state.
+  m_totalEnergy   = 0.;
+  m_maxXtalEnergy = 0.;
+  m_minEdgeLength   = 0;
+  m_maxEdgeLength   = 0;
+  m_meanEdgeLength  = 0;
+  m_meanEdgeLengthTrunc=0;
+  m_rmsEdgeLength   = 0;
+  m_rmsEdgeLengthTrunc =0;
+  m_statsAvailable=false;
   nodemap.clear();
 }
 
 void MSTTree::addEdge(MSTEdge &_edg) 
 {
-  edges.push_back(&_edg);
+  m_edges.push_back(&_edg);
   // add nodes
-  addNode(edges.back()->getNode1()); 
-  addNode(edges.back()->getNode2()); 
+  addNode(m_edges.back()->getNode1()); 
+  addNode(m_edges.back()->getNode2()); 
 }
 
 void MSTTree::addNode(Event::CalXtalRecData *_node) 
@@ -128,18 +165,50 @@ void MSTTree::addNode(Event::CalXtalRecData *_node)
 // collect some statistics for sorting, print info etc...
 void MSTTree::evalStats()
 {
-
-  totalEnergy = 0.;
-  maxXtalEnergy = 0.;
+  // characterize first the energy, loop over the cristals
+  m_totalEnergy = 0.;
+  m_maxXtalEnergy = 0.;  
   std::map<int, Event::CalXtalRecData*>::iterator it;
   for ( it=nodemap.begin() ; it != nodemap.end(); it++ )
     {
       double xtalEnergy = (*it).second->getEnergy();
-      totalEnergy += xtalEnergy;
-      if (xtalEnergy>=maxXtalEnergy) maxXtalEnergy = xtalEnergy;
+      m_totalEnergy += xtalEnergy;
+      if (xtalEnergy>=m_maxXtalEnergy) m_maxXtalEnergy = xtalEnergy;
     }
-  // Add tree length = sum of edges
-  // Add mean and length of edges
+
+  // now get the property of the edges loop over the edges
+  std::list<MSTEdge*>::iterator itedge;
+  double length=0.;
+  for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
+    {
+      length=(*itedge)->getWeight();
+      if (length>=m_maxEdgeLength) m_maxEdgeLength = length;
+      if (length<=m_minEdgeLength) m_minEdgeLength = length;
+      m_meanEdgeLength+=length;
+      m_rmsEdgeLength+=length*length;
+    }
+  m_meanEdgeLength/=getNumEdges();
+  m_rmsEdgeLength/=getNumEdges();
+  m_rmsEdgeLength=sqrt(m_rmsEdgeLength);
+
+  // now get properties truncating outliers at 3*RMS
+  int trcnt=0;
+  double maxTrunc=m_meanEdgeLength+3*m_rmsEdgeLength;
+  for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
+    {
+      if(length<=maxTrunc)
+	{
+	trcnt+=1;
+        m_meanEdgeLengthTrunc+=length;
+        m_rmsEdgeLengthTrunc+=length*length;	
+	}
+    }
+  m_meanEdgeLengthTrunc/=trcnt; 
+  m_rmsEdgeLengthTrunc/=trcnt; 
+  m_rmsEdgeLengthTrunc=sqrt(m_rmsEdgeLengthTrunc);
+  
+  // Set statistics bit
+  m_statsAvailable=true;
 }
 
 void MSTTree::printNodes() 
@@ -453,7 +522,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
 
 	// Sorting Trees - required since there is no intrinsic ordering in the MST algorithm
-	// First eval some stats
+	// First eval some stats - energy and edges properties - fill members
 	for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
 	  {
 	    it->evalStats();	    
@@ -510,26 +579,23 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    cluster->setProducerName(producerName) ;
 	    cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
 	    
-	    // Put this into a separate method of this class: MSTTree:getCalMSTParams()
-	    // Set the CalMSTreeParams for the cluster and associated status bit
-	    double treeTotalEnergy  =treeIter->getTotalEnergy();
-            double treeMaxXtalEnergy=treeIter->getMaxEnergy();
-	    int    treeNumEdges     =treeIter->getNumEdges();
-	    double treeMinEdgeLength = 0., treeMaxEdgeLength=0.;
-	    double treeMeanEdgeLength = 0., treeMeanEdgeLengthTrunc=0.;
-	    double treeRmsEdgeLength = 0.,  treeRmsEdgeLengthTrunc=0.;
-	    Event::CalMSTreeParams mstreeparams(treeTotalEnergy,
- 			    treeMaxXtalEnergy,  treeNumEdges,
- 			    treeMinEdgeLength,  treeMaxEdgeLength,
- 			    treeMeanEdgeLength, treeMeanEdgeLengthTrunc,
- 			    treeRmsEdgeLength,  treeRmsEdgeLengthTrunc);
+	    // Set the CalMSTreeParams for the cluster and associated status bit    
+	    // make sure first that statistics are available
+	    if(treeIter->getStatsBit()==false) treeIter->evalStats();
+	    Event::CalMSTreeParams mstreeparams(treeIter->getTotalEnergy(),
+ 		  treeIter->getMaxEnergy(),	treeIter->getNumEdges(),		     
+ 		  treeIter->getMinEdgeLength(), treeIter->getMaxEdgeLength(),		     
+ 		  treeIter->getMeanEdgeLength(),treeIter->getMeanEdgeLengthTrunc(),	     
+ 		  treeIter->getRmsEdgeLength(), treeIter->getRmsEdgeLengthTrunc());
+		  
 	    cluster->setMSTreeParams(mstreeparams);
 	    cluster->setStatusBit(Event::CalCluster::MSTTREE);
 	    // Raw debugging -- works
-	    //std::cout<<"Number of edges "<<cluster->getMSTreeNumEdges()<<std::endl;
-	    
+	    //std::cout<<"CalMSTreeParams "<<cluster->getMSTreeParams()<<std::endl;
+	    	    
 	    // Add cluster into the collection
 	    calClusterCol->push_back(cluster);
+	    // Do I need to delete mstreeparams ? -- Johan
 
 	    // Loop through the xtals to make the relational table (hmmm... this could be done better...)  - from Tracy
 	    for(XtalDataListIterator xTalIter = xTalClus->begin(); xTalIter != xTalClus->end(); xTalIter++)
