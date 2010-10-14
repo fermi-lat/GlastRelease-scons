@@ -107,8 +107,7 @@ private:
     /// Number of edges
     int m_numberOfEdges;
 
-    /// More quantities from test_MST.py
-    /// Not implemented yet in MSTTree
+    /// More quantities
     double m_minEdgeLength;
     double m_maxEdgeLength;
     double m_meanEdgeLength;
