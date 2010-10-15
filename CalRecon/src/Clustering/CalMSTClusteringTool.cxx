@@ -184,6 +184,8 @@ void MSTTree::evalStats()
     { 
     std::list<MSTEdge*>::iterator itedge;
     double length=0.;
+    m_maxEdgeLength=0.;
+    m_minEdgeLength=1000000.;
     for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
       {
     	length=(*itedge)->getWeight();
@@ -201,6 +203,7 @@ void MSTTree::evalStats()
     double maxTrunc=m_meanEdgeLength+3*m_rmsEdgeLength;
     for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
       {
+    	length=(*itedge)->getWeight();    
     	if(length<=maxTrunc)
     	  {
     	  trcnt+=1;
