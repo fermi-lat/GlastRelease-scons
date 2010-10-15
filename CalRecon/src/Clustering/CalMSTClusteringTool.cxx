@@ -177,35 +177,41 @@ void MSTTree::evalStats()
     }
 
   // now get the property of the edges loop over the edges
-  std::list<MSTEdge*>::iterator itedge;
-  double length=0.;
-  for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
-    {
-      length=(*itedge)->getWeight();
-      if (length>=m_maxEdgeLength) m_maxEdgeLength = length;
-      if (length<=m_minEdgeLength) m_minEdgeLength = length;
-      m_meanEdgeLength+=length;
-      m_rmsEdgeLength+=length*length;
-    }
-  m_meanEdgeLength/=getNumEdges();
-  m_rmsEdgeLength/=getNumEdges();
-  m_rmsEdgeLength=sqrt(m_rmsEdgeLength);
+  // but do so only if there is at least one edge !
+  // if there is no edge, i.e. it's a tree/cluster with one cristal
+  // then from the constructor the parameters should be already set to 0
+  if(getNumEdges()>0)
+    { 
+    std::list<MSTEdge*>::iterator itedge;
+    double length=0.;
+    for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
+      {
+    	length=(*itedge)->getWeight();
+    	if (length>=m_maxEdgeLength) m_maxEdgeLength = length;
+    	if (length<=m_minEdgeLength) m_minEdgeLength = length;
+    	m_meanEdgeLength+=length;
+    	m_rmsEdgeLength+=length*length;
+      }
+    m_meanEdgeLength/=getNumEdges();
+    m_rmsEdgeLength/=getNumEdges();
+    m_rmsEdgeLength=sqrt(m_rmsEdgeLength);
 
-  // now get properties truncating outliers at 3*RMS
-  int trcnt=0;
-  double maxTrunc=m_meanEdgeLength+3*m_rmsEdgeLength;
-  for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
-    {
-      if(length<=maxTrunc)
-	{
-	trcnt+=1;
-        m_meanEdgeLengthTrunc+=length;
-        m_rmsEdgeLengthTrunc+=length*length;	
-	}
+    // now get properties truncating outliers at 3*RMS
+    int trcnt=0;
+    double maxTrunc=m_meanEdgeLength+3*m_rmsEdgeLength;
+    for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
+      {
+    	if(length<=maxTrunc)
+    	  {
+    	  trcnt+=1;
+    	  m_meanEdgeLengthTrunc+=length;
+    	  m_rmsEdgeLengthTrunc+=length*length;    
+    	  }
+      }
+    m_meanEdgeLengthTrunc/=trcnt; 
+    m_rmsEdgeLengthTrunc/=trcnt; 
+    m_rmsEdgeLengthTrunc=sqrt(m_rmsEdgeLengthTrunc);
     }
-  m_meanEdgeLengthTrunc/=trcnt; 
-  m_rmsEdgeLengthTrunc/=trcnt; 
-  m_rmsEdgeLengthTrunc=sqrt(m_rmsEdgeLengthTrunc);
   
   // Set statistics bit
   m_statsAvailable=true;
@@ -621,7 +627,12 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	std::string producerName("CalMSTClusteringTool/") ;
 	producerName += cluster->getProducerName() ;
 	cluster->setProducerName(producerName) ;
-	cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
+	cluster->setStatusBit(Event::CalCluster::ALLXTALS);
+	
+	// Attach a dummy mstree params container - but do not set the status bit
+	Event::CalMSTreeParams mstreeparams(-1,-1,-1,-1,-1,-1,-1,-1,-1);
+	cluster->setMSTreeParams(mstreeparams);
+	 
 	calClusterCol->push_back(cluster);
 
 	// Loop through again to make the relations
