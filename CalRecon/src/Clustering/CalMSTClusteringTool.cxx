@@ -200,7 +200,8 @@ void MSTTree::evalStats()
 
     // now get properties truncating outliers at 3*RMS
     int trcnt=0;
-    double maxTrunc=m_meanEdgeLength+3*m_rmsEdgeLength;
+    int NSigmaTrunc=3;
+    double maxTrunc=m_meanEdgeLength+NSigmaTrunc*m_rmsEdgeLength;
     for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
       {
     	length=(*itedge)->getWeight();    
