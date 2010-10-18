@@ -79,8 +79,6 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
-    CalMSTreeParams m_mstreeParams;     //! Parameters of the "Minimum Spanning Tree"
-    CalFitParams m_fitParams;
     CalParams m_params ;
     Double32_t m_rmsLong ;
     Double32_t m_rmsLongAsym ;
@@ -89,8 +87,10 @@ private:
     Int_t m_numSaturatedXtals;
     Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;
+    CalFitParams m_fitParams;
+    CalMSTreeParams m_mstreeParams;     //! Parameters of the "Minimum Spanning Tree"
 
-    ClassDef(CalCluster,6)
+    ClassDef(CalCluster,7)
 };
 
 
