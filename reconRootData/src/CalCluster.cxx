@@ -88,6 +88,9 @@ Bool_t CalCluster::CompareInRange( const CalCluster & c, const std::string & nam
     bool result = true ;
 
     result = getParams().CompareInRange(c.getParams()) && result ;
+    result = getFitParams().CompareInRange(c.getFitParams()) && result ;
+    result = getMSTreeParams().CompareInRange(c.getMSTreeParams()) && result ;
+
     int i ;
     for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i ) {
         result = getLayer(i).CompareInRange(c.getLayer(i)) && result ;
