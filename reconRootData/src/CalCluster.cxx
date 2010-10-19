@@ -34,6 +34,7 @@ void CalCluster::Clear( Option_t * )
   for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i )
     m_layers[i].Clear() ;
   m_mstreeParams.Clear();
+  m_fitParams.Clear();
   m_params.Clear() ;
   m_rmsLong = 0.0 ;
   m_rmsLongAsym = 0.0 ;
@@ -57,6 +58,8 @@ CalCluster::CalCluster
 void CalCluster::Print( Option_t * ) const
  {
   m_params.Print() ;
+  m_fitParams.Print() ;
+  m_mstreeParams.Print() ;
   std::cout
     <<"No. Saturated Xtals " << m_numSaturatedXtals << "\n"
     <<"No.Trunc Xtals "<<m_numTruncXtals<<"\n"
