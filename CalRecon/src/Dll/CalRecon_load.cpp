@@ -12,10 +12,12 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
     DECLARE_SERVICE(   CalReconSvc             );
     DECLARE_AUDITOR(   CalReconAuditor         );
     DECLARE_ALGORITHM( CalClustersAlg          );
+    DECLARE_ALGORITHM( CalClassifyAlg          );
     DECLARE_ALGORITHM( CalMipFinderAlg         );
     DECLARE_ALGORITHM( CalEventEnergyAlg       );
     DECLARE_ALGORITHM( CalDisplay              );
     DECLARE_ALGORITHM( PropertiesCheckAlg      );
+    DECLARE_TOOL(      CalMSTClusteringTool    );
     DECLARE_TOOL(      CalSingleClusteringTool );
     DECLARE_TOOL(      CalSimpleClusteringTool );
     DECLARE_TOOL(      StdMipFindingTool       );
@@ -27,6 +29,7 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
     DECLARE_TOOL(      CalProfileTool          );
     DECLARE_TOOL(      CalValsCorrTool         );
     DECLARE_TOOL(      CalTransvOffsetTool     );
+    DECLARE_TOOL(      CalClusterNBClassifyTool);
 } 
 
 
