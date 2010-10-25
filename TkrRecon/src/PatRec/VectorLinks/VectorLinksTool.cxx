@@ -167,7 +167,7 @@ StatusCode VectorLinksTool::findTracks()
     double eventEnergy = getEventEnergy();
 
     // STEP ONE: build the list of all VecPoints
-    TkrVecPointsBuilder vecPointsBuilder(m_dataSvc, m_tkrGeom, m_clusTool);
+    TkrVecPointsBuilder vecPointsBuilder(false, 0, 0, m_dataSvc, m_tkrGeom, m_clusTool);
 
     // No point in continuing if too few VecPoints
     if (vecPointsBuilder.getNumBiLayers() > 2)
