@@ -37,8 +37,9 @@ macro source "*.cxx" WIN32 "*.h *.cxx"
 
 library CalRecon  *.cxx ${CalRecon_headers}      \
                   -s=Dll *.cpp                   \
-                  -s=Display          ${source}  \
+                  -s=Display           ${source} \
                   -s=Clustering        ${source} \
+                  -s=Classify          ${source} \
                   -s=MipFinding        ${source} \
                   -s=EnergyCorrections ${source} \
                   -s=Utilities         ${source}
