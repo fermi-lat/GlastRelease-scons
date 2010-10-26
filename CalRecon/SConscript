@@ -14,6 +14,7 @@ CalRecon=libEnv.SharedLibrary('CalRecon',
                               listFiles(['src/*.cxx','src/Dll/*.cpp',
                                          'src/Display/*.cxx',
                                          'src/Clustering/*.cxx',
+                                         'src/Classify/*.cxx',
                                          'src/MipFinding/*.cxx',
                                          'src/EnergyCorrections/*.cxx',
                                          'src/Utilities/*.cxx']))
