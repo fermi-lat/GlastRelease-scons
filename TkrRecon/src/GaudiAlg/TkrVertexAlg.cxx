@@ -111,6 +111,7 @@ StatusCode TkrVertexAlg::execute()
     Event::TkrTrackCol* pTkrTracks = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
     //std::cout << "TkrVertexAlg::execute: " << pTkrTracks->size() << " tracks to vertex" << std::endl;
     
+    if(pTkrTracks==0 || pTkrTracks->size()==0) return sc;
     // Retrieve the information on vertices
     SmartDataPtr<Event::TkrVertexCol> pVtxCol(eventSvc(), EventModel::TkrRecon::TkrVertexCol);
 

@@ -1,3 +1,4 @@
+
 /**
  * @class KalmanTrackFitTool
  *
@@ -15,6 +16,9 @@
 // to turn one debug variables
 // #define DEBUG
 
+#include "Track/KalmanTrackFitTool.h"
+
+/*
 // Tool and Gaudi related stuff
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -157,7 +161,7 @@ private:
 
     /// Errors?
     IComputeMeasErrors* m_fitErrs;
-};
+};*/
 
 static ToolFactory<KalmanTrackFitTool> s_factory;
 const IToolFactory& KalmanTrackFitToolFactory = s_factory;

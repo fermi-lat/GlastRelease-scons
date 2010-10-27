@@ -176,12 +176,14 @@ StatusCode TkrTrackFitAlg::doTrackFit()
     // Find the collection of candidate tracks
     Event::TkrTrackCol* trackCol = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
 
+    if(trackCol==0||trackCol->size()==0) return sc;
     // Ok, now set up to loop over candidate tracks
     for(Event::TkrTrackColPtr trackIter = trackCol->begin(); trackIter != trackCol->end(); trackIter++)
     {
         Event::TkrTrack* track = *trackIter;
 
-        m_FitTool->doTrackFit(track);
+		// RJ: don't refit the Cosmic Ray tracks
+		if (!(track->getStatusBits() & Event::TkrTrack::COSMICRAY)) m_FitTool->doTrackFit(track);
     }
 
     // leave this around for now, may be useful again
@@ -252,8 +254,10 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
     for(Event::TkrTrackColPtr trackIter = trackCol->begin(); trackIter != trackCol->end(); trackIter++)
     {
          Event::TkrTrack* track = *trackIter;
-         m_AlignTool->alignHits(track);
-         m_FitTool->doTrackReFit(track);
+		 if (!(track->getStatusBits() & Event::TkrTrack::COSMICRAY)) {   // RJ: don't refit cosmic-ray candidates
+			m_AlignTool->alignHits(track);
+			m_FitTool->doTrackReFit(track);
+		 }
     }
 
     // leave this around for a while, may be needed later
