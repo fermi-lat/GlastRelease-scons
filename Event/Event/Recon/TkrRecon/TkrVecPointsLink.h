@@ -33,7 +33,8 @@ public:
                      FIRSTLINK  = 0x0002,
                      SKIP1LAYER = 0x0010,
                      SKIP2LAYER = 0x0020,
-                     SAMETOWER  = 0x0100};
+                     SAMETOWER  = 0x0100,
+                     VERIFIED   = 0x0800};
 
     // Constructors
     TkrVecPointsLink(const TkrVecPoint* firstPoint, const TkrVecPoint* secondPoint, double ang);
@@ -54,6 +55,7 @@ public:
     void setSameTower()                 {m_statusBits      |=  SAMETOWER;}
     void setSkip1Layer()                {m_statusBits      |=  SKIP1LAYER;}
     void setSkip2Layer()                {m_statusBits      |=  SKIP2LAYER;}
+    void setVerified()                  {m_statusBits      |=  VERIFIED;}
     void setMaxScatAngle(double ang)    {m_maxScatAngle     =  ang;}
     void setAngleToNextLink(double ang) {m_angleToNextLink  =  ang;}
     void setDistToNextLink(double dist) {m_distToNextLink   =  dist;}
@@ -70,6 +72,7 @@ public:
     const bool         skipsLayers()         const {return (m_statusBits & (SKIP1LAYER | SKIP2LAYER)) != 0;}
     const bool         skip1Layer()          const {return (m_statusBits & SKIP1LAYER) == SKIP1LAYER;}
     const bool         skip2Layer()          const {return (m_statusBits & SKIP2LAYER) == SKIP2LAYER;}
+    const bool         verified()            const {return (m_statusBits & VERIFIED)   == VERIFIED;}
     const unsigned int getStatusBits()       const {return m_statusBits;}
     const Point&       getPosition()         const {return m_position;}
     const Point        getPosition(double z) const;
