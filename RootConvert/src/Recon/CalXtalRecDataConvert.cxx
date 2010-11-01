@@ -62,14 +62,13 @@ void convert( const CalXtalRecData & rootXtalRecData, Event::CalXtalRecData & td
                 const CalRangeRecData * rootXtalRange
                   = rootXtalRecData.getRangeRecData(range) ;
                 if (rootXtalRange) {
-                    Event::CalXtalRecData::CalRangeRecData * tdsXtalRange
-                      = new Event::CalXtalRecData::CalRangeRecData(
+                    Event::CalXtalRecData::CalRangeRecData tdsXtalRange(
                             rootXtalRange->getRange(CalXtalId::POS),
                             rootXtalRange->getEnergy(CalXtalId::POS),
                             rootXtalRange->getRange(CalXtalId::NEG),
                             rootXtalRange->getEnergy(CalXtalId::NEG)
                         );
-                    tdsXtalRange->setPosition(RootPersistence::convertPoint(rootXtalRange->getPosition()));
+                    tdsXtalRange.setPosition(RootPersistence::convertPoint(rootXtalRange->getPosition()));
                     tdsXtalRecData.addRangeRecData(*tdsXtalRange);
                }
             }
@@ -80,14 +79,13 @@ void convert( const CalXtalRecData & rootXtalRecData, Event::CalXtalRecData & td
             const CalRangeRecData * rootXtalRange
               = rootXtalRecData.getRangeRecData(0) ;   
             
-            Event::CalXtalRecData::CalRangeRecData * tdsXtalRange
-              = new Event::CalXtalRecData::CalRangeRecData(
+            Event::CalXtalRecData::CalRangeRecData tdsXtalRange(
                     rootXtalRange->getRange(CalXtalId::POS),
                     rootXtalRange->getEnergy(CalXtalId::POS),
                     rootXtalRange->getRange(CalXtalId::NEG),
                     rootXtalRange->getEnergy(CalXtalId::NEG)
                 ) ;
-            tdsXtalRange->setPosition(RootPersistence::convertPoint(rootXtalRange->getPosition()));
+            tdsXtalRange.setPosition(RootPersistence::convertPoint(rootXtalRange->getPosition()));
             tdsXtalRecData.addRangeRecData(*tdsXtalRange) ;
             
         }

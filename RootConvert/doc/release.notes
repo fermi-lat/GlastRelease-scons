@@ -4,6 +4,8 @@
  @verbatim
  * EOH *
 
+                                     hmk Patch to remove memory leak when
+                                     reading CalXtalRecData
  RootConvert-01-46-02 06-Sep-2010    jrb tag for compatibility with reconRootData
  RootConvert-01-46-01 12-Jun-2010    jrb upgrades for SCons builds
  RootConvert-01-46-00 16-May-2010  TU Picking up Luca's changes to CalCluster
