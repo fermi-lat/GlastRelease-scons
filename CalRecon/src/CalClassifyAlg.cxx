@@ -15,6 +15,7 @@
 
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/TopLevel/EventModel.h"
+#include <algorithm>
 
 /**   
 * @class CalClassifyAlg
@@ -29,6 +30,10 @@
 *        Implemented from CalClustersAlg, Johan, October 2010
 */
 
+bool SortByGamProb(Event::CalCluster *clusterA,
+                   Event::CalCluster *clusterB)
+{ return (clusterA->getGamProb()>clusterB->getGamProb()); }
+
 
 class CalClassifyAlg : public Algorithm
 {
@@ -40,6 +45,7 @@ public:
     virtual ~CalClassifyAlg() {}; 
     
     virtual StatusCode initialize() ;
+
 
         
     /*!Classifies the clusters and stores
@@ -55,9 +61,11 @@ public:
         
 private:
     
+    /// Sort clusters according to the classification or not
+    bool m_sortByClassification;
     /// name of Tool for finding clusters
     StringProperty      m_classifierToolName;
-
+    
     /// pointer to actual tool for finding clusters
     ICalClassifyTool* m_classifierTool;
 
@@ -76,7 +84,8 @@ DECLARE_ALGORITHM_FACTORY(CalClassifyAlg) ;
 CalClassifyAlg::CalClassifyAlg(const std::string & name, ISvcLocator * pSvcLocator )
                              : Algorithm(name,pSvcLocator), m_calReconSvc(0)
 {   
-    declareProperty ("classifierToolName", m_classifierToolName="CalClusterNBClassifyTool") ;
+    declareProperty ("classifierToolName",   m_classifierToolName="CalClusterNBClassifyTool") ;
+    declareProperty ("sortByClassification", m_sortByClassification=false) ;
 }
 
 StatusCode CalClassifyAlg::initialize()
@@ -136,17 +145,30 @@ StatusCode CalClassifyAlg::execute()
             sc = m_calReconSvc->handleError(name(),"classifier tool failure") ;
         }
         
-	// Shall we sort the cluster now that they are classified ? -- TBD
-	
-        // display cluster energies, and classification for DEBUG -- TBD
-        Event::CalClusterCol::const_iterator cluster ;
+
+	// Sort the cluster now that they are classified
+	// Let the Ubber cluster at the end though
+        if(m_sortByClassification){          
+	  log<<MSG::DEBUG<<"Sorting cluster using gam probability."<<endreq ;
+	  sort (calClusterCol->begin(), calClusterCol->end()-1, SortByGamProb);     //(12 26 32 33 45 53 71 80)
+	} else {
+	  log<<MSG::DEBUG<<"Clusters have been sorted by energy."<<endreq ;	  
+	}
+
+        // For debug
+        log<<MSG::DEBUG<<"Last cluster is always the ubber cluster:"<<endreq ;
+	Event::CalClusterCol::const_iterator cluster ;
         for ( cluster = calClusterCol->begin() ; 	 
               cluster != calClusterCol->end() ; 	 
-              cluster++) { 	 
-            log<<MSG::DEBUG<<"CalCluster Energy: "
-              <<(*cluster)->getCalParams().getEnergy()
-              <<endreq ;
+              cluster++) {
+	    double prob = (*cluster)->getGamProb();
+            log<<MSG::DEBUG<<"CalCluster Gam Prob: "
+               <<prob
+               <<"\tEnergy: "
+               <<(*cluster)->getCalParams().getEnergy()
+               <<endreq ;
         }
+
         
     // Catch any exceptions here
     } catch( CalException & e ) {
@@ -165,7 +187,6 @@ StatusCode CalClassifyAlg::finalize()
 { 
     return StatusCode::SUCCESS ; 
 }
-
 
 
 
