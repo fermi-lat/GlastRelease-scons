@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 #include "GaudiKernel/ObjectVector.h"
@@ -111,7 +112,10 @@ public:
 //	/// @param MIPFIT Bit set means a MIP like track was fitted
 //	                 MIPFIT          = 0x00000800
 	/// @param MSTTREE Bit set means a Minimum Spanning Tree information is available
-	              MSTTREE          = 0x0001000
+	              MSTTREE          = 0x0001000,
+	/// @param CLASSIFIED Bit set means clusters have been classified
+	              CLASSIFIED       = 0x0002000
+
 	};
 
     /**
@@ -127,6 +131,7 @@ public:
     void initialize(const CalMSTreeParams& treeParams,
                     const CalFitParams&    fitParams,
                     const CalParams&       params,
+		    const std::map <std::string, double>& classprob,
                     double                 rms_long,
                     double                 rms_trans,
                     double                 long_asym,
@@ -137,6 +142,7 @@ public:
         m_mstreeParams      = treeParams;
         m_fitParams         = fitParams;
         m_params            = params;
+	m_classesProb       = classprob;
         m_rmslong           = rms_long;
         m_rmstrans          = rms_trans;
         m_rmslongAsym       = long_asym;
@@ -151,8 +157,9 @@ public:
     void setMSTreeParams(const CalMSTreeParams& params) {m_mstreeParams      = params;}
     void setFitParams(const CalFitParams& params) {m_fitParams         = params;}
     void setCalParams(const CalParams& params)    {m_params            = params;  }
+    void setClassesProb(std::map <std::string, double>& classprob) {m_classesProb = classprob;  }
     void setRmsLong(double rmsLong)               {m_rmslong           = rmsLong; }
-	void setRmsLongAsym(double rmsLongAsym)       {m_rmslongAsym       = rmsLongAsym;}
+    void setRmsLongAsym(double rmsLongAsym)       {m_rmslongAsym       = rmsLongAsym;}
     void setSkewnessLong(double skewLong)         {m_skewnessLong      = skewLong;}
     void setRmsTrans(double rmsTrans)             {m_rmstrans          = rmsTrans;}
     void setNumSaturatedXtals(int nSat)           {m_numSaturatedXtals = nSat;}
@@ -167,10 +174,12 @@ public:
     const CalFitParams& getFitParams() const {return m_fitParams;}
     /// Direct access to the CalParams
     const CalParams& getCalParams()    const {return m_params;}
+    /// Direct access to map of classes probabilities
+    const std::map <std::string, double>& getClassesProb()    const {return m_classesProb;}   
     /// get RMS of longitudinal position measurements
     double getRmsLong()		           const {return m_rmslong;} 
     /// get RMS of transverse position measurements
-	double getRmsLongAsym()            const {return m_rmslongAsym;} 
+    double getRmsLongAsym()            const {return m_rmslongAsym;} 
     /// get RMS of transverse position measurements
     double getRmsTrans()	           const {return m_rmstrans;}
     /// get the longitudinal skewness
@@ -186,7 +195,10 @@ public:
     /// get number of edges in the tree
     int getMSTreeNumEdges()                  const {return m_mstreeParams.getNumberOfEdges();}
 
-	/// Access individual status bits
+    /// Access individual probabilities
+    inline double getGamProb()    const {return m_classesProb.find("gam")->second;}   
+
+    /// Access individual status bits
     inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
     inline void clearStatusBit( StatusBits bitToClear ) { m_statusBits &= ~bitToClear ; }
     inline bool checkStatusBit( StatusBits bitToCheck ) const { return ((m_statusBits&bitToCheck)!=ZERO) ; }
@@ -216,6 +228,9 @@ private:
     CalFitParams m_fitParams;
     //! Cal Parameters
     CalParams m_params;
+    //! Classification map with probabilities -- new another member with the classifier name -- TBD
+    std::map <std::string, double> m_classesProb;
+
     //! RMS of longitudinal position measurement
     double m_rmslong;
 	//! difference in RMS of longitudinal position measurement moments
@@ -224,12 +239,12 @@ private:
     double m_rmstrans;
     //! longitudinal skewness
     double m_skewnessLong;
-	//! number of "saturated" Xtals
-	int m_numSaturatedXtals;
-	//! number of Xtals with > 1% Total Cluster Energy
-	int m_numTruncXtals;
-	//! Status Bits
-	unsigned int m_statusBits;
+    //! number of "saturated" Xtals
+    int m_numSaturatedXtals;
+    //! number of Xtals with > 1% Total Cluster Energy
+    int m_numTruncXtals;
+    //! Status Bits
+    unsigned int m_statusBits;
 
 };
 
@@ -238,13 +253,16 @@ inline void CalCluster::iniCluster()
     m_mstreeParams      = CalMSTreeParams();
     m_fitParams         = CalFitParams();
     m_params            = CalParams();
+    // Create the map and initialize gam prob to -1.
+    m_classesProb.find("gam")->second= -1.;
+
     m_rmslong           = 0.;
-	m_rmslongAsym       = 0.;
+    m_rmslongAsym       = 0.;
     m_rmstrans          = 0.;
     m_skewnessLong      = -9999.;
-	m_statusBits        = 0;
+    m_statusBits        = 0;
     m_numSaturatedXtals = 0;
-	m_numTruncXtals     = 0; 
+    m_numTruncXtals     = 0; 
 }
 
 inline void CalCluster::writeOut(MsgStream& stream) const
@@ -255,7 +273,8 @@ inline void CalCluster::writeOut(MsgStream& stream) const
 //        stream - Gaudi message stream
 {
     stream << "Energy " << m_params.getEnergy();
-	stream << " No.Trunc Xtals " << m_numTruncXtals;
+    stream << " No.Trunc Xtals " << m_numTruncXtals;
+    stream << " Gam prob " << getGamProb();
     stream << " " << getPosition().x() 
            << " " << getPosition().y() 
            << " " << getPosition().z();
