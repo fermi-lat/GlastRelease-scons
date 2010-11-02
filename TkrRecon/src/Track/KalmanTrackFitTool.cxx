@@ -16,9 +16,6 @@
 // to turn one debug variables
 // #define DEBUG
 
-#include "Track/KalmanTrackFitTool.h"
-
-/*
 // Tool and Gaudi related stuff
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -82,6 +79,8 @@ public:
 
     /// @brief Method to set type of hit energy loss for a track
     void       setHitEnergyLoss(const std::string& energyLossType);
+    /// @brief Method to set the particle type assumed for a track
+    void       setParticleType(const std::string ParticleName) {m_ParticleName = ParticleName;}
     /// @brief Method to set method for determing cluster errors in fit 
     void       setClusErrCompType(const std::string& clusErrorType);
     /// @brief Method to set multiple scattering matrix computation
@@ -161,7 +160,7 @@ private:
 
     /// Errors?
     IComputeMeasErrors* m_fitErrs;
-};*/
+};
 
 static ToolFactory<KalmanTrackFitTool> s_factory;
 const IToolFactory& KalmanTrackFitToolFactory = s_factory;
