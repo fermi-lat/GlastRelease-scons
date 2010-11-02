@@ -236,11 +236,7 @@ private:
   
   //! Event Service member directly useable by concrete classes.
   IDataProviderSvc*  m_dataSvc;
-  
-  //! Utility for filling clusters 
-  // TBD -- Need to update cluster with a classification info
-  //ICalClusterFiller* m_clusterInfo;
-  
+    
   // Other methods
   StatusCode getPDFsFromXml();
   double getPdValue(std::string topology, std::string varName,
@@ -291,7 +287,7 @@ StatusCode CalClusterNBClassifyTool::initialize()
     }
 
     // check if jobOptions were passed
-    log<<MSG::DEBUG<<"m_xmlPDFFileName\t\tset to "<<m_xmlPDFFileName<<endreq;
+    log<<MSG::INFO<<"m_xmlPDFFileName\t\tset to "<<m_xmlPDFFileName<<endreq;
 
     // Cluster filling utility
     // TBD -- Need to update cluster with a classification info
@@ -318,11 +314,13 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
   
   // --------------------------------------------
 
-  log << MSG::DEBUG << "Running the CalClusterNBClassifyTool" << endreq;
+  log << MSG::DEBUG << "Calling Naive Bayes classifier" << endreq;
   Event::CalClusterCol::const_iterator cluster ;
   for (cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
     {
-      classifyCluster(*cluster);
+      // Current PDFs were derived with precut at NumXtals>3
+      if((*cluster)->getMSTreeNumEdges()+1>3)
+        classifyCluster(*cluster);
     }
   // Get the cluster instance
   //     Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
@@ -338,10 +336,10 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
 
 StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calCluster)
 {
+  MsgStream log(msgSvc(),name()) ;
   std::string topology, varName;
   double varValue, pdValue;
   double energy = calCluster->getCalParams().getEnergy();
-  std::cout<<"Energy "<< energy  <<std::endl;
   std::map <std::string, double> probMap;
   std::map<std::pair <std::string, std::string>, PdfHistoCollection>::iterator iter;
   for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
@@ -350,8 +348,8 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
       varName = (*iter).first.second;
       varValue = getVariableValue(varName, calCluster);
       pdValue = getPdValue(topology, varName, energy, varValue);
-      std::cout << topology << "\t" << varName << "\t" << varValue << "\t" <<
-	pdValue << std::endl;
+      log << MSG::DEBUG << topology << "\t" << varName << "\t"
+                        << varValue << "\t" << pdValue << endreq;
       if (probMap.count(topology) == 0)
 	probMap[topology] = pdValue;
       else
@@ -370,10 +368,15 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
 	  (*it).second /= pdSum;
 	}
     }
+
+  // Debug
   for (it = probMap.begin(); it != probMap.end(); it++)
-    {
-      std::cout << (*it).first << "\t" << (*it).second << std::endl;
-    }
+    log << MSG::DEBUG << (*it).first <<"\t"<< (*it).second  << endreq;
+  
+  // Assign probability map to the cluster
+  calCluster->setClassesProb(probMap);
+  calCluster->setStatusBit(Event::CalCluster::CLASSIFIED);
+  
   return StatusCode::SUCCESS;
 }
 
@@ -427,7 +430,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
 StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
 {
   XERCES_CPP_NAMESPACE_USE
-    MsgStream log(msgSvc(),name());
+  MsgStream log(msgSvc(),name());
   facilities::commonUtilities::setupEnvironment();
   
   facilities::Util::expandEnvVar(&m_xmlPDFFileName);
@@ -446,7 +449,7 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
   }
 
   if (doc != 0) {  // successful
-    std::cout << "Document successfully parsed" << std::endl;
+    log << MSG::DEBUG << "Document successfully parsed"  << endreq;
 
     // look up some attributes
     DOMElement* docElt = doc->getDocumentElement();
@@ -466,7 +469,8 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
   DOMNodeList* constList = attElt->getElementsByTagName(xmlchEltName);
 
   unsigned int nElt = constList->getLength();
-  std::cout << nElt << " energy bins found " << std::endl;
+  log << MSG::DEBUG << nElt << " energy bins found "  << endreq;
+
   
   m_energyBinning = new NBCEnergyBinning();
 
@@ -602,7 +606,6 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
   }
   }
   delete parser;
-  std::cout << getPdValue("gam", "CalTransRms", 1500.0, 26.0) << std::endl;
   return StatusCode::SUCCESS ;
 }
 
