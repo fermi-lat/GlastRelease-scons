@@ -138,8 +138,12 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
     // initialize empty CalMSTreeParams container - CalMSTreePar
     Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
 
+    // initialize empty prob map - m_classesProb
+    std::map <std::string, double> probMap;
+    probMap.find("gam")->second=-1;
+
     // Fill CalCluster data
-    cl->initialize(treeParams, fitParams, params, 0., 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
+    cl->initialize(treeParams, fitParams, params, probMap, 0., 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
 
     for( i = 0; i < calnLayers; i++)
     {
