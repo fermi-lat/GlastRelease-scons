@@ -12,7 +12,7 @@
 * $Header: 
 */
 
-class CalMSTreeParams
+class CalMSTreeParams : public TObject
 {
 public:
 
@@ -21,19 +21,19 @@ public:
 
     /// Direct construction from all the elements
     CalMSTreeParams
-    ( Double32_t totalEnergy,
-      Double32_t maxXtalEnergy,  Int_t    numberOfEdges,		      
-      Double32_t minEdgeLength,  Double32_t maxEdgeLength,		      
-      Double32_t meanEdgeLength, Double32_t meanEdgeLengthTrunc,	      
-      Double32_t rmsEdgeLength,  Double32_t rmsEdgeLengthTrunc);	      
+    ( Double_t totalEnergy,
+      Double_t maxXtalEnergy,  Int_t	numberOfEdges,  		    
+      Double_t minEdgeLength,  Double_t maxEdgeLength,  		  
+      Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,		  
+      Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc);		  
 
     /// init
     void init
-    ( Double32_t totalEnergy,
-      Double32_t maxXtalEnergy,  Int_t    numberOfEdges,		      
-      Double32_t minEdgeLength,  Double32_t maxEdgeLength,		      
-      Double32_t meanEdgeLength, Double32_t meanEdgeLengthTrunc,	      
-      Double32_t rmsEdgeLength,  Double32_t rmsEdgeLengthTrunc);
+    ( Double_t totalEnergy,
+      Double_t maxXtalEnergy,  Int_t	numberOfEdges,  		    
+      Double_t minEdgeLength,  Double_t maxEdgeLength,  		  
+      Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,		  
+      Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc);
 
     /// Destructor
     virtual ~CalMSTreeParams() {}
@@ -41,26 +41,26 @@ public:
     ///--------------------------------------------------- 
     ///--- Get methods
     /// Retrieve the total enegy
-    inline Double32_t  getTotalEnergy()      const {return m_totalEnergy;}
+    inline const Double_t  getTotalEnergy()      const {return m_totalEnergy;}
     /// Retrieve the energy in the crystal with the maximum enegy
-    inline Double32_t  getMaxXtalEnergy()    const {return m_maxXtalEnergy;}
+    inline const Double_t  getMaxXtalEnergy()    const {return m_maxXtalEnergy;}
     /// Retrieve the number of edges
-    inline Int_t     getNumberOfEdges()    const {return m_numberOfEdges;}
+    inline const Int_t     getNumberOfEdges()    const {return m_numberOfEdges;}
     /// Retrieve the minimum edge length
-    inline Double32_t  getMinEdgeLength()         const {return m_minEdgeLength;}
+    inline const Double_t  getMinEdgeLength()         const {return m_minEdgeLength;}
     /// Retrieve the minimum edge length
-    inline Double32_t  getMaxEdgeLength()         const {return m_maxEdgeLength;}
+    inline const Double_t  getMaxEdgeLength()         const {return m_maxEdgeLength;}
     /// Retrieve the maximum edge length
-    inline Double32_t  getMeanEdgeLength()        const {return m_meanEdgeLength;}
+    inline const Double_t  getMeanEdgeLength()        const {return m_meanEdgeLength;}
     /// Retrieve the average edge length
-    inline Double32_t  getMeanEdgeLengthTrunc()   const {return m_meanEdgeLengthTrunc;}
+    inline const Double_t  getMeanEdgeLengthTrunc()   const {return m_meanEdgeLengthTrunc;}
     /// Retrieve the RMS of edges length
-    inline Double32_t  getRmsEdgeLength()         const {return m_rmsEdgeLength;}
+    inline const Double_t  getRmsEdgeLength()         const {return m_rmsEdgeLength;}
     /// Retrieve the RMS of edges length  after truncation
-    inline Double32_t  getRmsEdgeLengthTrunc()    const {return m_rmsEdgeLengthTrunc;}
+    inline const Double_t  getRmsEdgeLengthTrunc()    const {return m_rmsEdgeLengthTrunc;}
 
     /// Retrieve the number of cristals from the number of edges
-    inline Int_t getNumXtals()          const {return m_numberOfEdges + 1;}
+    inline const Int_t getNumXtals()          const {return m_numberOfEdges + 1;}
 
     /// Other methods
     void Print( Option_t * option ="" ) const ;
