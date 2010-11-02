@@ -38,11 +38,11 @@ void CalMSTreeParams::Clear(  Option_t * )
 
 
 void CalMSTreeParams::init
-( Double32_t totalEnergy,
-  Double32_t maxXtalEnergy,  Int_t    numberOfEdges,			  
-  Double32_t minEdgeLength,  Double32_t maxEdgeLength,  		  
-  Double32_t meanEdgeLength, Double32_t meanEdgeLengthTrunc,		  
-  Double32_t rmsEdgeLength,  Double32_t rmsEdgeLengthTrunc)
+( Double_t totalEnergy,
+  Double_t maxXtalEnergy,  Int_t    numberOfEdges,			
+  Double_t minEdgeLength,  Double_t maxEdgeLength,		      
+  Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,	      
+  Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc)
 {
     m_totalEnergy    = totalEnergy;
     m_maxXtalEnergy  = maxXtalEnergy;
