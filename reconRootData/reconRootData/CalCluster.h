@@ -7,6 +7,7 @@
 #include "CalParams.h"
 #include <TObject.h>
 #include <TVector3.h>
+#include <map>
 
 #include <vector>
 #ifndef R__GLOBALSTL
@@ -36,13 +37,19 @@ public:
     CalCluster()
      { Clear() ; }
     CalCluster
-     ( const std::vector<CalClusterLayerData> &, const CalMSTreeParams&,
-       const CalFitParams&, const CalParams &,
+     ( const std::vector<CalClusterLayerData> &,
+       const CalMSTreeParams&,
+       const CalFitParams&,
+       const CalParams &,
+       const std::map <std::string, double>& classprob,          
        Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     void init
-     ( const std::vector<CalClusterLayerData> &, const CalMSTreeParams&,
-       const CalFitParams&, const CalParams &,
+     ( const std::vector<CalClusterLayerData> &,
+       const CalMSTreeParams&,
+       const CalFitParams&,
+       const CalParams &,
+       const std::map <std::string, double>& classprob,                
        Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     virtual ~CalCluster()
@@ -54,8 +61,10 @@ public:
      { return m_layers[i] ; }
     const CalFitParams & getFitParams() const
      { return m_fitParams;}
+    const std::map <std::string, double>& getClassesProb() const
+     {return m_classesProb;}   
     const CalParams & getParams() const
-     { return m_params ; }
+     { return m_params ; }     
     Double_t getRmsLong() const
      { return m_rmsLong ; }
     Double_t getRmsLongAsym() const
@@ -71,6 +80,8 @@ public:
     UInt_t  getStatusBits() const
      { return m_statusBits ; }
      
+    Double_t getGamProb()    const {return m_classesProb.find("gam")->second;}   
+
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalCluster &, const std::string & name = "" ) const ; // for tests
@@ -88,7 +99,8 @@ private:
     Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;
     CalFitParams m_fitParams;
-    CalMSTreeParams m_mstreeParams;     //! Parameters of the "Minimum Spanning Tree"
+    CalMSTreeParams m_mstreeParams;    //! Parameters of the "Minimum Spanning Tree"
+    std::map <std::string, double> m_classesProb;     // Classification probabilities
 
     ClassDef(CalCluster,7)
 };
