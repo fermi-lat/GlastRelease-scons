@@ -78,7 +78,7 @@ private:
     StatusCode writeCalReconRelations();
 
     /// Standard method for filling a root relation
-    void addRootRelation(TRef& first, TRef& second, std::vector<std::string>& infos);
+    void addRootRelation(TRef& first, TRef& second, std::vector<std::string> infos);
 
     /// Calls TTree::Fill for each event and clears m_digiEvt
     void writeEvent();
@@ -473,7 +473,7 @@ StatusCode relationRootWriterAlg::writeMcRelations() {
     return sc;
 }
 
-void relationRootWriterAlg::addRootRelation(TRef& first, TRef& second, std::vector<std::string>& infos)
+void relationRootWriterAlg::addRootRelation(TRef& first, TRef& second, std::vector<std::string> infos)
 {
     // Our first job is to copy any string information in the "infos" vector
     TObjArray infosRoot;
