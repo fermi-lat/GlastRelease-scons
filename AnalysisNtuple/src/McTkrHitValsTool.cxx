@@ -430,7 +430,7 @@ void McTkrHitValsTool::CntTotalHits(const Event::McParticle* /* primary */)
     m_totalPrimTkrHits = 0;
 
     // If there is no cluster table then there are no hits (by definition)
-    if (m_clusToPosHitTab)
+    if (m_clusToPosHitTab && !m_clusToPosHitTab->getAllRelations()->empty())
     {
         // Retrieve pointer to McPositionHit Collection in the TDS
         SmartDataPtr<Event::McPositionHitCol> posHitCol(m_pEventSvc, EventModel::MC::McPositionHitCol);
