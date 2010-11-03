@@ -18,9 +18,9 @@ public:
     
     Relation();
     
-    Relation(TRef key, const TRefArray& valueCol);
+    Relation(TRef& first, TRef& second, const TObjArray& infos);
     
-    void initialize(TRef key, const TRefArray& valueCol);
+    void initialize(TRef& first, TRef& second, const TObjArray& infos);
     
     virtual ~Relation();
     
@@ -29,14 +29,17 @@ public:
     
     void Print(Option_t *option="") const;
     
-    const TObject* getKey() const { return m_key.GetObject(); };
+    const TObject* getFirst()   const {return m_first.GetObject();};
     
-    const TRefArray& getValueCol() const { return m_valueCol; };
+    const TObject* getSecond()  const {return m_second.GetObject();};
+    
+    const TObjArray& getInfos() const {return m_infos; };
     
 private:
     
-    TRef m_key;
-    TRefArray m_valueCol;
+    TRef      m_first;
+    TRef      m_second;
+    TObjArray m_infos;
     
     ClassDef(Relation,1) // Relation Class
 };

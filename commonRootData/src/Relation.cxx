@@ -15,12 +15,9 @@ Relation::Relation() {
     Clear();
 }
 
-Relation::Relation(TRef key, const TRefArray& valueCol) {
-    m_key = key;
-    Int_t irel;
-    for (irel = 0; irel < valueCol.GetEntries(); irel++) {
-        m_valueCol.Add(valueCol.At(irel));
-    }
+Relation::Relation(TRef& first, TRef& second, const TObjArray& infos) 
+{
+    initialize(first, second, infos);
 }
 
 Relation::~Relation() {    
@@ -28,29 +25,38 @@ Relation::~Relation() {
 }
 
 
-void Relation::initialize(TRef key, const TRefArray& valueCol) {
-    m_key = key;
-    Int_t irel;
-    for (irel = 0; irel < valueCol.GetEntries(); irel++) {
-        m_valueCol.Add(valueCol.At(irel));
-}}
+void Relation::initialize(TRef& first, TRef& second, const TObjArray& infos) 
+{
+    m_first  = first;
+    m_second = second;
 
-void Relation::Clear(Option_t *option) {
-    TObject::Clear(option);
-    m_key = 0;
-    m_valueCol.Clear();
+    // We need to make our own copy that we "own"
+    m_infos = *(TObjArray*)infos.Clone();
 }
 
-void Relation::Print(Option_t *option) const {
+void Relation::Clear(Option_t *option) 
+{
+    TObject::Clear(option);
+    m_first  = 0;
+    m_second = 0;
+    m_infos.SetOwner();
+    m_infos.Clear();
+}
+
+void Relation::Print(Option_t *option) const 
+{
     using namespace std;
     TObject::Print(option);
-    cout << "Key: ";
-    m_key.GetObject()->Print();
+    cout << "First: ";
+    m_first.GetObject()->Print();
+    cout << ", Second: ";
+    m_second.GetObject()->Print();
     cout << endl;
     
     Int_t irel;
-    for (irel = 0; irel < m_valueCol.GetEntries(); irel++) {
-        (m_valueCol.At(irel))->Print();
+    for (irel = 0; irel < m_infos.GetEntries(); irel++) 
+    {
+        (m_infos.At(irel))->Print();
         cout << endl;
     }
 }

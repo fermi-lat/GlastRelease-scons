@@ -39,7 +39,8 @@ void RelTable::initialize(UInt_t nEvent, UInt_t nRun)
     m_runId   = nRun;
 }
 
-void RelTable::addRelation(Relation *rel) {
+void RelTable::addRelation(Relation *rel) 
+{
     if (!m_table) m_table = new TObjArray();
     m_table->Add(rel);
 }
@@ -48,7 +49,7 @@ const Relation* RelTable::getRelByFirst(const TObject *key) const {
     TObjArrayIter it(m_table);
     Relation *rel = 0;
     while ((rel = (Relation*)it.Next())) {
-        if (rel->getKey() == key) return rel;
+        if (rel->getFirst() == key) return rel;
     }
     
     return 0;
@@ -58,6 +59,7 @@ void RelTable::Clear(Option_t *option) {
     TObject::Clear(option);
     if (m_table) 
     {
+        m_table->SetOwner();
         m_table->Clear();
         delete m_table;
     }
