@@ -19,6 +19,7 @@ DECLARE_FACTORY_ENTRIES(AnalysisNtuple) {
     DECLARE_AUDITOR(   EventAuditor      );
 
     DECLARE_TOOL(      TkrValsTool      );
+    DECLARE_TOOL(      TreeValsTool     );
     DECLARE_TOOL(      CalValsTool      );
     DECLARE_TOOL(      AcdValsTool      );
     DECLARE_TOOL(      Acd2ValsTool     );
