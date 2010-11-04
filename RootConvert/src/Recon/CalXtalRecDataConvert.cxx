@@ -69,7 +69,7 @@ void convert( const CalXtalRecData & rootXtalRecData, Event::CalXtalRecData & td
                             rootXtalRange->getEnergy(CalXtalId::NEG)
                         );
                     tdsXtalRange.setPosition(RootPersistence::convertPoint(rootXtalRange->getPosition()));
-                    tdsXtalRecData.addRangeRecData(*tdsXtalRange);
+                    tdsXtalRecData.addRangeRecData(tdsXtalRange);
                }
             }
             
@@ -86,7 +86,7 @@ void convert( const CalXtalRecData & rootXtalRecData, Event::CalXtalRecData & td
                     rootXtalRange->getEnergy(CalXtalId::NEG)
                 ) ;
             tdsXtalRange.setPosition(RootPersistence::convertPoint(rootXtalRange->getPosition()));
-            tdsXtalRecData.addRangeRecData(*tdsXtalRange) ;
+            tdsXtalRecData.addRangeRecData(tdsXtalRange) ;
             
         }
     }
