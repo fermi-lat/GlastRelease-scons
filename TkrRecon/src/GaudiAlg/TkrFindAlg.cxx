@@ -89,7 +89,7 @@ TkrFindAlg::TkrFindAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator)  
 { 
     declareProperty("TrackFindType",   m_TrackFindType="Combo");
-    declareProperty("DoCRFinding",     m_doCRFinding=false);
+    declareProperty("DoCRFinding",     m_doCRFinding=true);
     declareProperty("CRGhosts",        m_CRGhosts=true);
 
     declareProperty("DoStandardFinding", m_doStandardFinding=true);
