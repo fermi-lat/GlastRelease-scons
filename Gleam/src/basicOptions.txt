@@ -205,8 +205,9 @@ RootTupleSvc.RejectIfBad = false;
 // First pass of Cal Recon - full recon...
 Cal1.Members = { 
     "CalXtalRecAlg",
-    "CalClustersAlg/first",
-    "CalEventEnergyAlg/RawEnergy"
+    "CalClustersAlg/CalCluster",
+    "CalEventEnergyAlg/CalRawEnergy",
+    "CalClassifyAlg/CalClassify"
     };
 
 // First pass of Tkr Recon
