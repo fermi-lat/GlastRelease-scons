@@ -140,7 +140,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
 
     // initialize empty prob map - m_classesProb
     std::map <std::string, double> probMap;
-    probMap.find("gam")->second=-1;
+    probMap["gam"]=-1;
 
     // Fill CalCluster data
     cl->initialize(treeParams, fitParams, params, probMap, 0., 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.

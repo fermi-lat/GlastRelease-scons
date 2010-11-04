@@ -251,7 +251,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
     Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
     // initialize empty prob map - m_classesProb
     std::map <std::string, double> probMap;
-    probMap.find("gam")->second=-1;
+    probMap["gam"]=-1;
     
     cluster->initialize(treeParams, fitParams, params, probMap, 0., 0., 0., 0., m_Nsaturated, num_TruncXtals);
 
@@ -399,7 +399,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
         Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
         // initialize empty prob map - m_classesProb
         std::map <std::string, double> probMap;
-        probMap.find("gam")->second=-1;
+        probMap["gam"]=-1;
     
         cluster->initialize(treeParams, fitParams, params, probMap, rms_long, rms_trans, long_asym, long_skew, m_Nsaturated, num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS);
