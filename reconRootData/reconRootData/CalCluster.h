@@ -80,8 +80,10 @@ public:
     UInt_t  getStatusBits() const
      { return m_statusBits ; }
      
-    Double_t getGamProb()    const {return m_classesProb.find("gam")->second;}   
-
+    /// Access individual probabilities
+    Double_t getTopologyProb(std::string) const;
+    Double_t getGamProb()    const {return getTopologyProb("gam");}
+    
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalCluster &, const std::string & name = "" ) const ; // for tests

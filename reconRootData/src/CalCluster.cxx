@@ -63,6 +63,16 @@ CalCluster::CalCluster
         longSkew, numSaturatedXtals,numTruncXtals,statusBits) ;
  }
 
+/// Access any classification probabilities
+Double_t CalCluster::getTopologyProb(std::string top) const
+{
+    if(m_classesProb.count(top))
+      return m_classesProb.find(top)->second;
+    else
+      return -1;
+}   
+
+
 void CalCluster::Print( Option_t * ) const
  {
   m_params.Print() ;
@@ -93,7 +103,8 @@ void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
         clusLayerData.push_back(layer) ;
     }
     std::map <std::string, double> m;
-    m.find("gam")->second=0.5;
+    m["gam"]=0.5;
+    
     init(clusLayerData,t,f,p, m, 1.0,2.0,3.0,3.5,4,4,5) ;
  }
 
