@@ -85,7 +85,7 @@ CalClassifyAlg::CalClassifyAlg(const std::string & name, ISvcLocator * pSvcLocat
                              : Algorithm(name,pSvcLocator), m_calReconSvc(0)
 {   
     declareProperty ("classifierToolName",   m_classifierToolName="CalClusterNBClassifyTool") ;
-    declareProperty ("sortByClassification", m_sortByClassification=false) ;
+    declareProperty ("sortByClassification", m_sortByClassification=true) ;
 }
 
 StatusCode CalClassifyAlg::initialize()
@@ -148,7 +148,7 @@ StatusCode CalClassifyAlg::execute()
 
 	// Sort the cluster now that they are classified
 	// Let the Ubber cluster at the end though
-        if(m_sortByClassification){          
+        if(m_sortByClassification){
 	  log<<MSG::DEBUG<<"Sorting cluster using gam probability."<<endreq ;
 	  sort (calClusterCol->begin(), calClusterCol->end()-1, SortByGamProb);     //(12 26 32 33 45 53 71 80)
 	} else {
