@@ -73,7 +73,7 @@ DECLARE_ALGORITHM_FACTORY(CalClustersAlg) ;
 CalClustersAlg::CalClustersAlg(const std::string & name, ISvcLocator * pSvcLocator )
                              : Algorithm(name,pSvcLocator), m_calReconSvc(0)
 {   
-    declareProperty ("clusteringToolName", m_clusteringToolName="CalSingleClusteringTool") ;
+    declareProperty ("clusteringToolName", m_clusteringToolName="CalMSTClusteringTool") ;
 }
 
 StatusCode CalClustersAlg::initialize()
