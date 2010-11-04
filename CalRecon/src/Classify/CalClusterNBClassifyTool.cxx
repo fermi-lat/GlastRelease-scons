@@ -257,7 +257,7 @@ CalClusterNBClassifyTool::CalClusterNBClassifyTool(const std::string & type,
 { 
     declareInterface<ICalClassifyTool>(this) ;
 
-    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONROOT)/xml/nbc_xml_good.xml" );
+    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONROOT)/xml/test_NBC.xml" );
  
     return;
 }
@@ -318,16 +318,8 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
         // Current PDFs were derived with precut at NumXtals>3
         if((*cluster)->getMSTreeNumEdges()+1>3)
             classifyCluster(*cluster);
-    }
-    // Get the cluster instance
-    //     Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
-    // 
-    //     std::string producerName("CalSingleClusteringTool/") ;
-    //     producerName += cluster->getProducerName() ;
-    //     cluster->setProducerName(producerName) ;
-    //     cluster->setStatusBit(Event::CalCluster::ALLXTALS); 
-    //     calClusterCol->push_back(cluster);
-    //   
+    }   
+    
     return StatusCode::SUCCESS ;
 }
 
@@ -365,11 +357,7 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
             (*it).second /= pdSum;
         }
     }
-
-    // Debug
-    for (it = probMap.begin(); it != probMap.end(); it++)
-        log << MSG::DEBUG << (*it).first <<"\t"<< (*it).second  << endreq;
-  
+ 
     // Assign probability map to the cluster
     calCluster->setClassesProb(probMap);
     calCluster->setStatusBit(Event::CalCluster::CLASSIFIED);
