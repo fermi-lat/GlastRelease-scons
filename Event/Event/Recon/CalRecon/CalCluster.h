@@ -196,7 +196,8 @@ public:
     int getMSTreeNumEdges()                  const {return m_mstreeParams.getNumberOfEdges();}
 
     /// Access individual probabilities
-    inline double getGamProb()    const {return m_classesProb.find("gam")->second;}   
+    inline double getTopologyProb(std::string) const;
+    inline double getGamProb()    const {return getTopologyProb("gam");}
 
     /// Access individual status bits
     inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
@@ -248,13 +249,24 @@ private:
 
 };
 
+/// Access any classification probabilities
+inline double CalCluster::getTopologyProb(std::string top) const
+{
+    if(m_classesProb.count(top))
+      return m_classesProb.find(top)->second;
+    else
+      return -1;
+}   
+
+
 inline void CalCluster::iniCluster()
 {
     m_mstreeParams      = CalMSTreeParams();
     m_fitParams         = CalFitParams();
     m_params            = CalParams();
-    // Create the map and initialize gam prob to -1.
-    m_classesProb.find("gam")->second= -1.;
+    // Create the map and initialize gam prob to -1 -- needed ? TBD
+    m_classesProb       = std::map <std::string, double>();
+    m_classesProb["gam"]=-1.;
 
     m_rmslong           = 0.;
     m_rmslongAsym       = 0.;
