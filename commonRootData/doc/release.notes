@@ -7,6 +7,7 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ commonRootData-02-16-01 05-Nov-2010 TU  Fixing issues with the relational tables
  commonRootData-02-15-08 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows
  commonRootData-02-15-07 12-Jun-2010    jrb upgrades for SCons builds
 v2r15p6 14-Sep-2009 HMK fix warnings
