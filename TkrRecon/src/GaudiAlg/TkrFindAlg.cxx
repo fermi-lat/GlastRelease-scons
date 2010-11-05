@@ -88,7 +88,7 @@ const IAlgFactory& TkrFindAlgFactory = Factory;
 TkrFindAlg::TkrFindAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator)  
 { 
-    declareProperty("TrackFindType",   m_TrackFindType="Combo");
+    declareProperty("TrackFindType",   m_TrackFindType="TreeBased"); 
     declareProperty("DoCRFinding",     m_doCRFinding=true);
     declareProperty("CRGhosts",        m_CRGhosts=true);
 

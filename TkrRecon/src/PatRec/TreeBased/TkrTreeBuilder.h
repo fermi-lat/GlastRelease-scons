@@ -44,6 +44,12 @@ public:
 
 private:
 
+    /// Make the TkrTree given a head node
+    Event::TkrTree* makeTkrTree(Event::TkrVecNode* headNode, double trackEnergy);
+
+    /// This tries to find and create the "second" track in a given tree
+    Event::TkrTrack* makeSecondTrack(Event::TkrVecNode* headNode, Event::TkrTree* tree, double trackEnergy);
+
     /// Recursive routine for building a node sibling map
     void makeSiblingMap(Event::TkrNodeSiblingMap* siblingMap, 
                         Event::TkrVecNode*        headNode,
