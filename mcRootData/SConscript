@@ -22,6 +22,7 @@ mcRootDataRootcint = libEnv.Rootcint('mcRootData/mcRootData_rootcint',
 
 mcRootData = libEnv.RootDynamicLibrary('mcRootData',
                                        listFiles(['src/*.cxx']) + ['mcRootData/mcRootData_rootcint.cxx'])
+libEnv['rootcint_node'] = mcRootDataRootcint
 progEnv.Tool('mcRootDataLib')
 
 test_mcRootData = progEnv.Program('test_mcRootData',

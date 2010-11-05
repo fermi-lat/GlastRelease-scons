@@ -22,6 +22,9 @@ gcrSelectRootDataRootcint=libEnv.Rootcint('gcrSelectRootData/gcrSelectRootData_r
                                           packageName = 'gcrSelectRootData')
 gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData',
                                               listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
+
+libEnv['rootcint_node'] = gcrSelectRootDataRootcint
+
 progEnv.Tool('gcrSelectRootDataLib')
 test_gcrSelectRootData  = progEnv.Program('test_gcrSelectRootData',
                                           ['src/test/testGcrClasses.cxx'])
