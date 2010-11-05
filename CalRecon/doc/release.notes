@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-12-01 05-Nov-10 TU  Bringing new clustering and cluster classification code
  CalRecon-06-11-02 01-Sep-10 jrb Fix thinko in src/test/singleOptions.txt
  CalRecon-06-11-01 01-Sep-10 jrb Upgrades for SCons build
  CalRecon-06-11-00 16-May-10 TU Including Luca's skewness
