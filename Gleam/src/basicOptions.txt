@@ -191,7 +191,6 @@ NtupleMaker.Members = {
     "McCoordsAlg",       // now in AnaTup
     "ObfCoordsAlg"       // now in AnaTup
  };
- NtupleMaker.Members = {};
 
 AnalysisNtupleAlg.tupleName = "MeritTuple";
 // default output to GLEAMROOT/data
