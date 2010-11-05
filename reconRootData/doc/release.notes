@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-24-01 05-Nov-2010 TU  Updates for Pass 8 versions of clustering
  reconRootData-09-23-02 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows
  reconRootData-09-23-01 13-Jun-2010    jrb upgrades for SCons builds
 reconRootData-09-23-00 TU  Picking up Luca's mods to CalCluster
