@@ -41,7 +41,7 @@ private:
     TRef      m_second;
     TObjArray m_infos;
     
-    ClassDef(Relation,1) // Relation Class
+    ClassDef(Relation,2) // Relation Class
 };
 
 #endif
