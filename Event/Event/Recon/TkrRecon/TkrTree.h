@@ -30,18 +30,19 @@ namespace Event {  // NameSpace
 
 // Typedef for the map of siblings at each layer
 typedef std::map<int, std::vector<TkrVecNode*> > TkrNodeSiblingMap;
+typedef std::vector<Event::TkrTrack*>            TkrTrackVec;
 
-class TkrTree: virtual public ContainedObject
+class TkrTree: virtual public ContainedObject, public TkrTrackVec
 {
 public:
     // Constructors
     TkrTree() :
-            m_headNode(0), m_siblingMap(0), m_track(0)
-            {}
+            m_headNode(0), m_siblingMap(0)
+            {TkrTrackVec::clear();}
 
     TkrTree(TkrVecNode* node, TkrNodeSiblingMap* nodeSiblingMap, TkrTrack* track) :
-            m_headNode(node), m_siblingMap(nodeSiblingMap), m_track(track)
-            {}
+            m_headNode(node), m_siblingMap(nodeSiblingMap)
+            {TkrTrackVec::clear(); push_back(track);}
 
     virtual ~TkrTree() 
     {
@@ -58,7 +59,7 @@ public:
     // Return pointer to the sibling map
     const TkrNodeSiblingMap* getSiblingMap() const {return m_siblingMap;}
     // Return pointer to the track for this tree
-    const TkrTrack*          getTrack()      const {return m_track;}
+    const TkrTrack*          getBestTrack()  const {return front();}
 
 private:
     // Pointer to the head node in the Tree
@@ -66,9 +67,6 @@ private:
 
     // Pointer to the Node sibling map
     TkrNodeSiblingMap* m_siblingMap;
-
-    // Pointer to the TkrTrack associated to the tree
-    TkrTrack*          m_track;
 };
 
 // Typedefs for gaudi container for these objects
