@@ -178,7 +178,7 @@ gcrSelectRootWriterAlg.gcrSelectRootFile = "$(GLEAMDATAPATH)/gcr.root";
 // ntuple generation 
 
 ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit"
-              //, "GlastClassify" 
+              , "GlastClassify" 
               };
 AuditorSvc.Auditors += {"EventAuditor"}; // For event-by-event timing
 
