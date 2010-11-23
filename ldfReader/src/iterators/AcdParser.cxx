@@ -135,7 +135,9 @@ void AcdParser::header(unsigned cable, AEMheader hdr)
         acd->addPmt(ldfReader::AcdDigi::AcdPmt(digiSide, iChannel, veto, accept,
                                                headerParity));
         AcdDigi::AcdPmt* newPmt = acd->getPmtSide(digiSide);
-        if(pmt) newPmt->initCable(cable);
+        if(newPmt) {
+           newPmt->initCable(cable);
+        }
     }
 
 // HMK new ACD end
