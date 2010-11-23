@@ -203,7 +203,12 @@ StatusCode LdfAcdDigiCnv::createObj(IOpaqueAddress* , DataObject*& refpObject) {
         } else {
             findDigi->second->init(pha, hitMapArr, acceptMapArr, cnoArr);
             findDigi->second->initLdfParameters(tileName, tileNumber, range, error);
-            findDigi->second->setNinja(false);
+            if ((hitMapArr[0] == true) && (acceptMapArr[0] == false) )
+                findDigi->second->setNinja(true);
+            else if ((hitMapArr[1] == true) && (acceptMapArr[1] == false) )
+                findDigi->second->setNinja(true);
+            else
+                findDigi->second->setNinja(false);
         }
         
     }
