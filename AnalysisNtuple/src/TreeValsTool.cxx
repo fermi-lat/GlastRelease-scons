@@ -304,7 +304,7 @@ StatusCode TreeValsTool::calculate()
     
             for(; sibItr != tree->getSiblingMap()->rend(); sibItr++)
             {
-                const std::vector<Event::TkrVecNode*>& nodeVec = sibItr->second;
+                const std::vector<const Event::TkrVecNode*>& nodeVec = sibItr->second;
 
                 int nodeVecSize = nodeVec.size();
 
@@ -339,7 +339,7 @@ StatusCode TreeValsTool::calculate()
     
                 for(; sibItr != tree->getSiblingMap()->rend(); sibItr++)
                 {
-                    const std::vector<Event::TkrVecNode*>& nodeVec = sibItr->second;
+                    const std::vector<const Event::TkrVecNode*>& nodeVec = sibItr->second;
 
                     int nodeVecSize = nodeVec.size();
 
