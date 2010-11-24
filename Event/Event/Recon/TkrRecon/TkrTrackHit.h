@@ -68,30 +68,31 @@ public:
     //         < volume info  >  <   hit type    > <    track fitting status          >
     // high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     //                                                                < more hit type >
-    enum StatusBits {HITONFIT       = 0x0000001,  // Hit is used in the fit
-                     HASMEASURED    = 0x0000002,  // Hit has valid measured parameters
-                     HASPREDICTED   = 0x0000004,  // Hit has valid predicted parameters
-                     HASFILTERED    = 0x0000008,  // Hit has valid filtered parameters
-                     HASSMOOTHED    = 0x0000010,  // Hit has valid smoothed parameters
-                     HASMATERIAL    = 0x0000020,  // Hit has valid material matrix
-                     HASREVFIT      = 0x0000040,  // Hit has "revfit" parameters 
-                     HASMONTECARLO  = 0x0000080,  // Hit has "Monte Carlo" parameters 
-                     HASUSER        = 0x0000100,  // Hit has user defined parameters
+    enum StatusBits {HITONFIT       = 0x00000001,  // Hit is used in the fit
+                     HASMEASURED    = 0x00000002,  // Hit has valid measured parameters
+                     HASPREDICTED   = 0x00000004,  // Hit has valid predicted parameters
+                     HASFILTERED    = 0x00000008,  // Hit has valid filtered parameters
+                     HASSMOOTHED    = 0x00000010,  // Hit has valid smoothed parameters
+                     HASMATERIAL    = 0x00000020,  // Hit has valid material matrix
+                     HASREVFIT      = 0x00000040,  // Hit has "revfit" parameters 
+                     HASMONTECARLO  = 0x00000080,  // Hit has "Monte Carlo" parameters 
+                     HASUSER        = 0x00000100,  // Hit has user defined parameters
 
-                     HITISSSD       = 0x0001000,  // Hit comes from a SSD
-                     HITISDEADST    = 0x0002000,  // Hit coresponds to a dead SSD Strip
-                     HITISGAP       = 0x0004000,  // Hit comes from gap between SSDs
-                     HITISTWR       = 0x0008000,  // Hit comes outside live SSD plane
+                     HITISSSD       = 0x00001000,  // Hit comes from a SSD
+                     HITISDEADST    = 0x00002000,  // Hit coresponds to a dead SSD Strip
+                     HITISGAP       = 0x00004000,  // Hit comes from gap between SSDs
+                     HITISTWR       = 0x00008000,  // Hit comes outside live SSD plane
 
-                     MEASURESX      = 0x0010000,  // Plane measures in X direction
-                     MEASURESY      = 0x0020000,  // Plane measures in Y direction
-                     HASVALIDTKR    = 0x0080000,  // Valid track volume identifier
+                     MEASURESX      = 0x00010000,  // Plane measures in X direction
+                     MEASURESY      = 0x00020000,  // Plane measures in Y direction
+                     HASVALIDTKR    = 0x00080000,  // Valid track volume identifier
 
-                     HITISUNKNOWN   = 0x0100000,  // Missing cluster, but fails all tests
-                     HITISDEADPLN   = 0x0200000,  // Entire plane is dead
-                     HITISTRUNCATED = 0x0400000,  // Hit is in a truncated region
+                     HITISUNKNOWN   = 0x00100000,  // Missing cluster, but fails all tests
+                     HITISDEADPLN   = 0x00200000,  // Entire plane is dead
+                     HITISTRUNCATED = 0x00400000,  // Hit is in a truncated region
+                     HITHASKINKANG  = 0x00800000,  // Hit has a kink angle that should be used
 
-                     UPWARDS        = 0x1000000   // Track direction is upwards (tz > 0)
+                     UPWARDS        = 0x01000000   // Track direction is upwards (tz > 0)
     };
 
 
@@ -111,7 +112,8 @@ public:
                 const double       hitChiSmooth) :
                     m_statusBits(0), m_cluster(cluster), m_hitID(tkrID), m_zPlane(hitZ), 
                     m_energy(hitEnergy), m_radLen(hitRadLen), m_activeDist(hitActDist),
-                    m_chiSquareFilter(hitChiFilter), m_chiSquareSmooth(hitChiSmooth)
+                    m_chiSquareFilter(hitChiFilter), m_chiSquareSmooth(hitChiSmooth),
+                    m_kinkAngle(0.)
     {
         if (m_cluster != 0)  m_statusBits  = HITISSSD | HITONFIT;
         if (tkrID.hasTray()) m_statusBits |= HASVALIDTKR;
@@ -149,6 +151,7 @@ public:
     inline const double        getChiSquareFilter() const {return m_chiSquareFilter;}
     inline const double        getChiSquareRevFit() const {return m_chiSquareRevFit;}
     inline const double        getChiSquareSmooth() const {return m_chiSquareSmooth;}
+    inline const double        getKinkAngle()       const {return m_kinkAngle;      }
     inline const idents::TkrId getTkrId()           const {return m_hitID;          }
 
     /// Allow rudimentary access to the hit information here 
@@ -180,6 +183,7 @@ public:
     inline void setChiSquareFilter(const double c)          {m_chiSquareFilter  = c;}
     inline void setChiSquareRevFit(const double c)          {m_chiSquareRevFit  = c;}
     inline void setChiSquareSmooth(const double c)          {m_chiSquareSmooth  = c;}
+    inline void setKinkAngle(const double a)                {m_kinkAngle        = a;}
 
     inline void setStatusBit(unsigned int bitToSet)         {m_statusBits      |=  bitToSet;}
     inline void clearStatusBit(StatusBits bitToClear)       {m_statusBits      &= ~bitToClear;}
@@ -207,6 +211,7 @@ private:
     double          m_chiSquareFilter; // hit chi-square at filter stage of fit
     double          m_chiSquareRevFit; // hit chi-square at filter stage of fit
     double          m_chiSquareSmooth; // hit chi-square at smooth stage of fit
+    double          m_kinkAngle;       // kink angle in the measuring plane of this hit
 
     typedef std::map<ParamType, TkrTrackParams> TkrParamsMap;
 

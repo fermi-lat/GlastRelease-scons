@@ -42,8 +42,8 @@ public:
     static const CLID& classID()       { return CLID_Relation; }
 
     Relation(T1* obj1, T2* obj2) : m_first(obj1), m_second(obj2) {}
-    Relation(T1* obj1, T2* obj2, std::string info);
-    Relation(T1* obj1, T2* obj2, std::vector<std::string> infos);
+    Relation(T1* obj1, T2* obj2, const std::string& info);
+    Relation(T1* obj1, T2* obj2, const std::vector<std::string>& infos);
 
     virtual ~Relation();
 
@@ -54,7 +54,7 @@ public:
     T2* getSecond()             { return m_second.getData(); }    
 
     /// Add additional information (as a string) to the relation
-    void addInfo(std::string inf);
+    void addInfo(const std::string& inf);
     std::vector<std::string> getInfos() const;
 
     /// Comparison operator for searching for duplicate entries
@@ -96,19 +96,21 @@ private:
 
 
 
-template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, std::string info): 
+template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, const std::string& info): 
   m_first(obj1), m_second(obj2), m_infos(1,info) {}
 
 
-template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, std::vector<std::string> infos): 
+template <class T1, class T2> inline Relation<T1,T2>::Relation(T1* obj1, T2* obj2, const std::vector<std::string>& infos): 
   m_first(obj1), m_second(obj2), m_infos(infos) {}
 
 template <class T1, class T2> inline Relation<T1,T2>::~Relation()
 {
+    if (!m_infos.empty()) m_infos.clear();
+
     return;
 }
 
-template <class T1, class T2> void Relation<T1,T2>::addInfo(std::string inf) 
+template <class T1, class T2> void Relation<T1,T2>::addInfo(const std::string& inf) 
 {
     // Purpose and Method:  This routine add additional information to the relation.
     // Inputs:  inf is the information to be added.

@@ -33,8 +33,12 @@ public:
                      FIRSTLINK  = 0x0002,
                      SKIP1LAYER = 0x0010,
                      SKIP2LAYER = 0x0020,
+                     SKIP3LAYER = 0x0040,
+                     SKIPNLAYER = 0x0080,
                      SAMETOWER  = 0x0100,
                      VERIFIED   = 0x0800};
+
+    enum skipsBits  {SKIPSLAYERS = SKIP1LAYER | SKIP2LAYER | SKIP3LAYER | SKIPNLAYER};
 
     // Constructors
     TkrVecPointsLink(const TkrVecPoint* firstPoint, const TkrVecPoint* secondPoint, double ang);
@@ -55,6 +59,8 @@ public:
     void setSameTower()                 {m_statusBits      |=  SAMETOWER;}
     void setSkip1Layer()                {m_statusBits      |=  SKIP1LAYER;}
     void setSkip2Layer()                {m_statusBits      |=  SKIP2LAYER;}
+    void setSkip3Layer()                {m_statusBits      |=  SKIP3LAYER;}
+    void setSkipNLayer()                {m_statusBits      |=  SKIPNLAYER;}
     void setVerified()                  {m_statusBits      |=  VERIFIED;}
     void setMaxScatAngle(double ang)    {m_maxScatAngle     =  ang;}
     void setAngleToNextLink(double ang) {m_angleToNextLink  =  ang;}
@@ -66,13 +72,15 @@ public:
     void addAngleToRmsSum(double ang);
     void addDistToRmsSum(double dist);
 
-    const bool         associated()          const {return (m_statusBits & ASSOCIATED) == ASSOCIATED;}
-    const bool         firstLink()           const {return (m_statusBits & FIRSTLINK)  == FIRSTLINK;}
-    const bool         sameTower()           const {return (m_statusBits & SAMETOWER)  == SAMETOWER;}
-    const bool         skipsLayers()         const {return (m_statusBits & (SKIP1LAYER | SKIP2LAYER)) != 0;}
-    const bool         skip1Layer()          const {return (m_statusBits & SKIP1LAYER) == SKIP1LAYER;}
-    const bool         skip2Layer()          const {return (m_statusBits & SKIP2LAYER) == SKIP2LAYER;}
-    const bool         verified()            const {return (m_statusBits & VERIFIED)   == VERIFIED;}
+    const bool         associated()          const {return (m_statusBits & ASSOCIATED)  == ASSOCIATED;}
+    const bool         firstLink()           const {return (m_statusBits & FIRSTLINK)   == FIRSTLINK;}
+    const bool         sameTower()           const {return (m_statusBits & SAMETOWER)   == SAMETOWER;}
+    const bool         skipsLayers()         const {return (m_statusBits & SKIPSLAYERS) != 0;}
+    const bool         skip1Layer()          const {return (m_statusBits & SKIP1LAYER)  == SKIP1LAYER;}
+    const bool         skip2Layer()          const {return (m_statusBits & SKIP2LAYER)  == SKIP2LAYER;}
+    const bool         skip3Layer()          const {return (m_statusBits & SKIP3LAYER)  == SKIP3LAYER;}
+    const bool         skipNLayer()          const {return (m_statusBits & SKIPNLAYER)  == SKIPNLAYER;}
+    const bool         verified()            const {return (m_statusBits & VERIFIED)    == VERIFIED;}
     const unsigned int getStatusBits()       const {return m_statusBits;}
     const Point&       getPosition()         const {return m_position;}
     const Point        getPosition(double z) const;

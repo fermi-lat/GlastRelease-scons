@@ -46,8 +46,13 @@ class TkrVecNode: public TkrVecNodeSet, virtual public ContainedObject
 {
 public:
     // enumerate the status bits
-    enum StatusBits {NODE_IS_SACRED     = 0x80000000,
-                     NODE_CAN_BE_SHARED = 0x01000000};
+    enum StatusBits {NODE_IS_SACRED       = 0x80000000,
+                     NODE_CAN_BE_SHARED   = 0x01000000};
+
+    enum LayerMask  {START_BILAYER_BITS   = 0x0000001F,
+                     CURRENT_BILAYER_BITS = 0x000003E0,
+                     TO_MAIN_BRANCH_BITS  = 0x00007C00,
+                     TREE_ID_BITS         = 0x00FF0000};
     // Constructors
     TkrVecNode(TkrVecNode*             parent, 
                const TkrVecPointsLink* associatedLink);
@@ -78,6 +83,7 @@ public:
     // Set status bits
     void setNodeSacred()                         {m_statusBits |= NODE_IS_SACRED;}
     void setNodeCanBeShared()                    {m_statusBits |= NODE_CAN_BE_SHARED;}
+    void setBiLyrs2MainBrch(int biLyrs);
 
     // Methods to return information
     // Return pointer to the parent node
@@ -100,6 +106,8 @@ public:
     const unsigned char                 getTreeStartLayer()  const;
     // Get the current bilayer
     const unsigned char                 getCurrentBiLayer()  const;
+    // Get the current bilayer
+    const unsigned char                 getBiLyrs2MainBrch() const;
     // Get the Tree ID
     const unsigned char                 getTreeId()          const;
     // Get the number of bilayers from start to this node
@@ -150,8 +158,9 @@ private:
     // Pointer to our parent node
     TkrVecNode*                  m_parent;
     // Bit mask to contain status items
-    // Currently: bits  0- 7 contain the tree starting bilayer
-    //            bits  8-15 contain the current bilayer
+    // Currently: bits  0- 4 contain the tree starting bilayer
+    //            bits  5- 9 contain the current bilayer
+    //            bits 10-14 contian the number of bilayers to main branch
     //            bits 16-23 contain the tree ID
     //            bits 24-31 represent status bits:
     //            0x80000000 is the "this node is sacred" bit
@@ -193,13 +202,14 @@ inline TkrVecNode::TkrVecNode(TkrVecNode* parent, const TkrVecPointsLink* associ
 
         if (parent->getTreeStartLayer())
         {
-            m_statusBits = (m_statusBits & 0xFFFFFF00) | parent->getTreeStartLayer();
+            m_statusBits = (m_statusBits & ~START_BILAYER_BITS) 
+                         | (parent->getTreeStartLayer() & START_BILAYER_BITS);
         }
         else if (associatedLink)
         {
             int biLayer = associatedLink->getFirstVecPoint()->getLayer();
 
-            m_statusBits = (m_statusBits & 0xFFFFFF00) | (biLayer & 0x000000FF);
+            m_statusBits = (m_statusBits & START_BILAYER_BITS) | (biLayer & START_BILAYER_BITS);
         }
 
         setTreeId(parent->getTreeId());
@@ -232,7 +242,7 @@ inline TkrVecNode::TkrVecNode(TkrVecNode* parent, const TkrVecPointsLink* associ
     {
         int biLayer = associatedLink->getFirstVecPoint()->getLayer();
 
-        m_statusBits = (m_statusBits & 0xFFFF00FF) | ((biLayer << 8) & 0x0000FF00);
+        m_statusBits = (m_statusBits & ~CURRENT_BILAYER_BITS) | ((biLayer << 5) & CURRENT_BILAYER_BITS);
     }
 }
 
@@ -351,28 +361,40 @@ inline const int TkrVecNode::getMemUsedInTree() const
     
 inline const unsigned char TkrVecNode::getTreeStartLayer() const
 {
-    unsigned char startLayer = m_statusBits & 0xFF;
+    unsigned char startLayer = m_statusBits & START_BILAYER_BITS;
 
     return startLayer;
 }
 
 inline const unsigned char TkrVecNode::getCurrentBiLayer()  const
 {
-    unsigned char currentLayer = (m_statusBits >> 8) & 0xFF;
+    unsigned char currentLayer = (m_statusBits & CURRENT_BILAYER_BITS) >> 5;
 
     return currentLayer;
 }
-    
+
+inline const unsigned char TkrVecNode::getBiLyrs2MainBrch()  const
+{
+    unsigned char currentLayer = (m_statusBits & TO_MAIN_BRANCH_BITS) >> 10;
+
+    return currentLayer;
+}
+
 inline const unsigned char TkrVecNode::getTreeId() const
 {
-    unsigned char treeId = (m_statusBits >> 16) & 0xFF;
+    unsigned char treeId = (m_statusBits & TREE_ID_BITS) >> 16;
 
     return treeId;
 }
 
 inline void TkrVecNode::setTreeId(int treeId)
 {
-    m_statusBits = (m_statusBits & 0xFF00FFFF) | ((treeId << 16) & 0x00FF0000);
+    m_statusBits = (m_statusBits & ~TREE_ID_BITS) | ((treeId << 16) & TREE_ID_BITS);
+}
+
+inline void TkrVecNode::setBiLyrs2MainBrch(int biLayersToMainBranch)
+{
+    m_statusBits = (m_statusBits & ~TO_MAIN_BRANCH_BITS) | ((biLayersToMainBranch << 10) & TO_MAIN_BRANCH_BITS);
 }
 
 inline bool TkrVecNode::removeDaughter(Event::TkrVecNode* node, bool keepBest)
