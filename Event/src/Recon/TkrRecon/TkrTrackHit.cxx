@@ -43,7 +43,17 @@ Point Event::TkrTrackHit::getPoint(TkrTrackHit::ParamType type)
 
 const Vector Event::TkrTrackHit::getDirection(TkrTrackHit::ParamType type) const
 {
-    const TkrTrackParams& hit = getTrackParams(type);
+    TkrTrackParams hit = getTrackParams(type);
+
+    if (m_statusBits & HITHASKINKANG)
+    {
+        int    measIdx = getParamIndex(Event::TkrTrackHit::SSDMEASURED, Event::TkrTrackParams::Position);
+        double measAng = atan(hit(measIdx));
+
+        measAng += m_kinkAngle;
+
+        hit(measIdx) = tan(measAng);
+    }
 
     // This assumes that track directions are slopes
     return Vector(-hit.getxSlope(), -hit.getySlope(), -1.).unit();
@@ -51,7 +61,17 @@ const Vector Event::TkrTrackHit::getDirection(TkrTrackHit::ParamType type) const
 
 Vector Event::TkrTrackHit::getDirection(TkrTrackHit::ParamType type)
 {
-    const TkrTrackParams& hit = getTrackParams(type);
+    TkrTrackParams hit = getTrackParams(type);
+
+    if (m_statusBits & HITHASKINKANG)
+    {
+        int    measIdx = getParamIndex(Event::TkrTrackHit::SSDMEASURED, Event::TkrTrackParams::Position);
+        double measAng = atan(hit(measIdx));
+
+        measAng += m_kinkAngle;
+
+        hit(measIdx) = tan(measAng);
+    }
 
     // This assumes that track directions are slopes
 	if(m_statusBits & UPWARDS){
