@@ -35,7 +35,13 @@ public:
     int    buildTrackElements();
 
     /// Access to the nodes collection
-    const Event::TkrVecNodeCol* getVecNodeCol() const {return m_headNodes;}
+    const Event::TkrVecNodeCol*         getVecNodeCol()         const {return m_headNodes;}
+
+    /// Access to relations between points and nodes
+    const Event::TkrVecPointToNodesTab* getPointsToNodesTab()   const {return m_pointsToNodesTab;}
+
+    /// Define a relational table to relate TkrClusters to points
+    const Event::TkrClusterToNodesTab*  getClustersToNodesTab() const {return m_clustersToNodesTab;}
 
 private:
 
