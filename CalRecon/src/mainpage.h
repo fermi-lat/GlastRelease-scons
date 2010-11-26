@@ -3,18 +3,29 @@
 
 /** @mainpage package CalRecon
  *
- * @authors A.Chekhtman, R.Terrier, J.A.Hernando, G. Musat, B. Giebels
+ * @authors A.Chekhtman, R.Terrier, J.A.Hernando, G. Musat, B. Giebels, L. Baldini, J. Bregeon, C. Sgro'
+ *
+ * @warning This documentation is obsolete and is now under revision.
  *
  * @section intro Introduction
  *
  *  CalRecon package reconstructs the energy and direction  of  incident particle from
  *   the calorimeter information. 
  *   
- *   Package contains 2 algorithms: CalClustersAlg and CalDisplay.
+ *   The package contains 6 algorithms:
+ *   - CalDisplay: extracts the reconstructed calorimeter data from TDS classes and draw the graphic representation
+ *   - CalClustersAlg: groups nearby hit cristals into clusters, different algorithms are available
+ *   - CalClassifyAlg: classifies clusters according to their topology (gamma-like, mip-like...)
+ *   - CalEventEnergyAlg: controls and applies the various energy correction tools used to determine the final event energy
+ *   - CalMipFinderAlg: looks for minimum ionizing particle tracks in the calorimeter (usually turned off)
+ *   - PropertiesCheckAlg: internal algorithm to check jobOption properties ?
  *
  *   The  control flow diagram of CalRecon package, including also the CalDigi package,
  *   is given on the following WEB page:
  * <A HREF="http://www-glast.slac.stanford.edu/software/CAL/meetings/calrecondiagram.pdf"> CalRecon diagram </A> 
+ *
+ * @section algs Description of the main algorithms
+ *   CalDisplay provides the display of reconstructed data.
  *
  *   CalClustersAlg calculates the energy, position and direction for
  *   calorimeter clusters and applies energy corrections.
@@ -31,10 +42,16 @@
  *     - average position for each layer
  *     - direction of incident particle
  *    
+ *   CalClassifyAlg
  *
- *   CalDisplay algorithm provides the display of reconstructed data.
+ *    
+ *   CalEventEnergyAlg
  *
- * @section Tools Tools
+ *    
+ *   CalMipFinderAlg
+ *
+ *
+ * @section tools Tools
  *
  * The original clustering and energy corrections (profile and last-layer
  * correlation methods) have been recast as Gaudi tools.
@@ -89,9 +106,6 @@
  * @verbinclude requirements
  * <hr>
  *  
- * @todo implement real clustering in CalClustersAlg to determine the 
- *       energies of electron and positron produced
- *       by low energy photon
  *
  * @todo move out hardwired constants describing the energy correction fit
  *       from CalClustersAlg::Leak function into a data file;
