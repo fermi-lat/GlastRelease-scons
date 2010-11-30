@@ -120,7 +120,7 @@ StatusCode TkrMapTool::initialize()
             int plane = m_tkrMap[ind];
             int end   = endArray[j];
             m_tkrInverseMap[planeMult*plane+end] = ind;
-            std::cout << plane << " " << end << " " << ind << std::endl;
+            //std::cout << plane << " " << end << " " << ind << std::endl;
         }
     }
 
