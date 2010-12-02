@@ -77,8 +77,10 @@ public:
                      GHOST      = 0x010000, // set if track contains ghost clusters
                      DIAGNOSTIC = 0x020000, // set if track contains diagnostic ghost clusters
                      COSMICRAY  = 0x040000, // set if the track was found by the cosmic-ray finder (don't use these for gamma-ray analysis!)
+                     TREEBASED  = 0x080000, // set if the track was found using the Tree Based pattern recognition
 
-                     COMPOSITE  = 0x100000  // set if "hits" are composite positions instead of clusters
+                     COMPOSITE  = 0x100000, // set if "hits" are composite positions instead of clusters
+                     HASKINKS   = 0x200000  // set if the track has kinks in it
     }; 
     
     /// Utility 
