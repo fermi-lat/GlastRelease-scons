@@ -4,6 +4,7 @@
  * @verbatim
  * EOH *
 
+ EbfWriter-01-08-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
  EbfWriter-01-08-02 12-Jun-2010    jrb upgrades for SCons builds
  EbfWriter-01-08-01 13-Nov-2009    jrb Updates for SCons
  * v1r8p0 17-Feb-2009 TU  Use LdfEvent::Gem.h to get trigger primitive information for simulations (kludge version)

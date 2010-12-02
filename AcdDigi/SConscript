@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Heather Kelly <heather@milkyway.gsfc.nasa.gov>
-# Version: AcdDigi-03-10-03
+# Version: AcdDigi-03-10-04
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
