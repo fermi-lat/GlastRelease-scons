@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-06-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
  GlastClassify-07-06-03 14-Jun-2010    jrb for SCons builds
  GlastClassify-07-06-02 12-Jun-2010    jrb upgrades for SCons builds
  GlastClassify-07-06-01 13-Apr-2010  TU Update to Pass7_v17.10.xml with Anders' request to change FswGamState
