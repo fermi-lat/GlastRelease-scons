@@ -899,7 +899,7 @@ double KalmanTrackFitTool::doFilterWithKinks(Event::TkrTrack& track)
             if (fabs(dltaNrm) > m_minNrmResForKink) 
             {
                 // Don't be greedy... find new position one sigma from cluster on correct side
-                double offset     = dltaPos > 0 ? -0.75*measErr : 0.75*measErr; //-0.5*measErr : 0.5*measErr;
+                double offset     = 0.; //dltaPos > 0 ? -0.75*measErr : 0.75*measErr; //-0.5*measErr : 0.5*measErr;
                 double predPosNew = measPos + offset;
 
                 // Get the previous hit in this measuring plane (which is most likely not the reference hit)
@@ -953,6 +953,9 @@ double KalmanTrackFitTool::doFilterWithKinks(Event::TkrTrack& track)
 
                     doFilterStep(firstHit, secndHit);
                 }
+
+                // And set the bit on the track to indicate a kink
+                track.setStatusBit(Event::TkrTrack::HASKINKS);
             }
         }
 
