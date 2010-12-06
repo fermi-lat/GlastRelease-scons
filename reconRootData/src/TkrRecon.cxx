@@ -68,7 +68,7 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
     const UInt_t NUM_CLUSTERS = 20;
     const UInt_t NUM_TRACKS = 15;
     const UInt_t NUM_VERTICES = 11;
-    // HMK Unused? const UInt_t NUM_TRUNCATION = 1;
+    const UInt_t NUM_TRUNCATION = 1;
 
     UInt_t icluster;
     for ( icluster = 0 ; icluster < NUM_CLUSTERS ; icluster++ ) 
@@ -94,7 +94,6 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
         vertex->Fake(ievent,ivertex,randNum) ;
         addVertex(vertex);
     }
-/* HMK-v12r7
 
     UInt_t itrunc;
     TkrTruncationData *trunc;
@@ -103,7 +102,6 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
 	trunc->Fake(ievent,itrunc,randNum);
 	addTruncationData(trunc);	
     }
-    */
 
     TkrDiagnostics * diag = new TkrDiagnostics ;
     diag->Fake(ievent,ivertex,randNum) ;
@@ -120,7 +118,7 @@ Bool_t TkrRecon::CompareInRange( TkrRecon & ref, const std::string & name ) {
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrCluster,getClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTrack,getTrackCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrVertex,getVertexCol()) && result ;
-// HMK-v12r7    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTruncationData,getTruncationDataCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTruncationData,getTruncationDataCol()) && result ;
     result = rootdatautil::CompareInRange(*getDiagnostics(),*ref.getDiagnostics(),"Diagnostics") && result ;
 
     if (!result) {

@@ -6,7 +6,7 @@
 ClassImp(GcrTrack)
 
 //-----------------------------------------------------------------------------------------------------------------
-void GcrTrack::Print(Option_t */*option*/) const
+void GcrTrack::Print(Option_t * /*option*/) const
 {
   std::cout << "---> writeOutPrint GcrTrack" << std::endl;
  

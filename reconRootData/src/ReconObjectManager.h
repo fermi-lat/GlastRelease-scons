@@ -8,6 +8,7 @@
 #include "reconRootData/TkrTrackHit.h"
 #include "reconRootData/TkrTrackParams.h"
 #include "reconRootData/TkrVertex.h"
+#include "reconRootData/TkrTruncationData.h"
 
 /** 
  *  @class ReconObjectManager
@@ -49,6 +50,9 @@ public:
     /// This method returns a "new" TkrVertex object allocated from the local pool
     TkrVertex*      getNewTkrVertex();
 
+    /// This method returns a "new" TkrVertex object allocated from the local pool
+    TkrTruncationData*  getNewTkrTruncationData();
+
     /// "Delete" all objects
     void Delete(const char* opt="");
 
@@ -78,5 +82,10 @@ private:
     /// Define a "pool" for TkrVertex and an iterator for accessing them
     std::list<TkrVertex>                m_tkrVertexPool;
     std::list<TkrVertex>::iterator      m_tkrVertexPoolIdx;
+
+    /// Define a "pool" for TkrTruncationData and an iterator for accessing them
+    std::list<TkrTruncationData>            m_tkrTruncationPool;
+    std::list<TkrTruncationData>::iterator  m_tkrTruncationPoolIdx;
+
 };
 #endif //ReconObjectManager_H

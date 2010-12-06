@@ -1,12 +1,14 @@
-/*
+
 #include "reconRootData/TkrTruncationData.h"
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 
+#include "ReconObjectManager.h"
+
 ClassImp(TkrTruncationData)
-*/
-//void TkrTruncationData::Clear(Option_t* /* option */) 
-/*
+
+void TkrTruncationData::Clear(Option_t* /* option */) 
+
 {
   m_status=0;
   m_stripCount.clear();
@@ -71,4 +73,25 @@ Bool_t TkrTruncationData::CompareInRange( const TkrTruncationData & ref, const s
 
 }
 
-*/
+void* TkrTruncationData::operator new(size_t /*size*/)
+{
+    TkrTruncationData* temp = ReconObjectManager::getPointer()->getNewTkrTruncationData();
+
+    // Since we recycle, make sure these member functions are cleared
+    //temp->m_hitCol.clear();
+
+    return temp;
+}
+
+void* TkrTruncationData::operator new(size_t /*size*/, void* vp)
+{
+    return vp;
+}
+
+void TkrTruncationData::operator delete(void* /*p*/)
+{
+    // Since we let ReconObjectManager handles memory, nothing to do here
+    return;
+}
+
+

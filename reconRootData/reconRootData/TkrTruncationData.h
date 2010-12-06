@@ -1,6 +1,6 @@
 #ifndef ROOT_TKRTRUNCATIONDATA_H
 #define ROOT_TKRTRUNCATIONDATA_H
-/* HMK-v12r7
+
 #include "TObject.h"
 
 #include <vector>
@@ -15,7 +15,6 @@ using namespace std;
 //typedef std::vector<UInt_t>   intVector;
 //typedef std::vector<Float_t> floatVector;
 
-*/
 
 /** @class TkrTruncationData
  * This ROOT class is the flattened version of the TDS 
@@ -23,7 +22,7 @@ using namespace std;
  *  from the TkrTruncationInfo added
  * $Header$
  */
-/* HMK-v12r7
+
 class TkrTruncationData : public TObject
 {
  public:
@@ -55,6 +54,15 @@ class TkrTruncationData : public TObject
   Bool_t CompareInRange( const TkrTruncationData & ref, const std::string & name = "" ) const ;
   void Print( Option_t * option ="" ) const ;
 
+  /// Override the "new" operator in order to use the ReconObjectManager pool management
+  void* operator new(size_t size);
+
+  void* operator new(size_t size, void* vp);
+
+  /// Override the "delete" operator in order to use the ReconObjectManager pool management
+  void  operator delete(void* p);
+
+
  private:
   ///From TkrTruncationPlane
   Int_t m_status;
@@ -70,5 +78,5 @@ class TkrTruncationData : public TObject
 
   ClassDef(TkrTruncationData,1) 
 };
-*/
+
 #endif

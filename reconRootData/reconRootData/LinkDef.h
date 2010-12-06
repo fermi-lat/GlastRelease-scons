@@ -54,7 +54,7 @@
 #pragma link C++ class TkrTrackHit+;
 #pragma link C++ class TkrTrackParams+;
 #pragma link C++ class TkrVertex+;
-// HMK-v12r7 #pragma link C++ class TkrTruncationData+;
+#pragma link C++ class TkrTruncationData+;
 #pragma link C++ class TkrDiagnostics+;
 
 #pragma link C++ class reconRootData::TaggerCluster+;
