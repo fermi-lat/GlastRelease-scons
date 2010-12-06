@@ -38,6 +38,7 @@ public:
 
     StatusCode initialize();
     StatusCode analyzeDigis();
+    StatusCode finalize();
 
 private:
     /// Pointer to the local Tracker geometry service

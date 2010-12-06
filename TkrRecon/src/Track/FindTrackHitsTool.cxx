@@ -658,7 +658,7 @@ TkrTrackHit* FindTrackHitsTool::findNextHit(TkrTrackHit* last_hit, bool reverse)
                     }
                 }
                 // now do the same for the high end (CC1)
-                if ((status | TkrTruncatedPlane::CC1SET)!=0) {
+                if ((status & TkrTruncatedPlane::CC1SET)!=0) {
                     lowPos  = stripLocalX[2];
                     highPos = 0.5*nStrips*stripPitch;
                     if ((localX-lowPos)>-xError && (localX-highPos)<xError) {
