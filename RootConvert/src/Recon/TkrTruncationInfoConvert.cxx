@@ -5,6 +5,7 @@
 
 #include <Event/Recon/TkrRecon/TkrTruncatedPlane.h>
 #include <TObject.h>
+#include <TCollection.h>
 
 #include <iostream>
 
@@ -40,7 +41,7 @@ void convert(const std::pair<Event::SortId, Event::TkrTruncatedPlane> & tdsTrunc
 }
 
 
-  void convert( const TObjArray &  truncationDataColRoot, 
+  void convert( const TCollection &  truncationDataColRoot, 
                 Event::TkrTruncationInfo & tdsTruncationInfo )
   {
     TIter truncationDataIter(&truncationDataColRoot);

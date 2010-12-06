@@ -34,7 +34,9 @@ macro_append RootConvert_headers "" WIN32 " \
         ../RootConvert/Recon/Acd*.h \
         ../RootConvert/Recon/Adf*.h \
         ../RootConvert/Recon/Gcr*.h \
+        ../RootConvert/Recon/Tkr*.h \
         ../RootConvert/GcrSelect/*.h"
+
  
 library RootConvert  \
         Utilities/*.cxx \
@@ -44,6 +46,7 @@ library RootConvert  \
         Recon/Adf*.cxx \
         Recon/Cal*.cxx \
         Recon/Gcr*.cxx \
+        Recon/Tkr*.cxx \
         GcrSelect/*.cxx \
         ${RootConvert_headers}
 

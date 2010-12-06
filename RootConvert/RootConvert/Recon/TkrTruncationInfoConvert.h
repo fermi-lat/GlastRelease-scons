@@ -7,16 +7,17 @@
 #include "GaudiKernel/DataObject.h"
 
 #include <Event/Recon/TkrRecon/TkrTruncationInfo.h>
-//#include <Event/Recon/TkrRecon/TkrTruncatedPlane.h>
 #include <reconRootData/TkrTruncationData.h>
 
 //#include <pair>
+#include <utility>
+#include <TCollection.h>
 
 namespace RootPersistence {
 
 void convert(const std::pair<Event::SortId, Event::TkrTruncatedPlane> &, TkrTruncationData &);
-//void convert( const Event::TkrTruncationInfo &, TkrTruncationData & ) ;
-void convert( const TObjArray &, Event::TkrTruncationInfo & ) ;
+void convert( const Event::TkrTruncationInfo &, TkrTruncationData & ) ;
+void convert( const TCollection &, Event::TkrTruncationInfo & ) ;
 
 }
 
