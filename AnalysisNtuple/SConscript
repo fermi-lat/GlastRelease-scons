@@ -1,7 +1,7 @@
 # -*-python-*-
 # $Header$
 # Authors: Leon Rochester <lsrea@slac.stanford.edu>
-# Version: AnalysisNtuple-02-57-05
+# Version: AnalysisNtuple-02-57-06
 
 import platform
 
