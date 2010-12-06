@@ -300,6 +300,7 @@ StatusCode TreeValsTool::calculate()
             Tkr_tree1_maxWidth     = sibItr->second.size();
             Tkr_tree1_lastWidth    = tree->getSiblingMap()->begin()->second.size();
 
+            
             float firstLayer = sibItr->first;
     
             for(; sibItr != tree->getSiblingMap()->rend(); sibItr++)
