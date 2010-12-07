@@ -318,8 +318,9 @@ StatusCode TkrHitTruncationTool::analyzeDigis()
 
     numRCTrunc += truncationInfo->getNumRCTruncated();
     numCCTrunc += truncationInfo->getNumCCTruncated();
-    std::cout << "event " << count << " truncs " << truncationInfo->getNumRCTruncated() 
-        << " " << truncationInfo->getNumCCTruncated() << std::endl;
+    
+    //std::cout << MSG::DEBUG << "event " << count << " truncs " << truncationInfo->getNumRCTruncated() 
+    //    << " " << truncationInfo->getNumCCTruncated() << std::endl;
 
     return sc;
 }  
