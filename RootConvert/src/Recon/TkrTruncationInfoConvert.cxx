@@ -19,7 +19,7 @@ void convert(const std::pair<Event::SortId, Event::TkrTruncatedPlane> & tdsTrunc
   rootTruncationData.setStatus(plane.getStatus()); 
   //hack so I can get what I want to do done! 
   const Event::intVector& tdsCntVec = plane.getStripCount();
-  std::vector<UInt_t> rootVec; //intVector rootVec;
+  std::vector<Int_t> rootVec; //intVector rootVec;
   for(Event::intVector::const_iterator tdsVecIter = tdsCntVec.begin(); tdsVecIter != tdsCntVec.end(); tdsVecIter++)
   {
       rootVec.push_back(*tdsVecIter);
@@ -55,18 +55,18 @@ void convert(const std::pair<Event::SortId, Event::TkrTruncatedPlane> & tdsTrunc
       if( (status & Event::TkrTruncatedPlane::CCSET)!=0 ) nCCTrunc++;
 
       //hack
-      const std::vector<UInt_t>& rootCntVec = truncationDataRoot->getStripCount();
+      const std::vector<Int_t>& rootCntVec = truncationDataRoot->getStripCount();
       Event::intVector tdsCntVec;
 
-      for(std::vector<UInt_t>::const_iterator rootVecIter = rootCntVec.begin(); rootVecIter != rootCntVec.end(); rootVecIter++)
+      for(std::vector<Int_t>::const_iterator rootVecIter = rootCntVec.begin(); rootVecIter != rootCntVec.end(); rootVecIter++)
       {
           tdsCntVec.push_back(*rootVecIter);
       }
       
-      const std::vector<UInt_t>& rootNumVec = truncationDataRoot->getStripNumber();
+      const std::vector<Int_t>& rootNumVec = truncationDataRoot->getStripNumber();
       Event::intVector tdsNumVec;
 
-      for(std::vector<UInt_t>::const_iterator rootVecIter = rootNumVec.begin(); rootVecIter != rootNumVec.end(); rootVecIter++)
+      for(std::vector<Int_t>::const_iterator rootVecIter = rootNumVec.begin(); rootVecIter != rootNumVec.end(); rootVecIter++)
       {
           tdsCntVec.push_back(*rootVecIter);
       }
