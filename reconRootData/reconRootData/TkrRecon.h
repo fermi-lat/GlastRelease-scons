@@ -87,7 +87,7 @@ private:
     static Int_t indCluster, indTrack, indVertex; //!        
     //, indTruncationData; 
 
-    ClassDef(TkrRecon,7)
+    ClassDef(TkrRecon,8)
 };
 
 #endif

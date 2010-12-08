@@ -52,8 +52,8 @@ Bool_t TkrTruncationData::CompareInRange( const TkrTruncationData & ref, const s
 
     // the test comes before "&& result" because we want to enforce all tests
     result = COMPARE_IN_RANGE(Status) && result ;
-    result = COMPARE_IN_RANGE(StripCount) && result ;
-    result = COMPARE_IN_RANGE(StripNumber) && result ;
+    //result = COMPARE_IN_RANGE(StripCount) && result ;
+    //result = COMPARE_IN_RANGE(StripNumber) && result ;
     //result = COMPARE_IN_RANGE(LocalX) && result ;
     result = COMPARE_IN_RANGE(PlaneZ) && result ;
     result = COMPARE_IN_RANGE(Tower) && result ;

@@ -30,8 +30,8 @@ class TkrTruncationData : public TObject
   virtual ~TkrTruncationData() {Clear();}
 
   const Int_t getStatus() const { return m_status; }
-  const vector<UInt_t>&   getStripCount() const   { return m_stripCount; }
-  const vector<UInt_t>&   getStripNumber() const { return m_stripNumber; }
+  const vector<Int_t>&   getStripCount() const   { return m_stripCount; }
+  const vector<Int_t>&   getStripNumber() const { return m_stripNumber; }
   const vector<Float_t>& getLocalX() const      { return m_localX; }
   const Float_t        getPlaneZ() const      { return m_planeZ; }
   const Int_t getTower() const { return m_tower;}
@@ -40,8 +40,8 @@ class TkrTruncationData : public TObject
   const Int_t getView()  const { return m_view; }
 
   void setStatus(int status) { m_status = status; }
-  void setStripCount(const vector<UInt_t>& stripCount)  { m_stripCount = stripCount; }
-  void setStripNumber(const vector<UInt_t>& stripNumber) { m_stripNumber = stripNumber; }
+  void setStripCount(const vector<Int_t>& stripCount)  { m_stripCount = stripCount; }
+  void setStripNumber(const vector<Int_t>& stripNumber) { m_stripNumber = stripNumber; }
   void setLocalX(const vector<Float_t>& localX)      { m_localX = localX; }
   void setPlaneZ(float planeZ)      { m_planeZ = planeZ; }
   void setTower(int tower)  { m_tower = tower;}
@@ -72,11 +72,11 @@ class TkrTruncationData : public TObject
   Int_t m_face;
   Int_t m_view;
   Float_t m_planeZ;
-  vector<UInt_t> m_stripCount;
-  vector<UInt_t> m_stripNumber;
+  vector<Int_t> m_stripCount;
+  vector<Int_t> m_stripNumber;
   vector<Float_t> m_localX;
 
-  ClassDef(TkrTruncationData,1) 
+  ClassDef(TkrTruncationData,2) 
 };
 
 #endif

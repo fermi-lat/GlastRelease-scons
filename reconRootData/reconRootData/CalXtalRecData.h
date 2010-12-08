@@ -103,7 +103,7 @@ private:
     /// ranges and pulse heights
     vector<CalRangeRecData> m_recData;
     
-    ClassDef(CalXtalRecData,1)
+    ClassDef(CalXtalRecData,2)
 };
 
 #endif
