@@ -26,8 +26,7 @@ progEnv.Tool('registerTargets', package = 'TkrUtil',
              testAppCxts = [[test_TkrUtil, progEnv],
                             [test_IndexedVector, progEnv]],
              includes = listFiles(['TkrUtil/*.h']),
-             data = listFiles(['data/*.txt', 'data/*.xml']),
-             jo = ['src/test/jobOptions.txt'])
+             jo = listFiles(['src/test/*.txt', src/test/*.xml])
 
 
 
