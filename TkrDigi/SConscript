@@ -23,6 +23,7 @@ test_TkrDigi = progEnv.GaudiProgram('test_TkrDigi',
 progEnv.Tool('registerTargets', package = 'TkrDigi',
              libraryCxts=[[TkrDigi,libEnv]],
              testAppCxts=[[test_TkrDigi,progEnv]],
+             data = listFiles(['data/*.txt']),
              jo = ['src/test/jobOptions.txt'])
 
 
