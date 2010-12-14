@@ -4,6 +4,7 @@
  @verbatim
  * EOH *
 
+ RootConvert-01-47-05 14-Dec-2010  lsrea update SConscript for TkrTruncation stuff
  RootConvert-01-47-04 08-Dec-2010  lsrea more UInt->Int fixes in Truncation code
  RootConvert-01-47-03 06-Dec-2010  lsrea mods for TKR truncation data i/o
  RootConvert-01-47-02 05-Nov-2010 TU Tagging updates including new Pass 8 stuff for cal
