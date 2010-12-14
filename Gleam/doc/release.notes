@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-06-02 13-Dec-2010  lsrea SCons mods
  Gleam-07-06-01 05-Nov-2010  lsrea One more little fix...
  Gleam-07-06-00 05-Nov-2010  lsrea fix basicOptions to restore the ValsTools
  Gleam-07-05-02 23-Sep-2010  lsrea Revert basicOptions sequence
