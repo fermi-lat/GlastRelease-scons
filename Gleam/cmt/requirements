@@ -90,7 +90,7 @@ use gr_app v*
 apply_pattern package_test
 
 # make a folder to keep local data files
-branches data
+# branches data  # make a data directory explicitly in cvs
 
 # temporary=============================================
 # this is set to the correct place for SLAC and glast-ts

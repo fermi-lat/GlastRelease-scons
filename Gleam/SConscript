@@ -46,6 +46,7 @@ test_Gleam = progEnv.GaudiProgram('test_Gleam', listFiles(['src/test/*.cxx']),
 progEnv.Tool('registerTargets', package = 'Gleam', 
 	     testAppCxts = [[test_Gleam, progEnv]],
 	     binaryCxts = [[Gleam, progEnv]],
+         data = ['data/dummy.txt'],
 	     jo = listFiles(['src/*.txt', 'src/test/*.txt',
 			     'src/jobOptions/pipeline/*.txt']) )
 
