@@ -17,6 +17,7 @@ RootConvert=libEnv.SharedLibrary('RootConvert',
                                             'src/Recon/Acd*.cxx',
                                             'src/Recon/Adf*.cxx',
                                             'src/Recon/Cal*.cxx',
+                                            'src/Recon/Tkr*.cxx',
                                             'src/Recon/Gcr*.cxx',
                                             'src/GcrSelect/*.cxx']))
 
