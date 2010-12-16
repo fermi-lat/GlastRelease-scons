@@ -20,7 +20,7 @@
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include <vector>
 
-#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectList.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/IInterface.h"
 
@@ -33,10 +33,11 @@ class TkrVecPoint: virtual public ContainedObject
 {
 public:
     // Status bit definitions    
-    enum StatusBits {ASSOCIATED       = 0x0001,
-                     LINKTOPHIT       = 0x0010,
-                     LINKBOTHIT       = 0x0020,
-                     ASSOCIATEDTONODE = 0x0100};
+    enum StatusBits {ASSOCIATED       = 0x00000001,
+                     LINKTOPHIT       = 0x00000010,
+                     LINKBOTHIT       = 0x00000020,
+                     ASSOCIATEDTONODE = 0x00000100,
+                     DONOTUSE         = 0x80000000};
 
     // constructors
     TkrVecPoint() : m_layer(-1), m_pXCluster(0), m_pYCluster(0), m_position(0.,0.,0.) 
@@ -77,6 +78,8 @@ public:
     void clearLinkBotHit()       {m_status &= ~LINKBOTHIT;}
     void setAssociatedToNode()   {m_status |=  ASSOCIATEDTONODE;}
     void clearAssociatedToNode() {m_status &= ~ASSOCIATEDTONODE;}
+    void setDoNotUse()           {m_status |=  DONOTUSE;}
+    void clearDoNotUse()         {m_status &= ~DONOTUSE;}
 
     /// @name access methods
     //@{
@@ -88,6 +91,8 @@ public:
     const bool isLinkBotHit()       const {return (m_status & LINKBOTHIT) != 0;}
     /// Is this hit associated to a node?
     const bool isAssociatedToNode() const {return (m_status & ASSOCIATEDTONODE) != 0;}
+    /// Is a usable point?
+    const bool isUsablePoint()      const {return (m_status & DONOTUSE) == 0;}
     /// Pointer to the cluster in the x plane of this layer
     const Event::TkrCluster*   getXCluster()   const {return m_pXCluster;}
     /// Pointer to the cluster of the y plane of this layer
@@ -165,11 +170,11 @@ inline bool TkrVecPoint::operator!=(const TkrVecPoint& point) const
             (m_pYCluster != point.m_pYCluster) );
 }
 
-typedef std::vector<TkrVecPoint*> TkrVecPointList;
+typedef std::list<TkrVecPoint*>         TkrVecPointList;
 typedef TkrVecPointList::const_iterator TkrVecPointListConItr;
 
 // Typedefs for gaudi container for these objects
-typedef ObjectVector<TkrVecPoint>      TkrVecPointCol;
+typedef ObjectList<TkrVecPoint>        TkrVecPointCol;
 typedef TkrVecPointCol::iterator       TkrVecPointColPtr;
 typedef TkrVecPointCol::const_iterator TkrVecPointColConPtr;
 
