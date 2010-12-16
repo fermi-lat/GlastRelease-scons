@@ -181,15 +181,17 @@ StatusCode VectorLinksTool::findTracks()
     // Set the event energy
     double eventEnergy = getEventEnergy();
 
+    // Set this here for now
+    int numLyrsToSkip = 3;
+
     // STEP ONE: build the list of all VecPoints
-    TkrVecPointsBuilder vecPointsBuilder(false, 0, 0, m_dataSvc, m_tkrGeom, m_clusTool);
+    TkrVecPointsBuilder vecPointsBuilder(numLyrsToSkip, m_dataSvc, m_tkrGeom, m_clusTool);
 
     // No point in continuing if too few VecPoints
     if (vecPointsBuilder.getNumBiLayers() > 2)
     {
         // STEP TWO: Associate (link) adjacent pairs of VecPoints and store away
-        TkrVecPointLinksBuilder vecPointLinksBuilder(vecPointsBuilder,
-                                                     eventEnergy,
+        TkrVecPointLinksBuilder vecPointLinksBuilder(eventEnergy,
                                                      m_dataSvc,
                                                      m_tkrGeom,
                                                      m_glastDetSvc,
