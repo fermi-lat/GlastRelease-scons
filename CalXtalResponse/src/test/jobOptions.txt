@@ -65,11 +65,11 @@ CalDigiAlg.CreateDiagnosticData = "1";
 // disable noise
 ToolSvc.CalSignalTool.enableNoise = false;
 
-test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_ped.txt";
-test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_cidac2adc.txt";
-test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_mpd.txt";
-test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_asym.txt";
-test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_tholdci.txt";
+test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cxr_test_ped.txt";
+test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cxr_test_cidac2adc.txt";
+test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cxr_test_mpd.txt";
+test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cxr_test_asym.txt";
+test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cxr_test_tholdci.txt";
 
 
 
@@ -79,11 +79,11 @@ test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/cxr_test_
 ApplicationMgr.ExtSvc += {"CalCalibSvc/CalCalibSvcIdeal"};
 CalCalibSvcIdeal.DefaultFlavor = "ideal"; // default for all calib types
 
-test_CalXtalResponse.pedTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/muonPeds.ideal.txt";
-test_CalXtalResponse.cidac2adcTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/cidac2adc.ideal.txt";
-test_CalXtalResponse.mpdTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/mpd.ideal.txt";
-test_CalXtalResponse.asymTXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.ideal.txt";
-test_CalXtalResponse.tholdCITXTPathIdeal = "$(CALXTALRESPONSEROOT)/src/test/tholdci.ideal.txt";
+test_CalXtalResponse.pedTXTPathIdeal = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/muonPeds.ideal.txt";
+test_CalXtalResponse.cidac2adcTXTPathIdeal = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cidac2adc.ideal.txt";
+test_CalXtalResponse.mpdTXTPathIdeal = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/mpd.ideal.txt";
+test_CalXtalResponse.asymTXTPathIdeal = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/muonAsym.ideal.txt";
+test_CalXtalResponse.tholdCITXTPathIdeal = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/tholdci.ideal.txt";
 
 ////////////////////////////////
 //-- CalFailureModeSvc test --//
@@ -103,11 +103,11 @@ CalFailureModeSvc.towerControllerList= {"4_2"};
 // IDEAL CALIB ONLY TEST (NO INET/MySQL) //
 ///////////////////////////////////////////
 // CalCalibSvc.DefaultFlavor = "ideal";
-// test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonPeds.ideal.txt";
-// test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEROOT)/src/test/cidac2adc.ideal.txt";
-// test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEROOT)/src/test/mpd.ideal.txt";
-// test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEROOT)/src/test/muonAsym.ideal.txt";
-// test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEROOT)/src/test/tholdci.ideal.txt";
+// test_CalXtalResponse.pedTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/muonPeds.ideal.txt";
+// test_CalXtalResponse.cidac2adcTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/cidac2adc.ideal.txt";
+// test_CalXtalResponse.mpdTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/mpd.ideal.txt";
+// test_CalXtalResponse.asymTXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/muonAsym.ideal.txt";
+// test_CalXtalResponse.tholdCITXTPath = "$(CALXTALRESPONSEJOBOPTIONSPATH)/test/tholdci.ideal.txt";
 // GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
