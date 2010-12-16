@@ -72,21 +72,28 @@ std::string EventModel::Overlay::TkrDigiHitTab        = EventModel::Overlay::Eve
 std::string EventModel::Overlay::TkrClusterHitTab     = EventModel::Overlay::Event + "/TkrClusterHitTab";
       
 // reconstructed data (Tracker)
-std::string EventModel::TkrRecon::Event               = EventModel::EventHeader + "/TkrRecon";
-std::string EventModel::TkrRecon::TkrClusterCol       = EventModel::TkrRecon::Event + "/TkrClusterCol";
-std::string EventModel::TkrRecon::TkrIdClusterMMap    = EventModel::TkrRecon::Event + "/TkrIdClusterMMap";
-std::string EventModel::TkrRecon::TkrIdClusterMap     = EventModel::TkrRecon::Event + "/TkrIdClusterMap";
-std::string EventModel::TkrRecon::TkrTrackCol         = EventModel::TkrRecon::Event + "/TkrTrackCol";
-std::string EventModel::TkrRecon::TkrTrackHitCol      = EventModel::TkrRecon::Event + "/TkrTrackHitCol";
-std::string EventModel::TkrRecon::TkrVertexCol        = EventModel::TkrRecon::Event + "/TkrVertexCol";
-std::string EventModel::TkrRecon::TkrDiagnostics      = EventModel::TkrRecon::Event + "/TkrDiagnostics";
-std::string EventModel::TkrRecon::TkrEventParams      = EventModel::TkrRecon::Event + "/TkrEventParams";
-std::string EventModel::TkrRecon::TkrTruncatedPlane   = EventModel::TkrRecon::Event + "/TkrTruncatedPlane";
-std::string EventModel::TkrRecon::TkrTruncationInfo   = EventModel::TkrRecon::Event + "/TkrTruncationInfo";
-std::string EventModel::TkrRecon::TkrVecPointCol          = EventModel::TkrRecon::Event + "/TkrVecPointCol";
-std::string EventModel::TkrRecon::TkrVecPointsLinkCol     = EventModel::TkrRecon::Event + "/TkrVecPointsLinkCol";
-std::string EventModel::TkrRecon::TkrTrackElementsCol     = EventModel::TkrRecon::Event + "/TkrTrackElementsCol";
-std::string EventModel::TkrRecon::TkrTrackElemsToLinksTab = EventModel::TkrRecon::Event + "/TkrTrackElemsToLinksTab";
+std::string EventModel::TkrRecon::Event                      = EventModel::EventHeader + "/TkrRecon";
+std::string EventModel::TkrRecon::TkrClusterCol              = EventModel::TkrRecon::Event + "/TkrClusterCol";
+std::string EventModel::TkrRecon::TkrIdClusterMMap           = EventModel::TkrRecon::Event + "/TkrIdClusterMMap";
+std::string EventModel::TkrRecon::TkrIdClusterMap            = EventModel::TkrRecon::Event + "/TkrIdClusterMap";
+std::string EventModel::TkrRecon::TkrTrackCol                = EventModel::TkrRecon::Event + "/TkrTrackCol";
+std::string EventModel::TkrRecon::TkrTrackHitCol             = EventModel::TkrRecon::Event + "/TkrTrackHitCol";
+std::string EventModel::TkrRecon::TkrVertexCol               = EventModel::TkrRecon::Event + "/TkrVertexCol";
+std::string EventModel::TkrRecon::TkrDiagnostics             = EventModel::TkrRecon::Event + "/TkrDiagnostics";
+std::string EventModel::TkrRecon::TkrEventParams             = EventModel::TkrRecon::Event + "/TkrEventParams";
+std::string EventModel::TkrRecon::TkrFilterParamsToBoxTab    = EventModel::TkrRecon::Event + "/TkrEventParamsToBoxTab";
+std::string EventModel::TkrRecon::TkrFilterParamsToPointsTab = EventModel::TkrRecon::Event + "/TkrEventParamsToPointsTab";
+std::string EventModel::TkrRecon::TkrFilterParamsCol         = EventModel::TkrRecon::Event + "/TkrFilterParamsCol";
+std::string EventModel::TkrRecon::TkrTruncatedPlane          = EventModel::TkrRecon::Event + "/TkrTruncatedPlane";
+std::string EventModel::TkrRecon::TkrTruncationInfo          = EventModel::TkrRecon::Event + "/TkrTruncationInfo";
+std::string EventModel::TkrRecon::TkrBoundBoxCol             = EventModel::TkrRecon::Event + "/TkrBoundBoxCol";
+std::string EventModel::TkrRecon::TkrBoundBoxPointsCol       = EventModel::TkrRecon::Event + "/TkrBoundBoxPointsCol";
+std::string EventModel::TkrRecon::TkrBoundBoxPointsToBoxTab  = EventModel::TkrRecon::Event + "/TkrBoundBoxPointsToBoxTab";
+std::string EventModel::TkrRecon::TkrVecPointCol             = EventModel::TkrRecon::Event + "/TkrVecPointCol";
+std::string EventModel::TkrRecon::TkrVecPointInfo            = EventModel::TkrRecon::Event + "/TkrVecPointInfo";
+std::string EventModel::TkrRecon::TkrVecPointsLinkCol        = EventModel::TkrRecon::Event + "/TkrVecPointsLinkCol";
+std::string EventModel::TkrRecon::TkrTrackElementsCol        = EventModel::TkrRecon::Event + "/TkrTrackElementsCol";
+std::string EventModel::TkrRecon::TkrTrackElemsToLinksTab    = EventModel::TkrRecon::Event + "/TkrTrackElemsToLinksTab";
 
 //reconstructed Cal data
 std::string EventModel::CalRecon::Event               = EventModel::EventHeader + "/CalRecon";

@@ -134,9 +134,16 @@ public:
         static std::string TkrVertexCol;
         static std::string TkrDiagnostics;
         static std::string TkrEventParams;
+        static std::string TkrFilterParamsCol;
+        static std::string TkrFilterParamsToBoxTab;
+        static std::string TkrFilterParamsToPointsTab;
         static std::string TkrTruncatedPlane;
         static std::string TkrTruncationInfo;
+        static std::string TkrBoundBoxCol;
+        static std::string TkrBoundBoxPointsCol;
+        static std::string TkrBoundBoxPointsToBoxTab;
         static std::string TkrVecPointCol;
+        static std::string TkrVecPointInfo;
         static std::string TkrVecPointsLinkCol;
         static std::string TkrTrackElementsCol;
         static std::string TkrTrackElemsToLinksTab;
