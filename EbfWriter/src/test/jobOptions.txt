@@ -45,7 +45,7 @@ ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT";
 
 
-GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$XMLGEODBSXMLPATH/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // ----------------------------
@@ -64,7 +64,7 @@ G4Generator.defaultCutValue=0.7; // instead of 0.1 default
 #include "$FLUXSVCJOBOPTIONSPATH/defaultOptions.txt"
 
 // Append (or replace) the list of source library documents
-FluxSvc.source_lib += {"$(G4GENERATORJOBOPTIONSPATH)/test/test_sources.xml"};
+FluxSvc.source_lib += {"$G4GENERATORJOBOPTIONSPATH/test/test_sources.xml"};
 FluxAlg.source_name="muon_pencil_angle";
 
 

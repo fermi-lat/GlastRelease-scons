@@ -23,4 +23,4 @@ progEnv.Tool('registerTargets', package='EbfWriter',
              libraryCxts=[[EbfWriter, libEnv]],
              testAppCxts = [[test_EbfWriter, progEnv]], 
              includes = listFiles(['EbfWriter/*.h']),
-             jo = ['src/test/jobOptions.txt','src/test/test_sources.xml])
+             jo = ['src/test/jobOptions.txt','src/test/test_sources.xml'])
