@@ -402,7 +402,10 @@ void TkrVecPointsFilterTool::groupTkrVecPoints(Event::TkrVecPointCol* tkrVecPoin
     MinSpanTreeNodeLists mstNodeLists;
 
     // Group the hits in this bilayer
-    int numNodesInList = getTkrVecPointMST(tkrVecPointCol->begin(), tkrVecPointCol->end(), mstNodeLists);
+    Event::TkrVecPointColPtr vecPointBegin = tkrVecPointCol->begin();
+    Event::TkrVecPointColPtr vecPointEnd   = tkrVecPointCol->end();
+
+    int numNodesInList = getTkrVecPointMST(vecPointBegin, vecPointEnd , mstNodeLists);
 
     // If there are no nodes in the list then no hits in this bilayer 
     if (numNodesInList > 0)
