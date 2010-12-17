@@ -9,8 +9,16 @@
 /** 
 * @class CalParams
 *
-* @brief Gaudi TDS class to store the calorimeter parameters and associated covariance
-*        matrix. 
+* @brief Gaudi TDS class to store the calorimeter parameters and associated
+* covariance matrix.
+*
+* This class is conceived as a generic container to store the output of
+* whatever algorithm uses the Calorimeter information to define energy,
+* centroid and direction (along with the associated errors) of a cluster.
+* Derived classes can then specialize this information in order to include
+* additional parameters that might be calculated by a specific algorithm
+* implementation (such as the CalMomParams class for the moments analysis and
+* CalFitParams for Philippe's fitting algorithm).
 * 
 * @author Bill Atwood, Tracy Usher
 *
