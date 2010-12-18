@@ -7,16 +7,45 @@
 #include "Event/Recon/CalRecon/CalMomParams.h"
 
 
-Event::CalMomParams::CalMomParams(double transRms, double longRms, double longRmsAsym,
-				  double longSkewness, double coreEnergyFrac) :
-                                  m_transRms(transRms),
-                                  m_longRms(longRms),
-                                  m_longRmsAsym(longRmsAsym),
-                                  m_longSkewness(longSkewness),
-                                  m_coreEnergyFrac(coreEnergyFrac)
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+				  const Vector& axis, const CLHEP::HepMatrix& axisErr,
+				  int numIterations, double transRms, double longRms,
+				  double longRmsAsym, double longSkewness,
+				  double coreEnergyFrac) :
+  CalParams(energy, eneError, centroid, centroidErr, axis, axisErr),
+  m_numIterations(numIterations),
+  m_transRms(transRms),
+  m_longRms(longRms),
+  m_longRmsAsym(longRmsAsym),
+  m_longSkewness(longSkewness),
+  m_coreEnergyFrac(coreEnergyFrac)
 {
-  // Do nothing here, as all the variables are already set :-)
+  // Nothing to do, here.
 }
+
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  double xCntrd, double yCntrd, double zCntrd,
+				  double cntdxx, double cntdxy, double cntdxz,
+				  double cntdyy, double cntdyz, double cntdzz,
+				  double xAxis,  double yAxis,  double zAxis,
+				  double axsdxx, double axsdxy, double axsdxz,
+				  double axsdyy, double axsdyz, double axsdzz,
+				  int numIterations, double transRms, double longRms,
+				  double longRmsAsym, double longSkewness,
+				  double coreEnergyFrac) :
+  CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
+	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
+	    axsdyy, axsdyz, axsdzz),
+  m_numIterations(numIterations),
+  m_transRms(transRms),
+  m_longRms(longRms),
+  m_longRmsAsym(longRmsAsym),
+  m_longSkewness(longSkewness),
+  m_coreEnergyFrac(coreEnergyFrac)
+{
+  // Nothing to do, here.
+} 
 
 void Event::CalMomParams::clear()
 {
@@ -24,6 +53,7 @@ void Event::CalMomParams::clear()
   Event::CalParams::clear();
 
   // ... then reset the additional class members.
+  m_numIterations  = 0;
   m_transRms       = -1.;
   m_longRms        = -1.;
   m_longRmsAsym    = -1.;
@@ -46,6 +76,7 @@ std::ostream& Event::CalMomParams::fillStream(std::ostream& s) const
 
   // ... then print the additional stuff.
   s <<
+    "Number of iterations = " << m_numIterations << "\n" << 
     "Transverse RMS = " << m_transRms << " mm\n" <<
     "Longitudinal RMS = " << m_longRms << " mm\n" <<
     "Longitudinal RMS asymmetry = " << m_longRmsAsym << "\n" <<

@@ -33,7 +33,21 @@ namespace Event { //Namespace Event
     CalMomParams() { clear() ; }
 
     /// Direct construction from all the elements.
-    CalMomParams(double transRms, double longRms, double longRmsAsym,
+    CalMomParams(double energy, double eneError,
+		 const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+		 const Vector& axis, const CLHEP::HepMatrix& axisErr,
+		 int numIterations, double transRms, double longRms, double longRmsAsym,
+		 double longSkewness, double coreEnergyFrac);
+
+    /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
+    CalMomParams(double energy, double eneError,
+		 double xCntrd, double yCntrd, double zCntrd,
+		 double cntdxx, double cntdxy, double cntdxz,
+		 double cntdyy, double cntdyz, double cntdzz,
+		 double xAxis,  double yAxis,  double zAxis,
+		 double axsdxx, double axsdxy, double axsdxz,
+		 double axsdyy, double axsdyz, double axsdzz,
+		 int numIterations, double transRms, double longRms, double longRmsAsym,
 		 double longSkewness, double coreEnergyFrac);
 
     /// Destructor.
@@ -68,6 +82,8 @@ namespace Event { //Namespace Event
 
   private:
     
+    /// The number of iterations in the moment analysis.
+    int m_numIterations;
     /// The transverse RMS of the energy distribution in the cluster.
     double m_transRms;
     /// The longitudinal RMS of the energy distribution in the cluster
