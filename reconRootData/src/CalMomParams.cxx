@@ -38,7 +38,7 @@ void CalMomParams::Clear( Option_t * )
     ( 0.,0.,
       TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
       TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
-      0,-1.,-1.,-1.,-9999.,-1.) ;
+      0,0.,0.,0.,0.,0.) ;
 }
 
 void CalMomParams::init
