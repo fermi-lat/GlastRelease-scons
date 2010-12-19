@@ -57,7 +57,7 @@ TkrVecNodesBuilder::TkrVecNodesBuilder(TkrVecPointLinksBuilder& vecPointLinksBld
     {
         m_qSumDispAttachCut  *= 10.;
         m_bestqSumDispCut    *= 10.;
-        m_bestAngleToNodeCut *= 10.;
+//        m_bestAngleToNodeCut *= 10.;
     }
 
     return;
