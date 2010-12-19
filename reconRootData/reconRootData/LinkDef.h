@@ -35,6 +35,7 @@
 
 #pragma link C++ class CalRecon+;
 #pragma link C++ class CalParams+;
+#pragma link C++ class CalMomParams+;
 #pragma link C++ class CalFitParams+;
 #pragma link C++ class CalMSTreeParams+;
 #pragma link C++ class CalClusterLayerData+;

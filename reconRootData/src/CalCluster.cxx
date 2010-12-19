@@ -9,24 +9,18 @@ void CalCluster::init
  ( const std::vector<CalClusterLayerData> & layers,
    const CalMSTreeParams & treeParams,
    const CalFitParams & fitParams, 
-   const CalParams & params,
-   const std::map <std::string, double>& classprob,   
-   Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t longSkew,
+   const CalMomParams & momParams,
+   const std::map <std::string, double>& classprob,
    Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits )
  {
   std::vector<CalClusterLayerData>::const_iterator layer ;
   int i ;
   for ( i=0, layer=layers.begin() ; layer != layers.end() ; ++i, ++layer )
     m_layers[i] = (*layer) ;
-  m_mstreeParams = treeParams;
+  m_mstParams    = treeParams;
   m_fitParams    = fitParams;
-  m_params       = params ;
+  m_momParams    = momParams ;
   m_classesProb  = classprob;
-
-  m_rmsLong = rmsLong ;
-  m_rmsLongAsym = rmsLongAsym ;
-  m_rmsTrans = rmsTrans ;
-  m_skewnessLong = longSkew ;
   m_numSaturatedXtals = numSaturatedXtals;
   m_numTruncXtals = numTruncXtals ;
   m_statusBits = statusBits ;
@@ -37,15 +31,10 @@ void CalCluster::Clear( Option_t * )
   int i ;
   for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i )
     m_layers[i].Clear() ;
-  m_mstreeParams.Clear();
+  m_mstParams.Clear();
   m_fitParams.Clear();
-  m_params.Clear() ;
+  m_momParams.Clear() ;
   m_classesProb.clear();
-  
-  m_rmsLong = 0.0 ;
-  m_rmsLongAsym = 0.0 ;
-  m_rmsTrans = 0.0 ;
-  m_skewnessLong = -9999. ;
   m_numTruncXtals = 0 ;
   m_statusBits = 0 ;
  }
@@ -54,13 +43,12 @@ CalCluster::CalCluster
  ( const std::vector<CalClusterLayerData> & layers,
    const CalMSTreeParams & treeParams,
    const CalFitParams& fitParams, 
-   const CalParams & params,
-   const std::map <std::string, double>& classprob,    
-   Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t longSkew,
+   const CalMomParams & momParams,
+   const std::map <std::string, double>& classprob,
    Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits )
  {
-   init(layers,treeParams, fitParams, params, classprob, rmsLong, rmsLongAsym, rmsTrans,
-        longSkew, numSaturatedXtals,numTruncXtals,statusBits) ;
+   init(layers,treeParams, fitParams, momParams, classprob,
+	numSaturatedXtals,numTruncXtals,statusBits) ;
  }
 
 /// Access any classification probabilities
@@ -75,14 +63,13 @@ Double_t CalCluster::getTopologyProb(std::string top) const
 
 void CalCluster::Print( Option_t * ) const
  {
-  m_params.Print() ;
+  m_momParams.Print() ;
   m_fitParams.Print() ;
-  m_mstreeParams.Print() ;
+  m_mstParams.Print() ;
   std::cout
     <<"Gam prob " << getGamProb() << "\n"
     <<"No. Saturated Xtals " << m_numSaturatedXtals << "\n"
     <<"No.Trunc Xtals "<<m_numTruncXtals<<"\n"
-    <<"RMS Long: "<<m_rmsLong<<"RMS Long Asym: "<<m_rmsLongAsym<<"  RMS Trans: "<<m_rmsTrans<<"\n"
     <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
  }
 
@@ -93,7 +80,7 @@ void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
     t.Fake(ievent,rank,randNum);
     CalFitParams f;
     f.Fake(ievent,rank,randNum);
-    CalParams p ;
+    CalMomParams p ;
     p.Fake(ievent,rank,randNum) ;
     CalClusterLayerData layer ;
     std::vector<CalClusterLayerData> clusLayerData ;
@@ -105,14 +92,14 @@ void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
     std::map <std::string, double> m;
     m["gam"]=0.5;
     
-    init(clusLayerData,t,f,p, m, 1.0,2.0,3.0,3.5,4,4,5) ;
+    init(clusLayerData,t,f,p,m,4,4,5) ;
  }
 
 Bool_t CalCluster::CompareInRange( const CalCluster & c, const std::string & name ) const {
 
     bool result = true ;
 
-    result = getParams().CompareInRange(c.getParams()) && result ;
+    result = getMomParams().CompareInRange(c.getMomParams()) && result ;
     result = getFitParams().CompareInRange(c.getFitParams()) && result ;
     result = getMSTreeParams().CompareInRange(c.getMSTreeParams()) && result ;
 
@@ -121,11 +108,7 @@ Bool_t CalCluster::CompareInRange( const CalCluster & c, const std::string & nam
         result = getLayer(i).CompareInRange(c.getLayer(i)) && result ;
     }
 
-    result = rootdatautil::CompareInRange(getGamProb(),c.getGamProb(),"GamProb") && result ;
-    
-    result = rootdatautil::CompareInRange(getRmsLong(),c.getRmsLong(),"RmsLong") && result ;
-    result = rootdatautil::CompareInRange(getRmsLongAsym(),c.getRmsLongAsym(),"RmsLongAsym") && result ;
-    result = rootdatautil::CompareInRange(getRmsTrans(),c.getRmsTrans(),"RmsTrans") && result ;
+    result = rootdatautil::CompareInRange(getGamProb(),c.getGamProb(),"GamProb") && result ;    
     result = rootdatautil::CompareInRange(getNumTruncXtals(),c.getNumTruncXtals(),"NumTruncXtals") && result ;
     result = rootdatautil::CompareInRange(getStatusBits(),c.getStatusBits(),"StatusBits") && result ;
 

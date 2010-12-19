@@ -4,7 +4,7 @@
 #include "CalClusterLayerData.h"
 #include "CalFitParams.h"
 #include "CalMSTreeParams.h"
-#include "CalParams.h"
+#include "CalMomParams.h"
 #include <TObject.h>
 #include <TVector3.h>
 #include <map>
@@ -40,44 +40,42 @@ public:
      ( const std::vector<CalClusterLayerData> &,
        const CalMSTreeParams&,
        const CalFitParams&,
-       const CalParams &,
-       const std::map <std::string, double>& classprob,          
-       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
+       const CalMomParams &,
+       const std::map <std::string, double>& classprob,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     void init
      ( const std::vector<CalClusterLayerData> &,
        const CalMSTreeParams&,
        const CalFitParams&,
-       const CalParams &,
-       const std::map <std::string, double>& classprob,                
-       Double_t rmsLong, Double_t rmsLongAsym, Double_t rmsTrans, Double_t skewLong,
+       const CalMomParams &,
+       const std::map <std::string, double>& classprob,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     virtual ~CalCluster()
      {}
 
     const CalMSTreeParams & getMSTreeParams() const
-     { return m_mstreeParams;}
+     { return m_mstParams;}
     const CalClusterLayerData & getLayer( int i ) const
      { return m_layers[i] ; }
     const CalFitParams & getFitParams() const
      { return m_fitParams;}
     const std::map <std::string, double>& getClassesProb() const
      {return m_classesProb;}   
-    const CalParams & getParams() const
-     { return m_params ; }     
+    const CalMomParams & getMomParams() const
+     { return m_momParams ; }
     Double_t getRmsLong() const
-     { return m_rmsLong ; }
+     { return m_momParams.getLongRms(); }
     Double_t getRmsLongAsym() const
-     { return m_rmsLongAsym ; }
+     { return m_momParams.getLongRmsAsym(); }
     Double_t getRmsTrans() const
-     { return m_rmsTrans ; }
+     { return m_momParams.getTransRms(); }
     Double_t getSkewnessLong() const
-     { return m_skewnessLong ; }
+     { return m_momParams.getLongSkewness(); }
     Int_t getNumSaturatedXtals() const
-     { return m_numSaturatedXtals;}
+     { return m_numSaturatedXtals; }
     Int_t getNumTruncXtals() const
      { return m_numTruncXtals ; }
-    UInt_t  getStatusBits() const
+    UInt_t getStatusBits() const
      { return m_statusBits ; }
      
     /// Access individual probabilities
@@ -92,19 +90,15 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
-    CalParams m_params ;
-    Double32_t m_rmsLong ;
-    Double32_t m_rmsLongAsym ;
-    Double32_t m_rmsTrans ;
-    Double32_t m_skewnessLong ;
+    CalMomParams m_momParams ;
     Int_t m_numSaturatedXtals;
     Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;
     CalFitParams m_fitParams;
-    CalMSTreeParams m_mstreeParams;    //! Parameters of the "Minimum Spanning Tree"
+    CalMSTreeParams m_mstParams;    //! Parameters of the "Minimum Spanning Tree"
     std::map <std::string, double> m_classesProb;     // Classification probabilities
 
-    ClassDef(CalCluster,7)
+    ClassDef(CalCluster,8)
 };
 
 

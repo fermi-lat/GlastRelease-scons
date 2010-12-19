@@ -69,6 +69,32 @@ public:
     inline const Double_t getyDirzDir()     const {return m_axisyz; }
     inline const Double_t getzDirzDir()     const {return m_axiszz; }
 
+    /// Set the energy
+    inline void setEnergy(double energy)         {m_energy   = energy; }
+    inline void setEnergyErr(double energyErr)   {m_eneError = energyErr; }
+
+    /// Set parameters for centroid
+    inline void setCentroid(const TVector3& pos) {m_clusterCentroid = pos; }
+
+    /// Set centroid errors
+    inline void setxPosxPos(double val)          {m_cenxx = val; }
+    inline void setxPosyPos(double val)          {m_cenxy = val; }
+    inline void setxPoszPos(double val)          {m_cenxz = val; }
+    inline void setyPosyPos(double val)          {m_cenyy = val; }
+    inline void setyPoszPos(double val)          {m_cenyz = val; }
+    inline void setzPoszPos(double val)          {m_cenzz = val; }
+
+    /// Set parameters for axis
+    inline void setAxis(const TVector3& axis)    {m_clusterAxis = axis; }
+
+    /// Set axis errors
+    inline void setxDirxDir(double val)          {m_axisxx = val; }
+    inline void setxDiryDir(double val)          {m_axisxy = val; }
+    inline void setxDirzDir(double val)          {m_axisxz = val; }
+    inline void setyDiryDir(double val)          {m_axisyy = val; }
+    inline void setyDirzDir(double val)          {m_axisyz = val; }
+    inline void setzDirzDir(double val)          {m_axiszz = val; }
+
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalParams &, const std::string & name = "" ) const ; // for tests
@@ -102,7 +128,7 @@ private:
     Double32_t m_axisyz;    // Cov(2,3) = Cov (3,2)= dy * dz
     Double32_t m_axiszz;    // Cov(3,3) = dz * dz
     
-    ClassDef(CalParams,2)
+    ClassDef(CalParams,3)
 } ;
 
 
