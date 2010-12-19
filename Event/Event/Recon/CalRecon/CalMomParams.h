@@ -14,6 +14,12 @@
 * RMS of the cluster, skewness, moments asymmetry and so on and so forth)
 * along with the basic information on the cluster energy, centroid and
 * direction.
+*
+* Whenever this class is changed, the changes should be propagated to the
+* related files on the ROOT side:
+* - reconRootData/reconRootData/CalMomParams.h
+* - reconRootData/src/CalMomParams.cxx
+* - RootConvert/RootConvert/Recon/CalMomParamsConvert.h
 * 
 * @author Luca Baldini, Johan Bregeon
 *
@@ -50,11 +56,23 @@ namespace Event { //Namespace Event
 		 int numIterations, double transRms, double longRms, double longRmsAsym,
 		 double longSkewness, double coreEnergyFrac);
 
+    /// Convenience constructor to be used to replace an old CalParams object directly
+    /// (i.e. the specific CalMomParams members are automagically initialized).
+    CalMomParams(double energy, double eneError,
+		 double xCntrd, double yCntrd, double zCntrd,
+		 double cntdxx, double cntdxy, double cntdxz,
+		 double cntdyy, double cntdyz, double cntdzz,
+		 double xAxis,  double yAxis,  double zAxis,
+		 double axsdxx, double axsdxy, double axsdxz,
+		 double axsdyy, double axsdyz, double axsdzz);
+
     /// Destructor.
     ~CalMomParams() {}
     
     /// Reset method.
     void clear();
+    /// Part of the reset code specific to the CalMomParams class (as opposed to the base class).
+    void clearMomParams();
 
     /// Retrieve parameters...
     inline double getTransRms()       const {return m_transRms;}
@@ -84,6 +102,7 @@ namespace Event { //Namespace Event
     
     /// The number of iterations in the moment analysis.
     int m_numIterations;
+    /// TBD add more statistics on the iterations (i.e. the number of xtals at the last step).
     /// The transverse RMS of the energy distribution in the cluster.
     double m_transRms;
     /// The longitudinal RMS of the energy distribution in the cluster

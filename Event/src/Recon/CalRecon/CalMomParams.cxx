@@ -45,6 +45,21 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
   m_coreEnergyFrac(coreEnergyFrac)
 {
   // Nothing to do, here.
+}
+
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  double xCntrd, double yCntrd, double zCntrd,
+				  double cntdxx, double cntdxy, double cntdxz,
+				  double cntdyy, double cntdyz, double cntdzz,
+				  double xAxis,  double yAxis,  double zAxis,
+				  double axsdxx, double axsdxy, double axsdxz,
+				  double axsdyy, double axsdyz, double axsdzz) :
+  CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
+	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
+	    axsdyy, axsdyz, axsdzz)
+{
+  // Initialize the members which are still undefined.
+  clearMomParams();
 } 
 
 void Event::CalMomParams::clear()
@@ -53,12 +68,22 @@ void Event::CalMomParams::clear()
   Event::CalParams::clear();
 
   // ... then reset the additional class members.
+  clearMomParams();
+}
+
+// TBD: define sensible initialization values, here.
+// Need to move the moment normalization into the moments analysis before you can put
+// negative numbers, here---in order not to get in troubles with sqrt() in AnalysisNtuple
+// later on.
+// Make sure the values are reflected on the ROOT side.
+void Event::CalMomParams::clearMomParams()
+{
   m_numIterations  = 0;
-  m_transRms       = -1.;
-  m_longRms        = -1.;
-  m_longRmsAsym    = -1.;
-  m_longSkewness   = -9999.;
-  m_coreEnergyFrac = -1.;
+  m_transRms       = 0.;
+  m_longRms        = 0.;
+  m_longRmsAsym    = 0.;
+  m_longSkewness   = 0.;
+  m_coreEnergyFrac = 0.;
 }
 
 double Event::CalMomParams::getElongation() const
