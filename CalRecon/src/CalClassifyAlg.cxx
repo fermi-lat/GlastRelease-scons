@@ -165,7 +165,7 @@ StatusCode CalClassifyAlg::execute()
             log<<MSG::DEBUG<<"CalCluster Gam Prob: "
                <<prob
                <<"\tEnergy: "
-               <<(*cluster)->getCalParams().getEnergy()
+               <<(*cluster)->getMomParams().getEnergy()
                <<endreq ;
         }
 

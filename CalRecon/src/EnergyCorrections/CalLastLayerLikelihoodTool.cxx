@@ -107,7 +107,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
     // energy, direction and point of impact.
   
     // Energy:
-    if( cluster->getCalParams().getEnergy() < minTrialEnergy()*.1 ) 
+    if( cluster->getMomParams().getEnergy() < minTrialEnergy()*.1 ) 
     {
       log << MSG::DEBUG << "Ending doEnergyCorr: "
                            "CAL Energy below Method Minimum"
@@ -115,7 +115,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
         return corResult;
     }
 
-    if( cluster->getCalParams().getEnergy() > maxTrialEnergy() ) 
+    if( cluster->getMomParams().getEnergy() > maxTrialEnergy() ) 
     {
        log << MSG::DEBUG << "Ending doEnergyCorr: "
                             "CAL Energy above Method Maximum"
@@ -161,13 +161,13 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
 
     setEventPDFdata(vertexPos+(geometricCut>.5)*16);
     setEventPDFparameters(fabs(trackDirection.z()),
-                          cluster->getCalParams().getEnergy(),
+                          cluster->getMomParams().getEnergy(),
                           calE7);
     log << MSG::VERBOSE 
         << "PDF Index: " << vertexPos+(geometricCut>.5)*16 
         << endreq
         << "Parameters: " << fabs(trackDirection.z()) << ", " 
-        << cluster->getCalParams().getEnergy() << ", " << calE7 << endreq;
+        << cluster->getMomParams().getEnergy() << ", " << calE7 << endreq;
     
     corResult= calculateEvent(cluster, log);
     if( corResult ) 

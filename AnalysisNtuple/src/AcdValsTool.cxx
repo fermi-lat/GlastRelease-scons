@@ -514,7 +514,7 @@ StatusCode AcdValsTool::calculate()
         if (pCals) {
             if (!pCals->empty()) {
                 Event::CalCluster* calCluster = pCals->front();
-                CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
+                CAL_EnergyRaw  = calCluster->getMomParams().getEnergy();
             }
         }
         // Find *Safe* Active Distance for this event given the energy

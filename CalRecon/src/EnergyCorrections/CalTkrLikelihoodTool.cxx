@@ -105,7 +105,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
     // energy, direction and point of impact.
   
     // Energy:
-    if( cluster->getCalParams().getEnergy() < minTrialEnergy()*.1 ) 
+    if( cluster->getMomParams().getEnergy() < minTrialEnergy()*.1 ) 
     {
       log << MSG::DEBUG << "Ending doEnergyCorr: "
                            "CAL Energy below Method Minimum"
@@ -113,7 +113,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
         return corResult;
     }
 
-    if( cluster->getCalParams().getEnergy() > maxTrialEnergy() ) 
+    if( cluster->getMomParams().getEnergy() > maxTrialEnergy() ) 
     {
        log << MSG::DEBUG << "Ending doEnergyCorr: "
                             "CAL Energy above Method Maximum"
@@ -160,12 +160,12 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
 
     setEventPDFdata(iData);
     setEventPDFparameters(fabs(trackDirection.z()),
-                          cluster->getCalParams().getEnergy(),
+                          cluster->getMomParams().getEnergy(),
                           nHits);
     log << MSG::VERBOSE 
         << "PDF Index: " << iData << endreq
         << "Parameters: " << fabs(trackDirection.z()) << ", " 
-        << cluster->getCalParams().getEnergy() << ", " << nHits << endreq;
+        << cluster->getMomParams().getEnergy() << ", " << nHits << endreq;
     
     corResult= calculateEvent(cluster, log);
 

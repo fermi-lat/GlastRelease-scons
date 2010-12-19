@@ -365,7 +365,7 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
 	m_t                  = 0.;
 	m_t_total            = 0.;
 	m_status_bits        = 0;
-    m_raw_energy   = m_cluster->getCalParams().getEnergy();
+    m_raw_energy   = m_cluster->getMomParams().getEnergy();
     m_corr_energy = m_raw_energy;
 	m_cal_pos  = m_cluster->getPosition();
     m_cal_dir  = m_cluster->getDirection();

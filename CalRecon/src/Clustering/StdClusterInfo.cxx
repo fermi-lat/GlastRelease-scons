@@ -129,11 +129,13 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
     // Compute direction using the positions and rms per layer
     Vector caldir = fitDirection(pLayer, rmsLayer);
 
-    Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
-                                         caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
+    Event::CalMomParams momParams(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(),
+				  1.,0.,0.,1.,0.,1.,
+				  caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
     // Initial fit parameters
-    Event::CalFitParams fitParams(4, 0., pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
-                                         caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
+    Event::CalFitParams fitParams(4, 0., pCluster.x(), pCluster.y(), pCluster.z(),
+				  1.,0.,0.,1.,0.,1.,
+				  caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
 
     // initialize empty CalMSTreeParams container - CalMSTreePar
     Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
@@ -143,7 +145,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
     probMap["gam"]=-1;
 
     // Fill CalCluster data
-    cl->initialize(treeParams, fitParams, params, probMap, 0., 0., 0., 0., 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
+    cl->initialize(treeParams, fitParams, momParams, probMap, 0, 0); // WBA:  I refuse to put backin the rms CRAP calculated here.
 
     for( i = 0; i < calnLayers; i++)
     {

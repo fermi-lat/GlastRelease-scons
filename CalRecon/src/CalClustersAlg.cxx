@@ -152,7 +152,7 @@ StatusCode CalClustersAlg::execute()
               cluster != calClusterCol->end() ; 	 
               cluster++) { 	 
             log<<MSG::DEBUG<<"CalCluster Energy: "
-              <<(*cluster)->getCalParams().getEnergy()
+              <<(*cluster)->getMomParams().getEnergy()
               <<endreq ;
         }
         

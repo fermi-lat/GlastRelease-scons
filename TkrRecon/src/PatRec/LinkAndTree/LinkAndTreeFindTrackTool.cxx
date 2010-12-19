@@ -55,7 +55,7 @@ StatusCode LinkAndTreeFindTrackTool::findTracks()
     //If clusters, then retrieve estimate for the energy
     if (pCalClusters)
     {
-        CalEnergy   = pCalClusters->front()->getCalParams().getEnergy(); 
+        CalEnergy   = pCalClusters->front()->getMomParams().getEnergy(); 
         CalPosition = pCalClusters->front()->getPosition();
     }
 

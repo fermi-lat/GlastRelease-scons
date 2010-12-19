@@ -328,7 +328,7 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
     MsgStream log(msgSvc(),name()) ;
     std::string topology, varName;
     double varValue, pdValue;
-    double energy = calCluster->getCalParams().getEnergy();
+    double energy = calCluster->getMomParams().getEnergy();
     std::map <std::string, double> probMap;
     std::map<std::pair <std::string, std::string>, PdfHistoCollection>::iterator iter;
     for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
@@ -370,7 +370,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
 {
     if (varName == "CalTransRms")
     {
-        double sumOfWeights = calCluster->getCalParams().getEnergy();
+        double sumOfWeights = calCluster->getMomParams().getEnergy();
         if (sumOfWeights > 0)
             return sqrt(calCluster->getRmsTrans()/sumOfWeights);
         else
@@ -382,7 +382,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
     }
     else if (varName == "MomentRatio")
     {
-        double sumOfWeights = calCluster->getCalParams().getEnergy();
+        double sumOfWeights = calCluster->getMomParams().getEnergy();
         if (sumOfWeights > 0)
         {
             double transRms = sqrt(calCluster->getRmsTrans()/sumOfWeights);
@@ -400,7 +400,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
     else if (varName == "NumXtals")
     {
         // Need to expose the number of xtals in the Cluster class.
-        double sumOfWeights = calCluster->getCalParams().getEnergy();
+        double sumOfWeights = calCluster->getMomParams().getEnergy();
         if (sumOfWeights > 0)
             return (calCluster->getMSTreeNumEdges() + 1)/log10(sumOfWeights);
         else

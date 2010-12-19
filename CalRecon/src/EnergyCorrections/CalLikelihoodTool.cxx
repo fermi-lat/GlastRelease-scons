@@ -218,10 +218,10 @@ Event::CalCorToolResult* CalLikelihoodTool::calculateEvent(
   corResult->setCorrectionName(type());
   corResult->setChiSquare(1.);
 
-  Event::CalParams params= cluster->getCalParams();
-  params.setEnergy(mpv[0]);
-  params.setEnergyErr(.5*(fwhm[0]+fwhm[1]));
-  corResult->setParams(params);
+  Event::CalParams momParams= cluster->getMomParams();
+  momParams.setEnergy(mpv[0]);
+  momParams.setEnergyErr(.5*(fwhm[0]+fwhm[1]));
+  corResult->setParams(momParams);
   return corResult;
 }
 

@@ -172,7 +172,7 @@ StatusCode MonteCarloFindTrackTool::findTracks()
     // If clusters, then retrieve estimate for the energy & centroid
     if (pCalClusters) 
     {
-        if (pCalClusters->size() > 0) CalEnergy = pCalClusters->front()->getCalParams().getEnergy(); 
+        if (pCalClusters->size() > 0) CalEnergy = pCalClusters->front()->getMomParams().getEnergy(); 
     }
 
     // Set the first track energy (same as done for "standard" pat rec)

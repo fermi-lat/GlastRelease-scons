@@ -232,19 +232,21 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
     // Also the Number of Truncated Xtals should be a data member in CalCluster!!!!!!!!!!!
 
     // Set energy centroid
-    Event::CalParams params(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
-                                               0., 0., 1.,   1.,0.,0.,1.,0.,1.);
+    Event::CalMomParams momParams(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(),
+				  1.,0.,0.,1.,0.,1., 0., 0., 1., 1.,0.,0.,1.,0.,1.);
 
     // Initial fit parameters
-    Event::CalFitParams fitParams(m_fit_nlayers, 0., pCluster.x(), pCluster.y(), pCluster.z(), 1.,0.,0.,1.,0.,1.,
-                                               0., 0., 1.,   1.,0.,0.,1.,0.,1.);
+    Event::CalFitParams fitParams(m_fit_nlayers, 0., pCluster.x(), pCluster.y(), pCluster.z(),
+				  1.,0.,0.,1.,0.,1., 0., 0., 1., 1.,0.,0.,1.,0.,1.);
 
     // Use the fit centroid/direction to see moments analysis
     if (m_fit_nlayers > 8 && m_fit_zdirection > 0.)
     {
         fitParams = Event::CalFitParams(m_fit_nlayers, m_fit_chisq, 
-                                        m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1.,0.,0.,1.,0.,1.,
-                                        m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1.,0.,0.,1.,0.,1.);
+                                        m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid, 
+					1.,0.,0.,1.,0.,1.,
+                                        m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
+					1.,0.,0.,1.,0.,1.);
     }
     
     // initialize empty CalMSTreeParams container
@@ -253,7 +255,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
     std::map <std::string, double> probMap;
     probMap["gam"]=-1;
     
-    cluster->initialize(treeParams, fitParams, params, probMap, 0., 0., 0., 0., m_Nsaturated, num_TruncXtals);
+    cluster->initialize(treeParams, fitParams, momParams, probMap, m_Nsaturated, num_TruncXtals);
 
     return ene;
 }
@@ -264,8 +266,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
     // Begin by building a Moments Data vector
     m_dataVec.clear();
 
-    Point  centroid = cluster->getCalParams().getCentroid();
-    Vector axis     = cluster->getCalParams().getAxis();
+    Point  centroid = cluster->getMomParams().getCentroid();
+    Vector axis     = cluster->getMomParams().getAxis();
 
     XtalDataList::const_iterator xTalMax = xTalVec->end();
 
@@ -387,21 +389,34 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
         // Store all this information away in the cluster
-        Event::CalParams params(energy, 10*energy,
-                centroid.x(), centroid.y(), centroid.z(), 1., 0., 0., 1., 0., 1.,
-                axis.x(),     axis.y(),     axis.z(),     1., 0., 0., 1., 0., 1.);
+        //Event::CalParams params(energy, 10*energy,
+	//       centroid.x(), centroid.y(), centroid.z(), 1., 0., 0., 1., 0., 1.,
+	//       axis.x(),     axis.y(),     axis.z(),     1., 0., 0., 1., 0., 1.);
 
-        Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq, 
-                                      m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,  1., 0., 0., 1., 0., 1.,
-                                      m_fit_xdirection, m_fit_ydirection, m_fit_zdirection, 1., 0., 0., 1., 0., 1.);
+	// Code for the new CalMomParams class.
+	//std::cout << "**********************************************************" << std::endl;
+	//std::cout << "CalParams: \n" << params << "\n" << std::endl;
+	CLHEP::HepMatrix I_3_3(3, 3, 1);
+	Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
+				       nIterations, rms_trans, rms_long, long_asym,
+				       long_skew, -1.0);
+	//std::cout << "CalMomParams: \n" << momParams << std::endl;
+	//std::cout << "**********************************************************" << std::endl;
+
+        Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq,
+                                      m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,
+				      1., 0., 0., 1., 0., 1.,
+                                      m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
+				      1., 0., 0., 1., 0., 1.);
 
         // initialize empty CalMSTreeParams container - CalMSTreePar
         Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
         // initialize empty prob map - m_classesProb
         std::map <std::string, double> probMap;
         probMap["gam"]=-1;
-    
-        cluster->initialize(treeParams, fitParams, params, probMap, rms_long, rms_trans, long_asym, long_skew, m_Nsaturated, num_TruncXtals);
+
+	cluster->initialize(treeParams, fitParams, momParams, probMap, m_Nsaturated,
+			    num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS);
     }
 

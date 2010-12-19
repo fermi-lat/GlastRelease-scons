@@ -57,36 +57,36 @@ public:
    ~CalParams() {}
 
     /// Retrieve the energy
-    inline double        getEnergy()       const {return m_energy;}
-    inline double        getEnergyErr()    const {return m_eneError;}
+    inline double        getEnergy()       const { return m_energy; }
+    inline double        getEnergyErr()    const { return m_eneError; }
 
     /// Retrieve the centroid position
-    inline const Point&  getCentroid()     const {return m_clusterCentroid;}
+    inline const Point&  getCentroid()     const { return m_clusterCentroid;}
 
     /// Errors in a HepMatrix
     CLHEP::HepMatrix     getCentroidErrs() const ;
 
     /// Direct access to errors
-    inline double        getxPosxPos()     const {return m_cenxx; }
-    inline double        getxPosyPos()     const {return m_cenxy; }
-    inline double        getxPoszPos()     const {return m_cenxz; }
-    inline double        getyPosyPos()     const {return m_cenyy; }
-    inline double        getyPoszPos()     const {return m_cenyz; }
-    inline double        getzPoszPos()     const {return m_cenzz; }
+    inline double        getxPosxPos()     const { return m_cenxx; }
+    inline double        getxPosyPos()     const { return m_cenxy; }
+    inline double        getxPoszPos()     const { return m_cenxz; }
+    inline double        getyPosyPos()     const { return m_cenyy; }
+    inline double        getyPoszPos()     const { return m_cenyz; }
+    inline double        getzPoszPos()     const { return m_cenzz; }
 
     /// Retrieve the centroid position
-    inline const Vector& getAxis()         const {return m_clusterAxis;}
+    inline const Vector& getAxis()         const { return m_clusterAxis;}
 
     /// Errors in a HepMatrix
     CLHEP::HepMatrix     getAxisErrs()     const ;
 
     /// Direct access to errors
-    inline double        getxDirxDir()     const {return m_axisxx; }
-    inline double        getxDiryDir()     const {return m_axisxy; }
-    inline double        getxDirzDir()     const {return m_axisxz; }
-    inline double        getyDiryDir()     const {return m_axisyy; }
-    inline double        getyDirzDir()     const {return m_axisyz; }
-    inline double        getzDirzDir()     const {return m_axiszz; }
+    inline double        getxDirxDir()     const { return m_axisxx; }
+    inline double        getxDiryDir()     const { return m_axisxy; }
+    inline double        getxDirzDir()     const { return m_axisxz; }
+    inline double        getyDiryDir()     const { return m_axisyy; }
+    inline double        getyDirzDir()     const { return m_axisyz; }
+    inline double        getzDirzDir()     const { return m_axiszz; }
 
     /// Define an ( ) operator (allows read/write - indexing from 1!!)
     //double& operator()(const int &i);
@@ -95,34 +95,28 @@ public:
     //const double& operator()(const int &i, const int &j) const;
 
     /// Set the energy
-    inline void setEnergy( double energy)       {m_energy   = energy;}
-    inline void setEnergyErr( double energyErr) {m_eneError = energyErr;}
+    inline void setEnergy(double energy)        { m_energy   = energy; }
+    inline void setEnergyErr(double energyErr)  { m_eneError = energyErr; }
 
     /// Set parameters for centroid
-    inline void setCentroid(const Point& pos)   {m_clusterCentroid = pos; }
-
-    void        setCentroidErrs(const CLHEP::HepMatrix& errs);
-
-    /// Set errors
-    inline void setxDirxDir(double val)         {m_cenxx = val; }
-    inline void setxDiryDir(double val)         {m_cenxy = val; }
-    inline void setxDirzDir(double val)         {m_cenxz = val; }
-    inline void setyDiryDir(double val)         {m_cenyy = val; }
-    inline void setyDirzDir(double val)         {m_cenyz = val; }
-    inline void setzDirzDir(double val)         {m_cenzz = val; }
+    inline void setCentroid(const Point& pos)   { m_clusterCentroid = pos; }
+    inline void setxPosxPos(double val)         { m_cenxx = val; }
+    inline void setxPosyPos(double val)         { m_cenxy = val; }
+    inline void setxPoszPos(double val)         { m_cenxz = val; }
+    inline void setyPosyPos(double val)         { m_cenyy = val; }
+    inline void setyPoszPos(double val)         { m_cenyz = val; }
+    inline void setzPoszPos(double val)         { m_cenzz = val; }
+    void setCentroidErrs(const CLHEP::HepMatrix& errs);
 
     /// Set parameters for axis
-    inline void setAxis(const Vector& axis)     {m_clusterAxis = axis; }
-
+    inline void setAxis(const Vector& axis)     { m_clusterAxis = axis; }
+    inline void setxDirxDir(double val)         { m_axisxx = val; }
+    inline void setxDiryDir(double val)         { m_axisxy = val; }
+    inline void setxDirzDir(double val)         { m_axisxz = val; }
+    inline void setyDiryDir(double val)         { m_axisyy = val; }
+    inline void setyDirzDir(double val)         { m_axisyz = val; }
+    inline void setzDirzDir(double val)         { m_axiszz = val; }
     void        setAxisErrs(const CLHEP::HepMatrix& errs);
-
-    /// Set errors
-    inline void setxPosxPos(double val)         {m_axisxx = val; }
-    inline void setxPosyPos(double val)         {m_axisxy = val; }
-    inline void setxPoszPos(double val)         {m_axisxz = val; }
-    inline void setyPosySlp(double val)         {m_axisyy = val; }
-    inline void setyPoszPos(double val)         {m_axisyz = val; }
-    inline void setzPoszPos(double val)         {m_axiszz = val; }
 
     std::ostream& fillStream( std::ostream& s ) const;
     friend std::ostream& operator<< ( std::ostream& s, const CalParams& obj ) 

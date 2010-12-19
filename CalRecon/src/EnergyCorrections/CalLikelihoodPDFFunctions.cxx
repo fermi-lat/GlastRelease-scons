@@ -176,7 +176,7 @@ PDFLikelihood::PDFLikelihood(const CalLikelihoodManagerTool*manager,
 void PDFLikelihood::setEvt(const Event::CalCluster*cluster,
                            const Event::TkrVertex*vertex) {
   tkr1ZDir()= fabs(vertex->getDirection()[2]);
-  calEnergyRaw()= cluster->getCalParams().getEnergy();
+  calEnergyRaw()= cluster->getMomParams().getEnergy();
   calELayer7()= cluster->back().getEnergy();
 
   const Event::TkrDigiCol *digi= m_manager->getTkrDigiCol();
@@ -252,7 +252,7 @@ bool PDFLowEnergyCuts::value(double result[1]) const{
 void PDFLowEnergyCuts::setEvt(const Event::CalCluster*cluster,
                               const Event::TkrVertex*vertex) {
   tkr1ZDir()= fabs(vertex->getDirection()[2]);
-  calZEcntr()= cluster->getCalParams().getCentroid().z();
+  calZEcntr()= cluster->getMomParams().getCentroid().z();
   geometricCut()= geometricCut(cluster, vertex);
 }
 double PDFLowEnergyCuts::geometricCut(const Event::CalCluster*cluster,
@@ -397,13 +397,13 @@ bool PDFHighEnergyCuts::value(double result[1]) const{
 void PDFHighEnergyCuts::setEvt(const Event::CalCluster*cluster,
                               const Event::TkrVertex*vertex) {
   tkr1ZDir()= fabs(vertex->getDirection()[2]);
-  calZEcntr()= cluster->getCalParams().getCentroid().z();
+  calZEcntr()= cluster->getMomParams().getCentroid().z();
   calTwrEdgeCntr()= calTwrEdgeCntr(cluster);
   calELayer7()= cluster->back().getEnergy();
 }
 double PDFHighEnergyCuts::calTwrEdgeCntr(const Event::CalCluster *cluster)const{
-  double x= cluster->getCalParams().getCentroid().x();
-  double y= cluster->getCalParams().getCentroid().x();
+  double x= cluster->getMomParams().getCentroid().x();
+  double y= cluster->getMomParams().getCentroid().x();
 
   if(x<0) x+= m_towerPitch;
   if(x>m_towerPitch) x-= m_towerPitch;

@@ -144,7 +144,7 @@ void CalRep::update()
         CalCluster* cl = cls->front(); 
 
         // get total energy in the calorimeter
-        double energy_sum = cl->getCalParams().getEnergy();
+        double energy_sum = cl->getMomParams().getEnergy();
 
         // draw only if there is some energy in the calorimeter        
         if(energy_sum > 0){        

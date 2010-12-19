@@ -4,6 +4,7 @@
 
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalMomParams.h"
 #include "CalRecon/ICalClusterFiller.h"
 #include "CalRecon/ICalReconSvc.h"
 #include "CalMomentsAnalysis.h"

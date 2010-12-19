@@ -413,12 +413,12 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalClusterCol * clu
     Event::CalCluster * cluster = clusters->front() ;
 
     if (vertex == 0)
-     { m_static_slope = cluster->getCalParams().getAxis().z() ; }
+     { m_static_slope = cluster->getMomParams().getAxis().z() ; }
     else
      { m_static_slope = vertex->getDirection().z() ; }
 
 
-    double eTotal = cluster->getCalParams().getEnergy() ;
+    double eTotal = cluster->getMomParams().getEnergy() ;
     
     m_xtalHeight = m_calCsIHeight / 10.;   // crystal height in cm
     m_xtalWidth  = m_calCsIWidth / 10.;    // crystal width in cm
@@ -561,15 +561,15 @@ Event::CalCorToolResult* CalProfileTool::doEnergyCorr(Event::CalClusterCol * clu
 
 
         // Ok, fill in the corrected information and exit
-        Event::CalParams params = cluster->getCalParams();
+        Event::CalParams momParams = cluster->getMomParams();
 
-        params.setEnergy(1000.*fit_energy_opt);
-        params.setEnergyErr(energy_err);
+        momParams.setEnergy(1000.*fit_energy_opt);
+        momParams.setEnergyErr(energy_err);
 
         corResult = new Event::CalCorToolResult();
         corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
         corResult->setCorrectionName(type());
-        corResult->setParams(params);
+        corResult->setParams(momParams);
         corResult->setChiSquare(ki2);
         (*corResult)["fit_energy"] = 1000.*fit_energy ;
         (*corResult)["energy_err"] = energy_err ;

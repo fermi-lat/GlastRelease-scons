@@ -19,7 +19,6 @@
 * related files on the ROOT side:
 * - reconRootData/reconRootData/CalMomParams.h
 * - reconRootData/src/CalMomParams.cxx
-* - RootConvert/RootConvert/Recon/CalMomParamsConvert.h
 * 
 * @author Luca Baldini, Johan Bregeon
 *
@@ -71,7 +70,8 @@ namespace Event { //Namespace Event
     
     /// Reset method.
     void clear();
-    /// Part of the reset code specific to the CalMomParams class (as opposed to the base class).
+    /// Part of the reset code specific to the CalMomParams class
+    /// (as opposed to the base class CalParams).
     void clearMomParams();
 
     /// Retrieve parameters...

@@ -165,7 +165,7 @@ Event::CalCorToolResult * CalLikelihoodManagerTool::doEnergyCorr
   Event::CalCluster * cluster = clusters->front() ;
 
   double tkr1Zdir= -vertex->getDirection()[2];
-  double eMin= cluster->getCalParams().getEnergy();
+  double eMin= cluster->getMomParams().getEnergy();
   double eMax= eMin*5<100.?100.:eMin*5;
 
   if( getTkrPlane(vertex)<0 
@@ -186,9 +186,9 @@ Event::CalCorToolResult * CalLikelihoodManagerTool::doEnergyCorr
   result->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
   result->setCorrectionName(type());
   result->setChiSquare(1.);
-  Event::CalParams params= cluster->getCalParams();
-  params.setEnergy(getEnergy());
-  params.setEnergyErr(getError());
+  Event::CalParams momParams= cluster->getMomParams();
+  momParams.setEnergy(getEnergy());
+  momParams.setEnergyErr(getError());
   result[0]["Probability"]= getProbability();
   result[0]["ErrorLow"]= getError(0);
   result[0]["ErrorHigh"]= getError(1);
@@ -201,10 +201,10 @@ Event::CalCorToolResult * CalLikelihoodManagerTool::doEnergyCorr
   result[0]["GeometricCut"]= ((PDFLowEnergyCuts*) ((PDFCutArray*) at(1))
                               ->getCutsFcn())
                               ->geometricCut(cluster, vertex);
-  result->setParams(params);
+  result->setParams(momParams);
 
-  log<<MSG::DEBUG<<"Energy "<<params.getEnergy()
-                 <<" MeV, Error "<<params.getEnergyErr()
+  log<<MSG::DEBUG<<"Energy "<<momParams.getEnergy()
+                 <<" MeV, Error "<<momParams.getEnergyErr()
                  <<" Range "<<result[0]["AnswerID"]<<endreq;
   return result;
 }

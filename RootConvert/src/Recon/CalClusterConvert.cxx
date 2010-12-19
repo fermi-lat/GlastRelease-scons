@@ -31,19 +31,15 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
     CalFitParams rootFitParams ;
     convert(tdsCluster.getFitParams(),rootFitParams) ;
       
-    CalParams rootParams ;
-    convert(tdsCluster.getCalParams(),rootParams) ;
+    CalMomParams rootMomParams ;
+    convert(tdsCluster.getMomParams(),rootMomParams) ;
 
     rootCluster.init
       ( rootLayers,
         rootTreeParams,
 	rootFitParams,
-	rootParams,
+	rootMomParams,
 	tdsCluster.getClassesProb(),
-        tdsCluster.getRmsLong(),
-        tdsCluster.getRmsLongAsym(),
-        tdsCluster.getRmsTrans(),
-	tdsCluster.getSkewnessLong(),
         (Int_t)tdsCluster.getNumSaturatedXtals(),
         (Int_t)tdsCluster.getNumTruncXtals(),
         tdsCluster.getStatusBits() ) ;
@@ -55,18 +51,14 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
     convert(rootCluster.getMSTreeParams(),tdsTreeParams) ;    
     Event::CalFitParams tdsFitParams;
     convert(rootCluster.getFitParams(),tdsFitParams) ;    
-    Event::CalParams tdsParams ;
-    convert(rootCluster.getParams(),tdsParams) ;    
+    Event::CalMomParams tdsMomParams ;
+    convert(rootCluster.getMomParams(),tdsMomParams) ;    
 
     tdsCluster.initialize
       ( tdsTreeParams, 
         tdsFitParams,
-        tdsParams,
+        tdsMomParams,
 	rootCluster.getClassesProb(),
-        rootCluster.getRmsLong(),
-        rootCluster.getRmsTrans(),
-        rootCluster.getRmsLongAsym(),
-	rootCluster.getSkewnessLong(),
         rootCluster.getNumSaturatedXtals(),
         rootCluster.getNumTruncXtals() ) ;
     

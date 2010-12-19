@@ -1051,11 +1051,11 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
  	iCluster++;
 
  	// grab the cluster direction information
-	upwardExtend.m_energy = calClusterTds->getCalParams().getEnergy();
+	upwardExtend.m_energy = calClusterTds->getMomParams().getEnergy();
  	upwardExtend.m_index = 11 + iCluster;
  	upwardExtend.m_upward = true;
 	std::cout << "Energy for index " << upwardExtend.m_index << ": " << upwardExtend.m_energy << std::endl;
-	AcdRecon::ReconFunctions::convertToAcdRep(calClusterTds->getCalParams(), upwardExtend);
+	AcdRecon::ReconFunctions::convertToAcdRep(calClusterTds->getMomParams(), upwardExtend);
  	
 	// get the LAT exit points
  	if ( ! AcdRecon::ReconFunctions::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {

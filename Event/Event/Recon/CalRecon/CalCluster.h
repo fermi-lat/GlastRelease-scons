@@ -12,6 +12,7 @@
 #include "Event/RelTable/RelTable.h"
 #include "Event/Recon/CalRecon/CalFitParams.h"
 #include "Event/Recon/CalRecon/CalParams.h"
+#include "Event/Recon/CalRecon/CalMomParams.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalMSTreeParams.h"
 
@@ -41,8 +42,7 @@ static const CLID& CLID_CalClusterCol = InterfaceID("CalClusterCol", 1, 0);
 * $Header$
 */
 
-namespace Event 
-{
+namespace Event { //Namespace Event
 
 /**
 *   Define a subclass which will hold data by later
@@ -67,7 +67,16 @@ private:
 };
 
 typedef std::vector<CalClusterLayerData> CalClusterLayerDataVec;
-    
+
+
+/// Note: when changing this class, the following files should be changed accordingly:
+/// - RootConvert/src/Recon/CalClusterConvert.cxx
+///   
+/// - reconRootData/reconRootData/CalCluster.h
+/// - reconRootData/src/CalCluster.cxx
+///   all the interfaces and members must be compatible with the TDS version.
+/// 
+
 class CalCluster : public CalClusterLayerDataVec, virtual public ContainedObject 
 {     
 public:
@@ -118,183 +127,97 @@ public:
 
 	};
 
-    /**
-    *   initializing a subset of CalCluster data members (this is
-    *   primarily used by reconRootReaderAlg in translating from
-    *   PDS to TDS).
-    *  
-    *   @param params Calorimeter Parameters for this cluster
-    *   @param layerData vector of CalReconLayerData objects
-    *   @param rms_long RMS of longitudinal position measurements 
-    *   @param rms_trans RMS of transversal position measurements 
-    */
-    void initialize(const CalMSTreeParams& treeParams,
-                    const CalFitParams&    fitParams,
-                    const CalParams&       params,
-		    const std::map <std::string, double>& classprob,
-                    double                 rms_long,
-                    double                 rms_trans,
-                    double                 long_asym,
-		    double                 skew_long,
-                    int                    numSaturatedXtals,
-                    int                    numTruncXtals)
-    {
-        m_mstreeParams      = treeParams;
-        m_fitParams         = fitParams;
-        m_params            = params;
-	m_classesProb       = classprob;
-        m_rmslong           = rms_long;
-        m_rmstrans          = rms_trans;
-        m_rmslongAsym       = long_asym;
-	m_skewnessLong      = skew_long; 	
-        m_numSaturatedXtals = numSaturatedXtals;
-        m_numTruncXtals     = numTruncXtals;
-    }
+    void initialize(const CalMSTreeParams& mstParams, const CalFitParams& fitParams,
+                    const CalMomParams& momParams,
+		    const std::map <std::string, double>& classProb,
+                    int numSaturatedXtals, int numTruncXtals);
 
-    /*
-     *   Define individual set methods here for all variables
-     */
-    void setMSTreeParams(const CalMSTreeParams& params) {m_mstreeParams      = params;}
-    void setFitParams(const CalFitParams& params) {m_fitParams         = params;}
-    void setCalParams(const CalParams& params)    {m_params            = params;  }
-    void setClassesProb(std::map <std::string, double>& classprob) {m_classesProb = classprob;  }
-    void setRmsLong(double rmsLong)               {m_rmslong           = rmsLong; }
-    void setRmsLongAsym(double rmsLongAsym)       {m_rmslongAsym       = rmsLongAsym;}
-    void setSkewnessLong(double skewLong)         {m_skewnessLong      = skewLong;}
-    void setRmsTrans(double rmsTrans)             {m_rmstrans          = rmsTrans;}
-    void setNumSaturatedXtals(int nSat)           {m_numSaturatedXtals = nSat;}
-    void setNumXtals(int numXtals)                {m_numTruncXtals     = numXtals;}
+    /// Access methods to the main objects.
+    inline const std::string & getProducerName() const { return m_producerName; }
+    inline unsigned int getStatusBits()          const { return m_statusBits ; }
+    const CalMSTreeParams& getMSTreeParams()     const { return m_mstParams; }
+    const CalFitParams& getFitParams()           const { return m_fitParams; }
+    const CalMomParams& getMomParams()           const { return m_momParams; }
+    /// This is not to break anything with the new container CalMomParams
+    /// It should probably print out something ("obsolete?").
+    const CalMomParams& getParams()              const { return m_momParams; }
+    const std::map <std::string, double>& getClassesProb() const { return m_classesProb; }
 
-    /*
-     * Provide access to the data
-     */
-    /// Direct access to the CalMSTreeParams
-    const CalMSTreeParams& getMSTreeParams() const {return m_mstreeParams;}
-    /// Direct access to the CalFitParams
-    const CalFitParams& getFitParams() const {return m_fitParams;}
-    /// Direct access to the CalParams
-    const CalParams& getCalParams()    const {return m_params;}
-    /// Direct access to map of classes probabilities
-    const std::map <std::string, double>& getClassesProb()    const {return m_classesProb;}   
-    /// get RMS of longitudinal position measurements
-    double getRmsLong()		           const {return m_rmslong;} 
-    /// get RMS of transverse position measurements
-    double getRmsLongAsym()            const {return m_rmslongAsym;} 
-    /// get RMS of transverse position measurements
-    double getRmsTrans()	           const {return m_rmstrans;}
-    /// get the longitudinal skewness
-    double getSkewnessLong()           const {return m_skewnessLong;}
-    /// get number of saturated Xtals in Cluster
-    int getNumSaturatedXtals()         const {return m_numSaturatedXtals;}
-	/// get Number of Truncated Xtals in Cluster
-    int getNumTruncXtals()	           const {return m_numTruncXtals;}
-    /// get reconstructed position
-    const Point & getPosition()        const {return m_params.getCentroid();}
-    /// get reconstructed direction
-    const Vector & getDirection()      const {return m_params.getAxis();}
-    /// get number of edges in the tree
-    int getMSTreeNumEdges()                  const {return m_mstreeParams.getNumberOfEdges();}
+    /// Access to the moments analysis output.
+    //double getEnergy()                           const { return m_momParams.getEnergy(); }
+    //double getEnergyErr()                        const { return m_momParams.getEnergyErr(); }
+    //const Point & getCentroid()                  const { return m_momParams.getCentroid(); }
+    //const Vector & getAxis()                     const { return m_momParams.getAxis(); }
+    // TBD Change names according to the CalMomParams class?
+    double getRmsLong()	                         const { return m_momParams.getLongRms(); }
+    double getRmsLongAsym()                      const { return m_momParams.getLongRmsAsym(); } 
+    double getRmsTrans()                         const { return m_momParams.getTransRms(); }
+    double getSkewnessLong()                     const { return m_momParams.getLongSkewness(); }
+    // TBD make obsolete in gavour of getCentroid()?
+    const Point & getPosition()                  const { return m_momParams.getCentroid(); }
+    // TBD make obsolete in gavour of getAxis()?
+    const Vector & getDirection()                const { return m_momParams.getAxis(); }
+ 
+    // Access to the Minimum Spanning Tree clustering output.
+    int getMSTreeNumEdges()                      const { return m_mstParams.getNumberOfEdges(); }
+ 
+    /// Access to the classification stage output.
+    double getTopologyProb(std::string)          const;
+    double getGamProb()                          const { return getTopologyProb("gam");}
 
-    /// Access individual probabilities
-    inline double getTopologyProb(std::string) const;
-    inline double getGamProb()    const {return getTopologyProb("gam");}
+    /// Access to the remaining parameters
+    int getNumSaturatedXtals()                   const { return m_numSaturatedXtals; }
+    int getNumTruncXtals()	                 const { return m_numTruncXtals; }
 
-    /// Access individual status bits
-    inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
-    inline void clearStatusBit( StatusBits bitToClear ) { m_statusBits &= ~bitToClear ; }
+    /// Set methods.
+    inline void setProducerName(const std::string & producerName) { m_producerName = producerName ; }
+    inline void setStatusBits( unsigned int statusBits )   { m_statusBits = statusBits ; }
+    void setMSTreeParams(const CalMSTreeParams& mstParams) { m_mstParams = mstParams; }
+    void setFitParams(const CalFitParams& fitParams)       { m_fitParams = fitParams; }
+    void setMomParams(const CalMomParams& momParams)       { m_momParams = momParams; }
+    void setClassesProb(std::map <std::string, double>& classprob) { m_classesProb = classprob; }
+    void setNumSaturatedXtals(int nSat)                    { m_numSaturatedXtals = nSat; }
+    void setNumXtals(int numXtals)                         { m_numTruncXtals     = numXtals; }
+
+    /// Manipulate status bits.
+    inline void setStatusBit( StatusBits bitToSet )        { m_statusBits |=  bitToSet ; }
+    inline void clearStatusBit( StatusBits bitToClear )    { m_statusBits &= ~bitToClear ; }
     inline bool checkStatusBit( StatusBits bitToCheck ) const { return ((m_statusBits&bitToCheck)!=ZERO) ; }
 
-    /// Access the status bits globally
-    inline unsigned int getStatusBits() const { return m_statusBits ; }
-    inline void setStatusBits( unsigned int statusBits ) { m_statusBits = statusBits ; }
-
-    /// Access the algo name
-    inline const std::string & getProducerName() const { return m_producerName ; }
-    inline void setProducerName( const std::string & producerName ) { m_producerName = producerName ; }
-
-    /// write some of CalCluster data to the ASCII output file
-    /// for debugging purposes
+    /// write some of CalCluster data to the ASCII output file for debugging purposes
     void writeOut(MsgStream& stream) const;
+    /// Std output facility.
+    std::ostream& fillStream(std::ostream& s) const;
+    friend std::ostream& operator<< (std::ostream& s, const CalCluster& obj)
+    {
+      return obj.fillStream(s);
+    }
         
 private:
 
-    ///reset CalCluster data
-    inline void iniCluster();
-        
-    //! name of the producer
+    /// Reset CalCluster data.
+    /// TBD Rename as clear?
+    void iniCluster();
+    /// Name of the producer.
     std::string m_producerName;
-    //! Parameters of the "Minimum Spanning Tree"
-    CalMSTreeParams m_mstreeParams;
-    //! Results of the "fit" to the cluster parameters
-    CalFitParams m_fitParams;
-    //! Cal Parameters
-    CalParams m_params;
-    //! Classification map with probabilities -- new another member with the classifier name -- TBD
-    std::map <std::string, double> m_classesProb;
-
-    //! RMS of longitudinal position measurement
-    double m_rmslong;
-	//! difference in RMS of longitudinal position measurement moments
-    double m_rmslongAsym;
-    //! RMS of transverse position measurement
-    double m_rmstrans;
-    //! longitudinal skewness
-    double m_skewnessLong;
-    //! number of "saturated" Xtals
-    int m_numSaturatedXtals;
-    //! number of Xtals with > 1% Total Cluster Energy
-    int m_numTruncXtals;
-    //! Status Bits
+    /// Status Bits.
     unsigned int m_statusBits;
-
+    /// Output of the Minimum Spanning Tree clustring algorithm.
+    CalMSTreeParams m_mstParams;
+    /// Output of the fit to the cluster centroid/direction.
+    CalFitParams m_fitParams;
+    /// Output of the moment analysis.
+    CalMomParams m_momParams;
+    /// Output of the cluster classification 
+    /// TBD Create a new CalClassParams class.
+    std::map <std::string, double> m_classesProb;
+    /// TBD Add the total number of xtals.
+    /// Number of "saturated" xtals.
+    int m_numSaturatedXtals;
+    /// Number of Xtals with > 1% of the total cluster energy.
+    int m_numTruncXtals;
 };
 
-/// Access any classification probabilities
-inline double CalCluster::getTopologyProb(std::string top) const
-{
-    if(m_classesProb.count(top))
-      return m_classesProb.find(top)->second;
-    else
-      return -1;
-}   
-
-
-inline void CalCluster::iniCluster()
-{
-    m_mstreeParams      = CalMSTreeParams();
-    m_fitParams         = CalFitParams();
-    m_params            = CalParams();
-    // Create the map and initialize gam prob to -1 -- needed ? TBD
-    m_classesProb       = std::map <std::string, double>();
-    m_classesProb["gam"]=-1.;
-
-    m_rmslong           = 0.;
-    m_rmslongAsym       = 0.;
-    m_rmstrans          = 0.;
-    m_skewnessLong      = -9999.;
-    m_statusBits        = 0;
-    m_numSaturatedXtals = 0;
-    m_numTruncXtals     = 0; 
-}
-
-inline void CalCluster::writeOut(MsgStream& stream) const
-
-// Purpose: provide ascii output of some data members for
-//          debugging purposes
-// Input:
-//        stream - Gaudi message stream
-{
-    stream << "Energy " << m_params.getEnergy();
-    stream << " No.Trunc Xtals " << m_numTruncXtals;
-    stream << " Gam prob " << getGamProb();
-    stream << " " << getPosition().x() 
-           << " " << getPosition().y() 
-           << " " << getPosition().z();
-    stream << " " << getDirection().x() 
-           << " " << getDirection().y() 
-           << " " << getDirection().z();
-    stream << endreq;
-}
 
 //typedef for the Gaudi TDS Container
 typedef ObjectVector<CalCluster>      CalClusterCol;
@@ -306,12 +229,6 @@ typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster> CalClusterHitT
 typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster> CalClusterHitRel;
 typedef RelationList<CalXtalRecData, CalCluster>                  CalClusterHitTabList;
 
-}
+}; //Namespace Event
 
 #endif	
-
-
-
-
-
-
