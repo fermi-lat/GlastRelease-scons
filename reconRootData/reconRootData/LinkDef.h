@@ -38,6 +38,7 @@
 #pragma link C++ class CalMomParams+;
 #pragma link C++ class CalFitParams+;
 #pragma link C++ class CalMSTreeParams+;
+#pragma link C++ class CalClassParams+;
 #pragma link C++ class CalClusterLayerData+;
 #pragma link C++ class CalCluster+;
 #pragma link C++ class CalCorToolResult+;

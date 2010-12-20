@@ -10,7 +10,7 @@ void CalCluster::init
    const CalMSTreeParams & treeParams,
    const CalFitParams & fitParams, 
    const CalMomParams & momParams,
-   const std::map <std::string, double>& classprob,
+   const CalClassParams & classParams,
    Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits )
  {
   std::vector<CalClusterLayerData>::const_iterator layer ;
@@ -20,7 +20,7 @@ void CalCluster::init
   m_mstParams    = treeParams;
   m_fitParams    = fitParams;
   m_momParams    = momParams ;
-  m_classesProb  = classprob;
+  m_classParams  = classParams;
   m_numSaturatedXtals = numSaturatedXtals;
   m_numTruncXtals = numTruncXtals ;
   m_statusBits = statusBits ;
@@ -34,7 +34,7 @@ void CalCluster::Clear( Option_t * )
   m_mstParams.Clear();
   m_fitParams.Clear();
   m_momParams.Clear() ;
-  m_classesProb.clear();
+  m_classParams.Clear();
   m_numTruncXtals = 0 ;
   m_statusBits = 0 ;
  }
@@ -42,30 +42,31 @@ void CalCluster::Clear( Option_t * )
 CalCluster::CalCluster
  ( const std::vector<CalClusterLayerData> & layers,
    const CalMSTreeParams & treeParams,
-   const CalFitParams& fitParams, 
+   const CalFitParams& fitParams,
    const CalMomParams & momParams,
-   const std::map <std::string, double>& classprob,
+   const CalClassParams & classParams,
    Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits )
  {
-   init(layers,treeParams, fitParams, momParams, classprob,
+   init(layers,treeParams,fitParams,momParams,classParams,
 	numSaturatedXtals,numTruncXtals,statusBits) ;
  }
 
-/// Access any classification probabilities
-Double_t CalCluster::getTopologyProb(std::string top) const
+Double_t CalCluster::getClassProb(const std::string& className) const
 {
-    if(m_classesProb.count(top))
-      return m_classesProb.find(top)->second;
-    else
-      return -1;
-}   
+  return m_classParams.getProb(className);
+}
 
+Double_t CalCluster::getGamProb() const
+{
+  return getClassProb("gam");
+}
 
 void CalCluster::Print( Option_t * ) const
  {
   m_momParams.Print() ;
   m_fitParams.Print() ;
   m_mstParams.Print() ;
+  m_classParams.Print() ;
   std::cout
     <<"Gam prob " << getGamProb() << "\n"
     <<"No. Saturated Xtals " << m_numSaturatedXtals << "\n"
@@ -82,6 +83,8 @@ void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
     f.Fake(ievent,rank,randNum);
     CalMomParams p ;
     p.Fake(ievent,rank,randNum) ;
+    CalClassParams c;
+    c.Fake(ievent,rank,randNum) ;
     CalClusterLayerData layer ;
     std::vector<CalClusterLayerData> clusLayerData ;
     UInt_t iclusLayer;
@@ -89,19 +92,18 @@ void CalCluster::Fake( Int_t ievent, UInt_t rank, Float_t randNum )
         layer.Fake(ievent,rank*ROOT_NUMCALLAYERS+iclusLayer,randNum) ;
         clusLayerData.push_back(layer) ;
     }
-    std::map <std::string, double> m;
-    m["gam"]=0.5;
-    
-    init(clusLayerData,t,f,p,m,4,4,5) ;
+
+    init(clusLayerData,t,f,p,c,4,4,5) ;
  }
 
 Bool_t CalCluster::CompareInRange( const CalCluster & c, const std::string & name ) const {
 
     bool result = true ;
 
-    result = getMomParams().CompareInRange(c.getMomParams()) && result ;
-    result = getFitParams().CompareInRange(c.getFitParams()) && result ;
     result = getMSTreeParams().CompareInRange(c.getMSTreeParams()) && result ;
+    result = getFitParams().CompareInRange(c.getFitParams()) && result ;
+    result = getMomParams().CompareInRange(c.getMomParams()) && result ;
+    result = getClassParams().CompareInRange(c.getClassParams()) && result ;
 
     int i ;
     for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i ) {

@@ -77,7 +77,7 @@ namespace Event { //Namespace Event
     void clearMomParams();
 
     /// Retrieve parameters...
-    inline int getNumIteration()        const { return m_numIterations; }
+    inline int getNumIterations()       const { return m_numIterations; }
     inline int getNumCoreXtals()        const { return m_numCoreXtals; }
     inline int getNumXtals()            const { return m_numXtals; }
     inline double getTransRms()         const { return m_transRms; }
@@ -92,7 +92,7 @@ namespace Event { //Namespace Event
     double getElongation() const;
 
     /// Set parameters.
-    inline void setNumIteration(int val)      { m_numIterations = val; }
+    inline void setNumIterations(int val)     { m_numIterations = val; }
     inline void setNumCoreXtals(int val)      { m_numCoreXtals = val; }
     inline void setNumXtals(int val)          { m_numXtals = val; }
     inline void setTransRms(double val)       { m_transRms = val; }

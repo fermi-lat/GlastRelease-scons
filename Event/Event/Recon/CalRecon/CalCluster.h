@@ -13,6 +13,7 @@
 #include "Event/Recon/CalRecon/CalFitParams.h"
 #include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/Recon/CalRecon/CalMomParams.h"
+#include "Event/Recon/CalRecon/CalClassParams.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
 #include "Event/Recon/CalRecon/CalMSTreeParams.h"
 
@@ -127,9 +128,10 @@ public:
 
 	};
 
-    void initialize(const CalMSTreeParams& mstParams, const CalFitParams& fitParams,
+    void initialize(const CalMSTreeParams& mstParams,
+		    const CalFitParams& fitParams,
                     const CalMomParams& momParams,
-		    const std::map <std::string, double>& classProb,
+		    const CalClassParams& classParams,
                     int numSaturatedXtals, int numTruncXtals);
 
     /// Access methods to the main objects.
@@ -141,7 +143,7 @@ public:
     /// This is not to break anything with the new container CalMomParams
     /// It should probably print out something ("obsolete?").
     const CalMomParams& getParams()              const { return m_momParams; }
-    const std::map <std::string, double>& getClassesProb() const { return m_classesProb; }
+    const CalClassParams& getClassParams()       const { return m_classParams; }
 
     /// Access to the moments analysis output.
     //double getEnergy()                           const { return m_momParams.getEnergy(); }
@@ -162,8 +164,8 @@ public:
     int getMSTreeNumEdges()                      const { return m_mstParams.getNumberOfEdges(); }
  
     /// Access to the classification stage output.
-    double getTopologyProb(std::string)          const;
-    double getGamProb()                          const { return getTopologyProb("gam");}
+    double getClassProb(const std::string& className) const;
+    double getGamProb()                               const;
 
     /// Access to the remaining parameters
     int getNumSaturatedXtals()                   const { return m_numSaturatedXtals; }
@@ -175,7 +177,7 @@ public:
     void setMSTreeParams(const CalMSTreeParams& mstParams) { m_mstParams = mstParams; }
     void setFitParams(const CalFitParams& fitParams)       { m_fitParams = fitParams; }
     void setMomParams(const CalMomParams& momParams)       { m_momParams = momParams; }
-    void setClassesProb(std::map <std::string, double>& classprob) { m_classesProb = classprob; }
+    void setClassParams(const CalClassParams& classParams) { m_classParams = classParams; }
     void setNumSaturatedXtals(int nSat)                    { m_numSaturatedXtals = nSat; }
     void setNumXtals(int numXtals)                         { m_numTruncXtals     = numXtals; }
 
@@ -209,8 +211,7 @@ private:
     /// Output of the moment analysis.
     CalMomParams m_momParams;
     /// Output of the cluster classification 
-    /// TBD Create a new CalClassParams class.
-    std::map <std::string, double> m_classesProb;
+    CalClassParams m_classParams;
     /// TBD Add the total number of xtals.
     /// Number of "saturated" xtals.
     int m_numSaturatedXtals;

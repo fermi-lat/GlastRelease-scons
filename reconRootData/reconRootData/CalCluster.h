@@ -5,6 +5,7 @@
 #include "CalFitParams.h"
 #include "CalMSTreeParams.h"
 #include "CalMomParams.h"
+#include "CalClassParams.h"
 #include <TObject.h>
 #include <TVector3.h>
 #include <map>
@@ -41,14 +42,14 @@ public:
        const CalMSTreeParams&,
        const CalFitParams&,
        const CalMomParams &,
-       const std::map <std::string, double>& classprob,
+       const CalClassParams&,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     void init
      ( const std::vector<CalClusterLayerData> &,
        const CalMSTreeParams&,
        const CalFitParams&,
-       const CalMomParams &,
-       const std::map <std::string, double>& classprob,
+       const CalMomParams&,
+       const CalClassParams&,
        Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
     virtual ~CalCluster()
      {}
@@ -58,11 +59,11 @@ public:
     const CalClusterLayerData & getLayer( int i ) const
      { return m_layers[i] ; }
     const CalFitParams & getFitParams() const
-     { return m_fitParams;}
-    const std::map <std::string, double>& getClassesProb() const
-     {return m_classesProb;}   
+     { return m_fitParams;} 
     const CalMomParams & getMomParams() const
      { return m_momParams ; }
+    const CalClassParams & getClassParams() const
+     { return m_classParams ; }
     Double_t getRmsLong() const
      { return m_momParams.getLongRms(); }
     Double_t getRmsLongAsym() const
@@ -78,10 +79,9 @@ public:
     UInt_t getStatusBits() const
      { return m_statusBits ; }
      
-    /// Access individual probabilities
-    Double_t getTopologyProb(std::string) const;
-    Double_t getGamProb()    const {return getTopologyProb("gam");}
-    
+    Double_t getClassProb(const std::string& className) const;
+    Double_t getGamProb() const;
+
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalCluster &, const std::string & name = "" ) const ; // for tests
@@ -90,13 +90,13 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
+    CalMSTreeParams m_mstParams ;
+    CalFitParams m_fitParams ;
     CalMomParams m_momParams ;
-    Int_t m_numSaturatedXtals;
+    CalClassParams m_classParams ;
+    Int_t m_numSaturatedXtals ;
     Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;
-    CalFitParams m_fitParams;
-    CalMSTreeParams m_mstParams;    //! Parameters of the "Minimum Spanning Tree"
-    std::map <std::string, double> m_classesProb;     // Classification probabilities
 
     ClassDef(CalCluster,8)
 };

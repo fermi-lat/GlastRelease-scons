@@ -7,6 +7,7 @@
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalNBCClassParams.h"
 
 #include <CalRecon/ICalReconSvc.h>
 #include <CalRecon/ICalClassifyTool.h>
@@ -326,11 +327,24 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
 StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calCluster)
 {
     MsgStream log(msgSvc(),name()) ;
-    std::string topology, varName;
+    std::string className, varName;
     double varValue, pdValue;
     double energy = calCluster->getMomParams().getEnergy();
-    std::map <std::string, double> probMap;
     std::map<std::pair <std::string, std::string>, PdfHistoCollection>::iterator iter;
+    
+    Event::CalNBCClassParams nbcClassParams;
+    for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
+      {
+        className = (*iter).first.first;
+        varName = (*iter).first.second;
+        varValue = getVariableValue(varName, calCluster);
+	pdValue = getPdValue(className, varName, energy, varValue);
+	nbcClassParams.multiply(className, pdValue);
+      }
+    nbcClassParams.normalize();
+
+    /**
+    std::map <std::string, double> probMap;
     for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
     {
         topology = (*iter).first.first;
@@ -360,6 +374,9 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
  
     // Assign probability map to the cluster
     calCluster->setClassesProb(probMap);
+    **/
+
+    calCluster->setClassParams(nbcClassParams);
     calCluster->setStatusBit(Event::CalCluster::CLASSIFIED);
   
     return StatusCode::SUCCESS;

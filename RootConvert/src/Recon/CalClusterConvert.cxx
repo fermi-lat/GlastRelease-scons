@@ -3,6 +3,8 @@
 #include <RootConvert/Recon/CalFitParamsConvert.h>
 #include <RootConvert/Recon/CalMSTreeParamsConvert.h>
 #include <RootConvert/Recon/CalParamsConvert.h>
+#include <RootConvert/Recon/CalMomParamsConvert.h>
+#include <RootConvert/Recon/CalClassParamsConvert.h>
 #include <RootConvert/Utilities/Toolkit.h>
 
 namespace RootPersistence {
@@ -27,19 +29,19 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
       
     CalMSTreeParams rootTreeParams ;
     convert(tdsCluster.getMSTreeParams(),rootTreeParams) ;
-
     CalFitParams rootFitParams ;
     convert(tdsCluster.getFitParams(),rootFitParams) ;
-      
     CalMomParams rootMomParams ;
     convert(tdsCluster.getMomParams(),rootMomParams) ;
+    CalClassParams rootClassParams;
+    convert(tdsCluster.getClassParams(),rootClassParams) ;
 
     rootCluster.init
       ( rootLayers,
         rootTreeParams,
 	rootFitParams,
 	rootMomParams,
-	tdsCluster.getClassesProb(),
+	rootClassParams,
         (Int_t)tdsCluster.getNumSaturatedXtals(),
         (Int_t)tdsCluster.getNumTruncXtals(),
         tdsCluster.getStatusBits() ) ;
@@ -52,13 +54,15 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
     Event::CalFitParams tdsFitParams;
     convert(rootCluster.getFitParams(),tdsFitParams) ;    
     Event::CalMomParams tdsMomParams ;
-    convert(rootCluster.getMomParams(),tdsMomParams) ;    
+    convert(rootCluster.getMomParams(),tdsMomParams) ;
+    Event::CalClassParams tdsClassParams ;
+    convert(rootCluster.getClassParams(),tdsClassParams) ;
 
     tdsCluster.initialize
       ( tdsTreeParams, 
         tdsFitParams,
         tdsMomParams,
-	rootCluster.getClassesProb(),
+	tdsClassParams,
         rootCluster.getNumSaturatedXtals(),
         rootCluster.getNumTruncXtals() ) ;
     

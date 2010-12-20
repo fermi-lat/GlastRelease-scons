@@ -14,13 +14,13 @@
 void Event::CalCluster::initialize(const CalMSTreeParams& mstParams,
 				   const CalFitParams& fitParams,
 				   const CalMomParams& momParams,
-				   const std::map <std::string, double>& classProb,
+				   const CalClassParams& classParams,
 				   int numSaturatedXtals, int numTruncXtals)
 {
   m_mstParams         = mstParams;
   m_fitParams         = fitParams;
   m_momParams         = momParams;
-  m_classesProb       = classProb;
+  m_classParams       = classParams;
   m_numSaturatedXtals = numSaturatedXtals;
   m_numTruncXtals     = numTruncXtals;
 }
@@ -28,23 +28,23 @@ void Event::CalCluster::initialize(const CalMSTreeParams& mstParams,
 /// TBD: rename to clear()
 void Event::CalCluster::iniCluster()
 {
-  m_mstParams          = CalMSTreeParams();
-  m_fitParams          = CalFitParams();
-  m_momParams          = CalMomParams();
-  // Create the map and initialize gam prob to -1 -- needed ? TBD
-  m_classesProb        = std::map <std::string, double>();
-  m_classesProb["gam"] = -1.;
-  m_statusBits         = 0;
-  m_numSaturatedXtals  = 0;
-  m_numTruncXtals      = 0; 
+  m_mstParams         = CalMSTreeParams();
+  m_fitParams         = CalFitParams();
+  m_momParams         = CalMomParams();
+  m_classParams       = CalClassParams();
+  m_statusBits        = 0;
+  m_numSaturatedXtals = 0;
+  m_numTruncXtals     = 0; 
 }
 
-double Event::CalCluster::getTopologyProb(std::string top) const
+double Event::CalCluster::getClassProb(const std::string& className) const
 {
-  if(m_classesProb.count(top))
-    return m_classesProb.find(top)->second;
-  else
-    return -1;
+  return m_classParams.getProb(className);
+}
+
+double Event::CalCluster::getGamProb() const
+{
+  return getClassProb("gam");
 }
 
 void Event::CalCluster::writeOut(MsgStream& stream) const

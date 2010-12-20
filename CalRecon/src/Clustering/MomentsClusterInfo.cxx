@@ -249,13 +249,14 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
 					1.,0.,0.,1.,0.,1.);
     }
     
-    // initialize empty CalMSTreeParams container
+    // Initialize empty CalMSTreeParams container
     Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
-    // initialize empty prob map - m_classesProb
-    std::map <std::string, double> probMap;
-    probMap["gam"]=-1;
     
-    cluster->initialize(treeParams, fitParams, momParams, probMap, m_Nsaturated, num_TruncXtals);
+    // Initialize an empty CalClassParams container.
+    Event::CalNBCClassParams nbcClassParams;
+    
+    cluster->initialize(treeParams, fitParams, momParams, nbcClassParams,
+			m_Nsaturated, num_TruncXtals);
 
     return ene;
 }
@@ -389,13 +390,11 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
 	// Initialize the CalMomParams container.
-	//std::cout << "********************************************************" << std::endl;
 	CLHEP::HepMatrix I_3_3(3, 3, 1);
 	Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
 				       nIterations, 0, 0, rms_trans, rms_long, long_asym,
 				       long_skew, -1., -1., -1.);
 	//std::cout << "CalMomParams: \n" << momParams << std::endl;
-	//std::cout << "********************************************************" << std::endl;
 
         Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq,
                                       m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,
@@ -405,12 +404,13 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
 
         // initialize empty CalMSTreeParams container - CalMSTreePar
         Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
-        // initialize empty prob map - m_classesProb
-        std::map <std::string, double> probMap;
-        probMap["gam"]=-1;
 
-	cluster->initialize(treeParams, fitParams, momParams, probMap, m_Nsaturated,
-			    num_TruncXtals);
+	// Initialize and empty container for the classification output.
+	Event::CalNBCClassParams nbcClassParams;
+	//std::cout << "CalNBCClassParams: \n" << nbcClassParams << std::endl;
+
+	cluster->initialize(treeParams, fitParams, momParams, nbcClassParams,
+			    m_Nsaturated, num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS);
     }
 
