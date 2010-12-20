@@ -332,6 +332,7 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
     double energy = calCluster->getMomParams().getEnergy();
     std::map<std::pair <std::string, std::string>, PdfHistoCollection>::iterator iter;
     
+    // Create the CalNBCClassParams object to store the class probabilities.
     Event::CalNBCClassParams nbcClassParams;
     for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
       {
@@ -343,39 +344,7 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
       }
     nbcClassParams.normalize();
 
-    /**
-    std::map <std::string, double> probMap;
-    for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
-    {
-        topology = (*iter).first.first;
-        varName = (*iter).first.second;
-        varValue = getVariableValue(varName, calCluster);
-        pdValue = getPdValue(topology, varName, energy, varValue);
-        log << MSG::DEBUG << topology << "\t" << varName << "\t"
-                        << varValue << "\t" << pdValue << endreq;
-        if (probMap.count(topology) == 0)
-            probMap[topology] = pdValue;
-        else
-            probMap[topology] *= pdValue;
-    }
-    std::map <std::string, double>::iterator it;
-    double pdSum = 0.0;
-    for (it = probMap.begin(); it != probMap.end(); it++)
-    {
-        pdSum += (*it).second;
-    }
-    if (pdSum > 0)
-    {
-        for (it = probMap.begin(); it != probMap.end(); it++)
-        {
-            (*it).second /= pdSum;
-        }
-    }
- 
-    // Assign probability map to the cluster
-    calCluster->setClassesProb(probMap);
-    **/
-
+    // And finally set the corresponding cluster class member.
     calCluster->setClassParams(nbcClassParams);
     calCluster->setStatusBit(Event::CalCluster::CLASSIFIED);
   

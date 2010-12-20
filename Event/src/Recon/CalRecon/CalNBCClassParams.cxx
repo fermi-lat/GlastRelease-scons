@@ -15,14 +15,14 @@ Event::CalNBCClassParams::CalNBCClassParams()
 
 void Event::CalNBCClassParams::multiply(const std::string &className, double pdfValue)
 {
-  // If the base map has not an entry for this class, yet, initialize the probability
-  // to the pdf value. 
-  if (hasClass(className)){
+  // If the base map has not an entry for this class, yet, (or has the dummy "gam" entry, so that
+  // the probablity is negative) initialize the probability to the pdf value. 
+  if ( getProb(className) < 0. ) {
     setProb(className, pdfValue);
   }
   // Otherwise multiply the current probability value by the pdf value. 
-  else{
-    setProb(className, pdfValue*getProb(className)); 
+  else {
+    setProb(className, pdfValue*getProb(className));
   }
 }
 
@@ -36,10 +36,10 @@ void Event::CalNBCClassParams::normalize()
       norm += (*iter).second;
     }
   // Then the actual normalization, if it's the case.
-  if (norm > 0){
+  if ( norm > 0 ) {
     for (iter = getProbMap().begin(); iter != getProbMap().end(); iter++)
       {
-	(*iter).second /= norm;
+	setProb( (*iter).first, ((*iter).second) / norm );
       }
   }
 }

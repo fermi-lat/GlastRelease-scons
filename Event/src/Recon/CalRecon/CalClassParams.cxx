@@ -21,12 +21,12 @@ void Event::CalClassParams::clear()
 
 bool Event::CalClassParams::hasClass(const std::string &className) const
 {
-  return m_probMap.count(className);
+  return ( m_probMap.count(className) > 0 );
 }
 
 double Event::CalClassParams::getProb(const std::string &className) const
 {
-  if (hasClass(className)){
+  if ( hasClass(className) ) {
     return m_probMap.find(className)->second;
   }
   else {
