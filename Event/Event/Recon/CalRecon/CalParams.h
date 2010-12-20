@@ -35,9 +35,6 @@ class CalParams
 public:
     /// Default constructor
     CalParams() { clear() ; }
-
-    /// reset method
-    void clear() ;
   
     /// Constructor given Points, Vectors and matrices
     CalParams(double energy, double eneError,
@@ -47,14 +44,30 @@ public:
     /// Direct construction from all the elements (the old fashioned way)
     CalParams(double energy, double eneError,
               double xCntrd, double yCntrd, double zCntrd,
-              double cntdxx, double cntdxy, double cntdxz, double cntdyy, double cntdyz, double cntdzz,
+              double cntdxx, double cntdxy, double cntdxz,
+	      double cntdyy, double cntdyz, double cntdzz,
               double xAxis,  double yAxis,  double zAxis,
-              double axsdxx, double axsdxy, double axsdxz, double axsdyy, double axsdyz, double axsdzz);
+              double axsdxx, double axsdxy, double axsdxz,
+	      double axsdyy, double axsdyz, double axsdzz);
 
-    /// Copy constructor
-    //CalParams (const CalParams& right);
+    /// Convenience constructor with centroid only
+    /// (with the axis is automatically initialized to the default values).
+    CalParams(double energy, double eneError,
+              const Point&  centroid, const CLHEP::HepMatrix& centroidErr);
 
-   ~CalParams() {}
+    /// And one more constructor with centroid only (the old fashioned way).
+    CalParams(double energy, double eneError,
+              double xCntrd, double yCntrd, double zCntrd,
+              double cntdxx, double cntdxy, double cntdxz,
+	      double cntdyy, double cntdyz, double cntdzz);
+
+    /// Reset methods
+    void clearEnergy();
+    void clearCentroid();
+    void clearAxis();
+    void clear();
+
+    ~CalParams() {}
 
     /// Retrieve the energy
     inline double        getEnergy()       const { return m_energy; }
@@ -152,7 +165,7 @@ private:
     double m_axisyz;    // Cov(2,3) = Cov (3,2)= dy * dz
     double m_axiszz;    // Cov(3,3) = dz * dz
 };
-
+ 
 
 }; //Namespace Event
 

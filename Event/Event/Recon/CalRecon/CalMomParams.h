@@ -41,8 +41,9 @@ namespace Event { //Namespace Event
     CalMomParams(double energy, double eneError,
 		 const Point& centroid, const CLHEP::HepMatrix& centroidErr,
 		 const Vector& axis, const CLHEP::HepMatrix& axisErr,
-		 int numIterations, double transRms, double longRms, double longRmsAsym,
-		 double longSkewness, double coreEnergyFrac);
+		 int numIterations, int numCoreXtals, int numXtals,
+		 double transRms, double longRms, double longRmsAsym, double longSkewness,
+		 double coreEnergyFrac, double dEdxAverage, double dEdxSpread);
 
     /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
     CalMomParams(double energy, double eneError,
@@ -52,8 +53,9 @@ namespace Event { //Namespace Event
 		 double xAxis,  double yAxis,  double zAxis,
 		 double axsdxx, double axsdxy, double axsdxz,
 		 double axsdyy, double axsdyz, double axsdzz,
-		 int numIterations, double transRms, double longRms, double longRmsAsym,
-		 double longSkewness, double coreEnergyFrac);
+		 int numIterations, int numCoreXtals, int numXtals,
+		 double transRms, double longRms, double longRmsAsym, double longSkewness,
+		 double coreEnergyFrac, double dEdxAverage, double dEdxSpread);
 
     /// Convenience constructor to be used to replace an old CalParams object directly
     /// (i.e. the specific CalMomParams members are automagically initialized).
@@ -75,21 +77,31 @@ namespace Event { //Namespace Event
     void clearMomParams();
 
     /// Retrieve parameters...
-    inline double getTransRms()       const {return m_transRms;}
-    inline double getLongRms()        const {return m_longRms;}
-    inline double getLongRmsAsym()    const {return m_longRmsAsym;}
-    inline double getLongSkewness()   const {return m_longSkewness;}
-    inline double getCoreEnergyFrac() const {return m_coreEnergyFrac;}
+    inline int getNumIteration()        const { return m_numIterations; }
+    inline int getNumCoreXtals()        const { return m_numCoreXtals; }
+    inline int getNumXtals()            const { return m_numXtals; }
+    inline double getTransRms()         const { return m_transRms; }
+    inline double getLongRms()          const { return m_longRms; }
+    inline double getLongRmsAsym()      const { return m_longRmsAsym; }
+    inline double getLongSkewness()     const { return m_longSkewness; }
+    inline double getCoreEnergyFrac()   const { return m_coreEnergyFrac; }
+    inline double getdEdxAverage()      const { return m_dEdxAverage; }
+    inline double getdEdxSpread()       const { return m_dEdxSpread; }
 
     /// Return the ratio between the tranverse and the longitudinal RMS values.
     double getElongation() const;
 
     /// Set parameters.
-    inline void setTransRms(double val)       {m_transRms = val;}
-    inline void setLongRms(double val)        {m_longRms = val;}
-    inline void setLongRmsAsym(double val)    {m_longRmsAsym = val;}
-    inline void setLongSkewness(double val)   {m_longSkewness = val;}
-    inline void setCoreEnergyFrac(double val) {m_coreEnergyFrac = val;}
+    inline void setNumIteration(int val)      { m_numIterations = val; }
+    inline void setNumCoreXtals(int val)      { m_numCoreXtals = val; }
+    inline void setNumXtals(int val)          { m_numXtals = val; }
+    inline void setTransRms(double val)       { m_transRms = val; }
+    inline void setLongRms(double val)        { m_longRms = val; }
+    inline void setLongRmsAsym(double val)    { m_longRmsAsym = val; }
+    inline void setLongSkewness(double val)   { m_longSkewness = val; }
+    inline void setCoreEnergyFrac(double val) { m_coreEnergyFrac = val; }
+    inline void setdEdxAverage(double val)    { m_dEdxAverage = val; }
+    inline void setdEdxSpread (double val)    { m_dEdxSpread = val; }
 
     /// Std output facility.
     std::ostream& fillStream(std::ostream& s) const;
@@ -100,21 +112,28 @@ namespace Event { //Namespace Event
 
   private:
     
-    /// The number of iterations in the moment analysis.
+    /// Number of iterations in the moment analysis.
     int m_numIterations;
-    /// TBD add more statistics on the iterations (i.e. the number of xtals at the last step).
-    /// The transverse RMS of the energy distribution in the cluster.
+    /// Number of xtals used in the penultimate iteration (the one used for the axis/centroid).
+    int m_numCoreXtals;
+    /// Number of xtals used in the last iteration (the one used for the moments).
+    int m_numXtals;
+    /// Transverse RMS of the energy distribution in the cluster.
     double m_transRms;
-    /// The longitudinal RMS of the energy distribution in the cluster
+    /// Longitudinal RMS of the energy distribution in the cluster
     /// (the average of the two largest moments of the distribution).
     double m_longRms;
-    /// The longitudinal RMS asymmetry (the fractional difference between
+    /// Longitudinal RMS asymmetry (the fractional difference between
     /// the two largest moments of the distribution).
     double m_longRmsAsym;
-    /// The skewness of the energy profile along the cluster axis.
+    /// Skewness of the energy profile along the cluster axis.
     double m_longSkewness;
-    /// Fractional energy sum within 1 Moliere radius from the cluster axis.
+    /// Fractional energy sum within 1 (or wathever) Moliere radius from the cluster axis.
     double m_coreEnergyFrac;
+    /// Average dE/dx along the cluster axis.
+    double m_dEdxAverage;
+    /// Fractional spread of the energy loss dE/dx along the cluster axis.
+    double m_dEdxSpread;
   };
 
 

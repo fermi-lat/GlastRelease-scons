@@ -388,20 +388,14 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
     
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
-        // Store all this information away in the cluster
-        //Event::CalParams params(energy, 10*energy,
-	//       centroid.x(), centroid.y(), centroid.z(), 1., 0., 0., 1., 0., 1.,
-	//       axis.x(),     axis.y(),     axis.z(),     1., 0., 0., 1., 0., 1.);
-
-	// Code for the new CalMomParams class.
-	//std::cout << "**********************************************************" << std::endl;
-	//std::cout << "CalParams: \n" << params << "\n" << std::endl;
+	// Initialize the CalMomParams container.
+	//std::cout << "********************************************************" << std::endl;
 	CLHEP::HepMatrix I_3_3(3, 3, 1);
 	Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
-				       nIterations, rms_trans, rms_long, long_asym,
-				       long_skew, -1.0);
+				       nIterations, 0, 0, rms_trans, rms_long, long_asym,
+				       long_skew, -1., -1., -1.);
 	//std::cout << "CalMomParams: \n" << momParams << std::endl;
-	//std::cout << "**********************************************************" << std::endl;
+	//std::cout << "********************************************************" << std::endl;
 
         Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq,
                                       m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,
