@@ -9,19 +9,20 @@
 #include <algorithm>
 
 
-CalMomentsAnalysis::CalMomentsAnalysis() : m_centroid(0.,0.,0.), 
-                                           m_moment(0.,0.,0.), 
-                                           m_rmsLong(0.),
-                                           m_rmsTrans(0.),
-                                           m_rmsLongAsym(0.),
-                                           m_numIterations(0),
-                                           m_numDroppedPoints(0)
+void CalMomentsAnalysis::clear()
 {
-    m_axis[0] = Vector(0.,0.,0.);
-    m_axis[1] = Vector(0.,0.,1.);
-    m_axis[2] = Vector(0.,0.,0.);
-
-    return;
+  m_weightSum        = 0.;
+  m_centroid         = Point(0.,0.,0.); 
+  m_moment           = Vector(0.,0.,0.);
+  m_axis[0]          = Vector(0.,0.,0.);
+  m_axis[1]          = Vector(0.,0.,1.);
+  m_axis[2]          = Vector(0.,0.,0.);
+  m_longRms          = 0.;
+  m_transRms         = 0.;
+  m_longRmsAsym      = 0.;
+  m_longSkewness     = 0.;
+  m_numIterations    = 0;
+  m_numDroppedPoints = 0;
 }
 
 double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const Point& iniCentroid)
@@ -30,7 +31,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
     // This version lifted directly from code supplied to Bill Atwood by Toby Burnett
     // TU 5/24/2005
     m_weightSum = 0.;
-    m_skewnessLong = -9999.;
+    m_longSkewness = -9999.;
     // Check that we have enough points to proceed - need at least three
     double chisq = -1.;
     if (dataVec.size() < 2) return chisq;
@@ -142,10 +143,10 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec, const P
         double longMag1 = fabs(m_moment[0]);
 	double longMag2 = fabs(m_moment[2]); 
 	
-        m_rmsLong     = (longMag1 + longMag2) / 2.;
-	m_rmsTrans    =  fabs(m_moment[1]);
-	m_rmsLongAsym = (longMag1 - longMag2)/(longMag1 + longMag2);
-	m_skewnessLong = skewness;
+        m_longRms     = (longMag1 + longMag2) / 2.;
+	m_transRms    =  fabs(m_moment[1]);
+	m_longRmsAsym = (longMag1 - longMag2)/(longMag1 + longMag2);
+	m_longSkewness = skewness;
     }
     else chisq = -1.;
 
@@ -180,14 +181,14 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
         chiSq = localChiSq;
 
         // Update the centroid for subsequent passes
-        centroid = getMomentsCentroid();
+        centroid = getCentroid();
 
         // Get the transverse moment
-        double rmsTrans = getTransverseRms();
+        double transRms = getTransRms();
 
         // Convert to distance by scaling with the sum of the weights 
         // and taking the square root
-        rmsTrans = sqrt(rmsTrans / m_weightSum);
+        transRms = sqrt(transRms / m_weightSum);
 
         // Sort the data points by their distance from the principal axis
         std::sort(dataVec.begin(), dataVec.end());
@@ -204,7 +205,7 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
             CalMomentsData& momentsData = dataVec.back();
 
             // If out of range drop this point and loop back to check again
-            if (momentsData.getDistToAxis() > scaleFactor * rmsTrans)
+            if (momentsData.getDistToAxis() > scaleFactor * transRms)
             {
                 dataVec.pop_back();
                 iterate = true;

@@ -357,17 +357,17 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
         int nDropped    = momentsAnalysis.getNumDroppedPoints();
 
         // Get the iterative moments centroid and axis from iterations
-        centroid = momentsAnalysis.getMomentsCentroid();
-        axis     = momentsAnalysis.getMomentsAxis();
+        centroid = momentsAnalysis.getCentroid();
+        axis     = momentsAnalysis.getAxis();
 
         // Recalculate the moments going back to using all the data points but with
         // the iterated moments centroid
         if (nIterations > 1) chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
     
         // Extract the values for the moments with all hits present
-        double rms_long  = momentsAnalysis.getLongitudinalRms();
-        double rms_trans = momentsAnalysis.getTransverseRms();
-        double long_asym = momentsAnalysis.getLongAsymmetry();
+        double rms_long  = momentsAnalysis.getLongRms();
+        double rms_trans = momentsAnalysis.getTransRms();
+        double long_asym = momentsAnalysis.getLongRmsAsym();
 	double long_skew = momentsAnalysis.getLongSkewness();
 
         if (!isFinite(rms_long))
