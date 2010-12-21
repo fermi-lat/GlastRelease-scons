@@ -315,10 +315,11 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
     log << MSG::DEBUG << "Calling Naive Bayes classifier" << endreq;
     Event::CalClusterCol::const_iterator cluster ;
     for (cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
-    {
-        // Current PDFs were derived with precut at NumXtals>3
-        if((*cluster)->getMSTreeNumEdges()+1>3)
-            classifyCluster(*cluster);
+      {
+	// Current PDFs were derived with precut at NumXtals>3
+	if( (*cluster)->getMSTreeNumEdges() + 1 > 3 ) {
+	  classifyCluster(*cluster);
+	}
     }   
     
     return StatusCode::SUCCESS ;
