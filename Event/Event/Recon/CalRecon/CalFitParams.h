@@ -182,6 +182,7 @@ inline CalFitParams::CalFitParams(int    fitLayers, double chiSquare,
     m_clusterAxis     = Vector(xAxis,yAxis,zAxis);
     return;
 }
+
 inline void CalFitParams::clear()
 {
     m_clusterCentroid = Point(0.,0.,0.);
@@ -255,17 +256,23 @@ inline CLHEP::HepMatrix CalFitParams::getAxisErrs() const
 
 inline std::ostream& CalFitParams::fillStream( std::ostream& s ) const
 {
-    s << m_nFitLayers << " " << m_chiSquare << "\n"
-      << m_clusterCentroid.x() << " " << m_clusterCentroid.y() << " " << m_clusterCentroid.z() << "\n"
-      << m_cenxx  << " " << m_cenxy << " " << m_cenxz << "\n"
-      << m_cenxy  << " " << m_cenyy << " " << m_cenyz << "\n"
-      << m_cenxz  << " " << m_cenyz << " " << m_cenzz << "\n"
-      << m_clusterAxis.x() << " " << m_clusterAxis.y() << " " << m_clusterAxis.z() << "\n"
-      << m_axisxx  << " " << m_axisxy << " " << m_axisxz << "\n"
-      << m_axisxy  << " " << m_axisyy << " " << m_axisyz << "\n"
-      << m_axisxz  << " " << m_axisyz << " " << m_axiszz;
+  s <<
+    "Centroid = (" << m_clusterCentroid.x() << ", " << m_clusterCentroid.y() << ", "
+		<< m_clusterCentroid.z() << ") mm\n" <<
+    "Centroid covariance matrix:\n" <<
+    "| " << m_cenxx  << "  " << m_cenxy << "  " << m_cenxz << " |\n" <<
+    "| " << m_cenxy  << "  " << m_cenyy << "  " << m_cenyz << " |\n" <<
+    "| " << m_cenxz  << "  " << m_cenyz << "  " << m_cenzz << " |\n" <<
+    "Axis = (" << m_clusterAxis.x() << ", " << m_clusterAxis.y() << ", "
+		  << m_clusterAxis.z() << ")\n" <<
+    "Axis covariance matrix:\n" <<
+    "| " << m_axisxx  << "  " << m_axisxy << "  " << m_axisxz << " |\n" <<
+    "| " << m_axisxy  << "  " << m_axisyy << "  " << m_axisyz << " |\n" <<
+    "| " << m_axisxz  << "  " << m_axisyz << "  " << m_axiszz << " |\n" <<
+    "Number of layers for the fit: " << m_nFitLayers << "\n" <<
+    "Fit chisquare: " << m_chiSquare;
 
-    return s; 
+    return s;
 }
 
 

@@ -394,24 +394,25 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
 	Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
 				       nIterations, 0, 0, rms_trans, rms_long, long_asym,
 				       long_skew, -1., -1., -1.);
-	//std::cout << "CalMomParams: \n" << momParams << std::endl;
-
+	// Initialize the CalFitParams container.
         Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq,
                                       m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,
 				      1., 0., 0., 1., 0., 1.,
                                       m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
 				      1., 0., 0., 1., 0., 1.);
 
-        // initialize empty CalMSTreeParams container - CalMSTreePar
+        // Initialize empty CalMSTreeParams container - CalMSTreePar
         Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
 
 	// Initialize and empty container for the classification output.
 	Event::CalNBCClassParams nbcClassParams;
-	//std::cout << "CalNBCClassParams: \n" << nbcClassParams << std::endl;
 
 	cluster->initialize(treeParams, fitParams, momParams, nbcClassParams,
 			    m_Nsaturated, num_TruncXtals);
         cluster->setStatusBit(Event::CalCluster::MOMENTS);
+	//std::cout << *cluster << std::endl;
+	//MsgStream log(msgSvc(),name()) ;
+	//log << MSG::DEBUG << *cluster << endreq;
     }
 
     return;
