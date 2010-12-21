@@ -32,6 +32,9 @@ namespace Event { //Namespace Event
     /// Default (no parameter) constructor.
     CalNBCClassParams();
 
+    /// Constructor from all members.
+    CalNBCClassParams(std::string producerName, std::map <std::string, double> probMap);
+
     /// Destructor.
     ~CalNBCClassParams() {}
 

@@ -18,18 +18,26 @@ class CalClassParams
 public:
 
   /// Default constructor
-  CalClassParams() { Clear() ; }
+  CalClassParams();
+
+  /// Constructor from all members.
+  CalClassParams(std::string producerName, std::map <std::string, double> probMap);
   
+  /// Destructor.
   virtual ~CalClassParams() {}
   
-  void init();
+  /// Initialize the class members.
+  void init(std::string producerName, std::map <std::string, double> probMap);
 
-  inline std::map <std::string, Double_t> getProbMap() const { return m_probMap; }
   inline std::string getProducerName()                 const { return m_producerName; }
+  inline std::map <std::string, Double_t> getProbMap() const { return m_probMap; }
+
+  inline void setProbMap(std::map <std::string, double> probMap) { m_probMap = probMap; }
+  inline void setProducerName(std::string producerName)   { m_producerName = producerName; }
+  inline void setProb(std::string className, double prob) { m_probMap[className] = prob; }
+
   Double_t getProb(const std::string &className)       const;
   Bool_t hasClass(const std::string &className)        const;
-
-  inline void setProb(std::string className, Double_t prob) { m_probMap[className] = prob; }
   
   void Clear( Option_t * option ="" ) ;
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests

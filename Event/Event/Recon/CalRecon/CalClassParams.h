@@ -36,6 +36,9 @@ namespace Event { //Namespace Event
     /// Default (no parameter) constructor.
     CalClassParams();
 
+    /// Constructor from all members.
+    CalClassParams(std::string producerName, std::map <std::string, double> probMap);
+
     /// Destructor.
     ~CalClassParams() {}
     
@@ -52,7 +55,6 @@ namespace Event { //Namespace Event
     inline void setProducerName(std::string producerName)   { m_producerName = producerName; }
     inline void setProb(std::string className, double prob) { m_probMap[className] = prob; }
 
-    /// Miscellaneous operations.
     /// Check whether the base std::map container has already a given key.
     bool hasClass(const std::string &className) const;
 

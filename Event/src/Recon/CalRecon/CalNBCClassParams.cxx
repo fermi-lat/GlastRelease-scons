@@ -9,15 +9,22 @@
 
 Event::CalNBCClassParams::CalNBCClassParams()
 {
-  clear();
   setProducerName("NBC");
+  clear();
+}
+
+Event::CalNBCClassParams::CalNBCClassParams(std::string producerName,
+					    std::map <std::string, double> probMap) :
+  Event::CalClassParams(producerName, probMap)
+{
+  //Nothing to do.
 }
 
 void Event::CalNBCClassParams::multiply(const std::string &className, double pdfValue)
 {
-  // If the base map has not an entry for this class, yet, (or has the dummy "gam" entry, so that
-  // the probablity is negative) initialize the probability to the pdf value. 
-  if ( getProb(className) < 0. ) {
+  // If the base map has not an entry for this class, yet, initialize the
+  // probability to the pdf value. 
+  if ( !hasClass(className) ) {
     setProb(className, pdfValue);
   }
   // Otherwise multiply the current probability value by the pdf value. 

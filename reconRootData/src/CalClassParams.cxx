@@ -13,6 +13,31 @@
 #include "Riostream.h"
 
 ClassImp(CalClassParams)
+
+CalClassParams::CalClassParams()
+{
+  setProducerName("Not set");
+  Clear();
+}
+
+CalClassParams::CalClassParams
+( std::string producerName,
+  std::map <std::string, double> probMap )
+{
+  init
+    ( producerName,probMap );
+}
+
+void CalClassParams::init(std::string producerName, std::map <std::string, double> probMap)
+{
+  m_producerName = producerName;
+  m_probMap      = probMap;
+}
+
+void CalClassParams::Clear( Option_t * )
+{
+  m_probMap.clear();
+}
   
 Double_t CalClassParams::getProb(const std::string &className) const
 {
@@ -29,26 +54,24 @@ Bool_t CalClassParams::hasClass(const std::string &className) const
   return m_probMap.count(className);
 }
 
-void CalClassParams::Clear( Option_t * )
-{
-  m_probMap.clear();
-  init();
-}
-
-void CalClassParams::init()
-{
-  setProb("gam", -1.);
-}
-
 void CalClassParams::Print( Option_t * ) const
 {
-  std::cout << "CalClassParams::Print() not implemented, yet." << std::endl;
+  std::cout << "Producer name: '" << getProducerName() << "'\n";
+  std::map <std::string, double>::const_iterator iter;
+  for (iter = m_probMap.begin(); iter != m_probMap.end(); iter++)
+    {
+      std::cout << "Probability for class '" << (*iter).first << "': " <<
+	(*iter).second << "\n";
+    }
 }
 
 // dummy data, just for tests
 void CalClassParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randNum */ )
  {
-   init();
+   std::map <std::string, double> probMap;
+   probMap["gam"] = 0.5;
+   probMap["had"] = 0.5;
+   init("Fake producer", probMap);
  }
 
 Bool_t CalClassParams::CompareInRange( const CalClassParams & cp, const std::string & name ) const

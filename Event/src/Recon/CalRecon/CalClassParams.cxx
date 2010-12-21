@@ -9,14 +9,21 @@
 
 Event::CalClassParams::CalClassParams()
 {
-  clear();
   setProducerName("Not set");
+  clear();
+}
+
+Event::CalClassParams::CalClassParams(std::string producerName,
+				      std::map <std::string, double> probMap) :
+  m_producerName(producerName),
+  m_probMap(probMap)
+{
+  //Nothing to do.
 }
 
 void Event::CalClassParams::clear()
 {
   m_probMap.clear();
-  setProb("gam", -1.);
 }
 
 bool Event::CalClassParams::hasClass(const std::string &className) const
