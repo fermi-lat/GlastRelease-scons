@@ -63,15 +63,26 @@ Double_t CalCluster::getGamProb() const
 
 void CalCluster::Print( Option_t * ) const
  {
-  m_momParams.Print() ;
-  m_fitParams.Print() ;
-  m_mstParams.Print() ;
-  m_classParams.Print() ;
-  std::cout
-    <<"Gam prob " << getGamProb() << "\n"
-    <<"No. Saturated Xtals " << m_numSaturatedXtals << "\n"
-    <<"No.Trunc Xtals "<<m_numTruncXtals<<"\n"
-    <<"Number of layers: "<<ROOT_NUMCALLAYERS<<std::endl ;
+   std::cout << 
+     "Cal cluster status bits: " << m_statusBits << "\n" <<
+     "Number of saturated xtals: " << m_numSaturatedXtals << "\n" <<
+     "Truncated number of xtals: " << m_numTruncXtals << "\n" <<
+     "----------------------------------------------------\n" <<
+     "---------- Output from the MST clustering ----------\n" << 
+     "----------------------------------------------------\n";
+   m_mstParams.Print() ;
+   std::cout << 
+     "----------------------------------------------------\n" <<
+     "----------- Output from the fitting tool -----------\n" << 
+     "----------------------------------------------------\n";
+   m_fitParams.Print() ;
+   std::cout << 
+     "----------------------------------------------------\n" <<
+     "--------- Output from the moments analysis ---------\n" << 
+     "----------------------------------------------------\n";
+   m_momParams.Print() ;
+   std::cout << 
+     "------------------------------------------------------" << std::endl;
  }
 
 // dummy data, just for tests

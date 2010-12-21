@@ -8,6 +8,7 @@
 //
 //    Tracy Usher
 //    David Chamont
+//    Luca Baldini
 //
 
 #include <reconRootData/CalFitParams.h>
@@ -17,14 +18,14 @@
 ClassImp(CalFitParams)
 
 CalFitParams::CalFitParams
-( int nFitLayers, double chiSquare,
+( int numFitLayers, double chiSquare,
   TVector3 centroid,
   double cntdxx, double cntdxy, double cntdxz, double cntdyy, double cntdyz, double cntdzz,
   TVector3 axis,
   double axsdxx, double axsdxy, double axsdxz, double axsdyy, double axsdyz, double axsdzz )
 {
-    init
-    ( nFitLayers, chiSquare,
+  init
+    ( numFitLayers, chiSquare,
       centroid,cntdxx,cntdxy,cntdxz,cntdyy,cntdyz,cntdzz,
       axis,axsdxx,axsdxy,axsdxz,axsdyy,axsdyz,axsdzz ) ;
 }
@@ -38,7 +39,7 @@ void CalFitParams::Clear( Option_t * )
 }
 
 void CalFitParams::init
-( Int_t nFitLayers, Double_t chiSquare,
+( Int_t numFitLayers, Double_t chiSquare,
   TVector3 centroid,
   Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
   Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
@@ -46,36 +47,34 @@ void CalFitParams::init
   Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
   Double_t axsdyy, Double_t axsdyz, Double_t axsdzz )
 {
-    m_nFitLayers = nFitLayers ;
-    m_chiSquare  = chiSquare ;
-    m_clusterCentroid = centroid ;
-    m_cenxx = cntdxx ;
-    m_cenxy = cntdxy ;
-    m_cenxz = cntdxz ;
-    m_cenyy = cntdyy ;
-    m_cenyz = cntdyz ;
-    m_cenzz = cntdzz ;
-    m_clusterAxis = axis ;
-    m_axisxx = axsdxx ;
-    m_axisxy = axsdxy ;
-    m_axisxz = axsdxz ;
-    m_axisyy = axsdyy ;
-    m_axisyz = axsdyz ;
-    m_axiszz = axsdzz ;
+  setEnergy(-1.);
+  setEnergyErr(-1.);
+  setCentroid(centroid);
+  setxPosxPos(cntdxx);
+  setxPosyPos(cntdxy);
+  setxPoszPos(cntdxz);
+  setyPosyPos(cntdyy);
+  setyPoszPos(cntdyz);
+  setzPoszPos(cntdzz);
+  setAxis(axis);
+  setxDirxDir(axsdxx);
+  setxDiryDir(axsdxy);
+  setxDirzDir(axsdxz);
+  setyDiryDir(axsdyy);
+  setyDirzDir(axsdyz);
+  setzDirzDir(axsdzz);
+  m_nFitLayers = numFitLayers ;
+  m_chiSquare  = chiSquare ;
 }
 
 void CalFitParams::Print( Option_t * ) const
 {
-    std::cout
-      << m_nFitLayers << " " << m_chiSquare << "\n"
-      << m_clusterCentroid.X() << " " << m_clusterCentroid.Y() << " " << m_clusterCentroid.Z() << "\n"
-      << m_cenxx  << " " << m_cenxy << " " << m_cenxz << "\n"
-      << m_cenxy  << " " << m_cenyy << " " << m_cenyz << "\n"
-      << m_cenxz  << " " << m_cenyz << " " << m_cenzz << "\n"
-      << m_clusterAxis.X() << " " << m_clusterAxis.Y() << " " << m_clusterAxis.Z() << "\n"
-      << m_axisxx  << " " << m_axisxy << " " << m_axisxz << "\n"
-      << m_axisxy  << " " << m_axisyy << " " << m_axisyz << "\n"
-      << m_axisxz  << " " << m_axisyz << " " << m_axiszz ;
+  // Call the base class method...
+  CalParams::Print();
+  // ... then print the additional stuff.
+  std::cout <<
+    "Number of layers for the fit: " << m_nFitLayers << "\n" <<
+    "Fit chisquare: " << m_chiSquare << std::endl;
 }
 
 // dummy data, just for tests

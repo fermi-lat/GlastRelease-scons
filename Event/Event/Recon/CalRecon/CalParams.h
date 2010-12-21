@@ -30,9 +30,9 @@
 namespace Event { //Namespace Event
 
 
-class CalParams
-{
-public:
+  class CalParams
+  {
+  public:
     /// Default constructor
     CalParams() { clear() ; }
   
@@ -164,7 +164,7 @@ private:
     double m_axisyy;    // Cov(2,2) = dy * dy
     double m_axisyz;    // Cov(2,3) = Cov (3,2)= dy * dz
     double m_axiszz;    // Cov(3,3) = dz * dz
-};
+  };
  
 
 }; //Namespace Event

@@ -58,10 +58,16 @@ void CalMSTreeParams::init
 // Dump the content of the container: the MST tree parameters
 void CalMSTreeParams::Print( Option_t * ) const
 {
-    std::cout
-      << m_totalEnergy	       << " " << m_maxXtalEnergy << " " << m_numberOfEdges << " "
-      << m_minEdgeLength       << " " << m_maxEdgeLength << " " << m_meanEdgeLength<< " "
-      << m_meanEdgeLengthTrunc << " " << m_rmsEdgeLength << " " << m_rmsEdgeLengthTrunc <<
+  std::cout <<
+    "Total energy: " << m_totalEnergy << " MeV\n" <<
+    "Maximum xtal energy: " << m_maxXtalEnergy << " MeV\n" <<
+    "Number of edges: " << m_numberOfEdges << "\n" <<
+    "Minimum edge length: " << m_minEdgeLength << " mm\n" <<
+    "Maximum edge length: " << m_maxEdgeLength << " mm\n" <<
+    "Edge-length average: " << m_meanEdgeLength << " mm\n" <<
+    "Edge-length truncated average: " << m_meanEdgeLengthTrunc << " mm\n" <<
+    "Edge-length RMS: " << m_rmsEdgeLength << " mm\n" <<
+    "Edge-length truncated RMS: " << m_rmsEdgeLengthTrunc << " mm" <<
     std::endl;
 }
 
