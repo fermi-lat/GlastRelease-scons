@@ -10,6 +10,7 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/RelTable/RelTable.h"
+#include "Event/Recon/CalRecon/CalXtalsParams.h"
 #include "Event/Recon/CalRecon/CalFitParams.h"
 #include "Event/Recon/CalRecon/CalParams.h"
 #include "Event/Recon/CalRecon/CalMomParams.h"
@@ -83,7 +84,9 @@ class CalCluster : public CalClusterLayerDataVec, virtual public ContainedObject
 public:
   
     // Define a "null" constructor
-    CalCluster(int numCalLayers=NUMCALLAYERS) : CalClusterLayerDataVec(numCalLayers) {iniCluster();}
+    CalCluster(int numCalLayers=NUMCALLAYERS) :
+      CalClusterLayerDataVec(numCalLayers)
+      {iniCluster();}
         
     virtual ~CalCluster() {}
 
@@ -128,22 +131,25 @@ public:
 
 	};
 
-    void initialize(const CalMSTreeParams& mstParams,
+    void initialize(const CalXtalsParams& xtalsParams,
+		    const CalMSTreeParams& mstParams,
 		    const CalFitParams& fitParams,
                     const CalMomParams& momParams,
-		    const CalClassParams& classParams,
-                    int numSaturatedXtals, int numTruncXtals);
+		    const CalClassParams& classParams);
 
     /// Access methods to the main objects.
     inline const std::string & getProducerName() const { return m_producerName; }
-    inline unsigned int getStatusBits()          const { return m_statusBits ; }
+    inline unsigned int getStatusBits()          const { return m_statusBits; }
+
+    const CalXtalsParams& getXtalsParams()       const { return m_xtalsParams; }
     const CalMSTreeParams& getMSTreeParams()     const { return m_mstParams; }
     const CalFitParams& getFitParams()           const { return m_fitParams; }
     const CalMomParams& getMomParams()           const { return m_momParams; }
+    const CalClassParams& getClassParams()       const { return m_classParams; }
+
     /// This is not to break anything with the new container CalMomParams
     /// It should probably print out something ("obsolete?").
     const CalMomParams& getParams()              const { return m_momParams; }
-    const CalClassParams& getClassParams()       const { return m_classParams; }
 
     // TBD Change names according to the CalMomParams class?
     double getRmsLong()	                         const { return m_momParams.getLongRms(); }
@@ -162,19 +168,18 @@ public:
     double getClassProb(const std::string& className) const;
     double getGamProb()                               const;
 
-    /// Access to the remaining parameters
-    int getNumSaturatedXtals()                   const { return m_numSaturatedXtals; }
-    int getNumTruncXtals()	                 const { return m_numTruncXtals; }
+    // A few other methods for backward compatibility.
+    int getNumSaturatedXtals() const { return m_xtalsParams.getNumSaturatedXtals(); }
+    int getNumTruncXtals()     const { return m_xtalsParams.getNumTruncXtals(); }
 
     /// Set methods.
     inline void setProducerName(const std::string & producerName) { m_producerName = producerName ; }
-    inline void setStatusBits( unsigned int statusBits )   { m_statusBits = statusBits ; }
+    inline void setStatusBits( unsigned int statusBits )   { m_statusBits = statusBits; }
+    void setXtalsParams(const CalXtalsParams& xtalsParams) { m_xtalsParams = xtalsParams; }
     void setMSTreeParams(const CalMSTreeParams& mstParams) { m_mstParams = mstParams; }
     void setFitParams(const CalFitParams& fitParams)       { m_fitParams = fitParams; }
     void setMomParams(const CalMomParams& momParams)       { m_momParams = momParams; }
     void setClassParams(const CalClassParams& classParams) { m_classParams = classParams; }
-    void setNumSaturatedXtals(int nSat)                    { m_numSaturatedXtals = nSat; }
-    void setNumXtals(int numXtals)                         { m_numTruncXtals     = numXtals; }
 
     /// Manipulate status bits.
     inline void setStatusBit( StatusBits bitToSet )        { m_statusBits |=  bitToSet ; }
@@ -200,6 +205,8 @@ private:
     std::string m_producerName;
     /// Status Bits.
     unsigned int m_statusBits;
+    /// Generic properties of the xtal collection.
+    CalXtalsParams m_xtalsParams;
     /// Output of the Minimum Spanning Tree clustring algorithm.
     CalMSTreeParams m_mstParams;
     /// Output of the fit to the cluster centroid/direction.
@@ -208,11 +215,6 @@ private:
     CalMomParams m_momParams;
     /// Output of the cluster classification 
     CalClassParams m_classParams;
-    /// TBD Add the total number of xtals.
-    /// Number of "saturated" xtals.
-    int m_numSaturatedXtals;
-    /// Number of Xtals with > 1% of the total cluster energy.
-    int m_numTruncXtals;
 };
 
 

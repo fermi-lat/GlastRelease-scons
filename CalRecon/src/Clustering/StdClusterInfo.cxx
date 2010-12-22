@@ -128,6 +128,8 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
  
     // Compute direction using the positions and rms per layer
     Vector caldir = fitDirection(pLayer, rmsLayer);
+    
+    Event::CalXtalsParams xtalsParams;
 
     Event::CalMomParams momParams(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(),
 				  1.,0.,0.,1.,0.,1.,
@@ -144,7 +146,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
     Event::CalClassParams classParams;
 
     // Fill CalCluster data
-    cl->initialize(treeParams, fitParams, momParams, classParams, 0, 0);
+    cl->initialize(xtalsParams, treeParams, fitParams, momParams, classParams);
 
     for( i = 0; i < calnLayers; i++)
     {

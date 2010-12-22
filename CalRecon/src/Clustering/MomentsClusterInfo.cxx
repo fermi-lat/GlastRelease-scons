@@ -231,6 +231,8 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
 
     // Also the Number of Truncated Xtals should be a data member in CalCluster!!!!!!!!!!!
 
+    Event::CalXtalsParams xtalsParams(num_TruncXtals, m_Nsaturated);
+
     // Set energy centroid
     Event::CalMomParams momParams(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(),
 				  1.,0.,0.,1.,0.,1., 0., 0., 1., 1.,0.,0.,1.,0.,1.);
@@ -255,8 +257,7 @@ double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::Cal
     // Initialize an empty CalClassParams container.
     Event::CalNBCClassParams nbcClassParams;
     
-    cluster->initialize(treeParams, fitParams, momParams, nbcClassParams,
-			m_Nsaturated, num_TruncXtals);
+    cluster->initialize(xtalsParams, treeParams, fitParams, momParams, nbcClassParams);
 
     return ene;
 }
@@ -389,6 +390,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
     
         int num_TruncXtals = cluster->getNumTruncXtals(); 
 
+	Event::CalXtalsParams xtalsParams(num_TruncXtals, m_Nsaturated);
+	
 	// Initialize the CalMomParams container.
 	CLHEP::HepMatrix I_3_3(3, 3, 1);
 	Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
@@ -407,8 +410,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
 	// Initialize and empty container for the classification output.
 	Event::CalNBCClassParams nbcClassParams;
 
-	cluster->initialize(treeParams, fitParams, momParams, nbcClassParams,
-			    m_Nsaturated, num_TruncXtals);
+	cluster->initialize(xtalsParams, treeParams, fitParams, momParams, nbcClassParams);
         cluster->setStatusBit(Event::CalCluster::MOMENTS);
 	//std::cout << *cluster << std::endl;
 	//MsgStream log(msgSvc(),name()) ;

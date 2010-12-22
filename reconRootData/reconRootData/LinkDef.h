@@ -34,6 +34,7 @@
 #pragma link C++ class AcdReconV2+;
 
 #pragma link C++ class CalRecon+;
+#pragma link C++ class CalXtalsParams+;
 #pragma link C++ class CalParams+;
 #pragma link C++ class CalMomParams+;
 #pragma link C++ class CalFitParams+;

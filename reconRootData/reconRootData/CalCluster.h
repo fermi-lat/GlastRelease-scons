@@ -2,6 +2,7 @@
 #define ROOT_CALCLUSTER_H
 
 #include "CalClusterLayerData.h"
+#include "CalXtalsParams.h"
 #include "CalFitParams.h"
 #include "CalMSTreeParams.h"
 #include "CalMomParams.h"
@@ -39,48 +40,37 @@ public:
      { Clear() ; }
     CalCluster
      ( const std::vector<CalClusterLayerData> &,
+       const CalXtalsParams&,
        const CalMSTreeParams&,
        const CalFitParams&,
        const CalMomParams &,
        const CalClassParams&,
-       Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
+       UInt_t statusBits ) ;
     void init
      ( const std::vector<CalClusterLayerData> &,
+       const CalXtalsParams&,
        const CalMSTreeParams&,
        const CalFitParams&,
        const CalMomParams&,
        const CalClassParams&,
-       Int_t numSaturatedXtals, Int_t numTruncXtals, UInt_t statusBits ) ;
+       UInt_t statusBits ) ;
     virtual ~CalCluster()
      {}
 
-    const CalMSTreeParams & getMSTreeParams() const
-     { return m_mstParams;}
     const CalClusterLayerData & getLayer( int i ) const
      { return m_layers[i] ; }
+    const CalXtalsParams & getXtalsParams() const
+     { return m_xtalsParams;}
+    const CalMSTreeParams & getMSTreeParams() const
+     { return m_mstParams;}
     const CalFitParams & getFitParams() const
      { return m_fitParams;} 
     const CalMomParams & getMomParams() const
      { return m_momParams ; }
     const CalClassParams & getClassParams() const
      { return m_classParams ; }
-    Double_t getRmsLong() const
-     { return m_momParams.getLongRms(); }
-    Double_t getRmsLongAsym() const
-     { return m_momParams.getLongRmsAsym(); }
-    Double_t getRmsTrans() const
-     { return m_momParams.getTransRms(); }
-    Double_t getSkewnessLong() const
-     { return m_momParams.getLongSkewness(); }
-    Int_t getNumSaturatedXtals() const
-     { return m_numSaturatedXtals; }
-    Int_t getNumTruncXtals() const
-     { return m_numTruncXtals ; }
     UInt_t getStatusBits() const
      { return m_statusBits ; }
-     
-    Double_t getClassProb(const std::string& className) const;
-    Double_t getGamProb() const;
 
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
@@ -90,15 +80,14 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
+    CalXtalsParams m_xtalsParams ;
     CalMSTreeParams m_mstParams ;
     CalFitParams m_fitParams ;
     CalMomParams m_momParams ;
     CalClassParams m_classParams ;
-    Int_t m_numSaturatedXtals ;
-    Int_t m_numTruncXtals ;
     UInt_t m_statusBits ;
 
-    ClassDef(CalCluster,8)
+    ClassDef(CalCluster,9)
 };
 
 

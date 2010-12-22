@@ -11,30 +11,28 @@
 
 #include "Event/Recon/CalRecon/CalCluster.h"
 
-void Event::CalCluster::initialize(const CalMSTreeParams& mstParams,
+void Event::CalCluster::initialize(const CalXtalsParams& xtalsParams,
+				   const CalMSTreeParams& mstParams,
 				   const CalFitParams& fitParams,
 				   const CalMomParams& momParams,
-				   const CalClassParams& classParams,
-				   int numSaturatedXtals, int numTruncXtals)
+				   const CalClassParams& classParams)
 {
-  m_mstParams         = mstParams;
-  m_fitParams         = fitParams;
-  m_momParams         = momParams;
-  m_classParams       = classParams;
-  m_numSaturatedXtals = numSaturatedXtals;
-  m_numTruncXtals     = numTruncXtals;
+  m_xtalsParams = xtalsParams;
+  m_mstParams   = mstParams;
+  m_fitParams   = fitParams;
+  m_momParams   = momParams;
+  m_classParams = classParams;
 }
 
 /// TBD: rename to clear()
 void Event::CalCluster::iniCluster()
 {
-  m_mstParams         = CalMSTreeParams();
-  m_fitParams         = CalFitParams();
-  m_momParams         = CalMomParams();
-  m_classParams       = CalClassParams();
-  m_statusBits        = 0;
-  m_numSaturatedXtals = 0;
-  m_numTruncXtals     = 0; 
+  m_xtalsParams = CalXtalsParams(); 
+  m_mstParams   = CalMSTreeParams();
+  m_fitParams   = CalFitParams();
+  m_momParams   = CalMomParams();
+  m_classParams = CalClassParams();
+  m_statusBits  = 0;
 }
 
 double Event::CalCluster::getClassProb(const std::string& className) const
@@ -58,8 +56,9 @@ std::ostream& Event::CalCluster::fillStream(std::ostream& s) const
 {
   s <<
     "Cal cluster status bits: " << m_statusBits << "\n" <<
-    "Number of saturated xtals: " << m_numSaturatedXtals << "\n" <<
-    "Truncated number of xtals: " << m_numTruncXtals << "\n" <<
+    "----------------------------------------------------\n" <<
+    "-------- Generic xtal collection properties --------\n" << 
+    "----------------------------------------------------\n" << m_xtalsParams << "\n" <<
     "----------------------------------------------------\n" <<
     "---------- Output from the MST clustering ----------\n" << 
     "----------------------------------------------------\n" << m_mstParams << "\n" <<

@@ -1,5 +1,6 @@
 
 #include <RootConvert/Recon/CalClusterConvert.h>
+#include <RootConvert/Recon/CalXtalsParamsConvert.h>
 #include <RootConvert/Recon/CalFitParamsConvert.h>
 #include <RootConvert/Recon/CalMSTreeParamsConvert.h>
 #include <RootConvert/Recon/CalParamsConvert.h>
@@ -26,7 +27,9 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
             convert(tdsLayer->getRmsSpread())) ;
         rootLayers.push_back(layerRoot) ;
     }
-      
+    
+    CalXtalsParams rootXtalsParams ;
+    convert(tdsCluster.getXtalsParams(),rootXtalsParams) ;
     CalMSTreeParams rootTreeParams ;
     convert(tdsCluster.getMSTreeParams(),rootTreeParams) ;
     CalFitParams rootFitParams ;
@@ -38,17 +41,18 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
 
     rootCluster.init
       ( rootLayers,
+	rootXtalsParams,
         rootTreeParams,
 	rootFitParams,
 	rootMomParams,
 	rootClassParams,
-        (Int_t)tdsCluster.getNumSaturatedXtals(),
-        (Int_t)tdsCluster.getNumTruncXtals(),
-        tdsCluster.getStatusBits() ) ;
+        (UInt_t)tdsCluster.getStatusBits() ) ;
  }
  
 void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
 {
+    Event::CalXtalsParams tdsXtalsParams;
+    convert(rootCluster.getXtalsParams(),tdsXtalsParams) ; 
     Event::CalMSTreeParams tdsTreeParams;
     convert(rootCluster.getMSTreeParams(),tdsTreeParams) ;    
     Event::CalFitParams tdsFitParams;
@@ -59,13 +63,13 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
     convert(rootCluster.getClassParams(),tdsClassParams) ;
 
     tdsCluster.initialize
-      ( tdsTreeParams, 
+      ( tdsXtalsParams,
+	tdsTreeParams, 
         tdsFitParams,
         tdsMomParams,
-	tdsClassParams,
-        rootCluster.getNumSaturatedXtals(),
-        rootCluster.getNumTruncXtals() ) ;
+	tdsClassParams) ;
     
+    // This should be handled with a proper Event::CalCluster constructor.
     UInt_t rootStatusBits = rootCluster.getStatusBits() ;
     tdsCluster.setStatusBits(rootStatusBits) ;
 
