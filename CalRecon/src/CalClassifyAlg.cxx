@@ -33,7 +33,7 @@
 
 bool SortByGamProb(Event::CalCluster *clusterA, Event::CalCluster *clusterB)
 {
-  return (clusterA->getGamProb() > clusterB->getGamProb());
+  return (clusterA->getClassParams().getGamProb() > clusterB->getClassParams().getGamProb());
 }
 
 

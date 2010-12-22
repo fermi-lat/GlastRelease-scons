@@ -59,6 +59,11 @@ public:
 
     const CalClusterLayerData & getLayer( int i ) const
      { return m_layers[i] ; }
+
+    std::string getProducerName() const
+      { return m_producerName ; } 
+    UInt_t getStatusBits() const
+     { return m_statusBits ; }
     const CalXtalsParams & getXtalsParams() const
      { return m_xtalsParams;}
     const CalMSTreeParams & getMSTreeParams() const
@@ -69,8 +74,6 @@ public:
      { return m_momParams ; }
     const CalClassParams & getClassParams() const
      { return m_classParams ; }
-    UInt_t getStatusBits() const
-     { return m_statusBits ; }
 
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
@@ -80,12 +83,14 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
+
+    std::string m_producerName ;
+    UInt_t m_statusBits ;
     CalXtalsParams m_xtalsParams ;
     CalMSTreeParams m_mstParams ;
     CalFitParams m_fitParams ;
     CalMomParams m_momParams ;
     CalClassParams m_classParams ;
-    UInt_t m_statusBits ;
 
     ClassDef(CalCluster,9)
 };

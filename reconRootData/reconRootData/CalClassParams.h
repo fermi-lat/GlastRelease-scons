@@ -33,10 +33,11 @@ public:
   inline std::map <std::string, Double_t> getProbMap() const { return m_probMap; }
 
   inline void setProbMap(std::map <std::string, double> probMap) { m_probMap = probMap; }
-  inline void setProducerName(std::string producerName)   { m_producerName = producerName; }
-  inline void setProb(std::string className, double prob) { m_probMap[className] = prob; }
+  inline void setProducerName(std::string producerName)      { m_producerName = producerName; }
+  inline void setProb(std::string className, double prob)    { m_probMap[className] = prob; }
 
   Double_t getProb(const std::string &className)       const;
+  Double_t getGamProb()                                const { return getProb("gam") ; }
   Bool_t hasClass(const std::string &className)        const;
   
   void Clear( Option_t * option ="" ) ;

@@ -24,25 +24,15 @@ void Event::CalCluster::initialize(const CalXtalsParams& xtalsParams,
   m_classParams = classParams;
 }
 
-/// TBD: rename to clear()
 void Event::CalCluster::iniCluster()
 {
-  m_xtalsParams = CalXtalsParams(); 
-  m_mstParams   = CalMSTreeParams();
-  m_fitParams   = CalFitParams();
-  m_momParams   = CalMomParams();
-  m_classParams = CalClassParams();
-  m_statusBits  = 0;
-}
-
-double Event::CalCluster::getClassProb(const std::string& className) const
-{
-  return m_classParams.getProb(className);
-}
-
-double Event::CalCluster::getGamProb() const
-{
-  return getClassProb("gam");
+  m_producerName = "Not set";
+  m_statusBits   = 0;
+  m_xtalsParams  = CalXtalsParams(); 
+  m_mstParams    = CalMSTreeParams();
+  m_fitParams    = CalFitParams();
+  m_momParams    = CalMomParams();
+  m_classParams  = CalClassParams();
 }
 
 void Event::CalCluster::writeOut(MsgStream& stream) const
@@ -55,7 +45,8 @@ void Event::CalCluster::writeOut(MsgStream& stream) const
 std::ostream& Event::CalCluster::fillStream(std::ostream& s) const
 {
   s <<
-    "Cal cluster status bits: " << m_statusBits << "\n" <<
+    "Producer name: " << m_producerName << "\n" <<
+    "Status bits: " << m_statusBits << "\n" <<
     "----------------------------------------------------\n" <<
     "-------- Generic xtal collection properties --------\n" << 
     "----------------------------------------------------\n" << m_xtalsParams << "\n" <<

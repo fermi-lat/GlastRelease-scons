@@ -917,7 +917,7 @@ StatusCode CalValsTool::calculate()
     }
 
     // New variables from cluster classification
-    CAL_Gam_Prob = calCluster->getGamProb();
+    CAL_Gam_Prob = calCluster->getClassParams().getGamProb();
 
     CAL_EnergyRaw  = calCluster->getMomParams().getEnergy();
     if(CAL_EnergyRaw<1.0) return sc;

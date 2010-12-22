@@ -18,12 +18,12 @@ void CalCluster::init
   int i ;
   for ( i=0, layer=layers.begin() ; layer != layers.end() ; ++i, ++layer )
     m_layers[i] = (*layer) ;
+  m_statusBits  = statusBits;
   m_xtalsParams = xtalsParams;
   m_mstParams   = treeParams;
   m_fitParams   = fitParams;
   m_momParams   = momParams ;
   m_classParams = classParams;
-  m_statusBits  = statusBits;
  }
 
 void CalCluster::Clear( Option_t * )
@@ -31,12 +31,14 @@ void CalCluster::Clear( Option_t * )
   int i ;
   for ( i=0 ; i<ROOT_NUMCALLAYERS ; ++i )
     m_layers[i].Clear() ;
+
+  m_statusBits   = 0;
+  m_producerName = "Not set";
   m_xtalsParams.Clear();
   m_mstParams.Clear();
   m_fitParams.Clear();
   m_momParams.Clear();
   m_classParams.Clear();
-  m_statusBits = 0;
  }
 
 CalCluster::CalCluster
@@ -54,7 +56,8 @@ CalCluster::CalCluster
 void CalCluster::Print( Option_t * ) const
  {
    std::cout << 
-     "Cal cluster status bits: " << m_statusBits << "\n";
+     "Producer name: " << m_producerName << "\n" <<
+     "Status bits: " << m_statusBits << "\n";
    std::cout <<
      "----------------------------------------------------\n" <<
      "-------- Generic xtal collection properties --------\n" << 

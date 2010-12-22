@@ -317,7 +317,7 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
     for (cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
       {
 	// Current PDFs were derived with precut at NumXtals>3
-	if( (*cluster)->getMSTreeNumEdges() + 1 > 3 ) {
+	if( (*cluster)->getMSTreeParams().getNumberOfEdges() + 1 > 3 ) {
 	  classifyCluster(*cluster);
 	}
     }   
@@ -389,7 +389,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
         // Need to expose the number of xtals in the Cluster class.
         double sumOfWeights = calCluster->getMomParams().getEnergy();
         if (sumOfWeights > 0)
-            return (calCluster->getMSTreeNumEdges() + 1)/log10(sumOfWeights);
+	  return (calCluster->getMSTreeParams().getNumberOfEdges() + 1)/log10(sumOfWeights);
         else
             return -1.0;
     }
