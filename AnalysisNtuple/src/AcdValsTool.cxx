@@ -402,13 +402,13 @@ StatusCode AcdValsTool::initialize()
     addItem("AcdCRActiveDist3D",   &ACD_CR_ActiveDist3D);
     addItem("AcdCRActDistTileEnergy",   &ACD_CR_ActiveDist_Energy);
     addItem("AcdCRActDistTrackNum", &ACD_CR_ActiveDist_TrackNum);
-	addItem("ACDCRRibbonActiveDist", &ACD_CR_ribbon_ActiveDist);
+	addItem("AcdCRRibbonActiveDist", &ACD_CR_ribbon_ActiveDist);
     addItem("AcdCRRibbonActEnergyPmtA", &ACD_CR_ribbon_EnergyPmtA);
     addItem("AcdCRRibbonActEnergyPmtB", &ACD_CR_ribbon_EnergyPmtB);
     addItem("AcdCR1ActiveDist",   &ACD_CR1_ActiveDist);
     addItem("AcdCR1ActDistTileEnergy",   &ACD_CR1_ActiveDist_Energy);
     addItem("AcdCR1ActDistTrackNum", &ACD_CR1_ActiveDist_TrackNum);
-	addItem("ACDCR1RibbonActiveDist", &ACD_CR1_ribbon_ActiveDist);
+	addItem("AcdCR1RibbonActiveDist", &ACD_CR1_ribbon_ActiveDist);
     addItem("AcdCR1RibbonActEnergyPmtA", &ACD_CR1_ribbon_EnergyPmtA);
     addItem("AcdCR1RibbonActEnergyPmtB", &ACD_CR1_ribbon_EnergyPmtB);
 
