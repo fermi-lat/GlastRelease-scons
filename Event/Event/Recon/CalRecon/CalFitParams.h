@@ -64,8 +64,8 @@ namespace Event { //Namespace Event
                  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
                  const Vector& axis, const CLHEP::HepMatrix& axisErr);
 
-    /// Convenience direct constructor from all the elements (the old fashioned way)
-    /// (see the comment to the previous constructor).
+    /// Convenience direct constructor from all the elements (the old fashioned way).
+    /// See also the comment to the previous constructor.
     CalFitParams(int numFitLayers, double chiSquare,
                  double xCntrd, double yCntrd, double zCntrd,
                  double cntdxx, double cntdxy, double cntdxz,
@@ -73,6 +73,19 @@ namespace Event { //Namespace Event
                  double xAxis,  double yAxis,  double zAxis,
                  double axsdxx, double axsdxy, double axsdxz,
 		 double axsdyy, double axsdyz, double axsdzz);
+
+    /// Convenience constructor with energy, centroid and axis only.
+    CalFitParams(double energy, double eneError,
+		 double xCntrd, double yCntrd, double zCntrd,
+		 double xAxis,  double yAxis,  double zAxis,
+		 int numFitLayers, double chiSquare);
+
+    /// Convenience constructors with energy and centroid only.
+    CalFitParams(double energy, double eneError,
+		 double xCntrd, double yCntrd, double zCntrd,
+		 int numFitLayers, double chiSquare);
+    CalFitParams(double energy, double eneError,
+		 const Point& centroid, int numFitLayers, double chiSquare);
 
     /// Destructor;
     ~CalFitParams() {}

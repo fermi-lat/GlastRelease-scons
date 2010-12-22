@@ -62,362 +62,322 @@ MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, double transSc
 /// This makes CalClusters out of associated CalXtalRecData pointers
 Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
 {
-    // Create an output cluster
-    Event::CalCluster* cluster = 0;
+  // Create an output cluster.
+  Event::CalCluster* cluster = 0;
+  
+  if (!xTalVec->empty()) {
+    cluster = new Event::CalCluster(0);
+    cluster->setProducerName("MomentsClusterInfo") ;
+    cluster->clear();
 
-    if (!xTalVec->empty())
-    {
-        cluster = new Event::CalCluster(0);
-        cluster->setProducerName("MomentsClusterInfo") ;
+    DetectSaturation();
 
-        cluster->clear();
+    fitDirectionCentroid(xTalVec);
 
-        //  DetectSaturation(calDigiCol);
-        DetectSaturation();
-
-        //  getCentroidTransverseInfoOnly(xTalVec);
-        fitDirectionCentroid(xTalVec);
-
-        double energy = fillLayerData(xTalVec, cluster);
-
-        fillMomentsData(xTalVec, cluster, energy);
-    }
-
-    return cluster;
+    fillLayerData(xTalVec, cluster);
+    
+    fillMomentsData(xTalVec, cluster);
+  }
+  return cluster;
 }
 
-double MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCluster* cluster)
+void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCluster* cluster)
 {
-    //Initialize local variables
-    double              ene = 0;                      // Total energy in this cluster
-    int                 num_TruncXtals = 0;           // Number of Xtals in the cluster with > 1% of the energy
-    Vector              pCluster(0.,0.,0.);           // Cluster position
-    std::vector<double> eneLayer(m_calnLayers,0.);    // Energy by layer
-    std::vector<Vector> pLayer(m_calnLayers);         // Position by layer
-    std::vector<Vector> rmsLayer(m_calnLayers);       // rms by layer
+  // Total number of xtals.
+  int numXtals = xTalVec->size();
+  // Number of xtals in the cluster with energy greater than a threshold.
+  int numTruncXtals     = 0;
+  // Plain sum of the xtal energies.
+  double xtalRawEneSum  = 0.;
+  // Corrected sum of the xtal energies.
+  double xtalCorrEneSum = 0.;
+  // Energy sum in crystals with a bad position measurement (resulting from a bad/dead readout).
+  double xtalBadEneSum  = 0.;
+  // Cluster position.
+  Point centroid(0., 0., 0.);
+  // Energy by layer.
+  std::vector<double> layerEnergy(m_calnLayers, 0.);
+  // Position by layer.
+  std::vector<Vector> layerAve(m_calnLayers);
+  // rms by layer.
+  std::vector<Vector> layerRms(m_calnLayers);
 
-    // Use the fit centroid as the start point
-    m_p0 = Point(0.,0.,0.);
+  // Use the fit centroid as the start point.
+  m_p0 = Point(0.,0.,0.);
 
-    // If the linear fit was performed then use the centroid from that for a first guess
-    //if (m_fit_nlayers > 3 && m_fit_zdirection > 0.) m_p0 = Point(m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid);
-
-    // Keep track of any energy in crystals with a bad position measurement (resulting from a bad/dead readout)
-    double badPosXtalEne = 0.;
-
-    // Compute barycenter and various moments
-    // loop over all crystals in the current cluster
-    XtalDataList::const_iterator xTalIter;
-    for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+  // Loop over all crystals in the current cluster and compute barycenter and various moments.
+  XtalDataList::const_iterator xTalIter;
+  
+  for ( xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++ )
     {
-        // get pointer to the reconstructed data for given crystal
-        Event::CalXtalRecData* recData = *xTalIter;
-        
-        // get reconstructed values
-        double eneXtal = recData->getEnergy();                 // crystal energy
-        Vector pXtal   = recData->getPosition();               // Vector of crystal position
-        int    layer   = (recData->getPackedId()).getLayer();  // layer number
+      // Get pointer to the reconstructed data for given crystal.
+      Event::CalXtalRecData* recData = *xTalIter;
+      // Get reconstructed values.
+      double xtalEne = recData->getEnergy();
+      Vector xtalPos = recData->getPosition();
+      int    layer   = (recData->getPackedId()).getLayer();
+      // Check if bad position measurement.
+      if ( !recData->isPositionGood() ) {
+	xtalBadEneSum += xtalEne;
+	continue;
+      }
 
-        // Check if bad position measurement
-        if (!recData->isPositionGood())
-        {
-            badPosXtalEne += eneXtal;
-            continue;
-        }
-
-        // Offset the position to be closer to actual cluster center
-        pXtal -= m_p0;
-
-        // update energy of corresponding layer
-        eneLayer[layer] += eneXtal;
-        
-        // update average position of corresponding layer
-        Vector ptmp = eneXtal*pXtal;
-        pLayer[layer] += ptmp;
-        
-        // Vector containing squared coordinates, weighted by crystal energy 
-        Vector ptmp_sqr(ptmp.x()*pXtal.x(), ptmp.y()*pXtal.y(), ptmp.z()*pXtal.z());
- 
-        // update quadratic spread, which is proportional to eneXtal;
-        // this means, that position error in one crystal
-        // is assumed to be 1/sqrt(eneXtal) 
-        rmsLayer[layer] += ptmp_sqr;
-        
-        // update energy sum
-        ene  += eneXtal;
-
-        // update cluster position
-        pCluster += ptmp;
+      // Offset the position to be closer to actual cluster center.
+      xtalPos -= m_p0;
+      
+      // Update energy of corresponding layer
+      layerEnergy[layer] += xtalEne;
+      
+      // Update average position of corresponding layer.
+      Vector wpos = xtalEne*xtalPos;
+      layerAve[layer] += wpos;
+  
+      // Vector containing squared coordinates, weighted by crystal energy.
+      Vector wpos2(wpos.x()*xtalPos.x(), wpos.y()*xtalPos.y(), wpos.z()*xtalPos.z());
+      
+      // Update quadratic spread, which is proportional to xtalEne;
+      // this means, that position error in one crystal
+      // is assumed to be 1/sqrt(xtalEne)
+      layerRms[layer] += wpos2;
+      
+      // Update energy sum
+      xtalRawEneSum += xtalEne;
+      
+      // update cluster position
+      centroid += wpos;
     }
-
-    // Now take the means
-    // if energy sum is not zero - normalize cluster position
-    if(ene > 0.) 
-    {
-        pCluster /= ene;
-        pCluster += m_p0;
-        cluster->setStatusBit(Event::CalCluster::CENTROID);
-    }
-    // if energy is zero - set cluster position to non-physical value
-    else pCluster = Vector(-1000., -1000., -1000.);
+  
+  // If energy sum is not zero normalize cluster position...
+  if ( xtalRawEneSum > 0. ) {
+    centroid /= xtalRawEneSum;
+    centroid += m_p0;
+    cluster->setStatusBit(Event::CalCluster::CENTROID);
+  }
+  // ...otherwise set cluster position to non-physical value
+  else {
+    centroid = Point(-1000., -1000., -1000.);
+  }
     
-    // loop over calorimeter layers
-    for(int i = 0; i < m_calnLayers; i++)
+  // Loop over calorimeter layers.
+  for ( int i = 0; i < m_calnLayers; i++ )
     {
-        // if energy in the layer is not zero - finalize calculations
-        if(eneLayer[i]>0)
-        {
-            // normalize position in the layer
-            pLayer[i] *= (1./eneLayer[i]); 
-            
-            // normalize quadratic spread in the laye
-            rmsLayer[i] *= (1./eneLayer[i]);
-            
-            // Vector containing the squared average position in each component
-            Vector sqrLayer(pLayer[i].x()*pLayer[i].x(),
-                            pLayer[i].y()*pLayer[i].y(),
-                            pLayer[i].z()*pLayer[i].z());
-            
-            // the precision of transverse coordinate measurement
-            // if there is no fluctuations: 1/sqrt(12) of crystal width
-            Vector d;
-            double csIWidth = m_calReconSvc->getCalCsIWidth() ;
-            if(i%2 == 1) d = Vector(csIWidth*csIWidth/12.,0.,0.);
-            else d = Vector(0.,csIWidth*csIWidth/12.,0.);
-            
-            // subtracting the  squared average position and adding
-            // the square of crystal width, divided by 12
-            rmsLayer[i] += d-sqrLayer;
+      // If energy in the layer is not zero finalize calculations...
+      if( layerEnergy[i] > 0 ) {
+	// Normalize position in the layer.
+	layerAve[i] /= layerEnergy[i]; 
+	// Normalize quadratic spread in the layer.
+	layerRms[i] /= layerEnergy[i];
 
-            // Reset pLayer to detector coordinates
-            pLayer[i] += m_p0;
-        }
-            
-        
-        // if energy in the layer is zero - reset position and spread Vectors
-        else 
-        {
-            pLayer[i]   = m_p0;
-            rmsLayer[i] = m_p0;
-        }
-
-
-        // Fill the cluster layer data
-        Point layerPos(pLayer[i].x(), pLayer[i].y(), pLayer[i].z());
-
-        // Set the data for the vector
-        Event::CalClusterLayerData layerData(eneLayer[i], layerPos, rmsLayer[i]);
-
-        cluster->push_back(layerData);
-    }
-
-    // Total energy in cluster includes energy in bad position crystals
-    ene += badPosXtalEne;
-
-    // loop over all crystals in the current cluster again to compute the number of Truncated Xtals
-    for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
-    {
-        // get pointer to the reconstructed data for given crystal
-        Event::CalXtalRecData* recData = *xTalIter;
-        
-        // get reconstructed values
-        double eneXtal = recData->getEnergy();                  // crystal energy
-
-        if(eneXtal > .01*ene) num_TruncXtals++;   //NOTE: 1% should be a declared property!!!!!  
-    }
-
-    // Correct for Zero Supression using Truncated Xtal count
-    ene += .2*num_TruncXtals; //Note .2 MeV/Xtal should be a declared property!!!!!!!!!!!!!
-
-    // Also the Number of Truncated Xtals should be a data member in CalCluster!!!!!!!!!!!
-
-    Event::CalXtalsParams xtalsParams(num_TruncXtals, m_Nsaturated);
-
-    // Set energy centroid
-    Event::CalMomParams momParams(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(),
-				  1.,0.,0.,1.,0.,1., 0., 0., 1., 1.,0.,0.,1.,0.,1.);
-
-    // Initial fit parameters
-    Event::CalFitParams fitParams(m_fit_nlayers, 0., pCluster.x(), pCluster.y(), pCluster.z(),
-				  1.,0.,0.,1.,0.,1., 0., 0., 1., 1.,0.,0.,1.,0.,1.);
-
-    // Use the fit centroid/direction to see moments analysis
-    if (m_fit_nlayers > 8 && m_fit_zdirection > 0.)
-    {
-        fitParams = Event::CalFitParams(m_fit_nlayers, m_fit_chisq, 
-                                        m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid, 
-					1.,0.,0.,1.,0.,1.,
-                                        m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
-					1.,0.,0.,1.,0.,1.);
-    }
-    
-    // Initialize empty CalMSTreeParams container
-    Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
-    
-    // Initialize an empty CalClassParams container.
-    Event::CalNBCClassParams nbcClassParams;
-    
-    cluster->initialize(xtalsParams, treeParams, fitParams, momParams, nbcClassParams);
-
-    return ene;
-}
-
-void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::CalCluster* cluster, double energy)
-{
-    // Try new utility class
-    // Begin by building a Moments Data vector
-    m_dataVec.clear();
-
-    Point  centroid = cluster->getMomParams().getCentroid();
-    Vector axis     = cluster->getMomParams().getAxis();
-
-    XtalDataList::const_iterator xTalMax = xTalVec->end();
-
-    double rmsDist   = 0.;
-    double weightSum = 0.;
-
-    // Loop through the xtals setting the hits to analyze
-    for(XtalDataList::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
-    {
-        if (xTalIter == xTalMax) continue;
-
-        Event::CalXtalRecData* recData = *xTalIter;
-
-        double xPos = recData->getPosition().x();
-        double yPos = recData->getPosition().y();
-        double zPos = recData->getPosition().z();
-    
-        // If there are saturated crystals, change the longitudinal position
-        if(m_Nsaturated>0 && m_fit_nlayers >= 4 && m_fit_zdirection > 0.)
-        {
-            if(m_saturated[(int)(recData->getPackedId()).getTower()][(int)(recData->getPackedId()).getLayer()][(int)(recData->getPackedId()).getColumn()])
-            {
-                Point CorPos = GetCorrectedPosition(recData->getPosition(),
-                                    (recData->getPackedId()).getTower(),
-                                    (recData->getPackedId()).getLayer(),
-                                    (recData->getPackedId()).getColumn());
-                xPos = CorPos.x();
-                yPos = CorPos.y();
-                zPos = CorPos.z();
-            }
-        }
-
-        Point CrystalPos(xPos, yPos, zPos);
-
-        CalMomentsData momentsData(CrystalPos, recData->getEnergy(), 0.);
-
-        // DC: unused !
-        // TU: Actually... bad design on my part but this method must be called. 
-        double distToAxis = momentsData.calcDistToAxis(centroid, axis);
-
-        rmsDist   += momentsData.getWeight() * distToAxis * distToAxis;
-        weightSum += momentsData.getWeight();
-                
-        m_dataVec.push_back(momentsData);
-    }
-
-    // Get the quick rms of crystals about fit axis
-    rmsDist = sqrt(rmsDist / weightSum);
-
-    // Use this to try to remove "isolated" crystals that might otherwise pull the axis
-    // Start by sorting the data vector according to distance to axis
-    std::sort(m_dataVec.begin(), m_dataVec.end());
-
-    // Look for the point where there is a significant gap in distance to the next xtal
-    CalMomentsDataVec::iterator momDataIter;
-    double                      envelope = std::min(5.*rmsDist, m_calReconSvc->getCaltowerPitch());
-    double                      lastDist = 0.;
-
-    int checkit     = m_dataVec.size();
-    int tempCounter = 0;
-
-    // Find the point in the vector where the distance to the axis indicates an outlier
-    for(momDataIter = m_dataVec.begin(); momDataIter != m_dataVec.end(); momDataIter++)
-    {
-        double dist     = (*momDataIter).getDistToAxis();
-        double distDiff = dist - envelope;
-        double gapDist  = dist - lastDist;
-
-        if (distDiff > 0. && gapDist > 3. * rmsDist) break;
-
-        lastDist = dist;
-        tempCounter++;
-    }
-
-    // Now remove the outlier crystals
-    if (momDataIter != m_dataVec.end()) m_dataVec.erase(momDataIter, m_dataVec.end());
-
-    CalMomentsAnalysis momentsAnalysis;
-
-    double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid, m_transScaleFactor);
-
-    if (chiSq >= 0.)
-    {
-        // Get info on iterations
-        int nIterations = momentsAnalysis.getNumIterations();
-        int nDropped    = momentsAnalysis.getNumDroppedPoints();
-
-        // Get the iterative moments centroid and axis from iterations
-        centroid = momentsAnalysis.getCentroid();
-        axis     = momentsAnalysis.getAxis();
-
-        // Recalculate the moments going back to using all the data points but with
-        // the iterated moments centroid
-        if (nIterations > 1) chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
-    
-        // Extract the values for the moments with all hits present
-        double rms_long  = momentsAnalysis.getLongRms();
-        double rms_trans = momentsAnalysis.getTransRms();
-        double long_asym = momentsAnalysis.getLongRmsAsym();
-	double long_skew = momentsAnalysis.getLongSkewness();
-
-        if (!isFinite(rms_long))
-        {
-            throw CalException("CalMomentsAnalysis computed infinite value for rms_long") ;
-        }
-        if (!isFinite(rms_trans))
-        {
-            throw CalException("CalMomentsAnalysis computed infinite value for rms_trans") ;
-        }
-        if (!isFinite(long_asym))
-        {
-            throw CalException("CalMomentsAnalysis computed infinite value for long_asym") ;
-        }
-	if (!isFinite(long_skew))
-	{
-	    throw CalException("CalMomentsAnalysis computed infinite value for long_skew") ;
-        }
-    
-        int num_TruncXtals = cluster->getNumTruncXtals(); 
-
-	Event::CalXtalsParams xtalsParams(num_TruncXtals, m_Nsaturated);
+	// Vector containing the squared average position in each component
+	Vector sqrLayer(layerAve[i].x()*layerAve[i].x(),
+			layerAve[i].y()*layerAve[i].y(),
+			layerAve[i].z()*layerAve[i].z());
 	
-	// Initialize the CalMomParams container.
-	CLHEP::HepMatrix I_3_3(3, 3, 1);
-	Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
-				       nIterations, 0, 0, rms_trans, rms_long, long_asym,
-				       long_skew, -1., -1., -1.);
-	// Initialize the CalFitParams container.
-        Event::CalFitParams fitParams(m_fit_nlayers, m_fit_chisq,
-                                      m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid,
-				      1., 0., 0., 1., 0., 1.,
-                                      m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
-				      1., 0., 0., 1., 0., 1.);
+	// the precision of transverse coordinate measurement
+	// if there is no fluctuations: 1/sqrt(12) of crystal width
+	Vector d;
+	double csIWidth = m_calReconSvc->getCalCsIWidth();
+	if ( i%2 == 1 ){
+	  d = Vector(csIWidth*csIWidth/12.,0.,0.);
+	}
+	else {
+	  d = Vector(0.,csIWidth*csIWidth/12.,0.);
+	}
+  
+	// Subtracting the  squared average position and adding the square of crystal width, divided by 12.
+	layerRms[i] += d - sqrLayer;
+	
+	// Reset layerAve to detector coordinates
+	layerAve[i] += m_p0;
+      }
+        
+      // Otherwise reset position and spread Vectors.
+      else {
+	layerAve[i] = m_p0;
+	layerRms[i] = m_p0;
+      }
 
-        // Initialize empty CalMSTreeParams container - CalMSTreePar
-        Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
+      // Fill the cluster layer data.
+      Point layerPos(layerAve[i].x(), layerAve[i].y(), layerAve[i].z());
+      
+      // Set the data for the vector.
+      Event::CalClusterLayerData layerData(layerEnergy[i], layerPos, layerRms[i]);
 
-	// Initialize and empty container for the classification output.
-	Event::CalNBCClassParams nbcClassParams;
-
-	cluster->initialize(xtalsParams, treeParams, fitParams, momParams, nbcClassParams);
-        cluster->setStatusBit(Event::CalCluster::MOMENTS);
-	//std::cout << *cluster << std::endl;
-	//MsgStream log(msgSvc(),name()) ;
-	//log << MSG::DEBUG << *cluster << endreq;
+      cluster->push_back(layerData);
     }
 
-    return;
+  // Total energy in cluster includes energy in bad position crystals
+  xtalRawEneSum += xtalBadEneSum;
+
+  // Loop over all crystals in the current cluster again to compute the number of Truncated Xtals
+  for( xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++ )
+    {
+      Event::CalXtalRecData* recData = *xTalIter;
+      double xtalEne = recData->getEnergy();
+      if ( xtalEne > .01 * xtalRawEneSum ) {
+	numTruncXtals++;   //NOTE: 1% should be a declared property!!!!!
+      }
+    }
+
+  // Correct for Zero Supression using Truncated Xtal count.
+  xtalCorrEneSum = xtalRawEneSum + ( .2 * numTruncXtals );
+  
+  // Set the cluster data members: first the CalXtalsParams container...
+  Event::CalXtalsParams xtalsParams(numXtals, numTruncXtals, m_Nsaturated,
+				    xtalRawEneSum, xtalCorrEneSum, -1., -1.);
+  cluster->setXtalsParams(xtalsParams);
+
+  // ...then we do create a minimal CalMomParams object in order to store the centroid...
+  Event::CalMomParams momParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid);
+  cluster->setMomParams(momParams);
+
+  // ...and finally the CalFitParamsContainer.
+  // I don't think this piece of code is actually ever used!
+  Event::CalFitParams fitParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid, m_fit_nlayers, 0.);
+  if ( m_fit_nlayers > 8 && m_fit_zdirection > 0. ) {
+    fitParams = Event::CalFitParams(xtalCorrEneSum, 10*xtalCorrEneSum,
+				    m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid,
+				    m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
+				    m_fit_nlayers, m_fit_chisq);
+  }
+  cluster->setFitParams(fitParams);
+}
+
+void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::CalCluster* cluster)
+{
+  m_dataVec.clear();
+  double energy    = cluster->getXtalsParams().getXtalCorrEneSum();
+  Point  centroid  = cluster->getMomParams().getCentroid();
+  Vector axis      = cluster->getMomParams().getAxis();
+  double rmsDist   = 0.;
+  double weightSum = 0.;
+
+  XtalDataList::const_iterator xTalMax = xTalVec->end();
+
+  // Loop through the xtals setting the hits to analyze
+  for(XtalDataList::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    {
+      if ( xTalIter == xTalMax ) continue;
+
+      Event::CalXtalRecData* recData = *xTalIter;
+      double xPos = recData->getPosition().x();
+      double yPos = recData->getPosition().y();
+      double zPos = recData->getPosition().z();
+    
+      // If there are saturated crystals, change the longitudinal position
+      if( m_Nsaturated > 0 && m_fit_nlayers >= 4 && m_fit_zdirection > 0. ) {
+	int tower  = (recData->getPackedId()).getTower();
+	int layer  = (recData->getPackedId()).getLayer();
+	int column = (recData->getPackedId()).getColumn();
+	if( m_saturated[tower][layer][column] ) {
+	  Point CorPos = GetCorrectedPosition(recData->getPosition(), tower, layer, column);
+	  xPos = CorPos.x();
+	  yPos = CorPos.y();
+	  zPos = CorPos.z();
+	}
+      }
+      Point CrystalPos(xPos, yPos, zPos);
+      
+      CalMomentsData momentsData(CrystalPos, recData->getEnergy(), 0.);
+
+      // TU: Bad design on my part but this method must be called. 
+      double distToAxis = momentsData.calcDistToAxis(centroid, axis);
+      
+      rmsDist   += momentsData.getWeight() * distToAxis * distToAxis;
+      weightSum += momentsData.getWeight();
+      
+      m_dataVec.push_back(momentsData);
+    }
+
+  // Get the quick rms of crystals about fit axis
+  rmsDist = sqrt(rmsDist / weightSum);
+  
+  // Use this to try to remove "isolated" crystals that might otherwise pull the axis
+  // Start by sorting the data vector according to distance to axis
+  std::sort(m_dataVec.begin(), m_dataVec.end());
+
+  // Look for the point where there is a significant gap in distance to the next xtal
+  CalMomentsDataVec::iterator momDataIter;
+  double                      envelope = std::min(5.*rmsDist, m_calReconSvc->getCaltowerPitch());
+  double                      lastDist = 0.;
+
+  int checkit     = m_dataVec.size();
+  int tempCounter = 0;
+
+  // Find the point in the vector where the distance to the axis indicates an outlier
+  for(momDataIter = m_dataVec.begin(); momDataIter != m_dataVec.end(); momDataIter++)
+    {
+      double dist     = (*momDataIter).getDistToAxis();
+      double distDiff = dist - envelope;
+      double gapDist  = dist - lastDist;
+      
+      if (distDiff > 0. && gapDist > 3. * rmsDist) break;
+      
+      lastDist = dist;
+      tempCounter++;
+    }
+  
+  // Now remove the outlier crystals
+  if (momDataIter != m_dataVec.end()) m_dataVec.erase(momDataIter, m_dataVec.end());
+
+  CalMomentsAnalysis momentsAnalysis;
+
+  int numXtals = m_dataVec.size();
+  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid, m_transScaleFactor);
+
+  if ( chiSq >= 0. ) {
+    // Get info on iterations
+    int numIterations = momentsAnalysis.getNumIterations();
+    int numCoreXtals  = numXtals - momentsAnalysis.getNumDroppedPoints();
+    
+    // Get the iterative moments centroid and axis from iterations
+    centroid = momentsAnalysis.getCentroid();
+    axis     = momentsAnalysis.getAxis();
+
+    // Recalculate the moments going back to using all the data points but with
+    // the iterated moments centroid.
+    if ( numIterations > 1 ) {
+      chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
+    }
+    
+    // Extract the values for the moments with all hits present.
+    double longRms  = momentsAnalysis.getLongRms();
+    double transRms = momentsAnalysis.getTransRms();
+    double longRmsAsym = momentsAnalysis.getLongRmsAsym();
+    double longSkewness = momentsAnalysis.getLongSkewness();
+    
+    if ( !isFinite(longRms) ) {
+      throw CalException("CalMomentsAnalysis computed infinite value for longRms") ;
+    }
+    if ( !isFinite(transRms) ) {
+      throw CalException("CalMomentsAnalysis computed infinite value for transRms") ;
+    }
+    if ( !isFinite(longRmsAsym) ) {
+      throw CalException("CalMomentsAnalysis computed infinite value for longRmsAsym") ;
+    }
+    if ( !isFinite(longSkewness) ) {
+      throw CalException("CalMomentsAnalysis computed infinite value for longSkewness") ;
+    }
+    
+    // Store the information in the actual cluster: first the CalMomParams container...
+    CLHEP::HepMatrix I_3_3(3, 3, 1);
+    Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
+				   numIterations, numCoreXtals, numXtals,
+				   transRms, longRms, longRmsAsym, longSkewness,
+				   -1., -1., -1.);
+    cluster->setMomParams(momParams);
+
+    // and finally the CalFitParams container.
+    Point fitCentroid(m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid);
+    Vector fitAxis(m_fit_xdirection, m_fit_ydirection, m_fit_zdirection);
+    Event::CalFitParams fitParams(energy, 10*energy, fitCentroid, I_3_3, fitAxis, I_3_3,
+				  m_fit_nlayers, m_fit_chisq);
+    cluster->setFitParams(fitParams);
+
+    // Set the relevant status bit and we're done!
+    cluster->setStatusBit(Event::CalCluster::MOMENTS);
+  }
+  return;
 }
 
 int MomentsClusterInfo::getCentroidTransverseInfoOnly(const XtalDataList* xTalVec)
@@ -442,21 +402,21 @@ int MomentsClusterInfo::getCentroidTransverseInfoOnly(const XtalDataList* xTalVe
     {
         // get pointer to the reconstructed data for given crystal
         Event::CalXtalRecData* recData = *xTalIter;
-        double eneXtal = recData->getEnergy();                  // crystal energy
+        double xtalEne = recData->getEnergy();                  // crystal energy
         int layer   = (recData->getPackedId()).getLayer();   // layer number
-        Vector pXtal   = recData->getPosition();         // Vector of crystal position
+        Vector xtalPos   = recData->getPosition();         // Vector of crystal position
         if(layer%2==0)
         {
-            myenergy[1] += eneXtal;
-            mycentroid[1] += eneXtal*pXtal.y();
+            myenergy[1] += xtalEne;
+            mycentroid[1] += xtalEne*xtalPos.y();
         }
         else
         {
-            myenergy[0] += eneXtal;
-            mycentroid[0] += eneXtal*pXtal.x();
+            myenergy[0] += xtalEne;
+            mycentroid[0] += xtalEne*xtalPos.x();
         }
-        myenergy[2] += eneXtal;
-        mycentroid[2] += eneXtal*pXtal.z();
+        myenergy[2] += xtalEne;
+        mycentroid[2] += xtalEne*xtalPos.z();
     }
   
     if(myenergy[0]<=0 || myenergy[1]<=0) return 1; // we must have x AND y information
@@ -567,31 +527,31 @@ int MomentsClusterInfo::fitDirectionCentroid(const XtalDataList* xTalVec)
     {
         // get pointer to the reconstructed data for given crystal
         Event::CalXtalRecData* recData = *xTalIter;
-        double eneXtal = recData->getEnergy();                  // crystal energy
+        double xtalEne = recData->getEnergy();                  // crystal energy
         int layer   = (recData->getPackedId()).getLayer();   // layer number
-        Vector pXtal   = recData->getPosition();         // Vector of crystal position
+        Vector xtalPos   = recData->getPosition();         // Vector of crystal position
         //
-        totenergy += eneXtal;
-        m_fit_e_layer[layer] += eneXtal;
-        mypos[layer][0] += eneXtal*pXtal.x();
-        mypos[layer][1] += eneXtal*pXtal.y();
-        mypos[layer][2] += eneXtal*pXtal.z();
-        mypos2[layer][0] += eneXtal*pXtal.x()*pXtal.x();
-        mypos2[layer][1] += eneXtal*pXtal.y()*pXtal.y();
-        mypos2[layer][2] += eneXtal*pXtal.z()*pXtal.z();
+        totenergy += xtalEne;
+        m_fit_e_layer[layer] += xtalEne;
+        mypos[layer][0] += xtalEne*xtalPos.x();
+        mypos[layer][1] += xtalEne*xtalPos.y();
+        mypos[layer][2] += xtalEne*xtalPos.z();
+        mypos2[layer][0] += xtalEne*xtalPos.x()*xtalPos.x();
+        mypos2[layer][1] += xtalEne*xtalPos.y()*xtalPos.y();
+        mypos2[layer][2] += xtalEne*xtalPos.z()*xtalPos.z();
         //
         if(layer%2==0)
         {
-            myenergy[1] += eneXtal;
-            mycentroid[1] += eneXtal*pXtal.y();
+            myenergy[1] += xtalEne;
+            mycentroid[1] += xtalEne*xtalPos.y();
         }
         else
         {
-            myenergy[0] += eneXtal;
-            mycentroid[0] += eneXtal*pXtal.x();
+            myenergy[0] += xtalEne;
+            mycentroid[0] += xtalEne*xtalPos.x();
         }
-        myenergy[2] += eneXtal;
-        mycentroid[2] += eneXtal*pXtal.z();
+        myenergy[2] += xtalEne;
+        mycentroid[2] += xtalEne*xtalPos.z();
     }
 
     if(myenergy[0]<=0 || myenergy[1]<=0) return 1; // we must have x AND y information

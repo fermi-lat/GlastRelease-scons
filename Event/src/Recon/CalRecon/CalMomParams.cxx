@@ -72,6 +72,45 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
   clearMomParams();
 }
 
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  double xCntrd, double yCntrd, double zCntrd,
+				  double xAxis,  double yAxis,  double zAxis)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid( Point(xCntrd,yCntrd,zCntrd) );
+  setAxis( Vector(xAxis,yAxis,zAxis) );
+}
+
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  const Point& centroid, const Vector& axis)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid(centroid);
+  setAxis(axis);
+}
+
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  double xCntrd, double yCntrd, double zCntrd)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid( Point(xCntrd,yCntrd,zCntrd) );
+}
+
+Event::CalMomParams::CalMomParams(double energy, double eneError,
+				  const Point& centroid)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid(centroid);
+}
+
 void Event::CalMomParams::clear()
 {
   // Call the base class clear method...

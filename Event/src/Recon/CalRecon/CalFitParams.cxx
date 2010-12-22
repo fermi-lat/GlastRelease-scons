@@ -61,6 +61,43 @@ Event::CalFitParams::CalFitParams(int numFitLayers, double chiSquare,
   // Nothing to do, here.
 }
 
+Event::CalFitParams::CalFitParams(double energy, double eneError,
+				  double xCntrd, double yCntrd, double zCntrd,
+				  double xAxis,  double yAxis,  double zAxis,
+				  int numFitLayers, double chiSquare)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid( Point(xCntrd,yCntrd,zCntrd) );
+  setAxis( Vector(xAxis,yAxis,zAxis) );
+  setFitLayers(numFitLayers);
+  setChiSquare(chiSquare);
+}
+
+Event::CalFitParams::CalFitParams(double energy, double eneError,
+				  double xCntrd, double yCntrd, double zCntrd,
+				  int numFitLayers, double chiSquare)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid( Point(xCntrd,yCntrd,zCntrd) );
+  setFitLayers(numFitLayers);
+  setChiSquare(chiSquare);
+}
+
+Event::CalFitParams::CalFitParams(double energy, double eneError,
+				  const Point& centroid, int numFitLayers, double chiSquare)
+{
+  clear();
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid(centroid);
+  setFitLayers(numFitLayers);
+  setChiSquare(chiSquare);
+}
+
 void Event::CalFitParams::clear()
 {
   // Call the base class clear method...

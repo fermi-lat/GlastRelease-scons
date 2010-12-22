@@ -36,11 +36,11 @@ public:
     
     Event::CalCluster* fillClusterInfo(const XtalDataList* xtalVec);
 private:
-    // Use this to fill the layer data, returns total energy
-    double fillLayerData(const XtalDataList* xtalVec, Event::CalCluster* cluster);
+    // Use this to fill the layer data.
+    void fillLayerData(const XtalDataList* xtalVec, Event::CalCluster* cluster);
 
-    // Use this to fill the moments information
-    void fillMomentsData(const XtalDataList* xtalVec, Event::CalCluster* cluster, double energy);
+    // Use this to fill the moments information.
+    void fillMomentsData(const XtalDataList* xtalVec, Event::CalCluster* cluster);
 
     // calculate the centroid of the shower from the hits using only the transverse position information (Philippe Bruel : needed when dealing with saturated crystals)
     int getCentroidTransverseInfoOnly(const XtalDataList* xtalVec);

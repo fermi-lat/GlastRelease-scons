@@ -67,6 +67,19 @@ namespace Event { //Namespace Event
 		 double axsdxx, double axsdxy, double axsdxz,
 		 double axsdyy, double axsdyz, double axsdzz);
 
+    /// Convenience constructors with energy, centroid and axis only.
+    CalMomParams(double energy, double eneError,
+		 double xCntrd, double yCntrd, double zCntrd,
+		 double xAxis,  double yAxis,  double zAxis);
+    CalMomParams(double energy, double eneError,
+		 const Point& centroid, const Vector& axis);
+
+    /// Convenience constructors with energy and centroid only.
+    CalMomParams(double energy, double eneError,
+		 double xCntrd, double yCntrd, double zCntrd);
+    CalMomParams(double energy, double eneError,
+		 const Point& centroid);
+
     /// Destructor.
     ~CalMomParams() {}
     
