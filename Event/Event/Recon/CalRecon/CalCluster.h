@@ -173,6 +173,11 @@ namespace Event { //Namespace Event
     inline bool checkStatusBit( StatusBits bitToCheck ) const
       { return ((m_statusBits&bitToCheck)!=ZERO) ; }
 
+    // A few convenience methods.
+    int getNumXtals()          const { return m_xtalsParams.getNumXtals(); }
+    int getNumSaturatedXtals() const { return m_xtalsParams.getNumSaturatedXtals(); }
+    int getNumTruncXtals()     const { return m_xtalsParams.getNumTruncXtals(); }
+
     /// Std output facility.
     std::ostream& fillStream(std::ostream& s) const;
     friend std::ostream& operator<< (std::ostream& s, const CalCluster& obj)
@@ -203,10 +208,6 @@ namespace Event { //Namespace Event
 
     // TBD make obsolete in favour of getAxis()? See the comments three lines above.
     const Vector & getDirection()                const { return m_momParams.getAxis(); }
-
-    // A few other methods for backward compatibility.
-    int getNumSaturatedXtals() const { return m_xtalsParams.getNumSaturatedXtals(); }
-    int getNumTruncXtals()     const { return m_xtalsParams.getNumTruncXtals(); }
 
     /// Write some of CalCluster data to the ASCII output file for debugging purposes
     /// Is this really needed? Or the overload of << is enough?
