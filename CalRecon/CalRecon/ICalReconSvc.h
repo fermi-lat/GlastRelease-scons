@@ -47,6 +47,12 @@ public:
     virtual double                getCaltowerPitch() const = 0 ;
     virtual bool                  getCalFlightGeom() const = 0 ;
 
+    // MomentsCLusterInfo parameters.
+    virtual double getMciTransScaleFactor()          const = 0 ;
+    virtual double getMciZeroSupprEnergy()           const = 0 ;
+    virtual double getMciXtalsTruncFrac()            const = 0 ;
+    virtual double getMciEneMomTruncFrac()           const = 0 ;
+
     // cal event data
     virtual Event::CalXtalRecCol* getXtalRecs()           = 0 ;
     virtual Event::CalDigiCol *getDigis()                 = 0 ;

@@ -38,25 +38,19 @@ double MomentsClusterInfo::m_fit_zdirection = 0;
 int MomentsClusterInfo::m_fit_option = 0;
 
 /// Constructor
-MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, double transScaleFactor) 
-                                     : m_calReconSvc(calReconSvc), 
-                                       m_p0(0.,0.,0.),
-                                       m_p1(0.,0.,0.),
-                                       m_transScaleFactor(transScaleFactor)
+MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc) :
+  m_calReconSvc(calReconSvc), 
+  m_p0(0.,0.,0.),
+  m_p1(0.,0.,0.)
 {
-    m_calnLayers = m_calReconSvc->getCalNLayers();
-
-    m_saturationadc = 4060;
-
-    m_dataVec.clear();
-
-    // Minuit object
-    m_minuit = new TMinuit(5);
-    
-    //Sets the function to be minimized
-    m_minuit->SetFCN(fcncal);
-
-    return;
+  m_calnLayers = m_calReconSvc->getCalNLayers();
+  m_saturationadc = 4060;
+  m_dataVec.clear();
+  // Minuit object
+  m_minuit = new TMinuit(5);
+  //Sets the function to be minimized
+  m_minuit->SetFCN(fcncal);
+  return;
 }
 
 /// This makes CalClusters out of associated CalXtalRecData pointers
@@ -65,41 +59,36 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalV
   // Create an output cluster.
   Event::CalCluster* cluster = 0;
   
-  if (!xTalVec->empty()) {
+  if ( !xTalVec->empty() ) {
     cluster = new Event::CalCluster(0);
     cluster->setProducerName("MomentsClusterInfo") ;
     cluster->clear();
 
+    // Are there saturated xtals?
     DetectSaturation();
-
+    
+    // Do Philippe's fit.
     fitDirectionCentroid(xTalVec);
 
+    // Calculate basic cluster properties.
     fillLayerData(xTalVec, cluster);
     
+    // Do the iterative moments analysis.
     fillMomentsData(xTalVec, cluster);
   }
   return cluster;
 }
 
-void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCluster* cluster)
+void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
+				       Event::CalCluster* cluster)
 {
-  // Total number of xtals.
-  int numXtals = xTalVec->size();
-  // Number of xtals in the cluster with energy greater than a threshold.
-  int numTruncXtals     = 0;
-  // Plain sum of the xtal energies.
-  double xtalRawEneSum  = 0.;
-  // Corrected sum of the xtal energies.
-  double xtalCorrEneSum = 0.;
-  // Energy sum in crystals with a bad position measurement (resulting from a bad/dead readout).
-  double xtalBadEneSum  = 0.;
-  // Cluster position.
+  int numXtals           = xTalVec->size();
+  double xtalRawEneSum   = 0.;
+  double xtalCorrEneSum  = 0.;
+  double xtalBadEneSum   = 0.;
   Point centroid(0., 0., 0.);
-  // Energy by layer.
   std::vector<double> layerEnergy(m_calnLayers, 0.);
-  // Position by layer.
   std::vector<Vector> layerAve(m_calnLayers);
-  // rms by layer.
   std::vector<Vector> layerRms(m_calnLayers);
 
   // Use the fit centroid as the start point.
@@ -184,7 +173,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCl
 	  d = Vector(0.,csIWidth*csIWidth/12.,0.);
 	}
   
-	// Subtracting the  squared average position and adding the square of crystal width, divided by 12.
+	// Subtracting the  squared average position and adding the square of crystal
+	// width, divided by 12.
 	layerRms[i] += d - sqrLayer;
 	
 	// Reset layerAve to detector coordinates
@@ -209,22 +199,60 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCl
   // Total energy in cluster includes energy in bad position crystals
   xtalRawEneSum += xtalBadEneSum;
 
-  // Loop over all crystals in the current cluster again to compute the number of Truncated Xtals
+  // Loop over all crystals in the current cluster again to compute the number of
+  // truncated xtals and the moments of the xtal energy distribution.
+  int numTruncXtals      = 0;
+  int numEneMomXtals     = 0;
+  double xtalEneMomSum   = 0.;
+  double xtalEneMomSum2  = 0.;
+  double xtalEneMomSum3  = 0.;
+  double xtalsTruncFrac  = m_calReconSvc->getMciXtalsTruncFrac();
+  double eneMomTruncFrac = m_calReconSvc->getMciEneMomTruncFrac();
   for( xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++ )
     {
       Event::CalXtalRecData* recData = *xTalIter;
       double xtalEne = recData->getEnergy();
-      if ( xtalEne > .01 * xtalRawEneSum ) {
-	numTruncXtals++;   //NOTE: 1% should be a declared property!!!!!
+      if ( xtalEne > (xtalsTruncFrac*xtalRawEneSum) ) {
+	numTruncXtals ++;
+      }
+      if ( xtalEne > (eneMomTruncFrac*xtalRawEneSum) ) {
+	numEneMomXtals ++;
+	xtalEneMomSum  += xtalEne;
+	xtalEneMomSum2 += xtalEne*xtalEne;
+	xtalEneMomSum3 += xtalEne*xtalEne*xtalEne;
       }
     }
 
+  // Normalize the moments of the xtal energy distribution, if needed.
+  double xtalEneRms = -1.;
+  double xtalEneSkewness = 0.;
+    
+  if ( numEneMomXtals > 0 ) {
+    xtalEneMomSum  /= numEneMomXtals;
+    xtalEneMomSum2 /= numEneMomXtals;
+    xtalEneMomSum3 /= numEneMomXtals;
+    
+    xtalEneRms = xtalEneMomSum2 - xtalEneMomSum*xtalEneMomSum;
+    xtalEneSkewness = (xtalEneMomSum3 - 3*xtalEneMomSum*xtalEneRms - 
+		       xtalEneMomSum*xtalEneMomSum*xtalEneMomSum);
+    xtalEneRms = sqrt(xtalEneRms);
+    xtalEneSkewness /= (xtalEneRms*xtalEneRms*xtalEneRms);
+    if ( !isFinite(xtalEneRms) ) {
+      throw CalException("CalMomentsAnalysis computed infinite value for xtalEneRms") ;
+    }
+    if ( !isFinite(xtalEneSkewness) ) {
+      throw CalException("CalMomentsAnalysis computed infinite value for xtalEneSkewness") ;
+    }
+  }
+
   // Correct for Zero Supression using Truncated Xtal count.
-  xtalCorrEneSum = xtalRawEneSum + ( .2 * numTruncXtals );
+  double zeroSupprEnergy = m_calReconSvc->getMciZeroSupprEnergy();
+  xtalCorrEneSum = xtalRawEneSum + (zeroSupprEnergy*numTruncXtals);
   
   // Set the cluster data members: first the CalXtalsParams container...
   Event::CalXtalsParams xtalsParams(numXtals, numTruncXtals, m_Nsaturated,
-				    xtalRawEneSum, xtalCorrEneSum, -1., -1.);
+				    xtalRawEneSum, xtalCorrEneSum,
+				    xtalEneRms, xtalEneSkewness);
   cluster->setXtalsParams(xtalsParams);
 
   // ...then we do create a minimal CalMomParams object in order to store the centroid...
@@ -232,7 +260,7 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCl
   cluster->setMomParams(momParams);
 
   // ...and finally the CalFitParamsContainer.
-  // I don't think this piece of code is actually ever used!
+  // I don't think this piece of code is actually ever used, need to cross-check!
   Event::CalFitParams fitParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid, m_fit_nlayers, 0.);
   if ( m_fit_nlayers > 8 && m_fit_zdirection > 0. ) {
     fitParams = Event::CalFitParams(xtalCorrEneSum, 10*xtalCorrEneSum,
@@ -243,7 +271,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec, Event::CalCl
   cluster->setFitParams(fitParams);
 }
 
-void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::CalCluster* cluster)
+void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
+					 Event::CalCluster* cluster)
 {
   m_dataVec.clear();
   double energy    = cluster->getXtalsParams().getXtalCorrEneSum();
@@ -255,7 +284,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
   XtalDataList::const_iterator xTalMax = xTalVec->end();
 
   // Loop through the xtals setting the hits to analyze
-  for(XtalDataList::const_iterator xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+  XtalDataList::const_iterator xTalIter;
+  for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
       if ( xTalIter == xTalMax ) continue;
 
@@ -298,11 +328,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
 
   // Look for the point where there is a significant gap in distance to the next xtal
   CalMomentsDataVec::iterator momDataIter;
-  double                      envelope = std::min(5.*rmsDist, m_calReconSvc->getCaltowerPitch());
-  double                      lastDist = 0.;
-
-  int checkit     = m_dataVec.size();
-  int tempCounter = 0;
+  double envelope = std::min(5.*rmsDist, m_calReconSvc->getCaltowerPitch());
+  double lastDist = 0.;
 
   // Find the point in the vector where the distance to the axis indicates an outlier
   for(momDataIter = m_dataVec.begin(); momDataIter != m_dataVec.end(); momDataIter++)
@@ -314,16 +341,18 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec, Event::Cal
       if (distDiff > 0. && gapDist > 3. * rmsDist) break;
       
       lastDist = dist;
-      tempCounter++;
     }
   
   // Now remove the outlier crystals
   if (momDataIter != m_dataVec.end()) m_dataVec.erase(momDataIter, m_dataVec.end());
 
+  // Do the actual moments analysis.
   CalMomentsAnalysis momentsAnalysis;
 
   int numXtals = m_dataVec.size();
-  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid, m_transScaleFactor);
+  double transScaleFactor = m_calReconSvc->getMciTransScaleFactor();
+  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid,
+							    transScaleFactor);
 
   if ( chiSq >= 0. ) {
     // Get info on iterations
