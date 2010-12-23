@@ -86,24 +86,27 @@ class CalMomentsAnalysis
   void clear();
   
   /// Perform the moments analysis on the given data around the given point
-  double doMomentsAnalysis(CalMomentsDataVec& dataVec, const Point& centroid);
+  double doMomentsAnalysis(CalMomentsDataVec& dataVec, const Point& centroid,
+			   double coreRadius);
 
   /// Drives an iterative moments analysis
-  /// (note the input data vector is NOT a reference---so is a copy)
+  /// (note the input data vector is NOT a reference, it is a copy)
   double doIterativeMomentsAnalysis(CalMomentsDataVec dataVec, const Point& centroid,
-				    double scaleFactor);
+				    double transScaleFactor, double transScaleFactorBoost,
+				    double coreRadius);
   
   /// Access class members...
-  const double getWeightSum()        const { return m_weightSum; }
-  const Point  getCentroid()         const { return m_centroid; }
-  const Vector getMoments()          const { return m_moment; }
-  const Vector getAxis(int axis=1)   const { return m_axis[axis]; }
-  const double getLongRms()          const { return m_longRms; }
-  const double getTransRms()         const { return m_transRms; }
-  const double getLongRmsAsym()      const { return m_longRmsAsym; }
-  const double getLongSkewness()     const { return m_longSkewness; }
-  const int    getNumIterations()    const { return m_numIterations; }
-  const int    getNumDroppedPoints() const { return m_numDroppedPoints; }
+  inline const double getWeightSum()        const { return m_weightSum; }
+  inline const Point  getCentroid()         const { return m_centroid; }
+  inline const Vector getMoments()          const { return m_moment; }
+  inline const Vector getAxis(int axis=1)   const { return m_axis[axis]; }
+  inline const double getLongRms()          const { return m_longRms; }
+  inline const double getTransRms()         const { return m_transRms; }
+  inline const double getLongRmsAsym()      const { return m_longRmsAsym; }
+  inline const double getLongSkewness()     const { return m_longSkewness; }
+  inline const double getCoreEnergyFrac()   const { return m_coreEnergyFrac; }
+  inline const int    getNumIterations()    const { return m_numIterations; }
+  inline const int    getNumDroppedPoints() const { return m_numDroppedPoints; }
   
  private:
   
@@ -122,7 +125,9 @@ class CalMomentsAnalysis
   /// The asymmetry associated with the longitudinal distribution
   double m_longRmsAsym;
   /// Skewness in the moments analysis
-  double m_longSkewness;;
+  double m_longSkewness;
+  /// Fractional energy sum within 1 (or wathever) Moliere radius from the cluster axis.
+  double m_coreEnergyFrac;
   /// Statistics on iterations (if done)
   int    m_numIterations;
   /// Number of calorimeter hits dropped during the iterations.

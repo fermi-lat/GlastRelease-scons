@@ -352,9 +352,13 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
   CalMomentsAnalysis momentsAnalysis;
 
   int numXtals = m_dataVec.size();
-  double transScaleFactor = m_calReconSvc->getMciTransScaleFactor();
+  double transScaleFactor = m_calReconSvc->getMaTransScaleFactor();
+  double transScaleFactorBoost = m_calReconSvc->getMaTransScaleFactorBoost();
+  double coreRadius = m_calReconSvc->getMaCoreRadius();
   double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid,
-							    transScaleFactor);
+							    transScaleFactor,
+							    transScaleFactorBoost,
+							    coreRadius);
 
   if ( chiSq >= 0. ) {
     // Get info on iterations
@@ -368,7 +372,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     // Recalculate the moments going back to using all the data points but with
     // the iterated moments centroid.
     if ( numIterations > 1 ) {
-      chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid);
+      chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid, coreRadius);
     }
     
     // Extract the values for the moments with all hits present.
@@ -376,6 +380,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     double transRms = momentsAnalysis.getTransRms();
     double longRmsAsym = momentsAnalysis.getLongRmsAsym();
     double longSkewness = momentsAnalysis.getLongSkewness();
+    double coreEnergyFrac = momentsAnalysis.getCoreEnergyFrac();
     
     if ( !isFinite(longRms) ) {
       throw CalException("CalMomentsAnalysis computed infinite value for longRms") ;
@@ -395,7 +400,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
 				   numIterations, numCoreXtals, numXtals,
 				   transRms, longRms, longRmsAsym, longSkewness,
-				   -1., -1., -1.);
+				   coreEnergyFrac, -1., -1.);
     cluster->setMomParams(momParams);
 
     // and finally the CalFitParams container.

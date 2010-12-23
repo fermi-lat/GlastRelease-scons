@@ -48,10 +48,14 @@ public:
     virtual bool                  getCalFlightGeom() const = 0 ;
 
     // MomentsCLusterInfo parameters.
-    virtual double getMciTransScaleFactor()          const = 0 ;
     virtual double getMciZeroSupprEnergy()           const = 0 ;
     virtual double getMciXtalsTruncFrac()            const = 0 ;
     virtual double getMciEneMomTruncFrac()           const = 0 ;
+
+    // Quantities for the moments analysis.
+    virtual double getMaTransScaleFactor()           const = 0 ;
+    virtual double getMaTransScaleFactorBoost()      const = 0 ;
+    virtual double getMaCoreRadius()                 const = 0 ;
 
     // cal event data
     virtual Event::CalXtalRecCol* getXtalRecs()           = 0 ;

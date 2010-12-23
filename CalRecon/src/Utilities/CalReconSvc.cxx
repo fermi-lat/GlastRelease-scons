@@ -57,11 +57,15 @@ class CalReconSvc
         double                  getCaltowerPitch()  const {return m_caltowerPitch;}
         bool                    getCalFlightGeom()  const {return m_calflightgeom;}
 
-        // MomentsCLusterInfo parameters.
-        double getMciTransScaleFactor()             const { return m_mciTransScaleFactor; }
+        // MomentsClusterInfo parameters.
         double getMciZeroSupprEnergy()              const { return m_mciZeroSupprEnergy; }
         double getMciXtalsTruncFrac()               const { return m_mciXtalsTruncFrac; }
         double getMciEneMomTruncFrac()              const { return m_mciEneMomTruncFrac; }
+
+        // Quantities for the moments analysis.
+        double getMaTransScaleFactor()              const { return m_maTransScaleFactor; }
+        double getMaTransScaleFactorBoost()         const { return m_maTransScaleFactorBoost; }
+        double getMaCoreRadius()                    const { return m_maCoreRadius; }
     
         // cal event data
         Event::CalXtalRecCol * getXtalRecs() ;
@@ -76,10 +80,14 @@ class CalReconSvc
         IGlastDetSvc * m_detSvc; 
         
         // Quantities for the MomentsClusterInfo class.
-        double m_mciTransScaleFactor;
         double m_mciZeroSupprEnergy;
         double m_mciXtalsTruncFrac;
         double m_mciEneMomTruncFrac;
+
+        // Quantities for the moments analysis.
+        double m_maTransScaleFactor;
+        double m_maTransScaleFactorBoost;
+        double m_maCoreRadius;
 
         // for errors
         bool m_saveBadEvents ;
@@ -144,19 +152,26 @@ CalReconSvc::CalReconSvc( const std::string & name, ISvcLocator * svcLocator )
     // force exceptions to be printed
     declareProperty("printExceptions",m_printExceptions= false) ;
 
+    // Energy correction (in MeV) for the zero suppression in the CAL.
+    // This number is multiplied by the truncated number of xtals.
+    declareProperty("MomentsClusterInfo_zeroSupprEnergy", m_mciZeroSupprEnergy=0.2) ;
+    // Energy threshold (in fraction of the raw energy) used to count
+    // the truncated number of xtals.
+    declareProperty("MomentsClusterInfo_xtalsTruncFrac", m_mciXtalsTruncFrac=0.01) ;
+    // Energy threshold (in fraction of the raw energy) used to calculate
+    // the moments of the xtal energy distribution.
+    declareProperty("MomentsClusterInfo_eneMomTruncFrac", m_mciEneMomTruncFrac=0.01) ;
+
     // Multiplicative factor driving the iterative moments analysis
     // (at each iteration the xtals whose distance exceeds this factor times the
     // transverse rms at the same step are dropped).
-    declareProperty("MomentsClusterInfo_transScaleFactor", m_mciTransScaleFactor = 1.0) ;
-    // Energy correction (in MeV) for the zero suppression in the CAL.
-    // This number is multiplied by the truncated number of xtals.
-    declareProperty("MomentsClusterInfo_zeroSupprEnergy", m_mciZeroSupprEnergy = 0.2) ;
-    // Energy threshold (in fraction of the raw energy) used to count
-    // the truncated number of xtals.
-    declareProperty("MomentsClusterInfo_xtalsTruncFrac", m_mciXtalsTruncFrac = 0.01) ;
-    // Energy threshold (in fraction of the raw energy) used to calculate
-    // the moments of the xtal energy distribution.
-    declareProperty("MomentsClusterInfo_eneMomTruncFrac", m_mciEneMomTruncFrac = 0.01) ;
+    declareProperty("CalMomentsAnalysis_transScaleFactor", m_maTransScaleFactor=1.0) ;
+    // Multiplicative boost factor driving the change of the previous one
+    // (transScaleFactor) at each iteration.
+    declareProperty("CalMomentsAnalysis_transScaleFactorBoost", m_maTransScaleFactorBoost=2.0) ;
+    // The radius (in terms of Moliere radii) of the cylinder around the axis
+    // used to integrate the fraction of shower core energy in the moments analysis.
+    declareProperty("CalMomentsAnalysis_coreRadius", m_maCoreRadius = 0.75) ;
 }
 
 CalReconSvc::~CalReconSvc() {

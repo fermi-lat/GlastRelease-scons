@@ -11,6 +11,7 @@
 
 void CalMomentsAnalysis::clear()
 {
+  // TBD: Need to think about what are the most sensible default values here!
   m_weightSum        = 0.;
   m_centroid         = Point(0.,0.,0.); 
   m_moment           = Vector(0.,0.,0.);
@@ -21,16 +22,18 @@ void CalMomentsAnalysis::clear()
   m_transRms         = 0.;
   m_longRmsAsym      = 0.;
   m_longSkewness     = 0.;
+  m_coreEnergyFrac   = 0;
   m_numIterations    = 0;
   m_numDroppedPoints = 0;
 }
 
 double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
-					     const Point& iniCentroid)
+					     const Point& iniCentroid,
+					     double coreRadius)
 {
   double chisq = -1.;
   
-  // Check that we have enough points to proceed - need at least three
+  // Check that we have enough points to proceed - need at least two.
   if ( dataVec.size() < 2 ) return chisq;
   
   // Initialize some local variables.
@@ -42,6 +45,11 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
   double Iyz = 0.;
   double weightSum = 0.;
   Point  centroid(0.,0.,0.);
+
+  // Convert the core radius (passed as a parameter) in physical units (mm).
+  // The Moliere radius for the CsI(Tl) is taken from the PDG Review of Particle Physics
+  // (2008), table 28.4, pag. 288.
+  coreRadius *= 35.7;
  
   // Loop through the data points a first time in order to determine
   // energy, centroid, and inertia tensor.
@@ -121,9 +129,11 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       }
 
     // Second loop to get the chisquare (residuals about principal axis, through centroid,
-    // using input weight) and skewness.
+    // using input weight) the skewness and the fraction of energy within the core
+    // cylinder.
     chisq = 0.; 
     double skewness = 0.;
+    double coreEnergy = 0;
     for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
       {
 	CalMomentsData& dataPoint = *vecIter;
@@ -132,6 +142,9 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 
 	chisq += dataPoint.getWeight()*distToAxis*distToAxis;
 	skewness += dataPoint.getWeight()*coordAlongAxis*coordAlongAxis*coordAlongAxis;
+	if ( distToAxis < coreRadius ) {
+	  coreEnergy += dataPoint.getWeight();
+	}
       }
 
     // Scale the chisquare by number of data points.
@@ -140,13 +153,14 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     // Final calculations to return moment of principal axis and average of other two.
     // Note that the normalization to the sum of weights, which used to be done in the
     // AnalysisNtuple package, is done here (Luca Baldini, Dec 23, 2010).
-    double longMag1 = fabs(m_moment[0]);
-    double longMag2 = fabs(m_moment[2]);
-    double transMag = fabs(m_moment[1]);
-    m_longRms       = sqrt((longMag1 + longMag2) / (2.*m_weightSum));
-    m_transRms      = sqrt(transMag/m_weightSum);
-    m_longRmsAsym   = (longMag1 - longMag2)/(longMag1 + longMag2);
-    m_longSkewness  = skewness/(m_weightSum*m_longRms*m_longRms*m_longRms);
+    double longMag1  = fabs(m_moment[0]);
+    double longMag2  = fabs(m_moment[2]);
+    double transMag  = fabs(m_moment[1]);
+    m_longRms        = sqrt((longMag1 + longMag2) / (2.*m_weightSum));
+    m_transRms       = sqrt(transMag/m_weightSum);
+    m_longRmsAsym    = (longMag1 - longMag2)/(longMag1 + longMag2);
+    m_longSkewness   = skewness/(m_weightSum*m_longRms*m_longRms*m_longRms);
+    m_coreEnergyFrac = coreEnergy/m_weightSum;
   }
 
   // This is when the radix test fails.
@@ -159,7 +173,9 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 
 double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
 						      const Point& inputCentroid,
-						      double scaleFactor)
+						      double transScaleFactor,
+						      double transScaleFactorBoost,
+						      double coreRadius)
 {
   // First reset the class members keeping track of the iteration stats.
   m_numIterations    = 0;
@@ -175,7 +191,7 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
   while(iterate)
     {
       // Do the standard moments analysis
-      double localChisq = doMomentsAnalysis(dataVec, centroid);
+      double localChisq = doMomentsAnalysis(dataVec, centroid, coreRadius);
 
       // Make sure it didn't fail on this iteration
       if ( localChisq < 0. ) {
@@ -206,7 +222,7 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
 	  CalMomentsData& momentsData = dataVec.back();
 	  
 	  // If out of range drop this point and loop back to check again
-	  if ( momentsData.getDistToAxis() > scaleFactor * transRms ) {
+	  if ( momentsData.getDistToAxis() > transScaleFactor * transRms ) {
 	    dataVec.pop_back();
 	    iterate = true;
 	    m_numDroppedPoints++;
@@ -215,7 +231,7 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
         }
 
       // Make it harder to drop points on each iteration by boosting the scale factor
-      scaleFactor *= 2.;
+      transScaleFactor *= transScaleFactorBoost;
 
       // Finally, make sure have enough points remaining to proceed!
       if (dataVec.size() < 3) break;
