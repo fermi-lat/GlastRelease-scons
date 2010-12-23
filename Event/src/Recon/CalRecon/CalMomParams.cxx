@@ -155,7 +155,7 @@ std::ostream& Event::CalMomParams::fillStream(std::ostream& s) const
   // ... then print the additional stuff.
   s <<
     "Number of iterations = " << m_numIterations << "\n" << 
-    m_numCoreXtals << "/" << m_numXtals << " used for the centroid/axis\n" << 
+    m_numCoreXtals << "/" << m_numXtals << " xtal(s) used for the final centroid/axis\n" << 
     "Transverse RMS = " << m_transRms << " mm\n" <<
     "Longitudinal RMS = " << m_longRms << " mm\n" <<
     "Longitudinal RMS asymmetry = " << m_longRmsAsym << "\n" <<
