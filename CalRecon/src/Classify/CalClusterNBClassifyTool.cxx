@@ -355,49 +355,33 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
 double CalClusterNBClassifyTool::getVariableValue(std::string varName,
                           Event::CalCluster* calCluster)
 {
-    if (varName == "CalTransRms")
-    {
-        double sumOfWeights = calCluster->getMomParams().getEnergy();
-        if (sumOfWeights > 0)
-            return sqrt(calCluster->getRmsTrans()/sumOfWeights);
-        else
-            return -1.0;
+  if (varName == "CalTransRms") {
+    return calCluster->getMomParams().getTransRms();
+  }
+  else if (varName == "CalLRmsAsym") {
+    return calCluster->getMomParams().getLongRmsAsym();
+  }
+  else if (varName == "MomentRatio") {
+    double transRms = calCluster->getMomParams().getTransRms();
+    double longRms = calCluster->getMomParams().getLongRms();
+    if ( transRms > 0 && longRms > 0 ) {
+      return log10(longRms/transRms);
     }
-    else if (varName == "CalLRmsAsym")
-    {
-        return calCluster->getRmsLongAsym();
+    else {
+      return -1.;
     }
-    else if (varName == "MomentRatio")
-    {
-        double sumOfWeights = calCluster->getMomParams().getEnergy();
-        if (sumOfWeights > 0)
-        {
-            double transRms = sqrt(calCluster->getRmsTrans()/sumOfWeights);
-            double longRms = sqrt(calCluster->getRmsLong()/sumOfWeights);
-            if (transRms > 0 && longRms > 0)
-            {
-                return log10(longRms/transRms);
-            }
-            else
-                return -1.0;
-        }
-        else
-            return -1.0;
-    }
-    else if (varName == "NumXtals")
-    {
-        // Need to expose the number of xtals in the Cluster class.
-        double sumOfWeights = calCluster->getMomParams().getEnergy();
-        if (sumOfWeights > 0)
-	  return (calCluster->getNumXtals())/log10(sumOfWeights);
-        else
-            return -1.0;
-    }
-    else 
-    {
-        std::cout << "Unknown variable " << varName << ". Abort." << std::endl;
-        return -1.0;
-    }
+  }
+  else if (varName == "NumXtals") {
+    double sumOfWeights = calCluster->getMomParams().getEnergy();
+    if (sumOfWeights > 0)
+      return (calCluster->getNumXtals())/log10(sumOfWeights);
+    else
+      return -1.0;
+  }
+  else {
+    std::cout << "Unknown variable " << varName << ". Abort." << std::endl;
+    return -1.0;
+  }
 }
 
 StatusCode CalClusterNBClassifyTool::getPDFsFromXml()

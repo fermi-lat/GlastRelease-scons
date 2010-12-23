@@ -76,7 +76,7 @@ typedef std::vector<CalMomentsData> CalMomentsDataVec;
 class CalMomentsAnalysis
 {
  public:
-  /// No-paremeter constructor
+  /// No-parameter constructor
   CalMomentsAnalysis() { clear(); }
   
   /// Destructor
