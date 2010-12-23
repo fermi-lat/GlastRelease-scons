@@ -32,7 +32,7 @@ macro_append includes ' $(ppcmd)"$(xmlBase_root)" $(ppcmd)"$(detModel_root)" $(p
 library GlastSvc  -import=detModel -import=CLHEP -import=xmlUtil \
      Dll/*.cpp \
      -s="../GlastSvc/GlastDetSvc" $(headers)\
-     -s="GlastDetSvc $(headers) *.cxx\
+     -s="GlastDetSvc" $(headers) *.cxx\
      -s="../GlastSvc\GlastRandomSvc" $(headers)\
      -s="GlastRandomSvc" $(headers) *.cxx\
      -s="../GlastSvc\Reco" $(headers)\
