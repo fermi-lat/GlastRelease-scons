@@ -4,7 +4,7 @@
 //  
 // Authors:
 //
-//    Tracy Usher
+//    Luca Baldini
 //
 //
 
@@ -51,9 +51,9 @@ std::ostream& Event::CalXtalsParams::fillStream( std::ostream& s ) const
     "Number of xtals = " << m_numXtals << "\n" <<
     "Truncated number of xtals = " << m_numTruncXtals << "\n" <<
     "Number of saturated xtals = " << m_numSaturatedXtals << "\n" <<
-    "Raw sum of xtal energies = " << m_xtalRawEneSum << "\n" <<
-    "Corrected sum of xtal energies = " << m_xtalCorrEneSum << "\n" <<
-    "Rms of xtal energy distribution = " << m_xtalEneRms << "\n" <<
+    "Raw sum of xtal energies = " << m_xtalRawEneSum << " MeV\n" <<
+    "Corrected sum of xtal energies = " << m_xtalCorrEneSum << " MeV\n" <<
+    "Rms of xtal energy distribution = " << m_xtalEneRms << " MeV\n" <<
     "Skewness of xtal energy distribution = " << m_xtalEneSkewness;
   
   return s; 
