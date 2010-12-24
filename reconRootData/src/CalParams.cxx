@@ -66,16 +66,20 @@ void CalParams::init
 
 void CalParams::Print( Option_t * ) const
 {
-    std::cout
-      << m_energy << " " << m_eneError << "\n"
-      << m_clusterCentroid.X() << " " << m_clusterCentroid.Y() << " " << m_clusterCentroid.Z() << "\n"
-      << m_cenxx  << " " << m_cenxy << " " << m_cenxz << "\n"
-      << m_cenxy  << " " << m_cenyy << " " << m_cenyz << "\n"
-      << m_cenxz  << " " << m_cenyz << " " << m_cenzz << "\n"
-      << m_clusterAxis.X() << " " << m_clusterAxis.Y() << " " << m_clusterAxis.Z() << "\n"
-      << m_axisxx  << " " << m_axisxy << " " << m_axisxz << "\n"
-      << m_axisxy  << " " << m_axisyy << " " << m_axisyz << "\n"
-      << m_axisxz  << " " << m_axisyz << " " << m_axiszz ;
+  std::cout <<
+    "Energy = " << m_energy << " +- " << m_eneError << " MeV\n" <<
+    "Centroid = (" << m_clusterCentroid.x() << ", " << m_clusterCentroid.y() << ", "
+		<< m_clusterCentroid.z() << ") mm\n" <<
+    "Centroid covariance matrix:\n" <<
+    "| " << m_cenxx  << "  " << m_cenxy << "  " << m_cenxz << " |\n" <<
+    "| " << m_cenxy  << "  " << m_cenyy << "  " << m_cenyz << " |\n" <<
+    "| " << m_cenxz  << "  " << m_cenyz << "  " << m_cenzz << " |\n" <<
+    "Axis = (" << m_clusterAxis.x() << ", " << m_clusterAxis.y() << ", "
+		  << m_clusterAxis.z() << ")\n" <<
+    "Axis covariance matrix:\n" <<
+    "| " << m_axisxx  << "  " << m_axisxy << "  " << m_axisxz << " |\n" <<
+    "| " << m_axisxy  << "  " << m_axisyy << "  " << m_axisyz << " |\n" <<
+    "| " << m_axisxz  << "  " << m_axisyz << "  " << m_axiszz << " |" ;
 }
 
 // dummy data, just for tests
