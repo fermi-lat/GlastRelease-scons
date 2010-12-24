@@ -2,28 +2,11 @@
 import os
 import sys
 import ROOT
-import copy
 import numpy
 
 from CalLayout import *
 
-from math import sqrt, acos, log10
-
-
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
-
-MERIT_VARS = ['EvtEventId', 'EvtRun',
-              'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
-              'McXDir', 'McYDir', 'McZDir',
-              'Tkr1XDir', 'Tkr1YDir', 'Tkr1ZDir',
-              'CalXDir', 'CalYDir', 'CalZDir',
-              'CalXEcntr', 'CalYEcntr', 'CalZEcntr',
-              'CalUberXDir', 'CalUberYDir', 'CalUberZDir',
-              'Tkr1X0', 'Tkr1Y0', 'Tkr1Z0',
-              'CalCsIRLn', 'CalLATRLn', 'CalCntRLn',
-              'CalTrackDoca', 'CalTrackAngle', 'CTBCORE',
-              'CalTransRms', 'CalLongRms', 'CalLRmsAsym', 'CalNumXtals',
-              'TkrNumTracks', 'TkrEnergy']
 
 #
 # Load the recon libraries.
@@ -78,13 +61,15 @@ class ReconReader:
         else:
             self.MeritChain = ROOT.TChain('MeritTuple')
             self.MeritChain.Add(meritFilePath)
-            for branchName in MERIT_VARS:
-                if branchName in ['EvtEventId', 'EvtRun']:
-                    a = numpy.array([0.0], dtype = 'l')
-                else:
-                    a = numpy.array([0.0], dtype = 'f')
-                self.MeritChain.SetBranchAddress(branchName, a)
-                self.MeritArrayDict[branchName] = a
+            for branch in self.MeritChain.GetListOfBranches():
+                branchName = branch.GetName()
+                branchTitle = branch.GetTitle()
+                branchType = branchTitle.split('/')[-1].lower()
+                if '[' not in branchName and branchType not in ['c']:
+                    print 'Creating array for %s...' % branchTitle
+                    a = numpy.array([0.0], dtype = branchType)
+                    self.MeritChain.SetBranchAddress(branchName, a)
+                    self.MeritArrayDict[branchName] = a
             self.MeritTreeFormula = ROOT.TTreeFormula('cut', cut,
                                                       self.MeritChain)
             print 'Done. %d entries found.' % self.MeritChain.GetEntries()
@@ -92,7 +77,7 @@ class ReconReader:
         # Relation file...
         print 'Opening the relation file...'
         if relFilePath is None:
-            relFilePath = reconFilePath.replace('recon.root', 'relation.root')
+            relFilePath = reconFilePath.replace('recon.root', 'rel.root')
             print 'No path specified, trying %s...' % relFilePath
         if not os.path.exists(relFilePath):
             print 'Could not find the relations, will ignore it.'
@@ -136,7 +121,7 @@ class ReconReader:
     def getCalClusterCol(self):
         return self.getCalRecon().getCalClusterCol()
 
-    def getCalCluster(self, i):
+    def getCalCluster(self, i = 0):
         if i >= 0 and i < self.getNumClusters():
             return self.getCalClusterCol().At(i)
 
@@ -146,33 +131,21 @@ class ReconReader:
     def getCalTotalNumXtals(self):
         return self.getCalXtalRecCol().GetEntries()
 
-    # This function is different from the others in that it returns a
-    # (sorted!) python list of CalCluster objects rather than a TCollection
-    # of ROOT.CalCluster objects.
-    # If fillXtalList and the relations root file is available, the code
-    # will dig into the relation table and fill the list fo xtals for each
-    # cluster.
-
-    def getCalClusterList(self, fillXtalList = True):
+    def getCalClusterXtalList(self, i = 0):
+        xtalList = []
         if self.RelTable is None:
-            fillXtalList = False
-        clusterList = []
-        if fillXtalList:
-            clusterDict = {}
-        for cluster in self.getCalClusterCol():
-            calCluster = CalCluster(cluster)
-            clusterList.append(calCluster)
-            if fillXtalList:
-                clusterDict[cluster] = calCluster
-        clusterList.sort()
-        if fillXtalList:
-            for relation in self.RelTable.getRelationTable():
-                if isinstance(relation.getKey(), ROOT.CalXtalRecData):
-                    xtal = relation.getKey()
-                    for cluster in relation.getValueCol():
-                        calCluster = clusterDict[cluster]
-                        calCluster.addXtal(xtal)
-        return clusterList
+            print 'No relation table available.'
+            return xtalList
+        cluster = self.getCalCluster(i)
+        if cluster is None:
+            print 'No CAL cluster at this time :-('
+            return xtalList
+        for relation in self.RelTable.getRelationTable():
+            if isinstance(relation.getFirst(), ROOT.CalXtalRecData):
+                xtal = relation.getFirst()
+                if cluster == relation.getSecond():
+                    xtalList.append(xtal)
+        return xtalList
 
 
 if __name__ == '__main__':
@@ -208,29 +181,12 @@ if __name__ == '__main__':
         numXtals = reader.getCalTotalNumXtals()
         print '%d cluster(s) found, %d xtals in total.' %\
             (numClusters, numXtals)
-        print 'Full info for the first cluster...'
-        reader.getCalCluster(0).Print()
+        if numClusters > 0:
+            print 'Full info for the first cluster...'
+            cluster = reader.getCalCluster(0)
+            cluster.Print()
         answer = raw_input('Press q to quit, s to save or type a number...')
         try:
             eventNumber = int(answer)
         except:
             eventNumber += 1
-    
-
-"""
-----------------------------------------------------
------------ Output from the fitting tool -----------
-----------------------------------------------------
-Energy = -1 +- -1 MeV
-Centroid = (-330.76, 618.478, -180.831) mm
-Centroid covariance matrix:
-| 1  0  0 |
-| 0  1  0 |
-| 0  0  1 |
-Axis = (0.362045, 0.686613, 0.630465)
-Axis covariance matrix:
-| 1  0  0 |
-| 0  1  0 |
-| 0  0  1 |Number of layers for the fit: 4
-Fit chisquare: 1.12321e-06
-"""
