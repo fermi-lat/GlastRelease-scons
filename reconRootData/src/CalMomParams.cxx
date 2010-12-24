@@ -97,7 +97,7 @@ void CalMomParams::Print( Option_t * ) const
   // Call the base class method...
   CalParams::Print();
   // ... then print the additional stuff.
-  std::cout <<
+  std::cout << "\n" <<
     "Number of iterations = " << m_numIterations << "\n" << 
     m_numCoreXtals << "/" << m_numXtals << " xtal(s) used for the final centroid/axis\n" << 
     "Transverse RMS = " << m_transRms << " mm\n" <<

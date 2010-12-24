@@ -29,6 +29,29 @@ public:
 
   /// Direct construction from all the elements (the old fashioned way)
   CalFitParams
+    ( Double_t energy, Double_t eneError,
+      TVector3 centroid,
+      Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
+      Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
+      TVector3 axis,
+      Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
+      Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
+      Int_t numFitLayers, Double_t chiSquare ) ;
+
+  void init
+    ( Double_t energy, Double_t eneError,
+      TVector3 centroid,
+      Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
+      Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
+      TVector3 axis,
+      Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
+      Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
+      Int_t numFitLayers, Double_t chiSquare ) ;
+  
+  /// Direct construction from all the elements (the old fashioned way).
+  /// This reflect the way the CalFitParams class looked like before it inherited from
+  /// the base class CalParams.
+  CalFitParams
     ( Int_t numFitLayers, Double_t chiSquare,
       TVector3 centroid,
       Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
@@ -37,7 +60,6 @@ public:
       Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
       Double_t axsdyy, Double_t axsdyz, Double_t axsdzz ) ;
   
-  /// init
   void init
     ( Int_t numFitLayers, Double_t chiSquare,
       TVector3 centroid,

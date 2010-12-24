@@ -12,7 +12,6 @@ from math import sqrt, acos, log10
 
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 
-LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
 MERIT_VARS = ['EvtEventId', 'EvtRun',
               'McEnergy', 'CalEnergyRaw', 'CTBBestEnergy', 'CalEnergyCorr',
               'McXDir', 'McYDir', 'McZDir',
@@ -26,6 +25,10 @@ MERIT_VARS = ['EvtEventId', 'EvtRun',
               'CalTransRms', 'CalLongRms', 'CalLRmsAsym', 'CalNumXtals',
               'TkrNumTracks', 'TkrEnergy']
 
+#
+# Load the recon libraries.
+#
+LIBRARIES = ['libcommonRootData.so', 'libreconRootData.so']
 print 'Loading necessary libraries...'
 LIB_DIRS = []
 for var in ['RELEASE', 'PARENT']:
@@ -42,73 +45,30 @@ for libName in LIBRARIES:
             break
 print 'Done.'
 
-
-
-
-# Convenience class inheriting from ROOT.CalCluster.
-# Beside wrapping some of the methods in order to save lines of code, it
-# provides a __cmp__ method that allows to sort lists of objects.
-
-class CalCluster(ROOT.CalCluster):
-
-    def __init__(self, cluster):
-        ROOT.CalCluster.__init__(self, cluster)
-        self.XtalList = []
-
-    def addXtal(self, xtal):
-        self.XtalList.append(xtal)
-
-    def getTotNumXtals(self):
-        return len(self.XtalList)
-
-    def getEnergy(self):
-        return self.getParams().getEnergy()
-
-    def getCentroid(self):
-        return self.getParams().getCentroid()
-
-    def getAxis(self):
-        return self.getParams().getAxis()
-
-    def getTransRms(self):
-        return sqrt(ROOT.CalCluster.getRmsTrans(self)/self.getEnergy())
-
-    def distToCentroid(self, cluster):
-        diff = cluster.getCentroid()
-        diff -= self.getCentroid()
-        return diff.Mag()
-
-    def distToAxis(self, cluster):
-        diff = cluster.getCentroid()
-        diff -= self.getCentroid()
-        cross = cluster.getAxis().Cross(diff)
-        return cross.Mag()        
-
-    def __cmp__(self, other):
-        if other.getEnergy() - self.getEnergy() > 0:
-            return 1
-        else:
-            return -1
-
-
-
+#
+# Python interface to read a recon file and have access to the objects
+# in there. It has the capability of parsing the content of the
+# corresponding merit and relation files, if passed as arguments.
+#
 
 class ReconReader:
     
     def __init__(self, reconFilePath, meritFilePath = None,
                  relFilePath = None, cut = '1'):
+        # Recon file...
         if not os.path.exists(reconFilePath):
             sys.exit('Could not find %s. Abort.' % reconFilePath)
         print 'Creating the recon chain...'
         self.ReconChain = ROOT.TChain('Recon')
         self.ReconChain.Add(reconFilePath)
         self.ReconEvent = ROOT.ReconEvent()
-        self.ReconChain.SetBranchAddress('ReconEvent',\
-                                         ROOT.AddressOf(self.ReconEvent))
+        reconAddress = ROOT.AddressOf(self.ReconEvent)
+        self.ReconChain.SetBranchAddress('ReconEvent', reconAddress)
         print 'Done. %d entries found.' % self.ReconChain.GetEntries()
+
+        # Merit file...
         print 'Creating the merit chain...'
         self.MeritArrayDict = {}
-        self.ExpectedSkewness = None
         if meritFilePath is None:
             meritFilePath = reconFilePath.replace('recon.root', 'merit.root')
             print 'No path specified, trying %s...' % meritFilePath
@@ -128,6 +88,8 @@ class ReconReader:
             self.MeritTreeFormula = ROOT.TTreeFormula('cut', cut,
                                                       self.MeritChain)
             print 'Done. %d entries found.' % self.MeritChain.GetEntries()
+        
+        # Relation file...
         print 'Opening the relation file...'
         if relFilePath is None:
             relFilePath = reconFilePath.replace('recon.root', 'relation.root')
@@ -140,28 +102,12 @@ class ReconReader:
             self.RelationsChain = ROOT.TChain('Relations')
             self.RelationsChain.Add(relFilePath)
             self.RelTable = ROOT.RelTable()
-            self.RelationsChain.SetBranchAddress('RelTable',\
-                                                 ROOT.AddressOf(self.RelTable))
+            relAddress = ROOT.AddressOf(self.RelTable)
+            self.RelationsChain.SetBranchAddress('RelTable', relAddress)
             print 'Done. %d entries found.' % self.RelationsChain.GetEntries()
 
     def getEntries(self):
         return self.ReconChain.GetEntries()
-
-    def getMeritVariable(self, branchName):
-        try:
-            return self.MeritArrayDict[branchName][0]
-        except KeyError:
-            return 'N/A'
-
-    def getEventInfo(self):
-        if self.MeritChain is None:
-            info = 'Event info not available.'
-        else:
-            info = 'Event info:\n'
-            for var in MERIT_VARS:
-                info += '    %s = %s\n' % (var, self.getMeritVariable(var))
-        info = info.strip('\n')
-        return info
 
     def getEntry(self, i):
         self.ReconChain.GetEvent(i)
@@ -172,14 +118,17 @@ class ReconReader:
             return self.MeritTreeFormula.EvalInstance()
         return 1
 
+    def getMeritVariable(self, branchName):
+        try:
+            return self.MeritArrayDict[branchName][0]
+        except KeyError:
+            return None
+
     def getCalRecon(self):
         return self.ReconEvent.getCalRecon()
 
     def getCalXtalRecCol(self):
         return self.getCalRecon().getCalXtalRecCol()
-
-    def getNumCalXtals(self):
-        return self.getCalXtalRecCol().GetEntries()
 
     def getNumClusters(self):
         return self.getCalClusterCol().GetEntries()
@@ -194,46 +143,8 @@ class ReconReader:
     def getCalUberCluster(self):
         return self.getCalCluster(self.getNumClusters() - 1)
 
-    def getCalClusterParams(self, i):
-        cluster = self.getCalCluster(i)
-        if cluster is not None:
-            return cluster.getParams()
-
-    def getCalUberClusterParams(self):
-        return self.getCalUberCluster().getParams()
-
     def getCalTotalNumXtals(self):
         return self.getCalXtalRecCol().GetEntries()
-
-    def getCalClusterEnergy(self, i):
-        params = self.getCalClusterParams(i)
-        if params is not None:
-            return params.getEnergy()
-
-    def getCalClusterCentroid(self, i):
-        params = self.getCalClusterParams(i)
-        if params is not None:
-            return params.getCentroid()
-
-    def getCalClusterAxis(self, i):
-        params = self.getCalClusterParams(i)
-        if params is not None:
-            return params.getAxis()
-
-    def getCalClusterTransRms(self, i):
-        cluster = self.getCalCluster(i)
-        if cluster is not None:
-            return sqrt(cluster.getRmsTrans()/self.getCalClusterEnergy(i))
-
-    def getCalClusterNumTruncXtals(self, i):
-        cluster = self.getCalCluster(i)
-        if cluster is not None:
-            return cluster.getNumTruncXtals()
-
-    def getCalClusterNumSaturatedXtals(self, i):
-        cluster = self.getCalCluster(i)
-        if cluster is not None:
-            return cluster.getNumSaturatedXtals()
 
     # This function is different from the others in that it returns a
     # (sorted!) python list of CalCluster objects rather than a TCollection
@@ -264,13 +175,6 @@ class ReconReader:
         return clusterList
 
 
-        
-
-
-    
-
-
-
 if __name__ == '__main__':
     from optparse import OptionParser
     usage = 'ReconReader.py reconFile <meritFile> <relFile>'
@@ -294,30 +198,39 @@ if __name__ == '__main__':
         relFilePath = args[2]
     except IndexError:
         relFilePath = None
-    fmt   = '%7s %12s %12s %13s %13s %13s'
-    hline = '*'*79
     reader = ReconReader(reconFilePath, meritFilePath, relFilePath, opts.c)
-    for event in xrange(10):
-        print 'ReconReader retrieving event %d...' % event
-        if reader.getEntry(event):
-            #print reader.getEventInfo()
-            numClusters = reader.getNumClusters()
-            numXtals = reader.getCalTotalNumXtals()
-            print '%d cluster(s) found, %d xtals in total.' %\
-                  (numClusters, numXtals)
-            print hline
-            print fmt % ('Cluster', 'Energy', 'Trans. rms', 'Tot. xtals',
-                         'Trunc. xtals', 'Sat. xtals')
-            print hline
-            clusterList = reader.getCalClusterList()
-            uberCluster = clusterList[0]
-            for (i, cluster) in enumerate(clusterList):
-                print fmt % (i,
-                             '%.3f' % cluster.getEnergy(),
-                             '%.3f' % cluster.getTransRms(),
-                             cluster.getTotNumXtals(),
-                             cluster.getNumTruncXtals(),
-                             cluster.getNumSaturatedXtals())
-            print hline
+    answer = ''
+    eventNumber = 0
+    while answer != 'q':
+        print 'ReconReader retrieving event %d...' % eventNumber
+        reader.getEntry(eventNumber)
+        numClusters = reader.getNumClusters()
+        numXtals = reader.getCalTotalNumXtals()
+        print '%d cluster(s) found, %d xtals in total.' %\
+            (numClusters, numXtals)
+        print 'Full info for the first cluster...'
+        reader.getCalCluster(0).Print()
+        answer = raw_input('Press q to quit, s to save or type a number...')
+        try:
+            eventNumber = int(answer)
+        except:
+            eventNumber += 1
     
 
+"""
+----------------------------------------------------
+----------- Output from the fitting tool -----------
+----------------------------------------------------
+Energy = -1 +- -1 MeV
+Centroid = (-330.76, 618.478, -180.831) mm
+Centroid covariance matrix:
+| 1  0  0 |
+| 0  1  0 |
+| 0  0  1 |
+Axis = (0.362045, 0.686613, 0.630465)
+Axis covariance matrix:
+| 1  0  0 |
+| 0  1  0 |
+| 0  0  1 |Number of layers for the fit: 4
+Fit chisquare: 1.12321e-06
+"""

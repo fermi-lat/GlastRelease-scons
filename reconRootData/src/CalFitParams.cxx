@@ -18,11 +18,30 @@
 ClassImp(CalFitParams)
 
 CalFitParams::CalFitParams
+( Double_t energy, Double_t eneError,
+  TVector3 centroid,
+  Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
+  Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
+  TVector3 axis,
+  Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
+  Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
+  Int_t numFitLayers, Double_t chiSquare )
+{
+  init
+    ( energy,eneError,
+      centroid,cntdxx,cntdxy,cntdxz,cntdyy,cntdyz,cntdzz,
+      axis,axsdxx,axsdxy,axsdxz,axsdyy,axsdyz,axsdzz,
+      numFitLayers, chiSquare ) ;
+}
+
+CalFitParams::CalFitParams
 ( int numFitLayers, double chiSquare,
   TVector3 centroid,
-  double cntdxx, double cntdxy, double cntdxz, double cntdyy, double cntdyz, double cntdzz,
+  double cntdxx, double cntdxy, double cntdxz,
+  double cntdyy, double cntdyz, double cntdzz,
   TVector3 axis,
-  double axsdxx, double axsdxy, double axsdxz, double axsdyy, double axsdyz, double axsdzz )
+  double axsdxx, double axsdxy, double axsdxz,
+  double axsdyy, double axsdyz, double axsdzz )
 {
   init
     ( numFitLayers, chiSquare,
@@ -30,12 +49,34 @@ CalFitParams::CalFitParams
       axis,axsdxx,axsdxy,axsdxz,axsdyy,axsdyz,axsdzz ) ;
 }
 
-void CalFitParams::Clear( Option_t * )
+void CalFitParams::init
+( Double_t energy, Double_t eneError,
+  TVector3 centroid,
+  Double_t cntdxx, Double_t cntdxy, Double_t cntdxz,
+  Double_t cntdyy, Double_t cntdyz, Double_t cntdzz,
+  TVector3 axis,
+  Double_t axsdxx, Double_t axsdxy, Double_t axsdxz,
+  Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
+  Int_t numFitLayers, Double_t chiSquare )
 {
-    init
-    ( 0,0.,
-      TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
-      TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0. ) ;
+  setEnergy(energy);
+  setEnergyErr(eneError);
+  setCentroid(centroid);
+  setxPosxPos(cntdxx);
+  setxPosyPos(cntdxy);
+  setxPoszPos(cntdxz);
+  setyPosyPos(cntdyy);
+  setyPoszPos(cntdyz);
+  setzPoszPos(cntdzz);
+  setAxis(axis);
+  setxDirxDir(axsdxx);
+  setxDiryDir(axsdxy);
+  setxDirzDir(axsdxz);
+  setyDiryDir(axsdyy);
+  setyDirzDir(axsdyz);
+  setzDirzDir(axsdzz);
+  m_nFitLayers = numFitLayers ;
+  m_chiSquare  = chiSquare ;
 }
 
 void CalFitParams::init
@@ -67,12 +108,21 @@ void CalFitParams::init
   m_chiSquare  = chiSquare ;
 }
 
+void CalFitParams::Clear( Option_t * )
+{
+  init
+    ( 0.,0.,
+      TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
+      TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
+      0,0. ) ;
+}
+
 void CalFitParams::Print( Option_t * ) const
 {
   // Call the base class method...
   CalParams::Print();
   // ... then print the additional stuff.
-  std::cout <<
+  std::cout << "\n" <<
     "Number of layers for the fit: " << m_nFitLayers << "\n" <<
     "Fit chisquare: " << m_chiSquare << std::endl;
 }
