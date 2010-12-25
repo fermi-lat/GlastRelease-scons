@@ -100,8 +100,8 @@ class CalMomentsData:
         return self.DistToAxis
 
     def calcDistToAxis(self, centroid, axis):
-        diffVec   = centroid - self.Point
-        crossProd = axis.Cross(diffVec)
+        diffVec   = self.Point - centroid
+        crossProd = -axis.Cross(diffVec)
         self.DistToAxis = crossProd.Mag()
         return self.DistToAxis
 
@@ -124,31 +124,95 @@ class CalDisplay(ReconReader):
                  relFilePath = None, cut = '1'):
         ReconReader.__init__(self, reconFilePath, meritFilePath,
                              relFilePath, cut)
-        self.Canvas = getSideCanvas('CalDisplay', 'CAL display')
+        self.Canvas = getFullCanvas('CalDisplay', 'CAL display')
+        self.Cluster = None
 
-    def drawCluster(self, i = 0):
-        print 'Full info for the first cluster...'
-        cluster = self.getCalCluster(i)
-        cluster.Print()
-        maxWeight = cluster.getMSTreeParams().getMaxXtalEnergy()
-        xtalList = self.getCalClusterXtalList(i)
+    def __drawXtals(self):
+        maxWeight = self.Cluster.getMSTreeParams().getMaxXtalEnergy()
         self.MomentsDataList = []
-        for xtalData in xtalList:
+        for xtalData in self.XtalList:
             momentsData = CalMomentsData(xtalData)
             momentsData.setMaxWeight(maxWeight)
             self.MomentsDataList.append(momentsData)
-        # Draw XZ view.
-        self.Canvas.cd(1)
+        # Draw xtals in XZ view.
+        self.Canvas.cd(1).cd(1)
         CAL_LAYOUT.draw('xz')
         for momentsData in self.MomentsDataList:
             momentsData.XZMarker.Draw()
-
-        # Draw YZ view.
-        self.Canvas.cd(2)
+        # Draw xtals in YZ view.
+        self.Canvas.cd(1).cd(2)
         CAL_LAYOUT.draw('yz')
         for momentsData in self.MomentsDataList:
-            momentsData.YZMarker.Draw()
+            momentsData.YZMarker.Draw() 
 
+    def __drawCalMomParams(self):
+        momParams = self.Cluster.getMomParams()
+        xc = momParams.getCentroid().x()
+        yc = momParams.getCentroid().y()
+        zc = momParams.getCentroid().z()
+        dx = momParams.getAxis().x()
+        dy = momParams.getAxis().y()
+        dz = momParams.getAxis().z()
+        if dz == 0.:
+            dz = 0.0001
+        x1 = xc - (zc - Z_MIN)*(dx/dz)
+        z1 = Z_MIN
+        x2 = xc + (Z_MAX - zc)*(dx/dz)
+        z2 = Z_MAX
+        self.XZCentrMarker = ROOT.TMarker(xc, zc, 20)
+        self.XZCentrMarker.SetMarkerColor(ROOT.kRed)
+        self.XZDirection = ROOT.TLine(x1, z1, x2, z2)
+        self.XZDirection.SetLineColor(ROOT.kRed)
+        self.XZDirection.SetLineWidth(1)
+        self.Canvas.cd(1).cd(1)
+        self.XZCentrMarker.Draw()
+        self.XZDirection.Draw()
+        y1 = yc - (zc - Z_MIN)*(dy/dz)
+        y2 = yc + (Z_MAX - zc)*(dy/dz)
+        self.YZCentrMarker = ROOT.TMarker(yc, zc, 20)
+        self.YZCentrMarker.SetMarkerColor(ROOT.kRed)
+        self.YZDirection = ROOT.TLine(y1, z1, y2, z2)
+        self.YZDirection.SetLineColor(ROOT.kRed)
+        self.YZDirection.SetLineWidth(1)
+        self.Canvas.cd(1).cd(2)
+        self.YZCentrMarker.Draw()
+        self.YZDirection.Draw()
+
+    def __drawLongProfile(self, transScale = 0.9):
+        self.LongProfile = ROOT.TGraph()
+        self.LongProfile.SetMarkerStyle(24)
+        self.LongProfile.SetMarkerSize(0.8)
+        centroid = self.Cluster.getMomParams().getCentroid()
+        axis = self.Cluster.getMomParams().getAxis()
+        transRms = self.Cluster.getMomParams().getTransRms()
+        i = 0
+        for xtalData in self.XtalList:
+            momentsData = CalMomentsData(xtalData)
+            momentsData.calcCoordAlongAxis(centroid, axis)
+            dist = momentsData.calcDistToAxis(centroid, axis)
+            if dist < transRms*transScale:
+                self.LongProfile.SetPoint(i, momentsData.CoordAlongAxis,
+                                          momentsData.getWeight())
+            i += 1
+        self.Canvas.cd(2).cd(1)
+        self.LongProfile.GetXaxis().SetTitle('Longitudinal position (mm)')
+        self.LongProfile.GetXaxis().SetTitleOffset(2.00)
+        self.LongProfile.GetYaxis().SetTitle('Xtal energy (MeV)')
+        self.LongProfile.GetYaxis().SetTitleOffset(3.50)
+        self.LongProfile.Draw('ap')
+
+    def drawCluster(self, i = 0):
+        print 'Full info for the first cluster...'
+        self.Cluster = self.getCalCluster(i)
+        self.XtalList = self.getCalClusterXtalList(i)
+        self.Cluster.Print()
+        # Draw the CAL layout and the actual xtals.
+        self.__drawXtals()
+        # Draw direction/centroid from the moments analysis.
+        self.__drawCalMomParams()
+        # Draw the longitudinal profile(s).
+        self.__drawLongProfile()
+        # Update canvas.
         self.Canvas.cd()
         self.Canvas.Update()
 
@@ -189,7 +253,7 @@ if __name__ == '__main__':
             (numClusters, numXtals)
         if numClusters > 0:
             display.drawCluster(0)
-        answer = raw_input('Press q to quit, s to save or type a number...')
+            answer = raw_input('Press q to quit, s to save or type a number...')
         try:
             eventNumber = int(answer)
         except:

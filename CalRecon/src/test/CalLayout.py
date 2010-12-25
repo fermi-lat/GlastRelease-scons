@@ -80,6 +80,22 @@ def getSideCanvas(name, title = None, width = 1200, height = 480):
     c.GetPad(2).SetLeftMargin(leftMargin)
     return c
 
+def getFullCanvas(name, title = None, width = 1200, height = 900):
+    title = title or name
+    rightMargin = 0.01
+    leftMargin = 0.05
+    c = ROOT.TCanvas(name, title, width, height)
+    c.Divide(1, 2)
+    c.GetPad(1).Divide(1, 2)
+    for i in range(1, 3):
+        c.GetPad(1).GetPad(i).SetRightMargin(rightMargin)
+        c.GetPad(1).GetPad(i).SetLeftMargin(leftMargin)
+    c.GetPad(2).Divide(3, 1)
+    for i in range(1, 4):
+        c.GetPad(2).GetPad(i).SetRightMargin(3*rightMargin)
+        c.GetPad(2).GetPad(i).SetLeftMargin(3*leftMargin)
+    return c
+
 def getTopCanvas(name, title = None, width = 620, height = 600,
                  topx = None, topy = None):
     title = title or name
@@ -171,8 +187,9 @@ class CalLayout:
         self.BaseHistogramXZ.SetMinimum(Z_MIN)
         self.BaseHistogramXZ.SetMaximum(Z_MAX)
         self.BaseHistogramXZ.GetXaxis().SetTitle('x (mm)')
+        self.BaseHistogramXZ.GetXaxis().SetTitleOffset(1.60)
         self.BaseHistogramXZ.GetYaxis().SetTitle('z (mm)')
-        self.BaseHistogramXZ.GetYaxis().SetTitleOffset(0.60)
+        self.BaseHistogramXZ.GetYaxis().SetTitleOffset(1.20)
         self.BaseHistogramYZ = self.BaseHistogramXZ.Clone('hyz')
         self.BaseHistogramYZ.SetTitle('YZ view')
         self.BaseHistogramYZ.GetXaxis().SetTitle('y (mm)')
