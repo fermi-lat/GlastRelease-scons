@@ -24,14 +24,14 @@ CalMomParams::CalMomParams
   double axsdxx, double axsdxy, double axsdxz, double axsdyy, double axsdyz, double axsdzz,
   Int_t numIterations, Int_t numCoreXtals, Int_t numXtals,
   Double_t transRms, Double_t longRms, Double_t longRmsAsym, Double_t longSkewness,
-  Double_t coreEnergyFrac, Double_t dEdxAverage, Double_t dEdxSpread )
+  Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread )
 {
     init
     ( energy,eneError,
       centroid,cntdxx,cntdxy,cntdxz,cntdyy,cntdyz,cntdzz,
       axis,axsdxx,axsdxy,axsdxz,axsdyy,axsdyz,axsdzz,
       numIterations,numCoreXtals,numXtals,
-      transRms,longRms,longRmsAsym,longSkewness,coreEnergyFrac,dEdxAverage,dEdxSpread ) ;
+      transRms,longRms,longRmsAsym,longSkewness,coreEnergyFrac,fullLength,dEdxSpread ) ;
 }
 
 void CalMomParams::Clear( Option_t * )
@@ -54,7 +54,7 @@ void CalMomParams::init
   Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
   Int_t numIterations, Int_t numCoreXtals, Int_t numXtals,
   Double_t transRms, Double_t longRms, Double_t longRmsAsym, Double_t longSkewness,
-  Double_t coreEnergyFrac, Double_t dEdxAverage, Double_t dEdxSpread )
+  Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread )
 {
     setEnergy(energy);
     setEnergyErr(eneError);
@@ -80,14 +80,22 @@ void CalMomParams::init
     m_longRmsAsym = longRmsAsym;
     m_longSkewness = longSkewness;
     m_coreEnergyFrac = coreEnergyFrac;
-    m_dEdxAverage = dEdxAverage;
+    m_fullLength = fullLength;
     m_dEdxSpread = dEdxSpread;
 }
 
 Double_t CalMomParams::getElongation() const
 {
-  if (m_transRms > 0.){
-    return m_longRms/m_transRms;
+  if ( getTransRms() > 0.){
+    return getLongRms()/getTransRms();
+  }
+  return -1.;
+}
+
+Double_t CalMomParams::getdEdxAverage() const
+{
+  if ( getFullLength() > 0. ) {
+    return getEnergy()/getFullLength();
   }
   return -1.;
 }
@@ -98,15 +106,18 @@ void CalMomParams::Print( Option_t * ) const
   CalParams::Print();
   // ... then print the additional stuff.
   std::cout << "\n" <<
-    "Number of iterations = " << m_numIterations << "\n" << 
-    m_numCoreXtals << "/" << m_numXtals << " xtal(s) used for the final centroid/axis\n" << 
-    "Transverse RMS = " << m_transRms << " mm\n" <<
-    "Longitudinal RMS = " << m_longRms << " mm\n" <<
-    "Longitudinal RMS asymmetry = " << m_longRmsAsym << "\n" <<
-    "Longitudinal skewness = " << m_longSkewness << "\n" <<
+    "Number of iterations = " << getNumIterations() << "\n" << 
+    getNumCoreXtals() << "/" << getNumXtals() <<
+    " xtal(s) used for the final centroid/axis\n" << 
+    "Transverse RMS = " << getTransRms() << " mm\n" <<
+    "Longitudinal RMS = " << getLongRms() << " mm\n" <<
+    "Longitudinal RMS asymmetry = " << getLongRmsAsym() << "\n" <<
+    "Longitudinal skewness = " << getLongSkewness() << "\n" <<
     "Elongation = " << getElongation() << "\n" <<
-    "Core energy fraction = " << m_coreEnergyFrac << "\n" <<
-    "Average dE/dx = " << m_dEdxAverage << " MeV/X0 (+- " << m_dEdxSpread << ")" << std::endl;
+    "Core energy fraction = " << getCoreEnergyFrac() << "\n" <<
+    "Cluster full length = " << getFullLength() << " X0\n" <<
+    "Average dE/dx = " << getdEdxAverage() << " MeV/X0 (+- " << getdEdxSpread() << ")" <<
+    std::endl;
 }
 
 // dummy data, just for tests

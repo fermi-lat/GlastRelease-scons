@@ -13,7 +13,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 				  int numIterations, int numCoreXtals, int numXtals,
 				  double transRms, double longRms, double longRmsAsym,
 				  double longSkewness, double coreEnergyFrac,
-				  double dEdxAverage, double dEdxSpread) :
+				  double fullLength, double dEdxSpread) :
   CalParams(energy, eneError, centroid, centroidErr, axis, axisErr),
   m_numIterations(numIterations),
   m_numCoreXtals(numCoreXtals),
@@ -23,7 +23,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
   m_longRmsAsym(longRmsAsym),
   m_longSkewness(longSkewness),
   m_coreEnergyFrac(coreEnergyFrac),
-  m_dEdxAverage(dEdxAverage),
+  m_fullLength(fullLength),
   m_dEdxSpread(dEdxSpread)
 {
   // Nothing to do, here.
@@ -39,7 +39,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 				  int numIterations, int numCoreXtals, int numXtals,
 				  double transRms, double longRms, double longRmsAsym,
 				  double longSkewness, double coreEnergyFrac,
-				  double dEdxAverage, double dEdxSpread) :
+				  double fullLength, double dEdxSpread) :
   CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
 	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
 	    axsdyy, axsdyz, axsdzz),
@@ -51,7 +51,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
   m_longRmsAsym(longRmsAsym),
   m_longSkewness(longSkewness),
   m_coreEnergyFrac(coreEnergyFrac),
-  m_dEdxAverage(dEdxAverage),
+  m_fullLength(fullLength),
   m_dEdxSpread(dEdxSpread)
 {
   // Nothing to do, here.
@@ -135,14 +135,22 @@ void Event::CalMomParams::clearMomParams()
   m_longRmsAsym    = 0.;
   m_longSkewness   = 0.;
   m_coreEnergyFrac = 0.;
-  m_dEdxAverage    = 0.;
+  m_fullLength     = 0.;
   m_dEdxSpread     = 0.;
 }
 
 double Event::CalMomParams::getElongation() const
 {
-  if (m_transRms > 0.){
-    return m_longRms/m_transRms;
+  if ( getTransRms() > 0. ) {
+    return getLongRms()/getTransRms();
+  }
+  return -1.;
+}
+
+double Event::CalMomParams::getdEdxAverage() const
+{
+  if ( getFullLength() > 0. ) {
+    return getEnergy()/getFullLength();
   }
   return -1.;
 }
@@ -154,15 +162,17 @@ std::ostream& Event::CalMomParams::fillStream(std::ostream& s) const
 
   // ... then print the additional stuff.
   s <<
-    "Number of iterations = " << m_numIterations << "\n" << 
-    m_numCoreXtals << "/" << m_numXtals << " xtal(s) used for the final centroid/axis\n" << 
-    "Transverse RMS = " << m_transRms << " mm\n" <<
-    "Longitudinal RMS = " << m_longRms << " mm\n" <<
-    "Longitudinal RMS asymmetry = " << m_longRmsAsym << "\n" <<
-    "Longitudinal skewness = " << m_longSkewness << "\n" <<
+    "Number of iterations = " << getNumIterations() << "\n" << 
+    getNumCoreXtals() << "/" << getNumXtals() <<
+    " xtal(s) used for the final centroid/axis\n" << 
+    "Transverse RMS = " << getTransRms() << " mm\n" <<
+    "Longitudinal RMS = " << getLongRms() << " mm\n" <<
+    "Longitudinal RMS asymmetry = " << getLongRmsAsym() << "\n" <<
+    "Longitudinal skewness = " << getLongSkewness() << "\n" <<
     "Elongation = " << getElongation() << "\n" <<
-    "Core energy fraction = " << m_coreEnergyFrac << "\n" <<
-    "Average dE/dx = " << m_dEdxAverage << " MeV/X0 (+- " << m_dEdxSpread << ")";  
+    "Core energy fraction = " << getCoreEnergyFrac() << "\n" <<
+    "Cluster full length = " << getFullLength() << " X0\n" <<
+    "Average dE/dx = " << getdEdxAverage() << " MeV/X0 (+- " << getdEdxSpread() << ")";  
 
   return s; 
 }

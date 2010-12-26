@@ -1,11 +1,28 @@
 
+import math
+
 from ReconReader import *
+
+
+CSI_RAD_LEN = 18.6
+CSI_MOL_RAD = 35.7
+
+CAL_TOWER_GAP = TOWER_PITCH - 0.5*(CSI_WIDTH*12 + CSI_LENGTH)
 
 
 class Point(ROOT.TVector3):
 
     def __init__(self, x = 0., y = 0., z = 0.):
         ROOT.TVector3.__init__(self, x, y, z)
+    
+    def x(self):
+        return self.X()
+
+    def y(self):
+        return self.Y()
+
+    def z(self):
+        return self.Z()
 
     def mag2(self):
         return self.Mag2()
@@ -29,7 +46,7 @@ class Point(ROOT.TVector3):
             return Point()
 
     def __str__(self):
-        return '(%.4f, %.4f, %.4f)' % (self.x(), self.y(), self.z())
+        return '(%.2f, %.2f, %.2f)' % (self.x(), self.y(), self.z())
 
 
 
@@ -62,18 +79,6 @@ class CalMomentsData:
         else:
             self.XZMarker.SetMarkerStyle(1)
             self.YZMarker.SetMarkerStyle(1)
-
-    def setX(self, x):
-        y = self.Point.y()
-        z = self.Point.z()
-        self.Point = Point(x, y, z)
-        self.XZMarker = ROOT.TMarker(self.Point.x(), self.Point.z(), 25)
-
-    def setY(self, y):
-        x = self.Point.x()
-        z = self.Point.z()
-        self.Point = Point(x, y, z)
-        self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25) 
 
     def getTower(self):
         return self.XtalData.getPackedId().getTower()
@@ -115,6 +120,12 @@ class CalMomentsData:
         else:
             return -1
 
+    def __str__(self):
+        return 'xtal (%d, %d, %d) with %.2f MeV @ %s' %\
+            (self.getTower(), self.getLayer(), self.getColumn(),
+             self.getWeight(), self.Point)
+        
+
 
 CAL_LAYOUT = CalLayout()
 
@@ -128,11 +139,54 @@ class CalDisplay(ReconReader):
         self.Cluster = None
         self.XtalEneHist = None
 
+    def __refineLongProfile(self, transScale = 0.9):
+        self.LongProfileRef = ROOT.TGraph()
+        self.LongProfileRef.SetMarkerStyle(24)
+        self.LongProfileRef.SetMarkerSize(0.8)
+        axis = self.Cluster.getMomParams().getAxis()
+        #print axis.x(), axis.y(), axis.z()
+        tsum = 0.
+        tsum2 = 0.
+        tsum3 = 0.
+        transRms = self.Cluster.getMomParams().getTransRms()
+        i = 0
+        for momentsData in self.MomentsDataList:
+            dist = momentsData.DistToAxis
+            if dist < transRms*transScale:
+                t0 = momentsData.CoordAlongAxis
+                t = momentsData.CoordAlongAxis
+                # Get the tower Id and the position into the grid.
+                towerId = momentsData.getTower()
+                numGapsX = towerId % 4
+                numGapsY = towerId / 4
+                # Correct for the gaps (not exact!!)
+                xdir = abs(axis.x())
+                ydir = abs(axis.y())
+                if xdir > 0.01:
+                    t += numGapsX*CAL_TOWER_GAP/xdir
+                if ydir > 0.01:
+                    t += numGapsY*CAL_TOWER_GAP/ydir
+                #print numGapsX, numGapsY, t, t0, t-t0
+                # Normalize to the X0 in CsI.
+                t /= CSI_RAD_LEN
+                self.LongProfileRef.SetPoint(i, t, momentsData.getWeight())
+                i += 1
+        self.Canvas.cd(2).cd(3)
+        self.LongProfileRef.GetXaxis().SetTitle('Longitudinal position (X0)')
+        self.LongProfileRef.GetXaxis().SetTitleOffset(2.00)
+        self.LongProfileRef.GetYaxis().SetTitle('Xtal energy (MeV)')
+        self.LongProfileRef.GetYaxis().SetTitleOffset(3.50)
+        self.LongProfileRef.Draw('ap')
+
     def __drawXtals(self):
         maxWeight = self.Cluster.getMSTreeParams().getMaxXtalEnergy()
+        centroid = self.Cluster.getMomParams().getCentroid()
+        axis = self.Cluster.getMomParams().getAxis()
         self.MomentsDataList = []
         for xtalData in self.XtalList:
             momentsData = CalMomentsData(xtalData)
+            momentsData.calcCoordAlongAxis(centroid, axis)
+            dist = momentsData.calcDistToAxis(centroid, axis)
             momentsData.setMaxWeight(maxWeight)
             self.MomentsDataList.append(momentsData)
         # Draw xtals in XZ view.
@@ -200,18 +254,14 @@ class CalDisplay(ReconReader):
         self.LongProfile = ROOT.TGraph()
         self.LongProfile.SetMarkerStyle(24)
         self.LongProfile.SetMarkerSize(0.8)
-        centroid = self.Cluster.getMomParams().getCentroid()
-        axis = self.Cluster.getMomParams().getAxis()
         transRms = self.Cluster.getMomParams().getTransRms()
         i = 0
-        for xtalData in self.XtalList:
-            momentsData = CalMomentsData(xtalData)
-            momentsData.calcCoordAlongAxis(centroid, axis)
-            dist = momentsData.calcDistToAxis(centroid, axis)
+        for momentsData in self.MomentsDataList:
+            dist = momentsData.DistToAxis
             if dist < transRms*transScale:
                 self.LongProfile.SetPoint(i, momentsData.CoordAlongAxis,
                                           momentsData.getWeight())
-            i += 1
+                i += 1
         self.Canvas.cd(2).cd(2)
         self.LongProfile.GetXaxis().SetTitle('Longitudinal position (mm)')
         self.LongProfile.GetXaxis().SetTitleOffset(2.00)
@@ -231,6 +281,7 @@ class CalDisplay(ReconReader):
         # Draw the various histograms/graphs.
         self.__drawXtalEneDist()
         self.__drawLongProfile()
+        self.__refineLongProfile()
         # Update canvas.
         self.Canvas.cd()
         self.Canvas.Update()

@@ -43,7 +43,7 @@ namespace Event { //Namespace Event
 		 const Vector& axis, const CLHEP::HepMatrix& axisErr,
 		 int numIterations, int numCoreXtals, int numXtals,
 		 double transRms, double longRms, double longRmsAsym, double longSkewness,
-		 double coreEnergyFrac, double dEdxAverage, double dEdxSpread);
+		 double coreEnergyFrac, double fullLength, double dEdxSpread);
 
     /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
     CalMomParams(double energy, double eneError,
@@ -55,7 +55,7 @@ namespace Event { //Namespace Event
 		 double axsdyy, double axsdyz, double axsdzz,
 		 int numIterations, int numCoreXtals, int numXtals,
 		 double transRms, double longRms, double longRmsAsym, double longSkewness,
-		 double coreEnergyFrac, double dEdxAverage, double dEdxSpread);
+		 double coreEnergyFrac, double fullLength, double dEdxSpread);
 
     /// Convenience constructor to be used to replace an old CalParams object directly
     /// (i.e. the specific CalMomParams members are automagically initialized).
@@ -98,11 +98,13 @@ namespace Event { //Namespace Event
     inline double getLongRmsAsym()      const { return m_longRmsAsym; }
     inline double getLongSkewness()     const { return m_longSkewness; }
     inline double getCoreEnergyFrac()   const { return m_coreEnergyFrac; }
-    inline double getdEdxAverage()      const { return m_dEdxAverage; }
+    inline double getFullLength()       const { return m_fullLength; }
     inline double getdEdxSpread()       const { return m_dEdxSpread; }
 
     /// Return the ratio between the tranverse and the longitudinal RMS values.
     double getElongation() const;
+    /// Return the average dE/dx along the cluster.
+    double getdEdxAverage() const;
 
     /// Set parameters.
     inline void setNumIterations(int val)     { m_numIterations = val; }
@@ -112,8 +114,8 @@ namespace Event { //Namespace Event
     inline void setLongRms(double val)        { m_longRms = val; }
     inline void setLongRmsAsym(double val)    { m_longRmsAsym = val; }
     inline void setLongSkewness(double val)   { m_longSkewness = val; }
+    inline void setFullLength(double val)     { m_fullLength = val; }
     inline void setCoreEnergyFrac(double val) { m_coreEnergyFrac = val; }
-    inline void setdEdxAverage(double val)    { m_dEdxAverage = val; }
     inline void setdEdxSpread (double val)    { m_dEdxSpread = val; }
 
     /// Std output facility.
@@ -141,11 +143,13 @@ namespace Event { //Namespace Event
     double m_longRmsAsym;
     /// Skewness of the energy profile along the cluster axis.
     double m_longSkewness;
+    /// The distance (in radiation lengths) between the positions of the first and
+    /// the last xtal, projected along the main axis of the cluster.
+    double m_fullLength;
     /// Fractional energy sum within 1 (or wathever) Moliere radius from the cluster axis.
     double m_coreEnergyFrac;
-    /// Average dE/dx along the cluster axis.
-    double m_dEdxAverage;
-    /// Fractional spread of the energy loss dE/dx along the cluster axis.
+    /// Fractional spread of the energy loss dE/dx along the cluster axis
+    /// (not implemented, yet).
     double m_dEdxSpread;
   };
 

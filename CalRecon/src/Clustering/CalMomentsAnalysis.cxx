@@ -18,6 +18,7 @@ void CalMomentsAnalysis::clear()
   m_axis[0]          = Vector(0.,0.,0.);
   m_axis[1]          = Vector(0.,0.,1.);
   m_axis[2]          = Vector(0.,0.,0.);
+  m_fullLength       = 0.;
   m_longRms          = 0.;
   m_transRms         = 0.;
   m_longRmsAsym      = 0.;
@@ -129,11 +130,13 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       }
 
     // Second loop to get the chisquare (residuals about principal axis, through centroid,
-    // using input weight) the skewness and the fraction of energy within the core
-    // cylinder.
+    // using input weight), the full cluster length, the skewness and the fraction of
+    // energy inside the core cylinder.
     chisq = 0.; 
+    double tmin = 9999.;
+    double tmax = -9999.;
     double skewness = 0.;
-    double coreEnergy = 0;
+    double coreEnergy = 0.;
     for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
       {
 	CalMomentsData& dataPoint = *vecIter;
@@ -141,6 +144,12 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 	double coordAlongAxis = dataPoint.calcCoordAlongAxis(m_centroid,m_axis[1]);
 
 	chisq += dataPoint.getWeight()*distToAxis*distToAxis;
+	if ( coordAlongAxis < tmin ) {
+	  tmin = coordAlongAxis;
+	}
+	if ( coordAlongAxis > tmax ) {
+	  tmax = coordAlongAxis;
+	}
 	skewness += dataPoint.getWeight()*coordAlongAxis*coordAlongAxis*coordAlongAxis;
 	if ( distToAxis < coreRadius ) {
 	  coreEnergy += dataPoint.getWeight();
@@ -149,6 +158,11 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 
     // Scale the chisquare by number of data points.
     chisq /= weightSum * dataVec.size();
+
+    // Scale the distance between the two extreme points in the longitudinal
+    // shower profile in order to convert the length from mm to X0.
+    // The X0 value for the CsI(Tl) is taken from the PDG Review of Particle Physics (2008).
+    m_fullLength = (tmax - tmin)/18.6;
 
     // Final calculations to return moment of principal axis and average of other two.
     // Note that the normalization to the sum of weights, which used to be done in the

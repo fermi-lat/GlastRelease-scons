@@ -361,16 +361,18 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
 							    coreRadius);
 
   if ( chiSq >= 0. ) {
-    // Get info on iterations
-    int numIterations = momentsAnalysis.getNumIterations();
-    int numCoreXtals  = numXtals - momentsAnalysis.getNumDroppedPoints();
-    
-    // Get the iterative moments centroid and axis from iterations
+    // Get all the variables that need to be grabbed before the last iteration
+    // (with all the xtals) is performed. This include the statistics on the iterations,
+    // the centroid/axis, the longitudinal skewness and the full cluster length.
     centroid = momentsAnalysis.getCentroid();
-    axis     = momentsAnalysis.getAxis();
+    axis = momentsAnalysis.getAxis();
+    int numIterations = momentsAnalysis.getNumIterations();
+    int numCoreXtals = numXtals - momentsAnalysis.getNumDroppedPoints();
+    double longSkewness = momentsAnalysis.getLongSkewness();
+    double fullLength = momentsAnalysis.getFullLength();
 
-    // Recalculate the moments going back to using all the data points but with
-    // the iterated moments centroid.
+    // That done, recalculate the moments going back to using all the data points
+    // but with the iterated moments centroid.
     if ( numIterations > 1 ) {
       chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid, coreRadius);
     }
@@ -379,7 +381,6 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     double longRms  = momentsAnalysis.getLongRms();
     double transRms = momentsAnalysis.getTransRms();
     double longRmsAsym = momentsAnalysis.getLongRmsAsym();
-    double longSkewness = momentsAnalysis.getLongSkewness();
     double coreEnergyFrac = momentsAnalysis.getCoreEnergyFrac();
     
     if ( !isFinite(longRms) ) {
@@ -400,7 +401,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
 				   numIterations, numCoreXtals, numXtals,
 				   transRms, longRms, longRmsAsym, longSkewness,
-				   coreEnergyFrac, -1., -1.);
+				   coreEnergyFrac, fullLength, -1.);
     cluster->setMomParams(momParams);
 
     // and finally the CalFitParams container.

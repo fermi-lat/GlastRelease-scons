@@ -100,6 +100,7 @@ class CalMomentsAnalysis
   inline const Point  getCentroid()         const { return m_centroid; }
   inline const Vector getMoments()          const { return m_moment; }
   inline const Vector getAxis(int axis=1)   const { return m_axis[axis]; }
+  inline const double getFullLength()       const { return m_fullLength; }
   inline const double getLongRms()          const { return m_longRms; }
   inline const double getTransRms()         const { return m_transRms; }
   inline const double getLongRmsAsym()      const { return m_longRmsAsym; }
@@ -113,11 +114,14 @@ class CalMomentsAnalysis
   /// Sum of weights in moments analysis 
   double m_weightSum;
   /// Centroid of the cluster.
-  Point  m_centroid;
+  Point m_centroid;
   /// Vector of calculated moments.
   Vector m_moment;
   /// Axis corresponding to the principal moments.
   Vector m_axis[3];
+  /// The distance (in radiation lengths) between the positions of the first and
+  /// the last xtal, projected along the main axis of the cluster.
+  double m_fullLength;
   /// The Longitudinal rms of the distribution of points.
   double m_longRms;
   /// The transverse rms of the distribution of points.
@@ -129,8 +133,8 @@ class CalMomentsAnalysis
   /// Fractional energy sum within 1 (or wathever) Moliere radius from the cluster axis.
   double m_coreEnergyFrac;
   /// Statistics on iterations (if done)
-  int    m_numIterations;
+  int m_numIterations;
   /// Number of calorimeter hits dropped during the iterations.
-  int    m_numDroppedPoints;
+  int m_numDroppedPoints;
 };
 

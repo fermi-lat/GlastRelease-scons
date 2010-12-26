@@ -13,10 +13,11 @@ void convert( const Event::CalMomParams & tdsMomParams, CalMomParams & rootMomPa
         convert(tdsMomParams.getAxis()),
         tdsMomParams.getxDirxDir(),tdsMomParams.getxDiryDir(),tdsMomParams.getxDirzDir(),
         tdsMomParams.getyDiryDir(),tdsMomParams.getyDirzDir(),tdsMomParams.getzDirzDir(),
-	tdsMomParams.getNumIterations(),tdsMomParams.getNumCoreXtals(),tdsMomParams.getNumXtals(),
+	tdsMomParams.getNumIterations(),tdsMomParams.getNumCoreXtals(),
+	tdsMomParams.getNumXtals(),
 	tdsMomParams.getTransRms(),tdsMomParams.getLongRms(),tdsMomParams.getLongRmsAsym(),
-	tdsMomParams.getLongSkewness(),tdsMomParams.getCoreEnergyFrac(),tdsMomParams.getdEdxAverage(),
-	tdsMomParams.getdEdxSpread() ) ;
+	tdsMomParams.getLongSkewness(),tdsMomParams.getCoreEnergyFrac(),
+	tdsMomParams.getFullLength(),tdsMomParams.getdEdxSpread() ) ;
  }
  
 void convert( const CalMomParams & rootMomParams, Event::CalMomParams & tdsMomParams )
@@ -31,10 +32,11 @@ void convert( const CalMomParams & rootMomParams, Event::CalMomParams & tdsMomPa
         rootAxis.X(),rootAxis.Y(),rootAxis.Z(),
         rootMomParams.getxDirxDir(), rootMomParams.getxDiryDir(), rootMomParams.getxDirzDir(),
         rootMomParams.getyDiryDir(), rootMomParams.getyDirzDir(), rootMomParams.getzDirzDir(),
-	rootMomParams.getNumIterations(),rootMomParams.getNumCoreXtals(),rootMomParams.getNumXtals(),
+	rootMomParams.getNumIterations(),rootMomParams.getNumCoreXtals(),
+	rootMomParams.getNumXtals(),
 	rootMomParams.getTransRms(),rootMomParams.getLongRms(),rootMomParams.getLongRmsAsym(),
-	rootMomParams.getLongSkewness(),rootMomParams.getCoreEnergyFrac(),rootMomParams.getdEdxAverage(),
-	rootMomParams.getdEdxSpread() ) ;
+	rootMomParams.getLongSkewness(),rootMomParams.getCoreEnergyFrac(),
+	rootMomParams.getFullLength(),rootMomParams.getdEdxSpread() ) ;
 }
 
 }
