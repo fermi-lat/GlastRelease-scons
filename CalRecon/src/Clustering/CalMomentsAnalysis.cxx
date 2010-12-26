@@ -135,6 +135,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     chisq = 0.; 
     double tmin = 9999.;
     double tmax = -9999.;
+    double variance = 0.;
     double skewness = 0.;
     double coreEnergy = 0.;
     for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
@@ -150,11 +151,15 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 	if ( coordAlongAxis > tmax ) {
 	  tmax = coordAlongAxis;
 	}
+	variance += dataPoint.getWeight()*coordAlongAxis*coordAlongAxis;
 	skewness += dataPoint.getWeight()*coordAlongAxis*coordAlongAxis*coordAlongAxis;
 	if ( distToAxis < coreRadius ) {
 	  coreEnergy += dataPoint.getWeight();
 	}
       }
+    variance /= m_weightSum;
+    skewness /= m_weightSum;
+    skewness /= pow(variance, 1.5);
 
     // Scale the chisquare by number of data points.
     chisq /= weightSum * dataVec.size();
@@ -173,7 +178,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     m_longRms        = sqrt((longMag1 + longMag2) / (2.*m_weightSum));
     m_transRms       = sqrt(transMag/m_weightSum);
     m_longRmsAsym    = (longMag1 - longMag2)/(longMag1 + longMag2);
-    m_longSkewness   = skewness/(m_weightSum*m_longRms*m_longRms*m_longRms);
+    m_longSkewness   = skewness;
     m_coreEnergyFrac = coreEnergy/m_weightSum;
   }
 
