@@ -227,7 +227,7 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   double xtalEneRms = -1.;
   double xtalEneSkewness = 0.;
     
-  if ( numEneMomXtals > 0 ) {
+  if ( numEneMomXtals > 1 ) {
     xtalEneMomSum  /= numEneMomXtals;
     xtalEneMomSum2 /= numEneMomXtals;
     xtalEneMomSum3 /= numEneMomXtals;
@@ -240,10 +240,10 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       xtalEneSkewness /= (xtalEneRms*xtalEneRms*xtalEneRms);
     }
     if ( !isFinite(xtalEneRms) ) {
-      throw CalException("CalMomentsAnalysis computed infinite value for xtalEneRms") ;
+      throw CalException("MomentsClusterInfo computed infinite value for xtalEneRms") ;
     }
     if ( !isFinite(xtalEneSkewness) ) {
-      throw CalException("CalMomentsAnalysis computed infinite value for xtalEneSkewness") ;
+      throw CalException("MomentsClusterInfo computed infinite value for xtalEneSkewness") ;
     }
   }
 
