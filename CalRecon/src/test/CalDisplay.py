@@ -126,6 +126,7 @@ class CalDisplay(ReconReader):
                              relFilePath, cut)
         self.Canvas = getFullCanvas('CalDisplay', 'CAL display')
         self.Cluster = None
+        self.XtalEneHist = None
 
     def __drawXtals(self):
         maxWeight = self.Cluster.getMSTreeParams().getMaxXtalEnergy()
@@ -178,6 +179,23 @@ class CalDisplay(ReconReader):
         self.YZCentrMarker.Draw()
         self.YZDirection.Draw()
 
+    def __drawXtalEneDist(self, truncFact = 0.02):
+        if self.XtalEneHist is not None:
+            self.XtalEneHist.Delete()
+        maxWeight = self.Cluster.getMSTreeParams().getMaxXtalEnergy()
+        totalEnergy = self.Cluster.getXtalsParams().getXtalRawEneSum()
+        self.XtalEneHist = ROOT.TH1F('xtalEneDist', 'Xtal energy distribution',
+                                     25, 0, 1.1*maxWeight)
+        for xtalData in self.XtalList:
+            xtalEnergy = xtalData.getEnergy()
+            if xtalEnergy > truncFact*totalEnergy:
+                self.XtalEneHist.Fill(xtalEnergy)
+        self.Canvas.cd(2).cd(1)
+        ROOT.gPad.SetLogy(True)
+        self.XtalEneHist.SetXTitle('Xtal energy (MeV)')
+        self.XtalEneHist.GetXaxis().SetTitleOffset(2.00)
+        self.XtalEneHist.Draw()
+
     def __drawLongProfile(self, transScale = 0.9):
         self.LongProfile = ROOT.TGraph()
         self.LongProfile.SetMarkerStyle(24)
@@ -194,7 +212,7 @@ class CalDisplay(ReconReader):
                 self.LongProfile.SetPoint(i, momentsData.CoordAlongAxis,
                                           momentsData.getWeight())
             i += 1
-        self.Canvas.cd(2).cd(1)
+        self.Canvas.cd(2).cd(2)
         self.LongProfile.GetXaxis().SetTitle('Longitudinal position (mm)')
         self.LongProfile.GetXaxis().SetTitleOffset(2.00)
         self.LongProfile.GetYaxis().SetTitle('Xtal energy (MeV)')
@@ -210,7 +228,8 @@ class CalDisplay(ReconReader):
         self.__drawXtals()
         # Draw direction/centroid from the moments analysis.
         self.__drawCalMomParams()
-        # Draw the longitudinal profile(s).
+        # Draw the various histograms/graphs.
+        self.__drawXtalEneDist()
         self.__drawLongProfile()
         # Update canvas.
         self.Canvas.cd()

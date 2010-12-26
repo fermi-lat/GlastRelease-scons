@@ -95,6 +95,8 @@ class ReconReader:
         return self.ReconChain.GetEntries()
 
     def getEntry(self, i):
+        if i >= self.getEntries():
+            sys.exit('No more events, bye!')
         self.ReconChain.GetEvent(i)
         if self.RelationsChain is not None:
             self.RelationsChain.GetEvent(i)
