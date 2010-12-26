@@ -156,10 +156,10 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 	int tower = dataPoint.getTower();
 	double xdir = fabs(m_axis[1].x());
 	double ydir = fabs(m_axis[1].y());
-	if ( xdir > 0.01 ) {
+	if ( xdir > 0.05 ) {
 	  t += 51.3*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
 	}
-	if ( ydir > 0.01 ) {
+	if ( ydir > 0.05 ) {
 	  t += 51.3*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
 	}
 	// End of the "embarassing" part of the code (Luca Baldini, Dec. 26, 2010).
