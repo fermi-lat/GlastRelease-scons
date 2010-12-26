@@ -135,31 +135,58 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     chisq = 0.; 
     double tmin = 9999.;
     double tmax = -9999.;
-    double variance = 0.;
-    double skewness = 0.;
+    double tave = 0.;
+    double tvar = 0.;
+    double tskew = 0.;
     double coreEnergy = 0.;
     for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
       {
 	CalMomentsData& dataPoint = *vecIter;
-	double distToAxis = dataPoint.calcDistToAxis(m_centroid,m_axis[1]);
-	double coordAlongAxis = dataPoint.calcCoordAlongAxis(m_centroid,m_axis[1]);
+	double distToAxis = dataPoint.calcDistToAxis(m_centroid, m_axis[1]);
+	double weight = dataPoint.getWeight();
+	double t = dataPoint.calcCoordAlongAxis(m_centroid, m_axis[1]);
 
+	// This is a rough attempt to correct for the gaps in the CAL modules;
+	// the gaps in the x and y directions are treated separately so the whole
+	// thing is really incorrect and, if these quantities will ever turn out
+	// to be useful we'll probably have to devise something smarter, here
+	// (i. e. use a real propagator).
+	// Also the gap between towers (51.3 mm) should not be hard-coded but
+	// retrieved from the appropriate service.
+	int tower = dataPoint.getTower();
+	double xdir = fabs(m_axis[1].x());
+	double ydir = fabs(m_axis[1].y());
+	if ( xdir > 0.01 ) {
+	  t += 51.3*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
+	}
+	if ( ydir > 0.01 ) {
+	  t += 51.3*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
+	}
+	// End of the "embarassing" part of the code (Luca Baldini, Dec. 26, 2010).
+	
 	chisq += dataPoint.getWeight()*distToAxis*distToAxis;
-	if ( coordAlongAxis < tmin ) {
-	  tmin = coordAlongAxis;
+	if ( t < tmin ) {
+	  tmin = t;
 	}
-	if ( coordAlongAxis > tmax ) {
-	  tmax = coordAlongAxis;
+	if ( t > tmax ) {
+	  tmax = t;
 	}
-	variance += dataPoint.getWeight()*coordAlongAxis*coordAlongAxis;
-	skewness += dataPoint.getWeight()*coordAlongAxis*coordAlongAxis*coordAlongAxis;
+	tave  += weight * t;
+	tvar  += weight * t*t;
+	tskew += weight * t*t*t;
 	if ( distToAxis < coreRadius ) {
 	  coreEnergy += dataPoint.getWeight();
 	}
       }
-    variance /= m_weightSum;
-    skewness /= m_weightSum;
-    skewness /= pow(variance, 1.5);
+    // Normalize all this garbage and refer to centroid.
+    tave  /= m_weightSum;
+    tvar  /= m_weightSum;
+    tvar  -= tave*tave;
+    tskew /= m_weightSum;
+    tskew -= (3*tvar*tave + tave*tave*tave);
+    if ( tvar > 0. ) {
+      tskew /= pow(tvar, 1.5);
+    }
 
     // Scale the chisquare by number of data points.
     chisq /= weightSum * dataVec.size();
@@ -178,7 +205,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     m_longRms        = sqrt((longMag1 + longMag2) / (2.*m_weightSum));
     m_transRms       = sqrt(transMag/m_weightSum);
     m_longRmsAsym    = (longMag1 - longMag2)/(longMag1 + longMag2);
-    m_longSkewness   = skewness;
+    m_longSkewness   = tskew;
     m_coreEnergyFrac = coreEnergy/m_weightSum;
   }
 

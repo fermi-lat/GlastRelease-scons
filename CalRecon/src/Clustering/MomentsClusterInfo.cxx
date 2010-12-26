@@ -310,7 +310,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
       }
       Point CrystalPos(xPos, yPos, zPos);
       
-      CalMomentsData momentsData(CrystalPos, recData->getEnergy(), 0.);
+      CalMomentsData momentsData(CrystalPos, recData->getEnergy(),
+				 recData->getPackedId().getTower());
 
       // TU: Bad design on my part but this method must be called. 
       double distToAxis = momentsData.calcDistToAxis(centroid, axis);

@@ -145,15 +145,15 @@ class CalDisplay(ReconReader):
         self.LongProfileRef.SetMarkerSize(0.8)
         axis = self.Cluster.getMomParams().getAxis()
         #print axis.x(), axis.y(), axis.z()
+        weightSum = 0.
         tsum = 0.
         tsum2 = 0.
         tsum3 = 0.
         transRms = self.Cluster.getMomParams().getTransRms()
-        i = 0
+        n = 0
         for momentsData in self.MomentsDataList:
             dist = momentsData.DistToAxis
             if dist < transRms*transScale:
-                t0 = momentsData.CoordAlongAxis
                 t = momentsData.CoordAlongAxis
                 # Get the tower Id and the position into the grid.
                 towerId = momentsData.getTower()
@@ -166,11 +166,25 @@ class CalDisplay(ReconReader):
                     t += numGapsX*CAL_TOWER_GAP/xdir
                 if ydir > 0.01:
                     t += numGapsY*CAL_TOWER_GAP/ydir
-                #print numGapsX, numGapsY, t, t0, t-t0
                 # Normalize to the X0 in CsI.
                 t /= CSI_RAD_LEN
-                self.LongProfileRef.SetPoint(i, t, momentsData.getWeight())
-                i += 1
+                energy = momentsData.getWeight()
+                weightSum += energy
+                tsum  += energy*t
+                tsum2 += energy*t*t
+                tsum3 += energy*t*t*t
+                self.LongProfileRef.SetPoint(n, t, energy)
+                n += 1
+        if weightSum > 0:
+            tsum  /= weightSum
+            tsum2 /= weightSum
+            tsum3 /= weightSum
+            if tsum2 > 0.:
+                mean = tsum
+                var = tsum2 - mean*mean
+                skew = tsum3 - 3*var*mean - mean*mean*mean
+                skew /= (var**1.5)
+            
         self.Canvas.cd(2).cd(3)
         self.LongProfileRef.GetXaxis().SetTitle('Longitudinal position (X0)')
         self.LongProfileRef.GetXaxis().SetTitleOffset(2.00)
