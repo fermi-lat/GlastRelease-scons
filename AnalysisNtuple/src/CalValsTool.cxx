@@ -735,7 +735,7 @@ StatusCode CalValsTool::initialize()
     addItem("Cal1MomZCntr",  &CAL_Clu1_MomZCntr);
     addItem("Cal1MomXDir",  &CAL_Clu1_MomXDir);
     addItem("Cal1MomYDir",  &CAL_Clu1_MomYDir);
-    addItem("Cal1MomXDir",  &CAL_Clu1_MomZDir);
+    addItem("Cal1MomZDir",  &CAL_Clu1_MomZDir);
     addItem("Cal1MomNumIterations",  &CAL_Clu1_MomNumIterations);
     addItem("Cal1MomNumCoreXtals",  &CAL_Clu1_MomNumCoreXtals);
     addItem("Cal1TransRms",  &CAL_Clu1_MomTransRms);
