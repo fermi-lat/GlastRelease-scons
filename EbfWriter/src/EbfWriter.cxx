@@ -349,7 +349,7 @@ StatusCode EbfWriter::execute()
     if(pCals) {
       if(!(pCals->empty())){
         Event::CalCluster* calCluster = pCals->front();
-        obsEn  = calCluster->getCalParams().getEnergy();
+        obsEn  = calCluster->getMomParams().getEnergy();
       }
     } else {
       //           log << MSG::WARNING << "No calCluster found: No Obs. will be stored in EBF file header" << endreq; 
