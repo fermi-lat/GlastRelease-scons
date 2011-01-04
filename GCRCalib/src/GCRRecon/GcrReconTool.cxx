@@ -346,7 +346,7 @@ float GcrReconTool::getCALEnergyRaw()
     if (!pCals) return -1.0;
     if (pCals->empty()) return -2.0;
     Event::CalCluster* calCluster = pCals->front();
-    CAL_EnergyRaw  = calCluster->getCalParams().getEnergy();
+    CAL_EnergyRaw  = calCluster->getMomParams().getEnergy();
     if(CAL_EnergyRaw<1.0) return -3.0;
 
     m_log << MSG::DEBUG << "CAL_EnergyRaw=" << CAL_EnergyRaw << endreq;
