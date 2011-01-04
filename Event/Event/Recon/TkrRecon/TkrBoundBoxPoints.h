@@ -24,70 +24,94 @@
 #include "Event/RelTable/RelTable.h"
 
 // Declare Gaudi object interface ID
-static const CLID& CLID_TkrBoundBoxPoints = InterfaceID("TkrBoundBoxPoints",  1, 0);
+static const CLID& CLID_TkrBoundBoxPoint = InterfaceID("TkrBoundBoxPoint",  1, 0);
 
 namespace Event {  // NameSpace
 
-class TkrBoundBoxPoints: virtual public ContainedObject
+class TkrBoundBoxPoint: virtual public ContainedObject
 {
 public:
     // constructors
-    TkrBoundBoxPoints() : m_firstVecPoint(0), m_secondVecPoint(0), m_separation(0.) {}
-    TkrBoundBoxPoints(const Event::TkrVecPoint* firstVecPoint,
-                      const Event::TkrVecPoint* secondVecPoint,
-                      const double              separation) 
-                      : m_firstVecPoint(firstVecPoint), 
-                        m_secondVecPoint(secondVecPoint), 
-                        m_separation(separation) 
+    TkrBoundBoxPoint() : m_parent(0), m_left(0), m_right(0), m_tkrVecPoint(0), m_position(0.,0.,0.) {}
+    TkrBoundBoxPoint(const Event::TkrBoundBoxPoint* parent,
+                     const Event::TkrBoundBoxPoint* left,
+                     const Event::TkrBoundBoxPoint* right,
+                     const Event::TkrVecPoint*      tkrVecPoint,
+                     const Point&                   position,
+                     const double&                  aveSeparation) 
+                      : m_parent(parent),
+                        m_left(left),
+                        m_right(right),
+                        m_tkrVecPoint(tkrVecPoint), 
+                        m_position(position),
+                        m_aveSeparation(aveSeparation)
     {}
 
     //! Retrieve pointer to class defininition structure
-    virtual const CLID& clID()    const   { return TkrBoundBoxPoints::classID(); }
-    static  const CLID& classID()         { return CLID_TkrBoundBoxPoints; }
+    virtual const CLID& clID()    const   { return TkrBoundBoxPoint::classID(); }
+    static  const CLID& classID()         { return CLID_TkrBoundBoxPoint; }
 
     // destructor
-    virtual ~TkrBoundBoxPoints()
+    virtual ~TkrBoundBoxPoint()
     {
         return;
     }
     /// @name Data set methods
     //@{
-    /// Allow to set the first TkrVecPoint
-    void setFirstTkrVecPoint(const Event::TkrVecPoint* vecPoint)  {m_firstVecPoint = vecPoint;}
-    /// Allow to set the second TkrVecPoint
-    void setSecondTkrVecPoint(const Event::TkrVecPoint* vecPoint) {m_firstVecPoint = vecPoint;}
-    /// Allow to set the separation between them
-    void setSeparation(const double separation)                   {m_separation    = separation;}
+    /// Set the parent point
+    void setBBParent(const Event::TkrBoundBoxPoint* parent)   {m_parent        = parent;}
+    /// Set the left daughter
+    void setLeft(const Event::TkrBoundBoxPoint* left)         {m_left          = left;}
+    /// Set the right daughter
+    void setRight(const Event::TkrBoundBoxPoint* right)       {m_right         = right;}
+    /// Allow to set the TkrVecPoint
+    void setTkrVecPoint(const Event::TkrVecPoint* vecPoint)   {m_tkrVecPoint   = vecPoint;}
+    /// Allow to set the position
+    void setPosition(const Point& position)                   {m_position      = position;}
+    /// Allow to set the average separation up to this point
+    void setAveSeparation(const double& aveSeparation)        {m_aveSeparation = aveSeparation;}
     //@}
 
     /// @name Data access methods
     //@{
-    /// Return the constant pointer to the first TkrVecPoint
-    const Event::TkrVecPoint* getFirstTkrVecPoint()  const {return m_firstVecPoint;}
-    /// Return the constant pointer to the second TkrVecPoint
-    const Event::TkrVecPoint* getSecondTkrVecPoint() const {return m_secondVecPoint;}
-    /// Return the separation between the two
-    const double              getSeparation()        const {return m_separation;}
+    /// Traverse up the tree to the parent
+    const Event::TkrBoundBoxPoint* getParent()        const {return m_parent;}
+    /// Traverse down to the left daughter
+    const Event::TkrBoundBoxPoint* getLeft()          const {return m_left;}
+    /// Traverse downn to the right daughter
+    const Event::TkrBoundBoxPoint* getRight()         const {return m_right;}
+    /// Return the constant pointer to the associated TkrVecPoint (if one)
+    const Event::TkrVecPoint*      getTkrVecPoint()   const {return m_tkrVecPoint;}
+    /// Return the position of this BB point
+    const Point&                   getPosition()      const {return m_position;}
+    /// Return the average separation up to this point
+    const double                   getAveSeparation() const {return m_aveSeparation;}
     //@}
 
 private:
 
-    // data members
-    const Event::TkrVecPoint* m_firstVecPoint;
-    const Event::TkrVecPoint* m_secondVecPoint;
-    double                    m_separation;
+    // For traversing up and down the binary tree structure
+    const Event::TkrBoundBoxPoint* m_parent;
+    const Event::TkrBoundBoxPoint* m_left;
+    const Event::TkrBoundBoxPoint* m_right;
+
+    // Data members
+    const Event::TkrVecPoint*      m_tkrVecPoint;
+    Point                          m_position;
+    double                         m_aveSeparation;
 };    
 
 // Typedefs for gaudi container for these objects
-typedef ObjectList<TkrBoundBoxPoints>        TkrBoundBoxPointsCol;
+typedef ObjectList<TkrBoundBoxPoint>         TkrBoundBoxPointsCol;
 typedef TkrBoundBoxPointsCol::iterator       TkrBoundBoxPointsColPtr;
 typedef TkrBoundBoxPointsCol::const_iterator TkrBoundBoxPointsColConPtr;
 
 class TkrBoundBox;
 
-typedef RelTable<TkrBoundBoxPoints, TkrBoundBox>     TkrBoundBoxPointsToBoxTab;
-typedef Relation<TkrBoundBoxPoints, TkrBoundBox>     TkrBoundBoxPointsToBoxRel;
-typedef RelationList<TkrBoundBoxPoints, TkrBoundBox> TkrBoundBoxPointsToBoxTabList;
+// Typedefs for relating to bounding boxes
+typedef RelTable<TkrBoundBoxPoint, TkrBoundBox>     TkrBoundBoxPointsToBoxTab;
+typedef Relation<TkrBoundBoxPoint, TkrBoundBox>     TkrBoundBoxPointsToBoxRel;
+typedef RelationList<TkrBoundBoxPoint, TkrBoundBox> TkrBoundBoxPointsToBoxTabList;
 
 }; // Namespace
 

@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <map>
+#include <string>
 
 
 namespace Event { //Namespace Event
@@ -71,7 +72,7 @@ namespace Event { //Namespace Event
     /// Name of the producer.
     std::string m_producerName;
     /// The std::map containing the probability values for the different topologies.
-    std::map <std::string, double> m_probMap;
+    std::map<std::string, double> m_probMap;
   };
 
 

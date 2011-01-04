@@ -39,7 +39,7 @@ void Event::CalCluster::writeOut(MsgStream& stream) const
 {
   std::stringstream s;
   fillStream(s);
-  stream << s;
+  stream << s.str();
 }
 
 std::ostream& Event::CalCluster::fillStream(std::ostream& s) const
