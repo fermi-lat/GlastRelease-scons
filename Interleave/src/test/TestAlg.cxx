@@ -69,6 +69,7 @@ private:
         , CTBBestXDir, CTBBestYDir, CTBBestZDir
         , CTBBestEnergyProb, CTBBestEnergyRatio, CTBCORE
         , CTBClassLevel, CTBParticleType
+        , Cal1MomXDir, Cal1MomYDir, Cal1MomZDir
         ;
 
 
@@ -92,6 +93,7 @@ TestAlg::TestAlg(const std::string& name, ISvcLocator* pSvcLocator)
 , CTBBestEnergy(1000.)
 , Tkr1FirstLayer (6)
 , CTBBestXDir(0), CTBBestYDir(0), CTBBestZDir(1.)
+, Cal1MomXDir(0.), Cal1MomYDir(0.), Cal1MomZDir(1.)
 {
 
 }
@@ -152,6 +154,9 @@ StatusCode TestAlg::initialize() {
     m_rootTupleSvc->addItem(treename,"CTBCORE",            &CTBCORE );
     m_rootTupleSvc->addItem(treename,"CTBClassLevel",      &CTBClassLevel );
     m_rootTupleSvc->addItem(treename,"CTBParticleType",    &CTBParticleType );
+    m_rootTupleSvc->addItem(treename,"Cal1MomXDir",        &Cal1MomXDir );
+    m_rootTupleSvc->addItem(treename,"Cal1MomYDir",        &Cal1MomYDir );
+    m_rootTupleSvc->addItem(treename,"Cal1MomZDir",        &Cal1MomZDir );
 
     return sc;
 }
