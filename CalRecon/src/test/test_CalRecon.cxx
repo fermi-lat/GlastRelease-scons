@@ -77,7 +77,7 @@ StatusCode test_CalRecon::execute() {
     for ( cluster = clusCol->begin() ;
           cluster != clusCol->end() ;
           ++cluster ) {
-        log<<MSG::INFO<<"Energy "<<(*cluster)->getCalParams().getEnergy()<<endreq ;
+        log<<MSG::INFO<<"Energy "<<(*cluster)->getMomParams().getEnergy()<<endreq ;
         log<<MSG::INFO<<"NbTruncXtals " <<(*cluster)->getNumTruncXtals()<<endreq ;
         log<<MSG::INFO<<"Position"
           <<" "<<(*cluster)->getPosition().x() 
