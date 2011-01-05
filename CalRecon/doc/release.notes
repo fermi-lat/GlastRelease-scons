@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-12-03 04-Jan-11 TU  Fix compile error in test code
  CalRecon-06-12-02  4-Jan-11 TU  Updates from Luca for clustering and cluster selection
  CalRecon-06-12-01 05-Nov-10 TU  Bringing new clustering and cluster classification code
  CalRecon-06-11-02 01-Sep-10 jrb Fix thinko in src/test/singleOptions.txt
