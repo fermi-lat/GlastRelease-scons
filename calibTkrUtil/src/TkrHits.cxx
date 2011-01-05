@@ -1177,7 +1177,7 @@ bool TkrHits::MIPfilter()
   for( int cl=0; cl!=numClusters; cl++){
     CalCluster* calCluster = dynamic_cast<CalCluster*>(clusters->At(cl));
     if(calCluster) {
-      m_calEnergyRaw += calCluster->getParams().getEnergy();
+      m_calEnergyRaw += calCluster->getMomParams().getEnergy();
       num++;
     }
   }
