@@ -74,11 +74,32 @@ void CalXtalsParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* ran
    init(1,2,3,4.,5.,6.,7.);
  }
 
-Bool_t CalXtalsParams::CompareInRange( const CalXtalsParams & cp, const std::string & name ) const
+Bool_t CalXtalsParams::CompareInRange( const CalXtalsParams & xp, const std::string & name ) const
 {  
   Bool_t result = true ;
-  // Not implemented, yet.
-  std::cout << "CalXtalsParams::CompareInRange() not implemented, yet." << std::endl;
+  result = rootdatautil::CompareInRange(getNumXtals(),xp.getNumXtals(),
+					"Number of xtals") && result ;
+  result = rootdatautil::CompareInRange(getNumTruncXtals(),xp.getNumTruncXtals(),
+					"Truncated number of xtals") && result ;
+  result = rootdatautil::CompareInRange(getNumSaturatedXtals(),xp.getNumSaturatedXtals(),
+					"Number of saturated xtals") && result ;
+  result = rootdatautil::CompareInRange(getXtalRawEneSum(),xp.getXtalRawEneSum(),
+					"Raw xtal energy sum") && result ;
+  result = rootdatautil::CompareInRange(getXtalCorrEneSum(),xp.getXtalCorrEneSum(),
+					"Corrected xtal energy sum") && result ;
+  result = rootdatautil::CompareInRange(getXtalEneRms(),xp.getXtalEneRms(),
+					"Rms of xtal energy distribution") && result ;
+  result = rootdatautil::CompareInRange(getXtalEneSkewness(),xp.getXtalEneSkewness(),
+					"Skewness of xtal energy distribution") && result ;
+  
+  if (!result) {
+    if ( name == "" ) {
+      std::cout<<"Comparison ERROR for CalXtalsParams"<<std::endl ;
+    }
+    else {
+      std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+  }
+  
   return result;
 }
-

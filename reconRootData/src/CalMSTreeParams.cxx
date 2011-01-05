@@ -82,26 +82,35 @@ void CalMSTreeParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* ra
 // CalMSTreeParams::CompareInRange, just for tests
 Bool_t CalMSTreeParams::CompareInRange( const CalMSTreeParams & tp, const std::string & name ) const {
     
-    Bool_t result = true ;
-    
-    result = rootdatautil::CompareInRange(getTotalEnergy()	  ,tp.getTotalEnergy()        ,"Total Energy") && result ;
-    result = rootdatautil::CompareInRange(getMaxXtalEnergy()      ,tp.getMaxXtalEnergy()      ,"Max Xtal Energy") && result ;
-    result = rootdatautil::CompareInRange(getNumberOfEdges()      ,tp.getNumberOfEdges()      ,"Number of Edges") && result ;
-    result = rootdatautil::CompareInRange(getMinEdgeLength()	  ,tp.getMinEdgeLength()      ,"Min Edge Length") && result ;
-    result = rootdatautil::CompareInRange(getMaxEdgeLength()	  ,tp.getMaxEdgeLength()      ,"Max Edge Length") && result ;
-    result = rootdatautil::CompareInRange(getMeanEdgeLength()	  ,tp.getMeanEdgeLength()     ,"Mean of Edge Lengths") && result ;
-    result = rootdatautil::CompareInRange(getMeanEdgeLengthTrunc(),tp.getMeanEdgeLengthTrunc(),"Truncated Mean of Edge Lengths") && result ;
-    result = rootdatautil::CompareInRange(getRmsEdgeLength()	  ,tp.getRmsEdgeLength()      ,"Rms of Edge Lengths") && result ;
-    result = rootdatautil::CompareInRange(getRmsEdgeLengthTrunc() ,tp.getRmsEdgeLengthTrunc() ,"Truncated Rms of Edge Lengths") && result ;
-
-    if (!result) {
-        if ( name == "" ) {
-            std::cout<<"Comparison ERROR for CalMSTreeParams"<<std::endl ;
-        }
-        else {
-            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
-        }
+  Bool_t result = true ;
+  
+  result = rootdatautil::CompareInRange(getTotalEnergy(),tp.getTotalEnergy(),
+					"Total energy") && result ;
+  result = rootdatautil::CompareInRange(getMaxXtalEnergy(),tp.getMaxXtalEnergy(),
+					"Maximum xtal energy") && result ;
+  result = rootdatautil::CompareInRange(getNumberOfEdges(),tp.getNumberOfEdges(),
+					"Number of edges") && result ;
+  result = rootdatautil::CompareInRange(getMinEdgeLength(),tp.getMinEdgeLength(),
+					"Minimum edge length") && result ;
+  result = rootdatautil::CompareInRange(getMaxEdgeLength(),tp.getMaxEdgeLength(),
+					"Maximum edge length") && result ;
+  result = rootdatautil::CompareInRange(getMeanEdgeLength(),tp.getMeanEdgeLength(),
+					"Mean edge lengths") && result ;
+  result = rootdatautil::CompareInRange(getMeanEdgeLengthTrunc(),tp.getMeanEdgeLengthTrunc(),
+					"Truncated mean of edge lengths") && result ;
+  result = rootdatautil::CompareInRange(getRmsEdgeLength(),tp.getRmsEdgeLength(),
+					"RMS of edge lengths") && result ;
+  result = rootdatautil::CompareInRange(getRmsEdgeLengthTrunc(),tp.getRmsEdgeLengthTrunc(),
+					"Truncated RMS of edge lengths") && result ;
+  
+  if (!result) {
+    if ( name == "" ) {
+      std::cout<<"Comparison ERROR for CalMSTreeParams"<<std::endl ;
     }
-    return result ;
-        
+    else {
+      std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+  }
+  return result ;
+  
 }

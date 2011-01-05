@@ -77,8 +77,26 @@ void CalClassParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* ran
 Bool_t CalClassParams::CompareInRange( const CalClassParams & cp, const std::string & name ) const
 {  
   Bool_t result = true ;
-  // Not implemented, yet.
-  std::cout << "CalClassParams::CompareInRange() not implemented, yet." << std::endl;
+
+  result = rootdatautil::CompareInRange(getProducerName(),cp.getProducerName(),
+					"Producer name") && result ;
+  std::map <std::string, double>::const_iterator iter;
+  
+  for (iter = getProbMap().begin(); iter != getProbMap().end(); iter++)
+    {
+      result = rootdatautil::CompareInRange((*iter).second,cp.getProb((*iter).first),
+					    (*iter).first) && result ;
+    }
+
+  if (!result) {
+    if ( name == "" ) {
+      std::cout<<"Comparison ERROR for CalClassParams"<<std::endl ;
+    }
+    else {
+      std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+  }
+  
   return result;
 }
 

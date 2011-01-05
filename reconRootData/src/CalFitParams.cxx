@@ -136,36 +136,28 @@ void CalFitParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randN
       TVector3(12.,13.,14.),15.,16.,17.,18.,19.,20.) ;
  }
 
-Bool_t CalFitParams::CompareInRange( const CalFitParams & cp, const std::string & name ) const {
+Bool_t CalFitParams::CompareInRange( const CalFitParams & fp, const std::string & name ) const {
     
-    Bool_t result = true ;
-    
-    result = rootdatautil::CompareInRange(getFitLayers(),cp.getFitLayers(),"Fit Layers") && result ;
-    result = rootdatautil::CompareInRange(getChiSquare(),cp.getChiSquare(),"ChiSquare") && result ;
-    result = rootdatautil::CompareInRange(getCentroid(),cp.getCentroid(),"Centroid") && result ;
-    result = rootdatautil::CompareInRange(getxPosxPos(),cp.getxPosxPos(),"xPosxPos") && result ;
-    result = rootdatautil::CompareInRange(getxPosyPos(),cp.getxPosyPos(),"xPosyPos") && result ;
-    result = rootdatautil::CompareInRange(getxPoszPos(),cp.getxPoszPos(),"xPoszPos") && result ;
-    result = rootdatautil::CompareInRange(getyPosyPos(),cp.getyPosyPos(),"yPosyPos") && result ;
-    result = rootdatautil::CompareInRange(getyPoszPos(),cp.getyPoszPos(),"yPoszPos") && result ;
-    result = rootdatautil::CompareInRange(getzPoszPos(),cp.getzPoszPos(),"zPoszPos") && result ;
-    result = rootdatautil::CompareInRange(getAxis(),cp.getAxis(),"Axis") && result ;
-    result = rootdatautil::CompareInRange(getxDirxDir(),cp.getxDirxDir(),"xDirxDir") && result ;
-    result = rootdatautil::CompareInRange(getxDiryDir(),cp.getxDiryDir(),"xDiryDir") && result ;
-    result = rootdatautil::CompareInRange(getxDirzDir(),cp.getxDirzDir(),"xDirzDir") && result ;
-    result = rootdatautil::CompareInRange(getyDiryDir(),cp.getyDiryDir(),"yDiryDir") && result ;
-    result = rootdatautil::CompareInRange(getyDirzDir(),cp.getyDirzDir(),"yDirzDir") && result ;
-    result = rootdatautil::CompareInRange(getzDirzDir(),cp.getzDirzDir(),"zDirzDir") && result ;
+  Bool_t result = true ;
+  
+  // First run the comparison on the members of the base class...
+  result = CalParams::CompareInRange(fp,name);
+  
+  // ...and finally on the other members.
+  result = rootdatautil::CompareInRange(getFitLayers(),fp.getFitLayers(),
+					"Number of fit layers") && result ;
+  result = rootdatautil::CompareInRange(getChiSquare(),fp.getChiSquare(),
+					"ChiSquare") && result ;
 
-    if (!result) {
-        if ( name == "" ) {
-            std::cout<<"Comparison ERROR for CalFitParams"<<std::endl ;
-        }
-        else {
-            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
-        }
+  if (!result) {
+    if ( name == "" ) {
+      std::cout<<"Comparison ERROR for CalFitParams"<<std::endl ;
     }
-    return result ;
+    else {
+      std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+  }
+  return result ;
         
 }
 

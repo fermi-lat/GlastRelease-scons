@@ -131,12 +131,44 @@ void CalMomParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randN
       22.,23.,24.,25.,26.,27.,28.) ;
  }
 
-Bool_t CalMomParams::CompareInRange( const CalMomParams & cp, const std::string & name ) const {
+Bool_t CalMomParams::CompareInRange( const CalMomParams & mp, const std::string & name ) const {
     
-    Bool_t result = true ;
-    /// To be implemented, based on the base class.
-    std::cout << "CalMomParams::CompareInRange() not implemented, yet." << std::endl;
-    return result ;
-        
+  Bool_t result = true ;
+
+  // First run the comparison on the members of the base class...
+  result = CalParams::CompareInRange(mp,name);
+  
+  // ...and finally on the other members.
+  result = rootdatautil::CompareInRange(getNumIterations(),mp.getNumIterations(),
+					"Number of iterations") && result ;
+  result = rootdatautil::CompareInRange(getNumCoreXtals(),mp.getNumCoreXtals(),
+					"Number of xtals used for axis/centroid") && result ;
+  result = rootdatautil::CompareInRange(getNumXtals(),mp.getNumXtals(),
+					"Total number of xtals") && result ;
+  result = rootdatautil::CompareInRange(getTransRms(),mp.getTransRms(),
+					"Transverse RMS") && result ;
+  result = rootdatautil::CompareInRange(getLongRms(),mp.getLongRms(),
+					"Longitudinal RMS") && result ;
+  result = rootdatautil::CompareInRange(getLongRmsAsym(),mp.getLongRmsAsym(),
+					"Longitudinal RMS asymmetry") && result ;
+  result = rootdatautil::CompareInRange(getLongSkewness(),mp.getLongSkewness(),
+					"Longitudinal skewness") && result ;
+  result = rootdatautil::CompareInRange(getCoreEnergyFrac(),mp.getCoreEnergyFrac(),
+					"Core energy fraction") && result ;
+  result = rootdatautil::CompareInRange(getFullLength(),mp.getFullLength(),
+					"Full cluster length") && result ;
+  result = rootdatautil::CompareInRange(getdEdxSpread(),mp.getdEdxSpread(),
+					"Spread in dE/dx along the cluster") && result ;
+  
+  if (!result) {
+    if ( name == "" ) {
+      std::cout<<"Comparison ERROR for CalMomParams"<<std::endl ;
+    }
+    else {
+      std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+    }
+  }
+  
+  return result ;
 }
 
