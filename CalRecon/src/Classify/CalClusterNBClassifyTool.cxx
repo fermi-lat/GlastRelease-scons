@@ -434,7 +434,8 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
         {
             try {
                 DOMNode* item = constList->item(iElt);
-                DOMElement* itemElt = dynamic_cast<DOMElement *>(item);
+//                DOMElement* itemElt = dynamic_cast<DOMElement *>(item);
+                DOMElement* itemElt = static_cast<DOMElement *>(item);
                 int bin = xmlBase::Dom::getIntAttribute(itemElt, "bin");
                 double emin = xmlBase::Dom::getDoubleAttribute(itemElt, "Emin");
                 double emax = xmlBase::Dom::getDoubleAttribute(itemElt, "Emax");
@@ -462,7 +463,8 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
         {
             try {
                 DOMNode* item = topoList->item(iElt);
-                DOMElement* itemElt = dynamic_cast<DOMElement *>(item);
+//                DOMElement* itemElt = dynamic_cast<DOMElement *>(item);
+                DOMElement* itemElt = static_cast<DOMElement *>(item);
                 // Get the name of the topology
                 const XMLCh* xmlchNamevalue = itemElt->getAttribute(xmlchName);
                 if (XMLString::stringLen(xmlchNamevalue) > 0 ) 
@@ -481,7 +483,8 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
                     {
                         try {
                             DOMNode* varitem = varList->item(iVars);
-                            DOMElement* varitemElt = dynamic_cast<DOMElement *>(varitem);
+//                           DOMElement* varitemElt = dynamic_cast<DOMElement *>(varitem);
+                            DOMElement* varitemElt = static_cast<DOMElement *>(varitem);
                             // Get the name of the variable name
                             const XMLCh* xmlVarNamevalue = varitemElt->getAttribute(xmlchName);
                             if (XMLString::stringLen(xmlVarNamevalue) > 0 ) 
@@ -502,7 +505,8 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
                                     PdfHisto hist;
                                     try {
                                         DOMNode* eneitem = eneList->item(iEne);
-                                        DOMElement* eneitemElt = dynamic_cast<DOMElement *>(eneitem);
+//                                        DOMElement* eneitemElt = dynamic_cast<DOMElement *>(eneitem);
+                                        DOMElement* eneitemElt = static_cast<DOMElement *>(eneitem);
           
                                         // Get the value of the energy bin
                                         intVal = xmlBase::Dom::getIntAttribute(eneitemElt, "bin");
@@ -513,8 +517,9 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
                                         unsigned int nData = dataList->getLength();
                                         for (unsigned int iData = 0; iData < nData; iData++) {
                                             DOMNode* dataitem = dataList->item(iData);
-                                            DOMElement* dataitemElt = dynamic_cast<DOMElement *>(dataitem);
-                                            // Get xmin
+//                                            DOMElement* dataitemElt = dynamic_cast<DOMElement *>(dataitem);
+                                            DOMElement* dataitemElt = static_cast<DOMElement *>(dataitem);
+                                           // Get xmin
                                             try {
                                                 xmin = xmlBase::Dom::getDoubleAttribute(dataitemElt, "xmin");
                                             }
