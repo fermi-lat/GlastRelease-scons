@@ -258,7 +258,7 @@ CalClusterNBClassifyTool::CalClusterNBClassifyTool(const std::string & type,
 { 
     declareInterface<ICalClassifyTool>(this) ;
 
-    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH/test_NBC.xml" );
+    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH)/test_NBC.xml" );
  
     return;
 }
