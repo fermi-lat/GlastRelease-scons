@@ -402,7 +402,7 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
         std::cout << "caught exception with message " << std::endl;
         std::cout << ex.getMsg() << std::endl;
         delete parser;
-        return 0;
+        return StatusCode::FAILURE;
     }
 
     if (doc != 0)   // successful
@@ -415,162 +415,93 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
         // Some variables used everywhere
         int    intVal;
 
-
         // ----------------------------------
         // Read the first tag with energy bins
         // ----------------------------------
-        DOMElement* attElt = xmlBase::Dom::findFirstChildByName(docElt, "EnergyBins");
-
-        XMLCh* xmlchEltName = XMLString::transcode("Energy");
-        DOMNodeList* constList = attElt->getElementsByTagName(xmlchEltName);
-
-        unsigned int nElt = constList->getLength();
-        log << MSG::DEBUG << nElt << " energy bins found "  << endreq;
-
-  
         m_energyBinning = new NBCEnergyBinning();
+	
+        DOMElement* attElt = xmlBase::Dom::findFirstChildByName(docElt, "EnergyBins");       
 
-        for (unsigned int iElt = 0; iElt < nElt; iElt++) 
-        {
-            try {
-                DOMNode* item = constList->item(iElt);
-//                DOMElement* itemElt = dynamic_cast<DOMElement *>(item);
-                DOMElement* itemElt = static_cast<DOMElement *>(item);
-                int bin = xmlBase::Dom::getIntAttribute(itemElt, "bin");
-                double emin = xmlBase::Dom::getDoubleAttribute(itemElt, "Emin");
-                double emax = xmlBase::Dom::getDoubleAttribute(itemElt, "Emax");
-                m_energyBinning->addBin(emin, emax);
+        std::vector<DOMElement*> childrenEnergyBins;
+        std::vector<DOMElement*>::iterator itemElt;
+        // Get a vector of DOMElements with Tag Name Energy, corresponding to all energy bins
+        xmlBase::Dom::getChildrenByTagName(attElt, "Energy",childrenEnergyBins,true);
+        for (itemElt=childrenEnergyBins.begin() ; itemElt != childrenEnergyBins.end(); itemElt++ )
+            {
+             double emin = xmlBase::Dom::getDoubleAttribute(*itemElt, "Emin");
+             double emax = xmlBase::Dom::getDoubleAttribute(*itemElt, "Emax");
+             m_energyBinning->addBin(emin, emax);
             }
-            catch (xmlBase::DomException ex) {
-                std::cout << std::endl << "DomException:  " << ex.getMsg() 
-                          << std::endl << std::endl;
-            }
-        }
+	
         log<<MSG::DEBUG << "Energy binning for the NBC classifier read from xml" <<
             std::endl << *m_energyBinning << endreq;
-  
+        	
         // ----------------------------------
-        // Get list of topologies
-        // ----------------------------------
+        // Get the vector of topologies DOMElement
+        // ----------------------------------       
         double xmin, xmax, prob;
-        XMLCh* xmlTopoEltName = XMLString::transcode("Topology");
-        XMLCh* xmlchName = XMLString::transcode("name");
-        DOMNodeList* topoList = docElt->getElementsByTagName(xmlTopoEltName);
-        unsigned int nTopo = topoList->getLength();
-        log<<MSG::DEBUG << nTopo << " cluster topologies found in the xml file." << endreq; 
+	std::vector<DOMElement*> topoVector;
+	xmlBase::Dom::getChildrenByTagName(docElt, "Topology", topoVector, true);
+	log<<MSG::DEBUG << topoVector.size() << " cluster topologies found in the xml file." << endreq; 
+
         // loop on topologies
-        for (unsigned int iElt = 0; iElt < nTopo; iElt++) 
-        {
-            try {
-                DOMNode* item = topoList->item(iElt);
-//                DOMElement* itemElt = dynamic_cast<DOMElement *>(item);
-                DOMElement* itemElt = static_cast<DOMElement *>(item);
-                // Get the name of the topology
-                const XMLCh* xmlchNamevalue = itemElt->getAttribute(xmlchName);
-                if (XMLString::stringLen(xmlchNamevalue) > 0 ) 
-                {
-                    char* topologyValue = XMLString::transcode(xmlchNamevalue);
-                    std::string topology(topologyValue);
-                    XMLString::release(&topologyValue);
-    
-                    // Get the list of variables
-                    XMLCh* xmlVarEltName = XMLString::transcode("Variable");      
-                    DOMNodeList* varList = itemElt->getElementsByTagName(xmlVarEltName);
-                    unsigned int nVars = varList->getLength();
-                    log<<MSG::DEBUG << nVars << " variables defined for topology '" << topology <<
-                            "'." << endreq;
-                    for (unsigned int iVars = 0; iVars < nVars; iVars++) 
+        std::vector<DOMElement*>::iterator topoIter;		
+        for (topoIter=topoVector.begin() ; topoIter != topoVector.end(); topoIter++ ) 
+            {	    
+            // Get the name of the topology
+            std::string topology = xmlBase::Dom::getAttribute(*topoIter, "name");
+	    
+	    // Get the vector of variables DOMElement
+	    std::vector<DOMElement*> varVector;
+	    xmlBase::Dom::getChildrenByTagName(*topoIter, "Variable", varVector, true);
+	    log<<MSG::DEBUG << varVector.size() << " variables defined for topology '"
+	                    << topology <<"'." << endreq;
+
+            // loop on variables
+            std::vector<DOMElement*>::iterator varIter;		
+            for (varIter=varVector.begin() ; varIter != varVector.end(); varIter++ ) 
+                {	    
+                // Get the name of the variable
+                std::string varName = xmlBase::Dom::getAttribute(*varIter, "name");
+                
+		// Create the PdfHisoCollection that we'll fill looping on energy bins
+		log << MSG::DEBUG << "Instantiating pdf collection for topology '" <<
+                        topology << "' and variable '" << varName << "'" << endreq;
+                PdfHistoCollection pdfHistCol(topology, varName, m_energyBinning);
+		
+	        // Get the vector of Energy bins DOMElement
+	        std::vector<DOMElement*> eneVector;
+	        xmlBase::Dom::getChildrenByTagName(*varIter, "Energy", eneVector, true);
+	    	
+                // loop on Energy bins for the variable
+                std::vector<DOMElement*>::iterator eneIter;	 	
+                for (eneIter=eneVector.begin() ; eneIter != eneVector.end(); eneIter++ ) 
                     {
-                        try {
-                            DOMNode* varitem = varList->item(iVars);
-//                           DOMElement* varitemElt = dynamic_cast<DOMElement *>(varitem);
-                            DOMElement* varitemElt = static_cast<DOMElement *>(varitem);
-                            // Get the name of the variable name
-                            const XMLCh* xmlVarNamevalue = varitemElt->getAttribute(xmlchName);
-                            if (XMLString::stringLen(xmlVarNamevalue) > 0 ) 
-                            {
-                                char* varnamevalue = XMLString::transcode(xmlVarNamevalue);
-                                std::string varName(varnamevalue);
-                                XMLString::release(&varnamevalue);
+		    PdfHisto hist;	    
+                    // Get the value of the energy bin for the variable
+                    intVal = xmlBase::Dom::getIntAttribute(*eneIter, "bin");
+		    
+		    // Get the vector of BinValues bins DOMElement -- Data !
+	            std::vector<DOMElement*> dataVector;
+		    xmlBase::Dom::getChildrenByTagName(*eneIter, "BinValues", dataVector, true);
+				    
+                    // loop on Data bins BinValues for the Energy bin
+                    std::vector<DOMElement*>::iterator dataIter;	 	
+                    for (dataIter=dataVector.begin() ; dataIter != dataVector.end(); dataIter++ )
+		         {
+			 xmin = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmin");
+			 prob = xmlBase::Dom::getDoubleAttribute(*dataIter, "pdv");
+			 xmax = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmax");
+			 hist.addBin(xmin, xmax, prob);
+                         } // end of loop on Data
+		     pdfHistCol.addPdfHisto(hist);
+		     //log << MSG::DEBUG <<hist<<endreq;
+                     }// end of loop on  Energy 
+                 addPdfHistCollection(pdfHistCol);
+                 }// end of loop on  Variable
+             }// end of loop on  Topology
+	 } // end of if parsing ok
 
-                                log << MSG::DEBUG << "Instantiating pdf collection for topology '" <<
-                                        topology << "' and variable '" << varName << "'" << endreq;
-                                PdfHistoCollection pdfHistCol(topology, varName, m_energyBinning);
-
-                                // Get the Energy bin for the variable
-                                XMLCh* xmlEneEltName = XMLString::transcode("Energy");        
-                                DOMNodeList* eneList = varitemElt->getElementsByTagName(xmlEneEltName);
-                                unsigned int nEne = eneList->getLength();
-                                for (unsigned int iEne = 0; iEne < nEne; iEne++) {
-                                    PdfHisto hist;
-                                    try {
-                                        DOMNode* eneitem = eneList->item(iEne);
-//                                        DOMElement* eneitemElt = dynamic_cast<DOMElement *>(eneitem);
-                                        DOMElement* eneitemElt = static_cast<DOMElement *>(eneitem);
-          
-                                        // Get the value of the energy bin
-                                        intVal = xmlBase::Dom::getIntAttribute(eneitemElt, "bin");
-
-                                        // Have to get the list of values from tag Data
-                                        XMLCh* xmlDataEltName = XMLString::transcode("BinValues");        
-                                        DOMNodeList* dataList = eneitemElt->getElementsByTagName(xmlDataEltName);
-                                        unsigned int nData = dataList->getLength();
-                                        for (unsigned int iData = 0; iData < nData; iData++) {
-                                            DOMNode* dataitem = dataList->item(iData);
-//                                            DOMElement* dataitemElt = dynamic_cast<DOMElement *>(dataitem);
-                                            DOMElement* dataitemElt = static_cast<DOMElement *>(dataitem);
-                                           // Get xmin
-                                            try {
-                                                xmin = xmlBase::Dom::getDoubleAttribute(dataitemElt, "xmin");
-                                            }
-                                            catch (xmlBase::DomException ex) {
-                                                std::cout << std::endl << "DomException:  " << ex.getMsg() 
-                                                            << std::endl << std::endl;
-                                            }   
-                                            // Get prob
-                                            try {
-                                                prob = xmlBase::Dom::getDoubleAttribute(dataitemElt, "pdv");
-                                            }
-                                            catch (xmlBase::DomException ex) {
-                                                std::cout << std::endl << "DomException:  " << ex.getMsg() 
-                                                        << std::endl << std::endl;
-                                            }   
-                                            // Get xmax
-                                            try {
-                                                xmax = xmlBase::Dom::getDoubleAttribute(dataitemElt, "xmax");
-                                            }
-                                            catch (xmlBase::DomException ex) {
-                                                std::cout << std::endl << "DomException:  " << ex.getMsg() 
-                                                    << std::endl << std::endl;
-                                            }
-                                            hist.addBin(xmin, xmax, prob);
-                                        } // end of loop on Data
-                                    }// end of try Energy       
-                                    catch (xmlBase::DomException ex) {              
-                                        std::cout << std::endl << "DomException:  " << ex.getMsg()    
-                                            << std::endl << std::endl;              
-                                    }
-                                    pdfHistCol.addPdfHisto(hist);
-                                    //log << MSG::DEBUG << "Pdf histogram for variable '" << varName <<
-                                    //  "' and energy bin '" << m_energyBinning->getBin(iEne) << "':" <<
-                                    //  std::endl << hist << endreq;
-                                } // end loop on Energy bins
-                                addPdfHistCollection(pdfHistCol);
-                            } // end if variable
-                        } // end try
-                        catch (xmlBase::DomException ex) {
-                            std::cout << std::endl << "DomException:  " << ex.getMsg()
-                                << std::endl << std::endl;
-                        } // end catch
-                    } // end loop on variables
-                } // end if on topology
-            }  // end try on topology
-            catch (xmlBase::DomException ex) {
-                std::cout << std::endl << "DomException:  " << ex.getMsg() 
-                    << std::endl << std::endl;
-            }
-        }
-    }
     delete parser;
     return StatusCode::SUCCESS ;
 }
