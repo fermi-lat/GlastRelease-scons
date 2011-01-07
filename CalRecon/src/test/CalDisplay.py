@@ -70,6 +70,7 @@ class CalMomentsData:
         self.CoordAlongAxis = 0.
         self.XZMarker = ROOT.TMarker(self.Point.x(), self.Point.z(), 25)
         self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25)
+        self.XYMarker = ROOT.TMarker(self.Point.x(), self.Point.y(), 25)
 
     def setMaxWeight(self, maxWeight):
         try:
@@ -79,9 +80,11 @@ class CalMomentsData:
         if markerSize > 0.15:
             self.XZMarker.SetMarkerSize(markerSize)
             self.YZMarker.SetMarkerSize(markerSize)
+            self.XYMarker.SetMarkerSize(markerSize)
         else:
             self.XZMarker.SetMarkerStyle(1)
             self.YZMarker.SetMarkerStyle(1)
+            self.XYMarker.SetMarkerStyle(1)
 
     def getTower(self):
         return self.XtalData.getPackedId().getTower()
@@ -139,6 +142,7 @@ class CalDisplay(ReconReader):
         ReconReader.__init__(self, reconFilePath, meritFilePath,
                              relFilePath, cut)
         self.Canvas = getFullCanvas('CalDisplay', 'CAL display')
+        self.TopCanvas = getTopCanvas('CalTopDisplay', 'CAL top display')
         self.Cluster = None
         self.XtalEneHist = None
 
@@ -147,13 +151,17 @@ class CalDisplay(ReconReader):
         self.LongProfileRef.SetMarkerStyle(24)
         self.LongProfileRef.SetMarkerSize(0.8)
         axis = self.Cluster.getMomParams().getAxis()
-        #print axis.x(), axis.y(), axis.z()
+        xdir = axis.x()
+        ydir = axis.y()
+        zdir = axis.z()
         weightSum = 0.
         tsum = 0.
         tsum2 = 0.
         tsum3 = 0.
         transRms = self.Cluster.getMomParams().getTransRms()
         n = 0
+        tmin = 10000.
+        tmax = -10000.
         for momentsData in self.MomentsDataList:
             dist = momentsData.DistToAxis
             if dist < transRms*transScale:
@@ -163,14 +171,16 @@ class CalDisplay(ReconReader):
                 numGapsX = towerId % 4
                 numGapsY = towerId / 4
                 # Correct for the gaps (not exact!!)
-                xdir = abs(axis.x())
-                ydir = abs(axis.y())
-                if xdir > 0.01:
-                    t += numGapsX*CAL_TOWER_GAP/xdir
-                if ydir > 0.01:
-                    t += numGapsY*CAL_TOWER_GAP/ydir
+                if abs(xdir) > 0.05:
+                    t -= numGapsX*CAL_TOWER_GAP/xdir
+                if abs(ydir) > 0.05:
+                    t -= numGapsY*CAL_TOWER_GAP/ydir
                 # Normalize to the X0 in CsI.
                 t /= CSI_RAD_LEN
+                if t < tmin:
+                    tmin = t
+                if t > tmax:
+                    tmax = t
                 energy = momentsData.getWeight()
                 weightSum += energy
                 tsum  += energy*t
@@ -186,7 +196,8 @@ class CalDisplay(ReconReader):
                 mean = tsum
                 var = tsum2 - mean*mean
                 skew = tsum3 - 3*var*mean - mean*mean*mean
-                skew /= (var**1.5)
+                if var > 0:
+                    skew /= (var**1.5)
             
         self.Canvas.cd(2).cd(3)
         self.LongProfileRef.GetXaxis().SetTitle('Longitudinal position (X0)')
@@ -215,7 +226,41 @@ class CalDisplay(ReconReader):
         self.Canvas.cd(1).cd(2)
         CAL_LAYOUT.draw('yz')
         for momentsData in self.MomentsDataList:
-            momentsData.YZMarker.Draw() 
+            momentsData.YZMarker.Draw()
+        # Draw xtals in the XY view.
+        self.TopCanvas.cd()
+        CAL_LAYOUT.draw('xy')
+        for momentsData in self.MomentsDataList:
+            momentsData.XYMarker.Draw()
+        self.TopCanvas.Update()
+
+    def __drawMcDir(self):
+        xc = self.getMeritVariable('McX0')
+        yc = self.getMeritVariable('McY0')
+        zc = self.getMeritVariable('McZ0')
+        dx = self.getMeritVariable('McXDir')
+        dy = self.getMeritVariable('McYDir')
+        dz = self.getMeritVariable('McZDir')
+        if dz == 0.:
+            dz = 0.0001
+        x1 = xc - (zc - Z_MIN)*(dx/dz)
+        z1 = Z_MIN
+        x2 = xc + (Z_MAX - zc)*(dx/dz)
+        z2 = Z_MAX
+        self.XZMcDirection = ROOT.TLine(x1, z1, x2, z2)
+        self.XZMcDirection.SetLineColor(ROOT.kBlue)
+        self.XZMcDirection.SetLineWidth(1)
+        self.XZMcDirection.SetLineStyle(7)
+        self.Canvas.cd(1).cd(1)
+        self.XZMcDirection.Draw()
+        y1 = yc - (zc - Z_MIN)*(dy/dz)
+        y2 = yc + (Z_MAX - zc)*(dy/dz)
+        self.YZMcDirection = ROOT.TLine(y1, z1, y2, z2)
+        self.YZMcDirection.SetLineColor(ROOT.kBlue)
+        self.YZMcDirection.SetLineWidth(1)
+        self.YZMcDirection.SetLineStyle(7)
+        self.Canvas.cd(1).cd(2)
+        self.YZMcDirection.Draw()
 
     def __drawCalMomParams(self):
         momParams = self.Cluster.getMomParams()
@@ -295,6 +340,8 @@ class CalDisplay(ReconReader):
         self.__drawXtals()
         # Draw direction/centroid from the moments analysis.
         self.__drawCalMomParams()
+        # Draw the MC directions.
+        self.__drawMcDir()
         # Draw the various histograms/graphs.
         self.__drawXtalEneDist()
         self.__drawLongProfile()
