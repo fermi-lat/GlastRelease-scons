@@ -72,7 +72,10 @@ class CalMomentsData:
         self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25)
 
     def setMaxWeight(self, maxWeight):
-        markerSize = 1.8*sqrt(self.getWeight()/maxWeight)
+        try:
+            markerSize = 1.8*sqrt(self.getWeight()/maxWeight)
+        except ValueError:
+            markerSize = 0.1
         if markerSize > 0.15:
             self.XZMarker.SetMarkerSize(markerSize)
             self.YZMarker.SetMarkerSize(markerSize)
