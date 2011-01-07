@@ -132,6 +132,10 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     // Second loop to get the chisquare (residuals about principal axis, through centroid,
     // using input weight), the full cluster length, the skewness and the fraction of
     // energy inside the core cylinder.
+    double xdir = m_axis[1].x();
+    double ydir = m_axis[1].y();
+    double absxdir = fabs(xdir);
+    double absydir = fabs(ydir);
     chisq = 0.; 
     double tmin = 9999.;
     double tmax = -9999.;
@@ -154,13 +158,11 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 	// Also the gap between towers (51.3 mm) should not be hard-coded but
 	// retrieved from the appropriate service.
 	int tower = dataPoint.getTower();
-	double xdir = fabs(m_axis[1].x());
-	double ydir = fabs(m_axis[1].y());
-	if ( xdir > 0.05 ) {
-	  t += 51.3*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
+	if ( absxdir > 0.05 ) {
+	  t -= 51.3*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
 	}
-	if ( ydir > 0.05 ) {
-	  t += 51.3*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
+	if ( absydir > 0.05 ) {
+	  t -= 51.3*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
 	}
 	// End of the "embarassing" part of the code (Luca Baldini, Dec. 26, 2010).
 	
