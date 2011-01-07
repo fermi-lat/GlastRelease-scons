@@ -197,7 +197,7 @@ int write(const char* fileName, int numEvents) {
 /// Returns -1 for failure.
 int main(int argc, char **argv) {
     
-    std::string fileStr("$(TESTDATAROOT)/recon-v9r11-v5r10.root");
+    std::string fileStr("$(TESTDATAROOT)/recon-v9r25-v5r26.root");
     facilities::Util::expandEnvVar(&fileStr);
     //char * fileName = "recon-v9r11-v5r10.root" ;
     const char *fileName = fileStr.c_str();
