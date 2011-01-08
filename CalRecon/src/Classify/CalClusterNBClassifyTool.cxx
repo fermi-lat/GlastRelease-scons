@@ -28,14 +28,14 @@ class NBCEnergyBin
 {
 public:
     NBCEnergyBin(double logEmin, double logEmax):
-        m_logEmin(logEmin), m_logEmax(logEmax) {;}
-    ~NBCEnergyBin() {};
+      m_logEmin(logEmin), m_logEmax(logEmax) {;}
+      ~NBCEnergyBin() {};
 
-    inline double getLoEdge() const {return m_logEmin;}
-    inline double getHiEdge() const {return m_logEmax;}
-    inline double getCenter() const {return 0.5*(getLoEdge() + getHiEdge());}
+      inline double getLoEdge() const {return m_logEmin;}
+      inline double getHiEdge() const {return m_logEmax;}
+      inline double getCenter() const {return 0.5*(getLoEdge() + getHiEdge());}
 
-    friend std::ostream& operator<<(std::ostream& output, const NBCEnergyBin& bin);
+      friend std::ostream& operator<<(std::ostream& output, const NBCEnergyBin& bin);
 
 private:
     double m_logEmin;
@@ -71,7 +71,7 @@ public:
     int getBinIndex(double energy);
 
     friend std::ostream& operator<<(std::ostream& output,
-                  const NBCEnergyBinning& binning);
+        const NBCEnergyBinning& binning);
 
 private:
     std::vector <NBCEnergyBin> m_energyBins;
@@ -98,15 +98,15 @@ std::ostream& operator<<(std::ostream& output, const NBCEnergyBinning& binning)
 {
     for (int i = 0; i < binning.getNumBins(); i++)
     {
-      output << "Bin " << i << ": " << binning.getBin(i) << std::endl;
+        output << "Bin " << i << ": " << binning.getBin(i) << std::endl;
     }
     return output;
 }
 
 
 /*
-  Tiny class to store histograms with the PDF
-  for one variable for one energy bin
+Tiny class to store histograms with the PDF
+for one variable for one energy bin
 */
 
 class PdfHisto
@@ -114,7 +114,7 @@ class PdfHisto
 public:
     PdfHisto() {;}
     ~PdfHisto() {};
-  
+
     inline int getNumBins()             const {return m_probs.size();}
     inline double getBinLoEdge(int bin) const {return m_loEdges[bin];}
     inline double getBinHiEdge(int bin) const {return m_hiEdges[bin];}
@@ -124,7 +124,7 @@ public:
     double getPdValue(double varValue);
 
     friend std::ostream& operator<<(std::ostream& output, const PdfHisto& hist);
-  
+
 private:
     std::vector <double> m_loEdges;
     std::vector <double> m_hiEdges;
@@ -159,8 +159,8 @@ std::ostream& operator<<(std::ostream& output, const PdfHisto& hist)
 {
     for (int i = 0; i < hist.getNumBins(); i++)
     {
-        output << "Bin " << i << ": (" << hist.getBinLoEdge(i) << "--" << hist.getBinHiEdge(i) <<
-            "), prob = " << hist.getBinProb(i) << std::endl;
+        output << "Bin " << i << ": (" << hist.getBinLoEdge(i) << "--" << hist.getBinHiEdge(i) 
+            << "), prob = " << hist.getBinProb(i) << std::endl;
     }
     return output;
 }
@@ -168,24 +168,24 @@ std::ostream& operator<<(std::ostream& output, const PdfHisto& hist)
 
 
 /*
-  Collection of PdfHisto objects
-  one PdfHisto per energy bin
-  one collection for each variable for each topology
+Collection of PdfHisto objects
+one PdfHisto per energy bin
+one collection for each variable for each topology
 */
 
 class PdfHistoCollection
 {
 public:
     PdfHistoCollection(std::string topo, std::string varName, NBCEnergyBinning *energyBinning):
-        m_topology(topo), m_varName(varName), m_energyBinning(energyBinning) {;}
-    ~PdfHistoCollection() {};
-  
-    inline std::string getTopology()           {return m_topology;}
-    inline std::string getVarName()            {return m_varName;}
-    inline void addPdfHisto(PdfHisto hist)     {m_pdfHistos.push_back(hist);}
-  
-    PdfHisto getPdfHisto(double energy);
-    double getPdValue(double energy, double varValue);
+      m_topology(topo), m_varName(varName), m_energyBinning(energyBinning) {;}
+      ~PdfHistoCollection() {};
+
+      inline std::string getTopology()           {return m_topology;}
+      inline std::string getVarName()            {return m_varName;}
+      inline void addPdfHisto(PdfHisto hist)     {m_pdfHistos.push_back(hist);}
+
+      PdfHisto getPdfHisto(double energy);
+      double getPdValue(double energy, double varValue);
 
 private:
     std::string m_topology;
@@ -205,23 +205,23 @@ double PdfHistoCollection::getPdValue(double energy, double varValue)
 }
 
 /*
-  Definition of the tool for the NBC classifier
+Definition of the tool for the NBC classifier
 */
 
 class CalClusterNBClassifyTool : public AlgTool, virtual public ICalClassifyTool
 {
 public :
-  
+
     /// Standard Gaudi Tool interface constructor
     CalClusterNBClassifyTool(const std::string& type,
-                             const std::string& name,
-                             const IInterface* parent );
-  
+        const std::string& name,
+        const IInterface* parent );
+
     virtual ~CalClusterNBClassifyTool() {};
-  
+
     /// @brief Intialization of the tool
     virtual StatusCode initialize() ;
-  
+
     /// @brief Default cluster finding framework
     virtual StatusCode classifyClusters(Event::CalClusterCol* calClusterCol);
 
@@ -230,19 +230,19 @@ public :
 private:
     //! Service for basic Cal info
     ICalReconSvc*      m_calReconSvc;
-  
+
     //! Event Service member directly useable by concrete classes.
     IDataProviderSvc*  m_dataSvc;
-    
+
     // Other methods
     StatusCode getPDFsFromXml();
     double getPdValue(std::string topology, std::string varName,
-             double energy, double varValue);
+        double energy, double varValue);
     double getVariableValue(std::string varName, Event::CalCluster* calCluster);
     void addPdfHistCollection(PdfHistoCollection pdfHistCol);
     PdfHistoCollection getHistoCollection(std::string topology,
-                        std::string varName);
-  
+        std::string varName);
+
     // Members
     std::string m_xmlPDFFileName;
     std::map <std::pair <std::string, std::string>, PdfHistoCollection> m_varPDFsMap;
@@ -252,14 +252,14 @@ private:
 DECLARE_TOOL_FACTORY(CalClusterNBClassifyTool) ;
 
 CalClusterNBClassifyTool::CalClusterNBClassifyTool(const std::string & type, 
-                                                  const std::string & name, 
-                                                  const IInterface* parent)
-                                                : AlgTool(type,name,parent)
+                                                   const std::string & name, 
+                                                   const IInterface* parent)
+                                                   : AlgTool(type,name,parent)
 { 
     declareInterface<ICalClassifyTool>(this) ;
 
     declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH)/test_NBC.xml" );
- 
+
     return;
 }
 
@@ -268,7 +268,7 @@ void CalClusterNBClassifyTool::addPdfHistCollection(PdfHistoCollection pdfHistCo
     std::pair <std::string, std::string> key(pdfHistCol.getTopology(), pdfHistCol.getVarName());
     m_varPDFsMap.insert(std::make_pair(key, pdfHistCol));
 }
-    
+
 StatusCode CalClusterNBClassifyTool::initialize()
 {
     MsgStream log(msgSvc(),name()) ;
@@ -293,7 +293,7 @@ StatusCode CalClusterNBClassifyTool::initialize()
 
     // Read the xml file with PDFs
     if ( sc = getPDFsFromXml().isFailure() )
-       log<<MSG::ERROR<<"Could not read xml file"<<endreq;
+        log<<MSG::ERROR<<"Could not read xml file"<<endreq;
 
     return StatusCode::SUCCESS ;
 }
@@ -309,19 +309,19 @@ StatusCode CalClusterNBClassifyTool::classifyClusters(Event::CalClusterCol* calC
     //      - classify the cluster
     // TDS output: updated CalClustersCol
     // -- TBD --
-  
+
     // --------------------------------------------
 
     log << MSG::DEBUG << "Calling Naive Bayes classifier" << endreq;
     Event::CalClusterCol::const_iterator cluster ;
     for (cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
-      {
-	// Current PDFs were derived with precut at NumXtals>3
-	if( (*cluster)->getNumXtals() > 3 ) {
-	  classifyCluster(*cluster);
-	}
+    {
+        // Current PDFs were derived with precut at NumXtals>3
+        if( (*cluster)->getNumXtals() > 3 ) {
+            classifyCluster(*cluster);
+        }
     }   
-    
+
     return StatusCode::SUCCESS ;
 }
 
@@ -332,66 +332,66 @@ StatusCode CalClusterNBClassifyTool::classifyCluster(Event::CalCluster* calClust
     double varValue, pdValue;
     double energy = calCluster->getMomParams().getEnergy();
     std::map<std::pair <std::string, std::string>, PdfHistoCollection>::iterator iter;
-    
+
     // Create the CalNBCClassParams object to store the class probabilities.
     Event::CalNBCClassParams nbcClassParams;
     for (iter = m_varPDFsMap.begin(); iter != m_varPDFsMap.end(); iter++)
-      {
+    {
         className = (*iter).first.first;
         varName = (*iter).first.second;
         varValue = getVariableValue(varName, calCluster);
-	pdValue = getPdValue(className, varName, energy, varValue);
-	nbcClassParams.multiply(className, pdValue);
-      }
+        pdValue = getPdValue(className, varName, energy, varValue);
+        nbcClassParams.multiply(className, pdValue);
+    }
     nbcClassParams.normalize();
 
     // And finally set the corresponding cluster class member.
     calCluster->setClassParams(nbcClassParams);
     calCluster->setStatusBit(Event::CalCluster::CLASSIFIED);
-  
+
     return StatusCode::SUCCESS;
 }
 
 double CalClusterNBClassifyTool::getVariableValue(std::string varName,
-                          Event::CalCluster* calCluster)
+                                                  Event::CalCluster* calCluster)
 {
-  if (varName == "CalTransRms") {
-    return calCluster->getMomParams().getTransRms();
-  }
-  else if (varName == "CalLRmsAsym") {
-    return calCluster->getMomParams().getLongRmsAsym();
-  }
-  else if (varName == "MomentRatio") {
-    double transRms = calCluster->getMomParams().getTransRms();
-    double longRms = calCluster->getMomParams().getLongRms();
-    if ( transRms > 0 && longRms > 0 ) {
-      return log10(longRms/transRms);
+    if (varName == "CalTransRms") {
+        return calCluster->getMomParams().getTransRms();
+    }
+    else if (varName == "CalLRmsAsym") {
+        return calCluster->getMomParams().getLongRmsAsym();
+    }
+    else if (varName == "MomentRatio") {
+        double transRms = calCluster->getMomParams().getTransRms();
+        double longRms = calCluster->getMomParams().getLongRms();
+        if ( transRms > 0 && longRms > 0 ) {
+            return log10(longRms/transRms);
+        }
+        else {
+            return -1.;
+        }
+    }
+    else if (varName == "NumXtals") {
+        double sumOfWeights = calCluster->getMomParams().getEnergy();
+        if (sumOfWeights > 0)
+            return (calCluster->getNumXtals())/log10(sumOfWeights);
+        else
+            return -1.0;
     }
     else {
-      return -1.;
+        std::cout << "Unknown variable " << varName << ". Abort." << std::endl;
+        return -1.0;
     }
-  }
-  else if (varName == "NumXtals") {
-    double sumOfWeights = calCluster->getMomParams().getEnergy();
-    if (sumOfWeights > 0)
-      return (calCluster->getNumXtals())/log10(sumOfWeights);
-    else
-      return -1.0;
-  }
-  else {
-    std::cout << "Unknown variable " << varName << ". Abort." << std::endl;
-    return -1.0;
-  }
 }
 
 StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
 {
     XERCES_CPP_NAMESPACE_USE
-    MsgStream log(msgSvc(),name());
+        MsgStream log(msgSvc(),name());
     facilities::commonUtilities::setupEnvironment();
-  
+
     facilities::Util::expandEnvVar(&m_xmlPDFFileName);
- 
+
     xmlBase::XmlParser* parser = new xmlBase::XmlParser(true);
 
     DOMDocument* doc = 0;
@@ -419,7 +419,7 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
         // Read the first tag with energy bins
         // ----------------------------------
         m_energyBinning = new NBCEnergyBinning();
-	
+
         DOMElement* attElt = xmlBase::Dom::findFirstChildByName(docElt, "EnergyBins");       
 
         std::vector<DOMElement*> childrenEnergyBins;
@@ -427,94 +427,94 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
         // Get a vector of DOMElements with Tag Name Energy, corresponding to all energy bins
         xmlBase::Dom::getChildrenByTagName(attElt, "Energy",childrenEnergyBins,true);
         for (itemElt=childrenEnergyBins.begin() ; itemElt != childrenEnergyBins.end(); itemElt++ )
-            {
-             double emin = xmlBase::Dom::getDoubleAttribute(*itemElt, "Emin");
-             double emax = xmlBase::Dom::getDoubleAttribute(*itemElt, "Emax");
-             m_energyBinning->addBin(emin, emax);
-            }
-	
+        {
+            double emin = xmlBase::Dom::getDoubleAttribute(*itemElt, "Emin");
+            double emax = xmlBase::Dom::getDoubleAttribute(*itemElt, "Emax");
+            m_energyBinning->addBin(emin, emax);
+        }
+
         log<<MSG::DEBUG << "Energy binning for the NBC classifier read from xml" <<
             std::endl << *m_energyBinning << endreq;
-        	
+
         // ----------------------------------
         // Get the vector of topologies DOMElement
         // ----------------------------------       
         double xmin, xmax, prob;
-	std::vector<DOMElement*> topoVector;
-	xmlBase::Dom::getChildrenByTagName(docElt, "Topology", topoVector, true);
-	log<<MSG::DEBUG << topoVector.size() << " cluster topologies found in the xml file." << endreq; 
+        std::vector<DOMElement*> topoVector;
+        xmlBase::Dom::getChildrenByTagName(docElt, "Topology", topoVector, true);
+        log<<MSG::DEBUG << topoVector.size() << 
+            " cluster topologies found in the xml file." << endreq; 
 
         // loop on topologies
         std::vector<DOMElement*>::iterator topoIter;		
         for (topoIter=topoVector.begin() ; topoIter != topoVector.end(); topoIter++ ) 
-            {	    
+        {	    
             // Get the name of the topology
             std::string topology = xmlBase::Dom::getAttribute(*topoIter, "name");
-	    
-	    // Get the vector of variables DOMElement
-	    std::vector<DOMElement*> varVector;
-	    xmlBase::Dom::getChildrenByTagName(*topoIter, "Variable", varVector, true);
-	    log<<MSG::DEBUG << varVector.size() << " variables defined for topology '"
-	                    << topology <<"'." << endreq;
+
+            // Get the vector of variables DOMElement
+            std::vector<DOMElement*> varVector;
+            xmlBase::Dom::getChildrenByTagName(*topoIter, "Variable", varVector, true);
+            log<<MSG::DEBUG << varVector.size() << " variables defined for topology '"
+                << topology <<"'." << endreq;
 
             // loop on variables
             std::vector<DOMElement*>::iterator varIter;		
             for (varIter=varVector.begin() ; varIter != varVector.end(); varIter++ ) 
-                {	    
+            {	    
                 // Get the name of the variable
                 std::string varName = xmlBase::Dom::getAttribute(*varIter, "name");
-                
-		// Create the PdfHisoCollection that we'll fill looping on energy bins
-		log << MSG::DEBUG << "Instantiating pdf collection for topology '" <<
-                        topology << "' and variable '" << varName << "'" << endreq;
+
+                // Create the PdfHisoCollection that we'll fill looping on energy bins
+                log << MSG::DEBUG << "Instantiating pdf collection for topology '" <<
+                    topology << "' and variable '" << varName << "'" << endreq;
                 PdfHistoCollection pdfHistCol(topology, varName, m_energyBinning);
-		
-	        // Get the vector of Energy bins DOMElement
-	        std::vector<DOMElement*> eneVector;
-	        xmlBase::Dom::getChildrenByTagName(*varIter, "Energy", eneVector, true);
-	    	
+
+                // Get the vector of Energy bins DOMElement
+                std::vector<DOMElement*> eneVector;
+                xmlBase::Dom::getChildrenByTagName(*varIter, "Energy", eneVector, true);
+
                 // loop on Energy bins for the variable
                 std::vector<DOMElement*>::iterator eneIter;	 	
                 for (eneIter=eneVector.begin() ; eneIter != eneVector.end(); eneIter++ ) 
-                    {
-		    PdfHisto hist;	    
+                {
+                    PdfHisto hist;	    
                     // Get the value of the energy bin for the variable
                     intVal = xmlBase::Dom::getIntAttribute(*eneIter, "bin");
-		    
-		    // Get the vector of BinValues bins DOMElement -- Data !
-	            std::vector<DOMElement*> dataVector;
-		    xmlBase::Dom::getChildrenByTagName(*eneIter, "BinValues", dataVector, true);
-				    
+
+                    // Get the vector of BinValues bins DOMElement -- Data !
+                    std::vector<DOMElement*> dataVector;
+                    xmlBase::Dom::getChildrenByTagName(*eneIter, "BinValues", dataVector, true);
+
                     // loop on Data bins BinValues for the Energy bin
                     std::vector<DOMElement*>::iterator dataIter;	 	
                     for (dataIter=dataVector.begin() ; dataIter != dataVector.end(); dataIter++ )
-		         {
-			 xmin = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmin");
-			 prob = xmlBase::Dom::getDoubleAttribute(*dataIter, "pdv");
-			 xmax = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmax");
-			 hist.addBin(xmin, xmax, prob);
-                         } // end of loop on Data
-		     pdfHistCol.addPdfHisto(hist);
-		     //log << MSG::DEBUG <<hist<<endreq;
-                     }// end of loop on  Energy 
-                 addPdfHistCollection(pdfHistCol);
-                 }// end of loop on  Variable
-             }// end of loop on  Topology
-	 } // end of if parsing ok
+                    {
+                        xmin = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmin");
+                        prob = xmlBase::Dom::getDoubleAttribute(*dataIter, "pdv");
+                        xmax = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmax");
+                        hist.addBin(xmin, xmax, prob);
+                    } // end of loop on Data
+                    pdfHistCol.addPdfHisto(hist);
+                    //log << MSG::DEBUG <<hist<<endreq;
+                }// end of loop on  Energy 
+                addPdfHistCollection(pdfHistCol);
+            }// end of loop on  Variable
+        }// end of loop on  Topology
+    } // end of if parsing ok
 
     delete parser;
     return StatusCode::SUCCESS ;
 }
 
 PdfHistoCollection CalClusterNBClassifyTool::getHistoCollection(std::string topology,
-                                std::string varName)
+                                                                std::string varName)
 {
     return m_varPDFsMap.find(std::make_pair(topology, varName))->second;
 }
 
 double CalClusterNBClassifyTool::getPdValue(std::string topology, std::string varName,
-                        double energy, double varValue)
+                                            double energy, double varValue)
 {
     return getHistoCollection(topology, varName).getPdValue(energy, varValue);
 }
-
