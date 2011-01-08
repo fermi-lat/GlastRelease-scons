@@ -37,14 +37,16 @@ void Event::CalNBCClassParams::normalize()
 {
   // First round to evaluate the sum of probabilities.
   double norm = 0.0;
-  std::map <std::string, double>::iterator iter;
-  for (iter = getProbMap().begin(); iter != getProbMap().end(); iter++)
+  std::map <std::string, double>::const_iterator iter;
+  std::map<std::string, double> probMap = getProbMap();
+  for (iter = probMap.begin(); iter != probMap.end(); iter++)
     {
       norm += (*iter).second;
+      //std::cout << (*iter).first << " " << (*iter).second << std::endl;
     }
   // Then the actual normalization, if it's the case.
   if ( norm > 0 ) {
-    for (iter = getProbMap().begin(); iter != getProbMap().end(); iter++)
+    for (iter = probMap.begin(); iter != probMap.end(); iter++)
       {
 	setProb( (*iter).first, ((*iter).second) / norm );
       }
