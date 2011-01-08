@@ -3,8 +3,8 @@
 
 // read back simulation and reconstruction first pass
 Simulation.Members += { "digiRootReaderAlg", "reconRootReaderAlg" } ;  
-digiRootReaderAlg.digiRootFile = "$CALRECONROOT/src/test/digi.root" ;
-reconRootReaderAlg.reconRootFile = "$CALRECONROOT/src/test/recon.root" ;
+digiRootReaderAlg.digiRootFile = "$CALRECONJOBOPTIONSPATH/test/digi.root" ;
+reconRootReaderAlg.reconRootFile = "$CALRECONJOBOPTIONSPATH/test/recon.root" ;
 
 // calo reconstruction second pass
 ApplicationMgr.DLLs += { "CalRecon" } ;

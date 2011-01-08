@@ -12,8 +12,8 @@ ApplicationMgr.DLLs   += { "FluxSvc" } ;
 ApplicationMgr.ExtSvc += { "FluxSvc" } ;
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" } ;
 FluxSvc.source_lib = { "$(FLUXXMLPATH)/source_library.xml" } ;
-FluxSvc.source_lib += { "$(G4GENERATORROOT)/src/test/test_sources.xml" } ;
-FluxSvc.source_lib += { "$(CALRECONROOT)/src/test/source_library.xml" } ;
+FluxSvc.source_lib += { "$(G4GENERATORJOBOPTIONSPATH)/test/test_sources.xml" } ;
+FluxSvc.source_lib += { "$(CALRECONJOBOPTIONSPATH)/test/source_library.xml" } ;
 ApplicationMgr.Runable = "FluxSvc" ;
 
 // generation
@@ -39,6 +39,6 @@ Reconstruction.Members += { "CalXtalRecAlg", "CalClustersAlg", "TkrReconAlg" } ;
 
 // output
 Reconstruction.Members += { "digiRootWriterAlg", "reconRootWriterAlg" } ;
-digiRootWriterAlg.digiRootFile = "$CALRECONROOT/src/test/digi.root" ;
-reconRootWriterAlg.reconRootFile = "$CALRECONROOT/src/test/recon.root" ;
+digiRootWriterAlg.digiRootFile = "$CALRECONJOBOPTIONSPATH/test/digi.root" ;
+reconRootWriterAlg.reconRootFile = "$CALRECONJOBOPTIONSPATH/test/recon.root" ;
 
