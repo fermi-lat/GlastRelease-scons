@@ -48,7 +48,7 @@ $Header$
 
 #include "Doca.h"
 
-/*! @class CalValsTool
+/*! @class CaValsTool
 @brief calculates Cal values
 
 @authors Bill Atwood, Leon Rochester
@@ -233,6 +233,7 @@ private:
     // Variables from the cluster classification.
     float CAL_Clu1_ClassGamProb;
     float CAL_Clu1_ClassHadProb;
+    float CAL_Clu1_ClassGhostProb;
     float CAL_Clu1_ClassMipProb;
 
     // New variables for new energy correction tools
@@ -764,6 +765,7 @@ StatusCode CalValsTool::initialize()
     // Variables from the cluster classification.
     addItem("Cal1GamProb",  &CAL_Clu1_ClassGamProb);
     addItem("Cal1HadProb",  &CAL_Clu1_ClassHadProb);
+    addItem("Cal1GhostProb",  &CAL_Clu1_ClassGhostProb);
     addItem("Cal1MipProb",  &CAL_Clu1_ClassMipProb);
 
     addItem("CalCfpEnergy",  &CAL_cfp_energy);
@@ -1072,6 +1074,7 @@ StatusCode CalValsTool::calculate()
     // Variables from the cluster classification.
     CAL_Clu1_ClassGamProb = calCluster->getClassParams().getProb("gam");
     CAL_Clu1_ClassHadProb = calCluster->getClassParams().getProb("had");
+    CAL_Clu1_ClassGhostProb = calCluster->getClassParams().getProb("ghost");
     CAL_Clu1_ClassMipProb = calCluster->getClassParams().getProb("mip");
 
     if(CAL_EnergyRaw>0.0) {
