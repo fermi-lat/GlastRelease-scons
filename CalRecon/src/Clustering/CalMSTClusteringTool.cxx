@@ -78,75 +78,81 @@ public:
   ~MSTTree( )  {};
   
   void addEdge(MSTEdge &);
-  void addNode(Event::CalXtalRecData* _node) ; // implemented using a map
-  int size () {return (m_edges.size());}
-  void clear() {m_edges.clear(); nodemap.clear();}; // useful reset
-  std::list<MSTEdge*> getEdges() {return m_edges;}; 
-  std::map<int, Event::CalXtalRecData*> getNodeMap() {return nodemap;};
+  void addNode(Event::CalXtalRecData* _node); 
 
-  ///--------------------------------------------------- 
-  ///--- Get methods
+  /// Retrieve the edges.
+  std::list<MSTEdge*> getEdges()                     const { return m_edges; }
+  /// Retrieve the map of nodes.
+  std::map<int, Event::CalXtalRecData*> getNodeMap() const { return m_nodeMap; }
+  /// Retrieve the number of edges.
+  int size ()                                        const { return m_edges.size(); }
   /// Retrieve the total enegy
-  double getTotalEnergy() {return m_totalEnergy;}
+  double getTotalEnergy()                            const { return m_totalEnergy; }
   /// Retrieve the energy in the crystal with the maximum enegy
-  double getMaxEnergy()   {return m_maxXtalEnergy;}  
+  double getMaxEnergy()                              const { return m_maxXtalEnergy; }  
   /// Retrieve the number of edges
-  int getNumEdges()                  {return (m_edges.size());}
+  int getNumEdges()                                  const { return m_edges.size(); }
   /// Retrieve the minimum edge length
-  double  getMinEdgeLength()	     {return m_minEdgeLength;}
+  double  getMinEdgeLength()	                     const { return m_minEdgeLength; }
   /// Retrieve the minimum edge length
-  double  getMaxEdgeLength()	     {return m_maxEdgeLength;}
+  double  getMaxEdgeLength()	                     const { return m_maxEdgeLength; }
   /// Retrieve the maximum edge length
-  double  getMeanEdgeLength()	     {return m_meanEdgeLength;}
+  double  getMeanEdgeLength()	                     const { return m_meanEdgeLength; }
   /// Retrieve the average edge length
-  double  getMeanEdgeLengthTrunc()    {return m_meanEdgeLengthTrunc;}
+  double  getMeanEdgeLengthTrunc()                   const { return m_meanEdgeLengthTrunc; }
   /// Retrieve the RMS of edges length
-  double  getRmsEdgeLength()	     {return m_rmsEdgeLength;}
+  double  getRmsEdgeLength()	                     const { return m_rmsEdgeLength; }
   /// Retrieve the RMS of edges length  after truncation
-  double  getRmsEdgeLengthTrunc()    {return m_rmsEdgeLengthTrunc;}
+  double  getRmsEdgeLengthTrunc()                    const { return m_rmsEdgeLengthTrunc; }
   /// Check if stats are available
-  double getStatsBit() {return m_statsAvailable;}
+  double getStatsBit()                               const { return m_statsAvailable; }
 
   // Other methods
   void printNodes();
-  void evalStats();
+  void clear();
+  void clearStats();
+  void evalStats(double truncFrac);
   
   
 private:
-  // Internal methods
   std::list<MSTEdge*> m_edges;
-  std::map<int, Event::CalXtalRecData*> nodemap;
+  std::map<int, Event::CalXtalRecData*> m_nodeMap;
   int  getXtalUniqueId(Event::CalXtalRecData *);
   bool m_statsAvailable;
-  // Members for MSTree properties -- length means weight in term of MSTree
-  // Note that numberOfEdges is directly available via m_edges.size()
   double m_totalEnergy;
   double m_maxXtalEnergy;
-  
   double m_minEdgeLength;
   double m_maxEdgeLength;
   double m_meanEdgeLength;
   double m_meanEdgeLengthTrunc;
   double m_rmsEdgeLength;
   double m_rmsEdgeLengthTrunc;
-  
-  
+
 };
 
-MSTTree::MSTTree () 
+MSTTree::MSTTree() 
 {
-  
-  m_edges.clear(); // make sure with know the initial state.
-  m_totalEnergy   = 0.;
-  m_maxXtalEnergy = 0.;
-  m_minEdgeLength   = 0;
-  m_maxEdgeLength   = 0;
-  m_meanEdgeLength  = 0;
-  m_meanEdgeLengthTrunc=0;
-  m_rmsEdgeLength   = 0;
-  m_rmsEdgeLengthTrunc =0;
-  m_statsAvailable=false;
-  nodemap.clear();
+  clear();
+}
+
+void MSTTree::clear()
+{
+  m_edges.clear();
+  m_nodeMap.clear();
+  clearStats();
+}
+
+void MSTTree::clearStats()
+{
+  m_totalEnergy         = 0.;
+  m_maxXtalEnergy       = 0.;
+  m_minEdgeLength       = 0;
+  m_maxEdgeLength       = 0;
+  m_meanEdgeLength      = 0;
+  m_meanEdgeLengthTrunc = 0;
+  m_rmsEdgeLength       = 0;
+  m_rmsEdgeLengthTrunc  = 0;
+  m_statsAvailable      = false; 
 }
 
 void MSTTree::addEdge(MSTEdge &_edg) 
@@ -159,78 +165,94 @@ void MSTTree::addEdge(MSTEdge &_edg)
 
 void MSTTree::addNode(Event::CalXtalRecData *_node) 
 {
-  nodemap[getXtalUniqueId(_node)] = _node;
+  m_nodeMap[getXtalUniqueId(_node)] = _node;
 }
 
 // collect some statistics for sorting, print info etc...
-void MSTTree::evalStats()
+void MSTTree::evalStats(double truncFrac)
 {
-  // characterize first the energy, loop over the cristals
-  m_totalEnergy = 0.;
-  m_maxXtalEnergy = 0.;  
+  // It doesn't hurt to reset things before we start.
+  clearStats();
+ 
+  // First loop over the xtals. 
   std::map<int, Event::CalXtalRecData*>::iterator it;
-  for ( it=nodemap.begin() ; it != nodemap.end(); it++ )
+  for ( it = m_nodeMap.begin() ; it != m_nodeMap.end(); it++ )
     {
       double xtalEnergy = (*it).second->getEnergy();
       m_totalEnergy += xtalEnergy;
-      if (xtalEnergy>=m_maxXtalEnergy) m_maxXtalEnergy = xtalEnergy;
+      if ( xtalEnergy >= m_maxXtalEnergy ) {
+	m_maxXtalEnergy = xtalEnergy;
+      }
     }
 
-  // now get the property of the edges loop over the edges
-  // but do so only if there is at least one edge !
-  // if there is no edge, i.e. it's a tree/cluster with one cristal
-  // then from the constructor the parameters should be already set to 0
-  if(getNumEdges()>0)
-    { 
+  // If there's at least one edge, loop over the edges in order to calculate the remaining quantities.
+  if( getNumEdges() > 0 ) {
+
+    // Set the minimum length to a ridiculous high value.
+    m_minEdgeLength   = 1000000.;
+
+    // Init some local variables.
+    double length     = 0.;
+    double energyFrac = 0.;
+    int truncNumEdges = 0 ;
+
+    // Start the actual loop.
     std::list<MSTEdge*>::iterator itedge;
-    double length=0.;
-    m_maxEdgeLength=0.;
-    m_minEdgeLength=1000000.;
-    for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
+    for ( itedge = m_edges.begin(); itedge != m_edges.end(); itedge++ )
       {
-    	length=(*itedge)->getWeight();
-    	if (length>=m_maxEdgeLength) m_maxEdgeLength = length;
-    	if (length<=m_minEdgeLength) m_minEdgeLength = length;
-    	m_meanEdgeLength+=length;
-    	m_rmsEdgeLength+=length*length;
-      }
-    m_meanEdgeLength/=getNumEdges();
-    m_rmsEdgeLength/=getNumEdges();
-    m_rmsEdgeLength=sqrt(m_rmsEdgeLength);
+    	length = (*itedge)->getWeight();
 
-    // now get properties truncating outliers at 3*RMS
-    int trcnt=0;
-    int NSigmaTrunc=3;
-    double maxTrunc=m_meanEdgeLength+NSigmaTrunc*m_rmsEdgeLength;
-    for ( itedge=m_edges.begin() ; itedge!=m_edges.end(); itedge++ )
-      {
-    	length=(*itedge)->getWeight();    
-    	if(length<=maxTrunc)
-    	  {
-    	  trcnt+=1;
-    	  m_meanEdgeLengthTrunc+=length;
-    	  m_rmsEdgeLengthTrunc+=length*length;    
-    	  }
+	// Update min/max edge lengths.
+    	if ( length >= m_maxEdgeLength ) {
+	  m_maxEdgeLength = length;
+	}
+    	if ( length <= m_minEdgeLength ) {
+	  m_minEdgeLength = length;
+	}
+
+	// Update mean and rms.
+    	m_meanEdgeLength += length;
+    	m_rmsEdgeLength  += length*length;
+
+	// Calculate the fractional energy of the edge: ( E(node1) + E(node2) )/totalEnergy...
+	energyFrac = ((*itedge)->getNode1()->getEnergy() + (*itedge)->getNode1()->getEnergy()) / m_totalEnergy;
+	// ...and if this exceeds the threshold passed through the proper job option, update the trunc quantities.
+	if ( energyFrac > truncFrac ) {
+	  truncNumEdges += 1;
+	  m_meanEdgeLengthTrunc += length;
+    	  m_rmsEdgeLengthTrunc  += length*length;
+	}
       }
-    m_meanEdgeLengthTrunc/=trcnt; 
-    m_rmsEdgeLengthTrunc/=trcnt; 
-    m_rmsEdgeLengthTrunc=sqrt(m_rmsEdgeLengthTrunc);
+
+    // Loop finished: normalize all this garbage! First the standard quantities...
+    m_meanEdgeLength /= getNumEdges();
+    m_rmsEdgeLength  /= getNumEdges();
+    m_rmsEdgeLength  -= (m_meanEdgeLength*m_meanEdgeLength);
+    m_rmsEdgeLength   = sqrt(m_rmsEdgeLength);
+    
+    // ...and, if it's the case, the trunc quantities.
+    if ( truncNumEdges > 0 ) {
+      m_meanEdgeLengthTrunc /= truncNumEdges;
+      m_rmsEdgeLengthTrunc  /= truncNumEdges;
+      m_rmsEdgeLengthTrunc  -= (m_meanEdgeLengthTrunc*m_meanEdgeLengthTrunc);
+      m_rmsEdgeLengthTrunc   = sqrt(m_rmsEdgeLengthTrunc);
     }
-  
-  // Set statistics bit
-  m_statsAvailable=true;
+  } 
+ 
+  // Finally set statistics bit.
+  m_statsAvailable = true;
 }
 
 void MSTTree::printNodes() 
 {
   // show tree content:
   std::map<int,  Event::CalXtalRecData*>::iterator it;
-  for ( it=nodemap.begin() ; it != nodemap.end(); it++ )
+  for ( it = m_nodeMap.begin(); it != m_nodeMap.end(); it++ ){
     std::cout << "--------> MAP: "<< (*it).first << " => " << (*it).second->getEnergy() << " MeV"<< std::endl;
-
+  }
 }
 
-// a unique Id to avoid duplication in the nodemap
+// a unique Id to avoid duplication in the m_nodeMap
 int  MSTTree::getXtalUniqueId(Event::CalXtalRecData * xTal)
 {
   idents::CalXtalId xTalId = xTal->getPackedId();
@@ -284,7 +306,7 @@ private:
   //! Utility for filling clusters
   ICalClusterFiller* m_clusterInfo;
 
-  // Keep trackk of crystals locally
+  // Keep track of crystals locally
   XtalDataList             m_xTals;
   XtalDataList             m_xTals_setA;
   Event::CalClusterHitTab* m_xTal2ClusTab;
@@ -297,23 +319,25 @@ private:
   std::list<MSTTree> m_clusterTree;
 
   // single value overwritten by model
-  float    m_maxEdgeWeight;
+  float m_maxEdgeWeight;
   // above that we do not grow a tree
-  int      m_maxNumXtals;
+  int   m_maxNumXtals;
   // Parameters to separate trees
-  float    m_maxEdgeWeightModel_thrLE;     // (mm) @ 10 MeV
-  float    m_maxEdgeWeightModel_thrPivEne; // (MeV)
-  float    m_maxEdgeWeightModel_thrHE;     // (mm) above the pivot
-
+  float m_maxEdgeWeightModel_thrLE;     // (mm) @ 10 MeV
+  float m_maxEdgeWeightModel_thrPivEne; // (MeV)
+  float m_maxEdgeWeightModel_thrHE;     // (mm) above the pivot
+  // Parameter defining the threshold for the "Trunc" variables.
+  double m_truncFrac;
+  
 } ;
 
 DECLARE_TOOL_FACTORY(CalMSTClusteringTool) ;
 
 CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type, 
-                                                 const std::string & name, 
-                                                 const IInterface* parent)
+					   const std::string & name, 
+					   const IInterface* parent)
   : AlgTool(type,name,parent),
-    m_maxEdgeWeight(300.) // Overwritten by jobOption
+    m_maxEdgeWeight(300.) // Overwritten by the algorithm.
 { 
 
   m_xTals.clear();
@@ -323,11 +347,11 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   declareInterface<ICalClusteringTool>(this) ; 
   
   // jobOptions declaration
-  declareProperty ("m_maxNumXtals"                 , m_maxEdgeWeight               = 1536.);
-  declareProperty ("m_maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE    = 500. );
-  declareProperty ("m_maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne= 1000.);
-  declareProperty ("m_maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE    = 200. );
-
+  declareProperty ("m_maxNumXtals"                 , m_maxNumXtals                  = 1536.);
+  declareProperty ("m_maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 500. );
+  declareProperty ("m_maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000.);
+  declareProperty ("m_maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 200. );
+  declareProperty ("m_truncFrac"                   , m_truncFrac                    = 0.05 );
 }
     
 StatusCode CalMSTClusteringTool::initialize()
@@ -346,10 +370,11 @@ StatusCode CalMSTClusteringTool::initialize()
     }
     
     // check if jobOptions were passed
-    log<<MSG::DEBUG<<"m_maxNumXtals                  set to "<<m_maxEdgeWeight  	     <<endreq;
-    log<<MSG::DEBUG<<"m_maxEdgeWeightModel_thrLE     set to "<<m_maxEdgeWeightModel_thrLE    <<endreq;
-    log<<MSG::DEBUG<<"m_maxEdgeWeightModel_thrPivEne set to "<<m_maxEdgeWeightModel_thrPivEne<<endreq;
-    log<<MSG::DEBUG<<"m_maxEdgeWeightModel_thrHE     set to "<<m_maxEdgeWeightModel_thrHE    <<endreq;
+    log << MSG::DEBUG << "m_maxNumXtals                  set to " << m_maxNumXtals                  << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrLE     set to " << m_maxEdgeWeightModel_thrLE     << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrPivEne set to " << m_maxEdgeWeightModel_thrPivEne << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrHE     set to " << m_maxEdgeWeightModel_thrHE     << endreq;
+    log << MSG::DEBUG << "m_truncFrac                    set to " << m_truncFrac                    << endreq;
 
     // Cluster filling utility
     // -- To be replaced with a generic version soon
@@ -386,11 +411,10 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
     m_xTal2ClusTab = new Event::CalClusterHitTab(xTal2ClusTabList);
 
     // Register the list in the TDS (which will assume ownership of the list, but not the table)
-    if (m_dataSvc->registerObject(EventModel::CalRecon::CalClusterHitTab, xTal2ClusTabList).isFailure())
-    {
-        throw GaudiException("Unable to register xTal to Cluster table in TDS", name(), StatusCode::FAILURE);
+    if (m_dataSvc->registerObject(EventModel::CalRecon::CalClusterHitTab, xTal2ClusTabList).isFailure()) {
+      throw GaudiException("Unable to register xTal to Cluster table in TDS", name(), StatusCode::FAILURE);
     }
-
+    
     // Make sure we have clean vectors to begin
     m_xTals.clear();
     m_xTals_setA.clear();
@@ -400,14 +424,14 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
     // get list of xtals 
     for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
-                it != m_calReconSvc->getXtalRecs()->end(); ++it )
-    {
+	 it != m_calReconSvc->getXtalRecs()->end(); ++it )
+      {
         // get pointer to the reconstructed data for given crystal
         Event::CalXtalRecData * recData = *it ;
-       
+	
 	XtalDataListIterator xTalIter = m_xTals_setA.insert(m_xTals_setA.end(), recData);
-    }
-
+      }
+    
     // DEBUG Print
     // take a look at list of clusters.
     //std::cout << "RRRRRRRRRRRRRRRRRRR Total number of xtals: " <<m_xTals_setA.size() << std::endl;
@@ -487,7 +511,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
 
 	// calculate stats for uber tree
-	m_uberTree.evalStats();
+	m_uberTree.evalStats(m_truncFrac);
 	m_maxEdgeWeight = getWeightThreshold(m_uberTree.getTotalEnergy());
 
 	// DEBUG Print
@@ -535,7 +559,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	// First eval some stats - energy and edges properties - fill members
 	for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
 	  {
-	    it->evalStats();	    
+	    it->evalStats(m_truncFrac);	    
 	  }
 	// Second, real sorting.
 	m_clusterTree.sort(compare_total_energy);
@@ -591,7 +615,9 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    
 	    // Set the CalMSTreeParams for the cluster and associated status bit    
 	    // make sure first that statistics are available
-	    if(treeIter->getStatsBit()==false) treeIter->evalStats();
+	    if( treeIter->getStatsBit() == false ) {
+	      treeIter->evalStats(m_truncFrac);
+	    }
 	    Event::CalMSTreeParams mstreeparams(treeIter->getTotalEnergy(),
  		  treeIter->getMaxEnergy(),	treeIter->getNumEdges(),		     
  		  treeIter->getMinEdgeLength(), treeIter->getMaxEdgeLength(),		     
