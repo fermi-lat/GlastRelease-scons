@@ -380,12 +380,12 @@ if __name__ == '__main__':
     eventNumber = 0
     while answer != 'q':
         print 'ReconReader retrieving event %d...' % eventNumber
-        display.getEntry(eventNumber)
+        cutPassed = display.getEntry(eventNumber)
         numClusters = display.getNumClusters()
         numXtals = display.getCalTotalNumXtals()
         print '%d cluster(s) found, %d xtals in total.' %\
             (numClusters, numXtals)
-        if numClusters > 0:
+        if numClusters > 0 and cutPassed:
             display.drawCluster(0)
             answer = raw_input('Press q to quit, s to save or type a number...')
         try:
