@@ -342,6 +342,8 @@ private:
   float m_maxEdgeWeightModel_thrHE;     // (mm) above the pivot
   // Parameter defining the threshold for the "Trunc" variables.
   double m_truncFrac;
+  // Flag to correct for gaps in the MST metrics.
+  bool m_correctForGaps;
   
 } ;
 
@@ -353,7 +355,6 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   : AlgTool(type,name,parent),
     m_maxEdgeWeight(300.) // Overwritten by the algorithm.
 { 
-
   m_xTals.clear();
   m_xTals_setA.clear();
   m_clusterTree.clear();
@@ -361,11 +362,12 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   declareInterface<ICalClusteringTool>(this) ; 
   
   // jobOptions declaration
-  declareProperty ("m_maxNumXtals"                 , m_maxNumXtals                  = 1536 );
-  declareProperty ("m_maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 500. );
-  declareProperty ("m_maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000.);
-  declareProperty ("m_maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 200. );
-  declareProperty ("m_truncFrac"                   , m_truncFrac                    = 0.05 );
+  declareProperty ("maxNumXtals"                 , m_maxNumXtals                  = 1536 );
+  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 500. );
+  declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000.);
+  declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 200. );
+  declareProperty ("truncFrac"                   , m_truncFrac                    = 0.05 );
+  declareProperty ("correctForGaps"              , m_correctForGaps               = true ); 
 }
     
 StatusCode CalMSTClusteringTool::initialize()
@@ -389,7 +391,8 @@ StatusCode CalMSTClusteringTool::initialize()
     log << MSG::DEBUG << "m_maxEdgeWeightModel_thrPivEne set to " << m_maxEdgeWeightModel_thrPivEne << endreq;
     log << MSG::DEBUG << "m_maxEdgeWeightModel_thrHE     set to " << m_maxEdgeWeightModel_thrHE     << endreq;
     log << MSG::DEBUG << "m_truncFrac                    set to " << m_truncFrac                    << endreq;
-
+    log << MSG::DEBUG << "m_correctForGaps               set to " << m_correctForGaps               << endreq;
+    
     // Cluster filling utility
     // -- To be replaced with a generic version soon
     m_clusterInfo = new MomentsClusterInfo(m_calReconSvc);
@@ -445,11 +448,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	
 	XtalDataListIterator xTalIter = m_xTals_setA.insert(m_xTals_setA.end(), recData);
       }
-    
-    // DEBUG Print
-    // take a look at list of clusters.
-    //std::cout << "RRRRRRRRRRRRRRRRRRR Total number of xtals: " <<m_xTals_setA.size() << std::endl;
-    // End of DEBUG Print
 
     // case of 0 and 1 xtal will be handled separately...
     if (m_xTals_setA.size()>1)
@@ -460,13 +458,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	// select a starting xtal
 	m_xTals.push_back(m_xTals_setA.front());
 	m_xTals_setA.pop_front();
-
-	// DEBUG Print
-	//std::cout << "RRRRRRRRRRRRRRRRRRR We start the loop with setA size = " 
-	//	  << m_xTals_setA.size() << " and setB size = " << m_xTals.size() << std::endl;
-	//std::cout << "WWWWWWWWWWW Filling the Uber Tree:" << std::endl;
-	//std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl;
-	// End of DEBUG Print
 
 	// loop until there are unassociated xtals
 	while(! m_xTals_setA.empty())
@@ -495,18 +486,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	    m_uberEdges.push_back( MSTEdge(*bestXtal1,*bestXtal2, sqrt(minWeight)) ); 
 	    m_uberTree.addEdge( m_uberEdges.back());
 
-	    // DEBUG Print
-	    //idents::CalXtalId xTalId1 = bestXtal1->getPackedId();
-	    //idents::CalXtalId xTalId2 = bestXtal2->getPackedId();	    
-	    //Point xTalPoint1 = bestXtal1->getPosition();
-	    //Point xTalPoint2 = bestXtal2->getPosition();
-	    ///* std::cout << "Map1\tE1\tX1\tY1\tZ1\tMap2\tE2\tX2\tY2\tZ2\tW" << std::endl; */
-	    //std::cout <<  xTalId1.getPackedId() <<"\t" << bestXtal1->getEnergy()  <<"\t"<< xTalPoint1.x()  <<"\t"<< xTalPoint1.y()  <<"\t"<< xTalPoint1.z()  <<"\t";
-	    //std::cout <<  xTalId2.getPackedId() <<"\t" << bestXtal2->getEnergy()  <<"\t"<< xTalPoint2.x()  <<"\t"<< xTalPoint2.y()  <<"\t"<< xTalPoint2.z()  <<"\t";
-	    //std::cout << sqrt(minWeight) << std::endl;
-	    // end of DEBUG Print
-
-	    
 	    // add best xtal2 to m_xTals and remove it from m_xTal_setA
 	    m_xTals.push_back(bestXtal2);
     
@@ -528,11 +507,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	m_uberTree.evalStats(m_truncFrac);
 	m_maxEdgeWeight = getWeightThreshold(m_uberTree.getTotalEnergy());
 
-	// DEBUG Print
-	//std::cout << "WWWWWWWWWWWSSSSSSSSSSS Final Uber Tree size: " << m_uberTree.size() << std::endl;
-	//std::cout << "WWWWWWWWWWWSSSSSSSSSSS Max weight for this event is: " << m_maxEdgeWeight << " for E= " << m_uberTree.getTotalEnergy() << std::endl;
-	// end of DEBUG Print
-
 	// Now we have the uber tree, need to loop over its edges 
 	// and remove those above threshold;
 	
@@ -546,14 +520,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	  MSTEdge* thisEdge = *it;
 	  if (thisEdge->getWeight() > m_maxEdgeWeight) // time to split the tree.
 	    {
-	      // DEBUG Print
-	      //idents::CalXtalId xTalId1 = thisEdge->getNode1()->getPackedId();
-	      //idents::CalXtalId xTalId2 = thisEdge->getNode2()->getPackedId();
-	      //std::cout << "WWWWWWWWWWWCCCCCCCC Found a large weight: " << thisEdge->getWeight() << std::endl;
-	      //std::cout << "WWWWWWWWWWWCCCCCCCC Node1: Map " << xTalId1.getPackedId() << " E="<<  thisEdge->getNode1()->getEnergy() << std::endl;
-	      //std::cout << "WWWWWWWWWWWCCCCCCCC Node2: Map " << xTalId2.getPackedId() << " E="<<  thisEdge->getNode2()->getEnergy() << std::endl;
-	      // end of DEBUG Print
-
 	      // Add node ONLY if splitting the very first edge.
 	      if (myEdgeCounter == 0){m_clusterTree.back().addNode(thisEdge->getNode1());}
 
@@ -578,22 +544,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	// Second, real sorting.
 	m_clusterTree.sort(compare_total_energy);
 
-	// DEBUG Print
-	// print all the nodes in the tree to check that is works.
-	//int count = 0;
-	//std::cout << "WWWWWWWWWWWCCCCCCCC Number of trees " << m_clusterTree.size() << std::endl;
-	//for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
-	//  {
-	//    std::cout << "WWWWWWWWWWWCCCCCCCC Tree number " << count << std::endl;
-	//    count++;
-	//    MSTTree thisTree = *it;
-	//    std::cout << "WWWWWWWWWWWCCCCCCCC TotalEnergy " << thisTree.getTotalEnergy() << " MaxEnergy " << thisTree.getMaxEnergy() << std::endl;
-	//    thisTree.printNodes();
-	//  }
-	// end of DEBUG Print
-	
-      
-
 	// Now add the uber tree to the end of our list
 	// But only do so if more than one cluster found
 	if (m_clusterTree.size() > 1) m_clusterTree.push_back(m_uberTree);
@@ -614,10 +564,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 		// get pointer to the reconstructed data for given crystal
 		Event::CalXtalRecData * recData = (*mapIter).second ;
 		xTalClus->push_back(recData);
-
-		// end of DEBUG Print	
-		//std::cout << "--------> FILLING CLUSTERS MAP: "<< (*mapIter).first << " => " << recData->getEnergy() << " MeV"<< std::endl;
-
 	      }
 
 	    // create and fill the cluster - from Tracy
@@ -640,8 +586,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 		  
 	    cluster->setMSTreeParams(mstreeparams);
 	    cluster->setStatusBit(Event::CalCluster::MSTTREE);
-	    // Raw debugging -- works
-	    //std::cout<<"CalMSTreeParams "<<cluster->getMSTreeParams()<<std::endl;
 	    	    
 	    // Add cluster into the collection
 	    calClusterCol->push_back(cluster);
@@ -702,31 +646,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
     return StatusCode::SUCCESS ;
 }
 
-
-// weight calculation between 2 xtals
-// double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::CalXtalRecData* xTal2 )
-// {
-//   // calculate the weights of the line that connects two xtals
-//   // now is the (square of the) euclidean distance, but is can be a more complex function
-//   // keep in mind that this function is called O(N^2) times per events (N= number od xtals)
-//   // so it must be as fast as possible.
-
-//   //Compute distance to this xTal
-
-//   // is this faster? 
-//   //Vector distVec = xTal1->getPosition() - xTal2->getPosition();
-//   //double dist2 = distVec.square();
-
-//   Point xTalPoint1 = xTal1->getPosition();
-//   Point xTalPoint2 = xTal2->getPosition();
-
-//   double dist2 = (xTalPoint1.x() - xTalPoint2.x())*(xTalPoint1.x() - xTalPoint2.x()) +
-//     (xTalPoint1.y() - xTalPoint2.y())*(xTalPoint1.y() - xTalPoint2.y()) +
-//     (xTalPoint1.z() - xTalPoint2.z())*(xTalPoint1.z() - xTalPoint2.z());
-
-//   return dist2 ;
-// }
-
 double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::CalXtalRecData* xTal2 )
 {
     // calculate the weights of the line that connects two xtals
@@ -750,35 +669,31 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
 	(xTalPoint1.z() - xTalPoint2.z())*(xTalPoint1.z() - xTalPoint2.z());
     
 
-    if (xTal1Tower == xTal2Tower)
-	{
-	    return dist2 ;
-	}
-    else
-	{
-	    int nGapsX = abs( (xTal1Tower%4) - (xTal2Tower%4)) ;
-	    int nGapsY = abs( (xTal1Tower/4) - (xTal2Tower/4)) ;
-	    // R_gap_x = xtalGap/(cos(theta) * sin(phi)) and R_gap_y = xtalGap/(sin(theta)* sin(phi))
-	    // cos(theta) = dx/L ; sin(theta) = dy/L and sin(phi) = L/R with R = sqrt(dx^2 + dy^2 +dz^2) and L = sqrt(dx^2 + dy^2)
-	    // D = R - nGapsX*R_gap_x  - nGapsY*R_gap_y =
-            //   = R - nGapsX*xtalGap*(L/dx)*(R/L) - nGapsY*xtalGap*(L/dy)*(R/L) = R(1 - nGapsX*xtalGap/dx - nGapsY*xtalGap/dy )
-	    double dist2Corr = 1.-  XTAL_GAP_DIST*nGapsX/fabs(xTalPoint1.x() - xTalPoint2.x()) - XTAL_GAP_DIST*nGapsY/fabs(xTalPoint1.y() - xTalPoint2.y());
-
-	    return dist2*dist2Corr*dist2Corr ;
-	}
+    if ( (xTal1Tower == xTal2Tower) || (m_correctForGaps == false)) {
+      return dist2 ;
+    }
+    else {
+      int nGapsX = abs( (xTal1Tower%4) - (xTal2Tower%4)) ;
+      int nGapsY = abs( (xTal1Tower/4) - (xTal2Tower/4)) ;
+      // R_gap_x = xtalGap/(cos(theta) * sin(phi)) and R_gap_y = xtalGap/(sin(theta)* sin(phi))
+      // cos(theta) = dx/L ; sin(theta) = dy/L and sin(phi) = L/R with R = sqrt(dx^2 + dy^2 +dz^2) and L = sqrt(dx^2 + dy^2)
+      // D = R - nGapsX*R_gap_x  - nGapsY*R_gap_y =
+      //   = R - nGapsX*xtalGap*(L/dx)*(R/L) - nGapsY*xtalGap*(L/dy)*(R/L) = R(1 - nGapsX*xtalGap/dx - nGapsY*xtalGap/dy )
+      double dist2Corr = 1.-  XTAL_GAP_DIST*nGapsX/fabs(xTalPoint1.x() - xTalPoint2.x()) -
+	XTAL_GAP_DIST*nGapsY/fabs(xTalPoint1.y() - xTalPoint2.y());
+      
+      return dist2*dist2Corr*dist2Corr ;
+    }
 }
 
 double CalMSTClusteringTool::getWeightThreshold(double energy)
 {
   // Implement a max weight per events that is energy dependent, defaults:
-  //  m_maxEdgeWeightModel_thrLE    =500. 
-  //  m_maxEdgeWeightModel_thrPivEne=1000.
-  //  m_maxEdgeWeightModel_thrHE    =200. 
-
-  if (energy>m_maxEdgeWeightModel_thrPivEne)
-      return m_maxEdgeWeightModel_thrHE;
-  else
-      return ( m_maxEdgeWeightModel_thrLE - 150.0*(log10(energy) - 1));
-  
+  if (energy>m_maxEdgeWeightModel_thrPivEne) {
+    return m_maxEdgeWeightModel_thrHE;
+  }
+  else {
+    return m_maxEdgeWeightModel_thrLE - 150.0*(log10(energy) - 1);
+  }
 }
 
