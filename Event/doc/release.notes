@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-06-02 11-Jan-2011 TU Updates to the Tracker Filter stuff
  Event-14-06-01 08-Jan-2011  lsrea fix iterator over probMap
  Event-14-06-00 04-Jan-2011 TU  Tagging with new Cal from Luca, new Tkr filter objects
  Event-14-05-03 09-Dec-2010  lsrea include status bits in TkrTrack
