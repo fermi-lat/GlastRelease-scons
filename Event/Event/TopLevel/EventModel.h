@@ -136,10 +136,12 @@ public:
         static std::string TkrEventParams;
         static std::string TkrFilterParamsCol;
         static std::string TkrFilterParamsToBoxTab;
+        static std::string TkrFilterParamsToLinksTab;
         static std::string TkrFilterParamsToPointsTab;
         static std::string TkrTruncatedPlane;
         static std::string TkrTruncationInfo;
         static std::string TkrBoundBoxCol;
+        static std::string TkrBoundBoxLinksCol;
         static std::string TkrBoundBoxPointsCol;
         static std::string TkrBoundBoxPointsToBoxTab;
         static std::string TkrVecPointCol;

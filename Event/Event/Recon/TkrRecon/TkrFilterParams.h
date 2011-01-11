@@ -119,6 +119,12 @@ typedef ObjectList<TkrFilterParams>                     TkrFilterParamsCol;
 typedef TkrFilterParamsCol::iterator                    TkrFilterParamsColPtr;
 typedef TkrFilterParamsCol::const_iterator              TkrFilterParamsColConPtr;
 
+class TkrBoundBoxLink;
+
+typedef RelTable<TkrFilterParams, TkrBoundBoxLink>     TkrFilterParamsToLinksTab;
+typedef Relation<TkrFilterParams, TkrBoundBoxLink>     TkrFilterParamsToLinksRel;
+typedef RelationList<TkrFilterParams, TkrBoundBoxLink> TkrFilterParamsToLinksTabList;
+
 class TkrBoundBox;
 
 typedef RelTable<TkrFilterParams, TkrBoundBox>          TkrFilterParamsToBoxTab;
