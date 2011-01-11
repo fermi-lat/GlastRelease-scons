@@ -1,4 +1,5 @@
-/**
+/*
+ *
  * @program scanTuple
  *
  * @brief
@@ -9,12 +10,15 @@
  * @author Michael Kuss
  *
  * $Header$
+ *
  */
 
 #include <iomanip>
 
 void scanTuple(const TString filename="merit.root",
                const TString treename="MeritTuple") {
+
+    const Bool_t debugFlag = kFALSE;
 
     gROOT->Reset();
     gROOT->Clear();
@@ -48,7 +52,6 @@ void scanTuple(const TString filename="merit.root",
         tt->GetEntry(itt);
 
         Int_t EvtRun = -123456789;
-//LSR 14-Jul-08 code for ntuple types; new type for EvtEventId
         ULong64_t EvtEventId = -123456789;
         Float_t McId = -123456789;
         Double_t EvtElapsedTime = -123456789;
@@ -57,6 +60,11 @@ void scanTuple(const TString filename="merit.root",
         for ( Int_t itl=0; itl<tlSize; ++itl ) {
             const TLeaf* tl = (TLeaf*)tlList->UncheckedAt(itl);
             const TString name = tl->GetName();
+            if ( name(0,3) == "Aud" ) {
+                if ( debugFlag )
+                    std::cout << "Skipping auditor variable " <<name<<std::endl;
+                continue;
+            }
             const TString type = tl->IsA()->GetName();
             Int_t len = tl->GetLen();
             if ( len < 1 ) {
@@ -64,52 +72,37 @@ void scanTuple(const TString filename="merit.root",
                           << " has length " << len << std::endl;
                 continue;
             }
+            // I was asking myself: "what is len?".
+            // Reply: some leaves are arrays, but most of them are of
+            // fundamental types and have length 1!
             for ( Int_t l=0; l<len; ++l ) {
-                if ( type == "TLeafF" ) {
-                    const Float_t fv = tl->GetValue(l);
-                    const UInt_t s = sizeof(fv);
-                    md5.Update((UChar_t*)&fv, s);
-                    if ( name == "McId" )
-                        McId = fv;
-                }
-                else if ( type == "TLeafD" ) {
-                    const Double_t dv = tl->GetValue(l);
-                    const UInt_t s = sizeof(dv);
-                    md5.Update((UChar_t*)&dv, s);
-                    if ( name == "EvtElapsedTime" )
-                        EvtElapsedTime = dv;
-                }
-                else if ( type == "TLeafI" ) {
-                    const Int_t iv = tl->GetValue(l);
-                    const UInt_t s = sizeof(iv);
-                    md5.Update((UChar_t*)&iv, s);
-                    if ( name == "EvtRun" )
-                        EvtRun = iv;
-                    if ( name == "EvtEventId" )
-                        EvtEventId = iv;
-                }
-                else if ( type == "TLeafC" ) {
-                    // GetValueString() makes the ENTIRE code very slow!
-                    //const TString sv = ((TLeafC*)tl)->GetValueString();
-                    const char* sv = tl->GetValuePointer();
-                    const UInt_t s = len;
-                    md5.Update((UChar_t*)sv, s);
-                    len = 1;
-                    break;
-                }
-                else {
-                    std::cout << "Leaf type " << type
-                              << " not implemented yet!" << std::endl;
-                }
+                // TLeaf.GetValue() is of type Double_t for all leave types!
+                // Thus, there is no point using the original type of the
+                // contained variable, e.g. Int_t for TLeafI!
+                const Double_t v = tl->GetValue(l);
+                const UInt_t s = sizeof(v);
+                md5.Update((UChar_t*)&v, s);
+                if ( name == "EvtRun" )
+                    EvtRun = v;
+                else if ( name == "EvtEventId64" )
+                    EvtEventId = v;
+                else if ( name == "McId" )
+                    McId = v;
+                else if ( name == "EvtElapsedTime" )
+                    EvtElapsedTime = v;
             }
-            /*
-              std::cout << type << "[" << len << "] " << name;
-              for ( Int_t l=0; l<len; ++l ) {
-              std::cout << ' ';
-              tl->PrintValue(l);
-              }
-              std::cout << std::endl;
-            */
+            if ( debugFlag ) {
+                //                std::cout << "Leaf " << name << " of type " << type
+                //                          << " has value " << v << std::endl;
+                std::cout << name << ' ' << type;
+                if ( len != 1 )
+                    std::cout << '[' << len << ']';
+                for ( Int_t l=0; l<len; ++l ) {
+                    std::cout << ' ';
+                    tl->PrintValue(l);
+                }
+                std::cout << std::endl;
+            }
         }
 
         md5.Final();
