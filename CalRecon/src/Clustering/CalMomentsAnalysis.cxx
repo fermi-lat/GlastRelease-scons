@@ -155,14 +155,14 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 	// thing is really incorrect and, if these quantities will ever turn out
 	// to be useful we'll probably have to devise something smarter, here
 	// (i. e. use a real propagator).
-	// Also the gap between towers (51.3 mm) should not be hard-coded but
+	// Also the gap between towers (45.6 mm) should not be hard-coded but
 	// retrieved from the appropriate service.
 	int tower = dataPoint.getTower();
 	if ( absxdir > 0.05 ) {
-	  t -= 51.3*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
+	  t -= 45.6*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
 	}
 	if ( absydir > 0.05 ) {
-	  t -= 51.3*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
+	  t -= 45.6*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
 	}
 	// End of the "embarassing" part of the code (Luca Baldini, Dec. 26, 2010).
 	
