@@ -164,7 +164,7 @@ TkrReconAlg::TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) 
 {
     // Variable to select reconstruction type
-    declareProperty("TrackerReconType", m_TrackerReconType="Combo");
+    declareProperty("TrackerReconType", m_TrackerReconType="TreeBased");
     // the following are for testing and debugging the code
     // defaults are set correctly for standard use
 

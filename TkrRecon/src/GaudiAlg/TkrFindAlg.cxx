@@ -236,7 +236,7 @@ StatusCode TkrFindAlg::execute()
         AlgTool* findCRAlgTool = dynamic_cast<AlgTool*>(m_CRFindTool);    
 
         findCRAlgTool->setProperty("PatrecMode", "CosmicRay");
-        sc = m_findTool->findTracks();
+        sc = m_CRFindTool->findTracks();
     }
     
     // now set TkrQueryClustersTool to return only non-ghost tracks, and do normal patrec
