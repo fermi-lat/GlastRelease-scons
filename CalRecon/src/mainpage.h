@@ -5,20 +5,18 @@
  *
  * @authors A.Chekhtman, R.Terrier, J.A.Hernando, G. Musat, B. Giebels, L. Baldini, J. Bregeon, C. Sgro'
  *
- * @warning This documentation is obsolete and is now under revision.
- *
  * @section intro Introduction
  *
- *  CalRecon package reconstructs the energy and direction  of  incident particle from
+ *  CalRecon package reconstructs the energy and direction of incident particle from
  *   the calorimeter information. 
  *   
  *   The package contains 6 algorithms:
- *   - CalDisplay: extracts the reconstructed calorimeter data from TDS classes and draw the graphic representation
  *   - CalClustersAlg: groups nearby hit cristals into clusters, different algorithms are available
  *   - CalClassifyAlg: classifies clusters according to their topology (gamma-like, mip-like...)
  *   - CalEventEnergyAlg: controls and applies the various energy correction tools used to determine the final event energy
  *   - CalMipFinderAlg: looks for minimum ionizing particle tracks in the calorimeter (usually turned off)
  *   - PropertiesCheckAlg: internal algorithm to check jobOption properties ?
+ *   - CalDisplay: extracts the reconstructed calorimeter data from TDS classes and draw the graphic representation
  *
  *   The  control flow diagram of CalRecon package, including also the CalDigi package,
  *   is given on the following WEB page:
