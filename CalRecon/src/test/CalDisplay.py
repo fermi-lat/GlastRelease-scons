@@ -276,24 +276,57 @@ class CalDisplay(ReconReader):
         z1 = Z_MIN
         x2 = xc + (Z_MAX - zc)*(dx/dz)
         z2 = Z_MAX
-        self.XZCentrMarker = ROOT.TMarker(xc, zc, 20)
-        self.XZCentrMarker.SetMarkerColor(ROOT.kRed)
-        self.XZDirection = ROOT.TLine(x1, z1, x2, z2)
-        self.XZDirection.SetLineColor(ROOT.kRed)
-        self.XZDirection.SetLineWidth(1)
+        self.XZMomCentrMarker = ROOT.TMarker(xc, zc, 20)
+        self.XZMomCentrMarker.SetMarkerColor(ROOT.kRed)
+        self.XZMomDirection = ROOT.TLine(x1, z1, x2, z2)
+        self.XZMomDirection.SetLineColor(ROOT.kRed)
+        self.XZMomDirection.SetLineWidth(1)
         self.Canvas.cd(1).cd(1)
-        self.XZCentrMarker.Draw()
-        self.XZDirection.Draw()
+        self.XZMomCentrMarker.Draw()
+        self.XZMomDirection.Draw()
         y1 = yc - (zc - Z_MIN)*(dy/dz)
         y2 = yc + (Z_MAX - zc)*(dy/dz)
-        self.YZCentrMarker = ROOT.TMarker(yc, zc, 20)
-        self.YZCentrMarker.SetMarkerColor(ROOT.kRed)
-        self.YZDirection = ROOT.TLine(y1, z1, y2, z2)
-        self.YZDirection.SetLineColor(ROOT.kRed)
-        self.YZDirection.SetLineWidth(1)
+        self.YZMomCentrMarker = ROOT.TMarker(yc, zc, 20)
+        self.YZMomCentrMarker.SetMarkerColor(ROOT.kRed)
+        self.YZMomDirection = ROOT.TLine(y1, z1, y2, z2)
+        self.YZMomDirection.SetLineColor(ROOT.kRed)
+        self.YZMomDirection.SetLineWidth(1)
         self.Canvas.cd(1).cd(2)
-        self.YZCentrMarker.Draw()
-        self.YZDirection.Draw()
+        self.YZMomCentrMarker.Draw()
+        self.YZMomDirection.Draw()
+
+    def __drawCalFitParams(self):
+        fitParams = self.Cluster.getFitParams()
+        xc = fitParams.getCentroid().x()
+        yc = fitParams.getCentroid().y()
+        zc = fitParams.getCentroid().z()
+        dx = fitParams.getAxis().x()
+        dy = fitParams.getAxis().y()
+        dz = fitParams.getAxis().z()
+        if dz == 0.:
+            dz = 0.0001
+        x1 = xc - (zc - Z_MIN)*(dx/dz)
+        z1 = Z_MIN
+        x2 = xc + (Z_MAX - zc)*(dx/dz)
+        z2 = Z_MAX
+        self.XZFitCentrMarker = ROOT.TMarker(xc, zc, 20)
+        self.XZFitCentrMarker.SetMarkerColor(ROOT.kBlack)
+        self.XZFitDirection = ROOT.TLine(x1, z1, x2, z2)
+        self.XZFitDirection.SetLineColor(ROOT.kBlack)
+        self.XZFitDirection.SetLineWidth(1)
+        self.Canvas.cd(1).cd(1)
+        self.XZFitCentrMarker.Draw()
+        self.XZFitDirection.Draw()
+        y1 = yc - (zc - Z_MIN)*(dy/dz)
+        y2 = yc + (Z_MAX - zc)*(dy/dz)
+        self.YZFitCentrMarker = ROOT.TMarker(yc, zc, 20)
+        self.YZFitCentrMarker.SetMarkerColor(ROOT.kBlack)
+        self.YZFitDirection = ROOT.TLine(y1, z1, y2, z2)
+        self.YZFitDirection.SetLineColor(ROOT.kBlack)
+        self.YZFitDirection.SetLineWidth(1)
+        self.Canvas.cd(1).cd(2)
+        self.YZFitCentrMarker.Draw()
+        self.YZFitDirection.Draw()
 
     def __drawXtalEneDist(self, truncFact = 0.02):
         if self.XtalEneHist is not None:
@@ -340,6 +373,8 @@ class CalDisplay(ReconReader):
         self.__drawXtals()
         # Draw direction/centroid from the moments analysis.
         self.__drawCalMomParams()
+        # Draw direction/centroid from the fit.
+        self.__drawCalFitParams()
         # Draw the MC directions.
         self.__drawMcDir()
         # Draw the various histograms/graphs.
