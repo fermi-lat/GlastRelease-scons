@@ -189,8 +189,18 @@ void MSTTree::evalStats(double truncFrac)
       }
     }
 
-  // If there's at least one edge, loop over the edges in order to calculate the remaining quantities.
-  if( getNumEdges() > 0 ) {
+  // Handle the case of cluster with one single edge separately. In this case the min/max/ave values
+  // are all the same.
+  if ( getNumEdges() == 1 ) {
+    double length = m_edges.front()->getWeight();
+    m_minEdgeLength = length;
+    m_maxEdgeLength = length;
+    m_meanEdgeLength = length;
+    m_meanEdgeLengthTrunc = length;
+  }
+
+  // If there's more than one edge, loop over the edges in order to calculate the remaining quantities.
+  if( getNumEdges() > 1 ) {
 
     // Set the minimum length to a ridiculous high value.
     m_minEdgeLength   = 1000000.;
@@ -205,9 +215,9 @@ void MSTTree::evalStats(double truncFrac)
     for ( itedge = m_edges.begin(); itedge != m_edges.end(); itedge++ )
       {
     	length = (*itedge)->getWeight();
-
+	
 	// Update min/max edge lengths.
-    	if ( length >= m_maxEdgeLength ) {
+	if ( length >= m_maxEdgeLength ) {
 	  m_maxEdgeLength = length;
 	}
     	if ( length <= m_minEdgeLength ) {
