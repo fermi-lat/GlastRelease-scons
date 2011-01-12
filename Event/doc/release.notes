@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-06-03 11-Jan-2011  lsrea add USEDCR bit to TkrCluster status
  Event-14-06-02 11-Jan-2011 TU Updates to the Tracker Filter stuff
  Event-14-06-01 08-Jan-2011  lsrea fix iterator over probMap
  Event-14-06-00 04-Jan-2011 TU  Tagging with new Cal from Luca, new Tkr filter objects
