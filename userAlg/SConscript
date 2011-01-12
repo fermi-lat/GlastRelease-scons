@@ -33,7 +33,8 @@ test_userAlg = progEnv.GaudiProgram('test_userAlg', ['src/UserAlg.cxx', 'src/Reg
 
 progEnv.Tool('registerTargets', package = 'userAlg',
 	     testAppCxts = [[test_userAlg, progEnv], [userApp,progEnv]],
-	     jo = listFiles(['src/*.txt', 'src/test/jobOptions.txt']))
+	     jo = listFiles(['src/*.txt', 'src/test/jobOptions.txt']),
+         xml = listFiles(['xml/*.xml']))
 
 
 

@@ -44,6 +44,9 @@ Output.Members={}; // turn off rootwriter.
 UserAlg.treeName="user";
 ApplicationMgr.EvtMax =1000;
 
+TkrFindFirst.DoCRFinding = false;
+TkrFindFirst.TrackFindType = "TreeBased";
+
 
 //==============================================================
 //
