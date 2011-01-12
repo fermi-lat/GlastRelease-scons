@@ -54,12 +54,12 @@ namespace Event {
         //
         // |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
         //
-        //            A   A         T   S   G                 R        {Cntlr}  U
-        //            l   l         o   a   h                 e          0=0    s
-        //            o   o         T   m   o                 m          1=1    e
-        //            n   n         2   e   s                 o         2=1+2   d
-        //            E   e         5   T   t                 v            
-        //            n             5   k                     e         
+        //            A   A         T   S   G                 R     u  {Cntlr}  U
+        //            l   l         o   a   h                 e     s    0=0    s
+        //            o   o         T   m   o                 m     e    1=1    e
+        //            n   n         2   e   s                 o     d   2=1+2   d
+        //            E   e         5   T   t                 v     C      
+        //            n             5   k                     e     R   
         //            d                                       d
         //
         // High-order bits (16-31, right to left):
@@ -77,6 +77,7 @@ namespace Event {
         enum { 
             fieldUSED        = 1,    // tells whether cluster is used on a track
             fieldEND         = 3,    // identifies controller, 0, 1, 2=mixed
+            fieldUSEDCR      = 1,    // cluster used on a CR track
             fieldREMOVED     = 1,    // cluster removed by Ghost Filter
             fieldGHOST       = 1,    // cluster is marked as a ghost
             fieldSAMETRACK   = 1,    // This cluster belongs to a track with a 255 or ghost
@@ -91,6 +92,7 @@ namespace Event {
         enum {    
             shiftUSED        =  0,
             shiftEND         =  1,
+            shiftUSEDCR      =  3,
             shiftREMOVED     =  4,
             shiftGHOST       =  8,
             shiftSAMETRACK   =  9,
@@ -105,6 +107,7 @@ namespace Event {
         enum maskType {
             maskUSED        = fieldUSED<<shiftUSED,
             maskEND         = fieldEND<<shiftEND,
+            maskUSEDCR      = fieldUSEDCR<<shiftUSEDCR,
             maskREMOVED     = fieldREMOVED<<shiftREMOVED,
             maskGHOST       = fieldGHOST<<shiftGHOST,
             maskSAMETRACK   = fieldSAMETRACK<<shiftSAMETRACK,
@@ -207,6 +210,13 @@ namespace Event {
             m_status &= ~mask;
         }
 
+        /// move USED bit to USEDCR bit, to avoid interfering with subsequent finding
+        inline void setUSEDCRBit() {
+            if(m_status & maskUSED) {
+                m_status &= ~maskUSED;
+                m_status |= maskUSEDCR;
+            }
+        }
 
     private:
 
