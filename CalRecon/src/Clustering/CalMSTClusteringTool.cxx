@@ -23,7 +23,6 @@
 #include "StdClusterInfo.h"
 #include "MomentsClusterInfo.h"
 
-#include "TMath.h"
 
 // A useful typedef 
 typedef  XtalDataList::iterator XtalDataListIterator;
@@ -61,7 +60,10 @@ private:
   Event::CalXtalRecData* node2;
   double weight;
 
+
 };
+
+
 
 void MSTEdge::setEdge(Event::CalXtalRecData* _node1, Event::CalXtalRecData* _node2, double _weight)
 {
@@ -667,7 +669,19 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
     double dist2 = (xTalPoint1.x() - xTalPoint2.x())*(xTalPoint1.x() - xTalPoint2.x()) +
 	(xTalPoint1.y() - xTalPoint2.y())*(xTalPoint1.y() - xTalPoint2.y()) +
 	(xTalPoint1.z() - xTalPoint2.z())*(xTalPoint1.z() - xTalPoint2.z());
-    
+
+    //double xtalEnergy1 = xTal1->getEnergy();
+    //double xtalEnergy2 = xTal2->getEnergy();
+    //double eneDist = (1. + ((xtalEnergy1 - xtalEnergy2)/(xtalEnergy1 + xtalEnergy2))*((xtalEnergy1 - xtalEnergy2)/(xtalEnergy1 + xtalEnergy2)) );
+    /*
+     double eneDist = 1.;
+    if (xtalEnergy1>xtalEnergy2) {
+	eneDist = 1. + log10(xtalEnergy1/xtalEnergy2);
+    }
+    else {
+	eneDist = 1. + log10(xtalEnergy2/xtalEnergy1);
+    }
+    */
 
     if ( (xTal1Tower == xTal2Tower) || (m_correctForGaps == false)) {
       return dist2 ;
