@@ -143,11 +143,11 @@ namespace Event { //Namespace Event
     double m_longRmsAsym;
     /// Skewness of the energy profile along the cluster axis.
     double m_longSkewness;
+    /// Fractional energy sum within 1 (or wathever) Moliere radius from the cluster axis.
+    double m_coreEnergyFrac;
     /// The distance (in radiation lengths) between the positions of the first and
     /// the last xtal, projected along the main axis of the cluster.
     double m_fullLength;
-    /// Fractional energy sum within 1 (or wathever) Moliere radius from the cluster axis.
-    double m_coreEnergyFrac;
     /// Fractional spread of the energy loss dE/dx along the cluster axis
     /// (not implemented, yet).
     double m_dEdxSpread;
