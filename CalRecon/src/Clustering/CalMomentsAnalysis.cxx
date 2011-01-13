@@ -60,11 +60,11 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       // Construct elements of (symmetric) "Inertia" Tensor:
       // See Goldstein, 1965, Chapter 5 (especially, eqs. 5-6, 7, 22, 26).
       // Analysis easy when translated to energy centroid.
-      
+ 
       // Get pointer to the reconstructed data for given crystal.
       const CalMomentsData& dataPoint = *vecIter;
       double weight = dataPoint.getWeight();
-      Vector hit    = dataPoint.getPosition() - iniCentroid;
+      Vector hit = dataPoint.getPosition() - iniCentroid;
       double Rsq  = hit.mag2();
       double xprm = hit.x();
       double yprm = hit.y();

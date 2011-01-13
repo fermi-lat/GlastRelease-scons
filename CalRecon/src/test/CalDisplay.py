@@ -86,6 +86,15 @@ class CalMomentsData:
             self.YZMarker.SetMarkerStyle(1)
             self.XYMarker.SetMarkerStyle(1)
 
+    def setColor(self, color, redraw = False):
+        self.XZMarker.SetMarkerColor(color)
+        self.YZMarker.SetMarkerColor(color)
+        self.XYMarker.SetMarkerColor(color)
+        if redraw:
+            self.XZMarker.Draw()
+            self.YZMarker.Draw()
+            self.XYMarker.Draw()
+
     def getTower(self):
         return self.XtalData.getPackedId().getTower()
 

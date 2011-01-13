@@ -329,18 +329,24 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
       
       CalMomentsData momData(*xtalIter);
       momData.applyFitCorrection(cluster->getFitParams(), m_calReconSvc);
- 
-      // Check whether the xtal is saturated.
-      if ( xtalSaturated(momData) ) {
-	momData.setSaturated();
-	if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
+
+      // If the fit is reasonable, we might take advantage of it.
+      if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
+	// Check whether the xtal is saturated.
+	if ( xtalSaturated(momData) ) {
+	  momData.setStatusBit(CalMomentsData::SATURATED);
 	  momData.enableFitCorrection();
 	}
-      }
+	// If the longitudinal position is right on the edge of the xtal,
+	// or if the fit position is close to the xtal edge, use the fit position.
+	if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
+	     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
+	  momData.enableFitCorrection();
+	}
+      }    
       
       // Put the object into the vector.
       momDataVec.push_back(momData);
-      std::cout << momData << std::endl;
     }
 
   // Do the actual moments analysis.
