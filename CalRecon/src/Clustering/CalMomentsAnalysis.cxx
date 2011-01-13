@@ -64,7 +64,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       // Get pointer to the reconstructed data for given crystal.
       const CalMomentsData& dataPoint = *vecIter;
       double weight = dataPoint.getWeight();
-      Vector hit    = dataPoint.getPoint() - iniCentroid;
+      Vector hit    = dataPoint.getPosition() - iniCentroid;
       double Rsq  = hit.mag2();
       double xprm = hit.x();
       double yprm = hit.y();
@@ -80,7 +80,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       
       // ...and cetntroid/energy.
       weightSum += weight;
-      centroid  += weight * dataPoint.getPoint();
+      centroid  += weight * dataPoint.getPosition();
     }
 
   // Render determinant of Inertia Tensor into cubic form.
@@ -286,16 +286,4 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
     }
 
   return chisq;
-}
-
-double CalMomentsData::calcDistToAxis(const Point& centroid, const Vector& axis)
-{
-  Vector diffVec   = centroid - m_point;
-  Vector crossProd = axis.cross(diffVec);
-  return m_distToAxis = crossProd.mag();
-}
-
-double CalMomentsData::calcCoordAlongAxis(const Point& centroid, const Vector& axis)
-{
-  return m_coordAlongAxis = (m_point - centroid).dot(axis);
 }

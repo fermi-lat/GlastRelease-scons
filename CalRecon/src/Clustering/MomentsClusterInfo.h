@@ -40,6 +40,11 @@ class MomentsClusterInfo : virtual public ICalClusterFiller
     
   Event::CalCluster* fillClusterInfo(const XtalDataList* xtalVec);
 
+  /// Return true if the xtal in a given position is saturated.
+  bool xtalSaturated(int tower, int layer, int column) const;
+  /// And a convenience overload to pass a CalMomentsData directly.
+  bool xtalSaturated(const CalMomentsData& momData) const;
+
 private:
   
   /// Use this to fill the layer data.
@@ -68,8 +73,7 @@ private:
   
   Point               m_p0;
   int                 m_calnLayers;
-  CalMomentsDataVec   m_dataVec;
-  Point               m_p1; // centroid using only the transverse position information
+  Point               m_p1;         // centroid using only the transverse position information
     
   /// in order to handle saturation
   float m_saturationadc;

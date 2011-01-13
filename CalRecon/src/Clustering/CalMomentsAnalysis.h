@@ -13,74 +13,10 @@
  */
 
 #include "geometry/Ray.h"
+#include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "CalMomentsData.h"
 
 #include <vector>
-
-// Start by defining a data class to operate on
-class CalMomentsData
-{
- public:
-  /// CalMomentsData is a utility data object for the moments analysis which 
-  /// attempts to make the class independent of the actual Cal data objects used.
-  /// Minimum constructor requires position and weight for the data point.
-  CalMomentsData(const Point& point, const double weight, int tower) :
-  m_useFlag(true),
-    m_point(point),
-    m_weight(weight),
-    m_tower(tower),
-    m_distToAxis(0.),
-    m_coordAlongAxis(0.)
-    {};
-    
-  /// Destructor
-  ~CalMomentsData() {}
-    
-  /// Provides access to data.
-  bool useIt()                     const { return m_useFlag; }
-  const Point& getPoint()          const { return m_point; }
-  const double getWeight()         const { return m_weight; }
-  const int getTower()             const { return m_tower; }
-  const double getDistToAxis()     const { return m_distToAxis; }
-  const double getCoordAlongAxis() const { return m_coordAlongAxis; }
-  
-  /// Provides "set" functions.
-  void setPoint(const Point& point)      { m_point = point; }
-  void setWeight(double weight)          { m_weight = weight; }
-  void setUseFlag(bool flag)             { m_useFlag = flag; }
-  void setTower(int tower)               { m_tower = tower; }
-  void setDistToAxis(double dist)        { m_distToAxis = dist; }
-  void setCoordAlongAxis(double coord)   { m_coordAlongAxis = coord; }
-  
-  /// Determine distance to given axis.
-  /// Note that this sets a class member, as well.
-  double calcDistToAxis(const Point& centroid, const Vector& axis);
-  
-  /// Determine the coordinate along a given axis.
-  /// Note that this sets a class member, as well.
-  double calcCoordAlongAxis(const Point& centroid, const Vector& axis);
-  
-  /// Define how to sort.
-  const bool operator<(const CalMomentsData& right)  const
-  {return m_distToAxis < right.getDistToAxis();}
-  
- private:
-  /// Bool for using or not using this data value.
-  bool m_useFlag;
-  /// The position of this data point.
-  Point m_point;
-  /// A weight to assign to the point in the moments calculation.
-  double m_weight;
-  /// The tower this hit belongs to. This van be used in the CAL moments analysis
-  /// to figure out whether two hits belong to the same tower or not.
-  int m_tower;
-  /// The distance from the "axis" of this point.
-  double m_distToAxis;
-  /// The position along the "axis" of this point (with sign, used to calculate the skewness).
-  double m_coordAlongAxis;
-};
-
-typedef std::vector<CalMomentsData> CalMomentsDataVec;
-
 
 class CalMomentsAnalysis
 {

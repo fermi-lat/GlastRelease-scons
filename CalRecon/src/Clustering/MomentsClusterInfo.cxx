@@ -45,7 +45,6 @@ MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc) :
 {
   m_calnLayers = m_calReconSvc->getCalNLayers();
   m_saturationadc = 4060;
-  m_dataVec.clear();
   // Minuit object
   m_minuit = new TMinuit(5);
   //Sets the function to be minimized
@@ -77,6 +76,21 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalV
     fillMomentsData(xTalVec, cluster);
   }
   return cluster;
+}
+
+bool MomentsClusterInfo::xtalSaturated(int tower, int layer, int column) const
+{
+  if ( m_Nsaturated == 0 ) {
+    return false;
+  }
+  else{
+    return m_saturated[tower][layer][column];
+  }
+}
+
+bool MomentsClusterInfo::xtalSaturated(const CalMomentsData& momData) const
+{
+  return xtalSaturated(momData.getTower(), momData.getLayer(), momData.getColumn());
 }
 
 void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
@@ -257,14 +271,29 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
 				    xtalEneRms, xtalEneSkewness);
   cluster->setXtalsParams(xtalsParams);
 
-  // ...then we do create a minimal CalMomParams object in order to store the centroid...
+  // ...then we do create a minimal CalMomParams object in order to store the centroid.
+  // This is actually *not* the centroid of the moments analysis, but rather the centroid
+  // calculated in the loop over the layers. The CalMomParams member of the cluster object
+  // will be overwritten in the fillMomentsData() methods.
+  //
+  // Luca Baldini, January 11, 2011.
   Event::CalMomParams momParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid);
   cluster->setMomParams(momParams);
-
-  // ...and finally the CalFitParamsContainer.
-  // I don't think this piece of code is actually ever used, need to cross-check!
+  
+  // ...and eventually we set the fit parameters for the cluster. The reason why we're doing it
+  // here is mainly historical, I guess, and it has to do with the fact that the CalFitParams
+  // container has members for the energy and the energy errors, though they're not calculated
+  // in the fit process. We might want to refactor the code, at some point. We create the container
+  // here because we might want to use the fit information in the moments analysis.
+  //
+  // Also: it is important to check that the fit routine actually did something by requiring that
+  // the number of fit layers is greater than 0, since the fit variables are not properly reset
+  // and we carry memory of the previous event if we don't do so. I'm not going to change
+  // Philippe's code, just keep the check (modified) here.
+  //
+  // Luca Baldini, January 11, 2011.
   Event::CalFitParams fitParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid, m_fit_nlayers, 0.);
-  if ( m_fit_nlayers > 8 && m_fit_zdirection > 0. ) {
+  if ( m_fit_nlayers > 0 ) {
     fitParams = Event::CalFitParams(xtalCorrEneSum, 10*xtalCorrEneSum,
 				    m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid,
 				    m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
@@ -273,90 +302,55 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   cluster->setFitParams(fitParams);
 }
 
-void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
+void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
 					 Event::CalCluster* cluster)
 {
-  m_dataVec.clear();
-  double energy    = cluster->getXtalsParams().getXtalCorrEneSum();
-  Point  centroid  = cluster->getMomParams().getCentroid();
-  Vector axis      = cluster->getMomParams().getAxis();
-  double rmsDist   = 0.;
-  double weightSum = 0.;
+  // Corrected xtal energy sum.
+  double energy = cluster->getXtalsParams().getXtalCorrEneSum();
+  // This "mom" params are fake, at this point, as the centroid is the centroid from the
+  // loop over the CAL layers and the axis is (0,0,0). These two variables will be overwritten
+  // in the body of this function.
+  Point  momCentroid = cluster->getMomParams().getCentroid();
+  Vector momAxis     = cluster->getMomParams().getAxis();
+  // The "fit" params, on the other hand, are for real, as the fit has already been performed.
+  Point  fitCentroid = cluster->getFitParams().getCentroid();
+  Vector fitAxis     = cluster->getFitParams().getAxis();
 
-  XtalDataList::const_iterator xTalMax = xTalVec->end();
+  // Create an empty vector of CalMomentsData object.
+  CalMomentsDataVec momDataVec;
+  momDataVec.clear();
 
-  // Loop through the xtals setting the hits to analyze
-  XtalDataList::const_iterator xTalIter;
-  for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+  // Loop through the xtals setting the hits to analyze.
+  XtalDataList::const_iterator xtalMax = xtalVec->end();
+  XtalDataList::const_iterator xtalIter;
+  for(xtalIter = xtalVec->begin(); xtalIter != xtalVec->end(); xtalIter++)
     {
-      if ( xTalIter == xTalMax ) continue;
-
-      Event::CalXtalRecData* recData = *xTalIter;
-      double xPos = recData->getPosition().x();
-      double yPos = recData->getPosition().y();
-      double zPos = recData->getPosition().z();
-    
-      // If there are saturated crystals, change the longitudinal position
-      if( m_Nsaturated > 0 && m_fit_nlayers >= 4 && m_fit_zdirection > 0. ) {
-	int tower  = (recData->getPackedId()).getTower();
-	int layer  = (recData->getPackedId()).getLayer();
-	int column = (recData->getPackedId()).getColumn();
-	if( m_saturated[tower][layer][column] ) {
-	  Point CorPos = GetCorrectedPosition(recData->getPosition(), tower, layer, column);
-	  xPos = CorPos.x();
-	  yPos = CorPos.y();
-	  zPos = CorPos.z();
+      if ( xtalIter == xtalMax ) continue;
+      
+      CalMomentsData momData(*xtalIter);
+      momData.applyFitCorrection(cluster->getFitParams(), m_calReconSvc);
+ 
+      // Check whether the xtal is saturated.
+      if ( xtalSaturated(momData) ) {
+	momData.setSaturated();
+	if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
+	  momData.enableFitCorrection();
 	}
       }
-      Point CrystalPos(xPos, yPos, zPos);
       
-      CalMomentsData momentsData(CrystalPos, recData->getEnergy(),
-				 recData->getPackedId().getTower());
-
-      // TU: Bad design on my part but this method must be called. 
-      double distToAxis = momentsData.calcDistToAxis(centroid, axis);
-      
-      rmsDist   += momentsData.getWeight() * distToAxis * distToAxis;
-      weightSum += momentsData.getWeight();
-      
-      m_dataVec.push_back(momentsData);
+      // Put the object into the vector.
+      momDataVec.push_back(momData);
+      std::cout << momData << std::endl;
     }
-
-  // Get the quick rms of crystals about fit axis
-  rmsDist = sqrt(rmsDist / weightSum);
-  
-  // Use this to try to remove "isolated" crystals that might otherwise pull the axis
-  // Start by sorting the data vector according to distance to axis
-  std::sort(m_dataVec.begin(), m_dataVec.end());
-
-  // Look for the point where there is a significant gap in distance to the next xtal
-  CalMomentsDataVec::iterator momDataIter;
-  double envelope = std::min(5.*rmsDist, m_calReconSvc->getCaltowerPitch());
-  double lastDist = 0.;
-
-  // Find the point in the vector where the distance to the axis indicates an outlier
-  for(momDataIter = m_dataVec.begin(); momDataIter != m_dataVec.end(); momDataIter++)
-    {
-      double dist     = (*momDataIter).getDistToAxis();
-      double distDiff = dist - envelope;
-      double gapDist  = dist - lastDist;
-      
-      if (distDiff > 0. && gapDist > 3. * rmsDist) break;
-      
-      lastDist = dist;
-    }
-  
-  // Now remove the outlier crystals
-  if (momDataIter != m_dataVec.end()) m_dataVec.erase(momDataIter, m_dataVec.end());
 
   // Do the actual moments analysis.
   CalMomentsAnalysis momentsAnalysis;
 
-  int numXtals = m_dataVec.size();
+  int numXtals = momDataVec.size();
   double transScaleFactor = m_calReconSvc->getMaTransScaleFactor();
   double transScaleFactorBoost = m_calReconSvc->getMaTransScaleFactorBoost();
   double coreRadius = m_calReconSvc->getMaCoreRadius();
-  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(m_dataVec, centroid,
+  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(momDataVec, momCentroid,
 							    transScaleFactor,
 							    transScaleFactorBoost,
 							    coreRadius);
@@ -365,8 +359,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     // Get all the variables that need to be grabbed before the last iteration
     // (with all the xtals) is performed. This include the statistics on the iterations,
     // the centroid/axis, the longitudinal skewness and the full cluster length.
-    centroid = momentsAnalysis.getCentroid();
-    axis = momentsAnalysis.getAxis();
+    momCentroid = momentsAnalysis.getCentroid();
+    momAxis = momentsAnalysis.getAxis();
     int numIterations = momentsAnalysis.getNumIterations();
     int numCoreXtals = numXtals - momentsAnalysis.getNumDroppedPoints();
     double longSkewness = momentsAnalysis.getLongSkewness();
@@ -375,7 +369,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     // That done, recalculate the moments going back to using all the data points
     // but with the iterated moments centroid.
     if ( numIterations > 1 ) {
-      chiSq = momentsAnalysis.doMomentsAnalysis(m_dataVec, centroid, coreRadius);
+      chiSq = momentsAnalysis.doMomentsAnalysis(momDataVec, momCentroid, coreRadius);
     }
     
     // Extract the values for the moments with all hits present.
@@ -399,18 +393,11 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xTalVec,
     
     // Store the information in the actual cluster: first the CalMomParams container...
     CLHEP::HepMatrix I_3_3(3, 3, 1);
-    Event::CalMomParams momParams (energy, 10*energy, centroid, I_3_3, axis, I_3_3,
+    Event::CalMomParams momParams (energy, 10*energy, momCentroid, I_3_3, momAxis, I_3_3,
 				   numIterations, numCoreXtals, numXtals,
 				   transRms, longRms, longRmsAsym, longSkewness,
 				   coreEnergyFrac, fullLength, -1.);
     cluster->setMomParams(momParams);
-
-    // and finally the CalFitParams container.
-    Point fitCentroid(m_fit_xcentroid,  m_fit_ycentroid,  m_fit_zcentroid);
-    Vector fitAxis(m_fit_xdirection, m_fit_ydirection, m_fit_zdirection);
-    Event::CalFitParams fitParams(energy, 10*energy, fitCentroid, I_3_3, fitAxis, I_3_3,
-				  m_fit_nlayers, m_fit_chisq);
-    cluster->setFitParams(fitParams);
 
     // Set the relevant status bit and we're done!
     cluster->setStatusBit(Event::CalCluster::MOMENTS);
