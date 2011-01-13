@@ -69,4 +69,6 @@ private  # Traudl says we need this
 
 # build this for testing, console only. Load all objects directly.
 
+set PARAMFILESROOT "${EXTFILESSYS}/gaudi"
+
 application test_AnalysisNtuple ${GlastMain} AnalysisNtupleAlg.cxx $(Joboptions)
