@@ -13,18 +13,23 @@
 #include "TMath.h"
 #include "TMinuit.h"
 
-/**   
-* @class MomentsClusterInfo
-*
-* Base class for clustering tools, containing member data and
-* default code for the global algorithm, the preparation of
-* a cluster from a set of crystals, and the computing of its
-* direction.
-* The only pure virtual method which needs to be implemented
-* in a derived class is nextXtalsSet(), which is selecting the
-* crystals to be grouped together.
-*
-* $Header$
+/**
+   @file MomentsClusterInfo.h
+   
+   @class MomentsClusterInfo
+
+   @brief Base class for clustering tools, containing member data and default code for
+   the global algorithm, the preparation of a cluster from a set of crystals, and the
+   computing of its direction.
+
+   The only pure virtual method which needs to be implemented in a derived class is
+   nextXtalsSet(), which is selecting the crystals to be grouped together.
+
+   @author Tracy Usher, Philippe Bruel, Luca Baldini (luca.baldini@pi.infn.it)
+
+   $Revision$
+   $Date$
+   $Header$
 */
 
 
