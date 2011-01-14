@@ -1,4 +1,13 @@
-/// Implementation of the CalMomentsData class.
+/**
+   @file CalMomentsData.h
+   
+   @brief Implementation file for the CalMomentsData class.
+
+   @author Luca Baldini (luca.baldini@pi.infn.it).
+   
+   Revision $Revision$, commited on $Date$.
+   $Id$
+*/
 
 #include "src/Clustering/CalMomentsData.h"
 
@@ -92,7 +101,7 @@ void CalMomentsData::applyFitCorrection(const Event::CalFitParams fitParams,
     }
     x = fitCentroid.x() + (z - fitCentroid.z()) / fitAxis.z() * fitAxis.x();
     distToEdge = std::min( fabs(x - minCoord), fabs(x - maxCoord) );
-    if ( distToEdge < DIST_FIT_POS_NEAR_EDGE ) {
+    if ( (x > minCoord) && (x < maxCoord) && (distToEdge < DIST_FIT_POS_NEAR_EDGE) ) {
       setStatusBit(FIT_POS_NEAR_EDGE);
     }
     if ( x < minCoord ) {
@@ -123,7 +132,7 @@ void CalMomentsData::applyFitCorrection(const Event::CalFitParams fitParams,
     }
     y = fitCentroid.y() + (z - fitCentroid.z()) / fitAxis.z() * fitAxis.y();
     distToEdge = std::min( fabs(y - minCoord), fabs(y - maxCoord) );
-    if ( distToEdge < DIST_FIT_POS_NEAR_EDGE ) {
+    if ( (y > minCoord) && (y < maxCoord) && (distToEdge < DIST_FIT_POS_NEAR_EDGE) ) {
       setStatusBit(FIT_POS_NEAR_EDGE);
     }
     if ( y < minCoord ) {

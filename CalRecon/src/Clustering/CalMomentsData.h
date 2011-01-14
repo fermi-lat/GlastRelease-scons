@@ -1,11 +1,21 @@
 /**
- * @class CalMomentsData
- *
- * @brief Utility data object for the moments analysis which  attempts to make the
- * class independent of the actual Cal data objects used.
- *
- * @author Tracy Usher, Luca Baldini.
- *
+   @file CalMomentsData.h
+
+   @class CalMomentsData
+   
+   @brief Utility data object for the moments analysis which attempts to make
+   the class independent of the actual Cal data objects used.
+
+   In the old implementation the class used to encapsulate essentially two pieces
+   of information: the xtal position and energy. Now there's much more information,
+   including whether the longitudinal position is on the xtal end, whether the
+   xtal is saturated, and, if available, the corrected longitudinal position provided
+   by the fit---which is using the transverse information only.
+   
+   @author Tracy Usher, Luca Baldini (luca.baldini@pi.infn.it).
+   
+   Revision $Revision$, commited on $Date$.
+   $Id$
  */
 
 /// Maximum distance to declare the hit position on the xtal edge.
@@ -45,7 +55,7 @@ class CalMomentsData
     FIT_POS_INVALID   = 0x00000040,
     /// Use the corrected longitudinal position (i.e. the value from the fit).
     USE_FIT_POS       = 0x00000080,
-    /// Do not use it in the moments analysis.
+    /// Do not use it in the moments analysis (which is not really used, yet).
     MASKED            = 0x00000100,
   };
 
