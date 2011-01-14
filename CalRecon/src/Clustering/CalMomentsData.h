@@ -12,11 +12,11 @@
    xtal is saturated, and, if available, the corrected longitudinal position provided
    by the fit---which is using the transverse information only.
    
-   @author Tracy Usher, Luca Baldini (luca.baldini@pi.infn.it).
+   @author Tracy Usher, Luca Baldini (luca.baldini@pi.infn.it)
    
    $Revision$
    $Date$
-   $Id$
+   $Header$
  */
 
 
