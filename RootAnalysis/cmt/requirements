@@ -32,6 +32,9 @@ macro SelectorAnalysis_headers "" \
                        "../src/SelectorAnalysis/recon/*.h "\
 
 private
+
+use facilities v*
+
 #apply_pattern root_package headers="\
 # ../src/SelectorAnalysis/digi/AcdDigiTask.h\
 # ../src/SelectorAnalysis/mc/McTask.h\
