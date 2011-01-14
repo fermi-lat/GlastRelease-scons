@@ -14,9 +14,11 @@
    
    @author Tracy Usher, Luca Baldini (luca.baldini@pi.infn.it).
    
-   Revision $Revision$, commited on $Date$.
+   $Revision$
+   $Date$
    $Id$
  */
+
 
 /// Maximum distance to declare the hit position on the xtal edge.
 #define DIST_LONG_POS_INVALID  0.01

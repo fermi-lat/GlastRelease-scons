@@ -1,13 +1,15 @@
 /**
-   @file CalMomentsData.h
+   @file CalMomentsData.cxx
    
    @brief Implementation file for the CalMomentsData class.
 
    @author Luca Baldini (luca.baldini@pi.infn.it).
    
-   Revision $Revision$, commited on $Date$.
+   $Revision$
+   $Date$
    $Id$
 */
+
 
 #include "src/Clustering/CalMomentsData.h"
 
