@@ -498,10 +498,6 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 	      {
 		m_xTals_setA.erase(xTalDataIter);
 	      }
-	    else
-	      {
-		int j = 0; 
-	      }
 	  }
 
 
