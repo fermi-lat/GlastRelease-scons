@@ -339,10 +339,10 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
 	}
 	// If the longitudinal position is right on the edge of the xtal,
 	// or if the fit position is close to the xtal edge, use the fit position.
-	if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
-	     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
-	  momData.enableFitCorrection();
-	}
+	//if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
+	//     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
+	//  momData.enableFitCorrection();
+	//}
       }    
       
       // Put the object into the vector.
