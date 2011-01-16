@@ -1,15 +1,19 @@
 #include <mcRootData/McIntegratingHit.h>
 #include <commonRootData/RootDataUtil.h>
 #include "TRefArray.h"
+#include "TObjString.h"
 #include "Riostream.h"
 
 #include "McObjectManager.h"
 
 ClassImp(McIntegratingHit)
+ClassImp(McXtalEnergyDep)
 
 
 McIntegratingHit::McIntegratingHit() {
     Clear();
+    m_xtalEnergyMap.SetOwnerKeyValue();
+    m_xtalEnergyMap.SetOwnerValue();
 }
 
 McIntegratingHit::~McIntegratingHit() {
@@ -68,6 +72,7 @@ void McIntegratingHit::Clear( Option_t * )
     m_volumeId.Clear();
     m_mapPtr = 0;
     m_energyArray[0] = 0.; m_energyArray[1] = 0.; m_energyArray[2] = 0.;
+    m_xtalEnergyMap.Clear();
 }
 
 // dummy data, just for tests
@@ -232,3 +237,133 @@ const TVector3 McIntegratingHit::getMoment2 () const
     return m_moment2Seed * (1./m_totalEnergy);
 }
 
+
+const McXtalEnergyDep* McIntegratingHit::getXtalEnergyDep(const TString& key) const
+{
+    TObject* xtalEnergyDep = m_xtalEnergyMap.FindObject(key);
+    return dynamic_cast<McXtalEnergyDep*>(xtalEnergyDep);
+}
+
+McXtalEnergyDep* McIntegratingHit::getXtalEnergyDep(const TString& key)
+{
+    TObject* xtalEnergyDep = m_xtalEnergyMap.FindObject(key);
+
+    // If no XtalEnergyDep object, then make one
+    if (!xtalEnergyDep)
+    {
+        TObjString* newKey = new TObjString(key);
+
+        xtalEnergyDep = new McXtalEnergyDep();
+        m_xtalEnergyMap.Add(newKey, xtalEnergyDep);
+    }
+
+    return dynamic_cast<McXtalEnergyDep*>(xtalEnergyDep);
+}
+    
+/// Code for the XtalEnergyDep subclass
+/// Retrieve the energy-weighted first moments of the position
+const TVector3 McXtalEnergyDep::getMoment1() const
+{
+    return m_moment1seed * (1./m_totalEnergy);
+}
+
+TVector3 McXtalEnergyDep::getMoment1()
+{
+    return m_moment1seed * (1./m_totalEnergy);
+}
+    
+/// Retrieve the energy-weighted second moments of the position
+const TVector3 McXtalEnergyDep::getMoment2() const
+{
+    return m_moment2seed * (1./m_totalEnergy);
+}
+
+TVector3 McXtalEnergyDep::getMoment2()
+{
+    return m_moment2seed * (1./m_totalEnergy);
+}
+
+// add energy/position for this diode
+void McXtalEnergyDep::addEnergyItem(Double_t totalEnergy, Double_t directEnergy, const TVector3& position)
+{
+    /// Increment the energy accumulators
+    m_totalEnergy  += totalEnergy;
+    m_directEnergy += directEnergy;
+
+    /// Get position squared for moments accumulators
+    TVector3 position2 = TVector3(position.x()*position.x(), position.y()*position.y(), position.z()*position.z());
+
+    /// Accumulate the moments
+    m_moment1seed += totalEnergy * position;
+    m_moment2seed += totalEnergy * position2;
+}
+    
+void McXtalEnergyDep::initialize(Double_t totalEnergy, Double_t directEnergy, const TVector3& mom1, const TVector3& mom2)
+{
+    m_totalEnergy  = totalEnergy;
+    m_directEnergy = directEnergy;
+    m_moment1seed  = mom1;
+    m_moment2seed  = mom2;
+}    
+
+void McXtalEnergyDep::Clear( Option_t * )
+{
+    m_totalEnergy  = 0.;
+    m_directEnergy = 0.;
+    m_moment1seed  = TVector3(0.,0.,0.);
+    m_moment2seed  = TVector3(0.,0.,0.);
+}
+
+// dummy data, just for tests
+void McXtalEnergyDep::Fake( Int_t /*ievent*/, UInt_t /*rank*/, Float_t /*randNum*/ ) {
+
+    Clear() ;
+    
+    double totE    = 5.5;
+    double directE = 1.1;
+    TVector3 moment1(1.0, 2.0, 3.0);
+    TVector3 moment2(2.0, 4.0, 6.0);
+    initialize(totE,directE,moment1,moment2) ;
+
+}
+
+#define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att,ref.get ## att,#att)
+
+Bool_t McXtalEnergyDep::CompareInRange( const McXtalEnergyDep& ref, const std::string & name ) const {
+
+    Bool_t result = true ;
+    
+    result = COMPARE_IN_RANGE(TotalEnergy()) && result ;
+    
+    result = COMPARE_IN_RANGE(DirectEnergy()) && result ;
+    result = COMPARE_IN_RANGE(Moment1()) && result ;
+    result = COMPARE_IN_RANGE(Moment2()) && result ;
+      
+    if (!result) 
+    {
+        if ( name == "" ) 
+        {
+            std::cout<<"Comparison ERROR for "<<ClassName()<<std::endl ;
+        }
+        else 
+        {
+            std::cout<<"Comparison ERROR for "<<name<<std::endl ;
+        }
+    }
+
+    return result ;
+}
+
+void McXtalEnergyDep::Print(Option_t *option) const {
+    using namespace std;
+    TObject::Print(option);
+    UInt_t p = 2;
+    cout.precision(p);
+    cout << "Total Energy:  " << m_totalEnergy << endl;
+    cout << "Direct Energy: " << m_directEnergy << endl;
+    cout << "Mom1: (" << m_moment1seed.X() << "," << m_moment1seed.Y() << ","
+        << m_moment1seed.Z() << ")   ";
+    cout << "Mom2: (" << m_moment2seed.X() << "," << m_moment2seed.Y() << ","
+        << m_moment2seed.Z() << ")" << endl;
+
+} 

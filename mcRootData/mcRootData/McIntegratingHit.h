@@ -4,6 +4,7 @@
 #include "TObject.h"
 #include "TVector.h"
 #include "TRefArray.h"
+#include "TMap.h"
 
 #include "commonRootData/idents/VolumeIdentifier.h"
 #include "McParticle.h"
@@ -75,6 +76,54 @@ using namespace std;
 */
 
 
+// Define sub class to contain energy information for each diode when in a crystal volume
+class McXtalEnergyDep : public TObject
+{
+public:
+    McXtalEnergyDep() : m_totalEnergy(0.), m_directEnergy(0.), m_moment1seed(0.,0.,0.), m_moment2seed(0.,0.,0.) {}
+   ~McXtalEnergyDep() {}
+
+    // Apparently, we need a copy constructor to keep compiler happy
+    McXtalEnergyDep(const McXtalEnergyDep& dep) {*this = dep;}
+
+    void Clear(Option_t * ="");
+    void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
+    Bool_t CompareInRange( const McXtalEnergyDep&, const std::string& name = "" ) const ; // for tests
+    void Print(Option_t * ="") const;
+
+    /// Get total deposited energy seen by this diode
+    Double_t getTotalEnergy()  const {return m_totalEnergy;}
+
+    /// Get the direct deposited energy seen by this diode
+    Double_t getDirectEnergy() const {return m_directEnergy;}
+
+    /// Retrieve the energy-weighted first moments of the position
+    const TVector3 getMoment1() const;
+          TVector3 getMoment1();
+
+    /// Retrieve the energy-weighted second moments of the position
+    const TVector3 getMoment2() const;
+          TVector3 getMoment2();
+
+    // add energy/position for this diode
+    void addEnergyItem(Double_t totalEnergy, Double_t directEnergy, const TVector3& position);
+
+    // For initialization
+    void initialize(Double_t totalEnergy, Double_t directEnergy, const TVector3& mom1, const TVector3& mom2);
+
+private:
+    /// total deposited energy: set automatically when m_energyInfo is modified.
+    Double_t  m_totalEnergy;
+    /// "direct" energy seen by diode
+    Double_t  m_directEnergy;
+    /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
+    TVector3  m_moment1seed;
+    /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
+    TVector3  m_moment2seed;
+
+    ClassDef(McXtalEnergyDep,1)  // XtalEnergyDep Class
+};
+
 class McIntegratingHit: public TObject {
     
 public:
@@ -89,6 +138,9 @@ public:
     McIntegratingHit();
     
     virtual ~McIntegratingHit();
+
+    // Apparently, we need a copy constructor to keep compiler happy
+    McIntegratingHit(const McIntegratingHit& hit) {*this = hit;}
 
     void Clear(Option_t * ="");
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
@@ -124,6 +176,13 @@ public:
     /// Retrieve the energy-weighted second moments of the position
     const TVector3 getMoment2 () const;
 
+    /// Retrieve XtalEnergyDep object
+    const McXtalEnergyDep* getXtalEnergyDep(const TString& key) const;
+    McXtalEnergyDep* getXtalEnergyDep(const TString& key);
+
+    /// Direct access to map for filling
+    TMap& getXtalEnergyDepMap() {return m_xtalEnergyMap;}
+
     void* operator new(size_t size);
 
     void* operator new(size_t size, void* vp);
@@ -132,22 +191,25 @@ public:
     
 private:
     /// total deposited energy: set automatically when m_energyInfo is modified.
-    Double_t m_totalEnergy;
+    Double_t         m_totalEnergy;
     /// Optionally store the energy associated with the primary and e-/e+
-    Double_t m_energyArray[3];
+    Double_t         m_energyArray[3];
     /// Packed flags for particle property
-    UInt_t m_packedFlags;
+    UInt_t           m_packedFlags;
     /// identifies what volume this integrating hit occurred in
     VolumeIdentifier m_volumeId;
     /// Energy-weighted_first_moments_of_the_position * number_of_energy_deposition
-    TVector3 m_moment1Seed;
+    TVector3         m_moment1Seed;
     /// Energy-weighted_second_moments_of_the_position * number_of_energy_deposition
-    TVector3 m_moment2Seed;
+    TVector3         m_moment2Seed;
     
     /// Actually store McParticles as a TRefArray
-    TRefArray m_mcPartArr;
+    TRefArray        m_mcPartArr;
     /// Store energies from McParticle* pair in a vector
     vector<Double_t> m_energyPtrArr;
+
+    /// Mapping between diodes and deposited energy
+    TMap             m_xtalEnergyMap;
    
     /// Store a vector of McParticle Ids
     //std::vector<Int_t> m_mcIdArr;

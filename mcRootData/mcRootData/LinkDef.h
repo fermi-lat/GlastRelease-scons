@@ -12,6 +12,7 @@
 //#pragma link C++ class VolumeIdentifier+;
 #pragma link C++ class McParticle+;
 #pragma link C++ class McPositionHit+;
+#pragma link C++ class McXtalEnergyDep;
 #pragma link C++ class McIntegratingHit+;
 #pragma link C++ class McEvent+;
 #pragma link C++ class McTrajectory+;
