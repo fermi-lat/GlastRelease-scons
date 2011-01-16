@@ -78,6 +78,15 @@ public:
         // add energy/position for this diode
         void addEnergyItem(double totalEnergy, double directEnergy, const HepPoint3D& position);
 
+        // Initialization for reading and writing 
+        void initialize(double totalEnergy, double directEnergy, const HepPoint3D& mom1, const HepPoint3D& mom2)
+        {
+            m_totalEnergy  = totalEnergy;
+            m_directEnergy = directEnergy;
+            m_moment1seed  = mom1;
+            m_moment2seed  = mom2;
+        }
+
     private:
         /// total deposited energy: set automatically when m_energyInfo is modified.
         double                   m_totalEnergy;
