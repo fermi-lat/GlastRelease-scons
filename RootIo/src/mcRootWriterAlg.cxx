@@ -485,6 +485,26 @@ StatusCode mcRootWriterAlg::writeMcIntegratingHits() {
             }
         }
 
+        // Now copy the XtalEnergyDep objects from the map
+        for(Event::McIntegratingHit::XtalEnergyDepMap::const_iterator depItr  = (*hit)->getXtalEnergyDepMap().begin();
+                                                                      depItr != (*hit)->getXtalEnergyDepMap().end();
+                                                                      depItr++)
+        {
+            std::string evtKey = depItr->first;
+            TObjString* key = new TObjString(evtKey.c_str());
+            McXtalEnergyDep* xtalEDep = new McXtalEnergyDep();
+
+            TVector3 moment1(depItr->second.moment1());
+            TVector3 moment2(depItr->second.moment2());
+
+            xtalEDep->initialize(depItr->second.getTotalEnergy(),
+                                 depItr->second.getDirectEnergy(),
+                                 moment1,
+                                 moment2                          );
+
+            mcIntHit->getXtalEnergyDepMap().Add(key, xtalEDep);
+        }
+
         // Add the ROOT McIntegratingHit to the ROOT collection of McIntegratingHits
         m_mcEvt->addMcIntegratingHit(mcIntHit);
     }
