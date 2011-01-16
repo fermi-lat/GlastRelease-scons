@@ -103,14 +103,18 @@ class CalMomentsData
   inline void unmask()                             { clearStatusBit(MASKED); }
   inline bool masked()                       const { return checkStatusBit(MASKED); }
  
-  /// Apply the fit longitudinal correction, i.e. set the longitudinal position of the crystal
-  /// to the longitudinal position of the extrapolation of the cal direction using only the
-  /// transverse information from the fit.
+  /// Apply the fit longitudinal correction, i.e. set (but do not use, yet) all the
+  /// data members related to the correction of the the longitudinal position of the crystal
+  /// based on the fit of the transverse positions.
   void applyFitCorrection(const Event::CalFitParams fitParams, const ICalReconSvc* calReconSvc);
 
   /// If the fit correction is available and the corresponding position falls within
   /// the xtal, set the USE_FIT_POS status bit in order to use it.
   void enableFitCorrection();
+
+  /// Set the USE_FIT_POS status bit in order to use it, if the corrected position is
+  /// available, regardless of any other circumstance.
+  void forceFitCorrection();
 
   /// Return the "best position" (i.e. use the fit longitudinal position if the
   /// USE_FIT_POS status bit is set).

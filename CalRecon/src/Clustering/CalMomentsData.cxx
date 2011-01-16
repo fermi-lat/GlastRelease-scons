@@ -157,6 +157,13 @@ void CalMomentsData::enableFitCorrection()
   }
 }
 
+void CalMomentsData::forceFitCorrection()
+{
+  if ( checkStatusBit(FIT_POS_AVAILABLE) ) {
+    setStatusBit(USE_FIT_POS);
+  }
+}
+
 double CalMomentsData::calcDistToAxis(const Point& centroid, const Vector& axis)
 {
   Vector diffVec   = centroid - getPosition();

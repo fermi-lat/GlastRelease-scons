@@ -335,7 +335,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
 	// Check whether the xtal is saturated.
 	if ( xtalSaturated(momData) ) {
 	  momData.setStatusBit(CalMomentsData::SATURATED);
-	  momData.enableFitCorrection();
+	  momData.forceFitCorrection();
 	}
 	// If the longitudinal position is right on the edge of the xtal,
 	// or if the fit position is close to the xtal edge, use the fit position.
