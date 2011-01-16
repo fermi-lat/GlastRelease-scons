@@ -221,7 +221,7 @@ private:
     /// transient data member to keep track of place in McParticle*, energy map
     mutable UInt_t m_mapPtr; //!
 
-    ClassDef(McIntegratingHit,2)  // Monte Carlo Integrating Hit Class
+    ClassDef(McIntegratingHit,3)  // Monte Carlo Integrating Hit Class
 };
 
 #endif
