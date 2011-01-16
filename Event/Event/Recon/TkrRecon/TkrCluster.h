@@ -22,7 +22,7 @@
 
 #include "GaudiKernel/IInterface.h"
 
-static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 5, 0);
+static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 6, 0);
 
 namespace Event {
 
