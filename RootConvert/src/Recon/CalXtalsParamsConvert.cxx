@@ -9,7 +9,9 @@ void convert( const Event::CalXtalsParams & tdsXtalsParams, CalXtalsParams & roo
       ( tdsXtalsParams.getNumXtals(),tdsXtalsParams.getNumTruncXtals(),
 	tdsXtalsParams.getNumSaturatedXtals(),
 	tdsXtalsParams.getXtalRawEneSum(),tdsXtalsParams.getXtalCorrEneSum(),
-	tdsXtalsParams.getXtalEneRms(),tdsXtalsParams.getXtalEneSkewness() ) ;
+	tdsXtalsParams.getXtalEneMax(),
+	tdsXtalsParams.getXtalEneRms(),tdsXtalsParams.getXtalEneSkewness(),
+	convert(tdsXtalsParams.getCentroid()) ) ;
  }
  
 void convert( const CalXtalsParams & rootXtalsParams, Event::CalXtalsParams & tdsXtalsParams )
@@ -18,7 +20,9 @@ void convert( const CalXtalsParams & rootXtalsParams, Event::CalXtalsParams & td
       ( rootXtalsParams.getNumXtals(),rootXtalsParams.getNumTruncXtals(),
 	rootXtalsParams.getNumSaturatedXtals(),
 	rootXtalsParams.getXtalRawEneSum(),rootXtalsParams.getXtalCorrEneSum(),
-	rootXtalsParams.getXtalEneRms(),rootXtalsParams.getXtalEneSkewness() ) ;
+	rootXtalsParams.getXtalEneMax(),
+	rootXtalsParams.getXtalEneRms(),rootXtalsParams.getXtalEneSkewness(),
+	convertPoint(rootXtalsParams.getCentroid()) ) ;
 }
 
 }

@@ -2,14 +2,21 @@
 #define reconRootData_CalXtalsParams_H
 
 #include <TObject.h>
+#include <TVector3.h>
 
-/** 
-* @class CalXtalsParams
-*
-* @brief Root clone for the TDS CalXtalsParams
-* @author Luca Baldini, Johan Bregeon
-*
+/**
+   @file CalXtalsParams.h
+   @class CalXtalsParams
+
+   @brief clone of the CalXtalsParams TDS class.
+   
+   @author Luca Baldini (luca.baldini@pi.infn.it)
+
+   $Revision$
+   $Date$
+   $Header$
 */
+
 
 class CalXtalsParams
 {
@@ -20,16 +27,16 @@ class CalXtalsParams
   
   /// Constructor from all members.
   CalXtalsParams(Int_t numXtals, Int_t numTruncXtals, Int_t numSaturatedXtals,
-		 Double_t xtalRawEneSum, Double_t xtalCorrEneSum,
-		 Double_t xtalEneRms, Double_t xtalEneSkewness);
+		 Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
+		 Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid);
   
   /// Destructor.
   virtual ~CalXtalsParams() {}
   
   /// Initialize the class members.
   void init(Int_t numXtals, Int_t numTruncXtals, Int_t numSaturatedXtals,
-	    Double_t xtalRawEneSum, Double_t xtalCorrEneSum,
-	    Double_t xtalEneRms, Double_t xtalEneSkewness);
+	    Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
+	    Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid);
   
   /// Retrieve class parameters...
   inline Int_t getNumXtals()             const { return m_numXtals; }
@@ -37,8 +44,10 @@ class CalXtalsParams
   inline Int_t getNumSaturatedXtals()    const { return m_numSaturatedXtals; }
   inline Double_t getXtalRawEneSum()     const { return m_xtalRawEneSum; }
   inline Double_t getXtalCorrEneSum()    const { return m_xtalCorrEneSum; }
+  inline Double_t getXtalEneMax()        const { return m_xtalEneMax; }
   inline Double_t getXtalEneRms()        const { return m_xtalEneRms; }
   inline Double_t getXtalEneSkewness()   const { return m_xtalEneSkewness; }
+  inline const TVector3  getCentroid()   const { return m_centroid; }
   
   void Clear( Option_t * option ="" ) ;
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
@@ -52,10 +61,12 @@ class CalXtalsParams
   Int_t m_numSaturatedXtals;
   Double_t m_xtalRawEneSum;
   Double_t m_xtalCorrEneSum;
+  Double_t m_xtalEneMax;
   Double_t m_xtalEneRms;
   Double_t m_xtalEneSkewness;
+  TVector3 m_centroid;
   
-  ClassDef(CalXtalsParams,1)
+  ClassDef(CalXtalsParams,2)
 } ;
 
 

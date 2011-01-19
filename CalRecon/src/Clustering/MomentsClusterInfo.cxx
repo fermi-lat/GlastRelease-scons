@@ -217,6 +217,7 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   // truncated xtals and the moments of the xtal energy distribution.
   int numTruncXtals      = 0;
   int numEneMomXtals     = 0;
+  double xtalEneMax      = 0.;
   double xtalEneMomSum   = 0.;
   double xtalEneMomSum2  = 0.;
   double xtalEneMomSum3  = 0.;
@@ -226,6 +227,9 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
     {
       Event::CalXtalRecData* recData = *xTalIter;
       double xtalEne = recData->getEnergy();
+      if ( xtalEne > xtalEneMax ) {
+	xtalEneMax = xtalEne;
+      }
       if ( xtalEne > (xtalsTruncFrac*xtalRawEneSum) ) {
 	numTruncXtals ++;
       }
@@ -267,16 +271,24 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   
   // Set the cluster data members: first the CalXtalsParams container...
   Event::CalXtalsParams xtalsParams(numXtals, numTruncXtals, m_Nsaturated,
-				    xtalRawEneSum, xtalCorrEneSum,
-				    xtalEneRms, xtalEneSkewness);
+				    xtalRawEneSum, xtalCorrEneSum, xtalEneMax,
+				    xtalEneRms, xtalEneSkewness, centroid);
   cluster->setXtalsParams(xtalsParams);
 
   // ...then we do create a minimal CalMomParams object in order to store the centroid.
   // This is actually *not* the centroid of the moments analysis, but rather the centroid
   // calculated in the loop over the layers. The CalMomParams member of the cluster object
-  // will be overwritten in the fillMomentsData() methods.
+  // will be overwritten in the fillMomentsData() methods. I don't think this is correct.
+  // When the moments analysis does run all the way to the end it does not make any difference,
+  // as this member is overwritten, but whan that does not happen we end up with a bogus
+  // class member faking something different from what it really is. I tested with a few
+  // thousands gammas and there's indeed a difference if I get rid of this, meaning that
+  // the CalMomParams information is used without checking the CalCluster status bit.
+  // Even stranger, it also makes a difference for the fit direction/centroid, thought for
+  // a tiny subset of the events.
+  // I'll leave things as they are for the time being, but we might want to revise this.
   //
-  // Luca Baldini, January 11, 2011.
+  // Luca Baldini, January 18, 2011.
   Event::CalMomParams momParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid);
   cluster->setMomParams(momParams);
   
@@ -305,16 +317,16 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
 void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
 					 Event::CalCluster* cluster)
 {
-  // Corrected xtal energy sum.
-  double energy = cluster->getXtalsParams().getXtalCorrEneSum();
-  // This "mom" params are fake, at this point, as the centroid is the centroid from the
-  // loop over the CAL layers and the axis is (0,0,0). These two variables will be overwritten
-  // in the body of this function.
-  Point  momCentroid = cluster->getMomParams().getCentroid();
-  Vector momAxis     = cluster->getMomParams().getAxis();
-  // The "fit" params, on the other hand, are for real, as the fit has already been performed.
-  Point  fitCentroid = cluster->getFitParams().getCentroid();
-  Vector fitAxis     = cluster->getFitParams().getAxis();
+  // Grab the necessary xtalsParams...
+  double xtalsCorrEnergySum = cluster->getXtalsParams().getXtalCorrEneSum();
+  Point  xtalsCentroid = cluster->getXtalsParams().getCentroid();
+
+  // ...and the fit params.
+  Point fitCentroid = cluster->getFitParams().getCentroid();
+
+  // Initialize empty centroid/axis to store the output of the moments analysis.
+  Point momCentroid = Point(0.,0.,0.);
+  Vector momAxis    = Vector(0.,0.,0.);
 
   // Create an empty vector of CalMomentsData object.
   CalMomentsDataVec momDataVec;
@@ -356,11 +368,9 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
   double transScaleFactor = m_calReconSvc->getMaTransScaleFactor();
   double transScaleFactorBoost = m_calReconSvc->getMaTransScaleFactorBoost();
   double coreRadius = m_calReconSvc->getMaCoreRadius();
-  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(momDataVec, momCentroid,
+  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(momDataVec, xtalsCentroid,
 							    transScaleFactor,
-							    transScaleFactorBoost,
-							    coreRadius);
-
+							    transScaleFactorBoost, coreRadius);
   if ( chiSq >= 0. ) {
     // Get all the variables that need to be grabbed before the last iteration
     // (with all the xtals) is performed. This include the statistics on the iterations,
@@ -399,7 +409,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
     
     // Store the information in the actual cluster: first the CalMomParams container...
     CLHEP::HepMatrix I_3_3(3, 3, 1);
-    Event::CalMomParams momParams (energy, 10*energy, momCentroid, I_3_3, momAxis, I_3_3,
+    Event::CalMomParams momParams (xtalsCorrEnergySum, 10*xtalsCorrEnergySum,
+				   momCentroid, I_3_3, momAxis, I_3_3,
 				   numIterations, numCoreXtals, numXtals,
 				   transRms, longRms, longRmsAsym, longSkewness,
 				   coreEnergyFrac, fullLength, -1.);
