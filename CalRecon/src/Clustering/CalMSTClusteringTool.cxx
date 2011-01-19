@@ -99,15 +99,15 @@ public:
   /// Retrieve the number of edges
   int getNumEdges()                                  const { return m_edges.size(); }
   /// Retrieve the minimum edge length
-  double  getMinEdgeLength()	                     const { return m_minEdgeLength; }
+  double  getMinEdgeLength()                         const { return m_minEdgeLength; }
   /// Retrieve the minimum edge length
-  double  getMaxEdgeLength()	                     const { return m_maxEdgeLength; }
+  double  getMaxEdgeLength()                         const { return m_maxEdgeLength; }
   /// Retrieve the maximum edge length
-  double  getMeanEdgeLength()	                     const { return m_meanEdgeLength; }
+  double  getMeanEdgeLength()                        const { return m_meanEdgeLength; }
   /// Retrieve the average edge length
   double  getMeanEdgeLengthTrunc()                   const { return m_meanEdgeLengthTrunc; }
   /// Retrieve the RMS of edges length
-  double  getRmsEdgeLength()	                     const { return m_rmsEdgeLength; }
+  double  getRmsEdgeLength()                         const { return m_rmsEdgeLength; }
   /// Retrieve the RMS of edges length  after truncation
   double  getRmsEdgeLengthTrunc()                    const { return m_rmsEdgeLengthTrunc; }
   /// Check if stats are available
@@ -187,7 +187,7 @@ void MSTTree::evalStats(double truncFrac)
       double xtalEnergy = (*it).second->getEnergy();
       m_totalEnergy += xtalEnergy;
       if ( xtalEnergy >= m_maxXtalEnergy ) {
-	m_maxXtalEnergy = xtalEnergy;
+        m_maxXtalEnergy = xtalEnergy;
       }
     }
 
@@ -216,28 +216,28 @@ void MSTTree::evalStats(double truncFrac)
     std::list<MSTEdge*>::iterator itedge;
     for ( itedge = m_edges.begin(); itedge != m_edges.end(); itedge++ )
       {
-    	length = (*itedge)->getWeight();
-	
-	// Update min/max edge lengths.
-	if ( length >= m_maxEdgeLength ) {
-	  m_maxEdgeLength = length;
-	}
-    	if ( length <= m_minEdgeLength ) {
-	  m_minEdgeLength = length;
-	}
+        length = (*itedge)->getWeight();
+        
+        // Update min/max edge lengths.
+        if ( length >= m_maxEdgeLength ) {
+          m_maxEdgeLength = length;
+        }
+        if ( length <= m_minEdgeLength ) {
+          m_minEdgeLength = length;
+        }
 
-	// Update mean and rms.
-    	m_meanEdgeLength += length;
-    	m_rmsEdgeLength  += length*length;
+        // Update mean and rms.
+        m_meanEdgeLength += length;
+        m_rmsEdgeLength  += length*length;
 
-	// Calculate the fractional energy of the edge: ( E(node1) + E(node2) )/totalEnergy...
-	energyFrac = ((*itedge)->getNode1()->getEnergy() + (*itedge)->getNode1()->getEnergy()) / m_totalEnergy;
-	// ...and if this exceeds the threshold passed through the proper job option, update the trunc quantities.
-	if ( energyFrac > truncFrac ) {
-	  truncNumEdges += 1;
-	  m_meanEdgeLengthTrunc += length;
-    	  m_rmsEdgeLengthTrunc  += length*length;
-	}
+        // Calculate the fractional energy of the edge: ( E(node1) + E(node2) )/totalEnergy...
+        energyFrac = ((*itedge)->getNode1()->getEnergy() + (*itedge)->getNode1()->getEnergy()) / m_totalEnergy;
+        // ...and if this exceeds the threshold passed through the proper job option, update the trunc quantities.
+        if ( energyFrac > truncFrac ) {
+          truncNumEdges += 1;
+          m_meanEdgeLengthTrunc += length;
+          m_rmsEdgeLengthTrunc  += length*length;
+        }
       }
 
     // Loop finished: normalize all this garbage! First the standard quantities...
@@ -293,8 +293,8 @@ public :
   
     /// Standard Gaudi Tool interface constructor
     CalMSTClusteringTool(const std::string& type,
-			 const std::string& name,
-			 const IInterface* parent );
+                         const std::string& name,
+                         const IInterface* parent );
 
     virtual ~CalMSTClusteringTool() {};
     
@@ -352,8 +352,8 @@ private:
 DECLARE_TOOL_FACTORY(CalMSTClusteringTool) ;
 
 CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type, 
-					   const std::string & name, 
-					   const IInterface* parent)
+                                           const std::string & name, 
+                                           const IInterface* parent)
   : AlgTool(type,name,parent),
     m_maxEdgeWeight(300.) // Overwritten by the algorithm.
 { 
@@ -443,197 +443,197 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
 
     // get list of xtals 
     for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
-	 it != m_calReconSvc->getXtalRecs()->end(); ++it )
+         it != m_calReconSvc->getXtalRecs()->end(); ++it )
       {
         // get pointer to the reconstructed data for given crystal
         Event::CalXtalRecData * recData = *it ;
-	
-	XtalDataListIterator xTalIter = m_xTals_setA.insert(m_xTals_setA.end(), recData);
+        
+        XtalDataListIterator xTalIter = m_xTals_setA.insert(m_xTals_setA.end(), recData);
       }
 
     // case of 0 and 1 xtal will be handled separately...
     if (m_xTals_setA.size()>1)
       {
 
-	// Loop to fill the Uber MST
-	
-	// select a starting xtal
-	m_xTals.push_back(m_xTals_setA.front());
-	m_xTals_setA.pop_front();
+        // Loop to fill the Uber MST
+        
+        // select a starting xtal
+        m_xTals.push_back(m_xTals_setA.front());
+        m_xTals_setA.pop_front();
 
-	// loop until there are unassociated xtals
-	while(! m_xTals_setA.empty())
-	  {
-	    double minWeight = 100000000.; // init to a very long number
-	    Event::CalXtalRecData * bestXtal1 = 0;
-	    Event::CalXtalRecData * bestXtal2 = 0;
-	    // loop over m_xTals
-	    for (XtalDataList::iterator it=m_xTals.begin() ; it != m_xTals.end(); it++ )
-	      {
-		// then loop over m_xtals_setA
-		for (XtalDataList::iterator itA=m_xTals_setA.begin() ; itA != m_xTals_setA.end(); itA++ )
-		  {
-		    // find the closest link between the two sets and the corresponding xtals
-		    double currWeight = xtalsWeight( *it, *itA);
-		    if (currWeight < minWeight)
-		      {
-			minWeight = currWeight;
-			bestXtal1 = *it;
-			bestXtal2 = *itA;
-		      }
-		  }
-	      }
-	      
-	    // Fill the uber tree
-	    m_uberEdges.push_back( MSTEdge(*bestXtal1,*bestXtal2, sqrt(minWeight)) ); 
-	    m_uberTree.addEdge( m_uberEdges.back());
+        // loop until there are unassociated xtals
+        while(! m_xTals_setA.empty())
+          {
+            double minWeight = 100000000.; // init to a very long number
+            Event::CalXtalRecData * bestXtal1 = 0;
+            Event::CalXtalRecData * bestXtal2 = 0;
+            // loop over m_xTals
+            for (XtalDataList::iterator it=m_xTals.begin() ; it != m_xTals.end(); it++ )
+              {
+                // then loop over m_xtals_setA
+                for (XtalDataList::iterator itA=m_xTals_setA.begin() ; itA != m_xTals_setA.end(); itA++ )
+                  {
+                    // find the closest link between the two sets and the corresponding xtals
+                    double currWeight = xtalsWeight( *it, *itA);
+                    if (currWeight < minWeight)
+                      {
+                        minWeight = currWeight;
+                        bestXtal1 = *it;
+                        bestXtal2 = *itA;
+                      }
+                  }
+              }
+              
+            // Fill the uber tree
+            m_uberEdges.push_back( MSTEdge(*bestXtal1,*bestXtal2, sqrt(minWeight)) ); 
+            m_uberTree.addEdge( m_uberEdges.back());
 
-	    // add best xtal2 to m_xTals and remove it from m_xTal_setA
-	    m_xTals.push_back(bestXtal2);
+            // add best xtal2 to m_xTals and remove it from m_xTal_setA
+            m_xTals.push_back(bestXtal2);
     
-	    // Now remove best xtal2 the crystal from m_xTals_setA 
-	    // from CalSimpleClusteringTool::removeXTal ??? Why Tracy made this thing so complicated ?
-	    XtalDataList::iterator xTalDataIter = std::find(m_xTals_setA.begin(), m_xTals_setA.end(), bestXtal2);
-	    if (xTalDataIter != m_xTals_setA.end())
-	      {
-		m_xTals_setA.erase(xTalDataIter);
-	      }
-	  }
+            // Now remove best xtal2 the crystal from m_xTals_setA 
+            // from CalSimpleClusteringTool::removeXTal ??? Why Tracy made this thing so complicated ?
+            XtalDataList::iterator xTalDataIter = std::find(m_xTals_setA.begin(), m_xTals_setA.end(), bestXtal2);
+            if (xTalDataIter != m_xTals_setA.end())
+              {
+                m_xTals_setA.erase(xTalDataIter);
+              }
+          }
 
 
-	// calculate stats for uber tree
-	m_uberTree.evalStats(m_truncFrac);
-	m_maxEdgeWeight = getWeightThreshold(m_uberTree.getTotalEnergy());
+        // calculate stats for uber tree
+        m_uberTree.evalStats(m_truncFrac);
+        m_maxEdgeWeight = getWeightThreshold(m_uberTree.getTotalEnergy());
 
-	// Now we have the uber tree, need to loop over its edges 
-	// and remove those above threshold;
-	
-	// create a first tree
-	m_clusterTree.push_back(MSTTree());
-	
-	std::list<MSTEdge*> uberEdges = m_uberTree.getEdges(); // 
-	int myEdgeCounter = 0;
-	for (std::list<MSTEdge*>::iterator it=uberEdges.begin();  it != uberEdges.end(); it++ )
-	{
-	  MSTEdge* thisEdge = *it;
-	  if (thisEdge->getWeight() > m_maxEdgeWeight) // time to split the tree.
-	    {
-	      // Add node ONLY if splitting the very first edge.
-	      if (myEdgeCounter == 0){m_clusterTree.back().addNode(thisEdge->getNode1());}
+        // Now we have the uber tree, need to loop over its edges 
+        // and remove those above threshold;
+        
+        // create a first tree
+        m_clusterTree.push_back(MSTTree());
+        
+        std::list<MSTEdge*> uberEdges = m_uberTree.getEdges(); // 
+        int myEdgeCounter = 0;
+        for (std::list<MSTEdge*>::iterator it=uberEdges.begin();  it != uberEdges.end(); it++ )
+        {
+          MSTEdge* thisEdge = *it;
+          if (thisEdge->getWeight() > m_maxEdgeWeight) // time to split the tree.
+            {
+              // Add node ONLY if splitting the very first edge.
+              if (myEdgeCounter == 0){m_clusterTree.back().addNode(thisEdge->getNode1());}
 
-	      // a new tree is created
-	      m_clusterTree.push_back(MSTTree());
-	      m_clusterTree.back().addNode(thisEdge->getNode2()); 
-	    }
-	  else
-	    {
-	      m_clusterTree.back().addEdge(*thisEdge);
-	    }
-	  myEdgeCounter+=1;
-	}
+              // a new tree is created
+              m_clusterTree.push_back(MSTTree());
+              m_clusterTree.back().addNode(thisEdge->getNode2()); 
+            }
+          else
+            {
+              m_clusterTree.back().addEdge(*thisEdge);
+            }
+          myEdgeCounter+=1;
+        }
 
 
-	// Sorting Trees - required since there is no intrinsic ordering in the MST algorithm
-	// First eval some stats - energy and edges properties - fill members
-	for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
-	  {
-	    it->evalStats(m_truncFrac);	    
-	  }
-	// Second, real sorting.
-	m_clusterTree.sort(compare_total_energy);
+        // Sorting Trees - required since there is no intrinsic ordering in the MST algorithm
+        // First eval some stats - energy and edges properties - fill members
+        for (std::list<MSTTree>::iterator it= m_clusterTree.begin();  it !=  m_clusterTree.end(); it++ )
+          {
+            it->evalStats(m_truncFrac);     
+          }
+        // Second, real sorting.
+        m_clusterTree.sort(compare_total_energy);
 
-	// Now add the uber tree to the end of our list
-	// But only do so if more than one cluster found
-	if (m_clusterTree.size() > 1) m_clusterTree.push_back(m_uberTree);
+        // Now add the uber tree to the end of our list
+        // But only do so if more than one cluster found
+        if (m_clusterTree.size() > 1) m_clusterTree.push_back(m_uberTree);
     
-	//-------------------------------------
-	// Convert the results into CalClusters
-	calClusterCol->clear() ;
+        //-------------------------------------
+        // Convert the results into CalClusters
+        calClusterCol->clear() ;
 
-	for (std::list<MSTTree>::iterator treeIter = m_clusterTree.begin(); treeIter != m_clusterTree.end(); treeIter++)
-	  {
-	    // create a temporary list of xtals
-	    XtalDataList *xTalClus = new XtalDataList();
-	    // fill the temporary list of xtals with the xtals in tree map.
-	    std::map<int, Event::CalXtalRecData*> xtalMap = treeIter->getNodeMap();
-	    std::map<int, Event::CalXtalRecData*>::const_iterator mapIter;
-	    for ( mapIter=xtalMap.begin() ; mapIter != xtalMap.end(); mapIter++ )
-	      {
-		// get pointer to the reconstructed data for given crystal
-		Event::CalXtalRecData * recData = (*mapIter).second ;
-		xTalClus->push_back(recData);
-	      }
+        for (std::list<MSTTree>::iterator treeIter = m_clusterTree.begin(); treeIter != m_clusterTree.end(); treeIter++)
+          {
+            // create a temporary list of xtals
+            XtalDataList *xTalClus = new XtalDataList();
+            // fill the temporary list of xtals with the xtals in tree map.
+            std::map<int, Event::CalXtalRecData*> xtalMap = treeIter->getNodeMap();
+            std::map<int, Event::CalXtalRecData*>::const_iterator mapIter;
+            for ( mapIter=xtalMap.begin() ; mapIter != xtalMap.end(); mapIter++ )
+              {
+                // get pointer to the reconstructed data for given crystal
+                Event::CalXtalRecData * recData = (*mapIter).second ;
+                xTalClus->push_back(recData);
+              }
 
-	    // create and fill the cluster - from Tracy
-	    Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
-	    std::string producerName("CalMSTClusteringTool/") ;
-	    producerName += cluster->getProducerName() ;
-	    cluster->setProducerName(producerName) ;
-	    cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
-	    
-	    // Set the CalMSTreeParams for the cluster and associated status bit    
-	    // make sure first that statistics are available
-	    if( treeIter->getStatsBit() == false ) {
-	      treeIter->evalStats(m_truncFrac);
-	    }
-	    Event::CalMSTreeParams mstreeparams(treeIter->getTotalEnergy(),
- 		  treeIter->getMaxEnergy(),	treeIter->getNumEdges(),		     
- 		  treeIter->getMinEdgeLength(), treeIter->getMaxEdgeLength(),		     
- 		  treeIter->getMeanEdgeLength(),treeIter->getMeanEdgeLengthTrunc(),	     
- 		  treeIter->getRmsEdgeLength(), treeIter->getRmsEdgeLengthTrunc());
-		  
-	    cluster->setMSTreeParams(mstreeparams);
-	    cluster->setStatusBit(Event::CalCluster::MSTTREE);
-	    	    
-	    // Add cluster into the collection
-	    calClusterCol->push_back(cluster);
-	    // Do I need to delete mstreeparams ? -- Johan
+            // create and fill the cluster - from Tracy
+            Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
+            std::string producerName("CalMSTClusteringTool/") ;
+            producerName += cluster->getProducerName() ;
+            cluster->setProducerName(producerName) ;
+            cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
+            
+            // Set the CalMSTreeParams for the cluster and associated status bit    
+            // make sure first that statistics are available
+            if( treeIter->getStatsBit() == false ) {
+              treeIter->evalStats(m_truncFrac);
+            }
+            Event::CalMSTreeParams mstreeparams(treeIter->getTotalEnergy(),
+                  treeIter->getMaxEnergy(),     treeIter->getNumEdges(),                     
+                  treeIter->getMinEdgeLength(), treeIter->getMaxEdgeLength(),                
+                  treeIter->getMeanEdgeLength(),treeIter->getMeanEdgeLengthTrunc(),          
+                  treeIter->getRmsEdgeLength(), treeIter->getRmsEdgeLengthTrunc());
+                  
+            cluster->setMSTreeParams(mstreeparams);
+            cluster->setStatusBit(Event::CalCluster::MSTTREE);
+                    
+            // Add cluster into the collection
+            calClusterCol->push_back(cluster);
+            // Do I need to delete mstreeparams ? -- Johan
 
-	    // Loop through the xtals to make the relational table (hmmm... this could be done better...)  - from Tracy
-	    for(XtalDataListIterator xTalIter = xTalClus->begin(); xTalIter != xTalClus->end(); xTalIter++)
-	      {
-		Event::CalXtalRecData*   xTal         = *xTalIter;
-		Event::CalClusterHitRel* xTal2ClusRel = new Event::CalClusterHitRel(xTal,cluster);
-		
-		m_xTal2ClusTab->addRelation(xTal2ClusRel);
-	      }
-	    
-	    delete xTalClus;
-	  }
-	
+            // Loop through the xtals to make the relational table (hmmm... this could be done better...)  - from Tracy
+            for(XtalDataListIterator xTalIter = xTalClus->begin(); xTalIter != xTalClus->end(); xTalIter++)
+              {
+                Event::CalXtalRecData*   xTal         = *xTalIter;
+                Event::CalClusterHitRel* xTal2ClusRel = new Event::CalClusterHitRel(xTal,cluster);
+                
+                m_xTal2ClusTab->addRelation(xTal2ClusRel);
+              }
+            
+            delete xTalClus;
+          }
+        
       } // end of case (m_xTals_setA.size()>1)
     else // special handling for m_xTals_setA.size() = 1 or 0
       {
-	// what follows comes form calSingleClusteringTool
-	calClusterCol->clear() ;
-	
-	// Get the cluster instance - only one obviously
-	Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(&m_xTals_setA);
+        // what follows comes form calSingleClusteringTool
+        calClusterCol->clear() ;
+        
+        // Get the cluster instance - only one obviously
+        Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(&m_xTals_setA);
 
-	std::string producerName("CalMSTClusteringTool/") ;
-	producerName += cluster->getProducerName() ;
-	cluster->setProducerName(producerName) ;
-	cluster->setStatusBit(Event::CalCluster::ALLXTALS);
-	
-	// Attach a dummy mstree params container - but do not set the status bit
-	Event::CalMSTreeParams mstreeparams(-1,-1,-1,-1,-1,-1,-1,-1,-1);
-	cluster->setMSTreeParams(mstreeparams);
-	 
-	calClusterCol->push_back(cluster);
+        std::string producerName("CalMSTClusteringTool/") ;
+        producerName += cluster->getProducerName() ;
+        cluster->setProducerName(producerName) ;
+        cluster->setStatusBit(Event::CalCluster::ALLXTALS);
+        
+        // Attach a dummy mstree params container - but do not set the status bit
+        Event::CalMSTreeParams mstreeparams(-1,-1,-1,-1,-1,-1,-1,-1,-1);
+        cluster->setMSTreeParams(mstreeparams);
+         
+        calClusterCol->push_back(cluster);
 
-	// Loop through again to make the relations
-	for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
-	     it != m_calReconSvc->getXtalRecs()->end(); ++it )
-	  {
-	    // get pointer to the reconstructed data for given crystal
-	    Event::CalXtalRecData * recData = *it ;
+        // Loop through again to make the relations
+        for (Event::CalXtalRecCol::const_iterator it = m_calReconSvc->getXtalRecs()->begin() ; 
+             it != m_calReconSvc->getXtalRecs()->end(); ++it )
+          {
+            // get pointer to the reconstructed data for given crystal
+            Event::CalXtalRecData * recData = *it ;
 
-	    // Even though only one cluster, we still need to make the relations!
-	    Event::CalClusterHitRel* xTal2ClusRel = new Event::CalClusterHitRel(recData,cluster);
+            // Even though only one cluster, we still need to make the relations!
+            Event::CalClusterHitRel* xTal2ClusRel = new Event::CalClusterHitRel(recData,cluster);
 
-	    xTal2ClusTabList->push_back(xTal2ClusRel);
-	  }
-	
+            xTal2ClusTabList->push_back(xTal2ClusRel);
+          }
+        
       } // end of clustering
  
 
@@ -663,8 +663,8 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
     int xTal2Tower  = xTal2Id.getTower();
 
     double dist2 = (xTalPoint1.x() - xTalPoint2.x())*(xTalPoint1.x() - xTalPoint2.x()) +
-	(xTalPoint1.y() - xTalPoint2.y())*(xTalPoint1.y() - xTalPoint2.y()) +
-	(xTalPoint1.z() - xTalPoint2.z())*(xTalPoint1.z() - xTalPoint2.z());
+        (xTalPoint1.y() - xTalPoint2.y())*(xTalPoint1.y() - xTalPoint2.y()) +
+        (xTalPoint1.z() - xTalPoint2.z())*(xTalPoint1.z() - xTalPoint2.z());
 
     //double xtalEnergy1 = xTal1->getEnergy();
     //double xtalEnergy2 = xTal2->getEnergy();
@@ -672,10 +672,10 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
     /*
      double eneDist = 1.;
     if (xtalEnergy1>xtalEnergy2) {
-	eneDist = 1. + log10(xtalEnergy1/xtalEnergy2);
+        eneDist = 1. + log10(xtalEnergy1/xtalEnergy2);
     }
     else {
-	eneDist = 1. + log10(xtalEnergy2/xtalEnergy1);
+        eneDist = 1. + log10(xtalEnergy2/xtalEnergy1);
     }
     */
 
