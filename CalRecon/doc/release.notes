@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-13-01 19-Jan-2011 lbaldini Zero division causing a segfault fixed.
  CalRecon-06-13-00 15-Jan-2011 lbaldini Some bug fixes and improvements in the clustering/moments analysis and some refactoring of the moments analysis itself.
  CalRecon-06-12-07 08-Jan-2011  lsrea fix paths for SCons
  CalRecon-06-12-06 08-Jan-2011  lsrea rewrite read of xml file without casts
