@@ -17,7 +17,7 @@
 
 
 CalMomentsData::CalMomentsData(const Point& position, const double weight,
-			       int tower, int layer, int column) :
+                               int tower, int layer, int column) :
   m_statusBits(ZERO),
   m_basePosition(position),
   m_corrPosition(Point(-9999., -9999., -9999.)),
@@ -70,7 +70,7 @@ double CalMomentsData::getFitCorrAmount() const
 }
 
 void CalMomentsData::applyFitCorrection(const Event::CalFitParams fitParams,
-					const ICalReconSvc* calReconSvc)
+                                        const ICalReconSvc* calReconSvc)
 {
   Point fitCentroid = fitParams.getCentroid();
   Vector fitAxis = fitParams.getAxis();
