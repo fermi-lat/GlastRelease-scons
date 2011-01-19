@@ -689,9 +689,15 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
       // cos(theta) = dx/L ; sin(theta) = dy/L and sin(phi) = L/R with R = sqrt(dx^2 + dy^2 +dz^2) and L = sqrt(dx^2 + dy^2)
       // D = R - nGapsX*R_gap_x  - nGapsY*R_gap_y =
       //   = R - nGapsX*xtalGap*(L/dx)*(R/L) - nGapsY*xtalGap*(L/dy)*(R/L) = R(1 - nGapsX*xtalGap/dx - nGapsY*xtalGap/dy )
-      double dist2Corr = 1.-  XTAL_GAP_DIST*nGapsX/fabs(xTalPoint1.x() - xTalPoint2.x()) -
-	XTAL_GAP_DIST*nGapsY/fabs(xTalPoint1.y() - xTalPoint2.y());
-      
+      double absDeltaX = fabs(xTalPoint1.x() - xTalPoint2.x());
+      double absDeltaY = fabs(xTalPoint1.y() - xTalPoint2.y());
+      double dist2Corr = 1.;
+      if ( absDeltaX > 0. ) { 
+        dist2Corr -=  XTAL_GAP_DIST*nGapsX/absDeltaX;
+      }
+      if ( absDeltaY > 0. ) {
+        dist2Corr -=     XTAL_GAP_DIST*nGapsY/absDeltaY;
+      }
       return dist2*dist2Corr*dist2Corr ;
     }
 }
