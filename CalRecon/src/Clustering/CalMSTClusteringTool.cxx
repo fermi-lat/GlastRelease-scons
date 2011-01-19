@@ -339,7 +339,7 @@ private:
   // above that we do not grow a tree
   int   m_maxNumXtals;
   // Parameters to separate trees
-  float m_maxEdgeWeightModel_thrLE;     // (mm) @ 10 MeV
+  float m_maxEdgeWeightModel_thrLE;     // (mm) @ 1 MeV
   float m_maxEdgeWeightModel_thrPivEne; // (MeV)
   float m_maxEdgeWeightModel_thrHE;     // (mm) above the pivot
   // Parameter defining the threshold for the "Trunc" variables.
@@ -365,7 +365,7 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   
   // jobOptions declaration
   declareProperty ("maxNumXtals"                 , m_maxNumXtals                  = 1536 );
-  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 500. );
+  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 650. );
   declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000.);
   declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 200. );
   declareProperty ("truncFrac"                   , m_truncFrac                    = 0.05 );
@@ -683,12 +683,15 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
       return dist2 ;
     }
     else {
-      int nGapsX = abs( (xTal1Tower%4) - (xTal2Tower%4)) ;
-      int nGapsY = abs( (xTal1Tower/4) - (xTal2Tower/4)) ;
+      int nGapsX = abs((xTal1Tower % 4) - (xTal2Tower % 4)) ;
+      int nGapsY = abs((xTal1Tower / 4) - (xTal2Tower / 4)) ;
       // R_gap_x = xtalGap/(cos(theta) * sin(phi)) and R_gap_y = xtalGap/(sin(theta)* sin(phi))
-      // cos(theta) = dx/L ; sin(theta) = dy/L and sin(phi) = L/R with R = sqrt(dx^2 + dy^2 +dz^2) and L = sqrt(dx^2 + dy^2)
+      // cos(theta) = dx/L
+      // sin(theta) = dy/L and sin(phi) = L/R
+      // with R = sqrt(dx^2 + dy^2 +dz^2) and L = sqrt(dx^2 + dy^2)
       // D = R - nGapsX*R_gap_x  - nGapsY*R_gap_y =
-      //   = R - nGapsX*xtalGap*(L/dx)*(R/L) - nGapsY*xtalGap*(L/dy)*(R/L) = R(1 - nGapsX*xtalGap/dx - nGapsY*xtalGap/dy )
+      // = R - nGapsX*xtalGap*(L/dx)*(R/L) - nGapsY*xtalGap*(L/dy)*(R/L) =
+      // R(1 - nGapsX*xtalGap/dx - nGapsY*xtalGap/dy)
       double absDeltaX = fabs(xTalPoint1.x() - xTalPoint2.x());
       double absDeltaY = fabs(xTalPoint1.y() - xTalPoint2.y());
       double dist2Corr = 1.;
@@ -704,12 +707,22 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
 
 double CalMSTClusteringTool::getWeightThreshold(double energy)
 {
-  // Implement a max weight per events that is energy dependent, defaults:
-  if (energy>m_maxEdgeWeightModel_thrPivEne) {
+  // This is the threshold used for the clustering: the overall MST is created and then
+  // all the edges whose weight is greater that this threshold are trimmed in order to
+  // define the clusters. The weight is explicitely energy dependent. In this context "energy"
+  // really means the total raw energy in the calorimeter.
+  // The basic parametrization is a negative-slope line (in log10*(energy) below an adjustable
+  // pivot plus a constant above the pivot. The value m_maxEdgeWeightModel_thrLE is to be
+  // intended at 1 MeV, or log10(energy) = 0.
+
+  // If the energy is larger that the pivot energy, return the high-energy constant
+  if ( energy > m_maxEdgeWeightModel_thrPivEne ) {
     return m_maxEdgeWeightModel_thrHE;
   }
+  // Otherwise define the slope and use it properly.
   else {
-    return m_maxEdgeWeightModel_thrLE - 150.0*(log10(energy) - 1);
+    double slope = (m_maxEdgeWeightModel_thrHE - m_maxEdgeWeightModel_thrLE)/log10(m_maxEdgeWeightModel_thrPivEne);
+    return m_maxEdgeWeightModel_thrLE + slope*log10(energy);
   }
 }
 
