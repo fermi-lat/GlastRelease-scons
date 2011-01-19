@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-07-00 19-Jan-2011 lbaldini Two more data members added to the CalXtalsParams container.
  Event-14-06-05 15-Jan-2011 TU Updates for including XtalEnergyDep in input/output
  Event-14-06-04 13-Jan-2011  lsrea add USEDCR bit to TkrCluster status
  Event-14-06-03 11-Jan-2011  lsrea add USEDCR bit to TkrCluster status
