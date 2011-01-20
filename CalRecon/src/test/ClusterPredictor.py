@@ -7,16 +7,32 @@ from math              import log10
 
 class ClusterPredictor:
 
-    def __init__(self, pdfFilePath, dataFilePath = None, cut = '1'):
+    def __init__(self, pdfFilePath, dataFilePath = None, cut = '1', varBins=False):
         print 'Retrieving histograms for pdfs...'
         self.PdfFile = ROOT.TFile(pdfFilePath)
         self.PdfHistDict = {}
         for topology in FILE_PATH_DICT.keys():
             self.PdfHistDict[topology] = {}
+            print self.PdfHistDict[topology]
             for var in VARIABLE_LIST:
-                print 'Processing %s for %s' % (var, topology)
-                hName = hname(var.Label, topology)
-                self.PdfHistDict[topology][var.Label] = self.PdfFile.Get(hName)
+                if varBins:
+                    self.PdfHistDict[topology][var.Label] = {}
+                    for i,(Emin,Emax) in enumerate(ENERGY_BINS):
+                        print 'Processing %s for %s using variable binning.'\
+                            % (var.Label, topology)
+                        hName = hVarname(var.Label, topology,i)
+                        print "Histo name is",hName
+                        print self.PdfFile.Get(hName)
+                        self.PdfHistDict[topology][var.Label][i] = \
+                            self.PdfFile.Get(hName)
+
+
+                else:
+                    print 'Processing %s for %s' % (var, topology)
+                    hName = hname(var.Label, topology)
+                    self.PdfHistDict[topology][var.Label] = \
+                        self.PdfFile.Get(hName)
+      
         print 'Done.'
         if dataFilePath is not None:
             self.__setupDataTree()
@@ -25,6 +41,8 @@ class ClusterPredictor:
         print 'Creating the TTreeFormula objects...'
         self.RootTree = ROOT.TChain('MeritTuple')
         self.RootTree.Add(dataFilePath)
+        print "Added %s files to tree" %dataFilePath
+        self.numEvents = self.RootTree.GetEntries()
         self.TreeFormulaDict = {}
         self.addTreeFormula('cut', cut)
         self.addTreeFormula('CalEnergyRaw', 'CalEnergyRaw')
@@ -32,12 +50,19 @@ class ClusterPredictor:
             self.addTreeFormula(var.Label, var.Expression)
         print 'Done.'
 
+
+    def getNumEntries(self):
+        return self.numEvents
+
     def addTreeFormula(self, name, expr):
         formula = ROOT.TTreeFormula(name, expr, self.RootTree)
         self.TreeFormulaDict[name] = formula
 
     def getPdfHist(self, topology, var):
         return self.PdfHistDict[topology][var.Label]
+
+    def getHistSlice(self,topology,var,Energybin):
+        return self.PdfHistDict[topology][var.Label][Energybin]
 
     def getPdfValue(self, topology, var):
         h = self.getPdfHist(topology, var)
@@ -56,9 +81,54 @@ class ClusterPredictor:
             biny = 1 + int(var.NumBins*(float(value - var.MinValue)/\
                                         (var.MaxValue - var.MinValue))) 
         pdfValue = h.GetBinContent(binx, biny)
-        print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
-              (topology, logE, var.Label, value, pdfValue)
+      #  print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
+      #        (topology, logE, var.Label, value, pdfValue)
         return pdfValue
+
+    def getPdfVarBinValue(self,topology,var):
+        #For each event you need the topology, variable and energy to get
+        #the prob. The energy is needed in order to select the right
+        #slice from the root file.
+        try:
+            logE = log10(self.getVar('CalEnergyRaw'))
+        except ValueError:
+            return 0.0
+
+        Energybin =  int(NUM_E_BINS*(float(logE - LOG_E_MIN)/\
+                                            (LOG_E_MAX - LOG_E_MIN)))
+
+
+        h = self.getHistSlice(topology, var,Energybin)
+        numEntries = h.GetEntries()
+       
+        value = self.getVar(var.Label)
+        bin = self.getBin(h,value,var)
+        binVal = h.GetBinContent(bin)
+        binWidth = h.GetBinWidth(bin)
+        try:
+            pdfValue = binVal/(float(numEntries)*binWidth)
+        except ZeroDivisionError:
+            pdfValue =  0.0
+            print "Zero Division Error!"
+            print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
+              (topology, logE, var.Label, value, pdfValue)
+       
+        return pdfValue
+        
+
+    def getBin(self,histogram,value,var):
+        numBins = histogram.GetNbinsX()
+        if value < var.MinValue:
+            bin = 0
+        elif value >= var.MaxValue:
+            bin = numBins + 1
+        else:
+            for i in range(1, numBins + 1):
+                lowEdge = histogram.GetBinLowEdge(i)
+                highEdge = lowEdge +  histogram.GetBinWidth(i)
+                if value>=lowEdge and value<=highEdge:
+                    bin = i
+        return bin
 
     def getEntry(self, entry):
         self.RootTree.GetEntry(entry)
@@ -70,12 +140,15 @@ class ClusterPredictor:
         return self.getTreeFormula(name).EvalInstance()
         
     def cutPassed(self):
-        return self.getTreeFormulaValue('cut')
+        self.getTreeFormula('cut').UpdateFormulaLeaves()
+        return  self.getTreeFormulaValue('cut')
+
 
     def getVar(self, varLabel):
+        self.getTreeFormula(varLabel).UpdateFormulaLeaves()
         return self.getTreeFormulaValue(varLabel)
 
-    def classifyEvent(self, entry = None):
+    def classifyEvent(self, entry = None,varBins = False):
         if entry is not None:
             self.getEntry(entry)
         self.ProbDict = {}
@@ -85,7 +158,12 @@ class ClusterPredictor:
             self.ProbDict[topology] = 1.0
         for topology in FILE_PATH_DICT.keys():
             for var in VARIABLE_LIST:
-                pdfValue = self.getPdfValue(topology, var)
+                if varBins:
+                    pdfValue = self.getPdfVarBinValue(topology, var)
+                    
+                else:
+                    pdfValue = self.getPdfValue(topology, var)
+                
                 self.ProbDict[topology] *= pdfValue
         probSum = sum(self.ProbDict.values())
         for topology in FILE_PATH_DICT.keys():
@@ -104,16 +182,16 @@ class ClusterPredictor:
 
 
 if __name__ == '__main__':
-    dataFilePath = FILE_PATH_DICT['mip']
-    numEvents = 20000
+    dataFilePath = FILE_PATH_DICT['had']
     cut = PRE_CUT
-    p = ClusterPredictor('cluclass.root', dataFilePath, cut)
+    p = ClusterPredictor('cluclassTestingCode.root', dataFilePath, cut,True)
+
     hDict = {}
     for topology in FILE_PATH_DICT.keys():
         hName  = 'hProb_%s' % topology
         hTitle = '%s probability' % topology
         h = ROOT.TH2F(hName, hTitle, NUM_E_BINS, LOG_E_MIN, LOG_E_MAX,
-                      50, 0, 1.01)
+                      55, 0, 1.01)
         h.SetXTitle('log10(CalEnergyRaw)')
         h.GetXaxis().SetTitleOffset(1.55)
         h.SetYTitle(hTitle)
@@ -121,13 +199,18 @@ if __name__ == '__main__':
         h.SetZTitle('Normalized # events')
         h.GetZaxis().SetTitleOffset(1.25)
         hDict[topology] = h
+
     hClass = ROOT.TH1F('hClass', 'hClass', 3, 0, 3)
     hClass.SetXTitle('Predicted topology')
     hClass.SetYTitle('Normalized # events')
     for (key, value) in TOPOLOGY_DICT.items():
         hClass.GetXaxis().SetBinLabel(value + 1, key)
+
+    #numEvents = p.getNumEntries()
+    numEvents = 80000
+       
     for i in xrange(numEvents):
-        classTopologyIndex = p.classifyEvent(i)
+        classTopologyIndex = p.classifyEvent(i,True)
         if p.cutPassed():
             hClass.Fill(classTopologyIndex)
             logE = log10(p.getVar('CalEnergyRaw'))
@@ -147,3 +230,4 @@ if __name__ == '__main__':
     hClass.Draw()
     c.cd()
     c.Update()
+ #   c.SaveAs('TestVarBinProbs_3Classes.pdf')
