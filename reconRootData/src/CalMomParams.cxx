@@ -140,25 +140,25 @@ Bool_t CalMomParams::CompareInRange( const CalMomParams & mp, const std::string 
   
   // ...and finally on the other members.
   result = rootdatautil::CompareInRange(getNumIterations(),mp.getNumIterations(),
-					"Number of iterations") && result ;
+                                        "Number of iterations") && result ;
   result = rootdatautil::CompareInRange(getNumCoreXtals(),mp.getNumCoreXtals(),
-					"Number of xtals used for axis/centroid") && result ;
+                                        "Number of xtals used for axis/centroid") && result ;
   result = rootdatautil::CompareInRange(getNumXtals(),mp.getNumXtals(),
-					"Total number of xtals") && result ;
+                                        "Total number of xtals") && result ;
   result = rootdatautil::CompareInRange(getTransRms(),mp.getTransRms(),
-					"Transverse RMS") && result ;
+                                        "Transverse RMS") && result ;
   result = rootdatautil::CompareInRange(getLongRms(),mp.getLongRms(),
-					"Longitudinal RMS") && result ;
+                                        "Longitudinal RMS") && result ;
   result = rootdatautil::CompareInRange(getLongRmsAsym(),mp.getLongRmsAsym(),
-					"Longitudinal RMS asymmetry") && result ;
+                                        "Longitudinal RMS asymmetry") && result ;
   result = rootdatautil::CompareInRange(getLongSkewness(),mp.getLongSkewness(),
-					"Longitudinal skewness") && result ;
+                                        "Longitudinal skewness") && result ;
   result = rootdatautil::CompareInRange(getCoreEnergyFrac(),mp.getCoreEnergyFrac(),
-					"Core energy fraction") && result ;
+                                        "Core energy fraction") && result ;
   result = rootdatautil::CompareInRange(getFullLength(),mp.getFullLength(),
-					"Full cluster length") && result ;
+                                        "Full cluster length") && result ;
   result = rootdatautil::CompareInRange(getdEdxSpread(),mp.getdEdxSpread(),
-					"Spread in dE/dx along the cluster") && result ;
+                                        "Spread in dE/dx along the cluster") && result ;
   
   if (!result) {
     if ( name == "" ) {

@@ -22,17 +22,17 @@ public:
     /// Direct construction from all the elements
     CalMSTreeParams
     ( Double_t totalEnergy,
-      Double_t maxXtalEnergy,  Int_t	numberOfEdges,  		    
-      Double_t minEdgeLength,  Double_t maxEdgeLength,  		  
-      Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,		  
-      Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc);		  
+      Double_t maxXtalEnergy,  Int_t numberOfEdges,
+      Double_t minEdgeLength,  Double_t maxEdgeLength,
+      Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,
+      Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc);
 
     /// init
     void init
     ( Double_t totalEnergy,
-      Double_t maxXtalEnergy,  Int_t	numberOfEdges,  		    
-      Double_t minEdgeLength,  Double_t maxEdgeLength,  		  
-      Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,		  
+      Double_t maxXtalEnergy,  Int_t numberOfEdges,
+      Double_t minEdgeLength,  Double_t maxEdgeLength,
+      Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,
       Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc);
 
     /// Destructor

@@ -17,10 +17,10 @@ ClassImp(CalMSTreeParams)
 
 CalMSTreeParams::CalMSTreeParams
 ( double totalEnergy,
-  double maxXtalEnergy,  int	numEdges,	    					  
-  double minEdgeLength,  double maxEdgeLength,	    					  
-  double meanEdgeLength, double meanEdgeLengthTrunc,					  
-  double rmsEdgeLength,  double rmsEdgeLengthTrunc)
+  double maxXtalEnergy, int numEdges,
+  double minEdgeLength, double maxEdgeLength,
+  double meanEdgeLength, double meanEdgeLengthTrunc,
+  double rmsEdgeLength, double rmsEdgeLengthTrunc)
 {
     init
     ( totalEnergy, maxXtalEnergy, numEdges, minEdgeLength, maxEdgeLength,
@@ -39,10 +39,10 @@ void CalMSTreeParams::Clear(  Option_t * )
 
 void CalMSTreeParams::init
 ( Double_t totalEnergy,
-  Double_t maxXtalEnergy,  Int_t    numberOfEdges,			
-  Double_t minEdgeLength,  Double_t maxEdgeLength,		      
-  Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,	      
-  Double_t rmsEdgeLength,  Double_t rmsEdgeLengthTrunc)
+  Double_t maxXtalEnergy, Int_t numberOfEdges,
+  Double_t minEdgeLength, Double_t maxEdgeLength,
+  Double_t meanEdgeLength, Double_t meanEdgeLengthTrunc,
+  Double_t rmsEdgeLength, Double_t rmsEdgeLengthTrunc)
 {
     m_totalEnergy    = totalEnergy;
     m_maxXtalEnergy  = maxXtalEnergy;
@@ -85,23 +85,23 @@ Bool_t CalMSTreeParams::CompareInRange( const CalMSTreeParams & tp, const std::s
   Bool_t result = true ;
   
   result = rootdatautil::CompareInRange(getTotalEnergy(),tp.getTotalEnergy(),
-					"Total energy") && result ;
+                                        "Total energy") && result ;
   result = rootdatautil::CompareInRange(getMaxXtalEnergy(),tp.getMaxXtalEnergy(),
-					"Maximum xtal energy") && result ;
+                                        "Maximum xtal energy") && result ;
   result = rootdatautil::CompareInRange(getNumberOfEdges(),tp.getNumberOfEdges(),
-					"Number of edges") && result ;
+                                        "Number of edges") && result ;
   result = rootdatautil::CompareInRange(getMinEdgeLength(),tp.getMinEdgeLength(),
-					"Minimum edge length") && result ;
+                                        "Minimum edge length") && result ;
   result = rootdatautil::CompareInRange(getMaxEdgeLength(),tp.getMaxEdgeLength(),
-					"Maximum edge length") && result ;
+                                        "Maximum edge length") && result ;
   result = rootdatautil::CompareInRange(getMeanEdgeLength(),tp.getMeanEdgeLength(),
-					"Mean edge lengths") && result ;
+                                        "Mean edge lengths") && result ;
   result = rootdatautil::CompareInRange(getMeanEdgeLengthTrunc(),tp.getMeanEdgeLengthTrunc(),
-					"Truncated mean of edge lengths") && result ;
+                                        "Truncated mean of edge lengths") && result ;
   result = rootdatautil::CompareInRange(getRmsEdgeLength(),tp.getRmsEdgeLength(),
-					"RMS of edge lengths") && result ;
+                                        "RMS of edge lengths") && result ;
   result = rootdatautil::CompareInRange(getRmsEdgeLengthTrunc(),tp.getRmsEdgeLengthTrunc(),
-					"Truncated RMS of edge lengths") && result ;
+                                        "Truncated RMS of edge lengths") && result ;
   
   if (!result) {
     if ( name == "" ) {

@@ -45,8 +45,8 @@ void CalXtalsParams::Clear( Option_t * )
 }
 
 void CalXtalsParams::init(Int_t numXtals, Int_t numTruncXtals, Int_t numSaturatedXtals,
-			  Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
-			  Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid)
+                          Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
+                          Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid)
 {
   m_numXtals          = numXtals;
   m_numTruncXtals     = numTruncXtals;
@@ -71,7 +71,7 @@ void CalXtalsParams::Print( Option_t * ) const
     "Rms of xtal energy distribution = " << m_xtalEneRms << " MeV\n" <<
     "Skewness of xtal energy distribution = " << m_xtalEneSkewness <<
     "Centroid = (" << m_centroid.x() << ", " << m_centroid.y() << ", "
-			 << m_centroid.z() << ") mm" << std::endl;
+                         << m_centroid.z() << ") mm" << std::endl;
 }
 
 // dummy data, just for tests
@@ -84,23 +84,23 @@ Bool_t CalXtalsParams::CompareInRange( const CalXtalsParams & xp, const std::str
 {  
   Bool_t result = true ;
   result = rootdatautil::CompareInRange(getNumXtals(),xp.getNumXtals(),
-					"Number of xtals") && result ;
+                                        "Number of xtals") && result ;
   result = rootdatautil::CompareInRange(getNumTruncXtals(),xp.getNumTruncXtals(),
-					"Truncated number of xtals") && result ;
+                                        "Truncated number of xtals") && result ;
   result = rootdatautil::CompareInRange(getNumSaturatedXtals(),xp.getNumSaturatedXtals(),
-					"Number of saturated xtals") && result ;
+                                        "Number of saturated xtals") && result ;
   result = rootdatautil::CompareInRange(getXtalRawEneSum(),xp.getXtalRawEneSum(),
-					"Raw xtal energy sum") && result ;
+                                        "Raw xtal energy sum") && result ;
   result = rootdatautil::CompareInRange(getXtalCorrEneSum(),xp.getXtalCorrEneSum(),
-					"Corrected xtal energy sum") && result ;
+                                        "Corrected xtal energy sum") && result ;
   result = rootdatautil::CompareInRange(getXtalEneMax(),xp.getXtalEneMax(),
-					"Maximum xtal energy") && result ;
+                                        "Maximum xtal energy") && result ;
   result = rootdatautil::CompareInRange(getXtalEneRms(),xp.getXtalEneRms(),
-					"Rms of xtal energy distribution") && result ;
+                                        "Rms of xtal energy distribution") && result ;
   result = rootdatautil::CompareInRange(getXtalEneSkewness(),xp.getXtalEneSkewness(),
-					"Skewness of xtal energy distribution") && result ;
+                                        "Skewness of xtal energy distribution") && result ;
   result = rootdatautil::CompareInRange(getCentroid(),xp.getCentroid(),
-					"Centroid of xtal collection") && result ;
+                                        "Centroid of xtal collection") && result ;
   
   if (!result) {
     if ( name == "" ) {

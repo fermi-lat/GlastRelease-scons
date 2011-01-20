@@ -61,7 +61,7 @@ void CalClassParams::Print( Option_t * ) const
   for (iter = m_probMap.begin(); iter != m_probMap.end(); iter++)
     {
       std::cout << "Probability for class '" << (*iter).first << "': " <<
-	(*iter).second << "\n";
+        (*iter).second << "\n";
     }
 }
 
@@ -79,13 +79,13 @@ Bool_t CalClassParams::CompareInRange( const CalClassParams & cp, const std::str
   Bool_t result = true ;
 
   result = rootdatautil::CompareInRange(getProducerName(),cp.getProducerName(),
-					"Producer name") && result ;
+                                        "Producer name") && result ;
   std::map <std::string, double>::const_iterator iter;
   
   for (iter = getProbMap().begin(); iter != getProbMap().end(); iter++)
     {
       result = rootdatautil::CompareInRange((*iter).second,cp.getProb((*iter).first),
-					    (*iter).first) && result ;
+                                            (*iter).first) && result ;
     }
 
   if (!result) {

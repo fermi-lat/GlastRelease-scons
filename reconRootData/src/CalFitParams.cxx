@@ -145,9 +145,9 @@ Bool_t CalFitParams::CompareInRange( const CalFitParams & fp, const std::string 
   
   // ...and finally on the other members.
   result = rootdatautil::CompareInRange(getFitLayers(),fp.getFitLayers(),
-					"Number of fit layers") && result ;
+                                        "Number of fit layers") && result ;
   result = rootdatautil::CompareInRange(getChiSquare(),fp.getChiSquare(),
-					"ChiSquare") && result ;
+                                        "ChiSquare") && result ;
 
   if (!result) {
     if ( name == "" ) {

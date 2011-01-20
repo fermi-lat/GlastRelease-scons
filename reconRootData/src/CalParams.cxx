@@ -69,13 +69,13 @@ void CalParams::Print( Option_t * ) const
   std::cout <<
     "Energy = " << m_energy << " +- " << m_eneError << " MeV\n" <<
     "Centroid = (" << m_clusterCentroid.x() << ", " << m_clusterCentroid.y() << ", "
-		<< m_clusterCentroid.z() << ") mm\n" <<
+                << m_clusterCentroid.z() << ") mm\n" <<
     "Centroid covariance matrix:\n" <<
     "| " << m_cenxx  << "  " << m_cenxy << "  " << m_cenxz << " |\n" <<
     "| " << m_cenxy  << "  " << m_cenyy << "  " << m_cenyz << " |\n" <<
     "| " << m_cenxz  << "  " << m_cenyz << "  " << m_cenzz << " |\n" <<
     "Axis = (" << m_clusterAxis.x() << ", " << m_clusterAxis.y() << ", "
-		  << m_clusterAxis.z() << ")\n" <<
+                << m_clusterAxis.z() << ")\n" <<
     "Axis covariance matrix:\n" <<
     "| " << m_axisxx  << "  " << m_axisxy << "  " << m_axisxz << " |\n" <<
     "| " << m_axisxy  << "  " << m_axisyy << "  " << m_axisyz << " |\n" <<

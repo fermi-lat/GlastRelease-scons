@@ -27,16 +27,16 @@ class CalXtalsParams
   
   /// Constructor from all members.
   CalXtalsParams(Int_t numXtals, Int_t numTruncXtals, Int_t numSaturatedXtals,
-		 Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
-		 Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid);
+                 Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
+                 Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid);
   
   /// Destructor.
   virtual ~CalXtalsParams() {}
   
   /// Initialize the class members.
   void init(Int_t numXtals, Int_t numTruncXtals, Int_t numSaturatedXtals,
-	    Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
-	    Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid);
+            Double_t xtalRawEneSum, Double_t xtalCorrEneSum, Double_t xtalEneMax,
+            Double_t xtalEneRms, Double_t xtalEneSkewness, TVector3 centroid);
   
   /// Retrieve class parameters...
   inline Int_t getNumXtals()             const { return m_numXtals; }
