@@ -1,7 +1,8 @@
 /**
  * @class CalMSTClusteringTool
  *
- * @brief Implements a Gaudi Tool for performing MST based clustering in the Cal 
+ * @brief Implements a Gaudi Tool for performing MST based clustering
+ * in the Cal 
  *
  * @author carmelo
  *
@@ -29,7 +30,11 @@ typedef  XtalDataList::iterator XtalDataListIterator;
 
 // GAP effective distance (in mm) is calculated as:
 // TOWER_PITCH - 0.5*(CELL_HOR_PITCH*10 + CSI_WIDTH*2 + CSI_LENGTH) 
-// TOWER_PITCH = 374.5; CELL_HOR_PITCH = 27.84; CSI_WIDTH = 26.7; CSI_LENGTH = 326.0;
+// TOWER_PITCH = 374.5;
+// CELL_HOR_PITCH = 27.84;
+// CSI_WIDTH = 26.7;
+// CSI_LENGTH = 326.0;
+
 #define XTAL_GAP_DIST  45.6
 
 //
@@ -231,7 +236,8 @@ void MSTTree::evalStats(double truncFrac)
         m_rmsEdgeLength  += length*length;
 
         // Calculate the fractional energy of the edge: ( E(node1) + E(node2) )/totalEnergy...
-        energyFrac = ((*itedge)->getNode1()->getEnergy() + (*itedge)->getNode1()->getEnergy()) / m_totalEnergy;
+        energyFrac = ((*itedge)->getNode1()->getEnergy() +
+                      (*itedge)->getNode2()->getEnergy()) / m_totalEnergy;
         // ...and if this exceeds the threshold passed through the proper job option, update the trunc quantities.
         if ( energyFrac > truncFrac ) {
           truncNumEdges += 1;
