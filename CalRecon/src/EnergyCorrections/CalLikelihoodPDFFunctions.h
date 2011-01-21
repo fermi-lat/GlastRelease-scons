@@ -130,7 +130,7 @@ class PDFLowEnergyCuts: public PDFFunction {
    */
  public:
   typedef enum { cZECNTR_MIN= int(0), 
-		 cZECNTR_MAX= int(1) } Cuts_t;
+                 cZECNTR_MAX= int(1) } Cuts_t;
   PDFLowEnergyCuts(const CalLikelihoodManagerTool*, MsgStream&);
   
   void setEvt(const Event::CalCluster*, const Event::TkrVertex*);
@@ -146,7 +146,7 @@ class PDFLowEnergyCuts: public PDFFunction {
   
   // calculates the geometricCut parmeter's value
   double geometricCut(const Event::CalCluster*,
-		      const Event::TkrVertex*) const;
+                      const Event::TkrVertex*) const;
  private:
   const CalLikelihoodManagerTool *m_manager;
   double m_calZorigin;
@@ -183,9 +183,9 @@ class PDFHighEnergyCuts: public PDFFunction {
  private:
   const CalLikelihoodManagerTool *m_manager;
   typedef enum { cZECNTR_TOP      = int(0), cZECNTR_CORE     = int(1),
-		 cZECNTR_BOTTOM   = int(2), cE7          = int(3),
-		 cTOWER_EDGE  = int(4), cTOWER_BORDER= int(5),
-		 cTOWER_CENTER= int(6) } Cuts_t;
+                 cZECNTR_BOTTOM   = int(2), cE7          = int(3),
+                 cTOWER_EDGE  = int(4), cTOWER_BORDER= int(5),
+                 cTOWER_CENTER= int(6) } Cuts_t;
   double m_towerPitch;
 };
 #endif

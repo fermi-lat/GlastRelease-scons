@@ -8,9 +8,9 @@
 
 
 Event::CalFitParams::CalFitParams(double energy, double eneError,
-				  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
-				  const Vector& axis, const CLHEP::HepMatrix& axisErr,
-				  int numFitLayers, double chiSquare) :
+                                  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+                                  const Vector& axis, const CLHEP::HepMatrix& axisErr,
+                                  int numFitLayers, double chiSquare) :
   CalParams(energy, eneError, centroid, centroidErr, axis, axisErr),
   m_nFitLayers(numFitLayers),
   m_chiSquare(chiSquare)
@@ -19,16 +19,16 @@ Event::CalFitParams::CalFitParams(double energy, double eneError,
 }
 
 Event::CalFitParams::CalFitParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  double cntdxx, double cntdxy, double cntdxz,
-				  double cntdyy, double cntdyz, double cntdzz,
-				  double xAxis,  double yAxis,  double zAxis,
-				  double axsdxx, double axsdxy, double axsdxz,
-				  double axsdyy, double axsdyz, double axsdzz,
-				  int numFitLayers, double chiSquare) :
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  double cntdxx, double cntdxy, double cntdxz,
+                                  double cntdyy, double cntdyz, double cntdzz,
+                                  double xAxis,  double yAxis,  double zAxis,
+                                  double axsdxx, double axsdxy, double axsdxz,
+                                  double axsdyy, double axsdyz, double axsdzz,
+                                  int numFitLayers, double chiSquare) :
   CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
-	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
-	    axsdyy, axsdyz, axsdzz),
+            cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
+            axsdyy, axsdyz, axsdzz),
   m_nFitLayers(numFitLayers),
   m_chiSquare(chiSquare)
 {
@@ -36,8 +36,8 @@ Event::CalFitParams::CalFitParams(double energy, double eneError,
 }
 
 Event::CalFitParams::CalFitParams(int numFitLayers, double chiSquare,
-				  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
-				  const Vector& axis, const CLHEP::HepMatrix& axisErr) :
+                                  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+                                  const Vector& axis, const CLHEP::HepMatrix& axisErr) :
   CalParams(-1., -1., centroid, centroidErr, axis, axisErr),
   m_nFitLayers(numFitLayers),
   m_chiSquare(chiSquare)
@@ -46,15 +46,15 @@ Event::CalFitParams::CalFitParams(int numFitLayers, double chiSquare,
 }
 
 Event::CalFitParams::CalFitParams(int numFitLayers, double chiSquare,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  double cntdxx, double cntdxy, double cntdxz,
-				  double cntdyy, double cntdyz, double cntdzz,
-				  double xAxis,  double yAxis,  double zAxis,
-				  double axsdxx, double axsdxy, double axsdxz,
-				  double axsdyy, double axsdyz, double axsdzz) :
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  double cntdxx, double cntdxy, double cntdxz,
+                                  double cntdyy, double cntdyz, double cntdzz,
+                                  double xAxis,  double yAxis,  double zAxis,
+                                  double axsdxx, double axsdxy, double axsdxz,
+                                  double axsdyy, double axsdyz, double axsdzz) :
   CalParams(-1., -1., xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
-	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
-	    axsdyy, axsdyz, axsdzz),
+            cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
+            axsdyy, axsdyz, axsdzz),
   m_nFitLayers(numFitLayers),
   m_chiSquare(chiSquare)
 {
@@ -62,9 +62,9 @@ Event::CalFitParams::CalFitParams(int numFitLayers, double chiSquare,
 }
 
 Event::CalFitParams::CalFitParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  double xAxis,  double yAxis,  double zAxis,
-				  int numFitLayers, double chiSquare)
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  double xAxis,  double yAxis,  double zAxis,
+                                  int numFitLayers, double chiSquare)
 {
   clear();
   setEnergy(energy);
@@ -76,8 +76,8 @@ Event::CalFitParams::CalFitParams(double energy, double eneError,
 }
 
 Event::CalFitParams::CalFitParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  int numFitLayers, double chiSquare)
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  int numFitLayers, double chiSquare)
 {
   clear();
   setEnergy(energy);
@@ -88,7 +88,7 @@ Event::CalFitParams::CalFitParams(double energy, double eneError,
 }
 
 Event::CalFitParams::CalFitParams(double energy, double eneError,
-				  const Point& centroid, int numFitLayers, double chiSquare)
+                                  const Point& centroid, int numFitLayers, double chiSquare)
 {
   clear();
   setEnergy(energy);

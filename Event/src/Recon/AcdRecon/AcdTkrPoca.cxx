@@ -21,8 +21,8 @@ AcdTkrPoca::AcdTkrPoca() {
 }
 
 AcdTkrPoca::AcdTkrPoca(const idents::AcdId& acdId, int trackIndex,
-		       double doca, double docaErr, unsigned docaRegion,
-		       const Point& poca, const Event::TkrTrackParams& paramsAtPoca) {
+                       double doca, double docaErr, unsigned docaRegion,
+                       const Point& poca, const Event::TkrTrackParams& paramsAtPoca) {
   set(acdId,trackIndex,doca,docaErr,docaRegion,poca,paramsAtPoca);
 }
 
@@ -36,8 +36,8 @@ void AcdTkrPoca::writeOut(MsgStream& /* stream */ ) const
 }
 
 void AcdTkrPoca::set(const idents::AcdId& acdId, int trackIndex,
-		     double doca, double docaErr, unsigned docaRegion,
-		     const Point& poca, const Event::TkrTrackParams& paramsAtPoca)
+                     double doca, double docaErr, unsigned docaRegion,
+                     const Point& poca, const Event::TkrTrackParams& paramsAtPoca)
 // Purpose: set all data members at once
 //
 {
@@ -69,7 +69,7 @@ void AcdTkrPoca::ini()
 AcdTkrPocaCol::AcdTkrPocaCol(const std::vector<AcdTkrPoca*>& acdTkrPocas) {
 //Purpose: take ownership of pocas from another vector
   for ( std::vector<AcdTkrPoca*>::const_iterator itr = acdTkrPocas.begin();
-	itr != acdTkrPocas.end(); itr++ ) {
+        itr != acdTkrPocas.end(); itr++ ) {
     AcdTkrPoca* poca = const_cast<AcdTkrPoca*>(*itr);
     add(poca);
   }

@@ -12,10 +12,10 @@
 #include "Event/Recon/CalRecon/CalCluster.h"
 
 void Event::CalCluster::initialize(const CalXtalsParams& xtalsParams,
-				   const CalMSTreeParams& mstParams,
-				   const CalFitParams& fitParams,
-				   const CalMomParams& momParams,
-				   const CalClassParams& classParams)
+                                   const CalMSTreeParams& mstParams,
+                                   const CalFitParams& fitParams,
+                                   const CalMomParams& momParams,
+                                   const CalClassParams& classParams)
 {
   m_xtalsParams = xtalsParams;
   m_mstParams   = mstParams;

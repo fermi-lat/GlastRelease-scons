@@ -296,57 +296,57 @@ double PDFLowEnergyCuts::geometricCut(const Event::CalCluster*cluster,
     // PhB
     if(m_manager->m_flight_geom)
       {
-	if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
+        if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
       }
     else
       {
-	if( (fabs(xT[0])>2.) || (fabs(xT[1])>.5) ) continue;
+        if( (fabs(xT[0])>2.) || (fabs(xT[1])>.5) ) continue;
       }
     
     double val= 0.;
     for( int ii=0; ii<10; ++ii )
       {
-	double towerX[2]= { xT[0], xT[1] };
-	if(m_manager->m_flight_geom)
-	  {
-	    for( int ax=0; ax<2; ++ax )
-	      {
-		// find position relative to tower center
-		// the tower being whichever one xT is now at
-		if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
-		else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
-		else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
-		else towerX[ax]= fabs(towerX[ax]-1.5);
-		
-		// normalisation for the trajectory slant
-		towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
-		
-		// moving along the trajectory
-		xT[ax]-= slopes[ax];
-	      }
-	  }
-	else
-	  {
-	    // X axis
-	    int ax = 0;
-	    // find position relative to tower center
-	    // the tower being whichever one xT is now at
-	    if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
-	    else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
-	    else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
-	    else towerX[ax]= fabs(towerX[ax]-1.5);
-	    // normalisation for the trajectory slant
-	    towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
-	    // moving along the trajectory
-	    xT[ax]-= slopes[ax];
-	    // Y axis
-	    towerX[1]= fabs(towerX[1]);
-	    towerX[1]= (.5-(towerX[1]<.5?towerX[1]:.5))/ellCorr[1]; 
-	    xT[1]-= slopes[1];
-	  }
-	// adding minimum distance to the tower edge
-	
-	val+= towerX[towerX[0]>towerX[1]];
+        double towerX[2]= { xT[0], xT[1] };
+        if(m_manager->m_flight_geom)
+          {
+            for( int ax=0; ax<2; ++ax )
+              {
+                // find position relative to tower center
+                // the tower being whichever one xT is now at
+                if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+                else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+                else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+                else towerX[ax]= fabs(towerX[ax]-1.5);
+                
+                // normalisation for the trajectory slant
+                towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+                
+                // moving along the trajectory
+                xT[ax]-= slopes[ax];
+              }
+          }
+        else
+          {
+            // X axis
+            int ax = 0;
+            // find position relative to tower center
+            // the tower being whichever one xT is now at
+            if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+            else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+            else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+            else towerX[ax]= fabs(towerX[ax]-1.5);
+            // normalisation for the trajectory slant
+            towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+            // moving along the trajectory
+            xT[ax]-= slopes[ax];
+            // Y axis
+            towerX[1]= fabs(towerX[1]);
+            towerX[1]= (.5-(towerX[1]<.5?towerX[1]:.5))/ellCorr[1]; 
+            xT[1]-= slopes[1];
+          }
+        // adding minimum distance to the tower edge
+        
+        val+= towerX[towerX[0]>towerX[1]];
       }
     geometricCut+= val*(*layer).getEnergy();
   }

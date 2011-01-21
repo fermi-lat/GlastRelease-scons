@@ -77,7 +77,7 @@ namespace Event {
     AcdEventTopology m_topology;
         
     /// the vector of calibrated ACD hits
-    AcdHitCol m_acdHits;	
+    AcdHitCol m_acdHits;        
     
     /// Track associations
     AcdTkrAssocCol m_acdTkrAssocs;

@@ -41,19 +41,19 @@ namespace Event { //Namespace Event
  
     /// Direct construction from all the elements.
     CalFitParams(double energy, double eneError,
-		 const Point& centroid, const CLHEP::HepMatrix& centroidErr,
-		 const Vector& axis, const CLHEP::HepMatrix& axisErr,
-		 int numFitLayers, double chiSquare);
+                 const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+                 const Vector& axis, const CLHEP::HepMatrix& axisErr,
+                 int numFitLayers, double chiSquare);
 
     /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
     CalFitParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd,
-		 double cntdxx, double cntdxy, double cntdxz,
-		 double cntdyy, double cntdyz, double cntdzz,
-		 double xAxis,  double yAxis,  double zAxis,
-		 double axsdxx, double axsdxy, double axsdxz,
-		 double axsdyy, double axsdyz, double axsdzz,
-		 int numFitLayers, double chiSquare);
+                 double xCntrd, double yCntrd, double zCntrd,
+                 double cntdxx, double cntdxy, double cntdxz,
+                 double cntdyy, double cntdyz, double cntdzz,
+                 double xAxis,  double yAxis,  double zAxis,
+                 double axsdxx, double axsdxy, double axsdxz,
+                 double axsdyy, double axsdyz, double axsdzz,
+                 int numFitLayers, double chiSquare);
  
     /// Convenience constructor (given Points, Vectors and matrices) for backward
     /// compatibility.
@@ -69,23 +69,23 @@ namespace Event { //Namespace Event
     CalFitParams(int numFitLayers, double chiSquare,
                  double xCntrd, double yCntrd, double zCntrd,
                  double cntdxx, double cntdxy, double cntdxz,
-		 double cntdyy, double cntdyz, double cntdzz,
+                 double cntdyy, double cntdyz, double cntdzz,
                  double xAxis,  double yAxis,  double zAxis,
                  double axsdxx, double axsdxy, double axsdxz,
-		 double axsdyy, double axsdyz, double axsdzz);
+                 double axsdyy, double axsdyz, double axsdzz);
 
     /// Convenience constructor with energy, centroid and axis only.
     CalFitParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd,
-		 double xAxis,  double yAxis,  double zAxis,
-		 int numFitLayers, double chiSquare);
+                 double xCntrd, double yCntrd, double zCntrd,
+                 double xAxis,  double yAxis,  double zAxis,
+                 int numFitLayers, double chiSquare);
 
     /// Convenience constructors with energy and centroid only.
     CalFitParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd,
-		 int numFitLayers, double chiSquare);
+                 double xCntrd, double yCntrd, double zCntrd,
+                 int numFitLayers, double chiSquare);
     CalFitParams(double energy, double eneError,
-		 const Point& centroid, int numFitLayers, double chiSquare);
+                 const Point& centroid, int numFitLayers, double chiSquare);
 
     /// Destructor;
     ~CalFitParams() {}

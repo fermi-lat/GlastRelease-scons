@@ -12,8 +12,8 @@ AcdTkrGapPoca::AcdTkrGapPoca()
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdTkrGapPoca::AcdTkrGapPoca(const AcdGapId& acdId, int trackIndex,
-			     const AcdTkrLocalCoords& local,
-			     const AcdPocaData& pocaData)
+                             const AcdTkrLocalCoords& local,
+                             const AcdPocaData& pocaData)
   :TObject(),AcdTkrLocalCoords(),AcdPocaData()
 {
   //Clear("");
@@ -39,8 +39,8 @@ AcdTkrGapPoca& AcdTkrGapPoca::operator=(const AcdTkrGapPoca& other)
 
 /// set all the values
 void AcdTkrGapPoca::initialize(const AcdGapId& acdId, Int_t trackIndex,
-			       const AcdTkrLocalCoords& local,
-			       const AcdPocaData& pocaData)
+                               const AcdTkrLocalCoords& local,
+                               const AcdPocaData& pocaData)
 {
   m_id = acdId;
   m_trackIndex = trackIndex;

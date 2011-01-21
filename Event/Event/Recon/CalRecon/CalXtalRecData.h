@@ -46,9 +46,9 @@ namespace Event
     class CalXtalRecData : virtual public ContainedObject { 
         
     public:
-	    /// Retrieve reference to class definition structure
- 	    virtual const CLID& clID() const   {return CalXtalRecData::classID(); }
-	    static const CLID& classID()       {return  CLID_CalXtalRecData; }
+            /// Retrieve reference to class definition structure
+             virtual const CLID& clID() const   {return CalXtalRecData::classID(); }
+            static const CLID& classID()       {return  CLID_CalXtalRecData; }
 
         /* enum to define status bits in status word
         ** XTAL_BAD_POSITION   - bad position information for this crystal
@@ -90,16 +90,16 @@ namespace Event
                   m_rangeM(rangeM) 
               {};
               
-	    ~CalRangeRecData() {};
+            ~CalRangeRecData() {};
               
-	    /// The separate setting function for reconstructed position
-	    /// is needed, because position reconstruction is performed              
-	    /// later, than energy reconstruction and is based
-	    /// on reconstructed energies
-	    void setPosition (const Point pos) { m_pos = pos;}
+            /// The separate setting function for reconstructed position
+            /// is needed, because position reconstruction is performed              
+            /// later, than energy reconstruction and is based
+            /// on reconstructed energies
+            void setPosition (const Point pos) { m_pos = pos;}
               
-	    /// retrieve position value
-	    Point getPosition() const { return m_pos;}
+            /// retrieve position value
+            Point getPosition() const { return m_pos;}
               
             /// Retrieve average energy of two faces for the best range
             inline double getEnergy() const
@@ -108,12 +108,12 @@ namespace Event
                       +getEnergy(idents::CalXtalId::NEG))/2;
             }
 
-	    /// retrieve energy from specified face
-	    inline double getEnergy(const idents::CalXtalId::XtalFace face) const
+            /// retrieve energy from specified face
+            inline double getEnergy(const idents::CalXtalId::XtalFace face) const
               {return face == idents::CalXtalId::POS ? m_eneP : m_eneM;}
               
-	    /// retrieve energy range from specified face
-	    inline char getRange(const idents::CalXtalId::XtalFace face) const 
+            /// retrieve energy range from specified face
+            inline char getRange(const idents::CalXtalId::XtalFace face) const 
               {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;}
               
               

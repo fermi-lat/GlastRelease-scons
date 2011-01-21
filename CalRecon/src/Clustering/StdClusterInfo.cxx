@@ -21,7 +21,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
     for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
     {
         // get pointer to the reconstructed data for given crystal
-		Event::CalXtalRecData* recData = *xTalIter;
+                Event::CalXtalRecData* recData = *xTalIter;
         
         // get reconstructed values
         double eneXtal = recData->getEnergy();                // crystal energy
@@ -62,7 +62,7 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
         pCluster /= ene; 
         cl->setStatusBit(Event::CalCluster::CENTROID) ;
     }
- 	// if energy is zero - set cluster position to non-physical value
+         // if energy is zero - set cluster position to non-physical value
     else pCluster = Vector(-1000., -1000., -1000.);
     
     // loop over calorimeter layers
@@ -132,12 +132,12 @@ Event::CalCluster* StdClusterInfo::fillClusterInfo(const XtalDataList* xTalVec)
     Event::CalXtalsParams xtalsParams;
 
     Event::CalMomParams momParams(ene, 10*ene, pCluster.x(), pCluster.y(), pCluster.z(),
-				  1.,0.,0.,1.,0.,1.,
-				  caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
+                                  1.,0.,0.,1.,0.,1.,
+                                  caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
     // Initial fit parameters
     Event::CalFitParams fitParams(4, 0., pCluster.x(), pCluster.y(), pCluster.z(),
-				  1.,0.,0.,1.,0.,1.,
-				  caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
+                                  1.,0.,0.,1.,0.,1.,
+                                  caldir.x(),   caldir.y(),   caldir.z(),   1.,0.,0.,1.,0.,1.);
 
     // initialize empty CalMSTreeParams container - CalMSTreePar
     Event::CalMSTreeParams treeParams(0.,0.,0,0.,0.,0.,0.,0.,0.);
@@ -196,7 +196,7 @@ Vector StdClusterInfo::fitDirection(std::vector<Vector> pos, std::vector<Vector>
     double mz2=0;       // mean z for y pos
     double norm1=0;     // sum of weights for odd layers
     double norm2=0;     // sum of weights for even layers
-    double var_z1=0;    // variance of z for odd layers	
+    double var_z1=0;    // variance of z for odd layers        
     double var_z2=0;    // variance of z for even layers
     
     // number of layers with non-zero energy deposition
@@ -257,7 +257,7 @@ Vector StdClusterInfo::fitDirection(std::vector<Vector> pos, std::vector<Vector>
                 norm2 += err;
             }
         }
-    }		
+    }                
     
     // linear fit requires at least 2 hitted layers in both XZ and YZ planes
     // otherwise non-physical direction is returned
@@ -300,4 +300,4 @@ Vector StdClusterInfo::fitDirection(std::vector<Vector> pos, std::vector<Vector>
     Vector dir(costheta*tgthx,costheta*tgthy,costheta);
     return dir;
 }
-	
+        

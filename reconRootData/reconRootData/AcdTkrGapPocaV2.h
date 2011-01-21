@@ -63,7 +63,7 @@ public:
 
   /// set all the values
   void initialize(const AcdGapId& acdId, int trackIndex,
-		  Float_t vetoHit, Float_t vetoProj, Float_t vetoProp);
+                  Float_t vetoHit, Float_t vetoProj, Float_t vetoProp);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);

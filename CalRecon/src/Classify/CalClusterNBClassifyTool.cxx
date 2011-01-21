@@ -446,9 +446,9 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
             " cluster topologies found in the xml file." << endreq; 
 
         // loop on topologies
-        std::vector<DOMElement*>::iterator topoIter;		
+        std::vector<DOMElement*>::iterator topoIter;                
         for (topoIter=topoVector.begin() ; topoIter != topoVector.end(); topoIter++ ) 
-        {	    
+        {            
             // Get the name of the topology
             std::string topology = xmlBase::Dom::getAttribute(*topoIter, "name");
 
@@ -459,9 +459,9 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
                 << topology <<"'." << endreq;
 
             // loop on variables
-            std::vector<DOMElement*>::iterator varIter;		
+            std::vector<DOMElement*>::iterator varIter;                
             for (varIter=varVector.begin() ; varIter != varVector.end(); varIter++ ) 
-            {	    
+            {            
                 // Get the name of the variable
                 std::string varName = xmlBase::Dom::getAttribute(*varIter, "name");
 
@@ -475,10 +475,10 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
                 xmlBase::Dom::getChildrenByTagName(*varIter, "Energy", eneVector, true);
 
                 // loop on Energy bins for the variable
-                std::vector<DOMElement*>::iterator eneIter;	 	
+                std::vector<DOMElement*>::iterator eneIter;                 
                 for (eneIter=eneVector.begin() ; eneIter != eneVector.end(); eneIter++ ) 
                 {
-                    PdfHisto hist;	    
+                    PdfHisto hist;            
                     // Get the value of the energy bin for the variable
                     intVal = xmlBase::Dom::getIntAttribute(*eneIter, "bin");
 
@@ -487,7 +487,7 @@ StatusCode CalClusterNBClassifyTool::getPDFsFromXml()
                     xmlBase::Dom::getChildrenByTagName(*eneIter, "BinValues", dataVector, true);
 
                     // loop on Data bins BinValues for the Energy bin
-                    std::vector<DOMElement*>::iterator dataIter;	 	
+                    std::vector<DOMElement*>::iterator dataIter;                 
                     for (dataIter=dataVector.begin() ; dataIter != dataVector.end(); dataIter++ )
                     {
                         xmin = xmlBase::Dom::getDoubleAttribute(*dataIter, "xmin");

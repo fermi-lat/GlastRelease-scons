@@ -41,11 +41,11 @@ void convert( const Event::CalCluster & tdsCluster, CalCluster & rootCluster )
 
     rootCluster.init
       ( rootLayers,
-	rootXtalsParams,
+        rootXtalsParams,
         rootTreeParams,
-	rootFitParams,
-	rootMomParams,
-	rootClassParams,
+        rootFitParams,
+        rootMomParams,
+        rootClassParams,
         (UInt_t)tdsCluster.getStatusBits() ) ;
  }
  
@@ -64,10 +64,10 @@ void convert( const CalCluster & rootCluster, Event::CalCluster & tdsCluster )
 
     tdsCluster.initialize
       ( tdsXtalsParams,
-	tdsTreeParams, 
+        tdsTreeParams, 
         tdsFitParams,
         tdsMomParams,
-	tdsClassParams) ;
+        tdsClassParams) ;
     
     // This should be handled with a proper Event::CalCluster constructor.
     UInt_t rootStatusBits = rootCluster.getStatusBits() ;

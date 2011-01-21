@@ -94,7 +94,7 @@ bool MomentsClusterInfo::xtalSaturated(const CalMomentsData& momData) const
 }
 
 void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
-				       Event::CalCluster* cluster)
+                                       Event::CalCluster* cluster)
 {
   int numXtals           = xTalVec->size();
   double xtalRawEneSum   = 0.;
@@ -121,8 +121,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       int    layer   = (recData->getPackedId()).getLayer();
       // Check if bad position measurement.
       if ( !recData->isPositionGood() ) {
-	xtalBadEneSum += xtalEne;
-	continue;
+        xtalBadEneSum += xtalEne;
+        continue;
       }
 
       // Offset the position to be closer to actual cluster center.
@@ -166,39 +166,39 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
     {
       // If energy in the layer is not zero finalize calculations...
       if( layerEnergy[i] > 0 ) {
-	// Normalize position in the layer.
-	layerAve[i] /= layerEnergy[i]; 
-	// Normalize quadratic spread in the layer.
-	layerRms[i] /= layerEnergy[i];
+        // Normalize position in the layer.
+        layerAve[i] /= layerEnergy[i]; 
+        // Normalize quadratic spread in the layer.
+        layerRms[i] /= layerEnergy[i];
 
-	// Vector containing the squared average position in each component
-	Vector sqrLayer(layerAve[i].x()*layerAve[i].x(),
-			layerAve[i].y()*layerAve[i].y(),
-			layerAve[i].z()*layerAve[i].z());
-	
-	// the precision of transverse coordinate measurement
-	// if there is no fluctuations: 1/sqrt(12) of crystal width
-	Vector d;
-	double csIWidth = m_calReconSvc->getCalCsIWidth();
-	if ( i%2 == 1 ){
-	  d = Vector(csIWidth*csIWidth/12.,0.,0.);
-	}
-	else {
-	  d = Vector(0.,csIWidth*csIWidth/12.,0.);
-	}
+        // Vector containing the squared average position in each component
+        Vector sqrLayer(layerAve[i].x()*layerAve[i].x(),
+                        layerAve[i].y()*layerAve[i].y(),
+                        layerAve[i].z()*layerAve[i].z());
+        
+        // the precision of transverse coordinate measurement
+        // if there is no fluctuations: 1/sqrt(12) of crystal width
+        Vector d;
+        double csIWidth = m_calReconSvc->getCalCsIWidth();
+        if ( i%2 == 1 ){
+          d = Vector(csIWidth*csIWidth/12.,0.,0.);
+        }
+        else {
+          d = Vector(0.,csIWidth*csIWidth/12.,0.);
+        }
   
-	// Subtracting the  squared average position and adding the square of crystal
-	// width, divided by 12.
-	layerRms[i] += d - sqrLayer;
-	
-	// Reset layerAve to detector coordinates
-	layerAve[i] += m_p0;
+        // Subtracting the  squared average position and adding the square of crystal
+        // width, divided by 12.
+        layerRms[i] += d - sqrLayer;
+        
+        // Reset layerAve to detector coordinates
+        layerAve[i] += m_p0;
       }
         
       // Otherwise reset position and spread Vectors.
       else {
-	layerAve[i] = m_p0;
-	layerRms[i] = m_p0;
+        layerAve[i] = m_p0;
+        layerRms[i] = m_p0;
       }
 
       // Fill the cluster layer data.
@@ -228,16 +228,16 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       Event::CalXtalRecData* recData = *xTalIter;
       double xtalEne = recData->getEnergy();
       if ( xtalEne > xtalEneMax ) {
-	xtalEneMax = xtalEne;
+        xtalEneMax = xtalEne;
       }
       if ( xtalEne > (xtalsTruncFrac*xtalRawEneSum) ) {
-	numTruncXtals ++;
+        numTruncXtals ++;
       }
       if ( xtalEne > (eneMomTruncFrac*xtalRawEneSum) ) {
-	numEneMomXtals ++;
-	xtalEneMomSum  += xtalEne;
-	xtalEneMomSum2 += xtalEne*xtalEne;
-	xtalEneMomSum3 += xtalEne*xtalEne*xtalEne;
+        numEneMomXtals ++;
+        xtalEneMomSum  += xtalEne;
+        xtalEneMomSum2 += xtalEne*xtalEne;
+        xtalEneMomSum3 += xtalEne*xtalEne*xtalEne;
       }
     }
 
@@ -253,7 +253,7 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
     if ( xtalEneMomSum2 > 0. ) {
       xtalEneRms = xtalEneMomSum2 - xtalEneMomSum*xtalEneMomSum;
       xtalEneSkewness = (xtalEneMomSum3 - 3*xtalEneMomSum*xtalEneRms - 
-			 xtalEneMomSum*xtalEneMomSum*xtalEneMomSum);
+                         xtalEneMomSum*xtalEneMomSum*xtalEneMomSum);
       xtalEneRms = sqrt(xtalEneRms);
       xtalEneSkewness /= (xtalEneRms*xtalEneRms*xtalEneRms);
     }
@@ -271,8 +271,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   
   // Set the cluster data members: first the CalXtalsParams container...
   Event::CalXtalsParams xtalsParams(numXtals, numTruncXtals, m_Nsaturated,
-				    xtalRawEneSum, xtalCorrEneSum, xtalEneMax,
-				    xtalEneRms, xtalEneSkewness, centroid);
+                                    xtalRawEneSum, xtalCorrEneSum, xtalEneMax,
+                                    xtalEneRms, xtalEneSkewness, centroid);
   cluster->setXtalsParams(xtalsParams);
 
   // ...then we do create a minimal CalMomParams object in order to store the centroid.
@@ -307,15 +307,15 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   Event::CalFitParams fitParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid, m_fit_nlayers, 0.);
   if ( m_fit_nlayers > 0 ) {
     fitParams = Event::CalFitParams(xtalCorrEneSum, 10*xtalCorrEneSum,
-				    m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid,
-				    m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
-				    m_fit_nlayers, m_fit_chisq);
+                                    m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid,
+                                    m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
+                                    m_fit_nlayers, m_fit_chisq);
   }
   cluster->setFitParams(fitParams);
 }
 
 void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
-					 Event::CalCluster* cluster)
+                                         Event::CalCluster* cluster)
 {
   // Grab the necessary xtalsParams...
   double xtalsCorrEnergySum = cluster->getXtalsParams().getXtalCorrEneSum();
@@ -344,17 +344,17 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
 
       // If the fit is reasonable, we might take advantage of it.
       if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
-	// Check whether the xtal is saturated.
-	if ( xtalSaturated(momData) ) {
-	  momData.setStatusBit(CalMomentsData::SATURATED);
-	  momData.forceFitCorrection();
-	}
-	// If the longitudinal position is right on the edge of the xtal,
-	// or if the fit position is close to the xtal edge, use the fit position.
-	//if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
-	//     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
-	//  momData.enableFitCorrection();
-	//}
+        // Check whether the xtal is saturated.
+        if ( xtalSaturated(momData) ) {
+          momData.setStatusBit(CalMomentsData::SATURATED);
+          momData.forceFitCorrection();
+        }
+        // If the longitudinal position is right on the edge of the xtal,
+        // or if the fit position is close to the xtal edge, use the fit position.
+        //if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
+        //     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
+        //  momData.enableFitCorrection();
+        //}
       }    
       
       // Put the object into the vector.
@@ -369,8 +369,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
   double transScaleFactorBoost = m_calReconSvc->getMaTransScaleFactorBoost();
   double coreRadius = m_calReconSvc->getMaCoreRadius();
   double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(momDataVec, xtalsCentroid,
-							    transScaleFactor,
-							    transScaleFactorBoost, coreRadius);
+                                                            transScaleFactor,
+                                                            transScaleFactorBoost, coreRadius);
   if ( chiSq >= 0. ) {
     // Get all the variables that need to be grabbed before the last iteration
     // (with all the xtals) is performed. This include the statistics on the iterations,
@@ -410,10 +410,10 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
     // Store the information in the actual cluster: first the CalMomParams container...
     CLHEP::HepMatrix I_3_3(3, 3, 1);
     Event::CalMomParams momParams (xtalsCorrEnergySum, 10*xtalsCorrEnergySum,
-				   momCentroid, I_3_3, momAxis, I_3_3,
-				   numIterations, numCoreXtals, numXtals,
-				   transRms, longRms, longRmsAsym, longSkewness,
-				   coreEnergyFrac, fullLength, -1.);
+                                   momCentroid, I_3_3, momAxis, I_3_3,
+                                   numIterations, numCoreXtals, numXtals,
+                                   transRms, longRms, longRmsAsym, longSkewness,
+                                   coreEnergyFrac, fullLength, -1.);
     cluster->setMomParams(momParams);
 
     // Set the relevant status bit and we're done!

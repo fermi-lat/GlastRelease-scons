@@ -11,7 +11,7 @@ AcdTkrPoint::AcdTkrPoint() {
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdTkrPoint::AcdTkrPoint(double arcLength, int face, 
-			 const TVector3& point, const TkrTrackParams& paramsAtPoint)
+                         const TVector3& point, const TkrTrackParams& paramsAtPoint)
 {
   //Clear();
   set(arcLength,face,point,paramsAtPoint);
@@ -38,7 +38,7 @@ AcdTkrPoint& AcdTkrPoint::operator=(const AcdTkrPoint& other)
 
 /// set all the values
 void AcdTkrPoint::set(double arcLength, int face, 
-		      const TVector3& point, const TkrTrackParams& paramsAtPoint)			    
+                      const TVector3& point, const TkrTrackParams& paramsAtPoint)                            
 {
   m_arcLength = arcLength;
   m_face = face;

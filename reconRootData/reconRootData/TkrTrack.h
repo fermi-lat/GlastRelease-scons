@@ -46,19 +46,19 @@ public:
     enum StatusBits {FOUND    = 0x0001,  //Set if track has been "found" by pat rec
                      FILTERED = 0x0002,  //Set if track fit filter stage has been run
                      SMOOTHED = 0x0004,  //Set if track fit smoother has been run
-					 REVFILTR = 0x0008,  //Set if track has been reverse-filtered
-					 CALENERGY= 0x0010,  //Set if track energy from raw calorimeter info
-					 LATENERGY= 0x0020,  //Set if track energy from TKR+CAL constrained
-					 USERENERGY= 0x0040, //Set if track energy set by user
-					 MCENERGY = 0x0080,  //Set if energy from users or from MC truth
-					 RADELOSS = 0x0100,  //Set if radiative energy loss used (e+/e- fitting)
-					 MIPELOSS = 0x0200,  //Set if Bethe-Block energy loss used (not e+/e-)
+                                         REVFILTR = 0x0008,  //Set if track has been reverse-filtered
+                                         CALENERGY= 0x0010,  //Set if track energy from raw calorimeter info
+                                         LATENERGY= 0x0020,  //Set if track energy from TKR+CAL constrained
+                                         USERENERGY= 0x0040, //Set if track energy set by user
+                                         MCENERGY = 0x0080,  //Set if energy from users or from MC truth
+                                         RADELOSS = 0x0100,  //Set if radiative energy loss used (e+/e- fitting)
+                                         MIPELOSS = 0x0200,  //Set if Bethe-Block energy loss used (not e+/e-)
                      ONEPASS  = 0x0400,  //Set if the full first pass track fit finished
                      TWOPASS  = 0x0800,  //Set if an iteration of the first fit finished
-					 PRCALSRCH= 0x1000,  //Set if Pat. Rec. used Cal Energy Centroid
-					 PRBLNSRCH= 0x2000,  //Set if Pat. Rec. used only Track info.
-					 TOP      = 0x4000,  //Set if track traj. intercepts top tracker plane
-					 BOTTOM   = 0x8000}; //Set if track traj. intercepts first Cal layer
+                                         PRCALSRCH= 0x1000,  //Set if Pat. Rec. used Cal Energy Centroid
+                                         PRBLNSRCH= 0x2000,  //Set if Pat. Rec. used only Track info.
+                                         TOP      = 0x4000,  //Set if track traj. intercepts top tracker plane
+                                         BOTTOM   = 0x8000}; //Set if track traj. intercepts first Cal layer
 
     TkrTrack();
 
@@ -106,7 +106,7 @@ public:
                                            const {return m_chisqSegment + penaltyGap*getNumGaps();}
     inline UInt_t       getNumXHits()            const {return m_nxHits;}
     inline UInt_t       getNumYHits()            const {return m_nyHits;}
-	inline UInt_t       getNumFitHits()          const {return m_nxHits + m_nyHits;}
+        inline UInt_t       getNumFitHits()          const {return m_nxHits + m_nyHits;}
     /// JCT: THE FOLLOWING SHOULD BE COMMENTED
     inline Double32_t     getTkrCalRadlen()        const {return m_TkrCal_radlen;}
 
@@ -136,7 +136,7 @@ public:
     inline void   setNumYHits(UInt_t i)                  {m_nyHits            = i;}
     inline void   setTkrCalRadLen(Double32_t x)            {m_TkrCal_radlen     = x;}
     inline void   setStatusBit(UInt_t status)            {m_statusBits       |= status;}
-	inline void   clearStatusBits()                      {m_statusBits        = 0;}
+        inline void   clearStatusBits()                      {m_statusBits        = 0;}
     inline void   clearEnergyStatusBits()                {m_statusBits       &= 0xff0f;}
 
     TkrTrackHit*        getHit(UInt_t iHit)      const {return iHit < Size() ? dynamic_cast<TkrTrackHit*>(At(iHit)) : 0; }
@@ -177,7 +177,7 @@ private:
 
     /// Kalman Filter Track data
     UInt_t       m_numSegmentPoints;    // Effective number of 3D segments that contribute
-	                                    //   to track direction
+                                            //   to track direction
     Double32_t     m_chisqSegment;        // Chi-square for this portion of the track
     UInt_t       m_nxHits;              // Number of x meas. points USED in fit
     UInt_t       m_nyHits;              // Number of y meas. points USED in fit

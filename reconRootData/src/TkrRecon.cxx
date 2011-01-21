@@ -99,8 +99,8 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
     TkrTruncationData *trunc;
     for(itrunc=0;itrunc< NUM_TRUNCATION;itrunc++) {
        trunc = new TkrTruncationData();
-	trunc->Fake(ievent,itrunc,randNum);
-	addTruncationData(trunc);	
+        trunc->Fake(ievent,itrunc,randNum);
+        addTruncationData(trunc);        
     }
 
     TkrDiagnostics * diag = new TkrDiagnostics ;

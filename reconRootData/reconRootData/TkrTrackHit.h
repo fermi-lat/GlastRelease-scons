@@ -119,7 +119,7 @@ public:
 
     /// Answer quick questions based on status bits
     inline const bool   validCluster()      const {return  m_cluster != 0;}
-	inline const bool   hitUsedOnFit()      const {return (m_statusBits & HITONFIT    ) == HITONFIT;}
+        inline const bool   hitUsedOnFit()      const {return (m_statusBits & HITONFIT    ) == HITONFIT;}
     inline const bool   validMeasuredHit()  const {return (m_statusBits & HASMEASURED ) == HASMEASURED;}
     inline const bool   validPredictedHit() const {return (m_statusBits & HASPREDICTED) == HASPREDICTED;}
     inline const bool   validFilteredHit()  const {return (m_statusBits & HASFILTERED ) == HASFILTERED;}

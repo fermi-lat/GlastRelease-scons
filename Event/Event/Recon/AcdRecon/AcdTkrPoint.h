@@ -62,13 +62,13 @@ namespace Event
     /// Constructor for use in persistent -> transient conversion and reconstruction
     /// Takes arguements as they are stored in ROOT and caluclated by AcdReconAlg
     AcdTkrPoint( int trackIndex,
-		 int volume, float arcLength, float cosTheta, 
-		 const HepPoint3D& global, const float localPosition[2], 
-		 const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+                 int volume, float arcLength, float cosTheta, 
+                 const HepPoint3D& global, const float localPosition[2], 
+                 const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
 
     /// Old Constructor for backwards compatiblity
     AcdTkrPoint( float arcLength, int volume,
-		 const HepPoint3D& global, const Event::TkrTrackParams& params );
+                 const HepPoint3D& global, const Event::TkrTrackParams& params );
     
     /// Destructor is trivial
     virtual ~AcdTkrPoint() {;}
@@ -84,8 +84,8 @@ namespace Event
     /// for backwards compatibility
     Point point() const { 
       return Point(AcdTkrLocalCoords::getGlobalPosition().x(), 
-		   AcdTkrLocalCoords::getGlobalPosition().y(),
-		   AcdTkrLocalCoords::getGlobalPosition().z()); }
+                   AcdTkrLocalCoords::getGlobalPosition().y(),
+                   AcdTkrLocalCoords::getGlobalPosition().z()); }
 
     /// for backwards compatibility
     const Event::TkrTrackParams& paramsAtPoint() const {
@@ -162,7 +162,7 @@ namespace Event
     /// takes ownership of a vector AcdTkrPoint
     void init(std::vector<AcdTkrPoint*>& acdhits) {
       for ( std::vector<AcdTkrPoint*>::iterator itr = acdhits.begin(); itr != acdhits.end(); itr++ ) {
-	push_back(*itr);
+        push_back(*itr);
       }
     }
 

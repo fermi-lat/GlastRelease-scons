@@ -44,7 +44,7 @@ public :
 
     virtual ~CalSimpleClusteringTool() {};
     
-	/// @brief Intialization of the tool
+        /// @brief Intialization of the tool
     virtual StatusCode initialize() ;
 
     /// @brief Default cluster finding framework
@@ -188,7 +188,7 @@ StatusCode CalSimpleClusteringTool::findClusters(Event::CalClusterCol* calCluste
         std::string producerName("CalSimpleClusteringTool/") ;
         producerName += cluster->getProducerName() ;
         cluster->setProducerName(producerName) ;
-		cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
+                cluster->clearStatusBit(Event::CalCluster::ALLXTALS);
 
         calClusterCol->push_back(cluster);
 
@@ -240,7 +240,7 @@ void CalSimpleClusteringTool::getXtals()
     for ( it = m_calReconSvc->getXtalRecs()->begin() ; it != m_calReconSvc->getXtalRecs()->end() ; ++it )
     {
         // get pointer to the reconstructed data for given crystal
-	    Event::CalXtalRecData* recData = *it ;
+            Event::CalXtalRecData* recData = *it ;
 
         XtalDataListIterator xTalIter = m_xTals.insert(m_xTals.end(), recData);
 

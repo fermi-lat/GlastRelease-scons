@@ -41,7 +41,7 @@ public:
   /// Constructor for use in persistent -> transient conversion and reconstruction
   /// Takes arguements as they are stored in ROOT and caluclated by AcdReconAlg
   AcdTkrPoint(double arcLength, int face, 
-	      const TVector3& point, const TkrTrackParams& paramsAtPoint);
+              const TVector3& point, const TkrTrackParams& paramsAtPoint);
 
   /// Copy constructor
   AcdTkrPoint(const AcdTkrPoint& other);
@@ -75,7 +75,7 @@ public:
   
   /// set all the values at once
   void set(double arcLength, int face, 
-	   const TVector3& point, const TkrTrackParams& paramsAtPoint);
+           const TVector3& point, const TkrTrackParams& paramsAtPoint);
   
   // set the individual values
   inline void setArcLength(float val) { m_arcLength = val; };

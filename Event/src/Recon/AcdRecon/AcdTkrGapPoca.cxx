@@ -14,17 +14,17 @@ namespace Event {
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdTkrGapPoca::AcdTkrGapPoca(const idents::AcdGapId& gapId, int trackIndex, 
-			       const float active[2],
-			       float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
-			       int volumePlane, float arcLengthToPlane, float cosTheta, 
-			       const HepPoint3D& global, const float localPosition[2], 
-			       const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
-			       int volume, int region, float arcLength, 
-			       float doca, float docaErrProj, float docaErrProp,
-			       const Point& poca, const Vector& voca)
+                               const float active[2],
+                               float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+                               int volumePlane, float arcLengthToPlane, float cosTheta, 
+                               const HepPoint3D& global, const float localPosition[2], 
+                               const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+                               int volume, int region, float arcLength, 
+                               float doca, float docaErrProj, float docaErrProp,
+                               const Point& poca, const Vector& voca)
     : AcdTkrLocalCoords(volumePlane,arcLengthToPlane,cosTheta,
-			global,localPosition,active,
-			localCovProj,localCovProp),
+                        global,localPosition,active,
+                        localCovProj,localCovProp),
       AcdPocaData(volume,region,arcLength,doca,docaErrProj,docaErrProp,poca,voca),
       m_id(gapId),
       m_trackIndex(trackIndex),
@@ -35,7 +35,7 @@ namespace Event {
   
   /// Old Constructor for backwards compatiblity  
   AcdTkrGapPoca::AcdTkrGapPoca(const idents::AcdGapId& gapId, int trackIndex, 
-			       const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData )
+                               const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData )
     : AcdTkrLocalCoords(local),
       AcdPocaData(pocaData),
       m_id(gapId),
@@ -51,7 +51,7 @@ namespace Event {
     :AcdTkrLocalCoords(other),AcdPocaData(other)
   {
     set(other.getId(),other.trackIndex(),
-	other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
   }
 
   /// Assignment operator
@@ -59,7 +59,7 @@ namespace Event {
   {
     if ( this == &other ) return *this;
     set(other.getId(),other.trackIndex(),
-	other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
     AcdTkrLocalCoords::copy(other);
     AcdPocaData::setPocaData(other);
     return *this;
@@ -100,9 +100,9 @@ namespace Event {
   void AcdTkrGapPoca::writeOut(MsgStream& stream) const 
   {
     stream << MSG::DEBUG
-	   << "AcdTrkGapPoca.  Gap: " << (int)m_id.asShort()
-	   << ".  Track: " << (int)m_trackIndex << std::endl
-	   << "Sigma " << m_vetoSigmaHit << ' ' << m_vetoSigmaProj << ' ' << m_vetoSigmaProp << std::endl;
+           << "AcdTrkGapPoca.  Gap: " << (int)m_id.asShort()
+           << ".  Track: " << (int)m_trackIndex << std::endl
+           << "Sigma " << m_vetoSigmaHit << ' ' << m_vetoSigmaProj << ' ' << m_vetoSigmaProp << std::endl;
     AcdTkrLocalCoords::writeOut(stream);
     AcdPocaData::writeOut(stream);
     stream << endreq;
@@ -111,7 +111,7 @@ namespace Event {
   /// Copy c'tor
   AcdTkrGapPocaCol::AcdTkrGapPocaCol(const std::vector<AcdTkrGapPoca*>& other) {
     for ( std::vector<AcdTkrGapPoca*>::const_iterator itr = other.begin();
-	  itr != other.end(); itr++ ) {
+          itr != other.end(); itr++ ) {
       AcdTkrGapPoca* onePoca = const_cast<AcdTkrGapPoca*>(*itr);
       add(onePoca);
     }

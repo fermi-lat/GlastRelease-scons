@@ -119,7 +119,7 @@ StatusCode CalClassifyAlg::execute()
     // Insure CalRecon/Event directory in TDS
     DataObject * pnode = 0 ;
     if ( (eventSvc()->retrieveObject(EventModel::CalRecon::Event,pnode)).isFailure()
-	 && (eventSvc()->registerObject(EventModel::CalRecon::Event, new DataObject)).isFailure() ) { 
+         && (eventSvc()->registerObject(EventModel::CalRecon::Event, new DataObject)).isFailure() ) { 
       throw CalException("Cannot register Event/CalRecon.") ;
     } 
 
@@ -139,7 +139,7 @@ StatusCode CalClassifyAlg::execute()
       sort (calClusterCol->begin(), calClusterCol->end()-1, SortByGamProb);
     }
     else {
-      log << MSG::DEBUG << "Clusters are sorted by energy." << endreq;	  
+      log << MSG::DEBUG << "Clusters are sorted by energy." << endreq;          
     }
     
     // For debug
@@ -148,9 +148,9 @@ StatusCode CalClassifyAlg::execute()
     int clusterId = 1;
     for ( cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
       {
-	log << MSG::DEBUG << "Full info for cluster (" << clusterId << ")\n" <<
-	  **cluster << endreq;
-	clusterId ++;
+        log << MSG::DEBUG << "Full info for cluster (" << clusterId << ")\n" <<
+          **cluster << endreq;
+        clusterId ++;
       }
     
   // Catch any exceptions here

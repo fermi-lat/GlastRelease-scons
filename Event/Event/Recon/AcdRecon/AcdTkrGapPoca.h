@@ -43,18 +43,18 @@ namespace Event {
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
     AcdTkrGapPoca(const idents::AcdGapId& acdId, int trackIndex, 
-		  const float active[2], 
-		  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
-		  int volumePlane, float arcLengthToPlane, float cosTheta, 
-		  const HepPoint3D& global, const float localPosition[2], 
-		  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
-		  int volume, int region, float arcLength, 
-		  float doca, float docaErrProj, float docaErrProp,
-		  const Point& poca, const Vector& voca);
+                  const float active[2], 
+                  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+                  int volumePlane, float arcLengthToPlane, float cosTheta, 
+                  const HepPoint3D& global, const float localPosition[2], 
+                  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+                  int volume, int region, float arcLength, 
+                  float doca, float docaErrProj, float docaErrProp,
+                  const Point& poca, const Vector& voca);
 
     /// Old Constructor for backwards compatiblity
     AcdTkrGapPoca( const idents::AcdGapId& acdId, int trackIndex, 
-		   const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData );
+                   const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData );
 
   
     /// Copy constructor
@@ -101,7 +101,7 @@ namespace Event {
 
     /// set only the data at this level
     inline void set(const idents::AcdGapId& gapId, int trackIndex, 
-		    float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp) {
+                    float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp) {
       m_id = gapId; m_trackIndex = trackIndex; 
       m_vetoSigmaHit = vetoSigmaHit; m_vetoSigmaProj = vetoSigmaProj; m_vetoSigmaProp = vetoSigmaProp;
     }

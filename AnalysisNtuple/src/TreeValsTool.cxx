@@ -175,15 +175,15 @@ DieEdge, KalThetaMs, [X/Y/Z]Dir, Phi, Theta, [X/Y/Z]0.
 
 @subsection general General variables
 <table>
-<tr><th> Variable <th> Type  <th> Description				                 
-<tr><td> TkrNumTracks 	
+<tr><th> Variable <th> Type  <th> Description                                                 
+<tr><td> TkrNumTracks         
 <td>F<td>   Number of tracks found (Maximum is set by TkrRecon, currently 10) 
 </table>
 
 @subsection both Variables that exist for both best and second tracks
 
 <table>
-<tr><th> Variable <th> Type  <th> Description				                 
+<tr><th> Variable <th> Type  <th> Description                                                 
 <tr><td> Tkr[1/2]Chisq 
 <td>F<td>   Track chisquared 
 <tr><td> Tkr[1/2]FirstChisq  

@@ -11,8 +11,8 @@ AcdPocaDataV2::AcdPocaDataV2() {
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdPocaDataV2::AcdPocaDataV2(Int_t volume, Int_t region, Float_t arcLength, 
-			     Float_t doca, Float_t docaErrProj,  Float_t docaErrProp,
-			     const TVector3& poca, const TVector3& pocaVector){
+                             Float_t doca, Float_t docaErrProj,  Float_t docaErrProp,
+                             const TVector3& poca, const TVector3& pocaVector){
   //Clear();
   set(volume,region,arcLength,doca,docaErrProj,docaErrProp,poca,pocaVector);
 }
@@ -23,7 +23,7 @@ AcdPocaDataV2::AcdPocaDataV2(const AcdPocaDataV2& other)
   //Clear();
   set(other.getVolume(),other.getRegion(),other.getArcLength(),
       other.getDoca(),other.getDocaErrProj(),other.getDocaErrProp(),
-      other.getPoca(),other.getPocaVector());	     
+      other.getPoca(),other.getPocaVector());             
 }
 
 /// Assignment operator
@@ -32,15 +32,15 @@ AcdPocaDataV2& AcdPocaDataV2::operator=(const AcdPocaDataV2& other)
   if ( this == &other ) return *this;
   set(other.getVolume(),other.getRegion(),other.getArcLength(),
       other.getDoca(),other.getDocaErrProj(),other.getDocaErrProp(),
-      other.getPoca(),other.getPocaVector());	 
+      other.getPoca(),other.getPocaVector());         
   return *this;
 }
 
 
 /// set all the values
 void AcdPocaDataV2::set(Int_t volume, Int_t region, Float_t arcLength,
-		      Float_t doca, Float_t docaErrProj, Float_t docaErrProp,
-		      const TVector3& poca, const TVector3& pocaVector)		       
+                      Float_t doca, Float_t docaErrProj, Float_t docaErrProp,
+                      const TVector3& poca, const TVector3& pocaVector)                       
 {
   m_volume = volume;
   m_region = region;
@@ -53,11 +53,11 @@ void AcdPocaDataV2::set(Int_t volume, Int_t region, Float_t arcLength,
 }  
 
 /// set all the values
-void AcdPocaDataV2::copy(const AcdPocaDataV2& other)			    
+void AcdPocaDataV2::copy(const AcdPocaDataV2& other)                            
 {
   set(other.getVolume(),other.getRegion(),other.getArcLength(),
       other.getDoca(),other.getDocaErrProj(),other.getDocaErrProp(),
-      other.getPoca(),other.getPocaVector());	 
+      other.getPoca(),other.getPocaVector());         
 }  
 
 

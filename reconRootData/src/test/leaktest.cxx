@@ -55,13 +55,13 @@
         acdRec->addRowDoca(f);
         acdRec->addRowActDist(randNum);
         acdRec->addRowActDist(f);
-		acdRec->addEnergy(f*2.);
-		acdRec->addEnergy(f);
-		acdRec->addId(AcdId(0, 0, 1, 2));
-		acdRec->addId(AcdId(0, 1, 3, 4));
+                acdRec->addEnergy(f*2.);
+                acdRec->addEnergy(f);
+                acdRec->addId(AcdId(0, 0, 1, 2));
+                acdRec->addId(AcdId(0, 1, 3, 4));
         acdRec->initialize(energy, count, gDoca, doca, actDist, minDocaId);
 
-		// Create CalRecon object
+                // Create CalRecon object
         CalRecon *calRec = new CalRecon();
         calRec->initialize();
 

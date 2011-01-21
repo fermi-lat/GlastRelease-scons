@@ -47,7 +47,7 @@ namespace Event
   
   /// This allows us to sort sets of AcdTkrHitPoca by the doca value
   struct AcdPocaMore {
-    bool operator()(const AcdTkrHitPoca* ptr1, const AcdTkrHitPoca* ptr2) const {	
+    bool operator()(const AcdTkrHitPoca* ptr1, const AcdTkrHitPoca* ptr2) const {        
       return ptr1->getDoca() > ptr2->getDoca();
     }
   };   

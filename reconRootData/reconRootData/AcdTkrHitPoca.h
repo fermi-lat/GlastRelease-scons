@@ -37,8 +37,8 @@ public:
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdTkrHitPoca(const AcdId& acdId, int trackIndex,
-		const AcdTkrLocalCoords& local,
-		const AcdPocaData& pocaData);
+                const AcdTkrLocalCoords& local,
+                const AcdPocaData& pocaData);
 
   /// Copy constructor
   AcdTkrHitPoca(const AcdTkrHitPoca& params);
@@ -56,8 +56,8 @@ public:
 
   /// set all the values
   void set(const AcdId& acdId, int trackIndex,
-	   const AcdTkrLocalCoords& local,
-	   const AcdPocaData& pocaData);
+           const AcdTkrLocalCoords& local,
+           const AcdPocaData& pocaData);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);

@@ -55,9 +55,9 @@ namespace Event {
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
     AcdSplashVars(const idents::AcdId& acdId, int trackIndex, 
-		const Point& calEntryPoint, const Vector& calEntryVector,
-		const float& tileSolidAngle, const float& weightedTrackAngle,
-		const float& weightedPathlength);
+                const Point& calEntryPoint, const Vector& calEntryVector,
+                const float& tileSolidAngle, const float& weightedTrackAngle,
+                const float& weightedPathlength);
     
     /// Copy constructor
     AcdSplashVars(const AcdSplashVars& params);
@@ -97,9 +97,9 @@ namespace Event {
     
     /// set all the values
     void set(const idents::AcdId& acdId, int trackIndex, 
-	     const Point& calEntryPoint, const Vector& calEntryVector,
-	     const float& tileSolidAngle, const float& weightedTrackAngle,
-	     const float& weightedPathlength);
+             const Point& calEntryPoint, const Vector& calEntryVector,
+             const float& tileSolidAngle, const float& weightedTrackAngle,
+             const float& weightedPathlength);
     
     /// reset all the values to their default
     virtual void ini();

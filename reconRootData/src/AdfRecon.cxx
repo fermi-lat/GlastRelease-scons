@@ -32,8 +32,8 @@ AdfRecon::AdfRecon() {
     Int_t m;
     for(m=0; m<4;m++)
       {
-	m_numCluster[0][m]=0;
-	m_numCluster[1][m]=0;
+        m_numCluster[0][m]=0;
+        m_numCluster[1][m]=0;
      }
 }
 
@@ -68,8 +68,8 @@ void AdfRecon::Clear(Option_t *option) {
     Int_t m;
     for(m=0; m<4; m++)
       {
-	m_numCluster[0][m]=0;
-	m_numCluster[1][m]=0;
+        m_numCluster[0][m]=0;
+        m_numCluster[1][m]=0;
      }
 
     if (m_taggerClusterCol) m_taggerClusterCol->Clear("C");

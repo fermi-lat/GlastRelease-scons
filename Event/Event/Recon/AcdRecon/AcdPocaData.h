@@ -46,8 +46,8 @@ namespace Event {
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
     AcdPocaData(int volume, int region, float arcLength, 
-		float doca, float docaErrProj, float docaErrProp,
-		const Point& poca, const Vector& voca);
+                float doca, float docaErrProj, float docaErrProp,
+                const Point& poca, const Vector& voca);
     
     /// Copy constructor
     AcdPocaData(const AcdPocaData& other);
@@ -111,12 +111,12 @@ namespace Event {
     
     /// set all the values
     void setPocaData(int volume, int region, float arcLength, 
-	     float doca, float docaErrProj, float docaErrProp,
-	     const Point& poca, const Vector& pocaVector);
+             float doca, float docaErrProj, float docaErrProp,
+             const Point& poca, const Vector& pocaVector);
 
     /// set all the values, old version
     void setPocaData(float arcLength, float doca, float docaErr, 
-	     const Point& poca, const Vector& pocaVector);
+             const Point& poca, const Vector& pocaVector);
     
     void setPocaData(const AcdPocaData& other);
     

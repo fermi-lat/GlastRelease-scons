@@ -16,7 +16,7 @@ AcdTkrGapPocaV2::AcdTkrGapPocaV2(const AcdTkrGapPocaV2& other)
 {
   //Clear();
   initialize(other.getGapId(),other.getTrackIndex(),
-	     other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+             other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
 }
 
 /// Assignment operator
@@ -24,7 +24,7 @@ AcdTkrGapPocaV2& AcdTkrGapPocaV2::operator=(const AcdTkrGapPocaV2& other)
 {
   if ( this == &other ) return *this;
   initialize(other.getGapId(),other.getTrackIndex(),
-	     other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+             other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
   AcdTkrLocalCoordsV2::copy(other);
   AcdPocaDataV2::copy(other); 
   return *this;
@@ -33,7 +33,7 @@ AcdTkrGapPocaV2& AcdTkrGapPocaV2::operator=(const AcdTkrGapPocaV2& other)
 
 /// set all the values
 void AcdTkrGapPocaV2::initialize(const AcdGapId& acdId, Int_t trackIndex,
-			       Float_t vetoSigmaHit, Float_t vetoSigmaProj, Float_t vetoSigmaProp)
+                               Float_t vetoSigmaHit, Float_t vetoSigmaProj, Float_t vetoSigmaProp)
 {
   m_id = acdId;
   m_trackIndex = trackIndex;

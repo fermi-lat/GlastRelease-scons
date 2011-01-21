@@ -45,9 +45,9 @@ AcdTkrAssoc::AcdTkrAssoc(const AcdTkrAssoc& other)
 
 /// Constructor for use in reconstruction, 
 AcdTkrAssoc::AcdTkrAssoc(int index, bool up, float energy, 
-			 const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-			 const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
-			 int tkrSSDVeto, float cornerDoca)
+                         const HepPoint3D& start, const HepVector3D& dir, float arcLength,
+                         const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
+                         int tkrSSDVeto, float cornerDoca)
   :m_index(index),
    m_upward(up),
    m_energy(energy),
@@ -62,9 +62,9 @@ AcdTkrAssoc::AcdTkrAssoc(int index, bool up, float energy,
 
 
 void AcdTkrAssoc::set(int index, bool up, float energy, 
-		      const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-		      const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
-		      int tkrSSDVeto, float cornerDoca){
+                      const HepPoint3D& start, const HepVector3D& dir, float arcLength,
+                      const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
+                      int tkrSSDVeto, float cornerDoca){
   // just in copy everything
   m_index = index;
   m_upward = up;
@@ -86,13 +86,13 @@ void AcdTkrAssoc::writeOut(MsgStream& stream) const
 {
 
   stream << MSG::DEBUG
-	 << "AcdTkrAssoc " << m_index << ' ' << (m_upward ? "up" : "down") << " E=" << m_energy << ' ' 
-	 << m_start << ' ' << m_dir << ' ' << " s= " << m_arcLength << " SSDVeto = " << m_tkrSSDVeto 
-	 << " CornerDoca = " << m_cornerDoca
-	 << std::endl
-	 << m_cov_start
-	 << m_cov_end
-	 << endreq;
+         << "AcdTkrAssoc " << m_index << ' ' << (m_upward ? "up" : "down") << " E=" << m_energy << ' ' 
+         << m_start << ' ' << m_dir << ' ' << " s= " << m_arcLength << " SSDVeto = " << m_tkrSSDVeto 
+         << " CornerDoca = " << m_cornerDoca
+         << std::endl
+         << m_cov_start
+         << m_cov_end
+         << endreq;
 }
 
 
@@ -118,7 +118,7 @@ void AcdTkrAssoc::ini()
 AcdTkrAssocCol::AcdTkrAssocCol(const std::vector<AcdTkrAssoc*>& acdTkrAssocs) {
 //Purpose: take ownership of TkrAssocs from a vector
   for ( std::vector<AcdTkrAssoc*>::const_iterator itr = acdTkrAssocs.begin();
-	itr != acdTkrAssocs.end(); itr++ ) {
+        itr != acdTkrAssocs.end(); itr++ ) {
     AcdTkrAssoc* TkrAssoc = const_cast<AcdTkrAssoc*>(*itr);
     add(TkrAssoc);
   }

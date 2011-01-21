@@ -12,8 +12,8 @@ AcdTkrHitPoca::AcdTkrHitPoca()
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdTkrHitPoca::AcdTkrHitPoca(const AcdId& acdId, int trackIndex,
-			     const AcdTkrLocalCoords& local,
-			     const AcdPocaData& pocaData)
+                             const AcdTkrLocalCoords& local,
+                             const AcdPocaData& pocaData)
   :TObject(),AcdTkrLocalCoords(),AcdPocaData()
 {
   //Clear("");
@@ -39,8 +39,8 @@ AcdTkrHitPoca& AcdTkrHitPoca::operator=(const AcdTkrHitPoca& other)
 
 /// set all the values
 void AcdTkrHitPoca::set(const AcdId& acdId, Int_t trackIndex,
-			const AcdTkrLocalCoords& local,
-			const AcdPocaData& pocaData)
+                        const AcdTkrLocalCoords& local,
+                        const AcdPocaData& pocaData)
 {
   m_id = acdId;
   m_trackIndex = trackIndex;

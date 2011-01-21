@@ -67,26 +67,26 @@ namespace RootPersistence {
    
   void convert( const lsfData::DatagramInfo& tdsObj, DatagramInfo& rootObj) {
     rootObj.initialize(tdsObj.openAction(),tdsObj.openReason(),
-		       tdsObj.crate(),tdsObj.mode(),
-		       tdsObj.closeAction(),tdsObj.closeReason(),
-		       tdsObj.datagrams(),tdsObj.modeChanges());    
+                       tdsObj.crate(),tdsObj.mode(),
+                       tdsObj.closeAction(),tdsObj.closeReason(),
+                       tdsObj.datagrams(),tdsObj.modeChanges());    
   };
   void convert( const DatagramInfo& rootObj, lsfData::DatagramInfo& tdsObj) {
     tdsObj.set(rootObj.openAction(),rootObj.openReason(),
-	       rootObj.crate(),rootObj.mode(),
-	       rootObj.closeAction(),rootObj.closeReason(),
-	       rootObj.datagrams(),rootObj.modeChanges());
+               rootObj.crate(),rootObj.mode(),
+               rootObj.closeAction(),rootObj.closeReason(),
+               rootObj.datagrams(),rootObj.modeChanges());
   };
 
   void convert( const lsfData::GemScalers& tdsObj, GemScalers& rootObj) {
     rootObj.initialize(tdsObj.elapsed(),tdsObj.livetime(),
-		       tdsObj.prescaled(),tdsObj.discarded(),
-		       tdsObj.sequence(),tdsObj.deadzone());
+                       tdsObj.prescaled(),tdsObj.discarded(),
+                       tdsObj.sequence(),tdsObj.deadzone());
   };
   void convert( const GemScalers& rootObj, lsfData::GemScalers& tdsObj) {
     tdsObj.set(rootObj.elapsed(),rootObj.livetime(),
-	       rootObj.prescaled(),rootObj.discarded(),
-	       rootObj.sequence(),rootObj.deadzone());
+               rootObj.prescaled(),rootObj.discarded(),
+               rootObj.sequence(),rootObj.deadzone());
   };
 
   // this handles the polymorphism of Configuration

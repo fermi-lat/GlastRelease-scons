@@ -8,12 +8,12 @@
 
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
-				  const Vector& axis, const CLHEP::HepMatrix& axisErr,
-				  int numIterations, int numCoreXtals, int numXtals,
-				  double transRms, double longRms, double longRmsAsym,
-				  double longSkewness, double coreEnergyFrac,
-				  double fullLength, double dEdxSpread) :
+                                  const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+                                  const Vector& axis, const CLHEP::HepMatrix& axisErr,
+                                  int numIterations, int numCoreXtals, int numXtals,
+                                  double transRms, double longRms, double longRmsAsym,
+                                  double longSkewness, double coreEnergyFrac,
+                                  double fullLength, double dEdxSpread) :
   CalParams(energy, eneError, centroid, centroidErr, axis, axisErr),
   m_numIterations(numIterations),
   m_numCoreXtals(numCoreXtals),
@@ -30,19 +30,19 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 }
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  double cntdxx, double cntdxy, double cntdxz,
-				  double cntdyy, double cntdyz, double cntdzz,
-				  double xAxis,  double yAxis,  double zAxis,
-				  double axsdxx, double axsdxy, double axsdxz,
-				  double axsdyy, double axsdyz, double axsdzz,
-				  int numIterations, int numCoreXtals, int numXtals,
-				  double transRms, double longRms, double longRmsAsym,
-				  double longSkewness, double coreEnergyFrac,
-				  double fullLength, double dEdxSpread) :
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  double cntdxx, double cntdxy, double cntdxz,
+                                  double cntdyy, double cntdyz, double cntdzz,
+                                  double xAxis,  double yAxis,  double zAxis,
+                                  double axsdxx, double axsdxy, double axsdxz,
+                                  double axsdyy, double axsdyz, double axsdzz,
+                                  int numIterations, int numCoreXtals, int numXtals,
+                                  double transRms, double longRms, double longRmsAsym,
+                                  double longSkewness, double coreEnergyFrac,
+                                  double fullLength, double dEdxSpread) :
   CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
-	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
-	    axsdyy, axsdyz, axsdzz),
+            cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
+            axsdyy, axsdyz, axsdzz),
   m_numIterations(numIterations),
   m_numCoreXtals(numCoreXtals),
   m_numXtals(numXtals),
@@ -58,23 +58,23 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 }
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  double cntdxx, double cntdxy, double cntdxz,
-				  double cntdyy, double cntdyz, double cntdzz,
-				  double xAxis,  double yAxis,  double zAxis,
-				  double axsdxx, double axsdxy, double axsdxz,
-				  double axsdyy, double axsdyz, double axsdzz) :
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  double cntdxx, double cntdxy, double cntdxz,
+                                  double cntdyy, double cntdyz, double cntdzz,
+                                  double xAxis,  double yAxis,  double zAxis,
+                                  double axsdxx, double axsdxy, double axsdxz,
+                                  double axsdyy, double axsdyz, double axsdzz) :
   CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
-	    cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
-	    axsdyy, axsdyz, axsdzz)
+            cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
+            axsdyy, axsdyz, axsdzz)
 {
   // Initialize the members which are still undefined.
   clearMomParams();
 }
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd,
-				  double xAxis,  double yAxis,  double zAxis)
+                                  double xCntrd, double yCntrd, double zCntrd,
+                                  double xAxis,  double yAxis,  double zAxis)
 {
   clear();
   setEnergy(energy);
@@ -84,7 +84,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 }
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  const Point& centroid, const Vector& axis)
+                                  const Point& centroid, const Vector& axis)
 {
   clear();
   setEnergy(energy);
@@ -94,7 +94,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 }
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  double xCntrd, double yCntrd, double zCntrd)
+                                  double xCntrd, double yCntrd, double zCntrd)
 {
   clear();
   setEnergy(energy);
@@ -103,7 +103,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
 }
 
 Event::CalMomParams::CalMomParams(double energy, double eneError,
-				  const Point& centroid)
+                                  const Point& centroid)
 {
   clear();
   setEnergy(energy);

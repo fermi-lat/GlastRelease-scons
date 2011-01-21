@@ -70,9 +70,9 @@ public:
         static std::string McPartToTkrPatCandTab;
         static std::string McPartToTkrTrackHitTab;
         static std::string McPartToTkrTrackTab;
-	static std::string McAcdTkrPointCol;
-	static std::string McAcdTkrHitPocaCol;
-	static std::string McAcdTkrAssocCol;
+        static std::string McAcdTkrPointCol;
+        static std::string McAcdTkrHitPocaCol;
+        static std::string McAcdTkrAssocCol;
     };
 
     class DLL_EXPORT_EVT Digi

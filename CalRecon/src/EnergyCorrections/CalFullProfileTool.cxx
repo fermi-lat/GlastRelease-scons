@@ -189,10 +189,10 @@ double CalFullProfileTool::compute_chi2(double *par)
     {
       delta  = (m_elayer_dat[i]-m_elayer_fit[i])/fit_error;
       if(m_elayer_nsat[i]>0 && m_elayer_fit[i]>m_elayer_dat[i])
-	delta = 0;
+        delta = 0;
       m_chisq += delta*delta;
 //       if(m_optpr)
-// 	printf("CalFullProfileTool::compute_chi2 m_elayer_dat[%d] = %f %f -> %f -> %f\n",i,m_elayer_dat[i],m_elayer_fit[i],delta,m_chisq);
+//         printf("CalFullProfileTool::compute_chi2 m_elayer_dat[%d] = %f %f -> %f -> %f\n",i,m_elayer_dat[i],m_elayer_fit[i],delta,m_chisq);
     }
 
   m_params_contribution_factor = 3+(double)m_Nsaturated;
@@ -224,8 +224,8 @@ void CalFullProfileTool::fcn(int & , double *, double &f, double *par, int )
 }
 
 CalFullProfileTool::CalFullProfileTool( const std::string& type, 
-				      const std::string& name, 
-				      const IInterface* parent)
+                                      const std::string& name, 
+                                      const IInterface* parent)
   : AlgTool(type,name,parent)
 {
   // declare base interface for all consecutive concrete classes
@@ -438,27 +438,27 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalClusterCol *
       TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
 
       if(TKRFIT>0)
-	{
-	  TKRFIT_fit_energy = 1000.*m_par2;
-	  TKRFIT_energy_err = 1000.*m_epar2;
-	  TKRFIT_fitflag = m_ierflg;
-	  TKRFIT_alpha = m_par0;
-	  TKRFIT_tmax = m_par1;
-	  TKRFIT_tkr_RLn = tkr_RLn;
-	  TKRFIT_lastx0 = m_lastx0;
-	  TKRFIT_cal_eff_RLn = m_totx0cal;
-	  TKRFIT_totchisq = m_totchisq;
-	  TKRFIT_chisq = m_chisq;
-	  TKRFIT_parcf = m_params_contribution_factor;
-	  TKRFIT_parc = m_params_contribution;
-	  TKRFIT_recp0 = pp[0];
-	  TKRFIT_recp1 = pp[1];
-	  TKRFIT_recp2 = pp[2];
-	  TKRFIT_recv0 = vv[0];
-	  TKRFIT_recv1 = vv[1];
-	  TKRFIT_recv2 = vv[2];
-	  TKRFIT_widening = m_wideningfactor;
-	}
+        {
+          TKRFIT_fit_energy = 1000.*m_par2;
+          TKRFIT_energy_err = 1000.*m_epar2;
+          TKRFIT_fitflag = m_ierflg;
+          TKRFIT_alpha = m_par0;
+          TKRFIT_tmax = m_par1;
+          TKRFIT_tkr_RLn = tkr_RLn;
+          TKRFIT_lastx0 = m_lastx0;
+          TKRFIT_cal_eff_RLn = m_totx0cal;
+          TKRFIT_totchisq = m_totchisq;
+          TKRFIT_chisq = m_chisq;
+          TKRFIT_parcf = m_params_contribution_factor;
+          TKRFIT_parc = m_params_contribution;
+          TKRFIT_recp0 = pp[0];
+          TKRFIT_recp1 = pp[1];
+          TKRFIT_recp2 = pp[2];
+          TKRFIT_recv0 = vv[0];
+          TKRFIT_recv1 = vv[1];
+          TKRFIT_recv2 = vv[2];
+          TKRFIT_widening = m_wideningfactor;
+        }
     }
     
   if(CALFIT==0 && TKRFIT==0)
@@ -567,14 +567,14 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
     {
       mytheta = atan(-sqrt(vv[0]*vv[0]+vv[1]*vv[1])/vv[2])*180./TMath::Pi();
       if(mytheta>40)
-	{
-	  tkrrln1 = 2-0.05*(mytheta-40.);
-	  if(tkr_RLn>tkrrln1)
-	    {
-	      wideningfactor = 1.+(tkr_RLn-tkrrln1)/1.5;
-	      if(wideningfactor>2) wideningfactor = 2.;
-	    }
-	}
+        {
+          tkrrln1 = 2-0.05*(mytheta-40.);
+          if(tkr_RLn>tkrrln1)
+            {
+              wideningfactor = 1.+(tkr_RLn-tkrrln1)/1.5;
+              if(wideningfactor>2) wideningfactor = 2.;
+            }
+        }
     }
 
   m_fsddm->SetWideningFactor(wideningfactor);
@@ -595,18 +595,18 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
   for(i=0;i<=m_fsddm->NDevelopment;++i)
     {
       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : m_fsddm->FSDDX0[" << i <<"] :"
-	 << " startx0 = " << m_fsddm->FSDDX0[i]->startx0
-	 << " totx0cal = " << m_fsddm->FSDDX0[i]->totx0cal
-	 << " lastx0 = " << m_fsddm->FSDDX0[i]->lastx0
-	 <<endreq;
+         << " startx0 = " << m_fsddm->FSDDX0[i]->startx0
+         << " totx0cal = " << m_fsddm->FSDDX0[i]->totx0cal
+         << " lastx0 = " << m_fsddm->FSDDX0[i]->lastx0
+         <<endreq;
     }
 
   for(i=0;i<8;++i)
     {
       lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : m_fsddm->meantotx0lay[" << i <<"] :"
-	 << m_fsddm->meantotx0lay[i]
-	 << " meanposx0lay = " << m_fsddm->meanposx0lay[i]
-	 <<endreq;
+         << m_fsddm->meantotx0lay[i]
+         << " meanposx0lay = " << m_fsddm->meanposx0lay[i]
+         <<endreq;
     }
 
   double arglist[10];
@@ -654,65 +654,65 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
   if(optntrye==1)
     {
       for(i=0;i<=ntrye;++i)
-	{
-	  vstart[2] = enemin+enestep*((double)i);
-	  m_fsppm->Fill(vstart[2]);
-	  vstart[0] = m_fsppm->alpha;
-	  vstart[1] = m_fsppm->tmax;
-	  vstep[0] = 0.05;
-	  vstep[1] = 0.05;
-	  vstep[2] = vstart[2]*0.05;
-	  m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
-	  m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
-	  m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
-	  m_minuit->FixParameter(2);
-	  arglist[0] = 500;
-	  arglist[1] = 1.;
-	  m_optpr = 0;
-	  m_spy_totchisq = 99999999;
-	  m_spy_par[0] = -1;
-	  m_spy_par[1] = -1;
-	  m_spy_par[2] = -1;
-	  m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
-	  m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
-	  m_minuit->GetParameter(0,par0,epar0);
-	  m_minuit->GetParameter(1,par1,epar1);
-	  if(ierflg==4)
-	    {
-	      vstart[0] = m_spy_par[0];
-	      vstart[1] = m_spy_par[1];
-	      vstep[0] = 0.05;
-	      vstep[1] = 0.05;
-	      m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
-	      m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
-	      m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
-	      m_minuit->FixParameter(2);
-	      arglist[0] = 500;
-	      arglist[1] = 1.;
-	      m_optpr = 0;
-	      m_spy_totchisq = 99999999;
-	      m_spy_par[0] = -1;
-	      m_spy_par[1] = -1;
-	      m_spy_par[2] = -1;
-	      m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
-	      m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
-	      //	  m_minuit->mnprin(3,amin);
-	      m_minuit->GetParameter(0,par0,epar0);
-	      m_minuit->GetParameter(1,par1,epar1);
-	    }
-	  mychisq[i] = amin;
-	  myalpha[i] = par0;
-	  mytmax[i] = par1;
-	  myenergy[i] = vstart[2];
-	  if(amin<mymin)
-	    {
-	      mymin = amin;
-	      scan0 = par0;
-	      scan1 = par1;
-	      scan2 = vstart[2];
-	    }
-	  if(amin>5*mymin) break;
-	}
+        {
+          vstart[2] = enemin+enestep*((double)i);
+          m_fsppm->Fill(vstart[2]);
+          vstart[0] = m_fsppm->alpha;
+          vstart[1] = m_fsppm->tmax;
+          vstep[0] = 0.05;
+          vstep[1] = 0.05;
+          vstep[2] = vstart[2]*0.05;
+          m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
+          m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
+          m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
+          m_minuit->FixParameter(2);
+          arglist[0] = 500;
+          arglist[1] = 1.;
+          m_optpr = 0;
+          m_spy_totchisq = 99999999;
+          m_spy_par[0] = -1;
+          m_spy_par[1] = -1;
+          m_spy_par[2] = -1;
+          m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+          m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+          m_minuit->GetParameter(0,par0,epar0);
+          m_minuit->GetParameter(1,par1,epar1);
+          if(ierflg==4)
+            {
+              vstart[0] = m_spy_par[0];
+              vstart[1] = m_spy_par[1];
+              vstep[0] = 0.05;
+              vstep[1] = 0.05;
+              m_minuit->mnparm(0, "a1", vstart[0], vstep[0], 1.1,20,ierflg);
+              m_minuit->mnparm(1, "a2", vstart[1], vstep[1], 0.1,20,ierflg);
+              m_minuit->mnparm(2, "a3", vstart[2], vstep[2], m_eTotal*0.95,10000,ierflg);
+              m_minuit->FixParameter(2);
+              arglist[0] = 500;
+              arglist[1] = 1.;
+              m_optpr = 0;
+              m_spy_totchisq = 99999999;
+              m_spy_par[0] = -1;
+              m_spy_par[1] = -1;
+              m_spy_par[2] = -1;
+              m_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+              m_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+              //          m_minuit->mnprin(3,amin);
+              m_minuit->GetParameter(0,par0,epar0);
+              m_minuit->GetParameter(1,par1,epar1);
+            }
+          mychisq[i] = amin;
+          myalpha[i] = par0;
+          mytmax[i] = par1;
+          myenergy[i] = vstart[2];
+          if(amin<mymin)
+            {
+              mymin = amin;
+              scan0 = par0;
+              scan1 = par1;
+              scan2 = vstart[2];
+            }
+          if(amin>5*mymin) break;
+        }
     }
   else
     scan2 = m_eTotal;
@@ -826,7 +826,7 @@ int CalFullProfileTool::DetectSaturation()
   for(i=0;i<16;++i)
     for(j=0;j<8;++j)
       for(k=0;k<12;++k)
-	m_fsddm->OffSatu[i][j][k] = 0;
+        m_fsddm->OffSatu[i][j][k] = 0;
   
   for(j=0;j<8;++j)
     {
@@ -842,7 +842,7 @@ int CalFullProfileTool::DetectSaturation()
   for(i=0;i<16;++i)
     for(j=0;j<8;++j)
       for(k=0;k<12;++k)
-	m_saturated[i][j][k] = false;
+        m_saturated[i][j][k] = false;
 
   for (Event::CalDigiCol::const_iterator digiIter = calDigiCol->begin(); digiIter != calDigiCol->end(); digiIter++)
     {
@@ -850,17 +850,17 @@ int CalFullProfileTool::DetectSaturation()
       idents::CalXtalId id = calDigi.getPackedId();
       CalUtil::XtalIdx xtalIdx(calDigi.getPackedId());
       for (Event::CalDigi::CalXtalReadoutCol::const_iterator ro =  calDigi.getReadoutCol().begin();ro != calDigi.getReadoutCol().end();ro++)
-	{
-	  float adcP = ro->getAdc(idents::CalXtalId::POS);
-	  float adcN = ro->getAdc(idents::CalXtalId::NEG);
-	  int rangepos = ro->getRange(idents::CalXtalId::POS);
-	  int rangeneg = ro->getRange(idents::CalXtalId::NEG);
-	  if( (rangepos==3 && adcP>=m_saturationadc) || (rangeneg==3 && adcN>=m_saturationadc))
-	    {
-	      m_saturated[(int)id.getTower()][(int)id.getLayer()][(int)id.getColumn()] = true;
-	      ++m_Nsaturated;
-	    }
-	}
+        {
+          float adcP = ro->getAdc(idents::CalXtalId::POS);
+          float adcN = ro->getAdc(idents::CalXtalId::NEG);
+          int rangepos = ro->getRange(idents::CalXtalId::POS);
+          int rangeneg = ro->getRange(idents::CalXtalId::NEG);
+          if( (rangepos==3 && adcP>=m_saturationadc) || (rangeneg==3 && adcN>=m_saturationadc))
+            {
+              m_saturated[(int)id.getTower()][(int)id.getLayer()][(int)id.getColumn()] = true;
+              ++m_Nsaturated;
+            }
+        }
     }
 
   if(m_Nsaturated==0) return 0;
@@ -875,11 +875,11 @@ int CalFullProfileTool::DetectSaturation()
       int ilay=xTalData->getPackedId().getLayer();
       int icol=xTalData->getPackedId().getColumn();
       if(m_saturated[itow][ilay][icol])
-	{
-	  m_fsddm->OffSatu[itow][ilay][icol] = 1;
-	  m_elayer_datsat[ilay] += xTalData->getEnergy()/1000;
-	  m_elayer_nsat[ilay] += 1;
-	}
+        {
+          m_fsddm->OffSatu[itow][ilay][icol] = 1;
+          m_elayer_datsat[ilay] += xTalData->getEnergy()/1000;
+          m_elayer_nsat[ilay] += 1;
+        }
     }
 
   return 0;

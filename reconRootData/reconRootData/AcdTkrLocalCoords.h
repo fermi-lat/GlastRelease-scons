@@ -42,7 +42,7 @@ public:
   AcdTkrLocalCoords();
 
   AcdTkrLocalCoords(const float position[2], float pathLength, float cosTheta, 
-		    int region, const TMatrixD& covMatrix);
+                    int region, const TMatrixD& covMatrix);
   
   AcdTkrLocalCoords(const AcdTkrLocalCoords& other);
   
@@ -70,7 +70,7 @@ public:
   
   /// set everything at once
   void set(const float position[2], float pathLength, float cosTheta, 
-	   int region, const TMatrixD& CovMatrix);
+           int region, const TMatrixD& CovMatrix);
   
   void copy(const AcdTkrLocalCoords& other);
   

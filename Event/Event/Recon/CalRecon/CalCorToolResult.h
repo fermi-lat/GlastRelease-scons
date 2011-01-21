@@ -80,7 +80,7 @@ public:
     /// @param chiSquare the chiSquare resulting from this correction 
     inline void setChiSquare(double chiSquare)             {m_chiSquare = chiSquare;}
 
-	/// Access individual status bits
+        /// Access individual status bits
     inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
     inline void clearStatusBit( StatusBits bitToClear ) { m_statusBits &= ~bitToClear ; }
     inline bool checkStatusBit( StatusBits bitToCheck ) const { return ((m_statusBits&bitToCheck)!=ZERO) ; }
@@ -110,7 +110,7 @@ typedef ObjectList< Event::Relation<Event::CalCluster, Event::CalCorToolResult> 
 
 }
 
-#endif	
+#endif        
 
 
 

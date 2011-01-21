@@ -30,7 +30,7 @@ namespace RootPersistence {
     for (tagIt = taggerHitColTds.begin(); tagIt != taggerHitColTds.end(); tagIt++) {
     rootObj->addTaggerHit(tagIt->getModuleId(), tagIt->getLayerId(), 
           tagIt->getStripId(), 
-	  tagIt->getPulseHeight(), tagIt->getSigma(), 
+          tagIt->getPulseHeight(), tagIt->getSigma(), 
           tagIt->getPedestalSubtract());
     }
   };
@@ -46,9 +46,9 @@ namespace RootPersistence {
     TIter tagIt(taggerHitColRoot);
     commonRootData::TaggerHit* tagRoot;
     while ((tagRoot = (commonRootData::TaggerHit*)tagIt.Next())) {
-	  AncillaryData::TaggerHit tagTds;
-	  convert(tagRoot, tagTds);
-	  tdsObj.append(tagTds);
+          AncillaryData::TaggerHit tagTds;
+          convert(tagRoot, tagTds);
+          tdsObj.append(tagTds);
     }
 
     tdsObj.initialize(rootObj->getPosition(), rootObj->getPulseHeight(),
@@ -62,8 +62,8 @@ namespace RootPersistence {
     unsigned int m;
     for(m=0; m<AncillaryData::N_MODULES; m++)
       {
-	rootObj.initNumCluster(0,m,tdsObj.getNumberOfClusters(0,m));
-	rootObj.initNumCluster(1,m,tdsObj.getNumberOfClusters(1,m));
+        rootObj.initNumCluster(0,m,tdsObj.getNumberOfClusters(0,m));
+        rootObj.initNumCluster(1,m,tdsObj.getNumberOfClusters(1,m));
      }
 
 

@@ -14,9 +14,9 @@ namespace Event {
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdSplashVars::AcdSplashVars(const idents::AcdId& acdId, int trackIndex,
-			   const Point& calEntryPoint, const Vector& calEntryVector,
-			   const float& tileSolidAngle, const float& weightedTrackAngle,
-			   const float& weightedPathlength)
+                           const Point& calEntryPoint, const Vector& calEntryVector,
+                           const float& tileSolidAngle, const float& weightedTrackAngle,
+                           const float& weightedPathlength)
   {
     set(acdId,trackIndex,calEntryPoint,calEntryVector,tileSolidAngle,weightedTrackAngle,weightedPathlength);
   }
@@ -25,8 +25,8 @@ namespace Event {
   AcdSplashVars::AcdSplashVars(const Event::AcdSplashVars& other)
   {
     set(other.getId(),other.getTrackIndex(),
-	other.calEntryPoint(),other.calEntryVector(),
-	other.tileSolidAngle(),other.weightedTrackAngle(),other.weightedPathlength());
+        other.calEntryPoint(),other.calEntryVector(),
+        other.tileSolidAngle(),other.weightedTrackAngle(),other.weightedPathlength());
   }
 
   /// Assignment operator
@@ -34,17 +34,17 @@ namespace Event {
   {
     if ( this == &other ) return *this;
     set(other.getId(),other.getTrackIndex(),
-	other.calEntryPoint(),other.calEntryVector(),
-	other.tileSolidAngle(),other.weightedTrackAngle(),other.weightedPathlength());
+        other.calEntryPoint(),other.calEntryVector(),
+        other.tileSolidAngle(),other.weightedTrackAngle(),other.weightedPathlength());
     return *this;
   }
 
 
   /// set all the values
   void AcdSplashVars::set(const idents::AcdId& acdId, int trackIndex, 
-			const Point& calEntryPoint, const Vector& calEntryVector,
-			const float& tileSolidAngle, const float& weightedTrackAngle,
-			const float& weightedPathlength)
+                        const Point& calEntryPoint, const Vector& calEntryVector,
+                        const float& tileSolidAngle, const float& weightedTrackAngle,
+                        const float& weightedPathlength)
   {
     m_id = acdId;
     m_trackIndex = trackIndex;
@@ -72,9 +72,9 @@ namespace Event {
   void AcdSplashVars::writeOut(MsgStream& stream) const 
   {
     stream << MSG::DEBUG
-	   << "AcdSplashVars.  Tile: " << m_id.id() 
-	   << ".  Track: " << (int)m_trackIndex
-	   << ".  ";
+           << "AcdSplashVars.  Tile: " << m_id.id() 
+           << ".  Track: " << (int)m_trackIndex
+           << ".  ";
     stream << m_calEntryPoint << std::endl;
     stream << m_calEntryVector << std::endl;
     stream << "Solid Angle: " << m_tileSolidAngle << std::endl;
@@ -86,7 +86,7 @@ namespace Event {
   /// Copy c'tor
   AcdSplashVarsCol::AcdSplashVarsCol(const std::vector<AcdSplashVars*>& other) {
     for ( std::vector<AcdSplashVars*>::const_iterator itr = other.begin();
-	  itr != other.end(); itr++ ) {
+          itr != other.end(); itr++ ) {
       AcdSplashVars* one = const_cast<AcdSplashVars*>(*itr);
       add(one);
     }

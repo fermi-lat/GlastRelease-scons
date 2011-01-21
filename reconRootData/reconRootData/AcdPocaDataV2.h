@@ -42,8 +42,8 @@ public:
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdPocaDataV2(Int_t volume, Int_t region, Float_t arcLength, 
-	      Float_t doca, Float_t docaErrProj,  Float_t docaErrProp,
-	      const TVector3& poca, const TVector3& pocaVector);
+              Float_t doca, Float_t docaErrProj,  Float_t docaErrProp,
+              const TVector3& poca, const TVector3& pocaVector);
 
   /// Copy constructor
   AcdPocaDataV2(const AcdPocaDataV2& other);
@@ -104,8 +104,8 @@ public:
   
   /// set all the values
   void set(Int_t volume, Int_t region, Float_t arcLength,
-	   Float_t doca, Float_t docaErrProj, Float_t docaErrProp,
-	   const TVector3& poca, const TVector3& pocaVector);
+           Float_t doca, Float_t docaErrProj, Float_t docaErrProp,
+           const TVector3& poca, const TVector3& pocaVector);
 
   /// copy in the object
   void copy(const AcdPocaDataV2& other);

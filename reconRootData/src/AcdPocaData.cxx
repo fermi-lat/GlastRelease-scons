@@ -11,7 +11,7 @@ AcdPocaData::AcdPocaData() {
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdPocaData::AcdPocaData(Float_t arcLength, Float_t doca, Float_t docaErr, 
-			 const TVector3& poca, const TVector3& pocaVector){
+                         const TVector3& poca, const TVector3& pocaVector){
   //Clear();
   set(arcLength,doca,docaErr,poca,pocaVector);
 }
@@ -21,7 +21,7 @@ AcdPocaData::AcdPocaData(const AcdPocaData& other)
 {
   //Clear();
   set(other.getArcLength(),other.getDoca(),other.getDocaErr(),
-      other.getPoca(),other.getPocaVector());	     
+      other.getPoca(),other.getPocaVector());             
 }
 
 /// Assignment operator
@@ -37,7 +37,7 @@ AcdPocaData& AcdPocaData::operator=(const AcdPocaData& other)
 
 /// set all the values
 void AcdPocaData::set(Float_t arcLength, Float_t doca, Float_t docaErr,
-		      const TVector3& poca, const TVector3& pocaVector)			    
+                      const TVector3& poca, const TVector3& pocaVector)                            
 {
   m_arcLength = arcLength;
   m_doca = doca;
@@ -47,7 +47,7 @@ void AcdPocaData::set(Float_t arcLength, Float_t doca, Float_t docaErr,
 }  
 
 /// set all the values
-void AcdPocaData::copy(const AcdPocaData& other)			    
+void AcdPocaData::copy(const AcdPocaData& other)                            
 {
   m_arcLength = other.m_arcLength;
   m_doca = other.m_doca;

@@ -13,17 +13,17 @@ AcdTkrIntersection::AcdTkrIntersection()
 
 
 AcdTkrIntersection::AcdTkrIntersection(const AcdId& tileId, Int_t trackIndex, 
-				       const TVector3& globalPosition, 
-				       const Double_t localPosition[2], const TMatrixD& localCovMatrix,
-				       Double_t arcLengthToIntersection, Double_t pathLengthInTile, 
-				       UChar_t tileHit, 
-				       Double_t cosTheta)
+                                       const TVector3& globalPosition, 
+                                       const Double_t localPosition[2], const TMatrixD& localCovMatrix,
+                                       Double_t arcLengthToIntersection, Double_t pathLengthInTile, 
+                                       UChar_t tileHit, 
+                                       Double_t cosTheta)
   :TObject()
 {
     initialize(tileId,trackIndex,
-	       globalPosition, 
-	       localPosition,localCovMatrix,
-	       arcLengthToIntersection,pathLengthInTile,tileHit,cosTheta);
+               globalPosition, 
+               localPosition,localCovMatrix,
+               arcLengthToIntersection,pathLengthInTile,tileHit,cosTheta);
 }
 
 AcdTkrIntersection::AcdTkrIntersection(const AcdTkrIntersection& params)
@@ -57,13 +57,13 @@ void AcdTkrIntersection::Print(Option_t *option) const
     double localYErr = m_localYYCov > 0. ? sqrt(m_localYYCov) : 0.;
     double correl =  m_localXYCov / ( localXErr * localYErr );          
     std::cout << "AcdTkrIntersection.  id: " << m_tileId.getId() << "  s: " << m_arcLengthToIntersection 
-	      << "  x: [" << m_location.X() << ',' << m_location.Y() << ',' <<  m_location.Z()
-	      << "]  local: {" << m_localX << ',' << m_localY  
-	      << "}  cov: <" << localXErr << ',' << localYErr << ',' << correl 
-	      << ">  path: "<< m_pathlengthInTile << "  angle: " << m_cosTheta 
-	      << "  hit: "
-	      << (int)(m_tileHit)
-	      << std::endl;
+              << "  x: [" << m_location.X() << ',' << m_location.Y() << ',' <<  m_location.Z()
+              << "]  local: {" << m_localX << ',' << m_localY  
+              << "}  cov: <" << localXErr << ',' << localYErr << ',' << correl 
+              << ">  path: "<< m_pathlengthInTile << "  angle: " << m_cosTheta 
+              << "  hit: "
+              << (int)(m_tileHit)
+              << std::endl;
 }
 
 AcdTkrIntersection& AcdTkrIntersection::operator=(const AcdTkrIntersection& params)
@@ -74,10 +74,10 @@ AcdTkrIntersection& AcdTkrIntersection::operator=(const AcdTkrIntersection& para
 }
 
 void AcdTkrIntersection::initialize(const AcdId& tileId, Int_t trackIndex,
-				    const TVector3& globalPostion, 
-				    const Double_t localPosition[2], const TMatrixD& localCovMatrix,
-				    Double_t arcLengthToIntersection, Double_t pathLengthInTile, 
-				    UChar_t tileHit, Double_t cosTheta) {
+                                    const TVector3& globalPostion, 
+                                    const Double_t localPosition[2], const TMatrixD& localCovMatrix,
+                                    Double_t arcLengthToIntersection, Double_t pathLengthInTile, 
+                                    UChar_t tileHit, Double_t cosTheta) {
   
   m_tileId = tileId;
   m_trackIndex = trackIndex;
@@ -104,9 +104,9 @@ void AcdTkrIntersection::initialize(const AcdTkrIntersection& params)
   localCov[1][0] = params.getLocalXYCov();
   localCov[1][1] = params.getLocalYYCov();
   initialize(params.getTileId(), params.getTrackIndex(), 
-	     params.getGlobalPosition(),
-	     local,localCov,
-	     params.getArcLengthToIntersection(),params.getPathLengthInTile(),params.tileHit(),params.getCosTheta());
+             params.getGlobalPosition(),
+             local,localCov,
+             params.getArcLengthToIntersection(),params.getPathLengthInTile(),params.tileHit(),params.getCosTheta());
 }  
 
 

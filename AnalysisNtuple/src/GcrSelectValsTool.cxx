@@ -130,37 +130,37 @@ StatusCode GcrSelectValsTool::calculate()
    for(int itow=0; itow<NTOW;itow++) 
       for (int ilay=0;ilay<NLAY;ilay++)
         for(int icol=0;icol<NCOL;icol++)
-	{
-    	  j=(itow*NLAY+ilay)*NCOL+icol;
-	  m_GcrSelect[j]=-1000;
+        {
+              j=(itow*NLAY+ilay)*NCOL+icol;
+          m_GcrSelect[j]=-1000;
     
         }
-	
+        
     
     SmartDataPtr<Event::GcrXtalCol> p_gcrXtalCol(m_pEventSvc, EventModel::CalRecon::GcrXtalCol); 
     m_inferedZ=-1000;
     if(p_gcrXtalCol){
-	    int i=0;
-	    int itow,ilay,icol;
-	    for(Event::GcrXtalCol::const_iterator gcrXtalIter=p_gcrXtalCol->begin(); gcrXtalIter != p_gcrXtalCol->end(); gcrXtalIter++)
-	    {
-	      Event::GcrXtal* p_gcrXtal = *gcrXtalIter;
-	      
-	      //Event::CalXtalRecData* xtalData = p_gcrSelectedXtal->getXtal();
-	      idents::CalXtalId xtalId = p_gcrXtal->getXtalId();
-	      itow = xtalId.getTower();
-	      ilay = xtalId.getLayer();
-	      icol = xtalId.getColumn();
+            int i=0;
+            int itow,ilay,icol;
+            for(Event::GcrXtalCol::const_iterator gcrXtalIter=p_gcrXtalCol->begin(); gcrXtalIter != p_gcrXtalCol->end(); gcrXtalIter++)
+            {
+              Event::GcrXtal* p_gcrXtal = *gcrXtalIter;
+              
+              //Event::CalXtalRecData* xtalData = p_gcrSelectedXtal->getXtal();
+              idents::CalXtalId xtalId = p_gcrXtal->getXtalId();
+              itow = xtalId.getTower();
+              ilay = xtalId.getLayer();
+              icol = xtalId.getColumn();
 
-	      i=(itow*NLAY+ilay)*NCOL+icol;
-	      //log << MSG::INFO << "GcrSelValsTool::calculate p_gcrSelectedXtal->getInferedZ()=" <<  p_gcrSelectedXtal->getInferedZ()<< endreq;
-	      
-	      /**std::printf("%10.4f \n", p_gcrSelectedXtal->getPathLength());
-	      fflush(stdout);*/
-	      
-	      m_GcrSelect[i] = p_gcrXtal->getPathLength();
+              i=(itow*NLAY+ilay)*NCOL+icol;
+              //log << MSG::INFO << "GcrSelValsTool::calculate p_gcrSelectedXtal->getInferedZ()=" <<  p_gcrSelectedXtal->getInferedZ()<< endreq;
+              
+              /**std::printf("%10.4f \n", p_gcrSelectedXtal->getPathLength());
+              fflush(stdout);*/
+              
+              m_GcrSelect[i] = p_gcrXtal->getPathLength();
           
-	    }
+            }
 
     }
     else{
@@ -172,10 +172,10 @@ StatusCode GcrSelectValsTool::calculate()
     for(int itow=0; itow<NTOW;itow++) 
       for (int ilay=0;ilay<NLAY;ilay++)
         for(int icol=0;icol<NCOL;icol++)
-	{
-    	  i=(itow*NLAY+ilay)*NCOL+icol;
-	  if(m_GcrSelect[i]>0)
-	    log << MSG::INFO << "m_GcrSelect["<<itow<<","<<icol<<","<<ilay <<"]= "<< m_GcrSelect[i] << endreq;
+        {
+              i=(itow*NLAY+ilay)*NCOL+icol;
+          if(m_GcrSelect[i]>0)
+            log << MSG::INFO << "m_GcrSelect["<<itow<<","<<icol<<","<<ilay <<"]= "<< m_GcrSelect[i] << endreq;
     
         }*/
       

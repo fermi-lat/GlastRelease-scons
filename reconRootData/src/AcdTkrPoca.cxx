@@ -12,8 +12,8 @@ AcdTkrPoca::AcdTkrPoca()
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdTkrPoca::AcdTkrPoca(const AcdId& acdId, Int_t tkIndex,
-		       Float_t doca, Float_t docaErr, UInt_t docaRegion,
-		       const TVector3& poca, const TkrTrackParams& paramsAtPoca)
+                       Float_t doca, Float_t docaErr, UInt_t docaRegion,
+                       const TVector3& poca, const TkrTrackParams& paramsAtPoca)
   :TObject()
 {
   //Clear();
@@ -26,8 +26,8 @@ AcdTkrPoca::AcdTkrPoca(const AcdTkrPoca& other)
 {
   //Clear();
   initialize(other.getId(),other.getTkrIndex(),
-	     other.getDoca(),other.getDocaErr(),other.getDocaRegion(),
-	     other.getPoca(),other.getParamsAtPoca());
+             other.getDoca(),other.getDocaErr(),other.getDocaRegion(),
+             other.getPoca(),other.getParamsAtPoca());
 }
 
 /// Assignment operator
@@ -35,16 +35,16 @@ AcdTkrPoca& AcdTkrPoca::operator=(const AcdTkrPoca& other)
 {
   if ( this == &other ) return *this;
   initialize(other.getId(),other.getTkrIndex(),
-	     other.getDoca(),other.getDocaErr(),other.getDocaRegion(),
-	     other.getPoca(),other.getParamsAtPoca());
+             other.getDoca(),other.getDocaErr(),other.getDocaRegion(),
+             other.getPoca(),other.getParamsAtPoca());
   return *this;
 }
 
 
 /// set all the values
 void AcdTkrPoca::initialize(const AcdId& acdId, Int_t tkIndex, 
-			    Float_t doca, Float_t docaErr, UInt_t docaRegion,
-			    const TVector3& poca, const TkrTrackParams& paramsAtPoca) {  
+                            Float_t doca, Float_t docaErr, UInt_t docaRegion,
+                            const TVector3& poca, const TkrTrackParams& paramsAtPoca) {  
   m_id = acdId;
   m_tkIndex = tkIndex;
   m_doca = doca;

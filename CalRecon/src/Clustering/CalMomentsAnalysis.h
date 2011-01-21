@@ -32,13 +32,13 @@ class CalMomentsAnalysis
   
   /// Perform the moments analysis on the given data around the given point
   double doMomentsAnalysis(CalMomentsDataVec& dataVec, const Point& centroid,
-			   double coreRadius);
+                           double coreRadius);
 
   /// Drives an iterative moments analysis
   /// (note the input data vector is NOT a reference, it is a copy)
   double doIterativeMomentsAnalysis(CalMomentsDataVec dataVec, const Point& centroid,
-				    double transScaleFactor, double transScaleFactorBoost,
-				    double coreRadius);
+                                    double transScaleFactor, double transScaleFactorBoost,
+                                    double coreRadius);
   
   /// Access class members...
   inline const double getWeightSum()        const { return m_weightSum; }

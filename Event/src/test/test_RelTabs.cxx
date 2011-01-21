@@ -86,7 +86,7 @@ int main()
   // The table is empty and so the following query should return an emtpy vector
   std::vector< Relation<FakeOne, FakeTwo>* > empty = tab.getRelByFirst(person1);
   std::cout << "Querying and empty table the size of the returned vector is " 
-	    << empty.size() << std::endl;  
+            << empty.size() << std::endl;  
   
   
   tab.addRelation(rel1);
@@ -206,9 +206,9 @@ int main()
       std::cout << "Floor: " << (*i)->getSecond()->floor << std::endl;  
       std::cout << "Dates : " << std::endl;
       for ( index = 0; index < (*i)->getInfos().size(); index++)
-	{
-	  std::cout << (*i)->getInfos()[index] << std::endl;
-	}
+        {
+          std::cout << (*i)->getInfos()[index] << std::endl;
+        }
     }
  
 

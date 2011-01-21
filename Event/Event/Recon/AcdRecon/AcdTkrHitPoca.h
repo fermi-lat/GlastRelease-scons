@@ -42,18 +42,18 @@ namespace Event {
     /// Constructor for use in transient -> persistent conversion 
     /// Takes arguements as they are stored in ROOT
     AcdTkrHitPoca(const idents::AcdId& acdId, int trackIndex,
-		  const float active2d[2], const float mips[2],
-		  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
-		  int volumePlane, float arcLengthToPlane, float cosTheta, 
-		  const HepPoint3D& global, const float localPosition[2], 
-		  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
-		  int volume, int region, float arcLength, 
-		  float doca, float docaErrProj, float docaErrProp,
-		  const Point& poca, const Vector& voca);
+                  const float active2d[2], const float mips[2],
+                  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+                  int volumePlane, float arcLengthToPlane, float cosTheta, 
+                  const HepPoint3D& global, const float localPosition[2], 
+                  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+                  int volume, int region, float arcLength, 
+                  float doca, float docaErrProj, float docaErrProp,
+                  const Point& poca, const Vector& voca);
 
     /// Old Constructor for backwards compatiblity
     AcdTkrHitPoca( const idents::AcdId& acdId, int trackIndex, 
-		   const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData );
+                   const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData );
 
     
     /// Copy constructor
@@ -114,8 +114,8 @@ namespace Event {
         
     /// set all the values
     void set(const idents::AcdId& acdId, int trackIndex,
-	     const float mips[2],
-	     float vetoHit, float vetoProj, float vetoProp);	        
+             const float mips[2],
+             float vetoHit, float vetoProj, float vetoProp);                
 
     /// reset all the values to their default
     virtual void ini();
@@ -186,7 +186,7 @@ namespace Event {
     /// takes ownership of a vector AcdTkrHitPoca
     void init(std::vector<AcdTkrHitPoca*>& acdhits) {
       for ( std::vector<AcdTkrHitPoca*>::iterator itr = acdhits.begin(); itr != acdhits.end(); itr++ ) {
-	push_back(*itr);
+        push_back(*itr);
       }
     }
     

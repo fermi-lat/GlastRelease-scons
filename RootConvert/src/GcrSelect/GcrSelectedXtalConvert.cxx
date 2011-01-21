@@ -33,19 +33,19 @@ void convert( const Event::GcrSelectedXtal& gcrSelXtalTds, GcrSelectedXtal& gcrS
     gcrSelXtalRoot.setEntryPoint(entryPointRoot);
     gcrSelXtalRoot.setExitPoint(exitPointRoot);
 
-	/**std::cout << "gcrSelXtalTds->getXtalId()=" 
-	<< " @@TDS:@@@@@@"	
-	<< ", rawEnergy=" << gcrSelXtalTds.getRawEnergy()
-	<< ", corrEnergy=" << gcrSelXtalTds.getCorrEnergy()
-	<< ", crossedFaces=" << gcrSelXtalTds.getCrossedFaces()
-	<< ",entry.x()=" << gcrSelXtalTds.getEntryPoint().x()
-	
-	<< " @@ROOT:@@@@@@"
-	<<", rawEnergy=" << gcrSelXtalRoot.getRawEnergy()
-	<< ", corrEnergy=" << gcrSelXtalRoot.getCorrEnergy()
-	<< ", crossedFaces=" << gcrSelXtalRoot.getCrossedFaces() 
-	<< ",entry.x()=" << gcrSelXtalRoot.getEntryPoint().x()
-	<< endreq;*/
+        /**std::cout << "gcrSelXtalTds->getXtalId()=" 
+        << " @@TDS:@@@@@@"        
+        << ", rawEnergy=" << gcrSelXtalTds.getRawEnergy()
+        << ", corrEnergy=" << gcrSelXtalTds.getCorrEnergy()
+        << ", crossedFaces=" << gcrSelXtalTds.getCrossedFaces()
+        << ",entry.x()=" << gcrSelXtalTds.getEntryPoint().x()
+        
+        << " @@ROOT:@@@@@@"
+        <<", rawEnergy=" << gcrSelXtalRoot.getRawEnergy()
+        << ", corrEnergy=" << gcrSelXtalRoot.getCorrEnergy()
+        << ", crossedFaces=" << gcrSelXtalRoot.getCrossedFaces() 
+        << ",entry.x()=" << gcrSelXtalRoot.getEntryPoint().x()
+        << endreq;*/
 
     
       //std::cout << "GcrXtalConvert::convert from TDS to ROOt END" << std::endl;   

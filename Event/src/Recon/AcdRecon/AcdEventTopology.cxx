@@ -61,11 +61,11 @@ AcdEventTopology::AcdEventTopology(const AcdEventTopology& other)
 
 /// Constructor for use in reconstruction, 
 AcdEventTopology::AcdEventTopology(unsigned tileCount, unsigned ribbonCount, unsigned tileVeto,
-				   float tileEnergy, float ribbonEnergy,
-				   unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],
-				   unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],
-				   float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],
-				   unsigned nSidesHit, unsigned nSidesVeto) 
+                                   float tileEnergy, float ribbonEnergy,
+                                   unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],
+                                   unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],
+                                   float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],
+                                   unsigned nSidesHit, unsigned nSidesVeto) 
   :m_tileCount(tileCount),
    m_ribbonCount(ribbonCount),
    m_tileVeto(tileVeto),
@@ -109,11 +109,11 @@ const AcdEventTopology& AcdEventTopology::operator=(const AcdEventTopology& othe
 }
 
 void AcdEventTopology::set(unsigned tileCount, unsigned ribbonCount, unsigned tileVeto,
-			   float tileEnergy, float ribbonEnergy,
-			   unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],
-			   unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],
-			   float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],
-			   unsigned nSidesHit, unsigned nSidesVeto) {
+                           float tileEnergy, float ribbonEnergy,
+                           unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],
+                           unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],
+                           float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],
+                           unsigned nSidesHit, unsigned nSidesVeto) {
   m_tileCount = tileCount;
   m_ribbonCount = ribbonCount;
   m_tileVeto = tileVeto;
@@ -142,21 +142,21 @@ void AcdEventTopology::writeOut(MsgStream& stream) const
 {
 
   stream << MSG::DEBUG
-	 << "AcdEventTopology. Tiles: " << m_tileCount << ", Ribbons: " << m_ribbonCount << " ,Vetos: " << m_tileVeto << std::endl
-	 << ", E_tile: " << m_tileEnergy << ", E_rib: " << m_ribbonEnergy << std::endl
-	 << "NTtile.  Top: " << m_nTilesTop 
-	 << ", SideRows: " << m_nTilesSideRow[0] << ' ' << m_nTilesSideRow[1] << ' ' << m_nTilesSideRow[2] << ' ' << m_nTilesSideRow[3]
-	 << ", Faces: " << m_nTilesSideFace[0] << ' ' << m_nTilesSideFace[1] << ' ' << m_nTilesSideFace[2] << ' ' << m_nTilesSideFace[3] << std::endl
-	 << "NVeto.  Top: " << m_nVetoTop 
-	 << ", SideRows: " << m_nVetoSideRow[0] << ' ' << m_nVetoSideRow[1] << ' ' << m_nVetoSideRow[2] << ' ' << m_nVetoSideRow[3]
-	 << ", Faces: " << m_nVetoSideFace[0] << ' ' << m_nVetoSideFace[1] << ' ' << m_nVetoSideFace[2] << ' ' << m_nVetoSideFace[3] << std::endl
-	 << "Energy.  Top: " << m_tileEnergyTop
-	 << ", SideRows: " << m_tileEnergySideRow[0] << ' ' << m_tileEnergySideRow[1] << ' ' 
-	 << m_tileEnergySideRow[2] << ' ' << m_tileEnergySideRow[3] 
-	 << ", Faces: " << m_tileEnergySideFace[0] << ' ' << m_tileEnergySideFace[1] << ' ' 
-	 << m_tileEnergySideFace[2] << ' ' << m_tileEnergySideFace[3] << std::endl
-	 << "SidesHit: " << m_nSidesHit << ", SideVetoed: " << m_nSidesVeto 
-	 << endreq;
+         << "AcdEventTopology. Tiles: " << m_tileCount << ", Ribbons: " << m_ribbonCount << " ,Vetos: " << m_tileVeto << std::endl
+         << ", E_tile: " << m_tileEnergy << ", E_rib: " << m_ribbonEnergy << std::endl
+         << "NTtile.  Top: " << m_nTilesTop 
+         << ", SideRows: " << m_nTilesSideRow[0] << ' ' << m_nTilesSideRow[1] << ' ' << m_nTilesSideRow[2] << ' ' << m_nTilesSideRow[3]
+         << ", Faces: " << m_nTilesSideFace[0] << ' ' << m_nTilesSideFace[1] << ' ' << m_nTilesSideFace[2] << ' ' << m_nTilesSideFace[3] << std::endl
+         << "NVeto.  Top: " << m_nVetoTop 
+         << ", SideRows: " << m_nVetoSideRow[0] << ' ' << m_nVetoSideRow[1] << ' ' << m_nVetoSideRow[2] << ' ' << m_nVetoSideRow[3]
+         << ", Faces: " << m_nVetoSideFace[0] << ' ' << m_nVetoSideFace[1] << ' ' << m_nVetoSideFace[2] << ' ' << m_nVetoSideFace[3] << std::endl
+         << "Energy.  Top: " << m_tileEnergyTop
+         << ", SideRows: " << m_tileEnergySideRow[0] << ' ' << m_tileEnergySideRow[1] << ' ' 
+         << m_tileEnergySideRow[2] << ' ' << m_tileEnergySideRow[3] 
+         << ", Faces: " << m_tileEnergySideFace[0] << ' ' << m_tileEnergySideFace[1] << ' ' 
+         << m_tileEnergySideFace[2] << ' ' << m_tileEnergySideFace[3] << std::endl
+         << "SidesHit: " << m_nSidesHit << ", SideVetoed: " << m_nSidesVeto 
+         << endreq;
 }
 
 

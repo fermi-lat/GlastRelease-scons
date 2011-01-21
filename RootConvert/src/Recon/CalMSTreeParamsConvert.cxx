@@ -9,9 +9,9 @@ void convert( const Event::CalMSTreeParams & tdsParams, CalMSTreeParams & rootPa
     rootParams.init
       ( tdsParams.getTotalEnergy(),
         tdsParams.getMaxXtalEnergy(),tdsParams.getNumberOfEdges(),
-	tdsParams.getMinEdgeLength(),tdsParams.getMaxEdgeLength(),
-	tdsParams.getMeanEdgeLength(),tdsParams.getMeanEdgeLengthTrunc(),
-	tdsParams.getRmsEdgeLength(),tdsParams.getRmsEdgeLengthTrunc() );
+        tdsParams.getMinEdgeLength(),tdsParams.getMaxEdgeLength(),
+        tdsParams.getMeanEdgeLength(),tdsParams.getMeanEdgeLengthTrunc(),
+        tdsParams.getRmsEdgeLength(),tdsParams.getRmsEdgeLengthTrunc() );
  }
  
 void convert( const CalMSTreeParams & rootParams, Event::CalMSTreeParams & tdsParams )
@@ -19,9 +19,9 @@ void convert( const CalMSTreeParams & rootParams, Event::CalMSTreeParams & tdsPa
     tdsParams = Event::CalMSTreeParams
       ( rootParams.getTotalEnergy(),
         rootParams.getMaxXtalEnergy(),rootParams.getNumberOfEdges(),
-	rootParams.getMinEdgeLength(),rootParams.getMaxEdgeLength(),
-	rootParams.getMeanEdgeLength(),rootParams.getMeanEdgeLengthTrunc(),
-	rootParams.getRmsEdgeLength(),rootParams.getRmsEdgeLengthTrunc()) ;
+        rootParams.getMinEdgeLength(),rootParams.getMaxEdgeLength(),
+        rootParams.getMeanEdgeLength(),rootParams.getMeanEdgeLengthTrunc(),
+        rootParams.getRmsEdgeLength(),rootParams.getRmsEdgeLengthTrunc()) ;
 }
 
 }

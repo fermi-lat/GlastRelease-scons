@@ -111,7 +111,7 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
                           const AcdId &ribbonActDistId,
                           const std::vector<Double_t> &rowDoca,
                           const std::vector<Double_t> &rowActDist, 
-			  const std::vector<AcdId> &idCol,
+                          const std::vector<AcdId> &idCol,
                           const std::vector<Double_t> &energyCol,
                           Double32_t cornerDoca) {
     Clear();
@@ -209,26 +209,26 @@ void AcdRecon::Print(Option_t *option) const {
     std::vector<Double_t>::const_iterator rowActDistIt;
     for (rowActDistIt = m_rowActDistCol.begin(); rowActDistIt != m_rowActDistCol.end(); rowActDistIt++) 
         cout << (*rowActDistIt) << endl;
-	cout << "Energy Collection: " << endl;
-	std::vector<Double_t>::const_iterator energyIt;
-	unsigned int i = 0;
-	for (energyIt = m_energyCol.begin(); energyIt != m_energyCol.end(); energyIt++) {
-		cout << m_idCol[i].getId() << " " << *energyIt << endl;
-		i++;
-	}
+        cout << "Energy Collection: " << endl;
+        std::vector<Double_t>::const_iterator energyIt;
+        unsigned int i = 0;
+        for (energyIt = m_energyCol.begin(); energyIt != m_energyCol.end(); energyIt++) {
+                cout << m_idCol[i].getId() << " " << *energyIt << endl;
+                i++;
+        }
 
 }
 
 Double_t AcdRecon::getEnergy(const AcdId& id) const {
-	std::vector<AcdId>::const_iterator idIt;
-	unsigned int index = 0;
-	for (idIt = m_idCol.begin(); idIt != m_idCol.end(); idIt++) {
-		if (*idIt == id) break;
-		++index;
-	}
-	if (idIt == m_idCol.end()) return -1.0;
-	if (index >= m_energyCol.size()) return -1.0;
-	return m_energyCol[index];
+        std::vector<AcdId>::const_iterator idIt;
+        unsigned int index = 0;
+        for (idIt = m_idCol.begin(); idIt != m_idCol.end(); idIt++) {
+                if (*idIt == id) break;
+                ++index;
+        }
+        if (idIt == m_idCol.end()) return -1.0;
+        if (index >= m_energyCol.size()) return -1.0;
+        return m_energyCol[index];
 }
 
 

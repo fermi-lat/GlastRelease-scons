@@ -19,9 +19,9 @@ void Event::GcrXtal::writeOut(MsgStream& log) const
     log << MSG::DEBUG;
     if (log.isActive() ) 
     {
-	int it=m_xtalId.getTower();
-	int il=m_xtalId.getLayer();
-	int ic=m_xtalId.getColumn();
+        int it=m_xtalId.getTower();
+        int il=m_xtalId.getLayer();
+        int ic=m_xtalId.getColumn();
         log << "---> writeOut GcrXtal tow / lay / col = " << it << " " << il << " " << ic << endreq;
         //log << "---> x / y /z = " << m_xtalData->getPosition().x() << " " << m_xtalData->getPosition().y() << " " << m_xtalData->getPosition().z() << endreq;
         log << "---> pathLength = " << m_pathLength << endreq;
@@ -55,24 +55,24 @@ void Event::GcrXtal::getReadableXedFaces(int xedFaces, int& inFace, int& outFace
      subXedFaces = int(xedFaces - std::pow(2.,double(n)));
      
      if(m_debugging)
-	 std::cout<< "subXedFaces= " << subXedFaces << std::endl;
+         std::cout<< "subXedFaces= " << subXedFaces << std::endl;
 
      mGuess = std::log(double(subXedFaces))/std::log(double(2));
      
      if(m_debugging)
-	std::cout<< "mGuess= " << mGuess << std::endl;
+        std::cout<< "mGuess= " << mGuess << std::endl;
 
      if ((mGuess-int(mGuess)) == 0.){
        
        if(m_debugging)
-	   std::cout<< "m found, m= " << mGuess << std::endl;
+           std::cout<< "m found, m= " << mGuess << std::endl;
 
        inFace=n;
        outFace=int(mGuess);
 
        
        if(m_debugging)
-	   std::cout<< "inFace,outFace found= " << inFace<< ","<< outFace << std::endl;
+           std::cout<< "inFace,outFace found= " << inFace<< ","<< outFace << std::endl;
       
       
        break;  
@@ -83,53 +83,53 @@ void Event::GcrXtal::getReadableXedFaces(int xedFaces, int& inFace, int& outFace
    
     if(m_debugging){
           
-	if(inFace == XFACE_ZTOP){
+        if(inFace == XFACE_ZTOP){
             std::cout<< "XFACE_ZTOP"<< std::endl;
-	    faceIn =  "XFACE_ZTOP";
-	} else if(inFace == XFACE_ZBOT){
+            faceIn =  "XFACE_ZTOP";
+        } else if(inFace == XFACE_ZBOT){
             std::cout<< "XFACE_ZBOT"<< std::endl;
-	    faceIn =  "XFACE_ZBOT";
-	}else if(inFace == XFACE_XLEFT){
+            faceIn =  "XFACE_ZBOT";
+        }else if(inFace == XFACE_XLEFT){
             std::cout<< "XFACE_XLEFT"<< std::endl;
-	    faceIn =  "XFACE_XLEFT";
-	}else if(inFace == XFACE_XRIGHT){
+            faceIn =  "XFACE_XLEFT";
+        }else if(inFace == XFACE_XRIGHT){
             std::cout<< "XFACE_XRIGHT"<< std::endl;
-	    faceIn =  "XFACE_XRIGHT";
-	}else if(inFace == XFACE_YLEFT){
+            faceIn =  "XFACE_XRIGHT";
+        }else if(inFace == XFACE_YLEFT){
             std::cout<< "XFACE_YLEFT"<< std::endl;
-	    faceIn =  "XFACE_YLEFT";
-	}else if(inFace == XFACE_YRIGHT){
+            faceIn =  "XFACE_YLEFT";
+        }else if(inFace == XFACE_YRIGHT){
             std::cout<< "XFACE_YRIGHT"<< std::endl;
-	    faceIn =  "XFACE_YRIGHT";
-	}else{
+            faceIn =  "XFACE_YRIGHT";
+        }else{
             std::cout<< "DEFAULT"<< std::endl;
-	    faceIn =  "DEFAULT";
-	}
+            faceIn =  "DEFAULT";
+        }
 
-	if(outFace == XFACE_ZTOP){
+        if(outFace == XFACE_ZTOP){
             std::cout<< "XFACE_ZTOP"<< std::endl;
-	    faceOut =  "XFACE_ZTOP";
-	} else if(outFace == XFACE_ZBOT){
+            faceOut =  "XFACE_ZTOP";
+        } else if(outFace == XFACE_ZBOT){
             std::cout<< "XFACE_ZBOT"<< std::endl;
-	    faceOut =  "XFACE_ZBOT";
-	}else if(outFace == XFACE_XLEFT){
+            faceOut =  "XFACE_ZBOT";
+        }else if(outFace == XFACE_XLEFT){
             std::cout<< "XFACE_XLEFT"<< std::endl;
-	    faceOut =  "XFACE_XLEFT";
-	}else if(outFace == XFACE_XRIGHT){
+            faceOut =  "XFACE_XLEFT";
+        }else if(outFace == XFACE_XRIGHT){
             std::cout<< "XFACE_XRIGHT"<< std::endl;
-	    faceOut =  "XFACE_XRIGHT";
-	}else if(outFace == XFACE_YLEFT){
+            faceOut =  "XFACE_XRIGHT";
+        }else if(outFace == XFACE_YLEFT){
             std::cout<< "XFACE_YLEFT"<< std::endl;
-	    faceOut =  "XFACE_YLEFT";
-	}else if(outFace == XFACE_YRIGHT){
+            faceOut =  "XFACE_YLEFT";
+        }else if(outFace == XFACE_YRIGHT){
             std::cout<< "XFACE_YRIGHT"<< std::endl;
-	    faceOut =  "XFACE_YRIGHT";
-	}else{
+            faceOut =  "XFACE_YRIGHT";
+        }else{
             std::cout<< "DEFAULT"<< std::endl;
-	    faceOut =  "DEFAULT";
+            faceOut =  "DEFAULT";
 
-	}
-	
+        }
+        
         std::cout<<"faceIn:"<< faceIn << std::endl;
         std::cout<<"faceOut:"<< faceOut << std::endl;
 

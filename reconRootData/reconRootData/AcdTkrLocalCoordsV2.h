@@ -43,9 +43,9 @@ public:
   AcdTkrLocalCoordsV2();
 
   AcdTkrLocalCoordsV2(Int_t volume, Float_t arcLength, Float_t cosTheta, 
-		      const TVector3& global, 
-		      const Float_t local[2], const Float_t active[2],
-		      const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp);
+                      const TVector3& global, 
+                      const Float_t local[2], const Float_t active[2],
+                      const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp);
   
   AcdTkrLocalCoordsV2(const AcdTkrLocalCoordsV2& other);
   
@@ -80,9 +80,9 @@ public:
 
   /// set everything at once
   void set(Int_t volume, Float_t arcLength, Float_t cosTheta, 
-	   const TVector3& global, 
-	   const Float_t local[2], const Float_t active[2],
-	   const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp);
+           const TVector3& global, 
+           const Float_t local[2], const Float_t active[2],
+           const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp);
   
   void copy(const AcdTkrLocalCoordsV2& other);
     

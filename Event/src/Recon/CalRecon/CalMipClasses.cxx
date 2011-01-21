@@ -16,9 +16,9 @@ void Event::CalMipXtal::writeOut(MsgStream& log) const
     log << MSG::DEBUG;
     if (log.isActive() ) 
     {
-	int it=m_xtalData->getPackedId().getTower();
-	int il=m_xtalData->getPackedId().getLayer();
-	int ic=m_xtalData->getPackedId().getColumn();
+        int it=m_xtalData->getPackedId().getTower();
+        int il=m_xtalData->getPackedId().getLayer();
+        int ic=m_xtalData->getPackedId().getColumn();
         log << "---> writeOut CalMipXtal tow / lay / col = " << it << " " << il << " " << ic << endreq;
         log << "---> x / y /z = " << m_xtalData->getPosition().x() << " " << m_xtalData->getPosition().y() << " " << m_xtalData->getPosition().z() << endreq;
         log << "---> free / freeC0 / d2C / e / ecor = " << m_free << " " << m_freeC0  << " " << m_d2C << " " << m_xtalData->getEnergy() << " " << m_ecor << endreq;

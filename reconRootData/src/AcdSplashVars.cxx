@@ -12,9 +12,9 @@ AcdSplashVars::AcdSplashVars()
 /// Constructor for use in transient -> persistent conversion 
 /// Takes arguements as they are stored in ROOT
 AcdSplashVars::AcdSplashVars(const AcdId& acdId, int trackIndex, 
-			 const TVector3& calEntryPoint, const TVector3& calEntryVector,
-			 const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
-			 const Float_t& weightedPathlength)
+                         const TVector3& calEntryPoint, const TVector3& calEntryVector,
+                         const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
+                         const Float_t& weightedPathlength)
   :TObject()
 {
   //Clear("");
@@ -46,9 +46,9 @@ AcdSplashVars& AcdSplashVars::operator=(const AcdSplashVars& other)
 
 /// set all the values
 void AcdSplashVars::set(const AcdId& acdId, Int_t trackIndex,
-		      const TVector3& calEntryPoint, const TVector3& calEntryVector,
-		      const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
-		      const Float_t& weightedPathlength)
+                      const TVector3& calEntryPoint, const TVector3& calEntryVector,
+                      const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
+                      const Float_t& weightedPathlength)
 {
   m_id = acdId;
   m_trackIndex = trackIndex;

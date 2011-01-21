@@ -81,7 +81,7 @@ public:
     /// @param energy the corrected energy
     inline void setParams(const CalParams& params)       {m_params = params;}
 
-	/// Access individual status bits
+        /// Access individual status bits
     inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
     inline void clearStatusBit( StatusBits bitToClear ) { m_statusBits &= ~bitToClear ; }
     inline bool checkStatusBit( StatusBits bitToCheck ) const { return ((m_statusBits&bitToCheck)!=ZERO) ; }
@@ -103,7 +103,7 @@ typedef CalEventEnergyCol::const_iterator CalEventEnergyColConItr ;
 
 }
 
-#endif	
+#endif        
 
 
 

@@ -30,7 +30,7 @@ AcdTkrLocalCoords::AcdTkrLocalCoords():
 }
 
 AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, 
-				     const HepPoint3D& global )
+                                     const HepPoint3D& global )
   :m_volume(volume),
    m_arcLengthPlane(arcLengthPlane),
    m_cosTheta(0),
@@ -42,9 +42,9 @@ AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane,
 }
       
 AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, float cosTheta, 
-				     const HepPoint3D& global, 
-				     const float localPosition[2], const float active[2], 
-				     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp)
+                                     const HepPoint3D& global, 
+                                     const float localPosition[2], const float active[2], 
+                                     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp)
   :m_volume(volume),
    m_arcLengthPlane(arcLengthPlane),
    m_cosTheta(cosTheta),
@@ -58,9 +58,9 @@ AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, float cos
 }
     
 AcdTkrLocalCoords::AcdTkrLocalCoords(float arcLength, float cosTheta, 
-				     const HepPoint3D& global, 
-				     const double localPosition[2], 
-				     const HepSymMatrix& planeError)
+                                     const HepPoint3D& global, 
+                                     const double localPosition[2], 
+                                     const HepSymMatrix& planeError)
   :m_volume(-1),
    m_arcLengthPlane(arcLength),
    m_cosTheta(cosTheta),
@@ -89,8 +89,8 @@ AcdTkrLocalCoords::AcdTkrLocalCoords(const AcdTkrLocalCoords& other)
 }
 
 void AcdTkrLocalCoords::setLocalData(int volume, float arcLengthPlane, float cosTheta, 
-				     const HepPoint3D& global, const float localPosition[2], const float active[2],
-				     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp) {
+                                     const HepPoint3D& global, const float localPosition[2], const float active[2],
+                                     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp) {
   
   m_volume =  volume;
   m_arcLengthPlane = arcLengthPlane;
@@ -106,8 +106,8 @@ void AcdTkrLocalCoords::setLocalData(int volume, float arcLengthPlane, float cos
 
 /// set everything at once, old version
 void AcdTkrLocalCoords::setLocalData(const float localPosition[2],  
-				     float /* pathLength */, float cosTheta, 
-				     int region, const HepSymMatrix& planeError) {
+                                     float /* pathLength */, float cosTheta, 
+                                     int region, const HepSymMatrix& planeError) {
   m_volume = region;
   m_local[0] = localPosition[0];
   m_local[1] = localPosition[1];
@@ -120,7 +120,7 @@ void AcdTkrLocalCoords::setLocalData(const float localPosition[2],
 
 /// set stuff from old version of AcdTkrPoint
 void AcdTkrLocalCoords::setLocalData(float arcLength, int face, 
-				     const Point& point, const Event::TkrTrackParams& /*params*/) {
+                                     const Point& point, const Event::TkrTrackParams& /*params*/) {
   m_volume = face;
   m_arcLengthPlane = arcLength;
   m_global.set( point.x(), point.y(), point.z());
@@ -149,13 +149,13 @@ void AcdTkrLocalCoords::writeOut(MsgStream& stream ) const
 {
 
   stream << "  LocalVol: " << m_volume 
-	 << "  Global. [" << m_global.x() << ',' << m_global.y() << ',' << m_global.z() 
-	 << "]. Local: [" << m_local[0] << ',' << m_local[1] 
-	 << "].  S: " << m_arcLengthPlane
-	 << ".   Angle: " << m_cosTheta
-	 << ".   CovProjected:  {" << m_localCovProj
-	 << "}.   CovPropagated:  {" << m_localCovProp
-	 << "}.";
+         << "  Global. [" << m_global.x() << ',' << m_global.y() << ',' << m_global.z() 
+         << "]. Local: [" << m_local[0] << ',' << m_local[1] 
+         << "].  S: " << m_arcLengthPlane
+         << ".   Angle: " << m_cosTheta
+         << ".   CovProjected:  {" << m_localCovProj
+         << "}.   CovPropagated:  {" << m_localCovProp
+         << "}.";
 }
 
 

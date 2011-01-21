@@ -14,7 +14,7 @@ Event::CalNBCClassParams::CalNBCClassParams()
 }
 
 Event::CalNBCClassParams::CalNBCClassParams(std::string producerName,
-					    std::map <std::string, double> probMap) :
+                                            std::map <std::string, double> probMap) :
   Event::CalClassParams(producerName, probMap)
 {
   //Nothing to do.
@@ -48,7 +48,7 @@ void Event::CalNBCClassParams::normalize()
   if ( norm > 0 ) {
     for (iter = probMap.begin(); iter != probMap.end(); iter++)
       {
-	setProb( (*iter).first, ((*iter).second) / norm );
+        setProb( (*iter).first, ((*iter).second) / norm );
       }
   }
 }

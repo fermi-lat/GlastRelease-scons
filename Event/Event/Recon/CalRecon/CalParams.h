@@ -45,10 +45,10 @@ namespace Event { //Namespace Event
     CalParams(double energy, double eneError,
               double xCntrd, double yCntrd, double zCntrd,
               double cntdxx, double cntdxy, double cntdxz,
-	      double cntdyy, double cntdyz, double cntdzz,
+              double cntdyy, double cntdyz, double cntdzz,
               double xAxis,  double yAxis,  double zAxis,
               double axsdxx, double axsdxy, double axsdxz,
-	      double axsdyy, double axsdyz, double axsdzz);
+              double axsdyy, double axsdyz, double axsdzz);
 
     /// Convenience constructor with centroid only
     /// (with the axis is automatically initialized to the default values).
@@ -59,7 +59,7 @@ namespace Event { //Namespace Event
     CalParams(double energy, double eneError,
               double xCntrd, double yCntrd, double zCntrd,
               double cntdxx, double cntdxy, double cntdxz,
-	      double cntdyy, double cntdyz, double cntdzz);
+              double cntdyy, double cntdyz, double cntdzz);
 
     /// Reset methods
     void clearEnergy();
@@ -134,7 +134,7 @@ namespace Event { //Namespace Event
     std::ostream& fillStream( std::ostream& s ) const;
     friend std::ostream& operator<< ( std::ostream& s, const CalParams& obj ) 
     {
-	    return obj.fillStream(s);
+            return obj.fillStream(s);
     }
 
 private:

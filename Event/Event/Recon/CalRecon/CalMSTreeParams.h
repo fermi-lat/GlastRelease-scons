@@ -93,7 +93,7 @@ public:
     std::ostream& fillStream( std::ostream& s ) const;
     friend std::ostream& operator<< ( std::ostream& s, const CalMSTreeParams& obj ) 
     {
-	    return obj.fillStream(s);
+            return obj.fillStream(s);
     }
 
 private:

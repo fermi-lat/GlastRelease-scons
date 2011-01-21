@@ -113,8 +113,8 @@ namespace Event
     /// Constructor for use in persistent -> transient conversion, 
     /// Takes arguements as they are stored in ROOT
     AcdHit(const idents::AcdId&, unsigned short flagsA, unsigned short flagsB, 
-	   unsigned short phaA, unsigned short phaB,
-	   float mipsPmtA, float mipsPmtB);
+           unsigned short phaA, unsigned short phaB,
+           float mipsPmtA, float mipsPmtB);
     
     /// Destructor is trivial
     virtual ~AcdHit() {};
@@ -123,8 +123,8 @@ namespace Event
 
     /// set everything at once
     void set(const idents::AcdId&, unsigned short flagsA, unsigned short flagsB, 
-	     unsigned short phaA, unsigned short phaB,
-	     float mipsPmtA, float mipsPmtB);
+             unsigned short phaA, unsigned short phaB,
+             float mipsPmtA, float mipsPmtB);
 
     /// Returns the id of the tile or ribbon
     inline const idents::AcdId& getAcdId() const { return m_acdId; };
@@ -165,7 +165,7 @@ namespace Event
     inline float ribbonEnergy(PmtId id) const {
       static const float MeVMipRibbon = 0.5;
       if ( ! m_acdId.ribbon() ) return -1;
-      return mips(id) * MeVMipRibbon;	    
+      return mips(id) * MeVMipRibbon;            
     }
 
     /// Returns the raw PHA value.  
@@ -280,7 +280,7 @@ namespace Event
     // take ownership
     void init(std::vector<AcdHit*>& other) {
       for ( std::vector<AcdHit*>::iterator itr = other.begin(); itr != other.end(); itr++ ) {
-	push_back(*itr);
+        push_back(*itr);
       }
     }
 

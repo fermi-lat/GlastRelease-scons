@@ -75,8 +75,8 @@ public:
 
   /// set all the values
   void set(const AcdId& acdId, int trackIndex,
-	   const float mips[2],
-	   Float_t vetoHit, Float_t vetoProj, Float_t vetoProp);
+           const float mips[2],
+           Float_t vetoHit, Float_t vetoProj, Float_t vetoProp);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);

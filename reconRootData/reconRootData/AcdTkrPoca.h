@@ -44,8 +44,8 @@ public:
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdTkrPoca(const AcdId& acdId, Int_t tkIndex, 
-	     Float_t m_doca, Float_t m_docaErr, UInt_t docaRegion,
-	     const TVector3& poca, const TkrTrackParams& paramsAtPoca);
+             Float_t m_doca, Float_t m_docaErr, UInt_t docaRegion,
+             const TVector3& poca, const TkrTrackParams& paramsAtPoca);
 
   /// Copy constructor
   AcdTkrPoca(const AcdTkrPoca& params);
@@ -92,8 +92,8 @@ public:
 
   /// set all the values
   void initialize(const AcdId& acdId, Int_t tkIndex, 
-		  Float_t doca, Float_t docaErr, UInt_t docaRegion,
-		  const TVector3& poca, const TkrTrackParams& paramsAtPoca);
+                  Float_t doca, Float_t docaErr, UInt_t docaRegion,
+                  const TVector3& poca, const TkrTrackParams& paramsAtPoca);
 
   /// reset all the values to their default
   virtual void Clear(Option_t*);

@@ -115,7 +115,7 @@ private:
     Double32_t              m_radlen;        // Integrated radiation lengths from end of track 1
     
     commonRootData::TkrId m_vtxID;         // Complete TkrId identifying the details of this vertex
-		                                   // (This is the TkrId of the first hit after the vertex)
+                                                   // (This is the TkrId of the first hit after the vertex)
     TkrTrackParams        m_params;        // Parameter structure for vertex (includes cov. matrix)
 
     //! List of track IDs used by this vertex

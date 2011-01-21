@@ -29,8 +29,8 @@ void CalMomentsAnalysis::clear()
 }
 
 double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
-					     const Point& iniCentroid,
-					     double coreRadius)
+                                             const Point& iniCentroid,
+                                             double coreRadius)
 {
   double chisq = -1.;
   
@@ -116,17 +116,17 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     // longest principal axis.
     for(int iroot=0; iroot < 3; iroot++) 
       {
-	double A = Iyz * (Ixx - m_moment[iroot]) - Ixy*Ixz;
-	double B = Ixz * (Iyy - m_moment[iroot]) - Ixy*Iyz;
-	double C = Ixy * (Izz - m_moment[iroot]) - Ixz*Iyz;
-	double D = sqrt( 1. / ( 1./(A*A) + 1./(B*B) + 1./(C*C) ) ) / C;
+        double A = Iyz * (Ixx - m_moment[iroot]) - Ixy*Ixz;
+        double B = Ixz * (Iyy - m_moment[iroot]) - Ixy*Iyz;
+        double C = Ixy * (Izz - m_moment[iroot]) - Ixz*Iyz;
+        double D = sqrt( 1. / ( 1./(A*A) + 1./(B*B) + 1./(C*C) ) ) / C;
 
-	m_axis[iroot] = Vector(D*C/A, D*C/B, D);
+        m_axis[iroot] = Vector(D*C/A, D*C/B, D);
 
-	// Set axis to "point up"
-	if ( m_axis[iroot].z() < 0. ) {
-	  m_axis[iroot] = -m_axis[iroot];
-	}
+        // Set axis to "point up"
+        if ( m_axis[iroot].z() < 0. ) {
+          m_axis[iroot] = -m_axis[iroot];
+        }
       }
 
     // Second loop to get the chisquare (residuals about principal axis, through centroid,
@@ -145,40 +145,40 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     double coreEnergy = 0.;
     for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
       {
-	CalMomentsData& dataPoint = *vecIter;
-	double distToAxis = dataPoint.calcDistToAxis(m_centroid, m_axis[1]);
-	double weight = dataPoint.getWeight();
-	double t = dataPoint.calcCoordAlongAxis(m_centroid, m_axis[1]);
+        CalMomentsData& dataPoint = *vecIter;
+        double distToAxis = dataPoint.calcDistToAxis(m_centroid, m_axis[1]);
+        double weight = dataPoint.getWeight();
+        double t = dataPoint.calcCoordAlongAxis(m_centroid, m_axis[1]);
 
-	// This is a rough attempt to correct for the gaps in the CAL modules;
-	// the gaps in the x and y directions are treated separately so the whole
-	// thing is really incorrect and, if these quantities will ever turn out
-	// to be useful we'll probably have to devise something smarter, here
-	// (i. e. use a real propagator).
-	// Also the gap between towers (45.6 mm) should not be hard-coded but
-	// retrieved from the appropriate service.
-	int tower = dataPoint.getTower();
-	if ( absxdir > 0.05 ) {
-	  t -= 45.6*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
-	}
-	if ( absydir > 0.05 ) {
-	  t -= 45.6*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
-	}
-	// End of the "embarassing" part of the code (Luca Baldini, Dec. 26, 2010).
-	
-	chisq += dataPoint.getWeight()*distToAxis*distToAxis;
-	if ( t < tmin ) {
-	  tmin = t;
-	}
-	if ( t > tmax ) {
-	  tmax = t;
-	}
-	tave  += weight * t;
-	tvar  += weight * t*t;
-	tskew += weight * t*t*t;
-	if ( distToAxis < coreRadius ) {
-	  coreEnergy += dataPoint.getWeight();
-	}
+        // This is a rough attempt to correct for the gaps in the CAL modules;
+        // the gaps in the x and y directions are treated separately so the whole
+        // thing is really incorrect and, if these quantities will ever turn out
+        // to be useful we'll probably have to devise something smarter, here
+        // (i. e. use a real propagator).
+        // Also the gap between towers (45.6 mm) should not be hard-coded but
+        // retrieved from the appropriate service.
+        int tower = dataPoint.getTower();
+        if ( absxdir > 0.05 ) {
+          t -= 45.6*(tower % 4)/xdir; // (tower % 4) counts the gaps in the x direction.
+        }
+        if ( absydir > 0.05 ) {
+          t -= 45.6*(tower / 4)/ydir; // (tower / 4) counts the gaps in the y direction.
+        }
+        // End of the "embarassing" part of the code (Luca Baldini, Dec. 26, 2010).
+        
+        chisq += dataPoint.getWeight()*distToAxis*distToAxis;
+        if ( t < tmin ) {
+          tmin = t;
+        }
+        if ( t > tmax ) {
+          tmax = t;
+        }
+        tave  += weight * t;
+        tvar  += weight * t*t;
+        tskew += weight * t*t*t;
+        if ( distToAxis < coreRadius ) {
+          coreEnergy += dataPoint.getWeight();
+        }
       }
     // Normalize all this garbage and refer to centroid.
     tave  /= m_weightSum;
@@ -220,10 +220,10 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
 }
 
 double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
-						      const Point& inputCentroid,
-						      double transScaleFactor,
-						      double transScaleFactorBoost,
-						      double coreRadius)
+                                                      const Point& inputCentroid,
+                                                      double transScaleFactor,
+                                                      double transScaleFactorBoost,
+                                                      double coreRadius)
 {
   // First reset the class members keeping track of the iteration stats.
   m_numIterations    = 0;
@@ -243,7 +243,7 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
 
       // Make sure it didn't fail on this iteration
       if ( localChisq < 0. ) {
-	break;
+        break;
       }
 
       // Update global chi-square to pick up this iteration's value
@@ -267,15 +267,15 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
       // and see if it is out of range
       while(!dataVec.empty())
         {
-	  CalMomentsData& momentsData = dataVec.back();
-	  
-	  // If out of range drop this point and loop back to check again
-	  if ( momentsData.getDistToAxis() > transScaleFactor * transRms ) {
-	    dataVec.pop_back();
-	    iterate = true;
-	    m_numDroppedPoints++;
-	  }
-	  else break;
+          CalMomentsData& momentsData = dataVec.back();
+          
+          // If out of range drop this point and loop back to check again
+          if ( momentsData.getDistToAxis() > transScaleFactor * transRms ) {
+            dataVec.pop_back();
+            iterate = true;
+            m_numDroppedPoints++;
+          }
+          else break;
         }
 
       // Make it harder to drop points on each iteration by boosting the scale factor

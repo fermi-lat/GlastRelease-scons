@@ -151,7 +151,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
 
     if(!m_flight_geom)
       {
-	nHits += 40; // 45.3*14/16
+        nHits += 40; // 45.3*14/16
       }
 
     int iData= vertexPos;

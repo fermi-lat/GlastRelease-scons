@@ -73,7 +73,7 @@ Note: the time for the first event in a run includes initialization overhead.
 The variables are named "Aud"+Entity Name. The current default set is:
 
 <table>
-<tr><th> Variable <th> Type <th> Description					
+<tr><th> Variable <th> Type <th> Description                                        
 <tr><td> AudEvent 
 <td>F<td>   Time for the entire event
 <tr><td> AudGeneration 

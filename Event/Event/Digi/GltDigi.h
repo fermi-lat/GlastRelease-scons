@@ -62,10 +62,10 @@ namespace Event {
     void setCALHITriggerVec(const CalTriggerVec trigVec) {m_CALHITriggerVec = trigVec;}
 
     /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
-	CalTriggerVec getCALLOTriggerVec() const {return m_CALLOTriggerVec;}
+        CalTriggerVec getCALLOTriggerVec() const {return m_CALLOTriggerVec;}
 
     /// \brief return 16 bit trigger vector for FLE trigger, one bit per tower
-	CalTriggerVec getCALHITriggerVec() const {return m_CALHITriggerVec;}
+        CalTriggerVec getCALHITriggerVec() const {return m_CALHITriggerVec;}
 
   private:
 

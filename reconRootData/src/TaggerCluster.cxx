@@ -26,11 +26,11 @@ TaggerCluster::TaggerCluster() {
 
 TaggerCluster::~TaggerCluster() {
   
-	if (m_taggerHitCol) {
+        if (m_taggerHitCol) {
         m_taggerHitCol->Delete();
         delete m_taggerHitCol;
         m_taggerHitCol = 0;
-	}
+        }
   
 }
 

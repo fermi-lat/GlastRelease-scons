@@ -12,7 +12,7 @@ AcdTkrLocalCoords::AcdTkrLocalCoords()
 
 
 AcdTkrLocalCoords::AcdTkrLocalCoords(const float position[2], float pathLength, float cosTheta, 
-				     int region, const TMatrixD& covMatrix)
+                                     int region, const TMatrixD& covMatrix)
 {
   set(position,pathLength,cosTheta,region,covMatrix);
 }
@@ -52,7 +52,7 @@ AcdTkrLocalCoords& AcdTkrLocalCoords::operator=(const AcdTkrLocalCoords& params)
 }
 
 void AcdTkrLocalCoords::set(const float position[2], float pathLength, float cosTheta, 
-			    int region, const TMatrixD& CovMatrix)
+                            int region, const TMatrixD& CovMatrix)
 {
   m_activeX = position[0];
   m_activeY = position[1];

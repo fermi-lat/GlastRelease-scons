@@ -14,7 +14,7 @@ Event::CalClassParams::CalClassParams()
 }
 
 Event::CalClassParams::CalClassParams(std::string producerName,
-				      std::map <std::string, double> probMap) :
+                                      std::map <std::string, double> probMap) :
   m_producerName(producerName),
   m_probMap(probMap)
 {

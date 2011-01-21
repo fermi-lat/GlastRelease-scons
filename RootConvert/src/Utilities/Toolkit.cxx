@@ -75,11 +75,11 @@ VolumeIdentifier convert( const idents::VolumeIdentifier & tdsVolId ) {
 idents::VolumeIdentifier convert( const VolumeIdentifier & rootVolId ) {
 
     // Purpose and Method:  We must store the volume ids as two 32 bit UInt_t
-    //	   in the ROOT class.  The idents::VolumeIdentifier class stores the
-    //	   data in one 64 bit word.  We must convert from the two 32 bit words
-    //	   into the 64 bit word.  We perform the conversion by iterating over
-    //	   all of the ids in the ROOT VolumeIdentifier and appending them to
-    //	   the TDS idents::VolumeIdentifier.
+    //           in the ROOT class.  The idents::VolumeIdentifier class stores the
+    //           data in one 64 bit word.  We must convert from the two 32 bit words
+    //           into the 64 bit word.  We perform the conversion by iterating over
+    //           all of the ids in the ROOT VolumeIdentifier and appending them to
+    //           the TDS idents::VolumeIdentifier.
     // Input:  ROOT VolumeIdentifier
     // Ouput:  idents::VolumeIdentifier
     

@@ -17,9 +17,9 @@
 
 
 Event::CalXtalsParams::CalXtalsParams(int numXtals, int numTruncXtals, int numSaturatedXtals,
-				      double xtalRawEneSum, double xtalCorrEneSum, double xtalEneMax,
-				      double xtalEneRms, double xtalEneSkewness,
-				      const Point& centroid) :
+                                      double xtalRawEneSum, double xtalCorrEneSum, double xtalEneMax,
+                                      double xtalEneRms, double xtalEneSkewness,
+                                      const Point& centroid) :
   m_numXtals(numXtals),
   m_numTruncXtals(numTruncXtals),
   m_numSaturatedXtals(numSaturatedXtals),
@@ -66,7 +66,7 @@ std::ostream& Event::CalXtalsParams::fillStream( std::ostream& s ) const
     "Rms of xtal energy distribution = " << m_xtalEneRms << " MeV\n" <<
     "Skewness of xtal energy distribution = " << m_xtalEneSkewness << "\n"
     "Centroid = (" << m_centroid.x() << ", " << m_centroid.y() << ", "
-			 << m_centroid.z() << ") mm";
+                         << m_centroid.z() << ") mm";
 
   return s;
 }

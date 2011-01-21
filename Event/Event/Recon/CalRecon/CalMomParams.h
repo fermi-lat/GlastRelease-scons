@@ -39,46 +39,46 @@ namespace Event { //Namespace Event
 
     /// Direct construction from all the elements.
     CalMomParams(double energy, double eneError,
-		 const Point& centroid, const CLHEP::HepMatrix& centroidErr,
-		 const Vector& axis, const CLHEP::HepMatrix& axisErr,
-		 int numIterations, int numCoreXtals, int numXtals,
-		 double transRms, double longRms, double longRmsAsym, double longSkewness,
-		 double coreEnergyFrac, double fullLength, double dEdxSpread);
+                 const Point& centroid, const CLHEP::HepMatrix& centroidErr,
+                 const Vector& axis, const CLHEP::HepMatrix& axisErr,
+                 int numIterations, int numCoreXtals, int numXtals,
+                 double transRms, double longRms, double longRmsAsym, double longSkewness,
+                 double coreEnergyFrac, double fullLength, double dEdxSpread);
 
     /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
     CalMomParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd,
-		 double cntdxx, double cntdxy, double cntdxz,
-		 double cntdyy, double cntdyz, double cntdzz,
-		 double xAxis,  double yAxis,  double zAxis,
-		 double axsdxx, double axsdxy, double axsdxz,
-		 double axsdyy, double axsdyz, double axsdzz,
-		 int numIterations, int numCoreXtals, int numXtals,
-		 double transRms, double longRms, double longRmsAsym, double longSkewness,
-		 double coreEnergyFrac, double fullLength, double dEdxSpread);
+                 double xCntrd, double yCntrd, double zCntrd,
+                 double cntdxx, double cntdxy, double cntdxz,
+                 double cntdyy, double cntdyz, double cntdzz,
+                 double xAxis,  double yAxis,  double zAxis,
+                 double axsdxx, double axsdxy, double axsdxz,
+                 double axsdyy, double axsdyz, double axsdzz,
+                 int numIterations, int numCoreXtals, int numXtals,
+                 double transRms, double longRms, double longRmsAsym, double longSkewness,
+                 double coreEnergyFrac, double fullLength, double dEdxSpread);
 
     /// Convenience constructor to be used to replace an old CalParams object directly
     /// (i.e. the specific CalMomParams members are automagically initialized).
     CalMomParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd,
-		 double cntdxx, double cntdxy, double cntdxz,
-		 double cntdyy, double cntdyz, double cntdzz,
-		 double xAxis,  double yAxis,  double zAxis,
-		 double axsdxx, double axsdxy, double axsdxz,
-		 double axsdyy, double axsdyz, double axsdzz);
+                 double xCntrd, double yCntrd, double zCntrd,
+                 double cntdxx, double cntdxy, double cntdxz,
+                 double cntdyy, double cntdyz, double cntdzz,
+                 double xAxis,  double yAxis,  double zAxis,
+                 double axsdxx, double axsdxy, double axsdxz,
+                 double axsdyy, double axsdyz, double axsdzz);
 
     /// Convenience constructors with energy, centroid and axis only.
     CalMomParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd,
-		 double xAxis,  double yAxis,  double zAxis);
+                 double xCntrd, double yCntrd, double zCntrd,
+                 double xAxis,  double yAxis,  double zAxis);
     CalMomParams(double energy, double eneError,
-		 const Point& centroid, const Vector& axis);
+                 const Point& centroid, const Vector& axis);
 
     /// Convenience constructors with energy and centroid only.
     CalMomParams(double energy, double eneError,
-		 double xCntrd, double yCntrd, double zCntrd);
+                 double xCntrd, double yCntrd, double zCntrd);
     CalMomParams(double energy, double eneError,
-		 const Point& centroid);
+                 const Point& centroid);
 
     /// Destructor.
     ~CalMomParams() {}

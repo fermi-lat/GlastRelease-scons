@@ -218,11 +218,11 @@ StatusCode CalEventEnergyAlg::execute()
 
                 log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
     
-                // Loop over clusters 	 
-//                for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin(); 	 
-//                      cluster != calClusters->end(); 	 
-//                      cluster++) { 	 
-                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters, vertex); 	 
+                // Loop over clusters          
+//                for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin();          
+//                      cluster != calClusters->end();          
+//                      cluster++) {          
+                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters, vertex);          
                     if (corResult != 0) {
                         calEnergy->push_back(corResult);
 //                        if(m_passBits != Event::CalEventEnergy::PASS_ONE) {

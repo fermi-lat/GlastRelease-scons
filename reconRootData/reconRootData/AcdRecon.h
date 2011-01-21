@@ -179,7 +179,7 @@ public:
     /// returns a single intersection by number
     inline const AcdTkrIntersection* getAcdTkrIntersection(UInt_t i) const { 
       return i < nAcdIntersections() ? 
-	static_cast<const AcdTkrIntersection*>((*m_acdTkrIntersectionCol)[i]) : 0;  
+        static_cast<const AcdTkrIntersection*>((*m_acdTkrIntersectionCol)[i]) : 0;  
     }  
 
     inline Double32_t getCornerDoca() const { return m_cornerDoca; };
@@ -189,12 +189,12 @@ public:
     
     /// return the number or POCA objects
     inline UInt_t nAcdTkrPoca() const { return m_acdTkrPocaCol != 0 ? 
-					  m_acdTkrPocaCol->GetEntriesFast() : 0; };
+                                          m_acdTkrPocaCol->GetEntriesFast() : 0; };
   
     /// returns a single poca object by number
     inline const AcdTkrPoca* getAcdTkrPoca(UInt_t i) const { 
       return i < nAcdTkrPoca() ? 
-	static_cast<const AcdTkrPoca*>((*m_acdTkrPocaCol)[i]) : 0;  
+        static_cast<const AcdTkrPoca*>((*m_acdTkrPocaCol)[i]) : 0;  
     }  
     
     // does "deep" copy onto TClonesArray (w/ placement new)
@@ -202,12 +202,12 @@ public:
     
     /// returns the number of hits
     inline UInt_t nAcdHit() const { return m_acdHitCol != 0 ? 
-				      m_acdHitCol->GetEntriesFast() : 0; };
+                                      m_acdHitCol->GetEntriesFast() : 0; };
   
     /// gets a single hit by number
     inline const AcdHit* getAcdHit(UInt_t i) const { 
       return i < nAcdHit() ? 
-	static_cast<const AcdHit*>((*m_acdHitCol)[i]) : 0;  
+        static_cast<const AcdHit*>((*m_acdHitCol)[i]) : 0;  
     }  
 
     // does "deep" copy onto TClonesArray (w/ placement new)
@@ -215,12 +215,12 @@ public:
     
     /// return the number or POCA objects
     inline UInt_t nAcdTkrHitPoca() const { return m_acdTkrHitPocaCol != 0 ? 
-					     m_acdTkrHitPocaCol->GetEntriesFast() : 0; };
+                                             m_acdTkrHitPocaCol->GetEntriesFast() : 0; };
   
     /// returns a single poca object by number
     inline const AcdTkrHitPoca* getAcdTkrHitPoca(UInt_t i) const { 
       return i < nAcdTkrHitPoca() ? 
-	static_cast<const AcdTkrHitPoca*>((*m_acdTkrHitPocaCol)[i]) : 0;  
+        static_cast<const AcdTkrHitPoca*>((*m_acdTkrHitPocaCol)[i]) : 0;  
     }  
 
     // does "deep" copy onto TClonesArray (w/ placement new)
@@ -228,12 +228,12 @@ public:
     
     /// return the number or POCA objects
     inline UInt_t nAcdTkrGapPoca() const { return m_acdTkrGapPocaCol != 0 ? 
-					     m_acdTkrGapPocaCol->GetEntriesFast() : 0; };
+                                             m_acdTkrGapPocaCol->GetEntriesFast() : 0; };
   
     /// returns a single poca object by number
     inline const AcdTkrGapPoca* getAcdTkrGapPoca(UInt_t i) const { 
       return i < nAcdTkrGapPoca() ? 
-	static_cast<const AcdTkrGapPoca*>((*m_acdTkrGapPocaCol)[i]) : 0;  
+        static_cast<const AcdTkrGapPoca*>((*m_acdTkrGapPocaCol)[i]) : 0;  
     }  
 
     // does "deep" copy onto TClonesArray (w/ placement new)
@@ -241,12 +241,12 @@ public:
     
     /// return the number or POCA objects
     inline UInt_t nAcdTkrPoint() const { return m_acdTkrPointCol != 0 ? 
-					   m_acdTkrPointCol->GetEntriesFast() : 0; };
+                                           m_acdTkrPointCol->GetEntriesFast() : 0; };
     
     /// returns a single poca object by number
     inline const AcdTkrPoint* getAcdTkrPoint(UInt_t i) const { 
       return i < nAcdTkrPoint() ? 
-	static_cast<const AcdTkrPoint*>((*m_acdTkrPointCol)[i]) : 0;  
+        static_cast<const AcdTkrPoint*>((*m_acdTkrPointCol)[i]) : 0;  
     }  
  
     // does "deep" copy onto TClonesArray (w/ placement new)
@@ -254,12 +254,12 @@ public:
     
     /// return the number or POCA objects
     inline UInt_t nAcdSplash() const { return m_acdSplashVarCol != 0 ?
-					   m_acdSplashVarCol->GetEntriesFast() : 0; };
+                                           m_acdSplashVarCol->GetEntriesFast() : 0; };
     
     /// returns a single poca object by number
     inline const AcdSplashVars* getAcdSplashVars(UInt_t i) const { 
       return i < nAcdSplash() ? 
-	static_cast<const AcdSplashVars*>((*m_acdSplashVarCol)[i]) : 0;  
+        static_cast<const AcdSplashVars*>((*m_acdSplashVarCol)[i]) : 0;  
     }  
 
     bool checkAcdRecon();   

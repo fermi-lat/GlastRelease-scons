@@ -55,8 +55,8 @@ namespace Event { //Namespace Event
   public:
     CalClusterLayerData() : m_energy(0.), m_position(0.,0.,0.), m_rmsSpread(0.,0.,0.) {}
       CalClusterLayerData(double energy, Point position, Vector rmsSpread) :
-	m_energy(energy), m_position(position), m_rmsSpread(rmsSpread) {}
-	
+        m_energy(energy), m_position(position), m_rmsSpread(rmsSpread) {}
+        
     ~CalClusterLayerData() {}
 
     double         getEnergy()    const {return m_energy;}
@@ -102,14 +102,14 @@ namespace Event { //Namespace Event
       //    /// @param ISOLATEDCLUSTER Bit set means this is a subset of all Xtals
       //                     ISOLATEDCLUSTER = 0x00000002,  
       // DC: not used ?
-      //	/// @param MIPTRACK Bit set means this is a subset of all Xtals associate with MIP
+      //        /// @param MIPTRACK Bit set means this is a subset of all Xtals associate with MIP
       //                     MIPTRACK        = 0x00000004,  
       // DC: to be replaced with a string
-      //	/// @param SIMPLECLUSTER Bit set means cluster found using SimpleClusterTool
+      //        /// @param SIMPLECLUSTER Bit set means cluster found using SimpleClusterTool
       //                     SIMPLECLUSTER   = 0x00000010,  
-      //	/// @param FUZZYCLUSTER Bit set means cluster found using FuzzyClusterTool
+      //        /// @param FUZZYCLUSTER Bit set means cluster found using FuzzyClusterTool
       //                     FUZZYCLUSTER    = 0x00000020,
-      //	/// @param MIPCLUSTER Bit set means cluster found using CalMIPFinderTool
+      //        /// @param MIPCLUSTER Bit set means cluster found using CalMIPFinderTool
       //                     MIPCLUSTER      = 0x00000040,
       // DC: CENTROID SHOULD BE REPLACED WITH AXIS
       /// @param CENTROID Bit set means centroid found
@@ -117,11 +117,11 @@ namespace Event { //Namespace Event
       /// @param MOMENTS Bit set means moments analysis run
       MOMENTS         = 0x00000200,
       // DC: not used ?
-      //	/// @param ENERGYCORR Bit set means one or more energy corrections were run
-      //	                 ENERGYCORR      = 0x00000400,
+      //        /// @param ENERGYCORR Bit set means one or more energy corrections were run
+      //                         ENERGYCORR      = 0x00000400,
       // DC: not used ?
-      //	/// @param MIPFIT Bit set means a MIP like track was fitted
-      //	                 MIPFIT          = 0x00000800
+      //        /// @param MIPFIT Bit set means a MIP like track was fitted
+      //                         MIPFIT          = 0x00000800
       /// @param MSTTREE Bit set means a Minimum Spanning Tree information is available
       MSTTREE          = 0x0001000,
       /// @param CLASSIFIED Bit set means clusters have been classified
@@ -143,10 +143,10 @@ namespace Event { //Namespace Event
     
     /// Initialize an existing object from all parameters.
     void initialize(const CalXtalsParams& xtalsParams,
-		    const CalMSTreeParams& mstParams,
-		    const CalFitParams& fitParams,
+                    const CalMSTreeParams& mstParams,
+                    const CalFitParams& fitParams,
                     const CalMomParams& momParams,
-		    const CalClassParams& classParams);
+                    const CalClassParams& classParams);
 
     /// Access methods to the main objects.
     inline const std::string & getProducerName()     const { return m_producerName; }
@@ -195,7 +195,7 @@ namespace Event { //Namespace Event
     const CalMomParams& getParams()              const { return m_momParams; }
 
     // TBD Change names according to the CalMomParams class? Maybe just get rid of them all.
-    double getRmsLong()	                         const { return m_momParams.getLongRms(); }
+    double getRmsLong()                                 const { return m_momParams.getLongRms(); }
     double getRmsLongAsym()                      const { return m_momParams.getLongRmsAsym(); } 
     double getRmsTrans()                         const { return m_momParams.getTransRms(); }
     double getSkewnessLong()                     const { return m_momParams.getLongSkewness(); }
@@ -247,4 +247,4 @@ typedef RelationList<CalXtalRecData, CalCluster>                  CalClusterHitT
 
 }; //Namespace Event
 
-#endif	
+#endif        

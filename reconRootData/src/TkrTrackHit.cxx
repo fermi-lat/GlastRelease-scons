@@ -96,14 +96,14 @@ const TVector3 TkrTrackHit::getDirection(TkrTrackHit::ParamType type) const
     TVector3 dir;
 
     // This assumes that track directions are slopes
-	if(m_statusBits & UPWARDS)
+        if(m_statusBits & UPWARDS)
     {
-		dir = TVector3(hit.getxSlope(), hit.getySlope(), 1.);
-	}
-	else 
+                dir = TVector3(hit.getxSlope(), hit.getySlope(), 1.);
+        }
+        else 
     { 
-		dir = TVector3(-hit.getxSlope(), -hit.getySlope(), -1.);
-	}
+                dir = TVector3(-hit.getxSlope(), -hit.getySlope(), -1.);
+        }
 
     dir.SetMag(1.);
 
@@ -118,14 +118,14 @@ TVector3 TkrTrackHit::getDirection(TkrTrackHit::ParamType type)
     TVector3 dir;
 
     // This assumes that track directions are slopes
-	if(m_statusBits & UPWARDS)
+        if(m_statusBits & UPWARDS)
     {
-		dir = TVector3(hit.getxSlope(), hit.getySlope(), 1.);
-	}
-	else 
+                dir = TVector3(hit.getxSlope(), hit.getySlope(), 1.);
+        }
+        else 
     { 
-		dir = TVector3(-hit.getxSlope(), -hit.getySlope(), -1.);
-	}
+                dir = TVector3(-hit.getxSlope(), -hit.getySlope(), -1.);
+        }
 
     dir.SetMag(1.);
 

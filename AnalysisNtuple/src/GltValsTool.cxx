@@ -138,7 +138,7 @@ produces 13 potential triggers
 <tr><td> GltType 
 <td>F<td>   Number of exposed sides for the triggered tower: <br>
             0 = central tower, 1 = side tower, <br> 
-            2 = edge edge tower, 4 = any single-tower setup 	
+            2 = edge edge tower, 4 = any single-tower setup         
 <tr><td> GltMoment 
 <td>F<td>   REMOVED!
 <tr><td> GltZDir 

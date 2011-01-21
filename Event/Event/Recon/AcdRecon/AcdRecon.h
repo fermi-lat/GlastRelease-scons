@@ -71,13 +71,13 @@ namespace Event {
             const std::vector<double> &rowActDist,
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol,
-	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-	    const std::vector<AcdTkrPoca*>& acdTkrPocas,
-	    const std::vector<AcdHit*>& acdHits,
-	    const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
-	    const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
-		 const std::vector<AcdTkrPoint*>& acdTkrPoints,
-		 const std::vector<AcdSplashVars*>& acdSplashVars,
+            const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+            const std::vector<AcdTkrPoca*>& acdTkrPocas,
+            const std::vector<AcdHit*>& acdHits,
+            const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
+            const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
+                 const std::vector<AcdTkrPoint*>& acdTkrPoints,
+                 const std::vector<AcdSplashVars*>& acdSplashVars,
             double cornerDoca)
             : m_totEnergy(e),
             m_totRibbonEnergy(ribbonEng),
@@ -90,19 +90,19 @@ namespace Event {
             m_maxActDistId(maxActDistId),
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
-	    m_idCol(idCol),
-	    m_energyCol(energyCol),            
+            m_idCol(idCol),
+            m_energyCol(energyCol),            
             m_ribbon_actDist(-2000.0),
-  	    m_ribbon_actDist_id(idents::AcdId(0,0)),            
-	    m_acdTkrIntersections(acdTkrIntersections),
+              m_ribbon_actDist_id(idents::AcdId(0,0)),            
+            m_acdTkrIntersections(acdTkrIntersections),
             m_acdTkrPocas(acdTkrPocas),
-   	    m_acdHits(acdHits),
-    	    m_cornerDoca(cornerDoca),
-	    m_acdTkrHitPocas(acdTkrHitPocas),
-	    m_acdTkrGapPocas(acdTkrGapPocas),	  
-	    m_acdTkrPoints(acdTkrPoints),
-	    m_acdSplashVars(acdSplashVars)
-	  {
+               m_acdHits(acdHits),
+                m_cornerDoca(cornerDoca),
+            m_acdTkrHitPocas(acdTkrHitPocas),
+            m_acdTkrGapPocas(acdTkrGapPocas),          
+            m_acdTkrPoints(acdTkrPoints),
+            m_acdSplashVars(acdSplashVars)
+          {
             m_actDist3D = -2000.0;
             m_rowActDist3DCol.resize(4, -2000.0);
         };
@@ -119,15 +119,15 @@ namespace Event {
             const std::vector<idents::AcdId>& idCol, 
             const std::vector<double>& energyCol,
             double ribbon_actDist, const idents::AcdId ribbon_actDist_id,
-	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-	    const std::vector<AcdTkrPoca*>& acdTkrPocas,
-		 const std::vector<AcdHit*>& acdHits,
-		 const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
-	    const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
-		 const std::vector<AcdTkrPoint*>& acdTkrPoints,
-		 const std::vector<AcdSplashVars*>& acdSplashVars,
-	    double actDist3D, const idents::AcdId &maxActDist3DId, 
-	    const std::vector<double> &rowActDist3D, double cornerDoca)
+            const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+            const std::vector<AcdTkrPoca*>& acdTkrPocas,
+                 const std::vector<AcdHit*>& acdHits,
+                 const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
+            const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
+                 const std::vector<AcdTkrPoint*>& acdTkrPoints,
+                 const std::vector<AcdSplashVars*>& acdSplashVars,
+            double actDist3D, const idents::AcdId &maxActDist3DId, 
+            const std::vector<double> &rowActDist3D, double cornerDoca)
             : m_totEnergy(e),
             m_totRibbonEnergy(ribbonE),
             m_tileCount(count),
@@ -143,18 +143,18 @@ namespace Event {
             m_rowDocaCol(rowDoca),
             m_rowActDistCol(rowActDist),
             m_rowActDist3DCol(rowActDist3D),
-	    m_idCol(idCol),
-	    m_energyCol(energyCol),            
+            m_idCol(idCol),
+            m_energyCol(energyCol),            
             m_ribbon_actDist(ribbon_actDist),
-	    m_ribbon_actDist_id(ribbon_actDist_id),
-	    m_acdTkrIntersections(acdTkrIntersections),
-	    m_acdTkrPocas(acdTkrPocas),
-	    m_acdHits(acdHits),
-	    m_cornerDoca(cornerDoca),
-	    m_acdTkrHitPocas(acdTkrHitPocas),
-	    m_acdTkrGapPocas(acdTkrGapPocas),
-	    m_acdTkrPoints(acdTkrPoints),
-	    m_acdSplashVars(acdSplashVars)	  
+            m_ribbon_actDist_id(ribbon_actDist_id),
+            m_acdTkrIntersections(acdTkrIntersections),
+            m_acdTkrPocas(acdTkrPocas),
+            m_acdHits(acdHits),
+            m_cornerDoca(cornerDoca),
+            m_acdTkrHitPocas(acdTkrHitPocas),
+            m_acdTkrGapPocas(acdTkrGapPocas),
+            m_acdTkrPoints(acdTkrPoints),
+            m_acdSplashVars(acdSplashVars)          
             {
                 m_rowActDist3DCol_down.clear();
 
@@ -175,15 +175,15 @@ namespace Event {
             const std::vector<double>&  energyCol,
             double actDist3D, const idents::AcdId &maxActDist3DId,
             const std::vector<double> &rowActDist3D,
-	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-		  const std::vector<AcdTkrPoca*>& acdTkrPocas,
-		  const std::vector<AcdHit*>& acdHits,
-		  const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
-		  const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
-		  const std::vector<AcdTkrPoint*>& acdTkrPoints,
-		  const std::vector<AcdSplashVars*>& acdSplashVars,
-	    double ribbonActDist=2000.0, 
-	    const idents::AcdId &ribActDistId=idents::AcdId(0,0),
+            const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+                  const std::vector<AcdTkrPoca*>& acdTkrPocas,
+                  const std::vector<AcdHit*>& acdHits,
+                  const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
+                  const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,
+                  const std::vector<AcdTkrPoint*>& acdTkrPoints,
+                  const std::vector<AcdSplashVars*>& acdSplashVars,
+            double ribbonActDist=2000.0, 
+            const idents::AcdId &ribActDistId=idents::AcdId(0,0),
             double cornerDoca=2000.0) ;
 
         void initActDist3D_down(double actDist3D,
@@ -224,15 +224,15 @@ namespace Event {
         inline const std::vector<double>& getRowActDist3DCol() const { return m_rowActDist3DCol; };
         inline const std::vector<double>& getRowActDist3DCol_Up() const { return m_rowActDist3DCol; };
         inline const std::vector<double>& getRowActDist3DCol_Down() const { return m_rowActDist3DCol_down; };
-	inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
+        inline const std::vector<idents::AcdId>& getIdCol()  const { return m_idCol; };
         inline const std::vector<double>& getEnergyCol()     const { return m_energyCol; };
-	inline const AcdTkrIntersectionCol& getAcdTkrIntersectionCol() const { return m_acdTkrIntersections; };
-	inline const AcdTkrPocaCol& getAcdTkrPocaCol() const { return m_acdTkrPocas; };
-	inline const AcdHitCol& getAcdHitCol() const { return m_acdHits; };
-	inline const AcdTkrHitPocaCol& getAcdTkrHitPocaCol() const { return m_acdTkrHitPocas; };
-	inline const AcdTkrGapPocaCol& getAcdTkrGapPocaCol() const { return m_acdTkrGapPocas; };
-	inline const AcdTkrPointCol& getAcdTkrPointCol() const { return m_acdTkrPoints; }
-	inline const AcdSplashVarsCol& getAcdSplashVarsCol() const { return m_acdSplashVars; }
+        inline const AcdTkrIntersectionCol& getAcdTkrIntersectionCol() const { return m_acdTkrIntersections; };
+        inline const AcdTkrPocaCol& getAcdTkrPocaCol() const { return m_acdTkrPocas; };
+        inline const AcdHitCol& getAcdHitCol() const { return m_acdHits; };
+        inline const AcdTkrHitPocaCol& getAcdTkrHitPocaCol() const { return m_acdTkrHitPocas; };
+        inline const AcdTkrGapPocaCol& getAcdTkrGapPocaCol() const { return m_acdTkrGapPocas; };
+        inline const AcdTkrPointCol& getAcdTkrPointCol() const { return m_acdTkrPoints; }
+        inline const AcdSplashVarsCol& getAcdSplashVarsCol() const { return m_acdSplashVars; }
 
         /// Serialize the object for writing
         virtual StreamBuffer& serialize( StreamBuffer& s ) const;
@@ -292,36 +292,36 @@ namespace Event {
         
         /// Reconstructed energy per ACD digi - MC for now
         std::vector<idents::AcdId> m_idCol;
-	std::vector<double>        m_energyCol;
+        std::vector<double>        m_energyCol;
 
         /// Active Distance calculation for ribbons
         double         m_ribbon_actDist;
         /// Id of the ribbon corresponding to the Active Distance
         idents::AcdId  m_ribbon_actDist_id;        
 
-	/// the vector of track intersections w/ the acd
-	AcdTkrIntersectionCol m_acdTkrIntersections;
+        /// the vector of track intersections w/ the acd
+        AcdTkrIntersectionCol m_acdTkrIntersections;
 
-	/// the vector of track poca w/ the acd
-	AcdTkrPocaCol m_acdTkrPocas;	
+        /// the vector of track poca w/ the acd
+        AcdTkrPocaCol m_acdTkrPocas;        
 
-	/// the vector of calibrated ACD hits
-	AcdHitCol m_acdHits;	
+        /// the vector of calibrated ACD hits
+        AcdHitCol m_acdHits;        
 
         /// Bill's variable to measure DOCA to rays along corner side gaps
         double m_cornerDoca;
 
-	/// new calculation of tkr pocas
-	AcdTkrHitPocaCol m_acdTkrHitPocas;
+        /// new calculation of tkr pocas
+        AcdTkrHitPocaCol m_acdTkrHitPocas;
 
-	/// pocas to the gaps
-	AcdTkrGapPocaCol m_acdTkrGapPocas;
+        /// pocas to the gaps
+        AcdTkrGapPocaCol m_acdTkrGapPocas;
 
-	/// points where the track cross the nomial ACD
-	AcdTkrPointCol m_acdTkrPoints;
+        /// points where the track cross the nomial ACD
+        AcdTkrPointCol m_acdTkrPoints;
 
-	/// Store the angles and such to study backsplash
-	AcdSplashVarsCol m_acdSplashVars;
+        /// Store the angles and such to study backsplash
+        AcdSplashVarsCol m_acdSplashVars;
 
 
     };
@@ -334,13 +334,13 @@ namespace Event {
         m_rowActDist3DCol_down.clear();
         m_idCol.clear();
         m_energyCol.clear();
-	m_acdTkrIntersections.clear();
-	m_acdTkrPocas.clear();
-	m_acdHits.clear();
-	m_acdTkrHitPocas.clear();
-	m_acdTkrGapPocas.clear();
-	m_acdTkrPoints.clear();
-	m_acdSplashVars.clear();
+        m_acdTkrIntersections.clear();
+        m_acdTkrPocas.clear();
+        m_acdHits.clear();
+        m_acdTkrHitPocas.clear();
+        m_acdTkrGapPocas.clear();
+        m_acdTkrPoints.clear();
+        m_acdSplashVars.clear();
     }
 
 
@@ -354,14 +354,14 @@ namespace Event {
             const std::vector<double>& energyCol, 
             double actDist3D, const idents::AcdId &maxActDist3DId,
             const std::vector<double> &rowActDist3D,
-	    const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
-	    const std::vector<AcdTkrPoca*>& acdTkrPocas,
-			       const std::vector<AcdHit*>& acdHits,
-			       const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
-			       const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,    
-			       const std::vector<AcdTkrPoint*>& acdTkrPoints,
-			       const std::vector<AcdSplashVars*>& acdSplashVars,
-	    double ribbon_actDist, const idents::AcdId &ribbonId, 
+            const std::vector<AcdTkrIntersection*>& acdTkrIntersections,
+            const std::vector<AcdTkrPoca*>& acdTkrPocas,
+                               const std::vector<AcdHit*>& acdHits,
+                               const std::vector<AcdTkrHitPoca*>& acdTkrHitPocas,
+                               const std::vector<AcdTkrGapPoca*>& acdTkrGapPocas,    
+                               const std::vector<AcdTkrPoint*>& acdTkrPoints,
+                               const std::vector<AcdSplashVars*>& acdSplashVars,
+            double ribbon_actDist, const idents::AcdId &ribbonId, 
             double cornerDoca)
     {
         m_totEnergy  = e;
@@ -384,48 +384,48 @@ namespace Event {
         m_rowActDist3DCol_down.clear();
         m_idCol      = idCol;
         m_energyCol  = energyCol;
-	m_acdTkrIntersections.clear();
-	for ( std::vector<AcdTkrIntersection*>::const_iterator itr = acdTkrIntersections.begin();
-	      itr != acdTkrIntersections.end(); itr++ ) {
-	  AcdTkrIntersection* iSect = const_cast<AcdTkrIntersection*>(*itr);
-	  m_acdTkrIntersections.add(iSect);
-	}
-	m_acdTkrPocas.clear();
-	for ( std::vector<AcdTkrPoca*>::const_iterator itrPoca = acdTkrPocas.begin();
-	      itrPoca != acdTkrPocas.end(); itrPoca++ ) {
-	  AcdTkrPoca* poca = const_cast<AcdTkrPoca*>(*itrPoca);
-	  m_acdTkrPocas.add(poca);
-	}
-	m_acdHits.clear();
-	for ( std::vector<AcdHit*>::const_iterator itrHit = acdHits.begin();
-	      itrHit != acdHits.end(); itrHit++ ) {
-	  AcdHit* hit = const_cast<AcdHit*>(*itrHit);
-	  m_acdHits.add(hit);
-	}	
-	m_acdTkrHitPocas.clear();
-	for ( std::vector<AcdTkrHitPoca*>::const_iterator itrHitPoca = acdTkrHitPocas.begin();
-	      itrHitPoca != acdTkrHitPocas.end(); itrHitPoca++ ) {
-	  AcdTkrHitPoca* hitPoca = const_cast<AcdTkrHitPoca*>(*itrHitPoca);
-	  m_acdTkrHitPocas.add(hitPoca);
-	}
-	m_acdTkrGapPocas.clear();
-	for ( std::vector<AcdTkrGapPoca*>::const_iterator itrGapPoca = acdTkrGapPocas.begin();
-	      itrGapPoca != acdTkrGapPocas.end(); itrGapPoca++ ) {
-	  AcdTkrGapPoca* gapPoca = const_cast<AcdTkrGapPoca*>(*itrGapPoca);
-	  m_acdTkrGapPocas.add(gapPoca);
-	}
-	m_acdTkrPoints.clear();
-	for ( std::vector<AcdTkrPoint*>::const_iterator itrPoint = acdTkrPoints.begin();
-	      itrPoint != acdTkrPoints.end(); itrPoint++ ) {
-	  AcdTkrPoint* point = const_cast<AcdTkrPoint*>(*itrPoint);
-	  m_acdTkrPoints.add(point);
-	}
-	m_acdSplashVars.clear();
-	for ( std::vector<AcdSplashVars*>::const_iterator itrSplash = acdSplashVars.begin();
-	      itrSplash != acdSplashVars.end(); itrSplash++ ) {
-	  AcdSplashVars* splash = const_cast<AcdSplashVars*>(*itrSplash);
-	  m_acdSplashVars.add(splash);
-	}
+        m_acdTkrIntersections.clear();
+        for ( std::vector<AcdTkrIntersection*>::const_iterator itr = acdTkrIntersections.begin();
+              itr != acdTkrIntersections.end(); itr++ ) {
+          AcdTkrIntersection* iSect = const_cast<AcdTkrIntersection*>(*itr);
+          m_acdTkrIntersections.add(iSect);
+        }
+        m_acdTkrPocas.clear();
+        for ( std::vector<AcdTkrPoca*>::const_iterator itrPoca = acdTkrPocas.begin();
+              itrPoca != acdTkrPocas.end(); itrPoca++ ) {
+          AcdTkrPoca* poca = const_cast<AcdTkrPoca*>(*itrPoca);
+          m_acdTkrPocas.add(poca);
+        }
+        m_acdHits.clear();
+        for ( std::vector<AcdHit*>::const_iterator itrHit = acdHits.begin();
+              itrHit != acdHits.end(); itrHit++ ) {
+          AcdHit* hit = const_cast<AcdHit*>(*itrHit);
+          m_acdHits.add(hit);
+        }        
+        m_acdTkrHitPocas.clear();
+        for ( std::vector<AcdTkrHitPoca*>::const_iterator itrHitPoca = acdTkrHitPocas.begin();
+              itrHitPoca != acdTkrHitPocas.end(); itrHitPoca++ ) {
+          AcdTkrHitPoca* hitPoca = const_cast<AcdTkrHitPoca*>(*itrHitPoca);
+          m_acdTkrHitPocas.add(hitPoca);
+        }
+        m_acdTkrGapPocas.clear();
+        for ( std::vector<AcdTkrGapPoca*>::const_iterator itrGapPoca = acdTkrGapPocas.begin();
+              itrGapPoca != acdTkrGapPocas.end(); itrGapPoca++ ) {
+          AcdTkrGapPoca* gapPoca = const_cast<AcdTkrGapPoca*>(*itrGapPoca);
+          m_acdTkrGapPocas.add(gapPoca);
+        }
+        m_acdTkrPoints.clear();
+        for ( std::vector<AcdTkrPoint*>::const_iterator itrPoint = acdTkrPoints.begin();
+              itrPoint != acdTkrPoints.end(); itrPoint++ ) {
+          AcdTkrPoint* point = const_cast<AcdTkrPoint*>(*itrPoint);
+          m_acdTkrPoints.add(point);
+        }
+        m_acdSplashVars.clear();
+        for ( std::vector<AcdSplashVars*>::const_iterator itrSplash = acdSplashVars.begin();
+              itrSplash != acdSplashVars.end(); itrSplash++ ) {
+          AcdSplashVars* splash = const_cast<AcdSplashVars*>(*itrSplash);
+          m_acdSplashVars.add(splash);
+        }
         m_cornerDoca = cornerDoca;
     }
 

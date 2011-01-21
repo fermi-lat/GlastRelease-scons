@@ -83,9 +83,9 @@ void AcdTkrAssoc::setPoint(const AcdTkrPointV2& point) {
 
 /// set all the values
 void AcdTkrAssoc::set(Int_t index, Bool_t up, Float_t energy, 
-		      const TVector3& start, const TVector3& dir, Float_t arcLength,
-		      const TMatrixDSym& covStart, const TMatrixDSym& covEnd,
-		      Int_t tkrSSDVeto, Float_t cornerDoca)
+                      const TVector3& start, const TVector3& dir, Float_t arcLength,
+                      const TMatrixDSym& covStart, const TMatrixDSym& covEnd,
+                      Int_t tkrSSDVeto, Float_t cornerDoca)
 {
   m_trackIndex = index;
   m_upward = up;
@@ -119,8 +119,8 @@ void AcdTkrAssoc::Clear(Option_t* option)
 void AcdTkrAssoc::Print(Option_t *option) const 
 {
   std::cout << "AcdTkrAssoc.  " << m_trackIndex << ' ' << (m_upward ? "up" : "down") << " E=" << m_energy 
-	    << " s= " << m_arcLength << " SSDVeto = " << m_tkrSSDVeto 
-	    << " CornerDoca = " << m_cornerDoca << std::endl;
+            << " s= " << m_arcLength << " SSDVeto = " << m_tkrSSDVeto 
+            << " CornerDoca = " << m_cornerDoca << std::endl;
   m_start.Print(option);
   m_dir.Print(option);
   m_cov_start.Print(option);

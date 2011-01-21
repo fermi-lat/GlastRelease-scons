@@ -17,14 +17,14 @@ void Event::GcrSelectedXtal::writeOut(MsgStream& log) const
     log << MSG::DEBUG;
     if (log.isActive() ) 
     {
-	int it=getXtalId().getTower();
-	int il=getXtalId().getLayer();
-	int ic=getXtalId().getColumn();
+        int it=getXtalId().getTower();
+        int il=getXtalId().getLayer();
+        int ic=getXtalId().getColumn();
         log << "---> writeOut GcrSelectedXtal: " << it << " " << il << " " << ic << endreq;
         log << "--->rawEnergy = " << m_rawEnergy << endreq;
         log << "---> corrEnergy = " << m_corrEnergy << endreq;
        
-	
+        
     }
 }
 
@@ -44,7 +44,7 @@ void Event::GcrSelectVals::initialize(int inferedZ, int acdZ, int interactionPar
     m_interactionParams = interactionParams;
     m_gcrOBFStatusWord = gcrOBFStatusWord;
 }
-	   
+           
 
 
 

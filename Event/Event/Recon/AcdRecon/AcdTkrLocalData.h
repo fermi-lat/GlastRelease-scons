@@ -53,17 +53,17 @@ namespace Event
     AcdTkrLocalCoords();
     
     AcdTkrLocalCoords(int volume, float arcLength, 
-		      const HepPoint3D& global);
+                      const HepPoint3D& global);
 
     AcdTkrLocalCoords(int volume, float arcLength, float cosTheta, 
-		      const HepPoint3D& global, 
-		      const float localPosition[2], const float active[2], 
-		      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+                      const HepPoint3D& global, 
+                      const float localPosition[2], const float active[2], 
+                      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
 
     AcdTkrLocalCoords(float arcLength, float cosTheta, 
-		      const HepPoint3D& global, 
-		      const double localPosition[2], 
-		      const HepSymMatrix& planeError);
+                      const HepPoint3D& global, 
+                      const double localPosition[2], 
+                      const HepSymMatrix& planeError);
 
     AcdTkrLocalCoords(const AcdTkrLocalCoords& other);
 
@@ -106,14 +106,14 @@ namespace Event
 
     /// set everything at once
     void setLocalData(int volume, float arcLength, float cosTheta, 
-		      const HepPoint3D& global, 
-		      const float localPosition[2], const float active[2], 
-		      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+                      const HepPoint3D& global, 
+                      const float localPosition[2], const float active[2], 
+                      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
     
     /// set everything at once, old version
     void setLocalData(const float localPosition[2],
-		      float pathLength, float cosTheta, 
-		      int region, const HepSymMatrix& planeError);
+                      float pathLength, float cosTheta, 
+                      int region, const HepSymMatrix& planeError);
     
     /// set stuff from old version of AcdTkrPoint
     void setLocalData(float arcLength, int face, const Point& point, const Event::TkrTrackParams& params);

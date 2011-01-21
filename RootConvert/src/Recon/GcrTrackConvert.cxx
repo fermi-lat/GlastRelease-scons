@@ -10,10 +10,10 @@ void convert( const Event::GcrTrack& gcrTrackTds, GcrTrack& gcrTrackRoot )
 
     //std::cout << "GcrTrackConvert::convert from TDS to ROOt BEGIN" << std::endl;   
 
-	    Vector m_direction;
-	    Vector m_dirError;
-	    Point m_calEntryPoint;
-	    Point m_calExitPoint;
+            Vector m_direction;
+            Vector m_dirError;
+            Point m_calEntryPoint;
+            Point m_calExitPoint;
 
      Vector directionTds = gcrTrackTds.getDirection();
      Vector dirErrorTds = gcrTrackTds.getDirError();

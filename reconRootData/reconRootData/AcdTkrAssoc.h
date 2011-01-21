@@ -85,9 +85,9 @@ public:
 
   /// set all the values
   void set(Int_t index, Bool_t up, Float_t energy, 
-	   const TVector3& start, const TVector3& dir, Float_t arcLength,
-	   const TMatrixDSym& covStart, const TMatrixDSym& covEnd,
-	   Int_t tkrSSDVeto, Float_t cornerDoca);
+           const TVector3& start, const TVector3& dir, Float_t arcLength,
+           const TMatrixDSym& covStart, const TMatrixDSym& covEnd,
+           Int_t tkrSSDVeto, Float_t cornerDoca);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);

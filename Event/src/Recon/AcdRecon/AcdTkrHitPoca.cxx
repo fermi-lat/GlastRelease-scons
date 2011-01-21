@@ -14,17 +14,17 @@ namespace Event {
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdTkrHitPoca::AcdTkrHitPoca(const idents::AcdId& acdId, int trackIndex,
-			       const float active2d[2], const float mips[2], 
-			       float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
-			       int volumePlane, float arcLengthToPlane, float cosTheta, 
-			       const HepPoint3D& global, const float localPosition[2], 
-			       const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
-			       int volume, int region, float arcLength, 
-			       float doca, float docaErrProj, float docaErrProp,
-			       const Point& poca, const Vector& voca)
+                               const float active2d[2], const float mips[2], 
+                               float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+                               int volumePlane, float arcLengthToPlane, float cosTheta, 
+                               const HepPoint3D& global, const float localPosition[2], 
+                               const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+                               int volume, int region, float arcLength, 
+                               float doca, float docaErrProj, float docaErrProp,
+                               const Point& poca, const Vector& voca)
     :AcdTkrLocalCoords(volumePlane,arcLengthToPlane,cosTheta,
-		       global,localPosition,active2d,
-		       localCovProj,localCovProp),
+                       global,localPosition,active2d,
+                       localCovProj,localCovProp),
      AcdPocaData(volume,region,arcLength,doca,docaErrProj,docaErrProp,poca,voca),
      m_id(acdId),
      m_trackIndex(trackIndex),
@@ -36,7 +36,7 @@ namespace Event {
   }
   
   AcdTkrHitPoca::AcdTkrHitPoca( const idents::AcdId& acdId, int trackIndex, 
-				const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData ) 
+                                const Event::AcdTkrLocalCoords& local, const Event::AcdPocaData& pocaData ) 
     :AcdTkrLocalCoords(local),
      AcdPocaData(pocaData),
      m_id(acdId),
@@ -56,7 +56,7 @@ namespace Event {
     :AcdTkrLocalCoords(other),AcdPocaData(other)
   {
     set(other.getId(),other.trackIndex(),other.m_mips,
-	other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
   }
 
   /// Assignment operator
@@ -64,7 +64,7 @@ namespace Event {
   {
     if ( this == &other ) return *this;
     set(other.getId(),other.trackIndex(),other.m_mips,
-	other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
     AcdTkrLocalCoords::copy(other);
     AcdPocaData::setPocaData(other);
     return *this;
@@ -93,8 +93,8 @@ namespace Event {
 
   /// set all the values
   void AcdTkrHitPoca::set(const idents::AcdId& acdId, int trackIndex,
-			  const float mips[2], 
-			  float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp)
+                          const float mips[2], 
+                          float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp)
   {
     m_id = acdId;
     m_trackIndex = trackIndex;
@@ -124,10 +124,10 @@ namespace Event {
   void AcdTkrHitPoca::writeOut(MsgStream& stream) const 
   {
     stream << MSG::DEBUG
-	   << "AcdTkrHitPoca.  Tile: " << m_id.id()  
-	   << ".  Track: " << ((int)m_trackIndex) 
-	   << ".  Mips:  " << m_mips[0] << ',' << m_mips[1] << std::endl
-	   << "Sigma " << m_vetoSigmaHit << ' ' << m_vetoSigmaProj << ' ' << m_vetoSigmaProp << std::endl;
+           << "AcdTkrHitPoca.  Tile: " << m_id.id()  
+           << ".  Track: " << ((int)m_trackIndex) 
+           << ".  Mips:  " << m_mips[0] << ',' << m_mips[1] << std::endl
+           << "Sigma " << m_vetoSigmaHit << ' ' << m_vetoSigmaProj << ' ' << m_vetoSigmaProp << std::endl;
     AcdTkrLocalCoords::writeOut(stream);
     AcdPocaData::writeOut(stream);
     stream << endreq;
@@ -136,7 +136,7 @@ namespace Event {
   /// Copy c'tor
   AcdTkrHitPocaCol::AcdTkrHitPocaCol(const std::vector<AcdTkrHitPoca*>& other) {
     for ( std::vector<AcdTkrHitPoca*>::const_iterator itr = other.begin();
-	  itr != other.end(); itr++ ) {
+          itr != other.end(); itr++ ) {
       AcdTkrHitPoca* onePoca = const_cast<AcdTkrHitPoca*>(*itr);
       add(onePoca);
     }

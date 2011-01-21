@@ -109,24 +109,24 @@ void FullShowerGeometryManager::Initialize()
       xyz[0] = -2*FSGM_towerPitch + geom_xy_step*(0.5+(double)i);
       WhereInCalForGeom(xyz,whereincal);
       switch(whereincal[0])
-	{
-	case 0:
-	  geom_x_mat[i][0] = false;
-	  geom_x_mat[i][1] = false;
-	  break;
-	case 1:
-	  geom_x_mat[i][0] = true;
-	  geom_x_mat[i][1] = false;
-	  break;
-	case 2:
-	  geom_x_mat[i][0] = false;
-	  geom_x_mat[i][1] = true;
-	  break;
-	default:
-	  geom_x_mat[i][0] = false;
-	  geom_x_mat[i][1] = false;
-	  break;
-	}
+        {
+        case 0:
+          geom_x_mat[i][0] = false;
+          geom_x_mat[i][1] = false;
+          break;
+        case 1:
+          geom_x_mat[i][0] = true;
+          geom_x_mat[i][1] = false;
+          break;
+        case 2:
+          geom_x_mat[i][0] = false;
+          geom_x_mat[i][1] = true;
+          break;
+        default:
+          geom_x_mat[i][0] = false;
+          geom_x_mat[i][1] = false;
+          break;
+        }
     }
   
   // reference = middle of a log
@@ -136,24 +136,24 @@ void FullShowerGeometryManager::Initialize()
       xyz[1] = -2*FSGM_towerPitch+geom_xy_step*(0.5+(double)j);
       WhereInCalForGeom(xyz,whereincal);
       switch(whereincal[0])
-	{
-	case 0:
-	  geom_y_mat[j][0] = false;
-	  geom_y_mat[j][1] = false;
-	  break;
-	case 1:
-	  geom_y_mat[j][0] = true;
-	  geom_y_mat[j][1] = false;
-	  break;
-	case 2:
-	  geom_y_mat[j][0] = false;
-	  geom_y_mat[j][1] = true;
-	  break;
-	default:
-	  geom_y_mat[j][0] = false;
-	  geom_y_mat[j][1] = false;
-	  break;
-	}
+        {
+        case 0:
+          geom_y_mat[j][0] = false;
+          geom_y_mat[j][1] = false;
+          break;
+        case 1:
+          geom_y_mat[j][0] = true;
+          geom_y_mat[j][1] = false;
+          break;
+        case 2:
+          geom_y_mat[j][0] = false;
+          geom_y_mat[j][1] = true;
+          break;
+        default:
+          geom_y_mat[j][0] = false;
+          geom_y_mat[j][1] = false;
+          break;
+        }
     }
 
   // Fill the test points used by the propagator
@@ -190,14 +190,14 @@ void FullShowerGeometryManager::FillXYPoints()
     {
       x = -1+step*(double)i;
       for(j=0;j<=2*n;++j)
-	{
-	  y = -1+step*(double)j;
-	  if(sqrt(x*x+y*y)>1) continue;
-	  FSGM_XCircle[FSGM_NCircle] = x;
-	  FSGM_YCircle[FSGM_NCircle] = y;
-	  FSGM_RCircle[FSGM_NCircle] = sqrt(x*x+y*y);
-	  ++FSGM_NCircle;
-	}
+        {
+          y = -1+step*(double)j;
+          if(sqrt(x*x+y*y)>1) continue;
+          FSGM_XCircle[FSGM_NCircle] = x;
+          FSGM_YCircle[FSGM_NCircle] = y;
+          FSGM_RCircle[FSGM_NCircle] = sqrt(x*x+y*y);
+          ++FSGM_NCircle;
+        }
     }
 }
 
@@ -310,16 +310,16 @@ void FullShowerGeometryManager::WhereInCalLT(double *xyz, int *whereincal)
   if(ilayer%2==0)  // look-up table set for even layers, invert x and y otherwise
     {
       if(geom_x_mat[i][1] || geom_y_mat[j][1])
-	whereincal[0] = 2;
+        whereincal[0] = 2;
       else
-	whereincal[0] = (int)(geom_x_mat[i][0] && geom_y_mat[j][0]);
+        whereincal[0] = (int)(geom_x_mat[i][0] && geom_y_mat[j][0]);
     }
   else
     {
       if(geom_y_mat[i][1] || geom_x_mat[j][1])
-	whereincal[0] = 2;
+        whereincal[0] = 2;
       else
-	whereincal[0] = (int)(geom_y_mat[i][0] && geom_x_mat[j][0]);
+        whereincal[0] = (int)(geom_y_mat[i][0] && geom_x_mat[j][0]);
     }
 }
 
@@ -405,10 +405,10 @@ void FullShowerGeometryManager::FillRadialProfile()
     {
       t = RadProf_t_step*(0.5+(double)i);
       for(j=0;j<FSGM_RPROF_R_MAX;++j)
-	{
-	  r = RadProf_r_step*(0.5+(double)j);
-	  RadProf[i][j] = RadialProfile(t,r);
-	}
+        {
+          r = RadProf_r_step*(0.5+(double)j);
+          RadProf[i][j] = RadialProfile(t,r);
+        }
     }
 }
 
@@ -491,7 +491,7 @@ void FullShowerDevelopmentDescription::Reset()
   for(i=0;i<16;++i)
     for(j=0;j<8;++j)
       for(k=0;k<12;++k)
-	OffSatu[i][j][k] = 0;
+        OffSatu[i][j][k] = 0;
 }
 
 void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend)
@@ -510,24 +510,24 @@ void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *
       if(vv[i]==0) continue;
       lambda = (m_fsgm->FSGM_CalSafeBoundaries[i][0]-pp[i])/vv[i];
       for(j=0;j<3;++j)
-	{
-	  if(j!=i) pp0[i][j] = pp[j]+lambda*vv[j];
-	  else pp0[i][j] = m_fsgm->FSGM_CalSafeBoundaries[i][0];
-	}
+        {
+          if(j!=i) pp0[i][j] = pp[j]+lambda*vv[j];
+          else pp0[i][j] = m_fsgm->FSGM_CalSafeBoundaries[i][0];
+        }
       lambda = (m_fsgm->FSGM_CalSafeBoundaries[i][1]-pp[i])/vv[i];
       for(j=0;j<3;++j)
-	{
-	  if(j!=i) pp1[i][j] = pp[j]+lambda*vv[j];
-	  else pp1[i][j] = m_fsgm->FSGM_CalSafeBoundaries[i][1];
-	}
+        {
+          if(j!=i) pp1[i][j] = pp[j]+lambda*vv[j];
+          else pp1[i][j] = m_fsgm->FSGM_CalSafeBoundaries[i][1];
+        }
       segmentlength[i] = 0;
       for(j=0;j<3;++j) segmentlength[i] += (pp0[i][j]-pp1[i][j])*(pp0[i][j]-pp1[i][j]);
       segmentlength[i] = sqrt(segmentlength[i]);
       if(segmentlength[i]<segmentlengthmin)
-	{
-	  segmentlengthmin = segmentlength[i];
-	  idir = i;
-	}
+        {
+          segmentlengthmin = segmentlength[i];
+          idir = i;
+        }
     }
 
   double checkdirection = (pp1[idir][0]-pp0[idir][0])*vv[0]+(pp1[idir][1]-pp0[idir][1])*vv[1]+(pp1[idir][2]-pp0[idir][2])*vv[2];
@@ -535,18 +535,18 @@ void FullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, double *
   if(checkdirection>0)
     {
       for(i=0;i<3;++i)
-	{
-	  ppstart[i] = pp0[idir][i];
-	  ppend[i] = pp1[idir][i];
-	}
+        {
+          ppstart[i] = pp0[idir][i];
+          ppend[i] = pp1[idir][i];
+        }
     }
   else
     {
       for(i=0;i<3;++i)
-	{
-	  ppstart[i] = pp1[idir][i];
-	  ppend[i] = pp0[idir][i];
-	}
+        {
+          ppstart[i] = pp1[idir][i];
+          ppend[i] = pp0[idir][i];
+        }
     }
 }
 
@@ -657,28 +657,28 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
       RM[j] = releffradius;
       effradius = 1.5*FSDD_MOLRAD*releffradius;
       for(i=0;i<m_fsgm->FSGM_NCircle;++i)
-	{
-	  ppcc[0] = ppc[0]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[0]+m_fsgm->FSGM_YCircle[i]*vv1[0]);
-	  ppcc[1] = ppc[1]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[1]+m_fsgm->FSGM_YCircle[i]*vv1[1]);
-	  ppcc[2] = ppc[2]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[2]+m_fsgm->FSGM_YCircle[i]*vv1[2]);
-	  m_fsgm->WhereInCal(ppcc,whereincal);
-	  radius = m_fsgm->FSGM_RCircle[i]*effradius;
-	  relradius = radius/FSDD_MOLRAD;
-	  radialprofile = m_fsgm->GetRadialProfile(relx0position,relradius/wideningfactor);
-	  etotdep += radialprofile;
-	  materialfraction[whereincal[0]][j] += radialprofile;
-	  if(whereincal[0]==1)
-	    {
-	      layerfraction[whereincal[1]][j] += radialprofile;
-	    }
-	}
+        {
+          ppcc[0] = ppc[0]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[0]+m_fsgm->FSGM_YCircle[i]*vv1[0]);
+          ppcc[1] = ppc[1]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[1]+m_fsgm->FSGM_YCircle[i]*vv1[1]);
+          ppcc[2] = ppc[2]+effradius*(m_fsgm->FSGM_XCircle[i]*vv0[2]+m_fsgm->FSGM_YCircle[i]*vv1[2]);
+          m_fsgm->WhereInCal(ppcc,whereincal);
+          radius = m_fsgm->FSGM_RCircle[i]*effradius;
+          relradius = radius/FSDD_MOLRAD;
+          radialprofile = m_fsgm->GetRadialProfile(relx0position,relradius/wideningfactor);
+          etotdep += radialprofile;
+          materialfraction[whereincal[0]][j] += radialprofile;
+          if(whereincal[0]==1)
+            {
+              layerfraction[whereincal[1]][j] += radialprofile;
+            }
+        }
       if(etotdep>0)
-	{
-	  for(i=0;i<3;++i)
-	    materialfraction[i][j] /= etotdep;
-	  for(i=0;i<8;++i)
-	    layerfraction[i][j] /= etotdep;
-	}
+        {
+          for(i=0;i<3;++i)
+            materialfraction[i][j] /= etotdep;
+          for(i=0;i<8;++i)
+            layerfraction[i][j] /= etotdep;
+        }
       
       z2X0mat = materialfraction[1][j]/FSDD_XCSI+materialfraction[2][j]/FSDD_XCRK;
       
@@ -689,10 +689,10 @@ bool FullShowerDevelopmentDescription::Compute(double *pp, double *vv, double st
       for(i=0;i<8;++i) totx0lay[i] += layerfraction[i][j]*dX0[j];
 
       if(materialfraction[2][j]>crackmaxfrac)
-	{
-	  x0crackmaxfrac = X0[j];
-	  crackmaxfrac = materialfraction[2][j];
-	}
+        {
+          x0crackmaxfrac = X0[j];
+          crackmaxfrac = materialfraction[2][j];
+        }
     }
 
   dX0[NStep] = 0;
@@ -790,36 +790,36 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
       lastdimm = dimm;
       dimm = 0;
       while(shmm->X0[imm]<X0[ix0+1] && imm<shmm->NStep)
-	{
-	  if(dimm==0)
-	    {
-	      check[ix0] += shmm->X0[imm]-X0[ix0];
-	      for(j=0;j<3;++j) materialfraction[j][ix0] += (shmm->X0[imm]-X0[ix0])*last_materialfraction[j];
-	      for(j=0;j<8;++j) layerfraction[j][ix0] += (shmm->X0[imm]-X0[ix0])*last_layerfraction[j];
-	    }
-	  icheck[ix0] += 1;
-	  if(shmm->X0[imm+1]<X0[ix0+1])
-	    {
-	      check[ix0] += shmm->dX0[imm];
-	      for(j=0;j<3;++j) materialfraction[j][ix0] += shmm->dX0[imm]*shmm->materialfraction[j][imm];
-	      for(j=0;j<8;++j) layerfraction[j][ix0] += shmm->dX0[imm]*shmm->layerfraction[j][imm];
-	    }
-	  else
-	    {
-	      check[ix0] += (X0[ix0+1]-shmm->X0[imm]);
-	      for(j=0;j<3;++j) materialfraction[j][ix0] += (X0[ix0+1]-shmm->X0[imm])*shmm->materialfraction[j][imm];
-	      for(j=0;j<8;++j) layerfraction[j][ix0] += (X0[ix0+1]-shmm->X0[imm])*shmm->layerfraction[j][imm];
-	    }
-	  for(j=0;j<3;++j) last_materialfraction[j] = shmm->materialfraction[j][imm];
-	  for(j=0;j<8;++j) last_layerfraction[j] = shmm->layerfraction[j][imm];
-	  ++imm;
-	  ++dimm;
-	}
+        {
+          if(dimm==0)
+            {
+              check[ix0] += shmm->X0[imm]-X0[ix0];
+              for(j=0;j<3;++j) materialfraction[j][ix0] += (shmm->X0[imm]-X0[ix0])*last_materialfraction[j];
+              for(j=0;j<8;++j) layerfraction[j][ix0] += (shmm->X0[imm]-X0[ix0])*last_layerfraction[j];
+            }
+          icheck[ix0] += 1;
+          if(shmm->X0[imm+1]<X0[ix0+1])
+            {
+              check[ix0] += shmm->dX0[imm];
+              for(j=0;j<3;++j) materialfraction[j][ix0] += shmm->dX0[imm]*shmm->materialfraction[j][imm];
+              for(j=0;j<8;++j) layerfraction[j][ix0] += shmm->dX0[imm]*shmm->layerfraction[j][imm];
+            }
+          else
+            {
+              check[ix0] += (X0[ix0+1]-shmm->X0[imm]);
+              for(j=0;j<3;++j) materialfraction[j][ix0] += (X0[ix0+1]-shmm->X0[imm])*shmm->materialfraction[j][imm];
+              for(j=0;j<8;++j) layerfraction[j][ix0] += (X0[ix0+1]-shmm->X0[imm])*shmm->layerfraction[j][imm];
+            }
+          for(j=0;j<3;++j) last_materialfraction[j] = shmm->materialfraction[j][imm];
+          for(j=0;j<8;++j) last_layerfraction[j] = shmm->layerfraction[j][imm];
+          ++imm;
+          ++dimm;
+        }
       if(dimm==0 && ix0<NStep-1)
-	{
- 	  for(j=0;j<3;++j) materialfraction[j][ix0] = last_materialfraction[j];
- 	  for(j=0;j<8;++j) layerfraction[j][ix0] = last_layerfraction[j];
-	}
+        {
+           for(j=0;j<3;++j) materialfraction[j][ix0] = last_materialfraction[j];
+           for(j=0;j<8;++j) layerfraction[j][ix0] = last_layerfraction[j];
+        }
     }
 
   ix0 = NStep-1;
@@ -840,10 +840,10 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
     {
       if(check[ix0]==0) continue;
       if(fabs(check[ix0]-x0step)>0.0001)
-	{
-	  // FullShowerDevelopmentDescription::Convert PROBLEM DURING CONVERSION
-	  return false;
-	}
+        {
+          // FullShowerDevelopmentDescription::Convert PROBLEM DURING CONVERSION
+          return false;
+        }
       for(j=0;j<3;++j) materialfraction[j][ix0] /= x0step;
       for(j=0;j<8;++j) layerfraction[j][ix0] /= x0step;
     }
@@ -854,17 +854,17 @@ bool FullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, FullShowe
       meanpos = 0;
       meanweight = 0;
       for(ix0=0;ix0<NStep;++ix0)
-	{
-	  if(layerfraction[j][ix0]>0)
-	    {
-	      meanpos += layerfraction[j][ix0]*X0[ix0];
-	      meanweight += layerfraction[j][ix0];
-	    }
-	}
+        {
+          if(layerfraction[j][ix0]>0)
+            {
+              meanpos += layerfraction[j][ix0]*X0[ix0];
+              meanweight += layerfraction[j][ix0];
+            }
+        }
       if(meanweight==0)
-	posx0lay[j] = -1;
+        posx0lay[j] = -1;
       else
-	posx0lay[j] = meanpos/meanweight;
+        posx0lay[j] = meanpos/meanweight;
     }
 
   return true;
@@ -943,12 +943,12 @@ bool FullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, do
   for(l=0;l<=NDevelopment;++l)
     {
       for(i=0;i<16;++i)
-	for(j=0;j<8;++j)
-	  for(k=0;k<12;++k)
-	    {
-	      FSDDMM[l]->OffSatu[i][j][k] = OffSatu[i][j][k];
-	      FSDDX0[l]->OffSatu[i][j][k] = OffSatu[i][j][k];
-	    }
+        for(j=0;j<8;++j)
+          for(k=0;k<12;++k)
+            {
+              FSDDMM[l]->OffSatu[i][j][k] = OffSatu[i][j][k];
+              FSDDX0[l]->OffSatu[i][j][k] = OffSatu[i][j][k];
+            }
     }
   
   for(i=0;i<=NDevelopment;++i)
@@ -966,19 +966,19 @@ bool FullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, do
       meanposx0lay[j] = 0;
       meanw = 0;
       for(i=0;i<=NDevelopment;++i)
-	{
-	  meantotx0lay[j] += FSDDX0[i]->totx0lay[j];
-	  if(FSDDX0[i]->posx0lay[j]>-1)
-	    {
-	      meanw += 1.;
-	      meanposx0lay[j] += FSDDX0[i]->posx0lay[j];
-	    }
-	}
+        {
+          meantotx0lay[j] += FSDDX0[i]->totx0lay[j];
+          if(FSDDX0[i]->posx0lay[j]>-1)
+            {
+              meanw += 1.;
+              meanposx0lay[j] += FSDDX0[i]->posx0lay[j];
+            }
+        }
       meantotx0lay[j] /= (double)(NDevelopment+1);
       if(meanw>0)
-	meanposx0lay[j] /= meanw;
+        meanposx0lay[j] /= meanw;
       else
-	meanposx0lay[j] = -1;
+        meanposx0lay[j] = -1;
     }
   
   return true;
@@ -1024,11 +1024,11 @@ void FullShowerDevelopmentDescriptionManager::FillCurrentFSDD(double showerxmax)
       CurrentFSDD->X0[i] = FSDDX0[ish]->X0[i];
       CurrentFSDD->RM[i] = FSDDX0[ish]->RM[i];
       for(j=0;j<3;++j)
-	CurrentFSDD->materialfraction[j][i] = (1-interpol)*FSDDX0[ish]->materialfraction[j][i]
-	  +interpol*FSDDX0[ish+1]->materialfraction[j][i];
+        CurrentFSDD->materialfraction[j][i] = (1-interpol)*FSDDX0[ish]->materialfraction[j][i]
+          +interpol*FSDDX0[ish+1]->materialfraction[j][i];
       for(j=0;j<8;++j)
-	CurrentFSDD->layerfraction[j][i] = (1-interpol)*FSDDX0[ish]->layerfraction[j][i]
-	  +interpol*FSDDX0[ish+1]->layerfraction[j][i];
+        CurrentFSDD->layerfraction[j][i] = (1-interpol)*FSDDX0[ish]->layerfraction[j][i]
+          +interpol*FSDDX0[ish+1]->layerfraction[j][i];
     }
 /*   for(i=CurrentFSDD->NStep;i<FSDD_NSTEPS_MAX;++i) */
 /*     { */

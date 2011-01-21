@@ -32,8 +32,8 @@ AcdTkrHitPocaV2& AcdTkrHitPocaV2::operator=(const AcdTkrHitPocaV2& other)
 
 /// set all the values
 void AcdTkrHitPocaV2::set(const AcdId& acdId, int trackIndex,
-			const float mips[2],
-			Float_t vetoSigmaHit, Float_t vetoSigmaProj, Float_t vetoSigmaProp)
+                        const float mips[2],
+                        Float_t vetoSigmaHit, Float_t vetoSigmaProj, Float_t vetoSigmaProp)
 {
   m_id = acdId;
   m_trackIndex = trackIndex;

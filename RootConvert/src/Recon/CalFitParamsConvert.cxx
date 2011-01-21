@@ -13,7 +13,7 @@ void convert( const Event::CalFitParams & tdsParams, CalFitParams & rootParams )
         convert(tdsParams.getAxis()),
         tdsParams.getxDirxDir(),tdsParams.getxDiryDir(),tdsParams.getxDirzDir(),
         tdsParams.getyDiryDir(),tdsParams.getyDirzDir(),tdsParams.getzDirzDir(),
-	tdsParams.getFitLayers(),tdsParams.getChiSquare() ) ;
+        tdsParams.getFitLayers(),tdsParams.getChiSquare() ) ;
  }
  
 void convert( const CalFitParams & rootParams, Event::CalFitParams & tdsParams )
@@ -28,7 +28,7 @@ void convert( const CalFitParams & rootParams, Event::CalFitParams & tdsParams )
         rootAxis.X(),rootAxis.Y(),rootAxis.Z(),
         rootParams.getxDirxDir(), rootParams.getxDiryDir(), rootParams.getxDirzDir(),
         rootParams.getyDiryDir(), rootParams.getyDirzDir(), rootParams.getzDirzDir(),
-	rootParams.getFitLayers(), rootParams.getChiSquare() ) ;
+        rootParams.getFitLayers(), rootParams.getChiSquare() ) ;
 }
 
 }

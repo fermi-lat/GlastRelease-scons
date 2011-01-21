@@ -45,9 +45,9 @@ public:
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdSplashVars(const AcdId& acdId, int trackIndex, 
-	      const TVector3& calEntryPoint, const TVector3& calEntryVector,
-	      const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
-	      const Float_t& weightedPathlength);
+              const TVector3& calEntryPoint, const TVector3& calEntryVector,
+              const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
+              const Float_t& weightedPathlength);
 
   /// Copy constructor
   AcdSplashVars(const AcdSplashVars& params);
@@ -84,9 +84,9 @@ public:
   
   /// set all the values
   void set(const AcdId& acdId, int trackIndex, 
-	   const TVector3& calEntryPoint, const TVector3& calEntryVector,
-	   const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
-	   const Float_t& weightedPathlength);
+           const TVector3& calEntryPoint, const TVector3& calEntryVector,
+           const Float_t& tileSolidAngle, const Float_t& weightedTrackAngle,
+           const Float_t& weightedPathlength);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);

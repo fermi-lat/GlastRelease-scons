@@ -35,8 +35,8 @@ public:
   /// Constructor for use in transient -> persistent conversion 
   /// Takes arguements as they are stored in ROOT
   AcdTkrGapPoca(const AcdGapId& gapId, int trackIndex,
-		const AcdTkrLocalCoords& local,
-		const AcdPocaData& pocaData);
+                const AcdTkrLocalCoords& local,
+                const AcdPocaData& pocaData);
 
   /// Copy constructor
   AcdTkrGapPoca(const AcdTkrGapPoca& params);
@@ -54,8 +54,8 @@ public:
 
   /// set all the values
   void initialize(const AcdGapId& acdId, int trackIndex,
-		  const AcdTkrLocalCoords& local,
-		  const AcdPocaData& pocaData);
+                  const AcdTkrLocalCoords& local,
+                  const AcdPocaData& pocaData);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);

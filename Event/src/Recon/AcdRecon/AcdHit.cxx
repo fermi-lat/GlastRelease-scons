@@ -35,16 +35,16 @@ AcdHit::AcdHit(const Event::AcdDigi& digi, float mipsPmtA, float mipsPmtB) {
 /// Constructor for use in persistent -> transient conversion, 
 /// Takes arguements as they are stored in ROOT
 AcdHit::AcdHit(const idents::AcdId& id, unsigned short flagsA, unsigned short flagsB, 
-	       unsigned short phaA, unsigned short phaB,
-	       float mipsPmtA, float mipsPmtB) {
+               unsigned short phaA, unsigned short phaB,
+               float mipsPmtA, float mipsPmtB) {
   set(id,flagsA,flagsB,phaA,phaB,mipsPmtA,mipsPmtB);
 }
 
 
 void AcdHit::set(const idents::AcdId& id, 
-		 unsigned short flagsA, unsigned short flagsB, 
-		 unsigned short phaA, unsigned short phaB,
-		 float mipsPmtA, float mipsPmtB) {
+                 unsigned short flagsA, unsigned short flagsB, 
+                 unsigned short phaA, unsigned short phaB,
+                 float mipsPmtA, float mipsPmtB) {
   // just copy everything
   m_acdId = id;
   m_flags[A] = flagsA;
@@ -63,12 +63,12 @@ void AcdHit::writeOut(MsgStream& stream) const
 {
 
   stream << MSG::DEBUG
-	 << "Tile: " << m_acdId.id()
-	 << "Phas: (" << m_pha[A] << ',' << m_pha[B] 
-	 << "). Flags: (" << m_flags[A] << ',' << m_flags[B] 
-	 << "). Mips: (" << m_mipsPmt[A] << ',' <<  m_mipsPmt[B]
-	 << ")."
-	 << endreq;
+         << "Tile: " << m_acdId.id()
+         << "Phas: (" << m_pha[A] << ',' << m_pha[B] 
+         << "). Flags: (" << m_flags[A] << ',' << m_flags[B] 
+         << "). Mips: (" << m_mipsPmt[A] << ',' <<  m_mipsPmt[B]
+         << ")."
+         << endreq;
 }
 
 
@@ -115,7 +115,7 @@ void AcdHit::setFlags(const Event::AcdDigi& digi)
 AcdHitCol::AcdHitCol(const std::vector<AcdHit*>& acdhits) {
 //Purpose: take ownership of hits from a vector
   for ( std::vector<AcdHit*>::const_iterator itr = acdhits.begin();
-	itr != acdhits.end(); itr++ ) {
+        itr != acdhits.end(); itr++ ) {
     AcdHit* hit = const_cast<AcdHit*>(*itr);
     add(hit);
   }

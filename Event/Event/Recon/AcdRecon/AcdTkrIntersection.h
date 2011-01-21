@@ -71,10 +71,10 @@ namespace Event
     AcdTkrIntersection();
     
     AcdTkrIntersection(const idents::AcdId& acdId, int trackIndex, 
-		       const Point& globalPosition, 
+                       const Point& globalPosition, 
                const double localPosition[2], const CLHEP::HepMatrix& localCovMatrix,
-		       double arcLengthToIntersection, double pathLengthInTile,
-		       unsigned char tileHit, double cosTheta);
+                       double arcLengthToIntersection, double pathLengthInTile,
+                       unsigned char tileHit, double cosTheta);
 
     virtual ~AcdTkrIntersection() {};
     
@@ -108,10 +108,10 @@ namespace Event
     
     /// set everything at once
     void set(const idents::AcdId& acdId, int trackIndex, 
-	     const Point& globalPosition, 
-	     const double localPosition[2], const HepMatrix& localCovMatrix,
-	     double arcLengthToIntersection, double pathLengthInTile,
-	     unsigned char tileHit, double cosTheta);
+             const Point& globalPosition, 
+             const double localPosition[2], const HepMatrix& localCovMatrix,
+             double arcLengthToIntersection, double pathLengthInTile,
+             unsigned char tileHit, double cosTheta);
 
     virtual void writeOut(MsgStream& stream) const;
     

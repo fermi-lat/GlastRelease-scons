@@ -108,7 +108,7 @@ StatusCode CalClustersAlg::execute()
     
     // non fatal errors
     // if there's no CalXtalRec then CalClustersAlg is not happening
-  	if (!m_calReconSvc->getXtalRecs())  return StatusCode::SUCCESS ;
+          if (!m_calReconSvc->getXtalRecs())  return StatusCode::SUCCESS ;
 
     // Ditto if the collection is empty
     if (m_calReconSvc->getXtalRecs()->empty()) return sc;
@@ -148,9 +148,9 @@ StatusCode CalClustersAlg::execute()
         
         // display cluster energies
         Event::CalClusterCol::const_iterator cluster ;
-        for ( cluster = calClusterCol->begin() ; 	 
-              cluster != calClusterCol->end() ; 	 
-              cluster++) { 	 
+        for ( cluster = calClusterCol->begin() ;          
+              cluster != calClusterCol->end() ;          
+              cluster++) {          
             log<<MSG::DEBUG<<"CalCluster Energy: "
               <<(*cluster)->getMomParams().getEnergy()
               <<endreq ;

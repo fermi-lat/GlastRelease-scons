@@ -29,11 +29,11 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   rootAcdRec.initialize(
     tdsAcdRec.getEnergy(), tdsAcdRec.getRibbonEnergy(),
     tdsAcdRec.getTileCount(), tdsAcdRec.getRibbonCount(),
-	tdsAcdRec.getGammaDoca(), tdsAcdRec.getDoca(), rootDocaId, 
+        tdsAcdRec.getGammaDoca(), tdsAcdRec.getDoca(), rootDocaId, 
     tdsAcdRec.getActiveDist3D(), rootActDistId, 
     tdsAcdRec.getRibbonActiveDist(), rootRibActDistId,
     tdsAcdRec.getRowDocaCol(), tdsAcdRec.getRowActDist3DCol(),
-	rootIdCol, tdsAcdRec.getEnergyCol(), tdsAcdRec.getCornerDoca());
+        rootIdCol, tdsAcdRec.getEnergyCol(), tdsAcdRec.getCornerDoca());
 
   idents::AcdId tdsActDistId_Down = tdsAcdRec.getMaxActDist3DId_Down();
   AcdId rootActDistId_Down = convert(tdsActDistId_Down);
@@ -53,7 +53,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   const Event::AcdTkrPocaCol& tdsAcdTkrPocas = tdsAcdRec.getAcdTkrPocaCol() ;
   AcdTkrPoca rootAcdPoca;
   for ( Event::AcdTkrPocaCol::const_iterator itrPoca = tdsAcdTkrPocas.begin();
-	itrPoca != tdsAcdTkrPocas.end(); itrPoca++ ) {
+        itrPoca != tdsAcdTkrPocas.end(); itrPoca++ ) {
     const Event::AcdTkrPoca* acdTkrPocaTDS = *itrPoca;
     convert(*acdTkrPocaTDS,rootAcdPoca);
     rootAcdRec.addAcdTkrPoca(rootAcdPoca);
@@ -62,7 +62,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   const Event::AcdHitCol& tdsAcdHits = tdsAcdRec.getAcdHitCol() ;    
   AcdHit rootAcdHit;
   for ( Event::AcdHitCol::const_iterator itrHit = tdsAcdHits.begin();
-	itrHit != tdsAcdHits.end(); itrHit++ ) {
+        itrHit != tdsAcdHits.end(); itrHit++ ) {
     const Event::AcdHit* acdHitTDS = *itrHit;
     convert(*acdHitTDS,rootAcdHit);
     rootAcdRec.addAcdHit(rootAcdHit);
@@ -71,7 +71,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   const Event::AcdTkrHitPocaCol& tdsAcdTkrHitPocas = tdsAcdRec.getAcdTkrHitPocaCol() ;
   AcdTkrHitPoca rootAcdHitPoca;
   for ( Event::AcdTkrHitPocaCol::const_iterator itrHitPoca = tdsAcdTkrHitPocas.begin();
-	itrHitPoca != tdsAcdTkrHitPocas.end(); itrHitPoca++ ) {
+        itrHitPoca != tdsAcdTkrHitPocas.end(); itrHitPoca++ ) {
     const Event::AcdTkrHitPoca* acdTkrHitPocaTDS = *itrHitPoca;
     convert(*acdTkrHitPocaTDS,rootAcdHitPoca);
     rootAcdRec.addAcdTkrHitPoca(rootAcdHitPoca);
@@ -80,7 +80,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   const Event::AcdTkrGapPocaCol& tdsAcdTkrGapPocas = tdsAcdRec.getAcdTkrGapPocaCol() ;
   AcdTkrGapPoca rootAcdGapPoca;
   for ( Event::AcdTkrGapPocaCol::const_iterator itrGapPoca = tdsAcdTkrGapPocas.begin();
-	itrGapPoca != tdsAcdTkrGapPocas.end(); itrGapPoca++ ) {
+        itrGapPoca != tdsAcdTkrGapPocas.end(); itrGapPoca++ ) {
     const Event::AcdTkrGapPoca* acdTkrGapPocaTDS = *itrGapPoca;
     convert(*acdTkrGapPocaTDS,rootAcdGapPoca);
     rootAcdRec.addAcdTkrGapPoca(rootAcdGapPoca);
@@ -89,7 +89,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   const Event::AcdTkrPointCol& tdsAcdTkrPoints = tdsAcdRec.getAcdTkrPointCol() ;
   AcdTkrPoint rootAcdPoint;
   for ( Event::AcdTkrPointCol::const_iterator itrPoint = tdsAcdTkrPoints.begin();
-	itrPoint != tdsAcdTkrPoints.end(); itrPoint++ ) {
+        itrPoint != tdsAcdTkrPoints.end(); itrPoint++ ) {
     const Event::AcdTkrPoint* acdTkrPointTDS = *itrPoint;
     convert(*acdTkrPointTDS,rootAcdPoint);
     rootAcdRec.addAcdTkrPoint(rootAcdPoint);
@@ -98,7 +98,7 @@ void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
   const Event::AcdSplashVarsCol& tdsAcdSplashVars = tdsAcdRec.getAcdSplashVarsCol() ;
   AcdSplashVars rootAcdSplash;
   for ( Event::AcdSplashVarsCol::const_iterator itrSplash = tdsAcdSplashVars.begin();
-	itrSplash != tdsAcdSplashVars.end(); itrSplash++ ) {
+        itrSplash != tdsAcdSplashVars.end(); itrSplash++ ) {
     const Event::AcdSplashVars* acdSplashVarsTDS = *itrSplash;
     convert(*acdSplashVarsTDS,rootAcdSplash);
     rootAcdRec.addAcdSplashVar(rootAcdSplash);
@@ -221,12 +221,12 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
         tdsActDistId,
         rootAcdRec.getRowActDistCol(),
         acdTkrIntersections,
-	acdTkrPocas,
-	acdHits,
-	acdTkrHitPocas,
-	acdTkrGapPocas,
-	acdTkrPoints,
-	acdSplashVars,
+        acdTkrPocas,
+        acdHits,
+        acdTkrHitPocas,
+        acdTkrGapPocas,
+        acdTkrPoints,
+        acdSplashVars,
         rootAcdRec.getRibbonActiveDist(),
         tdsRibActDistId, 
         rootAcdRec.getCornerDoca()
@@ -246,7 +246,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     const Event::AcdHitCol& tdsAcdHits = tds.getHitCol() ;    
     AcdHit rootAcdHit;
     for ( Event::AcdHitCol::const_iterator itrHit = tdsAcdHits.begin();
-	  itrHit != tdsAcdHits.end(); itrHit++ ) {
+          itrHit != tdsAcdHits.end(); itrHit++ ) {
       const Event::AcdHit* acdHitTDS = *itrHit;
       AcdHit* addedHit = root.addAcdHit(rootAcdHit);
       convert(*acdHitTDS,*addedHit);      
@@ -255,7 +255,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     const Event::AcdTkrAssocCol& tdsAcdTkrAssocs = tds.getTkrAssocCol() ;    
     AcdTkrAssoc rootAcdTkrAssoc;
     for ( Event::AcdTkrAssocCol::const_iterator itrAssoc = tdsAcdTkrAssocs.begin();
-	  itrAssoc != tdsAcdTkrAssocs.end(); itrAssoc++ ) {
+          itrAssoc != tdsAcdTkrAssocs.end(); itrAssoc++ ) {
       const Event::AcdTkrAssoc* acdTkrAssocTDS = *itrAssoc;
       AcdTkrAssoc* addedAssoc = root.addAcdTkrAssoc(rootAcdTkrAssoc);
       convert(*acdTkrAssocTDS,*addedAssoc);      
@@ -286,17 +286,17 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   void convert( const Event::AcdHit& tds, AcdHit& root) {
     AcdId theId = convert( tds.getAcdId());
     root.set( theId,
-	      tds.getFlags(Event::AcdHit::A), tds.getFlags(Event::AcdHit::B),
-	      tds.getPha(Event::AcdHit::A), tds.getPha(Event::AcdHit::B),
-	      tds.mips(Event::AcdHit::A), tds.mips(Event::AcdHit::B) ); 
+              tds.getFlags(Event::AcdHit::A), tds.getFlags(Event::AcdHit::B),
+              tds.getPha(Event::AcdHit::A), tds.getPha(Event::AcdHit::B),
+              tds.mips(Event::AcdHit::A), tds.mips(Event::AcdHit::B) ); 
   } 
   
   void convert( const AcdHit& root, Event::AcdHit& tds) {
     idents::AcdId theId = convert( root.getId());
     tds.set( theId, 
-	     root.getFlags(AcdHit::A), root.getFlags(AcdHit::B),
-	     root.getPha(AcdHit::A), root.getPha(AcdHit::B),
-	     root.getMips(AcdHit::A), root.getMips(AcdHit::B) ); 
+             root.getFlags(AcdHit::A), root.getFlags(AcdHit::B),
+             root.getPha(AcdHit::A), root.getPha(AcdHit::B),
+             root.getMips(AcdHit::A), root.getMips(AcdHit::B) ); 
   }
 
   void convert( const Event::AcdEventTopology& tds, AcdEventTopology& root) {
@@ -315,11 +315,11 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
       tileEnergySideFace[i] = tds.getTileEnergySideFace(i+1);
     }
     root.set( tds.getTileCount(), tds.getRibbonCount(), tds.getTileVeto(),
-	      tds.getTileEnergy(), tds.getRibbonEnergy(), 
-	      tds.getTileCountTop(), tileCountSideRow, tileCountSideFace,
-	      tds.getVetoCountTop(), vetoCountSideRow, vetoCountSideFace,
-	      tds.getTileEnergyTop(), tileEnergySideRow, tileEnergySideFace,
-	      tds.getNSidesHit(), tds.getNSidesVeto());
+              tds.getTileEnergy(), tds.getRibbonEnergy(), 
+              tds.getTileCountTop(), tileCountSideRow, tileCountSideFace,
+              tds.getVetoCountTop(), vetoCountSideRow, vetoCountSideFace,
+              tds.getTileEnergyTop(), tileEnergySideRow, tileEnergySideFace,
+              tds.getNSidesHit(), tds.getNSidesVeto());
   }
 
   void convert( const AcdEventTopology& root, Event::AcdEventTopology& tds){
@@ -338,11 +338,11 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
       tileEnergySideFace[i] = root.getTileEnergySideFace(i+1);
     }
     tds.set( root.getTileCount(), root.getRibbonCount(), root.getTileVeto(),
-	     root.getTileEnergy(), root.getRibbonEnergy(), 
-	     root.getTileCountTop(), tileCountSideRow, tileCountSideFace,
-	     root.getVetoCountTop(), vetoCountSideRow, vetoCountSideFace,
-	     root.getTileEnergyTop(), tileEnergySideRow, tileEnergySideFace,
-	     root.getNSidesHit(), root.getNSidesVeto());
+             root.getTileEnergy(), root.getRibbonEnergy(), 
+             root.getTileCountTop(), tileCountSideRow, tileCountSideFace,
+             root.getVetoCountTop(), vetoCountSideRow, vetoCountSideFace,
+             root.getTileEnergyTop(), tileEnergySideRow, tileEnergySideFace,
+             root.getNSidesHit(), root.getNSidesVeto());
   }
 
   void convert( const Event::AcdTkrAssoc& tds, AcdTkrAssoc& root) {
@@ -354,10 +354,10 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     convert( tds.getCovStart(), covStart );
     convert( tds.getCovEnd(), covEnd );
     root.set( tds.getTrackIndex(), tds.getUpward(), tds.getEnergy(),
-	      start, dir, 
-	      tds.getArcLength(), 
-	      covStart, covEnd,
-	      tds.getTkrSSDVeto(), tds.getCornerDoca() );
+              start, dir, 
+              tds.getArcLength(), 
+              covStart, covEnd,
+              tds.getTkrSSDVeto(), tds.getCornerDoca() );
 
     AcdTkrHitPocaV2 rootAcdHitPoca;
     int nHitPoca = tds.nHitPoca();
@@ -390,10 +390,10 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     convert( root.getCovStart(), covStart );
     convert( root.getCovEnd(), covEnd );
     tds.set( root.getTrackIndex(), root.getUpward(), root.getEnergy(),
-	     start, dir, 
-	     root.getArcLength(), 
-	     covStart, covEnd,
-	     root.getTkrSSDVeto(), root.getCornerDoca() );
+             start, dir, 
+             root.getArcLength(), 
+             covStart, covEnd,
+             root.getTkrSSDVeto(), root.getCornerDoca() );
 
     int nHitPoca = root.nAcdHitPoca();
     for ( int iHitPoca(0); iHitPoca < nHitPoca; iHitPoca++ ) {
@@ -464,16 +464,16 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     poca.SetXYZ(pocaTDS.x(),pocaTDS.y(),pocaTDS.z());
     const Event::TkrTrackParams& tkrParTds = tds.paramsAtPoca();
     TkrTrackParams paramsAtPoca(tkrParTds.getxPosition(), tkrParTds.getxSlope(), 
-				tkrParTds.getyPosition(), tkrParTds.getySlope(),
-				tkrParTds.getxPosxPos(),  tkrParTds.getxPosxSlp(), 
-				tkrParTds.getxPosyPos(),  tkrParTds.getxPosySlp(),
-				tkrParTds.getxSlpxSlp(),  tkrParTds.getxSlpyPos(), 
-				tkrParTds.getxSlpySlp(),  tkrParTds.getyPosyPos(), 
-				tkrParTds.getyPosySlp(),  tkrParTds.getySlpySlp() );
+                                tkrParTds.getyPosition(), tkrParTds.getySlope(),
+                                tkrParTds.getxPosxPos(),  tkrParTds.getxPosxSlp(), 
+                                tkrParTds.getxPosyPos(),  tkrParTds.getxPosySlp(),
+                                tkrParTds.getxSlpxSlp(),  tkrParTds.getxSlpyPos(), 
+                                tkrParTds.getxSlpySlp(),  tkrParTds.getyPosyPos(), 
+                                tkrParTds.getyPosySlp(),  tkrParTds.getySlpySlp() );
     AcdId acdId = convert(tds.acdId());
     root.initialize( acdId, tds.trackIndex(),
-		     tds.doca(),tds.docaErr(),tds.docaRegion(),
-		     poca,paramsAtPoca);
+                     tds.doca(),tds.docaErr(),tds.docaRegion(),
+                     poca,paramsAtPoca);
   }
 
   void convert( const AcdTkrPoca& root, Event::AcdTkrPoca& tds) {
@@ -483,15 +483,15 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     idents::AcdId acdIdTds = convert(root.getId());
     const TkrTrackParams& paramsRoot = root.getParamsAtPoca();
     Event::TkrTrackParams paramsAtPoca(paramsRoot.getxPosition(), paramsRoot.getxSlope(), 
-				       paramsRoot.getyPosition(), paramsRoot.getySlope(),
-				       paramsRoot.getxPosxPos(),  paramsRoot.getxPosxSlp(), 
-				       paramsRoot.getxPosyPos(),  paramsRoot.getxPosySlp(),
-				       paramsRoot.getxSlpxSlp(),  paramsRoot.getxSlpyPos(), 
-				       paramsRoot.getxSlpySlp(),  paramsRoot.getyPosyPos(), 
-				       paramsRoot.getyPosySlp(),  paramsRoot.getySlpySlp() );
+                                       paramsRoot.getyPosition(), paramsRoot.getySlope(),
+                                       paramsRoot.getxPosxPos(),  paramsRoot.getxPosxSlp(), 
+                                       paramsRoot.getxPosyPos(),  paramsRoot.getxPosySlp(),
+                                       paramsRoot.getxSlpxSlp(),  paramsRoot.getxSlpyPos(), 
+                                       paramsRoot.getxSlpySlp(),  paramsRoot.getyPosyPos(), 
+                                       paramsRoot.getyPosySlp(),  paramsRoot.getySlpySlp() );
     tds.set(acdIdTds,root.getTkrIndex(),
-	    root.getDoca(),root.getDocaErr(),root.getDocaRegion(),
-	    poca,paramsAtPoca);
+            root.getDoca(),root.getDocaErr(),root.getDocaRegion(),
+            poca,paramsAtPoca);
   }
 
   void convert( const Event::AcdTkrPoint& tds, AcdTkrPoint& root) {
@@ -581,7 +581,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     AcdId acdId = convert(tds.getId());
     mips[0] = tds.mipsPmtA(); mips[1] = tds.mipsPmtB();     
     root.set(acdId,tds.trackIndex(),mips,
-	     tds.vetoSigmaHit(),tds.vetoSigmaProj(),tds.vetoSigmaProp() ); 
+             tds.vetoSigmaHit(),tds.vetoSigmaProj(),tds.vetoSigmaProp() ); 
     convert( (const Event::AcdTkrLocalCoords&)tds, root );
     convert( (const Event::AcdPocaData&)tds, root );  
   }
@@ -590,7 +590,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     idents::AcdId acdId = convert(root.getId());
     mips[0] = root.mipsPmtA(); mips[1] = root.mipsPmtB();     
     tds.set(acdId,root.getTrackIndex(),mips,
-	    root.vetoSigmaHit(),root.vetoSigmaProj(),root.vetoSigmaProp()); 
+            root.vetoSigmaHit(),root.vetoSigmaProj(),root.vetoSigmaProp()); 
     convert( (const AcdTkrLocalCoordsV2&)root, tds );
     convert( (const AcdPocaDataV2&)root, tds );
   }
@@ -639,7 +639,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   void convert( const Event::AcdTkrGapPoca& tds, AcdTkrGapPocaV2& root) {
     AcdGapId gapId( tds.getId().asShort() );
     root.initialize(gapId,tds.trackIndex(),
-		    tds.vetoSigmaHit(),tds.vetoSigmaProj(),tds.vetoSigmaProp());
+                    tds.vetoSigmaHit(),tds.vetoSigmaProj(),tds.vetoSigmaProp());
     convert( (const Event::AcdTkrLocalCoords&)tds, root );
     convert( (const Event::AcdPocaData&)tds, root );
   }
@@ -647,7 +647,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   void convert( const AcdTkrGapPocaV2& root, Event::AcdTkrGapPoca& tds) {    
     idents::AcdGapId gapId( root.getGapId().asShort() );
     tds.set(gapId,root.getTrackIndex(),
-	    root.vetoSigmaHit(),root.vetoSigmaProj(),root.vetoSigmaProp() ); 
+            root.vetoSigmaHit(),root.vetoSigmaProj(),root.vetoSigmaProp() ); 
     convert( (const AcdTkrLocalCoordsV2&)root, tds );
     convert( (const AcdPocaDataV2&)root, tds );    
   }
@@ -659,7 +659,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     vector.SetXYZ(tds.calEntryVector().x(),tds.calEntryVector().y(),tds.calEntryVector().z());
     AcdId acdId = convert(tds.getId());
     root.set(acdId,tds.getTrackIndex(),point,vector,
-	     tds.tileSolidAngle(),tds.weightedTrackAngle(),tds.weightedPathlength());
+             tds.tileSolidAngle(),tds.weightedTrackAngle(),tds.weightedPathlength());
   }
 
   void convert( const AcdSplashVars& root, Event::AcdSplashVars& tds) {
@@ -669,7 +669,7 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     vector.set(root.calEntryVector().X(),root.calEntryVector().Y(),root.calEntryVector().Z());
     idents::AcdId acdId = convert(root.getId());
     tds.set(acdId,root.getTrackIndex(),point,vector,
-	    root.tileSolidAngle(),root.weightedTrackAngle(),root.weightedPathlength());
+            root.tileSolidAngle(),root.weightedTrackAngle(),root.weightedPathlength());
   }
   
 
@@ -689,8 +689,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     convert( tds.getLocalCovProj(), localProj);
     convert( tds.getLocalCovProp(), localProp);
     root.set(tds.getLocalVolume(),tds.getArclengthToPlane(),tds.getCosTheta(),
-	     point,local,active2d,
-	     localProj,localProp);	     
+             point,local,active2d,
+             localProj,localProp);             
   }
 
   void convert( const AcdTkrLocalCoordsV2& root, Event::AcdTkrLocalCoords& tds) {
@@ -708,8 +708,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     convert( root.getLocalCovProj(), localProj);
     convert( root.getLocalCovProp(), localProp);
     tds.setLocalData(root.getVolume(),root.getArclengthToPlane(),root.getCosTheta(),
-		     point,local,active2d,
-		     localProj,localProp);
+                     point,local,active2d,
+                     localProj,localProp);
   }
 
   void convert( const Event::AcdPocaData& tds, AcdPocaDataV2& root) {
@@ -718,8 +718,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     poca.SetXYZ(tds.getPoca().x(),tds.getPoca().y(),tds.getPoca().z());
     pocaVector.SetXYZ(tds.getPocaVector().x(),tds.getPocaVector().y(),tds.getPocaVector().z());
     root.set( tds.getVolume(), tds.getRegion(), tds.getArcLength(),
-	      tds.getDoca(), tds.getDocaErrProj(), tds.getDocaErrProp(), 
-	      poca, pocaVector );
+              tds.getDoca(), tds.getDocaErrProj(), tds.getDocaErrProp(), 
+              poca, pocaVector );
   }
 
   void convert( const AcdPocaDataV2& root, Event::AcdPocaData& tds) {
@@ -728,8 +728,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     poca.set(root.getPoca().X(),root.getPoca().Y(),root.getPoca().Z());
     pocaVector.set(root.getPocaVector().X(),root.getPocaVector().Y(),root.getPocaVector().Z());
     tds.setPocaData( root.getVolume(), root.getRegion(), root.getArcLength(),
-		     root.getDoca(), root.getDocaErrProj(), root.getDocaErrProp(), 
-		     poca, pocaVector );
+                     root.getDoca(), root.getDocaErrProj(), root.getDocaErrProp(), 
+                     poca, pocaVector );
   }
 
   void convert( const HepSymMatrix& tds, TMatrixDSym& root) {

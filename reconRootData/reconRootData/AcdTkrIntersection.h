@@ -57,10 +57,10 @@ public:
     AcdTkrIntersection();
 
     AcdTkrIntersection(const AcdId& tileId, int trackIndex, 
-		       const TVector3& globalPosition, 
-		       const Double_t localPosition[2], const TMatrixD& localCovMatrix,
-		       Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit,
-		       Double_t cosTheta);
+                       const TVector3& globalPosition, 
+                       const Double_t localPosition[2], const TMatrixD& localCovMatrix,
+                       Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit,
+                       Double_t cosTheta);
 
     AcdTkrIntersection(const AcdTkrIntersection& params);
 
@@ -76,10 +76,10 @@ public:
 
     /// Provide an initialization method (in case of default constructor)
     void initialize(const AcdId& tileId, Int_t trackIndex, 
-		    const TVector3& globalPostion, 
-		    const Double_t localPosition[2], const TMatrixD& localCovMatrix,
-		    Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit,
-		    Double_t cosTheta);
+                    const TVector3& globalPostion, 
+                    const Double_t localPosition[2], const TMatrixD& localCovMatrix,
+                    Double_t arcLengthToIntersection, Double_t pathLengthInTile, UChar_t tileHit,
+                    Double_t cosTheta);
     void initialize(const AcdTkrIntersection& params);
 
     /// Direct access to parameters

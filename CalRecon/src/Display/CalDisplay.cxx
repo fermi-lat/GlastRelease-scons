@@ -173,7 +173,7 @@ void CalRep::update()
             }
             
             
-            // drawing the center of the cluster		
+            // drawing the center of the cluster                
             setColor("green");
             double x = (cl->getPosition()).x();
             double y = (cl->getPosition()).y();
@@ -191,7 +191,7 @@ void CalRep::update()
             lineTo(Point(x, y, z+s));
             lineTo(Point(x, y+s, z));
             lineTo(Point(x, y, z-s));
-            lineTo(Point(x, y-s, z));		
+            lineTo(Point(x, y-s, z));                
             
 
             // drawing the reconstructed shower direction

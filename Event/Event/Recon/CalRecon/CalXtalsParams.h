@@ -39,8 +39,8 @@ namespace Event { //Namespace Event
     
     /// Constructor from all members.
     CalXtalsParams(int numXtals, int numTruncXtals, int numSaturatedXtals,
-		   double xtalRawEneSum, double xtalCorrEneSum, double xtalEneMax,
-		   double xtalEneRms, double xtalEneSkewness, const Point& centroid);
+                   double xtalRawEneSum, double xtalCorrEneSum, double xtalEneMax,
+                   double xtalEneRms, double xtalEneSkewness, const Point& centroid);
 
     /// Convenience constructor from the two members originally in the CalCluster class.
     CalXtalsParams(int numTruncXtals, int numSaturatedXtals);

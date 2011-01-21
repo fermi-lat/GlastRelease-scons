@@ -32,7 +32,7 @@ void TkrVertex::Clear(Option_t* /* option */)
     m_radlen     =  0.;                     // Integrated radiation lengths from end of track 1
     
     m_vtxID      = commonRootData::TkrId(); // Complete TkrId identifying the details of this vertex
-		                                    // (This is the TkrId of the first hit after the vertex)
+                                                    // (This is the TkrId of the first hit after the vertex)
     m_params     = TkrTrackParams();        // Parameter structure for vertex (includes cov. matrix)
 
     m_tracks.Clear();

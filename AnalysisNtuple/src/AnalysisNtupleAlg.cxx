@@ -401,8 +401,8 @@ StatusCode AnalysisNtupleAlg::execute()
             else if (toolname=="VtxValsTool"    ) {varname = "VtxZDir";}
             else if (toolname=="CalValsTool"    ) {varname = "CalEnergyRaw";}
             else if (toolname=="CalMipValsTool" ) {varname = "CalMipNum";}
-	    //else if (toolname=="GcrSelectValsTool" ) {varname = "GcrSelect[1536]","InferedZ";}
-	    //else if (toolname=="GcrReconValsTool" )  {varname = "GcrRecon[1536]";}
+            //else if (toolname=="GcrSelectValsTool" ) {varname = "GcrSelect[1536]","InferedZ";}
+            //else if (toolname=="GcrReconValsTool" )  {varname = "GcrRecon[1536]";}
             else if (toolname=="AcdValsTool"    ) {varname = "AcdTileCount";}
             else if (toolname=="Acd2ValsTool"   ) {varname = "Acd2TileCount";}
             else if (toolname=="EvtValsTool"    ) {varname = "EvtEnergyRaw";}
