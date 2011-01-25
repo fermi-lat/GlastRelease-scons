@@ -1,180 +1,8 @@
 import ROOT
 import time
-from array import array
-from pXmlWriter import *
-
-ROOT.gStyle.SetCanvasColor(0)
-ROOT.gStyle.SetPalette(1)
-ROOT.gStyle.SetPaintTextFormat('.3f')
-ROOT.gStyle.SetOptStat(111111)
-
-
-LOG_E_MIN = 1
-LOG_E_MAX = 6
-NUM_E_BINS = 10
-PRE_CUT   = 'CalNumXtals > 4'
-INI_NUM_BINS = 4000
-
-ENERGY_BINS = [(1.0,1.5),(1.5,2.0),(2.0,2.5),(2.5,3.0),(3.0,3.5),
-              (3.5,4.0),(4.0,4.5),(4.5,5.0),(5.0,5.5),(5.5,6.0)]
-
-
-class ClusterVariable:
-
-    def __init__(self, expression, minValue, maxValue, numBins = 50,
-                 label = None):
-        self.Expression = expression
-        self.MinValue = minValue
-        self.MaxValue = maxValue
-        self.NumBins = numBins
-        self.Label = label or expression
-
-    def __str__(self):
-        return 'Variable "%s" (%.3f--%.3f in %d bins)' %\
-               (self.Expression, self.MinValue, self.MaxValue, self.NumBins)
-        
-# There's a subtle thing in the AnalysisTuple package that need to be
-# taken into account!
-#
-#float logRLn = 0; 
-#    if ((CAL_LAT_RLn - CAL_Cntr_RLn) > 0.0) {
-#        logRLn = log(CAL_LAT_RLn - CAL_Cntr_RLn);
-#    }
-#    if (logRLn > 0.0) {
-#        CAL_Long_Rms  = sqrt(calCluster->getRmsLong()/CAL_EnergyRaw) / logRLn;
-#    }
-#
-# where:
-#
-# addItem("CalLATRLn",     &CAL_LAT_RLn);
-# addItem("CalCntRLn",     &CAL_Cntr_RLn);
-
-#Remove info from tkr to get the calongrms only depending on cal. Now no longer
-#needed, variable Cal1LongRms has the right info.
-#CAL_LONG_EXP = 'CalLongRms*log(CalLATRLn - CalCntRLn)*((CalLATRLn - CalCntRLn) != 0)'
-
-
-VARIABLE_LIST  = [ClusterVariable('Cal1TransRms', 0, 100),
-                  ClusterVariable('Cal1LongRmsAsym', 0, 0.25),
-                  ClusterVariable('log10(Cal1LongRms/Cal1TransRms)',
-                                  0, 2.5, label = 'MomentRatio'),
-                  ClusterVariable('Cal1CoreEneFrac', 0, 1),
-                  ClusterVariable('Cal1XtalEneRms/CalEnergyRaw',0, 0.4,
-                                  label = 'XtalEneRms'),
-                  ClusterVariable('Cal1XtalEneSkewness',-2, 10),
-                  ClusterVariable('Cal1dEdxAve/Cal1FullLength', 0, 100,
-                                  label = 'dEdxperLength')
-                #  ClusterVariable('Cal1NumXtals/log10(CalEnergyRaw)', 0, 150,
-                #                  label = 'NumXtals')
-                  ]
-"""
-VARIABLE_LIST  = [ClusterVariable('CalTransRms', 0, 100),
-                  ClusterVariable('CalLRmsAsym', 0, 0.25),
-                  ClusterVariable('log10(%s/CalTransRms)'%CAL_LONG_EXP,
-                                  0, 2.5, label = 'MomentRatio'),
-                  ClusterVariable('CalNumXtals/log10(CalEnergyRaw)', 0, 150,
-                                  label = 'NumXtals')
-                  ]
-
-
-FILE_PATH_DICT = {'gam': '/data/Pass8/mc/allGamma-GR-v15r39-Lyon/allGamma-GR-v15r39-Lyon_merit.root',
-                  'had': '/data/Pass8/mc/allPro-GR-v15r39p1-Lyon/allPro-GR-v15r39p1-Lyon_merit.root',
-                  'mip': '/data/Pass8/mc/allPro-GR-v15r39p1-Lyon/allPro-GR-v15r39p1-Lyon_merit.root',
-                  #'ghost': '/data/Pass8/mc/allGamma-GR-v18r4p2-PT/skimPhilippePTEvents_merit.root'
-                  }
-"""
-mainFilePath = '/data/work/recon/v18r8p2/work/firstlook'
-
-
-FILE_PATH_DICT = {'gam': '%s/all_gamma-v18r8p2-1*.root'%mainFilePath,
-                  'had': '%s/CrProtonMix-v18r8p2-1*.root'%mainFilePath,
-                  'mip': '%s/high_e_surface_muons-v18r8p2-1*.root'%mainFilePath}
-
-
-
-TOPOLOGY_DICT = {'gam': 0,
-                 'had': 1,
-                 'mip': 2
-             #    'ghost':3
-                 }
-
-PRE_CUT_DICT = {'gam': None,
-                'had': 'abs(CalMIPRatio - 1) > 0.75',
-                'mip': 'abs(CalMIPRatio - 1) < 0.75'
-              #  'ghost': None
-                }
-COLORS_DICT = {'gam': ROOT.kRed,
-               'had': ROOT.kBlue,
-               'mip': ROOT.kBlack
-              # 'ghost': ROOT.kGray + 2
-               }
-
-
-def hname(label, topology):
-    return 'fPdf_%s_%s' % (label, topology)
-
-
-def hVarname(label,topology,Ebin):
-    return 'fPdf_%s_%s_varBin_%s' % (label, topology,Ebin)
-
-def getColor(topology):
-    try:
-        return COLORS_DICT[topology]
-    except KeyError:
-        return ROOT.kBlack
-
-def getCut(topology):
-    try:
-        cut = PRE_CUT_DICT[topology]
-    except KeyError:
-        return PRE_CUT
-    if cut is None or cut.strip() == '':
-        return PRE_CUT
-    return '(%s) && (%s)' % (PRE_CUT, cut)
-
-def getTopologyIndex(topology):
-    try:
-        return TOPOLOGY_DICT[topology]
-    except KeyError:
-        return -1
-
-def normalizeHist(hist1d, miny = 0, maxy = 1):
-    numBinsX = hist1d.GetNbinsX()
-    sum = 0.0
-    for i in xrange(1, numBinsX + 1):
-        sum += hist1d.GetBinContent(i)
-    for i in xrange(1, numBinsX + 1):
-        try:
-            value = hist1d.GetBinContent(i)/sum
-            hist1d.SetBinContent(i, value)
-        except ZeroDivisionError:
-            pass
-    hist1d.SetMinimum(miny)
-    hist1d.SetMaximum(maxy)
-
-def normalizeSlices(hist2d, minz = 1e-3, maxz = 1):
-    numBinsX = hist2d.GetNbinsX()
-    numBinsY = hist2d.GetNbinsY()
-    for i in xrange(1, numBinsX + 1):
-        sum = 0.0
-        for j in xrange(0, numBinsY + 2):
-            sum += hist2d.GetBinContent(i, j)
-        for j in xrange(0, numBinsY + 2):
-            try:
-                value = hist2d.GetBinContent(i, j)/sum
-                hist2d.SetBinContent(i, j, value)
-            except ZeroDivisionError:
-                pass
-    hist2d.SetMinimum(minz)
-    hist2d.SetMaximum(maxz)
-
-
-
-OBJECT_POOL = {}
-
-def toPool(rootObject):
-    OBJECT_POOL[rootObject.GetName()] = rootObject
-
+from array         import array
+from pXmlWriter    import *
+from ClusterConfig import *
 
 class ClusterClassifier:
 
@@ -466,7 +294,7 @@ class ClusterClassifier:
 
 
     def getGRversion(self):
-        GRversion = mainFilePath.split('/')[4]
+        GRversion = MAIN_FILE_PATH.split('/')[4]
         GRversion = GRversion.split('/')[0]
         return GRversion
 
@@ -529,4 +357,4 @@ if __name__ == '__main__':
     c.writeOutputFile('cluclassTestingCode.root')
   #  c.drawAllPdfHists()
 #    c.writeOutputFile('cluclassVarBins_dEdx.root')
-    #c.writeXmlFile('xml_TestCode.xml')
+    c.writeXmlFile('xml_TestCode.xml')

@@ -1,15 +1,17 @@
 import array
 
-from ClusterClassifier import *
-from math              import log10
+from ClusterConfig   import *
+from math            import log10
 
 
 
 class ClusterPredictor:
 
-    def __init__(self, pdfFilePath, dataFilePath = None, cut = '1', varBins=False):
+    def __init__(self, pdfFilePath, dataFilePath = None, cut = '1', varBins=True):
         print 'Retrieving histograms for pdfs...'
         self.PdfFile = ROOT.TFile(pdfFilePath)
+        self.DataFilePath = dataFilePath
+        self.Cut = cut
         self.PdfHistDict = {}
         for topology in FILE_PATH_DICT.keys():
             self.PdfHistDict[topology] = {}
@@ -34,17 +36,17 @@ class ClusterPredictor:
                         self.PdfFile.Get(hName)
       
         print 'Done.'
-        if dataFilePath is not None:
+        if self.DataFilePath is not None:
             self.__setupDataTree()
 
     def __setupDataTree(self):
         print 'Creating the TTreeFormula objects...'
         self.RootTree = ROOT.TChain('MeritTuple')
-        self.RootTree.Add(dataFilePath)
-        print "Added %s files to tree" %dataFilePath
+        self.RootTree.Add(self.DataFilePath)
+        print "Added %s files to tree" %self.DataFilePath
         self.numEvents = self.RootTree.GetEntries()
         self.TreeFormulaDict = {}
-        self.addTreeFormula('cut', cut)
+        self.addTreeFormula('cut', self.Cut)
         self.addTreeFormula('CalEnergyRaw', 'CalEnergyRaw')
         for var in VARIABLE_LIST:
             self.addTreeFormula(var.Label, var.Expression)
@@ -109,9 +111,9 @@ class ClusterPredictor:
             pdfValue = binVal/(float(numEntries)*binWidth)
         except ZeroDivisionError:
             pdfValue =  0.0
-            print "Zero Division Error!"
-            print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
-              (topology, logE, var.Label, value, pdfValue)
+           # print "Zero Division Error!"
+           # print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
+           #   (topology, logE, var.Label, value, pdfValue)
        
         return pdfValue
         
@@ -148,7 +150,7 @@ class ClusterPredictor:
         self.getTreeFormula(varLabel).UpdateFormulaLeaves()
         return self.getTreeFormulaValue(varLabel)
 
-    def classifyEvent(self, entry = None,varBins = False):
+    def classifyEvent(self, entry = None,varBins = True):
         if entry is not None:
             self.getEntry(entry)
         self.ProbDict = {}
@@ -182,9 +184,9 @@ class ClusterPredictor:
 
 
 if __name__ == '__main__':
-    dataFilePath = FILE_PATH_DICT['had']
+    dataFilePath = FILE_PATH_DICT['mip']
     cut = PRE_CUT
-    p = ClusterPredictor('cluclassTestingCode.root', dataFilePath, cut,True)
+    p = ClusterPredictor('cluclassTestingCode.root', dataFilePath, cut)
 
     hDict = {}
     for topology in FILE_PATH_DICT.keys():
@@ -208,9 +210,9 @@ if __name__ == '__main__':
 
     #numEvents = p.getNumEntries()
     numEvents = 80000
-       
+    histoList = []    
     for i in xrange(numEvents):
-        classTopologyIndex = p.classifyEvent(i,True)
+        classTopologyIndex = p.classifyEvent(i)
         if p.cutPassed():
             hClass.Fill(classTopologyIndex)
             logE = log10(p.getVar('CalEnergyRaw'))
@@ -222,10 +224,13 @@ if __name__ == '__main__':
     cTitle = 'Classification of test dataset' 
     c = ROOT.TCanvas(cName, cTitle, 1000, 800)
     c.Divide(2, 2)
+   
     for (i, topology) in enumerate(FILE_PATH_DICT.keys()):
         c.cd(i + 1)
         hDict[topology].Draw('lego')
+        histoList.append(hDict[topology])
     c.cd(4)
+    saveToFile(histoList,"TestHistoFile.root")
     normalizeHist(hClass)
     hClass.Draw()
     c.cd()
