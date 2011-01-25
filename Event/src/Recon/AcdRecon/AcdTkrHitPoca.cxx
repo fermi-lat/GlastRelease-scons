@@ -71,22 +71,29 @@ namespace Event {
   }
 
 
-  /// Comparison operator, requires identity
+  /// Comparison operator
   bool AcdTkrHitPoca::operator<(const Event::AcdTkrHitPoca& other) const {
+    // Check identity
     if ( this == &other ) return false;
-
-    if ( this->hasHit() != other.hasHit() ) {      
-      return this->hasHit();
-    }
-
-    float vs2 = vetoSigma2();
-    float ovs2 = other.vetoSigma2();      
-    if ( vs2 < ovs2 ) return true;
-    if ( vs2 > ovs2 ) return false;
-
-    if ( m_id.id() < other.getId().id() ) return true;
-    if ( m_id.id() > other.getId().id() ) return false;
-    
+    // First compare vetoSigma2
+    float myVS2 = vetoSigma2();
+    float otherVS2 = other.vetoSigma2();
+    if ( myVS2 < otherVS2 ) return true;
+    if ( myVS2 > otherVS2 ) return false;
+    // They might be equal.  
+    // This is the case when a track extapolate into two tiles with MIP-like hits.
+    // myVS2 == otherVS2 == 0. 
+    //   or two tiles without hits
+    // myVS2 == otherVS2 == 1.e4
+    // Larger hit wins.  
+    if ( vetoSigmaHit() < other.vetoSigmaHit()) return true;
+    if ( vetoSigmaHit() > other.vetoSigmaHit()) return false;
+    // Still equal.  This is the case when a track extrapolates inside two tiles without hits    
+    // Larger scaled active distance wins
+    if ( vetoSigmaProj() < other.vetoSigmaProj()) return true;
+    if ( vetoSigmaProj() > other.vetoSigmaProj()) return false;    
+    // Everything looks the same, return false.  
+    // This breaks strict ordering, but maintains strict weak ordering
     return false;    
   }
 
@@ -105,6 +112,16 @@ namespace Event {
     m_vetoSigmaProp = vetoSigmaProp;
   }  
   
+
+  /// combine the sigma from the hit with the sigma from the track
+  float AcdTkrHitPoca::vetoSigma2() const
+  {
+    // Only add positive values.  
+    float retVal = m_vetoSigmaHit >= 0. ? (m_vetoSigmaHit*m_vetoSigmaHit) : 0.;
+    retVal += m_vetoSigmaProj >= 0. ? (m_vetoSigmaProj*m_vetoSigmaProj) : 0.;
+    return retVal;
+  }
+
   
   /// reset all the values to their default
   void AcdTkrHitPoca::ini()

@@ -93,9 +93,7 @@ namespace Event {
     }
 
     /// combine the sigma from the hit with the sigma from the track
-    inline float vetoSigma2() const {
-      return ((m_vetoSigmaHit*m_vetoSigmaHit) + (m_vetoSigmaProj*m_vetoSigmaProj));
-    }
+    float vetoSigma2() const;
 
     /// An estimator of the number of sigma needed for this track to be a true MIP signal
     inline float vetoSigmaHit() const {
