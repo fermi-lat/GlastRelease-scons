@@ -203,7 +203,9 @@ void MSTTree::evalStats(double truncFrac)
     m_minEdgeLength = length;
     m_maxEdgeLength = length;
     m_meanEdgeLength = length;
+    m_rmsEdgeLength  = -1.;
     m_meanEdgeLengthTrunc = length;
+    m_rmsEdgeLengthTrunc  = -1.;
   }
 
   // If there's more than one edge, loop over the edges in order to calculate the remaining quantities.
@@ -253,7 +255,10 @@ void MSTTree::evalStats(double truncFrac)
     m_rmsEdgeLength   = sqrt(m_rmsEdgeLength);
     
     // ...and, if it's the case, the trunc quantities.
-    if ( truncNumEdges > 0 ) {
+    if ( truncNumEdges == 1 ) {
+      m_rmsEdgeLengthTrunc  = -1;
+    }
+    if ( truncNumEdges > 1 ) {
       m_meanEdgeLengthTrunc /= truncNumEdges;
       m_rmsEdgeLengthTrunc  /= truncNumEdges;
       m_rmsEdgeLengthTrunc  -= (m_meanEdgeLengthTrunc*m_meanEdgeLengthTrunc);
