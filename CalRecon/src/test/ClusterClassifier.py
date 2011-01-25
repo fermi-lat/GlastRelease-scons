@@ -1,17 +1,25 @@
 import ROOT
 import time
+import os
 from array         import array
 from pXmlWriter    import *
 from ClusterConfig import *
 
 class ClusterClassifier:
 
-    def __init__(self, varBins=True):
+    def __init__(self, varBins=True, trainSample=True):
         print 'Opening files...'
         self.RootTreeDict = {}
-        for (topology, filePath) in FILE_PATH_DICT.items():
-            self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
-            self.RootTreeDict[topology].Add(filePath)
+        if trainSample:
+            self.__setupTrainDict()
+            for (topology, filePathList) in self.TrainDict.items():
+                for filePath in filePathList:
+                    self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
+                    self.RootTreeDict[topology].Add(filePath)
+        else:
+            for (topology, filePath) in FILE_PATH_DICT.items():
+                self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
+                self.RootTreeDict[topology].Add(filePath)
         print 'Creating histograms for pdfs...'
         self.PdfHistDict = {}
         self.PdfHistSliceDict = {}
@@ -25,11 +33,24 @@ class ClusterClassifier:
                     print 'Processing %s for %s with varBins' % (var, topology)
                     self.__createHistSlice(var, topology)
                 else:
-                    print 'Processing %s for %s with fixedBins'% (var, topology)
+                    print 'Processing %s for %s with fixedBins'%(var, topology)
                     self.__createPdfHist(var, topology)
         print 'Done.'
 
 
+    def __setupTrainDict(self):
+        self.TrainDict = {}
+        for (topology,filePath) in FILE_PATH_DICT.items():
+            TRAIN_FILE_LIST = []
+            fileName = os.path.basename(filePath)
+            fileName = fileName.split('-')[0]
+            print fileName
+            TRAIN_FILE_LIST = getTrainFilePath(fileName)
+          
+            self.TrainDict[topology] = TRAIN_FILE_LIST
+
+        #print self.TrainDict
+            
     def __createHistSlice(self, var, topology):
         # Create the equal sized bin histogram...
         hName = hname(var.Label, topology)
@@ -354,7 +375,7 @@ class ClusterClassifier:
 
 if __name__ == '__main__':
     c = ClusterClassifier()
-    c.writeOutputFile('cluclassTestingCode.root')
+    c.writeOutputFile('cluclassTestingTrainSample.root')
   #  c.drawAllPdfHists()
 #    c.writeOutputFile('cluclassVarBins_dEdx.root')
-    c.writeXmlFile('xml_TestCode.xml')
+   # c.writeXmlFile('xml_TestCode.xml')

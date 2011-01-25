@@ -1,5 +1,5 @@
 import ROOT
-
+import os
 
 #Set preferences for ROOT output
 ROOT.gStyle.SetCanvasColor(0)
@@ -12,7 +12,7 @@ LOG_E_MIN = 1
 LOG_E_MAX = 6
 NUM_E_BINS = 10
 #Minimal precut to classify a cluster
-PRE_CUT   = 'CalNumXtals > 4'
+PRE_CUT   = 'Cal1NumXtals > 4'
 # Set large number of bins to perform equal pop binning.
 INI_NUM_BINS = 4000
 
@@ -47,41 +47,67 @@ VARIABLE_LIST  = [ClusterVariable('Cal1TransRms', 0, 100),
                   ClusterVariable('Cal1XtalEneRms/CalEnergyRaw',0, 0.4,
                                   label = 'XtalEneRms'),
                   ClusterVariable('Cal1XtalEneSkewness',-2, 10),
-                  ClusterVariable('Cal1dEdxAve/Cal1FullLength', 0, 100,
-                                  label = 'dEdxperLength')
-                #  ClusterVariable('Cal1NumXtals/log10(CalEnergyRaw)', 0, 150,
-                #                  label = 'NumXtals')
+                  ClusterVariable('Cal1dEdxAve/Cal1FullLength', 0, 60,
+                                  label = 'dEdxperLength'),
+                  ClusterVariable('Cal1NumXtals/log10(CalEnergyRaw)', 0, 60,
+                                  label = 'NumXtals')
                   ]
 
 #File path where the datasets for training are located. NB! The version of
 #GR which is writen in the output xml file is taken from this path in method
 # getGRversion() in ClusterClassifier class.
-MAIN_FILE_PATH = '/data/work/recon/v18r8p3/work/firstlook'
 
+MAIN_FILE_PATH = "/data/users/pesce/v18r8p5/work/output"
 
-FILE_PATH_DICT = {#'gam': '%s/all_gamma_180GeV-*.root'%MAIN_FILE_PATH,
-                  #'had': '%s/CrProtonMix-*.root'%MAIN_FILE_PATH,
-                  'mip': '%s/high_e_surface_muons-*.root'%MAIN_FILE_PATH}
-
-
+FILE_PATH_DICT = {'gam': '%s/all_gamma_180GeV-v18r8p5-*original-merit.root'%\
+                  MAIN_FILE_PATH,
+                  'had': '%s/CrProtonMix-v18r8p5-*original-merit.root'%\
+                  MAIN_FILE_PATH,
+                  'mip':'%s/high_e_surface_muons-v18r8p5*original-merit.root'%\
+                  MAIN_FILE_PATH,
+                  'ghost':'%s/PTSkim-v18r8p5-*merit.root'%\
+                  MAIN_FILE_PATH}
 
 TOPOLOGY_DICT = {'gam': 0,
                  'had': 1,
-                 'mip': 2
-             #    'ghost':3
+                 'mip': 2,
+                 'ghost':3
                  }
 
 PRE_CUT_DICT = {'gam': None,
                 'had': 'abs(CalMIPRatio - 1) > 0.75',
-                'mip': 'abs(CalMIPRatio - 1) < 0.75'
-              #  'ghost': None
+                'mip': 'abs(CalMIPRatio - 1) < 0.75',
+                'ghost': None
                 }
+
 COLORS_DICT = {'gam': ROOT.kRed,
                'had': ROOT.kBlue,
-               'mip': ROOT.kBlack
-              # 'ghost': ROOT.kGray + 2
+               'mip': ROOT.kBlack,
+               'ghost': ROOT.kGray + 2
                }
 
+
+def getTrainFilePath(fileName):
+    #fileName = os.path.basename(filePath)
+    #fileName = fileName.split('-')[0]
+    #print fileName
+    list = []
+    trainFileList = []  
+    for file in os.listdir(MAIN_FILE_PATH):
+        if fileName in file:
+            if 'merit' in file:
+                list.append(file)
+    numFiles = len(list)
+   
+    for i,trainfile in enumerate(list):
+        if i<=numFiles/2.:
+            fullPath = os.path.join(MAIN_FILE_PATH,trainfile)
+            trainFileList.append(fullPath)
+        i+1
+   # print "TrainFileList is",trainFileList
+#    print len(trainFileList)
+    #raw_input()
+    return trainFileList
 
 def hname(label, topology):
     return 'fPdf_%s_%s' % (label, topology)
@@ -156,3 +182,8 @@ def saveToFile(objectList, filePath):
     for object in objectList:
         object.Write()
     outputFile.Close()
+
+
+if __name__=='__main__':
+    getTrainFilePath('%s/all_gamma_180GeV-v18r8p5-*original-merit.root'%\
+                  MAIN_FILE_PATH,)
