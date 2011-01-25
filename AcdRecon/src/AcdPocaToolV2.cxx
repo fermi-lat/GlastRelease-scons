@@ -185,8 +185,15 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
     }    
   } 
 
-  if ( aTrack.m_index >= 0 && pocaData.m_active3D < 0 ) {
-    vetoSigmaProj = -1. * pocaData.m_active3D / activeDist3DErrProj;  
+  if ( activeDist3DErrProj > 0 ) {
+    // We have a good projection error
+    // Note that vetoSigmaProj can go negative if we are inside the tile or ribbon
+    vetoSigmaProj = -1. * pocaData.m_active3D / activeDist3DErrProj;
+  }
+
+  if ( activeDist3DErrProp > 0 ) {
+    // We have a good propagation error
+    // Note that vetoSigmaProj can go negative if we are inside the tile or ribbon
     vetoSigmaProp = -1. * pocaData.m_active3D / activeDist3DErrProp;
   }
 
@@ -204,16 +211,21 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
     return StatusCode::SUCCESS;
   }
 
-  float totalMips = mips[0] + mips[1];
-  float vetoSigmaHit(0.);
-  if ( acdId.tile() ) {
-    float expectedMips = 2. / pocaData.m_cosTheta;
-    vetoSigmaHit = ( expectedMips - totalMips ) / 0.45;  
-  } else {
-    float expectedMips = 1.5;
-    vetoSigmaHit = ( expectedMips - totalMips ) / 1.;
+  bool hasHit = (mips[0] > 0.001) || (mips[1] > 0.001);
+  // default value in case we don't have a hit is 1.e4
+  float vetoSigmaHit(1.e4);
+  
+  if ( hasHit ) {
+    float totalMips = mips[0] + mips[1];
+    // Note that vetoSigmaHit
+    if ( acdId.tile() ) {
+      float expectedMips = 2. / pocaData.m_cosTheta;
+      vetoSigmaHit = ( expectedMips - totalMips ) / 0.45;  
+    } else {
+      float expectedMips = 1.5;
+      vetoSigmaHit = ( expectedMips - totalMips ) / 1.;
+    }
   }
-  if ( vetoSigmaHit < 0. ) vetoSigmaHit = 0.;
 
 
   if ( false ) {
