@@ -149,6 +149,10 @@ class ReconReader:
                     xtalList.append(xtal)
         return xtalList
 
+    def getCalUberClusterXtalList(self):
+        return self.getCalClusterXtalList(self.getNumClusters() - 1)
+
+
 
 if __name__ == '__main__':
     from optparse import OptionParser
