@@ -60,7 +60,7 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalV
   
   if ( !xTalVec->empty() ) {
     cluster = new Event::CalCluster(0);
-    cluster->setProducerName("MomentsClusterInfo") ;
+    cluster->setProducerName("MomentsClusterInfo");
     cluster->clear();
 
     // Are there saturated xtals?
@@ -90,8 +90,17 @@ bool MomentsClusterInfo::xtalSaturated(int tower, int layer, int column) const
 
 bool MomentsClusterInfo::xtalSaturated(const CalMomentsData& momData) const
 {
-  return xtalSaturated(momData.getTower(), momData.getLayer(), momData.getColumn());
+  return xtalSaturated(momData.getTower(), momData.getLayer(),
+                       momData.getColumn());
 }
+
+bool MomentsClusterInfo::xtalSaturated(Event::CalXtalRecData* recData) const
+{
+  return xtalSaturated((recData->getPackedId()).getTower(),
+                       (recData->getPackedId()).getLayer(),
+                       (recData->getPackedId()).getColumn());
+}
+
 
 void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
                                        Event::CalCluster* cluster)
@@ -108,7 +117,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   // Use the fit centroid as the start point.
   m_p0 = Point(0.,0.,0.);
 
-  // Loop over all crystals in the current cluster and compute barycenter and various moments.
+  // Loop over all crystals in the current cluster and compute barycenter
+  // and various moments.
   XtalDataList::const_iterator xTalIter;
   
   for ( xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++ )
@@ -136,7 +146,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       layerAve[layer] += wpos;
   
       // Vector containing squared coordinates, weighted by crystal energy.
-      Vector wpos2(wpos.x()*xtalPos.x(), wpos.y()*xtalPos.y(), wpos.z()*xtalPos.z());
+      Vector wpos2(wpos.x()*xtalPos.x(), wpos.y()*xtalPos.y(),
+                   wpos.z()*xtalPos.z());
       
       // Update quadratic spread, which is proportional to xtalEne;
       // this means, that position error in one crystal
@@ -187,8 +198,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
           d = Vector(0.,csIWidth*csIWidth/12.,0.);
         }
   
-        // Subtracting the  squared average position and adding the square of crystal
-        // width, divided by 12.
+        // Subtracting the  squared average position and adding the square of
+        // crystal width, divided by 12.
         layerRms[i] += d - sqrLayer;
         
         // Reset layerAve to detector coordinates
@@ -205,7 +216,8 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       Point layerPos(layerAve[i].x(), layerAve[i].y(), layerAve[i].z());
       
       // Set the data for the vector.
-      Event::CalClusterLayerData layerData(layerEnergy[i], layerPos, layerRms[i]);
+      Event::CalClusterLayerData layerData(layerEnergy[i], layerPos,
+                                           layerRms[i]);
 
       cluster->push_back(layerData);
     }
@@ -213,10 +225,12 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   // Total energy in cluster includes energy in bad position crystals
   xtalRawEneSum += xtalBadEneSum;
 
-  // Loop over all crystals in the current cluster again to compute the number of
-  // truncated xtals and the moments of the xtal energy distribution.
+  // Loop over all crystals in the current cluster again to compute the number
+  // of truncated xtals, the number of saturated xtals and the moments of the
+  // xtal energy distribution.
   int numTruncXtals      = 0;
   int numEneMomXtals     = 0;
+  int numSaturatedXtals  = 0;
   double xtalEneMax      = 0.;
   double xtalEneMomSum   = 0.;
   double xtalEneMomSum2  = 0.;
@@ -239,6 +253,9 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
         xtalEneMomSum2 += xtalEne*xtalEne;
         xtalEneMomSum3 += xtalEne*xtalEne*xtalEne;
       }
+      if ( xtalSaturated(recData) ) {
+        numSaturatedXtals += 1;
+      }
     }
 
   // Normalize the moments of the xtal energy distribution, if needed.
@@ -258,10 +275,10 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       xtalEneSkewness /= (xtalEneRms*xtalEneRms*xtalEneRms);
     }
     if ( !isFinite(xtalEneRms) ) {
-      throw CalException("MomentsClusterInfo computed infinite value for xtalEneRms") ;
+      throw CalException("MomentsClusterInfo: infinite xtalEneRms");
     }
     if ( !isFinite(xtalEneSkewness) ) {
-      throw CalException("MomentsClusterInfo computed infinite value for xtalEneSkewness") ;
+      throw CalException("MomentsClusterInfo: infinite xtalEneSkewness");
     }
   }
 
@@ -270,45 +287,55 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
   xtalCorrEneSum = xtalRawEneSum + (zeroSupprEnergy*numTruncXtals);
   
   // Set the cluster data members: first the CalXtalsParams container...
-  Event::CalXtalsParams xtalsParams(numXtals, numTruncXtals, m_Nsaturated,
+  Event::CalXtalsParams xtalsParams(numXtals, numTruncXtals, numSaturatedXtals,
                                     xtalRawEneSum, xtalCorrEneSum, xtalEneMax,
                                     xtalEneRms, xtalEneSkewness, centroid);
   cluster->setXtalsParams(xtalsParams);
 
-  // ...then we do create a minimal CalMomParams object in order to store the centroid.
-  // This is actually *not* the centroid of the moments analysis, but rather the centroid
-  // calculated in the loop over the layers. The CalMomParams member of the cluster object
-  // will be overwritten in the fillMomentsData() methods. I don't think this is correct.
-  // When the moments analysis does run all the way to the end it does not make any difference,
-  // as this member is overwritten, but whan that does not happen we end up with a bogus
-  // class member faking something different from what it really is. I tested with a few
-  // thousands gammas and there's indeed a difference if I get rid of this, meaning that
-  // the CalMomParams information is used without checking the CalCluster status bit.
-  // Even stranger, it also makes a difference for the fit direction/centroid, thought for
-  // a tiny subset of the events.
-  // I'll leave things as they are for the time being, but we might want to revise this.
+  // ...then we do create a minimal CalMomParams object in order to store the
+  // centroid.
+  // This is actually *not* the centroid of the moments analysis, but rather
+  // the centroid calculated in the loop over the layers. The CalMomParams
+  // member of the cluster object will be overwritten in the fillMomentsData()
+  // methods. I don't think this is correct. When the moments analysis does
+  // run all the way to the end it does not make any difference, as this
+  // member is overwritten, but whan that does not happen we end up with a bogus
+  // class member faking something different from what it really is.
+  // I tested with a few thousands gammas and there's indeed a difference if I
+  // get rid of this, meaning that the CalMomParams information is used without
+  // checking the CalCluster status bit.
+  // Even stranger, it also makes a difference for the fit direction/centroid,
+  // thought for a tiny subset of the events.
+  // I'll leave things as they are for the time being, but we might want to
+  // revise this.
   //
   // Luca Baldini, January 18, 2011.
   Event::CalMomParams momParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid);
   cluster->setMomParams(momParams);
   
-  // ...and eventually we set the fit parameters for the cluster. The reason why we're doing it
-  // here is mainly historical, I guess, and it has to do with the fact that the CalFitParams
-  // container has members for the energy and the energy errors, though they're not calculated
-  // in the fit process. We might want to refactor the code, at some point. We create the container
-  // here because we might want to use the fit information in the moments analysis.
+  // ...and eventually we set the fit parameters for the cluster. The reason
+  // why we're doing it here is mainly historical, I guess, and it has to do
+  // with the fact that the CalFitParams container has members for the energy
+  // and the energy errors, though they're not calculated in the fit process.
+  // We might want to refactor the code, at some point. We create the container
+  // here because we might want to use the fit information in the moments
+  // analysis.
   //
-  // Also: it is important to check that the fit routine actually did something by requiring that
-  // the number of fit layers is greater than 0, since the fit variables are not properly reset
-  // and we carry memory of the previous event if we don't do so. I'm not going to change
-  // Philippe's code, just keep the check (modified) here.
+  // Also: it is important to check that the fit routine actually did
+  // something by requiring that the number of fit layers is greater than 0,
+  // since the fit variables are not properly reset and we carry memory of the
+  // previous event if we don't do so. I'm not going to change Philippe's code,
+  // just keep the check (modified) here.
   //
   // Luca Baldini, January 11, 2011.
-  Event::CalFitParams fitParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid, m_fit_nlayers, 0.);
+  Event::CalFitParams fitParams(xtalCorrEneSum, 10*xtalCorrEneSum, centroid,
+                                m_fit_nlayers, 0.);
   if ( m_fit_nlayers > 0 ) {
     fitParams = Event::CalFitParams(xtalCorrEneSum, 10*xtalCorrEneSum,
-                                    m_fit_xcentroid, m_fit_ycentroid, m_fit_zcentroid,
-                                    m_fit_xdirection, m_fit_ydirection, m_fit_zdirection,
+                                    m_fit_xcentroid, m_fit_ycentroid,
+                                    m_fit_zcentroid,
+                                    m_fit_xdirection, m_fit_ydirection,
+                                    m_fit_zdirection,
                                     m_fit_nlayers, m_fit_chisq);
   }
   cluster->setFitParams(fitParams);
@@ -350,7 +377,8 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
           momData.forceFitCorrection();
         }
         // If the longitudinal position is right on the edge of the xtal,
-        // or if the fit position is close to the xtal edge, use the fit position.
+        // or if the fit position is close to the xtal edge, use the fit
+        // position.
         //if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
         //     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
         //  momData.enableFitCorrection();
@@ -365,16 +393,19 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
   CalMomentsAnalysis momentsAnalysis;
 
   int numXtals = momDataVec.size();
-  double transScaleFactor = m_calReconSvc->getMaTransScaleFactor();
-  double transScaleFactorBoost = m_calReconSvc->getMaTransScaleFactorBoost();
+  double transScaleFac = m_calReconSvc->getMaTransScaleFactor();
+  double transScaleFacBoost = m_calReconSvc->getMaTransScaleFactorBoost();
   double coreRadius = m_calReconSvc->getMaCoreRadius();
-  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(momDataVec, xtalsCentroid,
-                                                            transScaleFactor,
-                                                            transScaleFactorBoost, coreRadius);
+  double chiSq = momentsAnalysis.doIterativeMomentsAnalysis(momDataVec,
+                                                            xtalsCentroid,
+                                                            transScaleFac,
+                                                            transScaleFacBoost,
+                                                            coreRadius);
   if ( chiSq >= 0. ) {
     // Get all the variables that need to be grabbed before the last iteration
-    // (with all the xtals) is performed. This include the statistics on the iterations,
-    // the centroid/axis, the longitudinal skewness and the full cluster length.
+    // (with all the xtals) is performed. This include the statistics on the
+    // iterations, the centroid/axis, the longitudinal skewness and the full
+    // cluster length.
     momCentroid = momentsAnalysis.getCentroid();
     momAxis = momentsAnalysis.getAxis();
     int numIterations = momentsAnalysis.getNumIterations();
@@ -382,10 +413,11 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
     double longSkewness = momentsAnalysis.getLongSkewness();
     double fullLength = momentsAnalysis.getFullLength();
 
-    // That done, recalculate the moments going back to using all the data points
-    // but with the iterated moments centroid.
+    // That done, recalculate the moments going back to using all the data
+    // points but with the iterated moments centroid.
     if ( numIterations > 1 ) {
-      chiSq = momentsAnalysis.doMomentsAnalysis(momDataVec, momCentroid, coreRadius);
+      chiSq = momentsAnalysis.doMomentsAnalysis(momDataVec, momCentroid,
+                                                coreRadius);
     }
     
     // Extract the values for the moments with all hits present.
@@ -395,19 +427,20 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
     double coreEnergyFrac = momentsAnalysis.getCoreEnergyFrac();
     
     if ( !isFinite(longRms) ) {
-      throw CalException("CalMomentsAnalysis computed infinite value for longRms") ;
+      throw CalException("CalMomentsAnalysis: infinite longRms");
     }
     if ( !isFinite(transRms) ) {
-      throw CalException("CalMomentsAnalysis computed infinite value for transRms") ;
+      throw CalException("CalMomentsAnalysis: infinite transRms");
     }
     if ( !isFinite(longRmsAsym) ) {
-      throw CalException("CalMomentsAnalysis computed infinite value for longRmsAsym") ;
+      throw CalException("CalMomentsAnalysis: infinite longRmsAsym");
     }
     if ( !isFinite(longSkewness) ) {
-      throw CalException("CalMomentsAnalysis computed infinite value for longSkewness") ;
+      throw CalException("CalMomentsAnalysis: infinite longSkewness");
     }
     
-    // Store the information in the actual cluster: first the CalMomParams container...
+    // Store the information in the actual cluster: first the CalMomParams
+    // container...
     CLHEP::HepMatrix I_3_3(3, 3, 1);
     Event::CalMomParams momParams (xtalsCorrEnergySum, 10*xtalsCorrEnergySum,
                                    momCentroid, I_3_3, momAxis, I_3_3,
