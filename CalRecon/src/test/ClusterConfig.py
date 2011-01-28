@@ -50,7 +50,8 @@ VARIABLE_LIST  = [ClusterVariable('Cal1TransRms', 0, 100),
                   ClusterVariable('Cal1dEdxAve/Cal1FullLength', 0, 60,
                                   label = 'dEdxperLength'),
                   ClusterVariable('Cal1NumXtals/log10(CalEnergyRaw)', 0, 60,
-                                  label = 'NumXtals')
+                                  label = 'NumXtals'),
+                  ClusterVariable('Cal1MomNumCoreXtals',0,60)
                   ]
 
 #File path where the datasets for training are located. NB! The version of
@@ -59,6 +60,7 @@ VARIABLE_LIST  = [ClusterVariable('Cal1TransRms', 0, 100),
 
 MAIN_FILE_PATH = "/data/users/pesce/v18r8p5/work/output"
 
+"""
 FILE_PATH_DICT = {'gam': '%s/all_gamma_180GeV-v18r8p5-*original-merit.root'%\
                   MAIN_FILE_PATH,
                   'had': '%s/CrProtonMix-v18r8p5-*original-merit.root'%\
@@ -67,6 +69,104 @@ FILE_PATH_DICT = {'gam': '%s/all_gamma_180GeV-v18r8p5-*original-merit.root'%\
                   MAIN_FILE_PATH,
                   'ghost':'%s/PTSkim-v18r8p5-*merit.root'%\
                   MAIN_FILE_PATH}
+"""
+
+TRAIN_FILE_PATH_DICT = {'gam':['all_gamma_180GeV-v18r8p5-0-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-1-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-2-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-3-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-4-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-200-merit.root',
+                               'all_gamma_180GeV-v18r8p5-201-merit.root',
+                               'all_gamma_180GeV-v18r8p5-202-merit.root',
+                               'all_gamma_180GeV-v18r8p5-203-merit.root',
+                               'all_gamma_180GeV-v18r8p5-204-merit.root'],
+                        'had':['CrProtonMix-v18r8p5-0-original-merit.root',
+                               'CrProtonMix-v18r8p5-1-original-merit.root',
+                               'CrProtonMix-v18r8p5-2-original-merit.root',
+                               'CrProtonMix-v18r8p5-3-original-merit.root',
+                               'CrProtonMix-v18r8p5-4-original-merit.root',
+                               'CrProtonMix-v18r8p5-5-original-merit.root',
+                               'CrProtonMix-v18r8p5-6-original-merit.root',
+                               'CrProtonMix-v18r8p5-7-original-merit.root',
+                               'CrProtonMix-v18r8p5-8-original-merit.root',
+                               'CrProtonMix-v18r8p5-9-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-40-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-41-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-42-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-43-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-44-original-merit.root'],
+                        'mip':['high_e_surface_muons-v18r8p5-0-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-1-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-2-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-3-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-4-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-6-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-7-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-8-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-9-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-50-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-51-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-52-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-53-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-54-original-merit.root'],
+                        'ghost':['PTSkim-v18r8p5-1-merit.root',
+                                 'PTSkim-v18r8p5-2-merit.root',
+                                 'PTSkim-v18r8p5-3-merit.root',
+                                 'PTSkim-v18r8p5-4-merit.root',
+                                 'PTSkim-v18r8p5-5-merit.root',
+                                 'PTSkim-v18r8p5-6-merit.root',
+                                 'PTSkim-v18r8p5-7-merit.root',
+                                 'PTSkim-v18r8p5-8-merit.root']
+    }
+
+
+CLASS_FILE_PATH_DICT = {'gam':['all_gamma_180GeV-v18r8p5-5-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-6-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-7-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-8-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-9-original-merit.root',
+                               'all_gamma_180GeV-v18r8p5-205-merit.root',
+                               'all_gamma_180GeV-v18r8p5-206-merit.root',
+                               'all_gamma_180GeV-v18r8p5-207-merit.root',
+                               'all_gamma_180GeV-v18r8p5-208-merit.root',
+                               'all_gamma_180GeV-v18r8p5-209-merit.root'],
+                        'had':['CrProtonMix-v18r8p5-10-original-merit.root',
+                               'CrProtonMix-v18r8p5-11-original-merit.root',
+                               'CrProtonMix-v18r8p5-12-original-merit.root',
+                               'CrProtonMix-v18r8p5-13-original-merit.root',
+                               'CrProtonMix-v18r8p5-14-original-merit.root',
+                               'CrProtonMix-v18r8p5-15-original-merit.root',
+                               'CrProtonMix-v18r8p5-16-original-merit.root',
+                               'CrProtonMix-v18r8p5-17-original-merit.root',
+                               'CrProtonMix-v18r8p5-18-original-merit.root',
+                               'CrProtonMix-v18r8p5-19-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-45-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-46-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-47-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-48-original-merit.root',
+                               'CrProtonPrimary-v18r8p5-49-original-merit.root'],
+                        'mip':['high_e_surface_muons-v18r8p5-10-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-11-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-12-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-13-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-14-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-15-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-55-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-56-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-57-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-58-original-merit.root',
+                               'high_e_surface_muons-v18r8p5-59-original-merit.root'],
+                        'ghost':['PTSkim-v18r8p5-9-merit.root',
+                                 'PTSkim-v18r8p5-10-merit.root',
+                                 'PTSkim-v18r8p5-11-merit.root',
+                                 'PTSkim-v18r8p5-12-merit.root',
+                                 'PTSkim-v18r8p5-13-merit.root',
+                                 'PTSkim-v18r8p5-14-merit.root',
+                                 'PTSkim-v18r8p5-15-merit.root',
+                                 'PTSkim-v18r8p5-16-merit.root']
+    }
+
 
 TOPOLOGY_DICT = {'gam': 0,
                  'had': 1,

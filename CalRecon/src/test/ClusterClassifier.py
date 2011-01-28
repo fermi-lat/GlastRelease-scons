@@ -17,14 +17,16 @@ class ClusterClassifier:
                     self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
                     self.RootTreeDict[topology].Add(filePath)
         else:
-            for (topology, filePath) in FILE_PATH_DICT.items():
+            for (topology, filePathList) in TRAIN_FILE_PATH_DICT.items():
                 self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
-                self.RootTreeDict[topology].Add(filePath)
+                for file in filePathList:
+                    self.RootTreeDict[topology].Add('%s/%s'%(MAIN_FILE_PATH,file))
+                    
         print 'Creating histograms for pdfs...'
         self.PdfHistDict = {}
         self.PdfHistSliceDict = {}
         self.PdfVarBinsDict = {}
-        for topology in FILE_PATH_DICT.keys():
+        for topology in TRAIN_FILE_PATH_DICT.keys():
             self.PdfHistDict[topology] = {}
             self.PdfHistSliceDict[topology] = {}
             self.PdfVarBinsDict[topology] = {}
@@ -47,7 +49,7 @@ class ClusterClassifier:
             print fileName
             TRAIN_FILE_LIST = getTrainFilePath(fileName)
           
-            self.TrainDict[topology] = TRAIN_FILE_LIST
+            self.TrainDict[topology] = TRAIN_FILE_PATH_LIST
 
         #print self.TrainDict
             
@@ -303,7 +305,7 @@ class ClusterClassifier:
     def writeOutputFile(self, filePath,varBins=True):
         print 'Writing output file %s...' % filePath
         outputFile = ROOT.TFile(filePath, 'RECREATE')
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             for var in VARIABLE_LIST:
                 if varBins:
                     for i,(Emin,Emax) in enumerate(ENERGY_BINS):
@@ -329,7 +331,7 @@ class ClusterClassifier:
                                 time.asctime())
         writer.writeComment('Precut used in training:')
         writer.indent()
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
              cut = getCut(topology)
              writer.writeComment('%s : %s'% (topology,cut))
         writer.openTag('VariableBinsInfo')
@@ -344,7 +346,7 @@ class ClusterClassifier:
         writer.closeTag('EnergyBins')
         writer.newLine
         writer.writeComment('Histogram info for each topology considered (gam, had) and variables in equally populated bins. xmin, xmax are the bin low edge and hig edge, and prob is the probability in that bin.')
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             writer.openTag('Topology',{'name':"%s"%topology,})
             writer.newLine()
             writer.indent()

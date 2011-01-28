@@ -7,13 +7,13 @@ from math            import log10
 
 class ClusterPredictor:
 
-    def __init__(self, pdfFilePath, dataFilePath = None, cut = '1', varBins=True):
+    def __init__(self, pdfFilePath, dataFilePathList = None, cut = '1', varBins=True):
         print 'Retrieving histograms for pdfs...'
         self.PdfFile = ROOT.TFile(pdfFilePath)
-        self.DataFilePath = dataFilePath
+        self.DataFilePathList = dataFilePathList
         self.Cut = cut
         self.PdfHistDict = {}
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             self.PdfHistDict[topology] = {}
             print self.PdfHistDict[topology]
             for var in VARIABLE_LIST:
@@ -36,14 +36,16 @@ class ClusterPredictor:
                         self.PdfFile.Get(hName)
       
         print 'Done.'
-        if self.DataFilePath is not None:
+        if self.DataFilePathList is not None:
             self.__setupDataTree()
 
     def __setupDataTree(self):
         print 'Creating the TTreeFormula objects...'
         self.RootTree = ROOT.TChain('MeritTuple')
-        self.RootTree.Add(self.DataFilePath)
-        print "Added %s files to tree" %self.DataFilePath
+        for file in self.DataFilePathList:
+            self.RootTree.Add("%s/%s"%(MAIN_FILE_PATH,file))
+            
+        print "Added %s files to tree" %self.DataFilePathList
         self.numEvents = self.RootTree.GetEntries()
         self.TreeFormulaDict = {}
         self.addTreeFormula('cut', self.Cut)
@@ -156,9 +158,9 @@ class ClusterPredictor:
         self.ProbDict = {}
         if not self.cutPassed():
             return
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             self.ProbDict[topology] = 1.0
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             for var in VARIABLE_LIST:
                 if varBins:
                     pdfValue = self.getPdfVarBinValue(topology, var)
@@ -168,14 +170,14 @@ class ClusterPredictor:
                 
                 self.ProbDict[topology] *= pdfValue
         probSum = sum(self.ProbDict.values())
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             try:
                 self.ProbDict[topology] /= probSum
             except ZeroDivisionError:
                 pass
         maxProb = 0
         classTopology = None
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             if self.ProbDict[topology] > maxProb:
                 maxProb = self.ProbDict[topology]
                 classTopology = topology
