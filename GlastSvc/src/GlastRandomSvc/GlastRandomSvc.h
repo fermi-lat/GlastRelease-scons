@@ -1,13 +1,29 @@
-/** @file GlastRandomSvc.h
-@brief definition of the class GlastRandomSvc
+/*
+ * @class GlastRandomSvc
+ *
+ * @brief Gaudi Service for setting the random engines and seeds
+ * for shared libraries that use random numbers (via CLHEP) 
+ *
+ * This service, in its initialize() method, collects the adresses 
+ * of all tools that implement the  IRandomAccess interface (one in each
+ * Dll that uses random numbers). The RandomAccess tool lives in 
+ * GlastRandomSvc. The initialize() method also sets the random engine
+ * for each of its Dll's either via the job options parameter
+ * RandomEngine or the default which is currently TripleRand. The
+ * handle() methods listens for BeginEvent events via the
+ * IncidentListener service and increments the run and particle 
+ * sequence numbers, sets those in the MCEvent header, then sets the
+ * seed for each of the Dll's that use randoms, based on the run and
+ * particle sequence numbers.
+ * 
+ *
+ * @authors Toby Burnett, Karl Young, Michael Kuss
+ *
+ * $Header$
+ */
 
-$Header$
-
-*/
 #ifndef _GlastRandomSvc_H
 #define _GlastRandomSvc_H 1
-
-
 
 #include <vector>
 #include <map>
@@ -21,28 +37,6 @@ $Header$
 
 class IDataProviderSvc;;
 
-/** @class GlastRandomSvc
-*
-* @brief Gaudi Service for setting the random engines and seeds
-* for shared libraries that use random numbers (via CLHEP) 
-* 
-* This service, in its initialize() method, collects the adresses 
-* of all tools that implement the  IRandomAccess interface (one in each
-* Dll that uses random numbers). The RandomAccess tool lives in 
-* GlastRandomSvc. The initialize() method also sets the random engine
-* for each of its Dll's either via the job options parameter
-* RandomEngine or the default which is currently TripleRand. The
-* handle() methods listens for BeginEvent events via the
-* IncidentListener service and increments the run and particle 
-* sequence numbers, sets those in the MCEvent header, then sets the
-* seed for each of the Dll's that use randoms, based on the run and
-* particle sequence numbers.
-* 
-*
-* @authors Toby Burnett, Karl Young
-*
-* $Header$
-*/
 class GlastRandomSvc : public Service,
     virtual public IIncidentListener
 {
@@ -83,10 +77,15 @@ private:
     typedef   std::map< std::string, CLHEP::HepRandomEngine* > EngineMap;
     EngineMap m_engineMap;
     StringProperty    m_randomEngine;
-    std::string    m_RunNumberString;
-    IntegerProperty   m_RunNumber;
-    IntegerProperty   m_InitialSequenceNumber;
-    int m_SequenceNumber;
+    std::string       m_runNumberString;
+    IntegerProperty   m_runNumber;
+    IntegerProperty   m_initialSequenceNumber;
+    IntegerProperty   m_numberOfRuns;
+    /// for setting the seed manually (run number seeded runs only)
+    IntegerProperty   m_seed;
+    int m_sequenceNumber;
+    int m_maxEventId;
+    unsigned int m_engineNum;
 
     // file name of seeds to be read in
     // if m_seedFile is empty, procceed to normal running of Gleam
@@ -97,8 +96,16 @@ private:
     StringProperty m_endSeedFile;
     std::ofstream m_output;
 
-    BooleanProperty m_autoSeed; 
+    // false: seed once at the beginning of a run
+    // true: seed for each event
+    BooleanProperty m_eventSeeded;
 
+    // check if choice of m_runNumber, m_numberOfRuns, and
+    // m_initialSequenceNumber ensure distinct random number sequences
+    // false: issue warnings only
+    // true: additionally, exit with StatusCode::FAILURE
+    BooleanProperty m_pedantic;
+    
     // seeds read from the file
     std::vector<GlastRandomSeed> m_seeds;
 

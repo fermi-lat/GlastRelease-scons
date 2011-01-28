@@ -19,6 +19,7 @@
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Random/RandGauss.h"
+#include "CLHEP/Random/RandFlat.h"
 #include "GaudiKernel/ObjectVector.h"
 
 #include "Event/MonteCarlo/McIntegratingHit.h"
@@ -62,14 +63,14 @@ static ToolFactory<MyRecon> afactory;
 
 //--------------------------------------------------------------------------
 /**
-    @class MyRandomTool
-    @brief example, test of mechanism
+  @class MyRandomTool
+  @brief example, test of mechanism
 
-    This makes a RandomAccess sub class that is instantiated in the local context,
-    and then will allow the service to replace the pointer to the engine.
+  This makes a RandomAccess sub class that is instantiated in the local context,
+  and then will allow the service to replace the pointer to the engine.
     
-      TODO: put in some code to actually exercise setting the seed.
-  */
+  TODO: put in some code to actually exercise setting the seed.
+*/
 class MyRandomTool : public RandomAccess {
 public:
     MyRandomTool::MyRandomTool(const std::string& type, 
@@ -79,7 +80,9 @@ public:
     
     }
 };
-static  ToolFactory<MyRandomTool>  randFactory;
+static ToolFactory<MyRandomTool> randFactory;
+const IToolFactory& MyRandomToolFactory = randFactory;
+
 //--------------------------------------------------------------------------
 /**
     @class MyOtherRandomTool
@@ -100,8 +103,8 @@ public:
     }
   
 };
-static  ToolFactory<MyOtherRandomTool>  otherRandFactory;
-
+static ToolFactory<MyOtherRandomTool> otherRandFactory;
+const IToolFactory& MyOtherRandomToolFactory = otherRandFactory;
 
 //--------------------------------------------------------------------------
 
@@ -200,9 +203,12 @@ StatusCode CreateEvent::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    log << MSG::DEBUG <<"Initial RandGauss status: " << RandGauss::getFlag() << endreq;
+    log << MSG::DEBUG <<"Initial RandGauss status: " << RandGauss::getFlag()
+        << endreq;
     // HMK Unused double test = RandGauss::shoot();
-    log << MSG::DEBUG << "RandGauss status after a shoot: " << RandGauss::getFlag() << endreq;
+    log << MSG::DEBUG << "RandGauss status after a shoot: "
+        << RandGauss::getFlag() << endreq;
+    log << MSG::DEBUG << "RandFlat random number: " <<RandFlat::shoot()<<endreq;
     
     //TODO: put something in here to get data???
 

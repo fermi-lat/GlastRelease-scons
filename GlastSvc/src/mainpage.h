@@ -1,4 +1,3 @@
-
 /** @mainpage package GlastSvc
 *
 * @section Introduction
@@ -60,38 +59,73 @@
 * @param GlastDetSvc.visitorMode
 * Default: propagate
 * @param GlastRandomSvc.RandomEngine
-* The CLHEP Random engine to use - same for all Dll's that use random
-* numbers.
+* The CLHEP Random engine to use - same for all Dll's that use random numbers.
 * Default:TripleRand
 * @param GlastRandomSvc.SeedFile
-* An ASCII file containing a set of lines containing
-* space separated run and sequence numbers to use. If this
-* file is not in the same directory as Gleam.exe it's full
-* path must be specified. Note that specification of this
-* file overrides individual run and initial sequence numbers
-* set via GlastRandomSvc.RunNumber and 
-* GlastRandomSvc.InitialSequenceNumber.  
+* Currently, this parameter has no effect!
+* The name SeedFile is misleading anyway!
+* An ASCII file containing a set of lines containing space separated run and
+* sequence numbers to use. If this file is not in the same directory as
+* Gleam.exe it's full path must be specified. Note that specification of this
+* file overrides individual run and initial sequence numbers set via
+* GlastRandomSvc.RunNumber and GlastRandomSvc.InitialSequenceNumber.
+* @param GlastRandomSvc.Seed
+* This parameter should be used in emergency situations only!
+* The seed to be used.  Overwrites the seed calculated by
+* GlastRandomSvc::applySeeds() if all following conditions are true:
+* *) GlastRandomSvc::autoSeed=false, i.e. run seeded runs only
+* *) one random engine instantiation only, i.e. valid for Linux/gcc only
+* *) GlastRandomSvc.Seed!=0
+* Default:0
 * @param GlastRandomSvc.RunNumber
-* Run number. Note that if a file of run and sequence numbers is 
-* specified via the job options parameter GlastRandomSvc.SeedFile 
-* that overrides individually set run and initial sequence 
-* numbers.
+* Run number.
+* Note that if a file of run and sequence numbers is specified via
+* GlastRandomSvc.SeedFile that overrides individually set run and initial
+* sequence numbers.
 * Default:10
 * @param GlastRandomSvc.RunNumberString
-* Run number in string format, allowing the use of environment variables.
-* Note that if a file of run and sequence numbers is 
-* specified via the job options parameter GlastRandomSvc.SeedFile 
-* that overrides individually set run and initial sequence 
-* numbers. If set non-null, it takes precedence over the integer version.
+* Run number in string format, allowing the use of environment variables. If set
+* non-null, it takes precedence over the integer version.
+* Note that if a file of run and sequence numbers is specified via
+* GlastRandomSvc.SeedFile that overrides individually set run and initial
+* sequence numbers.
 * Default:null
 * @param GlastRandomSvc.InitialSequenceNumber
-* Incident particle sequence number to begin run with - is not
-* event number as not all events trigger.
-* Note that if a file of run and sequence numbers is specified 
-* via the job options parameter GlastRandomSvc.SeedFile 
-* that overrides individually set run and initial sequence 
-* numbers.
+* Incident particle sequence number to begin run with - is not event number as
+* not all events trigger.
+* Note that if a file of run and sequence numbers is specified via
+* GlastRandomSvc.SeedFile that overrides individually set run and initial
+* sequence numbers.
 * Default:0
+* @param GlastRandomSvc.NumberOfRuns
+* Specifies the number of runs contained in a task. This number is being used in
+* the algorithm which calculates the seed, and ensures that all events of all
+* runs are distinct.  All runs of a task have to run with the same
+* GlastRandomSvc.NumberOfRuns!
+* Default:20000 for  GlastRandomSvc.autoSeed=true, 20000000 (20M) for false
+* @param GlastRandomSvc.autoSeed
+* A better name would be eventSeeded.
+* If set to true, GlastRandomSvc::applySeeds() is called for each event, using
+* the run number,  GlastRandomSvc.NumberOfRuns, and the current event id. Thus,
+* each event generation starts with it's own well defined seed. Using odd
+* positive seeds only, this allows for 2^30 (about 1G) distinct events.
+* If set to false, GlastRandomSvc::applySeeds() is called only once at the
+* beginning of a run, using the run number, GlastRandomSvc.NumberOfRuns, and
+* GlastRandomSvc.InitialSequenceNumber. Using odd positive seeds only, this
+* allows for 2^30 (about 1G) distinct runs, each with up to 10^42 events
+* (the latter was calculated assuming 100k random numbers for each event).
+* Default:false
+* @param GlastRandomSvc.pedantic
+* GlastRandomSvc checks various parameters for validity:
+* *) the run number has to be positive smaller than GlastRandomSvc.NumberOfRuns
+* *) GlastRandomSvc.InitialSequenceNumber has to be positive
+* *) in the case of GlastRandomSvc.autoSeed=true, checks if for given
+*    GlastRandomSvc.NumberOfRuns the id of the last event stays within limits to
+*    avoid duplicate events. I.e., the following inequality has to be valid:
+*    GlastRandomSvc.NumberOfRuns*(lastEventId+1)<2^30.
+* A failure in any of these checks causes a warning.  Additionally, if pedantic
+* is set to true, GlastRandomSvc terminates with StatusCode::FAILURE.
+* Default:true
 * @param CurrentEventAlg.fileName
 * Name of the output ASCII file which will contain the run and event ids 
 * written by the CurrentEventAlg algorithm.  This JO parameter can handle
@@ -108,6 +142,5 @@
 * <hr>
 * @section requirements requirements
 * @verbinclude requirements
-
+*
 */
-

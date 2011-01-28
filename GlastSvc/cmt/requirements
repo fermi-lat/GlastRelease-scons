@@ -53,7 +53,4 @@ apply_pattern package_Cshlibflags
 macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml" 
 
 # build this for testing
-set TESTJOBOPTIONS  "${GLASTSVCROOT}/src/test/jobOptions.txt"
 apply_pattern package_test
-
-
