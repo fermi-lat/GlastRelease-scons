@@ -41,6 +41,7 @@ def drawProbSlices(topology,ClassifierFileName):
         hist1d.GetYaxis().SetTitle("Normalized # of events")
         hist1d.GetYaxis().SetRangeUser(0,1)
         hist1d.Draw()
+        hist1d.SetLineWidth(2)
         pool.append(hist1d)
         ROOT.gPad.SetGridy(True)
         ROOT.gPad.SetGridx(True)
@@ -72,9 +73,19 @@ def draw2dHists(topology,NormClassFileName,ClassFileName):
     return c2d,pool2
     
 if __name__== '__main__':
-    topology = "gam"
-    NormClassFileName = 'TestNormHistoFileTrainSample_%s.root'%topology
-    ClassFileName     = 'TestHistoFileTrainSample_%s.root'%topology
+    topology = "mip"
+    
+    NormClassFileName = 'TestNormHistoFileMomNumXtalsdEdx_largeStat_%s.root'%topology 
+    ClassFileName     = 'TestHistoFileMomNumXtalsdEdx_largeStat_%s.root'%topology
+#    NormClassFileName = 'TestNormHistoFileTrainSample2_%s.root'%topology
+#    ClassFileName     = 'TestHistoFileTrainSample2_%s.root'%topology
+   
+    #NormClassFileName = 'TestNormHistoFile_%s.root'%topology
+    #ClassFileName     = 'TestHistoFile_%s.root'%topology
     (c,pool) = drawProbSlices(topology,NormClassFileName)
     (c2d,pool2) = draw2dHists(topology,NormClassFileName,ClassFileName)
     raw_input()
+
+
+   # NormClassFileName = 'TestNormHistoFileTrainSample_%s.root'%topology
+   # ClassFileName     = 'TestHistoFileTrainSample_%s.root'%topology
