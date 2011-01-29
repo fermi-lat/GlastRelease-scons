@@ -71,8 +71,9 @@
 * GlastRandomSvc.RunNumber and GlastRandomSvc.InitialSequenceNumber.
 * @param GlastRandomSvc.Seed
 * This parameter should be used in emergency situations only!
-* The seed to be used.  Overwrites the seed calculated by
-* GlastRandomSvc::applySeeds() if all following conditions are true:
+* The seed to be used. In the case of negative and/or even values a warning is
+* logged. Overwrites the seed calculated by GlastRandomSvc::applySeeds() if all
+* following conditions are true:
 * *) GlastRandomSvc::autoSeed=false, i.e. run seeded runs only
 * *) one random engine instantiation only, i.e. valid for Linux/gcc only
 * *) GlastRandomSvc.Seed!=0
@@ -108,12 +109,12 @@
 * If set to true, GlastRandomSvc::applySeeds() is called for each event, using
 * the run number,  GlastRandomSvc.NumberOfRuns, and the current event id. Thus,
 * each event generation starts with it's own well defined seed. Using odd
-* positive seeds only, this allows for 2^30 (about 1G) distinct events.
+* positive seeds only, this allows for 2^30 (1Gi) distinct events.
 * If set to false, GlastRandomSvc::applySeeds() is called only once at the
 * beginning of a run, using the run number, GlastRandomSvc.NumberOfRuns, and
 * GlastRandomSvc.InitialSequenceNumber. Using odd positive seeds only, this
-* allows for 2^30 (about 1G) distinct runs, each with up to 10^42 events
-* (the latter was calculated assuming 100k random numbers for each event).
+* allows for 1Gi distinct runs, each with up to 10^42 events (the latter was
+* calculated assuming 100k random numbers for each event).
 * Default:false
 * @param GlastRandomSvc.pedantic
 * GlastRandomSvc checks various parameters for validity:

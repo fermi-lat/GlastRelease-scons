@@ -318,7 +318,7 @@ StatusCode GlastRandomSvc::initialize ()
     // Setting the parameter "Seed" is invalid:
     // 1) for event seeded runs
     // 2) for runs with multiple engine instantiations
-    if ( m_seed > 0 ) {
+    if ( m_seed != 0 ) {
         if ( m_eventSeeded || m_engineNum != 1 ) {
             log << MSG::ERROR << "Explicitely setting the seed (here to "
                 << m_seed << ") in the job options doesn't make sense:";
@@ -332,8 +332,15 @@ StatusCode GlastRandomSvc::initialize ()
             log << endreq;
             return StatusCode::FAILURE;
         }
-        else
+        else {
             log << MSG::INFO << "Seed set to: " << m_seed << endreq;
+            if ( m_seed < 0 )
+                log << MSG::WARNING << "Chosen seed is negative."
+                    << " Use of negative seeds is not recommended." << endreq;
+            if ( m_seed%2 == 0 )
+                log << MSG::WARNING << "Chosen seed is even."
+                    << " Use of even seeds is not recommended." << endreq;
+        }
     }
 
     // pick up ApplicationMgr.EvtMax
@@ -351,11 +358,10 @@ StatusCode GlastRandomSvc::initialize ()
     }
     log << MSG::INFO << "ApplicationMgr.EvtMax set to: " <<AppMgrEvtMax<<endreq;
 
-    const int twoTo30 = 1073741824;
-    //        const int twoTo30 = 1000000000;
+    const int oneGi = 1073741824;
     // subtract 1 from m_maxEventId: e.g. 8 numbers in the range 0
     // to 7
-    m_maxEventId = twoTo30 / ( m_numberOfRuns * m_engineNum ) - 1;
+    m_maxEventId = oneGi / ( m_numberOfRuns * m_engineNum ) - 1;
     log << MSG::INFO;
     if ( log.isActive() ) {
         log << "maximum allowed event id";
@@ -422,6 +428,9 @@ StatusCode GlastRandomSvc::initialize ()
             << m_engineNum << ", should be equal to either 1 or the total "
             << "number of engines, here " << m_engineMap.size()
             << ".  Everything else is weird!" << endreq;
+        // MWK: Probably, one day this will cause immediate termination.  I
+        // doubt there is a situation where this condition is valid, but I'm
+        // not sure.
         exitFlag = true;
     }
 
