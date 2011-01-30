@@ -376,9 +376,9 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   
   // jobOptions declaration
   declareProperty ("maxNumXtals"                 , m_maxNumXtals                  = 1536 );
-  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 650. );
-  declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000.);
-  declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 200. );
+  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 750. );
+  declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 300. );
+  declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 150. );
   declareProperty ("truncFrac"                   , m_truncFrac                    = 0.05 );
   declareProperty ("correctForGaps"              , m_correctForGaps               = true ); 
 }
