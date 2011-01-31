@@ -1,5 +1,5 @@
 package GlastSvc
-version v9r28p4
+version v10r0p1
 
 branches src cmt doc
 #$Id$
