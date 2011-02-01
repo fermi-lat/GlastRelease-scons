@@ -1,9 +1,9 @@
 package AcdDigi
-version v3r10p4
+version v3r10p5
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
-use GlastSvc v9r*
+use GlastSvc v*
 use Event v*
 
 use facilities v2r*
