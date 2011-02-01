@@ -14,8 +14,8 @@ usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
 
 usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a'})
 
-
 #Don't have any of the following for RHEL5 yet
+usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.0.0'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v18r1-gl4' })
 usedExternals.append({ 'name' : 'geant4', 'iversion' : '8.0.p01-gl4' })
 #usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v06-02-00' })
