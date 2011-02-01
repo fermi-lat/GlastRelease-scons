@@ -130,6 +130,7 @@ public:
         static std::string TkrIdClusterMap;
         static std::string TkrClusterCol;
         static std::string TkrTrackCol;
+        static std::string TkrCRTrackCol;
         static std::string TkrTrackHitCol;
         static std::string TkrVertexCol;
         static std::string TkrDiagnostics;

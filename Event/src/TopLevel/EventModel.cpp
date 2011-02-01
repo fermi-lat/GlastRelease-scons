@@ -77,6 +77,7 @@ std::string EventModel::TkrRecon::TkrClusterCol              = EventModel::TkrRe
 std::string EventModel::TkrRecon::TkrIdClusterMMap           = EventModel::TkrRecon::Event + "/TkrIdClusterMMap";
 std::string EventModel::TkrRecon::TkrIdClusterMap            = EventModel::TkrRecon::Event + "/TkrIdClusterMap";
 std::string EventModel::TkrRecon::TkrTrackCol                = EventModel::TkrRecon::Event + "/TkrTrackCol";
+std::string EventModel::TkrRecon::TkrCRTrackCol              = EventModel::TkrRecon::Event + "/TkrCRTrackCol";
 std::string EventModel::TkrRecon::TkrTrackHitCol             = EventModel::TkrRecon::Event + "/TkrTrackHitCol";
 std::string EventModel::TkrRecon::TkrVertexCol               = EventModel::TkrRecon::Event + "/TkrVertexCol";
 std::string EventModel::TkrRecon::TkrDiagnostics             = EventModel::TkrRecon::Event + "/TkrDiagnostics";
