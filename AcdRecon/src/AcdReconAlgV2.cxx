@@ -937,14 +937,14 @@ StatusCode AcdReconAlgV2::hitDistances(const AcdRecon::TrackData& aTrack,
       continue;
     }
     // not there, make it
-    AcdRecon::PocaData& pocaData = pocaMap[acdId];
+    AcdRecon::PocaData pocaData;
     sc = elemDistances(aTrack,acdId,pocaData);
     if ( sc.isFailure() ) {
       // Already gave error message, just return
       return sc;
     } 
-    if ( pocaData.m_arcLengthPlane < 0. ) {
-      pocaMap.erase(acdId);
+    if ( pocaData.m_arcLengthPlane >= 0. ) {
+        pocaMap[acdId] = pocaData;
     }
     pocaData.m_hasHit = true;
 
