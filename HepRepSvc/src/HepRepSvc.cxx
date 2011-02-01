@@ -109,7 +109,7 @@ StatusCode HepRepSvc::initialize ()
 
     // get the Particle Property Service
     IParticlePropertySvc* pps = 0;
-    status = service("ParticlePropertySvc", pps);
+    status = service("ParticlePropertySvc", pps, true);
     if( status.isFailure()) {
       log << MSG::ERROR << "Could not find ParticlePropertySvc" << endreq;
       return status;
