@@ -1,5 +1,5 @@
 package GlastClassify
-version v7r6p4
+version v7r7p1
 
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
@@ -20,7 +20,8 @@ macro source "*.cxx " WIN32 "*.h *.cxx"
 
 use classifier *
 use xmlBase v5r*
-use TMine * rootExtensions
+#use TMine * rootExtensions
+use TMineExt * IExternal
 
 use ntupleWriterSvc v*
 
