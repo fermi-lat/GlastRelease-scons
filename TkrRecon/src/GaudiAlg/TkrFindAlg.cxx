@@ -229,6 +229,21 @@ StatusCode TkrFindAlg::execute()
     // Set TkrQueryClustersTool to return all hits, and look for "cosmics"
 
     if(m_doCRFinding) {
+        // Set up the special cosmic ray track col here
+        Event::TkrTrackCol* crTrackCol =
+            SmartDataPtr<Event::TkrTrackCol>(m_dataSvc,EventModel::TkrRecon::TkrCRTrackCol);
+
+        // If no pointer then create it
+        if (crTrackCol == 0)
+        {
+            crTrackCol = new Event::TkrTrackCol();
+            if ((m_dataSvc->registerObject(
+                EventModel::TkrRecon::TkrCRTrackCol, crTrackCol)).isFailure()) {
+                    log << MSG::ERROR << "could not register Cosmic Ray TkrTrackCol" << endreq;
+                    return sc;
+            }
+        }
+
         ITkrQueryClustersTool::filterType type = 
             (m_CRGhosts ? ITkrQueryClustersTool::ALL : ITkrQueryClustersTool::NORMAL);
 
