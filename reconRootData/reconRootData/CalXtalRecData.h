@@ -93,8 +93,9 @@ public:
     
 private:
 
-    /// Bit mask to contain status information
-    UInt_t                  m_statusBits;
+ // Bit mask to contain status information
+//    UInt_t                  m_statusBits;
+// Try to maintain backward compatibility by adding new data members at end
 
     /// Cal readout mode is based on trigger type
     CalXtalId::CalTrigMode  m_mode;
@@ -103,6 +104,9 @@ private:
     /// ranges and pulse heights
     vector<CalRangeRecData> m_recData;
     
+    /// Bit mask to contain status information
+    UInt_t                  m_statusBits;
+
     ClassDef(CalXtalRecData,2)
 };
 

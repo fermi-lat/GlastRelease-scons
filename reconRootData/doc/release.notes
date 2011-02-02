@@ -4,6 +4,8 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-26-04 01-Feb-2011 hmk      Retain old data members in CalCluster to
+     allow support of reading pre-Pass8 recon ROOT files
  reconRootData-09-26-03 27-Jan-2011 lbaldini Small formatting imprvement in a printout.
  reconRootData-09-26-02 21-Jan-2011 lbaldini Untabified.
  reconRootData-09-26-01 20-Jan-2011 lbaldini Test program updated for the new members (and some files untabified).

@@ -75,6 +75,14 @@ public:
     const CalClassParams & getClassParams() const
      { return m_classParams ; }
 
+    /// Old Data Methods to provide support for older Recon ROOT files before Pass 8
+    const CalParams & getParams() const { return m_params; }
+    Double_t getRmsLong() const { return m_rmsLong; }
+    Double_t getRmsLongAsym() const { return m_rmsLongAsym; }
+    Double_t getRmsTrans() const { return m_rmsTrans; }
+    Int_t getNumTruncXtals() const { return m_numTruncXtals; }
+    /// End Old Data Methods
+
     void Clear( Option_t * option ="" ) ;
     void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
     Bool_t CompareInRange( const CalCluster &, const std::string & name = "" ) const ; // for tests
@@ -83,14 +91,22 @@ public:
 private:
 
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
+    
+    /// Old data members retained to allow reading old ROOT files
+    CalParams m_params;
+    Double32_t m_rmsLong;
+    Double32_t m_rmsLongAsym;
+    Double32_t m_rmsTrans;
+    Int_t m_numTruncXtals;
+    /// end old data members
 
-    std::string m_producerName ;
     UInt_t m_statusBits ;
     CalXtalsParams m_xtalsParams ;
     CalMSTreeParams m_mstParams ;
     CalFitParams m_fitParams ;
     CalMomParams m_momParams ;
     CalClassParams m_classParams ;
+    std::string m_producerName ;
 
     ClassDef(CalCluster,9)
 };
