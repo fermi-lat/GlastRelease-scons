@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-01-11  2-Feb-2011 HMK Update use of GlastSvc to a generic version
  AcdRecon-05-01-10  1-Feb-2011 TU Eric's fixes to prevent crashes on bad track errors, small fix for windows
  AcdRecon-05-01-09 04-Jan-2011 TU  New scheme to access Cal parameters
  AcdRecon-05-01-08 01-Dec-2010    jrb Make new main branch tag for SCons RM

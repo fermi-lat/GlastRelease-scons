@@ -1,5 +1,5 @@
 package AcdRecon
-version v5r1p10
+version v5r1p11
 
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
@@ -7,7 +7,7 @@ author Eric Charles <echarles@slac.stanford.edu>
 branches src doc
 
 use GlastPolicy v*
-use GlastSvc v9r*
+use GlastSvc v*
 use TkrUtil  v*
 use Event    v*
 use GuiSvc   v3*
