@@ -16,10 +16,10 @@ progEnv.Tool('calibRootDataLib')
 progEnv.Tool('overlayRootDataLib')
 progEnv.Tool('CalUtilLib')
 progEnv.Tool('ldfReaderLib')
-progEnv.Tool('TMineLib')
 progEnv.Tool('configDataLib')
 progEnv.Tool('RootConvertLib')
 progEnv.Tool('rootUtilLib')
+progEnv.Tool('GlastClassifyLib')
 
 if baseEnv['PLATFORM'] != 'win32':
 	progEnv.AppendUnique(LINKFLAGS=['-u GuiSvc_loadRef'])
