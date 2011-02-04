@@ -2,12 +2,14 @@
 import math
 
 from ReconReader import *
-
+from CalLayout   import *
 
 CSI_RAD_LEN = 18.6
 CSI_MOL_RAD = 35.7
 
 CAL_TOWER_GAP = TOWER_PITCH - 0.5*(CSI_WIDTH*12 + CSI_LENGTH)
+
+COLOR_WHEEL = [ROOT.kRed, ROOT.kBlue, ROOT.kMagenta, ROOT.kGreen]
 
 
 class Point(ROOT.TVector3):
@@ -266,7 +268,7 @@ class CalDisplay(ReconReader):
         CAL_LAYOUT.draw('xy')
         self.TopCanvas.Update()
 
-    def drawMcDir(self, color = ROOT.kBlue, style = 1):
+    def drawMcDir(self, color = ROOT.kGray, style = 1):
         xc = self.getMeritVariable('McX0')
         yc = self.getMeritVariable('McY0')
         zc = self.getMeritVariable('McZ0')
@@ -312,6 +314,10 @@ class CalDisplay(ReconReader):
             print 'Cluster %d:' % i
             print '-'*80
             cluster.getXtalsParams().Print()
+            print '-'*20
+            cluster.getMSTreeParams().Print()
+            print '-'*20
+            cluster.getClassParams().Print()
             print '-'*80
             print
         self.drawCalLayout()
@@ -319,16 +325,17 @@ class CalDisplay(ReconReader):
         uberCluster = self.getCalUberCluster()
         uberXtals = self.getCalUberClusterXtalList()
         maxEnergy = uberCluster.getMSTreeParams().getMaxXtalEnergy()
-        firstCluster = self.getCalCluster(0)
-        firstXtals = self.getCalClusterXtalList(0)
         self.drawMcDir()
-        uberDisplay = CalClusterDisplay(uberCluster, uberXtals, maxEnergy)
-        uberDisplay.draw(self.SideCanvas, self.TopCanvas)
-        self.ClusterDisplayList.append(uberDisplay)
-        firstDisplay = CalClusterDisplay(firstCluster, firstXtals, maxEnergy)
-        firstDisplay.setColor(ROOT.kRed)
-        firstDisplay.draw(self.SideCanvas, self.TopCanvas)
-        self.ClusterDisplayList.append(firstDisplay)
+        maxCluster = min(3, self.getNumClusters())
+        for (i, cluster) in enumerate(self.getCalClusterCol()):
+            if i >= maxCluster:
+                break
+            xtals = self.getCalClusterXtalList(i)
+            display = CalClusterDisplay(cluster, xtals, maxEnergy)
+            display.setColor(COLOR_WHEEL[i])
+            display.draw(self.SideCanvas, self.TopCanvas)
+            self.ClusterDisplayList.append(display)
+
 
 
 
@@ -367,7 +374,7 @@ if __name__ == '__main__':
             (numClusters, numXtals)
         if numClusters > 0 and cutPassed:
             display.drawClusters()
-            answer = raw_input('Press q to quit, s to save or type a number...')
+            answer = raw_input('\n\n\tPress q to quit, s to save or type a number...')
         try:
             eventNumber = int(answer)
         except:

@@ -4,7 +4,7 @@ import sys
 import ROOT
 import numpy
 
-from CalLayout import *
+#from CalLayout import *
 
 ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
 
@@ -66,7 +66,7 @@ class ReconReader:
                 branchTitle = branch.GetTitle()
                 branchType = branchTitle.split('/')[-1].lower()
                 if '[' not in branchName and branchType not in ['c']:
-                    print 'Creating array for %s...' % branchTitle
+                    ## print 'Creating array for %s...' % branchTitle
                     a = numpy.array([0.0], dtype = branchType)
                     self.MeritChain.SetBranchAddress(branchName, a)
                     self.MeritArrayDict[branchName] = a
@@ -77,7 +77,7 @@ class ReconReader:
         # Relation file...
         print 'Opening the relation file...'
         if relFilePath is None:
-            relFilePath = reconFilePath.replace('recon.root', 'rel.root')
+            relFilePath = reconFilePath.replace('recon.root', 'relation.root')
             print 'No path specified, trying %s...' % relFilePath
         if not os.path.exists(relFilePath):
             print 'Could not find the relations, will ignore it.'
