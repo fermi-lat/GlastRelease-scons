@@ -71,10 +71,33 @@ def draw2dHists(topology,NormClassFileName,ClassFileName):
     c2d.Update()
 
     return c2d,pool2
-    
+
+
+def drawPanel(topologyList,FileName):
+    cName = 'PanelHists'
+    cTitle = 'Classification'
+    c3d = ROOT.TCanvas(cName, cTitle, 850, 850)
+    pool3 = []
+    c3d.Divide(2,3)
+    rootFile = ROOT.TFile(FileName)
+    for i,topology in enumerate(topologyList):
+        c3d.cd(i+1)
+        hist = rootFile.Get("hNormProb_%s"%topology)
+        hist.Draw("lego")
+        pool3.append(hist)
+    c3d.cd(5)
+    hclass = rootFile.Get("hClass")
+    hclass.Draw()
+    pool3.append(hclass)
+    pool3.append(rootFile)
+    c3d.Update()
+    return c3d,pool3
+
+
+
 if __name__== '__main__':
-    topology = "mip"
-    
+    topology = "had"
+    topologyList = ['mip','gam','had','ghost']
     NormClassFileName = 'TestNormHistoFileMomNumXtalsdEdx_largeStat_%s.root'%topology 
     ClassFileName     = 'TestHistoFileMomNumXtalsdEdx_largeStat_%s.root'%topology
 #    NormClassFileName = 'TestNormHistoFileTrainSample2_%s.root'%topology
@@ -82,8 +105,9 @@ if __name__== '__main__':
    
     #NormClassFileName = 'TestNormHistoFile_%s.root'%topology
     #ClassFileName     = 'TestHistoFile_%s.root'%topology
-    (c,pool) = drawProbSlices(topology,NormClassFileName)
+    (c,pool)    = drawProbSlices(topology,NormClassFileName)
     (c2d,pool2) = draw2dHists(topology,NormClassFileName,ClassFileName)
+    (c3d,pool3) = drawPanel(topologyList,NormClassFileName)
     raw_input()
 
 
