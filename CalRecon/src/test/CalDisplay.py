@@ -317,6 +317,8 @@ class CalDisplay(ReconReader):
             print '-'*20
             cluster.getMSTreeParams().Print()
             print '-'*20
+            cluster.getMomParams().Print()
+            print '-'*20
             cluster.getClassParams().Print()
             print '-'*80
             print
@@ -325,8 +327,19 @@ class CalDisplay(ReconReader):
         uberCluster = self.getCalUberCluster()
         uberXtals = self.getCalUberClusterXtalList()
         maxEnergy = uberCluster.getMSTreeParams().getMaxXtalEnergy()
-        self.drawMcDir()
-        maxCluster = min(3, self.getNumClusters())
+        self.drawMcDir(ROOT.kBlack)
+        display = CalClusterDisplay(uberCluster, uberXtals, maxEnergy)
+        display.setColor(ROOT.kGray)
+        display.draw(self.SideCanvas, self.TopCanvas)
+        self.ClusterDisplayList.append(display)
+        nClusters = self.getNumClusters()
+        if nClusters<=1:
+            maxCluster = 1
+        elif nClusters>len(COLOR_WHEEL):
+            maxCluster = len(COLOR_WHEEL)
+        else:
+            maxCluster = nClusters-1        
+##         maxCluster = min(3, self.getNumClusters())
         for (i, cluster) in enumerate(self.getCalClusterCol()):
             if i >= maxCluster:
                 break
