@@ -150,9 +150,11 @@ class ReconReader:
         return xtalList
 
     def getCalUberClusterXtalList(self):
-        return self.getCalClusterXtalList(self.getNumClusters() - 1)
-
-
+        # No, this would return [] if no rel table is found
+        #return self.getCalClusterXtalList(self.getNumClusters() - 1)
+        return self.getCalXtalRecCol()
+        
+        
 
 if __name__ == '__main__':
     from optparse import OptionParser
