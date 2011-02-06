@@ -275,6 +275,9 @@ class CalDisplay(ReconReader):
         dx = self.getMeritVariable('McXDir')
         dy = self.getMeritVariable('McYDir')
         dz = self.getMeritVariable('McZDir')
+        if (xc is None) or (yc is None) or (zc is None):
+            print "No MC info..."
+            return None
         if dz == 0.:
             dz = 0.0001
         x1 = xc - (zc - Z_MIN)*(dx/dz)
