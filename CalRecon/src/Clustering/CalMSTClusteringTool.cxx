@@ -696,6 +696,11 @@ double CalMSTClusteringTool::xtalsWeight(Event::CalXtalRecData* xTal1, Event::Ca
     else {
       int nGapsX = abs((xTal1Tower % 4) - (xTal2Tower % 4)) ;
       int nGapsY = abs((xTal1Tower / 4) - (xTal2Tower / 4)) ;
+      // apply correction only for 1 single gap (X or Y)
+      // JIRA LPATE-31
+      if ( (nGapsX+nGapsY)>1 ){
+        return dist2 ;
+      }
       // R_gap_x = xtalGap/(cos(theta) * sin(phi)) and R_gap_y = xtalGap/(sin(theta)* sin(phi))
       // cos(theta) = dx/L
       // sin(theta) = dy/L and sin(phi) = L/R
