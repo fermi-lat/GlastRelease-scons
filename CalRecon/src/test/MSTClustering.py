@@ -12,14 +12,48 @@ from CalMomentsAnalysis import *
 from ClusterPredictor   import *
 
 #ROOT.gStyle.SetOptStat(111111)
-
+ROOT.gStyle.SetOptStat(0)
 
 CAL_LAYOUT = CalLayout()
 COLOR_LIST = [ROOT.kRed, ROOT.kBlue, ROOT.kGray + 1]
 for i in range(100):
     COLOR_LIST.append(ROOT.kBlack)
 
+XTAL_GAP_DIST = 45.6
 
+m_correctForGaps               = False
+m_maxEdgeWeightModel_thrLE     = 750.
+m_maxEdgeWeightModel_thrPivEne = 300.
+m_maxEdgeWeightModel_thrHE     = 150.
+
+def nodeDistX0(node1, node2):
+    xTal1Id = node1.getPackedId();
+    xTal2Id = node2.getPackedId();
+    
+    xTal1Tower  = xTal1Id.getTower();
+    xTal2Tower  = xTal2Id.getTower();
+
+    dist2 = nodeDist2(node1, node2);
+    
+    if (xTal1Tower == xTal2Tower) or (m_correctForGaps == False):
+        return dist2 ;
+    else:
+        nGapsX = abs((xTal1Tower % 4) - (xTal2Tower % 4)) ;
+        nGapsY = abs((xTal1Tower / 4) - (xTal2Tower / 4)) ;
+        if (nGapsX + nGapsY >1):
+            return dist2
+
+        absDeltaX = abs(node1.X - node2.X);
+        absDeltaY = abs(node1.Y - node2.Y);
+        dist2Corr = 1.;
+        if absDeltaX > 0. : 
+            dist2Corr -=  XTAL_GAP_DIST*nGapsX/absDeltaX;
+        if absDeltaY > 0.:
+            dist2Corr -=  XTAL_GAP_DIST*nGapsY/absDeltaY;
+      
+        return dist2*dist2Corr*dist2Corr 
+  
+        
 
 def nodeDist2(node1, node2):
     return (node1.X - node2.X)*(node1.X - node2.X) +\
@@ -33,18 +67,22 @@ def getNextEdge(set1, set2):
     minWeight = 100000000000
     for n1 in set1.NodeList:
         for n2 in set2.NodeList:
-            weight = nodeDist2(n1, n2)
+            #weight = nodeDist2(n1, n2)
+            weight =  nodeDistX0(n1, n2)
             if weight < minWeight:
                 minWeight = weight
                 node1 = n1
                 node2 = n2
     return MSTEdge(node1, node2, math.sqrt(minWeight))
 
-def getWeigthThreshold(energy):
-    if energy > 1000.0:
-        return 200.0
+
+
+def getWeigthThreshold(energy):    
+    if energy > m_maxEdgeWeightModel_thrPivEne:
+        return m_maxEdgeWeightModel_thrHE
     else:
-        return 500.0 - 150.0*(math.log10(energy) - 1)
+        slope = (m_maxEdgeWeightModel_thrHE - m_maxEdgeWeightModel_thrLE)/math.log10(m_maxEdgeWeightModel_thrPivEne)
+        return m_maxEdgeWeightModel_thrLE + slope*log10(energy)
 
 
 
@@ -591,8 +629,8 @@ if __name__ == '__main__':
         reader.getEntry(evtNumber)
         if fakeReader is not None:
             fakeReader.getEntry(evtNumber)
-        xtalCol = reader.getCalXtalRecCol()
-        numXtals = reader.getNumCalXtals()
+        xtalCol  = reader.getCalXtalRecCol()
+        numXtals = reader.getCalTotalNumXtals()
         print '\nAnalyzing event %d, %d xtal(s) found.' % (evtNumber, numXtals)
         runId = reader.getMeritVariable('EvtRun')
         evtId = reader.getMeritVariable('EvtEventId')
@@ -622,7 +660,8 @@ if __name__ == '__main__':
         except:
             evtNumber += 1
         if answer == 's':
-            filePath = 'mst_%d-%d_uber.pdf' % (runId, evtId)
+            filedir  = './'
+            filePath = filedir+'mst_%d-%d_uber.pdf' % (runId, evtId)
             os.system('mv %s %s' % ('mst-uber.pdf', filePath))
-            filePath = 'mst_%d-%d_clusters.pdf' % (runId, evtId)
+            filePath = filedir+'mst_%d-%d_clusters.pdf' % (runId, evtId)
             os.system('mv %s %s' % ('mst-clusters.pdf', filePath))
