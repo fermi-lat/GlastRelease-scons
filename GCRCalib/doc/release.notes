@@ -2,6 +2,9 @@
  Package GCRCalib
  EOH
 
+ GCRCalib-01-08-01  09-Feb-2011   HMK patch to prevent bad obfStatus ptr
+        from being used in GcrReconTool::checkFilters, if it turns out to be 
+        missing on TDS
  GCRCalib-01-08-00  4-Jan-2011     TU new scheme for accessing cal params
  GCRCalib-01-07-02 15-Jul-2010  cohen fix the OBF/FSW issue redux
  GCRCalib-01-07-01 07-Jul-2010  cohen fix the OBF/FSW issue

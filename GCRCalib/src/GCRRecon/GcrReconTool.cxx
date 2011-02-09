@@ -373,8 +373,9 @@ bool GcrReconTool::checkFilters(){
     m_log << MSG::INFO << "no OBF or FSW filter status found"<< endreq;
   }
   else {
-    if ( digiTds->fromMc() )
-      {
+    if ( digiTds->fromMc() ) 
+      { 
+      if (obfStatus) {
         m_log << MSG::DEBUG << "Using OBF filter status"<< endreq;
         const OnboardFilterTds::IObfStatus* obfResultGamma = 0;
         const OnboardFilterTds::IObfStatus* obfResultHIP = 0;
@@ -404,8 +405,11 @@ bool GcrReconTool::checkFilters(){
           filtersbDGN = obfResultDGN->getState();
         else
           m_log << MSG::INFO <<  "no obfResultDGN" << endreq;
-      }
-    else 
+      } // end check for obfStatus
+      else
+        m_log << MSG::INFO << "no OBF Status found on TDS" << endreq;
+      } // end check for digiTds->fromMc()
+    else if (metaEventTds)
       {
         m_log << MSG::DEBUG << "Using FSW filter"<< endreq;
         const lsfData::GammaHandler* gamma = metaEventTds->gammaFilter();
