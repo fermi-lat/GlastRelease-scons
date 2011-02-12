@@ -19,14 +19,15 @@ COLOR_LIST = [ROOT.kRed, ROOT.kBlue, ROOT.kGray + 1]
 for i in range(100):
     COLOR_LIST.append(ROOT.kBlack)
 
-XTAL_GAP_DIST = 45.6
+XTAL_GAP_DIST = 45.6#*4./5.
 
 m_correctForGaps               = False
+
 m_maxEdgeWeightModel_thrLE     = 750.
 m_maxEdgeWeightModel_thrPivEne = 300.
 m_maxEdgeWeightModel_thrHE     = 150.
 
-def nodeDistX0(node1, node2):
+def nodeDistX0(node1, node2, globWeight='1'):
     xTal1Id = node1.getPackedId();
     xTal2Id = node2.getPackedId();
     
@@ -63,12 +64,12 @@ def nodeDist2(node1, node2):
 def nodeDist(node1, node2):
     return math.sqrt(nodeDist2(node1, node2))
 
-def getNextEdge(set1, set2):
+def getNextEdge(set1, set2, globWeight='1'):
     minWeight = 100000000000
     for n1 in set1.NodeList:
         for n2 in set2.NodeList:
             #weight = nodeDist2(n1, n2)
-            weight =  nodeDistX0(n1, n2)
+            weight =  nodeDistX0(n1, n2, globWeight)
             if weight < minWeight:
                 minWeight = weight
                 node1 = n1
@@ -160,7 +161,6 @@ class MSTNodeSet:
         return self.getNumNodes() == 0
 
 
-
 class MSTEdge:
 
     def __init__(self, node1, node2, weight):
@@ -168,6 +168,7 @@ class MSTEdge:
         self.Node2 = node2
         self.Weight = weight
         self.LineXY = ROOT.TLine(node1.X, node1.Y, node2.X, node2.Y)
+        #self.LineXY = myTLine(node1.X, node1.Y, node2.X, node2.Y)
         self.LineXZ = ROOT.TLine(node1.X, node1.Z, node2.X, node2.Z)
         self.LineYZ = ROOT.TLine(node1.Y, node1.Z, node2.Y, node2.Z)
 
@@ -448,11 +449,14 @@ class MSTClustering:
                   numXtals
             setA = MSTNodeSet([MSTNode(xtalCol[0])])
             setB = MSTNodeSet()
+            
+            totalE = 0
             for (i, xtal) in enumerate(xtalCol):
                 if i != 0:
                     setB.addNode(MSTNode(xtal))
+                    totalE += xtal.getEnergy()
             while not setB.isEmpty():
-                edge = getNextEdge(setA, setB)
+                edge = getNextEdge(setA, setB, totalE)
                 self.UberTree.addEdge(edge)
                 setA.addNode(edge.Node2)
                 setB.removeNode(edge.Node2)
@@ -485,15 +489,19 @@ class MSTClustering:
         tree = MST(self.FakeReader)
         if self.getTotalNumNodes() == 1:
             tree.addNode(self.UberTree.NodeList[0])
+        myEdgeCounter = 0;
         for edge in self.UberTree.getEdges():
             if edge.Weight > self.WeightThreshold:
                 edge.setLineStyle(7)
-                tree.addNode(edge.Node1)
+                #Add node ONLY if splitting the very first edge.
+                if myEdgeCounter == 0:
+                    tree.addNode(edge.Node1)
                 self.ClusterCol.append(tree)
                 tree = MST(self.FakeReader)
                 tree.addNode(edge.Node2)
             else:
                 tree.addEdge(edge)
+            myEdgeCounter+=1;
         self.ClusterCol.append(tree)
         elapsedTime = time.time() - startTime
         print 'Done in %.3f s, %d cluster(s) found.' %\
@@ -516,12 +524,12 @@ class MSTClustering:
             print 'Done in %.3f s.' % elapsedTime
         self.ClusterCol.sort(reverse = True)    
 
-    def draw(self):
+    def draw(self, label =""):
         if self.TopCanvasUber is None:
-            self.TopCanvasUber = getTopCanvas('Top (uber cluster)',
+            self.TopCanvasUber = getTopCanvas('Top (uber cluster) %s' % label,
                                               topx = 10, topy = 10)
         if self.TopCanvasClusters is None:
-            self.TopCanvasClusters = getTopCanvas('Top (all clusters)',
+            self.TopCanvasClusters = getTopCanvas('Top (all clusters) %s' % label,
                                                   topx = 680, topy = 10)
         self.TopCanvasUber.cd()
         self.TopCanvasUber.Clear()
