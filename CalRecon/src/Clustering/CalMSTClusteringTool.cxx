@@ -462,8 +462,9 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
         XtalDataListIterator xTalIter = m_xTals_setA.insert(m_xTals_setA.end(), recData);
       }
 
-    // case of 0 and 1 xtal will be handled separately...
-    if (m_xTals_setA.size()>1)
+    // case numXtals is 0, 1 and > maxNumXtals will be handled separately,
+    // without calculating the MST
+    if (m_xTals_setA.size()>1 &&  m_xTals_setA.size()<=m_maxNumXtals)
       {
 
         // Loop to fill the Uber MST
