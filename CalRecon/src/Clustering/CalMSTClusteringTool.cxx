@@ -348,7 +348,7 @@ private:
   // single value overwritten by model
   float m_maxEdgeWeight;
   // above that we do not grow a tree
-  int   m_maxNumXtals;
+  unsigned int   m_maxNumXtals;
   // Parameters to separate trees
   float m_maxEdgeWeightModel_thrLE;     // (mm) @ 1 MeV
   float m_maxEdgeWeightModel_thrPivEne; // (MeV)
@@ -376,11 +376,11 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   
   // jobOptions declaration
   declareProperty ("maxNumXtals"                 , m_maxNumXtals                  = 1536 );
-  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 750. );
-  declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 300. );
-  declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 150. );
+  declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 880. );
+  declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000. );
+  declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 120. );
   declareProperty ("truncFrac"                   , m_truncFrac                    = 0.05 );
-  declareProperty ("correctForGaps"              , m_correctForGaps               = true ); 
+  declareProperty ("correctForGaps"              , m_correctForGaps               = false ); 
 }
     
 StatusCode CalMSTClusteringTool::initialize()
