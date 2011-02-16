@@ -5,6 +5,7 @@
 
 // LOCAL INCLUDES
 #include "CalXtalRecAlg.h"
+#include "XtalRecTool.h"
 #include "../Xtalk/INeighborXtalkTool.h"
 #include "CalXtalResponse/IXtalRecTool.h"
 
@@ -145,7 +146,8 @@ StatusCode CalXtalRecAlg::execute()
     // release it from the auto_ptr so it is not deleted
     m_calXtalRecCol->push_back(recData.release());
   }
-
+    // This is where the code to deal with the ambiguity has to go.S
+  	sc = dynamic_cast<XtalRecTool*>(m_xtalRecTool)->ambiguity(m_calXtalRecCol);
 
   return StatusCode::SUCCESS;
 }

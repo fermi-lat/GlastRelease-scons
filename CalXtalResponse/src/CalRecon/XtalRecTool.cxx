@@ -15,9 +15,10 @@
 #include "CalUtil/CalArray.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
+
 #include "Event/Digi/CalDigi.h"
 #include "Event/TopLevel/Event.h"
-#include "Event/Recon/CalRecon/CalXtalRecData.h"
+
 
 // EXTLIB
 #include "GaudiKernel/ToolFactory.h"
@@ -122,52 +123,112 @@ StatusCode XtalRecTool::initialize() {
    - compute centroid position & intesity from CIDAC scale
    - check for noise threshold & xtal saturation
 */
-StatusCode XtalRecTool::calculate(const Event::CalDigi &digi,
-                                  Event::CalXtalRecData &xtalRec,
-                                  CalVec<FaceNum, bool> &belowNoise,
-                                  CalVec<FaceNum, bool> &saturated,
-                                  INeighborXtalkTool const*const xtalkTool) {
-  // initialize return values
-  fill(belowNoise.begin(), belowNoise.end(), false);
-  fill(saturated.begin(), saturated.end(), false);
+StatusCode XtalRecTool::calculate(const Event::CalDigi &         digi,
+                                  Event::CalXtalRecData&         xtalRec,
+                                  CalVec<FaceNum, bool>&         belowNoise,
+                                  CalVec<FaceNum, bool>&         saturated,
+                                  INeighborXtalkTool const*const xtalkTool) 
+{
+    // initialize return values
+    fill(belowNoise.begin(), belowNoise.end(), false);
+    fill(saturated.begin(), saturated.end(), false);
   
-  // used for global access routines.
-  const XtalIdx xtalIdx(digi.getPackedId());
+    // used for global access routines.
+    const XtalIdx xtalIdx(digi.getPackedId());
 
-  // check for empty digi
-  if (digi.getReadoutCol().size() <= 0)
-    return StatusCode::SUCCESS;
+    // check for empty digi
+    if (digi.getReadoutCol().size() <= 0)
+        return StatusCode::SUCCESS;
 
-  for (CalDigi::CalXtalReadoutCol::const_iterator ro =  digi.getReadoutCol().begin();
-       ro != digi.getReadoutCol().end();
-       ro++) {
-    /// check if current range is below noise threshold
-    CalVec<FaceNum, bool> rngBelowNoise;
+    for (CalDigi::CalXtalReadoutCol::const_iterator ro =  digi.getReadoutCol().begin();
+         ro != digi.getReadoutCol().end();
+         ro++) 
+    {
+        /// check if current range is below noise threshold
+        CalVec<FaceNum, bool> rngBelowNoise;
 
-    // using auto_ptr, bc I am responsible for this pointer.
-    auto_ptr<Event::CalXtalRecData::CalRangeRecData> rngRec(createRangeRecon(xtalIdx,
-                                                                             *ro, 
-                                                                             rngBelowNoise,
-                                                                             saturated,
-                                                                             xtalkTool));
+        // using auto_ptr, bc I am responsible for this pointer.
+        auto_ptr<Event::CalXtalRecData::CalRangeRecData> rngRec(createRangeRecon(xtalIdx,
+                                                                                 *ro, 
+                                                                                 rngBelowNoise,
+                                                                                 saturated,
+                                                                                 xtalkTool));
     
-    if (!rngRec.get())
-      return StatusCode::FAILURE;
+        if (!rngRec.get())
+            return StatusCode::FAILURE;
 
-    /// only retain belowNoise info for first range
-    if (ro == digi.getReadoutCol().begin())
-      copy(rngBelowNoise.begin(),
-           rngBelowNoise.end(),
-           belowNoise.begin());
+        /// only retain belowNoise info for first range
+        if (ro == digi.getReadoutCol().begin())
+            copy(rngBelowNoise.begin(), rngBelowNoise.end(), belowNoise.begin());
 
-    xtalRec.addRangeRecData(*(rngRec.get()));
-  } // per range loop
+        xtalRec.addRangeRecData(*(rngRec.get()));
+    } // per range loop
 
-  return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
-/**
-   Algorithm is as follows:
+// Algorithm to deal with Ambiguous Region of Xtal response
+StatusCode XtalRecTool::ambiguity(Event::CalXtalRecCol* pxtalrecs)
+{
+    if (!pxtalrecs->empty()) 
+    {
+        for(Event::CalXtalRecCol::const_iterator jlog=pxtalrecs->begin(); jlog != pxtalrecs->end(); ++jlog) 
+        {
+            Event::CalXtalRecData& recLog = **jlog;   
+            idents::CalXtalId xtalId = recLog.getPackedId();
+            int tower = xtalId.getTower();
+            int layer = xtalId.getLayer();
+            Point pos = recLog.getPosition();
+            // Hardwire in is that even layers have the long. co-ordinate in the x direction....
+            float xLong;
+			point2Pos(xtalId, xLong, pos);
+            float xTrans; 
+            
+            double eneMax = 0.; 
+
+            for(Event::CalXtalRecCol::const_iterator klog=pxtalrecs->begin(); klog != pxtalrecs->end(); ++klog) 
+            {
+                Event::CalXtalRecData& recLogTs = **klog;   
+                idents::CalXtalId xtalIdTs = recLogTs.getPackedId();
+                int towerTs = xtalIdTs.getTower();
+                if(towerTs != tower) continue;
+
+                int layerTs = xtalIdTs.getLayer();
+                if(layerTs == layer+1 || layerTs == layer-1) 
+                {
+                    double eneLog = recLogTs.getEnergy();
+                    if(eneLog > eneMax) 
+                    {
+                        eneMax = eneLog;
+                        Point posTs = recLogTs.getPosition();
+						point2PosTrans(xtalIdTs, xTrans, posTs);
+                    }
+                }
+            }
+			if(eneMax > 5. && fabs(xTrans) > 135. && fabs(xLong) < 135.) {
+                double deltaX = 135. - fabs(xLong);
+                double corrTerm = deltaX*deltaX*.15;
+                float xLongCorr = (xTrans > 0) ? xLong + corrTerm : xLong - corrTerm;
+
+				// Clip to max end of xtal
+				xLongCorr = min<float>(    m_CsILength/2, xLongCorr);
+                xLongCorr = max<float>(-1.*m_CsILength/2, xLongCorr);
+
+                Point corrPos(0., 0., 0.);
+				const CalUtil::XtalIdx xtalIdxU(xtalId);
+				pos2Point(xtalIdxU, xLongCorr, corrPos);
+
+                const Event::CalXtalRecData::CalRangeRecData *rngData = recLog.getRangeRecData(0); 
+				Event::CalXtalRecData::CalRangeRecData *rngDataR = const_cast<Event::CalXtalRecData::CalRangeRecData *> (rngData);
+                rngDataR->setPosition(corrPos);
+            }
+        }
+    }
+    return StatusCode::SUCCESS;
+}
+
+
+/*   Algorithm is as follows:
    - subtract pedestals from ADC readouts
    - check if either face is below 1/2 LAC signal level
    - convert ADC readouts to CIDAC scale
@@ -295,9 +356,18 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
       sc = m_calCalibSvc->evalPos(xtalIdx, ASYM_SL, asym, pos);
   if (sc.isFailure()) return 0;
 
-  // 1st clip position to end of xtal
-  pos = min<float>(   m_CsILength/2,pos);
-  pos = max<float>(-1*m_CsILength/2,pos);
+  // First attempts to correct overshoot 
+  if(fabs(pos) > 113.) {
+    float deltaX = fabs(pos)-113.;
+    float deltaCorrection = deltaX*deltaX*.0052;
+	if(fabs(pos) - deltaCorrection < 113) deltaX = 0.;  //Stop unwanted large deltaX behavior
+    if(pos > 0. ) pos -= deltaCorrection;
+    else          pos += deltaCorrection;
+  }
+  // Now clip position to end of xtal
+    pos = min<float>(   m_CsILength/2,pos);
+    pos = max<float>(-1.*m_CsILength/2,pos);
+
   
   // generate position vector from scalar longitudinal position
   Point pXtal;
@@ -419,7 +489,6 @@ void XtalRecTool::pos2Point(const XtalIdx xtalIdx,
   //-- CONSTRUCT GEOMETRY VECTORS FOR XTAL --//
 
   // create Volume Identifier for segments 0 & 11 of this crystal
-  
   // volId info snagged from 
   // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
   idents::VolumeIdentifier segm0Id, segm11Id;
@@ -452,14 +521,121 @@ void XtalRecTool::pos2Point(const XtalIdx xtalIdx,
   m_detSvc->getTransform3DByID(segm11Id,&transf);
   //get position of the center of the last segment
   const Vector vect11 = transf.getTranslation();
-
-  Point p0(0.,0.,0.);           
-  // position of the crystal center
-  const Point pCenter = p0+(vect0+vect11)*0.5; 
+          
+  Point p0(0., 0., 0.);
+  // position of the crystal center - need to bogus p0 to cast Vector -> Point
+  const Point pCenter = p0 + (vect0+vect11)*0.5; 
   //normalized vector of the crystal direction 
-  const Vector dirXtal = (vect11-vect0)*m_nCsISeg/(m_nCsISeg-1);  
+  const Vector dirXtal = (vect11-vect0).unit();  
 
   // put 1D position info into 3D vector
-  // 'pos' is in units of xtal Length, convert to rel units (-1->1)
-  pXtal = pCenter+dirXtal*(pos/m_CsILength);
+  pXtal = pCenter+dirXtal*pos;
+}
+
+/** \brief convert 3d point in LAT geometry space to longitudinal pos along cal xtal
+    \param pXtal ouput position vector
+    \param pos input longitudinal position in mm from center of xtal
+*/
+void XtalRecTool::point2Pos(const idents::CalXtalId xtalId,
+                            float &pos, 
+                            const Point pXtal) const {
+  
+  // create Volume Identifier for segments 0 & 11 of this crystal
+  // volId info snagged from 
+  // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
+
+  const CalUtil::XtalIdx xtalIdx(xtalId);
+  idents::VolumeIdentifier segm0Id, segm11Id;
+  
+  // init seg0 w/ info shared by both.
+  segm0Id.append(m_eLATTowers);
+  segm0Id.append(xtalIdx.getTwr().getRow());
+  segm0Id.append(xtalIdx.getTwr().getCol());
+  segm0Id.append(m_eTowerCAL);
+  segm0Id.append(xtalIdx.getLyr().val());
+  segm0Id.append(xtalIdx.getLyr().getDir().val()); 
+  segm0Id.append(xtalIdx.getCol().val());
+  segm0Id.append(m_eXtal);
+
+  // copy over shared info
+  segm11Id = segm0Id;
+  
+  // init segment specific info.
+  segm0Id.append(0); // segment Id
+  segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
+  
+  HepTransform3D transf;
+
+  //get 3D transformation for segment 0 of this crystal
+  m_detSvc->getTransform3DByID(segm0Id,&transf);
+  //get position of the center of the segment 0
+  const Vector vect0 = transf.getTranslation();
+
+  //get 3D transformation for the last segment of this crystal
+  m_detSvc->getTransform3DByID(segm11Id,&transf);
+  //get position of the center of the last segment
+  const Vector vect11 = transf.getTranslation();
+          
+  Point p0(0., 0., 0.);
+  // position of the crystal center - need to bogus p0 to cast Vector -> Point
+  const Point pCenter = p0 + (vect0+vect11)*0.5; 
+
+  Point hit = p0 +(pXtal - pCenter);
+  pos = (xtalId.isX()) ?  hit.x() : hit.y();
+}
+
+void XtalRecTool::point2PosTrans(const idents::CalXtalId xtalId,
+                            float &pos, 
+                            const Point pXtal) const {
+  
+  // create Volume Identifier for segments 0 & 11 of this crystal
+  // volId info snagged from 
+  // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
+
+  const CalUtil::XtalIdx xtalIdx(xtalId);
+  idents::VolumeIdentifier segm0Id, segm11Id;
+  
+  // init seg0 w/ info shared by both.
+  segm0Id.append(m_eLATTowers);
+  segm0Id.append(xtalIdx.getTwr().getRow());
+  segm0Id.append(xtalIdx.getTwr().getCol());
+  segm0Id.append(m_eTowerCAL);
+  segm0Id.append(xtalIdx.getLyr().val());
+  segm0Id.append(xtalIdx.getLyr().getDir().val()); 
+  segm0Id.append(0);
+  segm0Id.append(m_eXtal);
+
+  segm11Id.append(m_eLATTowers);
+  segm11Id.append(xtalIdx.getTwr().getRow());
+  segm11Id.append(xtalIdx.getTwr().getCol());
+  segm11Id.append(m_eTowerCAL);
+  segm11Id.append(xtalIdx.getLyr().val());
+  segm11Id.append(xtalIdx.getLyr().getDir().val()); 
+ // segm11Id.append(xtalIdx.getCol().val());
+  segm11Id.append(11);
+  segm11Id.append(m_eXtal);
+
+ 
+  // init segment specific info.
+  segm0Id.append(5); // segment Id's set to middle of log
+  segm11Id.append(5); 
+  
+  HepTransform3D transf;
+
+  //get 3D transformation for segment 0 of this crystal
+  m_detSvc->getTransform3DByID(segm0Id,&transf);
+  //get position of the center of the segment 0
+  const Vector vect0 = transf.getTranslation();
+
+  //get 3D transformation for the last segment of this crystal
+  m_detSvc->getTransform3DByID(segm11Id,&transf);
+  //get position of the center of the last segment
+  const Vector vect11 = transf.getTranslation();
+          
+  Point p0(0., 0., 0.);
+  // position of the crystal center - need to bogus p0 to cast Vector -> Point
+  const Point pCenter = p0 + (vect0+vect11)*0.5; 
+
+  Point hit = p0 +(pXtal - pCenter);
+  pos = (xtalId.isX()) ?  hit.y() : hit.x();
 }
