@@ -12,7 +12,10 @@ usedExternals.append({ 'name' : 'cppunit', 'iversion' : '1.10.2' })
 # Probably can't actually use python 2.5.1-gl1 for all OS's, archs, etc.
 usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
 
-usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a'})
+if baseEnv['COMPILERNAME'] != 'vc71':
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i2'})
+else:
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
 
 #Don't have any of the following for RHEL5 yet
 usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.0.0'})
