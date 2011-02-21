@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-14-04 21-Feb-2011 lbaldini New default values for the MST clustering parameters.
  CalRecon-06-14-03 30-Jan-2011 lbaldini Default values for the MST clustering changed.
  CalRecon-06-14-02 27-Jan-2011 lbaldini A couple of bug fixes.
  CalRecon-06-14-01 21-Jan-2011 lbaldini Untabified.
