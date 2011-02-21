@@ -493,6 +493,27 @@ void TkrVecPointsFilterTool::groupTkrVecPoints(Event::TkrVecPointCol* tkrVecPoin
     // Sort if we must, put the "biggest" one at the front
     if (mstNodeLists.size() > 1) mstNodeLists.sort(compareMinSpanTreeNodeLists);
 
+    const MinSpanTreeNodeList& mstNodeList = mstNodeLists.front();
+
+    double aveDist = 0.;
+    int    nInAve  = 0;
+
+    for(MinSpanTreeNodeList::const_iterator nodeItr = mstNodeList.begin(); nodeItr != mstNodeList.end(); nodeItr++)
+    {
+        const MinSpanTreeNode* node = *nodeItr;
+
+        if (node->getDistToParent() > 0.)
+        {
+            double distToParent = node->getDistToParent();
+
+            aveDist += distToParent;
+            nInAve++;
+        }
+    }
+
+    aveDist /= double(nInAve);
+    int stophere = 0;
+
     BBLinksList linksList;
 
     int numLinks = makeBoundingBoxes(mstNodeLists.front(), linksList);

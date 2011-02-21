@@ -15,7 +15,7 @@
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "src/Track/TkrControl.h"
 
-class MinSpanTreeNode
+class MinSpanTreeNode 
 {
 public:
     MinSpanTreeNode(const IMSTObject* point) : 
