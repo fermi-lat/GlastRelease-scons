@@ -27,14 +27,14 @@ public:
   virtual ~CalClassParams() {}
   
   /// Initialize the class members.
-  void init(std::string producerName, std::map <std::string, double> probMap);
+  void init(const std::string& producerName, const std::map <std::string, Double_t>& probMap);
 
-  inline std::string getProducerName()                 const { return m_producerName; }
-  inline std::map <std::string, Double_t> getProbMap() const { return m_probMap; }
+  inline const std::string& getProducerName()                 const { return m_producerName; }
+  inline const std::map <std::string, Double_t>& getProbMap() const { return m_probMap; }
 
-  inline void setProbMap(std::map <std::string, double> probMap) { m_probMap = probMap; }
-  inline void setProducerName(std::string producerName)      { m_producerName = producerName; }
-  inline void setProb(std::string className, double prob)    { m_probMap[className] = prob; }
+  inline void setProbMap(const std::map <std::string, Double_t>& probMap) { m_probMap = probMap; }
+  inline void setProducerName(const std::string& producerName)      { m_producerName = producerName; }
+  inline void setProb(const std::string& className, Double_t prob)    { m_probMap[className] = prob; }
 
   Double_t getProb(const std::string &className)       const;
   Double_t getGamProb()                                const { return getProb("gam") ; }
@@ -48,7 +48,7 @@ public:
  private:
   
   std::string m_producerName;
-  std::map <std::string, double> m_probMap;
+  std::map <std::string, Double_t> m_probMap;
   
   ClassDef(CalClassParams,1)
 } ;

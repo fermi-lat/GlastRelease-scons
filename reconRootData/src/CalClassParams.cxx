@@ -22,13 +22,13 @@ CalClassParams::CalClassParams()
 
 CalClassParams::CalClassParams
 ( std::string producerName,
-  std::map <std::string, double> probMap )
+  std::map <std::string, Double_t> probMap )
 {
   init
     ( producerName,probMap );
 }
 
-void CalClassParams::init(std::string producerName, std::map <std::string, double> probMap)
+void CalClassParams::init(const std::string& producerName, const std::map <std::string, Double_t>& probMap)
 {
   m_producerName = producerName;
   m_probMap      = probMap;

@@ -108,7 +108,7 @@ private:
     CalClassParams m_classParams ;
     std::string m_producerName ;
 
-    ClassDef(CalCluster,9)
+    ClassDef(CalCluster,10)
 };
 
 

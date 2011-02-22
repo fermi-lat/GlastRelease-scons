@@ -107,7 +107,7 @@ private:
     /// Bit mask to contain status information
     UInt_t                  m_statusBits;
 
-    ClassDef(CalXtalRecData,2)
+    ClassDef(CalXtalRecData,3)
 };
 
 #endif
