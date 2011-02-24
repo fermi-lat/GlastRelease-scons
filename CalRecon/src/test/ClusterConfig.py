@@ -1,30 +1,38 @@
 import ROOT
 import os
 
+#from FileSampleDicts_3Classes import *
+#from FileSampleDicts_AGNs30_HE_Skim import *
+#from FileSampleDicts_EarthLimb import *
+#from FileSampleDicts_HighLatBkg import *
+from FileSampleDicts_ClassData import *
+#from FileSampleDicts_NoGhosts import *
+
+
 #Set preferences for ROOT output
 ROOT.gStyle.SetCanvasColor(0)
 ROOT.gStyle.SetPalette(1)
 ROOT.gStyle.SetPaintTextFormat('.3f')
-ROOT.gStyle.SetOptStat(111111)
+#ROOT.gStyle.SetOptStat(111111)
 
 #Set energy range and number of bins 
 LOG_E_MIN = 1
 LOG_E_MAX = 6
 NUM_E_BINS = 10
 #Minimal precut to classify a cluster
-PRE_CUT   = 'Cal1NumXtals > 4'
+PRE_CUT   = 'Cal1NumXtals > 3'
 # Set large number of bins to perform equal pop binning.
-INI_NUM_BINS = 4000
+INI_NUM_BINS = 6000
 
 #Define the energy bins
 ENERGY_BINS = [(1.0,1.5),(1.5,2.0),(2.0,2.5),(2.5,3.0),(3.0,3.5),
-              (3.5,4.0),(4.0,4.5),(4.5,5.0),(5.0,5.5),(5.5,6.0)]
+              (3.5,4.0),(4.0,4.5),(4.5,5.0),(5.0,5.5)]#,(5.5,6.0)]
 
 
 
 class ClusterVariable:
     #Basic class to handle variable info
-    def __init__(self, expression, minValue, maxValue, numBins = 50,
+    def __init__(self, expression, minValue, maxValue, numBins = 25,
                  label = None):
         self.Expression = expression
         self.MinValue = minValue
@@ -39,18 +47,23 @@ class ClusterVariable:
 
 
 #Variable list with range and expressions.
-VARIABLE_LIST  = [ClusterVariable('Cal1TransRms', 0, 100),
-                  ClusterVariable('Cal1LongRmsAsym', 0, 0.25),
-                  ClusterVariable('log10(Cal1LongRms/Cal1TransRms)',
-                                  0, 2.5, label = 'MomentRatio'),
-                  ClusterVariable('Cal1CoreEneFrac', 0, 1),
-                  ClusterVariable('Cal1XtalEneRms/CalEnergyRaw',0, 0.4,
-                                  label = 'XtalEneRms'),
-                  ClusterVariable('Cal1XtalEneSkewness',-2, 10),
-                  ClusterVariable('Cal1dEdxAve/Cal1FullLength', 0, 60,
-                                  label = 'dEdxperLength'),
-                  ClusterVariable('Cal1NumXtals/log10(CalEnergyRaw)', 0, 60,
-                                  label = 'NumXtals'),
+VARIABLE_LIST  = [#ClusterVariable('Cal1TransRms', 0, 100),
+                  #ClusterVariable('Cal1LongRmsAsym', 0, 0.25),
+                  #ClusterVariable('log10(Cal1LongRms/Cal1TransRms)',
+                  #                0, 2.5, label = 'MomentRatio'),
+                  #ClusterVariable('Cal1CoreEneFrac', 0, 1.1),
+                  #ClusterVariable('Cal1XtalEneRms/CalEnergyRaw',0, 0.4,
+                  #                label = 'XtalEneRms'),
+                 # ClusterVariable('Cal1XtalEneSkewness',-2, 10),
+                 # ClusterVariable('log10(Cal1dEdxAve/Cal1FullLength)',
+                 #                 -3.5, 3.5, label = 'dEdxperLength'),
+                  ClusterVariable('Cal1MstAveEdgeLen', 0, 120),
+
+                  #Cal1NumXtals is similar to Cal1XtalEneRms, and it looks
+                  # like the later is better at discriminating gamma.
+
+                 # ClusterVariable('Cal1NumXtals/log10(CalEnergyRaw)', 0, 80,
+                 #                 label = 'NumXtals'),
                   ClusterVariable('Cal1MomNumCoreXtals',0,60)
                   ]
 
@@ -58,121 +71,15 @@ VARIABLE_LIST  = [ClusterVariable('Cal1TransRms', 0, 100),
 #GR which is writen in the output xml file is taken from this path in method
 # getGRversion() in ClusterClassifier class.
 
-MAIN_FILE_PATH = "/data/users/pesce/v18r8p5/work/output"
-
-"""
-FILE_PATH_DICT = {'gam': '%s/all_gamma_180GeV-v18r8p5-*original-merit.root'%\
-                  MAIN_FILE_PATH,
-                  'had': '%s/CrProtonMix-v18r8p5-*original-merit.root'%\
-                  MAIN_FILE_PATH,
-                  'mip':'%s/high_e_surface_muons-v18r8p5*original-merit.root'%\
-                  MAIN_FILE_PATH,
-                  'ghost':'%s/PTSkim-v18r8p5-*merit.root'%\
-                  MAIN_FILE_PATH}
-"""
-
-TRAIN_FILE_PATH_DICT = {'gam':['all_gamma_180GeV-v18r8p5-0-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-1-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-2-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-3-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-4-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-200-merit.root',
-                               'all_gamma_180GeV-v18r8p5-201-merit.root',
-                               'all_gamma_180GeV-v18r8p5-202-merit.root',
-                               'all_gamma_180GeV-v18r8p5-203-merit.root',
-                               'all_gamma_180GeV-v18r8p5-204-merit.root'],
-                        'had':['CrProtonMix-v18r8p5-0-original-merit.root',
-                               'CrProtonMix-v18r8p5-1-original-merit.root',
-                               'CrProtonMix-v18r8p5-2-original-merit.root',
-                               'CrProtonMix-v18r8p5-3-original-merit.root',
-                               'CrProtonMix-v18r8p5-4-original-merit.root',
-                               'CrProtonMix-v18r8p5-5-original-merit.root',
-                               'CrProtonMix-v18r8p5-6-original-merit.root',
-                               'CrProtonMix-v18r8p5-7-original-merit.root',
-                               'CrProtonMix-v18r8p5-8-original-merit.root',
-                               'CrProtonMix-v18r8p5-9-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-40-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-41-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-42-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-43-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-44-original-merit.root'],
-                        'mip':['high_e_surface_muons-v18r8p5-0-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-1-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-2-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-3-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-4-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-6-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-7-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-8-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-9-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-50-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-51-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-52-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-53-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-54-original-merit.root'],
-                        'ghost':['PTSkim-v18r8p5-1-merit.root',
-                                 'PTSkim-v18r8p5-2-merit.root',
-                                 'PTSkim-v18r8p5-3-merit.root',
-                                 'PTSkim-v18r8p5-4-merit.root',
-                                 'PTSkim-v18r8p5-5-merit.root',
-                                 'PTSkim-v18r8p5-6-merit.root',
-                                 'PTSkim-v18r8p5-7-merit.root',
-                                 'PTSkim-v18r8p5-8-merit.root']
-    }
-
-
-CLASS_FILE_PATH_DICT = {'gam':['all_gamma_180GeV-v18r8p5-5-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-6-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-7-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-8-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-9-original-merit.root',
-                               'all_gamma_180GeV-v18r8p5-205-merit.root',
-                               'all_gamma_180GeV-v18r8p5-206-merit.root',
-                               'all_gamma_180GeV-v18r8p5-207-merit.root',
-                               'all_gamma_180GeV-v18r8p5-208-merit.root',
-                               'all_gamma_180GeV-v18r8p5-209-merit.root'],
-                        'had':['CrProtonMix-v18r8p5-10-original-merit.root',
-                               'CrProtonMix-v18r8p5-11-original-merit.root',
-                               'CrProtonMix-v18r8p5-12-original-merit.root',
-                               'CrProtonMix-v18r8p5-13-original-merit.root',
-                               'CrProtonMix-v18r8p5-14-original-merit.root',
-                               'CrProtonMix-v18r8p5-15-original-merit.root',
-                               'CrProtonMix-v18r8p5-16-original-merit.root',
-                               'CrProtonMix-v18r8p5-17-original-merit.root',
-                               'CrProtonMix-v18r8p5-18-original-merit.root',
-                               'CrProtonMix-v18r8p5-19-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-45-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-46-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-47-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-48-original-merit.root',
-                               'CrProtonPrimary-v18r8p5-49-original-merit.root'],
-                        'mip':['high_e_surface_muons-v18r8p5-10-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-11-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-12-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-13-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-14-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-15-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-55-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-56-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-57-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-58-original-merit.root',
-                               'high_e_surface_muons-v18r8p5-59-original-merit.root'],
-                        'ghost':['PTSkim-v18r8p5-9-merit.root',
-                                 'PTSkim-v18r8p5-10-merit.root',
-                                 'PTSkim-v18r8p5-11-merit.root',
-                                 'PTSkim-v18r8p5-12-merit.root',
-                                 'PTSkim-v18r8p5-13-merit.root',
-                                 'PTSkim-v18r8p5-14-merit.root',
-                                 'PTSkim-v18r8p5-15-merit.root',
-                                 'PTSkim-v18r8p5-16-merit.root']
-    }
-
+#MAIN_FILE_PATH = "/data/users/pesce/v18r8p5/work/output"
 
 TOPOLOGY_DICT = {'gam': 0,
                  'had': 1,
                  'mip': 2,
                  'ghost':3
                  }
+
+TOPOLOGY_LIST = ['gam','had','ghost','mip']
 
 PRE_CUT_DICT = {'gam': None,
                 'had': 'abs(CalMIPRatio - 1) > 0.75',
@@ -183,7 +90,7 @@ PRE_CUT_DICT = {'gam': None,
 COLORS_DICT = {'gam': ROOT.kRed,
                'had': ROOT.kBlue,
                'mip': ROOT.kBlack,
-               'ghost': ROOT.kGray + 2
+               'ghost':ROOT.kGray + 2
                }
 
 
@@ -209,8 +116,13 @@ def getTrainFilePath(fileName):
     #raw_input()
     return trainFileList
 
-def hname(label, topology):
-    return 'fPdf_%s_%s' % (label, topology)
+def hname(label, topology, Emin = None):
+    if Emin:
+        hname = 'fPdf_%s_%s_%s' % (label, topology,Emin)
+
+    else:
+        hname = 'fPdf_%s_%s' % (label, topology)
+    return hname
 
 
 def hVarname(label,topology,Ebin):

@@ -1,4 +1,5 @@
 import ROOT
+ROOT.gROOT.SetStyle('Plain')
 
 #Main configuration is specified in the ClusterConfig file.
 
@@ -11,24 +12,25 @@ from ClusterPredictor  import *
 #Write the output to a root file with the 2d histograms of the classified
 #topologies as well as the xml file.
 
+#BaseName = 'cluclassTestBinning_AllVars_Mst_ClassData'
+BaseName = 'cluclass_testBatchMode'
 
-ClassifierFileName = 'cluclassTestingCode.root'
-
+ClassifierFileName = '%s.root'%BaseName
 
 #Specify the name of the output root and xml files here.
 
-classifier = ClusterClassifier()
-classifier.writeOutputFile(ClassifierFileName)
-classifier.writeXmlFile('xml_TestCode.xml')
+#classifier = ClusterClassifier(True,False)
+#classifier.writeOutputFile(ClassifierFileName)
+#classifier.writeXmlFile('xml_MomNumXtalsdEdx_largeStat.xml')
 
 
 
 #Specify the topology you want to classify here.
-
-dataFilePath = FILE_PATH_DICT['mip']
+ClassType = "mip"
+dataFilePathList = CLASS_FILE_PATH_DICT[ClassType]
 cut = PRE_CUT
 
-predictor = ClusterPredictor(ClassifierFileName,dataFilePath,cut)
+predictor = ClusterPredictor(ClassifierFileName,dataFilePathList,cut)
 
 hDict = {}
 hNormDict = {}
@@ -54,14 +56,14 @@ def setUp2dHist(norm=True):
 
 
 
-for topology in FILE_PATH_DICT.keys():
+for topology in CLASS_FILE_PATH_DICT.keys():
     hNorm = setUp2dHist()
 
     hNormDict[topology] = hNorm
     h     = setUp2dHist(False)
     hDict[topology] = h
 
-hClass = ROOT.TH1F('hClass', 'hClass', 3, 0, 3)
+hClass = ROOT.TH1F('hClass', 'hClass', 4, 0, 4)
 hClass.SetXTitle('Predicted topology')
 hClass.SetYTitle('Normalized # events')
 for (key, value) in TOPOLOGY_DICT.items():
@@ -71,8 +73,8 @@ for (key, value) in TOPOLOGY_DICT.items():
 #Pick whether you want to classify using the full training sample or just a
 #small number of events.
 
-#numEvents = p.getNumEntries()
-numEvents = 80000
+numEvents = predictor.getNumEntries()
+#numEvents = 8000
 histoList = []    
 NormhistoList = []    
 for i in xrange(numEvents):
@@ -80,12 +82,12 @@ for i in xrange(numEvents):
     if predictor.cutPassed():
         hClass.Fill(classTopologyIndex)
         logE = log10(predictor.getVar('CalEnergyRaw'))
-        for topology in FILE_PATH_DICT.keys():
+        for topology in CLASS_FILE_PATH_DICT.keys():
             hDict[topology].Fill(logE, predictor.ProbDict[topology])
             hNormDict[topology].Fill(logE, predictor.ProbDict[topology])
             
             
-for topology in FILE_PATH_DICT.keys():
+for topology in CLASS_FILE_PATH_DICT.keys():
     normalizeSlices(hNormDict[topology])
 
     histoList.append(hDict[topology])
@@ -95,21 +97,25 @@ for topology in FILE_PATH_DICT.keys():
 cName = 'cClass'
 cTitle = 'Classification of test dataset' 
 c = ROOT.TCanvas(cName, cTitle, 1000, 800)
-c.Divide(2, 2)
+c.Divide(2, 3)
    
-for (i, topology) in enumerate(FILE_PATH_DICT.keys()):
+for (i, topology) in enumerate(CLASS_FILE_PATH_DICT.keys()):
     c.cd(i + 1)
     hNormDict[topology].Draw('lego')
    
-c.cd(4)
+c.cd(5)
 normalizeHist(hClass)
 hClass.Draw()
 c.cd()
 c.Update()
+NormhistoList.append(hClass)
 #Save the canvas as pdf.
-c.SaveAs('TestVarBinProbs_3Classes.pdf')
+c.SaveAs('%s_%s.pdf'%(BaseName,ClassType))
 #Save both the normalized 2d histos and well as those which are not normalized.
-saveToFile(histoList,"TestHistoFile.root")
-saveToFile(NormhistoList,"TestNormHistoFile.root")
+saveToFile(histoList,"%s_Histo_%s.root"%(BaseName,ClassType))
+saveToFile(NormhistoList,"%s_NormHisto_%s.root"%(BaseName,ClassType))
 
 
+#NewVar: log10(Cal1dEdxAve/Cal1FullLength), and log10(Cal1FitChiSquare)
+#NewVar1:Cal1MomNumCoreXtals and not log10(Cal1FitChiSquare)
+#NewVar2: log10(Cal1FitChiSquare) and not Cal1MomNumCoreXtals --Bad

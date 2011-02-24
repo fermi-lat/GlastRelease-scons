@@ -43,7 +43,7 @@ class ClusterPredictor:
         print 'Creating the TTreeFormula objects...'
         self.RootTree = ROOT.TChain('MeritTuple')
         for file in self.DataFilePathList:
-            self.RootTree.Add("%s/%s"%(MAIN_FILE_PATH,file))
+            self.RootTree.Add(file)
             
         print "Added %s files to tree" %self.DataFilePathList
         self.numEvents = self.RootTree.GetEntries()
@@ -104,27 +104,26 @@ class ClusterPredictor:
 
         h = self.getHistSlice(topology, var,Energybin)
         numEntries = h.GetEntries()
-       
-        value = self.getVar(var.Label)
-        bin = self.getBin(h,value,var)
-        binVal = h.GetBinContent(bin)
+
+
+        value    = self.getVar(var.Label)
+        bin      = self.getBin(h,value,var)
+        binVal   = h.GetBinContent(bin)
         binWidth = h.GetBinWidth(bin)
         try:
             pdfValue = binVal/(float(numEntries)*binWidth)
         except ZeroDivisionError:
             pdfValue =  0.0
-           # print "Zero Division Error!"
-           # print 'PDF value for %s (logE = %.3f, %s = %.3f) = %.3f' %\
-           #   (topology, logE, var.Label, value, pdfValue)
        
         return pdfValue
         
 
     def getBin(self,histogram,value,var):
         numBins = histogram.GetNbinsX()
-        if value < var.MinValue:
+        highBin = histogram.GetBinLowEdge(numBins) + histogram.GetBinWidth(numBins)
+        if value < histogram.GetBinLowEdge(1):
             bin = 0
-        elif value >= var.MaxValue:
+        elif value >= highBin:
             bin = numBins + 1
         else:
             for i in range(1, numBins + 1):
@@ -132,6 +131,8 @@ class ClusterPredictor:
                 highEdge = lowEdge +  histogram.GetBinWidth(i)
                 if value>=lowEdge and value<=highEdge:
                     bin = i
+          
+              
         return bin
 
     def getEntry(self, entry):
@@ -164,7 +165,6 @@ class ClusterPredictor:
             for var in VARIABLE_LIST:
                 if varBins:
                     pdfValue = self.getPdfVarBinValue(topology, var)
-                    
                 else:
                     pdfValue = self.getPdfValue(topology, var)
                 

@@ -22,26 +22,33 @@ def getYProjection(Histo2D,name,Emin,Emax):
     return Histo1D
 
 
-def drawProbSlices(topology,ClassifierFileName):
+def drawProbSlices(topology,ClassifierFileName,norm=True):
     
     cName = 'cClass'
     cTitle = 'Probability of topology' 
     c = ROOT.TCanvas(cName, cTitle, 1000, 800)
     c.Divide(3,3)
    
-  #  ClassifierFileName = 'TestNormHistoFileTrainSample_%s.root'%topology
     histfile = ROOT.TFile(ClassifierFileName)
     pool = []
     pool.append(histfile)
     for i,(Emin,Emax) in enumerate(ENERGY_BINS):
         c.cd(i+1)
-        hist2d = histfile.Get("hNormProb_%s"%topology)
+        if norm:
+            hist2d = histfile.Get("hNormProb_%s"%topology)
+        else:
+            hist2d = histfile.Get("hProb_%s"%topology)
         hist1d = getYProjection(hist2d,"%s probability logE(%s-%s)"%(topology,Emin,Emax),Emin,Emax)
         hist1d.GetXaxis().SetTitle("%s probability"%topology)
-        hist1d.GetYaxis().SetTitle("Normalized # of events")
-        hist1d.GetYaxis().SetRangeUser(0,1)
+        if norm:
+            hist1d.GetYaxis().SetTitle("Normalized # of events")
+            hist1d.GetYaxis().SetRangeUser(0,1)
+        else:
+            hist1d.GetYaxis().SetTitle("# of events")
+        
         hist1d.Draw()
         hist1d.SetLineWidth(2)
+        hist1d.SetFillColor(COLORS_DICT[topology])
         pool.append(hist1d)
         ROOT.gPad.SetGridy(True)
         ROOT.gPad.SetGridx(True)
@@ -61,12 +68,15 @@ def draw2dHists(topology,NormClassFileName,ClassFileName):
     c2d.cd(1)
     Norm2dHist = NormClassFile.Get("hNormProb_%s"%topology)
     Norm2dHist.Draw("lego")
+   # Norm2dHist.SetLineColor(ROOT.kRed)
+    Norm2dHist.SetTitle("Normalized %s probability"%topology)
     pool2.append(Norm2dHist)
     pool2.append(NormClassFile)
     pool2.append(ClassFile)
     c2d.cd(2)
     Stand2dHist = ClassFile.Get("hProb_%s"%topology)
     Stand2dHist.Draw("lego")
+    #Stand2dHist.SetLineColor(ROOT.kRed)
     pool2.append(Stand2dHist)
     c2d.Update()
 
@@ -76,7 +86,7 @@ def draw2dHists(topology,NormClassFileName,ClassFileName):
 def drawPanel(topologyList,FileName):
     cName = 'PanelHists'
     cTitle = 'Classification'
-    c3d = ROOT.TCanvas(cName, cTitle, 850, 850)
+    c3d = ROOT.TCanvas(cName, cTitle, 1000, 800)
     pool3 = []
     c3d.Divide(2,3)
     rootFile = ROOT.TFile(FileName)
@@ -96,20 +106,26 @@ def drawPanel(topologyList,FileName):
 
 
 if __name__== '__main__':
-    topology = "had"
+    #BaseFileName = 'cluclassTestBinning_3Classes'
+    #BaseFileName = 'cluclassTestBinning_AllVars_Mst_ClassData'
+    BaseFileName = 'cluclassTestBinning_AllVars_Mst'
+    #BaseFileName = 'cluclassTestBinning'
+   # BaseFileName = 'cluclassTestBinning_MstVar'
+
+    topology = "gam"
     topologyList = ['mip','gam','had','ghost']
-    NormClassFileName = 'TestNormHistoFileMomNumXtalsdEdx_largeStat_%s.root'%topology 
-    ClassFileName     = 'TestHistoFileMomNumXtalsdEdx_largeStat_%s.root'%topology
-#    NormClassFileName = 'TestNormHistoFileTrainSample2_%s.root'%topology
-#    ClassFileName     = 'TestHistoFileTrainSample2_%s.root'%topology
+    
+    NormClassFileName = '%s_NormHisto_%s.root'%(BaseFileName,topology)
+    ClassFileName     = '%s_Histo_%s.root'%(BaseFileName,topology)
+    
+   # NormClassFileName = 'TestNormHistoFile3Classes_largeStat_%s.root'%topology
+   # ClassFileName     = 'TestHistoFile3Classes_largeStat_%s.root'%topology
+
    
-    #NormClassFileName = 'TestNormHistoFile_%s.root'%topology
-    #ClassFileName     = 'TestHistoFile_%s.root'%topology
     (c,pool)    = drawProbSlices(topology,NormClassFileName)
     (c2d,pool2) = draw2dHists(topology,NormClassFileName,ClassFileName)
     (c3d,pool3) = drawPanel(topologyList,NormClassFileName)
     raw_input()
 
 
-   # NormClassFileName = 'TestNormHistoFileTrainSample_%s.root'%topology
-   # ClassFileName     = 'TestHistoFileTrainSample_%s.root'%topology
+   

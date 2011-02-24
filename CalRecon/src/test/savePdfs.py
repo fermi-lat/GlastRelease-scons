@@ -48,6 +48,12 @@ class ClusterPdfs:
         numEntries = h.GetEntries()
         numBins = h.GetNbinsX()
         
+        overFlow  = h.GetBinContent(numBins + 2)
+        underFlow = h.GetBinContent(0)
+        totExtra = underFlow+overFlow
+
+        TotalEntries = numEntries + totExtra
+        
         hTitle = '%s P.D.F.Distribution (%s)' % (var.Expression, topology)
         hName = hname("%s_PDF_%s"%(var.Label,Energybin), topology)
         pdfh = ROOT.TH1F()
@@ -57,17 +63,18 @@ class ClusterPdfs:
 
         for bin in range(1,numBins +1):
         
-            binVal = h.GetBinContent(bin)
+            binVal   = h.GetBinContent(bin)
             binWidth = h.GetBinWidth(bin)
 
             try:
                 pdfValue = binVal/(float(numEntries)*binWidth)
+
             except ZeroDivisionError:
                 pdfValue =  0.0
 
             pdfh.SetBinContent(bin,pdfValue)
             
-       
+
         self.PdfESliceHistDict[topology][var.Label][Energybin] = pdfh
        
 
@@ -88,9 +95,13 @@ class ClusterPdfs:
 
         
 if __name__ == '__main__':
-    c = ClusterPdfs('cluclass_MomNumXtalsdEdx_largeStat.root')
+    c = ClusterPdfs('cluclassTestBinning_AllVars_Mst.root')
+    #c = ClusterPdfs('cluclassTestNewVar1_smallSample.root')
+#    c = ClusterPdfs('cluclassTestBinning.root')
     for energyBin, (emin,emax) in enumerate(ENERGY_BINS):
         for topology in CLASS_FILE_PATH_DICT.keys():
             for var in VARIABLE_LIST:
                 c.getPdf(topology,var,energyBin)
-    c.writeOutputFile("cluclass_pdfHists.root")
+ 
+    c.writeOutputFile("cluclass_pdfTestBinning_AllVars_Mst.root")
+ #  c.writeOutputFile("cluclass_pdfHistsnewVar1_smallSample.root")
