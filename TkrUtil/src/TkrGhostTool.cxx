@@ -30,6 +30,7 @@
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrDiagnosticTool.h"
 #include "TkrUtil/ITkrMapTool.h"
+#include "TkrUtil/ITkrTrackVecTool.h"
 
 #include <iomanip>
 #include <map>
@@ -68,6 +69,7 @@ private:
     IGlastDetSvc*          m_pDetSvc;
     ITkrGeometrySvc*       m_tkrGeom;
     ITkrDiagnosticTool*    m_pDiagTool;
+    ITkrTrackVecTool*       m_trackVecTool;
 
     int m_numTowers;
     int m_numLayers;
@@ -138,6 +140,11 @@ StatusCode TkrGhostTool::initialize()
         return StatusCode::FAILURE;
     }
 
+    m_trackVecTool = 0;
+    if (toolSvc()->retrieveTool("TkrTrackVecTool", m_trackVecTool).isFailure()) {
+        log << MSG::ERROR << "Couldn't retrieve TkrTrackVecTool" << endreq;
+        return StatusCode::FAILURE;
+    }
 
     int numX, numY;
     m_pDetSvc->getNumericConstByName("xNum", &numX);
@@ -507,13 +514,19 @@ StatusCode TkrGhostTool::flagEarlyTracks()
 
     // Flag the hits on tracks containing ghosts or 255's
     //get the tracks
-    SmartDataPtr<Event::TkrTrackCol> 
-        trackCol(m_dataSvc, EventModel::TkrRecon::TkrTrackCol);
+
+    std::vector<Event::TkrTrack*> trackVec = m_trackVecTool->getTrackVec();
+
+    //SmartDataPtr<Event::TkrTrackCol> 
+    //    trackCol(m_dataSvc, EventModel::TkrRecon::TkrTrackCol);
 
     int trackCount = 0;
-    Event::TkrTrackColConPtr tcolIter = trackCol->begin();
-    for(; tcolIter!=trackCol->end(); ++tcolIter,++trackCount) {
-        Event::TkrTrack* track = *tcolIter;
+    int itk;
+    
+    //Event::TkrTrackColConPtr tcolIter = trackCol->begin();
+    //for(; tcolIter!=trackCol->end(); ++tcolIter,++trackCount) {
+    for(itk=0; itk<trackVec.size(); ++itk, ++trackCount) {
+        Event::TkrTrack* track = trackVec[itk];;
         track->clearStatusBits(Event::TkrTrack::GHOST);
         track->clearStatusBits(Event::TkrTrack::DIAGNOSTIC);
         Event::TkrTrackHitVecItr pHit = track->begin();

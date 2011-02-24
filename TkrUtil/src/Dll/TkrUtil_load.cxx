@@ -29,6 +29,7 @@ DECLARE_FACTORY_ENTRIES(TkrUtil) {
     DECLARE_TOOL(    TkrGhostTool        );
     DECLARE_TOOL(    TkrDiagnosticTool   );
     DECLARE_TOOL(    TkrMapTool          );
+    DECLARE_TOOL(    TkrTrackVecTool     );
 } 
 
 
