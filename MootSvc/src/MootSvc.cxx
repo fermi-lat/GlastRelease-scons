@@ -245,7 +245,7 @@ MOOT::MootQuery* MootSvc::makeConnection(bool verbose) {
 
 #ifdef WIN32
   const std::string 
-    slacDefault("\\\\Slaccfs\\slac_afs\\g\\glast\\moot\\archive-mood");
+    slacDefault("\\\\samba01\\slac_afs\\g\\glast\\moot\\archive-mood");
 #else
   const std::string slacDefault("/afs/slac/g/glast/moot/archive-mood");
 #endif
