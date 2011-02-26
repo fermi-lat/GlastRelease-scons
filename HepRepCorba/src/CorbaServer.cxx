@@ -7,6 +7,10 @@
 // no idea what this was for!
 //extern int done = 1;
 
+namespace {
+    enum JAVARC { NOJDK = -1, SUNJDK, OPENJDK};
+}
+
 void CorbaServer::run()
 {  
   int orb_argc = 1;
@@ -81,11 +85,24 @@ void CorbaServer::run()
     system((root + iorFileName).c_str());
   }
   else if ((wiredStart != "")&& (::getenv("TMP") != NULL))
-  {    
-    std::string root("javaws ");
-    root = root + wiredStart;
-    root += " -open ";
-    system((root + iorFileName).c_str());
+  {
+    std::string wiredCmd = ("javaws ");
+    int javaRC;
+#ifdef WIN32
+    javaRC = SUNJDK;
+#else
+    javaRC = testjavaws();
+#endif
+    if(javaRC==NOJDK) {
+      std::cout << "javaws not found!!!" << std::endl;
+      return;
+    }
+    if(javaRC==SUNJDK) {
+    wiredCmd += wiredStart + " -open " + iorFileName;
+    } else if(javaRC==OPENJDK) {
+    wiredCmd += " -arg -open -arg " + iorFileName + wiredStart;
+    }
+    system((wiredCmd).c_str());
   }
 
   // We start the CORBA server
@@ -111,4 +128,31 @@ void CorbaServer::shutDown()
 {
   std::cout << "CORBA Server Destroyed" << std::endl;
   m_orb->shutdown(0);
+}
+
+int CorbaServer::testjavaws() {
+
+    const int MAX_BUFFER = 1024;
+
+    FILE *stream;
+    char buffer[MAX_BUFFER];
+    int result = 0;
+
+#ifdef WIN32
+    stream = _popen("javaws --help", "r");
+#else
+    stream = popen("javaws --help", "r");
+#endif
+    while (fgets(buffer, MAX_BUFFER, stream) != NULL) {
+        if (strstr(buffer,"-arg") != NULL) result = 1;
+    }
+    
+    int rc;
+#ifdef WIN32
+    rc = _pclose(stream) >> 8;
+#else
+    rc = pclose(stream) >> 8;
+#endif
+   if (rc != 0 && rc != 255) result = -1;
+    return result;
 }

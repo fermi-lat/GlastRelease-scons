@@ -28,6 +28,7 @@ class CorbaServer: public IServer
 
  private:
   CORBA::ORB* m_orb;
+  int testjavaws();
 
 };
 
