@@ -20,6 +20,8 @@ $Header$
 class IIncidentSvc;
 class IDataProviderSvc;
 
+#include "TkrUtil/ITkrTrackVecTool.h"
+
 /** @class ValBase
 @brief base class for the XxxValsTools
 
@@ -169,6 +171,8 @@ protected:
     IIncidentSvc* m_incSvc;
     /// let ValBase handle the pointer to the data service, everyone uses it
     IDataProviderSvc* m_pEventSvc;
+    /// trackVecTool
+    ITkrTrackVecTool* m_pTrackVec;
     /// flag to signal new event
     bool m_newEvent;
     /// flag to allow an always-calculate call if 0; if 1 checks and sets m_newEvent

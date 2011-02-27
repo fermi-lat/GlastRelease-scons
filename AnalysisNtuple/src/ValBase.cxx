@@ -60,6 +60,13 @@ ValBase::ValBase(const std::string& type,
           m_pEventSvc = eventsvc;
       } 
 
+      sc = toolSvc()->retrieveTool("TkrTrackVecTool", m_pTrackVec);
+      if(sc.isFailure()) {
+        log << MSG::ERROR << "TkrGhostTool not found!" << endreq;
+        return StatusCode::FAILURE;
+    }
+
+
       //set up listener for IncidentSvc
       incsvc->addListener(this, "BeginEvent", 100);
       return sc;
