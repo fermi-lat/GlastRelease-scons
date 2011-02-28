@@ -12,6 +12,7 @@ $Header$
 #include "ntupleWriterSvc/INTupleWriterSvc.h"
 
 #include "classifier/DecisionTree.h"
+#include "facilities/Util.h"
 
 #include "AtwoodTrees.h"
 #include "GlastClassify/ITupleInterface.h"
@@ -203,6 +204,8 @@ private:
     bool           m_useTMine;
     StringProperty m_TMineSelection;
     bool           m_TMineTrace;
+    StringProperty m_TMineCacheFile;
+
 
     /// this guy does the work!
     GlastClassify::AtwoodTrees * m_ctree;
@@ -231,12 +234,15 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
 {
     declareProperty("TreeName",      m_treename="MeritTuple");
+    //declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYROOT/xml/Pass7_Analysis_Protected.xml");
     declareProperty("xmlFileName",   m_xmlFileName="");
     declareProperty("PrintTreeInfo", m_treeInfo=false);
+    
     // EAC mods
     declareProperty("UseTMine",      m_useTMine=false);
     declareProperty("TMineSelection",m_TMineSelection="");
     declareProperty("TMineTrace",    m_TMineTrace=false);    
+    declareProperty("TMineCacheFile",m_TMineCacheFile="tmine_cache.root");
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode ClassifyAlg::initialize()
@@ -262,6 +268,7 @@ StatusCode ClassifyAlg::initialize()
     // create the classification object if requested
     try { 
         std::string path( m_xmlFileName.value()); 
+	facilities::Util::expandEnvVar(&path);
 	if ( m_useTMine ) {
             TTree* tree = m_tuple->getTTree();
             if ( tree == 0 ) {
@@ -269,7 +276,7 @@ StatusCode ClassifyAlg::initialize()
                 sc = StatusCode::FAILURE;
                 return sc;
             }
-	    m_tMine = TMiner::Init();
+	    m_tMine = TMiner::Init(TMiner::PARASITIC);
 	    switch ( log.level() ) {
 	    case MSG::VERBOSE:
 	    case MSG::DEBUG:
@@ -297,9 +304,14 @@ StatusCode ClassifyAlg::initialize()
 	    if ( m_TMineTrace ) {
 	      TMine::Messages::SetMessageStatus(TMine::Messages::TraceExec,TMine::Messages::Always);
 	    }
+
+	    std::string cacheFilePath( m_TMineCacheFile.value()); 
+	    facilities::Util::expandEnvVar(&cacheFilePath);
+
             m_tMiner = m_tMine->MakeParasite(*tree,
 					     path.c_str(),
-					     m_TMineSelection.value().c_str());
+					     m_TMineSelection.value().c_str(),
+					     cacheFilePath.c_str());
             if ( m_tMiner == 0 ) {
                 log << MSG::ERROR << "Failed to load TMine from XML " << path << endreq;
                 sc = StatusCode::FAILURE;
