@@ -234,7 +234,7 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
 {
     declareProperty("TreeName",      m_treename="MeritTuple");
-    //declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYROOT/xml/Pass7_Analysis_Protected.xml");
+    //declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml");
     declareProperty("xmlFileName",   m_xmlFileName="");
     declareProperty("PrintTreeInfo", m_treeInfo=false);
     
@@ -298,7 +298,7 @@ StatusCode ClassifyAlg::initialize()
 	      log << MSG::DEBUG << "Setting TMine::Messages::ERROR" << endreq;
 	      TMine::Messages::SetDefaultSeverity(TMine::Messages::ERROR);
 	      break;
-	    defaut:
+	    default:
 	      break;
 	    }
 	    if ( m_TMineTrace ) {
