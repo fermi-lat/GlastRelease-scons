@@ -9,5 +9,6 @@ def generate(env, **kw):
     env.Tool('xmlBaseLib')
     env.Tool('facilitiesLib')
     env.Tool('addLibrary', library = env['xercesLibs'])
+    env.Tool('addLibrary', library = env['TMineLibs'])
 def exists(env):
     return 1;
