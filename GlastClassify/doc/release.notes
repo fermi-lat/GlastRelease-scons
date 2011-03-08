@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-07-03 07-Mar-2011    jrb Add dependency on libs from TMine external
  GlastClassify-07-07-01 02-Mar-2011 ec&lsrea
  GlastClassify-07-07-01 31-Jan-2011    hmk use IExternal/TMineExt rather than
                  TMine in rootExtensions
