@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-02-02 08-Mar-2011    jrb Use new external name: LDF rather than ldf
  containerSettings-00-02-01 07-Mar-2011    jrb Use TMineExt 3.1.2
  containerSettings-00-02-00 01-Feb-2011    jrb use TMineExt external
  containerSettings-00-01-01 23-Sep-2010    jrb use most recent obf external
