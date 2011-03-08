@@ -31,7 +31,8 @@ EventSelector.StorageType = "LDFFILE";
 //EventSelector.InputList = {"$GLAST_EXT/LDF/v06-00-01/test/data/muon-5.arch"};
 //EventSelector.InputList = {"C:/muon-5.arch"};
 //EventSelector.fileName = "C:/muon-5.arch";
-EventSelector.FileName = "$(GLAST_EXT)/LDF/v06-00-01/test/data/muon-5.arch";
+//EventSelector.FileName = "$(GLAST_EXT)/LDF/v06-00-01/test/data/muon-5.arch";
+EventSelector.FileName = "$(LDFCONVERTERDATAPATH)/muon-5.arch";
 EventSelector.SweepEventSearch = 0;
 
 // Turn off debugging messages by setting level to 0
