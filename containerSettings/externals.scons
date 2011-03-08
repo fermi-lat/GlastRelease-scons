@@ -22,7 +22,7 @@ usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.1.2'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v18r1-gl4' })
 usedExternals.append({ 'name' : 'geant4', 'iversion' : '8.0.p01-gl4' })
 #usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v06-02-00' })
-usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01' })
+usedExternals.append({ 'name' : 'LDF', 'iversion' : 'v07-01-01' })
 usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
 
 # Do we really need these?
