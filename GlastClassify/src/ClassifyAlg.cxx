@@ -234,8 +234,8 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
 {
     declareProperty("TreeName",      m_treename="MeritTuple");
-    //declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml");
-    declareProperty("xmlFileName",   m_xmlFileName="");
+    declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml");
+    //declareProperty("xmlFileName",   m_xmlFileName="");
     declareProperty("PrintTreeInfo", m_treeInfo=false);
     
     // EAC mods
