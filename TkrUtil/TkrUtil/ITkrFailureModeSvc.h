@@ -13,6 +13,8 @@ $Header$
 // Include files
 #include "GaudiKernel/IInterface.h"
 
+#include "idents/TkrId.h"
+
 // Declaration of the interface ID ( interface id, major version,
 // minor version)
 
@@ -35,6 +37,7 @@ public:
 
     /// look for object in list of failed objects
     virtual bool isFailed(int towerId, int layer = -1, int view = -1) const = 0;
+    virtual bool isFailed(const idents::TkrId& tkrId ) const = 0;
     virtual bool empty() const = 0;
 };
 

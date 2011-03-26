@@ -273,8 +273,18 @@ bool TkrFailureModeSvc::towerFailed(int tower) const {
     return (loc != m_towerList[m_calibType].end());
 }
 
+bool TkrFailureModeSvc::isFailed(const idents::TkrId& tkrId)const
+{
+    idents::TowerId twrId = idents::TowerId(tkrId.getTowerX(), tkrId.getTowerY());
+    int tower = twrId.id();
+    int layer = m_tkrGeom->getLayer(tkrId);
+    int view  = tkrId.getView();
+    return isFailed(tower, layer, view);
+    return true;
+}
 
-bool TkrFailureModeSvc::isFailed(int tower, int layer, int view) const {
+bool TkrFailureModeSvc::isFailed(int tower, int layer, int view) const 
+{
     // Purpose and Method: check whether given id is in any of the identified lists
     //                     
 
