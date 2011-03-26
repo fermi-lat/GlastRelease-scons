@@ -31,7 +31,7 @@
 #include "TkrRecon/GaudiAlg/TkrClusterAlg.h"
 #include "src/Cluster/TkrMakeClusterTable.h"
 #include "TkrUtil/ITkrMakeClustersTool.h"
-#include "TkrRecon/Track/ITkrHitTruncationTool.h"
+#include "TkrUtil/ITkrHitTruncationTool.h"
 
 #include "Event/Digi/TkrDigi.h"
 

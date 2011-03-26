@@ -242,7 +242,7 @@ StatusCode TkrFindAlg::execute()
     // If no pointer then create it
     // Set TkrQueryClustersTool to return all hits, and look for "cosmics"
 
-    if(m_doCRFinding) {
+   if(m_doCRFinding) {
         // Set up the special cosmic ray track col here
         Event::TkrTrackCol* crTrackCol =
             SmartDataPtr<Event::TkrTrackCol>(m_dataSvc,EventModel::TkrRecon::TkrCRTrackCol);
