@@ -9,20 +9,14 @@ from ClusterConfig import *
 
 class ClusterClassifier:
 
-    def __init__(self, varBins=True, trainSample=True):
+    def __init__(self, varBins=True):
         print 'Opening files...'
         self.RootTreeDict = {}
-        if trainSample:
-            self.__setupTrainDict()
-            for (topology, filePathList) in self.TrainDict.items():
-                for filePath in filePathList:
-                    self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
-                    self.RootTreeDict[topology].Add(filePath)
-        else:
-            for (topology, filePathList) in TRAIN_FILE_PATH_DICT.items():
-                self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
-                for file in filePathList:
-                    self.RootTreeDict[topology].Add(file)
+      
+        for (topology, filePathList) in TRAIN_FILE_PATH_DICT.items():
+            self.RootTreeDict[topology] = ROOT.TChain('MeritTuple')
+            for file in filePathList:
+                self.RootTreeDict[topology].Add(file)
                     
         print 'Creating histograms for pdfs...'
         self.PdfHistDict = {}
@@ -56,8 +50,9 @@ class ClusterClassifier:
         #print self.TrainDict
             
     def __createHistSlice(self, var, topology):
-        # Create the equal sized bin histogram...
-       
+        # Create the equal populated bin histogram...
+
+        #Get a precut of needed for the topology.
         cut = getCut(topology)
         
         self.PdfHistSliceDict[topology][var.Label] = {}
@@ -71,7 +66,7 @@ class ClusterClassifier:
             fullCut = cut+Ecut
             ## Get the min and max value for this variable in this energy
             ## range and for this topology. I then use this range to
-            ## project the merituple onto a histo with this xrange. By
+            ## project the meritTuple onto a histo with this xrange. By
             ## using different xranges for each energy, topology and variable
             ## I hope to be able to pick better binning in each case.
             if self.RootTreeDict[topology].GetEntries(str(fullCut)) > 0:
@@ -80,13 +75,15 @@ class ClusterClassifier:
             else:
                 xmin = var.MinValue
                 xmax = var.MaxValue
-                   
+            print "Bounds for var %s are (%s,%s)"%(var.Expression,xmin,xmax)
+            
             hName = hname(var.Label, topology,i)
             hTitle = '%s P.D.F. (%s) logE (%s,%s)' %\
                 (var.Expression, topology,Emin,Emax)
             
             h = ROOT.TH1F(hName, hTitle, INI_NUM_BINS, xmin, xmax)
-           
+
+            #Here I project without specifying the binning.
             h.SetTitle(var.Expression)
             self.RootTreeDict[topology].Project(hName, var.Expression, fullCut)
           
@@ -99,11 +96,11 @@ class ClusterClassifier:
             h.GetXaxis().SetTitleSize(0.06)
             h.GetXaxis().SetTitleOffset(0.80)
           
-            h.Draw()
+            #h.Draw()
           
             print "%s cut:%s xrange: (%s,%s)"%(topology,fullCut,xmin,xmax)
-            ROOT.gPad.Update()
-            raw_input()
+            #ROOT.gPad.Update()
+           # raw_input()
 
             
             self.PdfHistSliceDict[topology][var.Label][i] = h
@@ -124,7 +121,7 @@ class ClusterClassifier:
                 PdfSlice.SetBinContent(1,0)
             PdfSlice.Draw()
             ROOT.gPad.Update()
-            raw_input()
+            #raw_input()
             self.PdfVarBinsDict[topology][var.Label][i] = PdfSlice
 
 
@@ -173,9 +170,15 @@ class ClusterClassifier:
         minValue = htemp.GetBinCenter(1) - 0.5*htemp.GetBinWidth(1)
         maxValue = htemp.GetBinCenter(numBins) + 0.5*htemp.GetBinWidth(numBins)
         print "Initial min and max from getBoundValues (%s,%s)"%(minValue,maxValue)
-        htemp.Draw()
-        ROOT.gPad.Update()
-        raw_input()
+        """
+        ##Here I am cutting out a given amount from the tail of the
+        ##distributions (you can set it via frac). I found that it was
+        ##messing up the classification. So for I am commenting this part
+        ##and taking everything, most likely I will need to think of a more
+        ##clever way to bin my histos.
+        #htemp.Draw()
+        #ROOT.gPad.Update()
+        #raw_input()
         Nbins = htemp.GetNbinsX()
         totalEntries = htemp.GetEntries()
         tot = 0 
@@ -188,18 +191,23 @@ class ClusterClassifier:
             binLowEdge    = htemp.GetBinLowEdge(i)
             binWidth      = htemp.GetBinWidth(i)
             binHighEdge   = binLowEdge + binWidth
-            if frac<0.98:
+            if frac<0.99:
                 maxValue = binHighEdge
        
-        ROOT.gPad.Update()
-
+        #ROOT.gPad.Update()
+        """
         htemp.Delete()
+        ##Final check that if the variable is defined between 0 and 1, the upper and lower
+        #bounds of the variable should not be different from 0 and 1.
+        if expr=="Cal1CoreEneFrac":
+            minValue = 0.0
+            maxValue = 1.0
        # logger.debug('Done, returning (%.3f, %.3f)' % (minValue, maxValue))
         return (minValue, maxValue)
 
 
    
-    def getNumBins(self,var,topology,i):
+    def getBinInfo(self,var,topology,i):
         #Decide the number of bins to use based on the statistics in the 
         #histo. A histo with less than 200 entries should not have more
         ## than one bin.
@@ -214,8 +222,11 @@ class ClusterClassifier:
             print "** Total entries less than 200 (%s)! Going to use 1 bin!"%\
                   TotalEntries
             Numbins = 1.0
-      
-        return Numbins
+
+        NeededEntries = TotalEntries/Numbins
+        PADDING       = sqrt(NeededEntries)
+        print "Needed entries %s" %  NeededEntries           
+        return NeededEntries, PADDING,Numbins
 
 
     def getVariableBinning(self,var,topology,i,xmin,xmax):
@@ -224,18 +235,14 @@ class ClusterClassifier:
          tot = 0
          histo        = self.PdfHistSliceDict[topology][var.Label][i]
          TotalEntries = histo.GetEntries()
-         Numbins      = self.getNumBins(var,topology,i)
+         (NeededEntries, PADDING,Numbins) = self.getBinInfo(var,topology,i)
          #If there are less than 200 entries in histo, use one single bin over
-         #entire range, otherwise calculate variable bins.
+         #entire range, otherwise calculate variable bins. NumBins, NeededEntries,
+         #PADDING decided in self.getNumBins.
          if Numbins>1:
-             try:
-                 NeededEntries = TotalEntries/Numbins
-             except ZeroDivisionError:
-                 NeededEntries = TotalEntries
-             PADDING       = sqrt(NeededEntries)
-             
+         
              binList.append(xmin)
-             print "Needed entries %s" %  NeededEntries           
+         
              for bin in range(1,INI_NUM_BINS + 1):
                  entriesPerBin = histo.GetBinContent(bin)
                  binLowEdge    = histo.GetBinLowEdge(bin)
@@ -252,17 +259,17 @@ class ClusterClassifier:
                      #I want to make sure that I have not reached the total
                      #amount of entries.
                      if counter!=(TotalEntries):
-                        print "%s.) %s %s %.4f"%\
-                             (bin,counter,NeededEntries,binHighEdge)
-                        binList.append(binHighEdge)
-                        counter = 0
+                         print "%s.) %s %s %.4f"%\
+                               (bin,counter,NeededEntries,binHighEdge)
+                         binList.append(binHighEdge)
+                         counter = 0
                    
-             
+
              #If I have reached the end of the histo, make sure to append to
              #the binlist the max xrange so that the full range containing
              #the 98% (this comes from the fact that in getBoundValues() I cut
              #out 2% of the tails of the distributions) of the events is
-             #covered in the binning.
+             #covered in the binning. -----This is not being used at the moment!!!
              if binList[-1]<xmax:
                  print "Last value in the list is ",binList[-1]
                  binList.append(xmax)
@@ -294,7 +301,7 @@ class ClusterClassifier:
             self.getPdfHist(topology, var).Draw('colz,text')
             ROOT.gPad.SetLogz(True)
         c.cd()
-        c.Update()
+        #c.Update()
         cName = '%s_slices' % var.Label
         cTitle = '%s (slices)' % var.Expression
         c = ROOT.TCanvas(cName, cTitle, 1000, 600)
@@ -336,7 +343,7 @@ class ClusterClassifier:
             toPool(label)
             label.Draw()
         c.cd()
-        c.Update()
+        #c.Update()
 
     def getPdfHist(self, topology, var):
         return self.PdfHistDict[topology][var.Label]
@@ -356,7 +363,7 @@ class ClusterClassifier:
         numEntries = histo.GetEntries()
         print "Number of bins:",numBins, numEntries
         sumProb = 0
-        for i in xrange(1, numBins):
+        for i in xrange(1, numBins + 1):
             binWidth    = histo.GetBinWidth(i)
             binVal      = histo.GetBinContent(i)
             binLowEdge  = histo.GetBinLowEdge(i)
@@ -370,8 +377,8 @@ class ClusterClassifier:
             info = tuple(['%.5f'%binLowEdge,'%.5f'%binHighEdge,'%.5f'%prob])
             infoList.append(info)
             histo.SetBinContent(i, prob)
-            print "%s.)Bin Width:%.2f\tBinContent:%d\t Prob:%.2f"\
-                %(i,binWidth,binVal,(prob))
+          #  print "%s.)Bin Width:%.2f\tBinContent:%d\t Prob:%.2f"\
+          #      %(i,binWidth,binVal,(prob))
        
         return infoList
 
@@ -394,7 +401,7 @@ class ClusterClassifier:
     def writeXmlFile(self,filepath,varBins=True):
         print 'Writing output file %s...' % filepath
         writer = pXmlWriter('%s'%filepath)
-        writer.writeComment('GR-%s used for training'%GR_VERSION)
+      #  writer.writeComment('GR-%s used for training'%GR_VERSION)
         writer.writeComment('Generated by ClusterClassifier on %s'%\
                                 time.asctime())
         writer.writeComment('Precut used in training:')
