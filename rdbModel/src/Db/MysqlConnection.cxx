@@ -952,14 +952,17 @@ namespace rdbModel {
       return Visitor::VERRORABORT;
     }
     
-    // Null
-    bool nullable = (std::string(colDescrip[2]) == std::string("YES"));
-    if (nullable != col->nullAllowed()) {
-      m_matchReturn = MATCHfail;
-      (*m_err) << "Failed null/not null match of col " << myName 
-                  << std::endl;
-      m_err->flush();
-      return Visitor::VERRORABORT;
+    // Null.  Don't check for timestamp data type. MySQL 4 and 5
+    // give different answers in some cases
+    if (dtype->getType() != Datatype::TYPEtimestamp) {
+      bool nullable = (std::string(colDescrip[2]) == std::string("YES"));
+      if (nullable != col->nullAllowed()) {
+        m_matchReturn = MATCHfail;
+        (*m_err) << "Failed null/not null match of col " << myName 
+                 << std::endl;
+        m_err->flush();
+        return Visitor::VERRORABORT;
+      }
     }
     // Key (PRI for primary, MUL if first in a multiple-field key
     // or if nullable unique key, UNI if not nullable, unique.  
