@@ -104,7 +104,7 @@ private:
     double m_rmsDist;          // The rms distance from the MST for TkrVecPoints in this box
 };
 
-const Point& TkrBoundBox::getBoxCenterPos()
+inline const Point& TkrBoundBox::getBoxCenterPos()
 {
     m_boxCenterPos  = m_lowCorner;
     m_boxCenterPos += m_highCorner;

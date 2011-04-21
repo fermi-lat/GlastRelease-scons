@@ -39,8 +39,10 @@ public:
                         m_numHitsTotal(0),
                         m_numDropped(0),
                         m_chiSquare(0.),
+                        m_aveDist(0.),
                         m_transRms(0.),
-                        m_longRmsAve(0.) { };
+                        m_longRms(0.),
+                        m_longRmsAsym(0.) { };
 
     TkrFilterParams(double energy, const Point& pos, const Vector& axis) : m_statusBits(0),
                                                                            m_EventEnergy(energy),
@@ -51,8 +53,10 @@ public:
                                                                            m_numHitsTotal(0),
                                                                            m_numDropped(0),
                                                                            m_chiSquare(0.),
+                                                                           m_aveDist(0.),
                                                                            m_transRms(0.),
-                                                                           m_longRmsAve(0.) { };
+                                                                           m_longRms(0.),
+                                                                           m_longRmsAsym(0.) { };
 
     virtual ~TkrFilterParams() { }
     
@@ -69,19 +73,21 @@ public:
                      SECONDPASS = 0x2000}; //Set if second pass numbers used
 
     /// Access data members
-    unsigned int getStatusBits()    const {return m_statusBits;}
-    double       getEventEnergy()   const {return m_EventEnergy;}
-    Point        getEventPosition() const {return m_EventPosition;}
-    Vector       getEventAxis()     const {return m_EventAxis;}
+    unsigned int getStatusBits()      const {return m_statusBits;}
+    double       getEventEnergy()     const {return m_EventEnergy;}
+    Point        getEventPosition()   const {return m_EventPosition;}
+    Vector       getEventAxis()       const {return m_EventAxis;}
 
-    int          getNumBiLayers()   const {return m_numBiLayers;}
-    int          getNumIterations() const {return m_numIterations;}
-    int          getNumHitsTotal()  const {return m_numHitsTotal;}
-    int          getNumDropped()    const {return m_numDropped;}
+    int          getNumBiLayers()     const {return m_numBiLayers;}
+    int          getNumIterations()   const {return m_numIterations;}
+    int          getNumHitsTotal()    const {return m_numHitsTotal;}
+    int          getNumDropped()      const {return m_numDropped;}
 
-    double       getChiSquare()     const {return m_chiSquare;}
-    double       getTransRms()      const {return m_transRms;}
-    double       getLongRmsAve()    const {return m_longRmsAve;}
+    double       getChiSquare()       const {return m_chiSquare;}
+    double       getAverageDistance() const {return m_aveDist;}
+    double       getTransRms()        const {return m_transRms;}
+    double       getLongRms()         const {return m_longRms;}
+    double       getLongRmsAysm()     const {return m_longRmsAsym;}
 
     /// Modify data members
     void  setStatusBit(const unsigned int stat) {m_statusBits |= stat;}
@@ -93,8 +99,10 @@ public:
     void  setNumHitsTotal(int numHits)          {m_numHitsTotal  = numHits;}
     void  setNumDropped(int numDropped)         {m_numDropped    = numDropped;}
     void  setChiSquare(double chiSquare)        {m_chiSquare     = chiSquare;}
+    void  setAverageDistance(double aveDist)    {m_aveDist       = aveDist;}
     void  setTransRms(double transRms)          {m_transRms      = transRms;}
-    void  setLongRmsAve(double longRmsAve)      {m_longRmsAve    = longRmsAve;}
+    void  setLongRms(double longRms)            {m_longRms       = longRms;}
+    void  setLongRmsAsym(double longAsym)       {m_longRmsAsym   = longAsym;}
 
 private:
     unsigned int m_statusBits;
@@ -110,8 +118,10 @@ private:
 
     // As well as moments output
     double       m_chiSquare;
+    double       m_aveDist;
     double       m_transRms; 
-    double       m_longRmsAve;
+    double       m_longRms;
+    double       m_longRmsAsym;
 };
 
 // Typedefs for gaudi container for these objects

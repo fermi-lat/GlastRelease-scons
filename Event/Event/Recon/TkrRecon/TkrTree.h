@@ -13,6 +13,7 @@
 
 #include "Event/Recon/TkrRecon/TkrVecNodes.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
+#include "Event/Recon/TkrRecon/TkrFilterParams.h"
 
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -37,16 +38,17 @@ class TkrTree: virtual public ContainedObject, public TkrTrackVec
 public:
     // Constructors
     TkrTree() :
-            m_headNode(0), m_siblingMap(0)
+            m_headNode(0), m_siblingMap(0), m_axisParams(0)
             {TkrTrackVec::clear();}
 
-    TkrTree(TkrVecNode* node, TkrNodeSiblingMap* nodeSiblingMap, TkrTrack* track) :
-            m_headNode(node), m_siblingMap(nodeSiblingMap)
+    TkrTree(TkrVecNode* node, TkrNodeSiblingMap* nodeSiblingMap, TkrFilterParams* axisParams, TkrTrack* track) :
+            m_headNode(node), m_siblingMap(nodeSiblingMap), m_axisParams(axisParams)
             {TkrTrackVec::clear(); push_back(track);}
 
     virtual ~TkrTree() 
     {
-        delete m_siblingMap;
+        if (m_siblingMap) delete m_siblingMap;
+        if (m_axisParams) delete m_axisParams;
     }
 
     //! Retrieve pointer to class defininition structure
@@ -58,6 +60,8 @@ public:
     const TkrVecNode*        getHeadNode()   const {return m_headNode;}
     // Return pointer to the sibling map
     const TkrNodeSiblingMap* getSiblingMap() const {return m_siblingMap;}
+    // Return pointer to the axis parameters
+    const TkrFilterParams*   getAxisParams() const {return m_axisParams;}
     // Return pointer to the track for this tree
     const TkrTrack*          getBestTrack()  const {return front();}
 
@@ -67,6 +71,9 @@ private:
 
     // Pointer to the Node sibling map
     TkrNodeSiblingMap* m_siblingMap;
+
+    // Pointer to the tree axis parameters 
+    TkrFilterParams*   m_axisParams;
 };
 
 // Typedefs for gaudi container for these objects
