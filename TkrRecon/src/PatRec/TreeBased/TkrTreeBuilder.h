@@ -13,6 +13,7 @@
 #define __TkrTreeBuilder_H 1
 
 #include "Event/Recon/TkrRecon/TkrTree.h"
+#include "Event/Recon/TkrRecon/TkrBoundBox.h"
 
 #include "TkrVecNodesBuilder.h"
 
@@ -70,6 +71,13 @@ private:
                                   UsedClusterList&          usedCompositeClusters,
                                   double                    energy        = 1000., 
                                   int                       nRequiredHits = 5);
+
+    /// Use this to try to set up the tree axis
+    typedef std::list<Event::TkrBoundBox*> TkrBoundBoxList;
+
+    void findTreeAxis(Event::TkrNodeSiblingMap* siblingMap, TkrBoundBoxList& bboxList);
+
+    Event::TkrFilterParams* doMomentsAnalysis(TkrBoundBoxList& bboxList);
 
     /// This makes map of "tree positions"
     typedef std::vector<TkrTreePosition>                 TkrTreePositionVec;
