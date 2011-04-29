@@ -89,7 +89,8 @@ public:
 					 G4double cutEnergy,
 					 G4double maxEnergy);
 
-  virtual std::vector<G4DynamicParticle*>* SampleSecondaries(const G4MaterialCutsCouple*,
+  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
+                                 const G4MaterialCutsCouple*,
 				 const G4DynamicParticle*,
 				 G4double tmin,
 				 G4double maxEnergy);

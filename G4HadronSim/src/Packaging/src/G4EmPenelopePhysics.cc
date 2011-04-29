@@ -45,16 +45,19 @@
 #include "G4PenelopePhotoElectric.hh"
 #include "G4PenelopeRayleigh.hh"
 
-#include "G4MultipleScattering.hh"
+//#include "G4MultipleScattering.hh"
 
+#include "G4eMultipleScattering.hh"
 #include "G4PenelopeIonisation.hh"
 #include "G4PenelopeBremsstrahlung.hh"
 #include "G4PenelopeAnnihilation.hh"
 
+#include "G4MuMultipleScattering.hh"
 #include "G4MuIonisation.hh"
 #include "G4MuBremsstrahlung.hh"
 #include "G4MuPairProduction.hh"
 
+#include "G4hMultipleScattering.hh"
 #include "G4hIonisation.hh"
 #include "G4ionIonisation.hh"
 

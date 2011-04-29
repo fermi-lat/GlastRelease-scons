@@ -44,8 +44,9 @@
 #include "G4GammaConversion.hh"
 #include "G4PhotoElectricEffect.hh"
 
-#include "G4MultipleScattering.hh"
+//#include "G4MultipleScattering.hh"
 
+#include "G4eMultipleScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
@@ -54,10 +55,12 @@
 #include "G4HadronSim/G4eBremsstrahlungHEModel.hh"
 #include "G4VEnergyLossProcess.hh"
 
+#include "G4MuMultipleScattering.hh"
 #include "G4MuIonisation.hh"
 #include "G4MuBremsstrahlung.hh"
 #include "G4MuPairProduction.hh"
 
+#include "G4hMultipleScattering.hh"
 #include "G4hIonisation.hh"
 #include "G4ionIonisation.hh"
 
@@ -163,7 +166,7 @@ void G4EmStandardPhysics::ConstructProcess()
       if (verbose==1) 
 	{
 	  G4eBremsstrahlungModel* bm = new G4eBremsstrahlungModel();
-	  bm->SetLPMflag(false);
+	  //bm->SetLPMflag(false);
 	  ebrem->AddEmModel(0,bm);	  
 	}
       else if (verbose == 2)
@@ -201,7 +204,7 @@ void G4EmStandardPhysics::ConstructProcess()
       if (verbose==1)
         {
           G4eBremsstrahlungModel* bp = new G4eBremsstrahlungModel();
-          bp->SetLPMflag(false);
+          //bp->SetLPMflag(false);
 	  epbrem->AddEmModel(0,bp);
 	}
       else if (verbose == 2)

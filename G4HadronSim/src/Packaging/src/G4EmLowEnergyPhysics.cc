@@ -57,16 +57,22 @@
 #include "G4eBremsstrahlungModel.hh"
 #include "G4VEnergyLossProcess.hh"
 
+#include "G4eMultipleScattering.hh"
 
-#include "G4MultipleScattering.hh"
+//#include "G4MultipleScattering.hh"
 #include "G4eplusAnnihilation.hh"
 
 #include "G4MuIonisation.hh"
 #include "G4MuBremsstrahlung.hh"
 #include "G4MuPairProduction.hh"
 
+#include "G4MuMultipleScattering.hh"
+
+
 #include "G4hIonisation.hh"
 #include "G4ionIonisation.hh"
+
+#include "G4hMultipleScattering.hh"
 
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
@@ -191,7 +197,7 @@ void G4EmLowEnergyPhysics::ConstructProcess()
 
 
       G4eBremsstrahlungModel* bp = new G4eBremsstrahlungModel();
-      bp->SetLPMflag(false);
+      //bp->SetLPMflag(false);
       G4VEnergyLossProcess* epbrem =
 	reinterpret_cast<G4VEnergyLossProcess*>(thePositronBremsStrahlung);
       epbrem->AddEmModel(0,bp);

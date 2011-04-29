@@ -54,7 +54,6 @@
 #include "G4HadronSim/HadronPhysicsQGSP_BIC.hh"
 #include "G4HadronSim/HadronPhysicsQGSP_BERT.hh"
 #include "G4HadronSim/HadronPhysicsQGSC.hh"
-#include "G4HadronSim/HadronPhysicsQGSC_LEAD.hh"
 #include "G4HadronSim/G4EmStandardPhysics.hh"
 #include "G4HadronSim/G4EmExtraPhysics.hh"
 #include "G4HadronSim/G4EmLowEnergyPhysics.hh"
@@ -230,9 +229,6 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
 
      if ( m_physicsChoice == "QGSC" )
          RegisterPhysics(new HadronPhysicsQGSC("hadron"));
-
-     if ( m_physicsChoice == "QGSC_LEAD" )
-         RegisterPhysics(new HadronPhysicsQGSC_LEAD("hadron"));
 
    }
 }

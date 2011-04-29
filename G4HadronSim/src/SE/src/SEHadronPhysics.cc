@@ -16,7 +16,8 @@
 // processes
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4MultipleScattering.hh"
+//#include "G4MultipleScattering.hh"
+#include "G4hMultipleScattering.hh"
 #include "G4hIonisation.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4PionPlusInelasticProcess.hh"

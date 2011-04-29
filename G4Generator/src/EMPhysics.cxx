@@ -91,7 +91,7 @@ void EMPhysics::ConstructProcess()
       m_eLossFactory(GlastMS::EnergyLossFactory::ELECTRON, GlastMS::EnergyLossFactory::BREMSSTRAHLUNG);
 
     G4eBremsstrahlungModel* bm = new G4eBremsstrahlungModel();
-    bm->SetLPMflag(false);
+    //bm->SetLPMflag(false);
 
     G4VEnergyLossProcess* ebrem = 
       reinterpret_cast<G4VEnergyLossProcess*>(theElectronBremsStrahlung);
@@ -113,7 +113,7 @@ void EMPhysics::ConstructProcess()
   G4eplusAnnihilation*          theAnnihilation               = new G4eplusAnnihilation();
 
     G4eBremsstrahlungModel* bp = new G4eBremsstrahlungModel();
-    bp->SetLPMflag(false);
+    //bp->SetLPMflag(false);
     G4VEnergyLossProcess* epbrem =
       reinterpret_cast<G4VEnergyLossProcess*>(thePositronBremsStrahlung);
     epbrem->AddEmModel(0,bp);

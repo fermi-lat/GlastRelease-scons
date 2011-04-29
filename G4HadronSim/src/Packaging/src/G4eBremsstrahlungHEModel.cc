@@ -655,7 +655,8 @@ G4DataVector* G4eBremsstrahlungHEModel::ComputePartialSumSigma(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-std::vector<G4DynamicParticle*>* G4eBremsstrahlungHEModel::SampleSecondaries(const G4MaterialCutsCouple* couple,
+void  G4eBremsstrahlungHEModel::SampleSecondaries(std::vector<G4DynamicParticle*>* vdp,
+					       const G4MaterialCutsCouple* couple,
 					       const G4DynamicParticle* dp,
 					       G4double tmin,
 					       G4double maxEnergy)
@@ -675,7 +676,7 @@ std::vector<G4DynamicParticle*>* G4eBremsstrahlungHEModel::SampleSecondaries(con
 {
   G4double kineticEnergy = dp->GetKineticEnergy();
   G4double tmax = min(maxEnergy, kineticEnergy);
-  if(tmin >= tmax) return 0;
+  if(tmin >= tmax) return ;
 
 //
 // GEANT4 internal units.
@@ -871,9 +872,6 @@ std::vector<G4DynamicParticle*>* G4eBremsstrahlungHEModel::SampleSecondaries(con
 
   // create G4DynamicParticle object for the Gamma
 
-  std::vector<G4DynamicParticle*>* vdp = new std::vector<G4DynamicParticle*>;
-
-
   G4DynamicParticle* g = new G4DynamicParticle(theGamma,gammaDirection,
                                                         gammaEnergy);
   vdp->push_back(g);
@@ -899,9 +897,6 @@ std::vector<G4DynamicParticle*>* G4eBremsstrahlungHEModel::SampleSecondaries(con
     fParticleChange->SetProposedMomentumDirection(direction);
     fParticleChange->SetProposedKineticEnergy(finalE);
   }
-
-  return vdp;
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
