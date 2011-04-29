@@ -110,8 +110,8 @@ public:
 
     McIntegratingHit() : m_volumeID(),
                          m_totalEnergy(0),
-                         m_moment1seed(0.),
-                         m_moment2seed(0.),
+                         m_moment1seed(0.,0.,0.),
+                         m_moment2seed(0.,0.,0.),
                          m_packedFlags(simulation)
     {
         m_energyArray[0]=m_energyArray[1]=m_energyArray[2]=m_energyArray[3]=0;
