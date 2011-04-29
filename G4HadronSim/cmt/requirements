@@ -14,11 +14,14 @@ apply_pattern package_linkopts
 apply_pattern package_stamps
 
 set G4tableDir                "${Geant4Runtime_PATH}/tables"
-set G4LEVELGAMMADATA	      "${G4tableDir}/PhotonEvaporation2.0"
-set NeutronHPCrossSections    "${G4tableDir}/G4NDL3.8"
-set G4RADIOACTIVEDATA         "${G4tableDir}/RadiativeDecay3.0"
-set G4LEDATA                  "${G4tableDir}/G4EMLOW3.0"
-set G4ELASTICDATA             "${G4tableDir}/G4ELASTIC1.1"
+set G4LEVELGAMMADATA          "${G4tableDir}/PhotonEvaporation2.1"
+set G4NEUTRONHPDATA           "${G4tableDir}/G4NDL3.14"
+set G4RADIOACTIVEDATA         "${G4tableDir}/RadiativeDecay3.3"
+set G4LEDATA                  "${G4tableDir}/G4EMLOW6.19"
+set G4REALSURFACEDATA         "${G4tableDir}/RealSurface1.0"
+set G4NEUTRONXSDATA           "${G4tableDir}/G4NEUTRONXS1.0" 
+set G4PIIDATA                 "${G4tableDir}/G4PII1.2"
+set G4ABLADATA                "${G4tableDir}/G4ABLA3.0"
 
 # path to the combined include folder
 macro G4HadronSimSrcDir "${G4HADRONSIMROOT}/src"
@@ -38,7 +41,9 @@ macro G4HadronSimSrcDir "${G4HADRONSIMROOT}/src"
 private
 #this is private to avoid passing on build info to clients
 use Geant4   v3r80* IExternal
+
 use GlastMS  v*
+
 
 
 macro src "src/*.cc " WIN32 "include/*.hh include/*.icc src/*.cc"
