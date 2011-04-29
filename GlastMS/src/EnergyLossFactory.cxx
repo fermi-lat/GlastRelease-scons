@@ -8,15 +8,15 @@
 #include "GlastMS/EnergyLossFactory.h"
 #include "G4ExceptionHandler.hh"
 #include "G4eIonisation.hh"
-#include "G4eIonisation52.hh"
+//#include "G4eIonisation52.hh"
 #include "G4eBremsstrahlung.hh"
-#include "G4eBremsstrahlung52.hh"
+//#include "G4eBremsstrahlung52.hh"
 #include "G4MuIonisation.hh"
-#include "G4MuIonisation52.hh"
+//#include "G4MuIonisation52.hh"
 #include "G4MuBremsstrahlung.hh"
-#include "G4MuBremsstrahlung52.hh"
+//#include "G4MuBremsstrahlung52.hh"
 #include "G4MuPairProduction.hh"
-#include "G4MuPairProduction52.hh"
+//#include "G4MuPairProduction52.hh"
 
 G4VContinuousDiscreteProcess* GlastMS::EnergyLossFactory::operator()(Particle part, ELossType type)
 {
@@ -41,20 +41,20 @@ G4VContinuousDiscreteProcess* GlastMS::EnergyLossFactory::operator()(Particle pa
             else                             process = new G4MuPairProduction();
         }
     }
-    else if (m_release == RELEASE52)
+    else if (m_release == RELEASE52) // NOT AVAILABLE ANYMORE
     {
         if (part == ELECTRON || part == POSITRON)
         {
             // Now look at what type of Energy Loss we are creating. 
-            if   (type == IONIZATION) process = new G4eIonisation52();
-            else                      process = new G4eBremsstrahlung52();
+            if   (type == IONIZATION) process = new G4eIonisation();
+            else                      process = new G4eBremsstrahlung();
         }
         else  // assume Muon
         {
             // Now look at what type of Energy Loss we are creating. 
-            if      (type == IONIZATION)     process = new G4MuIonisation52();
-            else if (type == BREMSSTRAHLUNG) process = new G4MuBremsstrahlung52();
-            else                             process = new G4MuPairProduction52();
+            if      (type == IONIZATION)     process = new G4MuIonisation();
+            else if (type == BREMSSTRAHLUNG) process = new G4MuBremsstrahlung();
+            else                             process = new G4MuPairProduction();
         }
     }
     else
