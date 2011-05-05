@@ -56,6 +56,9 @@ private:
                     Event::TkrNodeSiblingMap& siblingMap);
 
     /// Use this to define a look up object for used clusters
+    void setBranchBits(Event::TkrVecNode* node, bool isMainBranch);
+
+    /// Use this to define a look up object for used clusters
     typedef std::set<const Event::TkrCluster*> UsedClusterList;
 
     /// Recursive routine for building a node sibling map from only the best branch
