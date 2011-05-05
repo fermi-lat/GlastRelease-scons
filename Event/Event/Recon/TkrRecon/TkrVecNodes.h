@@ -46,13 +46,15 @@ class TkrVecNode: public TkrVecNodeSet, virtual public ContainedObject
 {
 public:
     // enumerate the status bits
-    enum StatusBits {NODE_IS_SACRED       = 0x80000000,
-                     NODE_CAN_BE_SHARED   = 0x01000000};
+    enum StatusBits {NODE_IS_SACRED           = 0x80000000,
+                     NODE_CAN_BE_SHARED       = 0x01000000,
+                     NODE_ON_BEST_BRANCH      = 0x02000000,
+                     NODE_ON_NEXT_BEST_BRANCH = 0x04000000};
 
-    enum LayerMask  {START_BILAYER_BITS   = 0x0000001F,
-                     CURRENT_BILAYER_BITS = 0x000003E0,
-                     TO_MAIN_BRANCH_BITS  = 0x00007C00,
-                     TREE_ID_BITS         = 0x00FF0000};
+    enum LayerMask  {START_BILAYER_BITS       = 0x0000001F,
+                     CURRENT_BILAYER_BITS     = 0x000003E0,
+                     TO_MAIN_BRANCH_BITS      = 0x00007C00,
+                     TREE_ID_BITS             = 0x00FF0000};
     // Constructors
     TkrVecNode(TkrVecNode*             parent, 
                const TkrVecPointsLink* associatedLink);
@@ -83,6 +85,8 @@ public:
     // Set status bits
     void setNodeSacred()                         {m_statusBits |= NODE_IS_SACRED;}
     void setNodeCanBeShared()                    {m_statusBits |= NODE_CAN_BE_SHARED;}
+    void setNodeOnBestBranch()                   {m_statusBits |= NODE_ON_BEST_BRANCH;}
+    void setNodeOnNextBestBranch()               {m_statusBits |= NODE_ON_NEXT_BEST_BRANCH;}
     void setBiLyrs2MainBrch(int biLyrs);
 
     // Methods to return information
@@ -113,8 +117,10 @@ public:
     // Get the number of bilayers from start to this node
     const unsigned char                 getNumBiLayers()     const {return getTreeStartLayer() - getCurrentBiLayer() + 1;}
     // Check status bits
-    const bool                          isNodeSacred()       const {return (m_statusBits & NODE_IS_SACRED)     != 0;}
-    const bool                          canNodeBeShared()    const {return (m_statusBits & NODE_CAN_BE_SHARED) != 0;}
+    const bool                          isNodeSacred()       const {return (m_statusBits & NODE_IS_SACRED)           != 0;}
+    const bool                          canNodeBeShared()    const {return (m_statusBits & NODE_CAN_BE_SHARED)       != 0;}
+    const bool                          isOnBestBranch()     const {return (m_statusBits & NODE_ON_BEST_BRANCH)      != 0;}
+    const bool                          isOnNextBestBranch() const {return (m_statusBits & NODE_ON_NEXT_BEST_BRANCH) != 0;}
     // Get the number of BiLayers from this node along best branch
     const int                           getBestNumBiLayers() const {return m_bestNumBiLayers;}
     // Get the rms deviations from this node along best branch
