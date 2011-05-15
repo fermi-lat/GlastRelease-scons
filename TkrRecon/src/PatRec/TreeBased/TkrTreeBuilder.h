@@ -55,7 +55,7 @@ private:
                     Event::TkrVecNodeSet&     leafSet,
                     Event::TkrNodeSiblingMap& siblingMap);
 
-    /// Use this to define a look up object for used clusters
+    /// Used to set the best and next best branch bits after leaf finding
     void setBranchBits(Event::TkrVecNode* node, bool isMainBranch);
 
     /// Use this to define a look up object for used clusters
@@ -78,9 +78,9 @@ private:
     /// Use this to try to set up the tree axis
     typedef std::list<Event::TkrBoundBox*> TkrBoundBoxList;
 
-    void findTreeAxis(Event::TkrNodeSiblingMap* siblingMap, TkrBoundBoxList& bboxList);
+    void findTreeAxis(Event::TkrNodeSiblingMap* siblingMap, TkrBoundBoxList& bboxList, Point& centroid);
 
-    Event::TkrFilterParams* doMomentsAnalysis(TkrBoundBoxList& bboxList);
+    Event::TkrFilterParams* doMomentsAnalysis(TkrBoundBoxList& bboxList, Point& centroid);
 
     /// This makes map of "tree positions"
     typedef std::vector<TkrTreePosition>                 TkrTreePositionVec;
