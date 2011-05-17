@@ -38,11 +38,20 @@ class TkrTree: virtual public ContainedObject, public TkrTrackVec
 public:
     // Constructors
     TkrTree() :
-            m_headNode(0), m_siblingMap(0), m_axisParams(0)
+            m_headNode(0), m_bestLeaf(0), m_secondLeaf(0), m_siblingMap(0), m_axisParams(0)
             {TkrTrackVec::clear();}
 
-    TkrTree(TkrVecNode* node, TkrNodeSiblingMap* nodeSiblingMap, TkrFilterParams* axisParams, TkrTrack* track) :
-            m_headNode(node), m_siblingMap(nodeSiblingMap), m_axisParams(axisParams)
+    TkrTree(TkrVecNode*        node, 
+            TkrVecNode*        bestLeaf,
+            TkrVecNode*        secondLeaf,
+            TkrNodeSiblingMap* nodeSiblingMap, 
+            TkrFilterParams*   axisParams, 
+            TkrTrack*          track) :
+            m_headNode(node), 
+            m_bestLeaf(bestLeaf), 
+            m_secondLeaf(secondLeaf), 
+            m_siblingMap(nodeSiblingMap), 
+            m_axisParams(axisParams)
             {TkrTrackVec::clear(); push_back(track);}
 
     virtual ~TkrTree() 
@@ -58,6 +67,10 @@ public:
     // Methods to return information
     // Return pointer to the head node for this tree
     const TkrVecNode*        getHeadNode()   const {return m_headNode;}
+    // Return pointer to the best leaf, corresponding to the best track
+    const TkrVecNode*        getBestLeaf()   const {return m_bestLeaf;}
+    // Return pointer to the second leaf, corresponding to second track (if there)
+    const TkrVecNode*        getSecondLeaf() const {return m_secondLeaf;}
     // Return pointer to the sibling map
     const TkrNodeSiblingMap* getSiblingMap() const {return m_siblingMap;}
     // Return pointer to the axis parameters
@@ -68,6 +81,12 @@ public:
 private:
     // Pointer to the head node in the Tree
     TkrVecNode*        m_headNode;
+
+    // Pointer to the "best" leaf corresponding to "best" track (if not composite)
+    TkrVecNode*        m_bestLeaf;
+
+    // Pointer to the second leaf, corresponding to the second track (if exists)
+    TkrVecNode*        m_secondLeaf;
 
     // Pointer to the Node sibling map
     TkrNodeSiblingMap* m_siblingMap;
