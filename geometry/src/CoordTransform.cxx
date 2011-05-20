@@ -23,6 +23,7 @@ CoordTransform::operator*(const CoordTransform& T) const
 void
 CoordTransform::transformCoord(Point& p)const {
 
+  using namespace CLHEP;
   Hep3Vector q(p);
   q *= R;
   //  p = (Point&)(R*p);

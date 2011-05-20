@@ -27,7 +27,7 @@
 class TestClassifier {
 public:
     TestClassifier()
-        :m_gaussian( new RandGauss(HepRandom::getTheEngine()) )
+        :m_gaussian( new CLHEP::RandGauss(CLHEP::HepRandom::getTheEngine()) )
     {
         defineEvent();
 
@@ -193,7 +193,7 @@ private:
 
     Classifier::Table m_data;
     std::vector<std::string> m_names;
-    RandGauss * m_gaussian;
+    CLHEP::RandGauss * m_gaussian;
 
 };
 

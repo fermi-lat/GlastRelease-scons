@@ -139,7 +139,7 @@ bool LivetimeSvc::tryToRegisterEvent(double current_time, bool highdeadtime)
        double elapsed(current_time-m_lastTriggerTime);
        m_totalTime+= elapsed;
        if(m_interleave==true){
-	 double ntrig( RandPoisson::shoot(elapsed*m_triggerRate));
+	 double ntrig( CLHEP::RandPoisson::shoot(elapsed*m_triggerRate));
 	 m_invisible_trig+=(int)ntrig;
 	 double livetimeinc=elapsed-m_previousDeadtime-ntrig*m_deadtime;
 	 if (livetimeinc<0)livetimeinc=0;
@@ -168,7 +168,7 @@ bool LivetimeSvc::isLive(double current_time)
     live = current_time-m_lastTriggerTime >= m_previousDeadtime;
     if( live && m_efficiency<1.0){
       // put in random
-      double r = RandFlat::shoot();
+      double r = CLHEP::RandFlat::shoot();
       if( r > m_efficiency){
 	live=false;
       }
