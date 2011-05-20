@@ -24,7 +24,7 @@
 //------------------------------------------------------------------------------
 // <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepPoint3D.html">class HepPoint3D</A>
 #include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/config/CLHEP.h"
+//#include "CLHEP/config/CLHEP.h"
 // Hack for CLHEP 1.9.2.2
 #ifndef HepPoint3D
 typedef HepGeom::Point3D<double> HepPoint3D;
@@ -36,7 +36,8 @@ inline StreamBuffer& operator<< ( StreamBuffer& s, const HepPoint3D& value)    {
 }
 // Input operator
 inline StreamBuffer& operator>> ( StreamBuffer& s, HepPoint3D& value )         {
-  HepDouble   x, y, z;
+  //HepDouble   x, y, z;
+  double x, y, z;
   s >> x >> y >> z;
   value.setX(x);
   value.setY(y);
@@ -59,7 +60,8 @@ inline StreamBuffer& operator<< ( StreamBuffer& s, const HepVector3D& value)   {
 }
 // Input operator
 inline StreamBuffer& operator>> ( StreamBuffer& s, HepVector3D& value )        {
-  HepDouble   x, y, z;
+  //HepDouble   x, y, z;
+  double x, y, z;
   s  >> x >> y >> z;
   value.setX(x);
   value.setY(y);
@@ -74,14 +76,19 @@ inline StreamBuffer& operator>> ( StreamBuffer& s, HepVector3D& value )        {
 //------------------------------------------------------------------------------
 // Output operator
 inline StreamBuffer& operator<< ( StreamBuffer& s, const CLHEP::HepLorentzVector& value) {
-  return s  << HepDouble(value.px()) 
-            << HepDouble(value.py())
-            << HepDouble(value.pz())
-            << HepDouble(value.e());
+  //return s  << HepDouble(value.px()) 
+  //          << HepDouble(value.py())
+  //          << HepDouble(value.pz())
+  //          << HepDouble(value.e());
+  return s  << double(value.px()) 
+            << double(value.py())
+            << double(value.pz())
+            << double(value.e());
 }
 // Input operator
 inline StreamBuffer& operator>> ( StreamBuffer& s, CLHEP::HepLorentzVector& value )   {
-  HepDouble   px, py, pz, E;
+  //HepDouble   px, py, pz, E;
+  double px, py, pz, E;
   s  >> px >> py >> pz >> E;
   value.setPx(px);
   value.setPy(py);

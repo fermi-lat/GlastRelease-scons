@@ -36,6 +36,10 @@ namespace AcdFrameUtil {
    * @brief Define the various rotations used to describe the ACD
    */
 
+  typedef HepGeom::Point3D<double> HepPoint3D;
+  typedef HepGeom::Vector3D<double> HepVector3D;
+
+
   typedef enum {
     FRAME_NONE = 100000,   // can't find anything suitable
     FRAME_FACE0 = 0,       // natural for top tiles, = LAT global frame
@@ -180,7 +184,7 @@ namespace AcdFrameUtil {
    *
    *
    **/
-  void getErrorAxes(const HepGeom::Transform3D& toGlobal, const HepSymMatrix& cov, HepVector3D& v1, HepVector3D& v2);
+  void getErrorAxes(const HepGeom::Transform3D& toGlobal, const CLHEP::HepSymMatrix& cov, HepVector3D& v1, HepVector3D& v2);
 
 }
 

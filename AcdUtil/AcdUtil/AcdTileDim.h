@@ -40,6 +40,9 @@
 * $Header$
 **/
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
 
 class AcdTileSection {
 public:
@@ -58,8 +61,8 @@ public:
   float               m_sharedWidth;  
   HepPoint3D          m_center;
   HepPoint3D          m_corners[4];
-  HepTransform3D      m_trans;
-  HepTransform3D      m_invTrans; 
+  HepGeom::Transform3D      m_trans;
+  HepGeom::Transform3D      m_invTrans; 
  
 };
 
@@ -123,7 +126,7 @@ public:
     return m_sections[iVol]->m_center;
   }
 
-  inline const HepTransform3D& transform(unsigned int iVol) const {
+  inline const HepGeom::Transform3D& transform(unsigned int iVol) const {
     assert(iVol < m_sections.size());
     return m_sections[iVol]->m_trans;
   }

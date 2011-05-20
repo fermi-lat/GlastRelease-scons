@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-08-00 20-May-2011 HMK CLHEP 2.1.0.1 and tagging updates from Tracy
  Event-14-07-03  1-Feb-2011 TU Add Event::TkrRecon::TkrCRTrackCol string to list for CR finder
  Event-14-07-02 25-Jan-2011 echarles Improve how AcdTkrHitPoca handles vetoSigma2
  Event-14-07-01 21-Jan-2011 lbaldini Untabified.

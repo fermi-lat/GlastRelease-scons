@@ -44,7 +44,7 @@ AcdTkrPoint::AcdTkrPoint( float arcLength, int volume,
 AcdTkrPoint::AcdTkrPoint(int trackIndex,
                          int volumePlane, float arcLengthToPlane, float cosTheta, 
                          const HepPoint3D& global, const float localPosition[2], 
-                         const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp)
+                         const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp)
   :AcdTkrLocalCoords(volumePlane,arcLengthToPlane,cosTheta,
                      global,localPosition,localPosition,
                      localCovProj,localCovProp),

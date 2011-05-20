@@ -32,7 +32,7 @@ AcdTkrIntersection::AcdTkrIntersection(const idents::AcdId& acdId, int trackInde
 
 void AcdTkrIntersection::set(const idents::AcdId& acdId, int trackIndex, 
                              const Point& globalPosition, 
-                             const double localPosition[2], const HepMatrix& localCovMatrix,
+                             const double localPosition[2], const CLHEP::HepMatrix& localCovMatrix,
                              double arcLengthToIntersection, double pathLengthInTile,
                              unsigned char tileHit, double cosTheta) {
   m_tileId = acdId;

@@ -64,7 +64,7 @@ namespace Event
     AcdTkrPoint( int trackIndex,
                  int volume, float arcLength, float cosTheta, 
                  const HepPoint3D& global, const float localPosition[2], 
-                 const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+                 const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp);
 
     /// Old Constructor for backwards compatiblity
     AcdTkrPoint( float arcLength, int volume,

@@ -21,6 +21,9 @@ class MsgStream;
 
 static const CLID& CLID_AcdTkrAssocCol = InterfaceID("AcdTkrAssocCol", 1, 0);
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
 /**
  *  @class Event::AcdTkrAssoc
  *
@@ -50,7 +53,7 @@ namespace Event
     /// Constructor for use in reconstruction, 
     AcdTkrAssoc(int index, bool up, float energy, 
                 const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-                const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
+                const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
                 int tkrSSDVeto, float cornerDoca);
     
     /// Destructor is trivial
@@ -71,9 +74,9 @@ namespace Event
 
     inline int getTkrSSDVeto() const { return m_tkrSSDVeto; }
 
-    inline const HepSymMatrix& getCovStart() const { return m_cov_start; }
+    inline const CLHEP::HepSymMatrix& getCovStart() const { return m_cov_start; }
 
-    inline const HepSymMatrix& getCovEnd() const { return m_cov_end; }
+    inline const CLHEP::HepSymMatrix& getCovEnd() const { return m_cov_end; }
 
     inline unsigned nHitPoca() const { return m_hitPocae.size(); }
 
@@ -90,7 +93,7 @@ namespace Event
     /// set everything at once
     void set(int index, bool up, float energy, 
              const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-             const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
+             const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
              int tkrSSDVeto, float cornerDoca);
 
     /// add a hitPoca
@@ -130,9 +133,9 @@ namespace Event
  
     float           m_arcLength;
 
-    HepSymMatrix    m_cov_start;
+    CLHEP::HepSymMatrix    m_cov_start;
 
-    HepSymMatrix    m_cov_end;     
+    CLHEP::HepSymMatrix    m_cov_end;     
 
     int             m_tkrSSDVeto;
 

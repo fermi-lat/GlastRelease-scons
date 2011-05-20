@@ -95,7 +95,7 @@ public:
 
     /// Given an AcdId, provide the tile size, center and corners
     virtual bool fillTileData(const idents::AcdId& id, int iVol,
-			      HepTransform3D& transform,
+			      HepGeom::Transform3D& transform,
 			      std::vector<double>& dim, 
 			      HepPoint3D& center,
 			      HepPoint3D* corner) = 0;

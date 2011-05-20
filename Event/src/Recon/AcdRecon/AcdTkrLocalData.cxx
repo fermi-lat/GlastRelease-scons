@@ -44,7 +44,7 @@ AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane,
 AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, float cosTheta, 
                                      const HepPoint3D& global, 
                                      const float localPosition[2], const float active[2], 
-                                     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp)
+                                     const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp)
   :m_volume(volume),
    m_arcLengthPlane(arcLengthPlane),
    m_cosTheta(cosTheta),
@@ -60,7 +60,7 @@ AcdTkrLocalCoords::AcdTkrLocalCoords(int volume, float arcLengthPlane, float cos
 AcdTkrLocalCoords::AcdTkrLocalCoords(float arcLength, float cosTheta, 
                                      const HepPoint3D& global, 
                                      const double localPosition[2], 
-                                     const HepSymMatrix& planeError)
+                                     const CLHEP::HepSymMatrix& planeError)
   :m_volume(-1),
    m_arcLengthPlane(arcLength),
    m_cosTheta(cosTheta),
@@ -90,7 +90,7 @@ AcdTkrLocalCoords::AcdTkrLocalCoords(const AcdTkrLocalCoords& other)
 
 void AcdTkrLocalCoords::setLocalData(int volume, float arcLengthPlane, float cosTheta, 
                                      const HepPoint3D& global, const float localPosition[2], const float active[2],
-                                     const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp) {
+                                     const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp) {
   
   m_volume =  volume;
   m_arcLengthPlane = arcLengthPlane;
@@ -107,7 +107,7 @@ void AcdTkrLocalCoords::setLocalData(int volume, float arcLengthPlane, float cos
 /// set everything at once, old version
 void AcdTkrLocalCoords::setLocalData(const float localPosition[2],  
                                      float /* pathLength */, float cosTheta, 
-                                     int region, const HepSymMatrix& planeError) {
+                                     int region, const CLHEP::HepSymMatrix& planeError) {
   m_volume = region;
   m_local[0] = localPosition[0];
   m_local[1] = localPosition[1];
@@ -171,6 +171,6 @@ void AcdTkrLocalCoords::ini()
   m_local[1] = 0.;
   m_active[0] = 0.;
   m_active[1] = 0.;
-  m_localCovProj = HepSymMatrix(2,0);
-  m_localCovProp = HepSymMatrix(2,0);  
+  m_localCovProj = CLHEP::HepSymMatrix(2,0);
+  m_localCovProp = CLHEP::HepSymMatrix(2,0);  
 }

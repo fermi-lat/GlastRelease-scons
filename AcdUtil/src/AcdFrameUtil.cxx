@@ -4,6 +4,9 @@
 #include "CLHEP/Matrix/Matrix.h"
 
 namespace AcdFrameUtil {
+
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
     
   //const double PI_OVER_2 = 1.57079632679489656;
 
@@ -180,7 +183,7 @@ namespace AcdFrameUtil {
 
   }
   
-  void getErrorAxes(const HepGeom::Transform3D& toGlobal, const HepSymMatrix& cov, HepVector3D& v1, HepVector3D& v2) {
+  void getErrorAxes(const HepGeom::Transform3D& toGlobal, const CLHEP::HepSymMatrix& cov, HepVector3D& v1, HepVector3D& v2) {
     
     // First get the rotation axis in the plane
     double top = -2. * cov(1,2);
@@ -188,22 +191,22 @@ namespace AcdFrameUtil {
     double angle = 0.5 * atan2(top,bot);
     
     // Set up the rotation matrix
-    HepMatrix rot(2,2,0);
+    CLHEP::HepMatrix rot(2,2,0);
     rot(1,1) = sin(angle);
     rot(2,2) = sin(angle);
     rot(2,1) = cos(angle);
     rot(1,2) = -1. * cos(angle);
 
     // Rotate out to the get eigenvalues
-    HepSymMatrix covUV = cov.similarity(rot);
+    CLHEP::HepSymMatrix covUV = cov.similarity(rot);
 
     // Get the error axis in the UV frame
-    HepSymMatrix errUV(2,0);
+    CLHEP::HepSymMatrix errUV(2,0);
     errUV(1,1) = sqrt( covUV(1,1) );
     errUV(2,2) = sqrt( covUV(2,2) );
 
     // Rotate back to the the error in the plane
-    HepMatrix errPlane = rot.T() * errUV;
+    CLHEP::HepMatrix errPlane = rot.T() * errUV;
     
     // make the err axis in the plane
     HepVector3D v1l( errPlane(1,1), errPlane(1,2), 0. );

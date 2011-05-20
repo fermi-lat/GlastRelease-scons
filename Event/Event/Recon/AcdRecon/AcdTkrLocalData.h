@@ -12,6 +12,7 @@ class Point;
 
 class MsgStream;
 
+typedef HepGeom::Point3D<double> HepPoint3D;
 
 /**
 *  @class Event::AcdTkrLocalCoords
@@ -58,12 +59,12 @@ namespace Event
     AcdTkrLocalCoords(int volume, float arcLength, float cosTheta, 
                       const HepPoint3D& global, 
                       const float localPosition[2], const float active[2], 
-                      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+                      const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp);
 
     AcdTkrLocalCoords(float arcLength, float cosTheta, 
                       const HepPoint3D& global, 
                       const double localPosition[2], 
-                      const HepSymMatrix& planeError);
+                      const CLHEP::HepSymMatrix& planeError);
 
     AcdTkrLocalCoords(const AcdTkrLocalCoords& other);
 
@@ -87,8 +88,8 @@ namespace Event
     inline float  getLocalX()               const {return m_local[0]; };
     inline float  getLocalY()               const {return m_local[1]; };
 
-    inline const HepSymMatrix& getLocalCovProj() const {return m_localCovProj; };
-    inline const HepSymMatrix& getLocalCovProp() const {return m_localCovProp; };
+    inline const CLHEP::HepSymMatrix& getLocalCovProj() const {return m_localCovProj; };
+    inline const CLHEP::HepSymMatrix& getLocalCovProp() const {return m_localCovProp; };
 
     /// For backwards compatibility
     inline float getLocalXXCov() const { return m_localCovProj(1,1); }
@@ -108,12 +109,12 @@ namespace Event
     void setLocalData(int volume, float arcLength, float cosTheta, 
                       const HepPoint3D& global, 
                       const float localPosition[2], const float active[2], 
-                      const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp);
+                      const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp);
     
     /// set everything at once, old version
     void setLocalData(const float localPosition[2],
                       float pathLength, float cosTheta, 
-                      int region, const HepSymMatrix& planeError);
+                      int region, const CLHEP::HepSymMatrix& planeError);
     
     /// set stuff from old version of AcdTkrPoint
     void setLocalData(float arcLength, int face, const Point& point, const Event::TkrTrackParams& params);
@@ -148,10 +149,10 @@ namespace Event
     float    m_active[2];
 
     ///  Covariance terms in expected LocalCoords
-    HepSymMatrix m_localCovProj;
+    CLHEP::HepSymMatrix m_localCovProj;
  
         ///  Covariance terms in expected intersection
-    HepSymMatrix m_localCovProp;
+    CLHEP::HepSymMatrix m_localCovProp;
 
   };
 

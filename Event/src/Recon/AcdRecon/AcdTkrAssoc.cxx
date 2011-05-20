@@ -46,7 +46,7 @@ AcdTkrAssoc::AcdTkrAssoc(const AcdTkrAssoc& other)
 /// Constructor for use in reconstruction, 
 AcdTkrAssoc::AcdTkrAssoc(int index, bool up, float energy, 
                          const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-                         const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
+                         const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
                          int tkrSSDVeto, float cornerDoca)
   :m_index(index),
    m_upward(up),
@@ -63,7 +63,7 @@ AcdTkrAssoc::AcdTkrAssoc(int index, bool up, float energy,
 
 void AcdTkrAssoc::set(int index, bool up, float energy, 
                       const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-                      const HepSymMatrix& covStart, const HepSymMatrix& covEnd,
+                      const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
                       int tkrSSDVeto, float cornerDoca){
   // just in copy everything
   m_index = index;
@@ -107,8 +107,8 @@ void AcdTkrAssoc::ini()
   m_start.set(0.,0.,0.);
   m_dir.set(0.,0.,0.);
   m_arcLength = 0.;
-  m_cov_start = HepSymMatrix(5,0);
-  m_cov_end = HepSymMatrix(5,0);
+  m_cov_start = CLHEP::HepSymMatrix(5,0);
+  m_cov_end = CLHEP::HepSymMatrix(5,0);
   m_tkrSSDVeto  = 0;
   m_cornerDoca = 0.;
   m_hitPocae.clear();

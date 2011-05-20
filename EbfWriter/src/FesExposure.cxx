@@ -1,4 +1,4 @@
-/** @file FesExposure.cxx
+/**: @file FesExposure.cxx
     @brief declare and implement the Algorithm FesExposure
 
     $Header$
@@ -50,7 +50,7 @@
 */
     static inline unsigned int writeAtt (unsigned int* data, FILE* fp);
     static inline void swap (unsigned int *wrds, int nwrds);
-    static inline Hep3Vector fromRaDec(double RA, double Dec);
+    static inline CLHEP::Hep3Vector fromRaDec(double RA, double Dec);
 
 class FesExposure : public Algorithm {
 public:
@@ -79,7 +79,7 @@ private:
     unsigned int  m_microTime;
     double        m_lastx,m_lasty,m_lastz;
     double        m_lastAttTime, m_lastPosTime;
-    Hep3Vector    m_lastXaxis,m_lastYaxis,m_lastZaxis;
+    CLHEP::Hep3Vector    m_lastXaxis,m_lastYaxis,m_lastZaxis;
     std::string   m_FileName;
     StringProperty m_timerName;
     
@@ -165,9 +165,9 @@ StatusCode FesExposure::initialize(){
 
     m_lastx = m_lasty = m_lastz = 0.;
     m_lastAttTime = m_lastPosTime = 0.;
-    m_lastXaxis = Hep3Vector(0.,0.,0.);
-    m_lastYaxis = Hep3Vector(0.,0.,0.);
-    m_lastZaxis = Hep3Vector(0.,0.,0.);
+    m_lastXaxis = CLHEP::Hep3Vector(0.,0.,0.);
+    m_lastYaxis = CLHEP::Hep3Vector(0.,0.,0.);
+    m_lastZaxis = CLHEP::Hep3Vector(0.,0.,0.);
    
     return sc;
 }
@@ -312,11 +312,11 @@ StatusCode FesExposure::addAttitudeHeader() {
    return sc;
 }
 
-StatusCode FesExposure::calcAttitudeContribution(Hep3Vector xAxis, Hep3Vector zAxis){
+StatusCode FesExposure::calcAttitudeContribution(CLHEP::Hep3Vector xAxis, CLHEP::Hep3Vector zAxis){
    StatusCode sc = StatusCode::SUCCESS;
 
 // Now get the directions starting from the Z axis. Why?
-   Hep3Vector yAxis = zAxis.cross(xAxis).unit();
+   CLHEP::Hep3Vector yAxis = zAxis.cross(xAxis).unit();
    xAxis = yAxis.cross(zAxis);
 
 // Now Convert these directional vectors to a Quaternion
@@ -431,13 +431,13 @@ StatusCode FesExposure::calcAttitudeContribution(Hep3Vector xAxis, Hep3Vector zA
    return sc;
 }
 
-static inline Hep3Vector fromRaDec(double RA, double Dec){
+static inline CLHEP::Hep3Vector fromRaDec(double RA, double Dec){
 
     double theta    = (90.0 - Dec)*M_PI/180.0;
     double phi      = RA*M_PI/180.0;
     double sinTheta = sin(theta);
        
-    Hep3Vector vec = Hep3Vector(sinTheta*cos(phi), sinTheta*sin(phi), cos(theta));
+    CLHEP::Hep3Vector vec = CLHEP::Hep3Vector(sinTheta*cos(phi), sinTheta*sin(phi), cos(theta));
  
     return vec;
 }

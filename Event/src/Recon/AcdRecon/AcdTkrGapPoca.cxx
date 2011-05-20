@@ -18,7 +18,7 @@ namespace Event {
                                float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
                                int volumePlane, float arcLengthToPlane, float cosTheta, 
                                const HepPoint3D& global, const float localPosition[2], 
-                               const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+                               const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp,
                                int volume, int region, float arcLength, 
                                float doca, float docaErrProj, float docaErrProp,
                                const Point& poca, const Vector& voca)

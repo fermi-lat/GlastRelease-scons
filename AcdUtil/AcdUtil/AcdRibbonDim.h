@@ -13,8 +13,11 @@
 #include "CLHEP/Geometry/Transform3D.h"
 #include "geometry/Ray.h"
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+typedef HepGeom::Transform3D HepTransform3D;
 
-// A ribbon segment
+// ribbon segment
 
 class AcdRibbonSegment {
 public:

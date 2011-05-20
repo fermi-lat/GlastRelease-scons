@@ -87,7 +87,7 @@ public:
     double       getAverageDistance() const {return m_aveDist;}
     double       getTransRms()        const {return m_transRms;}
     double       getLongRms()         const {return m_longRms;}
-    double       getLongRmsAysm()     const {return m_longRmsAsym;}
+    double       getLongRmsAsym()     const {return m_longRmsAsym;}
 
     /// Modify data members
     void  setStatusBit(const unsigned int stat) {m_statusBits |= stat;}

@@ -6,6 +6,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ DetDispaly-03-03-05 20-May-2011    hmk CLHEP 2.1.0.1
  DetDisplay-03-03-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
  DetDisplay-03-03-03 15-Jun-2010  lsrea Up max detail level from 7 to 9; default is still 2
  DetDisplay-03-03-02 12-Jun-2010    jrb upgrades for SCons builds

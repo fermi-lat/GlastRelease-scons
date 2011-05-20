@@ -29,6 +29,7 @@
 #include "gui/DisplayControl.h"
 #include "gui/GuiMgr.h"
 #include "GuiSvc/IGuiTool.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 #include <cassert>
 
@@ -139,8 +140,11 @@ StripDisplay::StripDisplay(const std::string& type,
 class   StripDisplay::StripRep : public gui::DisplayRep {
 public:
     StripRep(bool noise):m_count(0), m_noise(noise){}
-    void   accept ( const SiDetector& d, const HepTransform3D& T_plane )
+    void   accept ( const SiDetector& d, const HepGeom::Transform3D& T_plane )
     {
+        typedef HepGeom::Point3D<double> HepPoint3D;
+        typedef HepGeom::Vector3D<double> HepVector3D;
+
         // static variable implmentation
         static float pScale = 50.f;
 
@@ -276,11 +280,11 @@ void StripDisplay::displayStrips(const Event::McTkrStripCol& strips)
         waferMin_id.append(0); waferMin_id.append(0);
         int topWafer = _tkrGeoSvc->nWaferAcross() - 1;
         waferMax_id.append(topWafer); waferMax_id.append(topWafer);
-        HepTransform3D TMin, TMax;
+        HepGeom::Transform3D TMin, TMax;
         _detSvc->getTransform3DByID(waferMin_id, &TMin);
         _detSvc->getTransform3DByID(waferMax_id, &TMax);
-        Hep3Vector offset = 0.5*(TMin.getTranslation() + TMax.getTranslation());
-        HepTransform3D  T_plane(TMin.getRotation(), offset);
+        CLHEP::Hep3Vector offset = 0.5*(TMin.getTranslation() + TMax.getTranslation());
+        HepGeom::Transform3D  T_plane(TMin.getRotation(), offset);
 
         // pass the strip list and transformation to the two instances of the rep
         m_stripRep->accept(strips, T_plane);

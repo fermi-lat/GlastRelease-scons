@@ -81,7 +81,7 @@ private:
     void displayBox(idents::VolumeIdentifier id, std::string category);
     //! add a hit to the display 
     //! @param a,b initial, final points for the step
-    void addHit(const Hep3Vector& a, const Hep3Vector& b);
+    void addHit(const CLHEP::Hep3Vector& a, const CLHEP::Hep3Vector& b);
 
     //! Add rep to display the tracks
     //! @param track a list of dots to connect
@@ -141,7 +141,7 @@ private:
 
     class LineRep : public gui::DisplayRep {
     public:
-        LineRep(const Hep3Vector& a, const Hep3Vector& b) 
+        LineRep(const CLHEP::Hep3Vector& a, const CLHEP::Hep3Vector& b) 
         {
             markerAt(a); moveTo(a);  lineTo(b);
         }
@@ -239,7 +239,7 @@ void MCdisplay::displayBox(idents::VolumeIdentifier id, std::string category)
 {
     if(m_detectorList[id]>0)return; // already displayed
     ++m_detectorList[id];
-    HepTransform3D T;
+    HepGeom::Transform3D T;
     m_gdsvc->getTransform3DByID(id, &T);
 
     std::string shape;
@@ -260,7 +260,7 @@ void MCdisplay::addTrack(const PointList & track, int charge, bool primary)
         TrackRep( const MCdisplay::PointList& track, bool neutral=false, bool primary=false){
             if( neutral) setColor("white");
             MCdisplay::PointList::const_iterator pit = track.begin();
-            Hep3Vector hit = (*pit)->getPoint();
+            CLHEP::Hep3Vector hit = (*pit)->getPoint();
             if(primary) markerAt(hit);
             moveTo(hit);
             pit++;
@@ -274,12 +274,12 @@ void MCdisplay::addTrack(const PointList & track, int charge, bool primary)
     else                m_detmap["tracks"]->append(TrackRep(track));
 }
 //____________________________________________________________________________
-void MCdisplay::addHit( const Hep3Vector& a, const Hep3Vector& b)
+void MCdisplay::addHit( const CLHEP::Hep3Vector& a, const CLHEP::Hep3Vector& b)
 {
 #if !defined(__GNUC__) || (__GNUC__ !=2)
     class LineRep : public gui::DisplayRep {
     public:
-        LineRep(const Hep3Vector& a, const Hep3Vector& b) 
+        LineRep(const CLHEP::Hep3Vector& a, const CLHEP::Hep3Vector& b) 
         {
             markerAt(a); moveTo(a);  lineTo(b);
         }
@@ -316,7 +316,7 @@ void MCdisplay::endEvent()
         idents::VolumeIdentifier id = (*ihit)->volumeID();
         displayBox(id, "hit_boxes");
         // add the hit
-        HepTransform3D T;
+        HepGeom::Transform3D T;
         m_gdsvc->getTransform3DByID(id, &T);
         HepPoint3D entry = T.getTranslation() + T.getRotation()*(*ihit)->entryPoint();
         HepPoint3D exit = T.getTranslation() + T.getRotation()*(*ihit)->exitPoint();

@@ -64,6 +64,7 @@
 #include <fstream>
 #include <cassert>
 #include <map>
+using namespace CLHEP;
 /** 
  * @class EbfWriter
  * @brief An algorithm to convert the digi data to ebf

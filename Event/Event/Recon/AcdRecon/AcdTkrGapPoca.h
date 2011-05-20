@@ -34,6 +34,8 @@ static const CLID& CLID_AcdTkrGapPocaCol = InterfaceID("AcdTkrGapPocaCol", 1, 0)
 namespace Event {
 
   class AcdTkrGapPoca : public Event::AcdTkrLocalCoords, public Event::AcdPocaData  {
+
+  typedef HepGeom::Point3D<double> HepPoint3D;
     
   public:
     
@@ -47,7 +49,7 @@ namespace Event {
                   float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
                   int volumePlane, float arcLengthToPlane, float cosTheta, 
                   const HepPoint3D& global, const float localPosition[2], 
-                  const HepSymMatrix& localCovProj, const HepSymMatrix& localCovProp,
+                  const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp,
                   int volume, int region, float arcLength, 
                   float doca, float docaErrProj, float docaErrProp,
                   const Point& poca, const Vector& voca);
