@@ -11,6 +11,8 @@
 #include "idents/TowerId.h"
 #include "idents/VolumeIdentifier.h"
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Transform3D.h"
+
 
 #include "TMath.h"
 
@@ -64,7 +66,7 @@ void FullShowerGeometryManager::Initialize()
   topLayerId.append(0);  // layer
   topLayerId.append(0);  // x view
   StatusCode sc;
-  HepTransform3D transfTop;
+  HepGeom::Transform3D transfTop;
   int count;
   for (count=0;count<3;++count) {
     topLayerId.append(0);

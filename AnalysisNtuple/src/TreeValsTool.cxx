@@ -483,7 +483,7 @@ StatusCode TreeValsTool::calculate()
             TFP_bestAveDist     = filterParams->getAverageDistance();
             TFP_bestRmsTrans    = filterParams->getTransRms();
             TFP_bestRmsLong     = filterParams->getLongRms();
-            TFP_bestRmsLongAsym = filterParams->getLongRmsAysm();
+            TFP_bestRmsLongAsym = filterParams->getLongRmsAsym();
         }
     }
 

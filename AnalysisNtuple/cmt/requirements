@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v2r58p2
+version v2r58p3
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc

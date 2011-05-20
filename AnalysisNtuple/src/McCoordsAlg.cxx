@@ -176,9 +176,9 @@ void McCworker::evaluate()
     double zenith_theta = mcdir.difference(zenith); 
     if( fabs(zenith_theta)<1e-8) zenith_theta=0;
     // all this to do the azimuth angle :-(
-    Hep3Vector north_pole(0,0,1);
-    Hep3Vector east_dir( north_pole.cross(zenith()).unit() ); // east is perp to north_pole and zenith
-    Hep3Vector north_dir( zenith().cross(east_dir));
+    CLHEP::Hep3Vector north_pole(0,0,1);
+    CLHEP::Hep3Vector east_dir( north_pole.cross(zenith()).unit() ); // east is perp to north_pole and zenith
+    CLHEP::Hep3Vector north_dir( zenith().cross(east_dir));
     double earth_azimuth=atan2( mcdir().dot(east_dir), mcdir().dot(north_dir) );
     if( earth_azimuth <0) earth_azimuth += 2*M_PI; // to 0-360 deg.
     if( fabs(earth_azimuth)<1e-8) earth_azimuth=0;
