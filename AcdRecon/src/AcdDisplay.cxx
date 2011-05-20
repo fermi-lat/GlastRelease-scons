@@ -85,7 +85,7 @@ public:
         topRibbonId.append(ribbonVolid[4]);
         topRibbonId.append(1);
         HepPoint3D ribboncenter;
-        HepTransform3D transform;
+        HepGeom::Transform3D transform;
 
         StatusCode sc = m_detsvc->getTransform3DByID(topRibbonId, &transform);
         if(sc.isSuccess()) ribboncenter = transform*ribboncenter;

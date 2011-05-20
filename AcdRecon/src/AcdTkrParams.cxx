@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+using namespace CLHEP;
+
 bool AcdTkrParams::convertToAcdRep(const Event::TkrTrackParams& params, const double& zRef, bool up,
 				   HepPoint3D& refPoint, HepVector3D& dir, HepSymMatrix& cov) {
 

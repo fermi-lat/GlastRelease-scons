@@ -26,6 +26,10 @@ namespace AcdUtil {
 
 namespace AcdRecon {
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
+
   // A couple of constants
   const int ribbonX = 5;
   const double maxDocaValue = 2000.;
@@ -63,7 +67,7 @@ namespace AcdRecon {
    * @param arcLength at which the intersection occurs
    * @param hitPoint of intersection
    */
-  void crossesPlane(const AcdRecon::TrackData& track, const HepTransform3D& plane, 
+  void crossesPlane(const AcdRecon::TrackData& track, const HepGeom::Transform3D& plane, 
 		    double& arcLength, HepPoint3D& hitPoint);  
 
   /**

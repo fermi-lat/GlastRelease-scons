@@ -22,6 +22,8 @@
 
 class AcdTkrParams {
   
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
   
 public:
   
@@ -37,7 +39,7 @@ public:
    * @return true from success, false otherwise
    */
   static bool convertToAcdRep(const Event::TkrTrackParams& params, const double& zRef, bool up,
-			      HepPoint3D& refPoint, HepVector3D& dir, HepSymMatrix& cov);
+			      HepPoint3D& refPoint, HepVector3D& dir, CLHEP::HepSymMatrix& cov);
 
 public:
 
@@ -46,7 +48,7 @@ public:
   
   /// C'tor from point, vector and cov. matrix
   AcdTkrParams(const HepPoint3D& refPoint, const HepVector3D& dir, 
-	       const HepSymMatrix& cov);
+	       const CLHEP::HepSymMatrix& cov);
 
   /// C'tor from track parameters, Z reference value and direction
   AcdTkrParams(const Event::TkrTrackParams& params, const double& zRef, bool up);
@@ -61,7 +63,7 @@ public:
   // access
   inline const HepPoint3D& refPoint() const { return m_refPoint; }
   inline const HepVector3D& dir() const { return m_dir; }
-  inline const HepSymMatrix& cov() const { return m_cov; }
+  inline const CLHEP::HepSymMatrix& cov() const { return m_cov; }
   
 private:
 
@@ -71,7 +73,7 @@ private:
   HepVector3D  m_dir;             
   
   /// 3x3 symetric covarience matrix on the position defined @ the reference point
-  HepSymMatrix m_cov;              
+  CLHEP::HepSymMatrix m_cov;              
   
 };
 

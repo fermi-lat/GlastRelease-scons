@@ -315,7 +315,7 @@ namespace AcdRecon {
 
   void ReconFunctions::crossesPlaneError(const AcdRecon::TrackData& track,  
 					 const HepPoint3D& planePoint, 
-					 const HepTransform3D& toGlobal,
+					 const HepGeom::Transform3D& toGlobal,
 					 const double& arcLength, HepSymMatrix& cov ) {
 
     // to get the normal vector

@@ -31,6 +31,9 @@ namespace AcdRecon {
 
   namespace ReconFunctions {
 
+    using namespace CLHEP;
+    typedef HepGeom::Point3D<double> HepPoint3D;
+
     // A couple of constants
     const double maxDocaValue = 2000.;
     
@@ -145,7 +148,7 @@ namespace AcdRecon {
      */
     void crossesPlaneError(const AcdRecon::TrackData& track,  
 			   const HepPoint3D& planePoint, 
-			   const HepTransform3D& toLocal,
+			   const HepGeom::Transform3D& toLocal,
 			   const double& arcLength, 
 			   HepSymMatrix& cov );
     

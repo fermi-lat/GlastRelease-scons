@@ -644,7 +644,7 @@ StatusCode AcdTkrIntersectTool::makeTkrPoint(const AcdRecon::TrackData& track, c
   HepPoint3D hitPlane(data.m_x.x(),data.m_x.y(),data.m_x.z()); 
   float local[2];
   float cosTheta(0.);
-  static const HepSymMatrix noError(2,0);
+  static const CLHEP::HepSymMatrix noError(2,0);
   switch (data.m_face) {
   case 0:
     local[0] = data.m_x.x();

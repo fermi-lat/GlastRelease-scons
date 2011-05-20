@@ -17,6 +17,8 @@ class Point;
 
 namespace AcdRecon {
   
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
 
   // A couple of constants
 

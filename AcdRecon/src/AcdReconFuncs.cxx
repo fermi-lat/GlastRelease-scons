@@ -52,7 +52,7 @@ namespace AcdRecon {
   }
 
 
-  void crossesPlane(const AcdRecon::TrackData& aTrack,  const HepTransform3D& plane, 
+  void crossesPlane(const AcdRecon::TrackData& aTrack,  const HepGeom::Transform3D& plane, 
 		    double& arcLength, HepPoint3D& x_isec) {
 
     // This one used the transformation to the plane
@@ -310,7 +310,7 @@ namespace AcdRecon {
       double testArcLength(-1.);
 
       const AcdRibbonSegment* seg = ribbon.getSegment(segment);
-      const HepTransform3D& toFacePlane = seg->m_trans;
+      const HepGeom::Transform3D& toFacePlane = seg->m_trans;
       AcdRecon::crossesPlane(aTrack, toFacePlane, testArcLength, testHitPoint);      
 	
       if (testArcLength < 0) continue;

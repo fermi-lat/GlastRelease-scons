@@ -20,6 +20,9 @@ namespace Event {
 
 namespace AcdRecon {
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
   /**
    *  @struct PocaData
    *
@@ -39,8 +42,8 @@ namespace AcdRecon {
       m_arcLengthPlane = 0.;
       m_hitsPlane = HepPoint3D();
       m_inPlane = HepPoint3D();
-      m_planeError_proj = HepSymMatrix(2,0);
-      m_planeError_prop = HepSymMatrix(2,0);
+      m_planeError_proj = CLHEP::HepSymMatrix(2,0);
+      m_planeError_prop = CLHEP::HepSymMatrix(2,0);
       m_volumePlane = -1;
 
       m_cosTheta = 0.;
@@ -72,9 +75,9 @@ namespace AcdRecon {
     /// 3D point that track crosses detector plane, in local coordiantes
     HepPoint3D m_inPlane; 
     /// 2x2 covarience martix in the detector plane, projected from original track params
-    HepSymMatrix m_planeError_proj; 
+    CLHEP::HepSymMatrix m_planeError_proj; 
     /// 2x2 covarience martix in the detector plane, using propagated error
-    HepSymMatrix m_planeError_prop;     
+    CLHEP::HepSymMatrix m_planeError_prop;     
     /// Which volume got hit, 
     int m_volumePlane;             
 
@@ -150,9 +153,9 @@ namespace AcdRecon {
     Point  m_x;           
 
     /// 2x2 covarience martix in the ACD plane, projected from original track params
-    HepSymMatrix m_planeError_proj; 
+    CLHEP::HepSymMatrix m_planeError_proj; 
     /// 2x2 covarience martix in the ACD plane, using propagated error
-    HepSymMatrix m_planeError_prop;     
+    CLHEP::HepSymMatrix m_planeError_prop;     
 
   };
 
@@ -220,13 +223,13 @@ namespace AcdRecon {
     bool        m_upward;  
 
     /// 5x5 covarience martix in the ACD rep, from original track params
-    HepSymMatrix m_cov_orig; 
+    CLHEP::HepSymMatrix m_cov_orig; 
 
     /// The projected point of the track
     mutable HepPoint3D  m_current;  
 
     /// 5x5 covarience martix in the ACD rep, propagated error
-    mutable HepSymMatrix m_cov_prop;     
+    mutable CLHEP::HepSymMatrix m_cov_prop;     
 
   };
 
