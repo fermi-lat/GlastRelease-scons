@@ -6,6 +6,8 @@
 
 namespace RootPersistence {
 
+using namespace CLHEP;
+
 void convert( const Event::AcdRecon & tdsAcdRec, AcdRecon & rootAcdRec ) {
     
   std::vector<AcdId> rootIdCol ;

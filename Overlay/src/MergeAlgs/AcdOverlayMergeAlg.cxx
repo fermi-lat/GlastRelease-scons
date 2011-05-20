@@ -32,10 +32,14 @@
 
 #include <map>
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+typedef HepGeom::Vector3D<double> HepVector3D;
+
 // Class definition
 class AcdOverlayMergeAlg : public Algorithm {
 
 public:
+
 
     AcdOverlayMergeAlg(const std::string& name, ISvcLocator* pSvcLocator); 
 

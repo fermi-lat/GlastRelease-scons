@@ -42,6 +42,8 @@ a value, it expects to find a source of such events generated with that value wh
 into the Gleam output tuple.
 
 */
+typedef HepGeom::Point3D<double> HepPoint3D;
+
 class AcdHitToOverlayTool : public AlgTool, virtual public IDigiToOverlayTool
 {
 public:

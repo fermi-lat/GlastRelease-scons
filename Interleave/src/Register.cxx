@@ -59,8 +59,8 @@ StatusCode RegisterSampledBackground::registerMe(IFluxSvc* fsvc)
     static RemoteSpectrumFactory<SampledBackground> factory(fsvc);
 
     //  needs to use the same random engine as FluxSvc ?
-    HepRandomEngine* engine = fsvc->getRandomEngine();
-    HepRandom::setTheEngine(engine);
+    CLHEP::HepRandomEngine* engine = fsvc->getRandomEngine();
+    CLHEP::HepRandom::setTheEngine(engine);
 
     // Get the initial location from FluxSvc and store in the CrLocation singleton
     //?CrLocation::instance()->setFluxSvc(fsvc);

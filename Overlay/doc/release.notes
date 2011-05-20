@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ Overlay-01-07-04 20-May-2011 HMK CLHEP 2.1.0.1
  Overlay-01-07-03 31-Jan-2011 TU Fix CalOverlayMergeAlg to include diode structures for light deposition
  Overlay-01-07-02 17-Jan-2011 TU Fix event indexing when wrapping at end of input file
  Overlay-01-07-01 12-Jun-2010    jrb upgrades for SCons builds

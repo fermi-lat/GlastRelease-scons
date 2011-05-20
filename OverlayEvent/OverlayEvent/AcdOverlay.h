@@ -20,6 +20,9 @@ static const CLID& CLID_AcdOverlay = InterfaceID("AcdOverlay", 1, 0);
 
 namespace Event {
 
+typedef HepGeom::Point3D<double> HepPoint3D;
+
+
 /*!
 * \class AcdOverlay
 * \brief TDS version of the Cal overlay data 

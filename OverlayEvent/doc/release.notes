@@ -5,6 +5,7 @@ $Id$
 @verbatim
 * EOH *
 
+ OverlayEvent-00-03-02 20-May-2011    hmk CLHEP 2.1.0.1
  OverlayEvent-00-03-01 12-Jun-2010    jrb upgrades for SCons builds
 27-Apr-10          v0r3p0  TU Add Diagnostic Data to the Overlay
 15-Sep-09          v0r2p2  TU Fix linux compiler warnings

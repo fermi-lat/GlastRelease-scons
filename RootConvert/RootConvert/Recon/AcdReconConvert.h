@@ -85,8 +85,8 @@ namespace RootPersistence {
   void convert( const Event::AcdPocaData&, AcdPocaDataV2&);
   void convert( const AcdPocaDataV2&, Event::AcdPocaData&);  
 
-  void convert( const HepSymMatrix&, TMatrixDSym& );
-  void convert( const TMatrixDSym&, HepSymMatrix& );
+  void convert( const CLHEP::HepSymMatrix&, TMatrixDSym& );
+  void convert( const TMatrixDSym&, CLHEP::HepSymMatrix& );
 
 }
 

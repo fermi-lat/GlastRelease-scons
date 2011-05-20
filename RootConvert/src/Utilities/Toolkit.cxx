@@ -96,6 +96,8 @@ idents::VolumeIdentifier convert( const VolumeIdentifier & rootVolId ) {
 //============================================================
 // Conversion math
 //============================================================
+ typedef HepGeom::Point3D<double> HepPoint3D;
+
 
 HepPoint3D convert( const TVector3 & v ) {
     return HepPoint3D(v.X(),v.Y(),v.Z()) ;
@@ -105,11 +107,11 @@ TVector3 convert( const HepPoint3D & v ) {
     return TVector3(v.x(),v.y(),v.z()) ;
 }
 
-Hep3Vector convert3vector( const TVector3 & v ) {
+CLHEP::Hep3Vector convert3vector( const TVector3 & v ) {
     return CLHEP::Hep3Vector(v.X(),v.Y(),v.Z()) ;
 }
 
-TVector3 convert3vector( const Hep3Vector & v ) {
+TVector3 convert3vector( const CLHEP::Hep3Vector & v ) {
     return TVector3(v.x(),v.y(),v.z()) ;
 }
 

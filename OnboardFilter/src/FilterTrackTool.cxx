@@ -43,6 +43,7 @@
 
 // HepPoint3D
 #include "CLHEP/Geometry/Point3D.h"
+typedef HepGeom::Point3D<double> HepPoint3D;
 
 // Useful stuff! 
 #include <map>

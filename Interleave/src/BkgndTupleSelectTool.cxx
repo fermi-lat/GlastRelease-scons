@@ -416,7 +416,7 @@ void BkgndTupleSelectTool::setCurrentTree(double x)
         throw std::runtime_error("BkgndTupleSelectTool::setCurrentTree: no events in the tree");
     }
     
-    m_eventOffset = (unsigned int)(RandFlat::shoot()*(length - 1));
+    m_eventOffset = (unsigned int)(CLHEP::RandFlat::shoot()*(length - 1));
 
     // point tree to buffer for copying events:
     setLeafPointers();
