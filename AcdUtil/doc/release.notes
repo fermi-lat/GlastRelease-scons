@@ -18,7 +18,6 @@
  v3r0p0gr3 10-Jun-2009 EAC Fix to compile more stuff on Windows
  v3r0p0gr2 09-Jun-2009 EAC Fix to compile on Windows
  v3r0p0gr1 08-Jun-2009 EAC New interfaces in AcdTileDim, AcdReconDim AcdGeomSvc
->>>>>>> 1.72.162.7
  v2r8p9   08-Sep-2008 EAC Bug fix, change localX to localY to fix typo.
  v2r8p8   04-Sep-2008 EAC Fix active distance 2d calculatoin for trapezoids.
  v2r8p7   02-Sep-2008 EAC Allow values below pedestal in mipEquilvalent_lowRange, since that does happen in data
