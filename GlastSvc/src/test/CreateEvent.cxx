@@ -169,8 +169,8 @@ StatusCode CreateEvent::initialize() {
         idents::VolumeIdentifier prefix = m_detSvc->getIDPrefix();
         log << "Size of id prefix is " << prefix.size() << endreq;
         
-        const HepTransform3D trans = m_detSvc->getTransform3DPrefix();
-        const Hep3Vector vec = trans.getTranslation();
+        const HepGeom::Transform3D trans = m_detSvc->getTransform3DPrefix();
+        const CLHEP::Hep3Vector vec = trans.getTranslation();
         log << "Prefix translation (x, y, z) is" << endreq;
         log << " (" << vec.x() << ", "
             << vec.y() << ", " << vec.z() << ")" << endreq;
@@ -223,12 +223,12 @@ StatusCode CreateEvent::execute() {
     
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
-    log << MSG::DEBUG <<"Initial RandGauss status: " << RandGauss::getFlag()
+    log << MSG::DEBUG <<"Initial RandGauss status: " << CLHEP::RandGauss::getFlag()
         << endreq;
-    // HMK Unused double test = RandGauss::shoot();
+    // HMK Unused double test = CLHEP::RandGauss::shoot();
     log << MSG::DEBUG << "RandGauss status after a shoot: "
-        << RandGauss::getFlag() << endreq;
-    log << MSG::DEBUG << "RandFlat random number: " <<RandFlat::shoot()<<endreq;
+        << CLHEP::RandGauss::getFlag() << endreq;
+    log << MSG::DEBUG << "RandFlat random number: " <<CLHEP::RandFlat::shoot()<<endreq;
     
     //TODO: put something in here to get data???
 

@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ GlastSvc-10-00-02 20-May-2011   hmk CLHEP 2.1.0.1 upgrade
  GlastSvc-10-00-01 31-Jan-2011    mk  Updates for handling rand num seeds.
            See JIRA GRINF-58
  GlastSvc-09-28-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
