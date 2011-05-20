@@ -428,8 +428,8 @@ StatusCode FluxAlg::execute()
         else break;
     } while(m_insideSAA && m_avoidSAA.value() || --count>0);
 
-    Hep3Vector p = m_flux->launchPoint();
-    Hep3Vector d = m_flux->launchDir();
+    CLHEP::Hep3Vector p = m_flux->launchPoint();
+    CLHEP::Hep3Vector d = m_flux->launchDir();
 
     double ke = m_flux->energy(); // kinetic energy in MeV
 
