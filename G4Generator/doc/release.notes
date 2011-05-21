@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ G4Generator-06-00-01 21-May-2011 hmk    patch requirements to use v9 of G4 
  G4Generator-06-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
  G4Generator-05-26-04 06-Jan-2011  lsrea Install src/test/test_sources.xml
  G4Generator-05-26-03 29-Jun-2010  lsrea Added jO param to make debugging of geometry easier

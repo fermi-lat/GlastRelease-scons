@@ -1,5 +1,5 @@
 package G4Generator
-version v6r0p0
+version v6r0p1
 
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
@@ -22,7 +22,7 @@ use geometry  v3*
 use G4HadronSim v*
 
 # for linux execution clients to get the LD_LIBRARY_PATH set.
-use Geant4Runtime v3r* IExternal
+use Geant4Runtime v9r* IExternal
 
 ## Attempt to keep our clients' test programs happy by making this public
 use cfitsio * IExternal
