@@ -1,9 +1,9 @@
 package gui
-version v3r7p4
+version v3r7p5
 author T.Burnett <tburnett@u.washington.edu>
 # $Header$
-use GlastPolicy v6r*
-use CLHEP       v3r* IExternal
+use GlastPolicy v*
+use CLHEP       v* IExternal
 
 
 apply_pattern package_include

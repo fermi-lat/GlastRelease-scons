@@ -5,6 +5,7 @@
  * $Id$
  * EOH *
 
+ geometry-03-02-04 21-May-2011    hmk patch requirements for CLHEP 
  geometry-03-02-03 20-May-2011    hmk CLHEP 2.1.0.1
  geometry-03-02-02 12-Jun-2010    jrb upgrades for SCons builds
  geometry-03-02-01 05-Nov-2009    jrb Updates for SCons

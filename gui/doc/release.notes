@@ -4,6 +4,7 @@
  @verbatim
  * EOH *
 
+ gui-03-07-05 21-May-2011    hmk patch requirements to use any CLHEP
  gui-03-07-04 12-Jun-2010    jrb upgrades for SCons builds
  gui-03-07-03 05-Nov-2009    jrb updates for SCons
    v3r7p2   THB 24-mar-06   CLHEP change

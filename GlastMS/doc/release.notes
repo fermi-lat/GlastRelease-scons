@@ -3,6 +3,7 @@
 @verbastim
  * Coordinator: T. Burnett, T. Usher
  *
+   v1r0p1 21-May-2011 hmk   patch for use of CLHEP in requirements file
    v1r0p0 20-May-2011 flongo G4 9.4.p01 upgrade
    v0r3p1 15-Sep-2009 TU  Fixing various linux compiler warnings
  * v0r3   23-Mar-2006 TU  Tagging for new externals (CLHEP, Gaudi, G4, etc.)

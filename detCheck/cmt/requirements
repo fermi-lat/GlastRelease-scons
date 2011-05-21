@@ -1,11 +1,11 @@
 package detCheck
 # $Header$
-version v1r7p2
+version v1r7p3
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use detModel v2r*
 use xmlGeoDbs v1r*
-use CLHEP v3r* IExternal
+use CLHEP v* IExternal
 use xmlUtil v3r*
 use idents  v2r*
 

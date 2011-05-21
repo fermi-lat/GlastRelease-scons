@@ -1,10 +1,10 @@
 package geometry
-version v3r2p3
+version v3r2p4
 author T.Burnett <tburnett@u.washington.edu>
 # $Header$
 
 use GlastPolicy
-use CLHEP v3r* IExternal
+use CLHEP * IExternal
 
 
 apply_pattern package_include
