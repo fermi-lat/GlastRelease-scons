@@ -1,5 +1,5 @@
 package G4Propagator
-version v3r0p0
+version v3r0p1
 author Tracy Usher   <usher@slac.stanford.edu>
 
 #$Id$
@@ -15,7 +15,7 @@ use G4Generator *
 private
 
 #this is private to avoid passing on build info to clients
-use Geant4   v3r* IExternal
+use Geant4   v9r* IExternal
 
 use gr_app v*
 
