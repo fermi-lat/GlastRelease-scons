@@ -1,12 +1,12 @@
 package CRflux
 
-version v1r17p8
+version v1r17p9
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
 use FluxSvc v6*
 
-use CLHEP v3* IExternal
+use CLHEP v* IExternal
 
 apply_pattern packageShr
 
