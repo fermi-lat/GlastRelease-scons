@@ -1,5 +1,5 @@
 package G4Generator
-version v6r0p1
+version v6r0p2
 
 author  T. Burnett <tburnett@u.washington.edu>
 author  R.Giannitrapani <riccardo@fisica.uniud.it>
@@ -30,7 +30,7 @@ use cfitsio * IExternal
 #=============================================================
 private
 #this is private to avoid passing on build info to clients
-use Geant4   v3r8* IExternal
+use Geant4   v9r* IExternal
 
 # special code to replace the standared multiple scattering 
 use GlastMS
