@@ -15,7 +15,7 @@
 */
 class UserSource :  public Spectrum {
 public:
-    UserSource(const std::string& /*params*/, HepRandomEngine* /*engine*/=0){};
+    UserSource(const std::string& /*params*/, CLHEP::HepRandomEngine* /*engine*/=0){};
 
 
     ///  specify correct particle type
