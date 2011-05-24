@@ -3,7 +3,7 @@ import os,sys,platform
 Import('baseEnv')
 
 usedExternals = []
-usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '1.9.2.2' })
+usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.0.1' })
 usedExternals.append({ 'name' : 'cfitsio', 'iversion' : 'v3060A' })
 usedExternals.append({ 'name' : 'swig', 'iversion' : '1.3.31' })
 usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-gl1' })
@@ -20,7 +20,7 @@ else:
 #Don't have any of the following for RHEL5 yet
 usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.1.2'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v18r1-gl4' })
-usedExternals.append({ 'name' : 'geant4', 'iversion' : '8.0.p01-gl4' })
+usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01' })
 #usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v06-02-00' })
 usedExternals.append({ 'name' : 'LDF', 'iversion' : 'v07-01-01' })
 usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
