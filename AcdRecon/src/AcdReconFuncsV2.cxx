@@ -15,7 +15,7 @@ namespace AcdRecon {
    * @param trackDir the directional cosines
    * @param cov the new covariance matrix
    **/
-  void ReconFunctions::fillTkrToAcdCovTranslation(const HepVector3D& dir, HepMatrix& covTrans) {
+    void ReconFunctions::fillTkrToAcdCovTranslation(const HepVector3D& dir, CLHEP::HepMatrix& covTrans) {
 
     covTrans(1,1) = 0.;
     covTrans(1,2) = dir.z() * ( 1. - ( dir.x() * dir.x()) );

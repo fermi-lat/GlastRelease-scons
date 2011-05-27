@@ -43,7 +43,7 @@ namespace AcdRecon {
      * @param trackDir the directional cosines
      * @param cov the new covariance matrix
      **/
-    void fillTkrToAcdCovTranslation(const HepVector3D& dir, HepMatrix& covTrans);
+    void fillTkrToAcdCovTranslation(const HepVector3D& dir, CLHEP::HepMatrix& covTrans);
 
     /**
      * @brief fill the 4 x 5 derivative matrix to get from Acd covariance form to Tkr covariance form
@@ -51,7 +51,7 @@ namespace AcdRecon {
      * @param dir the directional cosines
      * @param covTrans the new covariance matrix
      **/
-    void fillAcdToTkrCovTranslation(const HepVector3D& dir, HepMatrix& covTrans);
+    void fillAcdToTkrCovTranslation(const HepVector3D& dir, CLHEP::HepMatrix& covTrans);
 
     /**
      * @brief fill the 4 x 4 covariance matrix from TrkTrackParams
@@ -59,7 +59,7 @@ namespace AcdRecon {
      * @param tkrParams the directional cosines
      * @param cov the  matrix
      **/
-    void fillCovMatrixFromTkr(const Event::TkrTrackParams& trackParams, HepSymMatrix& cov);
+    void fillCovMatrixFromTkr(const Event::TkrTrackParams& trackParams, CLHEP::HepSymMatrix& cov);
     
     /**
      * @brief Convert from TrkTrackParams to AcdRecon::TrackData
