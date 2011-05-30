@@ -155,6 +155,8 @@ private:
     std::vector<IValsTool*> m_toolvec;
     /// the various tree names
     StringProperty m_eventTreeName;
+    // ADW 26-May-2011: Specify production tuple flag
+    bool m_proTuple;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,6 +171,8 @@ Algorithm(name, pSvcLocator), m_tuple(0), m_rootTupleSvc(0)
     declareProperty("cuts" , m_cuts=default_cuts);
     declareProperty("generated" , m_generated=10000);
     declareProperty("EventTreeName",     m_eventTreeName="MeritTuple");
+    // ADW 26-May-2011: Specify production tuple flag
+    declareProperty("proTuple",m_proTuple = false);
 
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,7 +251,7 @@ StatusCode meritAlg::setupTools() {
 
     VisitBill visitor(this);
     for( std::vector<IValsTool*>::iterator it =m_toolvec.begin(); it != m_toolvec.end(); ++it){
-        if( (*it)->traverse(&visitor,false)==IValsTool::Visitor::ERROR) {
+        if( (*it)->traverse(&visitor,false,m_proTuple)==IValsTool::Visitor::ERROR) {
             log << MSG::ERROR << *it << " traversal failed" << endreq;
             return StatusCode::FAILURE;
         }
