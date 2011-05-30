@@ -75,6 +75,8 @@ TriggerTest.Members = {"TriggerInfoAlg", "TriggerAlg", "Count/trigger", "TriRowB
 CalDigitization.Members = { "CalDigiAlg" };
 
 // this sequence runs if the event passes the trigger
+
+/// ADW: Run NtupleMaker twice
 Triggered.Members={
     "Sequencer/Filter", // can also cause rejection
     "Sequencer/ReconCalibrationUpdate",
@@ -82,7 +84,8 @@ Triggered.Members={
     "Sequencer/FilterPerformance",
     "Sequencer/User",
     "Sequencer/EventDisplay",
-    "Sequencer/NtupleMaker",
+    "Sequencer/NtupleMaker1",
+    "Sequencer/NtupleMaker2",
     "Sequencer/Output"
  };
 
@@ -180,23 +183,36 @@ gcrSelectRootWriterAlg.gcrSelectRootFile = "$(GLEAMDATAPATH)/gcr.root";
 ApplicationMgr.DLLs += {"AnalysisNtuple", "ntupleWriterSvc", "merit"
               , "GlastClassify" 
               };
+
+/// ADW: Make development tuple with defaults (i.e. MeritTuple)
+/// Can't duplicate Auditor yet...
 AuditorSvc.Auditors += {"EventAuditor"}; // For event-by-event timing
 
-NtupleMaker.Members = {
-    "PtValsAlg",         // pointing info
-    "AnalysisNtupleAlg", // AnaTup and Filter stuff into the tuple
-    "ClassifyAlg",       // Atwood's Insightful Miner analysis
-    "FT1Alg",            // generate stuff to go into FT1 // version from AnaTup
-    "meritAlg",          // some analysis for PSF
-    "McCoordsAlg",       // now in AnaTup
-    "ObfCoordsAlg"       // now in AnaTup
+NtupleMaker1.Members = {
+    "PtValsAlg/PtValsAlg1",   
+    "AnalysisNtupleAlg/AnalysisNtupleAlg1",
+    "ClassifyAlg/ClassifyAlg1",       
+    "FT1Alg/FT1Alg1",            
+    "meritAlg/meritAlg1",        
+    "McCoordsAlg/McCoordsAlg1",  
+    "ObfCoordsAlg/ObfCoordsAlg1" 
  };
 
-AnalysisNtupleAlg.tupleName = "MeritTuple";
+
+/// ADW: Make production tuple named PrimeTuple
+NtupleMaker2.Members = {
+    "AnalysisNtupleAlg/AnalysisNtupleAlg2"
+ };
+AnalysisNtupleAlg2.tupleName = "PrimeTuple";
+AnalysisNtupleAlg2.proTuple = true;
+
 // default output to GLEAMROOT/data
 RootTupleSvc.filename            = "${GLEAMDATAPATH}/merit.root";
 RootTupleSvc.RejectIfBad = false;
 
+
+/// ADW: Friend the two tuples
+RootTupleSvc.treeFriends = {"MeritTuple","PrimeTuple"};
 
 // ----------------------------
 // Reconstruction sequence details
