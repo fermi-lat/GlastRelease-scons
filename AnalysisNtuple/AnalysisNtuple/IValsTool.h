@@ -102,8 +102,9 @@ public:
     
     
     /// sets up callback method for user to access the data
+    // ADW 26-May-2011: Specify production tuple flag
     virtual Visitor::eVisitorRet traverse(IValsTool::Visitor* v, 
-        const bool checkCalc=true) = 0;   
+        const bool checkCalc=true, const bool proTuple = false) = 0;   
 };
 
 #endif  // _H_IValsTool
