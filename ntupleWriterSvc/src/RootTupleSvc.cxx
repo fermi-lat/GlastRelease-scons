@@ -216,6 +216,9 @@ private:
     /// For getting "the" current tree...
     bool getTree(std::string& treeName, TTree*& t);
 
+    // ADW 26-May-2011: Make friends from various trees
+    bool makeFriends();
+
     /// routine to be called at the beginning of an event
     void beginEvent();
     /// routine that is called when we reach the end of an event
@@ -236,6 +239,9 @@ private:
     StringArrayProperty m_includeBranchList;
     /// List of branches to exclude from reading
     StringArrayProperty m_excludeBranchList;
+
+    // ADW 26-May-2011: Make friends from various trees
+    StringArrayProperty m_treeFriendsList;
 
     /// the ROOT stuff: a file and a a set of trees to put into it
     // replaced with m_fileCol, so we can handle multiple ROOT output files
@@ -287,6 +293,8 @@ private:
     static int m_meritVersion;
   
     int m_joMeritVersion;
+
+    
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
@@ -328,6 +336,8 @@ RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("IncludeBranches",m_includeBranchList=initList);
     declareProperty("ExcludeBranches",m_excludeBranchList=initList);
 
+    /// ADW
+    declareProperty("TreeFriends", m_treeFriendsList=initList);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::initialize () 
@@ -582,6 +592,46 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
     saveDir->cd();
     return inFileFlag;
 }
+
+bool RootTupleSvc::makeFriends()
+{
+    MsgStream log(msgSvc(),name());
+    std::vector<std::string>::const_iterator friendListItr1, friendListItr2;
+    std::map<std::string, TTree*>::const_iterator treeItr;
+    std::string treeName1, treeName2;
+    TTree* tree1;
+    TTree* tree2;
+
+    for (friendListItr1 = m_treeFriendsList.value().begin();
+         friendListItr1 != m_treeFriendsList.value().end();
+         friendListItr1++ ) {
+            treeName1 = *friendListItr1;
+            treeItr = m_tree.find(treeName1);
+            if( treeItr!=m_tree.end()) {
+                tree1 = treeItr->second;
+             } else {
+                log << MSG::WARNING << "Can't friend to TTree " << treeName2 << endreq;
+                return false;
+            }
+        for (friendListItr2 = m_treeFriendsList.value().begin();
+             friendListItr2 != m_treeFriendsList.value().end();
+             friendListItr2++ ) {
+            treeName2 = *friendListItr2;
+            treeItr = m_tree.find(treeName2);
+           if(treeItr!=m_tree.end()) {
+                tree2 = treeItr->second;
+                if(tree1==tree2) continue;
+            } else {
+               log << MSG::WARNING << "Can't friend to TTree " << treeName2 << endreq;
+               return false;
+            }
+            tree1->AddFriend(tree2);
+            log << MSG::INFO << "Friendship link TTree " << treeName2 <<" to "<< treeName1 <<std::endl;
+        }
+    }
+    return true;
+}
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName, 
@@ -891,8 +941,12 @@ StatusCode RootTupleSvc::finalize ()
         } 
     }
 
- 
-
+    if (m_treeFriendsList.value().size() > 1) {
+        log << MSG::INFO << "Making TTree friends " << endreq;
+        if (!makeFriends()) {
+            log << MSG::WARNING << "==========> Failed to make TTree friends" << endreq;
+        }            
+    }
 
     for( std::map<std::string, TFile*>::iterator it = m_fileCol.begin(); it!=m_fileCol.end(); ++it){
         TFile* f = it->second; 
@@ -909,7 +963,6 @@ StatusCode RootTupleSvc::finalize ()
             f=0;
         }
     }
-
     return StatusCode::SUCCESS;
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -941,7 +994,7 @@ long long RootTupleSvc::getInputTreePtr(void*& pval, const std::string & tupleNa
 
     }
 
-    log << MSG::INFO << "Did not find tree" << treename << endreq;
+    log << MSG::INFO << "Did not find tree " << treename << endreq;
     pval = 0;
     saveDir->cd();
     return -1;
