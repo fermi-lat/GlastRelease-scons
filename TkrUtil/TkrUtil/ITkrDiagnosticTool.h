@@ -38,6 +38,9 @@ public:
     virtual void setTriggerInfo(int tower, int gtcc, int gtrc) = 0;
     virtual bool isSetTrigger(int tower, int plane, int end) = 0;
     virtual void clearTriggerInfo() = 0;
+    virtual bool doDiagnosticInfo() = 0;
+    //virtual void setDiagnosticFlag(const bool doDiagFlag) = 0;
+    //virtual bool getDiagnosticFlag() const = 0;
 };
 
 #endif
