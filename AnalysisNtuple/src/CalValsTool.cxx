@@ -1174,6 +1174,10 @@ StatusCode CalValsTool::calculate()
     double calYLo = m_tkrGeom->getLATLimit(1,LOW)  + deltaY;
     double calYHi = m_tkrGeom->getLATLimit(1,HIGH) - deltaY;
 
+    // define the distance from the cal centroid to the nearest gap
+    // the second argument of activeDist (view) does not seem to be used
+    int tmp_view;
+    CAL_TwrEdgeCntr = activeDist(cal_pos, tmp_view);
     
     // collect the CAL edge energy
     // the edge is larger of the width and length of the layer
@@ -1303,7 +1307,7 @@ StatusCode CalValsTool::calculate()
     Point pos0(CAL_x0, CAL_y0, m_calZTop);
     int view;
     CAL_TwrEdgeTop  = activeDist(pos0, view);
-    CAL_TwrEdgeCntr = activeDist(cal_pos, view);
+    
     // Find the distance closest to an edge
     double dX = std::max(calXLo-CAL_x0, CAL_x0-calXHi);
     double dY = std::max(calYLo-CAL_y0, CAL_y0-calYHi);
