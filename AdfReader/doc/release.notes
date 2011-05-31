@@ -4,6 +4,8 @@
  @verbatim
      * EOH *
 
+ AdfReader-00-03-04 31-May-2011    hmk Turning off unit test for now due to 
+    it getting stuck infinite loop
  AdfReader-00-03-03 22-Jun-2010    jrb Eliminate SCons duplicate target complaints
  AdfReader-00-03-02 12-Jun-2010    jrb upgrades for SCons builds
  AdfReader-00-03-01 05-Nov-2009    jrb Updates for SCons

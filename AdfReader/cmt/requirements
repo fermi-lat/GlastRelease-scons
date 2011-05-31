@@ -31,7 +31,7 @@ library AdfReader \
 #library AdfReader *.cxx \
 #        ${AdfReader_headers}
 
-application test_AdfReader test/AdfReaderTest.cxx *.cxx
+#HMK disabling for now, due to getting stuck in infinite loops
+#application test_AdfReader test/AdfReaderTest.cxx *.cxx
 
-#apply_pattern package_test
 
