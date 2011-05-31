@@ -20,6 +20,8 @@
 
 #include "LdfEvent/DiagnosticData.h"
 
+#include "Event/Recon/TkrRecon/TkrDiagnosticFlag.h"
+
 #include <map>
 
 class DiagDataOverlayMergeAlg : public Algorithm 
@@ -83,6 +85,14 @@ StatusCode DiagDataOverlayMergeAlg::execute()
     // Restrictions and Caveats: none
 
     StatusCode sc = StatusCode::SUCCESS; 
+
+    SmartDataPtr<Event::TkrDiagnosticFlag> diagFlag(eventSvc(), EventModel::TkrRecon::TkrDiagnosticFlag);
+    // if no diagFlag, do the default (full diagnostics), otherwise check the flag
+    if(diagFlag) {
+        bool doDiag = diagFlag->getDiagnosticFlag();
+        if (!doDiag) return sc;
+    }
+
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG << "execute" << endreq;
 
