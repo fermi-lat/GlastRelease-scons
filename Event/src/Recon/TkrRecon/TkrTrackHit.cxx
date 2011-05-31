@@ -45,7 +45,7 @@ const Vector Event::TkrTrackHit::getDirection(TkrTrackHit::ParamType type) const
 {
     TkrTrackParams hit = getTrackParams(type);
 
-    if (m_statusBits & HITHASKINKANG)
+    if (m_statusBits & HITHASKINKANG && type != SMOOTHED)
     {
         int    measIdx = getParamIndex(Event::TkrTrackHit::SSDMEASURED, Event::TkrTrackParams::Position);
         double measAng = atan(hit(measIdx));
@@ -63,10 +63,11 @@ Vector Event::TkrTrackHit::getDirection(TkrTrackHit::ParamType type)
 {
     TkrTrackParams hit = getTrackParams(type);
 
-    if (m_statusBits & HITHASKINKANG)
+    if (m_statusBits & HITHASKINKANG && type != SMOOTHED)
     {
-        int    measIdx = getParamIndex(Event::TkrTrackHit::SSDMEASURED, Event::TkrTrackParams::Position);
-        double measAng = atan(hit(measIdx));
+        int    measIdx = getParamIndex(Event::TkrTrackHit::SSDMEASURED, Event::TkrTrackParams::Slope);
+        double measSlp = hit(measIdx);
+        double measAng = atan(measSlp);
 
         measAng += m_kinkAngle;
 

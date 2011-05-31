@@ -75,19 +75,21 @@ namespace Event {
         //                                                                  D    
                                                                             
         enum { 
-            fieldUSED        = 1,    // tells whether cluster is used on a track
-            fieldEND         = 3,    // identifies controller, 0, 1, 2=mixed
-            fieldUSEDCR      = 1,    // cluster used on a CR track
-            fieldREMOVED     = 1,    // cluster removed by Ghost Filter
-            fieldGHOST       = 1,    // cluster is marked as a ghost
-            fieldSAMETRACK   = 1,    // This cluster belongs to a track with a 255 or ghost
-            field255         = 1,    // cluster is marked as a ToT==255
-            fieldALONE       = 1,    // cluster is alone in its plane
-            fieldALONEEND    = 1,    // cluster is alone in its readout end
-            fieldDIAGNOSTIC  = 1,    // ghost cluster discovered from TEM diags
-            fieldSAMETRACKD  = 1,    // This cluster from a track with a 255 or a diagnostic ghost
-            fieldPLANEOFFSET = 1,    // to calculate Plane number from Tray/Face (1 for LAT)
-            fieldLAYEROFFSET = 1     // to calculate Layer number from Plane (0 for LAT)
+            fieldUSED        =  1,    // tells whether cluster is used on a track
+            fieldEND         =  3,    // identifies controller, 0, 1, 2=mixed
+            fieldUSEDCR      =  1,    // cluster used on a CR track
+            fieldREMOVED     =  1,    // cluster removed by Ghost Filter
+            fieldGHOST       =  1,    // cluster is marked as a ghost
+            fieldSAMETRACK   =  1,    // This cluster belongs to a track with a 255 or ghost
+            field255         =  1,    // cluster is marked as a ToT==255
+            fieldALONE       =  1,    // cluster is alone in its plane
+            fieldALONEEND    =  1,    // cluster is alone in its readout end
+            fieldDIAGNOSTIC  =  1,    // ghost cluster discovered from TEM diags
+            fieldSAMETRACKD  =  1,    // This cluster from a track with a 255 or a diagnostic ghost
+            fieldTREEBITS    = 15,    // Reserving this 4 bit field for association to trees
+            fieldONAGOODTREE =  1,    // This clusters has been associated to a "good" tree
+            fieldPLANEOFFSET =  1,    // to calculate Plane number from Tray/Face (1 for LAT)
+            fieldLAYEROFFSET =  1     // to calculate Layer number from Plane (0 for LAT)
         };
         enum {    
             shiftUSED        =  0,
@@ -101,6 +103,7 @@ namespace Event {
             shiftALONEEND    = 13,
             shiftDIAGNOSTIC  = 16,
             shiftSAMETRACKD  = 17,
+            shiftTREEBITS    = 20,
             shiftPLANEOFFSET = 29,
             shiftLAYEROFFSET = 30 
         };
@@ -116,6 +119,8 @@ namespace Event {
             maskALONEEND    = fieldALONEEND<<shiftALONEEND,
             maskDIAGNOSTIC  = fieldDIAGNOSTIC<<shiftDIAGNOSTIC,
             maskSAMETRACKD  = fieldSAMETRACKD<<shiftSAMETRACKD,
+            maskTREEBITS    = fieldTREEBITS<<shiftTREEBITS,
+            maskONAGOODTREE = fieldONAGOODTREE<<shiftTREEBITS,
             maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
             maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
             maskZAPGHOSTS   = mask255|maskGHOST|maskSAMETRACK|maskDIAGNOSTIC|maskSAMETRACKD,
