@@ -97,6 +97,7 @@ std::string EventModel::TkrRecon::TkrVecPointInfo            = EventModel::TkrRe
 std::string EventModel::TkrRecon::TkrVecPointsLinkCol        = EventModel::TkrRecon::Event + "/TkrVecPointsLinkCol";
 std::string EventModel::TkrRecon::TkrTrackElementsCol        = EventModel::TkrRecon::Event + "/TkrTrackElementsCol";
 std::string EventModel::TkrRecon::TkrTrackElemsToLinksTab    = EventModel::TkrRecon::Event + "/TkrTrackElemsToLinksTab";
+std::string EventModel::TkrRecon::TkrDiagnosticFlag          = EventModel::TkrRecon::Event + "/TkrDiagnosticFlag";
 
 //reconstructed Cal data
 std::string EventModel::CalRecon::Event               = EventModel::EventHeader + "/CalRecon";

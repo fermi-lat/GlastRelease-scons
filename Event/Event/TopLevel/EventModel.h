@@ -150,6 +150,7 @@ public:
         static std::string TkrVecPointsLinkCol;
         static std::string TkrTrackElementsCol;
         static std::string TkrTrackElemsToLinksTab;
+        static std::string TkrDiagnosticFlag;
     };
 
 
