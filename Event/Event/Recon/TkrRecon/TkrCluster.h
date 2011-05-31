@@ -88,6 +88,7 @@ namespace Event {
             fieldSAMETRACKD  =  1,    // This cluster from a track with a 255 or a diagnostic ghost
             fieldTREEBITS    = 15,    // Reserving this 4 bit field for association to trees
             fieldONAGOODTREE =  1,    // This clusters has been associated to a "good" tree
+            fieldCOMPOSITE   =  1,    // This cluster is a "composite" cluster from tree based tracking
             fieldPLANEOFFSET =  1,    // to calculate Plane number from Tray/Face (1 for LAT)
             fieldLAYEROFFSET =  1     // to calculate Layer number from Plane (0 for LAT)
         };
@@ -104,6 +105,7 @@ namespace Event {
             shiftDIAGNOSTIC  = 16,
             shiftSAMETRACKD  = 17,
             shiftTREEBITS    = 20,
+            shiftCOMPOSITE   = 23,
             shiftPLANEOFFSET = 29,
             shiftLAYEROFFSET = 30 
         };
@@ -121,6 +123,7 @@ namespace Event {
             maskSAMETRACKD  = fieldSAMETRACKD<<shiftSAMETRACKD,
             maskTREEBITS    = fieldTREEBITS<<shiftTREEBITS,
             maskONAGOODTREE = fieldONAGOODTREE<<shiftTREEBITS,
+            maskCOMPOSITE   = fieldCOMPOSITE<<shiftCOMPOSITE,
             maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
             maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
             maskZAPGHOSTS   = mask255|maskGHOST|maskSAMETRACK|maskDIAGNOSTIC|maskSAMETRACKD,
