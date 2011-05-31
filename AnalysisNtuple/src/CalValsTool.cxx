@@ -1142,7 +1142,8 @@ StatusCode CalValsTool::calculate()
     CAL_Num_Xtals_Trunc = float(no_xtals_trunc); 
 
     // No use in continuing if too little energy in CAL
-    if(CAL_EnergyRaw < 5.) return sc;  
+    //if(CAL_EnergyRaw < 5.) return sc;
+    // See JIRA LPATE-48
 
     Point  cal_pos  = calCluster->getPosition();
     Vector cal_dir  = calCluster->getDirection();
