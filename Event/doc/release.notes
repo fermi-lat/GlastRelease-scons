@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-09-00 30-May-2011  lsrea add the TkrDiagnosticFlag object
  Event-14-08-02 26-May-2011  lsrea Rename status bit: MULTKRVTX->WIDEFIRSTCLUSTER
  Event-14-08-00 21-May-2011 HMK requirements patch for CLHEP
  Event-14-08-00 20-May-2011 HMK CLHEP 2.1.0.1 and tagging updates from Tracy
