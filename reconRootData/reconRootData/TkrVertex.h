@@ -31,16 +31,21 @@ using namespace std;
 class TkrVertex : public TObject
 {
 public:
-    /// Status word bits organized like:
-    ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-    ///                                             <Track Topology > <Track composition>
-    enum StatusBits {ONETKRVTX = 0x0001,  //Set if single track vertex
-                     TWOTKRVTX = 0x0002,  //Set if 2 track vertex
-                     MULTKRVTX = 0x0004,  //Set if >2 track vertex
-                     DOCAVTX   = 0x0010,  //Set if vertex location set by DOCA point
-                     FIRSTHIT  = 0x0020,  //Set if two tracks share first hit
-                     STAGVTX   = 0x0040,  //Set if tracks don't start in same plane (staggered)
-                     CROSSTKR  = 0x0080}; //Set if DOCA location lies inside track hits
+    // Status word bits organized like:
+    //        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
+    //                     Ghost                   [Track Topology ] [Track composition]
+    enum StatusBits {
+        ONETKRVTX         = 0x0001,  //Set if single track vertex
+        TWOTKRVTX         = 0x0002,  //Set if 2 track vertex
+        WIDEFIRSTCLUSTER  = 0x0004,  //Set if the first cluster is "too wide"
+        NEUTRALVTX        = 0x0008,  //Set if vertex includes neutral energy vector
+        DOCAVTX           = 0x0010,  //Set if vertex location set by DOCA point
+        FIRSTHIT          = 0x0020,  //Set if two tracks share first hit
+        STAGVTX           = 0x0040,  //Set if tracks don't start in same plane (staggered)
+        CROSSTKR          = 0x0080,  //Set if DOCA location lies inside track hits
+
+        GHOST             = 0x1000   //Set if at least one track in the vertex is a ghost
+    };
     
     TkrVertex();
 
