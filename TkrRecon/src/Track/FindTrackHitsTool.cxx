@@ -334,7 +334,7 @@ StatusCode FindTrackHitsTool::findTrackHits(TkrTrack* track)
     // Loop until no more track hits found or hit of type HITISUNKNOWN is returned  
     // Stop when m_maxGaps or m_maxConsecutiveGaps is exceeded.
 
-    while(TkrTrackHit* trackHit = findNextHit(lastHit, false))
+     while(TkrTrackHit* trackHit = findNextHit(lastHit, false))
     {
         // Could be a hit of type HITISUNKNOWN... terminate for now
         if(((trackHit->getStatusBits())&TkrTrackHit::HITISUNKNOWN)!=0) {
@@ -878,6 +878,9 @@ TkrCluster* FindTrackHitsTool::findNearestCluster(int plane, TkrTrackParams* par
     Point center(x0,y0,z0);
     Point nearHit(0.,0.,z0);
 
+    // Mask for checking on cluster status
+    unsigned int clusMask = Event::TkrCluster::maskUSED | Event::TkrCluster::maskONAGOODTREE;
+
     // Must be inside Glast
     double min_dist = -1.;
     // no longer used...
@@ -899,7 +902,8 @@ TkrCluster* FindTrackHitsTool::findNearestCluster(int plane, TkrTrackParams* par
         if (deltaStrip < max_dist)
         {
             // Is this cluster already in use?
-            if (cluster->hitFlagged()) continue; // look for another one
+//            if (cluster->hitFlagged()) continue; // look for another one
+            if (cluster->isSet(clusMask)) continue; // look for another one
         } 
         else break;  // outside region, cluster search has failed 
 
