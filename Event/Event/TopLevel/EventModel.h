@@ -132,6 +132,7 @@ public:
         static std::string TkrTrackCol;
         static std::string TkrCRTrackCol;
         static std::string TkrTrackHitCol;
+        static std::string TkrTrackMap;
         static std::string TkrVertexCol;
         static std::string TkrDiagnostics;
         static std::string TkrEventParams;

@@ -192,6 +192,25 @@ typedef ObjectVector<TkrTrack>      TkrTrackCol;
 typedef TkrTrackCol::iterator       TkrTrackColPtr;
 typedef TkrTrackCol::const_iterator TkrTrackColConPtr;
 
+static const CLID& CLID_TkrTrackMap = InterfaceID("TkrTrackMap",  1, 0);
+
+// typedef for overall container to reference everything in TDS
+// This defines a map, keys are the strings in EventModel.h which define the track collection
+// Currently: Event::TkrRecon::TkrTrackCol
+//            Event::TkrRecon::TkrCRTrackCol
+// The data are pointers to the track collections which are independently stored in the TDS
+// This is defined to be a DataObject in order to store in the TDS
+class TkrTrackMap : virtual public std::map<std::string, TkrTrackCol*>, virtual public DataObject
+{
+public:
+    TkrTrackMap() : DataObject() {clear();}
+    virtual ~TkrTrackMap() {};
+
+    /// Retrieve reference to class definition structure
+    virtual const CLID& clID() const  { return TkrTrackMap::classID(); }
+    static const CLID& classID() { return CLID_TkrTrackMap; }
+};
+
 }; //Namespace
 
 #endif
