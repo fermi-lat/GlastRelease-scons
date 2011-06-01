@@ -294,7 +294,7 @@ StatusCode reconRootWriterAlg::writeTkrRecon() {
     TkrRecon* recon = m_reconEvt->getTkrRecon();
     if (!recon) return StatusCode::FAILURE;
     recon->initialize();
-    
+
     SmartDataPtr<Event::TkrClusterCol> clusterColTds(eventSvc(), EventModel::TkrRecon::TkrClusterCol);
     if (clusterColTds) fillTkrClusterCol(recon, clusterColTds);
 
@@ -457,8 +457,12 @@ void reconRootWriterAlg::fillFitTracks(TkrRecon* recon, Event::TkrTrackCol* trac
         TRef ref = trackRoot;
         m_common.m_tkrTrackMap[trackTds] = ref;
 
-        // Ok, now add the track to the list!
-        recon->addTrack(trackRoot);
+        // Ok, now add the track to the right collection!
+        if((trackRoot->getStatusBits()&Event::TkrTrack::COSMICRAY)==0) {
+            recon->addTrack(trackRoot);
+        } else {
+            recon->addCRTrack(trackRoot);
+        }
     }
     
     return;
