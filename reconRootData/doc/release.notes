@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-26-07 01-Jun-2011 kadrlica Updated enums for parsing status bits; Added cosmic-ray track collection
  reconRootData-09-26-06 18-Mar-2011  lsrea Updates for CR track col
  reconRootData-09-26-05 21-Feb-2011 hmk    Patch unit test and CalClassParams
  reconRootData-09-26-04 01-Feb-2011 hmk      Retain old data members in CalCluster to
