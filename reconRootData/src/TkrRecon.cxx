@@ -10,6 +10,7 @@ ClassImp(TkrRecon)
 TkrRecon::TkrRecon() {
     m_clusterCol  = 0;
     m_trackCol    = 0;
+    m_crTrackCol  = 0;
     m_vertexCol   = 0;
     m_diagnostics = 0;
     m_truncationDataCol = 0;
@@ -21,6 +22,8 @@ TkrRecon::~TkrRecon() {
     m_clusterCol = 0;
     if (m_trackCol) delete m_trackCol;
     m_trackCol = 0;
+    if (m_crTrackCol) delete m_crTrackCol;
+    m_crTrackCol = 0;
     if (m_vertexCol) delete m_vertexCol;
     m_vertexCol = 0;
     if (m_truncationDataCol) delete m_truncationDataCol;
@@ -32,6 +35,7 @@ TkrRecon::~TkrRecon() {
 void TkrRecon::initialize() {
     if (!m_clusterCol)        m_clusterCol        = new TObjArray();
     if (!m_trackCol)          m_trackCol          = new TObjArray();
+    if (!m_crTrackCol)        m_crTrackCol        = new TObjArray();
     if (!m_vertexCol)         m_vertexCol         = new TObjArray();
     if (!m_truncationDataCol) m_truncationDataCol = new TObjArray();
 }
@@ -49,6 +53,7 @@ void TkrRecon::Print(Option_t *option) const {
     using namespace std;
     cout << "Number of TkrClusters: " << m_clusterCol->GetEntries() << endl;
     cout << "Number of Tracks: " << m_trackCol->GetEntries() << endl;
+    cout << "Number of Cosmic-ray Tracks: " << m_crTrackCol->GetEntries() << endl;
     cout << "Number of Vertices: " << m_vertexCol->GetEntries() << endl;
     if(m_truncationDataCol)
       cout << "Number of TruncationData: " << m_truncationDataCol->GetEntries() << endl;
@@ -106,7 +111,6 @@ void TkrRecon::Fake( Int_t ievent, Float_t randNum ) {
     TkrDiagnostics * diag = new TkrDiagnostics ;
     diag->Fake(ievent,ivertex,randNum) ;
     addDiagnostics(diag) ;
-
 }
 
 #define COMPARE_TOBJ_ARRAY_IN_RANGE(T,m) rootdatautil::TObjArrayCompareInRange<T>(m,ref.m)
@@ -117,6 +121,7 @@ Bool_t TkrRecon::CompareInRange( TkrRecon & ref, const std::string & name ) {
 
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrCluster,getClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTrack,getTrackCol()) && result ;
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTrack,getCRTrackCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrVertex,getVertexCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(TkrTruncationData,getTruncationDataCol()) && result ;
     result = rootdatautil::CompareInRange(*getDiagnostics(),*ref.getDiagnostics(),"Diagnostics") && result ;
