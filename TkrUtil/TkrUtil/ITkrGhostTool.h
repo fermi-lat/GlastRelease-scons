@@ -38,6 +38,7 @@ public:
     virtual StatusCode flagEarlyHits(Event::TkrClusterCol* col=0) = 0;
     virtual StatusCode flagEarlyTracks() = 0;
     virtual StatusCode flagEarlyVertices() = 0;
+    virtual StatusCode flagEarlyCalClusters() = 0;
 
 };
 
