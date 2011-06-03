@@ -258,7 +258,8 @@ CalClusterNBClassifyTool::CalClusterNBClassifyTool(const std::string & type,
 { 
     declareInterface<ICalClassifyTool>(this) ;
 
-    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH)/test_NBC.xml" );
+    
+    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH)/xml_cluclass_AllPeriodics_CalTwrEdge.xml" );
 
     return;
 }
@@ -358,8 +359,32 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
     if (varName == "CalTransRms") {
         return calCluster->getMomParams().getTransRms();
     }
-    else if (varName == "CalLRmsAsym") {
+    else if (varName == "CalLongRmsAsym") {
         return calCluster->getMomParams().getLongRmsAsym();
+    }
+    else if (varName == "CalCoreEneFrac") {
+        return calCluster->getMomParams().getCoreEnergyFrac();
+    }
+    else if (varName == "CalMomNumCoreXtals") {
+        return calCluster->getMomParams().getNumCoreXtals();
+    }
+    else if (varName == "XtalEneRms") {
+      double sumOfWeights = calCluster->getMomParams().getEnergy();
+      if (sumOfWeights > 0)
+        return (calCluster->getXtalsParams().getXtalEneRms())/sumOfWeights;
+      else
+	return -1;
+    }
+    else if (varName == "CalXtalEneSkewness") {
+        return calCluster->getXtalsParams().getXtalEneSkewness();
+    }
+    else if (varName == "CalMstAveEdgeLen") {
+        return calCluster->getMSTreeParams().getMeanEdgeLength();
+    }
+    else if (varName == "dEdxperLength") {
+      double MomdEdxAve  = calCluster->getMomParams().getdEdxAverage();
+      double MomFullLenght = calCluster->getMomParams().getFullLength();
+      return log10(MomdEdxAve/MomFullLenght);     
     }
     else if (varName == "MomentRatio") {
         double transRms = calCluster->getMomParams().getTransRms();
@@ -379,7 +404,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
             return -1.0;
     }
     else {
-        std::cout << "Unknown variable " << varName << ". Abort." << std::endl;
+        std::cout << "Unknown variable! NBC will not work!" << varName << ". Abort." << std::endl;
         return -1.0;
     }
 }
