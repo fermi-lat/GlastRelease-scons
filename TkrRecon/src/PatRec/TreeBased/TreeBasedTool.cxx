@@ -215,6 +215,7 @@ StatusCode TreeBasedTool::findTracks()
     //Register these objects in the TDS
     //sc = m_dataSvc->registerObject(EventModel::TkrRecon::TkrTrackCol,    tdsTracks);
 
+//    SmartDataPtr<Event::TkrTrackCol> tdsTracks(m_dataSvc, EventModel::TkrRecon::TkrTrackCol);
     SmartDataPtr<Event::TkrTrackMap> tdsTrackMap(m_dataSvc, EventModel::TkrRecon::TkrTrackMap);
 
     // We are not meant to be able to get here without a track collection in the TDS
