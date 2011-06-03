@@ -426,7 +426,7 @@ void FT1worker::evaluate()
         glastDir= Hep3Vector(Tkr1XDir, Tkr1YDir, Tkr1ZDir);
         
     // if we have a tracker direction to project, do it now
-    if(glastDir != 0) {
+    if(glastDir.mag2() != 0) {
         // instrument coords
         m_ft1convlayer   = Tkr1FirstLayer;
 
