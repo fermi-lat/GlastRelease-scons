@@ -446,7 +446,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
                                    momCentroid, I_3_3, momAxis, I_3_3,
                                    numIterations, numCoreXtals, numXtals,
                                    transRms, longRms, longRmsAsym, longSkewness,
-                                   coreEnergyFrac, fullLength, -1.);
+                                   coreEnergyFrac, fullLength, -1., -1.);
     cluster->setMomParams(momParams);
 
     // Set the relevant status bit and we're done!
