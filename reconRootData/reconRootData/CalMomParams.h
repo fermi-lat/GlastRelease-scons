@@ -32,7 +32,8 @@ class CalMomParams : public CalParams
       Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
       Int_t numIterations, Int_t numCoreXtals, Int_t numXtals,
       Double_t transRms, Double_t longRms, Double_t longRmsAsym, Double_t longSkewness,
-      Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread ) ;
+      Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread,
+      Double_t minGhostDoca ) ;
   
   /// init
   void init
@@ -45,7 +46,8 @@ class CalMomParams : public CalParams
       Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
       Int_t numIterations, Int_t numCoreXtals, Int_t numXtals,
       Double_t transRms, Double_t longRms, Double_t longRmsAsym, Double_t longSkewness,
-      Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread ) ;
+      Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread,
+      Double_t minGhostDoca) ;
   
   virtual ~CalMomParams() {}
   
@@ -60,6 +62,7 @@ class CalMomParams : public CalParams
   inline const Double_t getCoreEnergyFrac() const { return m_coreEnergyFrac; }
   inline const Double_t getFullLength()     const { return m_fullLength; }
   inline const Double_t getdEdxSpread()     const { return m_dEdxSpread; }
+  inline const Double_t getMinGhostDoca()   const { return m_minGhostDoca; }
   
   Double_t getElongation() const;
   Double_t getdEdxAverage() const;
@@ -81,6 +84,7 @@ class CalMomParams : public CalParams
   Double_t m_coreEnergyFrac;
   Double_t m_fullLength;
   Double_t m_dEdxSpread;
+  Double_t m_minGhostDoca;
   
   ClassDef(CalMomParams,2)
 

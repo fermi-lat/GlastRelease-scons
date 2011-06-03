@@ -17,7 +17,8 @@ void convert( const Event::CalMomParams & tdsMomParams, CalMomParams & rootMomPa
         tdsMomParams.getNumXtals(),
         tdsMomParams.getTransRms(),tdsMomParams.getLongRms(),tdsMomParams.getLongRmsAsym(),
         tdsMomParams.getLongSkewness(),tdsMomParams.getCoreEnergyFrac(),
-        tdsMomParams.getFullLength(),tdsMomParams.getdEdxSpread() ) ;
+        tdsMomParams.getFullLength(),tdsMomParams.getdEdxSpread(),
+        tdsMomParams.getMinGhostDoca() ) ;
  }
  
 void convert( const CalMomParams & rootMomParams, Event::CalMomParams & tdsMomParams )
@@ -36,7 +37,8 @@ void convert( const CalMomParams & rootMomParams, Event::CalMomParams & tdsMomPa
         rootMomParams.getNumXtals(),
         rootMomParams.getTransRms(),rootMomParams.getLongRms(),rootMomParams.getLongRmsAsym(),
         rootMomParams.getLongSkewness(),rootMomParams.getCoreEnergyFrac(),
-        rootMomParams.getFullLength(),rootMomParams.getdEdxSpread() ) ;
+        rootMomParams.getFullLength(),rootMomParams.getdEdxSpread(),
+        rootMomParams.getMinGhostDoca() ) ;
 }
 
 }

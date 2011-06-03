@@ -43,7 +43,8 @@ namespace Event { //Namespace Event
                  const Vector& axis, const CLHEP::HepMatrix& axisErr,
                  int numIterations, int numCoreXtals, int numXtals,
                  double transRms, double longRms, double longRmsAsym, double longSkewness,
-                 double coreEnergyFrac, double fullLength, double dEdxSpread);
+                 double coreEnergyFrac, double fullLength, double dEdxSpread,
+		 double minGhostDoca);
 
     /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
     CalMomParams(double energy, double eneError,
@@ -55,7 +56,8 @@ namespace Event { //Namespace Event
                  double axsdyy, double axsdyz, double axsdzz,
                  int numIterations, int numCoreXtals, int numXtals,
                  double transRms, double longRms, double longRmsAsym, double longSkewness,
-                 double coreEnergyFrac, double fullLength, double dEdxSpread);
+                 double coreEnergyFrac, double fullLength, double dEdxSpread,
+		 double minGhostDoca);
 
     /// Convenience constructor to be used to replace an old CalParams object directly
     /// (i.e. the specific CalMomParams members are automagically initialized).
@@ -100,6 +102,7 @@ namespace Event { //Namespace Event
     inline double getCoreEnergyFrac()   const { return m_coreEnergyFrac; }
     inline double getFullLength()       const { return m_fullLength; }
     inline double getdEdxSpread()       const { return m_dEdxSpread; }
+    inline double getMinGhostDoca()     const { return m_minGhostDoca; }
 
     /// Return the ratio between the tranverse and the longitudinal RMS values.
     double getElongation() const;
@@ -117,6 +120,7 @@ namespace Event { //Namespace Event
     inline void setFullLength(double val)     { m_fullLength = val; }
     inline void setCoreEnergyFrac(double val) { m_coreEnergyFrac = val; }
     inline void setdEdxSpread (double val)    { m_dEdxSpread = val; }
+    inline void setMinGhostDoca (double val)  { m_minGhostDoca = val; }
 
     /// Std output facility.
     std::ostream& fillStream(std::ostream& s) const;
@@ -151,6 +155,9 @@ namespace Event { //Namespace Event
     /// Fractional spread of the energy loss dE/dx along the cluster axis
     /// (not implemented, yet).
     double m_dEdxSpread;
+    /// Minimum of the DOCAs between the cluster and the TKR ghost tracks.
+    /// If no ghost tracks, default = -1.
+    double m_minGhostDoca;
   };
 
 

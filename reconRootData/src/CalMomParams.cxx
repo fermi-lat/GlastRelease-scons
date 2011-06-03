@@ -24,14 +24,16 @@ CalMomParams::CalMomParams
   double axsdxx, double axsdxy, double axsdxz, double axsdyy, double axsdyz, double axsdzz,
   Int_t numIterations, Int_t numCoreXtals, Int_t numXtals,
   Double_t transRms, Double_t longRms, Double_t longRmsAsym, Double_t longSkewness,
-  Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread )
+  Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread, 
+  Double_t minGhostDoca )
 {
     init
     ( energy,eneError,
       centroid,cntdxx,cntdxy,cntdxz,cntdyy,cntdyz,cntdzz,
       axis,axsdxx,axsdxy,axsdxz,axsdyy,axsdyz,axsdzz,
       numIterations,numCoreXtals,numXtals,
-      transRms,longRms,longRmsAsym,longSkewness,coreEnergyFrac,fullLength,dEdxSpread ) ;
+      transRms,longRms,longRmsAsym,longSkewness,coreEnergyFrac,fullLength,dEdxSpread,
+      minGhostDoca) ;
 }
 
 void CalMomParams::Clear( Option_t * )
@@ -41,7 +43,7 @@ void CalMomParams::Clear( Option_t * )
       TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
       TVector3(0.,0.,0.),0.,0.,0.,0.,0.,0.,
       0,0,0,
-      0.,0.,0.,0.,0.,0.,0.) ;
+      0.,0.,0.,0.,0.,0.,0.,-1.) ;
 }
 
 void CalMomParams::init
@@ -54,7 +56,8 @@ void CalMomParams::init
   Double_t axsdyy, Double_t axsdyz, Double_t axsdzz,
   Int_t numIterations, Int_t numCoreXtals, Int_t numXtals,
   Double_t transRms, Double_t longRms, Double_t longRmsAsym, Double_t longSkewness,
-  Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread )
+  Double_t coreEnergyFrac, Double_t fullLength, Double_t dEdxSpread,
+  Double_t minGhostDoca)
 {
     setEnergy(energy);
     setEnergyErr(eneError);
@@ -82,6 +85,7 @@ void CalMomParams::init
     m_coreEnergyFrac = coreEnergyFrac;
     m_fullLength = fullLength;
     m_dEdxSpread = dEdxSpread;
+    m_minGhostDoca = minGhostDoca;
 }
 
 Double_t CalMomParams::getElongation() const
@@ -116,7 +120,8 @@ void CalMomParams::Print( Option_t * ) const
     "Elongation = " << getElongation() << "\n" <<
     "Core energy fraction = " << getCoreEnergyFrac() << "\n" <<
     "Cluster full length = " << getFullLength() << " X0\n" <<
-    "Average dE/dx = " << getdEdxAverage() << " MeV/X0 (+- " << getdEdxSpread() << ")" <<
+    "Average dE/dx = " << getdEdxAverage() << " MeV/X0 (+- " << getdEdxSpread() << ")\n" <<
+    "Minimum DOCA to Ghost Track = " << getMinGhostDoca() << " mm" <<
     std::endl;
 }
 
@@ -128,7 +133,7 @@ void CalMomParams::Fake( Int_t /* ievent */, UInt_t /* rank */, Float_t /* randN
       TVector3(3.,4.,5.),6.,7.,8.,9.,10.,11.,
       TVector3(12.,13.,14.),15.,16.,17.,18.,19.,20.,
       21,21,21,
-      22.,23.,24.,25.,26.,27.,28.) ;
+      22.,23.,24.,25.,26.,27.,28.,29.) ;
  }
 
 Bool_t CalMomParams::CompareInRange( const CalMomParams & mp, const std::string & name ) const {
@@ -159,6 +164,8 @@ Bool_t CalMomParams::CompareInRange( const CalMomParams & mp, const std::string 
                                         "Full cluster length") && result ;
   result = rootdatautil::CompareInRange(getdEdxSpread(),mp.getdEdxSpread(),
                                         "Spread in dE/dx along the cluster") && result ;
+  result = rootdatautil::CompareInRange(getMinGhostDoca(),mp.getMinGhostDoca(),
+                                        "Min. DOCA of cluster and a ghost track") && result ;
   
   if (!result) {
     if ( name == "" ) {

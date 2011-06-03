@@ -13,7 +13,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
                                   int numIterations, int numCoreXtals, int numXtals,
                                   double transRms, double longRms, double longRmsAsym,
                                   double longSkewness, double coreEnergyFrac,
-                                  double fullLength, double dEdxSpread) :
+                                  double fullLength, double dEdxSpread, double minGhostDoca) :
   CalParams(energy, eneError, centroid, centroidErr, axis, axisErr),
   m_numIterations(numIterations),
   m_numCoreXtals(numCoreXtals),
@@ -24,7 +24,8 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
   m_longSkewness(longSkewness),
   m_coreEnergyFrac(coreEnergyFrac),
   m_fullLength(fullLength),
-  m_dEdxSpread(dEdxSpread)
+  m_dEdxSpread(dEdxSpread),
+  m_minGhostDoca(minGhostDoca)
 {
   // Nothing to do, here.
 }
@@ -39,7 +40,7 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
                                   int numIterations, int numCoreXtals, int numXtals,
                                   double transRms, double longRms, double longRmsAsym,
                                   double longSkewness, double coreEnergyFrac,
-                                  double fullLength, double dEdxSpread) :
+                                  double fullLength, double dEdxSpread, double minGhostDoca) :
   CalParams(energy, eneError, xCntrd, yCntrd, zCntrd, cntdxx, cntdxy, cntdxz,
             cntdyy, cntdyz, cntdzz, xAxis, yAxis, zAxis, axsdxx, axsdxy, axsdxz,
             axsdyy, axsdyz, axsdzz),
@@ -52,7 +53,8 @@ Event::CalMomParams::CalMomParams(double energy, double eneError,
   m_longSkewness(longSkewness),
   m_coreEnergyFrac(coreEnergyFrac),
   m_fullLength(fullLength),
-  m_dEdxSpread(dEdxSpread)
+  m_dEdxSpread(dEdxSpread),
+  m_minGhostDoca(minGhostDoca)
 {
   // Nothing to do, here.
 }
@@ -137,6 +139,7 @@ void Event::CalMomParams::clearMomParams()
   m_coreEnergyFrac = 0.;
   m_fullLength     = 0.;
   m_dEdxSpread     = 0.;
+  m_minGhostDoca   = -1.;
 }
 
 double Event::CalMomParams::getElongation() const
@@ -172,7 +175,8 @@ std::ostream& Event::CalMomParams::fillStream(std::ostream& s) const
     "Elongation = " << getElongation() << "\n" <<
     "Core energy fraction = " << getCoreEnergyFrac() << "\n" <<
     "Cluster full length = " << getFullLength() << " X0\n" <<
-    "Average dE/dx = " << getdEdxAverage() << " MeV/X0 (+- " << getdEdxSpread() << ")";  
+    "Average dE/dx = " << getdEdxAverage() << " MeV/X0 (+- " << getdEdxSpread() << ")\n" <<
+    "Minimum DOCA to Ghost Track = " << getMinGhostDoca() << " mm";
 
   return s; 
 }
