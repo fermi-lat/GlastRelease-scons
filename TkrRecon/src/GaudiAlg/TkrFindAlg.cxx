@@ -285,9 +285,10 @@ StatusCode TkrFindAlg::execute()
 
         findCRAlgTool->setProperty("PatrecMode", "CosmicRay");
         sc = m_CRFindTool->findTracks();
-
+        
         if(m_ghostTool && m_CRGhosts) {
             sc = m_ghostTool->flagEarlyTracks();
+            sc = m_ghostTool->flagEarlyCalClusters();
         }
     }
     
