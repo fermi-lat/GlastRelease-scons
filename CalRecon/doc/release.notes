@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-14-07 04-Jun-2011 kadrlica Added a member variable for storing the ghost DOCA in CalMomParams
  CalRecon-06-14-06 03-Jun-2011  pesce Modifications to CalClusterNBCClassifyTool and new xml file for cluster classification.
  CalRecon-06-14-05 20-May-2011 hmk      CLHEP 2.1.0.1
  CalRecon-06-14-04 21-Feb-2011 lbaldini New default values for the MST clustering parameters.
