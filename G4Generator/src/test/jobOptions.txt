@@ -54,7 +54,7 @@ MessageSvc.OutputLevel      = 2;
 //FluxAlg.source_name="muon_pencil";
 //FluxAlg.source_name="muon_patch";
 FluxAlg.source_name="gamma_test";
-//FluxAlg.source_name="muon_pencil";
+//FluxAlg.source_name="C_test";
 
 // do you want trajectories in the TDS? (default is 0)
 G4Generator.saveTrajectories = 1;
@@ -65,7 +65,10 @@ G4Generator.mcTreeMode = "pruneCal";
 // do you want the full or only the em physics? (default is full)
 
 //G4Generator.physics_choice = "LowEnergy";
-G4Generator.physics_choice = "GLAST";
+//G4Generator.physics_choice = "GLAST";
+G4Generator.physics_choice = "QGSP_BERT";
+//G4Generator.physics_choice = "QGSP_INCL_ABLA";
+//G4Generator.physics_choice = "LHEP";
 G4Generator.defaultCutValue= 0.7;	
 // Change from "store" to "build" since no one is truly interested
 // in storing

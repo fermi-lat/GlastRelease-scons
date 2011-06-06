@@ -47,19 +47,40 @@
 
 // others
 
-#include "G4HadronSim/HadronPhysicsLHEP.hh"
-#include "G4HadronSim/HadronPhysicsLHEP_BIC.hh"
-#include "G4HadronSim/HadronPhysicsLHEP_BERT.hh"
-#include "G4HadronSim/HadronPhysicsQGSP.hh"
-#include "G4HadronSim/HadronPhysicsQGSP_BIC.hh"
-#include "G4HadronSim/HadronPhysicsQGSP_BERT.hh"
-#include "G4HadronSim/HadronPhysicsQGSC.hh"
-#include "G4HadronSim/G4EmStandardPhysics.hh"
-#include "G4HadronSim/G4EmExtraPhysics.hh"
-#include "G4HadronSim/G4EmLowEnergyPhysics.hh"
-#include "G4HadronSim/G4DecayPhysics.hh"
-#include "G4HadronSim/G4IonPhysics.hh"
+//#include "G4HadronSim/HadronPhysicsLHEP.hh"
+//#include "G4HadronSim/HadronPhysicsLHEP_BIC.hh"
+//#include "G4HadronSim/HadronPhysicsLHEP_BERT.hh"
+//#include "G4HadronSim/HadronPhysicsQGSP.hh"
+//#include "G4HadronSim/HadronPhysicsQGSP_BIC.hh"
+//#include "G4HadronSim/HadronPhysicsQGSP_BERT.hh"
+//#include "G4HadronSim/HadronPhysicsQGSC.hh"
+//#include "G4HadronSim/G4EmStandardPhysics.hh"
+//#include "G4HadronSim/G4EmExtraPhysics.hh"
+//#include "G4HadronSim/G4EmLowEnergyPhysics.hh"
+//#include "G4HadronSim/G4DecayPhysics.hh"
+//#include "G4HadronSim/G4IonPhysics.hh"
+
 #include "EpaxIonPhysics.h"
+
+#include "HadronPhysicsLHEP.hh"
+#include "HadronPhysicsQGSP.hh"
+#include "HadronPhysicsQGSP_BIC.hh"
+#include "HadronPhysicsQGSP_BERT.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4EmLivermorePhysics.hh"
+#include "G4DecayPhysics.hh"
+#include "G4IonPhysics.hh"
+
+
+// new 
+
+#include "G4QStoppingPhysics.hh" 
+#include "G4HadronElasticPhysicsLHEP.hh"
+#include "G4HadronElasticPhysics.hh"
+#include "G4NeutronTrackingCut.hh"
+#include "G4IonBinaryCascadePhysics.hh"
+
 
 
 #include <cstdlib>
@@ -161,33 +182,38 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
    }
  if (m_physicsChoice=="LowEnergy")
    {
-     G4int ver=1;
+     G4int ver=0;
   
      // EM Physics
      
-     RegisterPhysics( new G4EmLowEnergyPhysics("lowEnergy EM", ver, msFactory, eLossFactory));
+     //     RegisterPhysics( new G4EmLowEnergyPhysics("lowEnergy EM", ver, msFactory, eLossFactory));
+     
+     RegisterPhysics( new G4EmLivermorePhysics(ver));
      
      // Decay Physics - i.e. decay
      
-     RegisterPhysics( new G4DecayPhysics("decay",ver) );
+     //     RegisterPhysics( new G4DecayPhysics("decay",ver) );
+
+     RegisterPhysics( new G4DecayPhysics("decay") );
      
      // Ion Physics
      
      RegisterPhysics( new G4IonPhysics("ion")); // to be updated
-
      
-     RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron")); // to be updated
+     //     RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron")); // to be updated
+     RegisterPhysics(  new HadronPhysicsLHEP("hadron")); // to be updated
  
    }
  if (m_physicsChoice!="GLAST"&&m_physicsChoice!="LC"&&m_physicsChoice!="Space"&&m_physicsChoice!="LowEnergy") 
    {
 
-     G4int ver=1;
-     if (m_physicsChoice=="QGSP_BERT_LPM") ver=2;
+     G4int ver=0;
   
      // EM Physics
      
-     RegisterPhysics( new G4EmStandardPhysics("standard EM", ver, msFactory, eLossFactory));
+     //     RegisterPhysics( new G4EmStandardPhysics("standard EM", ver, msFactory, eLossFactory));
+
+     RegisterPhysics( new G4EmStandardPhysics(ver));
      
      // Synchroton Radiation & GN Physics
   
@@ -195,40 +221,103 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
 
      // Decay Physics - i.e. decay
      
-     RegisterPhysics( new G4DecayPhysics("decay",ver) );
+     //     RegisterPhysics( new G4DecayPhysics("decay",ver) );
+     RegisterPhysics( new G4DecayPhysics("decay") );
      
      // Ion Physics
-     //RegisterPhysics( new G4IonPhysics("ion"));
+    
+     //     RegisterPhysics( new G4IonPhysics("ion"));
 
      // Full Ion Physics
      
-     RegisterPhysics( new EpaxIonPhysics("ion", m_physicsChoice, msFactory));
+     //     RegisterPhysics( new EpaxIonPhysics("ion", m_physicsChoice, msFactory));
 
+
+     // Neutrons 
+
+     RegisterPhysics( new G4NeutronTrackingCut(ver) );
+     
+    
 
      if (m_physicsChoice=="LHEP")
-     // Hadron Physics
-       RegisterPhysics(  new HadronPhysicsLHEP("hadron"));
+       {
+	 // Hadron Physics
 
-     if (m_physicsChoice=="LHEP_BIC")
-       RegisterPhysics(  new HadronPhysicsLHEP_BIC("hadron"));
+	 RegisterPhysics(  new HadronPhysicsLHEP("hadron"));
+	 
+	 // Hadron Elastic Phys
 
-     if (m_physicsChoice=="LHEP_BERT")
-       RegisterPhysics(  new HadronPhysicsLHEP_BERT("hadron"));
+	 RegisterPhysics(  new G4HadronElasticPhysicsLHEP("hadronElast"));
+
+	 //  Ion Physics   
+
+	 RegisterPhysics( new G4IonPhysics("ion"));
+	 
+       }
+
 
      if (m_physicsChoice=="QGSP")
-       RegisterPhysics(  new HadronPhysicsQGSP("hadron"));
+       {
+       
+	 // Hadron Physics
 
+	 RegisterPhysics(  new HadronPhysicsQGSP("hadron"));
+	 
+	 // Hadron Elastic Phys
+
+	 RegisterPhysics(  new G4HadronElasticPhysics("hadronElast"));
+
+	 // Stopping Physics
+
+	 RegisterPhysics( new G4QStoppingPhysics("stopping"));
+
+	 //  Ion Physics   
+
+	 RegisterPhysics( new G4IonPhysics("ion"));
+
+       }
+     
      if (m_physicsChoice=="QGSP_BERT")
-       RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron"));
+       {
 
-     if (m_physicsChoice=="QGSP_BERT_LPM")
-       RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron"));
+	 RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron"));
+	 
+	 // Hadron Elastic Phys
+
+	 RegisterPhysics(  new G4HadronElasticPhysics("hadronElast"));
+
+	 // Stopping Physics
+
+	 RegisterPhysics( new G4QStoppingPhysics("stopping"));
+
+
+	 //  Ion Physics   
+
+	 RegisterPhysics( new G4IonPhysics("ion"));
+       }
 
      if (m_physicsChoice=="QGSP_BIC")
-       RegisterPhysics(  new HadronPhysicsQGSP_BIC("hadron"));
+       {
 
-     if ( m_physicsChoice == "QGSC" )
-         RegisterPhysics(new HadronPhysicsQGSC("hadron"));
+	 RegisterPhysics(  new HadronPhysicsQGSP_BIC("hadron"));
+	 
+	 // Hadron Elastic Phys
+
+	 RegisterPhysics(  new G4HadronElasticPhysics("hadronElast"));
+
+	 // Stopping Physics
+
+	 RegisterPhysics( new G4QStoppingPhysics("stopping"));
+
+	 //  Ion Physics   
+
+	 RegisterPhysics( new G4IonBinaryCascadePhysics("ion"));
+
+       }
+
+
+     //     if ( m_physicsChoice == "QGSC" )
+     //    RegisterPhysics(new HadronPhysicsQGSC("hadron"));
 
    }
 }

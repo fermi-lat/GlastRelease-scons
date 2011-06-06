@@ -57,6 +57,7 @@
 
 #include "src/G4GenExceptionHandler.h"
 
+#include "G4PhysListFactory.hh"
 
 RunManager* RunManager::fRunManager = 0;
 
@@ -115,9 +116,21 @@ RunManager::RunManager(std::ostream& log,
   G4ProcessTable::GetProcessTable()->CreateMessenger();
   randomNumberStatusDir = "./";
 
+
+  
+
+
   // The user stuff
-  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory, eLossFactory);
+
+  //  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory, eLossFactory);
+  
+  G4PhysListFactory* myFactory = new G4PhysListFactory();
+  
+  physicsList = myFactory -> GetReferencePhysList(G4String(physics_choice));
+
   //userPrimaryGeneratorAction = new PrimaryGeneratorAction;
+
+
 
 }
 
