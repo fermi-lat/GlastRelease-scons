@@ -3,6 +3,8 @@
 @verbatim
  * EOH *
 
+ G4Generator-06-00-03 06-Jun-2011 flongo use updated G4 physics lists which
+             should eliminate the need for G4HadronSim
  G4Generator-06-00-02 21-May-2011 hmk    patch requirements to use v9 of G4 
  G4Generator-06-00-01 21-May-2011 hmk    patch requirements to use v9 of G4 
  G4Generator-06-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
