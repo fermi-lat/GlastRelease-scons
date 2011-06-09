@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-09-02 08-Jun-2011 hmk      Add non-const access for CalMomParams
  Event-14-09-01 04-Jun-2011 kadrlica Added a member variable for storing the ghost DOCA in CalMomParams
  Event-14-09-00 30-May-2011  lsrea add the TkrDiagnosticFlag object
  Event-14-08-02 26-May-2011  lsrea Rename status bit: MULTKRVTX->WIDEFIRSTCLUSTER

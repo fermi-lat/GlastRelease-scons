@@ -158,6 +158,7 @@ namespace Event { //Namespace Event
     const CalClassParams& getClassParams()           const { return m_classParams; }
 
     /// Set methods.
+    CalMomParams& getMomParamsRef() { return m_momParams; }
     inline void setProducerName(const std::string & producerName)
       { m_producerName = producerName ; }
     inline void setStatusBits( unsigned int statusBits )   { m_statusBits = statusBits; }
