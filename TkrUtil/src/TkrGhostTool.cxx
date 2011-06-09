@@ -525,7 +525,7 @@ StatusCode TkrGhostTool::flagEarlyTracks()
     //    trackCol(m_dataSvc, EventModel::TkrRecon::TkrTrackCol);
 
     int trackCount = 0;
-    uint itk;
+    unsigned int itk;
     
     //Event::TkrTrackColConPtr tcolIter = trackCol->begin();
     //for(; tcolIter!=trackCol->end(); ++tcolIter,++trackCount) {
@@ -658,7 +658,7 @@ StatusCode TkrGhostTool::flagEarlyCalClusters()
 
     // Get all the tracks from the tracker.
     std::vector<Event::TkrTrack*> trackVec = m_trackVecTool->getTrackVec();
-    uint trackCount, itk;
+    unsigned int trackCount, itk;
     double minDoca;
 
     // Loop over the clusters an find the min DOCA to a ghost track
@@ -682,7 +682,7 @@ StatusCode TkrGhostTool::flagEarlyCalClusters()
         }
         // If minDoca, unchanged set it with an unphysical value
         if (minDoca > 900000) minDoca = -1.;
-        (*cluster)->getMomParams().setMinGhostDoca(minDoca);
+        (*cluster)->getMomParamsRef().setMinGhostDoca(minDoca);
         log << MSG::DEBUG << "Found CalCluster minGhostDoca of: " 
             << minDoca << endreq;
     }
