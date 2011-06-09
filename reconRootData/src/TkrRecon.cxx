@@ -53,7 +53,10 @@ void TkrRecon::Print(Option_t *option) const {
     using namespace std;
     cout << "Number of TkrClusters: " << m_clusterCol->GetEntries() << endl;
     cout << "Number of Tracks: " << m_trackCol->GetEntries() << endl;
-    cout << "Number of Cosmic-ray Tracks: " << m_crTrackCol->GetEntries() << endl;
+    if (m_crTrackCol) 
+        cout << "Number of Cosmic-ray Tracks: " << m_crTrackCol->GetEntries() << endl;
+    else 
+        cout << "No Cosmic-ray Tracks" << std::endl;
     cout << "Number of Vertices: " << m_vertexCol->GetEntries() << endl;
     if(m_truncationDataCol)
       cout << "Number of TruncationData: " << m_truncationDataCol->GetEntries() << endl;

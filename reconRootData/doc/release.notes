@@ -4,6 +4,8 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-26-09 08-Jun-2011 hmk      Increment versions as necessary for
+    new data members and get unit test to succeed
  reconRootData-09-26-08 04-Jun-2011 kadrlica Added a member variable for storing the ghost DOCA in CalMomParams
  reconRootData-09-26-07 01-Jun-2011 kadrlica Updated enums for parsing status bits; Added cosmic-ray track collection
  reconRootData-09-26-06 18-Mar-2011  lsrea Updates for CR track col

@@ -50,7 +50,7 @@ public:
   std::string m_producerName;
   std::map <std::string, Double_t> m_probMap;
   
-  ClassDef(CalClassParams,1)
+  ClassDef(CalClassParams,2)
 } ;
 
 

@@ -77,14 +77,14 @@ private:
     TObjArray *m_clusterCol;
     /// collection of TkrTrack
     TObjArray *m_trackCol;
-    /// ADW: cosmic-ray collection of TkrTrack
-    TObjArray *m_crTrackCol;
     /// collection of TkrVertex
     TObjArray *m_vertexCol;
      /// Diagnostics
     TkrDiagnostics*   m_diagnostics;
     /// collection of TkrTruncationData
     TObjArray *m_truncationDataCol;
+    /// ADW: cosmic-ray collection of TkrTrack
+    TObjArray *m_crTrackCol;
 
 
     static TkrCluster *keepCluster[16384]; //!
@@ -94,7 +94,7 @@ private:
     static Int_t indCluster, indTrack, indVertex; //!        
     //, indTruncationData; 
 
-    ClassDef(TkrRecon,8)
+    ClassDef(TkrRecon,9)
 };
 
 #endif
