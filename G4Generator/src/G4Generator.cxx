@@ -86,7 +86,7 @@ G4Generator::G4Generator(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("defaultCalCutValue", m_defaultCalCutValue=0.1*mm);
 
   // G4 choices 
-  declareProperty("physics_choice", m_physics_choice="GLAST");
+  declareProperty("physics_choice", m_physics_choice="QGSP_BERT");
   declareProperty("physics_tables", m_physics_table="build");
   declareProperty("physics_dir",    m_physics_dir="G4cuts/100micron/");
 
