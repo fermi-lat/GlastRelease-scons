@@ -247,7 +247,7 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
 	 
 	 // Hadron Elastic Phys
 
-	 RegisterPhysics(  new G4HadronElasticPhysicsLHEP("hadronElast"));
+	 RegisterPhysics(  new G4HadronElasticPhysicsLHEP());
 
 	 //  Ion Physics   
 

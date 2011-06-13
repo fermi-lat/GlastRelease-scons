@@ -3,6 +3,8 @@
 @verbatim
  * EOH *
 
+ G4Generator-06-00-05 12-Jun-2011 hmk    Fix typo in #ifdef in TrackingAction
+             and modify register call for G4HadronElasticPhysicsLHEP
  G4Generator-06-00-04 09-Jun-2011 hmk    Make QGSP_BERT the default 
             physics_choice in G4Generator
  G4Generator-06-00-03 06-Jun-2011 flongo use updated G4 physics lists which
