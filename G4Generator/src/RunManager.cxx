@@ -21,7 +21,7 @@
 #include "G4RunManagerKernel.hh"
 
 #include "UIsession.h"
-#include "PhysicsList.h"
+//#include "PhysicsList.h"
 #include "PrimaryGeneratorAction.h"
 #include "TrackingAction.h"
 #include "SteppingAction.h"
