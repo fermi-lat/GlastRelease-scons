@@ -13,6 +13,9 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "OverlayEvent/OverlayEventModel.h"
+#include "OverlayEvent/EventOverlay.h"
+
 #include "IDigiToOverlayTool.h"
 
 #include <vector>
@@ -28,10 +31,10 @@ public:
 
 private:
     /// Type of tool to run
-    std::string         m_type;
+    std::string                      m_type;
 
     /// Tools to use for translation
-    StringArrayProperty m_translateToolNames;
+    StringArrayProperty              m_translateToolNames;
 
     /// Translation tool list
     std::vector<IDigiToOverlayTool*> m_translateTools;
@@ -50,7 +53,7 @@ DigiToOverlayAlg::DigiToOverlayAlg(const std::string& name,
 
     // Build a list of default tool names
     std::vector<std::string> defaultToolNames;
-    defaultToolNames.push_back("EventToOverlayTool");
+    defaultToolNames.push_back("EventToOverlayTool");      // Must be there, must be first
     defaultToolNames.push_back("TkrDigiToOverlayTool");
     defaultToolNames.push_back("CalXtalToOverlayTool");
     defaultToolNames.push_back("AcdHitToOverlayTool");

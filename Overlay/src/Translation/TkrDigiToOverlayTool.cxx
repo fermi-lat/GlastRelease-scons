@@ -11,6 +11,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/DataSvc.h"
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Digi/TkrDigi.h"
@@ -49,8 +50,11 @@ public:
 
 private:
 
-    /// Pointer to the event data service (aka "eventSvc")
-    IDataProviderSvc*   m_edSvc;
+    /// Pointer to the event data service
+    IDataProviderSvc* m_edSvc;
+
+    /// Pointer to the Overlay data service
+    DataSvc*          m_dataSvc;
 };
 
 static ToolFactory<TkrDigiToOverlayTool> s_factory;
@@ -87,6 +91,13 @@ StatusCode TkrDigiToOverlayTool::initialize()
     }
     m_edSvc = dynamic_cast<IDataProviderSvc*>(iService);
 
+    sc = serviceLocator()->service("OverlayDataSvc", iService, true);
+    if ( sc.isFailure() ) {
+        log << MSG::ERROR << "could not find EventDataSvc !" << endreq;
+        return sc;
+    }
+    m_dataSvc = dynamic_cast<DataSvc*>(iService);
+
     return sc;
 }
 
@@ -107,12 +118,12 @@ StatusCode TkrDigiToOverlayTool::translate()
     SmartDataPtr<Event::TkrDigiCol> tkrDigiCol(m_edSvc, EventModel::Digi::TkrDigiCol);
 
     // Create a collection of TkrOverlays and register in the TDS
-    SmartDataPtr<Event::TkrOverlayCol> overlayCol(m_edSvc, OverlayEventModel::Overlay::TkrOverlayCol);
+    SmartDataPtr<Event::TkrOverlayCol> overlayCol(m_dataSvc, m_dataSvc->rootName() + OverlayEventModel::Overlay::TkrOverlayCol);
     if(!overlayCol)
     {
         overlayCol = new Event::TkrOverlayCol();
 
-        status = m_edSvc->registerObject(OverlayEventModel::Overlay::TkrOverlayCol, overlayCol);
+        status = m_dataSvc->registerObject(m_dataSvc->rootName() + OverlayEventModel::Overlay::TkrOverlayCol, overlayCol);
         if( status.isFailure() ) 
         {
             log << MSG::ERROR << "could not register OverlayEventModel::Overlay::TkrOverlayCol" << endreq;

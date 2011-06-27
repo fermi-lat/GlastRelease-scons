@@ -4,8 +4,14 @@
 // $Header$
 
 // Include the Overlay package library
-ApplicationMgr.DLLs += { "Overlay"};
-ApplicationMgr.ExtSvc += {"OverlayInputSvc"};
+ApplicationMgr.DLLs   += { "Overlay"};
+
+// Add the required services to our list
+ApplicationMgr.ExtSvc += { {"OverlayCnvSvc", 
+                            "EvtPersistencySvc/OverlayPersistencySvc" , 
+                            "OverlayDataSvc/OverlayDataSvc" };
+
+OverlayPersistencySvc.CnvServices = { "OverlayCnvSvc" };
 
 // Reset the basic Trigger sequence so we can call TriggerInfoAlg in Digitization
 TriggerTest.Members = {"TriggerAlg", "Count/trigger", "TriRowBitsAlg" };
@@ -31,9 +37,6 @@ Digitization.BranchMembers = {
     "AcdDigiAlg",
     "TriggerInfoAlg"
     };
-    
-// Also modify the CalDigitization sequencer
-//CalDigitization.Members = { "CalDigiAlg", "CalOverlayMergeAlg" };
 
 // Turn off the random noise hit backgrounds in the Tracker
 ToolSvc.GeneralNoiseTool.occupancy = 0.;

@@ -17,6 +17,8 @@ DECLARE_FACTORY_ENTRIES(Overlay) {
     DECLARE_ALGORITHM( DiagDataOverlayMergeAlg );
     DECLARE_ALGORITHM( DigiToOverlayAlg );
     DECLARE_ALGORITHM( SkimOverlayEventsAlg );
+    DECLARE_SERVICE( OverlayCnvSvc );
+    DECLARE_SERVICE( OverlayDataSvc );
     DECLARE_SERVICE( OverlayInputSvc );
     DECLARE_SERVICE( OverlayOutputSvc );
     DECLARE_TOOL( McIlwain_L_Tool );

@@ -9,7 +9,7 @@
 
 class IGlastDetSvc;
 
-extern const long int SICB_StorageType;
+extern const long int EXCEL_StorageType;
 
 /** @class BaseCnv
 * @brief Base class for all GLAST Converters.
@@ -36,7 +36,7 @@ public:
     
     /// Storage type and class ID
     static const unsigned char storageType()      { 
-        return SICB_StorageType; 
+        return EXCEL_StorageType; 
     }
     
     virtual StatusCode initialize();
@@ -58,7 +58,7 @@ public:
     /// Update the references of an already converted object.
     virtual StatusCode updateRepRefs(IOpaqueAddress* pAddress, DataObject* pObject);
 
-    long repSvcType() const { return SICB_StorageType; }
+    long repSvcType() const { return EXCEL_StorageType; }
 };
 
 
