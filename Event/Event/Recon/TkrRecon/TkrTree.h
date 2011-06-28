@@ -52,7 +52,7 @@ public:
             m_secondLeaf(secondLeaf), 
             m_siblingMap(nodeSiblingMap), 
             m_axisParams(axisParams)
-            {TkrTrackVec::clear(); push_back(track);}
+            {TkrTrackVec::clear(); if (track) push_back(track);}
 
     virtual ~TkrTree() 
     {
@@ -77,6 +77,14 @@ public:
     const TkrFilterParams*   getAxisParams() const {return m_axisParams;}
     // Return pointer to the track for this tree
     const TkrTrack*          getBestTrack()  const {return front();}
+
+    // Methods to set specific parameters. 
+    // It is required that the constructor be provided with some info that is unchangeable
+    // This allows setting of the best leaf
+    void setBestLeaf(TkrVecNode* bestLeaf)  {m_bestLeaf = bestLeaf;}
+
+    // This allows setting of the next best leaf
+    void setSecondLeaf(TkrVecNode* scndLeaf) {m_secondLeaf = scndLeaf;}
 
 private:
     // Pointer to the head node in the Tree
