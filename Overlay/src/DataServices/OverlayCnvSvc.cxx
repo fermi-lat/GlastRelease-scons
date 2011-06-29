@@ -80,7 +80,7 @@ private:
     typedef std::map<std::string, std::vector<std::string> > SubPathMap;
 
     typedef std::map<const CLID,  IGlastCnv*>                CLIDToCnvMap;
-    typedef std::map<const CLID,  std::vector<const CLID> >  SubCLIDMap;
+    typedef std::map<const CLID,  std::vector<CLID> >        SubCLIDMap;
 
 
     PathToCnvMap        m_pathToCnvMap;
@@ -90,11 +90,6 @@ private:
 };
 
 #include "GlastSvc/EventSelector/IGlastCnv.h"
-
-//static const InterfaceID IID_IBaseCnv(902, 1 , 0); 
-// RCS Id for identification of object version
-static const char* rcsid = "$Id$";
-
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -229,7 +224,7 @@ StatusCode OverlayCnvSvc::updateServiceState(IOpaqueAddress* pAddress)
         if (clidIter != m_subClidMap.end())
         {
             // Loop over the list of daughter converters and activate them
-            for(std::vector<const CLID>::iterator subIter = clidIter->second.begin(); subIter != clidIter->second.end(); subIter++)
+            for(std::vector<CLID>::iterator subIter = clidIter->second.begin(); subIter != clidIter->second.end(); subIter++)
             {
                 // Now look up the pointer to the converter
                 CLIDToCnvMap::iterator cnvIter  = m_clidToCnvMap.find(*subIter);
@@ -239,8 +234,6 @@ StatusCode OverlayCnvSvc::updateServiceState(IOpaqueAddress* pAddress)
                 {
                     // Avoid self reference, though this should not happen here
                     if (glastCnv->objType() == clID) continue;
-
-                    const CLID& clID2 = glastCnv->objType();
 
                     IOpaqueAddress*   newAddr  = 0;
                     unsigned long     ipars[2] = {0, 0};
