@@ -385,7 +385,7 @@ int TkrVecPointLinksBuilder::buildLinksGivenVecs(TkrVecPointsLinkVecVec&        
                     double siHitDistYx = 0.5 * projectedX + xActiveDistY;
                     double siHitDistYy = 0.5 * projectedY + yActiveDistY;
 
-                    static double nStripsEdgeTol = 1.25;
+                    static double nStripsEdgeTol = 3.0; //1.25;
                     static double edgeTol        = nStripsEdgeTol * m_siStripPitch;             // Set at 1/2 strip
 
                     // Useful to break down
@@ -455,13 +455,13 @@ int TkrVecPointLinksBuilder::buildLinksGivenVecs(TkrVecPointsLinkVecVec&        
                     double hitDeltaY = clusterY ? fabs(layerPtY.y() - clusterY->position().y()) : 100.;
 
                     // Case: in a gap in the X plane, on cluster in the Y plane
-                    if (siHitGapX && clusterY && hitDeltaY < m_siStripPitch * clusterY->size()) 
+                    if (siHitGapX && clusterY && hitDeltaY < 5. * m_siStripPitch * clusterY->size()) 
                     {
                         continue;
                     }
 
                     // Case: in a gap in the Y plane, on cluster in the X plane
-                    if (siHitGapY && clusterX && hitDeltaX < m_siStripPitch * clusterX->size()) 
+                    if (siHitGapY && clusterX && hitDeltaX < 5. * m_siStripPitch * clusterX->size()) 
                     {
                         continue;
                     }
