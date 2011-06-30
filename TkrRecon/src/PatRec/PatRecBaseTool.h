@@ -3,6 +3,7 @@
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 #include "TkrUtil/ITkrQueryClustersTool.h"
+#include "TkrUtil/ITkrReasonsTool.h"
 #include "TkrRecon/PatRec/ITkrFindTrackTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -39,6 +40,9 @@ class PatRecBaseTool : public AlgTool, virtual public ITkrFindTrackTool
 
   /// Query Clusters tool
   ITkrQueryClustersTool* m_clusTool;
+
+  /// Reasons tool
+  ITkrReasonsTool*       m_reasonsTool;
 
 };
 #endif

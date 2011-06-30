@@ -20,6 +20,7 @@
 #include "TkrUtil/ITkrSplitsSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "TkrUtil/ITkrQueryClustersTool.h"
+#include "TkrUtil/ITkrReasonsTool.h"
 
 #include <vector>
 typedef Event::TkrVecPointsLinkPtrVec    TkrVecPointsLinkVec;
@@ -33,6 +34,7 @@ public:
                             ITkrGeometrySvc*           tkrGeom,
                             IGlastDetSvc*              detSvc,
                             ITkrQueryClustersTool*     clusTool,
+                            ITkrReasonsTool*           reasonsTool,
                             bool                       fillInternalMap = false);
 
     ~TkrVecPointLinksBuilder();
@@ -72,7 +74,7 @@ private:
     int pruneNonVerifiedLinks(TkrVecPointsLinkVec& linkVec, Event::TkrVecPointsLinkCol* tkrVecPointsLinkCol);
 
     /// This checks to see if we are in a truncated region
-    bool inTruncatedRegion(const Point& planeHit, double halfWidth);
+    bool inTruncatedRegion(const Point& planeHit, double& truncatedDist);
 
     /// Make a TkrId given position
     idents::TkrId makeTkrId(const Point& planeHit);
@@ -92,6 +94,7 @@ private:
     ITkrGeometrySvc*              m_tkrGeom;
     IGlastDetSvc*                 m_detSvc;
     ITkrQueryClustersTool*        m_clusTool;
+    ITkrReasonsTool*              m_reasonsTool;
 
     // Event axis vector from TkrEventParams
     Vector                        m_eventAxis;

@@ -58,6 +58,12 @@ StatusCode PatRecBaseTool::initialize()
           return fail;
       }
 
+      if ((toolSvc()->retrieveTool("TkrReasonsTool", m_reasonsTool)).isFailure())
+      {
+          log << MSG::ERROR << "Could not find TkrReasonsTool" << endreq;
+          return fail;
+      }
+
   }
   log << MSG::INFO << "PatRecBaseTool successfully initialized" << endreq;
   return sc;

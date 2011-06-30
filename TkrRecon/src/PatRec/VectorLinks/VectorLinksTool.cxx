@@ -196,6 +196,7 @@ StatusCode VectorLinksTool::findTracks()
                                                      m_tkrGeom,
                                                      m_glastDetSvc,
                                                      m_clusTool,
+                                                     m_reasonsTool,
                                                      true);
 
         if (vecPointLinksBuilder.getNumTkrVecPointsLinks() > 1) 
