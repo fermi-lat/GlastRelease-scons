@@ -29,14 +29,21 @@ class TkrVecPointsLink: virtual public ContainedObject
 {
 public:
     
-    enum StatusBits {ASSOCIATED = 0x0001,
-                     FIRSTLINK  = 0x0002,
-                     SKIP1LAYER = 0x0010,
-                     SKIP2LAYER = 0x0020,
-                     SKIP3LAYER = 0x0040,
-                     SKIPNLAYER = 0x0080,
-                     SAMETOWER  = 0x0100,
-                     VERIFIED   = 0x0800};
+    enum StatusBits {ASSOCIATED   = 0x00000001,
+                     FIRSTLINK    = 0x00000002,
+                     SKIP1LAYER   = 0x00000010,
+                     SKIP2LAYER   = 0x00000020,
+                     SKIP3LAYER   = 0x00000040,
+                     SKIPNLAYER   = 0x00000080,
+                     SAMETOWER    = 0x00000100,
+                     VERIFIED     = 0x00000800,
+                     INTERTOWER   = 0x00010000,
+                     WAFERGAP     = 0x00020000,
+                     WAFERGAPPLUS = 0x00040000,
+                     GAPANDCLUS   = 0x00080000,
+                     TRUNCATED    = 0x00100000,
+                     BADSTRIPS    = 0x00080000
+                                         };
 
     enum skipsBits  {SKIPSLAYERS = SKIP1LAYER | SKIP2LAYER | SKIP3LAYER | SKIPNLAYER};
 
@@ -52,23 +59,24 @@ public:
     virtual const CLID& clID()    const   { return TkrVecPointsLink::classID(); }
     static  const CLID& classID()         { return CLID_TkrVecPointsLink; }
 
-    void setUnAssociated()              {m_statusBits      &= ~ASSOCIATED;}
-    void setAssociated()                {m_statusBits      |=  ASSOCIATED;}
-    void setNotFirstLink()              {m_statusBits      &= ~FIRSTLINK;}
-    void setFirstLink()                 {m_statusBits      |=  FIRSTLINK;}
-    void setSameTower()                 {m_statusBits      |=  SAMETOWER;}
-    void setSkip1Layer()                {m_statusBits      |=  SKIP1LAYER;}
-    void setSkip2Layer()                {m_statusBits      |=  SKIP2LAYER;}
-    void setSkip3Layer()                {m_statusBits      |=  SKIP3LAYER;}
-    void setSkipNLayer()                {m_statusBits      |=  SKIPNLAYER;}
-    void setVerified()                  {m_statusBits      |=  VERIFIED;}
-    void setMaxScatAngle(double ang)    {m_maxScatAngle     =  ang;}
-    void setAngleToNextLink(double ang) {m_angleToNextLink  =  ang;}
-    void setDistToNextLink(double dist) {m_distToNextLink   =  dist;}
-    void setRmsAngleSum(double ang)     {m_rmsAngleSum      =  ang;}
-    void setRmsDistSum(double dist)     {m_rmsDistSum       =  dist;}
-    void setNumAnglesInSum(int num)     {m_numAnglesInSum   =  num;}
-    void setNumDistsInSum(int num)      {m_numDistsInSum    =  num;}
+    void setUnAssociated()                {m_statusBits      &= ~ASSOCIATED;}
+    void setAssociated()                  {m_statusBits      |=  ASSOCIATED;}
+    void setNotFirstLink()                {m_statusBits      &= ~FIRSTLINK;}
+    void setFirstLink()                   {m_statusBits      |=  FIRSTLINK;}
+    void setSameTower()                   {m_statusBits      |=  SAMETOWER;}
+    void setSkip1Layer()                  {m_statusBits      |=  SKIP1LAYER;}
+    void setSkip2Layer()                  {m_statusBits      |=  SKIP2LAYER;}
+    void setSkip3Layer()                  {m_statusBits      |=  SKIP3LAYER;}
+    void setSkipNLayer()                  {m_statusBits      |=  SKIPNLAYER;}
+    void setVerified()                    {m_statusBits      |=  VERIFIED;}
+    void updateStatusBits(unsigned bits)  {m_statusBits      |=  bits;}
+    void setMaxScatAngle(double ang)      {m_maxScatAngle     =  ang;}
+    void setAngleToNextLink(double ang)   {m_angleToNextLink  =  ang;}
+    void setDistToNextLink(double dist)   {m_distToNextLink   =  dist;}
+    void setRmsAngleSum(double ang)       {m_rmsAngleSum      =  ang;}
+    void setRmsDistSum(double dist)       {m_rmsDistSum       =  dist;}
+    void setNumAnglesInSum(int num)       {m_numAnglesInSum   =  num;}
+    void setNumDistsInSum(int num)        {m_numDistsInSum    =  num;}
     void addAngleToRmsSum(double ang);
     void addDistToRmsSum(double dist);
 
