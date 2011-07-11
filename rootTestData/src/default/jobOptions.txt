@@ -35,7 +35,7 @@ CalClustersAlg.OutputLevel=4; // too much info
 
 // Number of events to process
 MeritAlg.generated = 5; // for estimation of Aeff
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 10;
 
 MessageSvc.OutputLevel      =3;
 
