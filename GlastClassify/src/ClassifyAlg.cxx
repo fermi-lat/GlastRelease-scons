@@ -239,7 +239,7 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
     declareProperty("PrintTreeInfo", m_treeInfo=false);
     
     // EAC mods
-    declareProperty("UseTMine",      m_useTMine=false);
+    declareProperty("UseTMine",      m_useTMine=true);
     declareProperty("TMineSelection",m_TMineSelection="");
     declareProperty("TMineTrace",    m_TMineTrace=false);    
     declareProperty("TMineCacheFile",m_TMineCacheFile="tmine_cache.root");
