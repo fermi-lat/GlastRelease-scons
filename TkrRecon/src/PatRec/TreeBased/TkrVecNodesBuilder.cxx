@@ -879,8 +879,11 @@ void TkrVecNodesBuilder::updateTreeParams(Event::TkrVecNode* updateNode)
         updateNode->setNumLeaves(nLeaves);
         updateNode->setNumBranches(nBranches);
         updateNode->setDepth(depth + 1);
-        updateNode->setBestNumBiLayers((*updateNode->begin())->getBestNumBiLayers());
-        updateNode->setBestRmsAngle((*updateNode->begin())->getBestRmsAngle());
+        updateNode->setBestNumBiLayers(updateNode->front()->getBestNumBiLayers());
+        updateNode->setBestRmsAngle(updateNode->front()->getBestRmsAngle());
+
+        // And if we are the grand poobah node then we need to make sure the start layer is set
+        if (!updateNode->getParentNode()) updateNode->setTreeStartLayer(updateNode->front()->getTreeStartLayer());
     }
     // Otherwise, at the end of the line, update in case of node deletion
     else
