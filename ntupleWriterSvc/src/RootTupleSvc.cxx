@@ -201,6 +201,7 @@ public:
 
     virtual bool setIndex( Long64_t i );
     virtual Long64_t index();
+    virtual Long64_t getNumberOfEvents();
 
 
 private:
@@ -267,6 +268,9 @@ private:
     /// If reading an input tuple also, then this is next event
     long long m_nextEvent;
 
+    /// store number of events in the file
+    long long m_nevents;
+
     /// if set, store all ttrees 
     bool m_storeAll;
 
@@ -310,7 +314,7 @@ int RootTupleSvc::m_meritVersion = 1;
 //         Implementation of RootTupleSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 RootTupleSvc::RootTupleSvc(const std::string& name,ISvcLocator* svc)
-: Service(name,svc), m_nextEvent(0), m_trials(0), 
+: Service(name,svc), m_nextEvent(0), m_nevents(0), m_trials(0), 
   m_badEventCount(0)
 {
     // declare the properties and set defaults
@@ -472,10 +476,10 @@ bool RootTupleSvc::getTree(std::string& treeName, TTree*& t)
             // add new TChain to the map
             m_inChain[treeName] = ch;
             // call GetEntries to load the headers of the TFiles
-            long long nevents = ch->GetEntries();
+            m_nevents = ch->GetEntries();
             log << MSG::INFO << "Number of events in input files = " 
-                << nevents << " StartingIndex: " << m_nextEvent << endreq;
-            if ((m_nextEvent > nevents-1) || (m_nextEvent < 0)) {
+                << m_nevents << " StartingIndex: " << m_nextEvent << endreq;
+            if ((m_nextEvent > m_nevents-1) || (m_nextEvent < 0)) {
                 log << MSG::WARNING << "StartingIndex invalid, resetting "
                     << m_nextEvent << " to zero" << endreq;
                 m_nextEvent = 0;
@@ -1194,6 +1198,10 @@ bool RootTupleSvc::fileExists( const std::string & filename )
   }
 
  Long64_t RootTupleSvc::index() { return m_nextEvent ; }
+
+ Long64_t RootTupleSvc::getNumberOfEvents() { 
+     return m_nevents; 
+ }
  
 
 

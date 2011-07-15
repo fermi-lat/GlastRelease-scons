@@ -125,6 +125,7 @@ public:
 
     virtual bool setIndex( long long ) = 0 ;
     virtual long long index() = 0 ;
+    virtual long long getNumberOfEvents() = 0;
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_INTupleWriterSvc; }
