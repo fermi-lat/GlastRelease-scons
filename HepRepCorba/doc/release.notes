@@ -4,6 +4,7 @@
  * $Header$
  *   EOH
 
+ HepRepCorba-03-03-00 15-Jul-2011  lsrea add getNumberOfEvents() to support WIRED
  HepRepCorba-03-02-02 13-Jun-2011  lsrea Fix a little confusing code
  HepRepCorba-03-02-01 18-Mar-2011  lsrea Mods for WIRED
  HepRepCorba-03-02-00 25-Aug-2010  lsrea Use new HepRepSvc option for starting WIRED
