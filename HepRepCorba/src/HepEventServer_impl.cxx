@@ -99,11 +99,14 @@ char* HepEventServer_impl::setEvent(const char* command)
       res = m_svcAdapter->nextEvent(1);
       if (res)
       {
-        sName << "Event-" << temp;
+          //std::string evtId = m_svcAdapter->getEventId();
+          //sName << evtId;
+          sName << "Event-" << temp;
         temp++;
 
         m_eventID = sName.str();
-        nextEventMsg = "ok:" + m_eventID;   
+        nextEventMsg = "ok:" + m_eventID;  
+
       } 
       else
       {
@@ -248,14 +251,15 @@ char* HepEventServer_impl::setEvent(const char* command)
 // Return the number of events (if known); disabled for now
 CORBA::Long HepEventServer_impl::getNumberOfEvents()
 {
-  return 0;
+  return m_svcAdapter->getNumberOfEvents();
 }
 
 
 // Return the title of the current event
 char* HepEventServer_impl::getEventTitle()
 {
-    return CORBA::string_dup(m_eventID.c_str());
+    // std::string evtId = m_svcAdapter->getEventId();
+    return CORBA::string_dup((m_eventID).c_str());
 }
 
 
