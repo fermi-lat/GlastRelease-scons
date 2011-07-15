@@ -464,6 +464,11 @@ std::string HepRepSvc::getEventId()
   
 }
 
+// returns the number of events in the current file
+long long HepRepSvc::getNumberOfEvents() {
+    return m_rtsvc->getNumberOfEvents();
+}
+
 // This method set the Event index
 bool HepRepSvc::setEventIndex(int index)
 {

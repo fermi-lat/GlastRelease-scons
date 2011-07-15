@@ -93,6 +93,9 @@ class HepRepSvc : virtual public Service,
   /// This method set the Event index 
   bool setEventIndex(int index);
 
+  /// get the number of events in the file
+  long long getNumberOfEvents();
+
   /// This method replay a given algorithm
   bool replayAlgorithm(std::string algName);
 
