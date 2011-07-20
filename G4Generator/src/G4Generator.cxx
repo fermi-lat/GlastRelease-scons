@@ -26,10 +26,6 @@
 #include "PrimaryGeneratorAction.h"
 #include "McParticleManager.h"
 #include "McTrajectoryManager.h"
-// GLAST Geant4
-
-#include "GlastMS/MultipleScatteringFactory.h"  // For controlling multiple scattering versions
-#include "GlastMS/EnergyLossFactory.h"          // For controlling energy loss versions in EMPhysics
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -188,20 +184,9 @@ StatusCode G4Generator::initialize()
   }
 
   // create a factory for the multiplescattering to pass around to the physics guys
-  GlastMS::MultipleScatteringFactory msFactory(
-      m_mscatOption ? GlastMS::MultipleScatteringFactory::OLD32 
-                    : GlastMS::MultipleScatteringFactory::NATIVE);
-  GlastMS::EnergyLossFactory eLossFactory(
-      m_eLossCurrent ? GlastMS::EnergyLossFactory::CURRENT 
-                     : GlastMS::EnergyLossFactory::RELEASE52);
-
-  log << MSG::INFO << "Using the " << (m_mscatOption? "Old 3.2" : "current G4") 
-      << " version of Multiple scattering" << endreq;
-
-  log << MSG::INFO << "Using the " << (!m_eLossCurrent? "Old 5.2" : "current G4") 
-      << " version of Energy Loss" << endreq;
   
   log << MSG::INFO << "Initializing run manager... ";
+
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
     {
@@ -212,9 +197,7 @@ StatusCode G4Generator::initialize()
                                     m_physics_choice, 
                                     m_physics_table, 
                                     m_physics_dir,
-                                    msFactory,
-                                    eLossFactory,
-									geosv);
+				    geosv);
 
       log << "done." << endreq;
     }

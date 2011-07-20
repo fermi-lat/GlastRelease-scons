@@ -19,7 +19,11 @@ use GlastSvc  v*
 use geometry  v3*
 
 # Use this publicly since it exports symbols that will be needed
+
 #use G4HadronSim v*
+
+
+use GlastMS v* 
 
 # for linux execution clients to get the LD_LIBRARY_PATH set.
 use Geant4Runtime v9r* IExternal
@@ -59,8 +63,8 @@ use gr_app *
 
 apply_pattern package_Cshlibflags
 
-macro source "*.cxx" WIN32 "*.h *.cxx"
-library G4Generator -s=../src $(source) -s=../src/Utilities $(source) -s=Dll *.cxx  
+macro source "*.cxx *.cc" WIN32 "*.h *.hh *.cxx"
+library G4Generator -s=../src $(source) -s=../src/Utilities $(source) -s=Dll *.cxx *.cc 
 
 # test program 
 public

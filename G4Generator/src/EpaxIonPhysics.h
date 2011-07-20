@@ -7,7 +7,6 @@
 #include "G4ios.hh"
 
 #include "G4VPhysicsConstructor.hh"
-#include "GlastMS/MultipleScatteringFactory.h"
 
 /** 
  * @class IonPhysics 
@@ -29,8 +28,7 @@ class EpaxIonPhysics : public G4VPhysicsConstructor
 {
  public: 
   
-  EpaxIonPhysics(const G4String& name, std::string& physicsChoice, 
-      GlastMS::MultipleScatteringFactory& msfactory);
+  EpaxIonPhysics(const G4String& name, std::string& physicsChoice);
   virtual ~EpaxIonPhysics();
   
  public: 
@@ -48,8 +46,6 @@ class EpaxIonPhysics : public G4VPhysicsConstructor
   // Allow to select full hadronic physics
   
   std::string m_physicsChoice;
-    GlastMS::MultipleScatteringFactory& m_msFactory;
-
 };
 
 

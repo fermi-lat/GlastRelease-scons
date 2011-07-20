@@ -122,9 +122,7 @@ class RunManager
              std::string& physics_choice, 
              std::string& physics_table,
              std::string&  physics_dir,
-             GlastMS::MultipleScatteringFactory& msfactory,
-             GlastMS::EnergyLossFactory& eLossFactory,
-			 IG4GeometrySvc*);
+	       IG4GeometrySvc*);
 
     virtual ~RunManager();
 

@@ -64,9 +64,9 @@ G4Generator.mcTreeMode = "pruneCal";
 
 // do you want the full or only the em physics? (default is full)
 
-//G4Generator.physics_choice = "LowEnergy";
+G4Generator.physics_choice = "EmStd";
 //G4Generator.physics_choice = "GLAST";
-G4Generator.physics_choice = "QGSP_BERT";
+//G4Generator.physics_choice = "QGSP_BERT";
 //G4Generator.physics_choice = "QGSP_INCL_ABLA";
 //G4Generator.physics_choice = "LHEP";
 G4Generator.defaultCutValue= 0.7;	

@@ -12,9 +12,8 @@
 #include "G4ios.hh"
 #include <iomanip> 
 
-EpaxIonPhysics::EpaxIonPhysics(const G4String& name, std::string& physicsChoice
-                       , GlastMS::MultipleScatteringFactory& msfactory)
-  :  G4VPhysicsConstructor(name), m_physicsChoice(physicsChoice), m_msFactory(msfactory)
+EpaxIonPhysics::EpaxIonPhysics(const G4String& name, std::string& physicsChoice)
+  :  G4VPhysicsConstructor(name), m_physicsChoice(physicsChoice)
 {
 }
 

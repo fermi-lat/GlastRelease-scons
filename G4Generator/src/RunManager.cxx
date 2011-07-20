@@ -21,7 +21,7 @@
 #include "G4RunManagerKernel.hh"
 
 #include "UIsession.h"
-//#include "PhysicsList.h"
+#include "PhysicsList.h"
 #include "PrimaryGeneratorAction.h"
 #include "TrackingAction.h"
 #include "SteppingAction.h"
@@ -71,9 +71,7 @@ RunManager::RunManager(std::ostream& log,
                        std::string& physics_choice, 
                        std::string& physics_table,
                        std::string&  physics_dir,
-                       GlastMS::MultipleScatteringFactory& msfactory,
-                       GlastMS::EnergyLossFactory& eLossFactory,
-					   IG4GeometrySvc* gsv)
+		       IG4GeometrySvc* gsv)
 :m_log(log),
  physicsList(NULL),
  userPrimaryGeneratorAction(NULL),
@@ -122,11 +120,16 @@ RunManager::RunManager(std::ostream& log,
 
   // The user stuff
 
-  //  physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir, msfactory, eLossFactory);
-  
-  G4PhysListFactory* myFactory = new G4PhysListFactory();
-  
-  physicsList = myFactory -> GetReferencePhysList(G4String(physics_choice));
+
+  if (physics_choice =="EmStd" || physics_choice == "EmLow")
+    {
+      physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir);
+    }
+  else
+    {
+      G4PhysListFactory* myFactory = new G4PhysListFactory();
+      physicsList = myFactory -> GetReferencePhysList(G4String(physics_choice));
+    }
 
   //userPrimaryGeneratorAction = new PrimaryGeneratorAction;
 
