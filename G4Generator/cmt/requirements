@@ -23,7 +23,7 @@ use geometry  v3*
 #use G4HadronSim v*
 
 
-use GlastMS v* 
+#use GlastMS v* 
 
 # for linux execution clients to get the LD_LIBRARY_PATH set.
 use Geant4Runtime v9r* IExternal
