@@ -296,7 +296,7 @@ StatusCode TkrHitValsTool::calculate()
             if(isWider)     Tkr_numWiderClusters++;
         }
 
-        bool onTrack = clust->hitFlagged();
+        bool onTrack = clust->isSet(Event::TkrCluster::maskUSEDANY);
         if(onTrack) {
             Tkr_numHitsOnTracks++;
             if(isMarked) {
