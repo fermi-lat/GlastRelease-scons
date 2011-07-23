@@ -531,7 +531,7 @@ StatusCode reconRootReaderAlg::storeTrackAndVertexCol(
     // ADW: Retrieve ROOT version of cosmic-ray track collection
     // Pretty ugly duplicate code.  Eventually move to map of collections.
     const TObjArray *crTrackRootCol = tkrRecRoot->getCRTrackCol();
-    TIter crTrackIter(trackRootCol);
+    TIter crTrackIter(crTrackRootCol);
     trackObj = 0;
     
     while ((trackObj = crTrackIter.Next())!=0) 
