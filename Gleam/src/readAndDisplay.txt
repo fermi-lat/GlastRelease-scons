@@ -36,11 +36,6 @@ Top.Members  += { "mcRootReaderAlg" };  // comment this for data
 Top.Members  += { "digiRootReaderAlg" }; 
 Top.Members  += { "reconRootReaderAlg" };
 
-// to flag ghost clusters in older data,
-Top.Members  += { "TkrReconAlg/FirstPass" }; 
-FirstPass.firstStage = 0;
-FirstPass.lastStage  = 0;
-
 Top.Members  += { "relationRootReaderAlg" }; // comment this for data
 Top.Members  += { "Sequencer/Output" };
 
@@ -56,7 +51,7 @@ ApplicationMgr.ExtSvc += { "RootIoSvc", "ParticlePropertySvc", "GlastDetSvc" };
 GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT"; // the whole schebang
 
-ApplicationMgr.EvtMax = 100000;
+ApplicationMgr.EvtMax = 1000000;
 
 // tell it to automatically start the version of FRED 
 HepRepSvc.startFred = "$Fred_EXE_DIR";
