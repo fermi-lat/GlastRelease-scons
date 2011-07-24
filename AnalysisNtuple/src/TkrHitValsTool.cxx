@@ -282,7 +282,7 @@ StatusCode TkrHitValsTool::calculate()
             Tkr_numHitsOnTracks++;
             if(isMarked) {
                 Tkr_numGhostsOnTracks++;
-                if(isFlagged) Tkr_numFlaggedTrackHits;
+                if(isFlagged) Tkr_numFlaggedTrackHits++;
             }
             else {
                 if(isSaturated) Tkr_numSaturatedOnTracks++;
