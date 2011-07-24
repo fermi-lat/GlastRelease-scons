@@ -22,7 +22,7 @@
 
 #include "GaudiKernel/IInterface.h"
 
-static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 6, 0);
+static const CLID& CLID_TkrCluster = InterfaceID("TkrCluster", 7, 0);
 
 namespace Event {
 
@@ -65,14 +65,14 @@ namespace Event {
         // High-order bits (16-31, right to left):
         //
         // |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-        //                                                                  
-        //        L   P                                                     S   G
-        //        y   l                                                     m   h
-        //        r   n                                                     e   o
-        //        O   O                                                     T   s
-        //        f   f                                                     r   t
-        //        f   f                                                     k   D
-        //                                                                  D    
+        //                                                  
+        //        L   P                           C           G                 G
+        //        y   l                           o           d                 h
+        //        r   n                           m           T                 o
+        //        O   O                           p           r                 s
+        //        f   f                           o           e                 t
+        //        f   f                           s           e                 D
+        //                                      [Tree-based bits]               
                                                                             
         enum { 
             fieldUSED        =  1,    // tells whether cluster is used on a track
