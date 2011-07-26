@@ -73,7 +73,7 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
     // algorithm name "RawEnergy" assigned to it, the second (or subsequent) name
     // doesn't matter for initialization.
     // This branch if first pass
-    if (name == "RawEnergy")
+    if (name == "CalRawEnergy")
     {
         corrToolVec.push_back("CalRawEnergyTool");
 
