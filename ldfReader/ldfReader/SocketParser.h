@@ -53,6 +53,10 @@ namespace ldfReader {
         unsigned int eventId() { return m_eventId; };
 
         unsigned long eventSize() { return m_eventSize; };
+    
+        /// Do nothing for SocketParser case
+        virtual void setGemIdSkipList(const std::vector<unsigned long long> &gemList) { };
+        virtual void setEventIndexSkipList(const std::vector<unsigned long long> &eventList) { };
 
         bool end();
 

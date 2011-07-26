@@ -39,6 +39,11 @@ namespace ldfReader {
 
         void ignoreSegFault(bool value);
 
+
+        /// Do nothing for LdfParser case
+        virtual void setGemIdSkipList(const std::vector<unsigned long long> &gemList) { };
+        virtual void setEventIndexSkipList(const std::vector<unsigned long long> &eventList) { }; 
+
         /// Turn on or off debug output.  Returns old value of flag
         //bool setDebug(bool on);
 

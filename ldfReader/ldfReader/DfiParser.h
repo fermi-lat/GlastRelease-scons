@@ -62,6 +62,14 @@ namespace ldfReader {
         // local exception class
         //class Exception{ };
 
+        virtual void setGemIdSkipList(const std::vector<unsigned long long> &gemList) {
+            m_gemIdSkipList = gemList; 
+        }
+
+        virtual void setEventIndexSkipList(const std::vector<unsigned long long> &eventList) {
+            m_eventIndexSkipList = eventList;
+        }
+
     private:
         double timeForTds(double utc);
 
@@ -92,7 +100,12 @@ namespace ldfReader {
 
         bool m_more;
 
+        std::vector<unsigned long long> m_gemIdSkipList;
+        std::vector<unsigned long long> m_eventIndexSkipList;
+
   //      ldfReader::ccsds2lsf m_cnv;
+
+        unsigned long long m_indexCounter;
 
     };
 }

@@ -9,6 +9,7 @@ $Header$
 */
 
 #include <string>
+#include <vector>
 
 namespace ldfReader {
     class EbfParser {
@@ -43,6 +44,10 @@ namespace ldfReader {
         /// the run ID.  We may use the LdfReader::runId routine (old I&T)
         /// or use ctx.run.startedAt (real data)
         virtual void setOldStyleRunId(bool flag=true);
+
+        /// Allow for skipping events according to GEM Id or Event Indices
+        virtual void setGemIdSkipList(const std::vector<unsigned long long> &gemIdSkipList) = 0;
+        virtual void setEventIndexSkipList(const std::vector<unsigned long long> &eventIndexSkipList) = 0;
 
         // local exception class
         class Exception{ };
