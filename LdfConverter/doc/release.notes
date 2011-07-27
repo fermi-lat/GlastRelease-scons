@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ LdfConverter-04-04-06 27-Jul-2011    hmk Merge in GlastReleasev15r47p12 branch
  LdfConverter-04-04-05 08-Mar-2011    jrb get test program to work in SCons build
  LdfConverter-04-04-04 02-Feb-2011    hmk Make use of GlastSvc generic
  LdfConverter-04-04-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
@@ -11,6 +12,12 @@ Coordinator:H.Kelly
 LdfConverter-04-04-01 10-Nov-2009 HMK Use EvtMax to denote reading in a 
         complete input file
 v4r3p5  10-Sep-2009 HMK Fix up warnings
+v4r3p4gr04 28-Mar-2011 HMK JIRA GRINF-54 printing event index option
+v4r3p4gr03 07-Mar-2011 HMK JIRA GRINF-54
+v4r3p4gr02 22-Nov-2010 HMK set AcdDigi Ninja bit if either PMT has a hit map bit
+          set but no associated accept map bit
+v4r3p4gr1 23-Sep-2009 HMK mod to use EvtMax==0 to denote reading in a complete
+         input file, to avoid issues with setting EvtMax > MAXINT
 v4r3p4  17-Jul-2009 HMK patch to set various levels for EbfDebug
 v4r3p3  17-Mar-2009 HMK Update mainpage.h for modified use of EbfDebug
 v4r3p2  29-Jul-2008 NG  Tagging Navid's update to remove CMT env vars

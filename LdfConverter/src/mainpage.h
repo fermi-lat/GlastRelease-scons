@@ -62,6 +62,9 @@ xx/** @mainpage package LdfConverter
   Integer.  Defaults to 0 (false).  If set to non-zero value, this will cause
   the runId to be obtained the same way done for I&T (via LSEReader::runid())
   rather than use the method for flight using ctx.run.startedAt
+  @param LdfEventSelector.PrintEventIndex
+  Bool.  Defaults to false.  If set to true, the event index number is printed
+  for each event.
   <hr>
   @section notes release notes
   release.notes

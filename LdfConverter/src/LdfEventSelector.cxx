@@ -24,6 +24,7 @@
 #include "ldfReader/DfiParser.h"
 #include "ldfReader/SocketParser.h"
 #include "LdfSelectorContext.h"
+#include <cstring>
 
 #include <sys/stat.h>
 
@@ -276,6 +277,21 @@ StatusCode LdfEventSelector::initialize()     {
 
     m_rootCLID = eds->rootCLID();
 
+    // Disabling gemId JO for now and just clearing the list so it's not used
+    //m_gemIdSkipVec = m_gemIdSkipList.value();
+    m_gemIdSkipVec.clear();
+
+    m_eventIndexSkipVec.clear();
+    facilities::Util::expandEnvVar(&m_eventIndicesToSkipEnv);
+    log << MSG::INFO << "EventIndicesToSkipEnv " 
+        << m_eventIndicesToSkipEnv << endreq;
+    char *indices;
+    indices = strtok(m_eventIndicesToSkipEnv.c_str()," ");
+    while(indices != NULL) {
+        m_eventIndexSkipVec.push_back(facilities::Util::atoi(indices));
+        indices = strtok(NULL," ");
+    }
+
     return sc;
 }
 
@@ -303,11 +319,24 @@ LdfEventSelector::LdfEventSelector( const std::string& name,
     declareProperty("AcdRemapFile", m_acdRemap="");
     declareProperty("IgnoreSegFault", m_ignoreSegFault=0);
     declareProperty("OldStyleRunId", m_oldStyleRunId=0);
+    UnsignedLongLongArrayProperty emptyList;
+    std::vector<unsigned long long> initVec;
+    emptyList.setValue(initVec);
+
+    //Disable use of GEM Id for now as well
+    //declareProperty("SkipListUsingGemId", m_gemIdSkipList=emptyList);
+ 
+    declareProperty("EventsToSkip", m_eventIndicesToSkipEnv="");
+
+    // Disable this for now while sorting out crash
+    //declareProperty("InsertEmptyEvent", m_insertEmptyEvent=false);
+    m_insertEmptyEvent = false;
 
     // Options for using socket connections
     declareProperty("SocketConnection", m_socket = 0);
     // default server is 60 - chosen for the beamtest
     declareProperty("SocketServer", m_server = 60);
+    declareProperty("PrintEventIndex", m_printCounter=false);
 
     //Here we get the maxEvt number from the aplication mgr property;
     //Sets the environment variable m_evtMax;
@@ -385,12 +414,18 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
                 return(StatusCode::FAILURE);
             }
 
-            log << MSG::DEBUG << "ctor DfiParser " << m_fileName << endreq;
             m_ebfParser = new ldfReader::DfiParser(m_fileName);
             m_ebfParser->printHeader();
             m_ebfParser->setDebug(m_ebfDebugLevel);
             m_ebfParser->setOldStyleRunId((m_oldStyleRunId != 0));
-            log << MSG::DEBUG << "return from ctor" << endreq;
+            /// Check if either of our JO skip list contain entries and if so pass on to 
+            /// DfiParser
+            if (m_gemIdSkipVec.size() > 0) {
+                m_ebfParser->setGemIdSkipList(m_gemIdSkipVec);
+            }
+            if (m_eventIndexSkipVec.size() > 0) {
+                m_ebfParser->setEventIndexSkipList(m_eventIndexSkipVec);
+            }
         } catch(...) {
             log << MSG::ERROR << "failed to setup DfiParser" << endreq;
             return(StatusCode::FAILURE);
@@ -487,9 +522,9 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
     static bool lastEventFlag = false;
     MsgStream log(msgSvc(), name());
-    log << MSG::DEBUG << "next" << endreq;
     // static counter for use when we want to skip to event N
     static unsigned long long counter = 0;
+    static bool firstCall = true;
     unsigned marker;
     try {
         LdfSelectorContext *pIt  = dynamic_cast<LdfSelectorContext*>(&refCtxt);
@@ -545,11 +580,23 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
                         findFirstMarkerFive = true;
                     }
 
+                    // If this is our first event to read, we need to check 
+                    // if we have an event to skip, in case it includes the 
+                    // first event
+                    if (firstCall) {
+                        firstCall = false;
+                        checkForSkippedEvents(counter, lastEventFlag);
+                        if (lastEventFlag) return StatusCode::FAILURE;
+                    }
+ 
                     bool DONE=false;
                     static bool foundEventNumber = false;  
                     // Once we find the eventNumber, we carry on from there
 
                     while ((!DONE) || (!findFirstMarkerFive)) {
+                        if (m_printCounter) 
+                            std::cout << "Reading Event Index: " << counter << std::endl;
+
                         int status = m_ebfParser->loadData();
                         if (status < 0) {
                             log << MSG::INFO << "Failed to get Event" << endreq;
@@ -687,6 +734,7 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
                             << " marker == 5" << endreq;
                         return StatusCode::FAILURE;
                     }
+
                     // Move file pointer for the next event
                     int ret = m_ebfParser->nextEvent();
                     if ( (ret !=0 ) && (m_criteriaType == CCSDSFILE) ) { 
@@ -721,6 +769,39 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
                         // HMK*(irfIt) = m_evtEnd;
                         //maybe need a terminate flag
                     }
+                    /// If we are skipping events using the event indices, and we are not inserting an empty event in
+                    /// the output ROOT file, we can skip loading this event entirely
+                    /// First, check if this is an event we should skip
+                    if ( (m_eventIndexSkipVec.size() > 0) && (!m_insertEmptyEvent) ) {
+                        std::vector<unsigned long long>::iterator it;
+                        int noMoreEvents = 0;
+                        while ( (std::find(m_eventIndexSkipVec.begin(), 
+                                         m_eventIndexSkipVec.end(), counter+1) != m_eventIndexSkipVec.end() ) && (noMoreEvents == 0) ) {
+                            counter++;
+                            log << MSG::INFO << "Skipping Event Index " << counter << " by JO request" << endreq;
+                            noMoreEvents = m_ebfParser->nextEvent(); /// move file pointer to next event
+                            if ( (noMoreEvents !=0 ) && (m_criteriaType == CCSDSFILE) ) { 
+                                log << MSG::INFO << "Last event found: source exhausted" << endreq;
+                                lastEventFlag = true;
+                            } else if (noMoreEvents != 0) {
+                                log << MSG::INFO << "Input event source exhausted" << endreq;
+                                if (marker != 5) 
+                                    log << MSG::WARNING << "Last Event was not a sweep event with"
+                                        << " marker == 5" << endreq;
+                            }
+                         
+                            if ( (noMoreEvents != 0) && (counter != m_ebfParser->eventCount()) )
+                                log << MSG::WARNING << "Number of events process " 
+                                   << (long long int) counter
+                                   << " does not match number of events in input file "
+                                   << (long long int) m_ebfParser->eventCount() << endreq;
+                            else if (noMoreEvents != 0)
+                                log << MSG::INFO << "Processed " << (long long int) counter 
+                                   << " event from a file containing " 
+                                   << (long long int) m_ebfParser->eventCount() 
+                                   << " events" << endreq;
+                        } // end while
+                    } // end if m_eventIndexSkipVec
                     return StatusCode::SUCCESS;
                     //HMKreturn *irfIt;
                 } else {
@@ -743,6 +824,40 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
     return StatusCode::SUCCESS;
 }
 
+
+void LdfEventSelector::checkForSkippedEvents(unsigned long long& counter, bool &lastEventFlag) {
+    MsgStream log(msgSvc(), name());
+    /// If we are skipping events using the event indices, and we are not inserting an empty event in
+    /// the output ROOT file, we can skip loading this event entirely
+    /// First, check if this is an event we should skip
+    if ( (m_eventIndexSkipVec.size() > 0) && (!m_insertEmptyEvent) ) {
+        std::vector<unsigned long long>::iterator it;
+        int noMoreEvents = 0;
+        while ( (std::find(m_eventIndexSkipVec.begin(), 
+                 m_eventIndexSkipVec.end(), counter) != m_eventIndexSkipVec.end() ) && (noMoreEvents == 0) ) {
+            log << MSG::INFO << "Skipping Event Index " << counter << " by JO request" << endreq;
+            noMoreEvents = m_ebfParser->nextEvent(); /// move file pointer to next event
+            counter++;
+            if ( (noMoreEvents !=0 ) && (m_criteriaType == CCSDSFILE) ) { 
+                log << MSG::INFO << "Last event found: source exhausted" << endreq;
+                lastEventFlag = true;
+            } else if (noMoreEvents != 0) {
+                log << MSG::INFO << "Input event source exhausted" << endreq;
+            }
+     
+            if ( (noMoreEvents != 0) && (counter != m_ebfParser->eventCount()) )
+                log << MSG::WARNING << "Number of events process " 
+                    << (long long int) counter
+                    << " does not match number of events in input file "
+                    << (long long int) m_ebfParser->eventCount() << endreq;
+            else if (noMoreEvents != 0)
+                log << MSG::INFO << "Processed " << (long long int) counter 
+                    << " event from a file containing " 
+                    << (long long int) m_ebfParser->eventCount() 
+                    << " events" << endreq;
+          } // end while
+     } // end if m_eventIndexSkipVec
+}
 
 StatusCode LdfEventSelector::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( riid == IID_IEvtSelector )  {

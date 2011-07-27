@@ -172,6 +172,9 @@ public:
   //HMKtypedef std::vector<StringProperty>            Properties;
     
 private:
+
+  void checkForSkippedEvents(unsigned long long& counter, bool &lastEventFlag);
+
   enum CriteriaType { 
     EBFFILE,
     EBFFITS,
@@ -250,6 +253,16 @@ private:
   int                   m_evtMax; // Obsolete parameter
   /// Printout frequency
   int                   m_evtPrintFrequency;
+  /// Potential list of gem ids to skip
+  UnsignedLongLongArrayProperty m_gemIdSkipList;
+  std::vector<unsigned long long> m_gemIdSkipVec;
+  /// Potential list of event indices to skip
+  UnsignedLongLongArrayProperty m_eventIndexSkipList;
+  std::vector<unsigned long long> m_eventIndexSkipVec;
+  /// JO parameter denotes whether to insert an empty event if we skip events
+  bool m_insertEmptyEvent;
+  std::string m_eventIndicesToSkipEnv;
+  bool m_printCounter;
 };
 
 #endif  // LdfEventSelector_H
