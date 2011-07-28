@@ -63,7 +63,7 @@ use gr_app *
 
 apply_pattern package_Cshlibflags
 
-macro source "*.cxx *.cc" WIN32 "*.h *.hh *.cxx *.cc"
+macro source "*.cxx" WIN32 "*.h *.hh *.cxx"
 library G4Generator -s=../src $(source) -s=../src/Utilities $(source) -s=Dll *.cxx *.cc 
 
 # test program 
