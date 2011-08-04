@@ -21,6 +21,9 @@
 \newcommand{\secder}[2]{\frac{{\rm d}^2#1}{{\rm d}#2^2}}
 \newcommand{\tmax}{t_{\rm max}}
 \newcommand{\diff}{{\rm d}}
+\newcommand{\xdir}{\ensuremath{x_{\rm dir}}}
+\newcommand{\ydir}{\ensuremath{y_{\rm dir}}}
+\newcommand{\zdir}{\ensuremath{z_{\rm dir}}}
 
 \begin{document}
 
@@ -754,6 +757,63 @@ and eventually:
 \end{equation}
 
 
+\subsection{Simplified error analysis}
+
+The main purpose in this section is to recover the expression for the
+covariance matrix in the $(\xdir, \ydir, \zdir)$ representation when error
+estimates on $\theta$ and $\phi$ are available---either on an event-by-event
+basis or through some phenomenological parametrization. We will assume for
+simplicity that the errors on $\theta$ and $\phi$ are uncorrelated.
+
+The basic transformation equations are:
+\begin{align}
+  \xdir & = \sin\theta \cos\phi\\
+  \ydir & = \sin\theta \sin\phi\\
+  \zdir & = \cos\theta
+\end{align}
+and the elements of the covariance matrix, as a function of $\theta$
+and $\phi$, read:
+\begin{equation}
+  \Sigma_{ij} = E[C_i C_j]
+\end{equation}
+where, denoting the central values with the subscript zero:
+\begin{align}
+  C_x & = (\sin\theta \cos\phi - \sin\theta_0 \cos\phi_0)\\
+  C_y & = (\sin\theta \sin\phi - \sin\theta_0 \sin\phi_0)\\
+  C_z & = (\cos\theta - \cos\theta_0)
+\end{align}
+We will take advantage of the fact that in the series expansion of the 
+expectation values:
+\begin{align}
+E[f(\theta, \phi)] & \approx f(\theta_0, \phi_0) + 
+\left.\pder{f(\theta, \phi)}{\theta}\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)] +
+\left.\pder{f(\theta, \phi)}{\phi}\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!E[(\phi - \phi_0)] +\\
+& \frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\theta}{\theta}
+\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)^2] +
+\frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\phi}{\phi}
+\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!E[(\phi - \phi_0)^2] +
+\left.\pdersec{f(\theta, \phi)}{\theta}{\phi}\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)(\phi - \phi_0)]
+\end{align}
+the first three terms vanish for obvious reasons, and so does the last,
+if the errors on $\theta$ and $\phi$ are not correlated. Therefore:
+\begin{align}
+E[f(\theta, \phi)] \approx
+\frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\theta}{\theta}\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!\sigma^2_\theta + 
+\frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\phi}{\phi}\right|_{\theta_0, \phi_0}
+\!\!\!\!\!\!\!\!\!\!\sigma^2_\phi
+\end{align}
+In the following we will need:
+\begin{align}
+\pdersec{C_i(\theta, \phi)C_j(\theta, \phi)}{\theta}{\theta}
+\quad {\rm and}\quad
+\pdersec{C_i(\theta, \phi)C_j(\theta, \phi)}{\phi}{\phi}
+\end{align}
 
 
 \section{Shower development: basic formul\ae}
