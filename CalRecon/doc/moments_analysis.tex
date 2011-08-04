@@ -5,6 +5,7 @@
   Johan Bregeon (johan.bregeon@pi.infn.it)}
 
 
+\usepackage{ifthen}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
@@ -14,7 +15,11 @@
 \usepackage[margin=1cm, font=small, labelfont=bf, labelsep=endash]{caption}
 
 \newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}
-\newcommand{\pdersec}[3]{\frac{\partial^2#1}{\partial#2\partial#3}}
+\newcommand{\pdersec}[3]%
+           {\ifthenelse{\equal{#2}{#3}}%
+             {\frac{\partial^2#1}{\partial#2^2}}%
+             {\frac{\partial^2#1}{\partial#2\partial#3}}%
+           }
 \newcommand{\itm}{\mathbbm I}
 \newcommand{\itc}[1]{\itm_{#1}}
 \newcommand{\firstder}[2]{\frac{{\rm d}#1}{{\rm d}#2}}
@@ -785,35 +790,99 @@ where, denoting the central values with the subscript zero:
 We will take advantage of the fact that in the series expansion of the 
 expectation values:
 \begin{align}
-E[f(\theta, \phi)] & \approx f(\theta_0, \phi_0) + 
-\left.\pder{f(\theta, \phi)}{\theta}\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)] +
-\left.\pder{f(\theta, \phi)}{\phi}\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!E[(\phi - \phi_0)] +\\
-& \frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\theta}{\theta}
-\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)^2] +
-\frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\phi}{\phi}
-\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!E[(\phi - \phi_0)^2] +
-\left.\pdersec{f(\theta, \phi)}{\theta}{\phi}\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)(\phi - \phi_0)]
+  E[f(\theta, \phi)] & \approx f(\theta_0, \phi_0) + 
+  \left[\pder{f(\theta, \phi)}{\theta}\right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)] +
+  \left[\pder{f(\theta, \phi)}{\phi}\right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!E[(\phi - \phi_0)] +\\\nonumber
+  & \frac{1}{2}\left[\pdersec{f(\theta, \phi)}{\theta}{\theta}
+  \right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)^2] +
+  \frac{1}{2}\left[\pdersec{f(\theta, \phi)}{\phi}{\phi}
+  \right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!E[(\phi - \phi_0)^2] +\\\nonumber
+  & \left[\pdersec{f(\theta, \phi)}{\theta}{\phi}\right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!E[(\theta - \theta_0)(\phi - \phi_0)]
 \end{align}
 the first three terms vanish for obvious reasons, and so does the last,
 if the errors on $\theta$ and $\phi$ are not correlated. Therefore:
 \begin{align}
-E[f(\theta, \phi)] \approx
-\frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\theta}{\theta}\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!\sigma^2_\theta + 
-\frac{1}{2}\left.\pdersec{f(\theta, \phi)}{\phi}{\phi}\right|_{\theta_0, \phi_0}
-\!\!\!\!\!\!\!\!\!\!\sigma^2_\phi
+  E[f(\theta, \phi)] \approx
+  \frac{1}{2}\left[\pdersec{f(\theta, \phi)}{\theta}{\theta}
+  \right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!\sigma^2_\theta + 
+  \frac{1}{2}\left[\pdersec{f(\theta, \phi)}{\phi}{\phi}
+    \right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\!\!\!\sigma^2_\phi
 \end{align}
 In the following we will need:
 \begin{align}
-\pdersec{C_i(\theta, \phi)C_j(\theta, \phi)}{\theta}{\theta}
-\quad {\rm and}\quad
-\pdersec{C_i(\theta, \phi)C_j(\theta, \phi)}{\phi}{\phi}
+  \nonumber
+  \left[\pdersec{C_i(\theta, \phi)C_j(\theta, \phi)}{\theta}{\theta}
+    \right]_{\theta_0, \phi_0}
+  \quad {\rm and}\quad
+  \left[\pdersec{C_i(\theta, \phi)C_j(\theta, \phi)}{\phi}{\phi}
+    \right]_{\theta_0, \phi_0}
 \end{align}
+The basic blocks are:
+\begin{align}
+  \nonumber
+  \pder{C_x}{\theta} &= \cos\theta\cos\phi ,\quad 
+  \pder{C_x}{\phi} = -\sin\theta\sin\phi\\\nonumber
+  \pder{C_y}{\theta} &= \cos\theta\sin\phi ,\quad
+  \pder{C_y}{\phi} = \sin\theta\cos\phi\\\nonumber
+  \pder{C_z}{\theta} &= -\sin\theta ,\quad
+  \pder{C_z}{\phi} = 0\\\nonumber
+  \pdersec{C_x}{\theta}{\theta} &= -\sin\theta\cos\phi ,\quad 
+  \pdersec{C_x}{\phi}{\phi} = -\sin\theta\cos\phi\\\nonumber
+  \pdersec{C_y}{\theta}{\theta} &= -\sin\theta\sin\phi ,\quad
+  \pdersec{C_y}{\phi}{\phi} = -\sin\theta\sin\phi\\\nonumber
+  \pdersec{C_z}{\theta}{\theta} &= -\cos\theta ,\quad
+  \pdersec{C_z}{\phi}{\phi} = 0\\\nonumber
+\end{align}
+And the actual ingredients for the covariance matrix can be easily
+calculated remembering that all the terms containing a $C_i$ multiplicative
+factor are zero when calculated in $(\theta_0, \phi_0)$:
+\begin{align}
+  \left[\pdersec{C^2_x}{\theta}{\theta}\right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\! =
+  \left[\pder{}{\theta}\left(2C_x\pder{C_x}{\theta}\right)
+    \right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\! =
+  \left[2\left(\pder{C_x}{\theta}\right)^2 +
+    2C_x\pdersec{C_x}{\theta}{\theta}\right]_{\theta_0, \phi_0}
+  \!\!\!\!\!\!\!\! = 2\cos^2\theta_0\cos^2\phi_0
+\end{align}
+So, along the same lines (and defining for compactness
+$s_{\theta_0} = \sin\theta_0$, $c_{\theta_0} = \cos\theta_0$,
+$s_{\phi_0} = \sin\phi_0$, $c_{\phi_0} = \cos\phi_0$):
+\begin{equation}
+  %m[0, 0] = ct2*cp2*dt2 + st2*sp2*dp2
+  %m[1, 1] = ct2*sp2*dt2 + st2*cp2*dp2
+  %m[2, 2] = st2*dt2
+  %m[0, 1] = ct2*cp*sp*dt2 - st2*cp*sp*dp2
+  %m[0, 2] = -st*ct*cp*dt2
+  %m[1, 2] = -st*ct*sp*dt2
+  %m[1, 0] = m[0, 1]
+  %m[2, 0] = m[0, 2]
+  %m[2, 1] = m[1, 2]
+  \Sigma =
+  \begin{pmatrix}
+    c_{\theta_0}^2c_{\phi_0}^2\sigma^2_\theta +
+    s_{\theta_0}^2s_{\phi_0}^2\sigma^2_\phi
+    & c_{\theta}^2 c_{\phi}s_{\phi}\sigma^2_\theta -
+    s_{\theta}^2c_{\phi}s_{\phi}\sigma^2_\phi
+    & -s_{\theta}c_{\theta}c_{\phi} \sigma^2_\theta\\
+    c_{\theta}^2 c_{\phi}s_{\phi}\sigma^2_\theta -
+    s_{\theta}^2c_{\phi}s_{\phi}\sigma^2_\phi
+    & c_{\theta_0}^2s_{\phi_0}^2\sigma^2_\theta +
+    s_{\theta_0}^2c_{\phi_0}^2\sigma^2_\phi
+    & -s_{\theta}c_{\theta}s_{\phi} \sigma^2_\theta\\
+    -s_{\theta}c_{\theta}c_{\phi} \sigma^2_\theta
+    & -s_{\theta}c_{\theta}s_{\phi} \sigma^2_\theta
+    & s_{\theta_0}^2\sigma^2_\theta\\
+  \end{pmatrix}
+\end{equation}
 
 
 \section{Shower development: basic formul\ae}
