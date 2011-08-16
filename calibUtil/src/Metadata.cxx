@@ -42,7 +42,11 @@ namespace calibUtil {
         nsub = 0;
       }
       // If this doesn't work, use default
-      if (nsub <= 0) m_host = std::string("glastCalibDB.slac.stanford.edu");
+      if (nsub <= 0) {
+        m_host = std::string("glastCalibDB.slac.stanford.edu");
+        std::cerr << "Using default MySQL calibration host " << m_host 
+                  << std::endl;
+      }
     }
 
     try {
@@ -52,7 +56,11 @@ namespace calibUtil {
       nsub = 0;
     }
     // If this doesn't work, use default
-    if (nsub <= 0) m_table = std::string("metadata_v2r1");
+    if (nsub <= 0) {
+      m_table = std::string("metadata_v2r1");
+      std::cerr << "Using default MySQL calibration table " << m_table 
+                << std::endl;      
+    }
   }
 
   Metadata::~Metadata() {
