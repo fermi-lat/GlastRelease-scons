@@ -133,7 +133,8 @@ StatusCode TkrTrackFitAlg::initialize()
         sc = StatusCode::FAILURE;
     }
 
-    sc = toolSvc()->retrieveTool("TkrTrackEnergyTool", m_EnergyTool);
+    //sc = toolSvc()->retrieveTool("TkrTrackEnergyTool", m_EnergyTool);
+    sc = toolSvc()->retrieveTool("TkrEnergySplitTool", m_EnergyTool);
     sc = toolSvc()->retrieveTool("TkrAlignHitsTool",   m_AlignTool);
 
     return sc;
