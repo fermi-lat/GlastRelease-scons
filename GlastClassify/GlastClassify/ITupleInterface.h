@@ -20,8 +20,10 @@ namespace GlastClassify{
     class Item {
     public:
         virtual ~Item(){};
-        virtual operator double()const = 0;
-        virtual void setDataValue(void* data) = 0;
+        virtual void        setDataValue(void* data)       = 0;
+        virtual void*       getDataAddr()            const = 0;
+        virtual std::string getDataType()            const = 0;
+        virtual operator double()                    const = 0;
     protected:
         Item(){};
     };

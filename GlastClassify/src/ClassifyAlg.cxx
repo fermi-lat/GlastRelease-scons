@@ -37,6 +37,10 @@ public:
         return (double)*m_pdata;
     }
 
+    void*       getDataAddr() const {return m_pdata;}
+
+    std::string getDataType() const {return m_type;}
+
 // LSR 14-Jul-08 code for ntuple types
 
     void setDataValue(void* data) 
@@ -234,12 +238,12 @@ ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
 {
     declareProperty("TreeName",      m_treename="MeritTuple");
-    declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml");
-    //declareProperty("xmlFileName",   m_xmlFileName="");
+    //declareProperty("xmlFileName",   m_xmlFileName="$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml");
+    declareProperty("xmlFileName",   m_xmlFileName="");
     declareProperty("PrintTreeInfo", m_treeInfo=false);
     
     // EAC mods
-    declareProperty("UseTMine",      m_useTMine=true);
+    declareProperty("UseTMine",      m_useTMine=false);
     declareProperty("TMineSelection",m_TMineSelection="");
     declareProperty("TMineTrace",    m_TMineTrace=false);    
     declareProperty("TMineCacheFile",m_TMineCacheFile="tmine_cache.root");
