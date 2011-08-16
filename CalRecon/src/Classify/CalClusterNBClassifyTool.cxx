@@ -259,7 +259,7 @@ CalClusterNBClassifyTool::CalClusterNBClassifyTool(const std::string & type,
     declareInterface<ICalClassifyTool>(this) ;
 
     
-    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH)/xml_cluclass_AllPeriodics_CalTwrEdge.xml" );
+    declareProperty ("m_xmlPDFFileName", m_xmlPDFFileName = "$(CALRECONXMLPATH)/xml_cluclass_NIPsWoTwoVars_CalTwrEdge.xml" );
 
     return;
 }
@@ -385,6 +385,14 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
       double MomdEdxAve  = calCluster->getMomParams().getdEdxAverage();
       double MomFullLenght = calCluster->getMomParams().getFullLength();
       return log10(MomdEdxAve/MomFullLenght);     
+    }
+    else if (varName == "CalLyr0Ratio") {
+      double CALEnergyRaw  = calCluster->getMomParams().getEnergy();
+      double ELayer0 = calCluster->at(0).getEnergy();
+      if (CALEnergyRaw > 0.0) 
+	return ELayer0/CALEnergyRaw;
+      else
+	return -1;
     }
     else if (varName == "MomentRatio") {
         double transRms = calCluster->getMomParams().getTransRms();
