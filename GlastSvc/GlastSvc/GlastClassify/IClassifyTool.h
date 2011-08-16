@@ -14,7 +14,6 @@
 
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/IProperty.h"
-#include "GlastSvc/GlastClassify/ITupleInterface.h"
 
 static const InterfaceID IID_IClassifyTool("IClassifyTool", 1 , 0);
 
