@@ -46,6 +46,11 @@ public:
     */
     void zeroCTvals();
 
+    /** @brief This will zero ALL variables in our tuple
+    *          ** Should not be used if analysis running on merit tuple! **
+    */
+    void zeroAllVals();
+
     /** @brief This stores IM analysis output variables into output ntuple
     */
     void storeCTvals();
