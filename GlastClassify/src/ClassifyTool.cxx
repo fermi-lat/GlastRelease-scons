@@ -15,6 +15,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 #include "TreeAnalysis.h"
 #include "xmlBuilders/xmlTreeAnalysisFactory.h"
@@ -186,7 +188,7 @@ private:
 // Now get on to the work of defining the actual tool here
 //
 
-class ClassifyTool : public AlgTool, virtual public IClassifyTool
+class ClassifyTool : public AlgTool, virtual public IClassifyTool, virtual public IIncidentListener
 {
 public:
     /// Standard Gaudi Tool interface constructor
@@ -209,6 +211,9 @@ public:
     /// @brief Once classification run this will look up and return the value of a given
     ///        variable. If the variable has been found successfully then it returns true
     bool       getVariable(const std::string& varName, double& varValue);
+
+    /// @brief Called by incident service at signalled times in event processing
+    void handle(const Incident& inc);
 
     /// @brief Finalize method for outputting run statistics
     StatusCode finalize();
@@ -275,6 +280,15 @@ StatusCode ClassifyTool::initialize()
 
     // get a pointer to RootTupleSvc 
     m_rootTupleSvc = dynamic_cast<INTupleWriterSvc*>(iService);
+
+    if ((sc = serviceLocator()->getService("IncidentSvc", iService)).isFailure())
+    {
+        throw GaudiException("Service [IncidentSvc] not found", name(), sc);
+    }
+    IIncidentSvc* incSvc = dynamic_cast<IIncidentSvc*>(iService);
+
+    //set up listener for IncidentSvc
+    incSvc->addListener(this, "BeginEvent", 100);
 
     return sc;
 }
@@ -361,6 +375,19 @@ bool ClassifyTool::getVariable(const std::string& varName, double& varValue)
     return foundIt;
 }
 
+void ClassifyTool::handle(const Incident & inc) 
+{    
+    MsgStream log(msgSvc(), name());
+
+    if(inc.type()=="BeginEvent") 
+    {
+        // Always zero the CTB output values in case cuts below fail
+        m_treeAnalysis->zeroAllVals();
+
+        // Always set the store row flag to true (so we can cross reference to merit?)
+        m_rootTupleSvc->storeRowFlag(m_tupleName, true);
+    }
+}
 StatusCode ClassifyTool::finalize()
 {
     StatusCode sc = StatusCode::SUCCESS;
