@@ -9,7 +9,8 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(GlastClassify) {
-    DECLARE_ALGORITHM( ClassifyAlg);
+    DECLARE_ALGORITHM(ClassifyAlg);
+    DECLARE_TOOL(ClassifyTool);
 } 
 
 
