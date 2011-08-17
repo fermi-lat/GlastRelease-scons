@@ -48,6 +48,10 @@
 
 #include "G4Generator/IG4GeometrySvc.h"
 
+// For setting env. variables G4 needs
+#include "facilities/commonUtilities.h"
+#include "facilities/Util.h"
+
 //vectors
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
@@ -186,6 +190,9 @@ StatusCode G4Generator::initialize()
   // create a factory for the multiplescattering to pass around to the physics guys
   
   log << MSG::INFO << "Initializing run manager... ";
+
+  // Set up environment variables for G4 tables
+  setTableEnvs();
 
   // The geant4 manager
   if (!(m_runManager = RunManager::GetRunManager()))
@@ -370,6 +377,33 @@ StatusCode G4Generator::finalize()
 }
 
 
+void G4Generator::setTableEnvs() {
+#ifdef G4TABLESPATH
+  using facilities::commonUtilities;
+
+  std::string tablesPath("$(GLAST_EXT)");
+  tablesPath += std::string(G4TABLESPATH);
+  facilities::Util::expandEnvVar(&tablesPath);
+  commonUtilities::setEnvironment("G4TableDir", tablesPath);
+  commonUtilities::setEnvironment("G4LEVELGAMMADATA", 
+                                  commonUtilities::joinPath(tablesPath, "PhotonEvaporation2.1"));
+  commonUtilities::setEnvironment("G4NEUTRONHPDATA", 
+                                  commonUtilities::joinPath(tablesPath, "G4NDL3.14"));
+  commonUtilities::setEnvironment("G4RADIOACTIVEDATA", 
+                                  commonUtilities::joinPath(tablesPath, "RadiativeDecay3.3"));
+  commonUtilities::setEnvironment("G4LEDATA", 
+                                  commonUtilities::joinPath(tablesPath, "G4EMLOW6.19"));
+  commonUtilities::setEnvironment("G4REALSURFACEDATA", 
+                                  commonUtilities::joinPath(tablesPath, "RealSurface1.0"));
+  commonUtilities::setEnvironment("G4NEUTRONXSDATA", 
+                                  commonUtilities::joinPath(tablesPath, "G4NEUTRONXS1.0"));
+  commonUtilities::setEnvironment("G4PIIDATA", 
+                                  commonUtilities::joinPath(tablesPath, "G4PIII.2"));
+  commonUtilities::setEnvironment("G4ABLADATA", 
+                                  commonUtilities::joinPath(tablesPath, "G4ABLA3.0"));
+#endif
+  return;
+}
 
 
 

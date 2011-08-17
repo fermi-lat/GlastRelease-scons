@@ -33,6 +33,9 @@ class G4Generator : public Algorithm {
  
   
  private:
+  /// Set up environment variables for G4 tables
+  void setTableEnvs();
+
   /// a pointer to the service for particle properties
   IParticlePropertySvc* m_ppsvc;
 
