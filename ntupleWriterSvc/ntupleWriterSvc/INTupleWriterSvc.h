@@ -31,28 +31,28 @@ public:
     /// add a pointer to a  double, or an array (depending on [n] following the name) of doubles
     virtual StatusCode addItem(const std::string & tupleName, 
              const std::string& itemName, const double* val,
-             const std::string& fileName=std::string(""))=0;
+             const std::string& fileName=std::string(""),bool write=true)=0;
 
     /// add a pointer to a  float, or an array of floats
     virtual StatusCode addItem(const std::string & tupleName, 
              const std::string& itemName, const float* val,
-             const std::string& fileName=std::string(""))=0;
+             const std::string& fileName=std::string(""),bool write=true)=0;
     
     /// add a pointer to an int (32 bits) or an array
     virtual StatusCode addItem(const std::string & tupleName, 
             const std::string& itemName, const int* val,
-            const std::string& fileName=std::string(""))=0;
+            const std::string& fileName=std::string(""),bool write=true)=0;
  
    
     /// add a pointer to a uint (32 bits) or an array
     virtual StatusCode addItem(const std::string & tupleName, 
             const std::string& itemName, const unsigned int* val,
-            const std::string& fileName=std::string(""))=0;
+            const std::string& fileName=std::string(""),bool write=true)=0;
  
     /// add a pointer to a uint (64 bits) or an array
     virtual StatusCode addItem(const std::string & tupleName, 
             const std::string& itemName, const unsigned long long* val,
-            const std::string& fileName=std::string(""))=0;
+            const std::string& fileName=std::string(""),bool write=true)=0;
  
         /** @brief Adds a pointer to a zero-terminated array of char 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -65,7 +65,7 @@ public:
 
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const char * pval,
-            const std::string& fileName=std::string(""))=0;
+            const std::string& fileName=std::string(""),bool write=true)=0;
 
 #if 1 // deprecate! eliminate!
 

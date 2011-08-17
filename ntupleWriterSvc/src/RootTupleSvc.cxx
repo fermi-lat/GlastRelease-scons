@@ -93,7 +93,7 @@ public:
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const double* pval, 
-        const std::string& fileName=std::string(""));
+        const std::string& fileName=std::string(""), bool write=true);
 
     /** @brief Adds a pointer to a float
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -103,7 +103,7 @@ public:
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const float* pval,
-        const std::string& fileName=std::string(""));
+        const std::string& fileName=std::string(""), bool write=true);
 
     /** @brief Adds a pointer to an int 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -113,7 +113,7 @@ public:
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const int* pval,
-        const std::string& fileName=std::string(""));
+        const std::string& fileName=std::string(""), bool write=true);
 
     /** @brief Adds a pointer to an unsigned int 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -123,7 +123,7 @@ public:
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const unsigned int* pval,
-        const std::string& fileName=std::string(""));
+        const std::string& fileName=std::string(""), bool write=true);
 
     /** @brief Adds a pointer to an unsigned long long 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -133,7 +133,7 @@ public:
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const unsigned long long* pval,
-        const std::string& fileName=std::string(""));
+        const std::string& fileName=std::string(""), bool write=true);
 
     /** @brief Adds a pointer to a zero-terminated array of char 
     @param tupleName - name of the Root tree: if it does not exist, it will be created. If blank, use the default
@@ -143,7 +143,7 @@ public:
     */
     virtual StatusCode addItem(const std::string & tupleName, 
         const std::string& itemName, const char * val,
-            const std::string& fileName=std::string(""));
+            const std::string& fileName=std::string(""), bool write=true);
 
 
 
@@ -156,7 +156,8 @@ public:
     */
     StatusCode addAnyItem(const std::string & tupleName, 
                const std::string& itemName, const std::string type, 
-               const void* pval, const std::string& fileName=std::string(""));
+               const void* pval, const std::string& fileName=std::string(""),
+               bool write=true);
 
     /// Set a flag to denote whether or not to store a row at the end of this event,
     virtual void storeRowFlag(bool flag) { m_storeAll = flag; }
@@ -642,7 +643,8 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
                                     const std::string& itemName0, 
                                     const std::string type,  
                                     const void* pval, 
-                                    const std::string& fileName)
+                                    const std::string& fileName,
+                                    bool write)
 {
     MsgStream log(msgSvc(),name());
     //bool inFileFlag = false;
@@ -651,31 +653,57 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     std::string rootFileName = fileName.empty() ? m_filename.value() : fileName;
     TDirectory *saveDir = gDirectory;
 
-    // Check list of output files
-    if ( m_fileCol.find(rootFileName) == m_fileCol.end()) {
-        // create a new TFile
-        TFile *tf = new TFile(rootFileName.c_str(), "RECREATE");
-        if (!tf->IsOpen()) {
-            log << MSG::ERROR 
-                << "cannot open ROOT file: " << rootFileName << endreq;
-            delete tf;
-            saveDir->cd();
-            return StatusCode::FAILURE;
-        }
-        m_fileCol[rootFileName] = tf;
-        getTree(treename,m_tree[treename]);
-        m_tree[treename]->SetDirectory(tf);
-        log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
-            << " in file: " << rootFileName << endreq;
-    } else if( m_tree.find(treename)==m_tree.end()){
-        // create new tree
-        m_fileCol[rootFileName]->cd();
-        getTree(treename,m_tree[treename]);
-        m_tree[treename]->SetDirectory(m_fileCol[rootFileName]);
-        log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
-            << " in file: " << rootFileName << endreq;
+    // If this tuple already exists, and was set up to be memory resident
+    // For now print error message and return without setting up new entry
+    if (m_tree.find(treename) != m_tree.end() && write &&
+                                 m_tree[treename]->GetCurrentFile() == 0) {
+        log << MSG::WARNING << "Ntuple " << treename << " was previously set"
+              << " up as a memory resident tree.  Skipping this new entry"
+              <<  itemName0 << endreq;
+        return StatusCode::FAILURE;
     }
-    // note have to cast away the const here!
+
+    // Check if this tuple already exists and we set it up to be written to
+    // a file..now client is requesting it be memory resident.  For now
+    // return with error message
+    if (m_tree.find(treename) != m_tree.end() && !write &&
+                                 m_tree[treename]->GetCurrentFile() != 0) {
+        log << MSG::WARNING << "Ntuple " << treename << " was previously set"
+            << " up to be written to file.  now requesting it to be memory "
+            << " resident.  Skipping this new entry " << itemName0 << endreq;
+        return StatusCode::FAILURE;
+    }
+
+    if (write) {
+        // Check list of output files
+        if ( m_fileCol.find(rootFileName) == m_fileCol.end()) {
+            // create a new TFile
+            TFile *tf = new TFile(rootFileName.c_str(), "RECREATE");
+            if (!tf->IsOpen()) {
+                log << MSG::ERROR 
+                    << "cannot open ROOT file: " << rootFileName << endreq;
+                delete tf;
+                saveDir->cd();
+                return StatusCode::FAILURE;
+            }
+            m_fileCol[rootFileName] = tf;
+            getTree(treename,m_tree[treename]);
+            m_tree[treename]->SetDirectory(tf);
+            log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
+                << " in file: " << rootFileName << endreq;
+        } else if( m_tree.find(treename)==m_tree.end()){
+            // create new tree
+            m_fileCol[rootFileName]->cd();
+            getTree(treename,m_tree[treename]);
+            m_tree[treename]->SetDirectory(m_fileCol[rootFileName]);
+            log << MSG::INFO << "Creating new tree \"" << treename << "\"" 
+                << " in file: " << rootFileName << endreq;
+        }
+    } else  { // memory resident
+        gDirectory->cd(0);
+        if (m_tree.find(treename) == m_tree.end())
+            m_tree[treename] = new TTree(treename.c_str(), m_title.value().c_str());
+    }
 
     // Searches list of branches, and returns NULL if itemName0 is not found
     TBranch* thisBranch = m_tree[treename]->GetBranch(itemName0.c_str());
@@ -714,9 +742,9 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, 
                                  const double* pval, 
-                                 const std::string& fileName)
+                                 const std::string& fileName, bool write)
 {
-    return addAnyItem(tupleName, itemName, "/D", (void*)pval, fileName);
+    return addAnyItem(tupleName, itemName, "/D", (void*)pval, fileName, write);
 
 
 }
@@ -724,41 +752,41 @@ StatusCode RootTupleSvc::addItem(const std::string & tupleName,
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, 
                                  const float* pval, 
-                                 const std::string& fileName)
+                                 const std::string& fileName, bool write)
 {
-    return addAnyItem(tupleName, itemName, "/F", (void*)pval, fileName);
+    return addAnyItem(tupleName, itemName, "/F", (void*)pval, fileName,write);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, 
                                  const int* pval, 
-                                 const std::string& fileName)
+                                 const std::string& fileName, bool write)
 {
-    return addAnyItem(tupleName, itemName, "/I", (void*)pval, fileName);
+    return addAnyItem(tupleName, itemName, "/I", (void*)pval, fileName,write);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, 
                                  const unsigned int* pval, 
-                                 const std::string& fileName)
+                                 const std::string& fileName, bool write)
 {
-    return addAnyItem(tupleName, itemName, "/i", (void*)pval, fileName);
+    return addAnyItem(tupleName, itemName, "/i", (void*)pval, fileName, write);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                  const std::string& itemName, 
                                  const unsigned long long* pval, 
-                                 const std::string& fileName)
+                                 const std::string& fileName, bool write)
 {
-    return addAnyItem(tupleName, itemName, "/l", (void*)pval, fileName);
+    return addAnyItem(tupleName, itemName, "/l", (void*)pval, fileName, write);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 StatusCode RootTupleSvc::addItem(const std::string & tupleName, 
                                const std::string& itemName,
                                const char * pval,
-                               const std::string& fileName)
+                               const std::string& fileName, bool write)
 {
-    return addAnyItem(tupleName, itemName, "/C", (void*)pval, fileName);
+    return addAnyItem(tupleName, itemName, "/C", (void*)pval, fileName, write);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -817,7 +845,10 @@ StatusCode RootTupleSvc::endEvent()
          it!=m_tree.end(); ++it){
         if( m_storeAll || m_storeTree[it->first]  ) {
             TTree* t = it->second;
-            t->GetCurrentFile()->cd();
+            if (t->GetCurrentFile() != 0)
+                t->GetCurrentFile()->cd();
+            else
+                gDirectory->cd(0);
             sc = checkForNAN(t, log);
             // check the tuple for non-finite entries, do not fill the tuple if found (unless overriden)
             if( sc.isFailure() ){ 
@@ -837,7 +868,10 @@ StatusCode RootTupleSvc::endEvent()
 StatusCode RootTupleSvc::checkForNAN( TTree* t, MsgStream& log)
 {
     TDirectory *saveDir = gDirectory;
-    t->GetCurrentFile()->cd();
+
+    if (t->GetCurrentFile() != 0)
+        t->GetCurrentFile()->cd();
+   
     TObjArray* ta = t->GetListOfBranches();
     StatusCode sc = SUCCESS;
 
@@ -910,12 +944,15 @@ StatusCode RootTupleSvc::finalize ()
 
     for( std::map<std::string, TTree*>::iterator it = m_tree.begin(); it!=m_tree.end(); ++it){
         TTree* t = it->second; 
-        t->GetCurrentFile()->cd();
+        if (t->GetCurrentFile() != 0)
+            t->GetCurrentFile()->cd();
         if( m_storeTree[it->first] ) t->Fill(); // In case the algorithm did an entry during its finalize
 
         if( t->GetEntries() ==0 ) {
 
             log << MSG::INFO << "No entries added to the TTree \"" << it->first <<"\" : not writing it" << endreq;
+        } else if (t->GetCurrentFile() == 0) {
+            log << MSG::INFO << "Memory Resident TTree " << it->first << endreq;
 
         }else{
             log << MSG::INFO << "Writing the TTree \"" << it->first<< "\" in file "<< t->GetCurrentFile()->GetName() //m_filename.value() 
@@ -1012,12 +1049,13 @@ long long RootTupleSvc::getOutputTreePtr(void*& pval, const std::string & tupleN
     std::string treename=tupleName.empty()? m_treename.value() : tupleName;
     TDirectory *saveDir = gDirectory;
 
-    // Check input files for this TTree
+    // Check output files for this TTree
     std::map<std::string, TTree*>::const_iterator treeit = m_tree.find(treename);
     if (treeit != m_tree.end()) {
         // Found the TChain, now return
         TTree* t = treeit->second;
-        t->GetCurrentFile()->cd();
+        if (t->GetCurrentFile() != 0) 
+            t->GetCurrentFile()->cd();
 
         pval = (void *)t;
         saveDir->cd();
@@ -1050,7 +1088,8 @@ std::string RootTupleSvc::getItem(const std::string & tupleName,
         throw std::invalid_argument("RootTupleSvc::getItem: did not find tuple or leaf");
     }
     TTree* t = treeit->second;
-    t->GetCurrentFile()->cd();
+    if (t->GetCurrentFile() != 0)
+        t->GetCurrentFile()->cd();
 
     if( itemName.empty()){
         // assume this is a request for the tree

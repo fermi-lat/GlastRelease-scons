@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-06-00-00 17-Aug-2011    hmk add in memory ntuple handling
  ntupleWriterSvc-05-05-00 15-Jul-2011  lsrea add getNumberOfEvents() to support WIRED
  ntupleWriterSvc-05-04-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
  ntupleWriterSvc-05-04-04 17-Jul-2010  lsrea Code to set the next event (used by HepRepSvc)

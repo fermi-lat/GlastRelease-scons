@@ -6,6 +6,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Algorithm.h"
+#include "TTree.h"
 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -44,6 +45,9 @@ private:
     float m_float2;
 
     double m_array[2]; // test an array
+
+    float m_memoryFloat;
+    int m_memoryInt;
 
     INTupleWriterSvc *m_rootTupleSvc;
 
@@ -100,6 +104,10 @@ StatusCode writeJunkAlg::initialize() {
     m_rootTupleSvc->addItem("tree_2","count", &m_count);
     m_rootTupleSvc->addItem("tree_2","square", &m_square);
 
+    // test creation of memory resident tuple
+    m_rootTupleSvc->addItem("memoryTree","memoryFloat",&m_memoryFloat, "", false);
+    m_rootTupleSvc->addItem("memoryTree","memoryInt",&m_memoryInt,"",false);
+
     // check that we can find a previous item
 
     float* test;
@@ -135,6 +143,20 @@ StatusCode writeJunkAlg::execute() {
 
     m_float2 = m_count;
 
+    // Set up memory resident tuple
+    m_memoryFloat = m_count;
+    m_memoryInt = 1;
+
+    void *memoryTree;
+    long long numMemoryEntries = m_rootTupleSvc->getOutputTreePtr(memoryTree, "memoryTree");
+    log << MSG::INFO << "Memory Tree Contains " << numMemoryEntries << " entries" << endreq;
+
+    void *testFloatPtr;
+    m_rootTupleSvc->getItem("memoryTree","memoryFloat",testFloatPtr);
+    float testFloat = *reinterpret_cast<float*>(testFloatPtr);
+
+    log << MSG::INFO << "Retrieved float from memory resident tree: " << testFloat << endreq;
+
     // test adding names
     static const char* names[] = {"name1", "name2"};
     strncpy(m_name, (m_count<3? names[0]: names[1]) , 10);
@@ -144,6 +166,7 @@ StatusCode writeJunkAlg::execute() {
 
     // Test the ability to turn off a row
     m_rootTupleSvc->storeRowFlag("tree_1",true) ; //callCount == 5);
+    m_rootTupleSvc->storeRowFlag("memoryTree",true);
     ++callCount;
 
 
