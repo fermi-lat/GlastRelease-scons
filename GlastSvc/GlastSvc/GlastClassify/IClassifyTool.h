@@ -22,7 +22,7 @@ class IClassifyTool : virtual public IAlgTool
 public:
     
     /// Typedef the map between variable names and locations
-    typedef std::map<std::string, double> VarNameToValueMap;
+    typedef std::map<std::string, float> VarNameToValueMap;
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IClassifyTool; }
@@ -38,6 +38,6 @@ public:
 
     /// @brief Once classification run this will look up and return the value of a given
     ///        variable. If the variable has been found successfully then it returns true
-    virtual bool       getVariable(const std::string& varName, double& varValue) = 0;
+    virtual bool       getVariable(const std::string& varName, float& varValue) = 0;
 };
 #endif
