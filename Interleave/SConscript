@@ -21,6 +21,7 @@ test_Interleave = progEnv.GaudiProgram('test_Interleave',
 progEnv.Tool('registerTargets', package = 'Interleave',
              libraryCxts = [[Interleave,libEnv]],
              testAppCxts = [[test_Interleave, progEnv]],
+             xml= listFiles(['xml/*']),
              jo=['src/test/jobOptions.txt', 'src/interleave.txt',
                  'src/test/testXml/jobOptionsXml.txt'])
 
