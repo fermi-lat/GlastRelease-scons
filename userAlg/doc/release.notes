@@ -4,6 +4,7 @@
 @verbatim
  * EOH *
 
+ userAlg-06-06-08 17-Aug-2011    jrb correct usage of TkrVertexCol smart pointer
  userAlg-06-06-07 23-May-2011    hmk Use CLHEP namespace
  userAlg-06-06-06 11-Jan-2011  lsrea Fix SConscript for test job
  userAlg-06-06-05 13-Jun-2010    jrb upgrades for SCons builds
