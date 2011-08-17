@@ -156,7 +156,7 @@ StatusCode UserAlg::execute()
     SmartDataPtr<Event::EventHeader>   header(eventSvc(),    EventModel::EventHeader);
     SmartDataPtr<Event::MCEvent>     mcheader(eventSvc(),    EventModel::MC::Event);
     SmartDataPtr<Event::McParticleCol> particles(eventSvc(), EventModel::MC::McParticleCol);
-    SmartDataPtr<Event::TkrVertexCol>  tracks(eventSvc(),    EventModel::TkrRecon::TkrVertexCol);
+    Event::TkrVertexCol* tracks = SmartDataPtr<Event::TkrVertexCol>(eventSvc(),    EventModel::TkrRecon::TkrVertexCol);
     SmartDataPtr<Event::CalClusterCol> clusters(eventSvc(),  EventModel::CalRecon::CalClusterCol);
     SmartDataPtr<Event::CalXtalRecCol> xtalrecs(eventSvc(),  EventModel::CalRecon::CalXtalRecCol);
     SmartDataPtr<Event::AcdRecon> acdrec(eventSvc(),         EventModel::AcdRecon::Event);
@@ -226,7 +226,8 @@ StatusCode UserAlg::execute()
 
     m_cuv = 0.;
 
-    if ( tracks->size() > 0 ) {// no clue why the vertex col is called "tracks"
+    if (tracks) {
+      if (!tracks->empty() ) {// no clue why the vertex col is called "tracks"
         const Event::TkrVertex* vertex1 = tracks->front();
         const Point p = vertex1->getPosition();
         const Vector v = vertex1->getDirection();
@@ -273,6 +274,7 @@ StatusCode UserAlg::execute()
             // let's exit, we found an ACD
             break;
         }
+      }
     }
     log << MSG::DEBUG << "completely useless: " << m_cuv << endreq;
     // *************************************************************************
