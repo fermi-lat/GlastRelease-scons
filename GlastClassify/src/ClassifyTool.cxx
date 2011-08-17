@@ -210,7 +210,7 @@ public:
 
     /// @brief Once classification run this will look up and return the value of a given
     ///        variable. If the variable has been found successfully then it returns true
-    bool       getVariable(const std::string& varName, double& varValue);
+    bool       getVariable(const std::string& varName, float& varValue);
 
     /// @brief Called by incident service at signalled times in event processing
     void handle(const Incident& inc);
@@ -359,7 +359,7 @@ StatusCode ClassifyTool::runClassification()
     return sc;
 }
 
-bool ClassifyTool::getVariable(const std::string& varName, double& varValue)
+bool ClassifyTool::getVariable(const std::string& varName, float& varValue)
 {
     bool foundIt = false;
 
