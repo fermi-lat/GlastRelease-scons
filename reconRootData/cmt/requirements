@@ -1,5 +1,5 @@
 package reconRootData
-version v9r26p9
+version v9r27p0
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -56,4 +56,5 @@ apply_pattern root_package headers="\
 
 private
 use facilities v*
-set TESTDATAROOT "${RECONROOTDATAROOT}/cmt"
+# HMK replacing TESTDATAROOT with RECONROOTDATADATAPATH
+#set TESTDATAROOT "${RECONROOTDATAROOT}/cmt"
