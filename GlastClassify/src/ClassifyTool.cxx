@@ -323,7 +323,7 @@ StatusCode ClassifyTool::setUpClassification(VarNameToValueMap& varMap,
     sc = m_rootTupleSvc->addItem(tupleName, "Dummy", dummyInt, tupleFileName, m_saveRows);
 
     // create our interface to the tuple
-    m_tuple = new GleamTuple(m_rootTupleSvc, m_tupleName);
+    m_tuple = new GleamTuple(m_rootTupleSvc, m_tupleName, tupleFileName);
 
     // Loop through the input var map to add variables to our tuple
     for(VarNameToValueMap::iterator varMapItr = varMap.begin(); varMapItr != varMap.end(); varMapItr++)
