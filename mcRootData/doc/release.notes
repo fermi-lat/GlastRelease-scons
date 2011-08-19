@@ -6,6 +6,7 @@
 $Header$
 * EOH *
 
+ mcRootData-02-22-06 18-Aug-2011 TU fix memory leak in McIntegratingHit 
  mcRootData-02-22-05 01-Feb-2011 hmk patch LinkDef to include + for new class
  mcRootData-02-22-04 15-Jan-2011 TU Updates to include XtalEnergyDep in input/output
  mcRootData-02-22-03 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows
