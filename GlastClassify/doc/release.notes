@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-08-02 19-Aug-2011  TU Forgot one small addition, now ok
  GlastClassify-07-08-01 19-Aug-2011  TU Small change to enable memory resident ntuples
  GlastClassify-07-08-00 19-Aug-2011  TU Tagging with ClassifyTool to allow recon access to classification 
  GlastClassify-07-07-05 15-Mar-2011  lsrea make Pass7_Protected_Analysis the default xml file for TMine
