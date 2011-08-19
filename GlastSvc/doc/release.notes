@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ GlastSvc-10-00-04 19-Aug-2011   TU Adding interface for ClassifyTool to enable recon access to classification
  GlastSvc-10-00-03 21-May-2011   hmk patch requirements for CLHEP upgrade
  GlastSvc-10-00-02 20-May-2011   hmk CLHEP 2.1.0.1 upgrade
  GlastSvc-10-00-01 31-Jan-2011    mk  Updates for handling rand num seeds.
