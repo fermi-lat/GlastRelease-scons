@@ -34,6 +34,7 @@ void* McIntegratingHit::operator new(size_t /*size*/)
     // Since we are re-using, make sure some of the data members which might allocate memory are cleaned up
     temp->m_mcPartArr.Clear();
     temp->m_energyPtrArr.clear();
+    temp->m_xtalEnergyMap.Clear();
 
     return temp;
 }
