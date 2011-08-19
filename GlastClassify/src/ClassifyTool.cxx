@@ -95,11 +95,15 @@ private:
 
 class GleamTuple : public GlastClassify::ITupleInterface {
 public:
-    GleamTuple( INTupleWriterSvc* tuple, const std::string& treename)
+    GleamTuple( INTupleWriterSvc* tuple, const std::string& treeName, const std::string fileName = "")
         : m_tuple(tuple)
-        , m_treename(treename)
+        , m_treeName(treeName)
+        , m_fileName(fileName)
+        , m_saveRow(false)
     {
-        m_tuple->getOutputTreePtr(m_treePtr, m_treename);
+        if (m_fileName != "") m_saveRow = true;
+
+        m_tuple->getOutputTreePtr(m_treePtr, m_treeName);
 
         if (!m_treePtr) 
             throw std::invalid_argument("GleamTuple constructor: can not get pointer to output tree!");
@@ -112,7 +116,7 @@ public:
         const GlastClassify::Item* item = 0;
         void* dummy;
 
-        std::string type = m_tuple->getItem(m_treename, name, dummy, m_treePtr);
+        std::string type = m_tuple->getItem(m_treeName, name, dummy, m_treePtr);
 
         if (type == "Float_t")
         {
@@ -162,25 +166,27 @@ public:
     /// create a new item (float only for now) in the tuple, which will take the given value
    void addItem(const std::string& name, float & value)
     {
-        m_tuple->addItem(m_treename, name, &value);
+        m_tuple->addItem(m_treeName, name, &value, m_fileName, m_saveRow);
     }
     
     void addItem(const std::string& name, double & value)
     {
-        m_tuple->addItem(m_treename, name, &value);
+        m_tuple->addItem(m_treeName, name, &value, m_fileName, m_saveRow);
     }
     void addItem(const std::string& name, unsigned long long & value)
     {
-        m_tuple->addItem(m_treename, name, &value);
+        m_tuple->addItem(m_treeName, name, &value, m_fileName, m_saveRow);
     }
     void addItem(const std::string& name, char & value)
     {
-        m_tuple->addItem(m_treename, name, &value);
+        m_tuple->addItem(m_treeName, name, &value, m_fileName, m_saveRow);
     }
 private:
     INTupleWriterSvc*  m_tuple;
     void*              m_treePtr;
-    const std::string& m_treename;
+    const std::string& m_treeName;
+    const std::string  m_fileName;
+    bool               m_saveRow;
 };
 
 
