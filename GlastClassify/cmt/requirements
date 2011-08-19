@@ -5,7 +5,8 @@ author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
 
 use GlastPolicy *
-use facilities *
+use facilities  *
+use GlastSvc    *
 
 apply_pattern packageShr
 

@@ -235,6 +235,9 @@ private:
     // Pointer to the classification tree analysis
     GlastClassify::TreeAnalysis*    m_treeAnalysis;
 
+    // Are we saving rows?
+    bool                            m_saveRows;
+
     bool                            m_printInfo;
 };
 
@@ -247,7 +250,7 @@ const IToolFactory& ClassifyToolFactory = s_factory;
 //
 ClassifyTool::ClassifyTool(const std::string& type, const std::string& name, const IInterface* parent) :
                     AlgTool(type, name, parent),
-                    m_treeAnalysis(0)
+                    m_rootTupleSvc(0), m_tupleName(""), m_tuple(0), m_treeAnalysis(0), m_saveRows(false)
 {
     declareProperty("PrintInfo", m_printInfo = true);
 
@@ -309,7 +312,9 @@ StatusCode ClassifyTool::setUpClassification(VarNameToValueMap& varMap,
     // so we have to do this on the side here... 
     int* dummyInt = new int();
 
-    sc = m_rootTupleSvc->addItem(tupleName, "Dummy", dummyInt, tupleFileName);
+    if (tupleFileName != "") m_saveRows = true;
+
+    sc = m_rootTupleSvc->addItem(tupleName, "Dummy", dummyInt, tupleFileName, m_saveRows);
 
     // create our interface to the tuple
     m_tuple = new GleamTuple(m_rootTupleSvc, m_tupleName);
@@ -385,7 +390,7 @@ void ClassifyTool::handle(const Incident & inc)
         m_treeAnalysis->zeroAllVals();
 
         // Always set the store row flag to true (so we can cross reference to merit?)
-        m_rootTupleSvc->storeRowFlag(m_tupleName, true);
+        if (m_saveRows) m_rootTupleSvc->storeRowFlag(m_tupleName, true);
     }
 }
 StatusCode ClassifyTool::finalize()

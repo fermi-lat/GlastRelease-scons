@@ -45,7 +45,7 @@ void AppendEngineNode::print(std::ostream& out, int depth) const
 void AppendEngineNode::execute()
 {
     // Append Nodes only have one output node
-    m_nodeMap.begin()->second->execute();
+    if (!m_nodeMap.empty()) m_nodeMap.begin()->second->execute();
 
     return;
 }
