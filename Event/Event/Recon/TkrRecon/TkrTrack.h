@@ -122,41 +122,41 @@ namespace Event {  // NameSpace
         /// JCT: THE FOLLOWING SHOULD BE COMMENTED
         inline int          getNumSegmentPoints()    const {return m_numSegmentPoints;}
         inline double       chiSquareSegment(double penaltyGap = 0.)  
-            const {return m_chisqSegment + penaltyGap*getNumGaps();}
-            inline int          getNumXHits()            const {return m_nxHits;}
-            inline int          getNumYHits()            const {return m_nyHits;}
-            inline int          getNumFitHits()          const {return m_nxHits + m_nyHits;}
-            /// JCT: THE FOLLOWING SHOULD BE COMMENTED
-            inline double       getTkrCalRadlen()        const {return m_TkrCal_radlen;}
+                               const {return m_chisqSegment + penaltyGap*getNumGaps();}
+        inline int          getNumXHits()            const {return m_nxHits;}
+        inline int          getNumYHits()            const {return m_nyHits;}
+        inline int          getNumFitHits()          const {return m_nxHits + m_nyHits;}
+        /// JCT: THE FOLLOWING SHOULD BE COMMENTED
+        inline double       getTkrCalRadlen()        const {return m_TkrCal_radlen;}
 
-            // Access to the hit information (why must I do it this way???)
-            int                 getNumHits()             const {return size();}
+        // Access to the hit information (why must I do it this way???)
+        int                 getNumHits()             const {return size();}
 
-            /// Set functions for initializing the data members
-            inline void   setInitialPosition(const Point x)   {m_initialPosition   = x;}
-            inline void   setInitialDirection(const Vector x) {m_initialDirection  = x;}
-            inline void   setInitialEnergy(double x)          {m_initialEnergy     = x;}
-            inline void   setChiSquareFilter(double x)        {m_chiSquareFilter   = x;}
-            inline void   setChiSquareSmooth(double x)        {m_chiSquareSmooth   = x;}
-            inline void   setNDegreesOfFreedom(const int i)   {m_nDegreesOfFreedom = i;}
-            inline void   setChiSqSegment(double x)           {m_chisqSegment      = x;}
-            inline void   setQuality(double x)                {m_Quality           = x;}
-            inline void   setScatter(double x)                {m_rmsResid          = x;}
-            inline void   setKalThetaMS(double x)             {m_KalmanThetaMS     = x;}
-            inline void   setKalEnergy(double x)              {m_KalmanEnergy      = x;}
-            inline void   setKalEnergyError(double x)         {m_KalmanEnergyErr   = x;}
-            inline void   setNumXGaps(int i)                  {m_Xgaps             = i;}
-            inline void   setNumYGaps(int i)                  {m_Ygaps             = i;}
-            inline void   setNumXFirstGaps(int i)             {m_XistGaps          = i;}
-            inline void   setNumYFirstGaps(int i)             {m_YistGaps          = i;}
-            inline void   setNumSegmentPoints(int i)          {m_numSegmentPoints  = i;}
-            inline void   setNumXHits(int i)                  {m_nxHits            = i;}
-            inline void   setNumYHits(int i)                  {m_nyHits            = i;}
-            inline void   setTkrCalRadLen(double x)           {m_TkrCal_radlen     = x;}
-            inline void   setStatusBit(unsigned int status)   {m_statusBits       |= status;}
-            inline void   clearStatusBits(unsigned int bits= 0xffffffff)            
-            {m_statusBits       &= ~bits;}
-            inline void   clearEnergyStatusBits()             {m_statusBits       &= 0xffffff0f;}
+        /// Set functions for initializing the data members
+        inline void   setInitialPosition(const Point x)   {m_initialPosition   = x;}
+        inline void   setInitialDirection(const Vector x) {m_initialDirection  = x;}
+        inline void   setInitialEnergy(double x)          {m_initialEnergy     = x;}
+        inline void   setChiSquareFilter(double x)        {m_chiSquareFilter   = x;}
+        inline void   setChiSquareSmooth(double x)        {m_chiSquareSmooth   = x;}
+        inline void   setNDegreesOfFreedom(const int i)   {m_nDegreesOfFreedom = i;}
+        inline void   setChiSqSegment(double x)           {m_chisqSegment      = x;}
+        inline void   setQuality(double x)                {m_Quality           = x;}
+        inline void   setScatter(double x)                {m_rmsResid          = x;}
+        inline void   setKalThetaMS(double x)             {m_KalmanThetaMS     = x;}
+        inline void   setKalEnergy(double x)              {m_KalmanEnergy      = x;}
+        inline void   setKalEnergyError(double x)         {m_KalmanEnergyErr   = x;}
+        inline void   setNumXGaps(int i)                  {m_Xgaps             = i;}
+        inline void   setNumYGaps(int i)                  {m_Ygaps             = i;}
+        inline void   setNumXFirstGaps(int i)             {m_XistGaps          = i;}
+        inline void   setNumYFirstGaps(int i)             {m_YistGaps          = i;}
+        inline void   setNumSegmentPoints(int i)          {m_numSegmentPoints  = i;}
+        inline void   setNumXHits(int i)                  {m_nxHits            = i;}
+        inline void   setNumYHits(int i)                  {m_nyHits            = i;}
+        inline void   setTkrCalRadLen(double x)           {m_TkrCal_radlen     = x;}
+        inline void   setStatusBit(unsigned int status)   {m_statusBits       |= status;}
+        inline void   clearStatusBits(unsigned int bits= 0xffffffff)            
+        {m_statusBits       &= ~bits;}
+        inline void   clearEnergyStatusBits()             {m_statusBits       &= 0xffffff0f;}
 
     private:    
         /// Status

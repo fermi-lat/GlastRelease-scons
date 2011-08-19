@@ -71,6 +71,12 @@ std::string EventModel::Overlay::CalDigiHitTab        = EventModel::Overlay::Eve
 std::string EventModel::Overlay::TkrDigiHitTab        = EventModel::Overlay::Event + "/TkrDigiHitTab";
 std::string EventModel::Overlay::TkrClusterHitTab     = EventModel::Overlay::Event + "/TkrClusterHitTab";
       
+// reconstructed data (Overall)
+std::string EventModel::Recon::Event                         = EventModel::EventHeader + "/Recon";
+std::string EventModel::Recon::TreeClusterRelationCol        = EventModel::Recon::Event + "/TreeClusterRelationCol";
+std::string EventModel::Recon::TreeToRelationMap             = EventModel::Recon::Event + "/TreeToRelationMap";
+std::string EventModel::Recon::ClusterToRelationMap          = EventModel::Recon::Event + "/ClusterToRelationMap";
+      
 // reconstructed data (Tracker)
 std::string EventModel::TkrRecon::Event                      = EventModel::EventHeader + "/TkrRecon";
 std::string EventModel::TkrRecon::TkrClusterCol              = EventModel::TkrRecon::Event + "/TkrClusterCol";

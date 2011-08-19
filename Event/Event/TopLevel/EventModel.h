@@ -119,6 +119,18 @@ public:
     };
 
 
+    class DLL_EXPORT_EVT Recon
+    {
+    public:
+        Recon() {}
+       ~Recon() {}
+
+        static std::string Event;
+        static std::string TreeClusterRelationCol;
+        static std::string TreeToRelationMap;
+        static std::string ClusterToRelationMap;
+    };
+
     class DLL_EXPORT_EVT TkrRecon
     {
     public:
