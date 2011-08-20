@@ -34,12 +34,12 @@
 //
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-template <class T> class GleamItem : public GlastClassify::Item {
+template <class T> class ClassifyItem : public GlastClassify::Item {
 public:
-    GleamItem<T>(const std::string& name, const std::string& type, T* data) :
+    ClassifyItem<T>(const std::string& name, const std::string& type, T* data) :
       m_pdata(data), m_name(name), m_type(type)   {}
     
-    virtual ~GleamItem<T>() {}
+    virtual ~ClassifyItem<T>() {}
 
     operator double()const {
         return (double)*m_pdata;
@@ -93,9 +93,9 @@ private:
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class GleamTuple : public GlastClassify::ITupleInterface {
+class ClassifyTuple : public GlastClassify::ITupleInterface {
 public:
-    GleamTuple( INTupleWriterSvc* tuple, const std::string& treeName, const std::string fileName = "")
+    ClassifyTuple( INTupleWriterSvc* tuple, const std::string& treeName, const std::string fileName = "")
         : m_tuple(tuple)
         , m_treeName(treeName)
         , m_fileName(fileName)
@@ -121,37 +121,37 @@ public:
         if (type == "Float_t")
         {
             float* data = (float*)dummy;
-            item =new GleamItem<float>(name, type, data);
+            item =new ClassifyItem<float>(name, type, data);
         }
         else if (type == "Double_t")
         {
             double* data = (double*)dummy;
-            item =new GleamItem<double>(name, type, data);
+            item =new ClassifyItem<double>(name, type, data);
         }
         else if (type == "UInt_t")
         {
             unsigned int* data = (unsigned int*)dummy;
-            item =new GleamItem<unsigned int>(name, type, data);
+            item =new ClassifyItem<unsigned int>(name, type, data);
         }
         else if (type == "ULong64_t")
         {
             unsigned long long* data = (unsigned long long*)dummy;
-            item =new GleamItem<unsigned long long>(name, type, data);
+            item =new ClassifyItem<unsigned long long>(name, type, data);
         }
         else if (type == "Int_t")
         {
             int* data = (int*)dummy;
-            item =new GleamItem<int>(name, type, data);
+            item =new ClassifyItem<int>(name, type, data);
         }
         else if (type == "UChar_t")
         {
             char* data = (char*)dummy;
-            item = new GleamItem<char>(name, type, data);
+            item = new ClassifyItem<char>(name, type, data);
         }
         else if (type == "Char_t")
         {
             char* data = (char*)dummy;
-            item = new GleamItem<char>(name, type, data);
+            item = new ClassifyItem<char>(name, type, data);
         }
         else
         {
@@ -323,7 +323,7 @@ StatusCode ClassifyTool::setUpClassification(VarNameToValueMap& varMap,
     sc = m_rootTupleSvc->addItem(tupleName, "Dummy", dummyInt, tupleFileName, m_saveRows);
 
     // create our interface to the tuple
-    m_tuple = new GleamTuple(m_rootTupleSvc, m_tupleName, tupleFileName);
+    m_tuple = new ClassifyTuple(m_rootTupleSvc, m_tupleName, tupleFileName);
 
     // Loop through the input var map to add variables to our tuple
     for(VarNameToValueMap::iterator varMapItr = varMap.begin(); varMapItr != varMap.end(); varMapItr++)
