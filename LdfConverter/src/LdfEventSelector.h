@@ -173,7 +173,7 @@ public:
     
 private:
 
-  void checkForSkippedEvents(unsigned long long& counter, bool &lastEventFlag);
+  void checkForSkippedEvents(unsigned long long& counter, bool &lastEventFlag) const;
 
   enum CriteriaType { 
     EBFFILE,

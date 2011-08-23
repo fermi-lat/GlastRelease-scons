@@ -286,11 +286,15 @@ StatusCode LdfEventSelector::initialize()     {
     log << MSG::INFO << "EventIndicesToSkipEnv " 
         << m_eventIndicesToSkipEnv << endreq;
     char *indices;
-    indices = strtok(m_eventIndicesToSkipEnv.c_str()," ");
+	//char* eventIndicesToStrTok = strdup(m_eventIndicesToSkipEnv.c_str());
+	char* eventIndicesToStrTok = new char[strlen(m_eventIndicesToSkipEnv.c_str())+1];
+	strcpy(eventIndicesToStrTok, m_eventIndicesToSkipEnv.c_str());
+    indices = strtok(eventIndicesToStrTok," ");
     while(indices != NULL) {
         m_eventIndexSkipVec.push_back(facilities::Util::atoi(indices));
         indices = strtok(NULL," ");
     }
+	delete [] eventIndicesToStrTok;
 
     return sc;
 }
@@ -825,7 +829,7 @@ StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
 }
 
 
-void LdfEventSelector::checkForSkippedEvents(unsigned long long& counter, bool &lastEventFlag) {
+void LdfEventSelector::checkForSkippedEvents(unsigned long long& counter, bool &lastEventFlag) const {
     MsgStream log(msgSvc(), name());
     /// If we are skipping events using the event indices, and we are not inserting an empty event in
     /// the output ROOT file, we can skip loading this event entirely
