@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ LdfConverter-04-04-07 23-Aug-2011    hmk Patches for Windows
  LdfConverter-04-04-06 27-Jul-2011    hmk Merge in GlastReleasev15r47p12 branch
  LdfConverter-04-04-05 08-Mar-2011    jrb get test program to work in SCons build
  LdfConverter-04-04-04 02-Feb-2011    hmk Make use of GlastSvc generic
