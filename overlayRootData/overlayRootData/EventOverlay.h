@@ -125,7 +125,7 @@ private:
     /// Storage for the Pt values
     PtOverlay       m_ptOverlay;
 
-    ClassDef(EventOverlay,3) // Storage for Raw(Digi) event and subsystem data
+    ClassDef(EventOverlay,4) // Storage for Raw(Digi) event and subsystem data
 }; 
  
 #endif
