@@ -28,7 +28,7 @@ OnboardFilter.RejectEvents = true;      // enable OBF
 #include "$GLEAMJOBOPTIONSPATH/calibration.txt"
 
 // test saa boundary mechanism
-//#include "$FLUXSVCROOT/src/SAAboundary.txt"
+//#include "$FLUXSVCJOBOPTIONSPATH/SAAboundary.txt"
 
 
 //==============================================================

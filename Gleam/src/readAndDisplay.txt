@@ -70,11 +70,11 @@ HepRepSvc.startFred = "$Fred_EXE_DIR";
 // From time to time, the test files below become outdated. If this job doesn't 
 //   run out of the box, please notify Leon or Heather.
 
-mcRootReaderAlg.mcRootFileList             = { "$(ROOTTESTDATAROOT)/data/default/mc.root" };
-digiRootReaderAlg.digiRootFileList         = { "$(ROOTTESTDATAROOT)/data/default/digi.root" };
-reconRootReaderAlg.reconRootFileList       = { "$(ROOTTESTDATAROOT)/data/default/recon.root" };
-relationRootReaderAlg.relationRootFileList = { "$(ROOTTESTDATAROOT)/data/default/relations.root" };
-RootTupleSvc.inFileList                    = { "$(ROOTTESTDATAROOT)/data/default/merit.root" };
+mcRootReaderAlg.mcRootFileList             = { "$(ROOTTESTDATADATAPATH)/default/mc.root" };
+digiRootReaderAlg.digiRootFileList         = { "$(ROOTTESTDATADATAPATH)/default/digi.root" };
+reconRootReaderAlg.reconRootFileList       = { "$(ROOTTESTDATADATAPATH)/default/recon.root" };
+relationRootReaderAlg.relationRootFileList = { "$(ROOTTESTDATADATAPATH)/default/relations.root" };
+RootTupleSvc.inFileList                    = { "$(ROOTTESTDATADATAPATH)/default/merit.root" };
 RootTupleSvc.RejectIfBad = false;
 
 // -------end readAndDisplay-specific-------

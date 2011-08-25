@@ -4,7 +4,7 @@
 // demo of the new basicOptions
 // $Header$
 
-//#include "$GLEAMROOT/src/basicOptions.txt"
+// old style: #include "$GLEAMROOT/src/basicOptions.txt"
 #include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 // choose one or the other below for old integrated Gui or FRED
