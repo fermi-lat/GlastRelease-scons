@@ -5,6 +5,16 @@
        Some simple test flux definitions for debugging
     -->
     
+    <!-- Diagnostic muons, 10 GeV, 2pi, default launch point -->
+    <source name="diagnostic_muons" flux="1.0">
+        <spectrum escale="GeV">
+            <particle name="mu+">
+               <energy e="10"/>
+            </particle>
+            <solid_angle mincos="0.0" maxcos="1.0"/>
+        </spectrum>
+    </source>
+
     <source name="beamtest_muon" >
        <spectrum escale="GeV"> 
          <particle name="mu+"><energy e="20"/> </particle>
