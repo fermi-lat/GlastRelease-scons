@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ G4Generator-06-02-02 25-Aug-2011  lsrea add diagnostic_muons to test_sources
  G4Generator-06-02-01 16-Aug-2011    jrb clean up SConscript
  G4Generator-06-02-00 16-Aug-2011    jrb define G4 table env variables in G4Generator::initialize
  G4Generator-06-01-01 28-Jul-2011 flongo rename some files from *.cc to *.cxx
