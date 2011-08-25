@@ -4,6 +4,8 @@
  *
  *                  EOH
 
+ containerSettings-00-03-01 25-Aug-2011 heather use python 2.6.5 for compilers
+      other than vc71
  containerSettings-00-03-00 23-May-2011 heather upgrade to CLHEP 2.1.0.1 and geant4 9.4.p01
  containerSettings-00-02-02 08-Mar-2011    jrb Use new external name: LDF rather than ldf
  containerSettings-00-02-01 07-Mar-2011    jrb Use TMineExt 3.1.2
