@@ -22,7 +22,6 @@
 
 // GLAST
 
-
 // others
 #include "EmStandardPhysics.hh"
 #include "EmLowEnergyPhysics.hh"
@@ -33,9 +32,9 @@
 //#include "HadronPhysicsQGSP.hh"
 //#include "HadronPhysicsQGSP_BIC.hh"
 #include "HadronPhysicsQGSP_BERT.hh"
-//#include "G4EmStandardPhysics.hh"
+#include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
-//#include "G4EmLivermorePhysics.hh"
+#include "G4EmLivermorePhysics.hh"
 #include "G4DecayPhysics.hh"
 //#include "G4IonPhysics.hh"
 
@@ -73,6 +72,8 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
 
   //          EmLow
   //          EmStd
+  //          EmLiv // New
+  //          QGSP_BERT_EPAX // New
 
  if (m_physicsChoice=="EmLow")
    {
@@ -81,8 +82,6 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      // EM Physics
      
      RegisterPhysics( new EmLowEnergyPhysics("lowEnergy EM", ver));
-     
-     //RegisterPhysics( new G4EmLivermorePhysics(ver));
      
      // Decay Physics - i.e. decay
      
@@ -95,6 +94,30 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron")); // to be updated
  
    }
+ if (m_physicsChoice=="EmLiv")
+   {
+     G4int ver=0;
+  
+     // EM Physics
+     
+     RegisterPhysics( new G4EmLivermorePhysics(ver));
+     RegisterPhysics( new G4EmExtraPhysics("extra EM"));
+     
+     // Decay Physics - i.e. decay
+     
+     RegisterPhysics( new G4DecayPhysics("decay") );
+     
+     // Ion Physics
+     
+     RegisterPhysics( new EpaxIonPhysics("ion", m_physicsChoice));
+
+     // Hadron Phyiscs
+     RegisterPhysics( new G4NeutronTrackingCut(ver) );
+     RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron")); // to be updated
+     RegisterPhysics(  new G4HadronElasticPhysics("hadronElast"));
+     RegisterPhysics( new G4QStoppingPhysics("stopping"));
+     
+   }
  if (m_physicsChoice=="EmStd") 
    {
 
@@ -104,8 +127,6 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      
      RegisterPhysics( new EmStandardPhysics("standard EM", ver));
 
-     //     RegisterPhysics( new G4EmStandardPhysics(ver));
-     
      // Synchroton Radiation & GN Physics
   
      RegisterPhysics( new G4EmExtraPhysics("extra EM"));
@@ -114,10 +135,6 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      
      RegisterPhysics( new G4DecayPhysics("decay") );
      
-     // Ion Physics
-    
-     //     RegisterPhysics( new G4IonPhysics("ion"));
-
      // Full Ion Physics
      
      RegisterPhysics( new EpaxIonPhysics("ion", m_physicsChoice));
@@ -139,30 +156,51 @@ PhysicsList::PhysicsList(double cutValue, const std::string& physicsChoice,
      
      
    }
+ if (m_physicsChoice=="QGSP_BERT_EPAX") 
+   {
+     G4int ver=0;
+     
+     // EM standard physics (default)
+     
+     RegisterPhysics( new G4EmStandardPhysics(ver));
+     
+     // Synchroton Radiation & GN Physics
+     
+     RegisterPhysics( new G4EmExtraPhysics("extra EM"));
+
+     // Decay Physics - i.e. decay
+     
+     RegisterPhysics( new G4DecayPhysics("decay") );
+     
+     // Ion Physics
+    
+     RegisterPhysics( new EpaxIonPhysics("ion", m_physicsChoice));
+     
+     // Neutrons 
+
+     RegisterPhysics( new G4NeutronTrackingCut(ver) );
+     
+     // Hadron Physics
+     
+     RegisterPhysics(  new HadronPhysicsQGSP_BERT("hadron"));
+     
+     // Hadron Elastic Phys
+     
+     RegisterPhysics(  new G4HadronElasticPhysics("hadronElast"));
+     
+     // Stopping Physics
+     
+     RegisterPhysics( new G4QStoppingPhysics("stopping"));
+     
+     
+   }
+
+
+
+
 }
 PhysicsList::~PhysicsList()
 {;}
-
-/*void PhysicsList::ConstructParticle()
-{
-  m_GeneralPhysics->ConstructParticle();
-  m_EMPhysics->ConstructParticle();
-  m_MuonPhysics->ConstructParticle();
-  m_HadronPhysics->ConstructParticle();
-  m_IonPhysics->ConstructParticle();
-}
-
-void PhysicsList::ConstructProcess()
-{
-  AddTransportation();
-
-  m_GeneralPhysics->ConstructProcess();
-  m_EMPhysics->ConstructProcess();
-  m_MuonPhysics->ConstructProcess();
-  m_HadronPhysics->ConstructProcess();
-  m_IonPhysics->ConstructProcess();
-}
-*/
 
 
 void PhysicsList::SetCuts()
