@@ -121,7 +121,8 @@ RunManager::RunManager(std::ostream& log,
   // The user stuff
 
 
-  if (physics_choice =="EmStd" || physics_choice == "EmLow")
+  if (physics_choice =="EmStd" || physics_choice == "EmLow" ||
+      physics_choice =="EmLiv" || physics_choice == "QGSP_BERT_EPAX")
     {
       physicsList = new PhysicsList(defaultCutValue, physics_choice, physics_table, physics_dir);
     }
