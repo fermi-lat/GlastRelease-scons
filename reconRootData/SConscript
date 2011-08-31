@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Heather Kelly <heather@milkyway.gsfc.nasa.gov>
-# Version: reconRootData-09-27-00
+# Version: reconRootData-09-27-01
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -66,6 +66,7 @@ test_reconRootData = progEnv.Program('test_reconRootData',
                                      ['src/test/testReconClasses.cxx'])
 progEnv.Tool('registerTargets', package = 'reconRootData',
              rootcintSharedCxts = [[reconRootData, libEnv]], 
+             data = listFiles(['data/*'],recursive=True),
              testAppCxts = [[test_reconRootData, progEnv]],
              includes = listFiles(['reconRootData/*.h']))
 
