@@ -90,7 +90,7 @@ AcdRecon AcdRecon-05-01-13
 
 # Geant4
 GlastMS GlastMS-01-00-01
-G4Generator G4Generator-06-02-01
+G4Generator G4Generator-06-03-00
 G4HadronSim G4HadronSim-02-00-01
 G4Propagator G4Propagator-03-00-01
 
