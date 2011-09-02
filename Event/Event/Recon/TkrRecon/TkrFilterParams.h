@@ -33,7 +33,7 @@ public:
     TkrFilterParams() : m_statusBits(0),
                         m_EventEnergy(0.),
                         m_EventPosition(0.,0.,0.),
-                        m_EventAxis(0.,0.,0.),
+                        m_EventAxis(0.,0.,1.),
                         m_numBiLayers(0),
                         m_numIterations(0),
                         m_numHitsTotal(0),

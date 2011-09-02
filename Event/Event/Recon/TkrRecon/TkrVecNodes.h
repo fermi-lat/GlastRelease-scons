@@ -316,7 +316,9 @@ inline void TkrVecNode::setRmsAngleInfo(double rmsAngSum, int num)
 
 inline const double TkrVecNode::getRmsAngle() const
 {
-    double rmsAngle = sqrt(m_rmsAngleSum / m_numAnglesInSum);
+    double rmsAngle = 0.;
+    
+    if (m_numAnglesInSum > 0) rmsAngle = sqrt(m_rmsAngleSum / m_numAnglesInSum);
 
     return rmsAngle;
 }
@@ -497,8 +499,10 @@ inline void TkrVecNode::resetBestParams()
 inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, const TkrVecNode* right) const
 {
     // Most number of bilayers wins (longest)
-    if      (left->getBestNumBiLayers() > right->getBestNumBiLayers()) return true;
-    else if (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
+//    if      (left->getBestNumBiLayers() > right->getBestNumBiLayers()) return true;
+//    else if (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
+    if      (left->getDepth() > right->getDepth()) return true;
+    else if (left->getDepth() < right->getDepth()) return false;
 
     // Check special case of stubs starting with skipping layer links
     if (left->getNumAnglesInSum() == 2 || right->getNumAnglesInSum() == 2)
