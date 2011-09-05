@@ -28,6 +28,7 @@
 #pragma link C++ class AcdTkrHitPocaV2+;
 #pragma link C++ class AcdTkrGapPocaV2+;
 #pragma link C++ class AcdTkrAssoc+;
+#pragma link C++ class AcdCalAssoc+;
 #pragma link C++ class AcdEventTopology+;
 
 #pragma link C++ class AcdRecon+;
