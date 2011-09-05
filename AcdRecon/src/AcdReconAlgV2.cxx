@@ -329,6 +329,7 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
 	
     Event::AcdPocaSet acdPocaSet;
     static Event::AcdTkrAssocCol acdTkrAssocs;
+    static Event::AcdCalAssocCol acdCalAssocs;
 
     sc = trackDistances(acdHits,acdTkrAssocs);
     if (sc.isFailure()) {
@@ -337,7 +338,7 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
     }    
 
     // disable calClusterDistances for now
-    //sc = calClusterDistances(acdHits,acdTkrAssocs);
+    sc = calClusterDistances(acdHits,acdCalAssocs);
     if (sc.isFailure()) {
       log << MSG::ERROR << "AcdReconAlgV2::calClusterDistances failed" << endreq;
       return sc;
@@ -377,6 +378,7 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
 
     acdRecon->getHitCol().init(acdHits);
     acdRecon->getTkrAssocCol().init(acdTkrAssocs);
+    acdRecon->getCalAssocCol().init(acdCalAssocs);
     
     sc = fillAcdEventTopology(acdHits,acdRecon->getEventTopology());
     if ( sc.isFailure() ) {
@@ -391,6 +393,7 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
 
     // ownership handed to TDS, clear local copies	
     acdTkrAssocs.clear();
+    acdCalAssocs.clear();
     acdHits.clear();	
 
     if ( log.level() <= MSG::DEBUG ) {         
@@ -622,6 +625,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 	  return sc;
 	}
 	tkrAssocs.push_back(downAssoc);
+
     }
    
     return sc;
@@ -888,6 +892,7 @@ StatusCode AcdReconAlgV2::mcDistances(const Event::AcdHitCol& acdHits,
     return sc;	
 }
 
+
 StatusCode AcdReconAlgV2::hitDistances(const AcdRecon::TrackData& aTrack, 
 				       const Event::AcdHitCol& acdHits, 
 				       const AcdRecon::ExitData& data,
@@ -951,6 +956,7 @@ StatusCode AcdReconAlgV2::hitDistances(const AcdRecon::TrackData& aTrack,
   }
   return sc;
 }
+
 
 StatusCode AcdReconAlgV2::elemDistances(const AcdRecon::TrackData& aTrack, 
 				      const idents::AcdId& acdId,
@@ -1018,9 +1024,10 @@ StatusCode AcdReconAlgV2::elemDistances(const AcdRecon::TrackData& aTrack,
 
 
 StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits, 
-					      Event::AcdTkrAssocCol& tkrAssocs) {
+					      Event::AcdCalAssocCol& calAssocs) {
 
-    // Purpose and Method: TBD
+    // Purpose and Method:  Calculates the DOCA and Active Distance quantities for
+    // the CAL cluster axes. Similar to the calculation done for tracks and vertices.
 	
     StatusCode sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
@@ -1048,14 +1055,14 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
     while(calItr != calClustersTds->end())
       {
 	const Event::CalCluster* calClusterTds = *calItr++;       // The TDS track
-	std::cout << "--------------------------->" << std::endl;
  	iCluster++;
 
  	// grab the cluster direction information
 	upwardExtend.m_energy = calClusterTds->getMomParams().getEnergy();
  	upwardExtend.m_index = 11 + iCluster;
  	upwardExtend.m_upward = true;
-	std::cout << "Energy for index " << upwardExtend.m_index << ": " << upwardExtend.m_energy << std::endl;
+	//std::cout << "--------------------------->" << std::endl;
+	//std::cout << "Energy for index " << upwardExtend.m_index << ": " << upwardExtend.m_energy << std::endl;
 	AcdRecon::ReconFunctions::convertToAcdRep(calClusterTds->getMomParams(), upwardExtend);
  	
 	// get the LAT exit points
@@ -1129,19 +1136,20 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
  	sortPocae(upHitPocae,upGapPocae);
 
  	HepVector3D propVect = upwardExtend.m_current - upwardExtend.m_point;
-	
-  	Event::AcdTkrAssoc* upAssoc = 
- 	  new Event::AcdTkrAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
+
+  	Event::AcdCalAssoc* upAssoc = 
+ 	  new Event::AcdCalAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
  				 upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
  				 upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
  				 ssdVetoUp,cornerDocaUp);
 
- 	sc = fillTkrAssoc(*upAssoc,upHitPocae,upGapPocae,upPoint);
+ 	sc = fillCalAssoc(*upAssoc,upHitPocae,upGapPocae,upPoint);
  	if (sc.isFailure()){
- 	  log << MSG::ERROR << "AcdPocaTool::fillTkrAssoc(up) failed" << endreq;
+ 	  log << MSG::ERROR << "AcdPocaTool::fillCalAssoc(up) failed" << endreq;
  	  return sc;
  	}
- 	tkrAssocs.push_back(upAssoc);   
+ 	calAssocs.push_back(upAssoc);   
+
       }
 
     return sc;   
@@ -1387,6 +1395,29 @@ StatusCode AcdReconAlgV2::fillTkrAssoc(Event::AcdTkrAssoc& assoc,
   }
   return StatusCode::SUCCESS;
 }
+
+/// Fill an AcdCalAssoc with data
+StatusCode AcdReconAlgV2::fillCalAssoc(Event::AcdCalAssoc& assoc,
+				     const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
+				     const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
+				     Event::AcdTkrPoint* point) {
+
+  for ( std::vector<Event::AcdTkrHitPoca*>::const_iterator itrHitPoca = hitPocae.begin(); 
+	itrHitPoca != hitPocae.end(); itrHitPoca++ ) {
+    assoc.addHitPoca(*(*itrHitPoca));
+  }
+  
+  for ( std::vector<Event::AcdTkrGapPoca*>::const_iterator itrGapPoca = gapPocae.begin(); 
+	itrGapPoca != gapPocae.end(); itrGapPoca++ ) {
+    assoc.addGapPoca(*(*itrGapPoca));
+  }
+
+  if ( point != 0 ) {
+    assoc.setPoint(*point);
+  }
+  return StatusCode::SUCCESS;
+}
+
 
 /// Fill the AcdEventTopology object
 StatusCode AcdReconAlgV2::fillAcdEventTopology(const Event::AcdHitCol& acdHits,

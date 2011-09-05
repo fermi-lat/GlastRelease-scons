@@ -13,6 +13,7 @@
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
 #include "Event/Recon/AcdRecon/AcdHit.h"
 #include "Event/Recon/AcdRecon/AcdTkrAssoc.h"
+#include "Event/Recon/AcdRecon/AcdCalAssoc.h"
 
 #include "GaudiKernel/ObjectVector.h"
 
@@ -190,9 +191,9 @@ class AcdReconAlgV2 : public Algorithm
       StatusCode trackDistances(const Event::AcdHitCol& acdHits, 
 				Event::AcdTkrAssocCol& tkrAssocs);
 
-      /// try and do the same thing with the CAL cluster(s)
+      /// try and do the same thing with the CAL clusters
       StatusCode calClusterDistances(const Event::AcdHitCol& acdHits, 
-				     Event::AcdTkrAssocCol& tkrAssocs);
+				     Event::AcdCalAssocCol& calAssocs);
 
       /// retrieves event vertex and calls the DOCA and Active Distance routines
       StatusCode vertexDistances(const Event::AcdHitCol& acdHits, 
@@ -236,6 +237,12 @@ class AcdReconAlgV2 : public Algorithm
 
       /// Fill an AcdTkrAssoc with data
       StatusCode fillTkrAssoc(Event::AcdTkrAssoc& assoc,
+			      const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
+			      const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
+			      Event::AcdTkrPoint* point);
+
+      /// Fill an AcdCalAssoc with data
+      StatusCode fillCalAssoc(Event::AcdCalAssoc& assoc,
 			      const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
 			      const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
 			      Event::AcdTkrPoint* point);
