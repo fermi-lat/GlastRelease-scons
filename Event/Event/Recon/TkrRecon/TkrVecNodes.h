@@ -501,11 +501,14 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
     // Most number of bilayers wins (longest)
 //    if      (left->getBestNumBiLayers() > right->getBestNumBiLayers()) return true;
 //    else if (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
-    if      (left->getDepth() > right->getDepth()) return true;
-    else if (left->getDepth() < right->getDepth()) return false;
+    if (fabs(left->getBestNumBiLayers() - right->getBestNumBiLayers()) >1)
+    {
+        if      (left->getDepth() > right->getDepth()) return true;
+        else if (left->getDepth() < right->getDepth()) return false;
+    }
 
     // Check special case of stubs starting with skipping layer links
-    if (left->getNumAnglesInSum() == 2 || right->getNumAnglesInSum() == 2)
+    if (left->getNumAnglesInSum() == 1 || right->getNumAnglesInSum() == 1)
     {
         if      (left->getDepth() < right->getDepth()) return false;
         else if (left->getDepth() > right->getDepth()) return true;
