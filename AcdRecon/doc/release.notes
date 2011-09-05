@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-01-14 05-Sep-2011 kadrlica Added treatment of AcdCalAssoc to AcdReconAlgV2
  AcdRecon-05-01-13 26-May-2011 HMK More CLHEP tweaks on windows
  AcdRecon-05-01-12 20-May-2011 HMK Mods for CLHEP namespace in 2.1.0.1
  AcdRecon-05-01-11  2-Feb-2011 HMK Update use of GlastSvc to a generic version
