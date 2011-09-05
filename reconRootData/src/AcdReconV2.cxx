@@ -1,6 +1,7 @@
 #include "reconRootData/AcdReconV2.h"
 #include "reconRootData/AcdHit.h"
 #include "reconRootData/AcdTkrAssoc.h"
+#include "reconRootData/AcdCalAssoc.h"
 #include <commonRootData/RootDataUtil.h>
 #include "Riostream.h"
 #include "TROOT.h"
@@ -14,7 +15,8 @@ ClassImp(AcdReconV2)
 AcdReconV2::AcdReconV2()
   :TObject(),
    m_acdHitCol( new TClonesArray( AcdHit::Class() ) ),
-   m_acdTkrAssocCol( new TClonesArray( AcdTkrAssoc::Class() ) ){  
+   m_acdTkrAssocCol( new TClonesArray( AcdTkrAssoc::Class() ) ),
+   m_acdCalAssocCol( new TClonesArray( AcdCalAssoc::Class() ) ){  
   Clear();
 }
 
@@ -29,6 +31,11 @@ AcdReconV2::~AcdReconV2() {
   }
   delete m_acdTkrAssocCol;
   m_acdTkrAssocCol = 0;
+  if ( m_acdCalAssocCol != 0 ) {
+    m_acdCalAssocCol->Delete();
+  }
+  delete m_acdCalAssocCol;
+  m_acdCalAssocCol = 0;
   Clear();
 }
 
@@ -40,6 +47,9 @@ void AcdReconV2::Clear(Option_t* option) {
   }
   if ( m_acdTkrAssocCol ) {
     m_acdTkrAssocCol->Clear();
+  }
+  if ( m_acdCalAssocCol ) {
+    m_acdCalAssocCol->Clear();
   }
 }
 
@@ -62,6 +72,12 @@ AcdTkrAssoc* AcdReconV2::addAcdTkrAssoc(const AcdTkrAssoc& toAdd) {
   return newAssoc;
 }
 
+AcdCalAssoc* AcdReconV2::addAcdCalAssoc(const AcdCalAssoc& toAdd) {
+  UInt_t n = getCalAssocCol().GetEntriesFast();
+  TClonesArray& assocs = *m_acdCalAssocCol; 
+  AcdCalAssoc* newAssoc =  (AcdCalAssoc*)(new (assocs[n]) AcdCalAssoc(toAdd));
+  return newAssoc;
+}
 
 //======================================================
 // For Unit Tests
