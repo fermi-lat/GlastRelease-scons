@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-27-02 05-Sep-2011 kadrlica Add AcdCalAssoc to the PDS
  reconRootData-09-27-01 31-Aug-2011 hmk      Patch for unit test on SCons to 
     copy data files into their proper spot
  reconRootData-09-27-00 17-Aug-2011 hmk      Use RECONROOTDATADATAPATH env 
