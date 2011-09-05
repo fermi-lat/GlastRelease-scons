@@ -25,6 +25,9 @@
 #include <Event/Recon/AcdRecon/AcdTkrAssoc.h>
 #include <reconRootData/AcdTkrAssoc.h>
 
+#include <Event/Recon/AcdRecon/AcdCalAssoc.h>
+#include <reconRootData/AcdCalAssoc.h>
+
 #include <Event/Recon/AcdRecon/AcdSplashVars.h>   
 #include <reconRootData/AcdSplashVars.h>
 
@@ -51,6 +54,9 @@ namespace RootPersistence {
 
   void convert( const Event::AcdTkrAssoc&, AcdTkrAssoc&);
   void convert( const AcdTkrAssoc&, Event::AcdTkrAssoc&);
+
+  void convert( const Event::AcdCalAssoc&, AcdCalAssoc&);
+  void convert( const AcdCalAssoc&, Event::AcdCalAssoc&);
   
   void convert( const Event::AcdTkrIntersection&, AcdTkrIntersection&);
   void convert( const AcdTkrIntersection&, Event::AcdTkrIntersection&);

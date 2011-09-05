@@ -262,6 +262,16 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
       AcdTkrAssoc* addedAssoc = root.addAcdTkrAssoc(rootAcdTkrAssoc);
       convert(*acdTkrAssocTDS,*addedAssoc);      
     } 
+
+    const Event::AcdCalAssocCol& tdsAcdCalAssocs = tds.getCalAssocCol() ;    
+    AcdCalAssoc rootAcdCalAssoc;
+    for ( Event::AcdCalAssocCol::const_iterator itrAssoc = tdsAcdCalAssocs.begin();
+          itrAssoc != tdsAcdCalAssocs.end(); itrAssoc++ ) {
+      const Event::AcdCalAssoc* acdCalAssocTDS = *itrAssoc;
+      AcdCalAssoc* addedAssoc = root.addAcdCalAssoc(rootAcdCalAssoc);
+      convert(*acdCalAssocTDS,*addedAssoc);      
+    } 
+
   }
   
   void convert( const AcdReconV2 & root, Event::AcdReconV2& tds) {
@@ -276,13 +286,22 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
       tds.getHitCol().push_back(acdHitTds);
     }
 
-    const TClonesArray& rootAssocs = root.getTkrAssocCol();
-    for ( Int_t iAssoc(0); iAssoc < rootAssocs.GetEntriesFast(); iAssoc++ ) {
-      const AcdTkrAssoc* acdAssocRoot = (const AcdTkrAssoc*)(rootAssocs.UncheckedAt(iAssoc));
-      Event::AcdTkrAssoc* acdAssocTds = new Event::AcdTkrAssoc();
-      convert(*acdAssocRoot,*acdAssocTds);
-      tds.getTkrAssocCol().push_back(acdAssocTds);
+    const TClonesArray& rootTkrAssocs = root.getTkrAssocCol();
+    for ( Int_t iAssoc(0); iAssoc < rootTkrAssocs.GetEntriesFast(); iAssoc++ ) {
+      const AcdTkrAssoc* acdTkrAssocRoot = (const AcdTkrAssoc*)(rootTkrAssocs.UncheckedAt(iAssoc));
+      Event::AcdTkrAssoc* acdTkrAssocTds = new Event::AcdTkrAssoc();
+      convert(*acdTkrAssocRoot,*acdTkrAssocTds);
+      tds.getTkrAssocCol().push_back(acdTkrAssocTds);
     }
+
+    const TClonesArray& rootCalAssocs = root.getCalAssocCol();
+    for ( Int_t iAssoc(0); iAssoc < rootCalAssocs.GetEntriesFast(); iAssoc++ ) {
+      const AcdCalAssoc* acdCalAssocRoot = (const AcdCalAssoc*)(rootCalAssocs.UncheckedAt(iAssoc));
+      Event::AcdCalAssoc* acdCalAssocTds = new Event::AcdCalAssoc();
+      convert(*acdCalAssocRoot,*acdCalAssocTds);
+      tds.getCalAssocCol().push_back(acdCalAssocTds);
+    }
+
   }   
 
   void convert( const Event::AcdHit& tds, AcdHit& root) {
@@ -419,6 +438,78 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     tds.setPoint(*acdPocaTds);
   }
   
+  void convert( const Event::AcdCalAssoc& tds, AcdCalAssoc& root) {
+    static TMatrixDSym covStart;
+    static TMatrixDSym covEnd;
+
+    TVector3 start = convert( tds.getStart() );
+    TVector3 dir = convert3vector( tds.getDir() );
+    convert( tds.getCovStart(), covStart );
+    convert( tds.getCovEnd(), covEnd );
+    root.set( tds.getTrackIndex(), tds.getUpward(), tds.getEnergy(),
+              start, dir, 
+              tds.getArcLength(), 
+              covStart, covEnd,
+              tds.getTkrSSDVeto(), tds.getCornerDoca() );
+
+    AcdTkrHitPocaV2 rootAcdHitPoca;
+    int nHitPoca = tds.nHitPoca();
+    for ( int iHitPoca(0); iHitPoca < nHitPoca; iHitPoca++ ) {
+      const Event::AcdTkrHitPoca* acdTkrHitPocaTDS = tds.getHitPoca(iHitPoca);
+      AcdTkrHitPocaV2* addedHitPoca = root.addHitPoca(rootAcdHitPoca);;
+      convert(*acdTkrHitPocaTDS,*addedHitPoca);
+      
+    }  
+    
+    AcdTkrGapPocaV2 rootAcdGapPoca;
+    int nGapPoca = tds.nGapPoca();
+    for ( int iGapPoca(0); iGapPoca < nGapPoca; iGapPoca++ ) {
+      const Event::AcdTkrGapPoca* acdTkrGapPocaTDS = tds.getGapPoca(iGapPoca);
+      AcdTkrGapPocaV2* addedGapPoca = root.addGapPoca(rootAcdGapPoca);
+      convert(*acdTkrGapPocaTDS,*addedGapPoca);      
+    }  
+    
+    AcdTkrPointV2 rootAcdPoint;
+    const Event::AcdTkrPoint* acdTkrPointTDS = tds.getPoint();
+    convert(*acdTkrPointTDS,rootAcdPoint);
+    root.setPoint(rootAcdPoint);
+  }
+  
+  void convert( const AcdCalAssoc& root, Event::AcdCalAssoc& tds) { 
+    static HepSymMatrix covStart;
+    static HepSymMatrix covEnd;
+    Point start = convertPoint( root.getStart() );
+    Vector dir = convertVector( root.getDir() );
+    convert( root.getCovStart(), covStart );
+    convert( root.getCovEnd(), covEnd );
+    tds.set( root.getTrackIndex(), root.getUpward(), root.getEnergy(),
+             start, dir, 
+             root.getArcLength(), 
+             covStart, covEnd,
+             root.getTkrSSDVeto(), root.getCornerDoca() );
+
+    int nHitPoca = root.nAcdHitPoca();
+    for ( int iHitPoca(0); iHitPoca < nHitPoca; iHitPoca++ ) {
+      const AcdTkrHitPocaV2* acdPocaRoot = root.getHitPoca(iHitPoca);
+      Event::AcdTkrHitPoca* acdPocaTds = new Event::AcdTkrHitPoca();
+      convert(*acdPocaRoot,*acdPocaTds);
+      tds.addHitPoca(*acdPocaTds);
+    }
+
+    int nGapPoca = root.nAcdGapPoca();
+    for ( int iGapPoca(0); iGapPoca < nGapPoca; iGapPoca++ ) {
+      const AcdTkrGapPocaV2* acdPocaRoot = root.getGapPoca(iGapPoca);
+      Event::AcdTkrGapPoca* acdPocaTds = new Event::AcdTkrGapPoca();
+      convert(*acdPocaRoot,*acdPocaTds);
+      tds.addGapPoca(*acdPocaTds);
+    }
+
+    AcdTkrPointV2& acdPocaRoot = const_cast<AcdTkrPointV2&>(root.getPoint());
+    Event::AcdTkrPoint* acdPocaTds = new Event::AcdTkrPoint();
+    convert(acdPocaRoot,*acdPocaTds);
+    tds.setPoint(*acdPocaTds);
+  }
+
   void convert( const Event::AcdTkrIntersection& tds, AcdTkrIntersection& root) {
     static TVector3 globalPosition;
     static Double_t localPosition[2];
