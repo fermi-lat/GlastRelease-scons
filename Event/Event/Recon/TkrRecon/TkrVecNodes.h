@@ -499,16 +499,13 @@ inline void TkrVecNode::resetBestParams()
 inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, const TkrVecNode* right) const
 {
     // Most number of bilayers wins (longest)
-//    if      (left->getBestNumBiLayers() > right->getBestNumBiLayers()) return true;
-//    else if (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
-    if (fabs(left->getBestNumBiLayers() - right->getBestNumBiLayers()) >1)
-    {
-        if      (left->getDepth() > right->getDepth()) return true;
-        else if (left->getDepth() < right->getDepth()) return false;
-    }
-
     // Check special case of stubs starting with skipping layer links
-    if (left->getNumAnglesInSum() == 1 || right->getNumAnglesInSum() == 1)
+    if (left->getNumAnglesInSum() <= 1 || right->getNumAnglesInSum() <= 1)
+    {
+        if      (left->getDepth() < right->getDepth()) return false;
+        else if (left->getDepth() > right->getDepth()) return true;
+    }
+    else if (std::abs(left->getBestNumBiLayers() - right->getBestNumBiLayers()) > 1)
     {
         if      (left->getDepth() < right->getDepth()) return false;
         else if (left->getDepth() > right->getDepth()) return true;
