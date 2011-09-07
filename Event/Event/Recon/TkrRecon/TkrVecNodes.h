@@ -499,13 +499,19 @@ inline void TkrVecNode::resetBestParams()
 inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, const TkrVecNode* right) const
 {
     // Most number of bilayers wins (longest)
-    // Check special case of stubs starting with skipping layer links
-    if (left->getNumAnglesInSum() <= 1 || right->getNumAnglesInSum() <= 1)
+    // Check special case that we are that end of the line for one or the other and its just a 
+    // "stub". We don't want it to accidently get placed in front of the "real" node!
+    if ((left->empty() && left->getNumAnglesInSum() <= 1) || (right->empty() && right->getNumAnglesInSum() <= 1))
     {
         if      (left->getDepth() < right->getDepth()) return false;
         else if (left->getDepth() > right->getDepth()) return true;
     }
-    else if (std::abs(left->getBestNumBiLayers() - right->getBestNumBiLayers()) > 1)
+
+    // This next is a bit tricky... when comparing trees of a minimum length then we 
+    // allow for some variation in layers but if one or other is less than minimum length
+    // then we simply take the longer one (by depth)
+    if (   std::abs(left->getBestNumBiLayers() - right->getBestNumBiLayers()) > 1
+        || left->getDepth() < 3 || right->getDepth() < 3                         )
     {
         if      (left->getDepth() < right->getDepth()) return false;
         else if (left->getDepth() > right->getDepth()) return true;
