@@ -507,17 +507,15 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
         else if (left->getDepth() > right->getDepth()) return true;
     }
 
-    // This next is a bit tricky... when comparing trees of a minimum length then we 
-    // allow for some variation in layers but if one or other is less than minimum length
-    // then we simply take the longer one (by depth)
-//    if (   std::abs(left->getBestNumBiLayers() - right->getBestNumBiLayers()) > 1
-//        || left->getDepth() < 3 || right->getDepth() < 3                         )
-    {
-        if      (left->getDepth() < right->getDepth()) return false;
-        else if (left->getDepth() > right->getDepth()) return true;
-    }
+    // Ok, first "real" selection is the deepest (most links) branch
+    if      (left->getDepth() < right->getDepth()) return false;
+    else if (left->getDepth() > right->getDepth()) return true;
 
-    // Last check is to take the branch that is "straightest". 
+    // If here then branches are the same depth, take the one spanning the most bilayers
+    if      (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
+    else if (left->getBestNumBiLayers() > right->getBestNumBiLayers()) return true;
+
+    // Last check is to take the branch which is "straightest" 
     // Use the scaled rms angle to determine straightest...
     double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
     double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
