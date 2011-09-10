@@ -126,15 +126,21 @@ TkrVecPointLinksBuilder::TkrVecPointLinksBuilder(double                     evtE
     // Following is a completely ad hoc scheme to constrain links if we think 
     // combinatorics are about to go out of control. All of this based on a quick
     // study looking at some histograms of # vec points vs time, etc. 
-    if (expVecPoints > 3.2)   
+    if (expVecPoints > 3.0)   
     {
         // Constrain down the angle to be less than 60 degrees
         m_toleranceAngle = M_PI / 2.; 
 
         // If we are starting to get extreme them drop the tolerance angle down to 30 degrees
-        if (expVecPoints > 3.75) 
+        if (expVecPoints > 3.2) 
         {
-            m_toleranceAngle = M_PI / 4.;
+            m_toleranceAngle = M_PI / 3.;
+
+            // If really starting to get up there then go to the well one more time
+            if (expVecPoints > 3.4)
+            {
+                m_toleranceAngle = M_PI / 6.;
+            }
         }
     }
 
