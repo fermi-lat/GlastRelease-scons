@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ G4Generator-06-03-01  9-Sep-2011  TU Making QGSP_BERT_EPAX the default for physics choice
  G4Generator-06-03-00 29-Aug-2011  flongo enable EmLiv physics list and 
      QGSP_BERT with Epax ion process (QGSP_BERT_EPAX)
  G4Generator-06-02-02 25-Aug-2011  lsrea add diagnostic_muons to test_sources
