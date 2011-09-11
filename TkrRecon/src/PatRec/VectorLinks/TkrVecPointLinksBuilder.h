@@ -42,6 +42,9 @@ public:
     // How many links do we have? 
     int                     getNumTkrVecPointsLinks()     {return m_numVecLinks;}
 
+    // And how many points were input?
+    int                     getNumTkrVecPoints()          {return m_numVecPoints;}
+
     // Get information on average proposed link direction
     Vector                  getLinkAveVec()               {return m_linkAveVec;}
     double                  getNumAveLinks()              {return m_numAveLinks;}
@@ -110,6 +113,9 @@ private:
 
     // Keep track of the total number of links
     int                           m_numVecLinks;
+
+    // Also keep count of the number of input TkrVecPoints
+    int                           m_numVecPoints;
 
     /// We seem to use this a lot, keep track of it
     double                        m_siStripPitch;
