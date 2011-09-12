@@ -1146,8 +1146,8 @@ class MomentsClusterInfo:
         nDiff += self.compare(self.RmsTrans, cluster.getRmsTrans(), 'RmsTrans')
         nDiff += self.compare(self.RmsLongAsym, cluster.getRmsLongAsym(),
                               'LongAsym')
-        nDiff += self.compare(self.SkewnessLong, cluster.getSkewnessLong(),
-                              'LongSkewness')
+        #nDiff += self.compare(self.SkewnessLong, cluster.getSkewnessLong(),
+        #                      'LongSkewness')
         reconCentroid = vector2point(cluster.getMomParams().getCentroid())
         nDiff += self.compare(self.Centroid.x(), reconCentroid.x(), 'Centr. x')
         nDiff += self.compare(self.Centroid.y(), reconCentroid.y(), 'Centr. y')
@@ -1237,7 +1237,7 @@ if __name__ == '__main__':
                 print 
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
-                m.drawLongProfile(reader.ExpectedSkewness)
+                m.drawLongProfile(None) #reader.ExpectedSkewness)
             answer = raw_input('\nType q to quit, s to save, enter to go on')
             if answer == 's':
                 for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
