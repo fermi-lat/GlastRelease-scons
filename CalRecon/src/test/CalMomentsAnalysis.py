@@ -41,21 +41,22 @@ MERIT_VARS = ['EvtEventId',
               'TkrNumTracks']
 MIN_NUM_XTALS = 3
 
-print 'Loading necessary libraries...'
-LIB_DIRS = []
-for var in ['RELEASE', 'PARENT']:
-    if var in os.environ.keys():
-        LIB_DIRS.append(os.path.join(os.environ[var], 'lib'))
-if not len(LIB_DIRS):
-    sys.exit('Could not locate libs, please define $RELEASE and/or $PARENT.')
-for libName in LIBRARIES:
-    for folder in LIB_DIRS:
-        libPath = os.path.join(folder, libName)
-        if os.path.exists(libPath):
-            print 'Loading %s' % libPath
-            ROOT.gSystem.Load(libPath)
-            break
-print 'Done.'
+# This is already done in ReconReader
+## print 'Loading necessary libraries...'
+## LIB_DIRS = []
+## for var in ['RELEASE', 'PARENT']:
+##     if var in os.environ.keys():
+##         LIB_DIRS.append(os.path.join(os.environ[var], 'lib'))
+## if not len(LIB_DIRS):
+##     sys.exit('Could not locate libs, please define $RELEASE and/or $PARENT.')
+## for libName in LIBRARIES:
+##     for folder in LIB_DIRS:
+##         libPath = os.path.join(folder, libName)
+##         if os.path.exists(libPath):
+##             print 'Loading %s' % libPath
+##             ROOT.gSystem.Load(libPath)
+##             break
+## print 'Done.'
 
 
 CSI_CRITICAL_ENERGY = 11.17
@@ -355,12 +356,12 @@ class CalMomentsAnalysisIteration:
         yc = self.Centroid.y()
         zc = self.Centroid.z()
         cluster = reconReader.getCalRecon().getCalClusterCol().At(0)
-        rxc = cluster.getParams().getCentroid().x()
-        ryc = cluster.getParams().getCentroid().y()
-        rzc = cluster.getParams().getCentroid().z()
-        rdx = cluster.getParams().getAxis().x()
-        rdy = cluster.getParams().getAxis().y()
-        rdz = cluster.getParams().getAxis().z()
+        rxc = cluster.getMomParams().getCentroid().x()
+        ryc = cluster.getMomParams().getCentroid().y()
+        rzc = cluster.getMomParams().getCentroid().z()
+        rdx = cluster.getMomParams().getAxis().x()
+        rdy = cluster.getMomParams().getAxis().y()
+        rdz = cluster.getMomParams().getAxis().z()
         if reconReader.MeritChain is not None:
             tdx = reconReader.getMeritVariable('Tkr1XDir')
             tdy = reconReader.getMeritVariable('Tkr1YDir')
@@ -1147,11 +1148,11 @@ class MomentsClusterInfo:
                               'LongAsym')
         nDiff += self.compare(self.SkewnessLong, cluster.getSkewnessLong(),
                               'LongSkewness')
-        reconCentroid = vector2point(cluster.getParams().getCentroid())
+        reconCentroid = vector2point(cluster.getMomParams().getCentroid())
         nDiff += self.compare(self.Centroid.x(), reconCentroid.x(), 'Centr. x')
         nDiff += self.compare(self.Centroid.y(), reconCentroid.y(), 'Centr. y')
         nDiff += self.compare(self.Centroid.z(), reconCentroid.z(), 'Centr. z')
-        reconAxis = vector2point(cluster.getParams().getAxis())
+        reconAxis = vector2point(cluster.getMomParams().getAxis())
         nDiff += self.compare(self.Axis.x(), reconAxis.x(), 'Axis xdir')
         nDiff += self.compare(self.Axis.y(), reconAxis.y(), 'Axis ydir')
         nDiff += self.compare(self.Axis.z(), reconAxis.z(), 'Axis zdir')
@@ -1220,7 +1221,7 @@ if __name__ == '__main__':
         meritFilePath = args[1]
     except IndexError:
         meritFilePath = None
-    reader = ReconReader(reconFilePath, meritFilePath, opts.c)
+    reader = ReconReader(reconFilePath, meritFilePath, None, opts.c)
     eventNumber = 0
     answer = ''
     while answer != 'q':
