@@ -52,7 +52,10 @@ private:
     Event::TkrVecPointToNodesRel* makeNewHeadNodeRel(Event::TkrVecNodeSet& headNodes, const Event::TkrVecPoint* point);
 
     /// Create a new node
-    Event::TkrVecPointToNodesRel* createNewNode(Event::TkrVecNode* parent, Event::TkrVecPointsLink* link, Event::TkrVecPoint* point);
+    Event::TkrVecPointToNodesRel* createNewNode(Event::TkrVecNode*       parent, 
+                                                Event::TkrVecPointsLink* link, 
+                                                Event::TkrVecPoint*      point,
+                                                double                   quadSum = 0.);
 
     /// Delete a previously created node (and all of its daughters)
     bool deleteNode(Event::TkrVecNode* node);
