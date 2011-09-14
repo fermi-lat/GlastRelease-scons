@@ -189,7 +189,7 @@ inline TkrVecNode::TkrVecNode(TkrVecNode* parent, const TkrVecPointsLink* associ
                               m_parent(parent),
                               m_statusBits(0),
                               m_rmsAngleSum(0.),
-                              m_numAnglesInSum(1),
+                              m_numAnglesInSum(0),
                               m_leaves(0),
                               m_branches(0),
                               m_depth(1),
