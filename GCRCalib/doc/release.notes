@@ -2,6 +2,7 @@
  Package GCRCalib
  EOH
 
+ GCRCalib-01-08-02 17-Sep-2011  lsrea Quiet it down a bit
  GCRCalib-01-08-01  09-Feb-2011   HMK patch to prevent bad obfStatus ptr
         from being used in GcrReconTool::checkFilters, if it turns out to be 
         missing on TDS
