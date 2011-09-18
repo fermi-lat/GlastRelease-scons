@@ -223,9 +223,9 @@ StatusCode GcrReconAlg::execute()
 StatusCode GcrReconAlg::finalize()
 { 
     MsgStream log(msgSvc(), name());
-    log<< MSG::DEBUG <<"GcrReconAlg::finalize Begin"<<endreq ;
-    log << MSG::INFO << noTkrColCount << " event(s) without a TkrTrackCol " << endreq;
-    log<< MSG::DEBUG <<"GcrReconAlg::finalize End"<<endreq ;
+    log << MSG::DEBUG <<"finalize Begin" << endreq ;
+    log << MSG::INFO  << noTkrColCount << " event(s) without a TkrTrackCol " << endreq;
+    log << MSG::DEBUG <<"finalize End"   << endreq ;
     return StatusCode::SUCCESS ; 
     
 }
@@ -361,8 +361,13 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 	    }
 	    else
 	{
-        	if(debug) log << MSG::DEBUG << "no TkrTrackCol found : no subsequent processing" << endreq;
-            noTkrColCount++;
+        if(debug) {
+            if(noTkrColCount<5) 
+                log << MSG::WARNING << "no TkrTrackCol found : no subsequent processing" << endreq;
+            if(noTkrColCount==4) log << MSG::WARNING << "further messages suppressed" << endreq;
+        }
+      
+        noTkrColCount++;
 		return StatusCode::FAILURE;
 	}
   }
