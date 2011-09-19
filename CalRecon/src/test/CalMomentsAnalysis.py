@@ -141,6 +141,8 @@ class CalMomentsData:
         self.CoordAlongAxis = 0.
         self.XZMarker = ROOT.TMarker(self.Point.x(), self.Point.z(), 25)
         self.YZMarker = ROOT.TMarker(self.Point.y(), self.Point.z(), 25)
+        #cs
+        self.extraWeightFactor = 1.
 
     def setMaxWeight(self, maxWeight):
         markerSize = 1.8*sqrt(self.getWeight()/maxWeight)
@@ -181,8 +183,14 @@ class CalMomentsData:
     def getPoint(self):
         return self.Point
 
+    # cs
+    def setExtraWeight(self, factor):
+        self.extraWeightFactor = factor
+        
+    # cs added self.extraWeightFactor*
     def getWeight(self):
-        return self.XtalData.getEnergy()
+        w = self.extraWeightFactor*self.XtalData.getEnergy()
+        return w
 
     def getDistToAxis(self):
         return self.DistToAxis
@@ -322,10 +330,20 @@ class CalMomentsAnalysisIteration:
                 x = self.XZLayerCentrDict[layer]
                 y = self.YZLayerCentrDict[layer]
                 z = getCalLayerZ(layer)
-                gxz.Fit('fitFunc', 'Q')
-                xfit = fitFunc.Eval(z)
-                gyz.Fit('fitFunc', 'Q')
-                yfit = fitFunc.Eval(z)
+                
+                # cs: protect against single xTal....
+                if gxz.GetN()>1:
+                    gxz.Fit('fitFunc', 'Q')
+                    xfit = fitFunc.Eval(z)
+                else:
+                    print "WARNING: X FIT FAILED..."
+                    xfit = x
+                if gyz.GetN()>1:
+                    gyz.Fit('fitFunc', 'Q')
+                    yfit = fitFunc.Eval(z)
+                else:
+                    print "WARNING: Y FIT FAILED..."
+                    yfit = y
                 self.XResDict[layer] = x - xfit
                 self.YResDict[layer] = y - yfit
                 if abs(self.XResDict[layer]) > resThreshold:
@@ -338,15 +356,15 @@ class CalMomentsAnalysisIteration:
                         myz = self.YZLayerCentrMarkerDict[layer]
                         myz.SetMarkerColor(ROOT.kRed)
                         self.YPPLayerList.append(layer)
-        # And eventually postprocess the dataVec.
-        for momentsData in self.MomentsDataListPP:
-            layer = momentsData.getLayer()
-            if layer in self.XPPLayerList:
-                x = momentsData.Point.x() - self.XResDict[layer]
-                momentsData.setX(x)
-            if layer in self.YPPLayerList:
-                y = momentsData.Point.y() - self.YResDict[layer]
-                momentsData.setY(y)
+#cs        # And eventually postprocess the dataVec.
+##         for momentsData in self.MomentsDataListPP:
+##             layer = momentsData.getLayer()
+##             if layer in self.XPPLayerList:
+##                 x = momentsData.Point.x() - self.XResDict[layer]
+##                 momentsData.setX(x)
+##             if layer in self.YPPLayerList:
+##                 y = momentsData.Point.y() - self.YResDict[layer]
+##                 momentsData.setY(y)
 
     def draw(self, reconReader, layerCentroids = True):
         dx = self.Axis[1].x()
@@ -372,6 +390,13 @@ class CalMomentsAnalysisIteration:
             tkrDir = Vector(tdx, tdy, tdz)
             calDir = self.Axis[1]
             self.CalTkrAngle = (180./M_PI)*calDir.Angle(-tkrDir)
+            #cs : drawing MC line
+            mdx = reconReader.getMeritVariable('McXDir')
+            mdy = reconReader.getMeritVariable('McYDir')
+            mdz = reconReader.getMeritVariable('McZDir')
+            mxc = reconReader.getMeritVariable('McX0')
+            myc = reconReader.getMeritVariable('McY0')
+            mzc = reconReader.getMeritVariable('McZ0')
         cName = 'cMomIter%d' % self.IterationNumber
         cTitle = 'Moments analysis---iteration %d' % self.IterationNumber
         self.Canvas = getSideCanvas(cName, cTitle)
@@ -433,6 +458,17 @@ class CalMomentsAnalysisIteration:
             self.XZTkrDirection.SetLineWidth(1)
             self.XZTkrDirection.SetLineStyle(7)
             self.XZTkrDirection.Draw()
+            #cs : draw MC dir
+            mx1 = mxc - (mzc - Z_MIN)*(mdx/mdz)
+            mz1 = Z_MIN
+            mx2 = mxc + (Z_MAX - mzc)*(mdx/mdz)
+            mz2 = Z_MAX
+            self.XZMcDirection = ROOT.TLine(mx1, mz1, mx2, mz2)
+            self.XZMcDirection.SetLineColor(ROOT.kGreen)
+            self.XZMcDirection.SetLineWidth(1)
+            self.XZMcDirection.SetLineStyle(1)
+            self.XZMcDirection.Draw()
+
         self.Canvas.cd(2)
         # Draw YZ view.
         CAL_LAYOUT.draw('yz')
@@ -477,6 +513,14 @@ class CalMomentsAnalysisIteration:
             self.YZTkrDirection.SetLineWidth(1)
             self.YZTkrDirection.SetLineStyle(7)
             self.YZTkrDirection.Draw()
+            #cs : draw MC dir
+            my1 = myc - (mzc - Z_MIN)*(mdy/mdz)
+            my2 = myc + (Z_MAX - mzc)*(mdy/mdz)
+            self.YZMcDirection = ROOT.TLine(my1, mz1, my2, mz2)
+            self.YZMcDirection.SetLineColor(ROOT.kGreen)
+            self.YZMcDirection.SetLineWidth(1)
+            self.YZMcDirection.SetLineStyle(1)
+            self.YZMcDirection.Draw()
         self.Canvas.cd()
         self.Canvas.Update()
 
@@ -587,7 +631,7 @@ class CalMomentsAnalysis:
         centroid /= weightSum
         return centroid
 
-    def doMomentsAnalysis(self, dataVec, iniCentroid):
+    def doMomentsAnalysis(self, dataVec, iniCentroid): #cs: fixCentroid
         print 'Starting moments analysis (iteration %d, %d xtals)...' %\
               (self.NumIterations, len(dataVec))
         self.WeightSum = 0.
@@ -610,6 +654,22 @@ class CalMomentsAnalysis:
             # Analysis easy when translated to energy centroid.
             #  get pointer to the reconstructed data for given crystal
             weight = dataPoint.getWeight()
+            #cs :
+            # eval distance projected on Axis and try to weight differently
+            # depending on this distance
+##             Z_TOP_CAL    = -58.07
+##             Z_BOTTOM_CAL = -207.52
+##             if iniAxis != None:
+##                 iniAxisLen = (Z_TOP_CAL - Z_BOTTOM_CAL)/iniAxis.z();
+##                 proj_len = (dataPoint.getPoint().z() - Z_BOTTOM_CAL)/iniAxis.z();
+##                 # test1:
+##                 extraWeightScaling = 10*(proj_len/iniAxisLen) +1.
+##                 # test2:
+##                 #extraWeightScaling = numpy.exp(2*(proj_len/iniAxisLen))
+##                 #print "PointZ",dataPoint.getPoint().z(), "fromZBottom", (dataPoint.getPoint().z() - Z_BOTTOM_CAL),\
+##                 #      "proj_len =", proj_len, "extraWeightScaling",extraWeightScaling
+##                 weight *= extraWeightScaling
+            
             hit = vector2point(dataPoint.getPoint()) - iniCentroid
             Rsq  = hit.mag2()
             xprm = hit.x()
@@ -700,6 +760,31 @@ class CalMomentsAnalysis:
         print 'Done, returning chi square = %.3f.' % chiSquare
         return chiSquare
 
+
+##     def evalTopVertex(self, dataVec):
+##         #cs : this is a function to identify the top xtal position
+##         # and provide a point to fix the centroid in moment analysis.
+##         tolXtalList = []
+##         for z in [-79.42, -100.77, -122.12]:
+##             #print "looking for z<= ", z
+##             for xx in dataVec:
+##                 #print xx.getPoint().z()
+##                 if xx.getPoint().z()>= z:
+##                    tolXtalList.append(xx)
+##             if len(tolXtalList)>0:
+##                 #print "Centroid among the top %d xtals" % len(tolXtalList)
+##                 break
+
+##         centroid  = Point(0., 0., 0.)
+##         totWeight = 0.
+##         for x in tolXtalList:
+##             weight = x.getWeight()
+##             centroid  += vector2point(x.getPoint()) * weight
+##             totWeight += weight
+##             #print x.getPoint()
+##         #print (centroid/totWeight)
+##         return (centroid/totWeight)
+        
     def doIterativeMomentsAnalysis(self, dataVec, inputCentroid = None,
                                    scaleFactor = 1.0):
         chiSq = -1.
@@ -749,7 +834,132 @@ class CalMomentsAnalysis:
                 break
             if self.ClipDataVec:
                 dataVec = self.Parent.getClippedDataVec(dataVec)
+
+        #        
+        # cs: do another step after all iterations - with fix
+        #
+
+        # cs: total energy:
+        self.TotalEnergy   = 0
+        self.PartialEnergy = 0
+        self.nReWXtals     = 0
+        for x in dataVec:
+            self.TotalEnergy += x.getWeight()
+            
+        # Update the centroid for subsequent passes
+        centroid = self.getMomentsCentroid()
+        # cs : update reference axis for subsequent passes
+        referenceAxis = self.getMomentsAxis()
+        # scale factor
+        #scaleFactor /= 2.
+        
+        X_BOUND_TWR10          =  24.2 #20.78 # 24.2 # 22.5 #
+        X_BOUND_TWR9           = -1*X_BOUND_TWR10
+        X_BOUND_MIDDLE         =  0    
+        #MAX_REMOVED_E_FRAC     = 1#0.10 # or 0.10 -> Eremoved < x * Etot
+        if True: #centroid.x()> X_BOUND_TWR10:
+            # cs :
+
+            # // Event axis point that intercept TWR 10 boundary
+            # m_cal_x = axis.position(-proj_len);
+            # position is p + s*dir; con p = X0, s = (-arc_len), dir = t0.unit()
+            proj_len_x_t10 = (centroid.x() - X_BOUND_TWR10)/referenceAxis.x();
+            m_cal_x_t10    = copy.copy(referenceAxis.Unit())
+            m_cal_x_t10   *= (-proj_len_x_t10 )
+            m_cal_x_t10   += centroid # x0 is centroid
+            ## print "m_cal_x_t10 X,y,z :", m_cal_x_t10.x(), m_cal_x_t10.y(), m_cal_x_t10.z()
+
+            # same as before, but now with TWR 9 boundary
+            proj_len_x_t9  = (centroid.x() - X_BOUND_TWR9)/referenceAxis.x();
+            m_cal_x_t9     = copy.copy(referenceAxis.Unit())
+            m_cal_x_t9    *= (-proj_len_x_t9 )
+            m_cal_x_t9    += centroid
+
+
+            #
+            # cs: try to clip a non-cylindrical region,
+            # but still symmetrical around the main axis
+            #
+            
+            # Check all elements in the list of data points
+            # and see if it is out of range - no good sorting
+            clippedFlag = False
+            reWXtalList = []
+            for momentsData in dataVec:
+                
+                # eval dist to axis
+                axisDist = momentsData.getDistToAxis()
+                
+                #print "data (x,y,z): (%.1f, %.1f, %.1f )" %(momentsData.getPoint().x(),\
+                #                                            momentsData.getPoint().y(),\
+                #                                            momentsData.getPoint().z()),
+                #print "Twr %d - Lyr %d - Col %d" % (momentsData.getTower(),momentsData.getLayer(),momentsData.getColumn())
+
+                # eval distance between axis and Cal gap on X side
+                # done assuming only X gap correction in twr 10
+                
+                # distance along the axis: (getPosition() - centroid).dot(axis);
+                dist = (momentsData.getPoint()-centroid)
+                dist = dist.Dot(referenceAxis)
+                # P0 point: projection of xtal along the axis
+                # position is X0 + (dist)*dir; 
+                p0 = copy.copy(referenceAxis.Unit())
+                p0 *= (dist)
+                p0 += centroid
+                #print "P0 (x,y,z): (%.1f, %.1f, %.1f )" %(p0.x(), p0.y(),p0.z())
+
+                # l is ||P0-m_cal_x||
+                if momentsData.getPoint().x() >= X_BOUND_MIDDLE:
+                    # xtal in twr 10, use m_cal_x_t10
+                    l = numpy.sqrt((p0.x() - m_cal_x_t10.x())**2 +
+                                   (p0.y() - m_cal_x_t10.y())**2 +
+                                   (p0.z() - m_cal_x_t10.z())**2 )
+                else:
+                    # xtal in twr 9, use m_cal_x_t9
+                    l = numpy.sqrt((p0.x() - m_cal_x_t9.x())**2 +
+                                   (p0.y() - m_cal_x_t9.y())**2 +
+                                   (p0.z() - m_cal_x_t9.z())**2 )
+                    #print "xtal in twr 9. l=",l
+
+                # d = l/tan(a) with a = axis.xdir
+                cosA = referenceAxis.x()
+                d = l*cosA/numpy.sqrt(1- cosA*cosA)
+                #print "d=",d, "rmsTrans =",scaleFactor*rmsTrans, "axisDist=", axisDist
+
+                # eval max allowed distance for this xtal
+                maxAllowedDist = min(d, scaleFactor*rmsTrans )
+                
+                # If out of range add extra weighting factor to this point
+                if (axisDist > maxAllowedDist):
+                    self.PartialEnergy += momentsData.getWeight()
+                    reWXtalList.append(momentsData.XtalData.getPackedId().getPackedId()) # add the id to the list of bad xtals
+                    self.nReWXtals += 1
+                    clippedFlag     = True
+            if clippedFlag:# this means we have to re-weigh some xtals
+                # do actual reweight
+                #extraWeight = 1 - min(1, MAX_REMOVED_E_FRAC*(self.TotalEnergy/self.PartialEnergy))
+                extraWeight = 0.5
+                
+                for momentsData in dataVec:
+                    pId = momentsData.XtalData.getPackedId().getPackedId()
+                    if pId in reWXtalList:
+                        momentsData.setExtraWeight(extraWeight)
+                
+                # Do the standard moments analysis
+                localChiSq = self.doMomentsAnalysis(dataVec, centroid);
+                # Update global chi-square to pick up this iteration's value
+                if localChiSq > 0.:
+                    self.NumIterations += 1
+                    chiSq = localChiSq
+                else:
+                    self.nReWXtals   *= -1 # negative value means failed mom analysis
+            else:
+                self.PartialEnergy = -1.
+                
         return (chiSq, dataVec)
+
+
+ 
 
     def getCovarianceMatrix(self, dataVec):
         (L0, L1, L2) = self.Moment
@@ -1014,6 +1224,7 @@ class MomentsClusterInfo:
             self.SkewnessLong = self.MomentsAnalysis.getLongSkewness()
         if self.CalRecon is not None:
             self.checkMomentsAnalysis()
+        
 
     def cleanup(self):
         print 'Cleaning up...'
@@ -1222,12 +1433,74 @@ if __name__ == '__main__':
     except IndexError:
         meritFilePath = None
     reader = ReconReader(reconFilePath, meritFilePath, None, opts.c)
-    eventNumber = 0
+    eventNumber = 0 #435 #13
+
+    #cs : file for quick repro
+    saveOutputTree = False
+    setNProcess    = 500 # -1 is all, 0 is interactive
+    if saveOutputTree:
+        if setNProcess != 0:
+            ROOT.gROOT.SetBatch(True)
+        labelout = args[0].split('/')[-1].split('recon')[0]
+        fout = ROOT.TFile('%srepro-edgeWeight0_gap24p2_extraStep.root' % labelout, 'recreate')
+        tout = ROOT.TTree("DirTuple", "DirTuple")
+        rX  = numpy.zeros(1, dtype=float)
+        orX = numpy.zeros(1, dtype=float)
+        mX  = numpy.zeros(1, dtype=float)
+        rY  = numpy.zeros(1, dtype=float)
+        orY = numpy.zeros(1, dtype=float)
+        mY  = numpy.zeros(1, dtype=float)
+        rZ  = numpy.zeros(1, dtype=float)
+        orZ = numpy.zeros(1, dtype=float)
+        mZ  = numpy.zeros(1, dtype=float)
+        AngleSep    = numpy.zeros(1, dtype=float)
+        OldAngleSep = numpy.zeros(1, dtype=float)
+        cntX  = numpy.zeros(1, dtype=float)
+        cntY  = numpy.zeros(1, dtype=float)
+        cntZ  = numpy.zeros(1, dtype=float)
+        totE  = numpy.zeros(1, dtype=float)
+        parE  = numpy.zeros(1, dtype=float)
+        nrwX  = numpy.zeros(1, dtype=float)
+        
+        EvtEventId  = numpy.zeros(1, dtype=float)
+        CalUberEnergy = numpy.zeros(1, dtype=float)
+        McEnergy      = numpy.zeros(1, dtype=float)
+        EnergyCorr    = numpy.zeros(1, dtype=float)
+        tout.Branch('MomXDir', rX, 'MomXDir/D')
+        tout.Branch('OldMomXDir', orX, 'OldMomXDir/D')
+        tout.Branch('McXDir', mX, 'McXDir/D')
+        tout.Branch('MomYDir', rY, 'MomYDir/D')
+        tout.Branch('OldMomYDir', orY, 'OldMomYDir/D')
+        tout.Branch('McYDir', mY, 'McYDir/D')
+        tout.Branch('MomZDir', rZ, 'MomZDir/D')
+        tout.Branch('OldMomZDir', orZ, 'OldMomZDir/D')
+        tout.Branch('McZDir', mZ, 'McZDir/D')
+        tout.Branch('AngleSep', AngleSep , 'AngleSep/D')
+        tout.Branch('OldAngleSep', OldAngleSep, 'OldAngleSep/D')
+        tout.Branch('EvtEventId', EvtEventId, 'EvtEventId/D')
+        tout.Branch('CalUberEnergy', CalUberEnergy, 'CalUberEnergy/D')
+        tout.Branch('McEnergy', McEnergy, 'McEnergy/D')
+        tout.Branch('EnergyCorr', EnergyCorr, 'EnergyCorr/D')
+        tout.Branch('CentroidX', cntX, 'CentroidX/D')
+        tout.Branch('CentroidY', cntY, 'CentroidY/D')
+        tout.Branch('CentroidZ', cntZ, 'CentroidZ/D')
+        tout.Branch('TotEnergy', totE, 'TotEnergy/D')
+        tout.Branch('ParEnergy', parE, 'ParEnergy/D')
+        tout.Branch('nReWXtals', nrwX, 'nReWXtals/D') # negative value means failed mom analysis
+   
     answer = ''
     while answer != 'q':
+    #for eventNumber in [36, 179, 184, 331, 435]:
+    #for eventNumber in [64, 253, 493, 4, 13]:
         if reader.getEntry(eventNumber):
             calRecon = reader.getCalRecon()
-            xtalCol = calRecon.getCalXtalRecCol()
+            print 'Run ID %d--Event ID %d' %\
+                        (reader.ReconEvent.getRunId(),  reader.ReconEvent.getEventId())
+            # cs: NO! this would inibit clustering!
+            #xtalColALL = calRecon.getCalXtalRecCol()
+            # cs: take first cluster from ReconReader,  NEED rel table!
+            xtalCol = reader.getCalClusterXtalList(0) 
+            
             m = MomentsClusterInfo(xtalCol, calRecon, opts.d*TOWER_PITCH,
                                    opts.l, opts.L, opts.p)
             if not m.NotEnoughXtals:
@@ -1238,13 +1511,92 @@ if __name__ == '__main__':
                 print '*** Final parameters after %d iteration(s):\n%s' %\
                       (m.MomentsAnalysis.getNumIterations(), m)
                 m.drawLongProfile(None) #reader.ExpectedSkewness)
-            answer = raw_input('\nType q to quit, s to save, enter to go on')
+                McDir     = ROOT.TVector3(-1*reader.getMeritVariable('McXDir'),\
+                                          -1*reader.getMeritVariable('McYDir'),\
+                                          -1*reader.getMeritVariable('McZDir'))
+                newRecDir = ROOT.TVector3(m.Axis[0], m.Axis[1], m.Axis[2])
+                RecDir    = ROOT.TVector3(reader.getMeritVariable('Cal1MomXDir'),\
+                                          reader.getMeritVariable('Cal1MomYDir'),\
+                                          reader.getMeritVariable('Cal1MomZDir'))
+                aSep  = acos(McDir.Dot(newRecDir))
+                oaSep = acos(McDir.Dot(RecDir))
+                print "\n*** AngularSep this %.3f vs Merit %.3f\n" % (aSep, oaSep)
+
+                #cs : write out for debug
+                print "newReconX %.2f  McX %.2f  (Diff %.3f ) -- MeritX %.2f (Diff %.3f ) " %\
+                      (m.Axis[0],  -1*reader.getMeritVariable('McXDir'), m.Axis[0] +reader.getMeritVariable('McXDir'),\
+                       reader.getMeritVariable('Cal1MomXDir'), reader.getMeritVariable('Cal1MomXDir')+reader.getMeritVariable('McXDir'))
+                print "newReconY %.2f  McY %.2f  (Diff %.3f ) -- MeritY %.2f (Diff %.3f ) " %\
+                      (m.Axis[1],  -1*reader.getMeritVariable('McYDir'), m.Axis[1] +reader.getMeritVariable('McYDir'),\
+                       reader.getMeritVariable('Cal1MomYDir'), reader.getMeritVariable('Cal1MomYDir')+reader.getMeritVariable('McYDir'))
+
+                McDir     = ROOT.TVector3(-1*reader.getMeritVariable('McXDir'),\
+                                          -1*reader.getMeritVariable('McYDir'),\
+                                          -1*reader.getMeritVariable('McZDir'))
+                newRecDir = ROOT.TVector3(m.Axis[0], m.Axis[1], m.Axis[2])
+                RecDir    = ROOT.TVector3(reader.getMeritVariable('Cal1MomXDir'),\
+                                          reader.getMeritVariable('Cal1MomYDir'),\
+                                          reader.getMeritVariable('Cal1MomZDir'))
+                aSep  = acos(McDir.Dot(newRecDir))
+                oaSep = acos(McDir.Dot(RecDir))
+                print "AngularSep new %.3f vs old %.3f" % (aSep, oaSep)
+                ERaw  = reader.getMeritVariable('CalUberEnergy')
+                EMc   = reader.getMeritVariable('McEnergy')
+                ECorr = reader.getMeritVariable('EvtEnergyCorr')
+                print "E Mc", EMc, "E Corr", ECorr, "(%.1f)" % (ECorr/EMc), "E Raw", ERaw, "(%.1f)" % (ERaw/EMc)
+                print "n Re-Weighted xtals = ", m.MomentsAnalysis.nReWXtals
+                print "frac removed energy = ", m.MomentsAnalysis.PartialEnergy/m.MomentsAnalysis.TotalEnergy
+                    
+                # file for quick repro
+                if saveOutputTree:
+                    #print "m.Axis[0]", m.Axis[0],  -1*reader.getMeritVariable('McXDir')
+                    rX[0] = m.Axis[0]
+                    orX[0] = reader.getMeritVariable('Cal1MomXDir')
+                    mX[0] = -1*reader.getMeritVariable('McXDir')
+                    rY[0] = m.Axis[1]
+                    orY[0] = reader.getMeritVariable('Cal1MomYDir')
+                    mY[0] = -1*reader.getMeritVariable('McYDir')
+                    rZ[0] = m.Axis[2]
+                    orZ[0] = reader.getMeritVariable('Cal1MomZDir')
+                    mZ[0] = -1*reader.getMeritVariable('McZDir')
+                    AngleSep[0]    = aSep
+                    OldAngleSep[0] = oaSep
+                    EvtEventId[0]    = reader.getMeritVariable('EvtEventId')
+                    CalUberEnergy[0] = ERaw
+                    McEnergy[0]      = EMc
+                    EnergyCorr[0]    = ECorr
+                    cntX[0]    = m.Centroid.x()
+                    cntY[0]    = m.Centroid.y()
+                    cntZ[0]    = m.Centroid.Z()
+                    totE[0]    = m.MomentsAnalysis.TotalEnergy
+                    parE[0]    = m.MomentsAnalysis.PartialEnergy
+                    nrwX[0]    = m.MomentsAnalysis.nReWXtals
+                    tout.Fill()
+                    
+            if saveOutputTree and setNProcess != 0:
+                if eventNumber == setNProcess:
+                    break
+            else: 
+                answer = raw_input('\nType q to quit, s to save, enter to go on')
+            #cs : end of write out for debug
+            #cs: answer = raw_input('\nType q to quit, s to save, enter to go on')
+                
             if answer == 's':
                 for (i, iter) in enumerate(m.MomentsAnalysis.IterationList):
                     evtId = reader.getMeritVariable('EvtEventId')
                     filePath = 'Event_%s_iter%d' % (evtId, i)
                     iter.save(filePath)
             m.cleanup()
+            #cs: jump to an evt number
+            try:
+                eventNumber = int(answer)-1
+            except ValueError:
+                pass
         eventNumber += 1
         
+
+    #cs : file for quick repro
+    if saveOutputTree:
+        fout.Write()
+        fout.Close()
 
