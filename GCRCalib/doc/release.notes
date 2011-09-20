@@ -2,6 +2,7 @@
  Package GCRCalib
  EOH
 
+ GCRCalib-01-08-04 20-Sep-2011  lsrea reduce the output to the log file
  GCRCalib-01-08-03 17-Sep-2011  lsrea Quiet it down a bit
  GCRCalib-01-08-02 17-Sep-2011  lsrea Quiet it down a bit
  GCRCalib-01-08-01  09-Feb-2011   HMK patch to prevent bad obfStatus ptr

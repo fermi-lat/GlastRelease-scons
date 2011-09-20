@@ -4,6 +4,7 @@
   <pre>
  * EOH *
 
+ EventIntegrity-00-08-07 20-Sep-2011  lsrea shorten the output to the log file
  EventIntegrity-00-08-06 17-Sep-2011  lsrea Tighten up the INFO output
  EventIntegrity-00-08-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
  EventIntegrity-00-08-04 12-Jun-2010    jrb upgrades for SCons builds
