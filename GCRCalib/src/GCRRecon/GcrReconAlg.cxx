@@ -107,8 +107,8 @@ private:
 } ;
 
 namespace {
-    int noTkrColCount;
-    bool debug;
+    int _noTkrColCount;
+    bool _debug;
 }
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -158,7 +158,7 @@ StatusCode GcrReconAlg::initialize()
         return sc ;
     }
 
-    noTkrColCount = 0;
+    _noTkrColCount = 0;
 
     return sc;
 }
@@ -177,10 +177,10 @@ StatusCode GcrReconAlg::execute()
     StatusCode sc = StatusCode::SUCCESS;
 
     log<< MSG::DEBUG;
-    debug = (log.isActive());
+    _debug = (log.isActive());
     log << endreq;
     
-    if (debug) log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
+    if (_debug) log<<MSG::DEBUG<<"GcrReconAlg::execute Begin"<<endreq ;
     
     // TEST:  Does TkrTrack enters CAL?
     //if (!(m_initAxis=="MC")){
@@ -190,16 +190,16 @@ StatusCode GcrReconAlg::execute()
       {
 	if((m_calEntryPoint.x()<m_calXLo) || (m_calEntryPoint.x()>m_calXHi) || (m_calEntryPoint.y()<m_calYLo) || (m_calEntryPoint.y()>m_calXHi)) 
 	  { 
-	    if(debug) log<<MSG::DEBUG<<"track1 out of calorimeter"<<endreq ;
+	    if(_debug) log<<MSG::DEBUG<<"track1 out of calorimeter"<<endreq ;
 
             return sc;
 	  }
 	else
-	  if(debug) log<<MSG::DEBUG<<"track1 in the calorimeter"<<endreq ; 
+	  if(_debug) log<<MSG::DEBUG<<"track1 in the calorimeter"<<endreq ; 
 
        }
        else{
-         if(debug) log<<MSG::DEBUG<<"no TKRtrack found"<<endreq ;
+         if(_debug) log<<MSG::DEBUG<<"no TKRtrack found"<<endreq ;
 	 return sc;
        } 
       
@@ -216,7 +216,7 @@ StatusCode GcrReconAlg::execute()
         m_gcrReconTool->findGcrXtals(m_initAxis, m_calEntryPoint, m_calExitPoint, m_initDir);
       }
 
-    if(debug) log<<MSG::DEBUG<<"GcrReconAlg::execute End"<<endreq ;
+    if(_debug) log<<MSG::DEBUG<<"GcrReconAlg::execute End"<<endreq ;
     return sc;
 }
 
@@ -224,7 +224,7 @@ StatusCode GcrReconAlg::finalize()
 { 
     MsgStream log(msgSvc(), name());
     log << MSG::DEBUG <<"finalize Begin" << endreq ;
-    log << MSG::INFO  << noTkrColCount << " event(s) without a TkrTrackCol " << endreq;
+    log << MSG::INFO  << _noTkrColCount << " event(s) without a TkrTrackCol " << endreq;
     log << MSG::DEBUG <<"finalize End"   << endreq ;
     return StatusCode::SUCCESS ; 
     
@@ -259,7 +259,7 @@ StatusCode GcrReconAlg::readGlastDet()
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
-  if(debug) log << MSG::DEBUG << "GcrReconTool BEGIN readGlastDet()" << endreq ;  
+  if(_debug) log << MSG::DEBUG << "GcrReconTool BEGIN readGlastDet()" << endreq ;  
 
   //TkrGeometrySvc used for access to tracker geometry info
   ITkrGeometrySvc*   m_geoSvc;
@@ -288,7 +288,7 @@ StatusCode GcrReconAlg::readGlastDet()
   
 
   //  log << MSG::DEBUG << "Cal limits: YLo,YHi, XLo, XHi" << m_calYLo <<"," << m_calYHi << "," << m_calXLo << ","<< m_calXHi<< endreq;  
-  if(debug) log << MSG::DEBUG << "GcrReconTool END readGlastDet()" << endreq ;  
+  if(_debug) log << MSG::DEBUG << "GcrReconTool END readGlastDet()" << endreq ;  
   return sc;
 }
 
@@ -307,7 +307,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 
 
   if(m_initAxis == "MC"){
-       if(debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MC " << endreq;
+       if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MC " << endreq;
 
        // ******the first McParticle initial position (when launched):
        Event::McParticle* firstMcParticle = findFirstMcParticle();
@@ -331,7 +331,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   }  
   
   else if(m_initAxis=="TKR"){
-      if(debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==TKR " << endreq;
+      if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==TKR " << endreq;
 
       //Locate and store a pointer to the data service
       DataSvc*           dataSvc;
@@ -348,7 +348,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 
         	int nTracks = pTracks->size();
 
-        	if(debug) log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
+        	if(_debug) log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
         	if(nTracks < 1) return StatusCode::FAILURE;
         	// Get the first Track - it should be the "Best Track"
         	Event::TkrTrackColConPtr pTrack = pTracks->begin();
@@ -361,19 +361,17 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 	    }
 	    else
 	{
-        if(debug) {
-            if(noTkrColCount<5) 
-                log << MSG::WARNING << "no TkrTrackCol found : no subsequent processing" << endreq;
-            if(noTkrColCount==4) log << MSG::WARNING << "further messages suppressed" << endreq;
+        if(_noTkrColCount<5) {
+            log << MSG::INFO << "no TkrTrackCol found : no subsequent processing" << endreq;
         }
-      
-        noTkrColCount++;
+        if(_noTkrColCount==4) {log << MSG::INFO << "further messages suppressed" << endreq;}
+        _noTkrColCount++;
 		return StatusCode::FAILURE;
 	}
   }
   else if(m_initAxis=="MOM")
     {
-      if(debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MOM " << endreq;
+      if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MOM " << endreq;
 
       MsgStream log(msgSvc(), name());
       StatusCode sc = StatusCode::SUCCESS;
@@ -412,8 +410,8 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 
 
   
-  if(debug) log << MSG::DEBUG << "initPos=(" << x0 <<"," << y0 << "," << z0 <<")"<< endreq;  
-  if(debug) log << MSG::DEBUG << "m_initDir=(" << ux0 <<"," << uy0 << "," << uz0 <<")"<< endreq;  
+  if(_debug) log << MSG::DEBUG << "initPos=(" << x0 <<"," << y0 << "," << z0 <<")"<< endreq;  
+  if(_debug) log << MSG::DEBUG << "m_initDir=(" << ux0 <<"," << uy0 << "," << uz0 <<")"<< endreq;  
 
 
   if (uz0!=0)
@@ -451,8 +449,8 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   
     }
 
-  if(debug) log << MSG::DEBUG << "CalEntryPoint=       " << '(' << m_calEntryPoint.x() << ',' << m_calEntryPoint.y() << ',' << m_calEntryPoint.z() << ')'  <<endreq;
-  if(debug) log << MSG::DEBUG << "CalExitPoint=       " << '(' << m_calExitPoint.x() << ',' << m_calExitPoint.y() << ',' << m_calExitPoint.z() << ')'  <<endreq;
+  if(_debug) log << MSG::DEBUG << "CalEntryPoint=       " << '(' << m_calEntryPoint.x() << ',' << m_calEntryPoint.y() << ',' << m_calEntryPoint.z() << ')'  <<endreq;
+  if(_debug) log << MSG::DEBUG << "CalExitPoint=       " << '(' << m_calExitPoint.x() << ',' << m_calExitPoint.y() << ',' << m_calExitPoint.z() << ')'  <<endreq;
     
   return sc;
 
