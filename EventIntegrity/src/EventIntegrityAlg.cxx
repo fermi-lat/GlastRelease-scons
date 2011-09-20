@@ -137,8 +137,8 @@ StatusCode EventIntegrityAlg::execute()
         }
         if (errorMessage!="") {
             setFilterPassed(false);
-            log << MSG::INFO << "Event " << evtTds->event() << "skipped: flag 0x" << std::hex << flags
-                << " bits: " << errorMessage << endreq;
+            log << MSG::INFO << "Event " << evtTds->event() << " skipped - flag 0x" << std::hex << flags
+                << ":" << errorMessage << endreq;
             skipCount++;
         }
     } 
