@@ -587,6 +587,27 @@ void   TreeBasedTool::setTrackEnergy(double eventEnergy, Event::TkrTrackCol* tds
     return;
 }
 
+
+class SortTreeClusterRelations
+{
+public:
+    SortTreeClusterRelations() {};
+   ~SortTreeClusterRelations() {};
+
+    const bool operator()(const Event::TreeClusterRelation* left, 
+                          const Event::TreeClusterRelation* right) const
+    {
+        // Try sorting simply by closest DOCA or angle
+        if (left->getTreeClusDoca() < right->getTreeClusDoca() || left->getTreeClusCosAngle() > right->getTreeClusCosAngle())
+        {
+            return true;
+        }
+
+        return false;
+    }
+};
+
+
 Event::TreeClusterRelationVec TreeBasedTool::buildTreeRelVec(TreeCalClusterAssociator& associator, 
                                                              Event::TkrTreeCol*        treeCol,
                                                              Event::CalClusterCol*     calClusterCol)
@@ -631,6 +652,9 @@ Event::TreeClusterRelationVec TreeBasedTool::buildTreeRelVec(TreeCalClusterAssoc
                     treeRelVec.push_back(*relVecItr);
                 }
             }
+
+            // Do the grand sort
+            if (treeRelVec.size() > 1) std::sort(treeRelVec.begin(), treeRelVec.end(), SortTreeClusterRelations());
 
             // Don't forget the remaining trees
             for(Event::TreeToRelationMap::iterator treeItr  = associator.getTreeToRelationMap().begin();
