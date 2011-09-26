@@ -598,12 +598,12 @@ public:
                           const Event::TreeClusterRelation* right) const
     {
         // Try sorting simply by closest DOCA or angle
-        if (left->getTreeClusDoca() < right->getTreeClusDoca() || left->getTreeClusCosAngle() > right->getTreeClusCosAngle())
+        if (left->getTreeClusDoca() > right->getTreeClusDoca() || left->getTreeClusCosAngle() < right->getTreeClusCosAngle())
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 };
 
