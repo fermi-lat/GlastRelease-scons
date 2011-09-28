@@ -310,9 +310,6 @@ StatusCode TkrReconAlg::initialize()
     // Set the property controlling the type of track fitting to perform
     if(m_TkrTrackFitAlg) m_TkrTrackFitAlg->setProperty("TrackFitType", m_TrackerReconType);
 
-    // Set the property controlling the type of vertex fitting to perform
-    if(m_TkrVertexAlg) m_TkrVertexAlg->setProperty("VertexerType", "DEFAULT");
-
     // Ghost Tool
     sc = toolSvc()->retrieveTool("TkrGhostTool", m_ghostTool);
     if(sc.isFailure()) {
