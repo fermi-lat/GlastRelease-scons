@@ -51,7 +51,7 @@ class IAppMgrUI;
 * \class RootIoSvc
 *
 * \brief Service that implements the IRunable interface, to control the event loop.
-* \author Heather Kelly heather@lheapop.gsfc.nasa.gov
+* \author Heather Kelly heather@slac.stanford.edu
 */
 //==============================================================================
 
@@ -516,7 +516,18 @@ unsigned RootIoSvc::setSingleFile( const std::string & type, const char * fileNa
      log << MSG::DEBUG 
          << "setSingleFile rootInputDesc does not exist for type " 
          << type << endreq;
-     return 2 ; 
+
+      // For now we only allow MC files to be added on the fly (for WIRED)
+      if (type == "mc") {
+          StringArrayProperty fileList;
+          std::vector<std::string> initVec;
+          initVec.push_back(myFileName);
+          fileList.setValue(initVec);
+          prepareRootInput("mc", "Mc", "McEvent", 0, fileList);
+          rootInputDesc = getRootInputDesc(type);
+          if (rootInputDesc == 0) return 2;
+      } else
+         return 2 ; 
    }
   
   if (!RootPersistence::fileExists(myFileName))
