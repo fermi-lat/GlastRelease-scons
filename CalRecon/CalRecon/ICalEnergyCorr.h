@@ -4,7 +4,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/CalRecon/CalCorToolResult.h"
-#include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrTree.h"
 
 /**   
 * @class ICalEnergyCorr
@@ -35,7 +35,7 @@ public:
      *  - Energy per layer is computed and stored in CalEnergyCorr in MeV
      *  - Barycenter per layer is also computed and stored in CalEnergyCorr
      */        
-    virtual Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol *, Event::TkrVertex* ) = 0;
+    virtual Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrTree* ) = 0;
 
 } ;
 

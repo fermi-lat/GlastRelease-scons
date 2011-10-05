@@ -4,7 +4,7 @@
 
 namespace Event {
   class CalCluster;
-  class TkrVertex;
+  class TkrTree;
 }
 class PDFParameters;
 class CalLikelihoodManagerTool;
@@ -40,7 +40,7 @@ class PDFFunction
      //implemented in derived classes only
      virtual bool value(double ans[1]) const= 0;
      virtual void setEvt(const Event::CalCluster *cal, 
-                         const Event::TkrVertex*)= 0;
+                         const Event::TkrTree*)= 0;
 
      bool eval(PDFParameters*, double[1], bool= true);
 
@@ -94,7 +94,7 @@ class PDFLikelihood: public PDFFunction {
    */
  public:
   PDFLikelihood(const CalLikelihoodManagerTool *man, MsgStream&);
-  void setEvt(const Event::CalCluster*, const Event::TkrVertex*);
+  void setEvt(const Event::CalCluster*, const Event::TkrTree*);
   bool value(double[1]) const;
   
   bool unPhysiscal(double energy) const { return calEnergyRaw()>energy; }
@@ -133,7 +133,7 @@ class PDFLowEnergyCuts: public PDFFunction {
                  cZECNTR_MAX= int(1) } Cuts_t;
   PDFLowEnergyCuts(const CalLikelihoodManagerTool*, MsgStream&);
   
-  void setEvt(const Event::CalCluster*, const Event::TkrVertex*);
+  void setEvt(const Event::CalCluster*, const Event::TkrTree*);
   bool value(double[1]) const;
   
   // next functions are really for comfort
@@ -146,7 +146,7 @@ class PDFLowEnergyCuts: public PDFFunction {
   
   // calculates the geometricCut parmeter's value
   double geometricCut(const Event::CalCluster*,
-                      const Event::TkrVertex*) const;
+                      const Event::TkrTree*) const;
  private:
   const CalLikelihoodManagerTool *m_manager;
   double m_calZorigin;
@@ -164,7 +164,7 @@ class PDFHighEnergyCuts: public PDFFunction {
  public:
   PDFHighEnergyCuts(const CalLikelihoodManagerTool*, MsgStream&);
   
-  void setEvt(const Event::CalCluster*, const Event::TkrVertex*);
+  void setEvt(const Event::CalCluster*, const Event::TkrTree*);
   bool value(double[1]) const;
   
   // next functions are really for comfort

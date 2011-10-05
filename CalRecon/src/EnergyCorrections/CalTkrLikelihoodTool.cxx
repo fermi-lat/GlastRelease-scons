@@ -37,7 +37,7 @@ public:
     *\author
     */
            
-    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
+    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrTree* );
 };
 
 #include <GaudiKernel/DeclareFactoryEntries.h>
@@ -54,7 +54,7 @@ CalTkrLikelihoodTool::CalTkrLikelihoodTool( const std::string& type,
                     m_dataFile="$(CALRECONXMLPATH)/CalTkrLikelihood.data");
 };
 
-Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)
+Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrTree* tree)
 //Purpose and method:
 //
 //   This function performs:
@@ -83,23 +83,22 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalClusterCol
     }
 
     // if reconstructed tracker data doesn't exist or number of tracks is 0:
-    if (vertex == 0)
+    if (!tree)
     {
         log << MSG::DEBUG << "Ending doEnergyCorr: No TKR Reconstruction" 
             << endreq;
         return corResult;
     }
 
-    if (clusters->empty())
+    if (!cluster)
     {
         log << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
             << endreq;
         return corResult;
     }
-    Event::CalCluster * cluster = clusters->front() ;
 
-    const Vector& trackDirection = vertex->getDirection();
-    const Point&  trackPosition  = vertex->getPosition();
+    const Vector& trackDirection = tree->getAxisParams()->getEventAxis();
+    const Point&  trackPosition  = tree->getAxisParams()->getEventPosition();
     // CUTS
     // this checks whether a set of PDF parameters exist for this event's
     // energy, direction and point of impact.

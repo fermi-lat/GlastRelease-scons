@@ -54,7 +54,7 @@ public:
     StatusCode initialize();
 
     // worker function to get the corrected energy      
-    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
+    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrTree* );
 
 
 
@@ -66,69 +66,69 @@ private:
     StatusCode aveRadLens(Point x0, Vector t0, double radius, int numSamples);
         Event::CalCorToolResult* loadResults(); 
 
-    /// TkrGeometrySvc used for access to tracker geometry info
-    ITkrGeometrySvc*  m_tkrGeom;
-
-    /// Pointer to the Gaudi data provider service
-    IDataProviderSvc* m_dataSvc;
-
-    /// G4 Propagator tool
-    IPropagator *     m_G4PropTool; 
-
-    /// Detector Service
-    IGlastDetSvc *    m_detSvc; 
-
-        /// Internal Cluster and vertex data
-        Event::CalCluster* m_cluster;
-        Event::TkrVertex*  m_vertex; 
-
-    /// some Geometry
-    double m_towerPitch;
-    int    m_xNum;
-    int    m_yNum;
-    
     /// gets the CAL info from detModel
     StatusCode getCalInfo();
 
+    /// TkrGeometrySvc used for access to tracker geometry info
+    ITkrGeometrySvc*   m_tkrGeom;
+
+    /// Pointer to the Gaudi data provider service
+    IDataProviderSvc*  m_dataSvc;
+
+    /// G4 Propagator tool
+    IPropagator *      m_G4PropTool; 
+
+    /// Detector Service
+    IGlastDetSvc *     m_detSvc; 
+
+    /// Internal Cluster and vertex data
+    Event::CalCluster* m_cluster;
+    Event::TkrTree*    m_tree; 
+
+    /// some Geometry
+    double             m_towerPitch;
+    int                m_xNum;
+    int                m_yNum;
+    
     /// CAL vars
-    double m_calXWidth;
-    double m_calYWidth;
-    double m_calZTop;
-    double m_calZBot;
-        Point  m_cal_pos;
-        Point  m_cal_top; 
-        Vector m_cal_dir;
+    double             m_calXWidth;
+    double             m_calYWidth;
+    double             m_calZTop;
+    double             m_calZBot;
+    Point              m_cal_pos;
+    Point              m_cal_top; 
+    Vector             m_cal_dir;
 
     // Internal Variables
-    double m_radLen_CsI, m_rms_RL_CsI; //Rad. lengths along axis in CsI Xtals (and rms)
-    double m_radLen_Stuff, m_rms_RL_Stuff; // Rad. lengths of other material along axis (and rms)
-    double m_radLen_Cntr, m_rms_RL_Cntr; // Rad. lengths along axis to centroid (and rms)
-    double m_radLen_CntrStuff, m_rms_RL_CntrStuff; // Rad. length of other material (not CsI) to centroid
+    double             m_radLen_CsI, m_rms_RL_CsI; //Rad. lengths along axis in CsI Xtals (and rms)
+    double             m_radLen_Stuff, m_rms_RL_Stuff; // Rad. lengths of other material along axis (and rms)
+    double             m_radLen_Cntr, m_rms_RL_Cntr; // Rad. lengths along axis to centroid (and rms)
+    double             m_radLen_CntrStuff, m_rms_RL_CntrStuff; // Rad. length of other material (not CsI) to centroid
 
-    double m_arcLen_CsI;      // Path length along shower axis in CsI Xtals
-    double m_arcLen_Stuff;    // Path length along shower axis for material other then CsI
-    double m_arcLen_Cntr;     // Path length along shower axis to energy centroid
+    double             m_arcLen_CsI;      // Path length along shower axis in CsI Xtals
+    double             m_arcLen_Stuff;    // Path length along shower axis for material other then CsI
+    double             m_arcLen_Cntr;     // Path length along shower axis to energy centroid
 
-        double m_gap_fraction;    // Fraction of edge cylinder that falls inside a gap
-        double m_edge_correction; // Edge-Gap multiplicative corrections factor
-        double m_leakage_correction; // Containment fraction for shower
-        double m_total_correction;// Total multiplicative correction - includes ad-hoc piece - see code
-        double m_raw_energy;      // Raw summed energy from Xtals
-        double m_corr_energy;     // Fully corrected energy 
-        double m_deltaT;          // Difference between predicted energy centriod and meas. centroid
-        double m_t_Pred;          // Predicted energy centriod
-        double m_t;               // Location of measured energy centroid in rad. len.
-        double m_t_total;         // Total rad. len. along event axis used in leakage calc. 
-        unsigned int m_status_bits; // Status bits to be set in CalCorResults
+    double             m_gap_fraction;    // Fraction of edge cylinder that falls inside a gap
+    double             m_edge_correction; // Edge-Gap multiplicative corrections factor
+    double             m_leakage_correction; // Containment fraction for shower
+    double             m_total_correction;// Total multiplicative correction - includes ad-hoc piece - see code
+    double             m_raw_energy;      // Raw summed energy from Xtals
+    double             m_corr_energy;     // Fully corrected energy 
+    double             m_deltaT;          // Difference between predicted energy centriod and meas. centroid
+    double             m_t_Pred;          // Predicted energy centriod
+    double             m_t;               // Location of measured energy centroid in rad. len.
+    double             m_t_total;         // Total rad. len. along event axis used in leakage calc. 
+    unsigned int       m_status_bits; // Status bits to be set in CalCorResults
 
    /// Control Parameters set via JobOptions parameters
-    double m_minEnergy;      // Min. energy required to due the corrections
-        double m_maxEdgeCorr;    // Max. allowed edge corretion factor
-        double m_edgeFracCutOff; // Contained fraction (edges) min. (or cutoff)
-        double m_minCorrEnergy;  // Min Energy for which to make leakage correction
-        double m_leakConvergence;// Leakage convergence fraction 
-        double m_minLeakFrac;    // Min allowed leakage fraction 
-        double m_minCsIRLn;      // Min. rad. len. of CsI for leakage correction
+    double             m_minEnergy;      // Min. energy required to due the corrections
+    double             m_maxEdgeCorr;    // Max. allowed edge corretion factor
+    double             m_edgeFracCutOff; // Contained fraction (edges) min. (or cutoff)
+    double             m_minCorrEnergy;  // Min Energy for which to make leakage correction
+    double             m_leakConvergence;// Leakage convergence fraction 
+    double             m_minLeakFrac;    // Min allowed leakage fraction 
+    double             m_minCsIRLn;      // Min. rad. len. of CsI for leakage correction
 };
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -220,8 +220,8 @@ StatusCode CalValsCorrTool::initialize()
     }
 
     m_towerPitch = m_tkrGeom->towerPitch();
-    m_xNum = m_tkrGeom->numXTowers();
-    m_yNum = m_tkrGeom->numYTowers();
+    m_xNum       = m_tkrGeom->numXTowers();
+    m_yNum       = m_tkrGeom->numYTowers();
 
     if ((sc = getCalInfo()).isFailure()) 
     {
@@ -256,7 +256,7 @@ StatusCode CalValsCorrTool::initialize()
 }
 
 
-Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)
+Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrTree* tree)
 {
     //Purpose and method:
     //
@@ -269,68 +269,83 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalClusterCol* clu
     Event::CalCorToolResult* corResult = 0;
     MsgStream lm(msgSvc(), name());
 
-    if (clusters->empty())
+    if (!cluster)
     {
         lm << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
             << endreq;
         return corResult;
     }
-        m_cluster = clusters->front() ;
-        m_vertex  = vertex; 
+    
+    m_cluster = cluster;
+    m_tree    = tree; 
 
         //Make sure we have valid cluster data
     if (!m_cluster) return corResult;
 
-        // Put here a place holder for Event Axis Calculation!!!!!!!!!!!!!
-        if(!m_cluster->checkStatusBit(Event::CalCluster::CENTROID)) return corResult;
-        m_cal_pos = m_cluster->getPosition();
-        Point x0  = m_cal_pos;
+    // Put here a place holder for Event Axis Calculation!!!!!!!!!!!!!
+    if(!m_cluster->checkStatusBit(Event::CalCluster::CENTROID)) return corResult;
 
-        Vector t0 = m_cluster->getDirection();
-        if( !m_cluster->checkStatusBit(Event::CalCluster::MOMENTS) ||
-                m_cluster->getRmsLong() < .1) { // Trap NaN condition caused by Moments failure
-                t0 = Vector(0., 0., 1.);
-        }
-        double tkr_Energy = 0.; 
-        double tkr_RLn    = 0.;
-    if (m_vertex != 0) {
-                x0 = m_vertex->getPosition();
+    m_cal_pos = m_cluster->getPosition();
+    Point x0  = m_cal_pos;
+    Vector t0 = m_cluster->getDirection();
 
-                Vector x_diff = x0 - m_cal_pos;
-                t0 = -m_vertex->getDirection();  // Swithed to this after P. Bruel's obs. that this choice minimized
-                                              // the low energy tail
-                                      // "event" axis alternative was: t0 = x_diff.unit();
-                double costh  = fabs(t0.z());
+    if( !m_cluster->checkStatusBit(Event::CalCluster::MOMENTS) ||
+              m_cluster->getRmsLong() < .1) { // Trap NaN condition caused by Moments failure
+        t0 = Vector(0., 0., 1.);
+    }
 
-            // Get the First Track - from vertex - THIS IS BAD - NEED A BETTER WAY HERE
-            SmartRefVector<Event::TkrTrack>::const_iterator pTrack1 = m_vertex->getTrackIterBegin(); 
-            const Event::TkrTrack* track_1 = *pTrack1;
+    double tkr_Energy = 0.; 
+    double tkr_RLn    = 0.;
 
-        tkr_RLn = track_1->getTkrCalRadlen();
+    if (m_tree != 0) 
+    {
+        x0 = m_tree->getAxisParams()->getEventPosition();
+        t0 = m_tree->getAxisParams()->getEventAxis();    
+
+        // Start at the top most point (ie in the top silicon layer) 
+        int    topLayer = m_tree->getHeadNode()->front()->getTreeStartLayer();
+        double zTopLyr  = std::max(m_tkrGeom->getLayerZ(topLayer, 0), m_tkrGeom->getLayerZ(topLayer, 1));
+
+        // Translate x0 to this z position
+        double arcLen   = t0.z() > 0. ? (zTopLyr - x0.z()) / t0.z() : 0.;
+
+        // Translate the tree start position to middle of top silicon layer
+        x0 = x0 + arcLen * t0;
+
+        // Now set up and call propagator to get the radiation lengths to calorimeter
+        arcLen = t0.z() > 0. ? (x0.z() - m_tkrGeom->calZTop()) / t0.z() : 0.;
+        m_G4PropTool->setStepStart(x0, -t0);
+        m_G4PropTool->step(arcLen);
+        tkr_RLn = m_G4PropTool->getRadLength(); 
+
         // Patch for error in KalFitTrack: 1/2 of first radiator left out
-        int plane = m_tkrGeom->getPlane(track_1->front()->getTkrId());
-        int layer = m_tkrGeom->getLayer(plane);
-        if (m_tkrGeom->isTopPlaneInLayer(plane)) {
-            tkr_RLn += 0.5*m_tkrGeom->getRadLenConv(layer)/costh;
+        int topPlane = m_tkrGeom->getPlane(zTopLyr);
+
+        if (m_tkrGeom->isTopPlaneInLayer(topPlane)) 
+        {
+            tkr_RLn += 0.5*m_tkrGeom->getRadLenConv(topLayer) / t0.z();
         }
 
         // add up the rad lens; this could be a local array if you're bothered by the overhead
         //   but hey, compared to the propagator...
         double tkr_radLen_nom = 0.; 
-        int layerCount = layer;
-        for(; layerCount>=0; --layerCount) {
+        int layerCount = topLayer;
+        for(; layerCount>=0; --layerCount) 
+        {
             tkr_radLen_nom += m_tkrGeom->getRadLenConv(layerCount) 
                              + m_tkrGeom->getRadLenRest(layerCount);
         }
-        tkr_radLen_nom /= costh;
-        if(tkr_RLn > tkr_radLen_nom * 1.5)     {tkr_RLn = tkr_radLen_nom * 1.5;}
-        else if(tkr_RLn < tkr_radLen_nom * .5) {tkr_RLn  = tkr_radLen_nom * .5;}
+        tkr_radLen_nom /= t0.z();
+        if      (tkr_RLn > tkr_radLen_nom * 1.5) {tkr_RLn = tkr_radLen_nom * 1.5;}
+        else if (tkr_RLn < tkr_radLen_nom * .5)  {tkr_RLn  = tkr_radLen_nom * .5;}
 
                 //Punt on the Tracker Energy!!!!!!!!!!!!!!!!!
         tkr_Energy = 50.; // - sort of right for 100 MeV
-        }
+    }
+
         // Now do the energy correction and calculation of several vars. used in bkg. rejection
     calculate(x0, t0, tkr_RLn, tkr_Energy);
+
     if (m_status_bits != Event::CalCorToolResult::ZERO) corResult = loadResults();
 
     return corResult;

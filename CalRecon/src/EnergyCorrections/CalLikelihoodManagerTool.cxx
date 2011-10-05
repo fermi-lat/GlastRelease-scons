@@ -8,7 +8,7 @@
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
-#include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrTree.h"
 
 #include "CalLikelihoodManagerTool.h"
 #include "CalLikelihoodPDFFunctions.h"
@@ -147,37 +147,36 @@ const Event::TkrDigiCol *CalLikelihoodManagerTool::getTkrDigiCol(void) const
 }
 
 Event::CalCorToolResult * CalLikelihoodManagerTool::doEnergyCorr
- ( Event::CalClusterCol * clusters, Event::TkrVertex* vertex ){
+ ( Event::CalCluster* cluster, Event::TkrTree* tree ){
                              
   MsgStream log(msgSvc(), "CalLikelihoodManagerTool.doEnergyCorr");
-  if (vertex == 0)
+  if (tree == 0)
   {
     log << MSG::DEBUG <<"No TKR Reconstruction"<< endreq;
     return 0;
   }
 
-  if (clusters->empty())
+  if (!cluster)
   {
       log << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
           << endreq;
       return 0 ;
   }
-  Event::CalCluster * cluster = clusters->front() ;
 
-  double tkr1Zdir= -vertex->getDirection()[2];
+  double tkr1Zdir= -tree->getAxisParams()->getEventAxis().z();
   double eMin= cluster->getMomParams().getEnergy();
   double eMax= eMin*5<100.?100.:eMin*5;
 
-  if( getTkrPlane(vertex)<0 
+  if( getTkrPlane(tree)<0 
       || eMax<m_minTrialEnergy 
       || eMin>m_maxTrialEnergy
       || tkr1Zdir<m_minTkr1ZDir) {
     log<<MSG::DEBUG<<"Outside range with CalEnergyRaw= "<<eMin<<" MeV, "
                      "Tkr1ZDir= "<<-tkr1Zdir
-                   <<", Vertex #"<<getTkrPlane(vertex)<<endreq;
+                   <<", Vertex #"<<getTkrPlane(tree)<<endreq;
     return 0;
   }
-  if( evalEnergy(eMin, eMax, cluster, vertex) || evalError(vertex) ) {
+  if( evalEnergy(eMin, eMax, cluster, tree) || evalError(tree) ) {
     log<<MSG::DEBUG<<"No PDF for this event"<<endreq;
     return 0;
   }
@@ -200,7 +199,7 @@ Event::CalCorToolResult * CalLikelihoodManagerTool::doEnergyCorr
   // next line means that the second PDFCutArray should be a "LowEnergy" type
   result[0]["GeometricCut"]= ((PDFLowEnergyCuts*) ((PDFCutArray*) at(1))
                               ->getCutsFcn())
-                              ->geometricCut(cluster, vertex);
+                              ->geometricCut(cluster, tree);
   result->setParams(momParams);
 
   log<<MSG::DEBUG<<"Energy "<<momParams.getEnergy()
@@ -310,11 +309,11 @@ void PDFCutArray::clear(void){
 }
 
 bool PDFCutArray::evalEnergy(double eMin, double eMax,
-                             const Event::CalCluster *cluster,
-                             const Event::TkrVertex *vertex){
+                             const Event::CalCluster* cluster,
+                             const Event::TkrTree*    tree){
   setAnswer(0);
-  m_LikelihoodFcn->setEvt(cluster, vertex);
-  m_CutsFcn->setEvt(cluster, vertex);
+  m_LikelihoodFcn->setEvt(cluster, tree);
+  m_CutsFcn->setEvt(cluster, tree);
   if( eMax<m_Grid->minTrialEnergy() || eMin>m_Grid->maxTrialEnergy() )
     return 0;
   if( eMin<m_Grid->minTrialEnergy() ) eMin= m_Grid->minTrialEnergy();
@@ -323,7 +322,7 @@ bool PDFCutArray::evalEnergy(double eMin, double eMax,
 
   const double *fcn= m_LikelihoodFcn->getInterpolationParameters();
   if( m_Grid->initialise(fcn) ) return 0;
-  return PDFAnswer::evalEnergy(eMin, eMax, cluster, vertex);
+  return PDFAnswer::evalEnergy(eMin, eMax, cluster, tree);
 }
 
 PDFAnswer::Status_t PDFCutArray::evalStatus(int i, PDFVertexArray *pdf){
@@ -375,11 +374,11 @@ PDFVertexArray::PDFVertexArray(std::ifstream &dataFile, PDFCutArray *tool,
   
 bool PDFVertexArray::evalEnergy(double eMin, double eMax,
                           const Event::CalCluster*,
-                          const Event::TkrVertex *vertex){
+                          const Event::TkrTree* tree){
   setAnswer(0);
   m_MPV[0]= m_MPV[1]= 0.;
   m_status= PDFAnswer::kNotCalculated;
-  int vZ0= getTkrPlane(vertex);
+  int vZ0= getTkrPlane(tree);
 
   if( m_Fcn->getMPV((PDFParameters *) at(vZ0), eMin, eMax, m_MPV) )
     return true;
@@ -388,9 +387,9 @@ bool PDFVertexArray::evalEnergy(double eMin, double eMax,
   return false;
 }
 
-bool PDFVertexArray::evalError(Event::TkrVertex *vertex){
+bool PDFVertexArray::evalError(Event::TkrTree *tree){
   m_FWHM[0]= m_FWHM[1]= 0.;
-  return m_Fcn->getFWHM((PDFParameters*) at(getTkrPlane(vertex)),
+  return m_Fcn->getFWHM((PDFParameters*) at(getTkrPlane(tree)),
                         m_MPV, m_FWHM);
 }
 
@@ -411,11 +410,11 @@ bool PDFAnswer::operator<(const PDFAnswer &a) const{
 
 bool PDFAnswer::evalEnergy(double eMin, double eMax,
                            const Event::CalCluster *cluster,
-                           const Event::TkrVertex *vertex){
+                           const Event::TkrTree *tree){
   m_Answer= 0;
   for(PDFVectItr pdf= begin(); pdf!=end(); ++pdf){
     PDFAnswer *ans= (PDFAnswer*)(*pdf);
-    if(ans->evalEnergy(eMin, eMax, cluster, vertex)) continue;
+    if(ans->evalEnergy(eMin, eMax, cluster, tree)) continue;
     if( operator<(ans[0]) ) m_Answer= ans;
   }
   return !m_Answer;

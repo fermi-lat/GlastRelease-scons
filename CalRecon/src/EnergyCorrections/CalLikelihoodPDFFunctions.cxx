@@ -173,24 +173,26 @@ PDFLikelihood::PDFLikelihood(const CalLikelihoodManagerTool*manager,
   m_manager = manager;
 }
 
-void PDFLikelihood::setEvt(const Event::CalCluster*cluster,
-                           const Event::TkrVertex*vertex) {
-  tkr1ZDir()= fabs(vertex->getDirection()[2]);
-  calEnergyRaw()= cluster->getMomParams().getEnergy();
-  calELayer7()= cluster->back().getEnergy();
+void PDFLikelihood::setEvt(const Event::CalCluster* cluster,
+                           const Event::TkrTree*    tree) 
+{
+    tkr1ZDir()     = fabs(tree->getAxisParams()->getEventAxis().z());
+    calEnergyRaw() = cluster->getMomParams().getEnergy();
+    calELayer7()   = cluster->back().getEnergy();
 
-  const Event::TkrDigiCol *digi= m_manager->getTkrDigiCol();
-  int nHits= 0;
-  for(Event::TkrDigiCol::const_iterator hit= digi->begin(); hit!=digi->end();
+    const Event::TkrDigiCol *digi= m_manager->getTkrDigiCol();
+    int nHits= 0;
+    for(Event::TkrDigiCol::const_iterator hit= digi->begin(); hit!=digi->end();
       ++hit)
-    nHits+= (*hit)->getNumHits();
-  // PhB
-  if(!m_manager->m_flight_geom)
+      nHits+= (*hit)->getNumHits();
+      
+    // PhB
+    if(!m_manager->m_flight_geom)
     {
-      nHits += 40; // 45.3*14/16
+        nHits += 40; // 45.3*14/16
     }
 
-  tkrSumHits()= nHits;
+    tkrSumHits()= nHits;
 }
 bool PDFLikelihood::value(double result[1]) const{
   // calculate LogNormal(x):
@@ -249,109 +251,110 @@ bool PDFLowEnergyCuts::value(double result[1]) const{
   else result[0]= 0.;
   return false;
 }
-void PDFLowEnergyCuts::setEvt(const Event::CalCluster*cluster,
-                              const Event::TkrVertex*vertex) {
-  tkr1ZDir()= fabs(vertex->getDirection()[2]);
-  calZEcntr()= cluster->getMomParams().getCentroid().z();
-  geometricCut()= geometricCut(cluster, vertex);
+void PDFLowEnergyCuts::setEvt(const Event::CalCluster* cluster,
+                              const Event::TkrTree*    tree) 
+{
+    tkr1ZDir()= fabs(tree->getAxisParams()->getEventAxis().z());
+    calZEcntr()= cluster->getMomParams().getCentroid().z();
+    geometricCut()= geometricCut(cluster, tree);
 }
-double PDFLowEnergyCuts::geometricCut(const Event::CalCluster*cluster,
-                                      const Event::TkrVertex*vertex) const
+double PDFLowEnergyCuts::geometricCut(const Event::CalCluster* cluster,
+                                      const Event::TkrTree*    tree) const
 // finds the vertex position and a value equal to the integration of the
 // distance to the closest crack along the trajectory, weighted by the energy
 // in the layer.
 {
-  Vector pX= vertex->getDirection(); 
-  Point x= vertex->getPosition(); 
+    Vector pX = tree->getAxisParams()->getEventAxis();
+    Point  x  = tree->getAxisParams()->getEventPosition();
 
-  if( fabs(pX[2])<1e-10 ) return 0;
-  double geometricCut= 0.;
-  double weight= 0.;
+    if( fabs(pX[2])<1e-10 ) return 0;
+    double geometricCut= 0.;
+    double weight= 0.;
 
-  double slopes[2]= { pX[0]/pX[2], 
-                      pX[1]/pX[2] };
-  // next values are for normalisation purposes: 
-  // they correct differences to a normal incident particle
-  double ellCorr[2]= {sqrt(1+slopes[0]*slopes[0]),
-                      sqrt(1+slopes[1]*slopes[1])};
-  double xT[2]= {x[0], 
-                 x[1]};
-  for( int ax=0; ax<2; ++ax )
-  {
-    // m_calZorigin: origin fixed at -47.395.
-    // XY position is extrapolated to there
-    xT[ax]-= slopes[ax]*(x[2]-m_calZorigin);
-    // m_towerPitch: tower width
-    // xT is in units of tower width
-    xT[ax]/= m_towerPitch;
-  
-    // this is one step along the trajectory on the ax axis
-    // There are 10 steps in all: thus the .1 * (CDE height)/(TOWER width)
-    slopes[ax]*= .1*m_ratioCDEHeighTowerPitch;
-  }
-  
-  for(Event::CalCluster::const_iterator layer= cluster->begin();
-      layer!=cluster->end(); ++layer ){
-    weight+= (*layer).getEnergy();
-    // PhB
-    if(m_manager->m_flight_geom)
-      {
-        if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
-      }
-    else
-      {
-        if( (fabs(xT[0])>2.) || (fabs(xT[1])>.5) ) continue;
-      }
+    double slopes[2]= { pX[0]/pX[2], 
+                        pX[1]/pX[2] };
+    // next values are for normalisation purposes: 
+    // they correct differences to a normal incident particle
+    double ellCorr[2]= {sqrt(1+slopes[0]*slopes[0]),
+                        sqrt(1+slopes[1]*slopes[1])};
+    double xT[2]= {x[0], 
+                   x[1]};
+    for( int ax=0; ax<2; ++ax )
+    {
+        // m_calZorigin: origin fixed at -47.395.
+        // XY position is extrapolated to there
+        xT[ax]-= slopes[ax]*(x[2]-m_calZorigin);
+        // m_towerPitch: tower width
+        // xT is in units of tower width
+        xT[ax]/= m_towerPitch;
     
-    double val= 0.;
-    for( int ii=0; ii<10; ++ii )
-      {
-        double towerX[2]= { xT[0], xT[1] };
-        if(m_manager->m_flight_geom)
-          {
-            for( int ax=0; ax<2; ++ax )
-              {
-                // find position relative to tower center
-                // the tower being whichever one xT is now at
-                if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
-                else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
-                else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
-                else towerX[ax]= fabs(towerX[ax]-1.5);
-                
-                // normalisation for the trajectory slant
-                towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
-                
-                // moving along the trajectory
-                xT[ax]-= slopes[ax];
-              }
-          }
-        else
-          {
-            // X axis
-            int ax = 0;
-            // find position relative to tower center
-            // the tower being whichever one xT is now at
-            if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
-            else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
-            else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
-            else towerX[ax]= fabs(towerX[ax]-1.5);
-            // normalisation for the trajectory slant
-            towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
-            // moving along the trajectory
-            xT[ax]-= slopes[ax];
-            // Y axis
-            towerX[1]= fabs(towerX[1]);
-            towerX[1]= (.5-(towerX[1]<.5?towerX[1]:.5))/ellCorr[1]; 
-            xT[1]-= slopes[1];
-          }
-        // adding minimum distance to the tower edge
-        
-        val+= towerX[towerX[0]>towerX[1]];
-      }
-    geometricCut+= val*(*layer).getEnergy();
-  }
-  geometricCut*= .2*sqrt(.5/(pX[2]*pX[2])+.5)/weight;
-  return geometricCut;
+        // this is one step along the trajectory on the ax axis
+        // There are 10 steps in all: thus the .1 * (CDE height)/(TOWER width)
+        slopes[ax]*= .1*m_ratioCDEHeighTowerPitch;
+    }
+    
+    for(Event::CalCluster::const_iterator layer= cluster->begin();
+        layer!=cluster->end(); ++layer ){
+      weight+= (*layer).getEnergy();
+      // PhB
+      if(m_manager->m_flight_geom)
+        {
+          if( (fabs(xT[0])>2.) || (fabs(xT[1])>2.) ) continue;
+        }
+      else
+        {
+          if( (fabs(xT[0])>2.) || (fabs(xT[1])>.5) ) continue;
+        }
+      
+      double val= 0.;
+      for( int ii=0; ii<10; ++ii )
+        {
+          double towerX[2]= { xT[0], xT[1] };
+          if(m_manager->m_flight_geom)
+            {
+              for( int ax=0; ax<2; ++ax )
+                {
+                  // find position relative to tower center
+                  // the tower being whichever one xT is now at
+                  if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+                  else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+                  else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+                  else towerX[ax]= fabs(towerX[ax]-1.5);
+                  
+                  // normalisation for the trajectory slant
+                  towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+                  
+                  // moving along the trajectory
+                  xT[ax]-= slopes[ax];
+                }
+            }
+          else
+            {
+              // X axis
+              int ax = 0;
+              // find position relative to tower center
+              // the tower being whichever one xT is now at
+              if( towerX[ax]<-1. ) towerX[ax]= fabs(towerX[ax]+1.5);
+              else if( towerX[ax]<0. ) towerX[ax]= fabs(towerX[ax]+.5);
+              else if( towerX[ax]<1. ) towerX[ax]= fabs(towerX[ax]-.5);
+              else towerX[ax]= fabs(towerX[ax]-1.5);
+              // normalisation for the trajectory slant
+              towerX[ax]= (.5-(towerX[ax]<.5?towerX[ax]:.5))/ellCorr[ax];
+              // moving along the trajectory
+              xT[ax]-= slopes[ax];
+              // Y axis
+              towerX[1]= fabs(towerX[1]);
+              towerX[1]= (.5-(towerX[1]<.5?towerX[1]:.5))/ellCorr[1]; 
+              xT[1]-= slopes[1];
+            }
+          // adding minimum distance to the tower edge
+          
+          val+= towerX[towerX[0]>towerX[1]];
+        }
+      geometricCut+= val*(*layer).getEnergy();
+    }
+    geometricCut*= .2*sqrt(.5/(pX[2]*pX[2])+.5)/weight;
+    return geometricCut;
 }
 
 /******************************************************************************/
@@ -394,12 +397,13 @@ bool PDFHighEnergyCuts::value(double result[1]) const{
   }
   return true;
 }
-void PDFHighEnergyCuts::setEvt(const Event::CalCluster*cluster,
-                              const Event::TkrVertex*vertex) {
-  tkr1ZDir()= fabs(vertex->getDirection()[2]);
-  calZEcntr()= cluster->getMomParams().getCentroid().z();
-  calTwrEdgeCntr()= calTwrEdgeCntr(cluster);
-  calELayer7()= cluster->back().getEnergy();
+void PDFHighEnergyCuts::setEvt(const Event::CalCluster* cluster,
+                              const Event::TkrTree*     tree) 
+{
+    tkr1ZDir()= fabs(tree->getAxisParams()->getEventAxis().z());
+    calZEcntr()= cluster->getMomParams().getCentroid().z();
+    calTwrEdgeCntr()= calTwrEdgeCntr(cluster);
+    calELayer7()= cluster->back().getEnergy();
 }
 double PDFHighEnergyCuts::calTwrEdgeCntr(const Event::CalCluster *cluster)const{
   double x= cluster->getMomParams().getCentroid().x();

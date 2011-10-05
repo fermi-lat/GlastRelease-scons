@@ -14,7 +14,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
-#include "Event/Recon/TkrRecon/TkrVertex.h"
+#include "Event/Recon/TkrRecon/TkrTree.h"
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
@@ -22,6 +22,7 @@
 #include "Event/Digi/CalDigi.h"
 
 #include <CalRecon/ICalEnergyCorr.h>
+#include "GlastSvc/Reco/IPropagatorSvc.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // to access an XML containing Profile Bias parameters file
@@ -65,67 +66,70 @@ public:
    * - 07/06/05       Philippe Bruel    first implementation
    */     
 
-  Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
+  Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrTree* );
 
   int doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm, int optntrye);
 
-  double GetRadiationLengthInTracker(Event::TkrVertex*);
+  double GetRadiationLengthInTracker(Event::TkrTree*);
 
   int DetectSaturation();
   
   StatusCode finalize();
     
 private:
-  /// Pointer to the Gaudi data provider service
-  IDataProviderSvc* m_dataSvc;
-  
-  /// Detector Service
-  IGlastDetSvc *    m_detSvc; 
-  
-  /// TkrGeometrySvc used for access to tracker geometry info
-  ITkrGeometrySvc*  m_tkrGeom;
+    /// Pointer to the Gaudi data provider service
+    IDataProviderSvc* m_dataSvc;
+    
+    /// Detector Service
+    IGlastDetSvc *    m_detSvc; 
 
-  // in order to handle saturation
-  float m_saturationadc;
-  static int m_Nsaturated;
-  bool m_saturated[16][8][12];
+    /// G4 Propagator tool
+    IPropagator *     m_G4PropTool; 
+    
+    /// TkrGeometrySvc used for access to tracker geometry info
+    ITkrGeometrySvc*  m_tkrGeom;
 
-  double m_eTotal;
+    // in order to handle saturation
+    float m_saturationadc;
+    static int m_Nsaturated;
+    bool m_saturated[16][8][12];
 
-  // some results of the fit
-  double m_amin; // minimum of minimized function
-  double m_par0; // alpha
-  double m_par1; // tmax
-  double m_par2; // energy
-  double m_epar0;
-  double m_epar1;
-  double m_epar2;
-  double m_wideningfactor;
-  double m_lastx0;
-  double m_totx0cal;
-  double m_ierflg;
+    double m_eTotal;
 
-  TMinuit* m_minuit;
-  static FullShowerProfileParamsManager *m_fsppm;
-  static FullShowerDevelopmentDescriptionManager *m_fsddm;
-  static double m_elayer_dat[8];
-  static double m_elayer_datsat[8];
-  static double m_elayer_nsat[8];
-  static double m_elayer_fit[8];
-  static double m_eelayer_fit[8];
-  // function passed to Minuit to minimize
-  static void fcn(int & , double *, double &f, double *par, int );
-  static double compute_chi2(double *par);
-  static double compute_deposited_energy(double *par, double z0, double z1);
-  
-  static double m_chisq;
-  static double m_params_contribution;
-  static double m_params_contribution_factor;
-  static double m_totchisq;
-  static int m_optpr;
+    // some results of the fit
+    double m_amin; // minimum of minimized function
+    double m_par0; // alpha
+    double m_par1; // tmax
+    double m_par2; // energy
+    double m_epar0;
+    double m_epar1;
+    double m_epar2;
+    double m_wideningfactor;
+    double m_lastx0;
+    double m_totx0cal;
+    double m_ierflg;
 
-  static double m_spy_par[3];
-  static double m_spy_totchisq;
+    TMinuit* m_minuit;
+    static FullShowerProfileParamsManager *m_fsppm;
+    static FullShowerDevelopmentDescriptionManager *m_fsddm;
+    static double m_elayer_dat[8];
+    static double m_elayer_datsat[8];
+    static double m_elayer_nsat[8];
+    static double m_elayer_fit[8];
+    static double m_eelayer_fit[8];
+    // function passed to Minuit to minimize
+    static void fcn(int & , double *, double &f, double *par, int );
+    static double compute_chi2(double *par);
+    static double compute_deposited_energy(double *par, double z0, double z1);
+    
+    static double m_chisq;
+    static double m_params_contribution;
+    static double m_params_contribution_factor;
+    static double m_totchisq;
+    static int m_optpr;
+
+    static double m_spy_par[3];
+    static double m_spy_totchisq;
 private:
   double BIAS0;
   double BIAS1;
@@ -237,313 +241,337 @@ StatusCode CalFullProfileTool::initialize()
   // This function does following initialization actions:
   //    - extracts geometry constants from xml file using GlastDetSvc
 {
-  MsgStream log(msgSvc(), name());
-  StatusCode sc = StatusCode::SUCCESS;
-  log << MSG::DEBUG << "Initializing CalFullProfileTool" <<endreq;
+    MsgStream log(msgSvc(), name());
+    StatusCode sc = StatusCode::SUCCESS;
+    log << MSG::DEBUG << "Initializing CalFullProfileTool" <<endreq;
   
-  //Locate and store a pointer to the data service which allows access to the TDS
-  if ((sc = service("EventDataSvc", m_dataSvc)).isFailure())
+    //Locate and store a pointer to the data service which allows access to the TDS
+    if ((sc = service("EventDataSvc", m_dataSvc)).isFailure())
     {
       throw GaudiException("Service [EventDataSvc] not found", name(), sc);
     }
   
-  if ((sc = service("GlastDetSvc", m_detSvc, true)).isFailure())
+    if ((sc = service("GlastDetSvc", m_detSvc, true)).isFailure())
     { 
       throw GaudiException("Service [GlastDetSvc] not found", name(), sc);
     }
   
-  // find TkrGeometrySvc service
-  if ((sc = service("TkrGeometrySvc", m_tkrGeom, true)).isFailure())
+    // find TkrGeometrySvc service
+    if ((sc = service("TkrGeometrySvc", m_tkrGeom, true)).isFailure())
     {
       throw GaudiException("Service [TkrGeometrySvc] not found", name(), sc);
     }
 
-  BIAS0 = 2.655362;
-  BIAS1 = 0.007235;
-
-  m_fsppm = new FullShowerProfileParamsManager();
-  m_fsddm = new FullShowerDevelopmentDescriptionManager(m_detSvc,14,2.,1.,1.85,0.80,0.1);
-  
-  // Minuit object
-  m_minuit = new TMinuit(5);
-  
-  //Sets the function to be minimized
-  m_minuit->SetFCN(fcn);
-
-  m_saturationadc = 4060;
-
-  return sc;
-}
-
-double CalFullProfileTool::GetRadiationLengthInTracker(Event::TkrVertex* vertex)
-{
-  if(!vertex) return 0;
-  
-  Vector vv = (vertex->getDirection()).unit();
-  double costheta = fabs(vv.z());
-  
-  // copied from CalValsCorrTool
-  
-  // Get the First Track - from vertex - THIS IS BAD - NEED A BETTER WAY HERE
-  SmartRefVector<Event::TkrTrack>::const_iterator pTrack1 = vertex->getTrackIterBegin(); 
-  const Event::TkrTrack* track_1 = *pTrack1;
-  
-  double tkr_RLn = track_1->getTkrCalRadlen();
-  
-  // Patch for error in KalFitTrack: 1/2 of first radiator left out
-  int plane = m_tkrGeom->getPlane(track_1->front()->getTkrId());
-  int layer = m_tkrGeom->getLayer(plane);
-  if (m_tkrGeom->isTopPlaneInLayer(plane)) {
-    tkr_RLn += 0.5*m_tkrGeom->getRadLenConv(layer)/costheta;
-  }
-  
-  // add up the rad lens; this could be a local array if you're bothered by the overhead
-  //   but hey, compared to the propagator...
-  double tkr_radLen_nom = 0.; 
-  int layerCount = layer;
-  for(; layerCount>=0; --layerCount) {
-    tkr_radLen_nom += m_tkrGeom->getRadLenConv(layerCount) 
-      + m_tkrGeom->getRadLenRest(layerCount);
-  }
-  if(costheta!=0)
+    IToolSvc* toolSvc = 0;
+    if((sc = service("ToolSvc", toolSvc, true)).isFailure()) 
     {
-      tkr_radLen_nom /= costheta;
-      if(tkr_RLn > tkr_radLen_nom * 1.5)     {tkr_RLn = tkr_radLen_nom * 1.5;}
-      else if(tkr_RLn < tkr_radLen_nom * .5) {tkr_RLn  = tkr_radLen_nom * .5;}
+        throw GaudiException("Service [ToolSvc] not found", name(), sc);
     }
-  
-  return tkr_RLn;
+
+    if((sc = toolSvc->retrieveTool("G4PropagationTool", m_G4PropTool)).isFailure()) 
+    {
+        throw GaudiException("Tool [G4PropagationTool] not found", name(), sc);
+        log << MSG::ERROR << "Couldn't find the ToolSvc!" << endreq;
+        return StatusCode::FAILURE;
+    }
+
+    BIAS0 = 2.655362;
+    BIAS1 = 0.007235;
+
+    m_fsppm = new FullShowerProfileParamsManager();
+    m_fsddm = new FullShowerDevelopmentDescriptionManager(m_detSvc,14,2.,1.,1.85,0.80,0.1);
+    
+    // Minuit object
+    m_minuit = new TMinuit(5);
+    
+    //Sets the function to be minimized
+    m_minuit->SetFCN(fcn);
+
+    m_saturationadc = 4060;
+
+    return sc;
 }
 
-Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalClusterCol * clusters, Event::TkrVertex* vertex)
+double CalFullProfileTool::GetRadiationLengthInTracker(Event::TkrTree* tree)
+{
+    double tkr_RLn = 0.;
+
+    if(!tree) return tkr_RLn;
+    
+    Point  x0 = tree->getAxisParams()->getEventPosition();
+    Vector vv = tree->getAxisParams()->getEventAxis();
+    double costheta = fabs(vv.z());
+    
+    // copied from CalValsCorrTool
+    // Start at the top most point (ie in the top silicon layer) 
+    int    topLayer = tree->getHeadNode()->front()->getTreeStartLayer();
+    double zTopLyr  = std::max(m_tkrGeom->getLayerZ(topLayer, 0), m_tkrGeom->getLayerZ(topLayer, 1));
+
+    // Translate x0 to this z position
+    double arcLen   = vv.z() > 0. ? (zTopLyr - x0.z()) / vv.z() : 0.;
+
+    // Translate the tree start position to middle of top silicon layer
+    x0 = x0 + arcLen * vv;
+
+    // Now set up and call propagator to get the radiation lengths to calorimeter
+    arcLen = vv.z() > 0. ? -(vv.z() - m_tkrGeom->calZTop()) / vv.z() : 0.;
+    m_G4PropTool->setStepStart(x0, -vv);
+    m_G4PropTool->step(arcLen);
+    tkr_RLn = m_G4PropTool->getRadLength(); 
+
+    // Patch for error in KalFitTrack: 1/2 of first radiator left out
+    int topPlane = m_tkrGeom->getPlane(zTopLyr);
+
+    if (m_tkrGeom->isTopPlaneInLayer(topPlane)) 
+    {
+        tkr_RLn += 0.5*m_tkrGeom->getRadLenConv(topLayer) / vv.z();
+    }
+    
+    // add up the rad lens; this could be a local array if you're bothered by the overhead
+    //   but hey, compared to the propagator...
+    double tkr_radLen_nom = 0.; 
+    int layerCount = topLayer;
+    for(; layerCount>=0; --layerCount) {
+      tkr_radLen_nom += m_tkrGeom->getRadLenConv(layerCount) 
+        + m_tkrGeom->getRadLenRest(layerCount);
+    }
+    if(costheta!=0)
+      {
+        tkr_radLen_nom /= costheta;
+        if(tkr_RLn > tkr_radLen_nom * 1.5)     {tkr_RLn = tkr_radLen_nom * 1.5;}
+        else if(tkr_RLn < tkr_radLen_nom * .5) {tkr_RLn  = tkr_radLen_nom * .5;}
+      }
+    
+    return tkr_RLn;
+}
+
+Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrTree* tree)
   //               This function fits the parameters of shower profile using
   //               the Minuit minimization package and stores the fitted
   //               parameters in the CalCluster object
   //
 {
-
-  Event::CalCorToolResult* corResult = 0;  
-  MsgStream lm(msgSvc(), name());
-  
-    if (clusters->empty())
+    Event::CalCorToolResult* corResult = 0;  
+    MsgStream lm(msgSvc(), name());
+    
+    if (!cluster)
     {
         lm << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
-            << endreq;
+           << endreq;
         return corResult;
     }
-    Event::CalCluster * cluster = clusters->front() ;
 
-  double pp[3];
-  double vv[3];
-  double tkr_RLn = 0;
+    double pp[3];
+    double vv[3];
+    double tkr_RLn = 0;
 
-  int i;
-  
-  m_eTotal = cluster->getMomParams().getEnergy()/1000.;
-
-  if( m_eTotal<1.)
-    {
-      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : m_eTotal<1GeV -> no energy computation" <<endreq;
-      return corResult;
-    }
-  
-  // defines global variable to be used for fcn
-  for (i=0;i<8;++i)
-    {
-      // We are working in GeV
-      m_elayer_dat[i] = (*cluster)[i].getEnergy()/1000.;
-    }
-
-  // Detect saturation must be called before m_fsddm->Compute !!!
-  DetectSaturation();
-
-  tkr_RLn = 0;
-  if(vertex!=NULL)
-    tkr_RLn = GetRadiationLengthInTracker(vertex);
-
-  // use cal position and direction
-  pp[0] = (cluster->getPosition()).x();
-  pp[1] = (cluster->getPosition()).y();
-  pp[2] = (cluster->getPosition()).z();
-  if((cluster->getDirection()).z()>0)
-    {
-      vv[0] = -(cluster->getDirection()).x();
-      vv[1] = -(cluster->getDirection()).y();
-      vv[2] = -(cluster->getDirection()).z();
-    }
-  else
-    {
-      vv[0] = (cluster->getDirection()).x();
-      vv[1] = (cluster->getDirection()).y();
-      vv[2] = (cluster->getDirection()).z();
-    }
-
-  int CALFIT = 0;
-  if(vertex!=NULL)
-    CALFIT = doProfileFit(pp,vv,tkr_RLn,lm,0);
-  else
-    CALFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
-
-  double CALFIT_fit_energy = 1000.*m_par2;
-  double CALFIT_energy_err = 1000.*m_epar2;
-  double CALFIT_fitflag = m_ierflg;
-  double CALFIT_alpha = m_par0;
-  double CALFIT_tmax = m_par1;
-  double CALFIT_tkr_RLn = tkr_RLn;
-  double CALFIT_lastx0 = m_lastx0;
-  double CALFIT_cal_eff_RLn = m_totx0cal;
-  double CALFIT_totchisq = m_totchisq;
-  double CALFIT_chisq = m_chisq;
-  double CALFIT_parcf = m_params_contribution_factor;
-  double CALFIT_parc = m_params_contribution;
-  double CALFIT_recp0 = pp[0];
-  double CALFIT_recp1 = pp[1];
-  double CALFIT_recp2 = pp[2];
-  double CALFIT_recv0 = vv[0];
-  double CALFIT_recv1 = vv[1];
-  double CALFIT_recv2 = vv[2];
-  double CALFIT_widening = m_wideningfactor;
-
-  // Fill TKRFIT_ variables with CALFIT results before trying TKRFIT
-  double TKRFIT_fit_energy = 1000.*m_par2;
-  double TKRFIT_energy_err = 1000.*m_epar2;
-  double TKRFIT_fitflag = m_ierflg;
-  double TKRFIT_alpha = m_par0;
-  double TKRFIT_tmax = m_par1;
-  double TKRFIT_tkr_RLn = tkr_RLn;
-  double TKRFIT_lastx0 = m_lastx0;
-  double TKRFIT_cal_eff_RLn = m_totx0cal;
-  double TKRFIT_totchisq = m_totchisq;
-  double TKRFIT_chisq = m_chisq;
-  double TKRFIT_parcf = m_params_contribution_factor;
-  double TKRFIT_parc = m_params_contribution;
-  double TKRFIT_recp0 = pp[0];
-  double TKRFIT_recp1 = pp[1];
-  double TKRFIT_recp2 = pp[2];
-  double TKRFIT_recv0 = vv[0];
-  double TKRFIT_recv1 = vv[1];
-  double TKRFIT_recv2 = vv[2];
-  double TKRFIT_widening = m_wideningfactor;
-
-  int TKRFIT = 0;
-  if(vertex!=NULL)
-    {
-      pp[0] = (vertex->getPosition()).x();
-      pp[1] = (vertex->getPosition()).y();
-      pp[2] = (vertex->getPosition()).z();
-      vv[0] = (vertex->getDirection()).x();
-      vv[1] = (vertex->getDirection()).y();
-      vv[2] = (vertex->getDirection()).z();
-
-      TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
-
-      if(TKRFIT>0)
-        {
-          TKRFIT_fit_energy = 1000.*m_par2;
-          TKRFIT_energy_err = 1000.*m_epar2;
-          TKRFIT_fitflag = m_ierflg;
-          TKRFIT_alpha = m_par0;
-          TKRFIT_tmax = m_par1;
-          TKRFIT_tkr_RLn = tkr_RLn;
-          TKRFIT_lastx0 = m_lastx0;
-          TKRFIT_cal_eff_RLn = m_totx0cal;
-          TKRFIT_totchisq = m_totchisq;
-          TKRFIT_chisq = m_chisq;
-          TKRFIT_parcf = m_params_contribution_factor;
-          TKRFIT_parc = m_params_contribution;
-          TKRFIT_recp0 = pp[0];
-          TKRFIT_recp1 = pp[1];
-          TKRFIT_recp2 = pp[2];
-          TKRFIT_recv0 = vv[0];
-          TKRFIT_recv1 = vv[1];
-          TKRFIT_recv2 = vv[2];
-          TKRFIT_widening = m_wideningfactor;
-        }
-    }
+    int i;
     
-  if(CALFIT==0 && TKRFIT==0)
+    m_eTotal = cluster->getMomParams().getEnergy()/1000.;
+
+    if( m_eTotal<1.)
+      {
+        lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : m_eTotal<1GeV -> no energy computation" <<endreq;
+        return corResult;
+      }
+    
+    // defines global variable to be used for fcn
+    for (i=0;i<8;++i)
+      {
+        // We are working in GeV
+        m_elayer_dat[i] = (*cluster)[i].getEnergy()/1000.;
+      }
+
+    // Detect saturation must be called before m_fsddm->Compute !!!
+    DetectSaturation();
+
+    tkr_RLn = 0;
+    if(tree!=NULL)
+      tkr_RLn = GetRadiationLengthInTracker(tree);
+
+    // use cal position and direction
+    pp[0] = (cluster->getPosition()).x();
+    pp[1] = (cluster->getPosition()).y();
+    pp[2] = (cluster->getPosition()).z();
+    if((cluster->getDirection()).z()>0)
+      {
+        vv[0] = -(cluster->getDirection()).x();
+        vv[1] = -(cluster->getDirection()).y();
+        vv[2] = -(cluster->getDirection()).z();
+      }
+    else
+      {
+        vv[0] = (cluster->getDirection()).x();
+        vv[1] = (cluster->getDirection()).y();
+        vv[2] = (cluster->getDirection()).z();
+      }
+
+    int CALFIT = 0;
+    if(tree!=NULL)
+      CALFIT = doProfileFit(pp,vv,tkr_RLn,lm,0);
+    else
+      CALFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
+
+    double CALFIT_fit_energy = 1000.*m_par2;
+    double CALFIT_energy_err = 1000.*m_epar2;
+    double CALFIT_fitflag = m_ierflg;
+    double CALFIT_alpha = m_par0;
+    double CALFIT_tmax = m_par1;
+    double CALFIT_tkr_RLn = tkr_RLn;
+    double CALFIT_lastx0 = m_lastx0;
+    double CALFIT_cal_eff_RLn = m_totx0cal;
+    double CALFIT_totchisq = m_totchisq;
+    double CALFIT_chisq = m_chisq;
+    double CALFIT_parcf = m_params_contribution_factor;
+    double CALFIT_parc = m_params_contribution;
+    double CALFIT_recp0 = pp[0];
+    double CALFIT_recp1 = pp[1];
+    double CALFIT_recp2 = pp[2];
+    double CALFIT_recv0 = vv[0];
+    double CALFIT_recv1 = vv[1];
+    double CALFIT_recv2 = vv[2];
+    double CALFIT_widening = m_wideningfactor;
+
+    // Fill TKRFIT_ variables with CALFIT results before trying TKRFIT
+    double TKRFIT_fit_energy = 1000.*m_par2;
+    double TKRFIT_energy_err = 1000.*m_epar2;
+    double TKRFIT_fitflag = m_ierflg;
+    double TKRFIT_alpha = m_par0;
+    double TKRFIT_tmax = m_par1;
+    double TKRFIT_tkr_RLn = tkr_RLn;
+    double TKRFIT_lastx0 = m_lastx0;
+    double TKRFIT_cal_eff_RLn = m_totx0cal;
+    double TKRFIT_totchisq = m_totchisq;
+    double TKRFIT_chisq = m_chisq;
+    double TKRFIT_parcf = m_params_contribution_factor;
+    double TKRFIT_parc = m_params_contribution;
+    double TKRFIT_recp0 = pp[0];
+    double TKRFIT_recp1 = pp[1];
+    double TKRFIT_recp2 = pp[2];
+    double TKRFIT_recv0 = vv[0];
+    double TKRFIT_recv1 = vv[1];
+    double TKRFIT_recv2 = vv[2];
+    double TKRFIT_widening = m_wideningfactor;
+
+    int TKRFIT = 0;
+    if(tree!=NULL)
     {
-      lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : No result with cal direction neither with tkr direction." <<endreq;
-      return corResult;
-    }
+        pp[0] =  tree->getAxisParams()->getEventPosition().x();
+        pp[1] =  tree->getAxisParams()->getEventPosition().y();
+        pp[2] =  tree->getAxisParams()->getEventPosition().z();
+        vv[0] = -tree->getAxisParams()->getEventAxis().x();
+        vv[1] = -tree->getAxisParams()->getEventAxis().y();
+        vv[2] = -tree->getAxisParams()->getEventAxis().z();
 
-  // Ok, fill in the corrected information and exit
-  Event::CalMomParams momParams = cluster->getMomParams();
-  corResult = new Event::CalCorToolResult();
-  corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
-  corResult->setCorrectionName(type());
-  // if TKRFIT has failed, TKRFIT_ variables have already been filled with CALFIT results
-  momParams.setEnergy(TKRFIT_fit_energy);
-  momParams.setEnergyErr(TKRFIT_energy_err);
-  corResult->setParams(momParams);
-  corResult->setChiSquare(TKRFIT_totchisq);
+        TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
 
-  corResult->insert(Event::CalCorEneValuePair("fit_energy", TKRFIT_fit_energy)); // energy (in MeV)
-  corResult->insert(Event::CalCorEneValuePair("energy_err", TKRFIT_energy_err)); // energy error (in MeV)
-  corResult->insert(Event::CalCorEneValuePair("fitflag",    TKRFIT_fitflag)); // flag from Minuit
-  corResult->insert(Event::CalCorEneValuePair("alpha",      TKRFIT_alpha)); // alpha (profile fit parameter 0)
-  corResult->insert(Event::CalCorEneValuePair("tmax",       TKRFIT_tmax)); // tmax (profile fit parameter 1)
-  corResult->insert(Event::CalCorEneValuePair("tkr_RLn",    TKRFIT_tkr_RLn)); // radiation length in tracker (0 for cal only events)
-  corResult->insert(Event::CalCorEneValuePair("lastx0",     TKRFIT_lastx0)); // total radiation length seen by the shower
-  corResult->insert(Event::CalCorEneValuePair("cal_eff_RLn",TKRFIT_cal_eff_RLn)); // effective radiation length in cal (i.e in CsI)
-  corResult->insert(Event::CalCorEneValuePair("totchisq",   TKRFIT_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
-  corResult->insert(Event::CalCorEneValuePair("chisq",      TKRFIT_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
-  corResult->insert(Event::CalCorEneValuePair("parcf",      TKRFIT_parcf)); // weighting factor of the parameters constraint
-  corResult->insert(Event::CalCorEneValuePair("parc",       TKRFIT_parc)); // parameters constraint contribution to the chisquare
-  corResult->insert(Event::CalCorEneValuePair("recp0",      TKRFIT_recp0)); // Point and direction information - kept for the moment for debugging purpose
-  corResult->insert(Event::CalCorEneValuePair("recp1",      TKRFIT_recp1));
-  corResult->insert(Event::CalCorEneValuePair("recp2",      TKRFIT_recp2));
-  corResult->insert(Event::CalCorEneValuePair("recv0",      TKRFIT_recv0));
-  corResult->insert(Event::CalCorEneValuePair("recv1",      TKRFIT_recv1));
-  corResult->insert(Event::CalCorEneValuePair("recv2",      TKRFIT_recv2));
-  corResult->insert(Event::CalCorEneValuePair("widening",   TKRFIT_widening));
+        if(TKRFIT>0)
+          {
+            TKRFIT_fit_energy = 1000.*m_par2;
+            TKRFIT_energy_err = 1000.*m_epar2;
+            TKRFIT_fitflag = m_ierflg;
+            TKRFIT_alpha = m_par0;
+            TKRFIT_tmax = m_par1;
+            TKRFIT_tkr_RLn = tkr_RLn;
+            TKRFIT_lastx0 = m_lastx0;
+            TKRFIT_cal_eff_RLn = m_totx0cal;
+            TKRFIT_totchisq = m_totchisq;
+            TKRFIT_chisq = m_chisq;
+            TKRFIT_parcf = m_params_contribution_factor;
+            TKRFIT_parc = m_params_contribution;
+            TKRFIT_recp0 = pp[0];
+            TKRFIT_recp1 = pp[1];
+            TKRFIT_recp2 = pp[2];
+            TKRFIT_recv0 = vv[0];
+            TKRFIT_recv1 = vv[1];
+            TKRFIT_recv2 = vv[2];
+            TKRFIT_widening = m_wideningfactor;
+          }
+      }
+      
+    if(CALFIT==0 && TKRFIT==0)
+      {
+        lm << MSG::DEBUG << "CalFullProfileTool::doEnergyCorr : No result with cal direction neither with tkr direction." <<endreq;
+        return corResult;
+      }
 
-  if(CALFIT>0)
-    {
-      corResult->insert(Event::CalCorEneValuePair("calfit_fit_energy", CALFIT_fit_energy)); // energy (in MeV)
-      corResult->insert(Event::CalCorEneValuePair("calfit_energy_err", CALFIT_energy_err)); // energy error (in MeV)
-      corResult->insert(Event::CalCorEneValuePair("calfit_fitflag",    CALFIT_fitflag)); // flag from Minuit
-      corResult->insert(Event::CalCorEneValuePair("calfit_alpha",      CALFIT_alpha)); // alpha (profile fit parameter 0)
-      corResult->insert(Event::CalCorEneValuePair("calfit_tmax",       CALFIT_tmax)); // tmax (profile fit parameter 1)
-      corResult->insert(Event::CalCorEneValuePair("calfit_tkr_RLn",    CALFIT_tkr_RLn)); // radiation length in tracker (0 for cal only events)
-      corResult->insert(Event::CalCorEneValuePair("calfit_lastx0",     CALFIT_lastx0)); // total radiation length seen by the shower
-      corResult->insert(Event::CalCorEneValuePair("calfit_cal_eff_RLn",CALFIT_cal_eff_RLn)); // effective radiation length in cal (i.e in CsI)
-      corResult->insert(Event::CalCorEneValuePair("calfit_totchisq",   CALFIT_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
-      corResult->insert(Event::CalCorEneValuePair("calfit_chisq",      CALFIT_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
-      corResult->insert(Event::CalCorEneValuePair("calfit_parcf",      CALFIT_parcf)); // weighting factor of the parameters constraint
-      corResult->insert(Event::CalCorEneValuePair("calfit_parc",       CALFIT_parc)); // parameters constraint contribution to the chisquare
-      corResult->insert(Event::CalCorEneValuePair("calfit_recp0",      CALFIT_recp0)); // Point and direction information - kept for the moment for debugging purpose
-      corResult->insert(Event::CalCorEneValuePair("calfit_recp1",      CALFIT_recp1));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recp2",      CALFIT_recp2));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recv0",      CALFIT_recv0));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recv1",      CALFIT_recv1));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recv2",      CALFIT_recv2));
-      corResult->insert(Event::CalCorEneValuePair("calfit_widening",   CALFIT_widening));
-    }
-  else
-    {
-      corResult->insert(Event::CalCorEneValuePair("calfit_fit_energy", 0)); // energy (in MeV)
-      corResult->insert(Event::CalCorEneValuePair("calfit_energy_err", 0)); // energy error (in MeV)
-      corResult->insert(Event::CalCorEneValuePair("calfit_fitflag",    0)); // flag from Minuit
-      corResult->insert(Event::CalCorEneValuePair("calfit_alpha",      0)); // alpha (profile fit parameter 0)
-      corResult->insert(Event::CalCorEneValuePair("calfit_tmax",       0)); // tmax (profile fit parameter 1)
-      corResult->insert(Event::CalCorEneValuePair("calfit_tkr_RLn",    0)); // radiation length in tracker (0 for cal only events)
-      corResult->insert(Event::CalCorEneValuePair("calfit_lastx0",     0)); // total radiation length seen by the shower
-      corResult->insert(Event::CalCorEneValuePair("calfit_cal_eff_RLn",0)); // effective radiation length in cal (i.e in CsI)
-      corResult->insert(Event::CalCorEneValuePair("calfit_totchisq",   -999)); // total chisquare = usual chisquare + weight * parameters constraint
-      corResult->insert(Event::CalCorEneValuePair("calfit_chisq",      0)); // usual chisquare (sum_layers ( (e-efit)/de )^2
-      corResult->insert(Event::CalCorEneValuePair("calfit_parcf",      0)); // weighting factor of the parameters constraint
-      corResult->insert(Event::CalCorEneValuePair("calfit_parc",       0)); // parameters constraint contribution to the chisquare
-      corResult->insert(Event::CalCorEneValuePair("calfit_recp0",      0)); // Point and direction information - kept for the moment for debugging purpose
-      corResult->insert(Event::CalCorEneValuePair("calfit_recp1",      0));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recp2",      0));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recv0",      0));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recv1",      0));
-      corResult->insert(Event::CalCorEneValuePair("calfit_recv2",      0));
-      corResult->insert(Event::CalCorEneValuePair("calfit_widening",   0));
-    }
+    // Ok, fill in the corrected information and exit
+    Event::CalMomParams momParams = cluster->getMomParams();
+    corResult = new Event::CalCorToolResult();
+    corResult->setStatusBit(Event::CalCorToolResult::VALIDPARAMS);
+    corResult->setCorrectionName(type());
+    // if TKRFIT has failed, TKRFIT_ variables have already been filled with CALFIT results
+    momParams.setEnergy(TKRFIT_fit_energy);
+    momParams.setEnergyErr(TKRFIT_energy_err);
+    corResult->setParams(momParams);
+    corResult->setChiSquare(TKRFIT_totchisq);
 
-  return corResult;
+    corResult->insert(Event::CalCorEneValuePair("fit_energy", TKRFIT_fit_energy)); // energy (in MeV)
+    corResult->insert(Event::CalCorEneValuePair("energy_err", TKRFIT_energy_err)); // energy error (in MeV)
+    corResult->insert(Event::CalCorEneValuePair("fitflag",    TKRFIT_fitflag)); // flag from Minuit
+    corResult->insert(Event::CalCorEneValuePair("alpha",      TKRFIT_alpha)); // alpha (profile fit parameter 0)
+    corResult->insert(Event::CalCorEneValuePair("tmax",       TKRFIT_tmax)); // tmax (profile fit parameter 1)
+    corResult->insert(Event::CalCorEneValuePair("tkr_RLn",    TKRFIT_tkr_RLn)); // radiation length in tracker (0 for cal only events)
+    corResult->insert(Event::CalCorEneValuePair("lastx0",     TKRFIT_lastx0)); // total radiation length seen by the shower
+    corResult->insert(Event::CalCorEneValuePair("cal_eff_RLn",TKRFIT_cal_eff_RLn)); // effective radiation length in cal (i.e in CsI)
+    corResult->insert(Event::CalCorEneValuePair("totchisq",   TKRFIT_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
+    corResult->insert(Event::CalCorEneValuePair("chisq",      TKRFIT_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
+    corResult->insert(Event::CalCorEneValuePair("parcf",      TKRFIT_parcf)); // weighting factor of the parameters constraint
+    corResult->insert(Event::CalCorEneValuePair("parc",       TKRFIT_parc)); // parameters constraint contribution to the chisquare
+    corResult->insert(Event::CalCorEneValuePair("recp0",      TKRFIT_recp0)); // Point and direction information - kept for the moment for debugging purpose
+    corResult->insert(Event::CalCorEneValuePair("recp1",      TKRFIT_recp1));
+    corResult->insert(Event::CalCorEneValuePair("recp2",      TKRFIT_recp2));
+    corResult->insert(Event::CalCorEneValuePair("recv0",      TKRFIT_recv0));
+    corResult->insert(Event::CalCorEneValuePair("recv1",      TKRFIT_recv1));
+    corResult->insert(Event::CalCorEneValuePair("recv2",      TKRFIT_recv2));
+    corResult->insert(Event::CalCorEneValuePair("widening",   TKRFIT_widening));
+
+    if(CALFIT>0)
+      {
+        corResult->insert(Event::CalCorEneValuePair("calfit_fit_energy", CALFIT_fit_energy)); // energy (in MeV)
+        corResult->insert(Event::CalCorEneValuePair("calfit_energy_err", CALFIT_energy_err)); // energy error (in MeV)
+        corResult->insert(Event::CalCorEneValuePair("calfit_fitflag",    CALFIT_fitflag)); // flag from Minuit
+        corResult->insert(Event::CalCorEneValuePair("calfit_alpha",      CALFIT_alpha)); // alpha (profile fit parameter 0)
+        corResult->insert(Event::CalCorEneValuePair("calfit_tmax",       CALFIT_tmax)); // tmax (profile fit parameter 1)
+        corResult->insert(Event::CalCorEneValuePair("calfit_tkr_RLn",    CALFIT_tkr_RLn)); // radiation length in tracker (0 for cal only events)
+        corResult->insert(Event::CalCorEneValuePair("calfit_lastx0",     CALFIT_lastx0)); // total radiation length seen by the shower
+        corResult->insert(Event::CalCorEneValuePair("calfit_cal_eff_RLn",CALFIT_cal_eff_RLn)); // effective radiation length in cal (i.e in CsI)
+        corResult->insert(Event::CalCorEneValuePair("calfit_totchisq",   CALFIT_totchisq)); // total chisquare = usual chisquare + weight * parameters constraint
+        corResult->insert(Event::CalCorEneValuePair("calfit_chisq",      CALFIT_chisq)); // usual chisquare (sum_layers ( (e-efit)/de )^2
+        corResult->insert(Event::CalCorEneValuePair("calfit_parcf",      CALFIT_parcf)); // weighting factor of the parameters constraint
+        corResult->insert(Event::CalCorEneValuePair("calfit_parc",       CALFIT_parc)); // parameters constraint contribution to the chisquare
+        corResult->insert(Event::CalCorEneValuePair("calfit_recp0",      CALFIT_recp0)); // Point and direction information - kept for the moment for debugging purpose
+        corResult->insert(Event::CalCorEneValuePair("calfit_recp1",      CALFIT_recp1));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recp2",      CALFIT_recp2));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recv0",      CALFIT_recv0));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recv1",      CALFIT_recv1));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recv2",      CALFIT_recv2));
+        corResult->insert(Event::CalCorEneValuePair("calfit_widening",   CALFIT_widening));
+      }
+    else
+      {
+        corResult->insert(Event::CalCorEneValuePair("calfit_fit_energy", 0)); // energy (in MeV)
+        corResult->insert(Event::CalCorEneValuePair("calfit_energy_err", 0)); // energy error (in MeV)
+        corResult->insert(Event::CalCorEneValuePair("calfit_fitflag",    0)); // flag from Minuit
+        corResult->insert(Event::CalCorEneValuePair("calfit_alpha",      0)); // alpha (profile fit parameter 0)
+        corResult->insert(Event::CalCorEneValuePair("calfit_tmax",       0)); // tmax (profile fit parameter 1)
+        corResult->insert(Event::CalCorEneValuePair("calfit_tkr_RLn",    0)); // radiation length in tracker (0 for cal only events)
+        corResult->insert(Event::CalCorEneValuePair("calfit_lastx0",     0)); // total radiation length seen by the shower
+        corResult->insert(Event::CalCorEneValuePair("calfit_cal_eff_RLn",0)); // effective radiation length in cal (i.e in CsI)
+        corResult->insert(Event::CalCorEneValuePair("calfit_totchisq",   -999)); // total chisquare = usual chisquare + weight * parameters constraint
+        corResult->insert(Event::CalCorEneValuePair("calfit_chisq",      0)); // usual chisquare (sum_layers ( (e-efit)/de )^2
+        corResult->insert(Event::CalCorEneValuePair("calfit_parcf",      0)); // weighting factor of the parameters constraint
+        corResult->insert(Event::CalCorEneValuePair("calfit_parc",       0)); // parameters constraint contribution to the chisquare
+        corResult->insert(Event::CalCorEneValuePair("calfit_recp0",      0)); // Point and direction information - kept for the moment for debugging purpose
+        corResult->insert(Event::CalCorEneValuePair("calfit_recp1",      0));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recp2",      0));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recv0",      0));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recv1",      0));
+        corResult->insert(Event::CalCorEneValuePair("calfit_recv2",      0));
+        corResult->insert(Event::CalCorEneValuePair("calfit_widening",   0));
+      }
+
+    return corResult;
 }
 
 int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm, int optntrye)

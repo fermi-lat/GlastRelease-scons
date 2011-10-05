@@ -68,13 +68,13 @@ class PDFAnswer: public PDFObject, public PDFVect
     // returns an estimation of the energy in the range given by the first 2
     // doubles
     virtual bool evalEnergy(double, double, const Event::CalCluster*,
-                                            const Event::TkrVertex*);
+                                            const Event::TkrTree*);
     // returns an estimation of the error
-    virtual bool evalError(Event::TkrVertex *p) { return m_Answer?m_Answer->evalError(p): true; }
+    virtual bool evalError(Event::TkrTree *p) { return m_Answer?m_Answer->evalError(p): true; }
     
     // returns vertex altitude
-    int getTkrPlane(const Event::TkrVertex *vertex) const
-    { return int(3.2e-2*(vertex->getPosition().z()-108.)); }
+    int getTkrPlane(const Event::TkrTree *tree) const
+    { return int(3.2e-2*(tree->getAxisParams()->getEventPosition().z()-108.)); }
 
     // returns estimated energy
     virtual double getEnergy(void) const { return m_Answer?m_Answer->getEnergy(): 0; }
@@ -131,9 +131,9 @@ class PDFVertexArray: public PDFAnswer
       // returns an estimation of the energy in the range given by the first 2
       // doubles
       bool evalEnergy(double, double, const Event::CalCluster*,
-                                      const Event::TkrVertex*);
+                                      const Event::TkrTree*);
       // returns an estimation of the error
-      bool evalError(Event::TkrVertex *p);
+      bool evalError(Event::TkrTree *p);
 
       // returns estimated energy
       double getEnergy(void) const { return m_MPV[0]; }
@@ -193,7 +193,7 @@ class PDFCutArray: public PDFAnswer
       // returns an estimation of the energy in the range given by the first 2
       // doubles
       bool evalEnergy(double, double, const Event::CalCluster*,
-                                      const Event::TkrVertex*);
+                                      const Event::TkrTree*);
       // returns status of PDFVertexArray for vertex altitude int
       Status_t evalStatus(int, PDFVertexArray*);
 
@@ -259,8 +259,8 @@ class CalLikelihoodManagerTool: public AlgTool, virtual public ICalEnergyCorr,
     *
     *\author Pol d'Avezac
     */
-    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, 
-                                          Event::TkrVertex*);
+    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, 
+                                          Event::TkrTree*);
 
     bool push_back(const char[], MsgStream&);
     void getParameters(std::map<double*,std::string>&, MsgStream&) const;

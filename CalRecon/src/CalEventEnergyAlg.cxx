@@ -6,6 +6,7 @@
 
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
+#include "Event/Recon/TreeClusterRelation.h"
 #include "Event/TopLevel/EventModel.h"
 
 #include <CalRecon/ICalEnergyCorr.h>
@@ -177,101 +178,99 @@ StatusCode CalEventEnergyAlg::execute()
     log<<MSG::DEBUG<<"Begin execute()"<<endreq ;
 
     // Retrieve our TDS objects, we use Clusters to output corrected energy in CalEventEnergy
-    Event::CalClusterCol*  calClusters = SmartDataPtr<Event::CalClusterCol>(eventSvc(),EventModel::CalRecon::CalClusterCol);
-    Event::CalEventEnergyCol* calEnergyCol   = SmartDataPtr<Event::CalEventEnergyCol>(eventSvc(),EventModel::CalRecon::CalEventEnergyCol);
-    Event::TkrVertexCol*   tkrVertices = SmartDataPtr<Event::TkrVertexCol>(eventSvc(),EventModel::TkrRecon::TkrVertexCol);
+    Event::CalClusterCol*     calClusterCol = SmartDataPtr<Event::CalClusterCol>(eventSvc(),EventModel::CalRecon::CalClusterCol);
 
-    // If no CalEnergyCol object (yet) then create one and register in TDS
-    if (calEnergyCol == 0) {       
-        calEnergyCol = new Event::CalEventEnergyCol() ;
-        if ((eventSvc()->registerObject(EventModel::CalRecon::CalEventEnergyCol, calEnergyCol)).isFailure()) {
-            log<<MSG::ERROR<<"Cannot register CalEventEnergyCol"<<endreq ;
-            return StatusCode::FAILURE ;
+    // See if we already have a calEnergyMap in the TDS
+    Event::CalEventEnergyMap* calEnergyMap = SmartDataPtr<Event::CalEventEnergyMap>(eventSvc(),EventModel::CalRecon::CalEventEnergyMap);
+
+    // If it is not there, then set up the CalEventEnergyMap in the TDS to relate clusters to energy algorithm
+    if (!calEnergyMap)
+    {
+        calEnergyMap = new Event::CalEventEnergyMap();
+
+        if ((eventSvc()->registerObject(EventModel::CalRecon::CalEventEnergyMap, calEnergyMap)).isFailure())
+        {
+            log << MSG::ERROR << "Cannot register CalEventEnergyMap in the TDS" << endreq;
+            return StatusCode::FAILURE;
         }
     }
-        
+
+    // Now recover the mapping between clusters and trees from the TDS
+    Event::ClusterToRelationMap* clusterToRelationMap = 
+        SmartDataPtr<Event::ClusterToRelationMap>(eventSvc(), EventModel::Recon::ClusterToRelationMap);
+
     // there could be no clusters collection, if there was no hits
-    if ((calClusters!=0)&&(calClusters->size()>0)) {
+    if (calClusterCol && !calClusterCol->empty()) 
+    {
+        // Loop over all clusters in the list (including the uber cluster)
+        for(Event::CalClusterCol::iterator clusItr = calClusterCol->begin(); clusItr != calClusterCol->end(); clusItr++)
+        {
+            // Recover the cluster pointer
+            Event::CalCluster* cluster = *clusItr;
 
-        // If no CalEnergy object (yet) then create one
-        Event::CalEventEnergy * calEnergy ;
-        if (calEnergyCol->size()==0) {       
-            calEnergy = new Event::CalEventEnergy ;
-            calEnergyCol->push_back(calEnergy) ;
-        // Else reset CalEventEnergy
-        } else {
-            calEnergy = calEnergyCol->front() ;
-// NO! Do not reset as we want to keep the original energy sum in the collection
-            //calEnergy->clear() ;
-        }
-        
-        // Set pointer to first vertex if it exists
-        Event::TkrVertex * vertex = 0 ;
-        if ((tkrVertices!=0) && !(tkrVertices->empty()))
-            vertex = tkrVertices->front() ;
+            // Search for the existing CalEventEnergy object
+            Event::CalEventEnergyMap::iterator clusEnergyItr = calEnergyMap->find(cluster);
 
-        // apply corrections according to vector of tools
-        std::vector<ICalEnergyCorr *>::const_iterator tool ;
-        for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) {
+            // What we want...
+            Event::CalEventEnergy * calEnergy;
 
-            try {
+            // Is there already one available?
+            if (clusEnergyItr == calEnergyMap->end()) 
+            {       
+                calEnergy = new Event::CalEventEnergy;
+                (*calEnergyMap)[cluster].push_back(calEnergy);
+            } 
+            else  calEnergy = clusEnergyItr->second.front();
 
-                log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
-    
-                // Loop over clusters          
-//                for ( Event::CalClusterCol::const_iterator cluster = calClusters->begin();          
-//                      cluster != calClusters->end();          
-//                      cluster++) {          
-                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(calClusters, vertex);          
-                    if (corResult != 0) {
-                        calEnergy->push_back(corResult);
-//                        if(m_passBits != Event::CalEventEnergy::PASS_ONE) {
-//                            // Need set the status bit in the CalCluster  
-//                            (*cluster)->setStatusBit(Event::CalCluster::ENERGYCORR);
-//                        }
-                    }
-//                }
-                
-            } catch( CalException & e ) {
-                sc = sc && m_calReconSvc->handleError(name()+" CalException",(*tool)->type()+", "+e.what()) ;
-            } catch( std::exception & e) {
-                sc = sc && m_calReconSvc->handleError(name()+" std::exception",(*tool)->type()+", "+e.what()) ;
-            } catch(...) {
-                sc = sc && m_calReconSvc->handleError(name(),(*tool)->type()+", "+"unknown exception") ;
+            // Recover the pointer to the TkrTree, if there is one available
+            Event::TkrTree* tree = 0;
+
+            if (clusterToRelationMap)
+            {
+                // Recover the tree associated to this cluster, if there is one
+                Event::ClusterToRelationMap::iterator clusTreeItr = clusterToRelationMap->find(cluster);
+
+                if (clusTreeItr != clusterToRelationMap->end()) tree = clusTreeItr->second.front()->getTree();
             }
+    
+            // apply corrections according to vector of tools
+            std::vector<ICalEnergyCorr *>::const_iterator tool ;
+            for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) 
+            {
+                try 
+                {
+                    log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
+    
+                    // Call the correction tool         
+                    Event::CalCorToolResult* corResult = (*tool)->doEnergyCorr(cluster, tree);          
+                    if (corResult != 0) 
+                    {
+                        calEnergy->push_back(corResult);
+                    }
+                    
+                } catch( CalException & e ) {
+                    sc = sc && m_calReconSvc->handleError(name()+" CalException",(*tool)->type()+", "+e.what()) ;
+                } catch( std::exception & e) {
+                    sc = sc && m_calReconSvc->handleError(name()+" std::exception",(*tool)->type()+", "+e.what()) ;
+                } catch(...) {
+                    sc = sc && m_calReconSvc->handleError(name(),(*tool)->type()+", "+"unknown exception") ;
+                }
+            }
+            
+            // Go through and pick the "best" energy
+            // For now this consists of choosing the value from CalValsCorrTool
+            // It is envisaged that this will be replaced by a call to a tool/method which examines all 
+            // possibilites and chooses the best for the given event
+            
+            const Event::CalCorToolResult * bestCorResult = calEnergy->findLast("CalValsCorrTool") ;
+            if (bestCorResult==0) {
+                bestCorResult = calEnergy->findLast("CalRawEnergyTool") ;
+            }    
+            if (bestCorResult!=0) {
+                calEnergy->setParams(bestCorResult->getParams()) ;
+                calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
+            }    
         }
-        
- // DC: useless ?
-//        // Set the pass number bits
-//        calEnergy->setStatusBit(m_passBits);
-//
-        // Go through and pick the "best" energy
-        // For now this consists of choosing the value from CalValsCorrTool
-        // It is envisaged that this will be replaced by a call to a tool/method which examines all 
-        // possibilites and chooses the best for the given event
-        
-        const Event::CalCorToolResult * bestCorResult = calEnergy->findLast("CalValsCorrTool") ;
-        if (bestCorResult==0) {
-            bestCorResult = calEnergy->findLast("CalRawEnergyTool") ;
-        }    
-        if (bestCorResult!=0) {
-            calEnergy->setParams(bestCorResult->getParams()) ;
-            calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
-        }    
-        
-//        for (Event::CalCorToolResultCol::iterator corIter = calEnergy->begin(); corIter != calEnergy->end(); corIter++)
-//        {
-//            Event::CalCorToolResult * corResult = *corIter;
-//
-//            //if (corResult->checkStatusBits(m_corrType))
-//            if (corResult->getCorrectionName() == m_corrType)
-//            {
-//                // Set the main energy parameters to the selected correction tool values
-//                // Should also be setting a bit in CalEventEnergy to describe this?
-//                calEnergy->setParams(corResult->getParams());
-//                break;
-//            }
-//        }
     }
     
     log<<MSG::DEBUG<<"End execute()"<<endreq ;

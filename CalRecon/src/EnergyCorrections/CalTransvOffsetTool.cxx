@@ -25,7 +25,7 @@ class CalTransvOffsetTool : public AlgTool, virtual public ICalEnergyCorr
 
     StatusCode initialize();
     
-    Event::CalCorToolResult* doEnergyCorr(Event::CalClusterCol*, Event::TkrVertex* );
+    Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrTree* );
 
  private:
 
@@ -61,25 +61,24 @@ StatusCode CalTransvOffsetTool::initialize()
     return sc;
 }
 
-Event::CalCorToolResult* CalTransvOffsetTool::doEnergyCorr(Event::CalClusterCol* clusters, Event::TkrVertex* vertex)
+Event::CalCorToolResult* CalTransvOffsetTool::doEnergyCorr(Event::CalCluster* cluster, Event::TkrTree* tree)
 {
     // calculating the transverse offset of average position in the calorimeter
     // with respect to the position predicted from tracker information
     Event::CalCorToolResult* corResult = 0;
     MsgStream log(msgSvc(), "CalTransvOffsetTool::doEnergyCorr");
     
-    if (clusters->empty())
+    if (!cluster)
     {
         log << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
             << endreq;
         return corResult;
     }
-    Event::CalCluster * cluster = clusters->front() ;
 
-    if (vertex != 0)
+    if (tree != 0)
     {
-        const Vector& trackDirection = vertex->getDirection();
-        const Point&  trackPosition  = vertex->getPosition();
+        const Vector& trackDirection = tree->getAxisParams()->getEventAxis();
+        const Point&  trackPosition  = tree->getAxisParams()->getEventPosition();
 
         // TU: I don't understand this calculation... 
         Vector calOffset     = (cluster->getPosition()) - trackPosition;
