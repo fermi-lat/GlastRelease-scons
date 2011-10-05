@@ -141,6 +141,7 @@ public:
         static std::string TkrIdClusterMMap;
         static std::string TkrIdClusterMap;
         static std::string TkrClusterCol;
+        static std::string TkrTreeCol;
         static std::string TkrTrackCol;
         static std::string TkrCRTrackCol;
         static std::string TkrTrackHitCol;
@@ -182,6 +183,7 @@ public:
        static std::string CalMipTrackCol;
        static std::string CalClusterCol;
        static std::string CalEventEnergyCol;
+       static std::string CalEventEnergyMap;
        static std::string CalClusterHitTab;
        //@@@FP 07/09/05
        // idem
