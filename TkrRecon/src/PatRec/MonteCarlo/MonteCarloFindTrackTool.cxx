@@ -43,7 +43,9 @@ public:
     /// @brief Intialization of the tool
     StatusCode initialize();
     /// @brief Method to association the Monte Carlo hits into Pattern Candidate tracks
-    StatusCode findTracks();
+    StatusCode firstPass();
+
+    StatusCode secondPass() {return StatusCode::SUCCESS;}
 
 private:
     /// private method to build an individual Monte Carlo track
@@ -158,7 +160,7 @@ StatusCode MonteCarloFindTrackTool::initialize()
 // Drives the finding of the pattern candidate tracks
 //
 
-StatusCode MonteCarloFindTrackTool::findTracks()
+StatusCode MonteCarloFindTrackTool::firstPass()
 {
     // Always believe in success
     StatusCode sc = StatusCode::SUCCESS;

@@ -53,7 +53,10 @@ public:
     StatusCode initialize();
 
     /// @brief Method to association the Monte Carlo hits into Pattern Candidate tracks
-    StatusCode findTracks();
+    StatusCode firstPass();
+
+    /// @brief This method does nothing in this pat rec scheme
+    StatusCode secondPass() {return StatusCode::SUCCESS;}
 
 private:
 
@@ -162,7 +165,7 @@ StatusCode VectorLinksTool::initialize()
 // Method called externally to drives the finding of the 
 // pattern candidate tracks
 //
-StatusCode VectorLinksTool::findTracks()
+StatusCode VectorLinksTool::firstPass()
 {
     // Always believe in success
     StatusCode sc = StatusCode::SUCCESS;

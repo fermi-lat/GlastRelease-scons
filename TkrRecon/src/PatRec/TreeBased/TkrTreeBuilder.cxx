@@ -34,7 +34,7 @@ TkrTreeBuilder::TkrTreeBuilder(TkrVecNodesBuilder&    vecNodesBldr,
     m_treeCol->clear();
 
     // And store in the TDS
-    StatusCode sc = dataSvc->registerObject("/Event/TkrRecon/TkrTreeCol", m_treeCol);
+    StatusCode sc = dataSvc->registerObject(EventModel::TkrRecon::TkrTreeCol, m_treeCol);
 
     return;
 }

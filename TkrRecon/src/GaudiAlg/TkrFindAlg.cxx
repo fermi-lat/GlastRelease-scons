@@ -259,7 +259,7 @@ StatusCode TkrFindAlg::execute()
     // If no pointer then create it
     // Set TkrQueryClustersTool to return all hits, and look for "cosmics"
 
-   if(m_doCRFinding) 
+   if(m_doCRFinding && name() != "TkrFindIter") 
    {
        // Go through the same song and dance as above, but now for the CR track collection
        if (trackMap->find(EventModel::TkrRecon::TkrCRTrackCol) == trackMap->end())
@@ -284,7 +284,7 @@ StatusCode TkrFindAlg::execute()
         AlgTool* findCRAlgTool = dynamic_cast<AlgTool*>(m_CRFindTool);    
 
         findCRAlgTool->setProperty("PatrecMode", "CosmicRay");
-        sc = m_CRFindTool->findTracks();
+        sc = m_CRFindTool->firstPass();
         
         if(m_ghostTool && m_CRGhosts) {
             sc = m_ghostTool->flagEarlyTracks();
@@ -303,7 +303,8 @@ StatusCode TkrFindAlg::execute()
             AlgTool* findAlgTool = dynamic_cast<AlgTool*>(m_findTool);    
             findAlgTool->setProperty("PatrecMode", "Normal");
         }
-        sc = m_findTool->findTracks();
+        if (name() != "TkrFindIter") sc = m_findTool->firstPass();
+        else                         sc = m_findTool->secondPass();
 
         if(m_ghostTool && m_standardGhosts) {
             sc = m_ghostTool->flagEarlyTracks();

@@ -12,26 +12,4 @@
 #ifndef LINKANDTREEFINDTRACKTOOL_H
 #define LINKANDTREEFINDTRACKTOOL_H
 
-#include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/DataSvc.h"
-#include "TkrRecon/PatRec/ITkrFindTrackTool.h"
-#include "TkrUtil/ITkrGeometrySvc.h"
-#include "src/PatRec/PatRecBaseTool.h"
-
-class LinkAndTreeFindTrackTool : public PatRecBaseTool //public AlgTool, virtual public ITkrFindTrackTool
-{
-public:
-    /// Standard Gaudi Tool interface constructor
-    LinkAndTreeFindTrackTool(const std::string& type, const std::string& name, const IInterface* parent);
-    virtual ~LinkAndTreeFindTrackTool() {}
-
-    /// @brief Method to find candidate tracks. Will retrieve the necessary information from
-    ///        the TDS, including calorimeter energy, and then use TkrLinkAndTree to find all
-    ///        possible track candidates. The resulting track candidate collection is then 
-    ///        stored in the TDS for the next stage.
-    StatusCode initialize();
-    StatusCode findTracks();
-
-};
-
 #endif

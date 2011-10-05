@@ -71,7 +71,8 @@ public:
     /// put actual init stuff here
     StatusCode initialize();
     /// does the work
-    StatusCode findTracks(); 
+    StatusCode firstPass(); 
+    StatusCode secondPass() {return StatusCode::SUCCESS;}
 
 protected:
     /// Pointer to TkrClusters - historical and will go. 
@@ -355,7 +356,7 @@ StatusCode ComboFindTrackTool::initialize()
     return sc;
 }
 
-StatusCode ComboFindTrackTool::findTracks()
+StatusCode ComboFindTrackTool::firstPass()
 {
 
     MsgStream msgLog(msgSvc(), name());
