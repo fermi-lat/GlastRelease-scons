@@ -5,6 +5,14 @@ from fermidebug import fdebug
 
 baseEnv.AppendUnique(CPPDEFINES = ['GlastRelease'])
 
+vstring = 'OBF_' + (str(baseEnv['obfversion'])).replace('-', '_')
+while vstring.count('_') > 3:
+    ix = vstring.rfind('_')
+    vstring = vstring[:ix]
+    
+    
+baseEnv.AppendUnique(CPPDEFINES = vstring)
+
 #########################                                                                                                                                                                                
 # GlastRelease Builders #                                                                                                                                                                                
 #########################                                                                                                                                                                                
