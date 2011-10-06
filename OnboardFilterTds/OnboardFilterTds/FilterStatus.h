@@ -16,8 +16,20 @@
 //#include "TkrUtil/ITkrGeometrySvc.h"
 #include "EDS/EBF_dir.h"
 #include "EDS/EDR_tkr.h"
-#include "EFC/GFC_V2_status.h"
+
+#include "EFC/GFC_V3_status.h"
+
+#ifdef SCons
+#ifdef OBF_B1_1_3
 #include "OnboardFilterTds/FSWHeaders/TFC_prjDef.h"
+#endif
+#ifdef OBF_B3_0_0
+#include "EFC/TFC_prjDef.h"
+#endif
+#else
+#include "OnboardFilterTds/FSWHeaders/TFC_prjDef.h"
+#endif
+
 #include "OnboardFilterTds/LogInfoDef.h"
 /**
  * @class FilterStatus
