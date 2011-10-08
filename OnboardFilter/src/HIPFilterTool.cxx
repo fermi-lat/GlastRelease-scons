@@ -42,13 +42,10 @@
 // Contains all info for a particular filter's release
 #ifdef OBF_B3_0_0
 #include "EFC/EFC.h"
-//#include "EFC/../src/EFC_samplerDef.h"
 #include "HIPFilterLibsB3-0-0.h"
 #endif
 #ifdef OBF_B1_1_3
 #include "FSWHeaders/EFC.h"
-// FSW include but made local due to keyword usage
-//#include "FSWHeaders/EFC_sampler.h"
 #include "HIPFilterLibsB1-1-3.h"
 #endif
 

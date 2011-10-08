@@ -17,7 +17,6 @@
 #include "ObfInterface.h"
 
 // FSW includes go here
-// FSW includes go here
 #ifdef OBF_1_1_3
 #include "FSWHeaders/CDM_pubdefs.h"
 #endif
@@ -102,11 +101,7 @@ FSWAuxLibsTool::FSWAuxLibsTool(const std::string& type,
     //#endif
 
     declareProperty("FileNamePeds",     m_FileName_Pedestals = "cal_db_pedestals");
-    //#ifndef SCons
     declareProperty("PathNameGains",    m_PathName_Gains     = "$(OBFCOG_DBBINDIR)/cal_db_gains");
-    //#else
-    //    declareProperty("PathNameGains",    m_PathName_Gains     = "$(OBFLDPATH)");
-    //#endif
 
     declareProperty("FileNameGains",    m_FileName_Gains     = "cal_db_gains");
 
@@ -146,11 +141,7 @@ StatusCode FSWAuxLibsTool::initialize()
         obf->loadLibrary(calGainFile, calGainPath);
 
         // Load the Gleam geometry for fsw
-        //#ifndef SCons
         obf->loadLibrary ("geo_db_data", "$(OBFGGF_DBBINDIR)/geo_db_data");
-        //#else
-        //        obf->loadLibrary ("geo_db_data", "$(OBFLDPATH)");
-        //#endif
     }
     catch(ObfInterface::ObfException& obfException)
     {
