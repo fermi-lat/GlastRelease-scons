@@ -35,7 +35,12 @@
 #include "EFC_DB/EFC_DB_sampler.h"
 #include "EFC/../src/GFC_def.h"
 #include "EFC/../src/TFC_geometryDef.h"
+#ifdef SCons
 #include "EFC/../src/GEO_DB_data.h"
+#else
+#include "src/GEO_DB_data.h"
+#endif
+
 //  Alternative to above include:  define these two macros
 // #define TKR_STRIP_PITCH_MM    0.228
 // #define TKR_LADDER_GAP_MM  (2*.974 +.2)
