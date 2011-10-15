@@ -1000,10 +1000,6 @@ void McTkrHitValsTool::countTruncatedPlanes(Event::McParticle* primary)
                 for(pit = points.begin(); pit != points.end(); pit++) 
                 {
                     Event::McTrajectoryPoint* point = *pit;
-                    idents::VolumeIdentifier  volId = point->getVolumeID();
-
-                    // If not in the tracker then nothing to do here
-                    if (!volId.isTkr()) continue;
 
                     // If in the tracker, next is to make sure we are in a sensitive volume
                     // Test for this is that an McPositionHit exists (is there a better way?)
@@ -1011,8 +1007,19 @@ void McTkrHitValsTool::countTruncatedPlanes(Event::McParticle* primary)
 
                     if (relVec.empty()) continue;
 
+                    idents::VolumeIdentifier  volId = relVec.front()->getSecond()->volumeID();
+
+                    // If not in the tracker then nothing to do here
+                    if (!volId.isTkr()) continue;
+
                     // Convert the volume identifier into 
                     idents::TkrId tkrId(volId);
+
+                    // Can this happen?
+                    if (!tkrId.hasTray() || !tkrId.hasBotTop() || !tkrId.hasView())
+                    {
+                        continue;
+                    }
 
                     // Convert this into a SortId
                     Event::SortId sortId(idents::TowerId(tkrId.getTowerX(), tkrId.getTowerY()).id(),
