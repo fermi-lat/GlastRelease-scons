@@ -30,7 +30,8 @@ class TkrTreeBuilder
 public:
     TkrTreeBuilder(TkrVecNodesBuilder&    vecNodesBldr,
                    IDataProviderSvc*      dataSvc, 
-                   ITkrGeometrySvc*       geoSvc);
+                   ITkrGeometrySvc*       geoSvc,
+                   int                    maxTrees = 30);
 
     ~TkrTreeBuilder();
 
@@ -69,6 +70,9 @@ private:
 
     /// Pointer to our TkrTree collection in the TDS
     Event::TkrTreeCol*     m_treeCol;
+
+    /// Control the maximum number of trees to return
+    int                    m_maxTrees;
 };
 
 #endif
