@@ -35,11 +35,11 @@ public:
     int                            associateTreeToClusters(Event::TkrTree* tree);
 
     /// Return the Track to relation map
-    Event::TreeClusterRelationVec& getTreeToRelationVec(Event::TkrTree* tree)          {return (*m_treeToRelationMap)[tree];}
-    Event::TreeToRelationMap&      getTreeToRelationMap()                              {return *m_treeToRelationMap;}
+    Event::TreeClusterRelationVec* getTreeToRelationVec(Event::TkrTree* tree);
+    Event::TreeToRelationMap*      getTreeToRelationMap()                              {return m_treeToRelationMap;}
 
-    Event::TreeClusterRelationVec& getClusterToRelationVec(Event::CalCluster* cluster) {return (*m_clusterToRelationMap)[cluster];}
-    Event::ClusterToRelationMap&   getClusterToRelationMap()                           {return *m_clusterToRelationMap;}
+    Event::TreeClusterRelationVec* getClusterToRelationVec(Event::CalCluster* cluster);
+    Event::ClusterToRelationMap*   getClusterToRelationMap()                           {return m_clusterToRelationMap;}
 
 private:
 
