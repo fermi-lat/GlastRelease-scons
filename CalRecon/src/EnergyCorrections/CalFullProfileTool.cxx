@@ -314,7 +314,7 @@ double CalFullProfileTool::GetRadiationLengthInTracker(Event::TkrTree* tree)
     x0 = x0 + arcLen * vv;
 
     // Now set up and call propagator to get the radiation lengths to calorimeter
-    arcLen = vv.z() > 0. ? -(vv.z() - m_tkrGeom->calZTop()) / vv.z() : 0.;
+    arcLen = vv.z() > 0. ? (x0.z() - m_tkrGeom->calZTop()) / vv.z() : 0.;
     m_G4PropTool->setStepStart(x0, -vv);
     m_G4PropTool->step(arcLen);
     tkr_RLn = m_G4PropTool->getRadLength(); 
