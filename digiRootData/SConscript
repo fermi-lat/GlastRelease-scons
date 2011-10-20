@@ -47,6 +47,7 @@ digiRootData = libEnv.RootDynamicLibrary('digiRootData',
                                          listFiles(['src/*.cxx']) + ['digiRootData/digiRootData_rootcint.cxx'])
 
 progEnv.Tool('digiRootDataLib')
+progEnv.Tool('facilitiesLib')
 test_digiRootData = progEnv.Program('test_digiRootData',
                                     ['src/test/testDigiClasses.cxx'])
 progEnv.Tool('addLibrary', library = baseEnv['ldfLibs'])
