@@ -17,7 +17,7 @@ tagv = "%s:%s" % (__tag__.split()[1], __version__.split()[1])
 
 
 # ROOT initilization
-ROOT.gSystem.Load("tkrPyRoot")
+ROOT.gSystem.Load("libtkrPyRoot")
 ROOT.gStyle.SetPalette(1)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch() # set ROOT into batch mode
