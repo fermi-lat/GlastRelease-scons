@@ -147,7 +147,7 @@ StatusCode AcdHitToOverlayTool::initialize()
     }
     m_edSvc = dynamic_cast<IDataProviderSvc*>(iService);
 
-    sc = serviceLocator()->service("OverlayDataSvc", iService, true);
+    sc = serviceLocator()->service("OverlayOutputSvc", iService, true);
     if ( sc.isFailure() ) {
         log << MSG::ERROR << "could not find EventDataSvc !" << endreq;
         return sc;

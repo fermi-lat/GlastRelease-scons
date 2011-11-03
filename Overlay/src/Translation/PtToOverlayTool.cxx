@@ -139,7 +139,7 @@ StatusCode PtToOverlayTool::initialize()
     }
     m_edSvc = dynamic_cast<IDataProviderSvc*>(iService);
 
-    sc = serviceLocator()->service("OverlayDataSvc", iService, true);
+    sc = serviceLocator()->service("OverlayOutputSvc", iService, true);
     if ( sc.isFailure() ) {
         log << MSG::ERROR << "could not find EventDataSvc !" << endreq;
         return sc;
@@ -365,7 +365,7 @@ StatusCode PtToOverlayTool::translate()
     StatusCode status = StatusCode::SUCCESS;
 
     // Create a collection of AcdOverlays and register in the TDS
-    SmartDataPtr<Event::PtOverlay> ptOverlay(m_edSvc, OverlayEventModel::Overlay::PtOverlay);
+    SmartDataPtr<Event::PtOverlay> ptOverlay(m_dataSvc, m_dataSvc->rootName() + OverlayEventModel::Overlay::PtOverlay);
     if(!ptOverlay)
     {
         ptOverlay = new Event::PtOverlay();

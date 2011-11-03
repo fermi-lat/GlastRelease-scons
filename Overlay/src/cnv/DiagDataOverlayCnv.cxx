@@ -113,13 +113,17 @@ StatusCode DiagDataOverlayCnv::initialize()
 
     // We're going rogue here, look up the OverlayDataSvc and use this as 
     // our data provider insteand of EventCnvSvc
-    IService* tmpService = 0;
-    if (service("OverlayOutputSvc", tmpService, false).isFailure())
+    IDataProviderSvc* tmpService = 0;
+    if (serviceLocator()->service("OverlayOutputSvc", tmpService, false).isFailure())
     {
-        log << MSG::INFO << "No OverlayOutputSvc available, no input conversion will be performed" << endreq;
+        log << MSG::INFO << "No OverlayOutputSvc available, no output conversion will be performed" << endreq;
         m_overlayOutputSvc = 0;
     }
-    else m_overlayOutputSvc = SmartIF<IOverlayDataSvc>(IID_IOverlayDataSvc, tmpService);
+    else 
+    {
+        // Need to up convert to point to the OverlayDataSvc
+        m_overlayOutputSvc = dynamic_cast<IOverlayDataSvc*>(tmpService);
+    }
 
     if (m_overlayOutputSvc) m_overlayOutputSvc->registerOutputPath(m_path);
 

@@ -10,9 +10,12 @@
 ApplicationMgr.DLLs+= { "Overlay"};
 
 // Include the Overlay output service which will make sure file is output
-ApplicationMgr.ExtSvc += {"OverlayDataSvc"};
+ApplicationMgr.ExtSvc += { "OverlayCnvSvc", 
+                           "EvtPersistencySvc/OverlayPersistencySvc" , 
+                           "OverlayDataSvc/OverlayOutputSvc" };
 
-OverlayDataSvc.ConfigureForOutput = true;
+OverlayPersistencySvc.CnvServices   = { "OverlayCnvSvc" };
+OverlayOutputSvc.ConfigureForOutput = true;
 
 // Replace the Output sequencer members with just this one algorithm
 Output.Members = { "DigiToOverlayAlg" };
