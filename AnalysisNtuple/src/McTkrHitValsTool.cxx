@@ -1171,8 +1171,11 @@ void McTkrHitValsTool::countTruncatedPlanes(Event::McParticle* primary)
                     }
 
                     // Store away
-                    planeIsTruncatedMap[plane] = true;           // The plane is truncated
-                    planeToActDistMap[plane]   = activeDist;     // Active distance to the hit
+                    if (activeDist > planeToActDistMap[plane])
+                    {
+                        planeIsTruncatedMap[plane] = true;           // The plane is truncated
+                        planeToActDistMap[plane]   = activeDist;     // Active distance to the hit
+                    }
                 }
             }
         }
