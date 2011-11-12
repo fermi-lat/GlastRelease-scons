@@ -4,6 +4,7 @@ def generate(env, **kw):
         env.Tool('addLibrary', library = ['CalUtil'])
     env.Tool('identsLib')
     env.Tool('addLibrary', library = env['rootLibs'])
+    env.Tool('addLibrary', library = env['gaudiLibs'])
     env.Tool('xmlBaseLib')
 def exists(env):
     return 1;
