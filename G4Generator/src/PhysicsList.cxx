@@ -1,5 +1,5 @@
 // File and Version Information:
-// $Header$
+// $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/G4Generator/src/PhysicsList.cxx,v 1.24 2011/08/26 23:59:15 flongo Exp 
 //
 // Description: This class manages the building of particles definitions and
 // physics processes setup by creating a set of specialized classes and
