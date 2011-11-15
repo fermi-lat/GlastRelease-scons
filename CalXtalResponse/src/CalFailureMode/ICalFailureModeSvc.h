@@ -53,4 +53,3 @@ class ICalFailureModeSvc : virtual public IInterface {
 };
 
 #endif // ICalFailureModeSvc_H
-
