@@ -72,9 +72,8 @@ class ICalCalibSvc : virtual public IInterface {
   \return null on error.
   */
   //  virtual const CalibData::Ped *getPed(CalUtil::RngIdx rngIdx) = 0;
-
-  virtual StatusCode getPed(CalUtil::RngIdx rngIdx, float &ped)=0;
-  virtual StatusCode getPedSig(CalUtil::RngIdx rngIdx, float &sig)=0;
+  virtual StatusCode getPed(CalUtil::RngIdx rngIdx, float &ped)=0
+  virtual StatusCode getPedSig(CalUtil::RngIdx rngIdx, float &sig)=0
 
 
   /** \brief get Asymmetry calibration information for one xtal
