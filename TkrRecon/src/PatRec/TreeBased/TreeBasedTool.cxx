@@ -149,7 +149,7 @@ TreeBasedTool::TreeBasedTool(const std::string& type, const std::string& name, c
     declareProperty("DoToolTiming",       m_doTiming            = true);
     declareProperty("MaxNumVecPoints",    m_maxNumVecPoints     = 10000);
     declareProperty("AssociateClusters",  m_associateClusters   = true);
-    declareProperty("ReorderTrees",       m_reorderTrees        = false);
+    declareProperty("ReorderTrees",       m_reorderTrees        = true);
 
     m_clusterCol = 0;
 
