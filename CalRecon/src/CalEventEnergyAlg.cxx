@@ -12,6 +12,8 @@
 #include <CalRecon/ICalEnergyCorr.h>
 #include <CalRecon/ICalReconSvc.h>
 
+#include "EnergyCorrections/ICalEnergySelectionTool.h"
+
 /**   
 * @class CalEventEnergyAlg
 *
@@ -48,15 +50,17 @@ private:
     //! correction tools
     std::vector<ICalEnergyCorr*> m_corrTools ;
 
-// DC: useless ?
-//    //! Type of correction for primary corrected parameters
-//    std::string                  m_corrType;
-//
-//    //! Set status bits depending on which iteration of algorithm
-//    Event::CalEventEnergy::StatusBits m_passBits ;
-//    
+    //! Energy selection tool name
+    std::string                  m_energySelectionToolName;
+
+    //! Pointer to the tool
+    ICalEnergySelectionTool*     m_energySelectionTool;
+
+    //! Keep track in one place of the algorithm name if on the first pass of recon
+    std::string                  m_firstPassName;
+
     //! package service
-    ICalReconSvc *      m_calReconSvc ;
+    ICalReconSvc *               m_calReconSvc ;
 } ;
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -64,50 +68,34 @@ DECLARE_ALGORITHM_FACTORY(CalEventEnergyAlg) ;
 
 
 CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pSvcLocator )
- : Algorithm(name,pSvcLocator)
+ : Algorithm(name,pSvcLocator), m_firstPassName("CalRawEnergy")
 {   
     std::vector<std::string> corrToolVec;
     std::string              corrType;
+    std::string              energySelectionToolName = "CalRawEnergySelectionTool";
 
     // Initial/default parameters depend on whether this would be the first pass
     // through CalRecon or the second. The first pass through should have the 
     // algorithm name "RawEnergy" assigned to it, the second (or subsequent) name
     // doesn't matter for initialization.
     // This branch if first pass
-    if (name == "CalRawEnergy")
+    if (name == m_firstPassName)
     {
         corrToolVec.push_back("CalRawEnergyTool");
-
-// DC: redundant with correctionName
-//        corrType   = Event::CalCorToolResult::RAWENERGY;
-// DC: useless ?
-//        corrType   = "CalRawEnergyTool";
-//        m_passBits = Event::CalEventEnergy::PASS_ONE;
     }
     // This the default for the second iteration of CalRecon
     else
     {
       corrToolVec.push_back("CalValsCorrTool");
-      // Ph. Bruel : old profile method, not used anymore 
-      //        corrToolVec.push_back("CalProfileTool");
-      // Philippe Bruel reminds us this isn't used anymore, so remove 9/22/09
-      //corrToolVec.push_back("CalLastLayerLikelihoodTool");
       corrToolVec.push_back("CalFullProfileTool");
-      // Philippe Bruel reminds us this isn't used anymore, so remove 9/22/09
-      //corrToolVec.push_back("CalTkrLikelihoodTool");
       corrToolVec.push_back("CalLikelihoodManagerTool"); //POL
-// DC: probably useless
-//        corrToolVec.push_back("CalTransvOffsetTool");
 
-        //corrType   = Event::CalCorToolResult::CALVALS;
-// DC: useless ?
-//        corrType   = "CalValsCorrTool";
-//        m_passBits = Event::CalEventEnergy::PASS_TWO;
+      energySelectionToolName = "CalEnergyClassificationTool";
     }
 
     // Declare the properties with these defaults
     declareProperty("corrToolNames", m_corrToolNames = corrToolVec);
-//    declareProperty("finalCorrType", m_corrType      = corrType);
+    declareProperty("EnergySelection", m_energySelectionToolName = energySelectionToolName);
 }
 
 
@@ -157,6 +145,13 @@ StatusCode CalEventEnergyAlg::initialize()
         {
             m_corrTools.push_back(tool) ;
         }
+    }
+
+    ICalEnergySelectionTool* selTool = 0;
+    if ((toolSvc()->retrieveTool(m_energySelectionToolName, m_energySelectionTool)).isFailure())
+    {
+        log << MSG::ERROR << " Unable to create " << m_energySelectionToolName << endreq ;
+        return StatusCode::FAILURE ;
     }
 
     return sc;
@@ -223,15 +218,17 @@ StatusCode CalEventEnergyAlg::execute()
             else  calEnergy = clusEnergyItr->second.front();
 
             // Recover the pointer to the TkrTree, if there is one available
-            Event::TkrTree* tree = 0;
+            Event::TreeClusterRelation* treeClusRel = 0;
 
             if (clusterToRelationMap)
             {
                 // Recover the tree associated to this cluster, if there is one
                 Event::ClusterToRelationMap::iterator clusTreeItr = clusterToRelationMap->find(cluster);
 
-                if (clusTreeItr != clusterToRelationMap->end()) tree = clusTreeItr->second.front()->getTree();
+                if (clusTreeItr != clusterToRelationMap->end()) treeClusRel = clusTreeItr->second.front();
             }
+
+            Event::TkrTree* tree = treeClusRel ? treeClusRel->getTree() : 0;
     
             // apply corrections according to vector of tools
             std::vector<ICalEnergyCorr *>::const_iterator tool ;
@@ -262,11 +259,10 @@ StatusCode CalEventEnergyAlg::execute()
             // It is envisaged that this will be replaced by a call to a tool/method which examines all 
             // possibilites and chooses the best for the given event
             
-            const Event::CalCorToolResult * bestCorResult = calEnergy->findLast("CalValsCorrTool") ;
-            if (bestCorResult==0) {
-                bestCorResult = calEnergy->findLast("CalRawEnergyTool") ;
-            }    
-            if (bestCorResult!=0) {
+            const Event::CalCorToolResult* bestCorResult = m_energySelectionTool->selectBestEnergy(calEnergy, treeClusRel);
+
+            if (bestCorResult != 0) 
+            {
                 calEnergy->setParams(bestCorResult->getParams()) ;
                 calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
             }    
