@@ -17,12 +17,17 @@
 
 static const InterfaceID IID_IClassifyTool("IClassifyTool", 1 , 0);
 
+namespace GlastClassify
+{
+    class Item;
+};
+
 class IClassifyTool : virtual public IAlgTool
 {
 public:
     
     /// Typedef the map between variable names and locations
-    typedef std::map<std::string, float> VarNameToValueMap;
+    typedef std::map<std::string, GlastClassify::Item*> VarNameToValueMap;
 
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IClassifyTool; }
@@ -38,6 +43,6 @@ public:
 
     /// @brief Once classification run this will look up and return the value of a given
     ///        variable. If the variable has been found successfully then it returns true
-    virtual bool       getVariable(const std::string& varName, float& varValue) = 0;
+    virtual bool       getVariable(const std::string& varName, GlastClassify::Item* &varItem) = 0;
 };
 #endif
