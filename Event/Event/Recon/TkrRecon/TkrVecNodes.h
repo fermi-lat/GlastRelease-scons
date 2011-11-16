@@ -101,10 +101,24 @@ public:
     const int                           getDepth()           const {return m_depth;}
     // Number of leaves in the tree
     const int                           getNumLeaves()       const {return m_leaves;}
+	// Number of Thin Layer leaves in the tree
+    const int                           getNumThinLeavesInTree()       const;
+	// Number of Thick Layer leaves in the tree
+    const int                           getNumThickLeavesInTree()       const;
     // number of branches in the tree
     const int                           getNumBranches()     const {return m_branches;}
     // Number of nodes in the tree
     const int                           getNumNodesInTree()  const;
+	   // Number of Thin section nodes in the tree
+    const int                           getNumThinNodesInTree()  const;
+	   // Number of Thick nodes in the tree
+    const int                           getNumThickNodesInTree()  const;
+		   // Number of Blank nodes in the tree
+    const int                           getNumBlankNodesInTree()  const;
+	   // Number of Thin rad. lens in the tree
+    const float                         getNumThinRLnInTree()  const;
+	   // Number of Thick rad. lens in the tree
+    const float                         getNumThickRLnInTree()  const;
     // Return the memory used by the tree
     const int                           getMemUsedInTree()   const;
     // Get the tree starting layer
@@ -364,7 +378,7 @@ inline const double TkrVecNode::getBestRmsAngle() const
 inline const int TkrVecNode::getNumNodesInTree() const
 {
     // We always count ourself
-    int nodeCount = m_associatedLink ? 1 : 0;
+    int nodeCount = 1; // I think this would miss head node:  m_associatedLink ? 1 : 0;
 
     if (!empty())
     {
@@ -375,6 +389,126 @@ inline const int TkrVecNode::getNumNodesInTree() const
     }
 
     return nodeCount;
+}
+inline const int TkrVecNode::getNumThinNodesInTree() const
+{
+    // We always count ourself
+	int currentBiLayer = getCurrentBiLayer(); 
+    int nodeCount = currentBiLayer > 5 ? 1 : 0;
+
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+            nodeCount += (*nodeItr)->getNumThinNodesInTree();
+        }
+    }
+
+    return nodeCount;
+}
+inline const int TkrVecNode::getNumThinLeavesInTree() const
+{
+	int nodeCount = 0;
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+            nodeCount += (*nodeItr)->getNumThinLeavesInTree();
+        }
+    }
+	else {
+		nodeCount = getCurrentBiLayer() > 5 ? 1 : 0;
+	}
+    return nodeCount;
+}
+inline const int TkrVecNode::getNumThickNodesInTree() const
+{
+    // We always count ourself
+    int nodeCount = (getCurrentBiLayer() > 1 && getCurrentBiLayer() < 6) ? 1 : 0;
+
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+            nodeCount += (*nodeItr)->getNumThickNodesInTree();
+        }
+    }
+
+    return nodeCount;
+}
+inline const int TkrVecNode::getNumThickLeavesInTree() const
+{
+	int nodeCount = 0;
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+            nodeCount += (*nodeItr)->getNumThickLeavesInTree();
+        }
+    }
+	else {
+		nodeCount = getCurrentBiLayer() > 1 && getCurrentBiLayer() < 6 ? 1 : 0;
+	}
+    return nodeCount;
+}
+inline const int TkrVecNode::getNumBlankNodesInTree() const
+{
+    // We always count ourself
+    int nodeCount = getCurrentBiLayer() < 2 ? 1 : 0;
+
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+            nodeCount += (*nodeItr)->getNumBlankNodesInTree();
+        }
+    }
+
+    return nodeCount;
+}
+
+inline const float TkrVecNode::getNumThinRLnInTree() const
+{
+    // We always count ourself
+	float radLen = 0;
+	if(getCurrentBiLayer()> 5) {
+		if(m_associatedLink){
+			Vector dir = m_associatedLink->getVector();
+			radLen += .045/std::max(.3, fabs(dir.z()));
+		}
+		else radLen += .015;
+	}
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+			radLen += (*nodeItr)->getNumThinRLnInTree();
+		}
+    }
+
+    return radLen;
+}
+	
+	inline const float TkrVecNode::getNumThickRLnInTree() const
+{
+    // We always count ourself
+	float radLen = 0;
+	if(getCurrentBiLayer()< 6 && getCurrentBiLayer() > 1) {
+		if(m_associatedLink){
+			Vector dir = m_associatedLink->getVector();
+			radLen += .20/std::max(.3, fabs(dir.z()));
+		}
+		else radLen += .09;
+	}
+    if (!empty())
+    {
+        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        {
+			radLen += (*nodeItr)->getNumThickRLnInTree();
+		}
+    }
+
+    return radLen;
 }
 
 inline const int TkrVecNode::getMemUsedInTree() const
@@ -547,4 +681,3 @@ typedef RelationList<const TkrCluster, TkrVecNode> TkrClusterToNodesTabList;
 }; // Namespace
 
 #endif
-
