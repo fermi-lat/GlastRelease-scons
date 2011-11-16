@@ -15,7 +15,7 @@ $Header$
 #include "facilities/Util.h"
 
 #include "AtwoodTrees.h"
-#include "GlastClassify/ITupleInterface.h"
+#include "GlastSvc/GlastClassify/ITupleInterface.h"
 
 // EAC Mods
 #include <TDirectory.h>
@@ -37,9 +37,10 @@ public:
         return (double)*m_pdata;
     }
 
-    void*       getDataAddr() const {return m_pdata;}
+    const std::string& getDataName() const {return m_name;}
+    void*              getDataAddr() const {return m_pdata;}
 
-    std::string getDataType() const {return m_type;}
+    const std::string& getDataType() const {return m_type;}
 
 // LSR 14-Jul-08 code for ntuple types
 

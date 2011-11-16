@@ -9,7 +9,7 @@ $Header$
 #ifndef GlastClassify_TreeAnalysis_h
 #define GlastClassify_TreeAnalysis_h
 
-#include "GlastClassify/ITupleInterface.h"
+#include "GlastSvc/GlastClassify/ITupleInterface.h"
 
 class IImActivityNode;
 

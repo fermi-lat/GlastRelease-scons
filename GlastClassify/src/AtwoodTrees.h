@@ -6,7 +6,7 @@ $Header$
 #ifndef GlastClassify_AtwoodTrees_h
 #define GlastClassify_AtwoodTrees_h
 
-#include "GlastClassify/ITupleInterface.h"
+#include "GlastSvc/GlastClassify/ITupleInterface.h"
 
 #include <string>
 #include <iostream>

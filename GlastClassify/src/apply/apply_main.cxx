@@ -15,6 +15,7 @@ $Header$
 #include <sstream>
 #include <cassert>
 #include <stdexcept>
+#include <fstream>
 
 /** 
 @page applications apply
@@ -35,6 +36,11 @@ int main(int argc, char* argv[])
 
     int rc = 0;
     try {
+
+	    // Try redirecting the cout output to a file 
+	    std::ofstream file("apply_main_output.txt");
+	
+	    std::cout.rdbuf(file.rdbuf());
 
         std::string  input_filename(""), output_filename(""), tree_name("MeritTuple");
         int n=0;

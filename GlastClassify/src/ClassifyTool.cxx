@@ -21,7 +21,7 @@
 #include "TreeAnalysis.h"
 #include "xmlBuilders/xmlTreeAnalysisFactory.h"
 
-#include "GlastClassify/ITupleInterface.h"
+#include "GlastSvc/GlastClassify/ITupleInterface.h"
 #include "GlastSvc/GlastClassify/IClassifyTool.h"
 #include "facilities/Util.h"
 
@@ -45,9 +45,10 @@ public:
         return (double)*m_pdata;
     }
 
-    void*       getDataAddr() const {return m_pdata;}
+    const std::string& getDataName() const {return m_name;}
+          void*        getDataAddr() const {return m_pdata;}
 
-    std::string getDataType() const {return m_type;}
+    const std::string& getDataType() const {return m_type;}
 
 // LSR 14-Jul-08 code for ntuple types
 
@@ -216,7 +217,7 @@ public:
 
     /// @brief Once classification run this will look up and return the value of a given
     ///        variable. If the variable has been found successfully then it returns true
-    bool       getVariable(const std::string& varName, float& varValue);
+    bool       getVariable(const std::string& varName, GlastClassify::Item* &varItem);
 
     /// @brief Called by incident service at signalled times in event processing
     void handle(const Incident& inc);
@@ -328,7 +329,23 @@ StatusCode ClassifyTool::setUpClassification(VarNameToValueMap& varMap,
     // Loop through the input var map to add variables to our tuple
     for(VarNameToValueMap::iterator varMapItr = varMap.begin(); varMapItr != varMap.end(); varMapItr++)
     {
-        m_tuple->addItem(varMapItr->first, varMapItr->second);
+        // The following song and dance is intended to be a way to avoid having to also keep track
+        // of the interface to root tuple stuff in the calling code. It involves a bit of a song and
+        // dance here but hopefully this is less painful that the alternative... (FLW)
+        GlastClassify::Item* item = varMapItr->second;
+
+        if (item->getDataType() == "Float_t")
+        {
+            m_tuple->addItem(varMapItr->first, *reinterpret_cast<float*>(item->getDataAddr()));
+        }
+        else if (item->getDataType() == "Double_t")
+        {
+            m_tuple->addItem(varMapItr->first, *reinterpret_cast<double*>(item->getDataAddr()));
+        }
+        else if (item->getDataType() == "Char_t")
+        {
+            m_tuple->addItem(varMapItr->first, *reinterpret_cast<char*>(item->getDataAddr()));
+        }
     }
 
     // Sort out the path to the input xml file
@@ -370,7 +387,7 @@ StatusCode ClassifyTool::runClassification()
     return sc;
 }
 
-bool ClassifyTool::getVariable(const std::string& varName, float& varValue)
+bool ClassifyTool::getVariable(const std::string& varName, GlastClassify::Item* &varItem)
 {
     bool foundIt = false;
 
@@ -379,8 +396,8 @@ bool ClassifyTool::getVariable(const std::string& varName, float& varValue)
 
     if (item)
     {
-        varValue = *item;
-        foundIt  = true;
+        varItem = const_cast<GlastClassify::Item*>(item);
+        foundIt = true;
     }
 
     return foundIt;
