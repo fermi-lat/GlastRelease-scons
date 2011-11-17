@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-08-05 17-Nov-2011  TU Updates to allow multiple variable types for ClassifyTool
  GlastClassify-07-08-04 22-Aug-2011  TU Fix linux related issues
  GlastClassify-07-08-03 19-Aug-2011  TU Fix compile error in application 
  GlastClassify-07-08-02 19-Aug-2011  TU Forgot one small addition, now ok
