@@ -56,7 +56,8 @@ public:
 private:
     
   /// Sort clusters according to the classification or not.
-  bool              m_sortByClassification;
+  //bool              m_sortByClassification;
+  float             m_maxEtoSortByClassification;
   /// name of Tool for finding clusters.
   StringProperty    m_classifierToolName;
   /// pointer to actual tool for finding clusters.
@@ -78,7 +79,7 @@ CalClassifyAlg::CalClassifyAlg(const std::string & name, ISvcLocator * pSvcLocat
   m_calReconSvc(0)
 {   
   declareProperty("classifierToolName", m_classifierToolName = "CalClusterNBClassifyTool");
-  declareProperty("sortByClassification", m_sortByClassification = true) ;
+  declareProperty("maxEtoSortByClassification", m_maxEtoSortByClassification = 50.) ;
 }
 
 StatusCode CalClassifyAlg::initialize()
@@ -133,13 +134,20 @@ StatusCode CalClassifyAlg::execute()
       sc = m_calReconSvc->handleError(name(),"classifier tool failure");
     }
        
-    // Sort the cluster now that they are classified. Put the Uber cluster at the end though
-    if( m_sortByClassification ) {
-      log << MSG::DEBUG << "Sorting clusters using gam probability..." << endreq;
+    // Cluster sorting (after classification). Put the Uber cluster at the end though
+    // Only if energy of any clusters is smaller than some value.
+    int nCluEgtThr = 0;
+    for ( Event::CalClusterCol::const_iterator cluster = calClusterCol->begin();          
+          cluster != calClusterCol->end();          
+          cluster++) {  
+      if ((*cluster)->getMomParams().getEnergy()> m_maxEtoSortByClassification) {nCluEgtThr+=1;}
+    }
+    if (nCluEgtThr==0){
+      log << MSG::DEBUG << "Clusters sorting: by gam probability." << endreq;
       sort (calClusterCol->begin(), calClusterCol->end()-1, SortByGamProb);
     }
     else {
-      log << MSG::DEBUG << "Clusters are sorted by energy." << endreq;          
+      log << MSG::DEBUG << "Clusters sorting: by energy." << endreq;          
     }
     
     // For debug
