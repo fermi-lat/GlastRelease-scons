@@ -7,6 +7,8 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-15-00 17-Nov-2011 TU New recon flow implemented, including classification analysis to return best energy
+                                  for each Tree/Cluster association. Also updates from Pisa to improve cluster classification
  CalRecon-06-14-08 25-Jul-2011 TU change first pass name to "CalEnergyRaw" to match basicOptions.txt
  CalRecon-06-14-07 04-Jun-2011 kadrlica Added a member variable for storing the ghost DOCA in CalMomParams
  CalRecon-06-14-06 03-Jun-2011  pesce Modifications to CalClusterNBCClassifyTool and new xml file for cluster classification.
