@@ -2,6 +2,8 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-06-00-01 18-Nov-2011  usher patch for memory resident tuples
+    to set the working directory to null
  ntupleWriterSvc-06-00-00 17-Aug-2011    hmk add in memory ntuple handling
  ntupleWriterSvc-05-05-00 15-Jul-2011  lsrea add getNumberOfEvents() to support WIRED
  ntupleWriterSvc-05-04-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
