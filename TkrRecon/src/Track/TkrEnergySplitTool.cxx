@@ -169,7 +169,11 @@ TkrEnergySplitTool::TkrEnergySplitTool(const std::string& type, const std::strin
     //Declare the additional interface
     declareInterface<ITkrTrackEnergyTool>(this);
 
-    declareProperty("TupleFileName",    m_tupleFileName       = "$(GLEAMDATAPATH)/TkrEnergySplitTuple.root");
+    // This allows the tuple we use to be output to disk. If we want this option, then the JO file should
+    // set:
+    // ToolSvc.TkrEnergySplitTool.TupleFileName = "$(GLEAMDATAPATH)/TkrEnergySplitTuple.root";
+    // (for example)
+    declareProperty("TupleFileName",    m_tupleFileName       = "");
     declareProperty("TupleName",        m_tupleName           = "TkrEnergySplit");
     declareProperty("AnalysisFileName", m_analysisXmlFileName = "$(TKRRECONXMLPATH)/EnergySplitter.xml");
     declareProperty("MinCalEnergyRaw",  m_minCalEnergyRaw     = 10.);
