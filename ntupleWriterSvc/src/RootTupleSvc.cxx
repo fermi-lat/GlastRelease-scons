@@ -702,7 +702,10 @@ StatusCode RootTupleSvc::addAnyItem(const std::string & tupleName,
     } else  { // memory resident
         gDirectory->cd(0);
         if (m_tree.find(treename) == m_tree.end())
+        {
             m_tree[treename] = new TTree(treename.c_str(), m_title.value().c_str());
+            m_tree[treename]->SetDirectory(0);
+        }
     }
 
     // Searches list of branches, and returns NULL if itemName0 is not found
