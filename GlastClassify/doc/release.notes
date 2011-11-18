@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-08-06 18-Nov-2011  TU Make sure the saveRows flag is set correctly each call to the setup method
  GlastClassify-07-08-05 17-Nov-2011  TU Updates to allow multiple variable types for ClassifyTool
  GlastClassify-07-08-04 22-Aug-2011  TU Fix linux related issues
  GlastClassify-07-08-03 19-Aug-2011  TU Fix compile error in application 
