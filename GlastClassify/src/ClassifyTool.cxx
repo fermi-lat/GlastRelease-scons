@@ -319,7 +319,7 @@ StatusCode ClassifyTool::setUpClassification(VarNameToValueMap& varMap,
     // so we have to do this on the side here... 
     int* dummyInt = new int();
 
-    if (tupleFileName != "") m_saveRows = true;
+    if (tupleFileName == "") m_saveRows = false;
 
     sc = m_rootTupleSvc->addItem(tupleName, "Dummy", dummyInt, tupleFileName, m_saveRows);
 
