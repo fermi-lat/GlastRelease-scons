@@ -113,7 +113,7 @@ public:
 
 private:
     /// Internal methods
-    void   setTupleValues(Event::CalEventEnergy*      calEnergy,
+    bool   setTupleValues(Event::CalEventEnergy*      calEnergy,
                           Event::TreeClusterRelation* treeClusRel);
 
     /// This used to determine the active distance
@@ -348,34 +348,33 @@ const Event::CalCorToolResult* CalEnergyClassificationTool::selectBestEnergy(Eve
     //Always believe deep down in the success of this venture we are about to embark on
     StatusCode sc = StatusCode::SUCCESS;
 
-    // Define a null pointer to the object we are going to return
+    // Define a pointer to the "corrected" energy result
     const Event::CalCorToolResult* calResult = 0;
 
     // Check that we have some objects in place...
     if (calEnergy && treeClusRel)
     {
         // Set up the tuple to use here
-        setTupleValues(calEnergy, treeClusRel);
+        if (setTupleValues(calEnergy, treeClusRel))
+        {
+            // Call the classification routine
+            m_classifyTool->runClassification();
 
-        // Call the classification routine
-        m_classifyTool->runClassification();
+            // Get back the result
+            std::string energyMethod((char*)m_outTupleMap["CTBEnergyMethod"]->getDataAddr());
 
-        // Set the cal result based on the output of the classification
-
-        // Get back the result
-        std::string energyMethod((char*)m_outTupleMap["CTBEnergyMethod"]->getDataAddr());
-
-        if (energyMethod == "Profile") calResult = calEnergy->findLast("CalFullProfileTool");
-        else                           calResult = calEnergy->findLast("CalValsCorrTool");
-
-        // if no result then back up is the raw energy
-        if (!calResult) calResult = calEnergy->findLast("CalRawEnergyTool");
+            if (energyMethod == "Profile") calResult = calEnergy->findLast("CalFullProfileTool");
+            else                           calResult = calEnergy->findLast("CalValsCorrTool");
+        }
+    
+        // The default value, in case nothing happens, is to return the "raw" energy
+        calResult = calEnergy->findLast("CalRawEnergyTool");
     }
 
     return calResult;
 }
     
-void CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      calEnergy,
+bool CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      calEnergy,
                                                  Event::TreeClusterRelation* treeClusRel)
 {
     // Set the "tuple" values that are used in this objects classification tree here
@@ -384,7 +383,7 @@ void CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      cal
     Event::CalCluster* cluster = treeClusRel->getCluster();
 
     // No tree, no cluster, no work
-    if (!cluster) return;
+    if (!cluster) return false;
 
     // useful stuff
     Vector treeDir(0., 0., -1.);
@@ -393,6 +392,9 @@ void CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      cal
     // Recover the energy corrections here
     const Event::CalCorToolResult* calValsCorr = calEnergy->findLast("CalValsCorrTool");
     const Event::CalCorToolResult* calCfpCorr  = calEnergy->findLast("CalFullProfileTool");
+
+    // if no energy corrections then we should return false
+    if (!calValsCorr) return false;
 
     // CalEnergyRaw 
     Point  calPos       = cluster->getPosition();
@@ -440,8 +442,6 @@ void CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      cal
     m_floatAddrMap["CalLongRms"]       = cluster->getMomParams().getLongRms();
     m_floatAddrMap["CalTransRms"]      = cluster->getMomParams().getTransRms();
 
-    m_floatAddrMap["CalCsIRLn"]        = calValsCorr->find("CsIRLn")->second;
-    m_floatAddrMap["CalTotRLn"]        = calValsCorr->find("CALRLn")->second;
     m_floatAddrMap["CalLATEdge"]       = latEdge;
     m_floatAddrMap["CalTwrEdge"]       = twrEdgeTop;
     m_floatAddrMap["CalTwrEdgeCntr"]   = activeDistTower(calPos, tmpView);
@@ -474,7 +474,9 @@ void CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      cal
 
     // THIS IS NOT RIGHT - need to recover the unbiased event energy here... but don't know how 
     // to do here, leave for the experts to determine how to include
-    m_floatAddrMap["EvtEnergyCorrUB"]      = calValsCorr->find("CorrectedEnergy")->second; 
+    m_floatAddrMap["EvtEnergyCorrUB"] = calValsCorr->find("CorrectedEnergy")->second; 
+    m_floatAddrMap["CalCsIRLn"]       = calValsCorr->find("CsIRLn")->second;
+    m_floatAddrMap["CalTotRLn"]       = calValsCorr->find("CALRLn")->second;
 
     // Recover tree vars if there is a tree
     if (tree)
@@ -494,7 +496,7 @@ void CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      cal
 
     m_floatAddrMap["McEnergy"]             = 0.;
 
-    return;
+    return true;
 }
 
 double CalEnergyClassificationTool::activeDistTower(Point pos, int &view) const
