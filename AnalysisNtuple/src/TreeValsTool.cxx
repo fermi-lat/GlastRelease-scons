@@ -438,7 +438,7 @@ StatusCode TreeValsTool::calculate()
     {
         Tkr_num_trees = treeCol->size();
 
-        if (Tkr_num_trees > 0)
+        if (Tkr_num_trees > 0 && (*treeCol->begin())->getHeadNode())
         {
             Event::TkrTreeColConPtr  treeItr  = treeCol->begin(); 
             const Event::TkrTree*    tree     = *treeItr++;
