@@ -216,9 +216,9 @@ StatusCode TkrTrackEnergyTool::SetTrackEnergies()
                 // If no CalCluster then we will have a TkrEventParams object. 
                 // If we have it and its not set with Cal energy then execute this section of
                 // code... use the MS energy from the track itself
-                if (tkrEventParams 
-                    && ((tkrEventParams->getStatusBits() & Event::TkrEventParams::CALPARAMS) != Event::TkrEventParams::CALPARAMS)
-                    || tkrEventParams->getEventEnergy() <= 0.) 
+                if (tkrEventParams
+                    && ((tkrEventParams->getStatusBits() & Event::TkrEventParams::CALPARAMS) != Event::TkrEventParams::CALPARAMS
+                    || tkrEventParams->getEventEnergy() <= 0.)) 
                 {
                     // no cal info... set track energies to MS energies if possible.
                     double minEnergy = m_control->getMinEnergy();
