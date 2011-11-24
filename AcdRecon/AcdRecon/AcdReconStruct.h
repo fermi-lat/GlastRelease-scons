@@ -203,7 +203,7 @@ typedef HepGeom::Vector3D<double> HepVector3D;
   public:
     /// Null c'tor, just a place keeper
     TrackData():
-      m_point(),m_dir(),m_energy(0.),m_index(-1),m_upward(true),
+    m_point(),m_dir(),m_energy(0.),m_index(-1),m_upward(true),m_tracker(true),
       m_cov_orig(5,0),m_current(),m_cov_prop(5,0){;}
     /// C'tor from point, direction, energy, track index, up or down flag
     TrackData(const HepPoint3D& point, const HepVector3D& dir, 
@@ -221,6 +221,8 @@ typedef HepGeom::Vector3D<double> HepVector3D;
     int         m_index;       
     /// which side of track
     bool        m_upward;  
+    /// is this a tracker track (as opposed to cal cluster)
+    bool        m_tracker;  
 
     /// 5x5 covarience martix in the ACD rep, from original track params
     CLHEP::HepSymMatrix m_cov_orig; 
