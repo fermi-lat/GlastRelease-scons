@@ -231,7 +231,7 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
 
 
   if ( false ) {
-    log << MSG::WARNINGt << "Hit " << acdId.id() << ' ' << pocaData.m_active3D << ' ' 
+    log << MSG::WARNING << "Hit " << acdId.id() << ' ' << pocaData.m_active3D << ' ' 
         << activeDist3DErrProj << ' ' << activeDist3DErrProp << ' ' 
         << vetoSigmaHit << ' ' << vetoSigmaProj << ' ' << vetoSigmaProp << std::endl; 
   }  
