@@ -180,48 +180,44 @@ namespace AcdRecon {
       
   }
 
+
   void ReconFunctions::convertToAcdRep(const Event::CalParams& calParams,
 				       AcdRecon::TrackData& acdParams) {
-    // get the direction first
+    // set the direction first
     acdParams.m_dir.set(calParams.getAxis().x(), 
 			calParams.getAxis().y(), 
 			calParams.getAxis().z());
 
-    // pathlength to get to z=0
+    // pathlength to get to z=0 (if z-slope = 0, pathlength = 0)
     double pathLength = fabs(calParams.getAxis().z()) > 1.e-9 ? 
       -1. * calParams.getCentroid().z() / calParams.getAxis().z() : 0.;      
     double delX = pathLength * calParams.getAxis().x();
     double delY = pathLength * calParams.getAxis().y();
     double delZ = pathLength * calParams.getAxis().z();
 
-    // get the direction first
+    // set the initial position
     acdParams.m_point.set(calParams.getCentroid().x() + delX, 
 			  calParams.getCentroid().y() + delY,
 			  calParams.getCentroid().z() + delZ);
     
-    // Set the reference point
+    // Set the reference point at z=0
     acdParams.m_current = acdParams.m_point;    
 
     // make the covariance matrix in ACD params.
-    // CalParams is a liar!!
-    // Let's make something up, Say acos(0.1) and 1 mm.
-    //acdParams.m_cov_orig(1, 1) = calParams.getxDirxDir();
-    //acdParams.m_cov_orig(1, 2) = calParams.getxDiryDir();
-    //acdParams.m_cov_orig(1, 3) = calParams.getxDirzDir();
-    //acdParams.m_cov_orig(2, 2) = calParams.getyDiryDir();
-    //acdParams.m_cov_orig(2, 3) = calParams.getyDirzDir();
-    //acdParams.m_cov_orig(3, 3) = calParams.getzDirzDir();
-    //acdParams.m_cov_orig(4, 4) = calParams.getxPosxPos();
-    //acdParams.m_cov_orig(4, 5) = calParams.getxPosyPos();
-    //acdParams.m_cov_orig(5, 5) = calParams.getyPosyPos();
-    acdParams.m_cov_orig(1, 1) = 0.01;
-    acdParams.m_cov_orig(2, 2) = 0.01;
-    acdParams.m_cov_orig(3, 3) = 0.01;
-    acdParams.m_cov_orig(4, 4) = 1.;
-    acdParams.m_cov_orig(5, 5) = 1.;
+    // EC: CalParams is a liar!!
+    // ADW: 11/21/11 I think this is now filled for CalMomParams
+    acdParams.m_cov_orig(1, 1) = calParams.getxDirxDir();
+    acdParams.m_cov_orig(1, 2) = calParams.getxDiryDir();
+    acdParams.m_cov_orig(1, 3) = calParams.getxDirzDir();
+    acdParams.m_cov_orig(2, 2) = calParams.getyDiryDir();
+    acdParams.m_cov_orig(2, 3) = calParams.getyDirzDir();
+    acdParams.m_cov_orig(3, 3) = calParams.getzDirzDir();
+    acdParams.m_cov_orig(4, 4) = calParams.getxPosxPos();
+    acdParams.m_cov_orig(4, 5) = calParams.getxPosyPos();
+    acdParams.m_cov_orig(5, 5) = calParams.getyPosyPos();
+
     acdParams.m_cov_prop = acdParams.m_cov_orig;
   }
-
 
   bool ReconFunctions::pointPoca(const AcdRecon::TrackData& aTrack, const HepPoint3D& point,
 				 double& arcLength, HepPoint3D& poca, HepVector3D& voca ) {
@@ -287,8 +283,6 @@ namespace AcdRecon {
     HepSymMatrix docaCov = vocaCov.similarity( V );
     docaError = sqrt( docaCov(1,1) );
   }
-  
-
 
   bool ReconFunctions::crossesPlane(const AcdRecon::TrackData& track,  
 				    const HepPoint3D& planePoint, 
@@ -688,8 +682,9 @@ namespace AcdRecon {
 					     data.m_active3DErr_proj);
     } else {
       if ( track.m_upward ) {
-	std:: cout << "No poca foud " << ribbon.acdId().id() << ' ' 
-		   << track.m_point << ' ' << track.m_dir << ' ' << (track.m_upward ? "Up" : "Down" ) << std::endl;
+
+        std::cout << "No poca found " << ribbon.acdId().id() << ' ' 
+                  << track.m_point << ' ' << track.m_dir << ' ' << (track.m_upward ? "Up" : "Down" ) << std::endl;
       }
     }
   }
@@ -739,6 +734,10 @@ namespace AcdRecon {
   bool ReconFunctions::exitsLat(const AcdRecon::TrackData& trackData,
 				const AcdRecon::AcdVolume& acdVol,
 				AcdRecon::ExitData& data) {
+    // Check where a track exits the fiducial ACD volume. This is used primarily 
+    // to compute which face the track exits. It would be better to name this 
+    // function "exitsAcd", since the Acd volume contains the TKR but not the CAL.
+
     
     // grab the track data
     const HepPoint3D& initialPosition = trackData.m_point;
@@ -751,16 +750,16 @@ namespace AcdRecon {
 
     // hits -x or +x side ?
     const double normToXIntersection =  initialDirection.x() < 0 ?  
-      -1.*acdVol.m_sides - initialPosition.x() :    // hits -x side
-      1.*acdVol.m_sides - initialPosition.x();      // hits +x side  
+      -1.*acdVol.m_sides - initialPosition.x() :    // hits -x side (face 1)
+      1.*acdVol.m_sides - initialPosition.x();      // hits +x side (face 3)
     const double slopeToXIntersection = fabs(initialDirection.x()) > 1e-9 ? 
       1. / initialDirection.x() : (normToXIntersection > 0. ? 1e9 : -1e9);
     const double sToXIntersection = normToXIntersection * slopeToXIntersection;
     
     // hits -y or +y side ?
     const double normToYIntersection = initialDirection.y() < 0 ?  
-      -1.*acdVol.m_sides - initialPosition.y() :    // hits -y side
-      1.*acdVol.m_sides - initialPosition.y();      // hits +y side
+      -1.*acdVol.m_sides - initialPosition.y() :    // hits -y side (face 2)
+      1.*acdVol.m_sides - initialPosition.y();      // hits +y side (face 4)
     const double slopeToYIntersection = fabs(initialDirection.y()) > 1e-9 ? 
       1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9); 
     const double sToYIntersection = normToYIntersection * slopeToYIntersection;
@@ -777,7 +776,8 @@ namespace AcdRecon {
       if ( sToXIntersection < sToZIntersection ) {
 	// hits X side
 	data.m_arcLength = sToXIntersection;
-	data.m_face = initialDirection.x() > 0 ? 1 : 3;
+        // ADW: I think these were backwards before
+	data.m_face = initialDirection.x() < 0 ? 1 : 3;
       } else {
 	// hits Z side
 	data.m_arcLength = sToZIntersection;
@@ -787,14 +787,15 @@ namespace AcdRecon {
       if ( sToYIntersection < sToZIntersection ) {
 	// hits Y side
 	data.m_arcLength = sToYIntersection;
-	data.m_face = initialDirection.y() > 0 ? 2 : 4;
+        // ADW: I think these were backwards before
+	data.m_face = initialDirection.y() < 0 ? 2 : 4;
       } else {
 	// hits Z side
 	data.m_arcLength = sToZIntersection;
 	data.m_face =  trackData.m_upward ? 0 : 5;
       }     
     }
-    
+
     // protect against negative arcLengths
     if ( data.m_arcLength < 0. ) {
       return false;
