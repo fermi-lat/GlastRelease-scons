@@ -154,6 +154,8 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
   poca = 0;  
   const idents::AcdId& acdId = pocaData.m_id;
 
+  MsgStream log(msgSvc(), name());  
+
   float local[2]; 
   float active2d[2];
   float mips[2];
@@ -175,9 +177,9 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
     activeDist3DErrProp = activeDist3DErrProj;
     if ( aTrack.m_index >= 0 ) {
       HepVector3D dx = aTrack.m_point - aTrack.m_current;    
-      std::cerr << "No Prop error for poca with " << acdId.id() << ' ' << aTrack.m_index << " at " 
-		<< pocaData.m_arcLengthPlane << ' ' << pocaData.m_arcLength << ' ' 
-		<< dx.mag() << ' ' << pocaData.m_active2D << ' ' <<  pocaData.m_active3D << std::endl;
+      log << MSG::WARNING << "No Prop error for poca with " << acdId.id() << ' ' << aTrack.m_index << " at " 
+          << pocaData.m_arcLengthPlane << ' ' << pocaData.m_arcLength << ' ' 
+          << dx.mag() << ' ' << pocaData.m_active2D << ' ' <<  pocaData.m_active3D << std::endl;
     } else {
       // don't do sigma for vertices
       activeDist3DErrProj = -1.;
@@ -229,9 +231,9 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
 
 
   if ( false ) {
-    std::cout << "Hit " << acdId.id() << ' ' << pocaData.m_active3D << ' ' 
-	      << activeDist3DErrProj << ' ' << activeDist3DErrProp << ' ' 
-	      << vetoSigmaHit << ' ' << vetoSigmaProj << ' ' << vetoSigmaProp << std::endl; 
+    log << MSG::WARNINGt << "Hit " << acdId.id() << ' ' << pocaData.m_active3D << ' ' 
+        << activeDist3DErrProj << ' ' << activeDist3DErrProp << ' ' 
+        << vetoSigmaHit << ' ' << vetoSigmaProj << ' ' << vetoSigmaProp << std::endl; 
   }  
 
   // temp storage
