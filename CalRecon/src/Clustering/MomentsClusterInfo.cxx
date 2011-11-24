@@ -438,15 +438,21 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
     if ( !isFinite(longSkewness) ) {
       throw CalException("CalMomentsAnalysis: infinite longSkewness");
     }
-    
+
+    // Place holder for centroid error and axis covariance
+    // ADW: Sept. 7, 2011
+    CLHEP::HepMatrix momCentroidErr = momentsAnalysis.getCentroidErr();
+    CLHEP::HepMatrix momAxisErr = momentsAnalysis.getAxisErr();
+
     // Store the information in the actual cluster: first the CalMomParams
     // container...
-    CLHEP::HepMatrix I_3_3(3, 3, 1);
+    //CLHEP::HepMatrix I_3_3(3, 3, 1);
     Event::CalMomParams momParams (xtalsCorrEnergySum, 10*xtalsCorrEnergySum,
-                                   momCentroid, I_3_3, momAxis, I_3_3,
+                                   momCentroid, momCentroidErr, momAxis, momAxisErr,
                                    numIterations, numCoreXtals, numXtals,
                                    transRms, longRms, longRmsAsym, longSkewness,
                                    coreEnergyFrac, fullLength, -1., -1.);
+    //momParams.fillStream(std::cout);
     cluster->setMomParams(momParams);
 
     // Set the relevant status bit and we're done!
