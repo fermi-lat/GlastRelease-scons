@@ -14,10 +14,12 @@ void CalMomentsAnalysis::clear()
   // TBD: Need to think about what are the most sensible default values here!
   m_weightSum        = 0.;
   m_centroid         = Point(0.,0.,0.); 
+  m_centroidErr      = CLHEP::HepMatrix(3,3,1);
   m_moment           = Vector(0.,0.,0.);
   m_axis[0]          = Vector(0.,0.,0.);
   m_axis[1]          = Vector(0.,0.,1.);
   m_axis[2]          = Vector(0.,0.,0.);
+  m_axisErr          = CLHEP::HepMatrix(3,3,1);
   m_fullLength       = 0.;
   m_longRms          = 0.;
   m_transRms         = 0.;
@@ -78,7 +80,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       Ixz -= xprm*zprm * weight;
       Iyz -= yprm*zprm * weight;
       
-      // ...and cetntroid/energy.
+      // ...and centroid/energy.
       weightSum += weight;
       centroid  += weight * dataPoint.getPosition();
     }
@@ -128,6 +130,9 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
           m_axis[iroot] = -m_axis[iroot];
         }
       }
+
+    // Calculate the covariance on the primary axis
+    m_axisErr = calcCovariance(m_axis[0]);
 
     // Second loop to get the chisquare (residuals about principal axis, through centroid,
     // using input weight), the full cluster length, the skewness and the fraction of
@@ -286,4 +291,46 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
     }
 
   return chisq;
+}
+
+CLHEP::HepMatrix CalMomentsAnalysis::calcCovariance(Vector momAxis) {
+  // ADW: 11/21/11 Place holder for calculating the covariant errors from 
+  // the moments analysis. For the time being, just use a
+  // uniform (and naive) 2 degree error on the moment direction
+
+  /// Hardcoded errors on the angles (to start with)
+  double dtheta = 2*(M_PI/180.);
+  double dphi = 2*(M_PI/180.);
+
+  double theta = momAxis.theta();
+  double phi = momAxis.phi();
+
+  /// Define all the trig
+  double st = sin(theta) ;  double st2 = st*st ; 
+  double ct = cos(theta) ;  double ct2 = ct*ct ; 
+  double sp = sin(phi)	 ;  double sp2 = sp*sp ; 
+  double cp = cos(phi)	 ;  double cp2 = cp*cp ; 
+
+  double dt2 = dtheta*dtheta ;
+  double dp2 = dphi*dphi     ;
+
+  CLHEP::HepMatrix cov(3,3,1);
+
+  /// Set the approximate covariance
+  cov(1, 1) = ct2*cp2*dt2 + st2*sp2*dp2	     ;
+  cov(2, 2) = ct2*sp2*dt2 + st2*cp2*dp2	     ;
+  cov(3, 3) = st2*dt2 		       	     ;
+  cov(1, 2) = ct2*cp*sp*dt2 - st2*cp*sp*dp2  ;
+  cov(1, 3) = -st*ct*cp*dt2	       	     ;
+  cov(2, 3) = -st*ct*sp*dt2	       	     ;
+  cov(2, 1) = cov(1, 2)		       	     ;
+  cov(3, 1) = cov(1, 3)		       	     ;
+  cov(3, 2) = cov(2, 3)		       	     ;
+
+  /// Just a test to see everything is working
+  //cov(1,1) = 1;
+  //cov(2,2) = 2;
+  //cov(3,3) = 3;
+
+  return cov;
 }

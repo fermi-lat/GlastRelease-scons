@@ -39,12 +39,18 @@ class CalMomentsAnalysis
   double doIterativeMomentsAnalysis(CalMomentsDataVec dataVec, const Point& centroid,
                                     double transScaleFactor, double transScaleFactorBoost,
                                     double coreRadius);
-  
+
+  /// ADW: Sept. 7, 2011
+  /// Calculate the covariance on the axis direction
+  CLHEP::HepMatrix calcCovariance(Vector momAxis);
+
   /// Access class members...
   inline const double getWeightSum()        const { return m_weightSum; }
   inline const Point  getCentroid()         const { return m_centroid; }
+  inline const CLHEP::HepMatrix  getCentroidErr()  const { return m_centroidErr; }
   inline const Vector getMoments()          const { return m_moment; }
   inline const Vector getAxis(int axis=1)   const { return m_axis[axis]; }
+  inline const CLHEP::HepMatrix  getAxisErr()  const { return m_axisErr; }
   inline const double getFullLength()       const { return m_fullLength; }
   inline const double getLongRms()          const { return m_longRms; }
   inline const double getTransRms()         const { return m_transRms; }
@@ -53,17 +59,23 @@ class CalMomentsAnalysis
   inline const double getCoreEnergyFrac()   const { return m_coreEnergyFrac; }
   inline const int    getNumIterations()    const { return m_numIterations; }
   inline const int    getNumDroppedPoints() const { return m_numDroppedPoints; }
-  
+
  private:
   
   /// Sum of weights in moments analysis 
   double m_weightSum;
   /// Centroid of the cluster.
   Point m_centroid;
+  /// ADW: Sept. 7, 2011
+  /// Matrix corresponding to the error on the centoid
+  CLHEP::HepMatrix m_centroidErr;
   /// Vector of calculated moments.
   Vector m_moment;
   /// Axis corresponding to the principal moments.
   Vector m_axis[3];
+  /// ADW: Sept. 7, 2011
+  /// Matrix correspoding to the covariance of the principal axis
+  CLHEP::HepMatrix m_axisErr;
   /// The distance (in radiation lengths) between the positions of the first and
   /// the last xtal, projected along the main axis of the cluster.
   double m_fullLength;
