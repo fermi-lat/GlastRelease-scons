@@ -195,6 +195,9 @@ StatusCode AcdReconAlgV2::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
 
+    SmartDataPtr<Event::EventHeader> header(eventSvc(), "/Event");
+    unsigned long evtId = (header) ? header->event() : 0;
+
     static bool firstEvent(true);
     if ( firstEvent ) {
       sc = m_acdGeoSvc->findCornerGaps();
@@ -836,7 +839,7 @@ StatusCode AcdReconAlgV2::mcDistances(const Event::AcdHitCol& acdHits,
 
     // get the LAT exit points
     if ( ! AcdRecon::ReconFunctions::entersLat(extend,s_acdVolume,enter) ) {
-      log << MSG::DEBUG << "AcdRecon::entersLat() failed on MC track- we'll bravely carry on" << endreq;
+      log << MSG::DEBUG << "AcdRecon::entersLat() failed on MC track - we'll bravely carry on" << endreq;
       return StatusCode::SUCCESS;
     }
 
@@ -1044,10 +1047,11 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
       log << MSG::DEBUG << "AcdReconAlgV2::calClusterDistances using " << calClustersTds->size() << " clusters." << endreq;
     }	
 
+
     // Places to store the track endpoint and direction
     AcdRecon::TrackData upwardExtend;
-    
-    // where does this track leave the LAT?
+
+    // where does this track leave the LAT volume?
     AcdRecon::ExitData upwardExit;
 
     int iCluster(-1);
@@ -1057,18 +1061,42 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
 	const Event::CalCluster* calClusterTds = *calItr++;       // The TDS track
  	iCluster++;
 
+        // Check to be sure the moments analysis has run (and there is a valid axis)
+        if (!calClusterTds->checkStatusBit(Event::CalCluster::MOMENTS)) continue;
+
+        const Event::CalParams clusterParams = calClusterTds->getMomParams();
+
  	// grab the cluster direction information
 	upwardExtend.m_energy = calClusterTds->getMomParams().getEnergy();
- 	upwardExtend.m_index = 11 + iCluster;
+ 	upwardExtend.m_index = iCluster;
  	upwardExtend.m_upward = true;
-	//std::cout << "--------------------------->" << std::endl;
-	//std::cout << "Energy for index " << upwardExtend.m_index << ": " << upwardExtend.m_energy << std::endl;
+        upwardExtend.m_tracker = false;
+
+        upwardExtend.m_dir.set(clusterParams.getAxis().x(), 
+			       clusterParams.getAxis().y(), 
+			       clusterParams.getAxis().z());
+
+        upwardExtend.m_dir.set(clusterParams.getCentroid().x(), 
+			       clusterParams.getCentroid().y(), 
+			       clusterParams.getCentroid().z());
+
+        // check if cluster enters the acd 
+        bool entersLat = AcdRecon::ReconFunctions::entersLat(upwardExtend,s_acdVolume,upwardExit);
+
+        // overwrittes values of upwardExtend
 	AcdRecon::ReconFunctions::convertToAcdRep(calClusterTds->getMomParams(), upwardExtend);
- 	
-	// get the LAT exit points
+
+	// get the LAT exit points 
  	if ( ! AcdRecon::ReconFunctions::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {
- 	  log << MSG::WARNING << "AcdRecon::exitsLat() failed on upward end - we'll bravely carry on" << endreq;
-	  return StatusCode::SUCCESS;
+          if ( !entersLat ) {
+            // Don't care if exitLat fails if cluster never entered the ACD volume
+            log << MSG::DEBUG << "AcdRecon::exitsLat() CalCluster doesn't enter LAT - we'll bravely carry on" << endreq;
+            return StatusCode::SUCCESS;
+          } else {
+            // Something else happened...
+            log << MSG::WARNING << "AcdRecon::exitsLat() failed for CalCluster - we'll bravely carry on" << endreq;
+            return StatusCode::SUCCESS;
+          }
  	}
 		
  	// keep track of all the pocas to hit tiles
