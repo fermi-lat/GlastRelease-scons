@@ -37,13 +37,13 @@ rdbModel rdbModel-02-14-05
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-09-07
-GlastSvc GlastSvc-10-00-04
+Event Event-14-09-09
+GlastSvc GlastSvc-10-00-05
 GuiSvc GuiSvc-03-08-03
 DetDisplay DetDisplay-03-03-05
 userAlg userAlg-06-06-08
 RootDisplay RootDisplay-00-03-02
-EventIntegrity EventIntegrity-00-08-05
+EventIntegrity EventIntegrity-00-08-07
 
 # ROOT data descriptions
 commonRootData commonRootData-02-16-01
@@ -62,7 +62,7 @@ RootConvert RootConvert-01-49-04
 RootIo RootIo-24-10-11
 
 configData configData-01-11-03
-Trigger Trigger-07-01-05
+Trigger Trigger-07-02-00
 
 FluxSvc FluxSvc-06-55-09
 CRflux CRflux-01-17-10
@@ -75,13 +75,13 @@ OnboardFilterTds OnboardFilterTds-00-10-02
 CalUtil CalUtil-03-14-05
 CalXtalResponse CalXtalResponse-00-25-02
 CalDigi CalDigi-03-07-04
-CalRecon CalRecon-06-14-08
-GCRCalib GCRCalib-01-08-01
+CalRecon CalRecon-06-15-01
+GCRCalib GCRCalib-01-08-04
 
 # Tracker
 TkrDigi TkrDigi-02-10-11
 TkrUtil TkrUtil-03-22-10
-TkrRecon TkrRecon-10-26-04
+TkrRecon TkrRecon-10-27-01
 
 # ACD
 AcdDigi AcdDigi-03-10-05
@@ -101,9 +101,9 @@ CalibSvc CalibSvc-00-40-06
 calibRootData calibRootData-01-07-11
 
 # ntuple
-ntupleWriterSvc ntupleWriterSvc-06-00-00
+ntupleWriterSvc ntupleWriterSvc-06-00-01
 merit merit-06-36-07
-AnalysisNtuple AnalysisNtuple-02-59-04
+AnalysisNtuple AnalysisNtuple-02-59-06
 
 # LDF
 CHS/eventFile eventFile-09-00-02
@@ -119,7 +119,7 @@ HepRepXml HepRepXml-00-08-07
 
 # classification
 classifier classifier-01-06-05
-GlastClassify GlastClassify-07-08-04
+GlastClassify GlastClassify-07-08-06
 
 Interleave Interleave-01-06-10
 
@@ -141,7 +141,7 @@ calibGenTKR calibGenTKR-04-08-01
 # not used in Gleam, here as a build check
 detCheck detCheck-01-07-05
 
-Gleam Gleam-07-06-04
+Gleam Gleam-07-06-05
 
 SConsFiles SConsFiles-00-15-00
 GlastRelease-scons/containerSettings containerSettings-00-03-01
