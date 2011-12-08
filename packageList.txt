@@ -75,7 +75,7 @@ OnboardFilterTds OnboardFilterTds-00-10-02
 CalUtil CalUtil-03-14-05
 CalXtalResponse CalXtalResponse-00-25-02
 CalDigi CalDigi-03-07-04
-CalRecon CalRecon-06-15-01
+CalRecon CalRecon-06-15-02
 GCRCalib GCRCalib-01-08-04
 
 # Tracker
@@ -86,7 +86,7 @@ TkrRecon TkrRecon-10-27-01
 # ACD
 AcdDigi AcdDigi-03-10-05
 AcdUtil AcdUtil-03-01-05
-AcdRecon AcdRecon-05-01-14
+AcdRecon AcdRecon-05-01-15
 
 # Geant4
 GlastMS GlastMS-01-00-01
