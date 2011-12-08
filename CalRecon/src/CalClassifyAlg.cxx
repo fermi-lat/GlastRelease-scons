@@ -79,7 +79,7 @@ CalClassifyAlg::CalClassifyAlg(const std::string & name, ISvcLocator * pSvcLocat
   m_calReconSvc(0)
 {   
   declareProperty("classifierToolName", m_classifierToolName = "CalClusterNBClassifyTool");
-  declareProperty("maxEtoSortByClassification", m_maxEtoSortByClassification = 50.) ;
+  declareProperty("maxEtoSortByClassification", m_maxEtoSortByClassification = 300.) ;
 }
 
 StatusCode CalClassifyAlg::initialize()
