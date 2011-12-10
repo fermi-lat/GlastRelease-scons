@@ -12,7 +12,9 @@ ClassImp(AcdTkrAssoc) ;
 AcdTkrAssoc::AcdTkrAssoc() 
   :TObject(),
    m_hitPocae(AcdTkrHitPocaV2::Class()),
-   m_gapPocae(AcdTkrGapPocaV2::Class()){   
+   m_gapPocae(AcdTkrGapPocaV2::Class()),
+   m_cov_start(5),
+   m_cov_end(5){
   Clear("");
 }
 
@@ -109,8 +111,8 @@ void AcdTkrAssoc::Clear(Option_t* option)
   m_start.Clear(option);
   m_dir.Clear(option);
   m_arcLength = 0.;
-  m_cov_start.Clear(option);
-  m_cov_end.Clear(option);
+  m_cov_start.Zero();
+  m_cov_end.Zero();
   m_tkrSSDVeto = 0;
   m_cornerDoca = 0.;  
 }

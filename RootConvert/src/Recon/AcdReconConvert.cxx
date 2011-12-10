@@ -367,8 +367,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   }
 
   void convert( const Event::AcdTkrAssoc& tds, AcdTkrAssoc& root) {
-    static TMatrixDSym covStart;
-    static TMatrixDSym covEnd;
+    static TMatrixDSym covStart(5);
+    static TMatrixDSym covEnd(5);
 
     TVector3 start = convert( tds.getStart() );
     TVector3 dir = convert3vector( tds.getDir() );
@@ -404,8 +404,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   }
   
   void convert( const AcdTkrAssoc& root, Event::AcdTkrAssoc& tds) { 
-    static HepSymMatrix covStart;
-    static HepSymMatrix covEnd;
+    static HepSymMatrix covStart(5);
+    static HepSymMatrix covEnd(5);
     Point start = convertPoint( root.getStart() );
     Vector dir = convertVector( root.getDir() );
     convert( root.getCovStart(), covStart );
@@ -826,21 +826,29 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   }
 
   void convert( const HepSymMatrix& tds, TMatrixDSym& root) {
+    //ADW: Make this function do something...
+    //return;
+    if ( tds.num_row() != root.GetNrows() ) return;
+    int size = tds.num_row();
+    for (int i = 0; i < size; i++) {
+      for (int j = i; j < size; j++) {
+        root[i][j] = root[j][i] = tds[i][j];
+      }
+    }
     return;
-    if ( tds.num_row() < 2 ) return;
-    root.ResizeTo(2,2);
-    root[0][0] = tds[0][0];
-    root[1][0] = tds[1][0];
-    root[1][1] = tds[1][1];
   }
 
   void convert( const TMatrixDSym& root, HepSymMatrix& tds) {    
+    //ADW: Make this function do something...
+    //return;
+    if ( root.GetNrows() != tds.num_row() ) return;
+    Int_t size = root.GetNcols();
+    for (int i = 0; i < size; i++) {
+      for (int j = i; j < size; j++) {
+        tds[i][j] = tds[j][i] = root[i][j];
+      }
+    }
     return;
-    if ( root.GetNcols() < 2 ) return;
-    if ( tds.num_row() < 2 ) return;
-    tds[0][0] = root[0][0];
-    tds[1][0] = root[1][0];
-    tds[1][1] = root[1][1];
   }
 
 }
