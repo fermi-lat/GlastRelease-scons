@@ -18,14 +18,18 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IObjManager.h"
-#include "GaudiKernel/IToolFactory.h"
+//#include "GaudiKernel/IObjManager.h"
+//#include "GaudiKernel/IToolFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
+#include "FluxObs.h"
+
 #include "CLHEP/Random/Random.h"
+
+#include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
 
 #include "astro/SkyDir.h"
 #include "astro/EarthOrbit.h"
@@ -185,6 +189,8 @@ private:
 
     IParticlePropertySvc* m_partSvc;
 
+    IRandomAccess *m_randTool;
+
     /// Allow SvcFactory to instantiate the service.
     friend class SvcFactory<FluxSvc>;
 
@@ -198,6 +204,9 @@ private:
     std::string m_dtd_file;
     /// the "current" flux object
     IFlux* m_currentFlux;
+
+    FluxObs *m_fluxObs;
+    IToolSvc *m_toolSvc; // to handle observer
 
 
     /// Reference to application manager UI
@@ -302,9 +311,9 @@ private:
 };
 
 // declare the service factories for the FluxSvc
-static SvcFactory<FluxSvc> a_factory;
-const ISvcFactory& FluxSvcFactory = a_factory;
-
+//static SvcFactory<FluxSvc> a_factory;
+//const ISvcFactory& FluxSvcFactory = a_factory;
+DECLARE_SERVICE_FACTORY(FluxSvc);
 
 static std::string default_source_library("$(FLUXXMLPATH)/source_library.xml");
 static std::string default_dtd_file("$(FLUXXMLPATH)/source.dtd");
@@ -385,7 +394,7 @@ StatusCode FluxSvc::initialize ()
     Spectrum::setStartTime(m_times.launch());
 
 
-    status = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
+    status = serviceLocator()->queryInterface(IAppMgrUI::interfaceID(), (void**)&m_appMgrUI);
 
     // parse file with source library entries (consistent with obssim)
     if( !m_xmlFiles.value().empty() ) {
@@ -466,7 +475,7 @@ StatusCode FluxSvc::initialize ()
     // if found, make one and call the special method  
 
     // Manager of the AlgTool Objects
-    IObjManager* objManager=0;             
+    /* IObjManager* objManager=0;             
 
     // locate Object Manager to locate later the tools 
     status = serviceLocator()->service("ApplicationMgr", objManager );
@@ -499,6 +508,25 @@ StatusCode FluxSvc::initialize ()
         }
 
     }
+*/
+
+    // get a pointer to the tool service
+    status = service( "ToolSvc", m_toolSvc, true );
+    if (!status.isSuccess()) {
+      log << MSG::ERROR << "Unable to get a handle to the tool service" << endmsg;
+      return status;
+    } else {
+      log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
+    }
+
+
+    status = m_toolSvc->retrieveTool("FluxSvcRandom", m_randTool);
+    if (status.isFailure()) 
+        log << MSG::WARNING << "unable to create tool FluxSvcRandom" << endreq;
+
+    m_fluxObs = new FluxObs();
+    m_fluxObs->setFluxSvc(this);
+    m_toolSvc->registerObserver(m_fluxObs);
 
     // attach an observer to be notified when orbital position changes
     // set callback to be notified when the position changes
@@ -550,7 +578,7 @@ StatusCode FluxSvc::finalize ()
 StatusCode FluxSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
     if ( IID_IFluxSvc.versionMatch(riid) )  {
         *ppvInterface = (IFluxSvc*)this;
-    }else if (IID_IRunable.versionMatch(riid) ) {
+    }else if (IRunable::interfaceID() == riid ) {
         *ppvInterface = (IRunable*)this;
     } else  {
         return Service::queryInterface(riid, ppvInterface);
@@ -662,7 +690,7 @@ StatusCode FluxSvc::run(){
     //
     IAlgManager* theAlgMgr;
     status = serviceLocator( )->getService( "ApplicationMgr",
-        IID_IAlgManager,
+        IAlgManager::interfaceID(),
         (IInterface*&)theAlgMgr );
     IAlgorithm* theIAlg;
     Algorithm*  theAlgorithm=0;

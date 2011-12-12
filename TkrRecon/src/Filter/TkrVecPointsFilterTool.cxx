@@ -151,8 +151,9 @@ private:
     MinSpanTreeNodeListsMap                 m_mstNodeListsMap;
 };
 
-static ToolFactory<TkrVecPointsFilterTool> s_factory;
-const IToolFactory& TkrVecPointsFilterToolFactory = s_factory;
+//static ToolFactory<TkrVecPointsFilterTool> s_factory;
+//const IToolFactory& TkrVecPointsFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrVecPointsFilterTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

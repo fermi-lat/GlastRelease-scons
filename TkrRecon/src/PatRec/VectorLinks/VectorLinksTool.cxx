@@ -106,8 +106,9 @@ private:
 };
 
 
-static ToolFactory<VectorLinksTool> s_factory;
-const IToolFactory& VectorLinksToolFactory = s_factory;
+//static ToolFactory<VectorLinksTool> s_factory;
+//const IToolFactory& VectorLinksToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(VectorLinksTool);
 
 //
 // Class constructor, no initialization here

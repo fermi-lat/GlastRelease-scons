@@ -34,9 +34,9 @@ $Header$
 #include <string.h>
 #include <cctype>
 
-static const SvcFactory<TkrAlignmentSvc> s_factory;
-const ISvcFactory& TkrAlignmentSvcFactory = s_factory;
-
+//static const SvcFactory<TkrAlignmentSvc> s_factory;
+//const ISvcFactory& TkrAlignmentSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY(TkrAlignmentSvc);
 
 // Service parameters which can be set at run time must be declared.
 // This should be done in the constructor.

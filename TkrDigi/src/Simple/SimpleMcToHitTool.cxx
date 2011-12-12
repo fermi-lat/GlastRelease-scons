@@ -26,8 +26,9 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 
-static const ToolFactory<SimpleMcToHitTool>    s_factory;
-const IToolFactory& SimpleMcToHitToolFactory = s_factory;
+//static const ToolFactory<SimpleMcToHitTool>    s_factory;
+//const IToolFactory& SimpleMcToHitToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(SimpleMcToHitTool);
 
 
 SimpleMcToHitTool::SimpleMcToHitTool(const std::string& type,

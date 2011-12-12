@@ -22,8 +22,9 @@
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
 
-static CnvFactory<XmlCalMuSlopeCnv> s_factory;
-const  ICnvFactory& XmlCalMuSlopeCnvFactory = s_factory;
+//static CnvFactory<XmlCalMuSlopeCnv> s_factory;
+//const  ICnvFactory& XmlCalMuSlopeCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlCalMuSlopeCnv);
 
 
 

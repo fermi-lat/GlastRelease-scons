@@ -15,9 +15,9 @@
 
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrDigiHitToDigiAlg>    Factory;
-const IAlgFactory& TkrDigiHitToDigiAlgFactory = Factory;
-
+//static const AlgFactory<TkrDigiHitToDigiAlg>    Factory;
+//const IAlgFactory& TkrDigiHitToDigiAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDigiHitToDigiAlg);
 
 TkrDigiHitToDigiAlg::TkrDigiHitToDigiAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator)

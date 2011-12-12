@@ -40,8 +40,10 @@ public:
 
 };
 
-static ToolFactory<LinkAndTreeFindTrackTool> s_factory;
-const IToolFactory& LinkAndTreeFindTrackToolFactory = s_factory;
+//static ToolFactory<LinkAndTreeFindTrackTool> s_factory;
+//const IToolFactory& LinkAndTreeFindTrackToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(LinkAndTreeFindTrackTool);
+
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter
 //

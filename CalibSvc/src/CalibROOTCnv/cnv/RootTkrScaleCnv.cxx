@@ -29,8 +29,9 @@
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
 
-static CnvFactory<RootTkrScaleCnv> s_factory;
-const  ICnvFactory& RootTkrScaleCnvFactory = s_factory;
+//static CnvFactory<RootTkrScaleCnv> s_factory;
+//const  ICnvFactory& RootTkrScaleCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(RootTkrScaleCnv);
 
 RootTkrScaleCnv::RootTkrScaleCnv( ISvcLocator* svc) :
   RootTkrBaseCnv(svc, CLID_Calib_TKR_ChargeScale) { 

@@ -31,8 +31,9 @@ private:
 
 //------------------------------------------------------------------------
 
-static const AlgFactory<FilterFailAlg>  Factory;
-const IAlgFactory& FilterFailAlgFactory = Factory;
+//static const AlgFactory<FilterFailAlg>  Factory;
+//const IAlgFactory& FilterFailAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(FilterFailAlg);
 
 //------------------------------------------------------------------------
 //! ctor

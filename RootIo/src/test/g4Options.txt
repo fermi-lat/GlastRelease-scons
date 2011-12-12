@@ -10,13 +10,14 @@ ApplicationMgr.DLLs   = { "GlastSvc", "G4Generator",
                           "CalRecon", "TkrRecon", "AcdRecon"};
 
 ApplicationMgr.ExtSvc = { 
-    "GlastEventSelector/EventSelector" , 
-    "EventCnvSvc", 
+    "DbEvtSelector/EventSelector" , 
     "GlastDetSvc" 
     };
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
+
+ApplicationMgr.HistogramPersistency = "NONE";
 
 // Stuff for detModel
 GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";

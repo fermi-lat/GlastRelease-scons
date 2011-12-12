@@ -31,8 +31,9 @@ public:
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<RegisterCorba> s_factory;
-const IToolFactory& RegisterCorbaFactory = s_factory;
+//static ToolFactory<RegisterCorba> s_factory;
+//const IToolFactory& RegisterCorbaFactory = s_factory;
+DECLARE_TOOL_FACTORY(RegisterCorba);
 
 // Standard Constructor
 RegisterCorba::RegisterCorba(const std::string& type, 

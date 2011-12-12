@@ -43,9 +43,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_OnboardFilter );
 
-static const AlgFactory<test_OnboardFilter>  Factory;
-const IAlgFactory& test_OnboardFilterFactory = Factory;
-
+//static const AlgFactory<test_OnboardFilter>  Factory;
+//const IAlgFactory& test_OnboardFilterFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_OnboardFilter);
 //------------------------------------------------------------------------
 //! ctor
 test_OnboardFilter::test_OnboardFilter(const std::string& name, 

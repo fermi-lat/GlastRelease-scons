@@ -4,11 +4,13 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ LdfConverter-04-05-00 08-Dec-2011    hmk Merge Gaudi v21r7
  LdfConverter-04-04-07 23-Aug-2011    hmk Patches for Windows
  LdfConverter-04-04-06 27-Jul-2011    hmk Merge in GlastReleasev15r47p12 branch
  LdfConverter-04-04-05 08-Mar-2011    jrb get test program to work in SCons build
  LdfConverter-04-04-04 02-Feb-2011    hmk Make use of GlastSvc generic
  LdfConverter-04-04-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ LdfConverter-04-04-02-gr01 06-Oct-2010 hmk upgrade gaudi v21r7 along branch
  LdfConverter-04-04-02 12-Jun-2010    jrb upgrades for SCons builds
 LdfConverter-04-04-01 10-Nov-2009 HMK Use EvtMax to denote reading in a 
         complete input file

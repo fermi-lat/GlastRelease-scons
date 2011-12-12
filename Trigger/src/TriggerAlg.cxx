@@ -131,8 +131,9 @@ private:
 };
 
 //------------------------------------------------------------------------------
-static const AlgFactory<TriggerAlg>  Factory;
-const IAlgFactory& TriggerAlgFactory = Factory;
+//static const AlgFactory<TriggerAlg>  Factory;
+//const IAlgFactory& TriggerAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TriggerAlg);
 //------------------------------------------------------------------------------
 /// 
 TriggerAlg::TriggerAlg(const std::string& name, ISvcLocator* pSvcLocator) 

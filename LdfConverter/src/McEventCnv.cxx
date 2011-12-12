@@ -6,8 +6,10 @@
 
 #define CNV_MCEVENTCNV_CPP 
 
+#include "GaudiKernel/Converter.h"
 #include "GaudiKernel/CnvFactory.h"
-#include "McEventCnv.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 
 // Event for creating the McEvent stuff
 #include "Event/TopLevel/MCEvent.h"
@@ -18,16 +20,70 @@
 // RCS Id for identification of object version
 static const char* rcsid = "$Id$";
 
-// Instantiation of a static factory class used by clients to create
-// instances of this service
-static CnvFactory<McEventCnv> s_factory;
-const ICnvFactory& McEventCnvFactory = s_factory;
-
-
-McEventCnv::McEventCnv(ISvcLocator* svc)
-: LdfBaseCnv(classID(), svc)
+class  McEventCnv : public Converter //virtual public IGlastCnv, public Converter 
 {
-  declareObject("/Event/MC", objType(), "PASS");
+
+  friend class CnvFactory<McEventCnv>;
+
+
+protected:
+
+    /**
+        Constructor for this converter
+        @param svc a ISvcLocator interface to find services
+        @param clid the type of object the converter is able to convert
+    */
+    McEventCnv(ISvcLocator* svc);
+
+    virtual ~McEventCnv() { };
+
+public:
+    /// Query interfaces of Interface
+    //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    static const CLID&         classID()     {return CLID_McEvent;}
+    static const unsigned char storageType() {return TEST_StorageType;}
+
+    /// Initialize the converter
+    virtual StatusCode initialize();
+
+    /// Initialize the converter
+    virtual StatusCode finalize();
+
+    /// Retrieve the class type of objects the converter produces. 
+    virtual const CLID& objType() const {return CLID_McEvent;}
+
+    /// Retrieve the class type of the data store the converter uses.
+    // MSF: Masked to generate compiler error due to interface change
+    virtual long repSvcType() const {return Converter::i_repSvcType();}
+
+    /// Create the transient representation of an object.
+    virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
+
+    /// Methods to set and return the path in TDS for output of this converter
+  //  virtual void setPath(const std::string& path) {m_path = path;}
+    virtual const std::string& getPath() const    {return m_path;}
+
+private:
+
+    std::string m_path;
+
+};
+
+
+McEventCnv::McEventCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_McEvent, svc)
+{
+  m_path = "/Event/MC";
+}
+StatusCode McEventCnv::initialize() 
+{
+    StatusCode status = Converter::initialize();
+
+    return status;
+}
+
+StatusCode McEventCnv::finalize() 
+{
+    return Converter::finalize();
 }
 
 
@@ -42,4 +98,5 @@ StatusCode McEventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObje
 }
 
 
-const CLID& McEventCnv::classID(){ return Event::MCEvent::classID();}
+//const CLID& McEventCnv::classID(){ return Event::MCEvent::classID();}
+

@@ -55,8 +55,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseAnc> Factory;
-const IAlgFactory& UseAncFactory = Factory;
+//static const AlgFactory<UseAnc> Factory;
+//const IAlgFactory& UseAncFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseAnc);
 
 
 UseAnc::UseAnc(const std::string&  name, 
@@ -197,13 +198,13 @@ void UseAnc::processNew(CalibData::AncCalibTaggerPed* pTagger,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << pathTagger << endreq
       << "Serial #" <<  pTagger->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pTagger->validSince()).hours()
-      << "  Vend: " << (pTagger->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pTagger->validSince()).hour(true)
+      << "  Vend: " << (pTagger->validTill()).hour(true) << endreq;
   
   log << MSG::INFO << "And retrieved with path " << pathQdc << endreq
       << "Serial #" <<  pQdc->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pQdc->validSince()).hours()
-      << "  Vend: " << (pQdc->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pQdc->validSince()).hour(true)
+      << "  Vend: " << (pQdc->validTill()).hour(true) << endreq;
   
   if (!done) {
     done = true;

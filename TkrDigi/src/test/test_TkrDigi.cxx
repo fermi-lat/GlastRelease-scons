@@ -39,8 +39,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_TkrDigi );
 
-static const AlgFactory<test_TkrDigi>  Factory;
-const IAlgFactory& test_TkrDigiFactory = Factory;
+//static const AlgFactory<test_TkrDigi>  Factory;
+//const IAlgFactory& test_TkrDigiFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_TkrDigi);
 
 //------------------------------------------------------------------------
 //! ctor

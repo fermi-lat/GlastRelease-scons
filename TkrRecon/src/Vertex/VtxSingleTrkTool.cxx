@@ -14,8 +14,9 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/EventModel.h"
 
-static ToolFactory<VtxSingleTrkTool> s_factory;
-const IToolFactory& VtxSingleTrkToolFactory = s_factory;
+//static ToolFactory<VtxSingleTrkTool> s_factory;
+//const IToolFactory& VtxSingleTrkToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(VtxSingleTrkTool);
 
 
 StatusCode VtxSingleTrkTool::doVtxFit(Event::TkrVertexCol& /*theVtxCol*/)

@@ -28,8 +28,9 @@ $Header$
 
 #include "facilities/Util.h"
 
-static const SvcFactory<TkrBadStripsSvc> s_factory;
-const ISvcFactory& TkrBadStripsSvcFactory = s_factory;
+//static const SvcFactory<TkrBadStripsSvc> s_factory;
+//const ISvcFactory& TkrBadStripsSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY(TkrBadStripsSvc);
 
 namespace {
     const std::string mType[2] = {"SIM", "REC"};

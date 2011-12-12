@@ -159,8 +159,9 @@ private:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<TkrQueryClustersTool> s_factory;
-const IToolFactory& TkrQueryClustersToolFactory = s_factory;
+//static ToolFactory<TkrQueryClustersTool> s_factory;
+//const IToolFactory& TkrQueryClustersToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrQueryClustersTool);
 
 // Standard Constructor
 TkrQueryClustersTool::TkrQueryClustersTool(const std::string& type, 

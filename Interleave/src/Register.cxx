@@ -36,8 +36,9 @@ public:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<RegisterSampledBackground> s_factory;
-const IToolFactory& RegisterSampledBackgroundFactory = s_factory;
+//static ToolFactory<RegisterSampledBackground> s_factory;
+//const IToolFactory& RegisterSampledBackgroundFactory = s_factory;
+DECLARE_TOOL_FACTORY(RegisterSampledBackground);
 
 // Standard Constructor
 RegisterSampledBackground::RegisterSampledBackground(const std::string& type, 

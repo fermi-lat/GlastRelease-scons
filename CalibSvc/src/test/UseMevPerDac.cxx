@@ -50,9 +50,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseMevPerDac> Factory;
-const IAlgFactory& UseMevPerDacFactory = Factory;
-
+//static const AlgFactory<UseMevPerDac> Factory;
+//const IAlgFactory& UseMevPerDacFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseMevPerDac);
 
 UseMevPerDac::UseMevPerDac(const std::string&  name, 
                  ISvcLocator*        pSvcLocator )
@@ -161,8 +161,8 @@ void UseMevPerDac::processNew(CalibData::CalMevPerDacCol* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
   
   if (!done) {
     done = true;

@@ -48,8 +48,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseIntNonlin> Factory;
-const IAlgFactory& UseIntNonlinFactory = Factory;
+//static const AlgFactory<UseIntNonlin> Factory;
+//const IAlgFactory& UseIntNonlinFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseIntNonlin);
 
 
 UseIntNonlin::UseIntNonlin(const std::string&  name, 
@@ -157,8 +158,8 @@ void UseIntNonlin::processNew(CalibData::CalCalibIntNonlin* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
   
   if (!done) {
     done = true;

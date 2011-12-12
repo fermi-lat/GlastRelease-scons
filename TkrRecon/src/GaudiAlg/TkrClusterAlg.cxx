@@ -71,8 +71,9 @@ private:
     bool m_redoToTsOnly;
 };
 
-static const AlgFactory<TkrClusterAlg>  Factory;
-const IAlgFactory& TkrClusterAlgFactory = Factory;
+//static const AlgFactory<TkrClusterAlg>  Factory;
+//const IAlgFactory& TkrClusterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrClusterAlg);
 
 TkrClusterAlg::TkrClusterAlg(const std::string& name, 
                              ISvcLocator* pSvcLocator) :

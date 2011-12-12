@@ -21,8 +21,9 @@
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
 
-static CnvFactory<XmlTest1Cnv> s_factory;
-const  ICnvFactory& XmlTest1CnvFactory = s_factory;
+//static CnvFactory<XmlTest1Cnv> s_factory;
+//const  ICnvFactory& XmlTest1CnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlTest1Cnv);
 
 
 

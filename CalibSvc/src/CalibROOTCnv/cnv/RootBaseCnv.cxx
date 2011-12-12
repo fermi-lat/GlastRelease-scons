@@ -57,7 +57,7 @@ StatusCode RootBaseCnv::initialize() {
   // I guess the service names are assigned in jobOptions?
 
   serviceLocator()->getService ("CalibDataSvc",
-                                IID_IDataProviderSvc,
+                                IDataProviderSvc::interfaceID(),
                                 (IInterface*&)dp);
   setDataProvider(dp);
   

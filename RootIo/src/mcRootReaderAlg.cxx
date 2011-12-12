@@ -110,9 +110,9 @@ private:
 
 };
 
-static const AlgFactory<mcRootReaderAlg>  Factory;
-const IAlgFactory& mcRootReaderAlgFactory = Factory;
-
+//static const AlgFactory<mcRootReaderAlg>  Factory;
+//const IAlgFactory& mcRootReaderAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(mcRootReaderAlg);
 
 mcRootReaderAlg::mcRootReaderAlg(const std::string& name, 
                                  ISvcLocator* pSvcLocator) 
@@ -643,6 +643,6 @@ void mcRootReaderAlg::endEvent() {
 StatusCode mcRootReaderAlg::finalize()
 {
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized();No longer available in Gaudi v21r7
     return sc;
 }

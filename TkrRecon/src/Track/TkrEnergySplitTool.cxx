@@ -156,8 +156,9 @@ private:
     DataSvc*                        m_dataSvc;
 };
 
-static ToolFactory<TkrEnergySplitTool> s_factory;
-const IToolFactory& TkrEnergySplitToolFactory = s_factory;
+//static ToolFactory<TkrEnergySplitTool> s_factory;
+//const IToolFactory& TkrEnergySplitToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrEnergySplitTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

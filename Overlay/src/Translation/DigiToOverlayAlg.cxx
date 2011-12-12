@@ -41,8 +41,9 @@ private:
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<DigiToOverlayAlg>    Factory;
-const IAlgFactory& DigiToOverlayAlgFactory = Factory;
+//static const AlgFactory<DigiToOverlayAlg>    Factory;
+//const IAlgFactory& DigiToOverlayAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(DigiToOverlayAlg);
 
 DigiToOverlayAlg::DigiToOverlayAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator)

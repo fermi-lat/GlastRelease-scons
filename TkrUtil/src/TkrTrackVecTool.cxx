@@ -38,8 +38,9 @@ private:
     DataSvc*               m_dataSvc;
 };
 
-static ToolFactory<TkrTrackVecTool> s_factory;
-const IToolFactory& TkrTrackVecToolFactory = s_factory;
+//static ToolFactory<TkrTrackVecTool> s_factory;
+//const IToolFactory& TkrTrackVecToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrTrackVecTool);
 
 TkrTrackVecTool::TkrTrackVecTool(const std::string& type, 
                                  const std::string& name, 

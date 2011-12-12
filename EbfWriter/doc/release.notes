@@ -4,11 +4,13 @@
  * @verbatim
  * EOH *
 
+ EbfWriter-01-10-00 05-Dec-2011    HMK Merge in Gaudi v21r7 upgrade
  EbfWriter-01-09-01 20-May-2011    HMK CLHEP 2.1.0.1
  EbfWriter-01-09-00  4-Jan-2011     TU new scheme for retrieving cal params
  EbfWriter-01-08-05 17-Dec-2010  lsrea SCons fixes
  EbfWriter-01-08-04 16-Dec-2010  lsrea fixes for SCons
  EbfWriter-01-08-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ EbfWriter-01-08-02-gr01 06-Oct-2010 hmk Upgrade Gaudi along branch
  EbfWriter-01-08-02 12-Jun-2010    jrb upgrades for SCons builds
  EbfWriter-01-08-01 13-Nov-2009    jrb Updates for SCons
  * v1r8p0 17-Feb-2009 TU  Use LdfEvent::Gem.h to get trigger primitive information for simulations (kludge version)

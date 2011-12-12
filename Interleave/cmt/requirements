@@ -1,6 +1,6 @@
 package Interleave
 
-version v1r6p10
+version v1r7p0
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
 
@@ -37,6 +37,7 @@ use AnalysisNtuple *
 use OnboardFilterTds *
 use RootConvert *
 use RootIo *
+use RootmapPolicy * GlastPolicy
 
 
 use xmlBase v*
@@ -52,8 +53,9 @@ macro xml "" WIN32 "*.xml"
 
 library Interleave \
  -s=../src $(source) \
- -s=Dll *.cxx \
  -s=../xml $(xml)
+
+apply_pattern generate_rootmap library=Interleave
 
 # test program, using local joboptions
 public set JOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt

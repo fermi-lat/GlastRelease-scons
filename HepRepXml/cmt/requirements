@@ -1,5 +1,5 @@
 package HepRepXml
-version v0r8p7
+version v0r9p0
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -12,6 +12,7 @@ apply_pattern package_include
 private
 
 use HepRepSvc
+use RootmapPolicy * GlastPolicy
 use gr_app
 
 apply_pattern package_headers
@@ -19,6 +20,8 @@ apply_pattern package_Cshlibflags
 
 library HepRepXml *.cxx \
  ${HepRepXml_headers}
+
+apply_pattern generate_rootmap library=HepRepXml
 
 # test program, using local joboptions
 # just tests if the stuff loads... 

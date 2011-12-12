@@ -229,8 +229,10 @@ private:
 
 };
 
-static ToolFactory<ComboFindTrackTool> s_factory;
-const IToolFactory& ComboFindTrackToolFactory = s_factory;
+//static ToolFactory<ComboFindTrackTool> s_factory;
+//const IToolFactory& ComboFindTrackToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(ComboFindTrackTool);
+
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter
 //

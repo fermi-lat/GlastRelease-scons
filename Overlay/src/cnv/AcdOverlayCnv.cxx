@@ -93,8 +93,9 @@ private:
 };
 
 
- static CnvFactory<AcdOverlayCnv> s_factory;
- const ICnvFactory& AcdOverlayCnvFactory = s_factory;
+ //static CnvFactory<AcdOverlayCnv> s_factory;
+ //const ICnvFactory& AcdOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(AcdOverlayCnv);
 
  AcdOverlayCnv::AcdOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, ObjectVector<Event::AcdOverlay>::classID(), svc) 
 {

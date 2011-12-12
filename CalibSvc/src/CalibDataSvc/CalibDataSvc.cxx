@@ -15,7 +15,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/TimePoint.h"
+//#include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/MCEvent.h"
 #include "Event/TopLevel/DigiEvent.h"
@@ -27,8 +27,10 @@
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
-static SvcFactory<CalibDataSvc> s_factory;
-const ISvcFactory& CalibDataSvcFactory = s_factory;
+//static SvcFactory<CalibDataSvc> s_factory;
+//const ISvcFactory& CalibDataSvcFactory = s_factory;
+
+DECLARE_SERVICE_FACTORY(CalibDataSvc);
 
 /// Standard Constructor
 CalibDataSvc::CalibDataSvc(const std::string& name,ISvcLocator* svc) :
@@ -375,13 +377,13 @@ StatusCode CalibDataSvc::queryInterface(const InterfaceID& riid,
 {
   // With the highest priority return the specific interfaces
   // If interfaces are not directly available, try out a base class
-  if ( IID_IDetDataSvc.versionMatch(riid) ) {
+    if ( IDetDataSvc::interfaceID() == riid ) {
     *ppvInterface = (IDetDataSvc*)this;
-  } else if (IID_IInstrumentName.versionMatch(riid) ) {
+    } else if (IInstrumentName::interfaceID() == riid ) {
     *ppvInterface = (IInstrumentName*) this;
-  } else if ( IID_IIncidentListener.versionMatch(riid) ) {
+    } else if ( IIncidentListener::interfaceID() == riid ) {
     *ppvInterface = (IIncidentListener*)this;
-  } else if (IID_ICalibPathSvc.versionMatch(riid) ) {
+    } else if (ICalibPathSvc::interfaceID() == riid ) {
     *ppvInterface = (ICalibPathSvc*)this;
   } else {
     return DataSvc::queryInterface(riid, ppvInterface);
@@ -400,29 +402,33 @@ StatusCode CalibDataSvc::clearStore()   {
 
 
 /// Set the new event time 
-void CalibDataSvc::setEventTime(const ITime& time) {
+void CalibDataSvc::setEventTime(const Gaudi::Time& time) {
   m_eventTimeDefined = true;
   if (0 != m_eventTime ) delete m_eventTime; 
-  CalibData::CalibTime *pTime = new CalibData::CalibTime(time);   
+  //CalibData::CalibTime *pTime = new CalibData::CalibTime(time);   
+  Gaudi::Time *pTime = new Gaudi::Time(time);
   m_eventTime = pTime;
 
+  std::string str;
   if ((m_nEvent < 100) || (m_nEvent == ((m_nEvent/100) * 100) ) ) {
     (*m_log) << MSG::DEBUG << "Event Time set to " 
-             << pTime->getString() << endreq;
+        << pTime->format(true,"%c") << endreq;
+//             << pTime->getString() << endreq;
   }
 
 }
 
 /// Check if the event time has been set
-const bool CalibDataSvc::validEventTime() const { 
+bool CalibDataSvc::validEventTime() const { 
   return (m_eventTimeDefined); 
 }
 
 /// Get the event time  
-const ITime& CalibDataSvc::eventTime ( )  const { 
+const Gaudi::Time& CalibDataSvc::eventTime ( )  const { 
   using CalibData::CalibTime;
 
-  static CalibTime   badTime(facilities::Timestamp(0,0));
+  //static CalibTime   badTime(facilities::Timestamp(0,0));
+  static Gaudi::Time badTime(0,0);
   if (m_eventTime) {
     return *m_eventTime;
   }
@@ -598,7 +604,7 @@ StatusCode  CalibDataSvc::updateFswKeys() {
 StatusCode  CalibDataSvc::updateTime() {
   using CalibData::CalibTime;
 
-  //  MsgStream log( msgSvc(), name() );
+    MsgStream log( msgSvc(), name() ); // HMK temp
 
 
   if (!m_useEventTime) return StatusCode::SUCCESS;
@@ -637,7 +643,12 @@ StatusCode  CalibDataSvc::updateTime() {
 
     }             // end of switch
 
-    if (sc.isSuccess()) setEventTime(m_time);
+    if (sc.isSuccess()) {
+      Gaudi::Time myGaudiTime(m_time.getClibTime(),m_time.getNano());
+    //  m_time.getGaudiTime(myGaudiTime);
+      setEventTime(myGaudiTime);
+      //setEventTime(m_time.getGaudiTime());
+    }
 
     m_newEvent = false;
     return sc;
@@ -779,4 +790,5 @@ const std::string CalibDataSvc::getCalibPath(const
   }
   return path;
 }
+
 

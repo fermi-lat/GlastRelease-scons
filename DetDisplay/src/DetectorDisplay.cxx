@@ -70,8 +70,9 @@ private:
 
 
 // declare the service factories for the DetectorDisplay
-static ToolFactory<DetectorDisplay> a_factory;
-const IToolFactory& DetectorDisplayFactory = a_factory;
+//static ToolFactory<DetectorDisplay> a_factory;
+//const IToolFactory& DetectorDisplayFactory = a_factory;
+DECLARE_TOOL_FACTORY(DetectorDisplay);
 
 /// Standard Constructor
 DetectorDisplay::DetectorDisplay(const std::string& type, 

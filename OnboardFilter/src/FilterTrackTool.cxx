@@ -160,8 +160,9 @@ private:
     const TFC_geometryTkr* m_tkrGeo;
 };
 
-static ToolFactory<FilterTrackTool> s_factory;
-const IToolFactory& FilterTrackToolFactory = s_factory;
+//static ToolFactory<FilterTrackTool> s_factory;
+//const IToolFactory& FilterTrackToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(FilterTrackTool);
 //------------------------------------------------------------------------
 
 FilterTrackTool::FilterTrackTool(const std::string& type, 

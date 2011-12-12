@@ -4,7 +4,7 @@ package CalibSvc
 ### Might end up changing this name to have a prefix a bit more general
 ### than "Calib"; e.g., DetSvc or CondSvc
 
-version v0r40p6
+version v0r41p0
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
@@ -35,6 +35,7 @@ use GaudiInterface * IExternal
 use ROOT   * IExternal 
 use XMLEXT * IExternal v5r2*
 use MYSQLEXT * IExternal v*
+use RootmapPolicy v* GlastPolicy
 
 use LdfEvent v*
 
@@ -58,7 +59,7 @@ macro_append includes ' $(ppcmd)"$(idents_root)" '
 
 macro_append includes ' $(ppcmd)"$(Event_root)" ' 
 
-library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData  *.cxx\
+library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData -import=xmlUtil  *.cxx\
                         CalibDataSvc/*.cxx      \
                         CalibMySQLCnv/*.cxx     \
                         CalibXMLCnv/*.cxx       \
@@ -66,8 +67,10 @@ library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData  *.cx
                         CalibROOTCnv/*.cxx      \
                         CalibROOTCnv/cnv/*.cxx  \
                         util/*.cxx              \
-                        Dll/*.cxx ${CalibSvc_headers}
+                        ${CalibSvc_headers}
 
+
+apply_pattern generate_rootmap library=CalibSvc
 
 ## macro WinInclude "" WIN32 "test/*.h test/*.txt"
 

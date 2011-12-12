@@ -99,7 +99,7 @@ private:
     */
 };
 
-static ToolFactory<TkrAlignHitsTool> s_factory;
-const IToolFactory& TkrAlignHitsToolFactory = s_factory;
+//static ToolFactory<TkrAlignHitsTool> s_factory;
+//const IToolFactory& TkrAlignHitsToolFactory = s_factory;
 
 #endif

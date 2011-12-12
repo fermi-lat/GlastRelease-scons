@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-09-00 08-Dec-2011 HMK Merge in Gaudi v21r7
  GlastClassify-07-08-06 18-Nov-2011  TU Make sure the saveRows flag is set correctly each call to the setup method
  GlastClassify-07-08-05 17-Nov-2011  TU Updates to allow multiple variable types for ClassifyTool
  GlastClassify-07-08-04 22-Aug-2011  TU Fix linux related issues
@@ -19,8 +20,10 @@ $Id$
  GlastClassify-07-07-01 31-Jan-2011    hmk use IExternal/TMineExt rather than
                  TMine in rootExtensions
  GlastClassify-07-06-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ GlastClassify-07-06-03-gr01 06-Oct-2010 hmk Update Gaudi v21r7 along branch
  GlastClassify-07-06-03 14-Jun-2010    jrb for SCons builds
  GlastClassify-07-06-02 12-Jun-2010    jrb upgrades for SCons builds
+ GlastClassify-07-06-01-gr01 08-Sep-2010 HMK Update to Gaudi v21r7
  GlastClassify-07-06-01 13-Apr-2010  TU Update to Pass7_v17.10.xml with Anders' request to change FswGamState
  GlastClassify-07-05-01 07-Dec-2009    jrb Add stuff for SCons build
 12-Feb-10  v7r5p0gr03 TU Fix categorical variable buffer overwrite problem

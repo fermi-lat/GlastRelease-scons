@@ -81,8 +81,9 @@ namespace {
 }
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<TkrFlagHitsTool> s_factory;
-const IToolFactory& TkrFlagHitsToolFactory = s_factory;
+//static ToolFactory<TkrFlagHitsTool> s_factory;
+//const IToolFactory& TkrFlagHitsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrFlagHitsTool);
 
 // Standard Constructor
 TkrFlagHitsTool::TkrFlagHitsTool(const std::string& type, 

@@ -24,8 +24,9 @@
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
 
-static CnvFactory<XmlBadStripsCnv> s_factory;
-const  ICnvFactory& XmlBadStripsCnvFactory = s_factory;
+//static CnvFactory<XmlBadStripsCnv> s_factory;
+//const  ICnvFactory& XmlBadStripsCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlBadStripsCnv);
 
 XmlBadStripsCnv::XmlBadStripsCnv( ISvcLocator* svc) :
   XmlBaseCnv(svc, CLID_Calib_TKR_BadChan) {

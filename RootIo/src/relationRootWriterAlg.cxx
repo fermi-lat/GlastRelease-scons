@@ -107,8 +107,9 @@ private:
 };
 
 
-static const AlgFactory<relationRootWriterAlg>  Factory;
-const IAlgFactory& relationRootWriterAlgFactory = Factory;
+//static const AlgFactory<relationRootWriterAlg>  Factory;
+//const IAlgFactory& relationRootWriterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(relationRootWriterAlg);
 
 relationRootWriterAlg::relationRootWriterAlg(const std::string& name, 
                                  ISvcLocator* pSvcLocator) : 
@@ -532,7 +533,7 @@ StatusCode relationRootWriterAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No Longer available in Gaudi v21r7
     return sc;
 }
 

@@ -122,8 +122,9 @@ private:
 };
 
 
-static const AlgFactory<mcRootWriterAlg>  Factory;
-const IAlgFactory& mcRootWriterAlgFactory = Factory;
+//static const AlgFactory<mcRootWriterAlg>  Factory;
+//const IAlgFactory& mcRootWriterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(mcRootWriterAlg);
 
 mcRootWriterAlg::mcRootWriterAlg(const std::string& name, 
                                  ISvcLocator* pSvcLocator) : 
@@ -657,6 +658,6 @@ StatusCode mcRootWriterAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No longer available in Gaudi v21r7
     return sc;
 }

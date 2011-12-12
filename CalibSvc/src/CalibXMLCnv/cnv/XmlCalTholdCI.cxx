@@ -59,8 +59,9 @@ private:
 };
 
 // Begin implementation
-static CnvFactory<XmlCalTholdCICnv> s_factory;
-const  ICnvFactory& XmlCalTholdCICnvFactory = s_factory;
+//static CnvFactory<XmlCalTholdCICnv> s_factory;
+//const  ICnvFactory& XmlCalTholdCICnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlCalTholdCICnv);
 
 
 

@@ -31,8 +31,9 @@ private:
  
 };
 
-static const AlgFactory<checkTds>  Factory;
-const IAlgFactory& checkTdsFactory = Factory;
+//static const AlgFactory<checkTds>  Factory;
+//const IAlgFactory& checkTdsFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(checkTds);
 
 
 checkTds::checkTds(const std::string& name, ISvcLocator* pSvcLocator) : 

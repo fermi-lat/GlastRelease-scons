@@ -57,8 +57,9 @@ private:
     DataSvc*          m_dataSvc;
 };
 
-static ToolFactory<CalXtalToOverlayTool> s_factory;
-const IToolFactory& CalXtalToOverlayToolFactory = s_factory;
+//static ToolFactory<CalXtalToOverlayTool> s_factory;
+//const IToolFactory& CalXtalToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalXtalToOverlayTool);
 
 //------------------------------------------------------------------------
 CalXtalToOverlayTool::CalXtalToOverlayTool(const std::string& type, 

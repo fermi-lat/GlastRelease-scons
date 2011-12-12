@@ -6,6 +6,7 @@
 
 // External constants
 #include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/Time.h"
 
 // Type definition
 /////#include "ConditionsDB/CondDBKey.h"
@@ -16,7 +17,7 @@ static const InterfaceID IID_ICalibMetaCnvSvc ("ICalibMetaCnvSvc", 1, 0);
 class DataObject;
 // class IConditionsDBGate;
 class IRegistry;
-class ITime;
+//class ITime;
 
 namespace calibUtil {
   class Metadata;
@@ -60,7 +61,7 @@ class ICalibMetaCnvSvc : virtual public IInterface
   /// database.
  virtual StatusCode createCalib(DataObject*& refpObject,
                                 const std::string& fullpath,
-                                const ITime&       time,
+                                const Gaudi::Time&       time,
                                 const std::string& instrumentName,
                                 const CLID&        classID,
                                 IRegistry*         entry=0) = 0;
@@ -72,7 +73,7 @@ class ICalibMetaCnvSvc : virtual public IInterface
   /// database.
   virtual StatusCode updateCalib(DataObject*        pObject,
                                  const std::string& fullpath,
-                                 const ITime&       time,
+                                 const Gaudi::Time&       time,
                                  const std::string& instrumentName,
                                  const CLID&        classID,
                                  IRegistry*         entry=0) = 0;
@@ -81,7 +82,7 @@ class ICalibMetaCnvSvc : virtual public IInterface
   virtual calibUtil::Metadata* getMeta() = 0;
 
   virtual StatusCode getValidInterval(unsigned int& serNo, 
-                                      ITime** pvStart, ITime** pvEnd) = 0;
+                                      Gaudi::Time** pvStart, Gaudi::Time** pvEnd) = 0;
 
   // Might want to add additional methods which will return certain metadata
   // in a convenient form, given a serial number.  Would be used

@@ -14,13 +14,14 @@
 #include <vector>
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/Time.h"
 #include <xercesc/dom/DOMElement.hpp>
 
 class ISvcLocator;
 class GenericAddress;
 class ICalibXmlSvc;
 class ICalibMetaCnvSvc;
-class ITime;
+//class ITime;
 
 namespace CalibData {
   class CalibTime;
@@ -150,8 +151,8 @@ protected:
   ICalibMetaCnvSvc* m_metaSvc;
 
   int m_serNo;
-  ITime*  m_vstart;
-  ITime*  m_vend;
+  Gaudi::Time*  m_vstart;
+  Gaudi::Time*  m_vend;
 
 
 };

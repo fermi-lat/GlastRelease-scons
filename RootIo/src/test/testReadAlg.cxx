@@ -61,9 +61,9 @@ private:
     StatusCode readOnboardFilter();
 };
 
-static const AlgFactory<testReadAlg>  Factory;
-const IAlgFactory& testReadAlgFactory = Factory;
-
+//static const AlgFactory<testReadAlg>  Factory;
+//const IAlgFactory& testReadAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(testReadAlg);
 
 testReadAlg::testReadAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
 Algorithm(name, pSvcLocator)

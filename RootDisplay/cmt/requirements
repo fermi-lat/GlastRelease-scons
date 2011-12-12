@@ -1,5 +1,5 @@
 package RootDisplay
-version v0r3p2
+version v0r4p0
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -19,6 +19,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
+use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 # get flags to build shared library
@@ -28,8 +29,9 @@ private
 
 apply_pattern package_headers
 
-library RootDisplay ${RootDisplay_headers} *.cxx   Dll/*.cxx
+library RootDisplay ${RootDisplay_headers} *.cxx   
 
+apply_pattern generate_rootmap library=RootDisplay
 
 public
 

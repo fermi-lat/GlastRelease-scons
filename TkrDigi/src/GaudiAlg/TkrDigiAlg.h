@@ -22,6 +22,7 @@
 #define __TKRDIGIALG_H__
 
 #include "GaudiKernel/Algorithm.h"
+#include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
 
 #include <string>
 
@@ -50,6 +51,8 @@ class TkrDigiAlg : public Algorithm {
     Algorithm* m_chargeAlg;
 
     IDataProviderSvc* m_edSvc;
+
+    IRandomAccess *m_randTool;
 
 };
 

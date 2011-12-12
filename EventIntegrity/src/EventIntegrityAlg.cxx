@@ -46,8 +46,9 @@ private:
 
 };
 
-static const AlgFactory<EventIntegrityAlg>  Factory;
-const IAlgFactory& EventIntegrityAlgFactory = Factory;
+//static const AlgFactory<EventIntegrityAlg>  Factory;
+//const IAlgFactory& EventIntegrityAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(EventIntegrityAlg);
 
 
 EventIntegrityAlg::EventIntegrityAlg(const std::string& name, ISvcLocator* pSvcLocator) :
@@ -148,7 +149,7 @@ StatusCode EventIntegrityAlg::execute()
 
 StatusCode EventIntegrityAlg::finalize() {
 
-    setFinalized();
+    //setFinalized(); No longer available in Gaudi v21r7
     StatusCode  sc = StatusCode::SUCCESS;
 
     MsgStream log(msgSvc(), name());

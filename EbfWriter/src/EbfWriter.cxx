@@ -142,9 +142,9 @@ private:
 
 
 
-static const AlgFactory<EbfWriter>  Factory;
-const IAlgFactory& EbfWriterFactory = Factory;
-
+//static const AlgFactory<EbfWriter>  Factory;
+//const IAlgFactory& EbfWriterFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(EbfWriter);
 
 
 

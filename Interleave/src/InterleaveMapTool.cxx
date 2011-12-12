@@ -26,7 +26,7 @@ This provides a mechanisn for relating back to the original intput ntuple row fo
 generated events. 
 
 */
-
+//HMK do I take this out?? Aug,2010
 static const InterfaceID IID_InterleaveMapTool("InterleaveMapTool", 1 , 0);
 
 class InterleaveMapTool : public AlgTool, virtual public IInterleaveMap
@@ -63,8 +63,9 @@ private:
     StringProperty     m_mapName;     ///< name of the map tree
 };
 
-static ToolFactory<InterleaveMapTool> s_factory;
-const IToolFactory& InterleaveMapToolFactory = s_factory;
+//static ToolFactory<InterleaveMapTool> s_factory;
+//const IToolFactory& InterleaveMapToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(InterleaveMapTool);
 
 //------------------------------------------------------------------------
 InterleaveMapTool::InterleaveMapTool(const std::string& type, 

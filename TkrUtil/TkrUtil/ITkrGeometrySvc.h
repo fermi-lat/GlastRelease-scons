@@ -139,15 +139,15 @@ public:
     /// Provide access to the new propagator
     virtual IPropagator*        getG4PropagationTool() const = 0;
     /// Provide access to the failure mode service
-    virtual ITkrFailureModeSvc* getTkrFailureModeSvc() const = 0;
+    virtual ITkrFailureModeSvc* getTkrFailureModeSvc() = 0;
     /// Provide acess to the alignment service
-    virtual ITkrAlignmentSvc*   getTkrAlignmentSvc()   const = 0;
+    virtual ITkrAlignmentSvc*   getTkrAlignmentSvc()   = 0;
     /// Provide access to the bad strips service
-    virtual ITkrBadStripsSvc*   getTkrBadStripsSvc()   const = 0;
+    virtual ITkrBadStripsSvc*   getTkrBadStripsSvc()   = 0;
     /// Provide access to the splits service
-    virtual ITkrSplitsSvc*      getTkrSplitsSvc()      const = 0;
+    virtual ITkrSplitsSvc*      getTkrSplitsSvc()      = 0;
     /// Provide access to the ToT service
-    virtual ITkrToTSvc*         getTkrToTSvc()         const = 0;
+    virtual ITkrToTSvc*         getTkrToTSvc()         = 0;
 
     /// calculate the tray number, botTop from layer, view
     virtual void layerToTray (int layer, int view, int& tray, int& botTop) const = 0;

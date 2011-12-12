@@ -7,12 +7,13 @@
 ApplicationMgr.DLLs += { "GlastSvc", "EventIntegrity"};
 
 ApplicationMgr.ExtSvc = {
-//    "GlastEventSelector/EventSelector" ,
-    "EventCnvSvc"
+    "DbEvtSelector/EventSelector" 
     };
 
+ApplicationMgr.HistogramPersistency = "NONE";
+
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
 
 ApplicationMgr.TopAlg = {"test_EventIntegrityAlg", 
                          "EventIntegrityAlg"};

@@ -40,8 +40,9 @@ private:
 
 //------------------------------------------------------------------------
 
-static const AlgFactory<InterleaveBranchAlg>  Factory;
-const IAlgFactory& InterleaveBranchAlgFactory = Factory;
+//static const AlgFactory<InterleaveBranchAlg>  Factory;
+//const IAlgFactory& InterleaveBranchAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(InterleaveBranchAlg);
 
 //------------------------------------------------------------------------
 //! ctor

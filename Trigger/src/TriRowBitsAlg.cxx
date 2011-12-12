@@ -75,8 +75,9 @@ private:
 };
 
 //------------------------------------------------------------------------------
-static const AlgFactory<TriRowBitsAlg>  Factory;
-const IAlgFactory& TriRowBitsAlgFactory = Factory;
+//static const AlgFactory<TriRowBitsAlg>  Factory;
+//const IAlgFactory& TriRowBitsAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TriRowBitsAlg);
 //------------------------------------------------------------------------------
 /// 
 TriRowBitsAlg::TriRowBitsAlg(const std::string& name, ISvcLocator* pSvcLocator) 

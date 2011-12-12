@@ -149,9 +149,9 @@ private:
     std::string                        m_currentRelType;
 };
 
-static const AlgFactory<relationRootReaderAlg>  Factory;
-const IAlgFactory& relationRootReaderAlgFactory = Factory;
-
+//static const AlgFactory<relationRootReaderAlg>  Factory;
+//const IAlgFactory& relationRootReaderAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(relationRootReaderAlg);
 
 relationRootReaderAlg::relationRootReaderAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
 Algorithm(name, pSvcLocator), m_relTab(0), m_branchName("RelTable")
@@ -671,7 +671,7 @@ StatusCode relationRootReaderAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized();
     return sc;
 }
 

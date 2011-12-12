@@ -123,8 +123,9 @@ private:
     IMootSvc*         m_mootSvc;
 };
 
-static ToolFactory<HIPFilterTool> s_factory;
-const IToolFactory& HIPFilterToolFactory = s_factory;
+//static ToolFactory<HIPFilterTool> s_factory;
+//const IToolFactory& HIPFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(HIPFilterTool);
 //------------------------------------------------------------------------
 
 HIPFilterTool::HIPFilterTool(const std::string& type, 

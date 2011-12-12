@@ -65,8 +65,9 @@ public:
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<RegisterSource> s_factory;
-const IToolFactory& RegisterSourceFactory = s_factory;
+//static ToolFactory<RegisterSource> s_factory;
+//const IToolFactory& RegisterSourceFactory = s_factory;
+DECLARE_TOOL_FACTORY(RegisterSource);
 
 // Standard Constructor
 RegisterSource::RegisterSource(const std::string& type, 

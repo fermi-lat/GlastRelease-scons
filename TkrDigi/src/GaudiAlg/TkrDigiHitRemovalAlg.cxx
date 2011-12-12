@@ -37,9 +37,9 @@ class TkrDigiHitRemovalAlg : public Algorithm {
 
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrDigiHitRemovalAlg>    Factory;
-const IAlgFactory& TkrDigiHitRemovalAlgFactory = Factory;
-
+//static const AlgFactory<TkrDigiHitRemovalAlg>    Factory;
+//const IAlgFactory& TkrDigiHitRemovalAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDigiHitRemovalAlg);
 
 TkrDigiHitRemovalAlg::TkrDigiHitRemovalAlg(const std::string& name,
                                  ISvcLocator* pSvcLocator)

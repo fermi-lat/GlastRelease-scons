@@ -98,8 +98,9 @@ private:
 };
 
 
-static const AlgFactory<gcrSelectRootWriterAlg>  Factory;
-const IAlgFactory& gcrSelectRootWriterAlgFactory = Factory;
+//static const AlgFactory<gcrSelectRootWriterAlg>  Factory;
+//const IAlgFactory& gcrSelectRootWriterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(gcrSelectRootWriterAlg);
 
 gcrSelectRootWriterAlg::gcrSelectRootWriterAlg(const std::string& name, 
                                        ISvcLocator* pSvcLocator) : 
@@ -360,7 +361,7 @@ StatusCode gcrSelectRootWriterAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No longer in Gaudi v21r7
 
     log << MSG::DEBUG;
     if( log.isActive()) log.stream() << "Finalized";

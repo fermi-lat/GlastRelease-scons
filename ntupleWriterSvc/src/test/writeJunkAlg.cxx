@@ -57,8 +57,9 @@ private:
 
 };
 
-static const AlgFactory<writeJunkAlg>  Factory;
-const IAlgFactory& writeJunkAlgFactory = Factory;
+//static const AlgFactory<writeJunkAlg>  Factory;
+//const IAlgFactory& writeJunkAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(writeJunkAlg);
 
 writeJunkAlg::writeJunkAlg(const std::string& name, ISvcLocator* pSvcLocator) 
 : Algorithm(name, pSvcLocator)

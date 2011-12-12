@@ -93,8 +93,9 @@ namespace {
     const double degToRad = M_PI/180.;
 }
 
-static const AlgFactory<BeamTransform>  Factory;
-const IAlgFactory& BeamTransformFactory = Factory;
+//static const AlgFactory<BeamTransform>  Factory;
+//const IAlgFactory& BeamTransformFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(BeamTransform);
 
 BeamTransform::BeamTransform(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)

@@ -147,8 +147,9 @@ private:
     IFhTool * m_headersTool ;
 };
 
-static const AlgFactory<reconRootReaderAlg>  Factory;
-const IAlgFactory& reconRootReaderAlgFactory = Factory;
+//static const AlgFactory<reconRootReaderAlg>  Factory;
+//const IAlgFactory& reconRootReaderAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(reconRootReaderAlg);
 
 
 reconRootReaderAlg::reconRootReaderAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
@@ -1022,6 +1023,6 @@ StatusCode reconRootReaderAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No longer available in Gaudi v21r7
     return sc;
 }

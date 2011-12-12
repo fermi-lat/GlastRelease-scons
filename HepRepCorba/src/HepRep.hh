@@ -1213,8 +1213,8 @@ class _objref_HepRep :
 public:
   HepRepInstanceTree* getInstanceTreeTop(const char* instanceTreeName, const char* instanceTreeVersion);
   HepRepTypeTree* getTypeTree(const char* typeTreeName, const char* typeTreeVersion);
-  HepRepInstanceTree* getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames);
-  HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts);
+  HepRepInstanceTree* getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const ::StringArray& typeNames);
+  HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const ::StringArray& typeNames, const ::HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const ::StringArray& invertAtts);
   StringArray* getLayerOrder();
   char* checkForException();
 
@@ -1252,8 +1252,8 @@ public:
 
   virtual HepRepInstanceTree* getInstanceTreeTop(const char* instanceTreeName, const char* instanceTreeVersion) = 0;
   virtual HepRepTypeTree* getTypeTree(const char* typeTreeName, const char* typeTreeVersion) = 0;
-  virtual HepRepInstanceTree* getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames) = 0;
-  virtual HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts) = 0;
+  virtual HepRepInstanceTree* getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const ::StringArray& typeNames) = 0;
+  virtual HepRepInstanceTree* getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const ::StringArray& typeNames, const ::HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const ::StringArray& invertAtts) = 0;
   virtual StringArray* getLayerOrder() = 0;
   virtual char* checkForException() = 0;
   

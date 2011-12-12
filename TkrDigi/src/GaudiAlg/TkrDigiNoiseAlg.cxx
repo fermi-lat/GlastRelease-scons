@@ -15,9 +15,9 @@
 
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrDigiNoiseAlg>    Factory;
-const IAlgFactory& TkrDigiNoiseAlgFactory = Factory;
-
+//static const AlgFactory<TkrDigiNoiseAlg>    Factory;
+//const IAlgFactory& TkrDigiNoiseAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDigiNoiseAlg);
 
 TkrDigiNoiseAlg::TkrDigiNoiseAlg(const std::string& name,
                                  ISvcLocator* pSvcLocator)

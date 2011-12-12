@@ -161,8 +161,9 @@ private:
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-static const AlgFactory<meritAlg>  Factory;
-const IAlgFactory& meritAlgFactory = Factory;
+//static const AlgFactory<meritAlg>  Factory;
+//const IAlgFactory& meritAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(meritAlg);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 meritAlg::meritAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator), m_tuple(0), m_rootTupleSvc(0)
@@ -375,7 +376,8 @@ StatusCode meritAlg::finalize() {
 
     delete m_tuple;
     delete m_fm;
-    setFinalized(); //  prevent being called again
+    //setFinalized(); //  prevent being called again HMK no longer available
+    // in Gaudi v21r7
 
     return StatusCode::SUCCESS;
 }

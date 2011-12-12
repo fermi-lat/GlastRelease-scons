@@ -107,8 +107,10 @@ private:
     IDataProviderSvc* m_dataSvc;
 };
 
-static ToolFactory<TkrOutputTool> s_factory;
-const IToolFactory& TkrOutputToolFactory = s_factory;
+//static ToolFactory<TkrOutputTool> s_factory;
+//const IToolFactory& TkrOutputToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrOutputTool);
+
 //------------------------------------------------------------------------
 
 TkrOutputTool::TkrOutputTool(const std::string& type, 

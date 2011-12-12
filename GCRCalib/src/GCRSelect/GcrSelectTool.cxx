@@ -216,8 +216,9 @@ private:
 
 
 //-----------------------------------------------------------------------------------------------------------------
-static ToolFactory<GcrSelectTool> s_factory;
-const IToolFactory& GcrSelectToolFactory = s_factory;
+//static ToolFactory<GcrSelectTool> s_factory;
+//const IToolFactory& GcrSelectToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GcrSelectTool);
 
 //-----------------------------------------------------------------------------------------------------------------
 GcrSelectTool::GcrSelectTool(const std::string & type, 

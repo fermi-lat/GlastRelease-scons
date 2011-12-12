@@ -102,8 +102,9 @@ private:
     AcdUtil::IAcdCalibSvc* m_calibSvc;
 };
 
-static ToolFactory<AcdHitToOverlayTool> s_factory;
-const IToolFactory& AcdHitToOverlayToolFactory = s_factory;
+//static ToolFactory<AcdHitToOverlayTool> s_factory;
+//const IToolFactory& AcdHitToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(AcdHitToOverlayTool);
 
 //------------------------------------------------------------------------
 AcdHitToOverlayTool::AcdHitToOverlayTool(const std::string& type, 

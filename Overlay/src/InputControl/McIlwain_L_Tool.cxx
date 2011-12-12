@@ -56,8 +56,9 @@ private:
     StringProperty       m_clearOption;
 };
 
-static ToolFactory<McIlwain_L_Tool> s_factory;
-const IToolFactory& McIlwain_L_ToolFactory = s_factory;
+//static ToolFactory<McIlwain_L_Tool> s_factory;
+//const IToolFactory& McIlwain_L_ToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(McIlwain_L_Tool);
 
 //------------------------------------------------------------------------
 McIlwain_L_Tool::McIlwain_L_Tool(const std::string& type, 

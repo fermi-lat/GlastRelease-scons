@@ -121,8 +121,9 @@ private:
     SiDetMap m_SiMap;
 };
 
-static const ToolFactory<StripDisplay>  Factory;
-const IToolFactory& StripDisplayFactory = Factory;
+//static const ToolFactory<StripDisplay>  Factory;
+//const IToolFactory& StripDisplayFactory = Factory;
+DECLARE_TOOL_FACTORY(StripDisplay);
 
 StripDisplay::StripDisplay(const std::string& type, 
                            const std::string& name, 

@@ -67,9 +67,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseTkrAlign> Factory;
-const IAlgFactory& UseTkrAlignFactory = Factory;
-
+//static const AlgFactory<UseTkrAlign> Factory;
+//const IAlgFactory& UseTkrAlignFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseTkrAlign);
 
 UseTkrAlign::UseTkrAlign(const std::string&  name, 
                ISvcLocator*        pSvcLocator )
@@ -213,8 +213,8 @@ void UseTkrAlign::processInter(CalibData::TkrTowerAlignCalib* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
 
   std::string vStart = pNew->getValidStart()->getString();
   std::string vEnd = pNew->getValidEnd()->getString();
@@ -242,8 +242,8 @@ void UseTkrAlign::processIntra(CalibData::TkrInternalAlignCalib* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
 
   std::string vStart = pNew->getValidStart()->getString();
   std::string vEnd = pNew->getValidEnd()->getString();

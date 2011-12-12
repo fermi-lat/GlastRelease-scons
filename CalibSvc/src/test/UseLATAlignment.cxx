@@ -30,8 +30,9 @@ private:
 };
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseLATAlignment> Factory;
-const IAlgFactory& UseLATAlignmentFactory = Factory;
+//static const AlgFactory<UseLATAlignment> Factory;
+//const IAlgFactory& UseLATAlignmentFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseLATAlignment);
 
 
 UseLATAlignment::UseLATAlignment( const std::string&  name, 
@@ -111,8 +112,8 @@ StatusCode UseLATAlignment::execute( ) {
     log << MSG::INFO 
         << "LAT alignment obj, serial #" <<  newSerial << endreq;
     
-    log << MSG::INFO << "Vstart: " <<  (alignCalib->validSince()).hours()
-        << "  Vend: " << (alignCalib->validTill()).hours() << endreq;
+    log << MSG::INFO << "Vstart: " <<  (alignCalib->validSince()).hour(true)
+        << "  Vend: " << (alignCalib->validTill()).hour(true) << endreq;
 
     log << MSG::INFO << "Rx: "   << rx  << endreq;
     log << MSG::INFO << "Ry: " << ry   << endreq;

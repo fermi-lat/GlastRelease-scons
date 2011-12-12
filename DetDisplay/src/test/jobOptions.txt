@@ -11,9 +11,10 @@ ApplicationMgr.DLLs   = {
 ApplicationMgr.ExtSvc = { 
     "ParticlePropertySvc",
     "GlastDetSvc", 
-    "GlastEventSelector/EventSelector" ,    
-    "EventCnvSvc",  
+    "DbEvtSelector/EventSelector" ,    
     "GuiSvc" };
+
+ApplicationMgr.HistogramPersistency="NONE";
 
 ApplicationMgr.Runable = "GuiSvc";
 GuiSvc.size=-3000;
@@ -27,7 +28,7 @@ MessageSvc.OutputLevel      = 2;
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 // input or not.
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
 
 GismoGenerator.max_generation=10;
 

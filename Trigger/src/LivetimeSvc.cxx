@@ -86,8 +86,9 @@ private:
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
-static SvcFactory<LivetimeSvc> a_factory;
-const ISvcFactory& LivetimeSvcFactory = a_factory;
+//static SvcFactory<LivetimeSvc> a_factory;
+//const ISvcFactory& LivetimeSvcFactory = a_factory;
+DECLARE_SERVICE_FACTORY(LivetimeSvc);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //         Implementation of LivetimeSvc methods
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

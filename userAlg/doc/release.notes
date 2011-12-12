@@ -4,6 +4,7 @@
 @verbatim
  * EOH *
 
+ userAlg-06-07-00 12-Dec-2011    hmk Merge in Gaudi v21r7 updates
  userAlg-06-06-08 17-Aug-2011    jrb correct usage of TkrVertexCol smart pointer
  userAlg-06-06-07 23-May-2011    hmk Use CLHEP namespace
  userAlg-06-06-06 11-Jan-2011  lsrea Fix SConscript for test job

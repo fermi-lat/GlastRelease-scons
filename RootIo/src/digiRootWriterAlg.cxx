@@ -149,8 +149,9 @@ private:
 };
 
 
-static const AlgFactory<digiRootWriterAlg>  Factory;
-const IAlgFactory& digiRootWriterAlgFactory = Factory;
+//static const AlgFactory<digiRootWriterAlg>  Factory;
+//const IAlgFactory& digiRootWriterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(digiRootWriterAlg);
 
 digiRootWriterAlg::digiRootWriterAlg(const std::string& name, 
                                  ISvcLocator* pSvcLocator) : 
@@ -759,7 +760,7 @@ StatusCode digiRootWriterAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No longer in Gaudi v21r7
     return sc;
 }
 

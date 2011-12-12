@@ -83,8 +83,9 @@ private:
     float*            m_bUp;
 };
 
-static ToolFactory<PtToOverlayTool> s_factory;
-const IToolFactory& PtToOverlayToolFactory = s_factory;
+//static ToolFactory<PtToOverlayTool> s_factory;
+//const IToolFactory& PtToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(PtToOverlayTool);
 
 //------------------------------------------------------------------------
 PtToOverlayTool::PtToOverlayTool(const std::string& type, 

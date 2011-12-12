@@ -123,8 +123,9 @@ private:
 
 };
 
-static ToolFactory<TkrReasonsTool> s_factory;
-const IToolFactory& TkrReasonsToolFactory = s_factory;
+//static ToolFactory<TkrReasonsTool> s_factory;
+//const IToolFactory& TkrReasonsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrReasonsTool);
 
 TkrReasonsTool::TkrReasonsTool(const std::string& type, 
                                  const std::string& name, 

@@ -35,8 +35,9 @@
 #include <sstream>
 #include <vector>
 
-static const ToolFactory<GeneralHitToDigiTool>    s_factory;
-const IToolFactory& GeneralHitToDigiToolFactory = s_factory;
+//static const ToolFactory<GeneralHitToDigiTool>    s_factory;
+//const IToolFactory& GeneralHitToDigiToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GeneralHitToDigiTool);
 
 //double GeneralHitToDigiTool::m_totThreshold =GeneralNoiseTool::noiseThreshold();
 //int    GeneralHitToDigiTool::s_maxHits      = 64;

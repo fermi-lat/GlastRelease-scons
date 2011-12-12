@@ -61,8 +61,9 @@ private:
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrVertexAlg>  Factory;
-const IAlgFactory& TkrVertexAlgFactory = Factory;
+//static const AlgFactory<TkrVertexAlg>  Factory;
+//const IAlgFactory& TkrVertexAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrVertexAlg);
 
 // Standard Gaudi Constructor format
 TkrVertexAlg::TkrVertexAlg(const std::string& name, ISvcLocator* pSvcLocator) :

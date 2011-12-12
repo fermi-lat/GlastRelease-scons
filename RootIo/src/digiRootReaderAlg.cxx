@@ -146,8 +146,9 @@ private:
     IFhTool * m_headersTool ;
 };
 
-static const AlgFactory<digiRootReaderAlg>  Factory;
-const IAlgFactory& digiRootReaderAlgFactory = Factory;
+//static const AlgFactory<digiRootReaderAlg>  Factory;
+//const IAlgFactory& digiRootReaderAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(digiRootReaderAlg);
 
 
 digiRootReaderAlg::digiRootReaderAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
@@ -886,7 +887,7 @@ StatusCode digiRootReaderAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No longer in Gaudi v21r7
     return sc;
 }
 

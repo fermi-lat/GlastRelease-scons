@@ -2,11 +2,14 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-06-01-00 09-Dec-2011  hmk   Gaudi v21r7 merge
  ntupleWriterSvc-06-00-01 18-Nov-2011  usher patch for memory resident tuples
     to set the working directory to null
  ntupleWriterSvc-06-00-00 17-Aug-2011    hmk add in memory ntuple handling
  ntupleWriterSvc-05-05-00 15-Jul-2011  lsrea add getNumberOfEvents() to support WIRED
  ntupleWriterSvc-05-04-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ ntupleWriterSvc-05-04-04-gr02 06-Oct-2010 hmk Migrate to Gaudi v21r7 along branch
+ ntupleWriterSvc-05-04-04-gr01 31-Aug-2010 hmk Migrate to Gaudi v21r7
  ntupleWriterSvc-05-04-04 17-Jul-2010  lsrea Code to set the next event (used by HepRepSvc)
  ntupleWriterSvc-05-04-03 13-Jun-2010    jrb upgrades for SCons builds
  ntupleWriterSvc-05-04-02 09-Nov-2009    jrb Updates for SCons

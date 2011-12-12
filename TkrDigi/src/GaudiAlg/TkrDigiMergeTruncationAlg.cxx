@@ -37,9 +37,9 @@ class TkrDigiMergeTruncationAlg : public Algorithm {
 
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrDigiMergeTruncationAlg>    Factory;
-const IAlgFactory& TkrDigiMergeTruncationAlgFactory = Factory;
-
+//static const AlgFactory<TkrDigiMergeTruncationAlg>    Factory;
+//const IAlgFactory& TkrDigiMergeTruncationAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDigiMergeTruncationAlg);
 
 TkrDigiMergeTruncationAlg::TkrDigiMergeTruncationAlg(const std::string& name,
                                  ISvcLocator* pSvcLocator)

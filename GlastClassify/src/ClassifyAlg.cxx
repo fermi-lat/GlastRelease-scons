@@ -226,8 +226,9 @@ private:
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-static const AlgFactory<ClassifyAlg>  Factory;
-const IAlgFactory& ClassifyAlgFactory = Factory;
+//static const AlgFactory<ClassifyAlg>  Factory;
+//const IAlgFactory& ClassifyAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(ClassifyAlg);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ClassifyAlg::ClassifyAlg(const std::string& name, ISvcLocator* pSvcLocator) 
@@ -367,7 +368,7 @@ StatusCode ClassifyAlg::finalize()
     delete m_tMiner;
     delete m_ctree;
     delete m_tuple;
-    setFinalized(); //  prevent being called again
+    //setFinalized(); //  prevent being called again No longer available in Gaudi
     return StatusCode::SUCCESS;
 }
 

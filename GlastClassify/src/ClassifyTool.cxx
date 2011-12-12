@@ -249,8 +249,9 @@ private:
 };
 
 
-static ToolFactory<ClassifyTool> s_factory;
-const IToolFactory& ClassifyToolFactory = s_factory;
+//static ToolFactory<ClassifyTool> s_factory;
+//const IToolFactory& ClassifyToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(ClassifyTool);
 
 //
 // Class constructor, no initialization here

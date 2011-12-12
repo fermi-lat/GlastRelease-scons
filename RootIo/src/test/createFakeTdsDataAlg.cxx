@@ -60,8 +60,9 @@ private:
     
 };
 
-static const AlgFactory<createFakeTdsDataAlg>  Factory;
-const IAlgFactory& createFakeTdsDataAlgFactory = Factory;
+//static const AlgFactory<createFakeTdsDataAlg>  Factory;
+//const IAlgFactory& createFakeTdsDataAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(createFakeTdsDataAlg);
 
 
 createFakeTdsDataAlg::createFakeTdsDataAlg(const std::string& name, ISvcLocator* pSvcLocator) : 

@@ -13,9 +13,9 @@
 //  #include "GaudiKernel/TimePoint.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<CalibEvtClock> Factory;
-const IAlgFactory& CalibEvtClockFactory = Factory;
-
+//static const AlgFactory<CalibEvtClock> Factory;
+//const IAlgFactory& CalibEvtClockFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalibEvtClock);
 
 CalibEvtClock::CalibEvtClock( const std::string&  name, 
                               ISvcLocator*        pSvcLocator )
@@ -40,7 +40,7 @@ StatusCode CalibEvtClock::initialize() {
   sc = service("CalibDataSvc", calibSvc, true);
 
   // Query the IDetDataSvc interface of the calib data service
-  sc = calibSvc->queryInterface(IID_IDetDataSvc, 
+  sc = calibSvc->queryInterface(IDetDataSvc::interfaceID(), 
                                 (void**) &m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
@@ -97,7 +97,7 @@ StatusCode CalibEvtClock::execute( ) {
   CalibData::CalibTime ctime(time);
   log << MSG::INFO << "Event time (hours) " << ctime.hours() << endreq;
   //  m_detDataSvc->setEventTime(CalibData::CalibTime(time));
-  m_detDataSvc->setEventTime(ctime);
+  m_detDataSvc->setEventTime(ctime.getGaudiTime());
 
   return StatusCode::SUCCESS;
 }

@@ -52,8 +52,9 @@ private:
     IPropagator*           m_propagator;
 };
 
-static ToolFactory<TkrEnergyTool> s_factory;
-const IToolFactory& TkrEnergyToolFactory = s_factory;
+//static ToolFactory<TkrEnergyTool> s_factory;
+//const IToolFactory& TkrEnergyToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrEnergyTool);
 
 // constants defined at file scope
 namespace {

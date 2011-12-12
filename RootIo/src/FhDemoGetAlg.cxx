@@ -47,8 +47,9 @@ private:
     IFhTool * m_headersTool ;
 };
 
-static const AlgFactory<FhDemoGetAlg>  Factory;
-const IAlgFactory& FhDemoGetAlgFactory = Factory;
+//static const AlgFactory<FhDemoGetAlg>  Factory;
+//const IAlgFactory& FhDemoGetAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(FhDemoGetAlg);
 
 
 FhDemoGetAlg::FhDemoGetAlg(const std::string& name, ISvcLocator* pSvcLocator) : 

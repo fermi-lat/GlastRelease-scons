@@ -30,41 +30,60 @@ typedef XmlAcdCnv<CalibData::AcdVetoFit> XmlAcdVetoFitCnv;
 typedef XmlAcdCnv<CalibData::AcdCnoFit> XmlAcdCnoFitCnv;
 typedef XmlAcdCnv<CalibData::AcdPE> XmlAcdPECnv;
 
-static CnvFactory< XmlAcdPedCnv > s_PedFactory;
-const  ICnvFactory& XmlAcdPedCnvFactory = s_PedFactory;
+//static CnvFactory< XmlAcdPedCnv > s_PedFactory;
+//const  ICnvFactory& XmlAcdPedCnvFactory = s_PedFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdPedCnv);
 
-static CnvFactory< XmlAcdGainCnv > s_GainFactory;
-const  ICnvFactory& XmlAcdGainCnvFactory = s_GainFactory;
+//static CnvFactory< XmlAcdGainCnv > s_GainFactory;
+//const  ICnvFactory& XmlAcdGainCnvFactory = s_GainFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdGainCnv);
 
-static CnvFactory< XmlAcdVetoCnv > s_VetoFactory;
-const  ICnvFactory& XmlAcdVetoCnvFactory = s_VetoFactory;
+//static CnvFactory< XmlAcdVetoCnv > s_VetoFactory;
+//const  ICnvFactory& XmlAcdVetoCnvFactory = s_VetoFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdVetoCnv);
 
-static CnvFactory< XmlAcdCnoCnv > s_CnoFactory;
-const  ICnvFactory& XmlAcdCnoCnvFactory = s_CnoFactory;
+//static CnvFactory< XmlAcdCnoCnv > s_CnoFactory;
+//const  ICnvFactory& XmlAcdCnoCnvFactory = s_CnoFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdCnoCnv);
 
-static CnvFactory< XmlAcdRangeCnv > s_RangeFactory;
-const  ICnvFactory& XmlAcdRangeCnvFactory = s_RangeFactory;
+//static CnvFactory< XmlAcdRangeCnv > s_RangeFactory;
+//const  ICnvFactory& XmlAcdRangeCnvFactory = s_RangeFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdRangeCnv);
 
-static CnvFactory< XmlAcdHighRangeCnv > s_HighRangeFactory;
-const  ICnvFactory& XmlAcdHighRangeCnvFactory = s_HighRangeFactory;
+//static CnvFactory< XmlAcdHighRangeCnv > s_HighRangeFactory;
+//const  ICnvFactory& XmlAcdHighRangeCnvFactory = s_HighRangeFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdHighRangeCnv);
 
-static CnvFactory< XmlAcdCoherentNoiseCnv > s_CoherentNoiseFactory;
-const  ICnvFactory& XmlAcdCoherentNoiseCnvFactory = s_CoherentNoiseFactory;
+//static CnvFactory< XmlAcdCoherentNoiseCnv > s_CoherentNoiseFactory;
+//const  ICnvFactory& XmlAcdCoherentNoiseCnvFactory = s_CoherentNoiseFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdCoherentNoiseCnv);
 
-static CnvFactory< XmlAcdRibbonCnv > s_RibbonFactory;
-const  ICnvFactory& XmlAcdRibbonCnvFactory = s_RibbonFactory;
+//static CnvFactory< XmlAcdRibbonCnv > s_RibbonFactory;
+//const  ICnvFactory& XmlAcdRibbonCnvFactory = s_RibbonFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdRibbonCnv);
 
-static CnvFactory< XmlAcdHighPedCnv > s_HighPedFactory;
-const  ICnvFactory& XmlAcdHighPedCnvFactory = s_HighPedFactory;
 
-static CnvFactory< XmlAcdCarbonCnv > s_CarbonFactory;
-const  ICnvFactory& XmlAcdCarbonCnvFactory = s_CarbonFactory;
+//static CnvFactory< XmlAcdHighPedCnv > s_HighPedFactory;
+//const  ICnvFactory& XmlAcdHighPedCnvFactory = s_HighPedFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdHighPedCnv);
 
-static CnvFactory< XmlAcdVetoFitCnv > s_VetoFitFactory;
-const  ICnvFactory& XmlAcdVetoFitCnvFactory = s_VetoFitFactory;
 
-static CnvFactory< XmlAcdCnoFitCnv > s_CnoFitFactory;
-const  ICnvFactory& XmlAcdCnoFitCnvFactory = s_CnoFitFactory;
+//static CnvFactory< XmlAcdCarbonCnv > s_CarbonFactory;
+//const  ICnvFactory& XmlAcdCarbonCnvFactory = s_CarbonFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdCarbonCnv);
 
-static CnvFactory< XmlAcdPECnv > s_PEFactory;
-const  ICnvFactory& XmlAcdPECnvFactory = s_PEFactory;
+
+//static CnvFactory< XmlAcdVetoFitCnv > s_VetoFitFactory;
+//const  ICnvFactory& XmlAcdVetoFitCnvFactory = s_VetoFitFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdVetoFitCnv);
+
+
+//static CnvFactory< XmlAcdCnoFitCnv > s_CnoFitFactory;
+//const  ICnvFactory& XmlAcdCnoFitCnvFactory = s_CnoFitFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdCnoFitCnv);
+
+
+//static CnvFactory< XmlAcdPECnv > s_PEFactory;
+//const  ICnvFactory& XmlAcdPECnvFactory = s_PEFactory;
+DECLARE_CONVERTER_FACTORY(XmlAcdPECnv);
+

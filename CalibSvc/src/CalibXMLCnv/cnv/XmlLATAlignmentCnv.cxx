@@ -41,8 +41,9 @@ protected:
 				 
 };
 
-static CnvFactory<XmlLATAlignmentCnv> s_factory;
-const  ICnvFactory& XmlLATAlignmentCnvFactory = s_factory;
+//static CnvFactory<XmlLATAlignmentCnv> s_factory;
+//const  ICnvFactory& XmlLATAlignmentCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlLATAlignmentCnv);
 
 
 XmlLATAlignmentCnv::XmlLATAlignmentCnv( ISvcLocator* svc) :

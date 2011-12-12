@@ -6,12 +6,13 @@
 #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/Time.h"
 
 #include "CalibSvc/IInstrumentName.h"
 #include "CalibSvc/ICalibPathSvc.h"
 #include "CalibData/CalibTime.h"
 // Forward declarations
-class ITime;
+//class ITime;
 class StatusCode;
 class IDataProviderSvc;
 class MsgStream;
@@ -79,13 +80,13 @@ public:
   // Implementation of the IDetDataSvc interface
 
   /// Check if the event time has been set 
-  virtual const bool validEventTime() const ;
+  virtual bool validEventTime() const ;
 
   /// Get the event time  
-  virtual const ITime& eventTime() const;
+  virtual const Gaudi::Time& eventTime() const;
 
   /// Set the new event time  
-  virtual void setEventTime(const ITime& time);
+  virtual void setEventTime(const Gaudi::Time& time);
 
 public:
   //Implementation of IInstrumentName interface
@@ -135,7 +136,7 @@ public:
   bool             m_eventTimeDefined;
 
   /// Current event time
-  ITime*           m_eventTime; 
+  Gaudi::Time*           m_eventTime; 
 
   bool             m_instrumentDefined;
   std::string      m_instrumentName;

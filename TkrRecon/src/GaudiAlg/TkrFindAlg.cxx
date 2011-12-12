@@ -84,8 +84,9 @@ private:
     bool     m_standardGhosts;
 };
 
-static const AlgFactory<TkrFindAlg>  Factory;
-const IAlgFactory& TkrFindAlgFactory = Factory;
+//static const AlgFactory<TkrFindAlg>  Factory;
+//const IAlgFactory& TkrFindAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrFindAlg);
 
 TkrFindAlg::TkrFindAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator)  

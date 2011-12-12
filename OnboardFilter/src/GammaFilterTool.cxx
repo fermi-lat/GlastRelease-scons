@@ -163,8 +163,9 @@ private:
     IMootSvc*         m_mootSvc;
 };
 
-static ToolFactory<GammaFilterTool> s_factory;
-const IToolFactory& GammaFilterToolFactory = s_factory;
+//static ToolFactory<GammaFilterTool> s_factory;
+//const IToolFactory& GammaFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GammaFilterTool);
 //------------------------------------------------------------------------
 
 GammaFilterTool::GammaFilterTool(const std::string& type, 

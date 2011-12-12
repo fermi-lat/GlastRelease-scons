@@ -29,8 +29,9 @@
 // Temporary.  Hope to find a better way to do this
 #include "CalibData/CalibModel.h"
 
-static CnvFactory<RootTkrTotCnv> s_factory;
-const  ICnvFactory& RootTkrTotCnvFactory = s_factory;
+//static CnvFactory<RootTkrTotCnv> s_factory;
+//const  ICnvFactory& RootTkrTotCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(RootTkrTotCnv);
 
 RootTkrTotCnv::RootTkrTotCnv( ISvcLocator* svc) :
   RootTkrBaseCnv(svc, CLID_Calib_TKR_TOTSignal) { 

@@ -58,8 +58,9 @@ class TkrOverlayMergeAlg : public Algorithm
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrOverlayMergeAlg>    Factory;
-const IAlgFactory& TkrOverlayMergeAlgFactory = Factory;
+//static const AlgFactory<TkrOverlayMergeAlg>    Factory;
+//const IAlgFactory& TkrOverlayMergeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrOverlayMergeAlg);
 
 TkrOverlayMergeAlg::TkrOverlayMergeAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator)

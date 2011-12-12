@@ -81,8 +81,9 @@ private:
     IDataProviderSvc* m_dataSvc;
 };
 
-static ToolFactory<GemOutputTool> s_factory;
-const IToolFactory& GemOutputToolFactory = s_factory;
+//static ToolFactory<GemOutputTool> s_factory;
+//const IToolFactory& GemOutputToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GemOutputTool);
 //------------------------------------------------------------------------
 
 GemOutputTool::GemOutputTool(const std::string& type, 

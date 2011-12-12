@@ -63,8 +63,9 @@ private:
 
 };
 
-static const AlgFactory<TkrFillTDInfoAlg>  Factory;
-const IAlgFactory& TkrFillTDInfoAlgFactory = Factory;
+//static const AlgFactory<TkrFillTDInfoAlg>  Factory;
+//const IAlgFactory& TkrFillTDInfoAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrFillTDInfoAlg);
 
 TkrFillTDInfoAlg::TkrFillTDInfoAlg(const std::string& name, 
                                    ISvcLocator* pSvcLocator) :

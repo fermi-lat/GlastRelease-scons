@@ -42,8 +42,9 @@ private:
     std::map< int, int>  m_tkrInverseMap;
 };
 
-static ToolFactory<TkrMapTool> s_factory;
-const IToolFactory& TkrMapToolFactory = s_factory;
+//static ToolFactory<TkrMapTool> s_factory;
+//const IToolFactory& TkrMapToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrMapTool);
 
 TkrMapTool::TkrMapTool(const std::string& type, 
                        const std::string& name, 

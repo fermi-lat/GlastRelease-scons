@@ -142,8 +142,9 @@ private:
 };
 
 
-static const AlgFactory<reconRootWriterAlg>  Factory;
-const IAlgFactory& reconRootWriterAlgFactory = Factory;
+//static const AlgFactory<reconRootWriterAlg>  Factory;
+//const IAlgFactory& reconRootWriterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(reconRootWriterAlg);
 
 reconRootWriterAlg::reconRootWriterAlg(const std::string& name, 
                                        ISvcLocator* pSvcLocator) : 
@@ -857,7 +858,7 @@ StatusCode reconRootWriterAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No longer available in Gaudi v21r7
 
     log << MSG::DEBUG;
     if( log.isActive()) log.stream() << "Finalized";

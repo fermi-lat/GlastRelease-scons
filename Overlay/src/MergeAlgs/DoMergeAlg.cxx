@@ -47,8 +47,9 @@ private:
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<DoMergeAlg>    Factory;
-const IAlgFactory& DoMergeAlgFactory = Factory;
+//static const AlgFactory<DoMergeAlg>    Factory;
+//const IAlgFactory& DoMergeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(DoMergeAlg);
 
 DoMergeAlg::DoMergeAlg(const std::string& name, ISvcLocator* pSvcLocator)
     : Algorithm(name, pSvcLocator) 

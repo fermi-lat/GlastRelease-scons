@@ -4,8 +4,11 @@
  * package manager:E. Charles
  * EOH *
 
+ ConfigSvc-00-03-00 05-Dec-2011    hmk Merge in Gaudi v21r7 updates
  ConfigSvc-00-02-12 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ ConfigSvc-00-02-11-gr01 06-Oct-2010 hmk Upgrade Gaudi v21r7 along branch
  ConfigSvc-00-02-11 12-Jun-2010    jrb upgrades for SCons builds
+ ConfigSvc-00-02-10-gr01 31-Aug-2010 hmk Migrate to Gaudi v21r7
  ConfigSvc-00-02-10 10-Nov-2009    jrb updates for SCons
  * v0r2p9 01-Aug-08 EAC Updated ConfigSvc to load GEM_DFT file, allow checks on FSW handler FMX keys
  * v0r2p8 30-Jun-08 EAC Added defaultTrgConfig.xml which actually has a GemWindow Mask, allow fixed cut & paste error

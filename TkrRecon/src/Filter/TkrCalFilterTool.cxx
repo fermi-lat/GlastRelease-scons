@@ -55,8 +55,9 @@ private:
     IDataProviderSvc* m_dataSvc;
 };
 
-static ToolFactory<TkrCalFilterTool> s_factory;
-const IToolFactory& TkrCalFilterToolFactory = s_factory;
+//static ToolFactory<TkrCalFilterTool> s_factory;
+//const IToolFactory& TkrCalFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrCalFilterTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

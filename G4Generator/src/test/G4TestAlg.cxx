@@ -28,8 +28,9 @@ private:
 };
 
 
-static const AlgFactory<G4TestAlg>  Factory;
-const IAlgFactory& G4TestAlgFactory = Factory;
+//static const AlgFactory<G4TestAlg>  Factory;
+//const IAlgFactory& G4TestAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(G4TestAlg);
 
 //
 G4TestAlg::G4TestAlg(const std::string& name, ISvcLocator* pSvcLocator) :

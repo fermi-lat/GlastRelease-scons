@@ -8,26 +8,86 @@
 
 #define LdfDiagnosticCnv_CXX 
 
-#include "GaudiKernel/RegistryEntry.h"
-#include "LdfDiagnosticCnv.h"
+#include "GaudiKernel/Converter.h"
+#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
-
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "ldfReader/data/LatData.h"
 
 #include "LdfEvent/DiagnosticData.h"
 
+class LdfDiagnosticCnv : public Converter //virtual public IGlastCnv, public Converter 
+{
+
+  friend class CnvFactory<LdfDiagnosticCnv>;
+
+
+protected:
+
+    /**
+        Constructor for this converter
+        @param svc a ISvcLocator interface to find services
+        @param clid the type of object the converter is able to convert
+    */
+    LdfDiagnosticCnv(ISvcLocator* svc);
+
+    virtual ~LdfDiagnosticCnv() { };
+
+public:
+    /// Query interfaces of Interface
+    //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    static const CLID&         classID()     {return CLID_LdfDiagnosticData;}
+    static const unsigned char storageType() {return TEST_StorageType;}
+
+    /// Initialize the converter
+    virtual StatusCode initialize();
+
+    /// Initialize the converter
+    virtual StatusCode finalize();
+
+    /// Retrieve the class type of objects the converter produces. 
+    virtual const CLID& objType() const {return CLID_LdfDiagnosticData;}
+
+    /// Retrieve the class type of the data store the converter uses.
+    // MSF: Masked to generate compiler error due to interface change
+    virtual long repSvcType() const {return Converter::i_repSvcType();}
+
+    /// Create the transient representation of an object.
+    virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
+
+    /// Methods to set and return the path in TDS for output of this converter
+  //  virtual void setPath(const std::string& path) {m_path = path;}
+    virtual const std::string& getPath() const    {return m_path;}
+
+private:
+
+    std::string m_path;
+
+};
+
 // Instantiation of a static factory class used by clients to create
 // instances of this service
-static CnvFactory<LdfDiagnosticCnv> s_factory;
-const ICnvFactory& LdfDiagnosticCnvFactory = s_factory;
+//static CnvFactory<MCEventCnv> s_factory;
+//const ICnvFactory& MCEventCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY ( LdfDiagnosticCnv );
 
-LdfDiagnosticCnv::LdfDiagnosticCnv(ISvcLocator* svc)
-: LdfBaseCnv(classID(), svc)
+LdfDiagnosticCnv::LdfDiagnosticCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_LdfDiagnosticData, svc)
 {
     // Here we associate this converter with the /Event path on the TDS.
-    declareObject("/Event/Diagnostic", objType(), "PASS");
+    m_path = "/Event/Diagnostic";
 }
 
+StatusCode LdfDiagnosticCnv::initialize() 
+{
+    StatusCode status = Converter::initialize();
+
+    return status;
+}
+
+StatusCode LdfDiagnosticCnv::finalize() 
+{
+    return Converter::finalize();
+}
 
 StatusCode LdfDiagnosticCnv::createObj(IOpaqueAddress* , 
                                     DataObject*& refpObject) {
@@ -76,12 +136,13 @@ StatusCode LdfDiagnosticCnv::createObj(IOpaqueAddress* ,
     return StatusCode::SUCCESS;
 }
 
-StatusCode LdfDiagnosticCnv::updateObj(int* , LdfEvent::DiagnosticData* ) {
+//StatusCode LdfDiagnosticCnv::updateObj(int* , LdfEvent::DiagnosticData* ) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
 
-    MsgStream log(msgSvc(), "LdfDiagnosticCnv");
-    log << MSG::DEBUG << "LdfDiagnosticCnv::updateObj" << endreq;
-    return StatusCode::SUCCESS;
-}
+//    MsgStream log(msgSvc(), "LdfDiagnosticCnv");
+//    log << MSG::DEBUG << "LdfDiagnosticCnv::updateObj" << endreq;
+//    return StatusCode::SUCCESS;//
+//}
+
 

@@ -108,9 +108,11 @@ private:
 
 
 
-static const AlgFactory<OnboardFilter> Factory;
-const IAlgFactory& OnboardFilterFactory = Factory;
+//static const AlgFactory<OnboardFilter> Factory;
+//const IAlgFactory& OnboardFilterFactory = Factory;
 //FilterInfo OnboardFilter::myFilterInfo;
+
+DECLARE_ALGORITHM_FACTORY(OnboardFilter);
 
 OnboardFilter::OnboardFilter(const std::string& name, ISvcLocator *pSvcLocator) : Algorithm(name,pSvcLocator), 
           m_events(0), m_rejected(0), m_noEbfData(0), m_curMode(enums::Lsf::NoMode), m_mootSvc(0), m_initialized(false)

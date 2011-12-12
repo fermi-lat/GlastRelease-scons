@@ -12,6 +12,7 @@
 */
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/Time.h"
 #include <string>
 
 #include "CalibSvc/ICalibRootSvc.h"
@@ -22,7 +23,7 @@ class GenericAddress;
 class ICalibRootSvc;
 class ICalibMetaCnvSvc;
 class IInstrumentName;
-class ITime;
+//class ITime;
 
 class TFile;
 class TTree;
@@ -200,8 +201,8 @@ protected:
   IInstrumentName* m_instrSvc;
 
   int m_serNo;
-  ITime*  m_vstart;
-  ITime*  m_vend;
+  Gaudi::Time*  m_vstart;
+  Gaudi::Time*  m_vend;
 
   // Note by keeping this stuff here we're disallowing possibility of 
   // interleaved writes of different calibrations

@@ -31,11 +31,11 @@
 */
 #include "XmlAncBaseCnv.h"
 
-class XmlAncTaggerPedCnv;
+//class XmlAncTaggerPedCnv;
 
 // template <class TYPE> class CnvFactory;
-static CnvFactory<XmlAncTaggerPedCnv> s_factory;
-const  ICnvFactory& XmlAncTaggerPedCnvFactory = s_factory;
+//static CnvFactory<XmlAncTaggerPedCnv> s_factory;
+//const  ICnvFactory& XmlAncTaggerPedCnvFactory = s_factory;
 
 class XmlAncTaggerPedCnv : public XmlAncBaseCnv {
 
@@ -55,6 +55,7 @@ protected:
 
 };
 
+DECLARE_CONVERTER_FACTORY(XmlAncTaggerPedCnv);
 
 //
 

@@ -1,7 +1,7 @@
 package EbfWriter
 # $Header$
 
-version v1r9p1
+version v1r10p0
 author Brian Winer <winer@mps.ohio-state.edu>
 
 use Event          *
@@ -21,6 +21,8 @@ apply_pattern package_include
 
 private
 #-------------------------------------------------------
+use RootmapPolicy * GlastPolicy
+
 apply_pattern package_Cshlibflags
 
 apply_pattern package_header
@@ -28,7 +30,9 @@ apply_pattern package_header
 macro_prepend includes "-I.. " WIN32 "/I.. "
 
 macro headers "" WIN32 " ../EbfWriter/*.h *.h"
-library EbfWriter $(headers) *.cxx Dll/*.cxx
+library EbfWriter $(headers) *.cxx 
+
+apply_pattern generate_rootmap library=EbfWriter
 
 
 private

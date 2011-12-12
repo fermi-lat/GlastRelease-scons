@@ -24,8 +24,9 @@
 #include "GaudiKernel/SvcFactory.h"
 
 /// Instantiation of a static factory to create instances of this service
-static SvcFactory<CalibMySQLCnvSvc>          CalibMySQLCnvSvc_factory;
-const ISvcFactory& CalibMySQLCnvSvcFactory = CalibMySQLCnvSvc_factory;
+//static SvcFactory<CalibMySQLCnvSvc>          CalibMySQLCnvSvc_factory;
+//const ISvcFactory& CalibMySQLCnvSvcFactory = CalibMySQLCnvSvc_factory;
+DECLARE_SERVICE_FACTORY(CalibMySQLCnvSvc);
 
 // Local utility to translate calibration quality list to bit map
 namespace {
@@ -77,7 +78,7 @@ StatusCode CalibMySQLCnvSvc::initialize()
   // it has to implement IDataProviderSvc
   IDataProviderSvc* pCDS = 0;
   sc = serviceLocator()->getService 
-    ("CalibDataSvc",  IID_IDataProviderSvc, (IInterface*&)pCDS);
+      ("CalibDataSvc",  IDataProviderSvc::interfaceID(), (IInterface*&)pCDS);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not locate CalibDataSvc" << endreq;
     return sc;
@@ -92,7 +93,7 @@ StatusCode CalibMySQLCnvSvc::initialize()
 
   // Query the IDetDataSvc and IInstrumentName interfaces of the 
   // calib data service
-  sc = pCDS->queryInterface(IID_IDetDataSvc, (void**) &m_detDataSvc);
+  sc = pCDS->queryInterface(IDetDataSvc::interfaceID(), (void**) &m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Cannot query IDetDataSvc interface of CalibDataSvc" << endreq;
@@ -128,7 +129,7 @@ StatusCode CalibMySQLCnvSvc::initialize()
   
   // Query the IAddressCreator interface of the detector persistency service
   IAddressCreator* iAddrCreator;
-  sc = m_detPersSvc->queryInterface(IID_IAddressCreator, 
+  sc = m_detPersSvc->queryInterface(IAddressCreator::interfaceID(), 
 				    (void**) &iAddrCreator);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
@@ -390,9 +391,9 @@ StatusCode CalibMySQLCnvSvc::updateObj(IOpaqueAddress* pAddress,
 	<< "Updated object does not implement IValidity" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::DEBUG << "New calib DataObject is valid since "
-  << pValidity->validSince().hours() 
-  << " till " << pValidity->validTill().hours()  
+  log << MSG::DEBUG << "New calib DataObject is valid (year only)  since "
+  << pValidity->validSince().year(false) 
+  << " till " << pValidity->validTill().year(false)  
   << endreq;
 
   //  log << MSG::DEBUG << "Method updateObj exiting" << endreq;
@@ -493,7 +494,7 @@ StatusCode CalibMySQLCnvSvc::createAddress(long svc_type,
 ///   (CalibMySQLCnvSvc has no converters of its own).
 StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
                                          const std::string& fullpath,
-                                         const ITime&       time,
+                                         const Gaudi::Time&       time,
                                          const std::string& instrName,
                                          const CLID&        classID,
                                          IRegistry*         entry)
@@ -606,8 +607,16 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
     facilities::Timestamp* since;
     facilities::Timestamp* till;
     m_meta->getInterval(ser, since, till);
-    pValidity->setValidity(CalibData::CalibTime(*since), 
-                           CalibData::CalibTime(*till));
+    log << MSG::DEBUG << "since, till " << since->getString() << " , " 
+        << till->getString() << endreq;
+
+    Gaudi::Time gSince = CalibData::CalibTime(*since).getGaudiTime();
+    Gaudi::Time gTill = CalibData::CalibTime(*till).getGaudiTime();
+    //log << MSG::DEBUG << "gSince " << gSince.year(false) << " " 
+    //    << gSince.month(false) << " " << gSince.day(false) << " " 
+    //    << gSince.hour(false) << " " << gSince.minute(false) << " " 
+    //    <<gSince.second(false) << endreq;
+    pValidity->setValidity(gSince, gTill);
   }
 
   log << MSG::DEBUG << "New object successfully created" << endreq;
@@ -627,7 +636,7 @@ StatusCode CalibMySQLCnvSvc::createCalib(DataObject*&       refpObject,
 ///   (the CalibMySQLCnvSvc has no converters of its own).
 StatusCode CalibMySQLCnvSvc::updateCalib( DataObject*        pObject,
                                           const std::string& fullpath,
-                                          const ITime&       time,
+                                          const Gaudi::Time&       time,
                                           const std::string& instr,
                                           const CLID&        classID,
                                           IRegistry*         entry )
@@ -797,7 +806,7 @@ calibUtil::Metadata* CalibMySQLCnvSvc::getMeta( ) {
 
 
 StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
-                                              ITime** pvStart, ITime** pvEnd) {
+                                              Gaudi::Time** pvStart, Gaudi::Time** pvEnd) {
   using calibUtil::Metadata;
   using CalibData::CalibTime;
 
@@ -811,8 +820,10 @@ StatusCode CalibMySQLCnvSvc::getValidInterval(unsigned int& serNo,
   StatusCode status = StatusCode::FAILURE;
 
   if (ret == Metadata::RETOk) {
-    *pvStart = new CalibTime(*since);
-    *pvEnd = new CalibTime(*till);
+//    *pvStart = new CalibTime(*since);
+//    *pvEnd = new CalibTime(*till);
+      *pvStart = new Gaudi::Time(since->getClibTime(),since->getNano());
+      *pvEnd = new Gaudi::Time(till->getClibTime(), till->getNano());
     status = StatusCode::SUCCESS;
   }
 
@@ -845,5 +856,6 @@ void CalibMySQLCnvSvc::handle(const Incident& inc) {
 //  m_enterTime = time;
 //  m_enterInterval = interval;
 // }
+
 
 

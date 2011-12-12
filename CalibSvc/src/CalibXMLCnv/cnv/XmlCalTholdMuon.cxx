@@ -59,8 +59,9 @@ private:
 };
 
 // Begin implementation
-static CnvFactory<XmlCalTholdMuonCnv> s_factory;
-const  ICnvFactory& XmlCalTholdMuonCnvFactory = s_factory;
+//static CnvFactory<XmlCalTholdMuonCnv> s_factory;
+//const  ICnvFactory& XmlCalTholdMuonCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlCalTholdMuonCnv);
 
 
 

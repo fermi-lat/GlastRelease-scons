@@ -43,8 +43,9 @@ class DiagDataOverlayMergeAlg : public Algorithm
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<DiagDataOverlayMergeAlg>    Factory;
-const IAlgFactory& DiagDataOverlayMergeAlgFactory = Factory;
+//static const AlgFactory<DiagDataOverlayMergeAlg>    Factory;
+//const IAlgFactory& DiagDataOverlayMergeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(DiagDataOverlayMergeAlg);
 
 DiagDataOverlayMergeAlg::DiagDataOverlayMergeAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator)

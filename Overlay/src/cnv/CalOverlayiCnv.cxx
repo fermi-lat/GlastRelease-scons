@@ -91,8 +91,9 @@ private:
 };
 
 
- static CnvFactory<CalOverlayCnv> s_factory;
- const ICnvFactory& CalOverlayCnvFactory = s_factory;
+ //static CnvFactory<CalOverlayCnv> s_factory;
+ //const ICnvFactory& CalOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(CalOverlayCnv);
 
  CalOverlayCnv::CalOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, ObjectVector<Event::CalOverlay>::classID(), svc) 
 {

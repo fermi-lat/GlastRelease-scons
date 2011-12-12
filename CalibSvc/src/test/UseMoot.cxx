@@ -49,9 +49,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseMoot> Factory;
-const IAlgFactory& UseMootFactory = Factory;
-
+//static const AlgFactory<UseMoot> Factory;
+//const IAlgFactory& UseMootFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseMoot);
 
 UseMoot::UseMoot(const std::string&  name, 
                  ISvcLocator*        pSvcLocator )

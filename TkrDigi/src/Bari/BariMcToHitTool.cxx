@@ -36,9 +36,9 @@
 #include "GaudiKernel/DataObject.h"
 
 
-static const ToolFactory<BariMcToHitTool>    s_factory;
-const IToolFactory& BariMcToHitToolFactory = s_factory;
-
+//static const ToolFactory<BariMcToHitTool>    s_factory;
+//const IToolFactory& BariMcToHitToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(BariMcToHitTool);
 
 BariMcToHitTool::BariMcToHitTool(const std::string& type,
                                  const std::string& name,

@@ -57,8 +57,9 @@ private:
     DataSvc*          m_dataSvc;
 };
 
-static ToolFactory<TkrDigiToOverlayTool> s_factory;
-const IToolFactory& TkrDigiToOverlayToolFactory = s_factory;
+//static ToolFactory<TkrDigiToOverlayTool> s_factory;
+//const IToolFactory& TkrDigiToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrDigiToOverlayTool);
 
 //------------------------------------------------------------------------
 TkrDigiToOverlayTool::TkrDigiToOverlayTool(const std::string& type, 

@@ -42,8 +42,9 @@ class GemOverlayMergeAlg : public Algorithm
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<GemOverlayMergeAlg>    Factory;
-const IAlgFactory& GemOverlayMergeAlgFactory = Factory;
+//static const AlgFactory<GemOverlayMergeAlg>    Factory;
+//const IAlgFactory& GemOverlayMergeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(GemOverlayMergeAlg);
 
 GemOverlayMergeAlg::GemOverlayMergeAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator)

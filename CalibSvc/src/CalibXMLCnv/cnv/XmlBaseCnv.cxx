@@ -53,13 +53,13 @@ StatusCode XmlBaseCnv::initialize() {
   // I guess the service names are assigned in jobOptions?
 
   serviceLocator()->getService ("CalibDataSvc",
-                                IID_IDataProviderSvc,
+                                IDataProviderSvc::interfaceID(),
                                 (IInterface*&)dp);
   setDataProvider(dp);
   
   // Locate the Xml Conversion Service
   serviceLocator()->getService ("CalibXmlCnvSvc",
-                                IID_ICalibXmlSvc,
+                                ICalibXmlSvc::interfaceID(),
                                 (IInterface*&)m_xmlSvc);
 
   // Locate meta conversion service

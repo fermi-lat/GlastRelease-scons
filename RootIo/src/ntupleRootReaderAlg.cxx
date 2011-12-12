@@ -79,8 +79,9 @@ private:
 
 };
 
-static const AlgFactory<ntupleRootReaderAlg>  Factory;
-const IAlgFactory& ntupleRootReaderAlgFactory = Factory;
+//static const AlgFactory<ntupleRootReaderAlg>  Factory;
+//const IAlgFactory& ntupleRootReaderAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(ntupleRootReaderAlg);
 
 
 ntupleRootReaderAlg::ntupleRootReaderAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
@@ -325,7 +326,7 @@ StatusCode ntupleRootReaderAlg::finalize()
     close();
     
     StatusCode sc = StatusCode::SUCCESS;
-    setFinalized();
+    //setFinalized(); No  longer in gaudi v21r7
     return sc;
 }
 

@@ -56,8 +56,9 @@ private:
     DataSvc*          m_dataSvc;
 };
 
-static ToolFactory<GemToOverlayTool> s_factory;
-const IToolFactory& GemToOverlayToolFactory = s_factory;
+//static ToolFactory<GemToOverlayTool> s_factory;
+//const IToolFactory& GemToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GemToOverlayTool);
 
 //------------------------------------------------------------------------
 GemToOverlayTool::GemToOverlayTool(const std::string& type, 

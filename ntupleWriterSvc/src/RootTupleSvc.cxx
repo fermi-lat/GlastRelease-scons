@@ -303,8 +303,9 @@ private:
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // declare the service factories for the ntupleWriterSvc
-static SvcFactory<RootTupleSvc> a_factory;
-const ISvcFactory& RootTupleSvcFactory = a_factory;
+//static SvcFactory<RootTupleSvc> a_factory;
+//const ISvcFactory& RootTupleSvcFactory = a_factory;
+DECLARE_SERVICE_FACTORY(RootTupleSvc);
 
 // Set Merit Version 
 // This value must be updated by hand when the contents of merit are modified

@@ -137,8 +137,9 @@ private:
     StringArrayProperty  m_disableList;
 };
 
-static ToolFactory<BkgndTupleSelectTool> s_factory;
-const IToolFactory& BkgndTupleSelectToolFactory = s_factory;
+//static ToolFactory<BkgndTupleSelectTool> s_factory;
+//const IToolFactory& BkgndTupleSelectToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(BkgndTupleSelectTool);
 
 //------------------------------------------------------------------------
 BkgndTupleSelectTool::BkgndTupleSelectTool(const std::string& type, 

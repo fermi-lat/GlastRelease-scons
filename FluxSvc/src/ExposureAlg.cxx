@@ -92,8 +92,9 @@ private:
 };
 //------------------------------------------------------------------------
 
-static const AlgFactory<ExposureAlg>  Factory;
-const IAlgFactory& ExposureAlgFactory = Factory;
+//static const AlgFactory<ExposureAlg>  Factory;
+//const IAlgFactory& ExposureAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(ExposureAlg);
 
 //------------------------------------------------------------------------
 //! ctor

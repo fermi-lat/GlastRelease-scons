@@ -219,8 +219,9 @@ private:
 } ;
 
 //-----------------------------------------------------------------------------------------------------------------
-static ToolFactory<GcrReconTool> s_factory;
-const IToolFactory& GcrReconToolFactory = s_factory;
+//static ToolFactory<GcrReconTool> s_factory;
+//const IToolFactory& GcrReconToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GcrReconTool);
 
 //-----------------------------------------------------------------------------------------------------------------
 GcrReconTool::GcrReconTool(const std::string & type, 

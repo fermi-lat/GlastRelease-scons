@@ -91,8 +91,9 @@ private:
 };
 
 
- static CnvFactory<PtOverlayCnv> s_factory;
- const ICnvFactory& PtOverlayCnvFactory = s_factory;
+ //static CnvFactory<PtOverlayCnv> s_factory;
+ //const ICnvFactory& PtOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(PtOverlayCnv);
 
  PtOverlayCnv::PtOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, Event::PtOverlay::classID(), svc) 
 {

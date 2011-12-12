@@ -76,8 +76,9 @@ private:
 
 //------------------------------------------------------------------------
 
-static const AlgFactory<InterleaveAlg>  Factory;
-const IAlgFactory& InterleaveAlgFactory = Factory;
+//static const AlgFactory<InterleaveAlg>  Factory;
+//const IAlgFactory& InterleaveAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(InterleaveAlg);
 
 //------------------------------------------------------------------------
 //! ctor

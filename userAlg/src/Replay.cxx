@@ -49,8 +49,9 @@ private:
 
 };
 
-static const AlgFactory<Replay>  Factory;
-const IAlgFactory& ReplayFactory = Factory;
+//static const AlgFactory<Replay>  Factory;
+//const IAlgFactory& ReplayFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(Replay);
 
 gui::SubMenu* Replay::s_replayMenu =0;
 
@@ -74,7 +75,7 @@ StatusCode Replay::initialize(){
 
     // Alg manager service for finding algs by name
     if ( (serviceLocator( )->getService( "ApplicationMgr",
-        IID_IAlgManager, (IInterface*&)m_AlgMgr )).isFailure() ) 
+        IAlgManager::interfaceID(), (IInterface*&)m_AlgMgr )).isFailure() ) 
     {
         log << MSG::ERROR << " no application manager???" << endreq;
         return StatusCode::FAILURE;

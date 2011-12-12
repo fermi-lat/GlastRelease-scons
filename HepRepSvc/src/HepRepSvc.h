@@ -12,6 +12,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IRunable.h"
 #include "HepRepSvc/IHepRepSvc.h"
+#include "HepRepObs.h"
 
 //forward declarations
 template <class TYPE> class SvcFactory;
@@ -175,6 +176,9 @@ private:
 
     /// The interface to the Algorithms manager
     IAlgManager* m_AlgMgr;
+
+    IToolSvc *m_toolSvc; // to handle observer
+    HepRepObs *m_heprepObs;
 };
 
 

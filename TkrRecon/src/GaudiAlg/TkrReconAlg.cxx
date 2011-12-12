@@ -156,8 +156,9 @@ bool TkrReconAlg::s_ghostTrackDone   = false;
 bool TkrReconAlg::s_ghostVertexDone  = false;
 
 // Definitions for use within Gaudi
-static const AlgFactory<TkrReconAlg>  Factory;
-const IAlgFactory& TkrReconAlgFactory = Factory;
+//static const AlgFactory<TkrReconAlg>  Factory;
+//const IAlgFactory& TkrReconAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrReconAlg);
 
 // Algorithm constructor
 TkrReconAlg::TkrReconAlg(const std::string& name, ISvcLocator* pSvcLocator) :

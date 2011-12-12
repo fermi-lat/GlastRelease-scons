@@ -58,8 +58,9 @@ private:
 };
 
 // Begin implementation
-static CnvFactory<XmlCalAsymCnv> s_factory;
-const  ICnvFactory& XmlCalAsymCnvFactory = s_factory;
+//static CnvFactory<XmlCalAsymCnv> s_factory;
+//const  ICnvFactory& XmlCalAsymCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlCalAsymCnv);
 
 
 

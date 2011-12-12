@@ -16,8 +16,9 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/TopLevel/EventModel.h"
 
-static ToolFactory<VtxKalFitTool> s_factory;
-const IToolFactory& VtxKalFitToolFactory = s_factory;
+//static ToolFactory<VtxKalFitTool> s_factory;
+//const IToolFactory& VtxKalFitToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(VtxKalFitTool);
 
 
 VtxKalFitTool::VtxKalFitTool(const std::string& type, 

@@ -32,8 +32,9 @@ $Header$
 
 
 // declare the service factories for the ConfigSvc
-static SvcFactory<ConfigSvc> a_factory;
-const ISvcFactory& ConfigSvcFactory = a_factory; 
+//static SvcFactory<ConfigSvc> a_factory;
+//const ISvcFactory& ConfigSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(ConfigSvc);
 
 
 ConfigSvc::ConfigSvc(const std::string& name,ISvcLocator* svc) 

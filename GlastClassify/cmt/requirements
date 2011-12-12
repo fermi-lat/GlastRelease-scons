@@ -1,5 +1,5 @@
 package GlastClassify
-version v7r8p6
+version v7r9p0
 
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
@@ -25,19 +25,23 @@ use xmlBase v5r*
 use TMineExt * IExternal
 
 use ntupleWriterSvc v*
-
+use RootmapPolicy * GlastPolicy
 use ROOT * IExternal
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
 macro_append ROOT_cppflags "" WIN32 " /wd4800 "
 
+set ClassificationTree_skip_rootmap "1"
+
 library  ClassificationTree -no_share                    \
                                 $(GlastClassify_headers) \
-                            -s= $(source)                \
+                             TreeAnalysis.cxx AtwoodTrees.cxx \
                             -s=ImActivityNodes $(source) \
                             -s=XT $(source)              \
                             -s=xmlBuilders $(source) 
 
-library  GlastClassify      -s=Dll $(source)   
+library  GlastClassify      ClassifyAlg.cxx   
+
+apply_pattern generate_rootmap library=GlastClassify
    
 macro_append GlastClassify_linkopts "" \
              Linux " -L${GlastClassify_cmtpath}/lib  -lClassificationTree " \

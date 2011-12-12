@@ -8,25 +8,86 @@
 
 #define LdfTimeCnv_CXX 
 
-#include "GaudiKernel/RegistryEntry.h"
-#include "LdfTimeCnv.h"
+#include "GaudiKernel/Converter.h"
+#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 
 #include "ldfReader/data/LatData.h"
 #include "LdfEvent/LdfTime.h"
 
+class  LdfTimeCnv : public Converter //virtual public IGlastCnv, public Converter 
+{
+
+  friend class CnvFactory<LdfTimeCnv>;
+
+
+protected:
+
+    /**
+        Constructor for this converter
+        @param svc a ISvcLocator interface to find services
+        @param clid the type of object the converter is able to convert
+    */
+    LdfTimeCnv(ISvcLocator* svc);
+
+    virtual ~LdfTimeCnv() { };
+
+public:
+    /// Query interfaces of Interface
+    //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    static const CLID&         classID()     {return CLID_LdfTime;}
+    static const unsigned char storageType() {return TEST_StorageType;}
+
+    /// Initialize the converter
+    virtual StatusCode initialize();
+
+    /// Initialize the converter
+    virtual StatusCode finalize();
+
+    /// Retrieve the class type of objects the converter produces. 
+    virtual const CLID& objType() const {return CLID_LdfTime;}
+
+    /// Retrieve the class type of the data store the converter uses.
+    // MSF: Masked to generate compiler error due to interface change
+    virtual long repSvcType() const {return Converter::i_repSvcType();}
+
+    /// Create the transient representation of an object.
+    virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
+
+    /// Methods to set and return the path in TDS for output of this converter
+  //  virtual void setPath(const std::string& path) {m_path = path;}
+    virtual const std::string& getPath() const    {return m_path;}
+
+private:
+
+    std::string m_path;
+
+};
+
 // Instantiation of a static factory class used by clients to create
 // instances of this service
-static CnvFactory<LdfTimeCnv> s_factory;
-const ICnvFactory& LdfTimeCnvFactory = s_factory;
+//static CnvFactory<MCEventCnv> s_factory;
+//const ICnvFactory& MCEventCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY ( LdfTimeCnv );
 
-LdfTimeCnv::LdfTimeCnv(ISvcLocator* svc)
-: LdfBaseCnv(classID(), svc)
+
+LdfTimeCnv::LdfTimeCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_LdfTime, svc)
 {
     // Here we associate this converter with the /Event path on the TDS.
-    declareObject("/Event/Time", objType(), "PASS");
+    m_path = "/Event/Time";
+}
+StatusCode LdfTimeCnv::initialize() 
+{
+    StatusCode status = Converter::initialize();
+
+    return status;
 }
 
+StatusCode LdfTimeCnv::finalize() 
+{
+    return Converter::finalize();
+}
 
 StatusCode LdfTimeCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {
@@ -42,12 +103,13 @@ StatusCode LdfTimeCnv::createObj(IOpaqueAddress* ,
     return StatusCode::SUCCESS;
 }
 
-StatusCode LdfTimeCnv::updateObj(int* , LdfEvent::LdfTime*) {
+//StatusCode LdfTimeCnv::updateObj(int* , LdfEvent::LdfTime*) {
     // Purpose and Method:  This method does nothing other than announce it has
     //   been called.
 
-    MsgStream log(msgSvc(), "LdfTimeCnv");
-    log << MSG::DEBUG << "LdfTimeCnv::updateObj" << endreq;
-    return StatusCode::SUCCESS;
-}
+//    MsgStream log(msgSvc(), "LdfTimeCnv");
+//    log << MSG::DEBUG << "LdfTimeCnv::updateObj" << endreq;
+//    return StatusCode::SUCCESS;//
+//}
+
 

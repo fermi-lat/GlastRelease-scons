@@ -76,8 +76,9 @@ private:
     //****** This section contains various useful member variables
 };
 
-static ToolFactory<FSWAuxLibsTool> s_factory;
-const IToolFactory& FSWAuxLibsToolFactory = s_factory;
+//static ToolFactory<FSWAuxLibsTool> s_factory;
+//const IToolFactory& FSWAuxLibsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(FSWAuxLibsTool);
 //------------------------------------------------------------------------
 
 FSWAuxLibsTool::FSWAuxLibsTool(const std::string& type, 

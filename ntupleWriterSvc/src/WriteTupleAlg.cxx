@@ -32,8 +32,9 @@ private:
 };
 
 //  factory stuff
-static const AlgFactory<WriteTupleAlg>  Factory;
-const IAlgFactory& WriteTupleAlgFactory = Factory;
+//static const AlgFactory<WriteTupleAlg>  Factory;
+//const IAlgFactory& WriteTupleAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(WriteTupleAlg);
 
 
 WriteTupleAlg::WriteTupleAlg(const std::string& name, ISvcLocator* pSvcLocator) 

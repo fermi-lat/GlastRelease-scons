@@ -29,9 +29,9 @@ private:
  
 };
 
-static const AlgFactory<testRootIoSvcAlg>  Factory;
-const IAlgFactory& testRootIoSvcAlgFactory = Factory;
-
+//static const AlgFactory<testRootIoSvcAlg>  Factory;
+//const IAlgFactory& testRootIoSvcAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(testRootIoSvcAlg);
 
 testRootIoSvcAlg::testRootIoSvcAlg(const std::string& name, ISvcLocator* pSvcLocator) : 
 Algorithm(name, pSvcLocator)

@@ -9,8 +9,10 @@ ApplicationMgr.DLLs   += {"CalibSvc"};
 
 // List of required services
  ApplicationMgr.ExtSvc   = {"GlastDetSvc", 
-//			    "GlastEventSelector/EventSelector" , 
-			    "EventCnvSvc" };
+			    "DbEvtSelector/EventSelector"};
+//			    "EventCnvSvc" };
+
+ApplicationMgr.HistogramPersistency = "NONE";
 
 // Use the new RootIoSvc, implementing IRunable
 ApplicationMgr.ExtSvc += { "RootIoSvc" };
@@ -31,7 +33,7 @@ MessageSvc.OutputLevel      = 2;
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 
 // Next few lines from AcdDigi test jobOptions
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
 
 GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.topVolume="LAT";

@@ -153,8 +153,9 @@ private:
 
 
 // declare the service factories for the MCdisplay
-static ToolFactory<MCdisplay> a_factory;
-const IToolFactory& MCdisplayFactory = a_factory;
+//static ToolFactory<MCdisplay> a_factory;
+//const IToolFactory& MCdisplayFactory = a_factory;
+DECLARE_TOOL_FACTORY(MCdisplay);
 
 //____________________________________________________________________________
 ///       Standard Constructor

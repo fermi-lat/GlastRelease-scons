@@ -74,8 +74,9 @@ private:
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrTrackFitAlg>  Factory;
-const IAlgFactory& TkrTrackFitAlgFactory = Factory;
+//static const AlgFactory<TkrTrackFitAlg>  Factory;
+//const IAlgFactory& TkrTrackFitAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrTrackFitAlg);
 
 // Standard Gaudi Constructor format
 TkrTrackFitAlg::TkrTrackFitAlg(const std::string& name, ISvcLocator* pSvcLocator) :

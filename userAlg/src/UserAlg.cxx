@@ -77,8 +77,9 @@ private:
 };
 
 
-static const AlgFactory<UserAlg>  Factory;
-const IAlgFactory& UserAlgFactory = Factory;
+//static const AlgFactory<UserAlg>  Factory;
+//const IAlgFactory& UserAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UserAlg);
 
 UserAlg::UserAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)

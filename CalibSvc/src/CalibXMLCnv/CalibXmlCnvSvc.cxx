@@ -17,8 +17,9 @@
 #include "xmlBase/XmlParser.h"
 
 // Make instances only via static factory class
-static SvcFactory<CalibXmlCnvSvc> calibXmlCnvSvc_factory;
-const ISvcFactory& CalibXmlCnvSvcFactory = calibXmlCnvSvc_factory;
+//static SvcFactory<CalibXmlCnvSvc> calibXmlCnvSvc_factory;
+//const ISvcFactory& CalibXmlCnvSvcFactory = calibXmlCnvSvc_factory;
+DECLARE_SERVICE_FACTORY(CalibXmlCnvSvc);
 
 CalibXmlCnvSvc::CalibXmlCnvSvc(const std::string& name, 
                                ISvcLocator* svc) :
@@ -55,7 +56,7 @@ StatusCode CalibXmlCnvSvc::initialize() {
   // it has to implement IDataProviderSvc
   IDataProviderSvc* pCDS = 0;
   sc = serviceLocator()->getService 
-    ("CalibDataSvc",  IID_IDataProviderSvc, (IInterface*&)pCDS);
+    ("CalibDataSvc",  IDataProviderSvc::interfaceID(), (IInterface*&)pCDS);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not locate CalibDataSvc" << endreq;
     return sc;
@@ -88,7 +89,7 @@ StatusCode CalibXmlCnvSvc::initialize() {
   
   // Query the IAddressCreator interface of the detector persistency service
   IAddressCreator* iAddrCreator;
-  sc = m_detPersSvc->queryInterface(IID_IAddressCreator, 
+  sc = m_detPersSvc->queryInterface(IAddressCreator::interfaceID(), 
 				    (void**) &iAddrCreator);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 

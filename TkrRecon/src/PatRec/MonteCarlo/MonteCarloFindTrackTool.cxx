@@ -98,8 +98,10 @@ private:
 };
 
 
-static ToolFactory<MonteCarloFindTrackTool> s_factory;
-const IToolFactory& MonteCarloFindTrackToolFactory = s_factory;
+//static ToolFactory<MonteCarloFindTrackTool> s_factory;
+//const IToolFactory& MonteCarloFindTrackToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(MonteCarloFindTrackTool);
+
 //
 // Class constructor, no initialization here
 //

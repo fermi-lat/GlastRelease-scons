@@ -91,8 +91,9 @@ private:
 };
 
 
- static CnvFactory<DiagDataOverlayCnv> s_factory;
- const ICnvFactory& DiagDataOverlayCnvFactory = s_factory;
+ //static CnvFactory<DiagDataOverlayCnv> s_factory;
+ //const ICnvFactory& DiagDataOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(DiagDataOverlayCnv);
 
  DiagDataOverlayCnv::DiagDataOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, Event::DiagDataOverlay::classID(), svc) 
 {

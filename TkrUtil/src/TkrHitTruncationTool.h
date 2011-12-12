@@ -66,7 +66,8 @@ private:
 
 };
 
-static ToolFactory<TkrHitTruncationTool> s_factory;
-const IToolFactory& TkrHitTruncationToolFactory = s_factory;
+//static ToolFactory<TkrHitTruncationTool> s_factory;
+//const IToolFactory& TkrHitTruncationToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrHitTruncationTool);
 
 #endif

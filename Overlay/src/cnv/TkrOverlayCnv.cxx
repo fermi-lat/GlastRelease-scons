@@ -92,8 +92,9 @@ private:
 };
 
 
- static CnvFactory<TkrOverlayCnv> s_factory;
- const ICnvFactory& TkrOverlayCnvFactory = s_factory;
+ //static CnvFactory<TkrOverlayCnv> s_factory;
+ //const ICnvFactory& TkrOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(TkrOverlayCnv);
 
  TkrOverlayCnv::TkrOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, ObjectVector<Event::TkrOverlay>::classID(), svc) 
 {

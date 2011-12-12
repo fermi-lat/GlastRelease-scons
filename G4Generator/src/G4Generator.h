@@ -6,11 +6,11 @@
 #include <string>
 #include <vector>
 #include "GaudiKernel/Property.h"
+#include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
 
 class RunManager;
 class IParticlePropertySvc;
 class IG4GenErrorSvc;
-
 
 /** 
  * @class G4Generator
@@ -38,6 +38,8 @@ class G4Generator : public Algorithm {
 
   /// a pointer to the service for particle properties
   IParticlePropertySvc* m_ppsvc;
+
+  IRandomAccess *m_randTool;
 
   /// a pointer to the Error handling service
   IG4GenErrorSvc* m_ErrorSvc;

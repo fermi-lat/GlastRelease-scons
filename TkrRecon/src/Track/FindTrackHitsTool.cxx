@@ -161,8 +161,9 @@ private:
     int    m_maxConsecutiveGaps; // Max. # of consecutive gaps (hitType = UNKNOWN) allowed
 };
 
-static ToolFactory<FindTrackHitsTool> s_factory;
-const IToolFactory& FindTrackHitsToolFactory = s_factory;
+//static ToolFactory<FindTrackHitsTool> s_factory;
+//const IToolFactory& FindTrackHitsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(FindTrackHitsTool);
 
 //
 // Does hit finding for candidate tracks

@@ -32,8 +32,9 @@
 #include "TkrUtil/ITkrGeometrySvc.h"
 
 
-static const AlgFactory<TkrDisplayAlg>  Factory;
-const IAlgFactory& TkrDisplayAlgFactory = Factory;
+//static const AlgFactory<TkrDisplayAlg>  Factory;
+//const IAlgFactory& TkrDisplayAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDisplayAlg);
 
 //------------------------------------------------------------------------------
 /// Algorithm parameters which can be set at run time must be declared.

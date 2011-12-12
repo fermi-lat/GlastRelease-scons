@@ -7,13 +7,15 @@
 //  -------------- basic Glast/Gaudi run enviornment -----------
 ApplicationMgr.DLLs   = {  "GlastSvc"};
 
-ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc" , "EventSelector/EventSelector" };
+ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc" , "DbEvtSelector/EventSelector" };
+
+ApplicationMgr.HistogramPersistency="NONE";
 
 // For Event loop
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 //EventSelector.Input = "NONE";
 //EventSelector.Input = "SVC='GlastEventSelector'";
-EventSelector.Input = "SVC='DbEvtSelector'";
+//EventSelector.Input = "SVC='DbEvtSelector'";
 
 // Stuff for detModel
 GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";

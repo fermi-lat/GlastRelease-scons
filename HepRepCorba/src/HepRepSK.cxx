@@ -294,7 +294,7 @@ class _0RL_cd_05fda001c74a4a06_00000000
 {
 public:
   inline _0RL_cd_05fda001c74a4a06_00000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
-     omniCallDescriptor(lcfn, op_, oplen, 0, 0, 0, upcall)
+     omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
   }
@@ -306,6 +306,8 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
+  static const char* const _user_exns[];
+
   ::CORBA::String_var arg_0_;
   const char* arg_0;
   ::CORBA::String_var arg_1_;
@@ -342,6 +344,10 @@ void _0RL_cd_05fda001c74a4a06_00000000::unmarshalReturnedValues(cdrStream& _n)
 
 }
 
+const char* const _0RL_cd_05fda001c74a4a06_00000000::_user_exns[] = {
+  0
+};
+
 // Local call call-back function.
 static void
 _0RL_lcfn_05fda001c74a4a06_10000000(omniCallDescriptor* cd, omniServant* svnt)
@@ -371,7 +377,7 @@ class _0RL_cd_05fda001c74a4a06_20000000
 {
 public:
   inline _0RL_cd_05fda001c74a4a06_20000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
-     omniCallDescriptor(lcfn, op_, oplen, 0, 0, 0, upcall)
+     omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
   }
@@ -383,6 +389,8 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
+  static const char* const _user_exns[];
+
   ::CORBA::String_var arg_0_;
   const char* arg_0;
   ::CORBA::String_var arg_1_;
@@ -419,6 +427,10 @@ void _0RL_cd_05fda001c74a4a06_20000000::unmarshalReturnedValues(cdrStream& _n)
 
 }
 
+const char* const _0RL_cd_05fda001c74a4a06_20000000::_user_exns[] = {
+  0
+};
+
 // Local call call-back function.
 static void
 _0RL_lcfn_05fda001c74a4a06_30000000(omniCallDescriptor* cd, omniServant* svnt)
@@ -448,7 +460,7 @@ class _0RL_cd_05fda001c74a4a06_40000000
 {
 public:
   inline _0RL_cd_05fda001c74a4a06_40000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
-     omniCallDescriptor(lcfn, op_, oplen, 0, 0, 0, upcall)
+     omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
   }
@@ -460,6 +472,8 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
+  static const char* const _user_exns[];
+
   ::CORBA::String_var arg_0_;
   const char* arg_0;
   ::CORBA::String_var arg_1_;
@@ -502,6 +516,10 @@ void _0RL_cd_05fda001c74a4a06_40000000::unmarshalReturnedValues(cdrStream& _n)
 
 }
 
+const char* const _0RL_cd_05fda001c74a4a06_40000000::_user_exns[] = {
+  0
+};
+
 // Local call call-back function.
 static void
 _0RL_lcfn_05fda001c74a4a06_50000000(omniCallDescriptor* cd, omniServant* svnt)
@@ -513,12 +531,12 @@ _0RL_lcfn_05fda001c74a4a06_50000000(omniCallDescriptor* cd, omniServant* svnt)
 
 }
 
-HepRepInstanceTree* _objref_HepRep::getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames)
+HepRepInstanceTree* _objref_HepRep::getInstances(const char* instanceTreeName, const char* instanceTreeVersion, const ::StringArray& typeNames)
 {
   _0RL_cd_05fda001c74a4a06_40000000 _call_desc(_0RL_lcfn_05fda001c74a4a06_50000000, "getInstances", 13);
   _call_desc.arg_0 = instanceTreeName;
   _call_desc.arg_1 = instanceTreeVersion;
-  _call_desc.arg_2 = &(StringArray&) typeNames;
+  _call_desc.arg_2 = &(::StringArray&) typeNames;
 
   _invoke(_call_desc);
   return _call_desc.result._retn();
@@ -532,7 +550,7 @@ class _0RL_cd_05fda001c74a4a06_60000000
 {
 public:
   inline _0RL_cd_05fda001c74a4a06_60000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
-     omniCallDescriptor(lcfn, op_, oplen, 0, 0, 0, upcall)
+     omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
   }
@@ -544,6 +562,8 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
+  static const char* const _user_exns[];
+
   ::CORBA::String_var arg_0_;
   const char* arg_0;
   ::CORBA::String_var arg_1_;
@@ -607,6 +627,10 @@ void _0RL_cd_05fda001c74a4a06_60000000::unmarshalReturnedValues(cdrStream& _n)
 
 }
 
+const char* const _0RL_cd_05fda001c74a4a06_60000000::_user_exns[] = {
+  0
+};
+
 // Local call call-back function.
 static void
 _0RL_lcfn_05fda001c74a4a06_70000000(omniCallDescriptor* cd, omniServant* svnt)
@@ -618,17 +642,17 @@ _0RL_lcfn_05fda001c74a4a06_70000000(omniCallDescriptor* cd, omniServant* svnt)
 
 }
 
-HepRepInstanceTree* _objref_HepRep::getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const StringArray& typeNames, const HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const StringArray& invertAtts)
+HepRepInstanceTree* _objref_HepRep::getInstancesAfterAction(const char* instanceTreeName, const char* instanceTreeVersion, const ::StringArray& typeNames, const ::HepRepActionList& actions, ::CORBA::Boolean getPoints, ::CORBA::Boolean getDrawAtts, ::CORBA::Boolean getNonDrawAtts, const ::StringArray& invertAtts)
 {
   _0RL_cd_05fda001c74a4a06_60000000 _call_desc(_0RL_lcfn_05fda001c74a4a06_70000000, "getInstancesAfterAction", 24);
   _call_desc.arg_0 = instanceTreeName;
   _call_desc.arg_1 = instanceTreeVersion;
-  _call_desc.arg_2 = &(StringArray&) typeNames;
-  _call_desc.arg_3 = &(HepRepActionList&) actions;
+  _call_desc.arg_2 = &(::StringArray&) typeNames;
+  _call_desc.arg_3 = &(::HepRepActionList&) actions;
   _call_desc.arg_4 = getPoints;
   _call_desc.arg_5 = getDrawAtts;
   _call_desc.arg_6 = getNonDrawAtts;
-  _call_desc.arg_7 = &(StringArray&) invertAtts;
+  _call_desc.arg_7 = &(::StringArray&) invertAtts;
 
   _invoke(_call_desc);
   return _call_desc.result._retn();
@@ -642,7 +666,7 @@ class _0RL_cd_05fda001c74a4a06_80000000
 {
 public:
   inline _0RL_cd_05fda001c74a4a06_80000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
-     omniCallDescriptor(lcfn, op_, oplen, 0, 0, 0, upcall)
+     omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
   }
@@ -652,6 +676,8 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
+  static const char* const _user_exns[];
+
   StringArray_var result;
 };
 
@@ -667,6 +693,10 @@ void _0RL_cd_05fda001c74a4a06_80000000::unmarshalReturnedValues(cdrStream& _n)
   (StringArray&)result <<= _n;
 
 }
+
+const char* const _0RL_cd_05fda001c74a4a06_80000000::_user_exns[] = {
+  0
+};
 
 // Local call call-back function.
 static void
@@ -696,7 +726,7 @@ class _0RL_cd_05fda001c74a4a06_a0000000
 {
 public:
   inline _0RL_cd_05fda001c74a4a06_a0000000(LocalCallFn lcfn,const char* op_,size_t oplen,_CORBA_Boolean upcall=0):
-     omniCallDescriptor(lcfn, op_, oplen, 0, 0, 0, upcall)
+     omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
   {
     
   }
@@ -706,6 +736,8 @@ public:
   void marshalReturnedValues(cdrStream&);
   
   
+  static const char* const _user_exns[];
+
   ::CORBA::String_var result;
 };
 
@@ -720,6 +752,10 @@ void _0RL_cd_05fda001c74a4a06_a0000000::unmarshalReturnedValues(cdrStream& _n)
   result = _n.unmarshalString(0);
 
 }
+
+const char* const _0RL_cd_05fda001c74a4a06_a0000000::_user_exns[] = {
+  0
+};
 
 // Local call call-back function.
 static void

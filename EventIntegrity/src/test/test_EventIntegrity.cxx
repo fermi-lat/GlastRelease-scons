@@ -37,8 +37,9 @@ private:
 };
 
 
-static const AlgFactory<test_EventIntegrityAlg>  Factory;
-const IAlgFactory& test_EventIntegrityAlgFactory = Factory;
+//static const AlgFactory<test_EventIntegrityAlg>  Factory;
+//const IAlgFactory& test_EventIntegrityAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_EventIntegrityAlg);
 
 test_EventIntegrityAlg::test_EventIntegrityAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)

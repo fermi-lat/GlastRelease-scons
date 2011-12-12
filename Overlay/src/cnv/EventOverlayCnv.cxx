@@ -96,8 +96,9 @@ private:
 };
 
 
- static CnvFactory<EventOverlayCnv> s_factory;
- const ICnvFactory& EventOverlayCnvFactory = s_factory;
+ //static CnvFactory<EventOverlayCnv> s_factory;
+ //const ICnvFactory& EventOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(EventOverlayCnv);
 
  EventOverlayCnv::EventOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, Event::EventOverlay::classID(), svc) 
 {

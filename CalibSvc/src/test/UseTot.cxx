@@ -47,8 +47,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseTot> Factory;
-const IAlgFactory& UseTotFactory = Factory;
+//static const AlgFactory<UseTot> Factory;
+//const IAlgFactory& UseTotFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseTot);
 
 
 UseTot::UseTot(const std::string&  name, 
@@ -164,8 +165,8 @@ void UseTot::processNew(CalibData::TkrTotCol* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
   
   unsigned tray = 0;
   bool top = true;

@@ -25,7 +25,7 @@ public:
     return CLID_Event;
   }
 
-protected:
+//protected:
 
   LdfEventCnv(ISvcLocator* svc);
 
@@ -42,3 +42,4 @@ protected:
 
 
 #endif // LdfEventCnv_H
+

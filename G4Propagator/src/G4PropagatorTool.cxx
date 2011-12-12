@@ -8,8 +8,9 @@
 
 #include "G4PropagatorTool.h"
 
-static ToolFactory<G4PropagatorTool> g4prop_factory;
-const IToolFactory& G4PropagatorToolFactory = g4prop_factory;
+//static ToolFactory<G4PropagatorTool> g4prop_factory;
+//const IToolFactory& G4PropagatorToolFactory = g4prop_factory;
+DECLARE_TOOL_FACTORY(G4PropagatorTool);
 
 IG4GeometrySvc* G4PropagatorTool::geometrySvc    = 0;
 IPropagator*    G4PropagatorTool::propagatorTool = 0;

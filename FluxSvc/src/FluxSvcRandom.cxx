@@ -10,5 +10,6 @@ public:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<FluxSvcRandom> s_factory;
-const IToolFactory& FluxSvcRandomFactory = s_factory;
+//static ToolFactory<FluxSvcRandom> s_factory;
+//const IToolFactory& FluxSvcRandomFactory = s_factory;
+DECLARE_TOOL_FACTORY(FluxSvcRandom);

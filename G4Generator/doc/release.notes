@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ G4Generator-06-04-00  8-Dec-2011 HMK Merge in Gaudi v21r7
  G4Generator-06-03-01  9-Sep-2011  TU Making QGSP_BERT_EPAX the default for physics choice
  G4Generator-06-03-00 29-Aug-2011  flongo enable EmLiv physics list and 
      QGSP_BERT with Epax ion process (QGSP_BERT_EPAX)
@@ -23,10 +24,12 @@
  G4Generator-06-00-01 21-May-2011 hmk    patch requirements to use v9 of G4 
  G4Generator-06-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
  G4Generator-05-26-04 06-Jan-2011  lsrea Install src/test/test_sources.xml
+ G4Generatory-05-26-03-gr01 06-Oct-2010 hmk Upgrade Gaudi v21r7 along branch
  G4Generator-05-26-03 29-Jun-2010  lsrea Added jO param to make debugging of geometry easier
  G4Generator-05-26-02 12-Jun-2010    jrb typo in job options
  G4Generator-05-26-01 12-Jun-2010    jrb upgrades for SCons builds
  G4Generator-05-26-00 04-Jun-2010 burnett Tracy's changes for CAL
+ G4Generator-05-25-01-gr01 02-Sep-2010 hmk Upgrade to Gaudi v21r7
  G4Generator-05-25-01 11-Oct-2009  lsrea upgrades to handle composites of composites
  v5r25p0 19-Dec-08 TU  Franz's updates for alpha interactions
  v5r24p0 26-Nov-08 TU  Franz's updates for option to include LPM effect from G4HadronSim

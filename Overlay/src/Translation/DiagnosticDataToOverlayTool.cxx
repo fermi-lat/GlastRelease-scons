@@ -56,8 +56,9 @@ private:
     DataSvc*          m_dataSvc;
 };
 
-static ToolFactory<DiagnosticDataToOverlayTool> s_factory;
-const IToolFactory& DiagnosticDataToOverlayToolFactory = s_factory;
+//static ToolFactory<DiagnosticDataToOverlayTool> s_factory;
+//const IToolFactory& DiagnosticDataToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(DiagnosticDataToOverlayTool);
 
 //------------------------------------------------------------------------
 DiagnosticDataToOverlayTool::DiagnosticDataToOverlayTool(const std::string& type, 

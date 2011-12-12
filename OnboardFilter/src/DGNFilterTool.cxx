@@ -139,8 +139,9 @@ private:
     IMootSvc*         m_mootSvc;
 };
 
-static ToolFactory<DGNFilterTool> s_factory;
-const IToolFactory& DGNFilterToolFactory = s_factory;
+//static ToolFactory<DGNFilterTool> s_factory;
+//const IToolFactory& DGNFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(DGNFilterTool);
 //------------------------------------------------------------------------
 
 DGNFilterTool::DGNFilterTool(const std::string& type, 

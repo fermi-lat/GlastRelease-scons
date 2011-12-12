@@ -30,5 +30,6 @@ public:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<G4GeneratorRandom> s_factory;
-const IToolFactory& G4GeneratorRandomFactory = s_factory;
+//static ToolFactory<G4GeneratorRandom> s_factory;
+//const IToolFactory& G4GeneratorRandomFactory = s_factory;
+DECLARE_TOOL_FACTORY(G4GeneratorRandom);

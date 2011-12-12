@@ -176,8 +176,9 @@ private:
     IComputeMeasErrors* m_fitErrs;
 };
 
-static ToolFactory<KalmanTrackFitTool> s_factory;
-const IToolFactory& KalmanTrackFitToolFactory = s_factory;
+//static ToolFactory<KalmanTrackFitTool> s_factory;
+//const IToolFactory& KalmanTrackFitToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(KalmanTrackFitTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

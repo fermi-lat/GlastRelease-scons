@@ -15,9 +15,9 @@
 
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrDigiChargeAlg>    Factory;
-const IAlgFactory& TkrDigiChargeAlgFactory = Factory;
-
+//static const AlgFactory<TkrDigiChargeAlg>    Factory;
+//const IAlgFactory& TkrDigiChargeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDigiChargeAlg);
 
 TkrDigiChargeAlg::TkrDigiChargeAlg(const std::string& name,
                                  ISvcLocator* pSvcLocator)

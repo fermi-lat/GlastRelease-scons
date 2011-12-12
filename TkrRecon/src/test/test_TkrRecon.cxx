@@ -50,8 +50,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_TkrRecon );
 
-static const AlgFactory<test_TkrRecon>  Factory;
-const IAlgFactory& test_TkrReconFactory = Factory;
+//static const AlgFactory<test_TkrRecon>  Factory;
+//const IAlgFactory& test_TkrReconFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_TkrRecon);
 
 //------------------------------------------------------------------------
 //! ctor

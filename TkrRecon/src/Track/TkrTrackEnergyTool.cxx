@@ -63,8 +63,9 @@ private:
     DataSvc*               m_dataSvc;
 };
 
-static ToolFactory<TkrTrackEnergyTool> s_factory;
-const IToolFactory& TkrTrackEnergyToolFactory = s_factory;
+//static ToolFactory<TkrTrackEnergyTool> s_factory;
+//const IToolFactory& TkrTrackEnergyToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrTrackEnergyTool);
 
 // constants defined at file scope
 

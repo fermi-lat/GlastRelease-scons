@@ -23,6 +23,8 @@ namespace {
     bool debug = false;
 }
 
+DECLARE_TOOL_FACTORY(TkrAlignHitsTool);
+
 TkrAlignHitsTool::TkrAlignHitsTool(const std::string& type, 
                                    const std::string& name, 
                                    const IInterface* parent) :

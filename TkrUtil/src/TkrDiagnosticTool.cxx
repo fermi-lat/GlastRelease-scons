@@ -84,8 +84,9 @@ private:
     double m_diagEnabledTime;
 };
 
-static ToolFactory<TkrDiagnosticTool> s_factory;
-const IToolFactory& TkrDiagnosticToolFactory = s_factory;
+//static ToolFactory<TkrDiagnosticTool> s_factory;
+//const IToolFactory& TkrDiagnosticToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrDiagnosticTool);
 
 TkrDiagnosticTool::TkrDiagnosticTool(const std::string& type, 
                            const std::string& name, 

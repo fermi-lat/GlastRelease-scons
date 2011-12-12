@@ -58,8 +58,9 @@ private:
     DataSvc*          m_dataSvc;
 };
 
-static ToolFactory<EventToOverlayTool> s_factory;
-const IToolFactory& EventToOverlayToolFactory = s_factory;
+//static ToolFactory<EventToOverlayTool> s_factory;
+//const IToolFactory& EventToOverlayToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(EventToOverlayTool);
 
 //------------------------------------------------------------------------
 EventToOverlayTool::EventToOverlayTool(const std::string& type, 

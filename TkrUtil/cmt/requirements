@@ -1,6 +1,6 @@
 package TkrUtil
 
-version v3r23p0
+version v3r24p0
 
 author Leon Rochester <lsrea@slac.stanford.edu>
 
@@ -21,7 +21,7 @@ set JOBOPTIONS ${TKRUTILROOT}/src/test/jobOptions.txt
 
 apply_pattern package_include
 
-library TkrUtil *.cxx Dll/*.cxx ${TkrUtil_headers}
+library TkrUtil *.cxx ${TkrUtil_headers}
 
 #=============================================================
 private
@@ -29,10 +29,11 @@ private
 # this is added to get the 'set ROOTSYS' from it, but TkrRecon
 #for instance seems to do without it.... to be investigated further
 use ROOT * IExternal
-
+use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 apply_pattern package_Cshlibflags 
+apply_pattern generate_rootmap library=TkrUtil
 
 private # Traudl says we need this
 
@@ -43,7 +44,7 @@ apply_pattern package_headers
 
 # build this for testing, console only. Load all objects directly. 
 
-application test_TkrUtil ${GuiMain} test/test_TkrUtil.cxx test/test_TkrUtil_load.cxx ${Win32Resource}
+application test_TkrUtil ${GuiMain} test/test_TkrUtil.cxx ${Win32Resource}
 
 application test_IndexedVector test/testIndexedVector.cxx
 

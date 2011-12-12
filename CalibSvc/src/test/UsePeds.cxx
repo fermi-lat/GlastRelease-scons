@@ -48,9 +48,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UsePeds> Factory;
-const IAlgFactory& UsePedsFactory = Factory;
-
+//static const AlgFactory<UsePeds> Factory;
+//const IAlgFactory& UsePedsFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UsePeds);
 
 UsePeds::UsePeds(const std::string&  name, 
                  ISvcLocator*        pSvcLocator )
@@ -171,8 +171,8 @@ void UsePeds::processNew(CalibData::CalCalibPed* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
 
   std::string vStart = pNew->getValidStart()->getString();
   std::string vEnd = pNew->getValidEnd()->getString();

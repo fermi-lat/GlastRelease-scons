@@ -1,5 +1,5 @@
 package DetDisplay
-version v3r3p5
+version v3r4p0
 
 author T. Burnett <tburnett@u.washington.edu>
 
@@ -17,6 +17,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
+use RootmapPolicy * GlastPolicy
 use gr_app
 
 # get flags to build shared library
@@ -24,7 +25,9 @@ use gr_app
 apply_pattern package_Cshlibflags
 
 macro source "*.cxx" WIN32 "*.h *.cxx"
-library DetDisplay $(source)  Dll/*.cxx
+library DetDisplay $(source)  
+
+apply_pattern generate_rootmap library=DetDisplay
 
 
 # build this for testing, or stand-alone use

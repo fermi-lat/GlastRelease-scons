@@ -145,8 +145,9 @@ private:
 //------------------------------------------------------------------------
 
 
-static const AlgFactory<FluxAlg>  Factory;
-const IAlgFactory& FluxAlgFactory = Factory;
+//static const AlgFactory<FluxAlg>  Factory;
+//const IAlgFactory& FluxAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(FluxAlg);
 
 //------------------------------------------------------------------------
 //! ctor

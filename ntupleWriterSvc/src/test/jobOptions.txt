@@ -19,7 +19,7 @@ MessageSvc.OutputLevel      = 2;
 // Event related parameters
 //--------------------------------------------------------------
 ApplicationMgr.EvtSel  = "NONE";
-
+ApplicationMgr.HistogramPersistency="NONE";
 writeJunkAlg.tupleName = "TESTALG";
 
 // Number of Events to Process

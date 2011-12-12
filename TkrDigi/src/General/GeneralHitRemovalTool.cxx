@@ -30,8 +30,9 @@
 #include <string>
 
 
-static const ToolFactory<GeneralHitRemovalTool>    s_factory;
-const IToolFactory& GeneralHitRemovalToolFactory = s_factory;
+//static const ToolFactory<GeneralHitRemovalTool>    s_factory;
+//const IToolFactory& GeneralHitRemovalToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GeneralHitRemovalTool);
 
 
 GeneralHitRemovalTool::GeneralHitRemovalTool(const std::string& type,

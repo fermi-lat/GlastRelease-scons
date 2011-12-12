@@ -57,8 +57,9 @@ private:
     
 };
 
-static const AlgFactory<test_LdfConverterAlg>  Factory;
-const IAlgFactory& test_LdfConverterAlgFactory = Factory;
+//static const AlgFactory<test_LdfConverterAlg>  Factory;
+//const IAlgFactory& test_LdfConverterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_LdfConverterAlg);
 
 
 test_LdfConverterAlg::test_LdfConverterAlg(const std::string& name, ISvcLocator* pSvcLocator) : 

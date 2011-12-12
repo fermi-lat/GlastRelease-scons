@@ -124,8 +124,9 @@ private:
     IMootSvc*         m_mootSvc;
 };
 
-static ToolFactory<MIPFilterTool> s_factory;
-const IToolFactory& MIPFilterToolFactory = s_factory;
+//static ToolFactory<MIPFilterTool> s_factory;
+//const IToolFactory& MIPFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(MIPFilterTool);
 //------------------------------------------------------------------------
 
 MIPFilterTool::MIPFilterTool(const std::string& type, 

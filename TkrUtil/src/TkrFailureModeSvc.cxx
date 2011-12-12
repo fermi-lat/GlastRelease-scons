@@ -21,8 +21,10 @@ namespace {
 }
 
 // declare the service factories for the TkrFailureModeSvc
-static SvcFactory<TkrFailureModeSvc> a_factory;
-const ISvcFactory& TkrFailureModeSvcFactory = a_factory; 
+//static SvcFactory<TkrFailureModeSvc> a_factory;
+//const ISvcFactory& TkrFailureModeSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(TkrFailureModeSvc);
+
 
 TkrFailureModeSvc::TkrFailureModeSvc(const std::string& name,ISvcLocator* svc) : Service(name,svc)
 {

@@ -147,8 +147,9 @@ private:
     double m_rmsTransCut;
 };
 
-static ToolFactory<TkrFilterTool> s_factory;
-const IToolFactory& TkrFilterToolFactory = s_factory;
+//static ToolFactory<TkrFilterTool> s_factory;
+//const IToolFactory& TkrFilterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrFilterTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

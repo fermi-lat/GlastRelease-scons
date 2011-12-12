@@ -91,8 +91,9 @@ private:
 };
 
 
- static CnvFactory<GemOverlayCnv> s_factory;
- const ICnvFactory& GemOverlayCnvFactory = s_factory;
+ //static CnvFactory<GemOverlayCnv> s_factory;
+ //const ICnvFactory& GemOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(GemOverlayCnv);
 
  GemOverlayCnv::GemOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, Event::GemOverlay::classID(), svc) 
 {

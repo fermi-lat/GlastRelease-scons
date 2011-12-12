@@ -48,8 +48,9 @@ private:
 
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<UseAsym> Factory;
-const IAlgFactory& UseAsymFactory = Factory;
+//static const AlgFactory<UseAsym> Factory;
+//const IAlgFactory& UseAsymFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(UseAsym);
 
 
 UseAsym::UseAsym(const std::string&  name, 
@@ -159,8 +160,8 @@ void UseAsym::processNew(CalibData::CalAsymCol* pNew,
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Retrieved with path " << path << endreq
       << "Serial #" <<  pNew->getSerNo() << endreq; 
-  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hours()
-      << "  Vend: " << (pNew->validTill()).hours() << endreq;
+  log << MSG::INFO << "Vstart: " <<  (pNew->validSince()).hour(true)
+      << "  Vend: " << (pNew->validTill()).hour(true) << endreq;
   
   if (!done) {
     done = true;

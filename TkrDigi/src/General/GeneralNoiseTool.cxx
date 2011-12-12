@@ -21,8 +21,10 @@
 #include <string>
 
 
-static const ToolFactory<GeneralNoiseTool>    s_factory;
-const IToolFactory& GeneralNoiseToolFactory = s_factory;
+//static const ToolFactory<GeneralNoiseTool>    s_factory;
+//const IToolFactory& GeneralNoiseToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GeneralNoiseTool);
+
 
 // 1/4 mip, was .03
 //double GeneralNoiseTool::s_noiseThreshold = 0.03875;

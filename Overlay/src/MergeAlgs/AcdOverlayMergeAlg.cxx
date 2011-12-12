@@ -65,8 +65,9 @@ private:
 
 
 // Define the factory for this algorithm
-static const AlgFactory<AcdOverlayMergeAlg>  Factory;
-const IAlgFactory& AcdOverlayMergeAlgFactory = Factory;
+//static const AlgFactory<AcdOverlayMergeAlg>  Factory;
+//const IAlgFactory& AcdOverlayMergeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AcdOverlayMergeAlg);
 
 /// construct object & declare jobOptions
 AcdOverlayMergeAlg::AcdOverlayMergeAlg(const std::string& name, ISvcLocator* pSvcLocator) :

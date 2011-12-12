@@ -51,8 +51,9 @@ private:
 };
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrFilterAlg>  Factory;
-const IAlgFactory& TkrFilterAlgFactory = Factory;
+//static const AlgFactory<TkrFilterAlg>  Factory;
+//const IAlgFactory& TkrFilterAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrFilterAlg);
 
 // Standard Gaudi Constructor format
 TkrFilterAlg::TkrFilterAlg(const std::string& name, ISvcLocator* pSvcLocator) :

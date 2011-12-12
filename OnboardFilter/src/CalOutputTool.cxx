@@ -86,8 +86,9 @@ private:
     IDataProviderSvc* m_dataSvc;
 };
 
-static ToolFactory<CalOutputTool> s_factory;
-const IToolFactory& CalOutputToolFactory = s_factory;
+//static ToolFactory<CalOutputTool> s_factory;
+//const IToolFactory& CalOutputToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalOutputTool);
 //------------------------------------------------------------------------
 
 CalOutputTool::CalOutputTool(const std::string& type, 

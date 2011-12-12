@@ -6,8 +6,11 @@
  * package manager:T.Burnett
  * EOH *
 
+ DetDispaly-03-04-00 05-Dec-2011    hmk Merge in Gaudi v21r7
  DetDispaly-03-03-05 20-May-2011    hmk CLHEP 2.1.0.1
  DetDisplay-03-03-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ DetDisplay-03-03-03-gr02 19-Apr-2011 hmk merge Gaudi updates to GlastReelasev18r7p1
+ DetDisplay-03-03-03-gr01 31-Aug-2010 hmk Move to Gaudi v21r7
  DetDisplay-03-03-03 15-Jun-2010  lsrea Up max detail level from 7 to 9; default is still 2
  DetDisplay-03-03-02 12-Jun-2010    jrb upgrades for SCons builds
  DetDisplay-03-03-01 10-Nov-2009    jrb Updates for SCons

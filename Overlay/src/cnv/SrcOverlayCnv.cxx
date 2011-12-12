@@ -91,8 +91,9 @@ private:
 };
 
 
- static CnvFactory<SrcOverlayCnv> s_factory;
- const ICnvFactory& SrcOverlayCnvFactory = s_factory;
+ //static CnvFactory<SrcOverlayCnv> s_factory;
+ //const ICnvFactory& SrcOverlayCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(SrcOverlayCnv);
 
  SrcOverlayCnv::SrcOverlayCnv( ISvcLocator* svc) : 
                  Converter (EXCEL_StorageType, Event::SrcOverlay::classID(), svc) 

@@ -106,8 +106,9 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     double                m_zCoord;
 };
 
-static ToolFactory<G4PropagationTool> g4prop_factory;
-const IToolFactory& G4PropagationToolFactory = g4prop_factory;
+//static ToolFactory<G4PropagationTool> g4prop_factory;
+//const IToolFactory& G4PropagationToolFactory = g4prop_factory;
+DECLARE_TOOL_FACTORY(G4PropagationTool);
 
 G4PropagationTool::G4PropagationTool(const std::string& type, const std::string& name, const IInterface* parent) :
   ParticleTransporter(0,0),

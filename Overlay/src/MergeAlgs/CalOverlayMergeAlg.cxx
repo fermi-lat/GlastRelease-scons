@@ -72,8 +72,9 @@ private:
 
 
 // Define the factory for this algorithm
-static const AlgFactory<CalOverlayMergeAlg>  Factory;
-const IAlgFactory& CalOverlayMergeAlgFactory = Factory;
+//static const AlgFactory<CalOverlayMergeAlg>  Factory;
+//const IAlgFactory& CalOverlayMergeAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalOverlayMergeAlg);
 
 /// construct object & declare jobOptions
 CalOverlayMergeAlg::CalOverlayMergeAlg(const string& name, ISvcLocator* pSvcLocator) :

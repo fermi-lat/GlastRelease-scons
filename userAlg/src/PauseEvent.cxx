@@ -66,8 +66,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( PauseEvent );
 
-static const AlgFactory<PauseEvent>  Factory;
-const IAlgFactory& PauseEventFactory = Factory;
+//static const AlgFactory<PauseEvent>  Factory;
+//const IAlgFactory& PauseEventFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(PauseEvent);
 
 PauseEvent::PauseEvent(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)

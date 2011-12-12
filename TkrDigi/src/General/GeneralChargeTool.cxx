@@ -22,9 +22,9 @@
 #include <string>
 
 
-static const ToolFactory<GeneralChargeTool>    s_factory;
-const IToolFactory& GeneralChargeToolFactory = s_factory;
-
+//static const ToolFactory<GeneralChargeTool>    s_factory;
+//const IToolFactory& GeneralChargeToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GeneralChargeTool);
 
 GeneralChargeTool::GeneralChargeTool(const std::string& type,
                                      const std::string& name,

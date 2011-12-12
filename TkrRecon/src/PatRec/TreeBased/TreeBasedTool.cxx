@@ -131,8 +131,9 @@ private:
 };
 
 
-static ToolFactory<TreeBasedTool> s_factory;
-const IToolFactory& TreeBasedToolFactory = s_factory;
+//static ToolFactory<TreeBasedTool> s_factory;
+//const IToolFactory& TreeBasedToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TreeBasedTool);
 
 //
 // Class constructor, no initialization here

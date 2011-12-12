@@ -4,11 +4,14 @@
  @verbatim
  * EOH *
 
+ G4Propagator-03-01-00 08-Dec-2011 hmk Merge in Gaudi v21r7 updates
  G4Propagator-03-00-01 21-May-2011 hmk    update use of IExternal/Geant4 to v9 
  G4Propagator-03-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
  G4Propagator-03-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
  G4Propagator-02-05-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ G4Propagator-02-05-04-gr01 06-Oct-2010 hmk Upgrade Gaudi v21r7 along branch
  G4Propagator-02-05-04 12-Jun-2010    jrb upgrades for SCons builds
+ G4Propagator-02-05-03-gr01 02-Sep-2010 hmk Upgrade to Gaudi v21r7
  G4Propagator-02-05-03 11-Nov-2009    jrb Updates for SCons
  v2r5p2   12-Sep-09 TU   Fixing linux compiler warnings
  v2r5p1   13-Aug-08 TU   Beef up the exception handling to make sure the messages are output

@@ -46,8 +46,9 @@ protected:
    
 };
 
-static CnvFactory<XmlSAABoundaryCnv> s_factory;
-const  ICnvFactory& XmlSAABoundaryCnvFactory = s_factory;
+//static CnvFactory<XmlSAABoundaryCnv> s_factory;
+//const  ICnvFactory& XmlSAABoundaryCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlSAABoundaryCnv);
 
 
 XmlSAABoundaryCnv::XmlSAABoundaryCnv( ISvcLocator* svc) :

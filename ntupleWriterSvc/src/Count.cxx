@@ -32,8 +32,9 @@ private:
 };
 
 //  factory stuff
-static const AlgFactory<Count>  Factory;
-const IAlgFactory& CountFactory = Factory;
+//static const AlgFactory<Count>  Factory;
+//const IAlgFactory& CountFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(Count);
 
 std::map<std::string,int> Count::s_map;
 

@@ -56,8 +56,9 @@ private:
 //------------------------------------------------------------------------
 
 
-static const SvcFactory<OrbitSvc>  Factory;
-const ISvcFactory& OrbitSvcFactory = Factory;
+//static const SvcFactory<OrbitSvc>  Factory;
+//const ISvcFactory& OrbitSvcFactory = Factory;
+DECLARE_SERVICE_FACTORY(OrbitSvc);
 
 //------------------------------------------------------------------------
 //! ctor

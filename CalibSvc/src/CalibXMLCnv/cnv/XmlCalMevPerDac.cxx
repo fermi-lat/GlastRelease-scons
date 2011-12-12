@@ -59,8 +59,9 @@ private:
 };
 
 // Begin implementation
-static CnvFactory<XmlCalMevPerDacCnv> s_factory;
-const  ICnvFactory& XmlCalMevPerDacCnvFactory = s_factory;
+//static CnvFactory<XmlCalMevPerDacCnv> s_factory;
+//const  ICnvFactory& XmlCalMevPerDacCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlCalMevPerDacCnv);
 
 
 

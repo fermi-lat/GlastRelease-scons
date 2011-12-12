@@ -47,8 +47,9 @@ protected:
 
 };
 
-static CnvFactory<XmlTkrSplitsCnv> s_factory;
-const  ICnvFactory& XmlTkrSplitsCnvFactory = s_factory;
+//static CnvFactory<XmlTkrSplitsCnv> s_factory;
+//const  ICnvFactory& XmlTkrSplitsCnvFactory = s_factory;
+DECLARE_CONVERTER_FACTORY(XmlTkrSplitsCnv);
 
 XmlTkrSplitsCnv::XmlTkrSplitsCnv( ISvcLocator* svc) :
   XmlTkrBaseCnv(svc, CLID_Calib_TKR_Splits) { 

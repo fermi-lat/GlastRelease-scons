@@ -24,9 +24,11 @@ $Header$
 #include "xmlBase/IFile.h"
 
 // declare the service factories for the TkrSplitsSvc
-static SvcFactory<TkrSplitsSvc> a_factory;
-const ISvcFactory& TkrSplitsSvcFactory = a_factory; 
+//static SvcFactory<TkrSplitsSvc> a_factory;
+//const ISvcFactory& TkrSplitsSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(TkrSplitsSvc);
 
+//
 TkrSplitsSvc::TkrSplitsSvc(const std::string& name,ISvcLocator* svc) 
 : Service(name,svc)
 {

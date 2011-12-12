@@ -23,8 +23,9 @@ $Header$
 #include "CLHEP/Random/RandGauss.h"
 
 // declare the service factories for the TkrToTSvc
-static SvcFactory<TkrToTSvc> a_factory;
-const ISvcFactory& TkrToTSvcFactory = a_factory; 
+//static SvcFactory<TkrToTSvc> a_factory;
+//const ISvcFactory& TkrToTSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(TkrToTSvc);
 
 using namespace idents;
 

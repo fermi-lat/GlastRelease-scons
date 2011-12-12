@@ -29,8 +29,9 @@
 
 
 /// Instantiation of a static factory to create instances of this service
-static SvcFactory<MootSvc>          MootSvc_factory;
-const ISvcFactory& MootSvcFactory = MootSvc_factory;
+//static SvcFactory<MootSvc>          MootSvc_factory;
+//const ISvcFactory& MootSvcFactory = MootSvc_factory;
+DECLARE_SERVICE_FACTORY(MootSvc);
 
 namespace {
 

@@ -7,9 +7,11 @@
 //  -------------- basic Glast/Gaudi run enviornment -----------
 ApplicationMgr.DLLs   = {  "GlastSvc","G4Generator","G4Propagator"};
 
-ApplicationMgr.ExtSvc = { 
+ApplicationMgr.ExtSvc = { "DbEvtSelector/EventSelector" };
 //    "GlastEventSelector/EventSelector" , 
-    "EventCnvSvc"};
+ //   "EventCnvSvc"};
+
+ApplicationMgr.HistogramPersistency = "NONE";
 
 //----------------- local algorithms to run -------------------
 ApplicationMgr.TopAlg = { 
@@ -31,7 +33,7 @@ MessageSvc.OutputLevel      = 2;
 
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
 
 // Stuff for detModel
 GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
