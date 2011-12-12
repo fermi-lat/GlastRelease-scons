@@ -36,8 +36,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_CalDigi );
 
-static const AlgFactory<test_CalDigi>  Factory;
-const IAlgFactory& test_CalDigiFactory = Factory;
+//static const AlgFactory<test_CalDigi>  Factory;
+//const IAlgFactory& test_CalDigiFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_CalDigi);
 
 test_CalDigi::test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator)
   :

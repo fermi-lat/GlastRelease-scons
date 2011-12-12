@@ -36,8 +36,9 @@
 
 
 // Define the factory for this algorithm
-static const AlgFactory<CalDigiAlg>  Factory;
-const IAlgFactory& CalDigiAlgFactory = Factory;
+//static const AlgFactory<CalDigiAlg>  Factory;
+//const IAlgFactory& CalDigiAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalDigiAlg);
 
 using namespace std;
 using idents::CalXtalId;

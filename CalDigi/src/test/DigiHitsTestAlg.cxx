@@ -41,8 +41,9 @@ public:
 };
 
 
-static const AlgFactory<DigiHitsTestAlg>  Factory;
-const IAlgFactory& DigiHitsTestAlgFactory = Factory;
+//static const AlgFactory<DigiHitsTestAlg>  Factory;
+//const IAlgFactory& DigiHitsTestAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(DigiHitsTestAlg);
 
 
 //------------------------------------------------------------------------------
