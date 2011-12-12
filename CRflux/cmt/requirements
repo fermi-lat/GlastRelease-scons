@@ -1,9 +1,9 @@
 package CRflux
-
-version v1r17p10
+version v1r18p0
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
+
 use FluxSvc v6*
 
 use CLHEP v* IExternal
@@ -20,6 +20,7 @@ use flux  *
 use cfitsio v* IExternal
 use XMLEXT v* IExternal
 use xmlBase v*
+use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 # get flags to build shared library
@@ -30,9 +31,9 @@ apply_pattern package_headers
 macro CRflux_cppflags '$(ppcmd)"$(FLUXROOT)"'
 
 library CRflux *.cxx psb97/*.cxx \
- Dll/*.cxx\
 $(CRflux_headers)
 
+apply_pattern generate_rootmap library=CRflux
 
 macro CRflux_headers "" WIN32 " *.h *.hh ../xml/*.xml test/*.txt test/*.xml "
 # test program, using local joboptions

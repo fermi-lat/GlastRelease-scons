@@ -12,7 +12,7 @@ namespace CalibData {
   CalibBase::CalibBase() : m_validSince(0), m_validTill(0), m_serNo(-1)
   {}
 
-  CalibBase::CalibBase(const ITime& since, const ITime& till, int serNo) :
+  CalibBase::CalibBase(const Gaudi::Time& since, const Gaudi::Time& till, int serNo) :
     m_validSince(0), m_validTill(0), m_serNo(serNo) 
   {
     m_validSince = new CalibData::CalibTime(since);
@@ -57,30 +57,30 @@ namespace CalibData {
   // In our case, we assume that the underlying class implementing
   // ITime is always CalibTime.
 
-  bool CalibBase::isValid (const ITime& t) const {
+  bool CalibBase::isValid (const Gaudi::Time& t) const {
     if (!isValid()) return false;
     return validSince() <= t &&  t <= validTill();
   };
 
-  const ITime& CalibBase::validSince() const {
-    return *m_validSince;
+  const Gaudi::Time& CalibBase::validSince() const {
+      return (m_validSince->getGaudiTime());
   }
 
-  const ITime& CalibBase::validTill() const {
-    return *m_validTill;
+  const Gaudi::Time& CalibBase::validTill() const {
+      return (m_validTill->getGaudiTime());
   }
 
-  void CalibBase::setValidity(const ITime& since, const ITime& till) {
+  void CalibBase::setValidity(const Gaudi::Time& since, const Gaudi::Time& till) {
     setValiditySince(since);
     setValidityTill(till);
   }
 
-  void CalibBase::setValiditySince(const ITime& since) {
+  void CalibBase::setValiditySince(const Gaudi::Time& since) {
     delete m_validSince;
     m_validSince = new CalibTime(since);
   }
 
-  void CalibBase::setValidityTill(const ITime& till) {
+  void CalibBase::setValidityTill(const Gaudi::Time& till) {
     delete m_validTill;
     m_validTill = new CalibTime(till);
   }
@@ -89,3 +89,4 @@ namespace CalibData {
     return StatusCode::SUCCESS;
   }
 }
+

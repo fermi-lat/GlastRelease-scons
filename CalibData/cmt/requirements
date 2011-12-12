@@ -1,14 +1,14 @@
 package CalibData
-
 # $Header$
 
-version v0r26p5
+version v0r27p0
 
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use facilities v2r*
 use idents     v2r*
 use GaudiInterface * IExternal
+use CLHEP * IExternal
 
 apply_pattern shared_library
 

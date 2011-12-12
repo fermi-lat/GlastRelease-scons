@@ -109,7 +109,7 @@ namespace CalibData {
     delete m_badStrips;
   }
 
-  BadStrips::BadStrips(eBadType bType, const ITime& since, const ITime& till, 
+  BadStrips::BadStrips(eBadType bType, const Gaudi::Time& since, const Gaudi::Time& till, 
                        int serNo) :
     CalibBase(since, till, serNo), m_type(bType), m_towers(0)
   {

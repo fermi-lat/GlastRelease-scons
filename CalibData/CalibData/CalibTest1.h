@@ -18,7 +18,7 @@ namespace CalibData {
   class CalibTest1 : public CalibBase {
   public:
     CalibTest1(const std::string& name, int value, 
-               const ITime& since, const ITime& till, int serNo = -1);
+               const Gaudi::Time& since, const Gaudi::Time& till, int serNo = -1);
 
     virtual ~CalibTest1() {}
 

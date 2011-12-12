@@ -21,7 +21,7 @@ namespace CalibData {
   class CalibSAABoundary : public CalibBase {
   public:
     CalibSAABoundary(std::vector<double>& lat, std::vector<double>& lon,
-                     const ITime& since, const ITime& till,int serNo);
+                     const Gaudi::Time& since, const Gaudi::Time& till,int serNo);
 
     CalibSAABoundary(const CalibSAABoundary& other);
 

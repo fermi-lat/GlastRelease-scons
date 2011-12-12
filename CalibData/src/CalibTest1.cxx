@@ -9,7 +9,7 @@
 
 namespace CalibData {
   CalibTest1::CalibTest1(const std::string& name, int value, 
-                         const ITime& since, const ITime& till, 
+                         const Gaudi::Time& since, const Gaudi::Time& till, 
                          int serNo) :
     CalibBase(since, till, serNo), m_name(name), m_value(value)
   {

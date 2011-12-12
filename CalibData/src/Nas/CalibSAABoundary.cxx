@@ -9,7 +9,7 @@
 
 namespace CalibData {
     CalibSAABoundary:: CalibSAABoundary(std::vector<double>& lat, std::vector<double>& lon,
-                                        const ITime& since, const ITime& till,int serNo):
+                                        const Gaudi::Time& since, const Gaudi::Time& till,int serNo):
          CalibBase(since, till, serNo), m_lat(lat), m_lon(lon)
        {
     //    m_me = this;

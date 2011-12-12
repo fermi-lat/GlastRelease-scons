@@ -23,7 +23,7 @@ namespace CalibData {
   public:
     CalibLATAlignment(double rx, double ry, double rz, 
                       const std::string& units,
-                      const ITime& since, const ITime& till,int serNo);
+                      const Gaudi::Time& since, const Gaudi::Time& till,int serNo);
 
     CalibLATAlignment(const CalibLATAlignment& other);
 

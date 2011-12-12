@@ -7,89 +7,32 @@ namespace {
 namespace CalibData {
   using facilities::Timestamp;
 
-  CalibTime::CalibTime() : Timestamp() {}
+  CalibTime::CalibTime() : Timestamp() {
+    m_gtime = Gaudi::Time(this->getClibTime(), this->getNano());
+  }
 
   CalibTime::CalibTime(const Timestamp& stamp) :
-    facilities::Timestamp(stamp) {}
+    facilities::Timestamp(stamp) {
+    m_gtime = Gaudi::Time(this->getClibTime(), this->getNano());
+  }
 
   CalibTime::CalibTime(double julianDate) : facilities::Timestamp(julianDate)
   {}
 
-  // This doesn't make any sense unless the input argument already "is"
-  // of type CalibTime
-  CalibTime::CalibTime(const ITime& time) {
-    longlong absTime = time.absoluteTime();
-    m_time = absTime / billion;
-    m_nano = absTime - (m_time * billion);
-  }
+  // Note Gaudi::Time months have range [0, 11]; 
+  // facilities::Timestamp uses [1,12]
+  CalibTime::CalibTime(const Gaudi::Time &time) : m_gtime(time),
+  facilities::Timestamp(time.year(false),time.month(false) + 1,
+                        time.day(false),time.hour(false),time.minute(false),
+                        time.second(false),time.nsecond()) 
+  {}
 
-  ITime&  CalibTime::operator+=( const ITime& ) {
-    /*   *this =  this->facilities::Timestamp::operator+=(CalibTime(other));
-         return *this;
-    */
-    throw facilities::BadTimeInput
-      ("CalibData::CalibTime Unsupported timestamp operation +=");
-  }
-
-  ITime&  CalibTime::operator-=( const ITime& ) {
-    /*   *this =  this->facilities::Timestamp::operator-=(CalibTime(other));
-         return *this;
-    */
-    throw facilities::BadTimeInput
-      ("CalibData::CalibTime Unsupported timestamp operation -=");
-  }
-
-
-  ITime::AbsoluteTime CalibTime::absoluteTime() const {
-    ITime::AbsoluteTime abs = m_time;
-    abs *= billion;
-    abs += m_nano;
-    return abs;
-  }
-
-  ITime::DimensionedTime CalibTime::seconds() const {
-    ITime::DimensionedTime dim = m_nano / 1000000000.0;
-    dim += m_time;
-    return dim;
-  }
-
-  bool CalibTime::operator==(const ITime& other) const {
-    facilities::Timestamp me = *this;
-    CalibTime otherCalib(other);
-    return (me == otherCalib);
-  }
-
-  bool CalibTime::operator!=(const ITime& other) const {
-    facilities::Timestamp me = *this;
-    CalibTime otherCalib(other);
-    return (me != otherCalib);
-  }
-
-  bool CalibTime::operator<=(const ITime& other) const {
-    facilities::Timestamp me = *this;
-    CalibTime otherCalib(other);
-    return (me <= otherCalib);
-  }
-
-  bool CalibTime::operator>=(const ITime& other) const {
-    facilities::Timestamp me = *this;
-    CalibTime otherCalib(other);
-    return (me >= otherCalib);
-  }
-
-  bool CalibTime::operator<(const ITime& other) const {
-    facilities::Timestamp me = *this;
-    CalibTime otherCalib(other);
-    return (me < otherCalib);
-  }
-
-  bool CalibTime::operator>(const ITime& other) const {
-    facilities::Timestamp me = *this;
-    CalibTime otherCalib(other);
-    return (me > otherCalib);
+  const Gaudi::Time& CalibTime::getGaudiTime() const {
+    return m_gtime;
   }
 
   std::ostream& CalibTime::printOut(std::ostream& o) const {
     return o << getString();
   }
 }
+

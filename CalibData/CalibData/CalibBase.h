@@ -16,7 +16,7 @@
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/ITime.h"
+#include "GaudiKernel/Time.h"
 
 #include "CalibData/CalibModel.h"
 
@@ -35,7 +35,7 @@ namespace CalibData {
     
   public:
     CalibBase();
-    CalibBase(const ITime& since, const ITime& till, int serNo = -1);
+    CalibBase(const Gaudi::Time& since, const Gaudi::Time& till, int serNo = -1);
     
     CalibBase(const CalibBase& obj);
     
@@ -58,22 +58,22 @@ namespace CalibData {
     virtual bool isValid() const;
     
     /// Check if the data object is valid at the specified time
-    virtual bool isValid(const ITime& t) const;
+    virtual bool isValid(const Gaudi::Time& t) const;
     
     /// Get start of validity
-    virtual const ITime& validSince() const;
+    virtual const Gaudi::Time& validSince() const;
     
     /// Get end of validity
-    virtual const ITime& validTill() const;
+    virtual const Gaudi::Time& validTill() const;
     
     /// Set validity range
-    virtual void setValidity(const ITime& since, const ITime& till);  
+    virtual void setValidity(const Gaudi::Time& since, const Gaudi::Time& till);  
     
     /// Set start of validity
-    virtual void setValiditySince(const ITime& since);  
+    virtual void setValiditySince(const Gaudi::Time& since);  
     
     /// Set end of validity
-    virtual void setValidityTill(const ITime& till);   
+    virtual void setValidityTill(const Gaudi::Time& till);   
     
     /// Update the validity range (foreseen for tree-like structures)
     virtual StatusCode updateValidity();

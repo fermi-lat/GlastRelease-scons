@@ -95,7 +95,7 @@ namespace CalibData {
 
     /// Make a contentless (except for CalibBase stuff and hot/dead
     /// discriminator) class.
-    BadStrips(eBadType bType, const ITime& since, const ITime& til, 
+    BadStrips(eBadType bType, const Gaudi::Time& since, const Gaudi::Time& til, 
               int serNo = -1);
     virtual ~BadStrips();
 
