@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-02-00 05-Dec-2011 HMK   Merge in Gaudi v21r7 upgrade
  AcdRecon-05-01-15 24-Nov-2011 kadrlica Fixed some error messages in AcdReconV2. Implemented a place holder for the cluster covariance matrix
  AcdRecon-05-01-14 05-Sep-2011 kadrlica Added treatment of AcdCalAssoc to AcdReconAlgV2
  AcdRecon-05-01-13 26-May-2011 HMK More CLHEP tweaks on windows
@@ -12,7 +13,9 @@ EOH
  AcdRecon-05-01-10  1-Feb-2011 TU Eric's fixes to prevent crashes on bad track errors, small fix for windows
  AcdRecon-05-01-09 04-Jan-2011 TU  New scheme to access Cal parameters
  AcdRecon-05-01-08 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ AcdRecon-05-01-07-gr01 06-Oct-2010 hmk Upgrade Gaudi v21r7 along branch
  AcdRecon-05-01-07 12-Jun-2010    jrb upgrades for SCons builds
+ AcdRecon-05-01-06 07-Sep-2010   hmk  Update for Gaudi v21r7
  AcdRecon-05-01-06 28-Apr-2010  lsrea Fixed a little bug in AcdPha2MipTool
  AcdRecon-05-01-05 03-Feb-2010    hmk add explicit use of IExternal/ROOT
  AcdRecon-05-01-04 02-Feb-2010    hmk add use of RootConvert for win version of

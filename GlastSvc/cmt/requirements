@@ -1,5 +1,5 @@
 package GlastSvc
-version v10r0p5
+version v11r0p0
 
 branches src cmt doc
 #$Id$
@@ -22,15 +22,16 @@ use detModel   * -no_auto_imports
 use xmlGeoDbs  v1r* -no_auto_imports
 use CLHEP v* IExternal -no_auto_imports
 
-use xmlUtil * -no_auto_imports
-
+use xmlUtil *
+private
+use RootmapPolicy * GlastPolicy
 use gr_app *
 
 macro headers "" WIN32 "*.h"
-macro_append includes ' $(ppcmd)"$(xmlBase_root)" $(ppcmd)"$(detModel_root)" $(ppcmd)"$(xmlUtil_root)"'
+macro_append includes ' $(ppcmd)"$(xmlBase_root)" $(ppcmd)"$(detModel_root)" '
 
-library GlastSvc  -import=detModel -import=CLHEP -import=xmlUtil \
-     Dll/*.cpp \
+library GlastSvc  -import=detModel -import=CLHEP  \
+#     Dll/*.cpp \
      -s="../GlastSvc/GlastDetSvc" $(headers)\
      -s="GlastDetSvc" $(headers) *.cxx\
      -s="../GlastSvc\GlastRandomSvc" $(headers)\
@@ -41,14 +42,16 @@ library GlastSvc  -import=detModel -import=CLHEP -import=xmlUtil \
      -s="../GlastSvc\EventSelector" $(headers) \
      -s="CurrentEventAlg" *.cxx \
      -s="../GlastSvc\GlastClassify" $(headers)\
-     -s="../GlastSvc\HistorySvc" $(headers)\
-     -s="HistorySvc" $(headers) *.cxx \
+#     -s="../GlastSvc\HistorySvc" $(headers)\
+#     -s="HistorySvc" $(headers) *.cxx \
      -s="EventSelector" $(headers) *.cpp 
             
 
 # get flags to build shared library
 
 apply_pattern package_Cshlibflags
+
+apply_pattern generate_rootmap library=GlastSvc
 
 
 macro WinInclude "" WIN32 "test/*.h  test/*.txt test/*.xml" 

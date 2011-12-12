@@ -1,5 +1,5 @@
 package AcdRecon
-version v5r1p15
+version v5r2p0
 
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
@@ -28,6 +28,9 @@ private
 use gr_app v*
 use RootConvert v* -no_auto_imports
 use RootIo  v* -no_auto_imports
+use RootmapPolicy * GlastPolicy
+
+apply_pattern generate_rootmap library=AcdRecon
 
 public
 apply_pattern declare_joboptions files="-s=../src/test  *.txt"

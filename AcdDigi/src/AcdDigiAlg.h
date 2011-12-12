@@ -12,6 +12,8 @@
 
 #include "Event/Digi/AcdDigi.h"
 #include "Event/MonteCarlo/McPositionHit.h"
+#include "GlastSvc/GlastRandomSvc/IRandomAccess.h"
+
 
 #include "AcdUtil/IAcdFailureModeSvc.h"
 
@@ -55,6 +57,8 @@ protected:
 private:
 
   IAcdFailureModeSvc *m_acdFailureSvc;
+
+  IRandomAccess *m_randTool;
 
   /// input XML file containing parameters for Digitization
   std::string m_xmlFileName;

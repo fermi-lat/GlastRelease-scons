@@ -5,6 +5,7 @@
  package manager:T.Burnett
            EOH
 
+ GlastSvc-11-00-00 05-Dec-2011 HMK Merge in Gaudi v21r7 mods
  GlastSvc-10-00-05 17-Nov-2011   TU Adding more to the interface to GlastClassify to allow multiple variable types
  GlastSvc-10-00-04 19-Aug-2011   TU Adding interface for ClassifyTool to enable recon access to classification
  GlastSvc-10-00-03 21-May-2011   hmk patch requirements for CLHEP upgrade
@@ -12,7 +13,9 @@
  GlastSvc-10-00-01 31-Jan-2011    mk  Updates for handling rand num seeds.
            See JIRA GRINF-58
  GlastSvc-09-28-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ GlastSvc-09-28-03-gr01 05-Oct-2010 hmk merge in Gaudi updates
  GlastSvc-09-28-03 12-Jun-2010    jrb upgrades for SCons builds
+ GlastSvc-09-28-02-gr01 31-Aug-2010 hmk Migrate to Gaudi v21r7
  GlastSvc-09-28-02 07-Dec-2009    jrb Little bug fix in SConscsript
  GlastSvc-09-28-01 11-Oct-2009  lsrea add each composite name only once
  v9r28p0   15-Sep-2009 HMK set m_autoSeed to false by default to avoid

@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-10-00 12-Dec-2011 HMK Merge in Gaudi v21r7 upgrade
  Event-14-09-10 02-Dec-2011    jrb little update for new gaudi and/or newer compilers
  Event-14-09-09 17-Nov-2011  TU Include Bill Atwood's new methods to the TkrVecNodes.h file
  Event-14-09-08 26-Sep-2011  TU Small but critical change to initialization of TkrVecNodes
@@ -31,10 +32,12 @@
  Event-14-05-03 09-Dec-2010  lsrea include status bits in TkrTrack
  Event-14-05-02 24-Nov-2010 TU Modifications for Tree Based Tracking AND allowing a kink angle in tracks
  Event-14-05-01 05-Nov-2010 TU Introducing new Pass 8 Recon classes for tracking and cal
+ Event-14-04-02-gr01 05-Oct-2010 hmk merge in Gaudi v21r7 update
  Event-14-04-02 06-Sep-2010    jrb Pick up latest CalXtalRecData.h for
                                compat. with reconRootData 09-23-02
  Event-14-04-01 12-Jun-2010    jrb upgrades for SCons builds
  Event-14-04-00 04-Jun-2010 burnett Tracy's changes for CAL
+ * Event-14-03-00-gr01 31-Aug-10 HMK Migrate to Gaudi v21r7
  * Event-14-03-00 16-May-10 TU Tag change to Tkr stuff to get Cosmic bit, also must tag Luca's additions to CalCluster
  * Event-14-02-00 24-Jan-10 TU Modify CalCluster format
  * Event-14-01-02 19-Dec-09 EC remove static version of AcdReconV2

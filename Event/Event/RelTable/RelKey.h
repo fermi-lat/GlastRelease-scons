@@ -99,7 +99,8 @@ template <class T1, class T2, class T3>
 inline void RelKey<T1,T2,T3>::removeFromMap(RelKeyMultiMap<T1,T2,T3>* map)
 {
     map->erase(m_iterator);
-    m_iterator = 0;
+    //m_iterator = 0;
+    m_iterator=map->end();
 }
 
 template <class T1, class T2, class T3> 

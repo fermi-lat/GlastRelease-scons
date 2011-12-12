@@ -3,10 +3,13 @@
  Coordinator:H.Kelly
  EOH 
 
+ AcdDigi-03-11-00 05-Dec-2011    hmk Merge in Gaudi v21r7 upgrade
  AcdDigi-03-10-05 31-Jan-2011    hmk Drop explicit version for GlastSvc use
  AcdDigi-03-10-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ AcdDigi-03-10-03-gr01 06-Oct-2010 hmk Upgrade for Gaudi v21r7 along branch
  AcdDigi-03-10-03 14-Jun-2010    jrb for SCons builds
  AcdDigi-03-10-02 12-Jun-2010    jrb upgrades for SCons builds
+ AcdDigu-03-10-01-gr01 31-Aug-2010 HMK Update to Gaudi v21r7
  AcdDigi-03-10-01 14-Dec-2009 HMK Merge in Eric's updates from v3r8gr1
  v3r9p0  08-Oct-2009 HMK Use AcdFailureModeSvc to skip certain AcdDigi creation
  v3r8p2  10-sep-2009 HMK ditch unused parameter warnings

@@ -54,8 +54,9 @@ private:
     std::vector<float> m_gauss;
 };
 
-static const AlgFactory<TestAcdDigiAlg>  Factory;
-const IAlgFactory& TestAcdDigiAlgFactory = Factory;
+//static const AlgFactory<TestAcdDigiAlg>  Factory;
+//const IAlgFactory& TestAcdDigiAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TestAcdDigiAlg);
 
 TestAcdDigiAlg::TestAcdDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {

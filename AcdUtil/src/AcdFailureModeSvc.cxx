@@ -18,8 +18,9 @@
 
 // declare the service factories for the AcdFailureModeSvc
 
-static SvcFactory<AcdFailureModeSvc> a_factory;
-const ISvcFactory& AcdFailureModeSvcFactory = a_factory; 
+//static SvcFactory<AcdFailureModeSvc> a_factory;
+//const ISvcFactory& AcdFailureModeSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(AcdFailureModeSvc);
 
 AcdFailureModeSvc::AcdFailureModeSvc(const std::string& name,ISvcLocator* svc) : Service(name,svc)
 {

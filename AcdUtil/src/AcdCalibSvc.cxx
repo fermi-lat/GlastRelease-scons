@@ -21,8 +21,9 @@
 
 // STD
 
-static SvcFactory< AcdCalibSvc > a_factory;
-const ISvcFactory& AcdCalibSvcFactory = a_factory; 
+//static SvcFactory< AcdCalibSvc > a_factory;
+//const ISvcFactory& AcdCalibSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(AcdCalibSvc);
 
 AcdCalibSvc::AcdCalibSvc(const std::string& name, ISvcLocator* Svc) 
   : Service(name,Svc),
@@ -79,7 +80,7 @@ StatusCode AcdCalibSvc::initialize ()
   }
 
   // Query the IDataProvider interface of the CalibDataService
-  sc = m_calibDataSvc->queryInterface(IID_IDataProviderSvc, 
+  sc = m_calibDataSvc->queryInterface(IDataProviderSvc::interfaceID(), 
                                       (void**) &m_dataProviderSvc);
   if ( !sc.isSuccess() ) {
     msglog << MSG::ERROR 

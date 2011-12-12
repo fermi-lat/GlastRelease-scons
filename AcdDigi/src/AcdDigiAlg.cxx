@@ -26,8 +26,9 @@
 #include "CLHEP/Random/RandExponential.h"
 
 // Define the factory for this algorithm
-static const AlgFactory<AcdDigiAlg>  Factory;
-const IAlgFactory& AcdDigiAlgFactory = Factory;
+//static const AlgFactory<AcdDigiAlg>  Factory;
+//const IAlgFactory& AcdDigiAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AcdDigiAlg);
 
 
 // Algorithm parameters which can be set at run time must be declared.
@@ -65,6 +66,10 @@ StatusCode AcdDigiAlg::initialize() {
         log << MSG::INFO << "Got CalibDataSvc " << m_calibSvcName << endreq;
     }
       
+    sc = toolSvc()->retrieveTool("AcdDigiRandom", m_randTool);
+    if (sc.isFailure() )
+      log << MSG::WARNING << "Unable to register AcdDigiRandom" << endreq;
+
     IGlastDetSvc* glastDetSvc(0);
     sc = service("GlastDetSvc", glastDetSvc, true);
     if (sc.isSuccess() ) 
@@ -483,6 +488,7 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
 
 
 StatusCode AcdDigiAlg::finalize() {
+  toolSvc()->releaseTool(m_randTool);
   return StatusCode::SUCCESS;
 }
 

@@ -28,8 +28,9 @@
 #include "xmlBase/IFile.h"
 
 // Define the factory for this algorithm
-static const AlgFactory<AcdDigiOrgAlg>  Factory;
-const IAlgFactory& AcdDigiOrgAlgFactory = Factory;
+//static const AlgFactory<AcdDigiOrgAlg>  Factory;
+//const IAlgFactory& AcdDigiOrgAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AcdDigiOrgAlg);
 
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor.

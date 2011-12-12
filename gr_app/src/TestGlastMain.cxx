@@ -68,7 +68,7 @@ int main( int argn, char** argc) {
   return 1;
 #endif
 #endif
-  // check for env var
+ // check for env var
   std::string jobstring = facilities::commonUtilities::getEnvironment("TESTJOBOPTIONS");
 
   // If called from wrapper script may see empty first argument 
@@ -102,9 +102,8 @@ int main( int argn, char** argc) {
     
     // Create an instance of an application manager
     IInterface* iface = Gaudi::createApplicationMgr();
-    
-    SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
-    SmartIF<IAppMgrUI>     appMgr  ( IID_IAppMgrUI, iface );
+    SmartIF<IProperty>     propMgr ( iface );
+    SmartIF<IAppMgrUI>     appMgr  ( iface );
 
     if( !appMgr.isValid() || !propMgr.isValid() ) {
       std::cout << "Fatal error while creating the ApplicationMgr " << std::endl;
@@ -123,6 +122,7 @@ int main( int argn, char** argc) {
     if( status.isFailure() ){
         std::cerr << "Application failed, returning error code 1" << std::endl;
     }
+    iface->release();
     current_time(std::cerr);
 
     return (status.isFailure()? 1 : 0);

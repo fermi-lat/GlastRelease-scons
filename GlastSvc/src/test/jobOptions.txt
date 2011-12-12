@@ -6,29 +6,31 @@
 
 // List of required services
 ApplicationMgr.ExtSvc   = { "GlastDetSvc", "GlastRandomSvc" ,
- "GlastHistorySvc",
- "EventSelector/EventSelector" };
+// "GlastHistorySvc",
+ "DbEvtSelector/EventSelector" };
  //"EventSelector/EventSelector" , "EventCnvSvc" };
  //  "GlastEventSelectorNew/EventSelector" , "EventCnvSvc" };
 //ApplicationMgr.EvtSel  = "NONE" ;
+
+ApplicationMgr.HistogramPersistency = "NONE";
 
 // For Event loop
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 //EventSelector.Input = "NONE";
 //EventSelector.Input = "SVC='GlastEventSelector'";
-EventSelector.Input = "SVC='DbEvtSelector' ConversionSvc='EventCnvSvc' ";
+//EventSelector.Input = "SVC='DbEvtSelector' ConversionSvc='EventCnvSvc' ";
 
 // List of Dlls
 ApplicationMgr.DLLs   = { "GlastSvc" };
 
-GlastHistorySvc.Dump = true;
+//GlastHistorySvc.Dump = true;
 
 //--------------------------------------------------------------------------
 
 ApplicationMgr.TopAlg = { "CreateEvent", "CurrentEventAlg" };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel      = 2;
+MessageSvc.OutputLevel      = 1;
 
 //=========================================================================
 // Persistency service setup:

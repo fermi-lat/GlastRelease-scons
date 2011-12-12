@@ -27,8 +27,9 @@
 #include "GaudiKernel/DataStoreItem.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/IObjManager.h"
-#include "GaudiKernel/IToolFactory.h"
+//#include "GaudiKernel/IObjManager.h" HMK No longer available in Gaudi v21r7
+//#include "GaudiKernel/IToolFactory.h" HMK No Longer available in Gaudi v21r7
+#include "GaudiKernel/IAlgManager.h" // HMK Gaudi v21r7
 #include "GaudiKernel/SmartDataPtr.h"
 
 
@@ -55,14 +56,14 @@
 
 
 // declare the service factories for the GlastRandomSvc
-static SvcFactory<GlastRandomSvc> a_factory;
-const ISvcFactory& GlastRandomSvcFactory = a_factory; 
+//static SvcFactory<GlastRandomSvc> a_factory;
+//const ISvcFactory& GlastRandomSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY( GlastRandomSvc );
 
 GlastRandomSvc* GlastRandomSvc::instance(){ return s_instance; }
 GlastRandomSvc* GlastRandomSvc::s_instance;
 
-GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc)
-    : Service(name,svc)
+GlastRandomSvc::GlastRandomSvc(const std::string& name,ISvcLocator* svc) : Service(name,svc), m_randObs(0)
 {
     // Purpose and Method: Constructor - Declares and sets default properties
     //                     
@@ -95,6 +96,11 @@ GlastRandomSvc::~GlastRandomSvc()
     // this is  repetetive in case finalize was
     // not called.
     finalize();
+    if (m_randObs) {
+        m_toolSvc->unRegisterObserver(m_randObs);
+        delete m_randObs;
+        m_randObs = 0;
+    }
 }
 
 
@@ -124,6 +130,8 @@ private:
     std::string m_name;
 
 };
+
+/* Now part of GlastRandomObs
 
 CLHEP::HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName) 
 {
@@ -156,6 +164,7 @@ CLHEP::HepRandomEngine* GlastRandomSvc::createEngine(std::string  engineName)
     }
     return 0;
 }
+*/
 
 StatusCode GlastRandomSvc::initialize () 
 {
@@ -173,9 +182,12 @@ StatusCode GlastRandomSvc::initialize ()
     // Call super-class, here the job options parameters obtain their values
     Service::initialize ();
 
-    if( serviceLocator() ) {
-        status = serviceLocator()->service("EventDataSvc", m_eventSvc, true );
-    }
+    status = service ( "EventDataSvc" , m_eventSvc , true ) ;
+
+
+//    if( serviceLocator() ) {
+ //       status = serviceLocator()->service("EventDataSvc", m_eventSvc, true );
+  ///  }
     if(status.isFailure())
     {
         log << MSG::ERROR << "Could not find EventDataSvc" << endreq;
@@ -225,6 +237,19 @@ StatusCode GlastRandomSvc::initialize ()
     incsvc->addListener(this, "EndEvent", 0);
 
 
+      // get a pointer to the tool service
+  status = service( "ToolSvc", m_toolSvc, true );
+  if (!status.isSuccess()) {
+    log << MSG::ERROR << "Unable to get a handle to the tool service" << endmsg;
+    return status;
+  } else {
+    log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
+  }
+
+
+
+/* HMK Move to Gaudi v21r7
+
     // Look for a factory of an AlgTool that implements the
     // IRandomAccess interface:
     // if found, make one and call the special method
@@ -250,7 +275,8 @@ StatusCode GlastRandomSvc::initialize ()
         // is it a tool factory?
         const IFactory* factory = objManager->objFactory( tooltype );
         IFactory* fact = const_cast<IFactory*>(factory);
-        status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
+//        status = fact->queryInterface( IID_IToolFactory, (void**)&toolfactory );
+        status = fact->queryInterface( IToolFactory::interfaceID(), (void**)&toolfactory );
         if( status.isSuccess() ) 
         {
             std::string fullname = this->name()+"."+tooltype;
@@ -297,9 +323,12 @@ StatusCode GlastRandomSvc::initialize ()
             itool->release();
         }
     }
+     HMK Move to Gaudi v21r7 */
+  
+  // now initialize seeds to be unique for each run 
 
-    log << MSG::INFO << "number of engines: " << m_engineMap.size()
-        << " (unique instantiations: " << m_engineNum << ")" << endreq;
+//    log << MSG::INFO << "number of engines: " << m_engineMap.size()
+//        << " (unique instantiations: " << m_engineNum << ")" << endreq;
 
     log << MSG::INFO << "autoSeed set to: " << (m_eventSeeded?"true":"false");
     if ( log.isActive() )
@@ -314,62 +343,6 @@ StatusCode GlastRandomSvc::initialize ()
     log << MSG::INFO << "InitialSequenceNumber set to: "
         << m_initialSequenceNumber << endreq;
     log << MSG::INFO << "NumberOfRuns set to: " << m_numberOfRuns<<endreq;
-
-    // Setting the parameter "Seed" is invalid:
-    // 1) for event seeded runs
-    // 2) for runs with multiple engine instantiations
-    if ( m_seed != 0 ) {
-        if ( m_eventSeeded || m_engineNum != 1 ) {
-            log << MSG::ERROR << "Explicitely setting the seed (here to "
-                << m_seed << ") in the job options doesn't make sense:";
-            //            m_seed = 0;
-            if ( log.isActive() ) {
-                if ( m_eventSeeded )
-                    log << " *) for runs with unique seed for each event";
-                if ( m_engineNum != 1 )
-                    log << " *) for more than 1 engine instantiation";
-            }
-            log << endreq;
-            return StatusCode::FAILURE;
-        }
-        else {
-            log << MSG::INFO << "Seed set to: " << m_seed << endreq;
-            if ( m_seed < 0 )
-                log << MSG::WARNING << "Chosen seed is negative."
-                    << " Use of negative seeds is not recommended." << endreq;
-            if ( m_seed%2 == 0 )
-                log << MSG::WARNING << "Chosen seed is even."
-                    << " Use of even seeds is not recommended." << endreq;
-        }
-    }
-
-    // pick up ApplicationMgr.EvtMax
-    IProperty* propMgr = 0;
-    status = serviceLocator()->service("ApplicationMgr", propMgr);
-    if ( status.isFailure() ) {
-        log << MSG::ERROR << "Unable to locate PropertyManager Service"<<endreq;
-        return status;
-    }
-    IntegerProperty AppMgrEvtMax("EvtMax", 0);
-    status = propMgr->getProperty(&AppMgrEvtMax);
-    if ( status.isFailure() ) {
-        log << MSG::ERROR << "could not retrieve ApplicationMgr.EvtMax"<<endreq;
-        return status;
-    }
-    log << MSG::INFO << "ApplicationMgr.EvtMax set to: " <<AppMgrEvtMax<<endreq;
-
-    const int oneGi = 1073741824;
-    // subtract 1 from m_maxEventId: e.g. 8 numbers in the range 0
-    // to 7
-    m_maxEventId = oneGi / ( m_numberOfRuns * m_engineNum ) - 1;
-    log << MSG::INFO;
-    if ( log.isActive() ) {
-        log << "maximum allowed event id";
-        if ( ! m_eventSeeded )
-            log << " (InitialSequenceNumber)";
-        log << ": " << m_maxEventId;
-    }
-    log << endreq;
 
     // sanity checks
     bool exitFlag = false;
@@ -397,6 +370,124 @@ StatusCode GlastRandomSvc::initialize ()
         exitFlag = true;
     }
 
+    if ( exitFlag ) {
+        log << MSG::WARNING << "The preceeding warnings highlight settings "
+            << "which may cause duplication of events." << endreq;
+        if ( m_pedantic ) {
+            log << MSG::ERROR << "If you don't care for duplicated events, or "
+                << "have taken other measures to avoid it, you can inhibit "
+                << "termination by specifying 'GlastRandomSvc.pedantic=false;' "
+                << "in your jobOptions file." << endreq;
+            log << MSG::ERROR << "GlastRandomSvc will exit with "
+                << "StatusCode::FAILURE now!" << endreq;
+            return StatusCode::FAILURE;
+        }
+        else
+            log << MSG::WARNING<<"Termination disabled by setting pedantic to: "
+                << (m_pedantic?"true":"false")
+                << ".  You are on your own now!" << endreq;
+    }
+
+//    log << MSG::DEBUG << "initialize(): calling applySeeds(" << m_runNumber
+//        << ", " << m_initialSequenceNumber << ')' <<endreq;
+//    applySeeds(m_runNumber, m_initialSequenceNumber);
+
+    m_randObs = new GlastRandomObs();
+    m_toolSvc->registerObserver(m_randObs);
+    m_randObs->setRunNumber(m_runNumber);
+    m_randObs->setSequenceNumber(m_sequenceNumber);
+    m_randObs->setRandomEngine(m_randomEngine.toString());
+    m_randObs->setAutoSeed(m_eventSeeded);
+
+    return StatusCode::SUCCESS;
+}
+
+void GlastRandomSvc::parameterChecks() {
+
+    MsgStream log( msgSvc(), name() );
+    bool exitFlag = false;
+
+    EngineMap engineMap = m_randObs->getEngineMap();
+    int engineNum = m_randObs->getEngineNum();
+    if (engineNum == 0) {
+        log << MSG::INFO << "SEtting engine num to 1 " << endreq;
+        engineNum = 1;
+     }
+
+    log << MSG::INFO << "number of engines: " << engineMap.size()
+        << " (unique instantiations: " << engineNum << ")" << endreq;
+
+    // Setting the parameter "Seed" is invalid:
+    // 1) for event seeded runs
+    // 2) for runs with multiple engine instantiations
+    if ( m_seed != 0 ) {
+        if ( m_eventSeeded || engineNum != 1 ) {
+            log << MSG::ERROR << "Explicitely setting the seed (here to "
+                << m_seed << ") in the job options doesn't make sense:";
+            //            m_seed = 0;
+            if ( log.isActive() ) {
+                if ( m_eventSeeded )
+                    log << " *) for runs with unique seed for each event";
+                if ( engineNum != 1 )
+                    log << " *) for more than 1 engine instantiation";
+            }
+            log << endreq;
+//            return StatusCode::FAILURE;
+        }
+        else {
+            log << MSG::INFO << "Seed set to: " << m_seed << endreq;
+            if ( m_seed < 0 )
+                log << MSG::WARNING << "Chosen seed is negative."
+                    << " Use of negative seeds is not recommended." << endreq;
+            if ( m_seed%2 == 0 )
+                log << MSG::WARNING << "Chosen seed is even."
+                    << " Use of even seeds is not recommended." << endreq;
+        }
+    }
+
+    // pick up ApplicationMgr.EvtMax
+    IProperty* propMgr = 0;
+    StatusCode status = serviceLocator()->service("ApplicationMgr", propMgr);
+    if ( status.isFailure() ) {
+        log << MSG::ERROR << "Unable to locate PropertyManager Service"<<endreq;
+  //      return status;
+    }
+    IntegerProperty AppMgrEvtMax("EvtMax", 0);
+    status = propMgr->getProperty(&AppMgrEvtMax);
+    if ( status.isFailure() ) {
+        log << MSG::ERROR << "could not retrieve ApplicationMgr.EvtMax"<<endreq;
+    //    return status;
+    }
+    log << MSG::INFO << "ApplicationMgr.EvtMax set to: " <<AppMgrEvtMax<<endreq;
+
+    const int oneGi = 1073741824;
+    // subtract 1 from m_maxEventId: e.g. 8 numbers in the range 0
+    // to 7
+    m_maxEventId = oneGi / ( m_numberOfRuns * engineNum ) - 1;
+    log << MSG::INFO;
+    if ( log.isActive() ) {
+        log << "maximum allowed event id";
+        if ( ! m_eventSeeded )
+            log << " (InitialSequenceNumber)";
+        log << ": " << m_maxEventId;
+    }
+    log << endreq;
+
+
+    // check for consistency in engine numbers.
+    // The number of engine instantiations should be either the number of
+    // engines (i.e. Windows/VisualC++) or 1 (Linux/gcc).
+    if ( engineNum != 1 && engineNum != engineMap.size() ) {
+        log << MSG::WARNING << "The number of engine instantiations, here "
+            << engineNum << ", should be equal to either 1 or the total "
+            << "number of engines, here " << engineMap.size()
+            << ".  Everything else is weird!" << endreq;
+        // MWK: Probably, one day this will cause immediate termination.  I
+        // doubt there is a situation where this condition is valid, but I'm
+        // not sure.
+        exitFlag = true;
+    }
+
     // the maximum event id in a run (given by InitialSequenceNumber+
     // ApplicationMgr.EvtMax-1 for event seeded runs, given by
     // InitialSequenceNumber for run seeded runs) should not exceed
@@ -420,20 +511,6 @@ StatusCode GlastRandomSvc::initialize ()
         exitFlag = true;
     }            
 
-    // check for consistency in engine numbers.
-    // The number of engine instantiations should be either the number of
-    // engines (i.e. Windows/VisualC++) or 1 (Linux/gcc).
-    if ( m_engineNum != 1 && m_engineNum != m_engineMap.size() ) {
-        log << MSG::WARNING << "The number of engine instantiations, here "
-            << m_engineNum << ", should be equal to either 1 or the total "
-            << "number of engines, here " << m_engineMap.size()
-            << ".  Everything else is weird!" << endreq;
-        // MWK: Probably, one day this will cause immediate termination.  I
-        // doubt there is a situation where this condition is valid, but I'm
-        // not sure.
-        exitFlag = true;
-    }
-
     if ( exitFlag ) {
         log << MSG::WARNING << "The preceeding warnings highlight settings "
             << "which may cause duplication of events." << endreq;
@@ -442,9 +519,6 @@ StatusCode GlastRandomSvc::initialize ()
                 << "have taken other measures to avoid it, you can inhibit "
                 << "termination by specifying 'GlastRandomSvc.pedantic=false;' "
                 << "in your jobOptions file." << endreq;
-            log << MSG::ERROR << "GlastRandomSvc will exit with "
-                << "StatusCode::FAILURE now!" << endreq;
-            return StatusCode::FAILURE;
         }
         else
             log << MSG::WARNING<<"Termination disabled by setting pedantic to: "
@@ -452,14 +526,7 @@ StatusCode GlastRandomSvc::initialize ()
                 << ".  You are on your own now!" << endreq;
     }
 
-    log << MSG::DEBUG << "initialize(): calling applySeeds(" << m_runNumber
-        << ", " << m_initialSequenceNumber << ')' <<endreq;
-    applySeeds(m_runNumber, m_initialSequenceNumber);
-
-    return StatusCode::SUCCESS;
 }
-
-
 
 void GlastRandomSvc::handle(const Incident &inc)
 {
@@ -475,13 +542,23 @@ void GlastRandomSvc::handle(const Incident &inc)
 
     if( inc.type()=="BeginEvent" ) {
 
-        // See if MCEvent was set up properly
-        SmartDataPtr<Event::MCEvent> mcevt(m_eventSvc, EventModel::MC::Event);
-        //if (mcevt == 0) {
-        if (!mcevt) {
-            log << MSG::ERROR << "Error accessing MCEvent" << endreq;
-            return;
+        static bool s_firstEventFlag = true;
+
+        // One the first event, we will do the sanity checks requiring
+        // engineNum, after allowing GlastRandomObs to do the engineNum count
+        if (s_firstEventFlag) {
+            parameterChecks();
+            applySeeds(m_runNumber, m_sequenceNumber);
+            s_firstEventFlag = false;
         }
+
+        // See if MCEvent was set up properly
+        DataObject* obj = 0;     
+        StatusCode sc = m_eventSvc->retrieveObject(EventModel::MC::Event, obj);
+        Event::MCEvent *mcevt = dynamic_cast<Event::MCEvent *>(obj);
+        if (!mcevt) {
+            log << MSG::WARNING << "de is null too" << endreq;
+    }
 
         const int runNo = m_runNumber;
         const int seqNo = m_sequenceNumber++;
@@ -505,7 +582,7 @@ void GlastRandomSvc::handle(const Incident &inc)
         header->setRun(runNo);
         header->setEvent(seqNo);
 
-        if ( m_eventSeeded ) {
+        if ( ( m_eventSeeded ) && (!s_firstEventFlag) ) {
             log << MSG::DEBUG << "handle(): calling applySeeds(" << runNo
                 << ", " << seqNo << ')' << endreq;
             applySeeds(runNo, seqNo);
@@ -514,14 +591,17 @@ void GlastRandomSvc::handle(const Incident &inc)
     }
 
     if(inc.type()=="EndEvent" && m_endSeedFile.value() != "") {
-        static int i = 0;
-        m_output << i << std::endl;
-        ++i;
-        EngineMap::const_iterator dllEngine;
-        for ( dllEngine=m_engineMap.begin(); dllEngine!=m_engineMap.end();
-              ++dllEngine )
-            m_output << dllEngine->second->getSeed() << " ";
-        m_output << std::endl;
+      static int i = 0;
+
+      m_output << i << std::endl;
+      ++i;
+
+      EngineMap::const_iterator dllEngine;
+      EngineMap m_engineMap = m_randObs->getEngineMap();
+      for (dllEngine = m_engineMap.begin(); dllEngine != m_engineMap.end(); ++dllEngine ) {
+          m_output << dllEngine->second->getSeed() << " ";
+      }
+      m_output << std::endl;
     }
 }
 
@@ -531,6 +611,12 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo) {
     int engineNum = 1;
     const int luxury = 0; // 2nd argument to setSeed
     EngineMap::const_iterator dllEngine;
+    EngineMap m_engineMap = m_randObs->getEngineMap();
+    int m_engineNum = m_randObs->getEngineNum();
+    if (m_engineNum == 0) {
+       m_engineNum = 1;
+       log << MSG::INFO << "Set engine num to 1" << endreq;
+    }
     for ( dllEngine=m_engineMap.begin(); dllEngine!=m_engineMap.end();
           ++dllEngine ) {
         long theSeed;
@@ -566,10 +652,10 @@ void GlastRandomSvc::applySeeds(int runNo, int seqNo) {
     CLHEP::RandGauss::setFlag(false);
 
     // now make sure the external ones (if any) are done too!
-    for ( std::vector<IRandomAccess::SetFlag>::iterator
-              it=m_setFlagPointers.begin();
-          it!=m_setFlagPointers.end(); ++it ) {
-        (**it)(false);
+    for( std::vector< IRandomAccess::SetFlag>::const_iterator it = m_randObs->getSetFlagPtrs().begin();
+         it != m_randObs->getSetFlagPtrs().end(); ++it)
+    {
+         (**it)(false);
     }
 }
 
@@ -582,10 +668,5 @@ StatusCode GlastRandomSvc::finalize ()
     // Dependencies: None
     // Restrictions and Caveats:  None
 
-    for (EngineMap::iterator dllEngine = m_engineMap.begin(); 
-        dllEngine != m_engineMap.end(); ++dllEngine ) {
-        delete dllEngine->second;       
-    }
-    m_engineMap.clear();
     return StatusCode::SUCCESS;
 }

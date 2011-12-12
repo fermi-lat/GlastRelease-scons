@@ -59,8 +59,9 @@ private:
                         unsigned seg);
 };
 
-static const AlgFactory<TestAcdUtil>  Factory;
-const IAlgFactory& TestAcdUtilFactory = Factory;
+//static const AlgFactory<TestAcdUtil>  Factory;
+//const IAlgFactory& TestAcdUtilFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TestAcdUtil);
 
 TestAcdUtil::TestAcdUtil(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator), m_log(0) {

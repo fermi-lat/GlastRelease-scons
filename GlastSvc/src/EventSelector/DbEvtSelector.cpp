@@ -139,8 +139,11 @@ protected:
 };
 
 
-static const SvcFactory<DbEvtSelector> s_DbEvtSelectorFactory;
-const ISvcFactory& DbEvtSelectorFactory = s_DbEvtSelectorFactory;
+//static const SvcFactory<DbEvtSelector> s_DbEvtSelectorFactory;
+//const ISvcFactory& DbEvtSelectorFactory = s_DbEvtSelectorFactory;
+
+DECLARE_SERVICE_FACTORY(DbEvtSelector);
+
 
 /** @class DbContext
  *
@@ -206,7 +209,7 @@ DbEvtSelector::~DbEvtSelector() {
 
 // IInterface::queryInterface
 StatusCode DbEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
-  if ( riid == IID_IEvtSelector )  {
+  if ( riid == IEvtSelector::interfaceID() )  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
     return SUCCESS;

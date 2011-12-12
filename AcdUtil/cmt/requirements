@@ -1,5 +1,5 @@
 package AcdUtil
-version v3r1p5
+version v3r2p0
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
 # $Id$
@@ -26,12 +26,14 @@ apply_pattern library_Llinkopts library=AcdUtilCommon
 #=============================================================
 private
 
+use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 #apply_pattern use_CalibData_symbols
 
 library AcdUtilCommon -no_share AcdTileDim.cxx AcdRibbonDim.cxx AcdTileFuncs.cxx AcdFrameUtil.cxx AcdCalibFuncs.cxx RayDoca.cxx
 
+set AcdUtilCommon_skip_rootmap "1"
 
 apply_pattern package_headers
 
@@ -40,9 +42,10 @@ library AcdUtil AcdGeometrySvc.cxx AcdDetectorList.cxx \
                 AcdCalibSvc.cxx  AcdSimCalibSvc.cxx \
                 AcdFailureModeSvc.cxx \
 	        IAcdCalibSvc.cxx \
-                Dll/*.cxx \
                 test/*.cxx \
                 ${AcdUtil_headers}               
+
+apply_pattern generate_rootmap library=AcdUtil
 
 apply_pattern package_Cshlibflags
 

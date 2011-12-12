@@ -16,11 +16,14 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/MCEvent.h"
 
-class  MCEventCnv : virtual public IGlastCnv, public Converter 
+class  MCEventCnv : public Converter 
 {
-public:
 
-    /**
+friend class CnvFactory<MCEventCnv>;
+
+
+protected:
+   /**
         Constructor for this converter
         @param svc a ISvcLocator interface to find services
         @param clid the type of object the converter is able to convert
@@ -28,6 +31,7 @@ public:
     MCEventCnv(ISvcLocator* svc);
 
     virtual ~MCEventCnv();
+public:
 
     /// Query interfaces of Interface
     //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
@@ -51,7 +55,7 @@ public:
     virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
 
     /// Methods to set and return the path in TDS for output of this converter
-    virtual void setPath(const std::string& path) {m_path = path;}
+    //virtual void setPath(const std::string& path) {m_path = path;}
     virtual const std::string& getPath() const    {return m_path;}
 
 private:
@@ -62,8 +66,9 @@ private:
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
-static CnvFactory<MCEventCnv> s_factory;
-const ICnvFactory& MCEventCnvFactory = s_factory;
+//static CnvFactory<MCEventCnv> s_factory;
+DECLARE_CONVERTER_FACTORY ( MCEventCnv );
+
 
  MCEventCnv::MCEventCnv( ISvcLocator* svc) : Converter (SICB_StorageType, CLID_McEvent, svc) 
 {

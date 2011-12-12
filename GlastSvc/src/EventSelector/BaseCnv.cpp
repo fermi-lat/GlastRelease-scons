@@ -10,16 +10,23 @@
 
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/IOpaqueAddress.h"
+#include "GaudiKernel/GenericAddress.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IConversionSvc.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/MsgStream.h"
 
 #include "BaseCnv.h"
 
-static const InterfaceID IID_IBaseCnv(902, 1 , 0); 
+//static const InterfaceID IID_IBaseCnv(902, 1 , 0); 
 
 BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
-: Converter(SICB_StorageType, clid, svc), m_CnvSvc(0)   {
+: Converter(SICB_StorageType, clid, svc)   {
     
     StatusCode sc;
     MsgStream log(msgSvc(), "BaseCnv");
@@ -29,7 +36,7 @@ BaseCnv::BaseCnv(const CLID& clid, ISvcLocator* svc)
     IService *isvc=0;
     sc = serviceLocator()->getService ("GlastDetSvc", isvc, true);
     if (sc.isSuccess()) {
-        sc = isvc->queryInterface(IID_IGlastDetSvc, (void**)&m_detSvc);
+        sc = isvc->queryInterface(IGlastDetSvc::interfaceID(), (void**)&m_detSvc);
     }
     if(sc.isFailure()){
         log << MSG::ERROR << "Unable start Glast detector service within BaseCnv" << endreq;
@@ -73,6 +80,7 @@ StatusCode BaseCnv::initialize()   {
     //   and paths within the TDS, using the vector of leaves and the
     //   declareObject methods available in each specific converter.
     StatusCode status = Converter::initialize();
+/*
     if ( status.isSuccess() )   {
         IService* isvc = 0;
         status = serviceLocator()->service("EventCnvSvc", isvc, true);
@@ -85,22 +93,21 @@ StatusCode BaseCnv::initialize()   {
             }
         }
     }
+*/
     return status;
 }
 
 StatusCode BaseCnv::finalize()   {
-    if ( m_CnvSvc )     {
-        m_CnvSvc->release();
-        m_CnvSvc = 0;
-    }
     return Converter::finalize();
 }
 
+/*
 void BaseCnv::declareObject(const std::string& path, const CLID& cl, 
                             const std::string& bank, long par)  {
     // Purpose and Method:  Save the path on the TDS, in the m_leaves vector, 
     //   corresponding to the DataObject that the converter handles.
     m_leaves.push_back(IEventCnvSvc::Leaf(path, cl, bank, par));
 }
+*/
 
 

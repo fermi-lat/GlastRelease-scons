@@ -58,7 +58,9 @@ public:
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<MyRecon> afactory;
+//static ToolFactory<MyRecon> afactory;
+DECLARE_TOOL_FACTORY( MyRecon );
+
 
 
 //--------------------------------------------------------------------------
@@ -80,8 +82,11 @@ public:
     
     }
 };
-static ToolFactory<MyRandomTool> randFactory;
-const IToolFactory& MyRandomToolFactory = randFactory;
+//static ToolFactory<MyRandomTool> randFactory;
+//const IToolFactory& MyRandomToolFactory = randFactory;
+
+//static  ToolFactory<MyRandomTool>  randFactory;
+DECLARE_TOOL_FACTORY( MyRandomTool );
 
 //--------------------------------------------------------------------------
 /**
@@ -103,8 +108,9 @@ public:
     }
   
 };
-static ToolFactory<MyOtherRandomTool> otherRandFactory;
-const IToolFactory& MyOtherRandomToolFactory = otherRandFactory;
+//static  ToolFactory<MyOtherRandomTool>  otherRandFactory;
+DECLARE_TOOL_FACTORY( MyOtherRandomTool );
+
 
 //--------------------------------------------------------------------------
 /**
@@ -123,13 +129,16 @@ public:
                                          const IInterface* parent)
         : RandomAccess( type, name, parent ) {}
 };
-static ToolFactory<MyThirdRandomTool> thirdRandFactory;
-const IToolFactory& MyThirdRandomToolFactory = thirdRandFactory;
+//static ToolFactory<MyThirdRandomTool> thirdRandFactory;
+//const IToolFactory& MyThirdRandomToolFactory = thirdRandFactory;
+DECLARE_TOOL_FACTORY(MyThirdRandomTool);
 
 //--------------------------------------------------------------------------
 
-static const AlgFactory<CreateEvent>  Factory;
-const IAlgFactory& CreateEventFactory = Factory;
+//static const AlgFactory<CreateEvent>  Factory;
+//const IAlgFactory& CreateEventFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( CreateEvent );
+
 
 CreateEvent::CreateEvent(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator), m_detSvc(0) {

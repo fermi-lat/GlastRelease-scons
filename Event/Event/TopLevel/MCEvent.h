@@ -10,6 +10,7 @@
 //#include "GlastEvent/TopLevel/SubMCEvent.h"
 #include "Event/TopLevel/Definitions.h"
 #include "Event/Utilities/TimeStamp.h"
+#include "GaudiKernel/IInterface.h"
 
 static const CLID& CLID_McEvent = InterfaceID("McEvent", 1, 1);
 

@@ -18,8 +18,10 @@
 #include <iostream>
 #include <algorithm>
 
-static const SvcFactory<AcdGeometrySvc> s_factory;
-const ISvcFactory& AcdGeometrySvcFactory = s_factory;
+//static const SvcFactory<AcdGeometrySvc> s_factory;
+//const ISvcFactory& AcdGeometrySvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY(AcdGeometrySvc);
+
 
 namespace {   // local utilities
   // Given a NamedId (std::vector<std::pair<std::string>, unsigned) look

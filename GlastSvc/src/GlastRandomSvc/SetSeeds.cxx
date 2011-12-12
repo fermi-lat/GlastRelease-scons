@@ -44,8 +44,10 @@ private:
 };
 //------------------------------------------------------------------------
 
-static const AlgFactory<SetSeeds>  Factory;
-const IAlgFactory& SetSeedsFactory = Factory;
+//static const AlgFactory<SetSeeds>  Factory;
+//const IAlgFactory& SetSeedsFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( SetSeeds );
+
 
 //------------------------------------------------------------------------
 //! ctor

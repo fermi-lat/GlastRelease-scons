@@ -71,8 +71,9 @@ static double maxDoca = 2000.0;
 
 //------------------------------------------------------------------------
 
-static const AlgFactory<AcdReconAlg>  Factory;
-const IAlgFactory& AcdReconAlgFactory = Factory;
+//static const AlgFactory<AcdReconAlg>  Factory;
+//const IAlgFactory& AcdReconAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AcdReconAlg);
 
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor

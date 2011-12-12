@@ -54,8 +54,9 @@ private:
 
 
 
-static const SvcFactory<GlastPropagatorSvc> s_factory;
-const ISvcFactory& GlastPropagatorSvcFactory = s_factory;
+//static const SvcFactory<GlastPropagatorSvc> s_factory;
+//const ISvcFactory& GlastPropagatorSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY( GlastPropagatorSvc );
 
 
 //------------------------------------------------------------------------------
@@ -118,7 +119,7 @@ StatusCode GlastPropagatorSvc::finalize()
 
 StatusCode  GlastPropagatorSvc::queryInterface (const InterfaceID& riid, void **ppvIF)
 {
-    if (IID_IPropagatorSvc == riid) {
+    if (IPropagatorSvc::interfaceID() == riid) {
         *ppvIF = dynamic_cast<IPropagatorSvc*> (this);
         return StatusCode::SUCCESS;
     }

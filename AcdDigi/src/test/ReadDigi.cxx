@@ -33,8 +33,9 @@ private:
 
 };
 
-static const AlgFactory<ReadDigi>  Factory;
-const IAlgFactory& ReadDigiFactory = Factory;
+//static const AlgFactory<ReadDigi>  Factory;
+//const IAlgFactory& ReadDigiFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(ReadDigi);
 
 ReadDigi::ReadDigi(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {

@@ -48,8 +48,11 @@ private:
   std::ofstream *m_eventFile;
 };
 
-static const AlgFactory<CurrentEventAlg>  Factory;
-const IAlgFactory& CurrentEventAlgFactory = Factory;
+//static const AlgFactory<CurrentEventAlg>  Factory;
+//const IAlgFactory& CurrentEventAlgFactory = Factory;
+
+DECLARE_ALGORITHM_FACTORY( CurrentEventAlg );
+
 
 CurrentEventAlg::CurrentEventAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator) 

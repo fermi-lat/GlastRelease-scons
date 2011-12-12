@@ -1,7 +1,8 @@
 # -*- python -*-
 # $Header$
 # Authors: Heather Kelly <heather@milkyway.gsfc.nasa.gov>
-# Version: AcdDigi-03-10-05
+# Version: AcdDigi-03-11-00
+
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -9,8 +10,8 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='AcdDigi', toBuild='component')
-AcdDigi = libEnv.SharedLibrary('AcdDigi',
-                               listFiles(['src/*.cxx', 'src/Dll/*.cxx']))
+AcdDigi = libEnv.ComponentLibrary('AcdDigi',
+                                  listFiles(['src/*.cxx']))
 
 progEnv.Tool('AcdDigiLib')
 
