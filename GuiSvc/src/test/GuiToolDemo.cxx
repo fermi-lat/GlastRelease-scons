@@ -44,8 +44,9 @@ private:
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<TestMenu> s_factory;
-const IToolFactory& TestMenuFactory = s_factory;
+//static ToolFactory<TestMenu> s_factory;
+//const IToolFactory& TestMenuFactory = s_factory;
+DECLARE_TOOL_FACTORY(TestMenu);
 
 // Standard Constructor
 TestMenu::TestMenu(const std::string& type, 

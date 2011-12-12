@@ -14,6 +14,7 @@
 #include "GaudiKernel/IRunable.h"
 
 #include "GuiSvc/IGuiSvc.h"
+#include "GuiSvc/GuiObs.h"
 
 //forward declarations
 namespace gui { class GuiMgr; }
@@ -95,11 +96,14 @@ private:
     /// Reference to application manager UI
     IAppMgrUI*    m_appMgrUI;
     int m_evtMax;
+    IToolSvc *m_toolSvc; // to handle observer
 
     gui::GuiMgr* m_guiMgr;
     float   m_size;
     int     m_pause_interval;
     bool    m_paused;
+
+    GuiObs *m_guiObs;
 
 };
 

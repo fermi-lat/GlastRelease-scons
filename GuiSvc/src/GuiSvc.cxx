@@ -15,8 +15,8 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/IObjManager.h"
-#include "GaudiKernel/IToolFactory.h"
+//#include "GaudiKernel/IObjManager.h"
+//#include "GaudiKernel/IToolFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/Algorithm.h"
 
@@ -30,9 +30,9 @@
 #include "gui/SimpleCommand.h"
 
 // declare the service factories for the GuiSvc
-static SvcFactory<GuiSvc> a_factory;
-const ISvcFactory& GuiSvcFactory = a_factory;
-
+//static SvcFactory<GuiSvc> a_factory;
+//const ISvcFactory& GuiSvcFactory = a_factory;
+//DECLARE_SERVICE_FACTORY(GuiSvc);
 
 // ------------------------------------------------
 // Implementation of the GuiSvc class
@@ -67,7 +67,8 @@ void GuiSvc::pause()
 StatusCode GuiSvc::initialize () 
 {
     using namespace gui;
-    if(state()==INITIALIZED) return StatusCode::SUCCESS;
+    //if(state()==INITIALIZED) return StatusCode::SUCCESS;
+    if(FSMState()==Gaudi::StateMachine::INITIALIZED) return StatusCode::SUCCESS;
     StatusCode  status =  Service::initialize ();
 
 
@@ -110,7 +111,7 @@ StatusCode GuiSvc::initialize ()
 
 
 
-    sc = serviceLocator()->queryInterface(IID_IAppMgrUI, (void**)&m_appMgrUI);
+    sc = serviceLocator()->queryInterface(IAppMgrUI::interfaceID(), (void**)&m_appMgrUI);
 
     // get property from application manager
     if ( m_evtMax == (int)0xFEEDBABE )   {
@@ -128,6 +129,22 @@ StatusCode GuiSvc::initialize ()
         setProperty(evtMax);
     }
 
+  // get a pointer to the tool service
+  status = service( "ToolSvc", m_toolSvc, true );
+  if (!status.isSuccess()) {
+    log << MSG::ERROR << "Unable to get a handle to the tool service" << endmsg;
+    return status;
+  } else {
+    log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
+  }
+
+
+    m_guiObs = new GuiObs();
+    m_guiObs->setGuiMgr(m_guiMgr);
+    m_toolSvc->registerObserver(m_guiObs);
+
+
+
     //----------------------------------------------------------------
     // most of  the following cribbed from ToolSvc and ObjManager
 
@@ -135,7 +152,7 @@ StatusCode GuiSvc::initialize ()
     // if found, make one and call the special method 
 
     // Manager of the AlgTool Objects
-    IObjManager* objManager=0;             
+    /*IObjManager* objManager=0;             
 
     // locate Object Manager to locate later the tools 
     status = serviceLocator()->service("ApplicationMgr", objManager );
@@ -168,6 +185,7 @@ StatusCode GuiSvc::initialize ()
             itool->release();
         }
     }
+*/
 
     return StatusCode::SUCCESS;
 }
@@ -257,7 +275,7 @@ StatusCode GuiSvc::run(){
     //
     IAlgManager* theAlgMgr;
     status = serviceLocator( )->getService( "ApplicationMgr",
-        IID_IAlgManager,
+        IAlgManager::interfaceID(),
         (IInterface*&)theAlgMgr );
     IAlgorithm* theIAlg;
     Algorithm*  theAlgorithm=0;
@@ -317,7 +335,7 @@ StatusCode GuiSvc::queryInterface(const InterfaceID& riid, void** ppvInterface) 
     if ( IID_IGuiSvc.versionMatch(riid) )  {
         *ppvInterface = (IGuiSvc*)this;
     }
-    else if (IID_IRunable.versionMatch(riid) ) {
+    else if (IRunable::interfaceID() == riid ) {
         *ppvInterface = (IRunable*)this;
     }
     else  {

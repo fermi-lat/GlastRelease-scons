@@ -11,8 +11,9 @@
 #include "src/test/Demo.h"
 #include "gui/GuiMgr.h"
  
-static const AlgFactory<GuiTestAlg>  Factory;
-const IAlgFactory& GuiTestAlgFactory = Factory;
+//static const AlgFactory<GuiTestAlg>  Factory;
+//const IAlgFactory& GuiTestAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(GuiTestAlg);
 
 
 //------------------------------------------------------------------------------

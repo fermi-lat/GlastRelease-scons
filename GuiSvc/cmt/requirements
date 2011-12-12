@@ -1,10 +1,11 @@
 package GuiSvc
-version v3r8p3
+version v3r9p0
 author T.Burnett <tburnett@u.washington.edu>
 
 branches GuiSvc cmt doc src
 #$Id$
 
+use GlastPolicy *
 use gui 
 use GaudiInterface * IExternal
 
@@ -30,6 +31,9 @@ macro GuiMain "$(GlastMain)"
 private
 
 #use gr_app
+#use RootmapPolicy * GlastPolicy
+
+#apply_pattern generate_rootmap library=GuiSvc
 
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 

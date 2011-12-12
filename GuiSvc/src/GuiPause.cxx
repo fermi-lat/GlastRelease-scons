@@ -53,8 +53,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( GuiPause );
 
-static const AlgFactory<GuiPause>  Factory;
-const IAlgFactory& GuiPauseFactory = Factory;
+//static const AlgFactory<GuiPause>  Factory;
+//const IAlgFactory& GuiPauseFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(GuiPause);
 
 GuiPause::GuiPause(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator), m_guiSvc(0) , m_enabled(false)
