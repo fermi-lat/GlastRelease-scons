@@ -1,5 +1,5 @@
 package CalXtalResponse
-version v0r25p2
+version v0r26p0
 author zachary.fewtrell@nrl.navy.mil
 
 branches src cmt doc
@@ -30,8 +30,7 @@ library CalXtalResponse *.cxx *.h               \
         CalTuple/*.cxx CalTuple/*.h             \        
         CalFailureMode/*.cxx CalFailureMode/*.h \
         Xtalk/*.cxx Xtalk/*.h                   \
-        CalTrig/*.cxx CalTrig/*.h               \
-        Dll/*.cxx Dll/*.h 
+        CalTrig/*.cxx CalTrig/*.h              
 
 #=============================================================
 private
@@ -39,10 +38,15 @@ private
 #needed only for the test app
 use CalibSvc
 use CalDigi
+use RootmapPolicy * GlastPolicy 
 use gr_app
 #use obf * IExternal
 
+
 apply_pattern package_Cshlibflags 
 
+apply_pattern generate_rootmap library=CalXtalResponse
+
 # sets up standard test executable and job options file
-apply_pattern package_test
+#apply_pattern package_test disable until I figure out how to ser up service
+# multiple times with different names

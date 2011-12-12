@@ -109,8 +109,9 @@ private:
 
 };
 
-static ToolFactory<NeighborXtalkTool> s_factory;
-const IToolFactory& NeighborXtalkToolFactory = s_factory;
+//static ToolFactory<NeighborXtalkTool> s_factory;
+//const IToolFactory& NeighborXtalkToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(NeighborXtalkTool);
 
 NeighborXtalkTool::NeighborXtalkTool( const string& type, 
                                       const string& name, 

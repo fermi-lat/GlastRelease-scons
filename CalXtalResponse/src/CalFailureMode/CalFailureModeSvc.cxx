@@ -20,8 +20,9 @@
 
 // declare the service factories for the CalFailureModeSvc
 
-static SvcFactory<CalFailureModeSvc> a_factory;
-const ISvcFactory& CalFailureModeSvcFactory = a_factory; 
+//static SvcFactory<CalFailureModeSvc> a_factory;
+//const ISvcFactory& CalFailureModeSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(CalFailureModeSvc);
 
 
 

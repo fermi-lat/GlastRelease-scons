@@ -20,8 +20,9 @@
 using namespace CalUtil;
 using namespace std;
 
-static ToolFactory<PrecalcCalibTool> s_factory;
-const IToolFactory& PrecalcCalibToolFactory = s_factory;
+//static ToolFactory<PrecalcCalibTool> s_factory;
+//const IToolFactory& PrecalcCalibToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(PrecalcCalibTool);
 
 /// used to represent invalid values in internal arrays.
 const float BAD_FLOAT = -999999.999999F;

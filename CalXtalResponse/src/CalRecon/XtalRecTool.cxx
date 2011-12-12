@@ -39,8 +39,9 @@ using namespace CalibData;
 using namespace idents;
 using namespace std;
 
-static ToolFactory<XtalRecTool> s_factory;
-const IToolFactory& XtalRecToolFactory = s_factory;
+//static ToolFactory<XtalRecTool> s_factory;
+//const IToolFactory& XtalRecToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(XtalRecTool);
 
 XtalRecTool::XtalRecTool( const string& type,
                           const string& name,

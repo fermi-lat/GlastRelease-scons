@@ -30,8 +30,9 @@ using namespace idents;
 using namespace std;
 using namespace CalUtil;
 
-static const AlgFactory<CalXtalRecAlg>  Factory;
-const IAlgFactory& CalXtalRecAlgFactory = Factory;
+//static const AlgFactory<CalXtalRecAlg>  Factory;
+//const IAlgFactory& CalXtalRecAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalXtalRecAlg);
 
 CalXtalRecAlg::CalXtalRecAlg(const string& name, ISvcLocator* pSvcLocator):
   Algorithm(name, pSvcLocator),

@@ -37,8 +37,9 @@
 
 const float XtalSignalTool::m_ePerMeVInDiode = 2.77e5;
 
-static ToolFactory<XtalSignalTool> s_factory;
-const IToolFactory& XtalSignalToolFactory = s_factory;
+//static ToolFactory<XtalSignalTool> s_factory;
+//const IToolFactory& XtalSignalToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(XtalSignalTool);
 
 /// declare jobOptions properties
 XtalSignalTool::XtalSignalTool( const std::string& type,

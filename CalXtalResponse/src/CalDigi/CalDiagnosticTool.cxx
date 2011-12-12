@@ -26,8 +26,10 @@ using namespace CalUtil;
 using namespace std;
 
 
-static ToolFactory<CalDiagnosticTool> s_factory;
-const IToolFactory& CalDiagnosticToolFactory = s_factory;
+//static ToolFactory<CalDiagnosticTool> s_factory;
+//const IToolFactory& CalDiagnosticToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalDiagnosticTool);
+
 
 CalDiagnosticTool::CalDiagnosticTool( const std::string& type,
                                       const std::string& name,

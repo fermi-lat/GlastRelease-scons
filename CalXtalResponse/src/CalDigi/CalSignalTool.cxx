@@ -33,8 +33,9 @@
 #include <map>
 #include <string>
 
-static ToolFactory< CalSignalTool > a_factory;
-const IToolFactory& CalSignalToolFactory = a_factory; 
+//static ToolFactory< CalSignalTool > a_factory;
+//const IToolFactory& CalSignalToolFactory = a_factory; 
+DECLARE_TOOL_FACTORY(CalSignalTool);
 
 CalSignalTool::CalSignalTool(const std::string& type,
                              const std::string& name,

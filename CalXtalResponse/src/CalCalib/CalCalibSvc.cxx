@@ -27,8 +27,9 @@
 
 using namespace CalUtil;
 
-static SvcFactory< CalCalibSvc > a_factory;
-const ISvcFactory& CalCalibSvcFactory = a_factory; 
+//static SvcFactory< CalCalibSvc > a_factory;
+//const ISvcFactory& CalCalibSvcFactory = a_factory; 
+DECLARE_SERVICE_FACTORY(CalCalibSvc);
 
 CalCalibSvc::CalCalibSvc(const string& name, ISvcLocator* Svc) 
   : Service(name,Svc),

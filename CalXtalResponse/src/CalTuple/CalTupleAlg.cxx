@@ -122,8 +122,9 @@ private:
   StringProperty m_xtalkToolName;
 };
 
-static const AlgFactory<CalTupleAlg>  Factory;
-const IAlgFactory& CalTupleAlgFactory = Factory;
+//static const AlgFactory<CalTupleAlg>  Factory;
+//const IAlgFactory& CalTupleAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalTupleAlg);
 
 CalTupleAlg::CalTupleAlg(const string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),

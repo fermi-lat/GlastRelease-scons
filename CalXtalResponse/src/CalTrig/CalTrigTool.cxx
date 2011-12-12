@@ -39,8 +39,9 @@ using namespace CalibData;
 using namespace idents;
 
 
-static ToolFactory<CalTrigTool> s_factory;
-const IToolFactory& CalTrigToolFactory = s_factory;
+//static ToolFactory<CalTrigTool> s_factory;
+//const IToolFactory& CalTrigToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalTrigTool);
 
 CalTrigTool::CalTrigTool( const std::string& type,
                           const std::string& name,

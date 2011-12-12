@@ -37,8 +37,9 @@ using namespace CalibData;
 using namespace idents;
 using namespace std;
 
-static ToolFactory<XtalDigiTool> s_factory;
-const IToolFactory& XtalDigiToolFactory = s_factory;
+//static ToolFactory<XtalDigiTool> s_factory;
+//const IToolFactory& XtalDigiToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(XtalDigiTool);
 
 static float round_int(float in) { return floor(in + 0.5);}
 

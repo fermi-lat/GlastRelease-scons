@@ -33,5 +33,6 @@ public:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<CalXtalRespRandom> s_factory;
-const IToolFactory& CalXtalRespRandomFactory = s_factory;
+//static ToolFactory<CalXtalRespRandom> s_factory;
+//const IToolFactory& CalXtalRespRandomFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalXtalRespRandom);

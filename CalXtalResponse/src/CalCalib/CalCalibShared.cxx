@@ -32,7 +32,7 @@ StatusCode CalCalibShared::initialize(Service &service) {
   }
 
   // Query the IDataProvider interface of the CalibDataService
-  sc = calibDataSvc->queryInterface(IID_IDataProviderSvc, 
+  sc = calibDataSvc->queryInterface(IDataProviderSvc::interfaceID(), 
                                     (void**) &m_dataProviderSvc);
   if ( !sc.isSuccess() ) {
     MsgStream msglog(m_service->msgSvc(), m_service->name()); 
