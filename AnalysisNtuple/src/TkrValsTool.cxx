@@ -306,8 +306,9 @@ namespace
 }
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<TkrValsTool> s_factory;
-const IToolFactory& TkrValsToolFactory = s_factory;
+//static ToolFactory<TkrValsTool> s_factory;
+//const IToolFactory& TkrValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrValsTool);
 
 // Standard Constructor
 TkrValsTool::TkrValsTool(const std::string& type, 

@@ -47,8 +47,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_AnalysisNtuple );
 
-static const AlgFactory<test_AnalysisNtuple>  Factory;
-const IAlgFactory& test_AnalysisNtupleFactory = Factory;
+//static const AlgFactory<test_AnalysisNtuple>  Factory;
+//const IAlgFactory& test_AnalysisNtupleFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_AnalysisNtuple);
 
 //------------------------------------------------------------------------
 //! ctor

@@ -130,8 +130,9 @@ private:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<VtxValsTool> s_factory;
-const IToolFactory& VtxValsToolFactory = s_factory;
+//static ToolFactory<VtxValsTool> s_factory;
+//const IToolFactory& VtxValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(VtxValsTool);
 
 // Standard Constructor
 VtxValsTool::VtxValsTool(const std::string& type, 

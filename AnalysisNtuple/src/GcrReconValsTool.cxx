@@ -84,8 +84,9 @@ private:
 };
   
 // Static factory for instantiation of algtool objects
-static ToolFactory<GcrReconValsTool> s_factory;
-const IToolFactory& GcrReconValsToolFactory = s_factory;
+//static ToolFactory<GcrReconValsTool> s_factory;
+//const IToolFactory& GcrReconValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GcrReconValsTool);
   
 // Standard Constructor
 GcrReconValsTool::GcrReconValsTool(const std::string& type, 

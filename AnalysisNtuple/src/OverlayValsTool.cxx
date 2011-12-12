@@ -125,8 +125,9 @@ private:
 //------------------------------------------------------------------------
 
 
-static const ToolFactory<OverlayValsTool>  Factory;
-const IToolFactory& OverlayValsToolFactory = Factory;
+//static const ToolFactory<OverlayValsTool>  Factory;
+//const IToolFactory& OverlayValsToolFactory = Factory;
+DECLARE_TOOL_FACTORY(OverlayValsTool);
 
 //------------------------------------------------------------------------
 //! ctor

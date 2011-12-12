@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v2r59p6
+version v2r60p0
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -28,7 +28,9 @@ use RootIo           v*
 use AcdUtil          v*
 use OnboardFilterTds v*
 use OverlayEvent     v*
+use RootmapPolicy * GlastPolicy
 use gr_app           v*
+
 
 macro AnalysisNtuple_cppflags "" \
    Linux "-DGLEAM -D__i386 -DEFC_FILTER -DMSG_ST -D__unix__  -DWUT_IMPLEMENTATION_PX "\
@@ -61,7 +63,9 @@ set LCHBDBASE  ${FLUXSVCROOT}/cdf
 
 apply_pattern package_headers
 
-library AnalysisNtuple *.cxx Dll/*.cxx ${AnalysisNtuple_headers}
+library AnalysisNtuple *.cxx ${AnalysisNtuple_headers}
+
+apply_pattern generate_rootmap library=AnalysisNtuple
 
 apply_pattern package_Cshlibflags 
 

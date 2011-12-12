@@ -84,8 +84,9 @@ private:
 };
   
 // Static factory for instantiation of algtool objects
-static ToolFactory<GcrSelectValsTool> s_factory;
-const IToolFactory& GcrSelectValsToolFactory = s_factory;
+//static ToolFactory<GcrSelectValsTool> s_factory;
+//const IToolFactory& GcrSelectValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GcrSelectValsTool);
   
 // Standard Constructor
 GcrSelectValsTool::GcrSelectValsTool(const std::string& type, 

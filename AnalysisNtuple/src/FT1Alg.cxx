@@ -75,8 +75,9 @@ private:
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-static const AlgFactory<FT1Alg>  Factory;
-const IAlgFactory& FT1AlgFactory = Factory;
+//static const AlgFactory<FT1Alg>  Factory;
+//const IAlgFactory& FT1AlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(FT1Alg);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

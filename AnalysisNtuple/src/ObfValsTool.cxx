@@ -109,8 +109,9 @@ private:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<ObfValsTool> s_factory;
-const IToolFactory& ObfValsToolFactory = s_factory;
+//static ToolFactory<ObfValsTool> s_factory;
+//const IToolFactory& ObfValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(ObfValsTool);
 
 // Standard Constructor
 ObfValsTool::ObfValsTool(const std::string& type, 

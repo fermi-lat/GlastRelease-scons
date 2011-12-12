@@ -61,8 +61,9 @@ private:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<McKludgeValsTool> s_factory;
-const IToolFactory& McKludgeValsToolFactory = s_factory;
+//static ToolFactory<McKludgeValsTool> s_factory;
+//const IToolFactory& McKludgeValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(McKludgeValsTool);
 
 // Standard Constructor
 McKludgeValsTool::McKludgeValsTool(const std::string& type, 

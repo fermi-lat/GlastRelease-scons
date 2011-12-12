@@ -349,8 +349,9 @@ namespace {
 }
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<CalValsTool> s_factory;
-const IToolFactory& CalValsToolFactory = s_factory;
+//static ToolFactory<CalValsTool> s_factory;
+//const IToolFactory& CalValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalValsTool);
 
 // Standard Constructor
 CalValsTool::CalValsTool(const std::string& type, 

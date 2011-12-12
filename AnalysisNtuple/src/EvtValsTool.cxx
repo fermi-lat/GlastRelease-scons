@@ -118,8 +118,9 @@ private:
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<EvtValsTool> s_factory;
-const IToolFactory& EvtValsToolFactory = s_factory;
+//static ToolFactory<EvtValsTool> s_factory;
+//const IToolFactory& EvtValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(EvtValsTool);
 
 // Standard Constructor
 EvtValsTool::EvtValsTool(const std::string& type, 

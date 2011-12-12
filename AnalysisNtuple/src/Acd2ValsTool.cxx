@@ -302,8 +302,9 @@ number of sigmas track propagation is away from tile or ribbon most likely to ve
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<Acd2ValsTool> s_factory;
-const IToolFactory& Acd2ValsToolFactory = s_factory;
+//static ToolFactory<Acd2ValsTool> s_factory;
+//const IToolFactory& Acd2ValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(Acd2ValsTool);
 
 // Standard Constructor
 Acd2ValsTool::Acd2ValsTool(const std::string& type, 

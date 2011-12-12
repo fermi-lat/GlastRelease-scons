@@ -119,8 +119,9 @@ around the best track
 */
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<CalMipValsTool> s_factory;
-const IToolFactory& CalMipValsToolFactory = s_factory;
+//static ToolFactory<CalMipValsTool> s_factory;
+//const IToolFactory& CalMipValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalMipValsTool);
   
 // Standard Constructor
 CalMipValsTool::CalMipValsTool(const std::string& type, 

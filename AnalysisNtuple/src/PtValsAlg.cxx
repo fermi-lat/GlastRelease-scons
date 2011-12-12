@@ -75,8 +75,9 @@ private:
 //------------------------------------------------------------------------
 
 
-static const AlgFactory<PtValsAlg>  Factory;
-const IAlgFactory& PtValsAlgFactory = Factory;
+//static const AlgFactory<PtValsAlg>  Factory;
+//const IAlgFactory& PtValsAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(PtValsAlg);
 
 //------------------------------------------------------------------------
 //! ctor

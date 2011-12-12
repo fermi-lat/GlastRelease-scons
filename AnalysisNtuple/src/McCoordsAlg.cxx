@@ -48,8 +48,9 @@ private:
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-static const AlgFactory<McCoordsAlg>  Factory;
-const IAlgFactory& McCoordsAlgFactory = Factory;
+//static const AlgFactory<McCoordsAlg>  Factory;
+//const IAlgFactory& McCoordsAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(McCoordsAlg);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

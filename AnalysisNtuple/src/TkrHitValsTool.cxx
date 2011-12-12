@@ -88,8 +88,9 @@ private:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<TkrHitValsTool> s_factory;
-const IToolFactory& TkrHitValsToolFactory = s_factory;
+//static ToolFactory<TkrHitValsTool> s_factory;
+//const IToolFactory& TkrHitValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrHitValsTool);
 
 // Standard Constructor
 TkrHitValsTool::TkrHitValsTool(const std::string& type, 

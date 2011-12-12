@@ -171,8 +171,9 @@ private:
 };
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<TreeValsTool> s_factory;
-const IToolFactory& TreeValsToolFactory = s_factory;
+//static ToolFactory<TreeValsTool> s_factory;
+//const IToolFactory& TreeValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TreeValsTool);
 
 // Standard Constructor
 TreeValsTool::TreeValsTool(const std::string& type, 

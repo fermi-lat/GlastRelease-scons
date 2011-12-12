@@ -177,8 +177,9 @@ produces 13 potential triggers
 
 
 // Static factory for instantiation of algtool objects
-static ToolFactory<GltValsTool> s_factory;
-const IToolFactory& GltValsToolFactory = s_factory;
+//static ToolFactory<GltValsTool> s_factory;
+//const IToolFactory& GltValsToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(GltValsTool);
 
 // Standard Constructor
 GltValsTool::GltValsTool(const std::string& type, 

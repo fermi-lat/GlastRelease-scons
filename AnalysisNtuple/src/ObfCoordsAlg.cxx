@@ -48,8 +48,9 @@ private:
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-static const AlgFactory<ObfCoordsAlg>  Factory;
-const IAlgFactory& ObfCoordsAlgFactory = Factory;
+//static const AlgFactory<ObfCoordsAlg>  Factory;
+//const IAlgFactory& ObfCoordsAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(ObfCoordsAlg);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

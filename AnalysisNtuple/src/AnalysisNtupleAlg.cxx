@@ -178,8 +178,9 @@ private:
     IValsTool::Visitor* m_visitor; 
 };
 
-static const AlgFactory<AnalysisNtupleAlg>  Factory;
-const IAlgFactory& AnalysisNtupleAlgFactory = Factory;
+//static const AlgFactory<AnalysisNtupleAlg>  Factory;
+//const IAlgFactory& AnalysisNtupleAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AnalysisNtupleAlg);
 
 AnalysisNtupleAlg::AnalysisNtupleAlg(const std::string& name, ISvcLocator* pSvcLocator)
 :Algorithm(name, pSvcLocator)
