@@ -19,10 +19,11 @@ if baseEnv['COMPILERNAME'] != 'vc71':
 else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
 
-#Missing gaudi, TMinExt for rhel5; LDF for rhel5 64-bit
-usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.1.2'})
-usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v18r1-gl4' })
-usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01' })
+usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.5'})
+usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl1' })
+usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
+
+#Missing LDF for rhel5 64-bit
 usedExternals.append({ 'name' : 'LDF', 'iversion' : 'v07-01-01' })
 usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
 
@@ -35,11 +36,11 @@ if sys.platform != 'win32':
 
 usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r9' })
 
-usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3-i3' })
-#usedExternals.append({ 'name' : 'obf', 'iversion' : 'B3-0-0' })
+#usedExternals.append({ 'name' : 'obf', 'iversion' : 'B1-1-3-i3' })
+usedExternals.append({ 'name' : 'obf', 'iversion' : 'B3-0-0' })
 
 #   OmniOrb 4.1.2
-usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.2' })
+usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.4' })
 
 #   Fox 1.4.34
 usedExternals.append({ 'name' : 'fox', 'iversion' : '1.4.34' })
