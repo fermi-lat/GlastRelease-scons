@@ -29,8 +29,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_CalRecon );
 
-static const AlgFactory<test_CalRecon>  Factory;
-const IAlgFactory& test_CalReconFactory = Factory;
+//static const AlgFactory<test_CalRecon>  Factory;
+//const IAlgFactory& test_CalReconFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_CalRecon);
 
 //------------------------------------------------------------------------
 //! ctor

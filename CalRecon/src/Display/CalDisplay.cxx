@@ -18,8 +18,9 @@
 
 using namespace Event;
 
-static const AlgFactory<CalDisplay>  Factory;
-const IAlgFactory& CalDisplayFactory = Factory;
+//static const AlgFactory<CalDisplay>  Factory;
+//const IAlgFactory& CalDisplayFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalDisplay);
 
 CalDisplay::CalDisplay(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {}

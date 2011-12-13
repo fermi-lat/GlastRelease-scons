@@ -23,7 +23,7 @@ StatusCode PropertiesCheckAlg::initialize()
   StatusCode joSc ;
   joSc = service("JobOptionsSvc",joSvc,true) ;
   if (joSc.isSuccess())
-   { joSc = joSvc->queryInterface(IID_IJobOptionsSvc,(void**)&joInt) ; }
+   { joSc = joSvc->queryInterface(IJobOptionsSvc::interfaceID(),(void**)&joInt) ; }
   if (joSc.isSuccess())
    {
     std::vector< std::string > clients = joInt->getClients() ;

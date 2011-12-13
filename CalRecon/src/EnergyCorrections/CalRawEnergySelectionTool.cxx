@@ -51,8 +51,9 @@ private:
                           Event::CalCluster* calCluster);
 };
 
-static ToolFactory<CalRawEnergySelectionTool> s_factory;
-const IToolFactory& CalRawEnergySelectionToolFactory = s_factory;
+//static ToolFactory<CalRawEnergySelectionTool> s_factory;
+//const IToolFactory& CalRawEnergySelectionToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalRawEnergySelectionTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

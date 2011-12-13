@@ -128,8 +128,9 @@ private:
 } ;
 
 //-----------------------------------------------------------------------------------------------------------------
-static ToolFactory<StdMipFindingTool> s_factory;
-const IToolFactory& StdMipFindingToolFactory = s_factory;
+//static ToolFactory<StdMipFindingTool> s_factory;
+//const IToolFactory& StdMipFindingToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(StdMipFindingTool);
 
 //-----------------------------------------------------------------------------------------------------------------
 StdMipFindingTool::StdMipFindingTool(const std::string & type, 

@@ -2,6 +2,7 @@
 #include "GaudiKernel/Auditor.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Chrono.h"
+#include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include <map>

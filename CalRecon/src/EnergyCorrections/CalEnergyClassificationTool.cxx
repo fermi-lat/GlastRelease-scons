@@ -168,8 +168,9 @@ private:
     //int    m_nCsI;
 };
 
-static ToolFactory<CalEnergyClassificationTool> s_factory;
-const IToolFactory& CalEnergyClassificationToolFactory = s_factory;
+//static ToolFactory<CalEnergyClassificationTool> s_factory;
+//const IToolFactory& CalEnergyClassificationToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(CalEnergyClassificationTool);
 
 //
 // Feeds Combo pattern recognition tracks to Kalman Filter

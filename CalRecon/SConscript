@@ -1,7 +1,8 @@
 # -*- python -*-
 # $Header$
 # Authors: Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>, David Chamont <chamont@poly.in2p3.fr
-# Version: CalRecon-06-15-02
+# Version: CalRecon-06-16-00
+
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -10,8 +11,8 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='CalRecon', toBuild='component')
 
-CalRecon=libEnv.SharedLibrary('CalRecon',
-                              listFiles(['src/*.cxx','src/Dll/*.cpp',
+CalRecon=libEnv.ComponentLibrary('CalRecon',
+                              listFiles(['src/*.cxx',
                                          'src/Display/*.cxx',
                                          'src/Clustering/*.cxx',
                                          'src/Classify/*.cxx',
