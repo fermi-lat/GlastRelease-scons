@@ -15,7 +15,7 @@ TkrUtil = libEnv.SharedLibrary('TkrUtil',
 progEnv.Tool('TkrUtilLib')
 progEnv.Tool('EventLib')
 test_TkrUtil = progEnv.GaudiProgram('test_TkrUtil',
-                                    ['src/test/test_TkrUtil.cxx',
+                                    ['src/test/test_TkrUtil.cxx'],
                                     test = 1, package='TkrUtil')
 test_IndexedVector = progEnv.Program('test_IndexedVector',
                                      ['src/test/testIndexedVector.cxx'])
