@@ -1,5 +1,5 @@
 package CalRecon
-version v6r16p0
+version v6r16p1
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -37,12 +37,7 @@ macro_prepend includes "-I ../src " WIN32 " /I ..\src  "
 macro source "*.cxx" WIN32 "*.h *.cxx"
 
 library CalRecon  *.cxx ${CalRecon_headers}      \
-<<<<<<< requirements
-                  -s=Dll *.cpp                   \
-                  -s=Display           ${source} \
-=======
                   -s=Display          ${source}  \
->>>>>>> 1.77.2.1
                   -s=Clustering        ${source} \
                   -s=Classify          ${source} \
                   -s=MipFinding        ${source} \

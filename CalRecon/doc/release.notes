@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-16-01 14-Dec-2011 hmk   Patch requirements file
  CalRecon-06-16-00 09-Dec-2011 hmk   Merge in Gaudi v21r7 mods
  CalRecon-06-15-02 24-Nov-2011 kadrlica Implemented a place holder for the cluster covariance matrix
  CalRecon-06-15-01 17-Nov-2011 TU Provide protection against crash when CalValsCorrTool does not run
