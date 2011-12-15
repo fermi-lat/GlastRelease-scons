@@ -5,6 +5,8 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-09-01 14-Dec-2011 HMK Patch to include ClassifyTool in 
+    shared lib
  GlastClassify-07-09-00 08-Dec-2011 HMK Merge in Gaudi v21r7
  GlastClassify-07-08-06 18-Nov-2011  TU Make sure the saveRows flag is set correctly each call to the setup method
  GlastClassify-07-08-05 17-Nov-2011  TU Updates to allow multiple variable types for ClassifyTool

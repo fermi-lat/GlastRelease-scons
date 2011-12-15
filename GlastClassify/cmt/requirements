@@ -1,5 +1,5 @@
 package GlastClassify
-version v7r9p0
+version v7r9p1
 
 author T. Usher <tracy.usher@slac.stanford.edu>
 # $Header$
@@ -39,7 +39,7 @@ library  ClassificationTree -no_share                    \
                             -s=XT $(source)              \
                             -s=xmlBuilders $(source) 
 
-library  GlastClassify      ClassifyAlg.cxx   
+library  GlastClassify      ClassifyAlg.cxx   ClassifyTool.cxx
 
 apply_pattern generate_rootmap library=GlastClassify
    
