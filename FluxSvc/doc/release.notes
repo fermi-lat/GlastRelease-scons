@@ -6,6 +6,8 @@
 
             * EOH *
 
+ FluxSvc-06-56-02 03-Jan-2011 hmk add in register sources for Interleave
+   and userAlg for now
  FluxSvc-06-56-01 03-Jan-2011 hmk Patch to explicitly find CRflux via toolSvc
  FluxSvc-06-56-00 08-Dec-2011 hmk Merge in Gaudi v21r7 mods
  FluxSvc-06-55-09 20-May-2011    hmk CLHEP 2.1.0.1
