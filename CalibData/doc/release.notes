@@ -4,6 +4,7 @@
 
                     EOH
 
+ CalibData-00-27-01 03-Jan-2012    jrb patch: friend myClass -> friend ::myClass  for gcc41 compilation
  CalibData-00-27-00 05-Dec-2011    hmk Merge in Gaudi v21r7 updates
  CalibData-00-26-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
  CalibData-00-26-04-gr02 17-Oct-2010 hmk Still playing with Gaudi::Time
