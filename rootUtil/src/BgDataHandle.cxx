@@ -47,18 +47,18 @@ BgDataHandle<T>::~BgDataHandle()
  {}
 
 // Partial specialiaztion for return branchType
-Char_t BgDataHandle<char *>::branchType() const { return 'C' ; }
-Char_t BgDataHandle<Bool_t>::branchType() const { return 'O' ; }
-Char_t BgDataHandle<Char_t>::branchType() const { return 'B' ; } 
-Char_t BgDataHandle<UChar_t>::branchType() const { return 'b' ; } 
-Char_t BgDataHandle<Short_t>::branchType() const { return 'S' ; } 
-Char_t BgDataHandle<UShort_t>::branchType() const { return 's' ; }
-Char_t BgDataHandle<Int_t>::branchType() const { return 'I' ; }
-Char_t BgDataHandle<UInt_t>::branchType() const { return 'i' ; }
-Char_t BgDataHandle<Long64_t>::branchType() const { return 'L' ; }
-Char_t BgDataHandle<ULong64_t>::branchType() const { return 'l' ; } 
-Char_t BgDataHandle<Float_t>::branchType() const { return 'F' ; } 
-Char_t BgDataHandle<Double_t>::branchType() const { return 'D' ; }
+template<> Char_t BgDataHandle<char *>::branchType() const { return 'C' ; }
+template<> Char_t BgDataHandle<Bool_t>::branchType() const { return 'O' ; }
+template<> Char_t BgDataHandle<Char_t>::branchType() const { return 'B' ; } 
+template<> Char_t BgDataHandle<UChar_t>::branchType() const { return 'b' ; } 
+template<> Char_t BgDataHandle<Short_t>::branchType() const { return 'S' ; } 
+template<> Char_t BgDataHandle<UShort_t>::branchType() const { return 's' ; }
+template<> Char_t BgDataHandle<Int_t>::branchType() const { return 'I' ; }
+template<> Char_t BgDataHandle<UInt_t>::branchType() const { return 'i' ; }
+template<> Char_t BgDataHandle<Long64_t>::branchType() const { return 'L' ; }
+template<> Char_t BgDataHandle<ULong64_t>::branchType() const { return 'l' ; } 
+template<> Char_t BgDataHandle<Float_t>::branchType() const { return 'F' ; } 
+template<> Char_t BgDataHandle<Double_t>::branchType() const { return 'D' ; }
 
 void BgDataHandleInstance::init() {
   // This is here to force template loading
