@@ -519,6 +519,18 @@ StatusCode FluxSvc::initialize ()
       log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
     }
 
+  /* HMK Explicitly search for RegisterCRflux tool since objManager is
+     no longer available in new Gaudi */
+
+   IRegisterSource *crFlux;
+   status = m_toolSvc->retrieveTool("RegisterCRflux", crFlux);
+   if (status.isFailure())
+       log << MSG::INFO << "No CRflux requested for this run" << endreq;
+   else {
+       log << MSG::INFO << "Found RegisterCRflux" << endreq;
+       crFlux->registerMe(this);
+   }
+
 
     status = m_toolSvc->retrieveTool("FluxSvcRandom", m_randTool);
     if (status.isFailure()) 
