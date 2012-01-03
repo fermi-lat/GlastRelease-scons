@@ -16,6 +16,8 @@
        @author  J. Bogart
 */
 
+class XmlTkrSplitsCnv;
+
 namespace CalibData {
 
   class TkrSplit : public RangeBase {
@@ -35,7 +37,7 @@ namespace CalibData {
   };
 
   class TkrSplitsCalib : public OldTkrBase {
-    friend class XmlTkrSplitsCnv;
+    friend class ::XmlTkrSplitsCnv;
 
   public:
     TkrSplitsCalib(unsigned nTowerRow, unsigned nTowerCol, 

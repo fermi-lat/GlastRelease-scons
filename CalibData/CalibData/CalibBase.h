@@ -24,14 +24,17 @@
 
 class MsgStream;
 
+class XmlBaseCnv;
+class RootBaseCnv;
+
 namespace CalibData {
   class CalibTime;
 
   class CalibBase : public DataObject,
                     virtual public IValidity {
 
-    friend class XmlBaseCnv;
-    friend class RootBaseCnv;
+    friend class ::XmlBaseCnv;
+    friend class ::RootBaseCnv;
     
   public:
     CalibBase();

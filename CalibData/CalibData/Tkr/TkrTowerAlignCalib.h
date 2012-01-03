@@ -29,7 +29,7 @@ namespace CalibData {
   };
 
   class TkrTowerAlignCalib : public CalibBase {
-    friend class XmlTkrTowerAlignCnv;         // to be written
+    friend class ::XmlTkrTowerAlignCnv;         // to be written
 
   public:
     TkrTowerAlignCalib(unsigned maxTowerId=0) {

@@ -77,7 +77,7 @@ namespace CalibData {
 */
   class BadStrips :  public CalibBase {
     /// Allow converter access to private build, set stuff
-    friend class XmlBadStripsCnv;  
+    friend class ::XmlBadStripsCnv;  
     
   public:
     enum eBadType {

@@ -34,7 +34,7 @@ namespace CalibData {
   };
 
   class TkrInternalAlignCalib : public CalibBase {
-    friend class XmlTkrInternalAlignCnv;         // to be written
+    friend class ::XmlTkrInternalAlignCnv;         // to be written
 
   public:
     TkrInternalAlignCalib()    {    };

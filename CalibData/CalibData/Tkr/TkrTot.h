@@ -16,6 +16,8 @@
        @author  J. Bogart
 */
 
+class RootTkrTotCnv;
+
 namespace CalibData {
 
   /**
@@ -104,7 +106,7 @@ namespace CalibData {
      TDS class for complete (charge-injection) calibration
   */
   class TkrTotCol : public TkrBase {
-    friend class RootTkrTotCnv;
+    friend class ::RootTkrTotCnv;
 
   public:
     TkrTotCol(unsigned nTowerRow=4, unsigned nTowerCol=4, unsigned nTray=19);

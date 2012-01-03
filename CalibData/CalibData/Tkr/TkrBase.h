@@ -37,7 +37,7 @@ namespace CalibData {
      per-strip or per-gtfe structure
   */
   class TkrBase : public CalibBase {
-    friend class RootTkrBaseCnv;
+    friend class ::RootTkrBaseCnv;
 
   public:
     /**
@@ -97,7 +97,7 @@ namespace CalibData {
        for per-uniplane data, derived from UniBase.
     */
     class TkrTower {
-    friend class RootTkrBaseCnv;
+      friend class ::RootTkrBaseCnv;
     public:
       unsigned m_iRow;
       unsigned m_iCol;

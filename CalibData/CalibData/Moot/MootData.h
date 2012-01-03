@@ -16,6 +16,7 @@
 
 class MootSvc;
 
+
 namespace CalibData {
   typedef enum {
     MOOTTYPE_notype,
@@ -32,7 +33,7 @@ namespace CalibData {
   } MOOTSUBTYPE;
   
   class MootBase {
-    friend class MootSvc;
+    friend class ::MootSvc;
   public:
     
     MootBase(MOOTTYPE t=MOOTTYPE_notype, MOOTSUBTYPE sub=MOOTSUBTYPE_nosubtype) :
@@ -57,7 +58,7 @@ namespace CalibData {
      Pure data class to describe filter configuration cdm
    */
   class MootFilterCfg {
-    friend class MootSvc;
+    friend class ::MootSvc;
   public:
     MootFilterCfg(const std::string& keyStr="", const std::string& name="",
                   const std::string& pkg="", const std::string& pkgVersion="",
@@ -109,7 +110,7 @@ namespace CalibData {
   */
 
   class MootParm  {
-    friend class MootSvc;
+    friend class ::MootSvc;
   public:
 
   
@@ -139,11 +140,12 @@ namespace CalibData {
   
   };      // end MootParm
 
-
   typedef std::vector<MootParm> MootParmVec;
 
-  class MootParmCol : public MootBase {
-    friend class MootSvc;
+  class MootParmCol : MootBase {
+
+  friend class ::MootSvc;
+
   public:
 
     MootParmCol(MOOTSUBTYPE sub=MOOTSUBTYPE_nosubtype, unsigned key=0, 
