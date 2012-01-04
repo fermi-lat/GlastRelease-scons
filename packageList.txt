@@ -102,14 +102,14 @@ calibRootData calibRootData-01-07-11
 
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-01-00
-merit merit-06-37-00
+merit merit-06-37-01
 AnalysisNtuple AnalysisNtuple-02-60-01
 
 # LDF
 CHS/eventFile eventFile-09-00-02
 LdfEvent LdfEvent-04-12-01
 lsfData lsfData-04-03-02
-ldfReader ldfReader-07-04-06
+ldfReader ldfReader-07-04-07
 LdfConverter LdfConverter-04-05-00
 
 # HepRep
@@ -143,6 +143,6 @@ detCheck detCheck-01-07-05
 
 Gleam Gleam-07-07-00
 
-SConsFiles SConsFiles-00-16-00
-GlastRelease-scons/containerSettings containerSettings-00-03-02
+SConsFiles SConsFiles-00-17-00
+GlastRelease-scons/containerSettings containerSettings-00-05-00
 
