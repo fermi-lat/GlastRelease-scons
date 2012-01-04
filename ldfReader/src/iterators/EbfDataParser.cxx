@@ -311,8 +311,8 @@ void EbfDataParser::_handleErrorCommon() const
   unsigned long long  evtId   = ((latData->contextExists()) ?
                                  latData->eventId() :
                                  latData->getOsw().evtSequence());
-
-  fprintf(stream(), "\n Event: %llu Apid: %d\n",
+  // Hoping that it doesn't matter which stream( ) function we call
+  fprintf(EBFiteratorBase::stream(), "\n Event: %llu Apid: %d\n",
           evtId, latData->getCcsds().getApid());
 }
 
