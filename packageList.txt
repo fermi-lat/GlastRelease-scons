@@ -23,7 +23,7 @@ celestialSources/eblAtten eblAtten-00-08-01
 celestialSources/microQuasar microQuasar-01-04-04
 
 # infrastructure
-gr_app gr_app-00-02-03
+gr_app gr_app-01-00-00
 gui gui-03-07-05
 geomrep geomrep-04-03-02
 geometry geometry-03-02-04
@@ -37,13 +37,13 @@ rdbModel rdbModel-02-14-05
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-09-09
-GlastSvc GlastSvc-10-00-05
-GuiSvc GuiSvc-03-08-03
-DetDisplay DetDisplay-03-03-05
-userAlg userAlg-06-06-08
-RootDisplay RootDisplay-00-03-02
-EventIntegrity EventIntegrity-00-08-07
+Event Event-14-10-00
+GlastSvc GlastSvc-11-00-00
+GuiSvc GuiSvc-03-09-00
+DetDisplay DetDisplay-03-04-00
+userAlg userAlg-06-07-00
+RootDisplay RootDisplay-00-04-00
+EventIntegrity EventIntegrity-00-09-00
 
 # ROOT data descriptions
 commonRootData commonRootData-02-16-01
@@ -51,7 +51,7 @@ mcRootData mcRootData-02-22-06
 digiRootData digiRootData-11-14-03
 reconRootData reconRootData-09-27-02
 gcrSelectRootData gcrSelectRootData-02-02-06
-rootUtil rootUtil-01-04-03
+rootUtil rootUtil-01-04-04
 rootTestData rootTestData-04-04-00
 
 AdfEvent AdfEvent-00-05-03
@@ -59,78 +59,78 @@ AncillaryDataEvent AncillaryDataEvent-01-04-03
 AncillaryDataUtil AncillaryDataUtil-01-00-05
 
 RootConvert RootConvert-01-49-04
-RootIo RootIo-24-10-11
+RootIo RootIo-25-01-00
 
 configData configData-01-11-03
-Trigger Trigger-07-02-00
+Trigger Trigger-07-03-00
 
-FluxSvc FluxSvc-06-55-09
-CRflux CRflux-01-17-10
+FluxSvc FluxSvc-06-56-02
+CRflux CRflux-01-18-00
 
-EbfWriter EbfWriter-01-09-01
-OnboardFilter OnboardFilter-04-14-07
+EbfWriter EbfWriter-01-10-00
+OnboardFilter OnboardFilter-04-14-07-gr01
 OnboardFilterTds OnboardFilterTds-00-10-02
 
 # Calorimeter
 CalUtil CalUtil-03-14-05
-CalXtalResponse CalXtalResponse-00-25-02
-CalDigi CalDigi-03-07-04
-CalRecon CalRecon-06-15-02
-GCRCalib GCRCalib-01-08-04
+CalXtalResponse CalXtalResponse-00-26-00
+CalDigi CalDigi-03-08-00
+CalRecon CalRecon-06-16-01
+GCRCalib GCRCalib-01-09-00
 
 # Tracker
-TkrDigi TkrDigi-02-10-11
-TkrUtil TkrUtil-03-22-10
-TkrRecon TkrRecon-10-27-01
+TkrDigi TkrDigi-02-11-01
+TkrUtil TkrUtil-03-24-02
+TkrRecon TkrRecon-10-28-00
 
 # ACD
-AcdDigi AcdDigi-03-10-05
-AcdUtil AcdUtil-03-01-05
-AcdRecon AcdRecon-05-01-15
+AcdDigi AcdDigi-03-11-00
+AcdUtil AcdUtil-03-02-00
+AcdRecon AcdRecon-05-02-00
 
 # Geant4
 GlastMS GlastMS-01-00-01
-G4Generator G4Generator-06-03-01
+G4Generator G4Generator-06-04-00
 G4HadronSim G4HadronSim-02-00-01
-G4Propagator G4Propagator-03-00-01
+G4Propagator G4Propagator-03-01-00
 
 # calibration
 calibUtil calibUtil-01-13-03
-CalibData CalibData-00-26-05
-CalibSvc CalibSvc-00-40-06
+CalibData CalibData-00-27-01
+CalibSvc CalibSvc-00-41-00
 calibRootData calibRootData-01-07-11
 
 # ntuple
-ntupleWriterSvc ntupleWriterSvc-06-00-01
-merit merit-06-36-07
-AnalysisNtuple AnalysisNtuple-02-59-06
+ntupleWriterSvc ntupleWriterSvc-06-01-00
+merit merit-06-37-00
+AnalysisNtuple AnalysisNtuple-02-60-01
 
 # LDF
 CHS/eventFile eventFile-09-00-02
 LdfEvent LdfEvent-04-12-01
 lsfData lsfData-04-03-02
 ldfReader ldfReader-07-04-06
-LdfConverter LdfConverter-04-04-07
+LdfConverter LdfConverter-04-05-00
 
 # HepRep
-HepRepSvc HepRepSvc-00-37-02
-HepRepCorba HepRepCorba-03-03-00
-HepRepXml HepRepXml-00-08-07
+HepRepSvc HepRepSvc-00-38-00
+HepRepCorba HepRepCorba-03-04-00
+HepRepXml HepRepXml-00-09-00
 
 # classification
 classifier classifier-01-06-05
-GlastClassify GlastClassify-07-08-06
+GlastClassify GlastClassify-07-09-01
 
-Interleave Interleave-01-06-10
+Interleave Interleave-01-07-00
 
 # MOOT
 mootCore mootCore-01-24-07
-MootSvc MootSvc-01-01-10
-ConfigSvc ConfigSvc-00-02-12
+MootSvc MootSvc-01-02-00
+ConfigSvc ConfigSvc-00-03-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-00-00
-Overlay Overlay-02-00-05
+Overlay Overlay-02-01-00
 overlayRootData overlayRootData-00-03-03
 
 calibGenCAL calibGenCAL-05-09-04
@@ -141,7 +141,7 @@ calibGenTKR calibGenTKR-04-08-01
 # not used in Gleam, here as a build check
 detCheck detCheck-01-07-05
 
-Gleam Gleam-07-06-05
+Gleam Gleam-07-07-00
 
 SConsFiles SConsFiles-00-16-00
 GlastRelease-scons/containerSettings containerSettings-00-03-02
