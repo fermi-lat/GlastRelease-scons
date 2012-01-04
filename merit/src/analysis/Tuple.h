@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 
+class Tuple;
+
 class TupleItem  {
 private:
    friend class Tuple;
@@ -116,7 +118,7 @@ private:
    virtual const TupleItem* tupleItem(const std::string& name)const;
    // return pointer to the tuple item by name. Error if not found
 
-   void Tuple::replaceOrAdd(TupleItem * item);
+   void replaceOrAdd(TupleItem * item);
 
    virtual bool nextEvent(){return false;};  // for subclasses
  private:
