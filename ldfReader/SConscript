@@ -44,7 +44,7 @@ test_socketReader = progEnv.Program('test_socketReader',
 
 progEnv.Tool('registerTargets', package = 'ldfReader',
 	     libraryCxts = [[ldfReader, libEnv]],
-             testApps = [[test_ldfReader, progEnv], [test_lsfReader,progEnv],
+             testAppCxts = [[test_ldfReader, progEnv], [test_lsfReader,progEnv],
                          [test_socketReader, progEnv]],
              includes = listFiles(['ldfReader/*'], recursive=True))
 
