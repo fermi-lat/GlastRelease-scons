@@ -5,6 +5,7 @@
  * $Id$
  * EOH *
 
+ merit-06-37-01 04-Jan-2012    jrb patch for gcc41
  merit-06-37-00 12-Dec-2011    hmk merge in Gaudi v21r7 updates
  merit-06-36-07 01-Dec-2010    jrb Make new main branch tag for SCons RM
  merit-06-36-06-gr01 06-Oct-2010    hmk Upgrade Gaudi v21r7 algon branch
