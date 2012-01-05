@@ -30,5 +30,5 @@ progEnv.Tool('registerTargets', package = 'CalRecon',
              libraryCxts = [[CalRecon, libEnv]],
              testAppCxts = [[test_CalRecon, progEnv]],
              includes = listFiles(['CalRecon/*.h']),
-             xml = listFiles(['xml/*.data', 'xml/*.xml']),
-             jo = listFiles(['src/test/*.txt']))
+             xml = listFiles(['xml/*.data', 'xml/*.xml', 'xml/*.txt']),
+             jo = listFiles(['src/test/*.txt', 'src/test/*.root']))
