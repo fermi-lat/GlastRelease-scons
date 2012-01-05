@@ -1,8 +1,8 @@
 
 // event loop
 ApplicationMgr.DLLs += { "GlastSvc" } ;
-//ApplicationMgr.ExtSvc = { "GlastEventSelector/EventSelector" } ;
-EventSelector.Input = "NONE" ;
+ApplicationMgr.ExtSvc = { "DbEvtSelector/EventSelector" } ;
+//EventSelector.Input = "NONE" ;
 ApplicationMgr.ExtSvc += { "EventCnvSvc" } ;
 EventPersistencySvc.CnvServices = { "EventCnvSvc" } ;
 ApplicationMgr.EvtMax = 10 ;
