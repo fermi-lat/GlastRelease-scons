@@ -4,7 +4,7 @@
 # in common with ScienceTools
 xmlBase xmlBase-05-05-10
 astro astro-03-11-15
-facilities facilities-02-20-02
+facilities facilities-02-20-05
 flux flux-08-40-09
 tip tip-02-17-01
 fitsGen fitsGen-06-04-01
@@ -24,7 +24,7 @@ celestialSources/microQuasar microQuasar-01-04-04
 
 # infrastructure
 gr_app gr_app-01-00-00
-gui gui-03-07-05
+gui gui-03-07-06
 geomrep geomrep-04-03-02
 geometry geometry-03-02-04
 xmlUtil xmlUtil-03-04-03
@@ -68,11 +68,11 @@ FluxSvc FluxSvc-06-56-02
 CRflux CRflux-01-18-00
 
 EbfWriter EbfWriter-01-10-00
-OnboardFilter OnboardFilter-04-14-07-gr01
-OnboardFilterTds OnboardFilterTds-00-10-02
+OnboardFilter OnboardFilter-04-16-00
+OnboardFilterTds OnboardFilterTds-00-11-00
 
 # Calorimeter
-CalUtil CalUtil-03-14-05
+CalUtil CalUtil-03-14-06
 CalXtalResponse CalXtalResponse-00-26-00
 CalDigi CalDigi-03-08-00
 CalRecon CalRecon-06-16-02
