@@ -193,7 +193,7 @@ public:
     /// Provide access to the bad strips service
     //ITkrBadStripsSvc*   getTkrBadStripsSvc()   const { return m_badStrips;}
     ITkrBadStripsSvc*   getTkrBadStripsSvc()   { 
-        if (m_badStrips) setupTkrBadStripsSvc();
+        if (!m_badStrips) setupTkrBadStripsSvc();
         return m_badStrips;}
     /// Provide access to the alignment service
     //ITkrAlignmentSvc*   getTkrAlignmentSvc()  const { return m_tkrAlign;}
