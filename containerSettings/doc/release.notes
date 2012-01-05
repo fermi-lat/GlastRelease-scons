@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-05-01 04-Jan-2012    hmk patch use of obf for vc71 to use B1-1-3-gl7
  containerSettings-00-05-00 04-Jan-2012    jrb change to using lowercase for ldf external name
  containerSettings-00-03-02 10-Oct-2011    jrb use new re-organized obf B1-1-3 (-gl7) 
  containerSettings-00-03-01 25-Aug-2011 heather use python 2.6.5 for compilers
