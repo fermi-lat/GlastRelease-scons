@@ -8,6 +8,7 @@ $Id$
 @verbatim
  * EOH *
 
+ Interleave-01-07-01 06-Jan-2012  lsrea test_Interleave now does something!
  Interleave-01-07-00 08-Dec-2011    hmk Merge Gaudi v21r7
  Interleave-01-06-10 16-Aug-2011    jrb install xml files
  Interleave-01-06-09 20-May-2011 HMK CLHEP 2.1.0.1 
