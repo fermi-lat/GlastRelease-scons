@@ -80,7 +80,7 @@ GCRCalib GCRCalib-01-09-00
 
 # Tracker
 TkrDigi TkrDigi-02-11-01
-TkrUtil TkrUtil-03-24-02
+TkrUtil TkrUtil-03-24-03
 TkrRecon TkrRecon-10-28-00
 
 # ACD
@@ -144,5 +144,5 @@ detCheck detCheck-01-07-05
 Gleam Gleam-07-07-00
 
 SConsFiles SConsFiles-00-17-01
-GlastRelease-scons/containerSettings containerSettings-00-05-01
+GlastRelease-scons/containerSettings containerSettings-00-05-02
 
