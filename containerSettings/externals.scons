@@ -25,7 +25,13 @@ usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
 
 #Missing LDF for rhel5 64-bit
 usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01' })
-usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
+
+
+if baseEnv['COMPILERNAME'] == 'vc90':
+    usedExternals.append({ 'name' : 'mysql', 'iversion' : '5.1.39' })
+else: 
+    usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
+
 
 # Do we really need these?
 usedExternals.append({ 'name' : 'zlib', 'iversion' : '1.1.4' })
@@ -43,7 +49,10 @@ else:
     usedExternals.append({ 'name' : 'obf', 'iversion' : 'B3-0-0' })
 
 #   OmniOrb 4.1.2
-usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.4' })
+if baseEnv['COMPILERNAME'] == 'vc71':
+    usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.2' })
+else:
+    usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.4' })
 
 #   Fox 1.4.34
 usedExternals.append({ 'name' : 'fox', 'iversion' : '1.4.34' })
