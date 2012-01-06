@@ -13,6 +13,7 @@ $Header$
 
 #include "ldfReader/LdfParser.h"
 #include "facilities/Util.h"
+#include "facilities/commonUtilities.h"
 #include "../../src/EbfDebug.h" 
 #include "ldfReader/data/LatData.h"
 
@@ -20,7 +21,14 @@ $Header$
 int main(int argn, char** argc) {
   try {
     using namespace ldfReader;
+#ifndef LDFTESTPATH
     std::string filename = "$(LDFROOT)/test/data/muon-5.arch";
+#else
+    std::string filename = LDFTESTPATH;
+    filename = facilities::commonUtilities::joinPath(filename, "data");
+    filename = facilities::commonUtilities::joinPath(filename, "muon-5.arch");
+#endif
+
     std::string remap = "";
 
     bool fitsWrap = false;

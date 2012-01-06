@@ -35,6 +35,11 @@ ldfReader = libEnv.SharedLibrary('ldfReader',
 							
 
 progEnv.Tool('ldfReaderLib')
+
+# test_ldfReader needs to find file under test subdir of ldf external
+testPath = baseEnv['ldfTestPath']
+testPathDef = 'LDFTESTPATH=\\"' + testPath + '\\"'
+progEnv.AppendUnique(CPPDEFINES = [testPathDef])
 test_ldfReader = progEnv.Program('test_ldfReader',
                                  ['src/test/test_ldfReader.cxx'])
 test_lsfReader = progEnv.Program('test_lsfReader',
