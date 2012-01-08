@@ -26,8 +26,9 @@ ApplicationMgr.ExtSvc = {
 
     
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
-EventSelector.PrintFreq = -1;
+ApplicationMgr.ExtSvc += { "DbEvtSelector/EventSelector" };
+//EventSelector.Input = "NONE";
+//EventSelector.PrintFreq = -1;
 
 
 // controls the event loop
