@@ -84,7 +84,7 @@ Digitization.Members = {
 //
 ApplicationMgr.DLLs +={ "Trigger"};
 Trigger.Members = {"TriggerAlg"};
-TriggerAlg.mask = -1; // all bits on by default
+TriggerAlg.mask = "0xffffffff"; // all bits on by default
 
 
 // ----------------------------
