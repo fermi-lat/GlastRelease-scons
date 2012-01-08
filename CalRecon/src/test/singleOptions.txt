@@ -9,7 +9,7 @@ reconRootReaderAlg.reconRootFile = "$CALRECONJOBOPTIONSPATH/test/recon.root" ;
 // calo reconstruction second pass
 ApplicationMgr.DLLs += { "CalRecon" } ;
 ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" } ;
-Reconstruction.Members += { "CalClustersAlg", "CalEventEnergyAlg" } ;
+Reconstruction.Members += { "CalClustersAlg", "CalEventEnergyAlg/CalRawEnergy" } ;
 Top.Members += { "test_CalRecon" } ;
 
 
