@@ -3,7 +3,7 @@
 #include "mootCore/FileDescrip.h"
 #include <vector>
 #include <iostream>
-
+#include <cstdlib>
 
 LatcDBImpl::LatcDBImpl(){
   m_mq=new MootQuery;

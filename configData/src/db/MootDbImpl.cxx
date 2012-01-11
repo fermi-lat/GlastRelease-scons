@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <set>
+#include <cstdlib>
 #include "enums/Lsf.h"
 #include "facilities/Util.h"
 
