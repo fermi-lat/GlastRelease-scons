@@ -3,6 +3,7 @@
  * Coordinator: J. Bogart
  *    EOH
 
+ xmlUtil-03-04-04 11-Jan-2012    jrb patch for gcc44
  xmlUtil-03-04-03 13-Jun-2010    jrb upgrades for SCons builds
  xmlUtil-03-04-02 10-Sep-2009    jrb Fix compiler warnings
     Upgrades to SConscript, xmlUtilLib.py

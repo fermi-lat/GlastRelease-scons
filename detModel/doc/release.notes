@@ -3,6 +3,7 @@
  * Coordinator: R.Giannitrapani
  *               EOH
 
+ detModel-02-21-04 11-Jan-2012    jrb patch for gcc44
  detModel-02-21-03 21-May-2011    hmk patch requirements to use any CLHEP
  detModel-02-21-02 12-Jun-2010    jrb upgrades for SCons builds
  detModel-02-21-01 05-Nov-2009    jrb Updates for SCons
