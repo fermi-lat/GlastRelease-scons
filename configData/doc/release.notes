@@ -4,6 +4,7 @@
  * package manager:M. Kocian
  * EOH *
 
+ configData-01-11-04 11-Jan-2012    jrb patch for gcc44
  configData-01-11-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
  configData-01-11-02 06-Sep-2010    jrb get test program to run again
  configData-01-11-01 12-Jun-2010    jrb upgrades for SCons builds
