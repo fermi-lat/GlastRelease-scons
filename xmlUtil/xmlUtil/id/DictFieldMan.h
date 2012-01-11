@@ -7,7 +7,7 @@
 // hash_map is causing more trouble than it's worth, so just use map
 // everywhere
 #include <map>
-
+#include <cstring>
 
 #include "xmlUtil/id/DictObject.h"
 

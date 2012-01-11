@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include <iostream>
+#include <cstdlib>
 
 namespace detModel{
   /// Some global methods for detModel
