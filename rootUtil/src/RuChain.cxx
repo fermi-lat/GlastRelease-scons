@@ -12,6 +12,7 @@
 #include <TRegexp.h>
 #include <TSystem.h>
 #include <Riostream.h>
+#include <cstdlib>
 
 
 RuChain::Observer::Observer( RuChain * chain )
