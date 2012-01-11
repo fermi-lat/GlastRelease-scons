@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <cstdio>
 
 #include "enums/Lsf.h"
 
