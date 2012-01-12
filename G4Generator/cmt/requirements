@@ -50,7 +50,7 @@ use Geant4   v9r* IExternal
 use RootmapPolicy * GlastPolicy
 
 # special code to replace the standared multiple scattering 
-use GlastMS
+#use GlastMS
 
 # only needed by test program 
 use FluxSvc v*
