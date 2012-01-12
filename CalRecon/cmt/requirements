@@ -1,5 +1,5 @@
 package CalRecon
-version v6r16p3
+version v6r16p4
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -20,7 +20,8 @@ apply_pattern packageShr
 #========================================================
 
 private
-
+use astro *
+#use GlastMS *
 use RootConvert v* -no_auto_imports
 use RootIo 
 use RootmapPolicy * GlastPolicy
@@ -51,3 +52,5 @@ macro CalRecon_stamps
 apply_pattern package_Cshlibflags 
 
 apply_pattern package_test
+
+application test_CalRecon ${WinMain}
