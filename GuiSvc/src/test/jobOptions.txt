@@ -3,7 +3,7 @@
 // Job options file for Gui test program
 //
 
-
+ApplicationMgr.DLLs   = { "GuiSvc" };
 ApplicationMgr.ExtSvc   = { "GuiSvc" };
 
 
@@ -14,6 +14,7 @@ ApplicationMgr.TopAlg = { "GuiTestAlg/Top" };
 
 MessageSvc.OutputLevel      = 1;
 
+ApplicationMgr.HistogramPersistency = "NONE";
 
 ApplicationMgr.Runable= "GuiSvc";
 

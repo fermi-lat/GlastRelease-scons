@@ -24,6 +24,7 @@ macro_append cppflags "-D_FILE_OFFSET_BITS=64 " \
 use astro v*
 use facilities v*
 use EbfWriter v* 
+use GuiSvc *
 use RootmapPolicy * GlastPolicy
 use gr_app v*
 
@@ -43,3 +44,5 @@ library LdfConverter  *.cxx ${LdfConverter_headers}
 apply_pattern generate_rootmap library=LdfConverter
 
 apply_pattern package_test
+
+application test_LdfConverter ${WinMain}

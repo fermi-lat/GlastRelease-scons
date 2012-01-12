@@ -32,7 +32,7 @@
 // declare the service factories for the GuiSvc
 //static SvcFactory<GuiSvc> a_factory;
 //const ISvcFactory& GuiSvcFactory = a_factory;
-//DECLARE_SERVICE_FACTORY(GuiSvc);
+DECLARE_SERVICE_FACTORY(GuiSvc);
 
 // ------------------------------------------------
 // Implementation of the GuiSvc class
