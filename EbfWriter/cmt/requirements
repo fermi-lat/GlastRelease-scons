@@ -1,7 +1,7 @@
 package EbfWriter
 # $Header$
 
-version v1r10p2
+version v1r10p3
 author Brian Winer <winer@mps.ohio-state.edu>
 
 use Event          *
@@ -32,6 +32,7 @@ macro_prepend includes "-I.. " WIN32 "/I.. "
 macro headers "" WIN32 " ../EbfWriter/*.h *.h"
 library EbfWriter $(headers) *.cxx 
 
+
 apply_pattern generate_rootmap library=EbfWriter
 
 
@@ -48,7 +49,12 @@ use RootIo         * -no_auto_imports
 use AcdRecon       * -no_auto_imports
 use gr_app         *
 
+use GuiSvc *
+
 public
 
 apply_pattern package_test
+
+application test_EbfWriter ${WinMain}
+
 set TESTJOBOPTIONS ${EBFWRITERROOT}/src/test/jobOptions.txt
