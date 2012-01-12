@@ -2,6 +2,7 @@
  Package GCRCalib
  EOH
 
+ GCRCalib-01-09-01 12-Jan-2012  hmk   windows patch
  GCRCalib-01-09-00 08-Dec-2011  hmk   Merge Gaudi v21r7
  GCRCalib-01-08-04 20-Sep-2011  lsrea reduce the output to the log file
  GCRCalib-01-08-03 17-Sep-2011  lsrea Quiet it down a bit
