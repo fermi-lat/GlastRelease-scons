@@ -9,8 +9,8 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='Interleave', toBuild='component')
-Interleave = libEnv.SharedLibrary('Interleave',
-                                  listFiles(['src/*.cxx', 'src/Dll/*.cxx']))
+Interleave = libEnv.ComponentLibrary('Interleave',
+                                     listFiles(['src/*.cxx']))
 
 
 progEnv.Tool('InterleaveLib')

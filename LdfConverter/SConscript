@@ -10,8 +10,8 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='LdfConverter', toBuild='component')
-LdfConverter = libEnv.SharedLibrary('LdfConverter',
-                                    listFiles(['src/*.cxx','src/Dll/*.cxx']))
+LdfConverter=libEnv.ComponentLibrary('LdfConverter',
+                                     listFiles(['src/*.cxx']))
 
 progEnv.AppendUnique(CPPDEFINES = ['_FILE_OFFSET_BITS=64'])
 progEnv.Tool('LdfConverterLib')
