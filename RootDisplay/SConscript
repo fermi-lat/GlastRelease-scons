@@ -10,8 +10,8 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='RootDisplay', toBuild='component')
 
-RootDisplay = libEnv.SharedLibrary('RootDisplay',
-                                   listFiles(['src/*.cxx','src/Dll/*.cxx']))
+RootDisplay =libEnv.ComponentLibrary('RootDisplay',
+				     listFiles(['src/*.cxx']))
 
 progEnv.Tool('RootDisplayLib')
 progEnv.Tool('GuiSvcLib')
