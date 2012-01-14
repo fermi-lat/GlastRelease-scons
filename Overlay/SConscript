@@ -10,16 +10,25 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='Overlay', toBuild='component')
-OverlayLib = libEnv.SharedLibrary('Overlay',
-                                   listFiles(['src/Dll/*.cxx',
-                                              'src/cnv/*.cxx',
-                                              'src/DataServices/*.cxx',
-                                              'src/MergeAlgs/*.cxx',
-                                              'src/InputControl/*.cxx',
-                                              'src/Translation/*.cxx',
-                                              'src/Tasks/*.cxx']))
 
-progEnv.Tool('OverlayLib')
+OverlayLib = libEnv.ComponentLibrary('Overlay',
+                              listFiles(['src/cnv/EventOverlayCnv.cxx',
+                                         'src/cnv/AcdOverlayCnv.cxx',
+                                         'src/cnv/CalOverlayiCnv.cxx',
+                                         'src/cnv/DiagOverlayiCnv.cxx',
+                                         'src/cnv/GemOverlayCnv.cxx', 
+                                         'src/cnv/PtOverlayCnv.cxx', 
+                                         'src/cnv/TkrOverlayCnv.cxx',
+                                         'src/cnv/SrcOverlayCnv.cxx',
+                                         #'src/cnv/*.cxx',
+                                         'src/DataServices/*.cxx',
+                                         'src/MergeAlgs/*.cxx',
+                                         'src/InputControl/*.cxx',
+                                         'src/Translation/*.cxx',
+                                         'src/Tasks/*.cxx'
+                                         ]))
+ 
+progEnv.Tool('OverlayLib', depsOnly = 1)
 test_Overlay = progEnv.GaudiProgram('test_Overlay',
                                     listFiles(['src/test/*.cxx']), test = 1,
                                     package='Overlay')
