@@ -11,7 +11,8 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='RootIo', toBuild='component')
 
-RootIo =libEnv.SharedLibrary('RootIo',listFiles(['src/*.cxx','src/Dll/*.cxx']))
+RootIo =libEnv.ComponentLibrary('RootIo',
+				listFiles(['src/*.cxx']))
 
 progEnv.Tool('RootIoLib')
 
