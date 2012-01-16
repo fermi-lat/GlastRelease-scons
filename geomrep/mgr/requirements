@@ -1,5 +1,5 @@
 package geomrep
-version v4r3
+version v4r3p3
 author T.Burnett <tburnett@u.washington.edu>
 
 #$Header$
@@ -19,6 +19,7 @@ library geomrep -no_share *.cxx ${geomrep_headers}
 
 # set up application link-options for test program. Note also the resource
 
-macro_append gui_linkopts $(guiapp_linkopts)
+
+macro_append gui_linkopts $(guiapp_nomain_linkopts)
 
 application testgeom test/testgeom.cxx ${Win32Resource}

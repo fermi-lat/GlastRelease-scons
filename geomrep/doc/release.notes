@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ geomrep-04-03-03 16-Jan-2012    hmk modify handling for gui and Winmain
  geomrep-04-03-02 12-Jun-2010    jrb upgrades for SCons builds
  geomrep-04-03-01 05-Nov-2009    jrb updates for SCons
  v4r3 24-mar-06 THB  New CLHEP 
