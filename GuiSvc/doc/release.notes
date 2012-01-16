@@ -4,6 +4,7 @@
  * @verbatim
  * EOH *
 
+ GuiSvc-03-09-01 16-Jan-2012    hmk make GuiSvc a shared lib
  GuiSvc-03-09-00 09-Dec-2011    hmk Merge Gaudi v21r7 updates
  GuiSvc-03-08-03 12-Jun-2010    jrb upgrades for SCons builds
  GuiSvc-03-08-02 09-Nov-2009    jrb Updates for SCons
