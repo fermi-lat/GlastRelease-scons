@@ -4,6 +4,8 @@
  @verbatim
  * EOH *
 
+ gui-03-07-07 16-Jan-2012    hmk modify gui_app_linkopts to avoid pulling in
+    WinMain unless necessary
  gui-03-07-06 16-Sep-2011    hmk patch guiLib.py for windows 
  gui-03-07-05 21-May-2011    hmk patch requirements to use any CLHEP
  gui-03-07-04 12-Jun-2010    jrb upgrades for SCons builds

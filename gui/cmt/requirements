@@ -1,5 +1,5 @@
 package gui
-version v3r7p6
+version v3r7p7
 author T.Burnett <tburnett@u.washington.edu>
 # $Header$
 use GlastPolicy v*
@@ -17,9 +17,6 @@ macro 	gui_X_linkopts "-L${X11_DIR}/lib -lXm -lXt -lX11"
 apply_pattern package_linkopts
 
 #this macro for building a gui app, as opposed to a shareable
-#macro guiapp_linkopts ""\
-#      Linux " "\
-#      WIN32 "${gui_root}/${BINDIR}/guisystem.lib "
 
 macro guiapp_nomain_linkopts ""\
       Linux "${gui_cmtpath}/lib/libguisystem_nomain.a ${gui_X_linkopts} "\
@@ -65,7 +62,8 @@ library guisystem_nomain -no_share ${gui_system_nomain_files}
 
 
 #simple self-contained test program (this needs to be fixed for linux
-#macro_append gui_linkopts ${guiapp_linkopts}
+macro_append gui_linkopts ${guiapp_nomain_linkopts} \
+     WIN32 ""
 
 application testGUI test/*.cxx ${Win32Resource}
 
