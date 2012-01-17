@@ -4,6 +4,7 @@
     $Id$
  * EOH *
 
+ G4HadronSim-03-00-00 16-Jan-2012    jrb this pkg is no longer needed on main branch
  G4HadromSim-02-00-01 21-May-2011 hmk modify use of IExternal/geant4 to v9r*
  G4HadromSim-02-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
  G4HadronSim-01-06-01 12-Jun-2010    jrb upgrades for SCons builds
