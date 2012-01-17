@@ -5,16 +5,16 @@
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
-progEnv = baseEnv.Clone()
-libEnv = baseEnv.Clone()
+#progEnv = baseEnv.Clone()
+#libEnv = baseEnv.Clone()
 
-GlastMS = libEnv.StaticLibrary('GlastMS', listFiles(['src/*.cxx', 'src/*.cc']))
+#GlastMS = libEnv.StaticLibrary('GlastMS', listFiles(['src/*.cxx', 'src/*.cc']))
 
-progEnv.Tool('GlastMSLib')
+#progEnv.Tool('GlastMSLib')
 
-progEnv.Tool('registerTargets', package = 'GlastMS',
-             staticLibraryCxts = [[GlastMS, libEnv]],
-             includes = listFiles(['GlastMS/*.h']))
+#progEnv.Tool('registerTargets', package = 'GlastMS',
+#             staticLibraryCxts = [[GlastMS, libEnv]],
+#             includes = listFiles(['GlastMS/*.h']))
 
 
 
