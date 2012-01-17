@@ -1,5 +1,5 @@
 package AcdRecon
-version v5r2p1
+version v5r2p2
 
 author Heather Kelly <heather@slac.stanford.edu>
 author Eric Charles <echarles@slac.stanford.edu>
@@ -27,6 +27,7 @@ apply_pattern component_library library=AcdRecon
 private
 use astro *
 #use GlastMS *
+use G4Propagator *
 use gr_app v*
 use RootConvert v* -no_auto_imports
 use RootIo  v* -no_auto_imports
