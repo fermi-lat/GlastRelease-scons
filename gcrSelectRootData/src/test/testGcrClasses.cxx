@@ -5,6 +5,7 @@
 #include "TRandom.h"
 #include "TCollection.h"
 #include "gcrSelectRootData/GcrSelectEvent.h"
+#include <cstdlib>
 
 /** @file testGcrClasses.cxx
 * @brief This defines a test routine for the GCR ROOT classes.

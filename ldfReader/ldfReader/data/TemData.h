@@ -2,6 +2,7 @@
 #define ldfReader_TemData_H
 
 #include <vector>
+#include <cstdio>
 
 #include "EventSummaryCommon.h"
 #include "DiagnosticData.h"

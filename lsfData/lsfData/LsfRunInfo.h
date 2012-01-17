@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 
 #include "enums/Lsf.h"
 /** @class RunInfo

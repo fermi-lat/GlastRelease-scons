@@ -3,6 +3,7 @@
 //
 #ifndef WIN32  // stupid to prevent compilation in windows 
 
+#include <cstring>
 #include "Xdraw.h"
 #include "gui/DisplayRep.h"
 #include <vector>

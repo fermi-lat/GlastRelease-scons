@@ -34,6 +34,7 @@
 #include <vector>
 #include <stdexcept>
 #include <sstream>
+#include <limits.h>
 
 namespace calibGenCAL {
   template <typename HistType>

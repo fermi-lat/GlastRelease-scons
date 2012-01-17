@@ -20,6 +20,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 UBinterpolate::UBinterpolate(std::string calibFileName) : m_calibFileName(calibFileName) {
     facilities::Util::expandEnvVar(&m_calibFileName);

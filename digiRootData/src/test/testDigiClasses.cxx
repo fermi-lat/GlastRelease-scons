@@ -5,6 +5,7 @@
 #include "TRandom.h"
 #include "TCollection.h"
 #include "digiRootData/DigiEvent.h"
+#include <cstdlib>
 
 /** @file testDigiClasses.cxx
 * @brief This defines a test routine for the Digitization ROOT classes.

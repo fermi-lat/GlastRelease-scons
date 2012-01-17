@@ -16,6 +16,8 @@ $Header$
 #include <cassert>
 #include <stdexcept>
 #include <fstream>
+#include <cstdlib>
+#include <typeinfo>
 
 /** 
 @page applications apply

@@ -2,6 +2,7 @@
 #include "EDS/FFS.h"
 
 #include <iostream>
+#include <cstring>
 
 namespace OnboardFilterTds{
     

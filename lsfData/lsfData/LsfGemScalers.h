@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cstdio>
 
 /** @class GemScalers
 * @brief FIXME

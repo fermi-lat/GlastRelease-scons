@@ -7,6 +7,7 @@ $Header$
 #ifndef XprsnTree_h
 #define XprsnTree_h
 
+#include <typeinfo>
 #include <iostream>
 #include <cmath>
 #include "ImPrecision.h"

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <cstdio>
 
 /** @class Timehack
 * @brief FIXME

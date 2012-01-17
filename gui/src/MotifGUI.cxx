@@ -28,6 +28,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cassert>
+#include <cstdlib>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //          File-scope variables (could be class or object variables)

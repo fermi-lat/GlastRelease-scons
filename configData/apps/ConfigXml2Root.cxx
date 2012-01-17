@@ -7,6 +7,7 @@
 // stl
 #include <string>
 #include <fstream>
+#include <cstdlib>
 
 #ifndef WIN32
 #include <unistd.h>

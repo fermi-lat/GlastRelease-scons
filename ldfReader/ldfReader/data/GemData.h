@@ -2,6 +2,7 @@
 #define ldfReader_GemData_H
 
 #include <vector>
+#include <cstdio>
 
 #include "EventSummaryCommon.h"
 #include "GEMcontribution.h"

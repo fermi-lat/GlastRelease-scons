@@ -1,6 +1,7 @@
 #ifndef LDFEVENT_CCSDS_H
 #define LDFEVENT_CCSDS_H 1
 
+#include <cstdio>
 #include <iostream>
 #include "GaudiKernel/StreamBuffer.h"
 

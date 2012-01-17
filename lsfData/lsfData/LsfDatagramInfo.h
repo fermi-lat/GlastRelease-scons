@@ -2,6 +2,7 @@
 #define LSFDATA_DATAGRAMINFO_H 1
 
 #include <iostream>
+#include <cstring>
 
 #include "enums/Lsf.h"
 

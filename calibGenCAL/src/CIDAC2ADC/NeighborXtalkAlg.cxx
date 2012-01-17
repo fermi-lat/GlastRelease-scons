@@ -22,6 +22,7 @@
 
 // STD INCLUDES
 #include <sstream>
+#include <cstdlib>
 
 namespace {
 

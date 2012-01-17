@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstdio>
 
 #include "lsfData/LsfTimeTone.h"
 #include "lsfData/LsfGemTime.h"

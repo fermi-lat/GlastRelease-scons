@@ -2,6 +2,7 @@
 #define ldfReader_AcdDigi_H
 
 #include <vector>
+#include <cstdio>
 
 namespace ldfReader {
     /** @class AcdDigi

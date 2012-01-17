@@ -5,7 +5,7 @@
 #include "PSdraw.h"
 #include "gui/DisplayRep.h"
 
-
+#include <cstring>
 #include <iostream>
 #include <iomanip>
 

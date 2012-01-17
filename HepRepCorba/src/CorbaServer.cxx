@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 
 // no idea what this was for!
 //extern int done = 1;

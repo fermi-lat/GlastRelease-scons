@@ -1,6 +1,8 @@
 #include "AncillaryDataEvent/TaggerCluster.h"
 #include "AdfEvent/TaggerParameters.h"
 
+#include <cstdlib>
+
 namespace AncillaryData {
 
 void TaggerCluster::calculateProperties()

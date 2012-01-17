@@ -23,7 +23,7 @@ int chdir(const char* path){return _chdir(path);}
 #endif
 #include <time.h>
 #include <stdio.h>
-
+#include <cstring>
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TrainerApplication::TrainerApplication(const std::string& datapath, const std::string& outputpath)

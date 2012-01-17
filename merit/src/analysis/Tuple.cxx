@@ -5,6 +5,7 @@
 #include <algorithm> // for count
 #include <cassert>
 #include <cmath>
+#include <cstring>
 #include <cfloat>
 #include <sstream>
 #include <iomanip>

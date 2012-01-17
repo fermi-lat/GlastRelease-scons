@@ -4,6 +4,7 @@
 #define XMLUTIL_DICTFIELDMAN_H
 
 #include <string>
+#include <cstring>
 // hash_map is causing more trouble than it's worth, so just use map
 // everywhere
 #include <map>

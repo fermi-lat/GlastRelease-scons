@@ -12,6 +12,7 @@
 #include <cassert>
 #include <cfloat>
 #include <cmath>
+#include <cstring>
 
 namespace gui {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

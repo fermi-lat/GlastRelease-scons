@@ -20,6 +20,7 @@
 #include <string>
 #include <fstream>
 #include <stdexcept>
+#include <cstdlib>
 
 using namespace std;
 using namespace calibGenCAL;

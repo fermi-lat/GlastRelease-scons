@@ -8,6 +8,7 @@
 */
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include "Coverage.h"
 #include "facilities/Util.h"
 #include "calibUtil/Metadata.h"

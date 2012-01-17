@@ -14,6 +14,7 @@ $Header$
 #include <cmath>  // for M_PI, among others
 
 #include <sstream>
+#include <cstring>
 
 using namespace GlastClassify;
 

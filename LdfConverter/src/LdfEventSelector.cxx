@@ -27,6 +27,7 @@
 #include <cstring>
 
 #include <sys/stat.h>
+#include <limits.h>
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

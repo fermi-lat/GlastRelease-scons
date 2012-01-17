@@ -1,6 +1,7 @@
 
 #include "mootCore/MootQuery.h"
 
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <iostream>

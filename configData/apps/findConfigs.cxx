@@ -1,6 +1,7 @@
 
 //
 // stl
+#include <cstdio>
 #include <string>
 #include <iostream>
 #include "facilities/Util.h"

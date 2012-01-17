@@ -14,6 +14,7 @@
 #include "TROOT.h"
 #include <vector>
 #include <iostream>
+#include <cstdlib>
 
 
 RootOutputDesc::RootOutputDesc

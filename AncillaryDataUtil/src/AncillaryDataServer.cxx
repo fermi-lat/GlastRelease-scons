@@ -1,6 +1,8 @@
 #include "AdfEvent/AncillaryWord.h"
 #include "AncillaryDataUtil/AncillaryDataTail.h"
 #include "AncillaryDataUtil/AncillaryDataServer.h"
+#include <cstdlib>
+#include <cstdio>
 
 #define DEBUG 0
 

@@ -5,6 +5,7 @@
    Implementation of callbacks for Xerces SAX parser
 */
 
+#include <cstdio>
 #include <iostream>
 #include <cstdlib>                // for system(...)
 #include "TROOT.h"

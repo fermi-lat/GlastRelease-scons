@@ -10,6 +10,7 @@
 #include <strstream>
 #include <string>
 #include <cstdio> // for sprintf
+#include <cstdlib>
 
 namespace gui {
 
