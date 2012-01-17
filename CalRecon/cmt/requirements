@@ -1,5 +1,5 @@
 package CalRecon
-version v6r16p4
+version v6r16p5
 
 author Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>
 author David Chamont <chamont@poly.in2p3.fr>
@@ -22,6 +22,7 @@ apply_pattern packageShr
 private
 use astro *
 #use GlastMS *
+use G4Propagator *
 use RootConvert v* -no_auto_imports
 use RootIo 
 use RootmapPolicy * GlastPolicy
