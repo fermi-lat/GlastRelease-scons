@@ -1,5 +1,5 @@
 package geomrep
-version v4r3p3
+version v4r3p4
 author T.Burnett <tburnett@u.washington.edu>
 
 #$Header$
@@ -22,4 +22,4 @@ library geomrep -no_share *.cxx ${geomrep_headers}
 
 macro_append gui_linkopts $(guiapp_nomain_linkopts)
 
-application testgeom test/testgeom.cxx ${Win32Resource}
+application testgeom test/testgeom.cxx ${Win32Resource} ${WinMain}
