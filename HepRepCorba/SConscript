@@ -5,12 +5,21 @@
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
+import sys
 libEnv = baseEnv.Clone()
 # no progEnv because no programs
 
-libEnv.Tool('addLinkDeps', package='HepRepCorba', toBuild='shared')
-HepRepCorba = libEnv.SharedLibrary('HepRepCorba',
-                                   listFiles(['src/*.cxx','src/*.cpp']))
+libEnv.Tool('addLinkDeps', package='HepRepCorba', toBuild='component')
+
+if sys.platform == 'win32' :
+    libEnv.AppendUnique(CPPDEFINES = ['__WIN32__', '__x86__', '__NT__', '_OMNITHREAD_DLL'])
+    libEnv.AppendUnique(CPPDEFINES = ['_WIN32_WINNT=0x0400'])
+
+else:
+    libEnv.AppendUnique(CPPDEFINES = ['G4USE_STD_NAMESPACE', 'OMNITHREAD_DLL' ])
+    
+HepRepCorba = libEnv.ComponentLibrary('HepRepCorba',
+                                      listFiles(['src/*.cxx','src/*.cpp']))
 
 
 libEnv.Tool('registerTargets', package = 'HepRepCorba',
