@@ -1,6 +1,6 @@
 package Gleam
 
-version v7r7p1
+version v7r7p2
 
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
@@ -80,7 +80,7 @@ use GCRCalib v*
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
 
 macro jobOpts "" WIN32 "*.txt *.h"  
-application Gleam $(GlastMain) $(Win32Resource) $(jobOpts) ${WinMain}
+application Gleam $(GlastMain) $(Win32Resource) $(jobOpts) 
 
 #macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
 #      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
