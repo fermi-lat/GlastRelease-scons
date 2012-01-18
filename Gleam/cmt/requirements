@@ -1,6 +1,6 @@
 package Gleam
 
-version v7r7p2
+version v7r7p3
 
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
@@ -80,7 +80,7 @@ use GCRCalib v*
 set JOBOPTIONS "${GLEAMROOT}/src/jobOptions.txt"
 
 macro jobOpts "" WIN32 "*.txt *.h"  
-application Gleam $(GlastMain) $(Win32Resource) $(jobOpts) 
+application Gleam $(GlastMain) $(Win32Resource) $(WinMain) $(jobOpts) 
 
 #macro Gleamlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
 #      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
@@ -91,7 +91,7 @@ use gr_app v*
 # define a standard test executable, if desired
 apply_pattern package_test
 
-application test_Gleam ${WinMain}
+application test_Gleam $(WinMain)
 
 # make a folder to keep local data files
 # branches data  # make a data directory explicitly in cvs
