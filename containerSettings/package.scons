@@ -28,15 +28,20 @@ def GaudiProgram(env, name, source, test, package=''):
 		env.Install(target='src',
 			    source='#gr_app/src/TestGlastMain.cxx')
 		testObject = env.Object('src/TestGlastMain.cxx')
+                print "in test == 1 branch"
+                print type(source)
+                print type(testObject)
+                print type(setPriorityObject)
                 return env.Program(name, source + testObject + setPriorityObject)
 	else:
 		env.Install(target='src',
 			    source='#gr_app/src/GlastMain.cxx')
-		mainObjects = [env.Object('src/GlastMain.cxx'), setPriorityObject]
+		mainObjects = [env.Object('src/GlastMain.cxx')]
                 if env['PLATFORM'] == 'win32':
                     objdir = '#/lib/' + env['VARIANT']
                     mainObjects += [objdir + '/WinMain.obj', 
-                                    objdir + '/wingui.res']
+                                    objdir + '/wingui.res', setPriorityObject]
+
                 return env.Program(name, source + mainObjects)
 
 baseEnv.AddMethod(GaudiProgram)
