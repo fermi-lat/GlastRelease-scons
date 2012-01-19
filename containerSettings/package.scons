@@ -28,10 +28,6 @@ def GaudiProgram(env, name, source, test, package=''):
 		env.Install(target='src',
 			    source='#gr_app/src/TestGlastMain.cxx')
 		testObject = env.Object('src/TestGlastMain.cxx')
-                print "in test == 1 branch"
-                print type(source)
-                print type(testObject)
-                print type(setPriorityObject)
                 return env.Program(name, source + testObject + setPriorityObject)
 	else:
 		env.Install(target='src',
