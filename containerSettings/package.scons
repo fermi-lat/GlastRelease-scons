@@ -32,7 +32,11 @@ def GaudiProgram(env, name, source, test, package=''):
 	else:
 		env.Install(target='src',
 			    source='#gr_app/src/GlastMain.cxx')
-		mainObject = env.Object('src/GlastMain.cxx')
-                return env.Program(name, source + mainObject + setPriorityObject)
+		mainObjects = [env.Object('src/GlastMain.cxx'), setPriorityObject]
+                if env['PLATFORM'] == 'win32':
+                    objdir = '#/lib/' + env['VARIANT']
+                    mainObjects += [objdir + '/WinMain.obj', 
+                                    objdir + '/wingui.res']
+                return env.Program(name, source + mainObjects)
 
 baseEnv.AddMethod(GaudiProgram)
