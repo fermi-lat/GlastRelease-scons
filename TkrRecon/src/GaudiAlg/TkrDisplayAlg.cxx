@@ -55,7 +55,7 @@ StatusCode TkrDisplayAlg::initialize()
 {
     //Look for the gui service
     IGuiSvc*   guiSvc = 0;
-    StatusCode sc     = service("GuiSvc", guiSvc);
+    StatusCode sc     = service("GuiSvc", guiSvc, false);
     if( sc.isFailure() )  
     {
         MsgStream   log( msgSvc(), name() );
