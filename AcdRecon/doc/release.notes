@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-02-03 20-Jan-2012    jrb SCons adjustment for GuiSvc component library; vc90 compiler patches
  AcdRecon-05-02-02 17-Jan-2012 HMK   add in G4Prop use
  AcdRecon-05-02-01 12-Jan-2012 HMK   Patches for Gaudi upgrade to get win
      working
