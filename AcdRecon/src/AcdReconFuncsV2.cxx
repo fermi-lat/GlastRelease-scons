@@ -49,7 +49,7 @@ namespace AcdRecon {
    * @param trackDir the directional cosines
    * @param cov the new covariance matrix
    **/
-  void ReconFunctions::fillAcdToTkrCovTranslation(const HepVector3D& dir, HepMatrix& covTrans) {
+  void ReconFunctions::fillAcdToTkrCovTranslation(const HepVector3D& dir, CLHEP::HepMatrix& covTrans) {
 
     double zVal = fabs(dir.z()) > 1e-9 ? dir.z() : 1.e-9;
     covTrans(1,1) = 0.;
@@ -83,7 +83,7 @@ namespace AcdRecon {
    * @param tkrParams the directional cosines
    * @param cov the  matrix
    **/
-  void ReconFunctions::fillCovMatrixFromTkr(const Event::TkrTrackParams& trackParams, HepSymMatrix& cov) {
+  void ReconFunctions::fillCovMatrixFromTkr(const Event::TkrTrackParams& trackParams, CLHEP::HepSymMatrix& cov) {
     for ( int i(1); i < 5; i++) {
       for ( int j(1); j < 5; j++ ){
 	cov(i,j) = trackParams(i,j);
@@ -310,7 +310,8 @@ namespace AcdRecon {
   void ReconFunctions::crossesPlaneError(const AcdRecon::TrackData& track,  
 					 const HepPoint3D& planePoint, 
 					 const HepGeom::Transform3D& toGlobal,
-					 const double& arcLength, HepSymMatrix& cov ) {
+					 const double& arcLength, 
+                                         CLHEP::HepSymMatrix& cov ) {
 
     // to get the normal vector
     static const HepVector3D zHat(0.,0.,1.);

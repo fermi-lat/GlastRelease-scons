@@ -150,7 +150,7 @@ namespace AcdRecon {
 			   const HepPoint3D& planePoint, 
 			   const HepGeom::Transform3D& toLocal,
 			   const double& arcLength, 
-			   HepSymMatrix& cov );
+			   CLHEP::HepSymMatrix& cov );
     
     /**
      * @brief POCA Between a track and a ray defined by two points
