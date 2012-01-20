@@ -288,7 +288,7 @@ StatusCode meritAlg::initialize() {
     // setup tuple output via the print service
     // get the Gui service
     IGuiSvc* guiSvc=0;
-    sc = service("GuiSvc", guiSvc);
+    sc = service("GuiSvc", guiSvc, false);
 
     if (!sc.isSuccess ()){
         log << MSG::DEBUG << "No GuiSvc, so no interactive printout" << endreq;
