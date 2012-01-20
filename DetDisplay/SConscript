@@ -17,13 +17,6 @@ progEnv.Tool('DetDisplayLib')
 progEnv.Tool('GuiSvcLib')
 progEnv.Tool('guiLib')
 
-if baseEnv['PLATFORM'] != 'win32':
-	progEnv.AppendUnique(LINKFLAGS=['-u GuiSvc_loadRef'])
-
-else:
-	progEnv.AppendUnique(LINKFLAGS=['/include:_GuiSvc_loadRef'])
-	progEnv.AppendUnique(LINKFLAGS=['/subsystem:windows'])  #from macro guiapp_linkopts in ../gui/cmt/requirements
-
 testDetDisplay = progEnv.GaudiProgram('TestDetDisplay', [], test=1,
 				      package='DetDisplay')
 progEnv.Tool('registerTargets', package = 'DetDisplay',
