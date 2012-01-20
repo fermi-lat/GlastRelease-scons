@@ -152,7 +152,7 @@ unsigned int AcdParser::constructTileNum(const char *name) {
     if (strncmp(name, "NA", 2) == 0) {
         if ( (strlen(name) == 3) || (strlen(name) == 4) ) {
             char num[10];
-            char* strptr = strpbrk(name, "0123456789");
+            const char* strptr = strpbrk(name, "0123456789");       // jrb
             tileNum = 0;
             if (strptr) {
                 strcpy(num, strptr );
