@@ -148,6 +148,6 @@ void TkrMapTool::geoToElec(int plane, int end, int& gtcc, int& gtrc)
 void TkrMapTool::elecToGeo(int gtcc, int gtrc, int& plane, int& end)
 {
     int res = elecToGeo(gtcc, gtrc);
-    plane = res/planeMult;
-    end   = res%planeMult;
+    plane = res;
+    end   = endArray[gtcc];
 }

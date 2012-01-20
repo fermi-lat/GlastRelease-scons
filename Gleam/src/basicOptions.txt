@@ -64,9 +64,9 @@ CalibrationUpdate.Members={
 // ----------------------------
 //  Digitization
 //
-ApplicationMgr.DLLs +={ "TkrDigi", "CalDigi", "AcdDigi"  };
+ApplicationMgr.DLLs +={ "TkrUtil", "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
-    "TkrDigiAlg",  "TkrFillTDInfoAlg",
+    "TkrDigiAlg",
     "AcdDigiAlg"
     };
 
@@ -127,7 +127,7 @@ ApplicationMgr.ExtSvc += { "GlastPropagatorSvc" };
 
 ApplicationMgr.DLLs +={ 
     "CalRecon", 
-    "TkrRecon", "TkrUtil"
+    "TkrRecon"
     };
 Reconstruction.Members={ 
     "Sequencer/Cal1", 

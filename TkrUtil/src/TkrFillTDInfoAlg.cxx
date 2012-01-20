@@ -261,10 +261,12 @@ StatusCode TkrFillTDInfoAlg::execute()
                 LdfEvent::TkrDiagnosticData tkrDiagTDS 
                     = diagTds2->getTkrDiagnosticByIndex(ind);
                 int dataword = tkrDiagTDS.dataWord();
-                if (dataword!=0) nNonZero++;
+                if (dataword!=0) {
+                    nNonZero++;
                 log << ind << " " 
                     << tkrDiagTDS.tower() << " " << tkrDiagTDS.gtcc() << " " 
                     << tkrDiagTDS.dataWord() << endreq;
+                }
             }
         }
         log << numTkrDiag 
