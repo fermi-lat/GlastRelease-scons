@@ -137,9 +137,9 @@ StatusCode CalClassifyAlg::execute()
     // Cluster sorting (after classification). Put the Uber cluster at the end though
     // Only if energy of any clusters is smaller than some value.
     int nCluEgtThr = 0;
-    for ( Event::CalClusterCol::const_iterator cluster = calClusterCol->begin();          
-          cluster != calClusterCol->end();          
-          cluster++) {  
+    Event::CalClusterCol::const_iterator cluster;
+    for ( cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++) 
+    {  
       if ((*cluster)->getMomParams().getEnergy()> m_maxEtoSortByClassification) {nCluEgtThr+=1;}
     }
     if (nCluEgtThr==0){
@@ -152,7 +152,7 @@ StatusCode CalClassifyAlg::execute()
     
     // For debug
     log << MSG::DEBUG << "Last cluster is always the uber cluster:" << endreq;
-    Event::CalClusterCol::const_iterator cluster;
+    
     int clusterId = 1;
     for ( cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
       {

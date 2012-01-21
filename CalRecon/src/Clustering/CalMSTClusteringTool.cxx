@@ -116,7 +116,7 @@ public:
   /// Retrieve the RMS of edges length  after truncation
   double  getRmsEdgeLengthTrunc()                    const { return m_rmsEdgeLengthTrunc; }
   /// Check if stats are available
-  double getStatsBit()                               const { return m_statsAvailable; }
+  bool    getStatsBit()                               const { return m_statsAvailable; }
 
   // Other methods
   void printNodes();
