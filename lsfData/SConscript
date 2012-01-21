@@ -17,7 +17,7 @@ if progEnv['PLATFORM'] == 'win32':
     progEnv.AppendUnique(CPPDEFINES = ['__i386'])
 
 test_lsfData = progEnv.Program('test_lsfData',[ 'src/test/test_lsfData.cxx'])
-test_LSFReader = progEnv.Program('test_LSFReader',
+test_lsfDataReader = progEnv.Program('test_lsfDataReader',
                                  ['src/test/test_LSFReader.cxx'])
 #dumpEnv = progEnv.Clone()
 #dumpEnv.Tool('addLibrary', library = dumpEnv['ldfLibs'])
@@ -26,7 +26,8 @@ test_LSFReader = progEnv.Program('test_LSFReader',
 
 progEnv.Tool('registerTargets', package = 'lsfData',
              libraryCxts = [[lsfData, libEnv]],
-             testAppCxts =[[test_lsfData, progEnv], [test_LSFReader, progEnv]],
+             testAppCxts =[[test_lsfData, progEnv],
+                           [test_lsfDataReader, progEnv]],
              includes = listFiles(['lsfData/*.h']))
 
 
