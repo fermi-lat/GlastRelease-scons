@@ -1,8 +1,7 @@
 #$Header$
 def generate(env, **kw):
-    if not kw.get('depsOnly', 0):
-        env.Tool('addLibrary', library = ['CalRecon'])
-    env.Tool('addLibrary', library = env['minuitLibs'])
+    #if not kw.get('depsOnly', 0):
+    #    env.Tool('addLibrary', library = ['CalRecon'])
     env.Tool('CalXtalResponseLib')
     env.Tool('TkrUtilLib')
     env.Tool('CalUtilLib')
