@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ LdfConverter-04-05-02 23-Jan-2012    jrb Johann's patches for gcc41
  LdfConverter-04-05-01 16-Jan-2012    hmk patches for windows
  LdfConverter-04-05-00 08-Dec-2011    hmk Merge Gaudi v21r7
  LdfConverter-04-04-07 23-Aug-2011    hmk Patches for Windows
