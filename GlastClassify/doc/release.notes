@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-09-02 23-Jan-2012    jrb Johann's patches for gcc41
  GlastClassify-07-09-01 14-Dec-2011 HMK Patch to include ClassifyTool in 
     shared lib
  GlastClassify-07-09-00 08-Dec-2011 HMK Merge in Gaudi v21r7
