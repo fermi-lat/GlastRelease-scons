@@ -47,7 +47,7 @@ use RootDisplay v*
 use CalibSvc    v*
 
 #diagnostic and summary of bottom line
-use merit       v*
+#use merit       v*
 use AnalysisNtuple v*
 use GlastClassify v*
 
