@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-10-00 24-Jan-2012  lsrea remove refs to obsolete 'merit' package
  Gleam-07-09-01 20-Jan-2012    jrb adjustments for GuiSvc component library
  Gleam-07-09-00 20-Jan-2012  lsrea mods for cable truncation
  Gleam-07-08-00 20-Jan-2012  lsrea mods for cable truncation
