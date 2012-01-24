@@ -7,7 +7,7 @@ astro astro-03-11-15
 facilities facilities-02-20-05
 flux flux-08-40-09
 tip tip-02-17-01
-fitsGen fitsGen-06-04-01
+fitsGen fitsGen-06-04-03
 embed_python embed_python-01-05-05
 evtUtils evtUtils-00-01-11-gr01
 
@@ -24,13 +24,13 @@ celestialSources/microQuasar microQuasar-01-04-04
 
 # infrastructure
 gr_app gr_app-01-00-00
-gui gui-03-07-06
-geomrep geomrep-04-03-02
+gui gui-03-07-08
+geomrep geomrep-04-03-04
 geometry geometry-03-02-04
-xmlUtil xmlUtil-03-04-03
+xmlUtil xmlUtil-03-04-05
 enums enums-03-00-02
 idents idents-02-20-03
-detModel detModel-02-21-03
+detModel detModel-02-21-04
 rdbModel rdbModel-02-14-05
 
 # geometry description
@@ -39,89 +39,89 @@ xmlGeoDbs xmlGeoDbs-01-48-00
 # General Gaudi pacakges
 Event Event-14-10-00
 GlastSvc GlastSvc-11-00-00
-GuiSvc GuiSvc-03-09-00
-DetDisplay DetDisplay-03-04-00
-userAlg userAlg-06-07-00
-RootDisplay RootDisplay-00-04-00
+GuiSvc GuiSvc-03-09-02
+DetDisplay DetDisplay-03-04-01
+userAlg userAlg-06-07-01
+RootDisplay RootDisplay-00-04-02
 EventIntegrity EventIntegrity-00-09-00
 
 # ROOT data descriptions
 commonRootData commonRootData-02-16-01
 mcRootData mcRootData-02-22-06
-digiRootData digiRootData-11-14-03
+digiRootData digiRootData-11-14-05
 reconRootData reconRootData-09-27-02
-gcrSelectRootData gcrSelectRootData-02-02-06
+gcrSelectRootData gcrSelectRootData-02-02-07
 rootUtil rootUtil-01-04-04
 rootTestData rootTestData-04-04-00
 
 AdfEvent AdfEvent-00-05-03
-AncillaryDataEvent AncillaryDataEvent-01-04-03
-AncillaryDataUtil AncillaryDataUtil-01-00-05
+AncillaryDataEvent AncillaryDataEvent-01-04-04
+AncillaryDataUtil AncillaryDataUtil-01-00-06
 
 RootConvert RootConvert-01-49-04
-RootIo RootIo-25-01-00
 
-configData configData-01-11-03
+
+configData configData-01-11-05
 Trigger Trigger-07-03-00
 
 FluxSvc FluxSvc-06-56-02
-CRflux CRflux-01-18-00
+CRflux CRflux-01-18-01
 
-EbfWriter EbfWriter-01-10-02
+EbfWriter EbfWriter-01-10-03
 OnboardFilter OnboardFilter-04-16-00
-OnboardFilterTds OnboardFilterTds-00-11-00
+OnboardFilterTds OnboardFilterTds-00-11-01
 
 # Calorimeter
-CalUtil CalUtil-03-14-06
+CalUtil CalUtil-03-14-07
 CalXtalResponse CalXtalResponse-00-26-00
 CalDigi CalDigi-03-08-00
-CalRecon CalRecon-06-16-03
-GCRCalib GCRCalib-01-09-00
+CalRecon CalRecon-06-16-07
+GCRCalib GCRCalib-01-09-01
 
 # Tracker
-TkrDigi TkrDigi-02-11-01
+TkrDigi TkrDigi-02-11-02
 TkrUtil TkrUtil-03-24-03
 TkrRecon TkrRecon-10-28-00
 
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-02-00
-AcdRecon AcdRecon-05-02-00
+AcdRecon AcdRecon-05-02-03
 
 # Geant4
-GlastMS GlastMS-01-00-01
-G4Generator G4Generator-06-04-00
-G4HadronSim G4HadronSim-02-00-01
+#GlastMS GlastMS-01-00-01
+G4Generator G4Generator-06-04-01
+#G4HadronSim G4HadronSim-02-00-01
 G4Propagator G4Propagator-03-01-00
 
 # calibration
-calibUtil calibUtil-01-13-03
+calibUtil calibUtil-01-13-04
 CalibData CalibData-00-27-01
 CalibSvc CalibSvc-00-41-00
 calibRootData calibRootData-01-07-11
 
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-01-00
-merit merit-06-37-01
+merit merit-06-37-02
 AnalysisNtuple AnalysisNtuple-02-60-01
 
 # LDF
 CHS/eventFile eventFile-09-00-02
-LdfEvent LdfEvent-04-12-01
-lsfData lsfData-04-03-02
-ldfReader ldfReader-07-04-08
-LdfConverter LdfConverter-04-05-00
+LdfEvent LdfEvent-04-12-02
+lsfData lsfData-04-03-04
+ldfReader ldfReader-07-04-09
+LdfConverter LdfConverter-04-05-02
 
 # HepRep
-HepRepSvc HepRepSvc-00-38-00
-HepRepCorba HepRepCorba-03-04-00
-HepRepXml HepRepXml-00-09-00
+HepRepSvc HepRepSvc-00-38-01
+HepRepCorba HepRepCorba-03-04-01
+HepRepXml HepRepXml-00-09-01
 
 # classification
-classifier classifier-01-06-05
-GlastClassify GlastClassify-07-09-01
+classifier classifier-01-06-06
+GlastClassify GlastClassify-07-09-02
 
-Interleave Interleave-01-07-02
+Interleave Interleave-01-07-03
 
 # MOOT
 mootCore mootCore-01-24-07
@@ -130,19 +130,19 @@ ConfigSvc ConfigSvc-00-03-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-00-00
-Overlay Overlay-02-01-00
-overlayRootData overlayRootData-00-03-03
+Overlay Overlay-02-01-01
+overlayRootData overlayRootData-00-03-04
 
 calibGenCAL calibGenCAL-05-09-05
-calibGenACD calibGenACD-04-01-04
+calibGenACD calibGenACD-04-01-05
 calibTkrUtil calibTkrUtil-02-09-07
-calibGenTKR calibGenTKR-04-08-01
+calibGenTKR calibGenTKR-04-08-02
 
 # not used in Gleam, here as a build check
 detCheck detCheck-01-07-05
 
 Gleam Gleam-07-07-00
 
-SConsFiles SConsFiles-00-17-01
-GlastRelease-scons/containerSettings containerSettings-00-05-02
+SConsFiles SConsFiles-00-17-06
+GlastRelease-scons/containerSettings containerSettings-00-05-03
 
