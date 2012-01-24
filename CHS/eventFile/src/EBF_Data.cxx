@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <stdexcept>
 #include <sstream>
+#include <cstring>
 
 #include "eventFile/EBF_Data.h"
 

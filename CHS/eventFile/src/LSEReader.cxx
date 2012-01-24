@@ -1,6 +1,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <cstring>
 
 #include <sstream>
 #include <stdexcept>

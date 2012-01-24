@@ -1,6 +1,9 @@
 #include <errno.h>
 #include <stdexcept>
 #include <sstream>
+#include <cstdio>
+#include <cstring>
+
 
 #include "eventFile/LSE_Info.h"
 #include "eventFile/LPA_Handler.h"
