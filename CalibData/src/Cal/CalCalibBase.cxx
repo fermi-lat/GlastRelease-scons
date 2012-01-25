@@ -137,6 +137,7 @@ namespace CalibData {
 
     //    m_pR = new vector<RangeBase*>(n, 0);
     m_ranges.reserve(n);
+    if (m_ranges.size() < n) m_ranges.resize(n);
 
   }
 
