@@ -182,7 +182,8 @@ StatusCode TkrTrackFitAlg::doTrackFit()
     // Find the collection of candidate tracks
     Event::TkrTrackCol* trackCol = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
 
-    if(trackCol==0||trackCol->size()==0) return sc;
+    if(trackCol==0) return sc;
+    if(trackCol->size()==0) return sc;
     // Ok, now set up to loop over candidate tracks
     for(Event::TkrTrackColPtr trackIter = trackCol->begin(); trackIter != trackCol->end(); trackIter++)
     {
@@ -216,6 +217,7 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
     Event::TkrTrackCol* trackCol = SmartDataPtr<Event::TkrTrackCol>(eventSvc(),EventModel::TkrRecon::TkrTrackCol);
 
     // Check that there are tracks to fit
+    if(!trackCol) return sc;
     if(trackCol->size() < 1) return sc;
 
     // Set the energy of the tracks

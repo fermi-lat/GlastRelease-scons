@@ -221,6 +221,12 @@ StatusCode TkrFindAlg::execute()
     // Message to acknowledge at this stage
     log << MSG::DEBUG << "------- TkrFindAlg - looking for tracks -------" << endreq;
 
+    // skip all this if there are no clusters
+    Event::TkrClusterCol* clustCol = 
+        SmartDataPtr<Event::TkrClusterCol>(m_dataSvc, EventModel::TkrRecon::TkrClusterCol);
+    if(!clustCol) return sc;
+    if(clustCol->size()==0) return sc;
+
     // move to TkrClusterAlg
     //sc = m_truncTool->analyzeDigis();
 
