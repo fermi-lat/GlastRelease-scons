@@ -238,6 +238,7 @@ StatusCode TkrHitValsTool::calculate()
     //Make sure we have valid cluster data
 
     if (!pClusters) return sc;
+    if(pClusters->size()==0) return sc;
 
     int layerIdx;
     for(layerIdx=0;layerIdx<_nLayers;++layerIdx) {
