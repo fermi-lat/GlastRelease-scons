@@ -289,6 +289,10 @@ namespace AcdRecon {
 	idSet.insert(*itrId);
       }
     }
+    // ADW: Add Tile 22 for calibration
+    idents::AcdId id22(0,0,2,2);
+    idSet.insert(id22);
+    
     return true;
   }
   
