@@ -229,7 +229,7 @@ StatusCode  AcdTkrIntersectToolV2::makeIntersections(IPropagator& prop,
 	// closest gap
 	float testDist = nextPoca->m_activeX;
 	
-	if ( testDist > bestTileActDist && nextPoca->m_activeY > 0 ) {
+	if ( testDist > bestTileActDist && nextPoca->m_activeY > -50. ) {
 	  tileDataForGap = nextPoca;
 	  bestTileActDist = testDist;
 	}    
