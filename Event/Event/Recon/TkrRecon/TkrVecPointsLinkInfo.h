@@ -55,10 +55,15 @@ public:
 
     /// @name Data access methods
     //@{
-    /// Recover a pointer to the collection of links
+    /// Recover a const pointer to the collection of links
     const Event::TkrVecPointsLinkCol*   getTkrVecPointsLinkCol()   const {return m_tkrVecPointsLinkCol;}
-    /// Recover a pointer to the link relations table
+    /// Recover a const pointer to the link relations table
     const Event::TkrVecPointToLinksTab* getTkrVecPointToLinksTab() const {return m_pointToLinksTab;}
+    /// For use by the builder methods
+    /// Recover a const pointer to the collection of links
+    Event::TkrVecPointsLinkCol*         getTkrVecPointsLinkCol()         {return m_tkrVecPointsLinkCol;}
+    /// Recover a const pointer to the link relations table
+    Event::TkrVecPointToLinksTab*       getTkrVecPointToLinksTab()       {return m_pointToLinksTab;}
     //@}
 
 private:
