@@ -5,6 +5,7 @@
  * $Id$
  * EOH *
 
+ merit-06-38-00 31-Jan-2012    jrb Avoid wasting time on merit in SCons LATEST builds
  merit-06-37-02 20-Jan-2012    hmk Avoid loading GuiSvc in meritAlg unless it
      is meant to be available
  merit-06-37-01 04-Jan-2012    jrb patch for gcc41
