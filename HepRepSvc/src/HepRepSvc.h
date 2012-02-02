@@ -11,8 +11,9 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "HepRepSvc/IHepRepSvc.h"
-#include "HepRepObs.h"
+//#include "HepRepObs.h"
 
 //forward declarations
 template <class TYPE> class SvcFactory;
@@ -28,6 +29,7 @@ class IRootIoSvc;
 class INTupleWriterSvc;
 class IDataProviderSvc;
 class IAlgManager;
+class HepRepObs;
 
 class HepRepSvc : virtual public Service,  
                   virtual public IIncidentListener, 

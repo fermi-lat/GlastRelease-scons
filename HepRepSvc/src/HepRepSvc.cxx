@@ -30,6 +30,7 @@
 #include "SvcAdapter.h"
 #include "HepRepSvc.h"
 #include "HepRepGeometry.h"
+#include "HepRepObs.h"
 
 #include "HeaderFiller.h"
 #include "MonteCarloFiller.h"
@@ -272,6 +273,7 @@ StatusCode HepRepSvc::initialize ()
    
     m_heprepObs = new HepRepObs();
     m_toolSvc->registerObserver(m_heprepObs);
+    m_heprepObs->setHepRepSvc(this);
  
     return StatusCode::SUCCESS;
 }

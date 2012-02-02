@@ -10,7 +10,9 @@ $Header$
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/Property.h"
 
-#include "GuiSvc/IGuiTool.h"
+//#include "GuiSvc/IGuiTool.h"
+
+#include "HepRepSvc.h"
 
 /** @class HepRepObs
 *
@@ -46,10 +48,10 @@ public:
    
     void onRetrieve(IAlgTool& tool) { };
 
-    void setHepRepMgr(gui::GuiMgr* guiMgr) { m_guiMgr = guiMgr; };
+    void setHepRepSvc(HepRepSvc* svc){ m_hepRepSvc = svc; };
 
 private:  
-    gui::GuiMgr* m_guiMgr;
+    HepRepSvc* m_hepRepSvc;
 
 };
 
