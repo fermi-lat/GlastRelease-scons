@@ -7,6 +7,7 @@
 @verbatim
  * EOH *
  
+ RootDisplay-00-05-00 23-Jan-2012    hmk Add RootDisplaySvc to handle IGuiTool
  RootDisplay-00-04-02 20-Jan-2012    jrb SCons adjustment for GuiSvc component library
  RootDisplay-00-04-01 14-Jan-2012    jrb minor new gaudi/SCons fix
  RootDisplay-00-04-00 08-Dec-2011    hmk Merge Gaudi v21r7

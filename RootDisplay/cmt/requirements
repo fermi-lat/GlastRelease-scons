@@ -1,5 +1,5 @@
 package RootDisplay
-version v0r4p2
+version v0r5p0
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -21,6 +21,7 @@ apply_pattern packageShr
 private
 use RootmapPolicy * GlastPolicy
 use gr_app v*
+use xmlUtil *
 
 # get flags to build shared library
 
@@ -35,15 +36,15 @@ apply_pattern generate_rootmap library=RootDisplay
 
 public
 
-macro RootDisplayTestlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
-      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
+#macro RootDisplayTestlinkopts  "  $(GuiSvc_lib) $(guiapp_linkopts) $(gui_linkopts) -u GuiSvc_loadRef  -ldl "\
+#      WIN32 " ${guiapp_linkopts} $(GuiSvc_lib)  /include:_GuiSvc_loadRef "
 
 
 #non-share test program for development
 set JOBOPTIONS ${ROOTDISPLAYROOT}/src/test/jobOptions.txt
 
 macro_append RootDisplay_headers "" WIN32 "test/*.txt "
-application RootDisplayTest ${GlastMain} ${Win32Resource} ${RootDisplay_headers} 
+application RootDisplayTest ${GlastMain} ${Win32Resource} ${WinMain} ${RootDisplay_headers} 
 
 
 apply_pattern dummy_test
