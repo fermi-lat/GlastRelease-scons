@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-05-04 03-Feb-2012    jrb use G4 p03 external for vc90 debug builds
  containerSettings-00-05-03 19-Jan-2012    jrb support for Gui main programs, mostly for Windows
  containerSettings-00-05-02 06-Jan-2012    hmk patch OmniOrb for vc71 and
     MYSQL for vc90
