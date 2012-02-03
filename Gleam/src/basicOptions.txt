@@ -249,7 +249,7 @@ TkrIter.Members = {
 //   ACD recon
 
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
-Acd.Members = {"AcdReconAlg"};
+Acd.Members = {"AcdReconAlg","AcdReconAlgV2"};
 
 // ----------------------------
 //   GCR
