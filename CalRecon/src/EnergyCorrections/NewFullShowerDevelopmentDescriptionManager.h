@@ -11,13 +11,13 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #define FSGM_XY_MAX 149800
-#define FSGM_NPOINTS_MAX 2000
+#define FSGM_NPOINTS_MAX 1100
 #define FSGM_NPOINTS_NRING 6
 #define FSGM_NPOINTS_IN_RING 10
 #define FSGM_RPROF_R_MAX 5000
 #define FSGM_RPROF_T_MAX 750
 
-#define FSDD_NSTEPS_MAX 13000
+#define FSDD_NSTEPS_MAX 1300
 #define FSDD_NMAX 20
 
 #define FSDD_XTAL_NMAX 200
