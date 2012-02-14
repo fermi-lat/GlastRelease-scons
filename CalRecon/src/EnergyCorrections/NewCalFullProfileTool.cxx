@@ -472,12 +472,12 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   double CALFIT_chidist = 0;
   double CALFIT_parcf = 0;
   double CALFIT_parc = 0;
-  double CALFIT_recp0 = pp[0];
-  double CALFIT_recp1 = pp[1];
-  double CALFIT_recp2 = pp[2];
-  double CALFIT_recv0 = vv[0];
-  double CALFIT_recv1 = vv[1];
-  double CALFIT_recv2 = vv[2];
+  double CALFIT_recp0 = 0;
+  double CALFIT_recp1 = 0;
+  double CALFIT_recp2 = 0;
+  double CALFIT_recv0 = 0;
+  double CALFIT_recv1 = 0;
+  double CALFIT_recv2 = 0;
   double CALFIT_widening = 0;
   int CALFIT_nxtalsel = 0;
 
@@ -500,12 +500,12 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   double TKRFIT_chidist = 0;
   double TKRFIT_parcf = 0;
   double TKRFIT_parc = 0;
-  double TKRFIT_recp0 = pp[0];
-  double TKRFIT_recp1 = pp[1];
-  double TKRFIT_recp2 = pp[2];
-  double TKRFIT_recv0 = vv[0];
-  double TKRFIT_recv1 = vv[1];
-  double TKRFIT_recv2 = vv[2];
+  double TKRFIT_recp0 = 0;
+  double TKRFIT_recp1 = 0;
+  double TKRFIT_recp2 = 0;
+  double TKRFIT_recv0 = 0;
+  double TKRFIT_recv1 = 0;
+  double TKRFIT_recv2 = 0;
   double TKRFIT_widening = 0;
 
   double chi2dist;
@@ -1132,7 +1132,10 @@ int NewCalFullProfileTool::SelectCloseCrystals(double *pptraj, double *vvtraj, d
   nm_nxtal = nm_nxtal_sat;
   nm_fsddm->NXtal = nm_nxtal;
   for(j=0;j<8;++j) nm_elayer_datsel[j] = nm_elayer_datsat[j];
-
+  for(i=0;i<16;++i)
+    for(j=0;j<8;++j)
+      for(k=0;k<12;++k)
+        if(nm_fsddm->OffSatu[i][j][k]>=nm_nxtal_sat) nm_fsddm->OffSatu[i][j][k] = -1;
 
   for(j=0;j<8;++j)
     {
