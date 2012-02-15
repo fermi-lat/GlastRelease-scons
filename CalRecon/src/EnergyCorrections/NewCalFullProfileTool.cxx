@@ -1243,6 +1243,7 @@ double NewCalFullProfileTool::GetChi2Dist(double *pptraj, double *vvtraj, double
       if(icount>-1)
         {
           xtalfitenergy = nm_extal_fit[icount];
+          if(icount<nm_nxtal_sat && xtalfitenergy>xtaldatenergy) xtalfitenergy = xtaldatenergy;
           xtalused[icount] = 1;
         }
       lambda = 0;
