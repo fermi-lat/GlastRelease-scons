@@ -47,9 +47,9 @@ public:
 
     virtual ~GlastRandomObs();
 
-    void onCreate(IAlgTool& tool);
+    virtual void onCreate(const IAlgTool* tool);
    
-    void onRetrieve(IAlgTool& tool) { }
+    virtual void onRetrieve(const IAlgTool* tool) { }
 
     const std::vector< IRandomAccess::SetFlag>& getSetFlagPtrs() const { return m_setFlagPointers; }
     

@@ -32,11 +32,11 @@ GuiObs::GuiObs():IToolSvc::Observer(),m_guiMgr(0)
 }
 
 
-void GuiObs::onCreate(IAlgTool& tool) {
+void GuiObs::onCreate(const IAlgTool* tool) {
 
 
     IGuiTool* gtool;
-    StatusCode status =tool.queryInterface( IGuiTool::interfaceID(), (void**)&gtool);
+    StatusCode status =const_cast<IAlgTool*>(tool)->queryInterface( IGuiTool::interfaceID(), (void**)&gtool);
     if( status.isSuccess() ){
         gtool->initialize(m_guiMgr);
     }

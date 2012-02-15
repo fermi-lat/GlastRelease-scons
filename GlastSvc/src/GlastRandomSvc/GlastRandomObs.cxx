@@ -107,16 +107,18 @@ CLHEP::HepRandomEngine* GlastRandomObs::createEngine(std::string  engineName)
     return 0;
 }
 
+//void GlastRandomObs::onRetrieve(const IAlgTool* tool) {
+//	StatusCode status;//
+//}
 
-
-void GlastRandomObs::onCreate(IAlgTool& tool) {
+void GlastRandomObs::onCreate(const IAlgTool* tool) {
 
     //MsgStream log (msgSvc(), name() ); 
     IRandomAccess* ranacc ;
-    StatusCode status =tool.queryInterface(IRandomAccess::interfaceID(), (void**)&ranacc);
+    StatusCode status =const_cast<IAlgTool*>(tool)->queryInterface(IRandomAccess::interfaceID(), (void**)&ranacc);
     if( status.isSuccess() )
     {   
-        std::string tooltype = tool.type();
+        std::string tooltype = tool->type();
         // Set the Random engine by name
         CLHEP::HepRandomEngine* hr = createEngine(m_randomEngine);
         if( hr==0) 

@@ -28,13 +28,13 @@ HepRepObs::HepRepObs():IToolSvc::Observer()
 }
 
 
-void HepRepObs::onCreate(IAlgTool& tool) {
+void HepRepObs::onCreate(const IAlgTool* tool) {
 
 
     IRegister* gtool;
-    StatusCode status =tool.queryInterface( IRegister::interfaceID(), (void**)&gtool);
+    StatusCode status =const_cast<IAlgTool*>(tool)->queryInterface( IRegister::interfaceID(), (void**)&gtool);
     if( status.isSuccess() ){
-        gtool->registerMe(m_hepRepSvc);
+        gtool->registerMe(const_cast<HepRepSvc*>(m_hepRepSvc));
     }
 
 

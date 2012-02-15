@@ -32,10 +32,10 @@ FluxObs::FluxObs():IToolSvc::Observer(), m_fluxSvc(0)
 }
 
 
-void FluxObs::onCreate(IAlgTool& tool) {
+void FluxObs::onCreate(const IAlgTool* tool) {
 
     IRegisterSource* ireg;
-    StatusCode status =tool.queryInterface( IRegisterSource::interfaceID(), (void**)&ireg);
+    StatusCode status =const_cast<IAlgTool*>(tool)->queryInterface( IRegisterSource::interfaceID(), (void**)&ireg);
     if( status.isSuccess() ){
         ireg->registerMe(m_fluxSvc);
     }

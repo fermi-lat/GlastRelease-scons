@@ -41,9 +41,9 @@ public:
 
     virtual ~GuiObs();
 
-    void onCreate(IAlgTool& tool);
+    void onCreate(const IAlgTool* tool);
    
-    void onRetrieve(IAlgTool& tool) { }
+    void onRetrieve(const IAlgTool* tool) { }
 
     void setGuiMgr(gui::GuiMgr* guiMgr) { m_guiMgr = guiMgr; }
 

@@ -45,9 +45,9 @@ public:
 
     virtual ~FluxObs();
 
-    void onCreate(IAlgTool& tool);
+    virtual void onCreate(const IAlgTool* tool);
    
-    void onRetrieve(IAlgTool& tool) { }
+    virtual void onRetrieve(const IAlgTool* tool) { }
 
     void setFluxSvc(IFluxSvc *fluxSvc) { m_fluxSvc = fluxSvc; }
 

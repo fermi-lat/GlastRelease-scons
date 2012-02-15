@@ -44,14 +44,14 @@ public:
 
     virtual ~HepRepObs() { };
 
-    void onCreate(IAlgTool& tool);
+    virtual void onCreate(const IAlgTool* tool);
    
-    void onRetrieve(IAlgTool& tool) { };
+    virtual void onRetrieve(const IAlgTool* tool) { };
 
-    void setHepRepSvc(HepRepSvc* svc){ m_hepRepSvc = svc; };
+    void setHepRepSvc(const HepRepSvc* svc){ m_hepRepSvc = svc; };
 
 private:  
-    HepRepSvc* m_hepRepSvc;
+    const HepRepSvc* m_hepRepSvc;
 
 };
 
