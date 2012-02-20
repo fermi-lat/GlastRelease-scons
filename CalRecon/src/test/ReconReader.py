@@ -95,6 +95,7 @@ class ReconReader:
         return self.ReconChain.GetEntries()
 
     def getEntry(self, i):
+        self.ReconEvent.Clear()
         if i >= self.getEntries():
             sys.exit('No more events, bye!')
         self.ReconChain.GetEvent(i)
