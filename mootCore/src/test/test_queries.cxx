@@ -602,7 +602,8 @@ int main(int /* nargs */, char**)    {
   // Cache contents of  filter assoc file
   //  std::string assocFile("/u/ey/jrb/junk/filterAssoc.xml");
   //  q.parseFilterParm(assocFile);
-  unsigned cfgKey=144;
+//  unsigned cfgKey=2595;
+  unsigned cfgKey=2587;
   //  q.cacheFilterConfig(cfgKey);
   conInfo.clear();
   unsigned nFound = q.getActiveFilters(cfgKey, conInfo);
