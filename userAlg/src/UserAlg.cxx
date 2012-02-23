@@ -109,7 +109,7 @@ StatusCode UserAlg::initialize(){
     }
     
     // get the Gui service (not required)
-    if (service("GuiSvc", m_guiSvc).isFailure ()){
+    if (service("GuiSvc", m_guiSvc, false).isFailure ()){
         log << MSG::WARNING << "No GuiSvc, so no display" << endreq;
     }else{
         //m_guiSvc->guiMgr()->display().add(new Rep, "User rep");
