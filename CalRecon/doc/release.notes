@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-16-08 23-Feb-2012 heather Remove CalReconAuditor from unit test for now
  CalRecon-06-16-07 23-Jan-2012    jrb 1. Johann's patches for gcc41 2. Eliminate unnecessary stuff from CalReconLib.py
  CalRecon-06-16-06 20-Jan-2012  lsrea fix windows warnings
  CalRecon-06-16-05 17-Jan-2012 heather use G4Prop for unit test

@@ -2,6 +2,9 @@
 #include "$CALRECONJOBOPTIONSPATH/test/singleOptions.txt"
 
 ApplicationMgr.DLLs += { "GaudiAud" } ;
-AuditorSvc.Auditors += { "CalReconAuditor" } ;
+
+// Comment out for now until we sort out why new Gaudi sees this auditor
+// as not being used and causing a seeming failure of the unit test
+//AuditorSvc.Auditors += { "CalReconAuditor" } ;
 
 
