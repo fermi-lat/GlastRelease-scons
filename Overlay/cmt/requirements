@@ -1,5 +1,5 @@
 package Overlay
-version v2r1p1
+version v2r1p2
 
 author Tracy Usher <usher@slac.stanford.edu>
 
@@ -49,7 +49,9 @@ library Overlay  \
         -s=../src/Translation $(source) \
         -s=../src/Tasks $(source) 
 
-apply_pattern generate_rootmap library=Overlay
+
+# Take this out for now in hopes that we really don't need rootmap
+#apply_pattern generate_rootmap library=Overlay
 
 
 # simple test program
