@@ -439,8 +439,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   }
   
   void convert( const Event::AcdCalAssoc& tds, AcdCalAssoc& root) {
-    static TMatrixDSym covStart;
-    static TMatrixDSym covEnd;
+    static TMatrixDSym covStart(5);
+    static TMatrixDSym covEnd(5);
 
     TVector3 start = convert( tds.getStart() );
     TVector3 dir = convert3vector( tds.getDir() );
@@ -476,8 +476,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   }
   
   void convert( const AcdCalAssoc& root, Event::AcdCalAssoc& tds) { 
-    static HepSymMatrix covStart;
-    static HepSymMatrix covEnd;
+    static HepSymMatrix covStart(5);
+    static HepSymMatrix covEnd(5);
     Point start = convertPoint( root.getStart() );
     Vector dir = convertVector( root.getDir() );
     convert( root.getCovStart(), covStart );
