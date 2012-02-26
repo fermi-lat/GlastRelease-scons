@@ -34,7 +34,7 @@ int checkGcrSelectEvent(GcrSelectEvent *evt, UInt_t ievent) {
 
 
 /// Read in the ROOT file just generated via the write method
-int read(char* fileName, int numEvents) {
+int read(const char* fileName, int numEvents) {
     TFile *f = new TFile(fileName, "READ");
     TTree *t = (TTree*)f->Get("GcrSelect");
     GcrSelectEvent *evt = 0;
@@ -58,7 +58,7 @@ int read(char* fileName, int numEvents) {
 }
 
 /// Create a new Monte Carlo ROOT file
-int write(char* fileName, int numEvents) {
+int write(const char* fileName, int numEvents) {
     Int_t buffer = 64000;
     Int_t splitLevel = 1;
     
@@ -96,7 +96,7 @@ int write(char* fileName, int numEvents) {
 /// Return 0 for success.
 /// Returns -1 for failure.
 int main(int argc, char **argv) {
-    char *fileName = "gcr.root";
+    const char *fileName = "gcr.root";
     int n = 1;
     int numEvents = 10;
     if (argc > 1) {
