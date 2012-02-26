@@ -1,3 +1,4 @@
+#include <limits.h>
 #include "RealWidget.h"
 #include "rdbModel/Tables/Datatype.h"
 
