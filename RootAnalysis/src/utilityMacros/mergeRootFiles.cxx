@@ -6,6 +6,7 @@
 #include "TKey.h"
 #endif
 
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string>
