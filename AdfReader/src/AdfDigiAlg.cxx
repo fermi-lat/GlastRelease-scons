@@ -30,8 +30,9 @@ private:
   
 };
 
-static const AlgFactory<AdfDigiAlg>  Factory;
-const IAlgFactory& AdfDigiAlgFactory = Factory;
+//static const AlgFactory<AdfDigiAlg>  Factory;
+//const IAlgFactory& AdfDigiAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AdfDigiAlg);
 
 AdfDigiAlg::AdfDigiAlg(const std::string& name, ISvcLocator* pSvcLocator)
   : Algorithm(name, pSvcLocator) 

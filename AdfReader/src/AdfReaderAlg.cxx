@@ -38,8 +38,9 @@ private:
   std::string dataFilePath;
 };
 
-static const AlgFactory<AdfReaderAlg>  Factory;
-const IAlgFactory& AdfReaderAlgFactory = Factory;
+//static const AlgFactory<AdfReaderAlg>  Factory;
+//const IAlgFactory& AdfReaderAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AdfReaderAlg);
 
 AdfReaderAlg::AdfReaderAlg(const std::string& name, ISvcLocator* pSvcLocator)
   : Algorithm(name, pSvcLocator) 

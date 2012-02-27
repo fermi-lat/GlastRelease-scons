@@ -62,8 +62,9 @@ private:
   float m_nSigma;
 };
 
-static const AlgFactory<AncillaryDataReconAlg>  Factory;
-const IAlgFactory& AncillaryDataReconAlgFactory = Factory;
+//static const AlgFactory<AncillaryDataReconAlg>  Factory;
+//const IAlgFactory& AncillaryDataReconAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(AncillaryDataReconAlg);
 
 AncillaryDataReconAlg::AncillaryDataReconAlg(const std::string& name, ISvcLocator* pSvcLocator)
   : Algorithm(name, pSvcLocator) 
