@@ -26,27 +26,27 @@ namespace FX {
  
 #ifdef _GERMAN
 	// German names
-	static char* SHORT_DAY_NAMES[] = {"SO","MO","DI","MI","DO","FR","SA"}; // 0-based
-	static char* MONTH_NAMES[]
+	static const char* SHORT_DAY_NAMES[] = {"SO","MO","DI","MI","DO","FR","SA"}; // 0-based
+	static const char* MONTH_NAMES[]
 		= {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"}; // 0-based
-	static char* DAY_NAMES[]
+	static const char* DAY_NAMES[]
 		= {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"}; // 0-based
-	static char *quater = "Quartal";
+	static const char *quater = "Quartal";
 #else 
 #ifdef _FRENCH // by Marc Duren marc.duren@9online.fr
-    static char* MONTH_NAMES[]=  {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"}; // 0-based
-	static char* DAY_NAMES[] =  {"Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"}; // 0-based
-	static char *quater = "Trimestre";
-	static char* SHORT_DAY_NAMES[] =  {"DIM","LUN","MAR","MER","JEU","VEN","SAM"}; // 0-based
+    static const char* MONTH_NAMES[]=  {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"}; // 0-based
+	static const char* DAY_NAMES[] =  {"Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"}; // 0-based
+	static const char *quater = "Trimestre";
+	static const char* SHORT_DAY_NAMES[] =  {"DIM","LUN","MAR","MER","JEU","VEN","SAM"}; // 0-based
 
 #else
 	// English 
-	static char* SHORT_DAY_NAMES[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"}; // 0-based
-	static char* MONTH_NAMES[]
+	static const char* SHORT_DAY_NAMES[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"}; // 0-based
+	static const char* MONTH_NAMES[]
 		= {"January","February","March","April","May","June","July","August","September","October","November","December"}; // 0-based
-	static char* DAY_NAMES[]
+	static const char* DAY_NAMES[]
 		= {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"}; // 0-based
-	static char *quater = "quater";
+	static const char *quater = "quater";
 #endif
 #endif	
 	

@@ -109,7 +109,7 @@ namespace MOOT {
   bool MoodConnection::open(const char* host, int port, 
                             std::string& dbname, bool wrt) {
     using facilities::commonUtilities;
-    static char* acct = "glastreader";
+    static const char* acct = "glastreader";
     // If wrt is true, expect to get user, password from .my.cnf
     // Else use glastreader
 
