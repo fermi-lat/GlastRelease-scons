@@ -165,7 +165,7 @@ namespace detCheck {
     bool checkLocs(std::vector<Location>& locs);
     bool pairOk(Location* loc1, Location* loc2);
 
-    bool Overlaps::checkBB(BB& bb1, BB& bb2);
+    bool checkBB(BB& bb1, BB& bb2);
     //! Extra checking to eliminate false positives if first loc describes
     //! sphere, second describes bo
     const bool checkSphereBox(Location* sphereLoc, Location* boxLoc);
