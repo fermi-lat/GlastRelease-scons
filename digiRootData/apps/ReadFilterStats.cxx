@@ -14,6 +14,7 @@
 #include <unistd.h>
 #else
 #include "facilities/XGetopt.h"
+using facilities::getopt;
 #endif
 
 struct readData;
@@ -458,11 +459,8 @@ int main(int argn, char** argc) {
 
   // Option parsing
   int opt;
-#ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "hi:o:")) != EOF ) {
-#else
+
   while ( (opt = getopt(argn, argc, "hi:o:")) != EOF ) {
-#endif
     switch (opt) {
     case 'h':   // help      
       usage(std::cout);
