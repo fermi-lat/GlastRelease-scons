@@ -52,8 +52,15 @@ test_digiRootData = progEnv.Program('test_digiRootData',
                                     ['src/test/testDigiClasses.cxx'])
 progEnv.Tool('addLibrary', library = baseEnv['ldfLibs'])
 progEnv.Tool('lsfDataLib')
-ReadFilterStats = progEnv.Program('ReadFilterStats',
-                                  ['apps/ReadFilterStats.cxx'])
+if baseEnv['PLATFORM'] == 'win32':
+    XGetoptObj = '#/lib/' + baseEnv['VARIANT'] + '/XGetopt.obj'
+    ReadFilterStats = progEnv.Program('ReadFilterStats',
+                                      ['apps/ReadFilterStats.cxx',
+                                       XGetoptObj])
+
+else:
+    ReadFilterStats = progEnv.Program('ReadFilterStats',
+                                      ['apps/ReadFilterStats.cxx'])
 
 progEnv.Tool('registerTargets', package = 'digiRootData',
              rootcintSharedCxts = [[digiRootData, libEnv]], 
