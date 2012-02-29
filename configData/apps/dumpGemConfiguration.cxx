@@ -13,6 +13,7 @@
 #include <unistd.h>
 #else
 #include "facilities/XGetopt.h"
+using facilities::getopt;
 #endif
 
 using namespace MOOT;
@@ -26,11 +27,8 @@ int main(int argc, char **argv){
   int opt;
   int argn=1;
   std::ostream *out=&std::cout;
-#ifdef WIN32
-  while ( (opt = facilities::getopt(argc, argv, "fMmrgo:")) != EOF ) {
-#else
+
   while ( (opt = getopt(argc, argv, "fMmrgo:")) != EOF ) {
-#endif
     argn++;
     switch(opt){
     case 'f':

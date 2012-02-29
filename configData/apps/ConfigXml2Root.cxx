@@ -13,6 +13,7 @@
 #include <unistd.h>
 #else
 #include "facilities/XGetopt.h"
+using facilities::getopt;
 #endif
 //
 // ROOT-io
@@ -51,11 +52,7 @@ int main(int argn, char** argc) {
   bool bcast(false);
   bool useMootKey=false;
 
-#ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "ho:Mp:a:b")) != EOF ) {
-#else
   while ( (opt = getopt(argn, argc, "ho:Mp:a:b")) != EOF ) {
-#endif
     switch (opt) {
     case 'h':   // help      
       usage();

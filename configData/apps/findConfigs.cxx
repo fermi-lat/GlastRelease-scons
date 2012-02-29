@@ -9,6 +9,7 @@
 #include <unistd.h>
 #else
 #include "facilities/XGetopt.h"
+using facilities::getopt;
 #endif
 //
 
@@ -100,11 +101,7 @@ int main(int argn, char** argc) {
   bool brief(false);
 
   int opt;
-#ifdef WIN32
-  while ( (opt = facilities::getopt(argn, argc, "hObp:a:v:")) != EOF ) {
-#else
   while ( (opt = getopt(argn, argc, "hObp:a:v:")) != EOF ) {
-#endif
     switch (opt) {
     case 'h':   // help      
       usage();
