@@ -15,7 +15,8 @@
 #ifndef WIN32
 #include <unistd.h>
 #else
-#include "apps/winutil/XGetopt.h"
+#include "facilities/XGetopt.h"
+using facilities::getopt;
 #endif
 
 void usage() {
