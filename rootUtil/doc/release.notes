@@ -4,6 +4,7 @@
 Coordinator:H.Kelly
  EOH 
 
+ rootUtil-01-04-06 04-Mar-2012    jrb Use facilities version of XGetopt
  rootUtil-01-04-05 28-Feb-2012    jrb on Windows link to installed XGetopt.obj
  rootUtil-01-04-04 03-Jan-2012    jrb patch for gcc41 compiler
  rootUtil-01-04-03 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows
