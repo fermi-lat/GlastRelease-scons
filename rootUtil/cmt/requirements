@@ -24,7 +24,8 @@ apply_pattern root_package headers="\
 
 private
 
-use facilities
+use facilities *
+apply_pattern use_facilities_symbols
 
 macro_append ROOT_libs " -lTreePlayer -lHist -lGraf3d " WIN32 " libTreePlayer.lib libHist.lib libGraf3d.lib "
 application testRootInterface ../apps/testRootInterface.cxx
