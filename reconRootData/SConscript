@@ -60,6 +60,7 @@ reconRootDataRootcint = libEnv.Rootcint('reconRootData/reconRootData_rootcint',
 libEnv['rootcint_node'] = reconRootDataRootcint
 reconRootData = libEnv.SharedLibrary('reconRootData',
                                      listFiles(['src/*.cxx']) + ['reconRootData/reconRootData_rootcint.cxx'])
+progEnv.Tool('facilitiesLib')
 progEnv.Tool('reconRootDataLib')
 
 test_reconRootData = progEnv.Program('test_reconRootData',
