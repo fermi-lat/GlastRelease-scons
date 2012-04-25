@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-28-01 25-Apr-2012    hmk patch merge
  reconRootData-09-28-00 24-Apr-2012    hmk Merge GlastReleasev19r4p1 branch
  reconRootData-09-27-04 24-Apr-2012    jrb get rid of bogus dependence of lib on facilities lib
  reconRootData-09-27-03 09-Dec-2011 kadrlica Output ACD covariance matrices to recon files.
