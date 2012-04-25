@@ -44,8 +44,9 @@ class TkrDigiTruncationAlg : public Algorithm {
 
 
 // Used by Gaudi for identifying this algorithm
-static const AlgFactory<TkrDigiTruncationAlg>    Factory;
-const IAlgFactory& TkrDigiTruncationAlgFactory = Factory;
+//static const AlgFactory<TkrDigiTruncationAlg>    Factory;
+//const IAlgFactory& TkrDigiTruncationAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(TkrDigiTruncationAlg);
 
 
 TkrDigiTruncationAlg::TkrDigiTruncationAlg(const std::string& name,

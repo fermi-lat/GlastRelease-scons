@@ -101,8 +101,9 @@ namespace {
   int          _numLayers;
 }
 
-static ToolFactory<TkrGhostTool> s_factory;
-const IToolFactory& TkrGhostToolFactory = s_factory;
+//static ToolFactory<TkrGhostTool> s_factory;
+//const IToolFactory& TkrGhostToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrGhostTool);
 
 TkrGhostTool::TkrGhostTool(const std::string& type, 
                            const std::string& name, 

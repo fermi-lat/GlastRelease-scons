@@ -145,8 +145,9 @@ private:
     Event::TkrVecPointToLinksTab* m_pointToLinksTab;
 };
 
-static ToolFactory<TkrVecLinkBuilderTool> s_factory;
-const IToolFactory& TkrVecLinkBuilderToolFactory = s_factory;
+//static ToolFactory<TkrVecLinkBuilderTool> s_factory;
+//const IToolFactory& TkrVecLinkBuilderToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(TkrVecLinkBuilderTool);
 
 
 TkrVecLinkBuilderTool::TkrVecLinkBuilderTool(const std::string& type, const std::string& name, const IInterface* parent)

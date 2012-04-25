@@ -68,9 +68,6 @@ private:
 
     bool m_newEvent;
 
-    bool m_trimDigis;
-    int  m_trimCount;
-
     Event::TkrTruncationInfo::TkrTruncationMap* m_truncMap;
     Event::TkrDigiCol*                          m_digiCol;
     Event::TkrTruncationInfo*                   m_truncationInfo;
