@@ -43,12 +43,16 @@ class TkrDigiAlg : public Algorithm {
      * particular tool another type is chosen.
      */
     std::string m_type;
-    /// Pointers to the sub algorithms
+    // Pointers to the sub algorithms
+    // done in anonymous namespace now
+    /*
     Algorithm* m_mcToHitAlg;
     Algorithm* m_hitRemovalAlg;
     Algorithm* m_noiseAlg;
     Algorithm* m_hitToDigiAlg;
     Algorithm* m_chargeAlg;
+    Algorithm* m_fillTDInfoAlg;
+    */
 
     IDataProviderSvc* m_edSvc;
 

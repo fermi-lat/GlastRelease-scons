@@ -70,6 +70,7 @@ public:
     void setSkipNLayer()                  {m_statusBits      |=  SKIPNLAYER;}
     void setVerified()                    {m_statusBits      |=  VERIFIED;}
     void updateStatusBits(unsigned bits)  {m_statusBits      |=  bits;}
+    void clearStatusBits(unsigned bits)   {m_statusBits      &= ~bits;}
     void setMaxScatAngle(double ang)      {m_maxScatAngle     =  ang;}
     void setAngleToNextLink(double ang)   {m_angleToNextLink  =  ang;}
     void setDistToNextLink(double dist)   {m_distToNextLink   =  dist;}

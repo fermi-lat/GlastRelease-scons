@@ -8,8 +8,7 @@
 #include "GaudiKernel/DataObject.h"
 
 #include "Event/TopLevel/Definitions.h"
-#include "Event/Recon/AcdRecon/AcdTkrAssoc.h"
-#include "Event/Recon/AcdRecon/AcdCalAssoc.h"
+#include "Event/Recon/AcdRecon/AcdAssoc.h"
 #include "Event/Recon/AcdRecon/AcdHit.h"
 #include "Event/Recon/AcdRecon/AcdEventTopology.h"
 

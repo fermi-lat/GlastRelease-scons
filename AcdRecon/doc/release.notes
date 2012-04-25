@@ -4,12 +4,18 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-03-00 24-Apr-2012 hmk Merge GlastReleasev19r4p1 branch
  AcdRecon-05-02-04 27-Jan-2012 kadrlica Added Tile22 to pat rec map and fix for particles with pocas just outside of tile boundaries
  AcdRecon-05-02-03 20-Jan-2012    jrb SCons adjustment for GuiSvc component library; vc90 compiler patches
  AcdRecon-05-02-02 17-Jan-2012 HMK   add in G4Prop use
  AcdRecon-05-02-01 12-Jan-2012 HMK   Patches for Gaudi upgrade to get win
      working
  AcdRecon-05-02-00 05-Dec-2011 HMK   Merge in Gaudi v21r7 upgrade
+ -- End GlastReleasev19r4p1 branch
+ AcdRecon-05-01-15-gr03 19-Apr-2012 kadrlica Primarily ACD de-ghosting and trigger information
+ AcdRecon-05-01-15-gr02 16-Mar-2012 kadrlica Added ACD flags to HitPoca
+ AcdRecon-05-01-15-gr01 27-Jan-2012 kadrlica Added Tile22 to pat rec map and fix for particles with pocas just outside of tile boundaries
+ -- Start  GlastReleasev19r4p1 branch
  AcdRecon-05-01-15 24-Nov-2011 kadrlica Fixed some error messages in AcdReconV2. Implemented a place holder for the cluster covariance matrix
  AcdRecon-05-01-14 05-Sep-2011 kadrlica Added treatment of AcdCalAssoc to AcdReconAlgV2
  AcdRecon-05-01-13 26-May-2011 HMK More CLHEP tweaks on windows

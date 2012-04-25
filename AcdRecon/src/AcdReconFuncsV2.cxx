@@ -683,9 +683,9 @@ namespace AcdRecon {
 					     data.m_active3DErr_proj);
     } else {
       if ( track.m_upward ) {
-
-        std::cout << "No poca found " << ribbon.acdId().id() << ' ' 
-                  << track.m_point << ' ' << track.m_dir << ' ' << (track.m_upward ? "Up" : "Down" ) << std::endl;
+        // Useful print out
+        //std::cout << "No poca found " << ribbon.acdId().id() << ' ' 
+        //          << track.m_point << ' ' << track.m_dir << ' ' << (track.m_upward ? "Up" : "Down" ) << std::endl;
       }
     }
   }

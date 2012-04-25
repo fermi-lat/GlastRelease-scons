@@ -1,5 +1,5 @@
-#ifndef Event_ACDCALASSOC_H
-#define Event_ACDCALASSOC_H
+#ifndef Event_ACDASSOC_H
+#define Event_ACDASSOC_H
 
 #include <vector>
 
@@ -19,15 +19,18 @@
 
 class MsgStream;
 
+static const CLID& CLID_AcdAssocCol = InterfaceID("AcdAssocCol", 1, 0);
+static const CLID& CLID_AcdTkrAssocCol = InterfaceID("AcdTkrAssocCol", 1, 0);
 static const CLID& CLID_AcdCalAssocCol = InterfaceID("AcdCalAssocCol", 1, 0);
 
 typedef HepGeom::Point3D<double> HepPoint3D;
 typedef HepGeom::Vector3D<double> HepVector3D;
 
 /**
- *  @class Event::AcdCalAssoc
+ *  @class Event::AcdAssoc
  *
  *  @brief
+ *  \author Eric Charles
  *  \author Alex Drlica-Wagner
  *
  * $Header$
@@ -40,24 +43,24 @@ namespace Event
   class AcdTkrGapPoca;
   class AcdTkrPoint;
 
-  class AcdCalAssoc : virtual public ContainedObject {
+  class AcdAssoc : virtual public ContainedObject {
     
   public:
 
     /// Default constructor
-    AcdCalAssoc();
+    AcdAssoc();
 
     /// Copy constructor
-    AcdCalAssoc(const AcdCalAssoc& other);
+    AcdAssoc(const AcdAssoc& other);
 
     /// Constructor for use in reconstruction, 
-    AcdCalAssoc(int index, bool up, float energy, 
+    AcdAssoc(int index, bool up, float energy, 
                 const HepPoint3D& start, const HepVector3D& dir, float arcLength,
                 const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
                 int tkrSSDVeto, float cornerDoca);
     
     /// Destructor is trivial
-    virtual ~AcdCalAssoc() {};
+    virtual ~AcdAssoc() {};
     
     /// Direct access to parameters
     inline int getTrackIndex() const { return m_index; }
@@ -151,58 +154,58 @@ namespace Event
 
    
   /*! 
-   * @class AcdCalAssocCol
+   * @class AcdAssocCol
    *
-   *  @brief TDS class to store the set of AcdCalAssocs
+   *  @brief TDS class to store the set of AcdAssocs
    *  
    * It inherits from DataObject
    * (to be a part of Gaudi TDS) and from std::vector of pointers
-   * to AcdCalAssoc objects. Some methods just rename the std::vector
+   * to AcdAssoc objects. Some methods just rename the std::vector
    * methods with the same functionality for backward compartibility.
    *
-   * @author Alex Drlica-Wagner
+   * @author Eric Charles
    *
    * @todo replace this class by typedef to ObjectVector, make corresponding
    *       changes in AcdPha2MipTool
    */
     
 
-  class AcdCalAssocCol : public DataObject, public std::vector<AcdCalAssoc*> 
+  class AcdAssocCol : public DataObject, public std::vector<AcdAssoc*> 
   {
   public:
 
     /// Default constructor.  Builds empty collection
-    AcdCalAssocCol() { clear();}
+    AcdAssocCol() { clear();}
 
-    /// "copy" constructor.  Take ownerships of a vector of AcdCalAssocs
-    AcdCalAssocCol(const std::vector<AcdCalAssoc*>& acdhits);
+    /// "copy" constructor.  Take ownerships of a vector of AcdAssocs
+    AcdAssocCol(const std::vector<AcdAssoc*>& acdhits);
     
     /// destructor - deleting the hits pointed
     /// by the vector elements
-    ~AcdCalAssocCol() { delCalAssocs();}
+    ~AcdAssocCol() { delAssocs();}
             
     // GAUDI members to be use by the converters
-    static const CLID& classID() {return CLID_AcdCalAssocCol;}
+    static const CLID& classID() {return CLID_AcdAssocCol;}
     virtual const CLID& clID() const {return classID();}
 
-    /// takes ownership of a vector AcdCalAssoc
-    void init(std::vector<AcdCalAssoc*>& other) {
-      for ( std::vector<AcdCalAssoc*>::iterator itr = other.begin(); itr != other.end(); itr++ ) {
+    /// takes ownership of a vector AcdAssoc
+    void init(std::vector<AcdAssoc*>& other) {
+      for ( std::vector<AcdAssoc*>::iterator itr = other.begin(); itr != other.end(); itr++ ) {
         push_back(*itr);
       }
     }
    
-    /// Add a new hit
-    void add(AcdCalAssoc* cl) {push_back(cl);}
+    /// Add a new association
+    void add(AcdAssoc* cl) {push_back(cl);}
     
     /// get the number of hits in collection
     int num()                  const {return size();}
     
     /// get pointer to the hit with given number 
-    AcdCalAssoc * getCalAssoc(int i) const {return operator[](i);}
+    AcdAssoc * getAssoc(int i) const {return operator[](i);}
     
-    /// delete all Calorimeter associations pointed by the vector elements
-    void delCalAssocs();
+    /// delete all associations pointed by the vector elements
+    void delAssocs();
     
     /// write information for all hits to the ascii file 
     /// for debugging purposes
@@ -215,6 +218,55 @@ namespace Event
         
   };
 
-}
+  class AcdTkrAssocCol : public AcdAssocCol
+  {
+  public:
 
+    /// Default constructor.  Builds empty collection
+    AcdTkrAssocCol() { clear();}
+
+    /// "copy" constructor.  Take ownerships of a vector of AcdAssocs
+    AcdTkrAssocCol(const std::vector<AcdAssoc*>& acdhits) : AcdAssocCol( acdhits ) {;}
+    
+    /// destructor - deleting the hits pointed
+    /// by the vector elements
+    ~AcdTkrAssocCol() { delTkrAssocs();}
+
+    // GAUDI members to be use by the converters
+    static const CLID& classID() {return CLID_AcdTkrAssocCol;}
+    virtual const CLID& clID() const {return classID();}
+
+    /// get pointer to the hit with given number 
+    AcdAssoc * getTkrAssoc(int i) const {return operator[](i);}
+    
+    /// delete all Track associations pointed by the vector elements
+    void delTkrAssocs() { delAssocs(); }
+  };
+  
+  class AcdCalAssocCol : public AcdAssocCol
+  {
+  public:
+
+    /// Default constructor.  Builds empty collection
+    AcdCalAssocCol() { clear();}
+
+    /// "copy" constructor.  Take ownerships of a vector of AcdAssocs
+    AcdCalAssocCol(const std::vector<AcdAssoc*>& acdhits) : AcdAssocCol( acdhits ) {;}
+    
+    /// destructor - deleting the hits pointed
+    /// by the vector elements
+    ~AcdCalAssocCol() { delCalAssocs();}
+
+    // GAUDI members to be use by the converters
+    static const CLID& classID() {return CLID_AcdCalAssocCol;}
+    virtual const CLID& clID() const {return classID();}
+
+    /// get pointer to the hit with given number 
+    AcdAssoc * getCalAssoc(int i) const {return operator[](i);}
+    
+    /// delete all Cal associations pointed by the vector elements
+    void delCalAssocs() { delAssocs(); }
+  };
+
+}
 #endif

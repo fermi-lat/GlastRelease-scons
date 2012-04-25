@@ -70,19 +70,25 @@ namespace Event
         const CalCorToolResult * findLast( const std::string & correctionName ) const ;
         
         /// Access to "the" energy and parameters
-        const CalParams&    getParams()     const {return m_params;}
-        double              getEnergy()     const {return m_params.getEnergy();}
-        const Point&        getCentroid()   const {return m_params.getCentroid();}
-        const Vector&       getDirection()  const {return m_params.getAxis();}
+        /// Remove for now (TU 2/14/12)
+        ///const std::string&  getBestCorName() const {return m_bestCorName;}
+        const CalParams&    getParams()      const {return m_params;}
+        double              getEnergy()      const {return m_params.getEnergy();}
+        const Point&        getCentroid()    const {return m_params.getCentroid();}
+        const Vector&       getDirection()   const {return m_params.getAxis();}
 
         ///
         /// Set methods for this class
         /// @param energy the corrected energy
-        inline void setParams(const CalParams& params)       {m_params = params;}
+        inline void setParams(const CalParams& params)            {m_params       = params;}
+
+        /// Set the name of the best correction method
+        /// Remove for now (TU 2/14/12)
+        ///inline void setBestCorName(const std::string& name)       {m_bestCorName  = name;}
 
             /// Access individual status bits
-        inline void setStatusBit( StatusBits bitToSet ) { m_statusBits |=  bitToSet ; }
-        inline void clearStatusBit( StatusBits bitToClear ) { m_statusBits &= ~bitToClear ; }
+        inline void setStatusBit( StatusBits bitToSet )           { m_statusBits |=  bitToSet ; }
+        inline void clearStatusBit( StatusBits bitToClear )       { m_statusBits &= ~bitToClear ; }
         inline bool checkStatusBit( StatusBits bitToCheck ) const { return ((m_statusBits&bitToCheck)!=ZERO) ; }
 
         /// Access the status bits globally
@@ -91,6 +97,7 @@ namespace Event
 
         
     private:
+        ///std::string  m_bestCorName;
         unsigned int m_statusBits;
         CalParams    m_params;
     };

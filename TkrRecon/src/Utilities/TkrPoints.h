@@ -37,7 +37,7 @@ class TkrPoints : public TkrPointList
 public:
 
     /// this makes the old kind of vector of points
-    TkrPoints::TkrPoints(int layer, ITkrQueryClustersTool* clusTool);
+    TkrPoints(int layer, ITkrQueryClustersTool* clusTool);
 
     /// this one will be sorted according to proximity of refPoint);
     TkrPoints(int layer, ITkrQueryClustersTool* clusTool, 

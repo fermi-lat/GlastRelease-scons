@@ -21,7 +21,7 @@ namespace Event {
                                const CLHEP::HepSymMatrix& localCovProj, const CLHEP::HepSymMatrix& localCovProp,
                                int volume, int region, float arcLength, 
                                float doca, float docaErrProj, float docaErrProp,
-                               const Point& poca, const Vector& voca)
+                               const Point& poca, const Vector& voca, const unsigned short flags[2])
     :AcdTkrLocalCoords(volumePlane,arcLengthToPlane,cosTheta,
                        global,localPosition,active2d,
                        localCovProj,localCovProp),
@@ -33,6 +33,8 @@ namespace Event {
      m_vetoSigmaProp(vetoSigmaProp){
     m_mips[0] = mips[0];
     m_mips[1] = mips[1];
+    m_flags[0] = flags[0];
+    m_flags[1] = flags[1];
   }
   
   AcdTkrHitPoca::AcdTkrHitPoca( const idents::AcdId& acdId, int trackIndex, 
@@ -46,6 +48,8 @@ namespace Event {
      m_vetoSigmaProp(-1.){
     m_mips[0] = -1.;
     m_mips[1] = -1.;
+    m_flags[0] = 0;
+    m_flags[1] = 0;
   }
 
 
@@ -56,7 +60,7 @@ namespace Event {
     :AcdTkrLocalCoords(other),AcdPocaData(other)
   {
     set(other.getId(),other.trackIndex(),other.m_mips,
-        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp(),other.m_flags);
   }
 
   /// Assignment operator
@@ -64,7 +68,7 @@ namespace Event {
   {
     if ( this == &other ) return *this;
     set(other.getId(),other.trackIndex(),other.m_mips,
-        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+        other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp(),other.m_flags);
     AcdTkrLocalCoords::copy(other);
     AcdPocaData::setPocaData(other);
     return *this;
@@ -101,7 +105,8 @@ namespace Event {
   /// set all the values
   void AcdTkrHitPoca::set(const idents::AcdId& acdId, int trackIndex,
                           const float mips[2], 
-                          float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp)
+                          float vetoSigmaHit, float vetoSigmaProj, float vetoSigmaProp,
+                          const unsigned short flags[2])
   {
     m_id = acdId;
     m_trackIndex = trackIndex;
@@ -110,6 +115,8 @@ namespace Event {
     m_vetoSigmaHit = vetoSigmaHit;
     m_vetoSigmaProj = vetoSigmaProj;
     m_vetoSigmaProp = vetoSigmaProp;
+    m_flags[0] = flags[0];
+    m_flags[1] = flags[1];
   }  
   
 
@@ -133,6 +140,8 @@ namespace Event {
     m_vetoSigmaHit = 0.;
     m_vetoSigmaProj = 0.;
     m_vetoSigmaProp = 0.;
+    m_flags[0] = 0;
+    m_flags[1] = 0;
     AcdTkrLocalCoords::ini();
     AcdPocaData::ini();
   }

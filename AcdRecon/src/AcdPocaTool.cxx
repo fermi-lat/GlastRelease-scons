@@ -169,11 +169,14 @@ StatusCode AcdPocaTool::makePoca(const AcdRecon::TrackData& aTrack,
   const idents::AcdId& acdId = pocaData.m_id;
 
   float active[2], local[2], mips[2]; 
+  unsigned short flags[2];
   float distance(0.), arcLength(0.), arcLengthPlane(0.);
   active[0] = pocaData.m_activeX;
   active[1] = pocaData.m_activeY;
   mips[0] = 0.;
   mips[1] = 0.;
+  flags[0] = 0;
+  flags[1] = 0;
   if ( acdId.tile() ) {
     // for tile local data is just active distances in X and Y, 
     // doca is active2D if in plane, otherwise active3D    
@@ -222,7 +225,7 @@ StatusCode AcdPocaTool::makePoca(const AcdRecon::TrackData& aTrack,
 				  pocaData.m_planeError_proj,pocaData.m_planeError_prop,
 				  pocaData.m_volume,pocaData.m_region,arcLength,
 				  distance,pocaData.m_active3DErr_proj,pocaData.m_active3DErr_prop,
-				  pocaPoint,pocaVector);
+				  pocaPoint,pocaVector,flags);
   return StatusCode::SUCCESS;
 
 }

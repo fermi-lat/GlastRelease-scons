@@ -21,7 +21,7 @@ TriggerTest.Members = {"TriggerAlg", "Count/trigger", "TriRowBitsAlg" };
 Digitization.Members = {
     "DoMergeAlg", 
     "TkrDigiAlg",
-    "TkrFillTDInfoAlg",
+    //"TkrFillTDInfoAlg",  // now called in TkrDigi
     "AcdOverlayMergeAlg",
     "AcdDigiAlg",
     "CalOverlayMergeAlg",
@@ -29,7 +29,7 @@ Digitization.Members = {
     "GemOverlayMergeAlg",
     "DiagDataOverlayMergeAlg",
     "TkrOverlayMergeAlg",
-    "TkrDigiMergeTruncationAlg"
+    "TkrDigiMergeTruncationAlg/SecondTruncation" // already called in TkrDigi, but can't hurt to do it again (??)
     };
 
 Digitization.BranchMembers = {

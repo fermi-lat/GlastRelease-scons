@@ -1,21 +1,21 @@
 // File and Version information:
 // $Header$
 //
-//  Implementation file of AcdCalAssoc and AcdCalAssocCol classes
+//  Implementation file of AcdAssoc,AcdAssocCol, and AcdCalAssocCol classes
 //  
 // Authors:
 //
+//    Eric Charles
 //    Alex Drlica-Wagner
 //
-//
 
-#include "Event/Recon/AcdRecon/AcdCalAssoc.h"
+#include "Event/Recon/AcdRecon/AcdAssoc.h"
 
 #include "GaudiKernel/MsgStream.h"
 
 using namespace Event;
 
-AcdCalAssoc::AcdCalAssoc()
+AcdAssoc::AcdAssoc()
   :m_index(-1),
    m_upward(true),
    m_energy(0.),
@@ -29,7 +29,7 @@ AcdCalAssoc::AcdCalAssoc()
 }
 
 /// Copy constructor
-AcdCalAssoc::AcdCalAssoc(const AcdCalAssoc& other)
+AcdAssoc::AcdAssoc(const AcdAssoc& other)
   :m_index(other.m_index),
    m_upward(other.m_upward),
    m_energy(other.m_energy),
@@ -44,7 +44,7 @@ AcdCalAssoc::AcdCalAssoc(const AcdCalAssoc& other)
 
 
 /// Constructor for use in reconstruction, 
-AcdCalAssoc::AcdCalAssoc(int index, bool up, float energy, 
+AcdAssoc::AcdAssoc(int index, bool up, float energy, 
                          const HepPoint3D& start, const HepVector3D& dir, float arcLength,
                          const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
                          int tkrSSDVeto, float cornerDoca)
@@ -61,7 +61,7 @@ AcdCalAssoc::AcdCalAssoc(int index, bool up, float energy,
 }
 
 
-void AcdCalAssoc::set(int index, bool up, float energy, 
+void AcdAssoc::set(int index, bool up, float energy, 
                       const HepPoint3D& start, const HepVector3D& dir, float arcLength,
                       const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
                       int tkrSSDVeto, float cornerDoca){
@@ -78,7 +78,7 @@ void AcdCalAssoc::set(int index, bool up, float energy,
   m_cornerDoca = cornerDoca;
 }
 
-void AcdCalAssoc::writeOut(MsgStream& stream) const
+void AcdAssoc::writeOut(MsgStream& stream) const
 // Purpose: provide ascii output of some data members for
 //          debugging purposes
 // Input:
@@ -86,7 +86,7 @@ void AcdCalAssoc::writeOut(MsgStream& stream) const
 {
 
   stream << MSG::DEBUG
-         << "AcdCalAssoc " << m_index << ' ' << (m_upward ? "up" : "down") << " E=" << m_energy << ' ' 
+         << "AcdAssoc " << m_index << ' ' << (m_upward ? "up" : "down") << " E=" << m_energy << ' ' 
          << m_start << ' ' << m_dir << ' ' << " s= " << m_arcLength << " SSDVeto = " << m_tkrSSDVeto 
          << " CornerDoca = " << m_cornerDoca
          << std::endl
@@ -97,7 +97,7 @@ void AcdCalAssoc::writeOut(MsgStream& stream) const
 
 
 
-void AcdCalAssoc::ini()
+void AcdAssoc::ini()
 // Purpose: reset all data members to 0
 //
 { 
@@ -115,26 +115,26 @@ void AcdCalAssoc::ini()
   m_gapPocae.clear();
 }
  
-AcdCalAssocCol::AcdCalAssocCol(const std::vector<AcdCalAssoc*>& acdCalAssocs) {
-//Purpose: take ownership of CalAssocs from a vector
-  for ( std::vector<AcdCalAssoc*>::const_iterator itr = acdCalAssocs.begin();
-        itr != acdCalAssocs.end(); itr++ ) {
-    AcdCalAssoc* CalAssoc = const_cast<AcdCalAssoc*>(*itr);
-    add(CalAssoc);
+AcdAssocCol::AcdAssocCol(const std::vector<AcdAssoc*>& acdAssocs) {
+//Purpose: take ownership of AcdAssocs from a vector
+  for ( std::vector<AcdAssoc*>::const_iterator itr = acdAssocs.begin();
+        itr != acdAssocs.end(); itr++ ) {
+    AcdAssoc* acdAssoc = const_cast<AcdAssoc*>(*itr);
+    add(acdAssoc);
   }
 }
 
-void AcdCalAssocCol::delCalAssocs()
-//Purpose: delete all AcdCalAssoc object from memory
+void AcdAssocCol::delAssocs()
+//Purpose: delete all AcdAssoc object from memory
 {
-  int nCalAssoc = num();
-  for (int iCalAssoc = 0; iCalAssoc < nCalAssoc; iCalAssoc++) {
-    delete operator[](iCalAssoc);
+  int nAssoc = num();
+  for (int iAssoc = 0; iAssoc < nAssoc; iAssoc++) {
+    delete operator[](iAssoc);
   }
   clear();
 }
 
-void AcdCalAssocCol::ini()
+void AcdAssocCol::ini()
 //Purpose:  delete all pointers to clusters
 // from collection 
 {
@@ -142,17 +142,19 @@ void AcdCalAssocCol::ini()
 }
 
 
-void AcdCalAssocCol::writeOut(MsgStream& stream) const
+void AcdAssocCol::writeOut(MsgStream& stream) const
 // Purpose: provide symbolic output of some data members
 //          of all clusters in collection for debugging purposes
 //
 // Input:
 //        stream - Gaudi message stream
 {
+    
   // loop over all clusters
   for (unsigned int i = 0; i < size();i++) {
     
     // call the writeOut() method for each cluster
     (operator[](i))->writeOut(stream);
   }
+  
 }

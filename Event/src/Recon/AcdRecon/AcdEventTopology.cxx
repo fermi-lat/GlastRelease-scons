@@ -18,9 +18,16 @@ using namespace Event;
 AcdEventTopology::AcdEventTopology()
   :m_tileCount(0),
    m_ribbonCount(0),
+   m_vetoCount(0),
    m_tileVeto(0),
+   m_totalTileEnergy(0.),
+   m_totalRibbonEnergy(0.),
    m_tileEnergy(0.),
    m_ribbonEnergy(0.),
+   m_ghostTileEnergy(0.),
+   m_ghostRibbonEnergy(0.),
+   m_triggerTileEnergy(0.),
+   m_triggerRibbonEnergy(0.),
    m_nTilesTop(0),
    m_nVetoTop(0),
    m_tileEnergyTop(0),
@@ -40,9 +47,16 @@ AcdEventTopology::AcdEventTopology()
 AcdEventTopology::AcdEventTopology(const AcdEventTopology& other)
   :m_tileCount(other.m_tileCount),
    m_ribbonCount(other.m_ribbonCount),
+   m_vetoCount(other.m_vetoCount),
    m_tileVeto(other.m_tileVeto),
+   m_totalTileEnergy(other.m_totalTileEnergy),
+   m_totalRibbonEnergy(other.m_totalRibbonEnergy),
    m_tileEnergy(other.m_tileEnergy),
-   m_ribbonEnergy(other.m_ribbonEnergy),   
+   m_ribbonEnergy(other.m_ribbonEnergy),
+   m_ghostTileEnergy(other.m_ghostTileEnergy),
+   m_ghostRibbonEnergy(other.m_ghostRibbonEnergy),
+   m_triggerTileEnergy(other.m_triggerTileEnergy),
+   m_triggerRibbonEnergy(other.m_triggerRibbonEnergy),
    m_nTilesTop(other.m_nTilesTop),
    m_nVetoTop(other.m_nVetoTop),
    m_tileEnergyTop(other.m_tileEnergyTop),
@@ -58,19 +72,26 @@ AcdEventTopology::AcdEventTopology(const AcdEventTopology& other)
   }  
 }
 
-
 /// Constructor for use in reconstruction, 
-AcdEventTopology::AcdEventTopology(unsigned tileCount, unsigned ribbonCount, unsigned tileVeto,
-                                   float tileEnergy, float ribbonEnergy,
-                                   unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],
-                                   unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],
-                                   float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],
-                                   unsigned nSidesHit, unsigned nSidesVeto) 
+AcdEventTopology::AcdEventTopology(unsigned tileCount, unsigned ribbonCount, unsigned vetoCount, unsigned tileVeto,                      
+                                   float totalTileEnergy, float totalRibbonEnergy, float tileEnergy, float ribbonEnergy,                 
+                                   float ghostTileEnergy, float ghostRibbonEnergy, float triggerTileEnergy, float triggerRibbonEnergy,   
+                                   unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],                            
+                                   unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],                               
+                                   float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],                        
+                                   unsigned nSidesHit, unsigned nSidesVeto)
   :m_tileCount(tileCount),
    m_ribbonCount(ribbonCount),
+   m_vetoCount(vetoCount),
    m_tileVeto(tileVeto),
+   m_totalTileEnergy(totalTileEnergy),
+   m_totalRibbonEnergy(totalRibbonEnergy),
    m_tileEnergy(tileEnergy),
    m_ribbonEnergy(ribbonEnergy),
+   m_ghostTileEnergy(ghostTileEnergy),
+   m_ghostRibbonEnergy(ghostRibbonEnergy),
+   m_triggerTileEnergy(triggerTileEnergy),
+   m_triggerRibbonEnergy(triggerRibbonEnergy),
    m_nTilesTop(nTilesTop),
    m_nVetoTop(nVetoTop),
    m_tileEnergyTop(tileEnergyTop),
@@ -86,13 +107,21 @@ AcdEventTopology::AcdEventTopology(unsigned tileCount, unsigned ribbonCount, uns
   }
 }
 
+
 const AcdEventTopology& AcdEventTopology::operator=(const AcdEventTopology& other) {
   if ( this == &other ) { return *this; }
   m_tileCount = other.m_tileCount;
   m_ribbonCount = other.m_ribbonCount;
+  m_vetoCount = other.m_vetoCount;
   m_tileVeto = other.m_tileVeto;
+  m_totalTileEnergy = other.m_totalTileEnergy;
+  m_totalRibbonEnergy = other.m_totalRibbonEnergy;
   m_tileEnergy = other.m_tileEnergy;
   m_ribbonEnergy = other.m_ribbonEnergy;
+  m_ghostTileEnergy = other.m_ghostTileEnergy;
+  m_ghostRibbonEnergy = other.m_ghostRibbonEnergy;
+  m_triggerTileEnergy = other.m_triggerTileEnergy;
+  m_triggerRibbonEnergy = other.m_triggerRibbonEnergy;
   m_nTilesTop = other.m_nTilesTop;
   m_tileEnergyTop = other.m_tileEnergyTop;
   m_nSidesHit = other.m_nSidesHit;
@@ -108,17 +137,25 @@ const AcdEventTopology& AcdEventTopology::operator=(const AcdEventTopology& othe
   return *this;
 }
 
-void AcdEventTopology::set(unsigned tileCount, unsigned ribbonCount, unsigned tileVeto,
-                           float tileEnergy, float ribbonEnergy,
-                           unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],
-                           unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],
-                           float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],
+void AcdEventTopology::set(unsigned tileCount, unsigned ribbonCount, unsigned vetoCount, unsigned tileVeto,                   
+                           float totalTileEnergy, float totalRibbonEnergy, float tileEnergy, float ribbonEnergy,              
+                           float ghostTileEnergy, float ghostRibbonEnergy, float triggerTileEnergy, float triggerRibbonEnergy,
+                           unsigned nTilesTop, unsigned nTilesSideRow[4], unsigned nTilesSideFace[4],                         
+                           unsigned nVetoTop, unsigned nVetoSideRow[4], unsigned nVetoSideFace[4],                            
+                           float tileEnergyTop, float tileEnergySideRow[4], float tileEnergySideFace[4],                     
                            unsigned nSidesHit, unsigned nSidesVeto) {
   m_tileCount = tileCount;
   m_ribbonCount = ribbonCount;
+  m_vetoCount = vetoCount;
   m_tileVeto = tileVeto;
+  m_totalTileEnergy = totalTileEnergy;
+  m_totalRibbonEnergy = totalRibbonEnergy;
   m_tileEnergy = tileEnergy;
   m_ribbonEnergy = ribbonEnergy;
+  m_ghostTileEnergy = ghostTileEnergy;
+  m_ghostRibbonEnergy = ghostRibbonEnergy;
+  m_triggerTileEnergy = triggerTileEnergy;
+  m_triggerRibbonEnergy = triggerRibbonEnergy;
   m_nTilesTop = nTilesTop;
   m_nVetoTop = nVetoTop;
   m_tileEnergyTop = tileEnergyTop;
@@ -143,7 +180,7 @@ void AcdEventTopology::writeOut(MsgStream& stream) const
 
   stream << MSG::DEBUG
          << "AcdEventTopology. Tiles: " << m_tileCount << ", Ribbons: " << m_ribbonCount << " ,Vetos: " << m_tileVeto << std::endl
-         << ", E_tile: " << m_tileEnergy << ", E_rib: " << m_ribbonEnergy << std::endl
+         << ", E_tile: " << m_totalTileEnergy << ", E_rib: " << m_totalRibbonEnergy << std::endl
          << "NTtile.  Top: " << m_nTilesTop 
          << ", SideRows: " << m_nTilesSideRow[0] << ' ' << m_nTilesSideRow[1] << ' ' << m_nTilesSideRow[2] << ' ' << m_nTilesSideRow[3]
          << ", Faces: " << m_nTilesSideFace[0] << ' ' << m_nTilesSideFace[1] << ' ' << m_nTilesSideFace[2] << ' ' << m_nTilesSideFace[3] << std::endl
@@ -167,9 +204,16 @@ void AcdEventTopology::ini()
 { 
   m_tileCount = 0;
   m_ribbonCount = 0;
+  m_vetoCount = 0;
   m_tileVeto = 0;
+  m_totalTileEnergy = 0.;
+  m_totalRibbonEnergy = 0.;
   m_tileEnergy = 0.;
   m_ribbonEnergy = 0.;
+  m_ghostTileEnergy = 0.;
+  m_ghostRibbonEnergy = 0.;
+  m_triggerTileEnergy = 0.;
+  m_triggerRibbonEnergy = 0.;
   m_nVetoTop = 0;
   m_nTilesTop = 0;
   m_tileEnergyTop = 0;

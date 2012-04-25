@@ -19,6 +19,7 @@ DECLARE_FACTORY_ENTRIES(TkrDigi)
   DECLARE_ALGORITHM(TkrDigiHitToDigiAlg);
   DECLARE_ALGORITHM(TkrDigiChargeAlg);
   DECLARE_ALGORITHM(TkrDigiMergeTruncationAlg);
+  DECLARE_ALGORITHM(TkrDigiTruncationAlg);
 
   DECLARE_TOOL     (BariMcToHitTool);
   DECLARE_TOOL     (SimpleMcToHitTool);

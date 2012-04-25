@@ -184,6 +184,8 @@ StatusCode TkrFindAlg::initialize()
         return sc;
     }
 
+    log << MSG::DEBUG << "Tool of type " << m_TrackFindType << " successfully initialized" << endreq;
+
     // Moved to TkrClusterAlg
     //sc = toolSvc()->retrieveTool("TkrHitTruncationTool", m_truncTool);
     //if (sc.isFailure()) {

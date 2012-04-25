@@ -603,8 +603,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 
 	HepVector3D propVect = upwardExtend.m_current - upwardExtend.m_point;
 	
- 	Event::AcdTkrAssoc* upAssoc = 
-	  new Event::AcdTkrAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
+ 	Event::AcdAssoc* upAssoc = 
+	  new Event::AcdAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
 				 upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
 				 upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
 				 ssdVetoUp,cornerDocaUp);
@@ -617,8 +617,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 	tkrAssocs.push_back(upAssoc);
 
 	propVect = downwardExtend.m_current - downwardExtend.m_point;
- 	Event::AcdTkrAssoc* downAssoc = 
-	  new Event::AcdTkrAssoc(downwardExtend.m_index,false,downwardExtend.m_energy,
+ 	Event::AcdAssoc* downAssoc = 
+	  new Event::AcdAssoc(downwardExtend.m_index,false,downwardExtend.m_energy,
 				 downwardExtend.m_point,downwardExtend.m_dir,propVect.mag(),
 				 downwardExtend.m_cov_orig,downwardExtend.m_cov_prop,
 				 ssdVetoDown,cornerDocaDown);
@@ -771,8 +771,8 @@ StatusCode AcdReconAlgV2::vertexDistances(const Event::AcdHitCol& acdHits,
       return sc;
     }
     HepVector3D propVect = upwardExtend.m_current - upwardExtend.m_point;    
-    Event::AcdTkrAssoc* upAssoc = 
-      new Event::AcdTkrAssoc(-1,true,upwardExtend.m_energy,
+    Event::AcdAssoc* upAssoc = 
+      new Event::AcdAssoc(-1,true,upwardExtend.m_energy,
 			     upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
 			     upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
 			     ssdVetoUp,cornerDocaUp);
@@ -784,8 +784,8 @@ StatusCode AcdReconAlgV2::vertexDistances(const Event::AcdHitCol& acdHits,
     tkrAssocs.push_back(upAssoc);
 
     propVect = upwardExtend.m_current - upwardExtend.m_point;        
-    Event::AcdTkrAssoc* downAssoc = 
-      new Event::AcdTkrAssoc(-1,false,downwardExtend.m_energy,
+    Event::AcdAssoc* downAssoc = 
+      new Event::AcdAssoc(-1,false,downwardExtend.m_energy,
 			     downwardExtend.m_point,downwardExtend.m_dir,propVect.mag(),
 			     downwardExtend.m_cov_orig,downwardExtend.m_cov_prop,
 			     ssdVetoDown,cornerDocaDown);
@@ -879,8 +879,8 @@ StatusCode AcdReconAlgV2::mcDistances(const Event::AcdHitCol& acdHits,
     }
 
     HepVector3D propVect = extend.m_current - extend.m_point;    
-    Event::AcdTkrAssoc* assoc = 
-      new Event::AcdTkrAssoc(-2,true,extend.m_energy,
+    Event::AcdAssoc* assoc = 
+      new Event::AcdAssoc(-2,true,extend.m_energy,
 			     extend.m_point,extend.m_dir,propVect.mag(),
 			     extend.m_cov_orig,extend.m_cov_prop,
 			     ssdVeto,cornerDoca);
@@ -1166,8 +1166,8 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
 
  	HepVector3D propVect = upwardExtend.m_current - upwardExtend.m_point;
 
-  	Event::AcdCalAssoc* upAssoc = 
- 	  new Event::AcdCalAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
+  	Event::AcdAssoc* upAssoc = 
+ 	  new Event::AcdAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
  				 upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
  				 upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
  				 ssdVetoUp,cornerDocaUp);
@@ -1404,7 +1404,7 @@ StatusCode AcdReconAlgV2::calcCornerDoca(const AcdRecon::TrackData& track,
 
 
 /// Fill an AcdTkrAssoc with data
-StatusCode AcdReconAlgV2::fillTkrAssoc(Event::AcdTkrAssoc& assoc,
+StatusCode AcdReconAlgV2::fillTkrAssoc(Event::AcdAssoc& assoc,
 				     const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
 				     const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
 				     Event::AcdTkrPoint* point) {
@@ -1426,7 +1426,7 @@ StatusCode AcdReconAlgV2::fillTkrAssoc(Event::AcdTkrAssoc& assoc,
 }
 
 /// Fill an AcdCalAssoc with data
-StatusCode AcdReconAlgV2::fillCalAssoc(Event::AcdCalAssoc& assoc,
+StatusCode AcdReconAlgV2::fillCalAssoc(Event::AcdAssoc& assoc,
 				     const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
 				     const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
 				     Event::AcdTkrPoint* point) {
@@ -1452,8 +1452,11 @@ StatusCode AcdReconAlgV2::fillCalAssoc(Event::AcdCalAssoc& assoc,
 StatusCode AcdReconAlgV2::fillAcdEventTopology(const Event::AcdHitCol& acdHits,
 					     Event::AcdEventTopology& evtTopo) {
   
-  unsigned tileCount(0),ribbonCount(0),tileVeto(0);
+  unsigned tileCount(0),ribbonCount(0),vetoCount(0),tileVeto(0);
+  float totalTileEnergy(0),totalRibbonEnergy(0);  
   float tileEnergy(0),ribbonEnergy(0);  
+  float ghostTileEnergy(0),ghostRibbonEnergy(0);  
+  float triggerTileEnergy(0),triggerRibbonEnergy(0);  
   unsigned nTilesTop(0);  
   unsigned nTilesSideRow[4] = {0,0,0,0};  
   unsigned nTilesSideFace[4] = {0,0,0,0};  
@@ -1471,10 +1474,13 @@ StatusCode AcdReconAlgV2::fillAcdEventTopology(const Event::AcdHitCol& acdHits,
   for ( Event::AcdHitCol::const_iterator itr = acdHits.begin(); itr != acdHits.end(); itr++ ) {
     Event::AcdHit* theHit = *itr;
     const idents::AcdId& id = theHit->getAcdId();
+    bool hasGhost   = theHit->getGhost();
+    bool hasTrigger = theHit->getTriggerVeto();
+    if ( hasTrigger)   vetoCount++;
     if ( id.tile() ) {
       tileCount++;
       sidesHit.insert( id.face() );
-      if ( theHit->getHitMapBit( Event::AcdHit::A ) || theHit->getHitMapBit( Event::AcdHit::B ) ) {
+      if ( hasTrigger ) {
 	sidesVeto.insert( id.face() );
 	tileVeto++;
 	switch ( id.face() ) {
@@ -1486,20 +1492,11 @@ StatusCode AcdReconAlgV2::fillAcdEventTopology(const Event::AcdHitCol& acdHits,
 	  nVetoSideRow[id.row()]++;
 	}
       }
-      float MeVperMip(1.8);
-      switch ( id.id() ) {
-      case 20:
-      case 21:
-      case 22:
-      case 23:
-      case 24:
-	MeVperMip *= 1.2;
-	break;
-      }
-      float energy = theHit->mips( Event::AcdHit::A ) + theHit->mips( Event::AcdHit::B );
-      energy *= MeVperMip;
-      energy /= 2.;
-      tileEnergy += energy;
+      float energy = theHit->tileEnergy();
+      totalTileEnergy += energy;
+      tileEnergy += energy*!hasGhost;
+      ghostTileEnergy += energy*hasGhost;
+      triggerTileEnergy += energy*hasTrigger;
       switch ( id.face() ) {
       case 0:
 	nTilesTop++;
@@ -1514,21 +1511,23 @@ StatusCode AcdReconAlgV2::fillAcdEventTopology(const Event::AcdHitCol& acdHits,
 	nTilesSideRow[id.row()]++;
 	tileEnergySideRow[id.row()] += energy;
 	break;
-      }      
+      }	     
     } else if ( id.ribbon() ) {
       ribbonCount++;
-      float MeVperMip(0.5);
-      float energy = theHit->mips( Event::AcdHit::A ) + theHit->mips( Event::AcdHit::B );
-      energy *= MeVperMip;
+      float energy = theHit->ribbonEnergy( Event::AcdHit::A ) + theHit->ribbonEnergy( Event::AcdHit::B );
       energy /= 2.;
-      ribbonEnergy += energy;
+      totalRibbonEnergy += energy;
+      ribbonEnergy += energy*!hasGhost;
+      ghostRibbonEnergy += energy*hasGhost;
+      triggerRibbonEnergy += energy*hasTrigger;
     }
   }
 
   nSidesHit = sidesHit.size();
   nSidesVeto = sidesVeto.size();
-  evtTopo.set( tileCount,  ribbonCount,  tileVeto,
-	       tileEnergy,  ribbonEnergy,
+  evtTopo.set( tileCount,  ribbonCount,  vetoCount, tileVeto,
+	       totalTileEnergy, totalRibbonEnergy, tileEnergy, ribbonEnergy,
+               ghostTileEnergy, ghostRibbonEnergy, triggerTileEnergy, triggerRibbonEnergy,
 	       nTilesTop,  nTilesSideRow,  nTilesSideFace,
 	       nVetoTop,  nVetoSideRow,  nVetoSideFace,
 	       tileEnergyTop,  tileEnergySideRow,  tileEnergySideFace,

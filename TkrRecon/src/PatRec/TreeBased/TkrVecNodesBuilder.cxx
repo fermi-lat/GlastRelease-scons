@@ -5,11 +5,7 @@
  *
  * @authors Tracy Usher
  *
-<<<<<<< TkrVecNodesBuilder.cxx
  * $Header$
-=======
- * $Header$
->>>>>>> 1.10
  *
 */
 

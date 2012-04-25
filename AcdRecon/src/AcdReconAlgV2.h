@@ -12,8 +12,7 @@
 #include "Event/Recon/AcdRecon/AcdTkrHitPoca.h"
 #include "Event/Recon/AcdRecon/AcdTkrGapPoca.h"
 #include "Event/Recon/AcdRecon/AcdHit.h"
-#include "Event/Recon/AcdRecon/AcdTkrAssoc.h"
-#include "Event/Recon/AcdRecon/AcdCalAssoc.h"
+#include "Event/Recon/AcdRecon/AcdAssoc.h"
 
 #include "GaudiKernel/ObjectVector.h"
 
@@ -236,13 +235,13 @@ class AcdReconAlgV2 : public Algorithm
 			   std::vector<Event::AcdTkrGapPoca*>& gapPocae );
 
       /// Fill an AcdTkrAssoc with data
-      StatusCode fillTkrAssoc(Event::AcdTkrAssoc& assoc,
+      StatusCode fillTkrAssoc(Event::AcdAssoc& assoc,
 			      const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
 			      const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
 			      Event::AcdTkrPoint* point);
 
       /// Fill an AcdCalAssoc with data
-      StatusCode fillCalAssoc(Event::AcdCalAssoc& assoc,
+      StatusCode fillCalAssoc(Event::AcdAssoc& assoc,
 			      const std::vector<Event::AcdTkrHitPoca*>& hitPocae,
 			      const std::vector<Event::AcdTkrGapPoca*>& gapPocae,
 			      Event::AcdTkrPoint* point);

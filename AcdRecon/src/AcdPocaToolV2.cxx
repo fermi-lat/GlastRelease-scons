@@ -159,8 +159,11 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
   float local[2]; 
   float active2d[2];
   float mips[2];
+  unsigned short flags[2];
   mips[0] =  theHit ? theHit->mips( Event::AcdHit::A) : 0.;
   mips[1] =  theHit ? theHit->mips( Event::AcdHit::B) : 0.;
+  flags[0] =  theHit ? theHit->getFlags( Event::AcdHit::A) : 0;
+  flags[1] =  theHit ? theHit->getFlags( Event::AcdHit::B) : 0;
 
   local[0] = pocaData.m_inPlane.x();
   active2d[0] = pocaData.m_activeX;
@@ -219,13 +222,18 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
   
   if ( hasHit ) {
     float totalMips = mips[0] + mips[1];
-    // Note that vetoSigmaHit
+    // Note that vetoSigmaHit takes the difference between expected
+    // and measured MIP signal and divides by the fit width of the
+    // MIP peak at normal incidence (~0.45 for tiles; 1.0 for ribbons).
+    // Path length corrections are made.
     if ( acdId.tile() ) {
       float expectedMips = 2. / pocaData.m_cosTheta;
-      vetoSigmaHit = ( expectedMips - totalMips ) / 0.45;  
+      float sigmaMips = 0.45 / sqrt(pocaData.m_cosTheta);
+      vetoSigmaHit = ( expectedMips - totalMips ) / sigmaMips;  
     } else {
       float expectedMips = 1.5;
-      vetoSigmaHit = ( expectedMips - totalMips ) / 1.;
+      float sigmaMips = 1.;
+      vetoSigmaHit = ( expectedMips - totalMips ) / sigmaMips;
     }
   }
 
@@ -248,7 +256,7 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
 				  pocaData.m_planeError_proj,pocaData.m_planeError_prop,
 				  pocaData.m_volume,pocaData.m_region,arcLengthPoca,
 				  distance,activeDist3DErrProj,activeDist3DErrProp,
-				  p,voca);
+				  p,voca,flags);
 
   return StatusCode::SUCCESS;
 

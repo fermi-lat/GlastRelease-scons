@@ -191,29 +191,20 @@ StatusCode TkrClusterAlg::execute()
         }
     }
     
+    // Create the TkrClusterCol TDS object
+    m_TkrClusterCol = new TkrClusterCol();
+    // Register the object in the TDS
+    sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrClusterCol,
+        m_TkrClusterCol);
+
     // Recover a pointer to the raw digi objects
     m_TkrDigiCol = SmartDataPtr<TkrDigiCol>(eventSvc(),
         EventModel::Digi::TkrDigiCol);
     if(!m_TkrDigiCol) return StatusCode::SUCCESS;
     Event::TkrDigiCol::const_iterator ppDigi;
-    // Create the TkrClusterCol TDS object, whether or not there are any digi hits
-    m_TkrClusterCol = new TkrClusterCol();
-    // Register the object in the TDS
-    sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrClusterCol,
-        m_TkrClusterCol);
     unsigned nDigisOrig = m_TkrDigiCol->size();
     if(nDigisOrig==0) return sc;
-    if(m_useDiagInfo) {
-        m_truncTool->addEmptyDigis();
-    }
-    // Do the trucation analysis
-    sc = m_truncTool->analyzeDigis();
-    // remove empty digis
-    //std::cout << "orig " << nDigisOrig << ", current " << m_TkrDigiCol->size()<< std::endl;
-    if(nDigisOrig<m_TkrDigiCol->size()) {
-        m_truncTool->removeEmptyDigis();
-        //std::cout << "after deletion " << m_TkrDigiCol->size() << std::endl;
-    }
+
     
     // Create the TkrIdClusterMMapCol TDS object
     m_TkrIdClusterMap = new TkrIdClusterMap();

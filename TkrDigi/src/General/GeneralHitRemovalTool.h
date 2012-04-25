@@ -36,10 +36,16 @@ public:
     /// truncates the digis after merging
     StatusCode truncateDigis();
 
+    void doTrimDigis(bool trim) { m_trimDigis = trim; }
+    bool getTrimDigisFlag() { return m_trimDigis; }
+    void setTrimCount( int trimCount) { m_trimCount = trimCount; }
+
 private:
 
-    // does the FailureMode, BadStrips, and RC buffers
-    int doBadHitsLoop(SiPlaneMapContainer::SiPlaneMap& siPlaneMap);
+    // does the FailureMode and BadStrips
+    int killBadHitsLoop(SiPlaneMapContainer::SiPlaneMap& siPlaneMap);
+    // does the RC buffers
+    int doRCBufferLoop(SiPlaneMapContainer::SiPlaneMap& siPlaneMap);
     // does the cable buffer
     int doCableBufferLoop(SiPlaneMapContainer::SiPlaneMap& siPlaneMap,
         bool& towersOutofOrder, bool& planesOutofOrder);
@@ -64,6 +70,10 @@ private:
     bool m_doFailed;
     bool m_doBad;
     bool m_doTrunc;
+
+    bool m_trimDigis;
+    int  m_trimCount;
+
 };
 
 #endif

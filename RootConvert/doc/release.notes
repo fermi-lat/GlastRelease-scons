@@ -4,8 +4,13 @@
  @verbatim
  * EOH *
 
+ RootConvert-01-51-00 24-Apr-2012 hmk    Merge GlastReleasev19r4p1 branch
  RootConvert-01-50-01 28-Feb-2012 kadrlica Initialize covariance matrices in AcdReconConvert.cxx
  RootConvert-01-50-00 09-Dec-2011 kadrlica Output ACD covariance matrices to recon files.
+ -- End GlastReleasev19r4p1 branch
+ RootConvert-01-49-04-gr02 19-Apr-2012 kadrlica Updated AcdEventTopology converter to hold de-ghosted and trigger energy.
+ RootConvert-01-49-04-gr01 16-Mar-2012 kadrlica add ACD flags to HitPoca
+ -- Start GlastReleasev19r4p1 branch
  RootConvert-01-49-04 05-Sep-2011 kadrlica Convert AcdCalAssocs in AcdRecon
  RootConvert-01-49-03 04-Jun-2011 kadrlica Added a member variable for storing the ghost DOCA in CalMomParams
  RootConvert-01-49-02 20-May-2011 hmk      CLHEP 2.1.0.1

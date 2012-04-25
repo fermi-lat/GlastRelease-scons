@@ -33,6 +33,9 @@ class IHitRemovalTool : virtual public IAlgTool {
      */
     virtual StatusCode execute() = 0;
     virtual StatusCode truncateDigis() = 0;
+    virtual void doTrimDigis(bool trim) = 0;
+    virtual bool getTrimDigisFlag() = 0;
+    virtual void setTrimCount( int trimCount) = 0;
 
 };
 
