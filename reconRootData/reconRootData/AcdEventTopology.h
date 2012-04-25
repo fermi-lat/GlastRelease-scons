@@ -45,11 +45,25 @@ public:
     
   inline UInt_t getRibbonCount() const { return m_ribbonCount; }
 
+  inline UInt_t getVetoCount() const { return m_vetoCount; }
+
   inline UInt_t getTileVeto() const { return m_tileVeto; }
+
+  inline Float_t getTotalTileEnergy() const { return m_totalTileEnergy; }
+
+  inline Float_t getTotalRibbonEnergy() const { return m_totalRibbonEnergy; }
 
   inline Float_t getTileEnergy() const { return m_tileEnergy; }
 
   inline Float_t getRibbonEnergy() const { return m_ribbonEnergy; }
+
+  inline Float_t getGhostTileEnergy() const { return m_ghostTileEnergy; }
+
+  inline Float_t getGhostRibbonEnergy() const { return m_ghostRibbonEnergy; }
+
+  inline Float_t getTriggerTileEnergy() const { return m_triggerTileEnergy; }
+
+  inline Float_t getTriggerRibbonEnergy() const { return m_triggerRibbonEnergy; }
 
   inline UInt_t getVetoCountTop() const { return m_nVetoTop; }
   
@@ -74,11 +88,12 @@ public:
   inline UInt_t getNSidesVeto() const { return m_nSidesVeto; }
 
   /// set all the values
-  void set(UInt_t tileCount, UInt_t ribbonCount, UInt_t tileVeto,
-           Float_t tileEnergy, Float_t ribbonEnergy,
+  void set(UInt_t tileCount, UInt_t ribbonCount, UInt_t vetoCount, UInt_t tileVeto,
+           Float_t totalTileEnergy, Float_t totalRibbonEnergy, Float_t tileEnergy, Float_t ribbonEnergy,
+           Float_t ghostTileEnergy, Float_t ghostRibbonEnergy, Float_t triggerTileEnergy, Float_t triggerRibbonEnergy,
            UInt_t nTilesTop, UInt_t nTilesSideRow[4], UInt_t nTilesSideFace[4],
            UInt_t nVetoTop, UInt_t nVetoSideRow[4], UInt_t nVetoSideFace[4],
-           Float_t tilesEnergyTop, Float_t tileEnergySideRow[4], Float_t tileEnergySideFace[4],
+           Float_t tileEnergyTop, Float_t tileEnergySideRow[4], Float_t tileEnergySideFace[4],
            UInt_t nSidesHit, UInt_t nSidesVeto);
   
   /// reset all the values to their default
@@ -96,11 +111,25 @@ private:
   
   UInt_t m_ribbonCount;
   
+  UInt_t m_vetoCount;
+
   UInt_t m_tileVeto;
   
+  Float_t m_totalTileEnergy;
+
+  Float_t m_totalRibbonEnergy;
+
   Float_t m_tileEnergy;
-  
+
   Float_t m_ribbonEnergy;
+
+  Float_t m_ghostTileEnergy;
+
+  Float_t m_ghostRibbonEnergy;
+
+  Float_t m_triggerTileEnergy;
+
+  Float_t m_triggerRibbonEnergy;
   
   UInt_t m_nTilesTop;
   

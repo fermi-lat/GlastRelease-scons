@@ -65,7 +65,7 @@ public:
     PMT_ACCEPT_BIT = 0,              // channel is above zero suppresion threshold (applied to digital data)
     PMT_VETO_BIT = 1,                // channel fired veto discriminator (applied to analog data)
     PMT_RANGE_BIT = 2,               // channel was read out in high range
-    PMT_RESERVED_BIT = 3,            // just a trick to split the errors into the higher byte
+    PMT_CNO_BIT = 3,                 // could be any channel on that GARC
     PMT_ODD_PARITY_ERROR_BIT = 4,    // PHA data transmission had parity error
     PMT_HEADER_PARITY_ERROR_BIT = 5, // header data transmission had parity error 
     PMT_DEAD_BIT = 6,                // PMT was flagged as dead by offline calibration
@@ -74,10 +74,10 @@ public:
   
   // masks used to test conditions
   typedef enum { 
-    PMT_VETO_MASK = 0x1,                // channel is above zero suppresion threshold (applied to digital data)
-    PMT_ACCEPT_MASK = 0x2,              // channel fired veto discriminator (applied to analog data)
+    PMT_ACCEPT_MASK = 0x1,              // channel is above zero suppresion threshold (applied to digital data)
+    PMT_VETO_MASK = 0x2,                // channel fired veto discriminator (applied to analog data)
     PMT_RANGE_MASK = 0x4,               // just a trick to split the errors into the higher byte
-    PMT_RESERVED_MASK = 0x8,            // just a trick to split the errors into the higher byte
+    PMT_CNO_MASK = 0x8,                 // could be any channel on that GARC
     PMT_ODD_PARITY_ERROR_MASK = 0x10,   // PHA data transmission had parity error
     PMT_HEADER_PARITY_ERROR_MASK = 0x20,// header data transmission had parity error 
     PMT_DEAD_MASK = 0x40,               // PMT was flagged as dead by offline calibration
@@ -140,6 +140,22 @@ public:
     return val;
   }
 
+  /// Return the Energy for tiles
+  inline Float_t getTileEnergy() const {
+    if ( ! m_acdId.isTile() ) return -1.;
+    static const float MeVMipTile10 = 1.9;
+    static const float MeVMipTile12 = 2.28;
+    float MeVMip = m_acdId.isTop() && m_acdId.getRow() == 2 ? MeVMipTile12 : MeVMipTile10;
+    return getMips() * MeVMip;
+  }
+
+  /// Return the Energy for either PMT on ribbons
+  inline Float_t getRibbonEnergy(PmtId id) const {
+    static const float MeVMipRibbon = 0.5;
+    if ( ! m_acdId.isRibbon() ) return -1;
+    return getMips(id) * MeVMipRibbon;            
+  }
+
   /// Return the PHA value
   inline UShort_t getPha(PmtId id) const { 
     return m_pha[id];
@@ -149,14 +165,30 @@ public:
   inline UShort_t getFlags(PmtId id) const { 
     return m_flags[id];
   }
+
+  /// Returns true if pmt flagged as ghost
+  inline Bool_t getGhost(PmtId id) const {
+    static const Float_t GhostThreshold = 0.5;
+    return (getMips(id) > GhostThreshold) && !getHitMapBit(id);
+  }
   
+  /// Returns true if hit flagged as ghost
+  inline bool getGhost( ) const {
+    return ( getGhost(A) && getGhost(B) );
+  }
+
+  /// Returns true if trigger veto bit set for either PMT
+  inline bool getTriggerVeto( ) const {
+    return ( getHitMapBit(A) || getHitMapBit(B) );
+  }
+
   /// Denotes that the PMT was above accept (AKA zero-suppresion) threshold
-  inline bool getAcceptMapBit(PmtId id) const { 
+  inline Bool_t getAcceptMapBit(PmtId id) const { 
     return (m_flags[id] & PMT_ACCEPT_MASK) != 0;
   };
   
   /// Denotes that the PMT was above hit (veto) threshold
-  inline bool getHitMapBit(PmtId id) const { 
+  inline Bool_t getHitMapBit(PmtId id) const { 
     return (m_flags[id] & PMT_VETO_MASK) != 0;
   };
   

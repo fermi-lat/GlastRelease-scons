@@ -1,5 +1,5 @@
 package reconRootData
-version v9r27p4
+version v9r28p0
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # $Id$
 
@@ -37,8 +37,7 @@ apply_pattern root_package headers="\
  ../reconRootData/AcdTkrPointV2.h\
  ../reconRootData/AcdTkrHitPocaV2.h\
  ../reconRootData/AcdTkrGapPocaV2.h\
- ../reconRootData/AcdTkrAssoc.h\
- ../reconRootData/AcdCalAssoc.h\
+ ../reconRootData/AcdAssoc.h\
  ../reconRootData/TkrCluster.h\
  ../reconRootData/TkrTrack.h\
  ../reconRootData/TkrTrackHit.h\

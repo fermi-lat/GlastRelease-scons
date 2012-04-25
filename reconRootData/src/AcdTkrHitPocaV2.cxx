@@ -15,7 +15,7 @@ AcdTkrHitPocaV2::AcdTkrHitPocaV2(const AcdTkrHitPocaV2& other)
 {
   //Clear();
   set(other.getId(),other.getTrackIndex(),other.m_mips,
-      other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+      other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp(),other.m_flags);
 }
 
 /// Assignment operator
@@ -23,7 +23,7 @@ AcdTkrHitPocaV2& AcdTkrHitPocaV2::operator=(const AcdTkrHitPocaV2& other)
 {
   if ( this == &other ) return *this;
   set(other.getId(),other.getTrackIndex(),other.m_mips,
-      other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
+      other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp(),other.m_flags);
   AcdTkrLocalCoordsV2::copy(other);
   AcdPocaDataV2::copy(other);
   return *this;
@@ -32,8 +32,9 @@ AcdTkrHitPocaV2& AcdTkrHitPocaV2::operator=(const AcdTkrHitPocaV2& other)
 
 /// set all the values
 void AcdTkrHitPocaV2::set(const AcdId& acdId, int trackIndex,
-                        const float mips[2],
-                        Float_t vetoSigmaHit, Float_t vetoSigmaProj, Float_t vetoSigmaProp)
+                          const float mips[2],
+                          Float_t vetoSigmaHit, Float_t vetoSigmaProj, Float_t vetoSigmaProp,
+                          const unsigned short flags[2])
 {
   m_id = acdId;
   m_trackIndex = trackIndex;
@@ -42,6 +43,8 @@ void AcdTkrHitPocaV2::set(const AcdId& acdId, int trackIndex,
   m_vetoSigmaHit = vetoSigmaHit;
   m_vetoSigmaProj = vetoSigmaProj;
   m_vetoSigmaProp = vetoSigmaProp;
+  m_flags[0] = flags[0];
+  m_flags[1] = flags[1];
 }  
 
 
@@ -56,6 +59,8 @@ void AcdTkrHitPocaV2::Clear(Option_t* option)
   m_vetoSigmaHit = 0.;
   m_vetoSigmaProj = 0.;
   m_vetoSigmaProp = 0.;
+  m_flags[0] = 0;
+  m_flags[1] = 0;
   AcdTkrLocalCoordsV2::clear();
   AcdPocaDataV2::clear();
 }

@@ -373,8 +373,10 @@ unsigned int TriggerInfoAlg::anticoincidence(unsigned short& cnoVector, std::vec
 
     // Look up the ACD digi collection
     SmartDataPtr<Event::AcdDigiCol> tiles(eventSvc(), EventModel::Digi::AcdDigiCol);
-    if( tiles == 0 ) log << MSG::DEBUG << "No acd digis found" << endreq;
-
+    if( tiles == 0 ) {
+        log << MSG::DEBUG << "No acd digis found" << endreq;
+        return ret;
+    }
     log << MSG::DEBUG << tiles->size() << " tiles found with hits" << endreq;
 
     for( Event::AcdDigiCol::const_iterator it = tiles->begin(); it !=tiles->end(); ++it){

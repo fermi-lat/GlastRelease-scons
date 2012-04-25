@@ -4,8 +4,13 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-09-28-00 24-Apr-2012    hmk Merge GlastReleasev19r4p1 branch
  reconRootData-09-27-04 24-Apr-2012    jrb get rid of bogus dependence of lib on facilities lib
  reconRootData-09-27-03 09-Dec-2011 kadrlica Output ACD covariance matrices to recon files.
+ -- End GlastReleasev19r4p1 branch
+ reconRootData-09-27-02-gr02 19-Apr-2012 kadrlica Updated AcdHit and fixed typo in one of the bit masks.
+ reconRootData-09-27-02-gr01 16-Mar-2012 kadrlica Acd ACD Flags to HitPoca
+ -- Start GlastReleasev19r4p1 branch
  reconRootData-09-27-02 05-Sep-2011 kadrlica Add AcdCalAssoc to the PDS
  reconRootData-09-27-01 31-Aug-2011 hmk      Patch for unit test on SCons to 
     copy data files into their proper spot

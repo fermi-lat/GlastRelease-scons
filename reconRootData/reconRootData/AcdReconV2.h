@@ -8,8 +8,7 @@
 
 #include "AcdEventTopology.h"
 #include "AcdHit.h"
-#include "AcdTkrAssoc.h"
-#include "AcdCalAssoc.h"
+#include "AcdAssoc.h"
 
 #include <iostream>
 
@@ -47,8 +46,8 @@ public:
   inline const TClonesArray& getCalAssocCol() const { return *m_acdCalAssocCol; }
   
   AcdHit* addAcdHit(const AcdHit& toAdd);
-  AcdTkrAssoc* addAcdTkrAssoc(const AcdTkrAssoc& toAdd);
-  AcdCalAssoc* addAcdCalAssoc(const AcdCalAssoc& toAdd);
+  AcdAssoc* addAcdTkrAssoc(const AcdAssoc& toAdd);
+  AcdAssoc* addAcdCalAssoc(const AcdAssoc& toAdd);
 
   void Clear(Option_t *option="");
   void Fake( Int_t ievent, Float_t randNum ) ; // for tests

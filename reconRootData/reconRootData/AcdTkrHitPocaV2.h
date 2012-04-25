@@ -57,12 +57,27 @@ public:
   inline Float_t mipsPmtB() const { 
     return m_mips[1];
   }
+
+  /// Return the flags associated with PMT A
+  inline UShort_t flagsPmtA() const { 
+    return m_flags[0];
+  }
+  
+  /// Return the flags associated with PMT B
+  inline UShort_t flagsPmtB() const { 
+    return m_flags[1];
+  }
  
   /// An estimator of the number of sigma needed for this track to be a true MIP signal
   inline Float_t vetoSigmaHit() const {
     return m_vetoSigmaHit;
   }
   
+  /// Return true if more than 0.001 MIPs
+  inline Bool_t hasHit() const {
+    return ( m_mips[0] > 0.001 || m_mips[1] > 0.001 );
+  }
+
   /// An estimator of the number of sigma needed for this track to hit this element
   inline Float_t vetoSigmaProj() const {
     return m_vetoSigmaProj;
@@ -76,7 +91,8 @@ public:
   /// set all the values
   void set(const AcdId& acdId, int trackIndex,
            const float mips[2],
-           Float_t vetoHit, Float_t vetoProj, Float_t vetoProp);
+           Float_t vetoHit, Float_t vetoProj, Float_t vetoProp,
+           const UShort_t flags[2]);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);
@@ -95,8 +111,11 @@ private:
   /// The index of the associated track
   Int_t m_trackIndex;
          
-  /// The mip values associated with the A pmt
+  /// The mip values associated with the hit
   Float_t m_mips[2];
+
+  /// The mip values associated with the A pmt
+  UShort_t m_flags[2];
 
   ///  An estimator of the number of sigma needed for this hit to be a true MIP signal
   Float_t m_vetoSigmaHit;

@@ -1,10 +1,10 @@
-#ifndef ROOT_ACDCALASSOC_H
-#define ROOT_ACDCALASSOC_H
+#ifndef ROOT_ACDASSOC_H
+#define ROOT_ACDASSOC_H
 
 #include "TObject.h"
 
 /** 
- * @class AcdCalAssoc
+ * @class AcdAssoc
  * @brief ROOT object which stores information about the Point of Closest Approach (POCA) between an 
  * extrapolated track and a hit Acd element (tile or ribbon).  
  *  
@@ -32,18 +32,18 @@
 class AcdTkrHitPocaV2;
 class AcdTkrGapPocaV2;
 
-class AcdCalAssoc : public TObject {
+class AcdAssoc : public TObject {
 
 public:
 
   /// Default constructor.  
-  AcdCalAssoc();
+  AcdAssoc();
   
   /// Copy constructor
-  AcdCalAssoc(const AcdCalAssoc& params);
+  AcdAssoc(const AcdAssoc& params);
 
   /// Assignment operator
-  AcdCalAssoc& operator=(const AcdCalAssoc& params);
+  AcdAssoc& operator=(const AcdAssoc& params);
 
   /// Return the index of the associated track
   inline Int_t getTrackIndex() const {
@@ -97,7 +97,7 @@ public:
   virtual void Print(Option_t *option) const;
   
   void Fake( Int_t ievent, UInt_t rank, Float_t randNum ) ; // for tests
-  Bool_t CompareInRange( const AcdCalAssoc&, const std::string & name = "" ) const ; // for tests   
+  Bool_t CompareInRange( const AcdAssoc&, const std::string & name = "" ) const ; // for tests   
 
 private:
   
@@ -128,7 +128,7 @@ private:
 
   AcdTkrPointV2   m_point;  
 
-  ClassDef(AcdCalAssoc,1)
+  ClassDef(AcdAssoc,1)
   
 };
 #endif
