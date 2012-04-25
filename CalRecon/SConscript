@@ -1,8 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Alexandre Chekhtman <chehtman@gamma.nrl.navy.mil>, David Chamont <chamont@poly.in2p3.fr
-# Version: CalRecon-06-16-09
-
+# Version: CalRecon-06-17-00
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -30,5 +29,10 @@ progEnv.Tool('registerTargets', package = 'CalRecon',
              libraryCxts = [[CalRecon, libEnv]],
              testAppCxts = [[test_CalRecon, progEnv]],
              includes = listFiles(['CalRecon/*.h']),
+<<<<<<< SConscript
              xml = listFiles(['xml/*.data', 'xml/*.xml', 'xml/*.txt']),
              jo = listFiles(['src/test/*.txt', 'src/test/*.root']))
+=======
+             xml = listFiles(['xml/*.data', 'xml/*.txt', 'xml/*.xml']),
+             jo = listFiles(['src/test/*.txt']))
+>>>>>>> 1.39.2.10

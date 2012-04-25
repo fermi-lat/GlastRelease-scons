@@ -369,7 +369,7 @@ const Event::CalCorToolResult* CalEnergyClassificationTool::selectBestEnergy(Eve
         }
     
         // The default value, in case nothing happens, is to return the "raw" energy
-        calResult = calEnergy->findLast("CalRawEnergyTool");
+        if (!calResult) calResult = calEnergy->findLast("CalRawEnergyTool");
     }
 
     return calResult;

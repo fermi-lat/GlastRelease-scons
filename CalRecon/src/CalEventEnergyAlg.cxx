@@ -79,7 +79,7 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
     // algorithm name "RawEnergy" assigned to it, the second (or subsequent) name
     // doesn't matter for initialization.
     // This branch if first pass
-    if (name == m_firstPassName)
+    if (name == m_firstPassName || name == "CalEventEnergyAlg")
     {
         corrToolVec.push_back("CalRawEnergyTool");
     }
@@ -195,9 +195,13 @@ StatusCode CalEventEnergyAlg::execute()
     Event::ClusterToRelationMap* clusterToRelationMap = 
         SmartDataPtr<Event::ClusterToRelationMap>(eventSvc(), EventModel::Recon::ClusterToRelationMap);
 
+    int iclu = 0;
+
     // there could be no clusters collection, if there was no hits
     if (calClusterCol && !calClusterCol->empty()) 
     {
+      int num_clusters  = calClusterCol->size();
+
         // Loop over all clusters in the list (including the uber cluster)
         for(Event::CalClusterCol::iterator clusItr = calClusterCol->begin(); clusItr != calClusterCol->end(); clusItr++)
         {
@@ -235,6 +239,7 @@ StatusCode CalEventEnergyAlg::execute()
             std::vector<ICalEnergyCorr *>::const_iterator tool ;
             for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) 
             {
+              if(iclu>0 && (((*tool)->type()).compare("CalFullProfileTool")==0 || ((*tool)->type()).compare("NewCalFullProfileTool")==0)) continue;
                 try 
                 {
                     log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
@@ -264,6 +269,8 @@ StatusCode CalEventEnergyAlg::execute()
 
             if (bestCorResult != 0) 
             {
+                /// Remove for now (TU 2/14/12)
+                ///calEnergy->setBestCorName(bestCorResult->getCorrectionName());
                 calEnergy->setParams(bestCorResult->getParams()) ;
                 calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
             }    

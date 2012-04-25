@@ -78,6 +78,9 @@ public:
   double GetCrystalDistanceToTrajectory(Point p0, Vector v0, Point p1, Vector v1, double xtalhalflength);
   int SelectCloseCrystals(double *pptraj, double *vvtraj, double maxdistance);
   double GetChi2Dist(double *pptraj, double *vvtraj, double fiterror, double *result=NULL);
+  double GetParXYcor(double vxy);
+  double GetXYcor(double x, double p);
+  int CorrectXYPosition(double *p, double *v, double *pp);
 
   StatusCode finalize();
     
@@ -101,6 +104,8 @@ private:
   double nm_xtal_doca[16][8][12];
   int nm_layer_nsat[8];
   double nm_elayer_datsat[8];
+
+  double ParXYcor[6];
 
   double nm_eTotal;
 
@@ -350,6 +355,13 @@ StatusCode NewCalFullProfileTool::initialize()
   nm_minuit->SetFCN(fcn);
 
   nm_saturationadc = 4060;
+
+  ParXYcor[0] = 0.389137;
+  ParXYcor[1] = -0.845238;
+  ParXYcor[2] = 44.352357;
+  ParXYcor[3] = -119.121806;
+  ParXYcor[4] = -223.517007;
+  ParXYcor[5] = 791.962123;
 
   return sc;
 }
@@ -601,14 +613,33 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
 
   int TKRFIT = 0;
 
+  double mynorm;
+  double ppc[3];
+  double ppp[3];
   if(tree!=NULL)
     {
+      // switch to neutral direction (head of teh track -> cluster centroid)
       pp[0] =  tree->getAxisParams()->getEventPosition().x();
       pp[1] =  tree->getAxisParams()->getEventPosition().y();
       pp[2] =  tree->getAxisParams()->getEventPosition().z();
-      vv[0] = -tree->getAxisParams()->getEventAxis().x();
-      vv[1] = -tree->getAxisParams()->getEventAxis().y();
-      vv[2] = -tree->getAxisParams()->getEventAxis().z();
+      ppc[0] = (cluster->getPosition()).x();
+      ppc[1] = (cluster->getPosition()).y();
+      ppc[2] = (cluster->getPosition()).z();
+      vv[0] = ppc[0]-pp[0];
+      vv[1] = ppc[1]-pp[1];
+      vv[2] = ppc[2]-pp[2];
+      mynorm = sqrt(vv[0]*vv[0]+vv[1]*vv[1]+vv[2]*vv[2]);
+      for(i=0;i<3;++i) vv[i] /= mynorm;
+      //
+      // Correct position using the neutral direction
+      CorrectXYPosition(ppc,vv,ppp);
+      //
+      // Recompute the neutral direction using the corrected centroid positions
+      vv[0] = ppp[0]-pp[0];
+      vv[1] = ppp[1]-pp[1];
+      vv[2] = ppp[2]-pp[2];
+      mynorm = sqrt(vv[0]*vv[0]+vv[1]*vv[1]+vv[2]*vv[2]);
+      for(i=0;i<3;++i) vv[i] /= mynorm;
 
       SelectCloseCrystals(pp,vv,100);
 
@@ -1274,6 +1305,81 @@ double NewCalFullProfileTool::GetChi2Dist(double *pptraj, double *vvtraj, double
     }
 
   return chi2dist;
+}
+
+double NewCalFullProfileTool::GetParXYcor(double vxy)
+{
+  if(vxy>0.28) return 1.; 
+  double par = ParXYcor[0]+ParXYcor[1]*vxy+ParXYcor[2]*vxy*vxy+ParXYcor[3]*vxy*vxy*vxy+ParXYcor[4]*vxy*vxy*vxy*vxy+ParXYcor[5]*vxy*vxy*vxy*vxy*vxy; 
+  if(par>1) par = 1;
+  return par;
+}
+
+double NewCalFullProfileTool::GetXYcor(double x, double p)
+{
+  if(x==0) return 0;
+  else if(x==1) return 1;
+  double xc = x;
+  double x0 = 0;
+  double x1 = 0.5;
+  double y0 = 0;
+  double y1 = 0.5;
+  if(x>0.5)
+    {
+      x0 = 0.5;
+      x1 = 1;
+      y0 = 0.5;
+      y1 = 1;      
+    }
+  double x2,y2;
+  x2 = (x0+x1)/2.;
+  int n = 0;
+  while(n<10)
+    {
+      ++n;
+      y2 = 0.5+p*(x2-0.5)+4*(1-p)*(x2-0.5)*(x2-0.5)*(x2-0.5);
+      if(y2>x)
+        {
+          x1 = x2;
+          y1 = y2;
+        }
+      else
+        {
+          x0 = x2;
+          y0 = y2;
+        }
+      x2 = (x0+x1)/2.;
+      xc = x2;
+    }
+  return xc;
+}
+
+int NewCalFullProfileTool::CorrectXYPosition(double *p, double *v, double *pp)
+{
+  int i;
+  for(i=0;i<3;++i) pp[i] = p[i];
+
+  int itow,ilog;
+  double x,xtow,xlog,xcor,vx,par;
+
+  for(i=0;i<2;++i)
+    {
+      vx = fabs(v[i]);
+      par = GetParXYcor(vx);
+      if(par>=1) continue;
+      //
+      x = p[i];
+      if(x<-749||x>749) continue;
+      itow = (int)floor((x+749)/374.5);
+      xtow = x+749-374.5*(double)itow;
+      if(xtow<20.66||xtow>354.74) continue;
+      ilog = (int)floor((xtow+7.63)/27.84);
+      xlog = (xtow+7.63)/27.84-(double)ilog;
+      xcor = GetXYcor(xlog,par);
+      pp[i] = 27.84*xcor-7.63+27.84*(double)ilog-749+374.5*(double)itow;
+    }
+
+  return 0;
 }
 
 StatusCode NewCalFullProfileTool::finalize()

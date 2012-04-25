@@ -9,6 +9,7 @@
 #include "NewFullShowerProfileParamsManager.h"
 
 #include "TMath.h"
+#include <math.h>
 
 /**   
 * @class NewFullShowerProfileParamsManager
@@ -158,7 +159,7 @@ void NewFullShowerProfileParamsManager::Reset()
 bool NewFullShowerProfileParamsManager::Fill(double *par)
 {
   logenergy = par[2];
-  if(fabs(par[2])>307) {Reset(); return false;}
+  if(fabs(par[2])>307.) {Reset(); return false;}
 
   energy = exp(log(10.)*logenergy);
 

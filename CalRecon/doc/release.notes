@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-17-00 24-Apr-2012 hmk Merge GlastReleasev19r4p1 branch
  CalRecon-06-16-09 23-Feb-2012 patch patch
  CalRecon-06-16-08 23-Feb-2012 heather Remove CalReconAuditor from unit test for now
  CalRecon-06-16-07 23-Jan-2012    jrb 1. Johann's patches for gcc41 2. Eliminate unnecessary stuff from CalReconLib.py
@@ -17,6 +18,22 @@ package manager: David Chamont
  CalRecon-06-16-02 04-Jan-2012    jrb fixes for test program
  CalRecon-06-16-01 14-Dec-2011 hmk   Patch requirements file
  CalRecon-06-16-00 09-Dec-2011 hmk   Merge in Gaudi v21r7 mods
+ -- End GlastReleasev19r4p1 branch
+ CalRecon-06-15-02-gr10 26-Mar-2012 bruel Carmelo fix of clusters rotation
+ CalRecon-06-15-02-gr09 20-Mar-2012 bruel fix memory leak possibly
+ CalRecon-06-15-02-gr08 19-Mar-2012 bruel tagging Philippe's patch to possibly
+     avoid accessing empty vectors
+ CalRecon-06-15-02-gr07 16-Mar-2012 kadrlica 
+    NewCalFullProfile = Neutral direction with centroid position correction - 
+    CalEventEnergyAlg = profile fit runs on only the first cluster - 
+    CalClassifyAlg = Uber2 cluster
+ CalRecon-06-15-02-gr06 14-Feb-2012 TU  Fix CalEventEnergyAlg to return corrected energy, Philippe update to new profile tool
+ CalRecon-06-15-02-gr05 12-Feb-2012 HMK Fix patch
+ CalRecon-06-15-02-gr04 10-Feb-2012 HMK Patch SConscript to handle xml/*.txt
+ CalRecon-06-15-02-gr03  7-Feb-2012 TU Include Philippe's fix to reduce static memory usage
+ CalRecon-06-15-02-gr02  6-Feb-2012 TU fix windows issues with Philippe's stuff, fix cal recon test job crash
+ CalRecon-06-15-02-gr01  3-Feb-2012 TU Tag Philippe's new profile energy on the GR v19r4p1 branch
+ -- Start GlastReleasev19r4p1 branch
  CalRecon-06-15-02 24-Nov-2011 kadrlica Implemented a place holder for the cluster covariance matrix
  CalRecon-06-15-01 17-Nov-2011 TU Provide protection against crash when CalValsCorrTool does not run
  CalRecon-06-15-00 17-Nov-2011 TU New recon flow implemented, including classification analysis to return best energy

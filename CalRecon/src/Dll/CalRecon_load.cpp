@@ -25,6 +25,7 @@ DECLARE_FACTORY_ENTRIES( CalRecon )
     DECLARE_TOOL(      CalTkrLikelihoodTool       );
     DECLARE_TOOL(      CalLastLayerLikelihoodTool );
     DECLARE_TOOL(      CalLikelihoodManagerTool   );
+    DECLARE_TOOL(      NewCalFullProfileTool      );
     DECLARE_TOOL(      CalFullProfileTool         );
     DECLARE_TOOL(      CalProfileTool             );
     DECLARE_TOOL(      CalValsCorrTool            );
