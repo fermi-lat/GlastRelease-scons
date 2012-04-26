@@ -43,7 +43,7 @@ if baseEnv['obfversion'][:6] == 'B1-1-3' :
     for r in listFiles(['src/*B3-*.cxx']) :
         cxx.remove(r)
 
-OnboardFilter = libEnv.SharedLibrary('OnboardFilter', cxx  )
+OnboardFilter = libEnv.ComponentLibrary('OnboardFilter', cxx  )
 
 progEnv.Tool('OnboardFilterLib')
 test_OnboardFilter = progEnv.GaudiProgram('test_OnboardFilter', listFiles(['src/test/*.cxx']), test=1, package='OnboardFilter')

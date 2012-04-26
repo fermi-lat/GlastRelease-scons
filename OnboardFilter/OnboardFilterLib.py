@@ -1,7 +1,7 @@
 # $Header$
 def generate(env, **kw):
-    if not kw.get('depsOnly', 0):
-        env.Tool('addLibrary', library = ['OnboardFilter'])
+    #if not kw.get('depsOnly', 0):
+    #    env.Tool('addLibrary', library = ['OnboardFilter'])
     if not env['PLATFORM']  == 'win32':
         env.Tool('addLibrary', library = ['dl'])
         env.Tool('addLibrary', library = ['pthread'])
