@@ -17,10 +17,13 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ObjectVector.h"
 
+#include "LdfBaseCnv.h"
+
 // RCS Id for identification of object version
 static const char* rcsid = "$Id$";
 
-class  McEventCnv : public Converter //virtual public IGlastCnv, public Converter 
+class  McEventCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<McEventCnv>;
@@ -43,11 +46,14 @@ public:
     static const CLID&         classID()     {return CLID_McEvent;}
     static const unsigned char storageType() {return TEST_StorageType;}
 
+/*
     /// Initialize the converter
     virtual StatusCode initialize();
 
     /// Initialize the converter
     virtual StatusCode finalize();
+
+*/
 
     /// Retrieve the class type of objects the converter produces. 
     virtual const CLID& objType() const {return CLID_McEvent;}
@@ -69,11 +75,17 @@ private:
 
 };
 
+DECLARE_CONVERTER_FACTORY ( McEventCnv );
 
-McEventCnv::McEventCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_McEvent, svc)
+
+McEventCnv::McEventCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+//Converter(TEST_StorageType, CLID_McEvent, svc)
 {
   m_path = "/Event/MC";
+  declareObject("/Event/MC", objType(), "PASS");
 }
+
+/*
 StatusCode McEventCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -85,6 +97,7 @@ StatusCode McEventCnv::finalize()
 {
     return Converter::finalize();
 }
+*/
 
 
 StatusCode McEventCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)

@@ -12,6 +12,8 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
 
+#include "LdfBaseCnv.h"
+#include "FilterCnv.h"
 
 //#include "GaudiKernel/ObjectVector.h"
 
@@ -22,7 +24,8 @@ static const char* rcsid = "$Id$";
 // instances of this service
 //static CnvFactory<FilterCnv> s_factory;
 //const ICnvFactory& FilterCnvFactory = s_factory;
-class  FilterCnv : public Converter //virtual public IGlastCnv, public Converter 
+class  FilterCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<FilterCnv>;
@@ -42,17 +45,21 @@ protected:
 public:
     /// Query interfaces of Interface
     //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
-    static const CLID&         classID()     {return CLID_DataObject;}
+    //static const CLID&         classID()     {return CLID_DataObject;}
+    static const CLID&         classID()     {return CLID_Filter;}
     static const unsigned char storageType() {return TEST_StorageType;}
 
+/*
     /// Initialize the converter
     virtual StatusCode initialize();
 
     /// Initialize the converter
     virtual StatusCode finalize();
+*/
 
     /// Retrieve the class type of objects the converter produces. 
-    virtual const CLID& objType() const {return CLID_DataObject;}
+    virtual const CLID& objType() const {return CLID_Filter;}
+    //virtual const CLID& objType() const {return CLID_DataObject;}
 
     /// Retrieve the class type of the data store the converter uses.
     // MSF: Masked to generate compiler error due to interface change
@@ -74,11 +81,14 @@ private:
 
 DECLARE_CONVERTER_FACTORY ( FilterCnv );
 
-FilterCnv::FilterCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_DataObject, svc)
+FilterCnv::FilterCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+//Converter(TEST_StorageType, CLID_DataObject, svc)
 {
   m_path = "/Event/Filter";
+  declareObject("/Event/Filter", objType(), "PASS");
 }
 
+/*
 StatusCode FilterCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -90,6 +100,7 @@ StatusCode FilterCnv::finalize()
 {
     return Converter::finalize();
 }
+*/
 
 StatusCode FilterCnv::createObj(IOpaqueAddress* pAddress, DataObject*& refpObject)
 {

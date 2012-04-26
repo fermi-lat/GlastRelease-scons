@@ -17,11 +17,14 @@
 #include "lsfData/Ebf.h"
 #include "EbfWriter/Ebf.h"
 
+#include "LdfBaseCnv.h"
+
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 //static CnvFactory<EbfCnv> s_factory;
 //const ICnvFactory& EbfCnvFactory = s_factory;
-class  EbfCnv : public Converter //virtual public IGlastCnv, public Converter 
+class  EbfCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<EbfCnv>;
@@ -44,11 +47,13 @@ public:
     static const CLID&         classID()     {return CLID_Ebf;}
     static const unsigned char storageType() {return TEST_StorageType;}
 
+/*
     /// Initialize the converter
     virtual StatusCode initialize();
 
     /// Initialize the converter
     virtual StatusCode finalize();
+*/
 
     /// Retrieve the class type of objects the converter produces. 
     virtual const CLID& objType() const {return CLID_Ebf;}
@@ -76,13 +81,15 @@ private:
 //const ICnvFactory& MCEventCnvFactory = s_factory;
 DECLARE_CONVERTER_FACTORY ( EbfCnv );
 
-EbfCnv::EbfCnv(ISvcLocator* svc) : Converter (TEST_StorageType, CLID_Ebf, svc)
+EbfCnv::EbfCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)//Converter (TEST_StorageType, CLID_Ebf, svc)
 {
     // Here we associate this converter with the /Event/Filter/Ebf path on the TDS.
     m_path = "/Event/Filter/Ebf";
+    declareObject("/Event/Filter/Ebf", objType(), "PASS");
     return;
 }
 
+/*
 StatusCode EbfCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -94,6 +101,7 @@ StatusCode EbfCnv::finalize()
 {
     return Converter::finalize();
 }
+*/
 
 StatusCode EbfCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {

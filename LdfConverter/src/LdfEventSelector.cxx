@@ -528,6 +528,7 @@ StatusCode LdfEventSelector::setCriteria(const std::string& storageType) {
 StatusCode LdfEventSelector::next(Context& refCtxt, int /* jump */ ) const  {
     static bool lastEventFlag = false;
     MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG << "Inside next" << endreq;
     // static counter for use when we want to skip to event N
     static unsigned long long counter = 0;
     static bool firstCall = true;

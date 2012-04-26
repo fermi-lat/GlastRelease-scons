@@ -18,7 +18,10 @@
 #include "lsfData/LsfMetaEvent.h"
 #include "LdfEvent/LsfMetaEvent.h"
 
-class  MetaEventCnv : public Converter //virtual public IGlastCnv, public Converter 
+#include "LdfBaseCnv.h"
+
+class  MetaEventCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<MetaEventCnv>;
@@ -41,11 +44,13 @@ public:
     static const CLID&         classID()     {return CLID_MetaEvent;}
     static const unsigned char storageType() {return TEST_StorageType;}
 
+/*
     /// Initialize the converter
     virtual StatusCode initialize();
 
     /// Initialize the converter
     virtual StatusCode finalize();
+*/
 
     /// Retrieve the class type of objects the converter produces. 
     virtual const CLID& objType() const {return CLID_MetaEvent;}
@@ -74,12 +79,15 @@ private:
 DECLARE_CONVERTER_FACTORY ( MetaEventCnv );
 
 
-MetaEventCnv::MetaEventCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_MetaEvent, svc)
+MetaEventCnv::MetaEventCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+//Converter(TEST_StorageType, CLID_MetaEvent, svc)
 {
     // Here we associate this converter with the /Event/Gem path on the TDS.
     m_path = "/Event/MetaEvent";
+    declareObject("/Event/MetaEvent", objType(), "PASS");
 }
 
+/*
 StatusCode MetaEventCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -91,6 +99,7 @@ StatusCode MetaEventCnv::finalize()
 {
     return Converter::finalize();
 }
+*/
 
 
 StatusCode MetaEventCnv::createObj(IOpaqueAddress* , 

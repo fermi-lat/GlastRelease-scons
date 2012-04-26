@@ -15,10 +15,12 @@
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IOpaqueAddress.h"
+#include "LdfBaseCnv.h"
 
 #include "AdfEvent/AdfEvent.h"
 
-class  AncillaryEventCnv : public Converter //virtual public IGlastCnv, public Converter 
+class  AncillaryEventCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<AncillaryEventCnv>;
@@ -41,11 +43,13 @@ public:
     static const CLID&         classID()     {return CLID_AncillaryEvent;}
     static const unsigned char storageType() {return TEST_StorageType;}
 
+/*
     /// Initialize the converter
     virtual StatusCode initialize();
 
     /// Initialize the converter
     virtual StatusCode finalize();
+*/
 
     /// Retrieve the class type of objects the converter produces. 
     virtual const CLID& objType() const {return CLID_AncillaryEvent;}
@@ -75,15 +79,15 @@ private:
 
 DECLARE_CONVERTER_FACTORY ( AncillaryEventCnv );
 
-
-AncillaryEventCnv::AncillaryEventCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_AncillaryEvent, svc)
+AncillaryEventCnv::AncillaryEventCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+//Converter(TEST_StorageType, CLID_AncillaryEvent, svc)
 //: LdfBaseCnv(classID(), svc)
 {
     // Here we associate this converter with the /Event path on the TDS.
-    //declareObject("/Event/AncillaryEvent", objType(), "PASS");
+    declareObject("/Event/AncillaryEvent", objType(), "PASS");
     m_path="/Event/AncillaryEvent";
 }
-
+/*
 StatusCode AncillaryEventCnv::initialize() { 
     return Converter::initialize();
 }
@@ -91,6 +95,7 @@ StatusCode AncillaryEventCnv::initialize() {
 StatusCode AncillaryEventCnv::finalize() { 
     return Converter::finalize();
 }
+*/
 
 StatusCode AncillaryEventCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {

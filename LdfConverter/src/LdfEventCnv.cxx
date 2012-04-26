@@ -15,6 +15,7 @@
 //#include "LdfEventCnv.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/TopLevel/Event.h"
+#include "LdfBaseCnv.h"
 
 #include "ldfReader/data/LatData.h"
 #include "facilities/Timestamp.h"
@@ -22,8 +23,7 @@
 #include "Event/Utilities/TimeStamp.h"
 #include <math.h>
 
-
-class  LdfEventCnv : public Converter //virtual public IGlastCnv, public Converter 
+class  LdfEventCnv : public LdfBaseCnv // public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<LdfEventCnv>;
@@ -51,13 +51,13 @@ public:
 
    /// Retrieve the class type of the data store the converter uses.
     // MSF: Masked to generate compiler error due to interface change
-    virtual long repSvcType() const {return Converter::i_repSvcType();}
+//    virtual long repSvcType() const {return Converter::i_repSvcType();}
 
     /// Initialize the converter
-    virtual StatusCode initialize();
+ //   virtual StatusCode initialize();
 
     /// Initialize the converter
-    virtual StatusCode finalize();
+ //   virtual StatusCode finalize();
 
     /// Retrieve the class type of objects the converter produces. 
    // virtual const CLID& objType() const {return CLID_Event;}
@@ -85,29 +85,32 @@ private:
 //const ICnvFactory& LdfEventCnvFactory = s_factory;
 DECLARE_CONVERTER_FACTORY ( LdfEventCnv );
 
-LdfEventCnv::LdfEventCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_Event, svc)
+LdfEventCnv::LdfEventCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+//: Converter(TEST_StorageType, CLID_Event, svc)
 //: LdfBaseCnv(classID(), svc)
 {
     // Here we associate this converter with the /Event path on the TDS.
-    //declareObject("/Event", objType(), "PASS");
+    declareObject("/Event", objType(), "PASS");
     m_path = "/Event";
 }
 
-StatusCode LdfEventCnv::initialize() {
-    StatusCode status = Converter::initialize();
-    return status;
-}
+//StatusCode LdfEventCnv::initialize() {
+    //StatusCode status = Converter::initialize();
+//    StatusCode status = LdfBaseCnv::inialize();
+//    return status;
+//}
 
-StatusCode LdfEventCnv::finalize() {
-    StatusCode status = Converter::finalize();
-    return status;
-}
+//StatusCode LdfEventCnv::finalize() {
+//    StatusCode status = Converter::finalize();
+//    return status;
+//}
 
 StatusCode LdfEventCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {
     // Purpose and Method:  This converter will create an empty EventHeader on
     //   the TDS.
     MsgStream log(msgSvc(), "LdfEventCnv");
+    log << MSG::DEBUG << "LdfEventCnv::createObj called" << endreq;
     Event::EventHeader *header = new Event::EventHeader();
     refpObject = header;
     // Retrieve the LAT data for this event 

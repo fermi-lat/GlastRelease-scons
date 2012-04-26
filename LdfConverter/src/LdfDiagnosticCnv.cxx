@@ -15,6 +15,59 @@
 #include "ldfReader/data/LatData.h"
 
 #include "LdfEvent/DiagnosticData.h"
+#include "LdfBaseCnv.h"
+
+class LdfDiagnosticCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
+{
+
+  friend class CnvFactory<LdfDiagnosticCnv>;
+
+
+protected:
+
+    /**
+        Constructor for this converter
+        @param svc a ISvcLocator interface to find services
+        @param clid the type of object the converter is able to convert
+    */
+    LdfDiagnosticCnv(ISvcLocator* svc);
+
+    virtual ~LdfDiagnosticCnv() { };
+
+public:
+    /// Query interfaces of Interface
+    //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    static const CLID&         classID()     {return CLID_LdfDiagnosticData;}
+    static const unsigned char storageType() {return TEST_StorageType;}
+
+/*
+    /// Initialize the converter
+    virtual StatusCode initialize();
+
+    /// Initialize the converter
+    virtual StatusCode finalize();
+*/
+
+    /// Retrieve the class type of objects the converter produces. 
+    virtual const CLID& objType() const {return CLID_LdfDiagnosticData;}
+
+    /// Retrieve the class type of the data store the converter uses.
+    // MSF: Masked to generate compiler error due to interface change
+    virtual long repSvcType() const {return Converter::i_repSvcType();}
+
+    /// Create the transient representation of an object.
+    virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
+
+    /// Methods to set and return the path in TDS for output of this converter
+  //  virtual void setPath(const std::string& path) {m_path = path;}
+    virtual const std::string& getPath() const    {return m_path;}
+
+private:
+
+    std::string m_path;
+
+};
 
 class LdfDiagnosticCnv : public Converter //virtual public IGlastCnv, public Converter 
 {
@@ -71,12 +124,16 @@ private:
 //const ICnvFactory& MCEventCnvFactory = s_factory;
 DECLARE_CONVERTER_FACTORY ( LdfDiagnosticCnv );
 
-LdfDiagnosticCnv::LdfDiagnosticCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_LdfDiagnosticData, svc)
+LdfDiagnosticCnv::LdfDiagnosticCnv(ISvcLocator* svc) 
+: LdfBaseCnv(classID(), svc)
+//: Converter(TEST_StorageType, CLID_LdfDiagnosticData, svc)
 {
     // Here we associate this converter with the /Event path on the TDS.
     m_path = "/Event/Diagnostic";
+    declareObject("/Event/Diagnostic", objType(), "PASS");
 }
 
+/*
 StatusCode LdfDiagnosticCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -88,6 +145,7 @@ StatusCode LdfDiagnosticCnv::finalize()
 {
     return Converter::finalize();
 }
+*/
 
 StatusCode LdfDiagnosticCnv::createObj(IOpaqueAddress* , 
                                     DataObject*& refpObject) {

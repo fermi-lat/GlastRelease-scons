@@ -35,6 +35,8 @@ public:
 
   virtual StatusCode finalize();
 
+  //virtual void loadConverter(DataObject*);
+
 // HMK these 2 are not in the CalibXmlCnvSvc
   //virtual StatusCode updateServiceState(IOpaqueAddress* pAddress);
   /// Associates a path on TDS with a particular converter

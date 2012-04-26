@@ -15,8 +15,10 @@
 
 #include "ldfReader/data/LatData.h"
 #include "LdfEvent/Gem.h"
+#include "LdfBaseCnv.h"
 
-class  LdfGemCnv : public Converter //virtual public IGlastCnv, public Converter 
+class  LdfGemCnv : public LdfBaseCnv
+//public Converter //virtual public IGlastCnv, public Converter 
 {
 
   friend class CnvFactory<LdfGemCnv>;
@@ -39,11 +41,13 @@ public:
     static const CLID&         classID()     {return CLID_LdfGem;}
     static const unsigned char storageType() {return TEST_StorageType;}
 
+/*
     /// Initialize the converter
     virtual StatusCode initialize();
 
     /// Initialize the converter
     virtual StatusCode finalize();
+*/
 
     /// Retrieve the class type of objects the converter produces. 
     virtual const CLID& objType() const {return CLID_LdfGem;}
@@ -71,11 +75,15 @@ private:
 //const ICnvFactory& MCEventCnvFactory = s_factory;
 DECLARE_CONVERTER_FACTORY ( LdfGemCnv );
 
-LdfGemCnv::LdfGemCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_LdfGem, svc)
+LdfGemCnv::LdfGemCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+///Converter(TEST_StorageType, CLID_LdfGem, svc)
 {
     // Here we associate this converter with the /Event/Gem path on the TDS.
     m_path  = "/Event/Gem";
+    declareObject("/Event/Gem", objType(), "PASS");
 }
+
+/*
 StatusCode LdfGemCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -88,6 +96,7 @@ StatusCode LdfGemCnv::finalize()
     return Converter::finalize();
 }
 
+*/
 
 StatusCode LdfGemCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {

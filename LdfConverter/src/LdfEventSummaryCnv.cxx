@@ -16,6 +16,58 @@
 #include "Event/TopLevel/Event.h"
 #include "ldfReader/data/LatData.h"
 #include "LdfEvent/EventSummaryData.h"
+#include "LdfBaseCnv.h"
+
+class  LdfEventSummaryCnv : public LdfBaseCnv //public Converter //virtual public IGlastCnv, public Converter 
+{
+
+  friend class CnvFactory<LdfEventSummaryCnv>;
+
+
+protected:
+
+    /**
+        Constructor for this converter
+        @param svc a ISvcLocator interface to find services
+        @param clid the type of object the converter is able to convert
+    */
+    LdfEventSummaryCnv(ISvcLocator* svc);
+
+    virtual ~LdfEventSummaryCnv() { };
+
+public:
+    /// Query interfaces of Interface
+    //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    static const CLID&         classID()     {return CLID_LdfEventSummaryData;}
+    static const unsigned char storageType() {return TEST_StorageType;}
+
+/*
+    /// Initialize the converter
+    virtual StatusCode initialize();
+
+    /// Initialize the converter
+    virtual StatusCode finalize();
+*/
+
+    /// Retrieve the class type of objects the converter produces. 
+    virtual const CLID& objType() const {return CLID_LdfEventSummaryData;}
+
+    /// Retrieve the class type of the data store the converter uses.
+    // MSF: Masked to generate compiler error due to interface change
+    virtual long repSvcType() const {return Converter::i_repSvcType();}
+
+    /// Create the transient representation of an object.
+    virtual StatusCode createObj(IOpaqueAddress* pAddress,DataObject*& refpObject);
+
+    /// Methods to set and return the path in TDS for output of this converter
+  //  virtual void setPath(const std::string& path) {m_path = path;}
+    virtual const std::string& getPath() const    {return m_path;}
+
+private:
+
+    std::string m_path;
+
+};
 
 class  LdfEventSummaryCnv : public Converter //virtual public IGlastCnv, public Converter 
 {
@@ -73,12 +125,15 @@ private:
 DECLARE_CONVERTER_FACTORY ( LdfEventSummaryCnv );
 
 
-LdfEventSummaryCnv::LdfEventSummaryCnv(ISvcLocator* svc) : Converter(TEST_StorageType, CLID_LdfEventSummaryData, svc)
+LdfEventSummaryCnv::LdfEventSummaryCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
+//Converter(TEST_StorageType, CLID_LdfEventSummaryData, svc)
 {
     // Here we associate this converter with the /Event path on the TDS.
     m_path = "/Event/EventSummary";
+    declareObject("/Event/EventSummary", objType(), "PASS");
 }
 
+/*
 StatusCode LdfEventSummaryCnv::initialize() 
 {
     StatusCode status = Converter::initialize();
@@ -90,6 +145,7 @@ StatusCode LdfEventSummaryCnv::finalize()
 {
     return Converter::finalize();
 }
+*/
 
 StatusCode LdfEventSummaryCnv::createObj(IOpaqueAddress* , 
                                DataObject*& refpObject) {
