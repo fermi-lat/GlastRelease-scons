@@ -35,10 +35,22 @@
 #include "EDS/EDR_cal.h"
 #include "EDS/EDR_tkrUnpack.h"
 
-#include "EDS/FFS.h"
+#ifdef OBF_B1_3_3
+# include "EDS/FFS.h"
+#else 
+# include "PBI/FFS.ih"
+# define  FFS_mask  FFSL_mask
+# define  FFS_eliminate FFSL_eliminate
+# define  FFS  FFSL
+#endif
+
 #include "GFC_DB/GAMMA_DB_instance.h"
 #include "EFC_DB/EFC_DB_sampler.h"
+#ifdef OBF_B3_0_0
+#include "EFC/GFC_def.h"
+#else
 #include "EFC/../src/GFC_def.h"
+#endif
 
 #ifdef OBF_B1_1_3
 #include "FSWHeaders/EFC.h"

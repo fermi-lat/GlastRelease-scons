@@ -45,7 +45,8 @@
 #endif
 #ifdef OBF_B3_0_0
 #include "EFC/EFC.h"
-#include "src/EFC_samplerDef.h"
+//#include "src/EFC_samplerDef.h"
+#include "EFC/EFC_samplerDef.h"
 #endif
 
 // Contains all info for a particular filter's release

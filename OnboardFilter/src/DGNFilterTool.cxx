@@ -50,14 +50,15 @@
 
 #ifdef OBF_B1_1_3
 #include "DGNFilterLibsB1-1-3.h"
-#endif
 
 // FSW include but made local do to keyword usage
 #include "FSWHeaders/EFC_sampler.h"
+#endif
 
 // Contains all info for a particular filter's release
 #ifdef OBF_B3_0_0
 #include "DGNFilterLibsB3-0-0.h"
+#include "EFC/EFC_samplerDef.h"
 #endif
 
 #ifdef OBF_B1_1_3

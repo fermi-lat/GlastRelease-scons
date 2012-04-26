@@ -35,8 +35,13 @@
 #include "EDS/EBF_cal.h"
 #include "EDS/EDR_calUnpack.h"
 
-// Go back to old style, using EDS/FFS.h
-#include "EDS/FFS.h"
+#ifdef OBF_B1_3_3
+# include "EDS/FFS.h"
+#else 
+# include "PBI/FFS.ih"
+# define  FFS_mask  FFSL_mask
+# define  FFS_eliminate FFSL_eliminate
+#endif
 
 // Useful stuff! 
 #include <map>
