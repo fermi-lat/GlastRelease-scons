@@ -1,5 +1,12 @@
 #include "OnboardFilterTds/Obf_TFC_prjs.h"
-#include "EDS/FFS.h"
+#ifdef OBF_B1_3_3
+# include "EDS/FFS.h"
+#else 
+# include "PBI/FFS.ih"
+# define  FFS_mask  FFSL_mask
+# define  FFS_eliminate FFSL_eliminate
+# define  FFS  FFSL
+#endif
 
 #include <iostream>
 #include <cstring>
