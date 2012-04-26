@@ -1,5 +1,5 @@
 package OnboardFilter
-version v4r16p1
+version v4r16p2
 # $Header$
 
 author Tracy Usher <usher@SLAC.Stanford.edu>
@@ -37,7 +37,12 @@ macro headers "" WIN32 "*.h"
 
 library OnboardFilter \
  -s=../OnboardFilter $(headers)\
- -s=../src *.cxx *.h 
+ -s=../src CalOutputTool.cxx DGNFilterLibsB1*.cxx DGNFilterTool.cxx \
+    FSWAuxLibsTool.cxx FilterTrackTool.cxx GammaFilterCfg*.cxx \
+    GammaFilterLibsB1*.cxx GammaFilterTool.cxx GemOutputTool.cxx GrbTrack.cxx \
+    HIPFilterLibsB1*.cxx HIPFilterTool.cxx MIPFilterLibsB1*.cxx \
+    MIPFilterTool.cxx ObfInterface.cxx OnboardFilter.cxx TkrOutputTool.cxx \
+    trackProj.cxx *.h 
 
 apply_pattern generate_rootmap library=OnboardFilter
  
