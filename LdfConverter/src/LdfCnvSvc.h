@@ -40,7 +40,7 @@ public:
 // HMK these 2 are not in the CalibXmlCnvSvc
   //virtual StatusCode updateServiceState(IOpaqueAddress* pAddress);
   /// Associates a path on TDS with a particular converter
-  //virtual StatusCode declareObject(const ILdfCnvSvc::Leaf& leaf);
+  virtual StatusCode declareObject(const ILdfCnvSvc::Leaf& leaf);
 
   /// Override inherited queryInterface due to enhanced interface
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);

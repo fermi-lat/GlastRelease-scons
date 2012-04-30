@@ -290,17 +290,17 @@ StatusCode LdfCnvSvc::finalize()     {
     return status;
 }
 
-//StatusCode LdfCnvSvc::declareObject(const ILdfCnvSvc::Leaf& leaf)   {
+StatusCode LdfCnvSvc::declareObject(const ILdfCnvSvc::Leaf& leaf)   {
     // Purpose and Method:  Callback from each of the individual converters that allows
     //  association of TDS path and converter.
-//    Leaf* ll = new Leaf(leaf);
-//    std::pair<LeafMap::iterator, bool> p = m_leaves.insert(LeafMap::value_type( leaf.path, ll) );
-//    if( p.second )    {
-//        return StatusCode::SUCCESS;
-//    }
-//    delete ll;
-//    return StatusCode::FAILURE;/
-//}
+    Leaf* ll = new Leaf(leaf);
+    std::pair<LeafMap::iterator, bool> p = m_leaves.insert(LeafMap::value_type( leaf.path, ll) );
+    if( p.second )    {
+        return StatusCode::SUCCESS;
+    }
+    delete ll;
+    return StatusCode::FAILURE;
+}
 
 /*void LdfCnvSvc::loadConverter(DataObject* pObject) {
     if (pObject) {
@@ -468,10 +468,10 @@ StatusCode LdfCnvSvc::updateServiceState(IOpaqueAddress* pAddress)    {
 }
 
 StatusCode LdfCnvSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)  {
-//    if ( IID_ILdfBaseCnv == riid )  {
-//        *ppvInterface = (ILdfCnvSvc*)this;
-//    }
-//    else  {
+    if ( IID_ILdfBaseCnv == riid )  {
+        *ppvInterface = (ILdfCnvSvc*)this;
+    }
+    else  {
         // Interface is not directly availible: try out a base class
         return ConversionSvc::queryInterface(riid, ppvInterface);
    }

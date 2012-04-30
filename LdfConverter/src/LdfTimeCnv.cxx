@@ -84,9 +84,9 @@ LdfTimeCnv::LdfTimeCnv(ISvcLocator* svc) : LdfBaseCnv(classID(), svc)
     m_path = "/Event/Time";
     declareObject("/Event/Time", objType(), "PASS");
 }
-StatusCode LdfTimeCnv::initialize() 
-{
-    StatusCode status = Converter::initialize();
+//StatusCode LdfTimeCnv::initialize() 
+//{
+//    StatusCode status = Converter::initialize();
 
 /*
 StatusCode LdfTimeCnv::initialize() 
