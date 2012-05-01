@@ -1,5 +1,5 @@
 package OnboardFilter
-version v4r16p4
+version v4r16p5
 # $Header$
 
 author Tracy Usher <usher@SLAC.Stanford.edu>
@@ -20,6 +20,7 @@ use TkrDigi v*
 use AcdDigi v*
 use CalDigi v*
 use RootmapPolicy * GlastPolicy
+use G4Generator *
 use gr_app v*
 
 macro OnboardFilter_cppflags "" \
