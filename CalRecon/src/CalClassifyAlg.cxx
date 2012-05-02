@@ -274,7 +274,7 @@ StatusCode CalClassifyAlg::execute()
 
     // For debug
     log << MSG::DEBUG << "Last cluster is always the uber cluster:" << endreq;
-    
+    Event::CalClusterCol::const_iterator cluster;    
     int clusterId = 1;
     for ( cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++)
       {
