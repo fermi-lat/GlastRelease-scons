@@ -1,5 +1,5 @@
 package Overlay
-version v2r2p0
+version v2r2p1
 
 author Tracy Usher <usher@slac.stanford.edu>
 
@@ -29,7 +29,7 @@ use Trigger      v*
 use FluxSvc      v*
 use AcdUtil      v*
 use TkrUtil      v*
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy  if not producing rootmap comment out
 use gr_app       v*
 
 macro source "*.cxx " WIN32 "*.h *.cxx"
