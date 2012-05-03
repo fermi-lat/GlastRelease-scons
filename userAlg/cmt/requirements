@@ -1,5 +1,5 @@
 package userAlg
-version v6r7p2
+version v6r7p3
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 
@@ -20,13 +20,14 @@ set JOBOPTIONS $(USERALGROOT)/src/jobOptions.txt
 macro other_source "" WIN32 " *.h *.txt ../xml/*.xml"
 
 macro userApplinkopts "${Geant4_linkopts} $(GuiSvc_lib) ${guiapp_linkopts} ${gui_linkopts} -u GuiSvc_loadRef -ldl" \
-      WIN32 "$(guiapp_linkopts) $(GuiSvc_lib) /include:_GuiSvc_loadRef"
+      WIN32 ""
+#      WIN32 "$(guiapp_linkopts) $(GuiSvc_lib) /include:_GuiSvc_loadRef"
 
-application userApp ${GlastMain} *.cxx ${other_source} ${Win32Resource}
+application userApp ${GlastMain} *.cxx ${other_source} ${Win32Resource} ${WinMain}
 
 
 # build a batch-oriented version from the same source, for RM testing
 set TESTJOBOPTIONS $(USERALGROOT)/src/test/jobOptions.txt
-application test_userAlg ${TestGlastMain} UserAlg.cxx RegisterSource.cxx ${other_source}
+application test_userAlg ${TestGlastMain} UserAlg.cxx RegisterSource.cxx ${other_source} ${WinMain}
 
 
