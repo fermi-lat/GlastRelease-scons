@@ -1,5 +1,5 @@
 package geomrep
-version v4r3p4
+version v4r3p5
 author T.Burnett <tburnett@u.washington.edu>
 
 #$Header$
@@ -16,6 +16,9 @@ apply_pattern package_headers
 private
 
 library geomrep -no_share *.cxx ${geomrep_headers}
+
+macro WinMain "" \
+  WIN32 " ${gui_root}\src\WinMain.cxx "
 
 # set up application link-options for test program. Note also the resource
 
