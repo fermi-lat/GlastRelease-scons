@@ -21,7 +21,7 @@ namespace {
   unsigned getAncsFromP(const std::vector<unsigned>& parms,
                         rdbModel::Rdb* rdb,
                         std::vector<unsigned>& ancs) {
-    unsigned cnt;
+    unsigned cnt = 0;
     for (unsigned parmIx = 0; parmIx < parms.size(); parmIx++) {
       std::string parmKeyStr;
       facilities::Util::utoa(parms[parmIx], parmKeyStr);
