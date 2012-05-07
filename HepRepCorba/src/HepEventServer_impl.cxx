@@ -99,12 +99,13 @@ char* HepEventServer_impl::setEvent(const char* command)
       res = m_svcAdapter->nextEvent(1);
       if (res)
       {
-          //std::string evtId = m_svcAdapter->getEventId();
+          std::string evtId = m_svcAdapter->getEventId();
           //sName << evtId;
           sName << "Event-" << temp;
         temp++;
 
         m_eventID = sName.str();
+        m_eventID = evtId;
         nextEventMsg = "ok:" + m_eventID;  
 
       } 
