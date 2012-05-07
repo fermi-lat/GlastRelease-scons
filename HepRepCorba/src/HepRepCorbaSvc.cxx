@@ -3,7 +3,10 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IToolSvc.h"
 
+#include "HepRepSvc/IHepRepSvc.h"
+
 #include "HepRepCorbaSvc.h"
+#include "CorbaServer.h"
 
 DECLARE_SERVICE_FACTORY(HepRepCorbaSvc);
 
@@ -27,20 +30,36 @@ StatusCode HepRepCorbaSvc::initialize()
     setProperties();
     MsgStream log(msgSvc(), name());
 
-    IToolSvc* toolSvc = 0;
-    if (sc = service("ToolSvc",toolSvc, true).isSuccess() )
-    {
-        sc = toolSvc->retrieveTool("RegisterCorba", m_xmlTool);
-        if (sc.isSuccess()) {
-            log << MSG::INFO << "Retrieved DetDisplay" << endreq;
-        } else {
-            log << MSG::ERROR << "Couldn't retrieve DetDisplay" << endreq;
-        }
+//    IToolSvc* toolSvc = 0;
+//    if (sc = service("ToolSvc",toolSvc, true).isSuccess() )
+//    {
+//        sc = toolSvc->retrieveTool("RegisterCorba", m_xmlTool);
+//        if (sc.isSuccess()) {
+//            log << MSG::INFO << "Retrieved DetDisplay" << endreq;
+//        } else {
+//            log << MSG::ERROR << "Couldn't retrieve DetDisplay" << endreq;
+//        }
+//
+//    } else { 
+//        log << MSG::INFO << "ToolSvc not found" << endreq;
+//        return sc; 
+//    } 
 
-    } else { 
-        log << MSG::INFO << "ToolSvc not found" << endreq;
-        return sc; 
-    } 
+    // Make the connection between corba and HepRepSvc here
+    IHepRepSvc* hepRepSvc = 0;
+    if (sc = service("HepRepSvc", hepRepSvc, true).isSuccess())
+    {
+        log << MSG::INFO << "Register corba server ..." << endreq;
+  
+        CorbaServer* corba = new CorbaServer();
+        hepRepSvc->setServer(corba);
+    }
+    else
+    {
+        log <<  MSG::INFO << "Could not locate HepRepSvc" << endreq;
+        return sc;
+    }
+
 
     log << MSG::INFO << "HepRepCorbaSvc Initialized" << endreq;
     return StatusCode::SUCCESS;
