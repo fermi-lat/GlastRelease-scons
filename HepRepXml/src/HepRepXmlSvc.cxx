@@ -3,7 +3,10 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IToolSvc.h"
 
+#include "HepRepSvc/IHepRepSvc.h"
+
 #include "HepRepXmlSvc.h"
+#include "XmlStreamer.h"
 
 DECLARE_SERVICE_FACTORY(HepRepXmlSvc);
 
@@ -27,21 +30,20 @@ StatusCode HepRepXmlSvc::initialize()
     setProperties();
     MsgStream log(msgSvc(), name());
 
-    IToolSvc* toolSvc = 0;
-    if (sc = service("ToolSvc",toolSvc, true).isSuccess() )
+    // Make the connection between corba and HepRepSvc here
+    IHepRepSvc* hepRepSvc = 0;
+    if (sc = service("HepRepSvc", hepRepSvc, true).isSuccess())
     {
-        sc = toolSvc->retrieveTool("RegisterXml", m_xmlTool);
-        if (sc.isSuccess()) {
-            log << MSG::INFO << "Retrieved DetDisplay" << endreq;
-        } else {
-            log << MSG::ERROR << "Couldn't retrieve DetDisplay" << endreq;
-        }
-
-    } else { 
-        log << MSG::INFO << "ToolSvc not found" << endreq;
-        return sc; 
-    } 
-
+        log << MSG::INFO << "Register corba server ..." << endreq;
+  
+        XmlStreamer* xml = new XmlStreamer();
+        hepRepSvc->addStreamer("xml",xml);
+    }
+    else
+    {
+        log <<  MSG::INFO << "Could not locate HepRepSvc" << endreq;
+        return sc;
+    }
     log << MSG::INFO << "HepRepXmlSvc Initialized" << endreq;
     return StatusCode::SUCCESS;
 
