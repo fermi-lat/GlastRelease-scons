@@ -36,6 +36,7 @@ public:
     enum StatusBits {ASSOCIATED       = 0x00000001,
                      LINKTOPHIT       = 0x00000010,
                      LINKBOTHIT       = 0x00000020,
+                     PRNTLNKBOTHIT    = 0x00000040,
                      ASSOCIATEDTONODE = 0x00000100,
                      DONOTUSE         = 0x80000000};
 
@@ -76,6 +77,8 @@ public:
     void clearLinkTopHit()       {m_status &= ~LINKTOPHIT;}
     void setLinkBotHit()         {m_status |=  LINKBOTHIT;}
     void clearLinkBotHit()       {m_status &= ~LINKBOTHIT;}
+    void setPrntLinkBotHit()     {m_status |=  PRNTLNKBOTHIT;}
+    void clearPrntLinkBotHit()   {m_status &= ~PRNTLNKBOTHIT;}
     void setAssociatedToNode()   {m_status |=  ASSOCIATEDTONODE;}
     void clearAssociatedToNode() {m_status &= ~ASSOCIATEDTONODE;}
     void setDoNotUse()           {m_status |=  DONOTUSE;}
@@ -84,11 +87,13 @@ public:
     /// @name access methods
     //@{
     /// Is this hit associated to a link?
-    const bool isAssociated()       const {return (m_status & ASSOCIATED) != 0;}
+    const bool isAssociated()       const {return (m_status & ASSOCIATED)       != 0;}
     /// Is this hit used as a top hit in a link?
-    const bool isLinkTopHit()       const {return (m_status & LINKTOPHIT) != 0;}
+    const bool isLinkTopHit()       const {return (m_status & LINKTOPHIT)       != 0;}
     /// Is this hit used as a bottom hit in a link?
-    const bool isLinkBotHit()       const {return (m_status & LINKBOTHIT) != 0;}
+    const bool isLinkBotHit()       const {return (m_status & LINKBOTHIT)       != 0;}
+    /// Is the top hit of the link making this a bottom link also a bottom link?
+    const bool isPrntLinkBotHit()   const {return (m_status & PRNTLNKBOTHIT)    != 0;}
     /// Is this hit associated to a node?
     const bool isAssociatedToNode() const {return (m_status & ASSOCIATEDTONODE) != 0;}
     /// Is a usable point?

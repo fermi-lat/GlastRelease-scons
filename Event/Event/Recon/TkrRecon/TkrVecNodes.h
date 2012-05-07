@@ -20,6 +20,7 @@
 #include "Event/RelTable/RelTable.h"
 
 #include <set>
+#include <queue>
 
 // Declare Gaudi object interface ID
 static const CLID& CLID_TkrVecNode = InterfaceID("TkrVecNode",  1, 0);
@@ -378,31 +379,99 @@ inline const double TkrVecNode::getBestRmsAngle() const
 inline const int TkrVecNode::getNumNodesInTree() const
 {
     // We always count ourself
-    int nodeCount = 1; // I think this would miss head node:  m_associatedLink ? 1 : 0;
+//    int nodeCount = 1; // I think this would miss head node:  m_associatedLink ? 1 : 0;
+    int nodeCount = 0; 
 
-    if (!empty())
+    // Non-recursive version using a queue
+    std::queue<const TkrVecNode*> nodeQueue;
+
+    nodeQueue.push(this);
+
+    // Basically, we loop until there are no more nodes in the queue
+    while(!nodeQueue.empty())
     {
-        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
-        {
-            nodeCount += (*nodeItr)->getNumNodesInTree();
-        }
+        const TkrVecNode* node = nodeQueue.front();
+
+        nodeQueue.pop();
+
+        for(TkrVecNodeSet::const_iterator nodeItr = node->begin(); nodeItr != node->end(); nodeItr++)
+            nodeQueue.push(*nodeItr);
+
+        nodeCount++;
     }
+
+//    if (!empty())
+//    {
+//        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+//        {
+//            nodeCount += (*nodeItr)->getNumNodesInTree();
+//        }
+//    }
 
     return nodeCount;
 }
 inline const int TkrVecNode::getNumThinNodesInTree() const
 {
-    // We always count ourself
-	int currentBiLayer = getCurrentBiLayer(); 
-    int nodeCount = currentBiLayer > 5 ? 1 : 0;
+    // NOTE: This function has been modified to return 
+    //       the number of unique clusters (X or Y) in the 
+    //       thin layers of the tree and NOT the number
+    //       of nodes (TU 4/26/12)
 
-    if (!empty())
+    // Use an STL set to keep track of unique clusters
+    std::set<const Event::TkrCluster*> uniqueClusters;
+
+    // Non-recursive version using a queue
+    std::queue<const TkrVecNode*> nodeQueue;
+
+    // We know the first node is a place holder so seed the nodeQueue
+    // by looping over daughters, adding them to the queue. This also
+    // allows counting the "top" clusters
+    for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
     {
-        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        const TkrVecNode* node = *nodeItr;
+
+        // Add clusters to set
+        if (node->getCurrentBiLayer() > 5)
         {
-            nodeCount += (*nodeItr)->getNumThinNodesInTree();
+            uniqueClusters.insert(node->getAssociatedLink()->getFirstVecPoint()->getXCluster());
+            uniqueClusters.insert(node->getAssociatedLink()->getFirstVecPoint()->getYCluster());
+        }
+
+        // add node to queue
+        nodeQueue.push(node);
+    }
+    
+    // Basically, we loop until there are no more nodes in the queue
+    while(!nodeQueue.empty())
+    {
+        const TkrVecNode* node = nodeQueue.front();
+
+        nodeQueue.pop();
+
+        for(TkrVecNodeSet::const_iterator nodeItr = node->begin(); nodeItr != node->end(); nodeItr++)
+            nodeQueue.push(*nodeItr);
+
+        // For thin section, currentBiLayer must be 6 or greater
+        if (node->getCurrentBiLayer() > 5)
+        {
+            uniqueClusters.insert(node->getAssociatedLink()->getSecondVecPoint()->getXCluster());
+            uniqueClusters.insert(node->getAssociatedLink()->getSecondVecPoint()->getYCluster());
         }
     }
+
+    // We always count ourself
+//	int currentBiLayer = getCurrentBiLayer(); 
+//    int nodeCount = currentBiLayer > 5 ? 1 : 0;
+
+//    if (!empty())
+//    {
+//        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+//        {
+//            nodeCount += (*nodeItr)->getNumThinNodesInTree();
+//        }
+//    }
+
+    int nodeCount = uniqueClusters.size();
 
     return nodeCount;
 }
@@ -423,16 +492,67 @@ inline const int TkrVecNode::getNumThinLeavesInTree() const
 }
 inline const int TkrVecNode::getNumThickNodesInTree() const
 {
-    // We always count ourself
-    int nodeCount = (getCurrentBiLayer() > 1 && getCurrentBiLayer() < 6) ? 1 : 0;
+    // NOTE: This function has been modified to return 
+    //       the number of unique clusters (X or Y) in the 
+    //       thin layers of the tree and NOT the number
+    //       of nodes (TU 4/26/12)
 
-    if (!empty())
+    // Use an STL set to keep track of unique clusters
+    std::set<const Event::TkrCluster*> uniqueClusters;
+
+    // Non-recursive version using a queue
+    std::queue<const TkrVecNode*> nodeQueue;
+
+    // We know the first node is a place holder so seed the nodeQueue
+    // by looping over daughters, adding them to the queue. This also
+    // allows counting the "top" clusters
+    for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
     {
-        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        const TkrVecNode* node = *nodeItr;
+
+        // Add clusters to set
+        if (node->getCurrentBiLayer() > 1 && node->getCurrentBiLayer() < 6)
         {
-            nodeCount += (*nodeItr)->getNumThickNodesInTree();
+            uniqueClusters.insert(node->getAssociatedLink()->getFirstVecPoint()->getXCluster());
+            uniqueClusters.insert(node->getAssociatedLink()->getFirstVecPoint()->getYCluster());
+        }
+
+        // add node to queue
+        nodeQueue.push(node);
+    }
+
+    // Basically, we loop until there are no more nodes in the queue
+    while(!nodeQueue.empty())
+    {
+        const TkrVecNode* node = nodeQueue.front();
+
+        nodeQueue.pop();
+
+        for(TkrVecNodeSet::const_iterator nodeItr = node->begin(); nodeItr != node->end(); nodeItr++)
+            nodeQueue.push(*nodeItr);
+
+	    int currentBiLayer = node->getCurrentBiLayer(); 
+
+        // For thick section, currentBiLayer must be in range 2-5
+        if (currentBiLayer > 1 && currentBiLayer < 6)
+        {
+            uniqueClusters.insert(node->getAssociatedLink()->getSecondVecPoint()->getXCluster());
+            uniqueClusters.insert(node->getAssociatedLink()->getSecondVecPoint()->getYCluster());
         }
     }
+
+    // We always count ourself
+//    int nodeCount = (getCurrentBiLayer() > 1 && getCurrentBiLayer() < 6) ? 1 : 0;
+
+//    if (!empty())
+//    {
+//        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+//        {
+//            nodeCount += (*nodeItr)->getNumThickNodesInTree();
+//        }
+//    }
+    
+    int nodeCount = uniqueClusters.size();
 
     return nodeCount;
 }
@@ -453,16 +573,65 @@ inline const int TkrVecNode::getNumThickLeavesInTree() const
 }
 inline const int TkrVecNode::getNumBlankNodesInTree() const
 {
-    // We always count ourself
-    int nodeCount = getCurrentBiLayer() < 2 ? 1 : 0;
+    // NOTE: This function has been modified to return 
+    //       the number of unique clusters (X or Y) in the 
+    //       thin layers of the tree and NOT the number
+    //       of nodes (TU 4/26/12)
 
-    if (!empty())
+    // Use an STL set to keep track of unique clusters
+    std::set<const Event::TkrCluster*> uniqueClusters;
+
+    // Non-recursive version using a queue
+    std::queue<const TkrVecNode*> nodeQueue;
+
+    // We know the first node is a place holder so seed the nodeQueue
+    // by looping over daughters, adding them to the queue. This also
+    // allows counting the "top" clusters
+    for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
     {
-        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+        const TkrVecNode* node = *nodeItr;
+
+        // Add clusters to set
+        if (node->getCurrentBiLayer() < 2)
         {
-            nodeCount += (*nodeItr)->getNumBlankNodesInTree();
+            uniqueClusters.insert(node->getAssociatedLink()->getFirstVecPoint()->getXCluster());
+            uniqueClusters.insert(node->getAssociatedLink()->getFirstVecPoint()->getYCluster());
+        }
+
+        // add node to queue
+        nodeQueue.push(node);
+    }
+
+    // Basically, we loop until there are no more nodes in the queue
+    while(!nodeQueue.empty())
+    {
+        const TkrVecNode* node = nodeQueue.front();
+
+        nodeQueue.pop();
+
+        for(TkrVecNodeSet::const_iterator nodeItr = node->begin(); nodeItr != node->end(); nodeItr++)
+            nodeQueue.push(*nodeItr);
+
+        // For blank section, currentBiLayer must be less than 2
+        if (node->getCurrentBiLayer() < 2)
+        {
+            uniqueClusters.insert(node->getAssociatedLink()->getSecondVecPoint()->getXCluster());
+            uniqueClusters.insert(node->getAssociatedLink()->getSecondVecPoint()->getYCluster());
         }
     }
+
+    // We always count ourself
+//    int nodeCount = getCurrentBiLayer() < 2 ? 1 : 0;
+
+//    if (!empty())
+//    {
+//        for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
+//        {
+//            nodeCount += (*nodeItr)->getNumBlankNodesInTree();
+//        }
+//    }
+
+    int nodeCount = uniqueClusters.size();
 
     return nodeCount;
 }
@@ -659,6 +828,30 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
 
     return false;
 }
+
+
+// Define the TDS version of the map between trees and the relations
+static const CLID& CLID_TkrVecNodeQueue  = InterfaceID("TkrTreeVecNodeQueue",  1, 0);
+
+struct TkrVecNodeQueueOrder
+{
+public:
+    bool operator()(const Event::TkrVecNode* left, const Event::TkrVecNode* right) const
+    {
+        Event::TkrVecNodesComparator nodeCompare;
+
+        return !nodeCompare(left, right);
+    }
+};
+
+typedef std::priority_queue<Event::TkrVecNode*, std::vector<Event::TkrVecNode*>, Event::TkrVecNodeQueueOrder> TkrVecNodeQueueDef;
+
+class TkrVecNodeQueue : public Event::TkrVecNodeQueueDef, public DataObject 
+{
+    //! Retrieve pointer to class defininition structure
+    virtual const CLID& clID() const   { return TkrVecNodeQueue::classID(); }
+    static const CLID& classID()       { return CLID_TkrVecNodeQueue; }
+};
 
 
 // These typedefs useful for point/link association
