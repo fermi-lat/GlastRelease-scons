@@ -35,7 +35,8 @@ public:
     int    buildTrackElements();
 
     /// Access to the nodes collection
-    const Event::TkrVecNodeCol*         getVecNodeCol()         const {return m_headNodes;}
+//    const Event::TkrVecNodeCol*         getVecNodeCol()         const {return m_headNodes;}
+    const Event::TkrVecNodeQueue*       getVecNodeCol()         const {return m_headNodes;}
 
     /// Access to relations between points and nodes
     const Event::TkrVecPointToNodesTab* getPointsToNodesTab()   const {return m_pointsToNodesTab;}
@@ -121,7 +122,8 @@ private:
     Event::TkrVecPointsLinkInfo*     m_tkrVecPointsLinkInfo;
 
     /// Define a container for the "head" nodes
-    Event::TkrVecNodeCol*            m_headNodes;
+//    Event::TkrVecNodeCol*            m_headNodes;
+    Event::TkrVecNodeQueue*           m_headNodes;
 
     /// Define a relational table to relate nodes to points
     Event::TkrVecPointToNodesTab*    m_pointsToNodesTab;

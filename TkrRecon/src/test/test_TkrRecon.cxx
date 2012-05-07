@@ -128,10 +128,12 @@ StatusCode test_TkrRecon::execute()
     SmartDataPtr<Event::TkrVertexCol> vertexData(eventSvc(), 
         EventModel::TkrRecon::TkrVertexCol);
     
+    // Note that with the way the test program is set up there will be NO vertices in the TDS
     if (vertexData==0) {
         log << MSG::INFO << "no TkrVertexCol found" << endreq;
-        sc = StatusCode::FAILURE;        
-        return sc;}
+//        sc = StatusCode::FAILURE;        
+//        return sc;
+    }
     else {
         log << MSG::INFO  << vertexData->size() << " Vertex/Vertices found" 
             << endreq;
