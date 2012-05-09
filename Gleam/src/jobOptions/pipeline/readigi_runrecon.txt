@@ -135,7 +135,7 @@ Cal1.Members = {"CalXtalRecAlg",
 Cal2.Members = {"CalEventEnergyAlg/second"};
 Cal3.Members = {"GcrReconAlg","GcrSelectAlg"};
 
-Tkr.Members     = {"TkrReconAlg/FirstPass"};
+Tkr.Members     = {"TkrDigiTruncationAlg", "TkrReconAlg/FirstPass"};
 TkrIter.Members = {"TkrReconAlg/Iteration"};
 
 

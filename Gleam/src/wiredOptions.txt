@@ -16,7 +16,7 @@ G4Generator.saveTrajectories=true;
 
 
 ApplicationMgr.DLLs+= { "HepRepSvc", "HepRepXml", "HepRepCorba"};
-ApplicationMgr.ExtSvc += {"HepRepSvc"};
+ApplicationMgr.ExtSvc += {"HepRepSvc", "HepRepCorbaSvc", "HepRepXmlSvc"};
 ApplicationMgr.Runable = "HepRepSvc";
 
 // tell it to automatically start WIRED from the web 
