@@ -49,6 +49,7 @@ void TkrTrack::Clear(Option_t* /* option */)
     m_nyHits             = 0;
     m_KalmanEnergyErr    = 0.;
     m_TkrCal_radlen      = 0.;
+    m_rangeEnergy        = 0.;
 
     TObjArray::Clear();
 }
@@ -107,7 +108,6 @@ void TkrTrack::Fake( Int_t ievent, UInt_t rank, Float_t randNum ) {
         setQuality(qual);
         setKalEnergy(e);
         setKalThetaMS(ms);
-        
 }
 
 #define COMPARE_IN_RANGE(att) rootdatautil::CompareInRange(get ## att(),ref.get ## att(),#att)

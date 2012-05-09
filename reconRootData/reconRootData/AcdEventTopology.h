@@ -153,7 +153,7 @@ private:
 
   UInt_t m_nSidesVeto;
   
-  ClassDef(AcdEventTopology,1)
+  ClassDef(AcdEventTopology,2)
   
 };
 #endif

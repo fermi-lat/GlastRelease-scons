@@ -126,7 +126,7 @@ private:
   ///  An estimator of the number of sigma needed for this track to hit this element
   Float_t m_vetoSigmaProp;
 
-  ClassDef(AcdTkrHitPocaV2,1)
+  ClassDef(AcdTkrHitPocaV2,2)
   
 };
 #endif

@@ -158,6 +158,9 @@ public:
 
     /// Override the "delete" operator in order to use the ReconObjectManager pool management
     void  operator delete(void* p);
+    
+    inline void        setRangeEnergy(Double32_t x)  {m_rangeEnergy = x;}
+    inline Double32_t  getRangeEnergy()              const {return m_rangeEnergy;}
 
 private:
     /// Status
@@ -193,8 +196,9 @@ private:
     UInt_t       m_nyHits;              // Number of y meas. points USED in fit
     Double32_t     m_KalmanEnergyErr;     // Estimated Error on Kalman Energy
     Double32_t     m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
+    Double32_t   m_rangeEnergy;           // energy estimated from the range 
 
-    ClassDef(TkrTrack,3)
+    ClassDef(TkrTrack,4)
 
 };
 #endif
