@@ -3,17 +3,20 @@
 // $Id$
 //##############################################################
 //
-// Job options file for Reading in the root output files and displaying events in FRED
+// Job options file for Reading in the root output files and displaying events
+// in FRED
 //
 
 ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud", "FluxSvc", "GlastSvc"};
-ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
+ApplicationMgr.ExtSvc += {"ChronoStatSvc", "GlastDetSvc"};
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
+ApplicationMgr.ExtSvc += {"DbEvtSelector/EventSelector"}; 
+EventPersistencySvc.CnvServices = {"EventCnvSvc"}; 
+//EventSelector.Input = "SVC='DbEvtSelector'";
+//EventSelector.PrintFreq = -1;
+
 ApplicationMgr.DLLs+=    {"AcdUtil","TkrUtil","G4Propagator", "G4Generator", "CalibSvc"};
-ApplicationMgr.DLLs+=    {"HepRepSvc", "HepRepXml", "HepRepCorba"}; 
-ApplicationMgr.ExtSvc += {"HepRepSvc","EventSelector/EventSelector"}; 
-ApplicationMgr.Runable = "HepRepSvc";
 
 // Uncomment this if you want to save xml files with the event 
 //HepRepSvc.autoStream = "xml";
@@ -21,15 +24,10 @@ ApplicationMgr.Runable = "HepRepSvc";
 // The default value 4 is not enought for the integration geometry 
 HepRepSvc.geometryDepth = 6;
 
-EventPersistencySvc.CnvServices = {"EventCnvSvc"}; 
-EventSelector.Input = "SVC='DbEvtSelector'";
-EventSelector.PrintFreq = -1;
-
-ApplicationMgr.TopAlg = {
-"Sequencer/Top" };
+ApplicationMgr.TopAlg = { "Sequencer/Top" };
 
 ApplicationMgr.DLLs += { "RootIo" };
-ApplicationMgr.DLLs += { "TkrRecon" };
+ApplicationMgr.DLLs += { "TkrRecon", "TkrUtil" };
 
 Top.Members   = {};
 Top.Members  += { "mcRootReaderAlg" };  // comment this for data
@@ -53,8 +51,8 @@ GlastDetSvc.topVolume="LAT"; // the whole schebang
 
 ApplicationMgr.EvtMax = 1000000;
 
-// tell it to automatically start the version of FRED 
-HepRepSvc.startFred = "$Fred_EXE_DIR";
+// Set up to run Fred
+#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt" 
 
 //or WIRED
 //HepRepSvc.startWired = 
@@ -67,7 +65,8 @@ HepRepSvc.startFred = "$Fred_EXE_DIR";
 // Names of input ROOT files - note that you can supply a list of input files
 // as a comma delimited list
 
-// From time to time, the test files below become outdated. If this job doesn't 
+// From time to time, the test files below become outdated. If this job
+// doesn't 
 //   run out of the box, please notify Leon or Heather.
 
 mcRootReaderAlg.mcRootFileList             = { "$(ROOTTESTDATADATAPATH)/default/mc.root" };
@@ -79,3 +78,5 @@ RootTupleSvc.RejectIfBad = false;
 
 // -------end readAndDisplay-specific-------
 // ----------------------------------
+
+

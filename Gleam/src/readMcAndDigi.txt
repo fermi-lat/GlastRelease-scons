@@ -1,11 +1,12 @@
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // Job options file for Gleam job to read default digi root file
-//$Header$
+//$Header: /nfs/slac/g/glast/ground/cvs/Gleam/src/readMcAndDigi.txt,v 1.3
+//2011/08/25 21:11:35 lsrea Exp $
 
 // start with the basic program defined in Gleam
 //old Style: #include "$GLEAMROOT/src/basicOptions.txt"
 #include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
-
 
 // --------------------------------------
 //      set up RootIo to control event loop
@@ -13,40 +14,54 @@
 ApplicationMgr.ExtSvc +={"RootIoSvc"};  
 ApplicationMgr.Runable=  "RootIoSvc";
 
+#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt" 
+//#include "$GLEAMROOT/src/wiredOptions.txt" 
+
 // ----------------------------------------------
 //         Algorithm sequence 
 
+Generation.Members = {
+    "mcRootReaderAlg"
+    };
+Digitization.Members = {
+    "digiRootReaderAlg",
+    "relationRootReaderAlg" //,
+    //"TkrFillTDInfoAlg"
+    };
+CalDigitization.Members = {
+    };
+    
+// Set up special recon
+////TkrFindFirst.TrackFindType = "Combo";
+////TkrFindIter.TrackFindType = "Combo";
+TkrFindFirst.DoCRFinding = false;
 
-Top.Members={
-    "mcRootReaderAlg",              // read mc, set time
-    "PointInfoAlg",                 // set pointing info from orbit, current time
-    "digiRootReaderAlg",            // read digi
-    "TriggerAlg",                   // set trigger bits -- must be before EbfWriter
-    "Sequencer/CalibrationUpdate",  // defined in basicOptions
-    "Sequencer/Onboard",            // onboard processing, defined below
-    "Sequencer/Reconstruction"      // defined in basicOptions
-    };
-Onboard.Members={
-    "EbfWriter",            // sets up Ebf for OBF
-    "OnboardFilter",
-   // "FilterTracks",     // ? not needed?
-    "FilterAlg"            // set filter status for tuple
-    };
+//ToolSvc.TreeBasedTool.MaxNumVecPoints = 2000;
+
+// Control which energy assignment tool to use
+TkrFitIter.EnergyToolName  = "TkrTrackEnergyTool";
+TkrFitFirst.EnergyToolName = "TkrTrackEnergyTool";
+//ToolSvc.TkrEnergySplitTool.TupleFileName = ""; // Try turning off to test
+//memory resident tuples
+
+// Tune kink fit
+//ToolSvc.KalmanTrackFitTool.minNrmResForKink = 25.; //15.;
+//ToolSvc.KalmanTrackFitTool.maxNumberOfKinks = 20; //8;
+
+// Try the tracker filter again
+TkrFilterFirst.FilterToolName = "TkrHoughFilterTool";
 
 mcRootReaderAlg.OutputLevel = 4;   // since it generates a line per event at INFO
 
 // -------------------------------------------------
 //          input files
 
-mcRootReaderAlg.mcRootFile       ="$(mcInRootFileName)";
-digiRootReaderAlg.digiRootFile   ="$(digiRootFileName)";
-//mcRootReaderAlg.mcRootFile       ="mc.root";
-//digiRootReaderAlg.digiRootFile   ="digi.root";
+//mcRootReaderAlg.mcRootFile       ="$(mcInRootFileName)";
+//digiRootReaderAlg.digiRootFile   ="$(digiRootFileName)";
 
 // ------------------------------------------------
 //          output
 RootTupleSvc.filename=           "$(meritRootFileName)";
-//RootTupleSvc.filename=           "remerit.root";
 
 
 ApplicationMgr.EvtMax = 10000;
