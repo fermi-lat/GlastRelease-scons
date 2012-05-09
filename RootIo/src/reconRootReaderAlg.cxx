@@ -660,6 +660,7 @@ Event::TkrTrack* reconRootReaderAlg::convertTkrTrack(const TkrTrack* trackRoot)
     trackTds->setNumXHits(trackRoot->getNumXHits());
     trackTds->setNumYHits(trackRoot->getNumYHits());
     trackTds->setTkrCalRadLen(trackRoot->getTkrCalRadlen());
+    trackTds->setRangeEnergy(trackRoot->getRangeEnergy());
 
     // Now loop over the hit planes and fill that information
     TIterator* hitIter = trackRoot->Iterator();

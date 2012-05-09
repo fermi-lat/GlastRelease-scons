@@ -440,6 +440,7 @@ void reconRootWriterAlg::fillFitTracks(TkrRecon* recon, Event::TkrTrackCol* trac
         trackRoot->setNumXHits(trackTds->getNumXHits());
         trackRoot->setNumYHits(trackTds->getNumYHits());
         trackRoot->setTkrCalRadLen(trackTds->getTkrCalRadlen());
+        trackRoot->setRangeEnergy(trackTds->getRangeEnergy());
 
         // Now loop over the hit planes and fill that information
         Event::TkrTrackHitVecConItr trkHitTdsItr = trackTds->begin();
