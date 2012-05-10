@@ -4,6 +4,7 @@ Import('baseEnv')
 from fermidebug import fdebug
 
 baseEnv.AppendUnique(CPPDEFINES = ['GlastRelease'])
+baseEnv['CONTAINERNAME'] = 'GlastRelease'
 
 vstring = 'OBF_' + (str(baseEnv['obfversion'])).replace('-', '_')
 while vstring.count('_') > 3:
