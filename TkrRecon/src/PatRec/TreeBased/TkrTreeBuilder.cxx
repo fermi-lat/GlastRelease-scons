@@ -307,12 +307,11 @@ Event::TkrFilterParams* TkrTreeBuilder::findTreeAxis(Event::TkrNodeSiblingMap* s
 
         // Some variables we'll need
         int numBiLayers   = topBiLayer - botBiLayer + 1;
-        int numIterations = 0;
-        int numTotal      = dataVec.size();
-        int numDropped    = 0;
 
         // fingers crossed! 
-        double chiSq = momentsAnalysis.doMomentsAnalysis(dataVec, startPos);
+        double sclFctr = 2.5;
+        double chiSq   = momentsAnalysis.doIterativeMomentsAnalysis(dataVec, startPos, sclFctr);
+//        double chiSq = momentsAnalysis.doMomentsAnalysis(dataVec, startPos);
 
         // Retrieve the goodies
         Point  momentsPosition = startPos; //momentsAnalysis.getMomentsCentroid();
@@ -326,16 +325,19 @@ Event::TkrFilterParams* TkrTreeBuilder::findTreeAxis(Event::TkrNodeSiblingMap* s
         filterParams->setEventAxis(momentsAxis);
         filterParams->setStatusBit(Event::TkrFilterParams::TKRPARAMS);
         filterParams->setNumBiLayers(numBiLayers);
+
+        int    numIterations = momentsAnalysis.getNumIterations();
+        int    numDropped    = momentsAnalysis.getNumDroppedPoints();
+        int    numTotal      = dataVec.size();
+        double aveDist       = momentsAnalysis.getAverageDistance();
+        double rmsTrans      = momentsAnalysis.getTransverseRms();
+        double rmsLong       = momentsAnalysis.getLongitudinalRms();
+        double rmsLongAsym   = momentsAnalysis.getLongAsymmetry();
+        double weightSum     = momentsAnalysis.getWeightSum();
+        
         filterParams->setNumIterations(numIterations);
         filterParams->setNumHitsTotal(numTotal);
         filterParams->setNumDropped(numDropped);
-
-        double aveDist     = momentsAnalysis.getAverageDistance();
-        double rmsTrans    = momentsAnalysis.getTransverseRms();
-        double rmsLong     = momentsAnalysis.getLongitudinalRms();
-        double rmsLongAsym = momentsAnalysis.getLongAsymmetry();
-        double weightSum   = momentsAnalysis.getWeightSum();
-        
         filterParams->setChiSquare(chiSq);
         filterParams->setAverageDistance(aveDist);
         filterParams->setTransRms(rmsTrans);
