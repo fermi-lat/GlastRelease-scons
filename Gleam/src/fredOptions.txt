@@ -22,7 +22,7 @@ ApplicationMgr.ExtSvc += {"HepRepSvc", "HepRepCorbaSvc", "HepRepXmlSvc"};
 ApplicationMgr.Runable = "HepRepSvc";
 
 // tell it to automatically start the version of FRED  
-HepRepSvc.startFred = "$Fred_DIR";
+HepRepSvc.startFred = "$Fred_EXE_DIR";
 
 // -------end display-specific stuff-------
 // ----------------------------------
