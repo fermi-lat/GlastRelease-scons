@@ -1,5 +1,5 @@
 package RootDisplay
-version v0r5p1
+version v0r5p2
 
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 
@@ -47,4 +47,4 @@ macro_append RootDisplay_headers "" WIN32 "test/*.txt "
 application RootDisplayTest ${GlastMain} ${Win32Resource} ${WinMain} ${RootDisplay_headers} 
 
 
-apply_pattern dummy_test
+#apply_pattern dummy_test
