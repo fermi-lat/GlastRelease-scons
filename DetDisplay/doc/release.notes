@@ -6,6 +6,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ DetDisplay-03-05-01 11-May-2012    hmk fix unit test for windows
  DetDisplay-03-05-00 23-Jan-2012    hmk Add in DetDisplaySvc to handle IGuiTool
  DetDisplay-03-04-01 20-Jan-2012    jrb SCons adjustment for GuiSvc component library
  DetDispaly-03-04-00 05-Dec-2011    hmk Merge in Gaudi v21r7
