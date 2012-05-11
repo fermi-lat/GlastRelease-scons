@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<IMML version="8.0">
+  <Worksheet lastNodeID="7" linkType="orthogonal">
+    <FileInfo>
+      <FileName>Pass8_Analysis_Open.xml</FileName>
+      <FileDateCreated/>
+    </FileInfo>
+    <WorksheetProperties>
+      <XTProps/>
+    </WorksheetProperties>
+    <WorksheetParameters>
+      <XTProps/>
+    </WorksheetParameters>
+    <ComponentComments>
+      <AuthorComments>
+        <AuthorName/>
+        <AuthorCommentTitle/>
+        <AuthorCommentDateCreated/>
+        <AuthorCommentText/>
+      </AuthorComments>
+      <DiscussionComments/>
+    </ComponentComments>
+    <ActivityNodeList>
+      <ActivityNode engineClass="com.insightful.miner.ReadTextFileEngineNode" guiClass="com.insightful.miner.ReadTextFileNodeModel" id="0" numInputs="0" numOutputs="1">
+        <DisplayInfo labelText="(0) Input" largeIcon="read_text_large.gif" smallIcon="read_text_small.gif" x="76" y="74"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="filePath" value="/a/wain041/g.ki.ki07/kadrlica/fermi/pass8/acd/class/AG-GR-v19r4p1gr14-OVL-000000-class.root"/>
+            <Property name="treeName" value="MeritTuple"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="1" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(1) SimpleBestEnergy" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="232" y="74"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="SimpleBestEnergy">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="SimpleBestLogEnergy">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="log10( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="SimpleBestEnergy">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="SimpleBestLogEnergy">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="log10( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="2" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(2) ACD Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="381" y="74"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="Acd2Tkr1VetoSigma">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="sqrt( (Acd2Tkr1VetoSigmaMip)^2 + ( SimpleBestLogEnergy * 1/10.*Acd2Tkr1VetoSigmaProj)^2)"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="Acd2TriggerTileEnergyRatio">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="Acd2TriggerTileEnergy/max(10., SimpleBestEnergy) * 100"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CutSetEngineNode" guiClass="com.insightful.miner.CutSetNodeModel" id="3" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(3) ACD Prefilters" largeIcon="cutset_large.gif" smallIcon="cutset_small.gif" x="516" y="75"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="cutDefinitions">
+              <Property name="Cal1ConeVeto">
+                <Property name="cutValue" value="!( Acd2Cal1Energy15 &gt; max(0.75,10/3.*SimpleBestLogEnergy - 13.4) )"/>
+                <Property name="makeOutput" value="false"/>
+              </Property>
+              <Property name="Tkr1ConeVeto">
+                <Property name="cutValue" value="!( Acd2Tkr1Energy30 &gt; max(0.5,27/4.*SimpleBestLogEnergy - 24.8) )"/>
+                <Property name="makeOutput" value="false"/>
+              </Property>
+              <Property name="Tkr1GapVeto">
+                <Property name="cutValue" value="!( (Tkr1SSDVeto == 0 & Acd2Tkr1VetoSigmaGap &lt; 2. ) | (Tkr1SSDVeto &lt; 3 & abs(Acd2Tkr1CornerDoca) &lt; 5.) )"/>
+                <Property name="makeOutput" value="false"/>
+              </Property>
+              <Property name="Tkr1SigmaVeto">
+                <Property name="cutValue" value="!( Acd2Tkr1VetoSigma &lt; 1.5 | (Tkr1SSDVeto &lt; 2 & Acd2Tkr1VetoSigma &lt; 3.) )"/>
+                <Property name="makeOutput" value="false"/>
+              </Property>
+              <Property name="TriggerTileEnergyVeto">
+                <Property name="cutValue" value="!( Acd2TriggerTileEnergyRatio &gt; 0.8 )"/>
+                <Property name="makeOutput" value="false"/>
+              </Property>
+            </Property>
+            <Property name="cutSetName" value="AcdPrefilters"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.WriteTextFileEngineNode" guiClass="com.insightful.miner.WriteTextFileNodeModel" id="7" numInputs="1" numOutputs="0">
+        <DisplayInfo labelText="(7) Output" largeIcon="read_text_large.gif" smallIcon="read_text_small.gif" x="645" y="75"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="deepCopyColumns"/>
+            <Property name="filePath" value="/a/wain041/g.ki.ki07/kadrlica/fermi/pass8/acd/class/output.root"/>
+            <Property name="filterColumns">
+              <Property name="Acd2Tkr1VetoSigma"/>
+              <Property name="Acd2TriggerTileEnergyRatio"/>
+            </Property>
+            <Property name="treeName" value="MeritTuple"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+    </ActivityNodeList>
+    <TextNodeList/>
+    <CollapsedNodeList/>
+    <LinkList>
+      <Link fromNode="1" fromPort="0" orthogonal="true" toNode="2" toPort="0"/>
+      <Link fromNode="2" fromPort="0" orthogonal="true" toNode="3" toPort="0"/>
+      <Link fromNode="0" fromPort="0" orthogonal="true" toNode="1" toPort="0"/>
+      <Link fromNode="3" fromPort="0" orthogonal="true" toNode="7" toPort="0"/>
+    </LinkList>
+  </Worksheet>
+</IMML>
