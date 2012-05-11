@@ -67,4 +67,8 @@ public
 # ROOTTESTDATA and output a file in Overlay format. 
 
 # Test program
-apply_pattern package_test
+#apply_pattern package_test
+set TESTJOBOPTIONS ${OVERLAYROOT}/src/test/jobOptions.txt ; \
+macro jobOptions ""                      WIN32 "test/jobOptions.txt" ; \
+application test_Overlay -group=test $(TestGlastMain) test/*.cxx $(WinMain) $(jobOptions)
+
