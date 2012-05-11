@@ -811,7 +811,7 @@ StatusCode TkrValsTool::initialize()
     addItem("Tkr1ToTTrAve",   &Tkr_1_ToTTrAve);
     addItem("Tkr1ToTAsym",    &Tkr_1_ToTAsym);
     addItem("Tkr1ChisqAsym",  &Tkr_1_ChisqAsym);
-    addItem("Tkr1SSDVeto",    &Tkr_1_SSDVeto);
+    addItem("Tkr1SSDVeto",    &Tkr_1_SSDVeto, true);
     addItem("TkrPlaneCrossed",  &Tkr_1_VetoPlaneCrossed);
 
     if(m_enableVetoDiagnostics) {

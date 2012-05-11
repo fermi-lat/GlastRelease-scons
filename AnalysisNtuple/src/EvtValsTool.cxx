@@ -297,8 +297,8 @@ StatusCode EvtValsTool::initialize()
     addItem("EvtElapsedTime",   &EvtElapsedTime);
     addItem("EvtLiveTime",      &EvtLiveTime);
 
-    addItem("EvtEnergyCorr",    &EvtEnergyCorr);
-    addItem("EvtEnergyCorrUB",  &EvtEnergyCorrUB);
+    addItem("EvtEnergyCorr",    &EvtEnergyCorr,   true);
+    addItem("EvtEnergyCorrUB",  &EvtEnergyCorrUB, true);
     addItem("EvtEnergyRaw",     &EvtEnergyRaw);
     addItem("EvtDeltaEoE",      &EvtDeltaEoE);
     addItem("EvtCalEdgeAngle",  &EvtCalEdgeAngle);
