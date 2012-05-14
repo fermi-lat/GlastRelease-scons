@@ -20,18 +20,26 @@ gcrSelectRootDataRootcint=libEnv.Rootcint('gcrSelectRootData/gcrSelectRootData_r
                                           includes=[''],
                                           localIncludes = locIncs,
                                           packageName = 'gcrSelectRootData')
-gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData',
-                                              listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
-
 libEnv['rootcint_node'] = gcrSelectRootDataRootcint
+
+libsrcs = listFiles(['src/*.cxx'])
+libsrcs.append('gcrSelectRootData/gcrSelectRootData_rootcint.cxx')
+print "In gcrSelectRootData SConscript sources are"
+for i in libsrcs: print str(i)
+
+gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData', libsrcs)
+
+#gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData',
+#                                              listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
+
 
 progEnv.Tool('gcrSelectRootDataLib')
 test_gcrSelectRootData  = progEnv.Program('test_gcrSelectRootData',
                                           ['src/test/testGcrClasses.cxx'])
 
 progEnv.Tool('registerTargets', package = 'gcrSelectRootData',
-             libraryCxts = [[gcrSelectRootData, libEnv]],
-             testAppCxts = [[test_gcrSelectRootData, libEnv]],
+             rootcintSharedCxts = [[gcrSelectRootData, libEnv]], 
+             testAppCxts = [[test_gcrSelectRootData, progEnv]],
              includes = listFiles(['gcrSelectRootData/*.h']))
 
 
