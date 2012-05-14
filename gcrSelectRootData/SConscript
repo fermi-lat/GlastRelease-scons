@@ -24,14 +24,8 @@ libEnv['rootcint_node'] = gcrSelectRootDataRootcint
 
 libsrcs = listFiles(['src/*.cxx'])
 libsrcs.append('gcrSelectRootData/gcrSelectRootData_rootcint.cxx')
-print "In gcrSelectRootData SConscript sources are"
-for i in libsrcs: print str(i)
 
 gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData', libsrcs)
-
-#gcrSelectRootData = libEnv.RootDynamicLibrary('gcrSelectRootData',
-#                                              listFiles(['src/*.cxx']) + ['gcrSelectRootData/gcrSelectRootData_rootcint.cxx'])
-
 
 progEnv.Tool('gcrSelectRootDataLib')
 test_gcrSelectRootData  = progEnv.Program('test_gcrSelectRootData',
