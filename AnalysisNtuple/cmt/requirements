@@ -1,6 +1,6 @@
 package AnalysisNtuple
 
-version v2r62p3
+version v2r62p4
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -75,4 +75,4 @@ private  # Traudl says we need this
 
 set PARAMFILESROOT "${EXTFILESSYS}/gaudi"
 
-application test_AnalysisNtuple ${GlastMain} AnalysisNtupleAlg.cxx $(Joboptions)
+application test_AnalysisNtuple ${GlastMain} AnalysisNtupleAlg.cxx ${WinMain} $(Joboptions)
