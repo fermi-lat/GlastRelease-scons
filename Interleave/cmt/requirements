@@ -1,6 +1,6 @@
 package Interleave
 
-version v1r7p4
+version v1r7p5
 author T. Burnett <tburnett@u.washington.edu>
 # $Id$
 
@@ -62,7 +62,7 @@ public set JOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt
 #apply_pattern package_test  
 set TESTJOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt ; \
 macro jobOptions ""                      WIN32 "test/jobOptions.txt" ; \
-application test_Interleave -group=test $(TestGlastMain) test/*.cxx $(jobOptions) $(WinMain)
+application test_Interleave $(TestGlastMain) test/*.cxx ${WinMain} $(jobOptions)
 
 
 
