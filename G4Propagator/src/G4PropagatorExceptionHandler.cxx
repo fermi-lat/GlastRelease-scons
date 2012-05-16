@@ -2,7 +2,7 @@
 
 #include "G4PropagatorExceptionHandler.h"
 #include "G4Generator/G4GenException.h"
-#include "src/RunManager.h"
+// #include "src/RunManager.h"
 #include "G4StateManager.hh"
 #include "G4ios.hh"
 #include <stdlib.h>
