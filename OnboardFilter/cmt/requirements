@@ -1,5 +1,5 @@
 package OnboardFilter
-version v4r16p5
+version v4r16p6
 # $Header$
 
 author Tracy Usher <usher@SLAC.Stanford.edu>
@@ -59,6 +59,6 @@ public
 set JOBOPTIONS ${ONBOARDFILTERROOT}/src/test/jobOptions.txt
 
 private
-application test_OnboardFilter ${GuiMain} test/*.cxx ${WinMain} ${Win32Resource}
+#application test_OnboardFilter ${GuiMain} test/*.cxx ${WinMain} ${Win32Resource}
 
 
