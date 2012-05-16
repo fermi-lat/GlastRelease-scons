@@ -4,6 +4,7 @@
 @verbatim
  * EOH *
 
+ userAlg-06-07-05 16-May-2012    hmk one more CMT rearrangement
  userAlg-06-07-04 11-May-2012    hmk Patch unix builds
  userAlg-06-07-03 03-May-2012    hmk Fix up windows builds
  userAlg-06-07-02 23-Feb-2012    hmk Prevent automatic use of display in UserAlg.cxx

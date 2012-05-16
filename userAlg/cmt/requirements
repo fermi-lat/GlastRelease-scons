@@ -1,5 +1,5 @@
 package userAlg
-version v6r7p4
+version v6r7p5
 # $Id$
 author T.Burnett <tburnett@u.washington.edu>
 
@@ -25,12 +25,12 @@ macro other_source "" WIN32 " *.h *.txt ../xml/*.xml"
 
 macro_append userApplinkopts ${guiapp_nomain_linkopts}
 
-application userApp ${GlastMain} *.cxx ${other_source} ${Win32Resource} ${WinMain}
+application userApp ${GlastMain} *.cxx ${WinMain} ${other_source} ${Win32Resource} 
 #application userApp ${GlastMain} ${other_source} ${Win32Resource} ${WinMain}
 
 
 # build a batch-oriented version from the same source, for RM testing
 set TESTJOBOPTIONS $(USERALGROOT)/src/test/jobOptions.txt
-application test_userAlg ${TestGlastMain} UserAlg.cxx RegisterSource.cxx ${other_source} ${WinMain}
+application test_userAlg ${TestGlastMain} UserAlg.cxx RegisterSource.cxx ${WinMain} ${other_source} 
 
 
