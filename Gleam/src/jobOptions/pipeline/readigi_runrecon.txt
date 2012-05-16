@@ -22,12 +22,13 @@ AuditorSvc.Auditors = {"ChronoAuditor"};
 //
 // Set up basic event loop: 
 //
-ApplicationMgr.ExtSvc = {"EventSelector/EventSelector" };
+ApplicationMgr.ExtSvc += { "DbEvtSelector/EventSelector" };
+
+ApplicationMgr.HistogramPersistency = "NONE";
 
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-
-EventSelector.Input     = "SVC='DbEvtSelector";
-EventSelector.PrintFreq = -1;
+//EventSelector.Input = "SVC='DbEvtSelector'";
+//EventSelector.PrintFreq = -1;
 
 
 //
@@ -177,8 +178,8 @@ ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 //
 // For dealing with non-MC data:
 //
-AnalysisNtupleAlg.toolList = {"McKludge","Glt","Acd","TkrHit","Tkr","Vtx","Cal","Evt","Obf"};
-
+AnalysisNtupleAlg.toolList = {"Glt","Acd","Acd2","TkrHit","Tkr","Vtx","Cal","Evt","Obf"};
+AnalysisNtupleAlg.readData = true; // removes any Mc tools
 
 //
 // FT2:
@@ -297,7 +298,7 @@ ToolSvc.GcrSelectTool.OutputLevel = 4;
 // 
 // Number of events:
 //
-ApplicationMgr.EvtMax = 10000000000;
+ApplicationMgr.EvtMax = -1;
 
 
 //
