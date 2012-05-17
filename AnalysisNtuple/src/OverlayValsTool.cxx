@@ -400,7 +400,7 @@ StatusCode OverlayValsTool::calculate()
         Event::CalClusterHitTabList* xTal2ClusTabList = SmartDataPtr<Event::CalClusterHitTabList>(m_pEventSvc,EventModel::CalRecon::CalClusterHitTab);
         Event::CalClusterHitTab* xTal2ClusTab = 0;
         if (xTal2ClusTabList) xTal2ClusTab = new Event::CalClusterHitTab(xTal2ClusTabList);
-        if(calOverlayCol && clusters && xTal2ClusTab)
+        if(calOverlayCol  && clusters!=0 && xTal2ClusTab)
           {
             // Get overlay energy in xtals
             int i,j,k;
