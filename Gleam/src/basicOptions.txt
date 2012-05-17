@@ -200,7 +200,10 @@ NtupleMaker1.Members = {
     "McCoordsAlg/McCoordsAlg1",  
     "ObfCoordsAlg/ObfCoordsAlg1" 
  };
-ClassifyAlg1.UseTMine = true;
+
+// Use the following setting until we figure out why 2 instances of TMine
+//     can't run at the same time on Windows.
+ClassifyAlg1.UseTMine = false;
 ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml";
 
 
