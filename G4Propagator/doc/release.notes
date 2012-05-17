@@ -4,6 +4,7 @@
  @verbatim
  * EOH *
 
+ G4Propagator-03-01-01 17-May-2012    jrb eliminate unnecessary #include and corresponding addition to include path
  G4Propagator-03-01-00 08-Dec-2011 hmk Merge in Gaudi v21r7 updates
  G4Propagator-03-00-01 21-May-2011 hmk    update use of IExternal/Geant4 to v9 
  G4Propagator-03-00-00 20-May-2011 flongo G4 9.4.p01 upgrade
