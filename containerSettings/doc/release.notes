@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-05-06 17-May-2012    hmk user ROOT v5.26.00a-gl6
  containerSettings-00-05-05 26-Apr-2012    jrb use obf B3-0-0-gl1
  containerSettings-00-05-04 03-Feb-2012    jrb use G4 p03 external for vc90 debug builds
  containerSettings-00-05-03 19-Jan-2012    jrb support for Gui main programs, mostly for Windows

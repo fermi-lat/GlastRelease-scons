@@ -14,10 +14,10 @@ if baseEnv['COMPILERNAME'] != 'vc71':
 else:
     usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
 
-if baseEnv['COMPILERNAME'] != 'vc71':
-    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i2'})
-else:
+if sys.platform == 'win32':
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
+else:
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i5'})
 
 usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.5'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl1' })
