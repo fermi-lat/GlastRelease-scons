@@ -1,6 +1,6 @@
 # -*- python -*-
 # $Header$
-# Authors: 
+# Authors: Alexandre Chekhtman
 # Version: CalUtil-03-14-07
 Import('baseEnv')
 Import('listFiles')
