@@ -3,7 +3,11 @@ import os,sys,platform
 Import('baseEnv')
 
 usedExternals = []
-usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.0.1' })
+if baseEnv['COMPILERNAME'] == 'vc90' and baseEnv.GetOption('debug'):
+  usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.2.2' })
+else:
+    usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.0.1' })
+
 usedExternals.append({ 'name' : 'cfitsio', 'iversion' : 'v3060A' })
 usedExternals.append({ 'name' : 'swig', 'iversion' : '1.3.31' })
 usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-gl1' })
@@ -15,6 +19,9 @@ else:
     usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
 
 if sys.platform == 'win32':
+  if baseEnv['COMPILERNAME'] == 'vc90' and baseEnv.GetOption('debug'):
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i2'})
+  else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
 else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i5'})
@@ -23,7 +30,7 @@ usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.5'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl1' })
 if baseEnv['COMPILERNAME'] == 'vc90':
     if baseEnv.GetOption('debug'):
-        usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03' })
+        usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03-gl1' })
     else:
         usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
 else:
