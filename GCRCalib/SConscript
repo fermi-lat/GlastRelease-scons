@@ -10,7 +10,7 @@ progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='GCRCalib', toBuild='component')
-libEnv.AppendUnique(CPPPATH = ['#TkrRecon/','#GCRCalib/'])
+libEnv.AppendUnique(CPPPATH = ['#GCRCalib/'])
 GCRCalib = libEnv.ComponentLibrary('GCRCalib',
 				   listFiles(['src/GCRRecon/*.cxx',
 					      'src/GCRSelect/*.cxx']))
