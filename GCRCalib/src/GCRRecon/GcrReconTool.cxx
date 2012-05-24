@@ -35,13 +35,10 @@
 //needed to get CALEnergyRaw:
 #include "Event/Recon/CalRecon/CalCluster.h"
 
-//#include "TkrUtil/ITkrGeometrySvc.h"
-
 #include "idents/TowerId.h" 
 #include "idents/VolumeIdentifier.h"
 #include "idents/CalXtalId.h"
 
-#include "TkrRecon/../src/Filter/ITkrFilterTool.h"
 #include "Event/Recon/TkrRecon/TkrEventParams.h"
 
 #include "geometry/Vector.h"

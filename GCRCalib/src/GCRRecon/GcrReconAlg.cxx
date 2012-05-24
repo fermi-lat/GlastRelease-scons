@@ -30,7 +30,6 @@
 #include "Event/MonteCarlo/McParticle.h"
 
 
-#include "TkrRecon/../src/Filter/ITkrFilterTool.h"
 #include "Event/Recon/TkrRecon/TkrEventParams.h"
 
 
@@ -369,35 +368,11 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
 		return StatusCode::FAILURE;
 	}
   }
-  else if(m_initAxis=="MOM")
+  else
     {
-      if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MOM " << endreq;
-
-      MsgStream log(msgSvc(), name());
-      StatusCode sc = StatusCode::SUCCESS;
-      ITkrFilterTool* filterTool;
-      if ((sc = toolSvc()->retrieveTool("TkrFilterTool", filterTool)).isFailure())
-        {
-          log << MSG::ERROR << " could not find TkrFilterTool " << endreq;
-          return sc;
-        }
-      sc = filterTool->doFilterStep();
-      //ok now the results need to be retrieved from the TDS:
-      // Recover pointer to TkrEventParams
-      Event::TkrEventParams* tkrEventParams = 
-        SmartDataPtr<Event::TkrEventParams>(m_dataSvc, EventModel::TkrRecon::TkrEventParams);
-      // First pass means no TkrEventParams
-      if (tkrEventParams == 0)
-        {
-          log << MSG::ERROR << " could not find TkrEventParams in the TDS " << endreq;
-          return StatusCode::FAILURE;
-        }
-      initPos = tkrEventParams->getEventPosition();
-      m_initDir = -tkrEventParams->getEventAxis();    
-    } else{
-    log<<MSG::ERROR<<"Invalid property "<<m_initAxis<<endreq;
-    return StatusCode::FAILURE;
-  }
+      log<<MSG::ERROR<<"Invalid property "<<m_initAxis<<endreq;
+      return StatusCode::FAILURE;
+    }
 
 
   double x0 = initPos.x();
