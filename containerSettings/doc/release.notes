@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-05-08 25-May-2012    jrb Fix up ldf external for vc90
  containerSettings-00-05-07 24-May-2012    jrb updates for vc90
  containerSettings-00-05-06 17-May-2012    hmk user ROOT v5.26.00a-gl6
  containerSettings-00-05-05 26-Apr-2012    jrb use obf B3-0-0-gl1

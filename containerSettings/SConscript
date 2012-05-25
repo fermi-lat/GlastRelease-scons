@@ -1,5 +1,5 @@
 # -*- python -*-
 # $Id$
 # Authors: J. Bogart <jrb@slac.stanford.edu>
-# Version: containerSettings-00-05-07
+# Version: containerSettings-00-05-08
 # Dummy file so that SCons will know about this directory
