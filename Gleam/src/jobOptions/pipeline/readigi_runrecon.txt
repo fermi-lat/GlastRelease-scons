@@ -92,7 +92,10 @@ GlastDetSvc.visitorMode = "recon";
 //
 ApplicationMgr.ExtSvc += {"GlastRandomSvc"};
 
-
+// For event-by-event timing
+//
+AuditorSvc.Auditors   += {"EventAuditor"};
+EventAuditor.algoNames = {"Event", "Generation", "Reconstruction","Cal1","Tkr", "Cal2", "TkrIter"};
 
 //
 // G4:
@@ -117,7 +120,8 @@ ApplicationMgr.ExtSvc += {"GlastPropagatorSvc"};
 //
 ApplicationMgr.DLLs += {"TkrUtil",
                         "CalRecon",
-                        "TkrRecon"};
+                        "TkrRecon",
+                        "TkrDigi"};
 
 Reconstruction.Members = {"Sequencer/Cal1", 
                           "Sequencer/Tkr",
@@ -131,9 +135,10 @@ Reconstruction.Members = {"Sequencer/Cal1",
 // Recon members:
 //
 Cal1.Members = {"CalXtalRecAlg",
-                "CalClustersAlg/first",
-                "CalEventEnergyAlg/RawEnergy"};
-Cal2.Members = {"CalEventEnergyAlg/second"};
+                 "CalClustersAlg/CalCluster",
+                 "CalEventEnergyAlg/CalRawEnergy",
+                 "CalClassifyAlg/CalClassify"}; 
+Cal2.Members = {"CalEventEnergyAlg/CalReconEnergy"};
 Cal3.Members = {"GcrReconAlg","GcrSelectAlg"};
 
 Tkr.Members     = {"TkrDigiTruncationAlg", "TkrReconAlg/FirstPass"};
@@ -153,21 +158,20 @@ GcrReconAlg.InitAxis           = "TKR";
 // New CAL calib file:
 CalTupleAlg.NeighborXtalkToolName   = "NeighborXtalkTool";
 CalXtalRecAlg.NeighborXtalkToolName = "NeighborXtalkTool";
-ToolSvc.NeighborXtalkTool.txtFile   = "$(LATCalibRoot)/CAL/LAT-flight_gain/pre_launch_calib_0608/digitization-licos-v3r9p12_077015240_digi_DIGI.neighborXtalk.txt";
+ToolSvc.NeighborXtalkTool.txtFile   =  "$(LATCalibRoot)/CAL/LAT-flight_gain/pre_launch_calib_0608/digitization-licos-v3r9p12_077015240_digi_DIGI.neighborXtalk.txt";
 
 
 //
 // Decrease output:
 //
-second.OutputLevel = 5;  
+CalReconEnergy.OutputLevel = 5;  
 
 
 //
 // ACD recon:
 //
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
-Acd.Members          = {"AcdReconAlg"};
-
+Acd.Members = {"AcdReconAlg","AcdReconAlgV2"}; //Turn on ACD recon v2
 
 //
 // Merit and AnalysisNtuple:
@@ -179,7 +183,7 @@ ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 // For dealing with non-MC data:
 //
 AnalysisNtupleAlg.toolList = {"Glt","Acd","Acd2","TkrHit","Tkr","Vtx","Cal","Evt","Obf"};
-AnalysisNtupleAlg.readData = true; // removes any Mc tools
+AnalysisNtupleAlg.realData = true; // removes any Mc tools
 
 //
 // FT2:
@@ -298,13 +302,13 @@ ToolSvc.GcrSelectTool.OutputLevel = 4;
 // 
 // Number of events:
 //
-ApplicationMgr.EvtMax = -1;
+ApplicationMgr.EvtMax = 5;
 
 
 //
 // Geometry: Use flight geometry!
 //
-GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight01/flightSegVols.xml";
 
 
 //
@@ -335,6 +339,8 @@ CalTupleAlg.tupleFilename = "caltuple.root";
 // Name of GCR Root file:
 //
 gcrSelectRootWriterAlg.gcrSelectRootFile = "gcr.root";
+
+
 
 
 //
