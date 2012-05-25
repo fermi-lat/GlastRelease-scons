@@ -42,10 +42,7 @@ public:
 
     /// Query interfaces of Interface
     //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
-    static const CLID&         classID() {
-      return InterfaceID("SrcOverlay", 1, 0);
-    }
-
+    static const CLID&         classID()     {return Event::SrcOverlay::classID();}
     static const unsigned char storageType() {return EXCEL_StorageType;}
 
     /// Initialize the converter
