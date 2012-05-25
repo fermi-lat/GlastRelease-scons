@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ Overlay-02-02-05 25-May-2012 TU  De-neutralize the overlay with the new gaudi
  Overlay-02-02-04 16-May-2012 hmk drop unit test in CMT
  Overlay-02-02-03 15-May-2012 hmk fix up unit test for linux
  Overlay-02-02-02 11-May-2012 hmk fix unit test on windows
