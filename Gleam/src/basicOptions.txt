@@ -247,7 +247,7 @@ FirstPass.firstStage = 2;
 
 // Second pass of Cal Recon - energy corrections only
 Cal2.Members = {
-    "CalEventEnergyAlg/second"
+    "CalEventEnergyAlg/CalReconEnergy"
     };
 TkrIter.Members = {
     "TkrReconAlg/Iteration"
@@ -345,6 +345,7 @@ EbfWriter.OutputLevel=4;
 ToolSvc.LastLayerCorrTool.OutputLevel=4; 
 ToolSvc.OutputLevel=4;
 CalXtalRecAlg.OutputLevel=4;
+CalReconEnergy.OutputLevel=5;
 AcdReconAlg.OutputLevel=4; // suppress INFO complaint about no tracks
 GcrReconAlg.OutputLevel           = 4;
 GcrReconSelect.OutputLevel        = 4;
