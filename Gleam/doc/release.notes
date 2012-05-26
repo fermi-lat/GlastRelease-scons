@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-00 26-May-2012  lsrea fixes to readigi_runrecon, and p7repro calibrations
  Gleam-07-10-10 18-May-2012  lsrea TMineX2 problem fixed!
  Gleam-07-10-09 16-May-2012  lsrea Temporarily turn off TMine for ClassifyAlg1
  Gleam-07-10-08 15-May-2012  lsrea Updated to new Gaudi, added Acd2ValsTool
