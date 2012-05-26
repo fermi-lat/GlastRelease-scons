@@ -469,6 +469,7 @@ StatusCode OverlayValsTool::calculate()
                     CAL_Clu5_OverlayEnergy = eTotovr;
                   }     
               }
+            delete xTal2ClusTab;
           }
     }
     
