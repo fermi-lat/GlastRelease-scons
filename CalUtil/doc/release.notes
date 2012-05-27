@@ -5,6 +5,7 @@
  * Package CalUtil
  * EOH *
 
+ CalUtil-03-14-10 27-May-2012 heather fix cmt author setting
  CalUtil-03-14-09 26-May-2012  lsrea another try at setting the SCons author
  CalUtil-03-14-08 26-May-2012  lsrea Sasha claims this package
  CalUtil-03-14-07 18-Jan-2012    jrb tag carriage control patches required by vc90

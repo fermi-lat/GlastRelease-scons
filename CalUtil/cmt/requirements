@@ -1,5 +1,6 @@
 package CalUtil
-version v3r14p9
+version v3r14p10
+author Alexandre Chekhtman <achekhtm@gmu.edu>
 
 # $Id$
 branches src cmt doc
