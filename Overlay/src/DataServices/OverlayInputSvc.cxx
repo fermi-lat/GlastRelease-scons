@@ -113,7 +113,7 @@ OverlayInputSvc::OverlayInputSvc(const std::string& name,ISvcLocator* svc) : Ser
     // The files will be ignored if RootIoSvc is provided a meta (event collection) ROOT file
 
     declareProperty("OverlayTool",      m_overlay="McIlwain_L");
-    declareProperty("InputXmlFilePath", m_inputXmlFilePath="$(OVERLAYROOT)/xml");
+    declareProperty("InputXmlFilePath", m_inputXmlFilePath="$(OVERLAYXMLPATH)/xml");
     declareProperty("clearOption",      m_clearOption="");
 
     m_inputFileMap.clear();

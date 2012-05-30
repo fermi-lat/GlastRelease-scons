@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Tracy Usher <usher@slac.stanford.edu>
-# Version: Overlay-02-02-05
+# Version: Overlay-02-02-06
 import os
 Import('baseEnv')
 Import('listFiles')
@@ -37,6 +37,7 @@ progEnv.Tool('registerTargets', package = 'Overlay',
              libraryCxts = [[OverlayLib, libEnv]],
              testAppCxts = [[test_Overlay, progEnv]],
              includes = listFiles(['Overlay/*']),
+             xml = listFiles(['xml/*.xml', 'xml/*.xsd']),
              jo = listFiles(['src/*/*.txt']))
 
 

@@ -8,7 +8,7 @@
 ApplicationMgr.DLLs   = {  "Overlay", "RootIo"};
 //ApplicationMgr.ExtSvc += {"OverlayInputSvc"};
 
-OverlayInputSvc.InputXmlFilePath="$(OVERLAYROOT)/src/test";
+OverlayInputSvc.InputXmlFilePath="$(OVERLAYXMLPATH)/test";
 
 // ----------------------------
 // setup basic event loop stuff
