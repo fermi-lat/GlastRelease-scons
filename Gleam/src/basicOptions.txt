@@ -191,7 +191,7 @@ ApplicationMgr.DLLs += {
 /// ADW: Make development tuple with defaults (i.e. MeritTuple)
 /// Can't duplicate Auditor yet...
 AuditorSvc.Auditors += {"EventAuditor"}; // For event-by-event timing
-
+ApplicationMgr.AuditAlgorithms = true;
 NtupleMaker1.Members = {
     "PtValsAlg/PtValsAlg1",   
     "AnalysisNtupleAlg/AnalysisNtupleAlg1",
