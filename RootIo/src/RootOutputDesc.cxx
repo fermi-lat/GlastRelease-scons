@@ -90,13 +90,17 @@ bool RootOutputDesc::fillTree(int autoSaveInterval)
    {
     rootUtil::AutoCd cd(getCurrentFile()) ;
     if (getCurrentFile()->TestBits(TFile::kWriteError))
-     { throw ; }
-    m_tree->Fill() ;
+     { std::cerr << "TestBits Failed" << std::endl; throw ; }
+    Int_t numBytes = m_tree->Fill() ;
+    if (numBytes < 0) {
+        std::cerr << "Filling TTree Error for " << m_treeName << std::endl;
+        throw;
+    }
     ++m_eventCounter;
     if ( m_eventCounter % autoSaveInterval == 0 )
      {
-      if ( m_tree->AutoSave() == 0 )
-       { throw ; }
+      if ( m_tree->AutoSave("flushbaskets") == 0 )
+       { std::cerr << "AutoSave Failed" << std::endl; throw ; }
      }
    }
   catch(...)

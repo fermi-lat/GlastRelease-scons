@@ -47,6 +47,7 @@ class RootOutputDesc
     bool LoadTree( Long64_t ievent ) { return (m_tree->LoadTree(ievent)<0?false:true) ; }
 
     bool fillTree(int autoSaveInterval=1000); 
+    void turnOffAutoFlush() { m_tree->SetAutoFlush(0);}
 
   private :
 
