@@ -253,6 +253,16 @@ StatusCode GeneralHitRemovalTool::truncateDigis()
             }
         }
     }
+
+    // make sure the stripDigiMap goes away!
+    StripDigiMap::iterator mapIter = stripDigiMap.begin();      
+    for(;mapIter!=stripDigiMap.end(); ++mapIter) {
+        SiStripList* stripList = mapIter->first;
+        stripList->clear();
+        delete stripList;
+    }
+    stripDigiMap.clear();
+
     return sc;
 }
 
