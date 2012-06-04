@@ -29,13 +29,13 @@ OverlayLib = libEnv.ComponentLibrary('Overlay',
                                          ]))
  
 progEnv.Tool('OverlayLib', depsOnly = 1)
-test_Overlay = progEnv.GaudiProgram('test_Overlay',
-                                    listFiles(['src/test/*.cxx']), test = 1,
-                                    package='Overlay')
+#test_Overlay = progEnv.GaudiProgram('test_Overlay',
+#                                    listFiles(['src/test/*.cxx']), test = 1,
+#                                    package='Overlay')
 
 progEnv.Tool('registerTargets', package = 'Overlay',
              libraryCxts = [[OverlayLib, libEnv]],
-             testAppCxts = [[test_Overlay, progEnv]],
+             #testAppCxts = [[test_Overlay, progEnv]],
              includes = listFiles(['Overlay/*']),
              xml = listFiles(['xml/*.xml', 'xml/*.xsd']),
              jo = listFiles(['src/*/*.txt']))
