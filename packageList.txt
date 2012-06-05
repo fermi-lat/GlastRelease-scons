@@ -50,7 +50,7 @@ commonRootData commonRootData-02-16-01
 mcRootData mcRootData-02-22-06
 digiRootData digiRootData-11-14-06
 reconRootData reconRootData-09-29-00
-gcrSelectRootData gcrSelectRootData-02-02-07
+gcrSelectRootData gcrSelectRootData-02-02-08
 rootUtil rootUtil-01-04-07
 rootTestData rootTestData-04-05-00
 
@@ -73,16 +73,16 @@ OnboardFilter OnboardFilter-04-16-07
 OnboardFilterTds OnboardFilterTds-00-11-03
 
 # Calorimeter
-CalUtil CalUtil-03-14-07
+CalUtil CalUtil-03-14-10
 CalXtalResponse CalXtalResponse-00-26-00
 CalDigi CalDigi-03-08-00
 CalRecon CalRecon-06-17-02
-GCRCalib GCRCalib-01-09-01
+GCRCalib GCRCalib-01-10-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-01
 TkrUtil TkrUtil-03-26-01
-TkrRecon TkrRecon-10-31-01
+TkrRecon TkrRecon-10-32-00
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -93,7 +93,7 @@ AcdRecon AcdRecon-05-03-00
 #GlastMS GlastMS-01-00-01
 G4Generator G4Generator-06-05-00
 #G4HadronSim G4HadronSim-02-00-01
-G4Propagator G4Propagator-03-01-00
+G4Propagator G4Propagator-03-01-01
 
 # calibration
 calibUtil calibUtil-01-13-04
@@ -104,7 +104,7 @@ calibRootData calibRootData-01-07-11
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-01-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-62-00
+AnalysisNtuple AnalysisNtuple-02-63-00
 
 # LDF
 CHS/eventFile eventFile-09-00-02
@@ -120,7 +120,7 @@ HepRepXml HepRepXml-00-10-01
 
 # classification
 classifier classifier-01-06-06
-GlastClassify GlastClassify-07-09-02
+GlastClassify GlastClassify-07-09-03
 
 Interleave Interleave-01-07-06
 
@@ -131,10 +131,10 @@ ConfigSvc ConfigSvc-00-03-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-00-00
-Overlay Overlay-02-02-04
+Overlay Overlay-02-02-06
 overlayRootData overlayRootData-00-03-04
 
-calibGenCAL calibGenCAL-05-09-05
+calibGenCAL calibGenCAL-05-09-07
 calibGenACD calibGenACD-04-01-06
 calibTkrUtil calibTkrUtil-02-09-09
 calibGenTKR calibGenTKR-04-08-03
@@ -142,8 +142,8 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-07-06
 
-Gleam Gleam-07-10-06
+Gleam Gleam-07-11-01
 
-SConsFiles SConsFiles-00-21-02
-GlastRelease-scons/containerSettings containerSettings-00-05-06
+SConsFiles SConsFiles-00-23-06
+GlastRelease-scons/containerSettings containerSettings-00-05-08
 
