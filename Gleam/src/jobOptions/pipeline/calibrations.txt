@@ -72,8 +72,8 @@ CalibMySQLCnvSvc.QualityList = {"PROD"};
 
 TkrReconCalib.deadStripsCalibFlavor        = "p7repro";
 TkrReconCalib.hotStripsCalibFlavor         = "p7repro";
-TkrReconCalib.internalAlignmentCalibFlavor = “p7repro”;
-TkrReconCalib.towerAlignmentCalibFlavor    = “p7repro”;
+TkrReconCalib.internalAlignmentCalibFlavor = "p7repro";
+TkrReconCalib.towerAlignmentCalibFlavor    = "p7repro";
 	 
 CalCalibSvc.FlavorAsym      = "p7repro";
 CalCalibSvc.FlavorPed       = "p7repro";
