@@ -80,7 +80,7 @@ CalRecon CalRecon-06-17-02
 GCRCalib GCRCalib-01-10-00
 
 # Tracker
-TkrDigi TkrDigi-02-13-01
+TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-26-01
 TkrRecon TkrRecon-10-32-00
 
@@ -131,7 +131,7 @@ ConfigSvc ConfigSvc-00-03-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-00-00
-Overlay Overlay-02-02-06
+Overlay Overlay-02-02-08
 overlayRootData overlayRootData-00-03-04
 
 calibGenCAL calibGenCAL-05-09-07
@@ -142,7 +142,7 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-07-06
 
-Gleam Gleam-07-11-01
+Gleam Gleam-07-11-02
 
 SConsFiles SConsFiles-00-23-07
 GlastRelease-scons/containerSettings containerSettings-00-05-08
