@@ -93,54 +93,54 @@ public:
 
     // Methods to return information
     // Return pointer to the parent node
-    const TkrVecNode*                   getParentNode()      const {return m_parent;}
+    const TkrVecNode*                   getParentNode()           const {return m_parent;}
     // Return pointer to the associated link
-    const TkrVecPointsLink*             getAssociatedLink()  const {return m_associatedLink;}
+    const TkrVecPointsLink*             getAssociatedLink()       const {return m_associatedLink;}
     // Return the rms angle
-    const double                        getRmsAngle()        const;
+    const double                        getRmsAngle()             const;
     // Return the depth of tree to this node
-    const int                           getDepth()           const {return m_depth;}
+    const int                           getDepth()                const {return m_depth;}
     // Number of leaves in the tree
-    const int                           getNumLeaves()       const {return m_leaves;}
+    const int                           getNumLeaves()            const {return m_leaves;}
 	// Number of Thin Layer leaves in the tree
-    const int                           getNumThinLeavesInTree()       const;
+    const int                           getNumThinLeavesInTree()  const;
 	// Number of Thick Layer leaves in the tree
-    const int                           getNumThickLeavesInTree()       const;
+    const int                           getNumThickLeavesInTree() const;
     // number of branches in the tree
-    const int                           getNumBranches()     const {return m_branches;}
+    const int                           getNumBranches()          const {return m_branches;}
     // Number of nodes in the tree
-    const int                           getNumNodesInTree()  const;
+    const int                           getNumNodesInTree()       const;
 	   // Number of Thin section nodes in the tree
-    const int                           getNumThinNodesInTree()  const;
+    const int                           getNumThinNodesInTree()   const;
 	   // Number of Thick nodes in the tree
     const int                           getNumThickNodesInTree()  const;
 		   // Number of Blank nodes in the tree
     const int                           getNumBlankNodesInTree()  const;
 	   // Number of Thin rad. lens in the tree
-    const float                         getNumThinRLnInTree()  const;
+    const float                         getNumThinRLnInTree()     const;
 	   // Number of Thick rad. lens in the tree
-    const float                         getNumThickRLnInTree()  const;
+    const float                         getNumThickRLnInTree()    const;
     // Return the memory used by the tree
-    const int                           getMemUsedInTree()   const;
+    const int                           getMemUsedInTree()        const;
     // Get the tree starting layer
-    const unsigned char                 getTreeStartLayer()  const;
+    const unsigned char                 getTreeStartLayer()       const;
     // Get the current bilayer
-    const unsigned char                 getCurrentBiLayer()  const;
+    const unsigned char                 getCurrentBiLayer()       const;
     // Get the current bilayer
-    const unsigned char                 getBiLyrs2MainBrch() const;
+    const unsigned char                 getBiLyrs2MainBrch()      const;
     // Get the Tree ID
-    const unsigned char                 getTreeId()          const;
+    const unsigned char                 getTreeId()               const;
     // Get the number of bilayers from start to this node
-    const unsigned char                 getNumBiLayers()     const {return getTreeStartLayer() - getCurrentBiLayer() + 1;}
+    const unsigned char                 getNumBiLayers()          const {return getTreeStartLayer() - getCurrentBiLayer() + 2;}
     // Check status bits
-    const bool                          isNodeSacred()       const {return (m_statusBits & NODE_IS_SACRED)           != 0;}
-    const bool                          canNodeBeShared()    const {return (m_statusBits & NODE_CAN_BE_SHARED)       != 0;}
-    const bool                          isOnBestBranch()     const {return (m_statusBits & NODE_ON_BEST_BRANCH)      != 0;}
-    const bool                          isOnNextBestBranch() const {return (m_statusBits & NODE_ON_NEXT_BEST_BRANCH) != 0;}
+    const bool                          isNodeSacred()            const {return (m_statusBits & NODE_IS_SACRED)           != 0;}
+    const bool                          canNodeBeShared()         const {return (m_statusBits & NODE_CAN_BE_SHARED)       != 0;}
+    const bool                          isOnBestBranch()          const {return (m_statusBits & NODE_ON_BEST_BRANCH)      != 0;}
+    const bool                          isOnNextBestBranch()      const {return (m_statusBits & NODE_ON_NEXT_BEST_BRANCH) != 0;}
     // Get the number of BiLayers from this node along best branch
-    const int                           getBestNumBiLayers() const {return m_bestNumBiLayers;}
+    const int                           getBestNumBiLayers()      const {return m_bestNumBiLayers;}
     // Get the rms deviations from this node along best branch
-    const double                        getBestRmsAngle()    const; // {return m_bestRmsAngle;}
+    const double                        getBestRmsAngle()         const; // {return m_bestRmsAngle;}
 
     // Define operator to facilitate sorting
     const bool operator<(const TkrVecNode& right) const
@@ -811,8 +811,8 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
     }
 
     // Ok, first "real" selection is the deepest (most links) branch
-    if      (left->getDepth() < right->getDepth()) return false;
-    else if (left->getDepth() > right->getDepth()) return true;
+    if      (left->getDepth() < right->getDepth() - 1) return false;
+    else if (left->getDepth() > right->getDepth() + 1) return true;
 
     // If here then branches are the same depth, take the one spanning the most bilayers
     //if      (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
@@ -820,8 +820,10 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
 
     // Last check is to take the branch which is "straightest" 
     // Use the scaled rms angle to determine straightest...
-    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
-    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
+//    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
+//    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
+    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth() + left->getNumAnglesInSum());
+    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth()+ right->getNumAnglesInSum());
     
     //if (left->getBestRmsAngle() < right->getBestRmsAngle()) return true;
     if (leftRmsAngle < rightRmsAngle) return true;
