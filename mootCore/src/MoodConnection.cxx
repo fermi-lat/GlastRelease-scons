@@ -139,8 +139,8 @@ namespace MOOT {
       return false;
     }
     std::string cnf("$(HOME)/.my.cnf");
-    facilities::Util::expandEnvVar(&cnf);
     if (m_write) {
+      facilities::Util::expandEnvVar(&cnf);
       ok = conn->setOption(rdbModel::DBreadDefaultFile, 
                              cnf.c_str());
       if (ok) ok = conn->setOption(rdbModel::DBreadDefaultGroup, "MOOT_WRITE");
