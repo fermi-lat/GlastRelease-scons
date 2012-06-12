@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+ mootCore-01-24-08 11-Jun-2012    jrb Eliminate unnecessary step (translating /u/ey/jrb) for read-only connection
  mootCore-01-24-07 16-Jun-2010    jrb updates for SCons builds
  mootCore-01-24-06 03-Mar-2010    jrb use addLinkDeps in SCons build
  mootCore-01-24-05 02-Mar-2010 panetta Fix SConscript for CHS-scons
