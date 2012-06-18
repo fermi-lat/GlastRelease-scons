@@ -834,6 +834,9 @@ Event::TkrTrack* TkrTreeTrackFinderTool::getTkrTrackFromHits(Point            st
         {
             throw(TkrException("Exception encountered when fitting track in tree TkrTreeTrackFinderTool::getTkrTrackFromHits "));  
         }
+
+        // Make sure the composite bit is set
+        track->setStatusBit(Event::TkrTrack::COMPOSITE);
     }
     else
     {
