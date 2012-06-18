@@ -66,17 +66,21 @@ public:
 
     // Methods to return information
     // Return pointer to the head node for this tree
-    const TkrVecNode*        getHeadNode()   const {return m_headNode;}
+    const TkrVecNode*        getHeadNode()              const {return m_headNode;}
     // Return pointer to the best leaf, corresponding to the best track
-    const TkrVecNode*        getBestLeaf()   const {return m_bestLeaf;}
+    const TkrVecNode*        getBestLeaf()              const {return m_bestLeaf;}
     // Return pointer to the second leaf, corresponding to second track (if there)
-    const TkrVecNode*        getSecondLeaf() const {return m_secondLeaf;}
+    const TkrVecNode*        getSecondLeaf()            const {return m_secondLeaf;}
     // Return pointer to the sibling map
-    const TkrNodeSiblingMap* getSiblingMap() const {return m_siblingMap;}
+    const TkrNodeSiblingMap* getSiblingMap()            const {return m_siblingMap;}
     // Return pointer to the axis parameters
-    const TkrFilterParams*   getAxisParams() const {return m_axisParams;}
+    const TkrFilterParams*   getAxisParams()            const {return m_axisParams;}
     // Return pointer to the track for this tree
-    const TkrTrack*          getBestTrack()  const {return front();}
+    const TkrTrack*          getBestTrack()             const {return front();}
+    // Return angle best branch track makes with tree axis
+    const double             getBestBranchAngleToAxis() const {return m_bestBranchAngleToAxis;}
+    // Return angle axis seeded track makes with tree axis
+    const double             getAxisSeededAngleToAxis() const {return m_axisSeededAngleToAxis;}
 
     // Methods to set specific parameters. 
     // It is required that the constructor be provided with some info that is unchangeable
@@ -85,6 +89,12 @@ public:
 
     // This allows setting of the next best leaf
     void setSecondLeaf(TkrVecNode* scndLeaf) {m_secondLeaf = scndLeaf;}
+
+    // Set the angle best branch track makes with tree axis
+    void setBestBranchAngleToAxis(double angToAxis) {m_bestBranchAngleToAxis = angToAxis;}
+
+    // Set the angle axis seeded track makes with tree axis
+    void setAxisSeededAngleToAxis(double angToAxis) {m_axisSeededAngleToAxis = angToAxis;}
 
 private:
     // Pointer to the head node in the Tree
@@ -101,6 +111,12 @@ private:
 
     // Pointer to the tree axis parameters 
     TkrFilterParams*   m_axisParams;
+
+    // Angle best leaf track to axis
+    double             m_bestBranchAngleToAxis;
+
+    // Angle axis seeded track to axis
+    double             m_axisSeededAngleToAxis;
 };
 
 // Typedefs for gaudi container for these objects
