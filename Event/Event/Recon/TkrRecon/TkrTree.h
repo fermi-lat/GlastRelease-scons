@@ -38,7 +38,13 @@ class TkrTree: virtual public ContainedObject, public TkrTrackVec
 public:
     // Constructors
     TkrTree() :
-            m_headNode(0), m_bestLeaf(0), m_secondLeaf(0), m_siblingMap(0), m_axisParams(0)
+                m_headNode(0), 
+                m_bestLeaf(0), 
+                m_secondLeaf(0), 
+                m_siblingMap(0), 
+                m_axisParams(0), 
+                m_bestBranchAngleToAxis(0.), 
+                m_axisSeededAngleToAxis(0.)
             {TkrTrackVec::clear();}
 
     TkrTree(TkrVecNode*        node, 
