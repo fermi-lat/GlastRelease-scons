@@ -67,6 +67,7 @@ CalibrationUpdate.Members={
 ApplicationMgr.DLLs +={ "TkrUtil", "TkrDigi", "CalDigi", "AcdDigi"  };
 Digitization.Members = { 
     "TkrDigiAlg",
+    "TkrDigiTruncationAlg",
     "AcdDigiAlg"
     };
 
