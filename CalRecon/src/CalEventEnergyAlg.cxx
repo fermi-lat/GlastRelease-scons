@@ -274,6 +274,7 @@ StatusCode CalEventEnergyAlg::execute()
                 calEnergy->setParams(bestCorResult->getParams()) ;
                 calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
             }    
+            ++iclu;
         }
     }
     
