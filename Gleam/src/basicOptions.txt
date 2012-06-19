@@ -203,6 +203,7 @@ NtupleMaker1.Members = {
 ClassifyAlg1.UseTMine = true;
 ClassifyAlg1.TMineCacheFile = "MeritTuple_cache.root";
 ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml";
+//ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Protected.xml";
 
 
 /// ADW: Make production tuple named PrimeTuple
@@ -215,16 +216,13 @@ AnalysisNtupleAlg2.proTuple = true;
 
 ClassifyAlg2.TreeName = "PrimeTuple";
 ClassifyAlg2.UseTMine = true;
-ClassifyAlg1.TMineCacheFile = "PrimeTuple_cache.root";
-ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
+ClassifyAlg2.TMineCacheFile = "PrimeTuple_cache.root";
+ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml";
+//ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
 
 // default output to GLEAMDATAPATH
 RootTupleSvc.filename            = "${GLEAMDATAPATH}/merit.root";
 RootTupleSvc.RejectIfBad = false;
-
-
-/// ADW: Friend the two tuples
-RootTupleSvc.treeFriends = {"MeritTuple","PrimeTuple"};
 
 // ----------------------------
 // Reconstruction sequence details
