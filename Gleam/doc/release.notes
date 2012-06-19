@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-03 19-Jun-2012  lsrea Put TkrDigiTruncationAlg back into the Digi sequence
  Gleam-07-11-02 05-Jun-2012  lsrea replace smart quotes with normal ones
  Gleam-07-11-01 30-May-2012  lsrea Actually turn on the Auditor
  Gleam-07-11-00 26-May-2012  lsrea fixes to readigi_runrecon, and p7repro calibrations
