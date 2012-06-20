@@ -73,9 +73,9 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     centroid  /= weightSum;
   }
   else{
-    std::cout << "warning, failed to calculate centroid..." << std::endl;
+    //reset the centroid in case of failure
     centroid = iniCentroid;
-  }//warns if there is an error in the centroid calculation
+  }
  
   // Loop through the data points a first time in order to determine
   // energy, centroid, and inertia tensor.
@@ -154,7 +154,6 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
       }
 
     // Calculate the covariance on the primary axis
-    //m_axisErr = calcCovariance(m_axis[0]);
     m_axisErr = calcCovariance(dataVec,m_centroid);
 
     // Second loop to get the chisquare (residuals about principal axis, through centroid,
