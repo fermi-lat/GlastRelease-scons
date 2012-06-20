@@ -42,7 +42,8 @@ class CalMomentsAnalysis
 
   /// ADW: Sept. 7, 2011
   /// Calculate the covariance on the axis direction
-  CLHEP::HepMatrix calcCovariance(Vector momAxis);
+  //CLHEP::HepMatrix calcCovariance(Vector momAxis);
+  CLHEP::HepMatrix calcCovariance(CalMomentsDataVec& dataVec, const Point& centroid);
 
   /// Access class members...
   inline const double getWeightSum()        const { return m_weightSum; }
