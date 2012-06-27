@@ -590,6 +590,9 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     // Apply final correction 
     m_corr_energy = m_corr_energy * ad_hoc_factor;
     m_total_correction = m_corr_energy/m_raw_energy;
+
+	// NOTE:  BIG Change:  leaving out the leakage correction.  It cause too much dispersion below 1 GeV
+	m_corr_energy *= m_leakage_correction; 
     
         return;
 }
