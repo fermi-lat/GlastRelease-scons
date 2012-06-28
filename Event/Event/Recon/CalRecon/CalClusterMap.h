@@ -13,18 +13,19 @@ static const CLID& CLID_CalClusterMap = InterfaceID("CalClusterMap",  1, 0);
 /** 
 * @class CalClusterMap
 *
-* @brief Gaudi TDS class providing access to the CAL clusters for the event level analysis.
+* @brief Gaudi TDS class providing access to the CAL clusters for the event
+* level analysis.
 *
-* This is essentially a std::map of std::vectors of pointers to Event::CalClusterVec
-* objects.
-* While we still keep an Event::CalClusterCol as the basic container for the cluster
-* objects (i.e. owning the objects themselves and taking care of the related cleanup)
-* we won't use that container for accessing the actual cluster, this new class providing
+* This is essentially a std::map of std::vectors of pointers to
+* Event::CalClusterVec objects. While we still keep an Event::CalClusterCol a
+* the basic container for the cluster objects (i.e. owning the objects
+* themselves and taking care of the related cleanup) we won't use that
+* container for accessing the actual cluster, this new class providing
 * a more flexible access option.
 *
 * We decided to map vectors of clusters rather than clusters as a more general
-* data structure, allowing to group together in a straighforward way, e.g., the "raw"
-* output of the clustering stage.
+* data structure, allowing to group together in a straighforward way, e.g., the
+* "raw" output of the clustering stage.
 *
 * @author Luca Baldini.
 */
