@@ -10,7 +10,8 @@
 /** 
 * @class CalClusterVec
 *
-* @brief TDS class representing a std::vector of pointers to Event::CalCluster obects.
+* @brief TDS class representing a std::vector of pointers to Event::CalCluster
+* obects.
 *
 * @author Luca Baldini.
 */
@@ -21,8 +22,22 @@ namespace Event { //Namespace Event
   class CalClusterVec : virtual public std::vector<CalCluster*>
     {
     public:
-      CalClusterVec() {};
+      CalClusterVec();
       virtual ~CalClusterVec() {};
+
+      /// Overloaded push_back() method (we have to keep track of the
+      /// clusters with the highest energy/gamma probability).
+      void push_back(CalCluster*);
+
+      /// Access methods.
+      inline const CalCluster* getHighestEnergyCluster() { return m_highestEnergyCluster; }
+      inline const CalCluster* getHighestGamProbCluster() { return m_highestGamProbCluster; }
+      
+    private:
+      /// Pointer to the cluster in the vector with the highest energy.
+      CalCluster* m_highestEnergyCluster;
+      /// Pointer to the cluster in the vector with the highest gamma probabilty.
+      CalCluster* m_highestGamProbCluster;
   };
 
 
