@@ -236,16 +236,19 @@ private:
 };
 
 
-//typedef for the Gaudi TDS Container
-typedef ObjectVector<CalCluster>      CalClusterCol;
-typedef CalClusterCol::iterator       CalClusterColItr;
-typedef CalClusterCol::const_iterator CalClusterColConItr;
-
-// Define the relational table taking us back to CalXtalRecData objects
-typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster> CalClusterHitTab;
-typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster> CalClusterHitRel;
-typedef RelationList<CalXtalRecData, CalCluster>                  CalClusterHitTabList;
-
+  // typedef for the Gaudi TDS Container.
+  // This is the object owning the clusters and responsible for deleting them when
+  // it's time to cleanup.
+  // We're generally not going to loop over this collection.
+  typedef ObjectVector<CalCluster>      CalClusterCol;
+  typedef CalClusterCol::iterator       CalClusterColItr;
+  typedef CalClusterCol::const_iterator CalClusterColConItr;
+  
+  // Define the relational table taking us back to CalXtalRecData objects
+  typedef Event::RelTable<Event::CalXtalRecData, Event::CalCluster> CalClusterHitTab;
+  typedef Event::Relation<Event::CalXtalRecData, Event::CalCluster> CalClusterHitRel;
+  typedef RelationList<CalXtalRecData, CalCluster>                  CalClusterHitTabList;
+  
 }; //Namespace Event
 
 #endif        
