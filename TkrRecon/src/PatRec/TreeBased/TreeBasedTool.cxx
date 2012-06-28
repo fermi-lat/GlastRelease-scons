@@ -570,7 +570,7 @@ StatusCode TreeBasedTool::secondPass()
                     // the energy assigned to it
                     //if (treeClusItr != treeClusVec.begin()) energy = m_minEnergy;
             
-                    int numTracks = m_tkrTrackFinder->findTracks(tree, energy);
+                    int numTracks = m_tkrTrackFinder->findTracks(tree, energy, cluster);
             
                     // We should abandon any trees with no tracks
                     if (numTracks > 0)
