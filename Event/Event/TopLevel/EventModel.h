@@ -177,29 +177,19 @@ public:
 
        static std::string Event;
        static std::string CalXtalRecCol;
-       //@@@FP 07/09/05
-       // reste des premieres versions
-       //            static std::string CalMIPsCol;
-       //@@@FP 07/09/05
        static std::string CalMipTrackCol;
        static std::string CalClusterCol;
+       static std::string CalClusterMap;
+       static std::string CalRawClusterVec;
+       static std::string CalUberCluster;
        static std::string CalEventEnergyCol;
        static std::string CalEventEnergyMap;
        static std::string CalClusterHitTab;
-       //@@@FP 07/09/05
-       // idem
-//       static std::string CalXtalMIPsTab;
-    //@@@FP 07/09/05
-           //@@@CL 06/01/06 BEGIN:
        static std::string GcrXtalCol;
        static std::string GcrReconVals;
-       //@@@CL 06/01/06 END
-       //@@@CL 26/27/06 BEGIN:
        static std::string GcrSelectedXtalsCol;
-       //@@@CL 06/27/06 END
        static std::string GcrTrack;
        static std::string GcrSelectVals;
- 
     };
 
 
