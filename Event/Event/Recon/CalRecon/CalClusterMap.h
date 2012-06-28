@@ -48,15 +48,19 @@ namespace Event { //Namespace Event
       static const CLID& classID()      { return CLID_CalClusterMap; }
 
       /// Return the CalClusterVec object corresponding to a given key.
-      CalClusterVec get(std::string);
-      /// Return the CalClusterVec corresponding to the raw output from the clustering.
-      CalClusterVec getRawClusterVec() { return get(EventModel::CalRecon::CalRawClusterVec); }
+      const CalClusterVec get(std::string);
+      /// Return the CalClusterVec corresponding to the raw output from
+      /// the clustering.
+      inline CalClusterVec getRawClusterVec()
+        { return get(EventModel::CalRecon::CalRawClusterVec); }
       /// Return a pointer to the cluster at the front of a given CalClusterVec.
-      /// This is a convenience function for accessing the vectors with a single element
-      /// (e.g., the one containing the user cluster).
-      CalCluster* getFront(std::string key) { return get(key).front(); }      
+      /// This is a convenience function for accessing the vectors with a
+      // single element (e.g., the one containing the user cluster).
+      inline CalCluster* getFront(std::string key)
+	{ return get(key).front(); }
       /// Return a pointer to the uber cluster.
-      CalCluster* getUberCluster() { return getFront(EventModel::CalRecon::CalUberCluster); }
+      inline CalCluster* getUberCluster()
+	{ return getFront(EventModel::CalRecon::CalUberCluster); }
   };
   
   // Iterator typedefs.

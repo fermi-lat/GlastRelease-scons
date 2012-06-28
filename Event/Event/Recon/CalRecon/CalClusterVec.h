@@ -30,13 +30,15 @@ namespace Event { //Namespace Event
       void push_back(CalCluster*);
 
       /// Access methods.
-      inline const CalCluster* getHighestEnergyCluster() { return m_highestEnergyCluster; }
-      inline const CalCluster* getHighestGamProbCluster() { return m_highestGamProbCluster; }
+      inline CalCluster* getHighestEnergyCluster()
+	const { return m_highestEnergyCluster; }
+      inline CalCluster* getHighestGamProbCluster()
+	const { return m_highestGamProbCluster; }
       
     private:
       /// Pointer to the cluster in the vector with the highest energy.
       CalCluster* m_highestEnergyCluster;
-      /// Pointer to the cluster in the vector with the highest gamma probabilty.
+      /// Pointer to the cluster in the vector with the highest gam prob.
       CalCluster* m_highestGamProbCluster;
   };
 

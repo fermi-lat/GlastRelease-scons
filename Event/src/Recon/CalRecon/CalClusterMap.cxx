@@ -9,7 +9,7 @@
 #include <stdexcept>
 
 
-Event::CalClusterVec Event::CalClusterMap::get(std::string key)
+const Event::CalClusterVec Event::CalClusterMap::get(std::string key)
 {
   CalClusterMap::const_iterator item = find(key);
   if (item == end()){
