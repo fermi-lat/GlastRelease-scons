@@ -16,6 +16,7 @@ class RootTree;
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 /** @class RootTuple
 @brief Adapt a ROOT TTree, or set of files, to make it like an STL container
@@ -93,7 +94,7 @@ public:
             :m_tuple(tuple), m_pos( end? tuple->size() : 0 )
         {}
         Iterator(const RootTuple * tuple, unsigned int total)
-            :m_tuple(tuple), m_pos( std::min( tuple->size(), total) )
+          :m_tuple(tuple), m_pos( std::min( (unsigned int) tuple->size(), total) )
         {}
 
         Iterator& operator++(){m_pos++; return *this;}
