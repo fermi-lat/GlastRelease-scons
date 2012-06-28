@@ -4,6 +4,7 @@
  * @verbatim
  * EOH *
 
+ EbfWriter-01-10-04 28-Jun-2012    jrb Tag Johann's gcc 4.4 patch
  EbfWriter-01-10-03 12-Jan-2012 heather pathes for windows
  EbfWriter-01-10-02 07-Jan-2012  lsrea fix unit test for real this time
  EbfWriter-01-10-01 06-Jan-2012  lsrea Fix jO for unit test

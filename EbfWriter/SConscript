@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: Brian Winer <winer@mps.ohio-state.edu> 
-# Version: EbfWriter-01-10-03
+# Version: EbfWriter-01-10-04
 
 import os
 Import('baseEnv')
