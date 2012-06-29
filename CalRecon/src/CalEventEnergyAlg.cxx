@@ -195,7 +195,6 @@ StatusCode CalEventEnergyAlg::execute()
     Event::ClusterToRelationMap* clusterToRelationMap = 
         SmartDataPtr<Event::ClusterToRelationMap>(eventSvc(), EventModel::Recon::ClusterToRelationMap);
 
-    int iclu = 0;
 
     // there could be no clusters collection, if there was no hits
     if (calClusterCol && !calClusterCol->empty()) 
@@ -239,7 +238,11 @@ StatusCode CalEventEnergyAlg::execute()
             std::vector<ICalEnergyCorr *>::const_iterator tool ;
             for ( tool = m_corrTools.begin(); tool != m_corrTools.end(); ++tool ) 
             {
-              if(iclu>0 && (((*tool)->type()).compare("CalFullProfileTool")==0 || ((*tool)->type()).compare("NewCalFullProfileTool")==0)) continue;
+                // Skip the profile fits after the first cluster
+                if ( clusItr != calClusterCol->begin() &&
+                    ((*tool)->type() == "CalFullProfileTool" || (*tool)->type() == "NewCalFullProfileTool"))
+                    continue;
+
                 try 
                 {
                     log<<MSG::DEBUG<<(*tool)->type()<<endreq ;
@@ -274,7 +277,6 @@ StatusCode CalEventEnergyAlg::execute()
                 calEnergy->setParams(bestCorResult->getParams()) ;
                 calEnergy->setStatusBits(Event::CalEventEnergy::VALIDPARAMS) ;
             }    
-            ++iclu;
         }
     }
     
