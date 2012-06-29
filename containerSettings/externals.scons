@@ -13,10 +13,13 @@ usedExternals.append({ 'name' : 'swig', 'iversion' : '1.3.31' })
 usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-gl1' })
 usedExternals.append({ 'name' : 'cppunit', 'iversion' : '1.10.2' })
 
-if baseEnv['COMPILERNAME'] != 'vc71':
-    usedExternals.append({ 'name' : 'python', 'iversion' : '2.6.5' })
-else:
+if baseEnv['COMPILERNAME'] == 'vc71':
     usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
+elif baseEnv['COMPILERNAME'] == 'gcc44':
+    usedExternals.append({ 'name' : 'python', 'iversion' : '2.7' })
+else:
+    usedExternals.append({ 'name' : 'python', 'iversion' : '2.6.5' })
+
 
 if sys.platform == 'win32':
   if baseEnv['COMPILERNAME'] == 'vc90' and baseEnv.GetOption('debug'):
@@ -27,12 +30,17 @@ else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i5'})
 
 usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.5'})
-usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl1' })
+if baseEnv['COMPILERNAME'] != 'gcc44':
+  usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl1' })
+else:
+  usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl2' })
 if baseEnv['COMPILERNAME'] == 'vc90':
     if baseEnv.GetOption('debug'):
         usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03-gl1' })
     else:
         usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
+elif baseEnv['COMPILERNAME'] == 'gcc44':
+    usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p04' })
 else:
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
 
@@ -40,7 +48,7 @@ else:
 usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01-i1' })
 
 
-if baseEnv['COMPILERNAME'] == 'vc90':
+if baseEnv['COMPILERNAME'] != 'vc71':
     usedExternals.append({ 'name' : 'mysql', 'iversion' : '5.1.39' })
 else: 
     usedExternals.append({ 'name' : 'mysql', 'iversion' : '4.1.18' })
