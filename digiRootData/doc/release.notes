@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 
 EOH
 
+ digiRootData-11-14-07 29-Jun-2012  lsrea fixed bug in TkrDigi::getToTForStrip(), although I don't think it's ever called
  digiRootData-11-14-06 28-Feb-2012    jrb on Windows link to installed XGetopt.obj
  digiRootData-11-14-05 23-Jan-2012    jrb Johann's patches for gcc41
  digiRootData-11-14-04 19-Oct-2011    jrb Avoid dragging in libraries unnecessarily in SCons build
