@@ -206,6 +206,7 @@ namespace Event { //Namespace Event
     // explicitely the centroid it's interested in (i.e. from the fit or from the
     // moments analysis).
     const Point & getPosition()                  const { return m_momParams.getCentroid(); }
+    Point getCorPosition(Vector vaxis)     { return m_momParams.getCorCentroid(vaxis); }
 
     // TBD make obsolete in favour of getAxis()? See the comments three lines above.
     const Vector & getDirection()                const { return m_momParams.getAxis(); }

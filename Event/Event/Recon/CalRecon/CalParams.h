@@ -75,6 +75,7 @@ namespace Event { //Namespace Event
 
     /// Retrieve the centroid position
     inline const Point&  getCentroid()     const { return m_clusterCentroid;}
+    Point  getCorCentroid(Vector vaxis);
 
     /// Errors in a HepMatrix
     CLHEP::HepMatrix     getCentroidErrs() const ;

@@ -163,6 +163,86 @@ CLHEP::HepMatrix Event::CalParams::getAxisErrs() const
   return errs;
 }
 
+Point Event::CalParams::getCorCentroid(Vector vaxis)
+{
+  double rawenergy = m_energy;
+  double p[3];
+  p[0] = m_clusterCentroid.x();
+  p[1] = m_clusterCentroid.y();
+  p[2] = m_clusterCentroid.z();
+  double v[3];
+  v[0] = vaxis.x();
+  v[1] = vaxis.y();
+  v[2] = vaxis.z();
+  if(v[2]>0)
+    {
+      v[0] = -v[0];
+      v[1] = -v[1];
+      v[2] = -v[2];
+    }
+  double mynorm = sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+
+  double pc[3];
+  int i;
+  for(i=0;i<3;++i) pc[i] = p[i];
+  //
+  if(rawenergy<=0 || mynorm==0) return m_clusterCentroid;
+
+  v[0] /= mynorm;
+  v[1] /= mynorm;
+  v[2] /= mynorm;
+
+  double loge = log10(rawenergy);
+  //
+  double x,xtow,xtowc,xlog,xrec;
+  int itow,ilog;
+  //
+  double myamp0,myamp,mysig;
+  double par0,par1;
+  double myxmax,mymax,delta;
+  for(i=0;i<2;++i)
+    {
+      x = p[i];
+      if(fabs(x)>1.5*374.5+5*27.84) continue;
+      //
+      itow = (int)floor((x+749)/374.5);
+      xtow = x+749-374.5*(double)itow;
+      xtowc = xtow-374.5/2;
+      if(fabs(xtowc)>5*27.84) continue;
+      //
+      ilog = (int)floor((xtow+7.63)/27.84);
+      xlog = (xtow+7.63)/27.84-(double)ilog;
+      //
+      xrec = xlog;
+      if(xtowc<0) xrec = 1-xlog;
+      xrec -= 0.5;
+      //
+      myamp0 = 3.75-(3.75-2.75)/0.5*(v[2]+1);
+      if(loge>5)
+        myamp = myamp0;
+      else
+        myamp = myamp0*(1-(loge-5)*(loge-5)/10.);
+      if(myamp<=0) continue;
+      mysig = 0.09-(0.09-0.055)/0.5*(v[2]+1);
+      if(mysig<=0) continue;
+      par0 = 10.;
+      par1 = myamp*exp(-v[i]*v[i]/2/mysig/mysig);
+      //
+      myxmax = fabs(1/par0*sqrt(par0/2/atan(par0/2)-1));
+      mymax = fabs((myxmax-0.5/atan(par0*0.5)*atan(par0*myxmax)));
+      delta = par1/mymax*(xrec-0.5/atan(par0*0.5)*atan(par0*xrec));
+      //
+      if(xtowc>0)
+        pc[i] = p[i]-delta;
+      else
+        pc[i] = p[i]+delta;
+    }
+
+  Point corcentroid(pc[0],pc[1],pc[2]);
+
+  return corcentroid;
+}
+
 std::ostream& Event::CalParams::fillStream( std::ostream& s ) const
 {
   s <<
