@@ -8,6 +8,7 @@
  *
  * @author Tracy Usher, Luca Baldini.
  *
+ *
  * File and Version Information:
  *      $Header$
  */
@@ -42,8 +43,7 @@ class CalMomentsAnalysis
 
   /// ADW: Sept. 7, 2011
   /// Calculate the covariance on the axis direction
-  //CLHEP::HepMatrix calcCovariance(Vector momAxis);
-  CLHEP::HepMatrix calcCovariance(CalMomentsDataVec& dataVec, const Point& centroid);
+  CLHEP::HepMatrix calcCovariance(Vector momAxis);
 
   /// Access class members...
   inline const double getWeightSum()        const { return m_weightSum; }
