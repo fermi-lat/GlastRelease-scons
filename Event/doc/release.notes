@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
 
+ Event-14-13-00 02-Jul-2012 TU Change CalCluster interface container, include centroid correction by P. Bruel
  Event-14-12-00 08-May-2012  lsrea Add rangeEnergy to TkrTrack
  Event-14-11-01  8-May-2012 TU Small changes to TkrVecNodes for output
  Event-14-11-00 24-Apr-2012 HMK Merge P8 GlastReleasev19r4p1 branch
