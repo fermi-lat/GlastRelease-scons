@@ -6,6 +6,7 @@
 
             * EOH *
 
+ FluxSvc-06-58-01 02-Jul-2012  cohen fix an oops
  FluxSvc-06-58-00 02-Jul-2012  cohen New gaudi evaluates env var based properties on the fly
  FluxSvc-06-57-00 15-Feb-2012 hmk Fix observer class
  FluxSvc-06-56-02 03-Jan-2011 hmk add in register sources for Interleave
