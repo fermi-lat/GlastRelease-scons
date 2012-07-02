@@ -3,7 +3,7 @@
 
 # in common with ScienceTools
 xmlBase xmlBase-05-05-10
-astro astro-03-11-17
+astro astro-03-13-03
 facilities facilities-02-20-07
 flux flux-08-41-00
 tip tip-02-17-01
@@ -48,7 +48,7 @@ EventIntegrity EventIntegrity-00-09-00
 # ROOT data descriptions
 commonRootData commonRootData-02-16-01
 mcRootData mcRootData-02-22-06
-digiRootData digiRootData-11-14-06
+digiRootData digiRootData-11-14-07
 reconRootData reconRootData-09-29-00
 gcrSelectRootData gcrSelectRootData-02-02-08
 rootUtil rootUtil-01-04-07
@@ -66,7 +66,7 @@ configData configData-01-11-06
 Trigger Trigger-07-04-00
 
 FluxSvc FluxSvc-06-57-00
-CRflux CRflux-01-18-01
+CRflux CRflux-01-19-00
 
 EbfWriter EbfWriter-01-10-03
 OnboardFilter OnboardFilter-04-16-07
@@ -142,7 +142,7 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-07-06
 
-Gleam Gleam-07-11-02
+Gleam Gleam-07-11-04
 
 SConsFiles SConsFiles-00-23-07
 GlastRelease-scons/containerSettings containerSettings-00-05-08
