@@ -29,7 +29,7 @@ if sys.platform == 'win32':
 else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i5'})
 
-usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.5'})
+usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.7'})
 if baseEnv['COMPILERNAME'] != 'gcc44':
   usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-gl1' })
 else:
