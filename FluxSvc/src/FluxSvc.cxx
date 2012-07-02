@@ -234,7 +234,7 @@ private:
 		try {
 		  //... first try the old way, needed for gaudi versions 
 		  // where it is not expanded on the fly when calling .value()
-		  int success = facilities::Util::expandEnvVar(&ev,"","");
+		  int success = facilities::Util::expandEnvVar(&ev);
 		  comma =  ev.find(',');
 		} catch(facilities::Untranslatable ex)
 		  {
