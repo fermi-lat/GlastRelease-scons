@@ -218,8 +218,7 @@ AnalysisNtupleAlg2.proTuple = true;
 ClassifyAlg2.TreeName = "PrimeTuple";
 ClassifyAlg2.UseTMine = true;
 ClassifyAlg2.TMineCacheFile = "PrimeTuple_cache.root";
-ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml";
-//ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
+ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
 
 // default output to GLEAMDATAPATH
 RootTupleSvc.filename            = "${GLEAMDATAPATH}/merit.root";
