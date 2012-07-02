@@ -18,8 +18,6 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
-//#include "GaudiKernel/IObjManager.h"
-//#include "GaudiKernel/IToolFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -229,33 +227,35 @@ private:
             // now add StartTime as offset to either the StartDate or LaunchDate
             double offset = m_startTime.value();
             double delta  = m_deltaTime.value();
+	    int comma = -1;
             if(! m_startTimeEnvVar.value().empty()) {
-                std::string t(m_startTimeEnvVar.value());
-                if( t.substr(0,2)=="$(" && t.size()>3 ) { // strip off redundant $(...) 
-                    t= t.substr(2, t.size()-3);
-                }
-                const char* envar=::getenv(t.c_str());
-                if( envar==0 ){
-                    log << MSG::WARNING << "Env var \"" << t
-                        << "\" requested for start time, not found, using value of StartTime: " 
-                        << m_startTime << endreq;
-                } else {
-                    // set offset and optional delta if env var found (parse 9999,2)
-                    std::string ev(envar); 
-                    int comma =  ev.find(',');
-                    offset = ::atof( ev.substr(0,comma>0?comma+1:-1).c_str() );
-                    log << MSG::INFO << "Setting start time offset from environment variable " 
-                        << t << " to "  << offset; 
-                    if( comma>0){ 
-                        delta = ::atof(ev.substr(comma+1).c_str());
-                        log << "\n\t\t\tsetting deltat to " << delta; 
-                    }
-                    log << endreq;
-                 }
-            }
+	      //user provided info for this parameter, so...
+                std::string ev(m_startTimeEnvVar.value());
+		try {
+		  //... first try the old way, needed for gaudi versions 
+		  // where it is not expanded on the fly when calling .value()
+		  int success = facilities::Util::expandEnvVar(&ev,"","");
+		  comma =  ev.find(',');
+		} catch(facilities::Untranslatable ex)
+		  {
+		    //assume that new gaudi expanded the env var already
+		    //In that case we require here that a comma be present
+		    comma =  ev.find(',');
+		    if(comma==-1){
+		      log<<MSG::FATAL<<"Incorrect value \""<<ev<<"\" for property FluxSvc.startTimeEnvVar : it should be an environment variable or a pair of numbers separated by a comma"<<endreq; 
+		      throw std::runtime_error("");
+		    }
+		  }
+		offset = ::atof( ev.substr(0,comma>0?comma+1:-1).c_str() );
+		log << MSG::INFO << "Setting start time offset from environment variable " 
+		    << m_startTimeEnvVar << " to "  << offset; 
+		if( comma>0){ 
+		  delta = ::atof(ev.substr(comma+1).c_str());
+		  log << "\n\t\t\tsetting deltat to " << delta; 
+		}
+		log << endreq;
+	    }
             m_start += offset;
-
-
             if( delta >0 && m_endTime==0 )  m_endTime=m_start+delta;
             // set the basic time here: it will be incremented by the flux object
             GPS::instance()->time(m_start);
