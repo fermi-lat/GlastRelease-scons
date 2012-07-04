@@ -4,6 +4,7 @@
  @verbatim
      * EOH *
 
+ AdfReader-00-03-05 04-Jul-2012  cohen patch for the new gaudi
  AdfReader-00-03-04 31-May-2011    hmk Turning off unit test for now due to 
     it getting stuck infinite loop
  AdfReader-00-03-03 22-Jun-2010    jrb Eliminate SCons duplicate target complaints
@@ -12,6 +13,7 @@
  v0r3p1 28-Jul-2008 jrb Tag Navid's upgrades for new env var. handling; add
                         EOH line to this file
 
+ AdfReader-00-03-05 04-Jul-2012  cohen patch for the new gaudi
  AdfReader-00-03-03 22-Jun-2010    jrb Eliminate SCons duplicate target complaints
  AdfReader-00-03-02 12-Jun-2010    jrb upgrades for SCons builds
  AdfReader-00-03-01 05-Nov-2009    jrb Updates for SCons

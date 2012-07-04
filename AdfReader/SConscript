@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$
 # Authors: N.Omodei <nicola.omodei@pi.infn.it>
-# Version: AdfReader-00-03-04
+# Version: AdfReader-00-03-05
 
 Import('baseEnv')
 Import('listFiles')
