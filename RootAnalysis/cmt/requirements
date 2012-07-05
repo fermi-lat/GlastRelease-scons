@@ -1,5 +1,5 @@
 package RootAnalysis
-version v8r9p5
+version v8r9p6
 author Heather Kelly <heather@milkyway.gsfc.nasa.gov>
 # This package contains useful Root scripts.
 
