@@ -80,7 +80,7 @@ namespace rdbModel {
 
 
     std::string minorStr = "UNKNOWN";
-    unsigned dotPos = versionString.find('.');
+    std::string::size_type dotPos = versionString.find('.');
     if (dotPos != std::string::npos)
       {
 	minorStr = std::string(versionString, dotPos+1);
@@ -338,7 +338,7 @@ namespace rdbModel {
         std::string enums = Dom::getAttribute(rtype, "values");
 
         unsigned int start = 0;
-        unsigned int blankLoc = enums.find(std::string(" "), start);
+        std::string::size_type blankLoc = enums.find(std::string(" "), start);
 
         while (blankLoc != std::string::npos) {
           newEnum->m_choices.push_back(enums.substr(start, blankLoc-start));
@@ -392,7 +392,7 @@ namespace rdbModel {
       }
 
       unsigned int start = 0;
-      unsigned int blankLoc = cols.find(std::string(" "), start);
+      std::string::size_type blankLoc = cols.find(std::string(" "), start);
 
       while (blankLoc != std::string::npos) {
         newIndex->m_indexCols.push_back(cols.substr(start, blankLoc-start));
