@@ -20,12 +20,13 @@ progEnv.Tool('configDataLib')
 progEnv.Tool('RootConvertLib')
 progEnv.Tool('rootUtilLib')
 progEnv.Tool('GlastClassifyLib')
+progEnvTest = progEnv.Clone()
 
 Gleam = progEnv.GaudiProgram('Gleam',[],test=0, package='Gleam') 
-test_Gleam = progEnv.GaudiProgram('test_Gleam', listFiles(['src/test/*.cxx']),
+test_Gleam = progEnvTest.GaudiProgram('test_Gleam', listFiles(['src/test/*.cxx']),
 				  test=1, package='Gleam')
 progEnv.Tool('registerTargets', package = 'Gleam', 
-	     testAppCxts = [[test_Gleam, progEnv]],
+	     testAppCxts = [[test_Gleam, progEnvTest]],
 	     binaryCxts = [[Gleam, progEnv]],
          data = ['data/dummy.txt'],
 	     jo = listFiles(['src/*.txt', 'src/test/*.txt',
