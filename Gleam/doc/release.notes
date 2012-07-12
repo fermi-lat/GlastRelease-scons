@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-05 11-Jul-2012    jrb patch to SConscript to generate correct Windows project file for Gleam
  Gleam-07-11-04 02-Jul-2012  heather Update basicOptions with Alex's patch to
    ClassifyAlg2 to use the P8 XML file
  Gleam-07-11-03 19-Jun-2012  lsrea Put TkrDigiTruncationAlg back into the Digi sequence
