@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-06-02 16-Jul-2012    jrb for rhel6 use ldf v07-01-02
  containerSettings-00-06-01 02-Jul-2012    hmk Move to TMineExt 3.2.7
  containerSettings-00-06-00 02-Jul-2012    jrb support for rhel6 GR
  containerSettings-00-05-08 25-May-2012    jrb Fix up ldf external for vc90
