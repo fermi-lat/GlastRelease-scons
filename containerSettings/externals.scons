@@ -2,6 +2,8 @@
 import os,sys,platform
 Import('baseEnv')
 
+# add something to make this file look different
+
 usedExternals = []
 if baseEnv['COMPILERNAME'] == 'vc90' and baseEnv.GetOption('debug'):
   usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.2.2' })
@@ -45,7 +47,10 @@ else:
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
 
 #Missing LDF for rhel5 64-bit
-usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01-i1' })
+if baseEnv['COMPILERNAME'] == 'gcc44':
+  usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-02' })
+else:
+  usedExternals.append({ 'name' : 'ldf', 'iversion' : 'v07-01-01-i1' })
 
 
 if baseEnv['COMPILERNAME'] != 'vc71':
