@@ -1,5 +1,5 @@
 package CRflux
-version v1r19p1
+version v1r19p2
 
 author Tsunefumi Mizuno <suhonen@slac.stanford.edu>
 # $Id$
@@ -33,7 +33,9 @@ macro CRflux_cppflags '$(ppcmd)"$(FLUXROOT)"'
 library CRflux *.cxx psb97/*.cxx \
 $(CRflux_headers)
 
-#apply_pattern generate_rootmap library=CRflux
+apply_pattern generate_rootmap library=CRflux
+
+set CRflux_skip_rootmap "1"
 
 macro CRflux_headers "" WIN32 " *.h *.hh ../xml/*.xml test/*.txt test/*.xml "
 # test program, using local joboptions
