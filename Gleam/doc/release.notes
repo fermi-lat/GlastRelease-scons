@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-06 18-Jul-2012  lsrea Add p7repro to the FlavorList in calibratrions.txt
  Gleam-07-11-05 11-Jul-2012    jrb patch to SConscript to generate correct Windows project file for Gleam
  Gleam-07-11-04 02-Jul-2012  heather Update basicOptions with Alex's patch to
    ClassifyAlg2 to use the P8 XML file
