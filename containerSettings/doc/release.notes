@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-07-00 18-Jul-2012 heather adding zlib 1.2.5 for vc90
  containerSettings-00-06-02 16-Jul-2012    jrb for rhel6 use ldf v07-01-02
  containerSettings-00-06-01 02-Jul-2012    hmk Move to TMineExt 3.2.7
  containerSettings-00-06-00 02-Jul-2012    jrb support for rhel6 GR
