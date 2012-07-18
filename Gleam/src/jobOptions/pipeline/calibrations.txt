@@ -24,6 +24,11 @@ CalibDataSvc.CalibRootName = "Calib";
 // Get time from data:
 CalibDataSvc.CalibTimeSource = "data";
 
+//
+// General calibration flavor list (so far!):
+//
+CalibDataSvc.CalibFlavorList = {"vanilla", "p7repro"};
+
 // Start up a CalCalibSvc:
 ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 
@@ -56,12 +61,6 @@ ToolSvc.AcdPha2MipTool.ApplyCoherentNoiseCalib = true;
 // To get some output about the ideal calibs for the ACD:
 //
 AcdCalibSvc.OutputLevel = 1;
-
-
-//
-// General calibration flavor list:
-//
-CalibDataSvc.CalibFlavorList = {"vanilla"};
 
 //
 // Only PROD! Default is PROD and DEV!
