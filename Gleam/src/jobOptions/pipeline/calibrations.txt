@@ -27,7 +27,7 @@ CalibDataSvc.CalibTimeSource = "data";
 //
 // General calibration flavor list (so far!):
 //
-CalibDataSvc.CalibFlavorList = {"vanilla", "p7repro"};
+CalibDataSvc.CalibFlavorList = {"vanilla", "p7repro", "flight"};
 
 // Start up a CalCalibSvc:
 ApplicationMgr.ExtSvc += {"CalCalibSvc"};
@@ -41,6 +41,9 @@ CalCalibSvc.DefaultFlavor = "vanilla";
 // Tracker flavor: 
 //
 TkrReconCalib.calibFlavor = "vanilla";
+
+// the dead GTRC in tower 10, plane 0
+TkrReconCalib.splitsCalibFlavor = "flight";
 
 //
 // Write out bad and hot strips to the log file: Not!
@@ -66,6 +69,7 @@ AcdCalibSvc.OutputLevel = 1;
 // Only PROD! Default is PROD and DEV!
 //
 CalibMySQLCnvSvc.QualityList = {"PROD"};
+
 
 // And here are the p7repro settings:
 
