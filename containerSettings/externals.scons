@@ -75,7 +75,7 @@ else:
 if baseEnv['COMPILERNAME'] == 'vc71':
     usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.2' })
 else:
-    usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.4-i1' }
+    usedExternals.append({ 'name' : 'OmniOrb', 'iversion' : '4.1.4-i1'})
 
 #   Fox 1.4.34
 #if baseEnv['COMPILERNAME'] != 'vc90':
