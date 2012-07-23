@@ -25,6 +25,7 @@ public:
      ( const StringArrayProperty& fileList, 
        const std::string&         treeName, 
        const std::string&         branchName, 
+       int                        readRetries = 3,
        TObject**                  branchPtr = 0,
        bool                       rebuildIndex = true,
        bool                       verbose=false ) ;
@@ -33,6 +34,7 @@ public:
      ( TChain *t,
        const std::string& treename,
        const std::string& branchName, 
+       int                readRetries = 3,
        TObject**          branchPtr = 0,
        bool               rebuildIndex = true, 
        bool               verbose=false);
@@ -85,6 +87,10 @@ public:
                                         /// the rebuild of the input files' index
     TVirtualIndex*      m_runEvtIndex;  /// Save the RunId/EventId Index in case other indices are in use such as CompositeEventList
     TChainIndex*        m_chainIndex;
+
+    int                 m_readRetries;  /// Number of times to retry ROOT read
+                                        /// in case we're dealing with a 
+                                       /// transient failure
     
  } ;
 

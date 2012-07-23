@@ -116,6 +116,8 @@ private:
     commonData m_common;
     IRootIoSvc*   m_rootIoSvc;
 
+    bool m_terminateOnReadError;
+
 /// typedefs for tables
     typedef Event::RelTable<Event::TkrDigi,Event::McPositionHit>         TkrDigiToPosHitTab;
     typedef Event::Relation<Event::TkrDigi,Event::McPositionHit>         TkrDigiToPosHitRel;
@@ -210,6 +212,7 @@ StatusCode relationRootReaderAlg::initialize()
     else if (m_fileList.value().size() == 0)
         m_rootIoSvc->appendFileList(m_fileList, "relations.root");
 
+    m_terminateOnReadError = m_rootIoSvc->terminateOnReadError();
 
 
     // Set up new school system...
@@ -271,6 +274,10 @@ StatusCode relationRootReaderAlg::execute()
     m_relTab = dynamic_cast<RelTable*>(m_rootIoSvc->getNextEvent("rel"));
 
     if (!m_relTab) {
+        if (m_terminateOnReadError) {
+            log << MSG::ERROR << "Failed to read in Relation Data" << endreq;
+            return StatusCode::FAILURE;
+         }
          // Do not fail if there was no Relation data to read - this may be an Event Display run - where the user 
         // did not provide a relation input file
         log << MSG::WARNING << "No Relation Data Available" << endreq;

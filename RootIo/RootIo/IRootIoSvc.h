@@ -107,6 +107,8 @@ class  IRootIoSvc : virtual public IInterface
     virtual void setEvtMax( Long64_t max ) = 0 ;
     virtual void setRootEvtMax( Long64_t max ) = 0;
 
+    virtual bool terminateOnReadError() = 0;
+
 
     //====================
     // For writers
