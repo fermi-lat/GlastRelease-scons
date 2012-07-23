@@ -29,7 +29,7 @@ ApplicationMgr.DLLs   = {  "Overlay", "RootIo"};
 // Set up overlay
 #include "$OVERLAYROOT/src/MergeAlgs/Overlay.txt"
 
-OverlayDataSvc.InputXmlFilePath="C:\Glast\data\McIlwain";
+OverlayDataSvc.InputXmlFilePath="$OVERLAYXMLPATH/test";
 //OverlayInputSvc.InputXmlFilePath="$(OVERLAYXMLPATH)/test";
 
 
