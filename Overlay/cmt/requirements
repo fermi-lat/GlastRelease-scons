@@ -68,7 +68,10 @@ public
 
 # Test program
 #apply_pattern package_test
-#set TESTJOBOPTIONS ${OVERLAYROOT}/src/test/jobOptions.txt ; \
+set JOBOPTIONS ${OVERLAYROOT}/src/test/TestReadJobOptions.txt ; \
 #macro jobOptions ""                      WIN32 "test/jobOptions.txt" ; \
-#application test_Overlay $(TestGlastMain) test/*.cxx $(WinMain) $(jobOptions)
+private
+use GuiSvc v*
+application test_Overlay ${GuiMain} test/*.cxx ${Win32Resource} ${WinMain}
+
 
