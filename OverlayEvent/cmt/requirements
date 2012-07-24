@@ -5,10 +5,12 @@ author T.Usher <usher@slac.stanford.edu>
 
 branches OverlayEvent cmt doc src
 
+use Event          v*
 use geometry       v3r*
 use idents         v2r*
 use enums          v*
-use CLHEP          v* IExternal
+use ldfExt         v*   IExternal
+use CLHEP          v*   IExternal
 use GaudiInterface v*   IExternal 
 
 apply_pattern shared_library
