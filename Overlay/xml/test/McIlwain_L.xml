@@ -12,7 +12,7 @@ $Header$
 
   <bin min="0.95" max="1.85">
     <fileList>
-      <file filePath="$OVERLAYDATAPATH/test/Overlay.root"
+      <file filePath="$(OVERLAYDATAPATH)/test/overlay.root"
           treeName="Overlay" branchName="EventOverlay" />
     </fileList>
   </bin>
