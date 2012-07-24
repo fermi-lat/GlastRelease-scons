@@ -95,7 +95,7 @@ private:
  //const ICnvFactory& PtOverlayCnvFactory = s_factory;
 DECLARE_CONVERTER_FACTORY(PtOverlayCnv);
 
- PtOverlayCnv::PtOverlayCnv( ISvcLocator* svc) : Converter (EXCEL_StorageType, Event::PtOverlay::classID(), svc) 
+ PtOverlayCnv::PtOverlayCnv( ISvcLocator* svc) : Converter (storageType(), classID(), svc) 
 {
     m_path = OverlayEventModel::Overlay::PtOverlay;
 
