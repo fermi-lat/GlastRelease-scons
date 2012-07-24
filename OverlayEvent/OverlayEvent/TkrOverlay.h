@@ -11,6 +11,7 @@
 //include files
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "idents/TowerId.h"
 #include "idents/GlastAxis.h"

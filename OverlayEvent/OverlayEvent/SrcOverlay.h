@@ -5,9 +5,10 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IInterface.h"
 #include "Event/TopLevel/Definitions.h"
 
-static const CLID& CLID_SrcOverlay = InterfaceID("SrcOverlay", 1, 0);
+static const CLID& CLID_SrcOverlay = InterfaceID("TstOverlay", 1, 0);
 
 /** @class SrcOverlay
 * @brief Defines the top level object for digitization data.
@@ -25,14 +26,14 @@ class SrcOverlay : public DataObject {
 public:
     
     SrcOverlay()
-        : DataObject(), m_fromMc(true) { }
+        : m_fromMc(true) { }
     
     virtual ~SrcOverlay() { }
     
     void initialize(bool fromMc) { m_fromMc = fromMc; };
 
     /// Retrieve reference to class definition structure
-    virtual const CLID& clID() const  { return SrcOverlay::classID(); }
+    virtual const CLID& clID() const  { return Event::SrcOverlay::classID(); }
     static const CLID& classID() { return CLID_SrcOverlay; }
     
     ///  Retrieve flag of origin

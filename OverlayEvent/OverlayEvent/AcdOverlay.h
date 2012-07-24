@@ -11,6 +11,7 @@
 //include files
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/IInterface.h"
 
 #include "CLHEP/Geometry/Point3D.h"
 

@@ -5,6 +5,7 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IInterface.h"
 #include "Event/Utilities/TimeStamp.h"
 #include "Event/TopLevel/Definitions.h"
 #include "enums/EventFlags.h"
