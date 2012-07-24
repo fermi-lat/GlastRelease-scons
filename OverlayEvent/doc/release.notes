@@ -5,6 +5,7 @@ $Id$
 @verbatim
 * EOH *
 
+ OverlayEvent-01-00-02 24-Jul-2012    jrb patch for SCons
  OverlayEvent-01-00-01 24-Jul-2012    TU Small changes to force TDS objects to be part of this lib
  OverlayEvent-01-00-00 27-Jun-2011    TU  Modifications to enable multiple input streams
  OverlayEvent-00-03-03 21-May-2011    hmk patch requirements for CLHEP
