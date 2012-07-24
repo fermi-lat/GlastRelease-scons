@@ -6,6 +6,7 @@ def generate(env, **kw):
     env.Tool('geometryLib')
     env.Tool('identsLib')
     env.Tool('addLibrary', library = env['clhepLibs'])
+    env.Tool('addLibrary', library = env['gaudiLibs'])
 
 def exists(env):
     return 1;
