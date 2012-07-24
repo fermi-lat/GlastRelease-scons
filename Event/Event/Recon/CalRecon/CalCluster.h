@@ -133,10 +133,6 @@ namespace Event { //Namespace Event
     CalCluster(int numCalLayers = NUMCALLAYERS) :
       CalClusterLayerDataVec(numCalLayers)
     { iniCluster(); }
-
-    /// It's not enrirely clear to me why we don't have a constructor setting
-    /// all the class members, but I'll leave things as they are for the time
-    /// being (Luca Baldini, Dec 22, 2010).
        
     /// Destructor.
     virtual ~CalCluster() {}
@@ -193,27 +189,26 @@ namespace Event { //Namespace Event
 
     /// This is not to break anything with the new container CalMomParams
     /// It should probably print out something ("obsolete?").
-    const CalMomParams& getParams()              const { return m_momParams; }
+    const CalMomParams& getParams()    const { return m_momParams; }
 
     // TBD Change names according to the CalMomParams class? Maybe just get rid of them all.
-    double getRmsLong()                                 const { return m_momParams.getLongRms(); }
-    double getRmsLongAsym()                      const { return m_momParams.getLongRmsAsym(); } 
-    double getRmsTrans()                         const { return m_momParams.getTransRms(); }
-    double getSkewnessLong()                     const { return m_momParams.getLongSkewness(); }
+    double getRmsLong()                const { return m_momParams.getLongRms(); }
+    double getRmsLongAsym()            const { return m_momParams.getLongRmsAsym(); } 
+    double getRmsTrans()               const { return m_momParams.getTransRms(); }
+    double getSkewnessLong()           const { return m_momParams.getLongSkewness(); }
 
     // TBD make obsolete in favour of getCentroid()? Or get rid of it, as at this
     // point the code calling this should have the responsibiliy to choose
     // explicitely the centroid it's interested in (i.e. from the fit or from the
     // moments analysis).
-    const Point & getPosition()                  const { return m_momParams.getCentroid(); }
-    Point getCorPosition(Vector vaxis)     { return m_momParams.getCorCentroid(vaxis); }
+    const Point & getPosition()        const { return m_momParams.getCentroid(); }
+    Point getCorPosition(Vector vaxis)       { return m_momParams.getCorCentroid(vaxis); }
 
     // TBD make obsolete in favour of getAxis()? See the comments three lines above.
-    const Vector & getDirection()                const { return m_momParams.getAxis(); }
+    const Vector & getDirection()      const { return m_momParams.getAxis(); }
 
     /// Write some of CalCluster data to the ASCII output file for debugging purposes
-    /// Is this really needed? Or the overload of << is enough?
-    void writeOut(MsgStream& stream) const;
+    void writeOut(MsgStream& stream)   const;
 
         
 private:
