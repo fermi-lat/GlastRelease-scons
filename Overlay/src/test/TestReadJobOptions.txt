@@ -27,7 +27,7 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 ApplicationMgr.DLLs   = {  "Overlay", "RootIo"};
 
 // Set up overlay
-#include "$OVERLAYROOT/src/MergeAlgs/Overlay.txt"
+#include "$OVERLAYJOBOPTIONSPATH/MergeAlgs/Overlay.txt"
 
 OverlayDataSvc.InputXmlFilePath="$OVERLAYXMLPATH/test";
 //OverlayInputSvc.InputXmlFilePath="$(OVERLAYXMLPATH)/test";
