@@ -9,6 +9,15 @@
 #include "OverlayEvent/OverlayEventModel.h"
 #include "GaudiKernel/ClassID.h"
 
+#include "OverlayEvent/EventOverlay.h"
+#include "OverlayEvent/SrcOverlay.h"
+#include "OverlayEvent/AcdOverlay.h"
+#include "OverlayEvent/TkrOverlay.h"
+#include "OverlayEvent/PtOverlay.h"
+#include "OverlayEvent/GemOverlay.h"
+#include "OverlayEvent/DiagDataOverlay.h"
+#include "OverlayEvent/CalOverlay.h"
+
 std::string OverlayEventModel::OverlayEventHeader = "/Overlay"; 
 
 /** 
