@@ -170,7 +170,7 @@ StatusCode CalClassifyAlg::execute()
     // iterator to be used in the rotate method below.
     Event::CalClusterCol::iterator cluMaxGProbIt ;
     cluMaxGProbIt = calClusterCol->begin();
-    std::advance(cluMaxGProbIt, cluMaxGProbId);
+    if (cluMaxGProbId > 0) std::advance(cluMaxGProbIt, cluMaxGProbId);
 
     if (nCluEgtThr==0){
 
