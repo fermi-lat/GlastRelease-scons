@@ -1,0 +1,29 @@
+# -*- python -*-
+# $Header$ 
+# Authors: Johan Bregeon <johan.bregeon@pi.infn.it>
+# Version: calibGenTRG-00-01-00
+Import('baseEnv')
+Import('listFiles')
+Import('packages')
+
+if baseEnv['PLATFORM'] != "win32":
+  progEnv = baseEnv.Clone()
+  libEnv = baseEnv.Clone()
+
+  # Shared library
+  libEnv.Tool('addLinkDeps', package='calibGenTRG', toBuild='shared')
+  calibGenTRG=libEnv.SharedLibrary('calibGenTRG', listFiles(['src/*.cxx']))
+
+  
+  # Programs
+  progEnv.Tool('calibGenTRGLib')
+
+#  genCIDAC2ADC = progEnv.Program('genCIDAC2ADC',
+#                                 ['src/CIDAC2ADC/genCIDAC2ADC.cxx',
+#                                  'src/CIDAC2ADC/IntNonlinAlg.cxx'])
+                                  
+  progEnv.Tool('registerTargets', package = 'calibGenTRG',
+               libraryCxts = [[calibGenTRG, libEnv]],
+               binaryCxts = [],
+               includes = listFiles(['calibGenTRG/*.h'], recursive=True))
+    
