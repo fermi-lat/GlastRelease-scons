@@ -107,7 +107,7 @@ void mippeak::Go(Long64_t numEvents)
     if (evt) evt->Clear();
     if (rec) rec->Clear();
     
-    Int_t nb = GetEvent(m_StartEvent);
+    GetEvent(m_StartEvent);
     m_gid=evt->getMetaEvent().run().id();
     std::cout<<"gid "<<m_gid<<std::endl;
     m_starttime=evt->getTimeStamp( );
@@ -121,7 +121,7 @@ void mippeak::Go(Long64_t numEvents)
         if (evt) evt->Clear();
         if (rec) rec->Clear();
         
-        Int_t nb = GetEvent(ievent);
+        GetEvent(ievent);
 
         if(ievent%1000==0) 
             std::cout << "** Processing Event " << ievent << std::endl;  

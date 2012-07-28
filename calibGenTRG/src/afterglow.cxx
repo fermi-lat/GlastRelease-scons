@@ -107,7 +107,7 @@ void afterglow::Go(Long64_t numEvents)
         if (evt) evt->Clear();
         if (rec) rec->Clear();
         
-        Int_t nb = GetEvent(ievent);
+        GetEvent(ievent);
 
         if(ievent%10000==0) 
             std::cout << "** Processing Event " << ievent << std::endl;  

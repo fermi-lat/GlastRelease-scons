@@ -367,7 +367,7 @@ void treqCAL::Go(Long64_t numEvents)
     if (evt) evt->Clear();
     if (rec) rec->Clear();
     
-    Int_t nb = GetEvent(m_StartEvent);
+    GetEvent(m_StartEvent);
     m_gid=evt->getMetaEvent().run().id();
     m_gid+=77000000;
     std::cout<<"gid "<<m_gid<<std::endl;
@@ -384,7 +384,7 @@ void treqCAL::Go(Long64_t numEvents)
         if (evt) evt->Clear();
         if (rec) rec->Clear();
         
-        Int_t nb = GetEvent(ievent);
+        GetEvent(ievent);
 	if (m_caltuple)m_caltuple->GetEvent(ievent);
         if(ievent%10000==0) 
             std::cout << "\r** Processing Event " << ievent << std::flush;  
