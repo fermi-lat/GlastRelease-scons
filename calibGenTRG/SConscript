@@ -14,16 +14,10 @@ if baseEnv['PLATFORM'] != "win32":
   libEnv.Tool('addLinkDeps', package='calibGenTRG', toBuild='shared')
   calibGenTRG=libEnv.SharedLibrary('calibGenTRG', listFiles(['src/*.cxx']))
 
-  
   # Programs
   progEnv.Tool('calibGenTRGLib')
 
-#  genCIDAC2ADC = progEnv.Program('genCIDAC2ADC',
-#                                 ['src/CIDAC2ADC/genCIDAC2ADC.cxx',
-#                                  'src/CIDAC2ADC/IntNonlinAlg.cxx'])
-                                  
   progEnv.Tool('registerTargets', package = 'calibGenTRG',
                libraryCxts = [[calibGenTRG, libEnv]],
-               binaryCxts = [],
-               includes = listFiles(['calibGenTRG/*.h'], recursive=True))
+               includes = listFiles(['calibGenTRG/*.h']))
     
