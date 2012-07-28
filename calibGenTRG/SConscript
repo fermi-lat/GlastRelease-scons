@@ -10,6 +10,19 @@ if baseEnv['PLATFORM'] != "win32":
   progEnv = baseEnv.Clone()
   libEnv = baseEnv.Clone()
 
+  # to fix code
+  libEnv.AppendUnique(CXXFLAGS = ['-Wall']) 
+
+  # to build dependencies in the library (for debug ?)
+  libEnv.Tool('addLibrary', library = baseEnv['rootGuiLibs'])
+  libEnv.Tool('addLibrary', library = baseEnv['rootLibs'])
+  libEnv.Tool('addLibrary', library = baseEnv['clhepLibs'])
+  libEnv.Tool('commonRootDataLib')
+  libEnv.Tool('mcRootDataLib')
+  libEnv.Tool('digiRootDataLib')
+  libEnv.Tool('reconRootDataLib')
+  libEnv.Tool('CalUtilLib')
+  
   # Shared library
   libEnv.Tool('addLinkDeps', package='calibGenTRG', toBuild='shared')
   calibGenTRG=libEnv.SharedLibrary('calibGenTRG', listFiles(['src/*.cxx']))
