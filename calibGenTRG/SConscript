@@ -10,6 +10,28 @@ if baseEnv['PLATFORM'] != "win32":
   progEnv = baseEnv.Clone()
   libEnv = baseEnv.Clone()
 
+  locIncs = listFiles(['calibGenTRG/*','src/*.h'])
+  libEnv.Tool('addLinkDeps', package='calibGenTRG', toBuild='rootlib')
+  calibGenTRGcint = libEnv.Rootcint('calibGenTRG/calibGenTRG_rootcint',
+                                       ['calibGenTRG/afterglow.h',
+                                        'calibGenTRG/mippeak.h',
+                                        'calibGenTRG/RootTreeAnalysis.h',
+                                        'calibGenTRG/takedata_mt.h',
+                                        'calibGenTRG/treqACD.h',
+                                        'calibGenTRG/treqCAL.h',
+                                        'calibGenTRG/vetoeff.h',
+                                        'src/fitTACK.h',
+                                        'src/LangauFun.h',
+                                        'src/egfun.h',
+                                        'calibGenTRG/LinkDef.h'],
+                                       includes = [''], localIncludes=locIncs,
+                                       packageName='calibGenTRG')
+
+  libEnv['rootcint_node'] = calibGenTRGcint
+                                       
+  calibGenTRG = libEnv.RootDynamicLibrary('calibGenTRG',
+                                         listFiles(['src/*.cxx']) + ['calibGenTRG/calibGenTRG_rootcint.cxx'])
+
   # to fix code
   libEnv.AppendUnique(CXXFLAGS = ['-Wall']) 
 
@@ -23,14 +45,9 @@ if baseEnv['PLATFORM'] != "win32":
   libEnv.Tool('reconRootDataLib')
   libEnv.Tool('CalUtilLib')
   
-  # Shared library
-  libEnv.Tool('addLinkDeps', package='calibGenTRG', toBuild='shared')
-  calibGenTRG=libEnv.SharedLibrary('calibGenTRG', listFiles(['src/*.cxx']))
-
   # Programs
   progEnv.Tool('calibGenTRGLib')
 
   progEnv.Tool('registerTargets', package = 'calibGenTRG',
-               libraryCxts = [[calibGenTRG, libEnv]],
+               rootcintSharedCxts = [[calibGenTRG, libEnv]], 
                includes = listFiles(['calibGenTRG/*.h']))
-    
