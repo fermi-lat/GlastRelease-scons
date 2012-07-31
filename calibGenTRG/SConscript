@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$ 
 # Authors: Johan Bregeon <johan.bregeon@pi.infn.it>
-# Version: calibGenTRG-00-01-01
+# Version: calibGenTRG-00-01-02
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
