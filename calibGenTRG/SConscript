@@ -10,7 +10,6 @@ if baseEnv['PLATFORM'] != "win32":
   progEnv = baseEnv.Clone()
   libEnv = baseEnv.Clone()
 
-  locIncs = listFiles(['calibGenTRG/*','src/*.h'])
   libEnv.Tool('addLinkDeps', package='calibGenTRG', toBuild='rootlib')
   calibGenTRGcint = libEnv.Rootcint('calibGenTRG/calibGenTRG_rootcint',
                                        ['calibGenTRG/afterglow.h',
@@ -20,11 +19,12 @@ if baseEnv['PLATFORM'] != "win32":
                                         'calibGenTRG/treqACD.h',
                                         'calibGenTRG/treqCAL.h',
                                         'calibGenTRG/vetoeff.h',
+#                                        'src/TestReport.h',
                                         'src/fitTACK.h',
                                         'src/LangauFun.h',
                                         'src/egfun.h',
                                         'calibGenTRG/LinkDef.h'],
-                                       includes = [''], localIncludes=locIncs,
+                                       includes = [], localIncludes=[],
                                        packageName='calibGenTRG')
 
   libEnv['rootcint_node'] = calibGenTRGcint
@@ -34,17 +34,7 @@ if baseEnv['PLATFORM'] != "win32":
 
   # to fix code
   libEnv.AppendUnique(CXXFLAGS = ['-Wall']) 
-
-  # to build dependencies in the library (for debug ?)
-  libEnv.Tool('addLibrary', library = baseEnv['rootGuiLibs'])
-  libEnv.Tool('addLibrary', library = baseEnv['rootLibs'])
-  libEnv.Tool('addLibrary', library = baseEnv['clhepLibs'])
-  libEnv.Tool('commonRootDataLib')
-  libEnv.Tool('mcRootDataLib')
-  libEnv.Tool('digiRootDataLib')
-  libEnv.Tool('reconRootDataLib')
-  libEnv.Tool('CalUtilLib')
-  
+ 
   # Programs
   progEnv.Tool('calibGenTRGLib')
 
