@@ -19,7 +19,7 @@ if baseEnv['PLATFORM'] != "win32":
                                         'calibGenTRG/treqACD.h',
                                         'calibGenTRG/treqCAL.h',
                                         'calibGenTRG/vetoeff.h',
-#                                        'src/TestReport.h',
+                                        'src/TestReport.h',
                                         'src/fitTACK.h',
                                         'src/LangauFun.h',
                                         'src/egfun.h',

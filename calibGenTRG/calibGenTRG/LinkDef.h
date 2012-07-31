@@ -7,6 +7,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class TestReport+;
 #pragma link C++ class RootTreeAnalysis+;
 #pragma link C++ class takedata_mt+;
 #pragma link C++ class fittack+;

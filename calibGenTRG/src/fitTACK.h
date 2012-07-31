@@ -5,7 +5,6 @@
 #include <TF1.h>
 #include <fstream>
 #include <iostream>
-#include "TestReport.h"
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TFile.h>
