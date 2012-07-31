@@ -1,10 +1,10 @@
 /** @file release.notes
 @brief Package calibGenTRG
 @verbatim
-  Managers: JOhan Bregeon, Martin Kocian
-
-  calibGenTRG-00-01-00 28-July-2012 bregeon calibGenTRG is born again
+  Managers: Johan Bregeon, Martin Kocian
 
 @endverbatim
  */
+
  calibGenTRG-00-01-01 28-Jul-2012 bregeon first stag
+ calibGenTRG-00-01-00 28-July-2012 bregeon calibGenTRG is born again
