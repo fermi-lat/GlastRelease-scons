@@ -208,22 +208,9 @@ int TkrVecNodesBuilder::buildTrackElements()
             keepNode = true;
         }
         
-        // Test priority queue
-        if (keepNode) m_headNodes->push(headNode);
-
         // Is this a keeper?
-//        if (keepNode) m_headNodes->push_back(headNode);
+        if (keepNode) m_headNodes->push(headNode);
         else          deleteNode(headNode);
-
-        // quick test to be discarded
-        if (keepNode)
-        {
-            int nNodesInTree   = headNode->getNumNodesInTree();
-            int nThinClusters  = headNode->getNumThinNodesInTree();
-            int nThickClusters = headNode->getNumThickNodesInTree();
-            int nBlankClusters = headNode->getNumBlankNodesInTree();
-            int rawhide = 0;
-        }
 
         headVecItr++;
     }

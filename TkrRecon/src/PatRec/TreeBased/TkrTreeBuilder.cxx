@@ -74,17 +74,21 @@ Event::TkrTreeCol* TkrTreeBuilder::buildTrees()
                 Event::TkrVecNode* headNode = tkrVecNodeCol->top();
 
                 // No proceeding if not enough hits to make a real track
-                if (headNode->getDepth() < 2) continue;
+                if (headNode->getDepth() > 1)
+				{
+					// Make the TkrTree with the best track
+					Event::TkrTree* tree = makeTkrTree(headNode);
 
-                // Make the TkrTree with the best track
-                Event::TkrTree* tree = makeTkrTree(headNode);
+					// If a positive result then store in the TDS collection
+					if (tree) 
+					{
+						m_treeCol->push_back(tree);
+						headNode->setTreeId(++treeID);
+					}
+				}
 
-                // If a positive result then store in the TDS collection
-                if (tree) 
-                {
-                    m_treeCol->push_back(tree);
-                    headNode->setTreeId(++treeID);
-                }
+				// Pop off the top of the queue
+				tkrVecNodeCol->pop();
             } 
             catch( TkrException& e )
             {
@@ -95,11 +99,8 @@ Event::TkrTreeCol* TkrTreeBuilder::buildTrees()
                 throw(TkrException("Exception encountered in TkrTreeBuilder "));  
             }
 
-            // Arbitrary limit on the number of trees = 10
-            if (int(m_treeCol->size()) >= m_maxTrees) break;
-
-            // Pop off the top of the queue
-            tkrVecNodeCol->pop();
+			// Arbitrary limit on the number of trees = 10
+			if (int(m_treeCol->size()) >= m_maxTrees) break;
         }
     }
 

@@ -1201,10 +1201,11 @@ double KalmanTrackFitTool::doSmoother(Event::TkrTrack& track)
     KFmatrix prvCovMat(fitCov);
 
     // Loop through the track hits and run the smoother
-    for( ; prevIter != track.begin(); smoothIter--, prevIter--) 
+//    for( ; prevIter != track.begin(); smoothIter--, prevIter--) 
+    while(prevIter != track.begin()) 
     {
-        Event::TkrTrackHit& prevPlane    = **prevIter;
-        Event::TkrTrackHit& currentPlane = **smoothIter;
+        Event::TkrTrackHit& prevPlane    = **prevIter--;
+        Event::TkrTrackHit& currentPlane = **prevIter; //**smoothIter;
 
 		double chiSqKF = doSmoothStep(prevPlane, currentPlane);
 
