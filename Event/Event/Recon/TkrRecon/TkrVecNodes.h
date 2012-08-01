@@ -811,19 +811,17 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
     }
 
     // Ok, first "real" selection is the deepest (most links) branch
-    if      (left->getDepth() < right->getDepth() - 1) return false;
-    else if (left->getDepth() > right->getDepth() + 1) return true;
-
-    // If here then branches are the same depth, take the one spanning the most bilayers
-    //if      (left->getBestNumBiLayers() < right->getBestNumBiLayers()) return false;
-    //else if (left->getBestNumBiLayers() > right->getBestNumBiLayers()) return true;
+//    if      (left->getDepth() < right->getDepth() - 1) return false;
+//    else if (left->getDepth() > right->getDepth() + 1) return true;
+    if      (left->getDepth() < right->getDepth() - 2) return false;
+    else if (left->getDepth() > right->getDepth() + 2) return true;
 
     // Last check is to take the branch which is "straightest" 
     // Use the scaled rms angle to determine straightest...
-//    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
-//    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
-    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth() + left->getNumAnglesInSum());
-    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth()+ right->getNumAnglesInSum());
+    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
+    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
+//    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth() + left->getNumAnglesInSum());
+//    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth()+ right->getNumAnglesInSum());
     
     //if (left->getBestRmsAngle() < right->getBestRmsAngle()) return true;
     if (leftRmsAngle < rightRmsAngle) return true;
@@ -850,9 +848,22 @@ typedef std::priority_queue<Event::TkrVecNode*, std::vector<Event::TkrVecNode*>,
 
 class TkrVecNodeQueue : public Event::TkrVecNodeQueueDef, public DataObject 
 {
+public:
     //! Retrieve pointer to class defininition structure
     virtual const CLID& clID() const   { return TkrVecNodeQueue::classID(); }
     static const CLID& classID()       { return CLID_TkrVecNodeQueue; }
+
+	//! Since we are a TDS container we must take responsibility for cleaning up the 
+	//! objects we own
+	virtual ~TkrVecNodeQueue()
+	{
+		while(!empty())
+		{
+			Event::TkrVecNode* node = top();
+			pop();
+			delete node;
+		}
+	}
 };
 
 
