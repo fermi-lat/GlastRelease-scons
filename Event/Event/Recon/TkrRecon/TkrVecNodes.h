@@ -811,17 +811,13 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
     }
 
     // Ok, first "real" selection is the deepest (most links) branch
-//    if      (left->getDepth() < right->getDepth() - 1) return false;
-//    else if (left->getDepth() > right->getDepth() + 1) return true;
     if      (left->getDepth() < right->getDepth() - 2) return false;
     else if (left->getDepth() > right->getDepth() + 2) return true;
 
     // Last check is to take the branch which is "straightest" 
     // Use the scaled rms angle to determine straightest...
-    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
-    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
-//    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth() + left->getNumAnglesInSum());
-//    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth()+ right->getNumAnglesInSum());
+    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth() + left->getNumAnglesInSum());
+    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth()+ right->getNumAnglesInSum());
     
     //if (left->getBestRmsAngle() < right->getBestRmsAngle()) return true;
     if (leftRmsAngle < rightRmsAngle) return true;
@@ -838,9 +834,23 @@ struct TkrVecNodeQueueOrder
 public:
     bool operator()(const Event::TkrVecNode* left, const Event::TkrVecNode* right) const
     {
-        Event::TkrVecNodesComparator nodeCompare;
+		// In contrast to TkrVecNodesComparator, we are only meant to deal with the head node
+		// for a given candidate tree. Note as well that returning "true" here means the left
+		// is "greater" than the right, not "less" (as with TkrVecNodesComparator)
+//		if      (left->getDepth() < right->getDepth() - 2) return true;
+//		else if (left->getDepth() > right->getDepth() + 2) return false;
 
-        return !nodeCompare(left, right);
+		// Last check is to take the branch which is "straightest" 
+		// Use the scaled rms angle to determine straightest...
+//		double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
+//		double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
+		double leftRmsAngle  = left->getBestRmsAngle()  * double(right->getBestNumBiLayers())  / double(left->getBestNumBiLayers());
+		double rightRmsAngle = right->getBestRmsAngle() * double(left->getBestNumBiLayers())   / double(right->getBestNumBiLayers());
+    
+		if (leftRmsAngle > rightRmsAngle) return true;
+
+		// This should maintain strict weak ordering
+		return false;
     }
 };
 
