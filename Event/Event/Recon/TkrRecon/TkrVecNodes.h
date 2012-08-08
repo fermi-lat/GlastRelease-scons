@@ -801,7 +801,8 @@ inline void TkrVecNode::resetBestParams()
 
 inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, const TkrVecNode* right) const
 {
-    // Most number of bilayers wins (longest)
+	// This sort comparator is used during the ordering of nodes in trees
+	// It will deal with all nodes, from the leaf up to the head.
     // Check special case that we are that end of the line for one or the other and its just a 
     // "stub". We don't want it to accidently get placed in front of the "real" node!
     if ((left->empty() && left->getNumAnglesInSum() <= 1) || (right->empty() && right->getNumAnglesInSum() <= 1))
@@ -810,14 +811,12 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
         else if (left->getDepth() > right->getDepth()) return true;
     }
 
-    // Ok, first "real" selection is the deepest (most links) branch
-    if      (left->getDepth() < right->getDepth() - 2) return false;
-    else if (left->getDepth() > right->getDepth() + 2) return true;
-
-    // Last check is to take the branch which is "straightest" 
+    // We want to follow a "longest-straightest" mantra, we accomplish this by
+	// weighting the best rms angle amongst branches below by the ratio of the best number of bilayers
     // Use the scaled rms angle to determine straightest...
-    double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth() + left->getNumAnglesInSum());
-    double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth()+ right->getNumAnglesInSum());
+	double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
+	double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
+	double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
     
     //if (left->getBestRmsAngle() < right->getBestRmsAngle()) return true;
     if (leftRmsAngle < rightRmsAngle) return true;
@@ -837,13 +836,9 @@ public:
 		// In contrast to TkrVecNodesComparator, we are only meant to deal with the head node
 		// for a given candidate tree. Note as well that returning "true" here means the left
 		// is "greater" than the right, not "less" (as with TkrVecNodesComparator)
-//		if      (left->getDepth() < right->getDepth() - 2) return true;
-//		else if (left->getDepth() > right->getDepth() + 2) return false;
 
 		// Last check is to take the branch which is "straightest" 
 		// Use the scaled rms angle to determine straightest...
-//		double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
-//		double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
 		double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
 		double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
 		double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
