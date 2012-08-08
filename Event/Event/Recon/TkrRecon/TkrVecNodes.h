@@ -844,8 +844,9 @@ public:
 		// Use the scaled rms angle to determine straightest...
 //		double leftRmsAngle  = left->getBestRmsAngle()  * double(left->getBestNumBiLayers())  / double(left->getDepth());
 //		double rightRmsAngle = right->getBestRmsAngle() * double(right->getBestNumBiLayers()) / double(right->getDepth());
-		double leftRmsAngle  = left->getBestRmsAngle()  * double(right->getBestNumBiLayers())  / double(left->getBestNumBiLayers());
-		double rightRmsAngle = right->getBestRmsAngle() * double(left->getBestNumBiLayers())   / double(right->getBestNumBiLayers());
+		double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
+		double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
+		double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
     
 		if (leftRmsAngle > rightRmsAngle) return true;
 
