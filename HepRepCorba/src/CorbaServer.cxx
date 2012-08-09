@@ -16,7 +16,7 @@ void CorbaServer::run()
 {  
   int orb_argc = 1;
   char* orb_argv[] = {""};
-  const char* options[][2] = { { "traceLevel", "25" }, {"giopMaxMsgSize", "33554432" }, { 0, 0 } };
+  const char* options[][2] = { { "traceLevel", "10" }, {"giopMaxMsgSize", "33554432" }, { 0, 0 } };
   
   try {
   m_orb = CORBA::ORB_init(orb_argc, orb_argv, "omniORB4", options);
