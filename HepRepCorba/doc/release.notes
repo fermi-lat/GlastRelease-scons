@@ -4,6 +4,7 @@
  * $Header$
  *   EOH
 
+ HepRepCorba-03-05-02 09-Aug-2012 TU Add parameters to omni orb initialization to increase message size and reporting
  HepRepCorba-03-05-01  8-May-2012 TU Small udpates to make work with new gaudi
  HepRepCorba-03-05-00 02-Feb-2012    hmk add HepRepCorbaSvc to handle tools
  HepRepCorba-03-04-01 17-Jan-2012    jrb Add SCons-specific compile- and link-time stuff dependency on OmniOrb
