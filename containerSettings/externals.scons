@@ -55,7 +55,7 @@ else:
 
 
 # Do we really need these?
-if baseEnv['COMPILERNAME'] != 'vc90':
+if baseEnv['COMPILERNAME'] == 'vc90':
     usedExternals.append({ 'name' : 'zlib', 'iversion' : '1.2.5' })
 else:
     usedExternals.append({ 'name' : 'zlib', 'iversion' : '1.1.4' })
