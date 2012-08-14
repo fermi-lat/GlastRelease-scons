@@ -181,7 +181,8 @@ newPredictEngineNode::TreePairVector xmlNewPredictEngineFactory::parseForest(con
             XTtupleMap::iterator dataIter = XprsnParser().getXtConstants().find(sLevelName);
 
             // If already there then we can skip
-            if (dataIter == XprsnParser().getXtTupleVars().end())
+//            if (dataIter == XprsnParser().getXtTupleVars().end())
+            if (dataIter == XprsnParser().getXtConstants().end())
             {
                 // Add variable to list
                 XTcolumnValBase* basePtr = 0;
