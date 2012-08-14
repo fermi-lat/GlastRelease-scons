@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-09-04 14-Aug-2012 TU Fix compile error picked up by vc90 compiler
  GlastClassify-07-09-03 11-May-2012 kadrlica Added preliminary Pass8 worksheet
  GlastClassify-07-09-02 23-Jan-2012    jrb Johann's patches for gcc41
  GlastClassify-07-09-01 14-Dec-2011 HMK Patch to include ClassifyTool in 
