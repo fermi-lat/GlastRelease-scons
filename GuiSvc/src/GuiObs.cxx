@@ -12,7 +12,6 @@ gets adresses
 */
 
 #include "GuiSvc/GuiObs.h"
-#include "facilities/Util.h"
 
 #include <iterator>
 #include <fstream>
