@@ -1,9 +1,9 @@
 # $Header$
 def generate(env, **kw):
-    if not kw.get('noGaudi', 0):
-        env.Tool('addLibrary', library = env['gaudiLibs'])
-        if not kw.get('depsOnly', 0):
-            env.Tool('addLibrary', library = ['GlastClassify'])
+#    if not kw.get('noGaudi', 0):
+#        env.Tool('addLibrary', library = env['gaudiLibs'])
+    if not kw.get('depsOnly', 0):
+        env.Tool('addLibrary', library = ['GlastClassify'])
     env.Tool('classifierLib')
     env.Tool('ntupleWriterSvcLib')
     env.Tool('xmlBaseLib')
