@@ -120,7 +120,7 @@ HepRepXml HepRepXml-00-10-01
 
 # classification
 classifier classifier-01-06-07
-GlastClassify GlastClassify-07-09-03
+GlastClassify GlastClassify-07-09-05
 
 Interleave Interleave-01-07-06
 
