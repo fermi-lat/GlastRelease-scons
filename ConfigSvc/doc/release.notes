@@ -4,6 +4,7 @@
  * package manager:E. Charles
  * EOH *
 
+ ConfigSvc-00-04-00 17-Aug-2012    jrb for Windows no-install-headers
  ConfigSvc-00-03-00 05-Dec-2011    hmk Merge in Gaudi v21r7 updates
  ConfigSvc-00-02-12 01-Dec-2010    jrb Make new main branch tag for SCons RM
  ConfigSvc-00-02-11-gr01 06-Oct-2010 hmk Upgrade Gaudi v21r7 along branch

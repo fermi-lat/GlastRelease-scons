@@ -4,6 +4,7 @@ package manager:C.Lavalley
 @verbatim
 * EOH *
 
+ gcrSelectRootData-02-03-00 17-Aug-2012    jrb for Windows no-install-headers
  gcrSelectRootData-02-02-08 15-May-2012    jrb SConscript patch affecting VS project file only
  gcrSelectRootData-02-02-07 23-Jan-2012    jrb Johann's patches for gcc41
  gcrSelectRootData-02-02-06 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows
