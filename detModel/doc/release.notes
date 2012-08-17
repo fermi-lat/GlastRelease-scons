@@ -3,6 +3,7 @@
  * Coordinator: R.Giannitrapani
  *               EOH
 
+ detModel-02-22-00 16-Aug-2012    jrb support for Windows no-installed-headers
  detModel-02-21-04 11-Jan-2012    jrb patch for gcc44
  detModel-02-21-03 21-May-2011    hmk patch requirements to use any CLHEP
  detModel-02-21-02 12-Jun-2010    jrb upgrades for SCons builds

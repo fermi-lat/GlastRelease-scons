@@ -1,7 +1,7 @@
 package detModel
 
 # $Header$
-version v2r21p4
+version v2r22p0
 
 author Riccardo Giannitrapani <riccardo@fisica.uniud.it>
 author Joanne Bogart <jrb@slac.stanford.edu>
