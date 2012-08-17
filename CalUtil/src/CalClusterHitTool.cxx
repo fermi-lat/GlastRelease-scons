@@ -105,6 +105,7 @@ StatusCode CalClusterHitTool::fillRecDataVec(Event::CalCluster* cluster)
     }
   }
   delete relTab;
+  return StatusCode::SUCCESS;
 }
 
 
