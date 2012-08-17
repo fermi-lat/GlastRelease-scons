@@ -7,6 +7,7 @@ Import('listFiles')
 Import('packages')
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'geometry', toBuild='static')
 geometryLib = libEnv.StaticLibrary('geometry',
                                    ['src/Box.cxx', 'src/Cone.cxx', 'src/Conic.cxx',
                                     'src/CoordTransform.cxx', 'src/Cylinder.cxx',

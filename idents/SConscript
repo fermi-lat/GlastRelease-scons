@@ -9,6 +9,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'idents', toBuild='static')
 identsLib = libEnv.StaticLibrary('idents', listFiles(['src/*.cxx']))
 
 progEnv.Tool('identsLib')

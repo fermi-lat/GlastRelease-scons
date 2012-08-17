@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'detModel', toBuild='static')
 detModel = libEnv.StaticLibrary('detModel',
                                 listFiles(['src/Management/*.cxx',
                                            'src/Sections/*.cxx',
