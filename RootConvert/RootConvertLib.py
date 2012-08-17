@@ -2,6 +2,8 @@
 def generate(env, **kw):
     if not kw.get('depsOnly', 0):
         env.Tool('addLibrary', library = ['RootConvert'])
+        if env['PLATFORM']=='win32' and env.get('CONTAINERNAME','')=='GlastRelease':
+	    env.Tool('findPkgPath', package = 'RootConvert') 
     env.Tool('EventLib')
     env.Tool('LdfEventLib')
     env.Tool('OnboardFilterTdsLib')

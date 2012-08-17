@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'classifier', toBuild='static')
 classifier = libEnv.StaticLibrary('classifier',
                                   listFiles(['classifier/*.cpp', 'src/*.cpp']))
 
