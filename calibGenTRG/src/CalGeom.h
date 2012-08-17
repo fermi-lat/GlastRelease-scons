@@ -34,7 +34,7 @@ using namespace CalUtil;
     /// z pos of z-center of Layer 0 Cal Xtal
     static const float lyr0ZCtr      = -58.07;
 
-    typedef Vector3D<float> Vec3D;
+    typedef HepGeom::Vector3D<float> Vec3D;
 
     /// return global LAT Z coordinate for z-center of given cal layer
     inline float lyrCtrZ(const CalUtil::LyrNum lyr) {
