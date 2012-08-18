@@ -3,6 +3,7 @@ Package LdfEvent
 Coordinator:H.Kelly
 EOH
 
+ LdfEvent-04-13-00 17-Aug-2012    jrb for Windows no-install-headers
  LdfEvent-04-12-02 23-Jan-2012    jrb Johann's patches for gcc41
  LdfEvent-04-12-01 12-Jun-2010    jrb upgrades for SCons builds
  LdfEvent-04-12-00 27-Apr-2010  lsrea Add a set method for the CAL diagnostic dataWord

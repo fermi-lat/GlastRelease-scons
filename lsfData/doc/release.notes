@@ -5,6 +5,7 @@ Coordinator:H.Kelly
 @verbatim
 * EOH *
 
+ lsfData-04-04-00 17-Aug-2012    jrb for Windows no-install-headers
  lsfData-04-03-04 20-Jan-2012    jrb rename app to avoid name conflict on Windows
  lsfData-04-03-03 11-Jan-2012    jrb patch for gcc44
  lsfData-04-03-02 13-Jun-2010    jrb upgrades for SCons builds
