@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'AdfEvent', toBuild='static')
 AdfEvent = libEnv.StaticLibrary('AdfEvent',listFiles(['src/*.cxx']))
 
 progEnv.Tool('AdfEventLib')

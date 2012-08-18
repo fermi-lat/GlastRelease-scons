@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'AncillaryDataEvent', toBuild='static')
 AncillaryDataEvent = libEnv.StaticLibrary('AncillaryDataEvent',
                                           listFiles(['src/*.cxx']))
 

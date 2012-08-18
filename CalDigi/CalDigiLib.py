@@ -7,5 +7,11 @@ def generate(env, **kw):
     env.Tool('CalUtilLib')
     env.Tool('xmlBaseLib')
     env.Tool('addLibrary', library = env['gaudiLibs'])
+    if env['PLATFORM']=='win32' and env.get('CONTAINERNAME','')=='GlastRelease':
+        env.Tool('findPkgPath', package = 'CalXtalResponse') 
+        env.Tool('findPkgPath', package = 'LdfEvent') 
+        env.Tool('findPkgPath', package = 'Event') 
+        env.Tool('findPkgPath', package = 'enums') 
+	env.Tool('findPkgPath', package = 'ConfigSvc')
 def exists(env):
     return 1;

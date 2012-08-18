@@ -10,5 +10,7 @@ def generate(env, **kw):
     env.Tool('addLibrary', library = env['gaudiLibs'])
     env.Tool('addLibrary', library = env['clhepLibs'])
     env.Tool('addLibrary', library = env['xercesLibs'])
+    if env['PLATFORM']=='win32' and env.get('CONTAINERNAME','')=='GlastRelease':
+        env.Tool('findPkgPath', package = 'RootIo') 
 def exists(env):
     return 1;

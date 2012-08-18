@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'gui', toBuild='static')
 gui = libEnv.StaticLibrary('gui',
                            listFiles(['src/LoopCommand.cxx','src/SceneControl.cxx',
                                       'src/Menu.cxx', 'src/SubMenu.cxx',

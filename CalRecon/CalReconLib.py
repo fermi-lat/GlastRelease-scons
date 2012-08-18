@@ -1,6 +1,9 @@
 #$Header$
 def generate(env, **kw):
-    #if not kw.get('depsOnly', 0):
+    if not kw.get('depsOnly', 0):
+        if env['PLATFORM']=='win32' and env.get('CONTAINERNAME','')=='GlastRelease':
+	    env.Tool('findPkgPath', package = 'CalRecon') 
+
     #    env.Tool('addLibrary', library = ['CalRecon'])
     env.Tool('CalXtalResponseLib')
     env.Tool('TkrUtilLib')

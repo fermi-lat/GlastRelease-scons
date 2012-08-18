@@ -8,6 +8,7 @@ Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
 
+libEnv.Tool('addLinkDeps', package = 'geomrep', toBuild='static')
 geomrep = libEnv.StaticLibrary('geomrep', listFiles(['src/*.cxx']))
 
 progEnv.Tool('geomrepLib')

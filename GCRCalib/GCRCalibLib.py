@@ -7,5 +7,8 @@ def generate(env, **kw):
     env.Tool('EventLib')
     env.Tool('TkrUtilLib')
     env.Tool('OnboardFilterTdsLib')
+    if env['PLATFORM']=='win32' and env.get('CONTAINERNAME','')=='GlastRelease':
+        env.Tool('findPkgPath', package = 'GlastSvc') 
+        env.Tool('findPkgPath', package = 'lsfData') 
 def exists(env):
     return 1;

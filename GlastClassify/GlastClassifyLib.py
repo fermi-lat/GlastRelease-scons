@@ -10,5 +10,8 @@ def generate(env, **kw):
     env.Tool('facilitiesLib')
     env.Tool('addLibrary', library = env['xercesLibs'])
     env.Tool('addLibrary', library = env['TMineLibs'])
+    if env['PLATFORM']=="win32" and env.get('CONTAINERNAME','')=='GlastRelease':
+        env.Tool('findPkgPath', package = 'GlastSvc') 
+
 def exists(env):
     return 1;
