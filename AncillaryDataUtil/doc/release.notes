@@ -5,12 +5,14 @@
 
   * EOH *
 
+ AncillaryDataUtil-01-01-00 20-Aug-2012    jrb for Windows no-install-headers
  AncillaryDataUtil-01-00-06 23-Jan-2012    jrb Johann's patches for gcc41
  AncillaryDataUtil-01-00-05 12-Jun-2010    jrb upgrades for SCons builds
  AncillaryDataUtil-01-00-04 05-Nov-2009    jrb Updates for SCons
  v1r0p3 28-Jul-2008 jrb Tag Navid's fix for new-style path handling; add
                         EOH line to this file.
 
+ AncillaryDataUtil-01-01-00 20-Aug-2012    jrb for Windows no-install-headers
  AncillaryDataUtil-01-00-06 23-Jan-2012    jrb Johann's patches for gcc41
  AncillaryDataUtil-01-00-05 12-Jun-2010    jrb upgrades for SCons builds
  AncillaryDataUtil-01-00-04 05-Nov-2009    jrb Updates for SCons

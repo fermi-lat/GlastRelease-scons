@@ -4,6 +4,7 @@
  @verbatim
    * EOH *
 
+ AncillaryDataEvent-01-05-00 20-Aug-2012    jrb for Windows no-install-headers
  AncillaryDataEvent-01-04-04 23-Jan-2012    jrb Johann's patches for gcc41
  AncillaryDataEvent-01-04-03 12-Jun-2010    jrb upgrades for SCons builds
  AncillaryDataEvent-01-04-02 05-Nov-2009    jrb Updates for SCons

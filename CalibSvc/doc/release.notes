@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
  *                  EOH
 
+ CalibSvc-00-42-00 20-Aug-2012    jrb for Windows no-install-headers
  CalibSvc-00-41-00 05-Dec-2011    hmk Merge in Gaudi v21r7 mods
  CalibSvc-00-40-06 02-Feb-2011    hmk Update use of GlastSvc to be a generic version
  CalibSvc-00-40-05 01-Dec-2010    jrb Make new main branch tag for SCons RM
