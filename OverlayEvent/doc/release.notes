@@ -5,6 +5,7 @@ $Id$
 @verbatim
 * EOH *
 
+ OverlayEvent-01-01-00 20-Aug-2012    jrb for Windows no-install-headers
  OverlayEvent-01-00-02 24-Jul-2012    jrb patch for SCons
  OverlayEvent-01-00-01 24-Jul-2012    TU Small changes to force TDS objects to be part of this lib
  OverlayEvent-01-00-00 27-Jun-2011    TU  Modifications to enable multiple input streams

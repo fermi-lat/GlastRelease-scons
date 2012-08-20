@@ -3,6 +3,7 @@
 @verbatim
  * EOH *
 
+ geomrep-04-04-00 20-Aug-2012    jrb for Windows no-install-headers
  geomrep-04-03-05 03-May-2012    hmk add definition of WinMain
  geomrep-04-03-04 18-Jan-2012    hmk patch for windows unit test
  geomrep-04-03-03 16-Jan-2012    hmk modify handling for gui and Winmain

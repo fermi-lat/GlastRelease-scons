@@ -1,7 +1,7 @@
 # -*- python -*-
 # $Header$ 
 # Authors: H. Kelly <heather@slac.stanford.edu>
-# Version: ntupleWriterSvc-06-01-00
+# Version: ntupleWriterSvc-06-02-00
 import os
 Import('baseEnv')
 Import('listFiles')

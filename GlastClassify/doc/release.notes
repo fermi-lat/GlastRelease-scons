@@ -5,6 +5,7 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-10-00 20-Aug-2012    jrb for Windows no-install-headers
  GlastClassify-07-09-05 15-Aug-2012 heather Live on edge and remove 
 ClassificationTree static library to fix up VC90 Gleam loading of GlastClassify
  GlastClassify-07-09-04 14-Aug-2012 TU Fix compile error picked up by vc90 compiler

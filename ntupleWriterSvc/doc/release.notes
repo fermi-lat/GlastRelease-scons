@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-06-02-00 20-Aug-2012    jrb for Windows no-install-headers
  ntupleWriterSvc-06-01-00 09-Dec-2011  hmk   Gaudi v21r7 merge
  ntupleWriterSvc-06-00-01 18-Nov-2011  usher patch for memory resident tuples
     to set the working directory to null

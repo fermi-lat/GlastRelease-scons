@@ -1,6 +1,6 @@
 package detCheck
 # $Header$
-version v1r7p6
+version v1r8p0
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use detModel v2r*

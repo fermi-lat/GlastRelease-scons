@@ -3,6 +3,7 @@
  * $Header$
  *           EOH
 
+ HepRepSvc-00-42-00 20-Aug-2012    jrb for Windows no-install-headers
  HepRepSvc-00-41-00 08-May-2012  lsrea Mainly fix for display in new Gaudi
  HepRepSvc-00-40-01  8-May-2012 TU Small changes to make work in new gaudi
  HepRepSvc-00-40-00 24-Apr-2012 hmk Merge GlastReleasev19r4p1 branch

@@ -4,6 +4,7 @@
  * @verbatim
  * EOH *
 
+ GuiSvc-03-11-00 20-Aug-2012    jrb for Windows no-install-headers
  GuiSvc-03-10-00 15-Feb-2012    hmk Fix up observer
  GuiSvc-03-09-02 19-Jan-2012    jrb build component library rather than static; bring closer to current CMT build strategy
  GuiSvc-03-09-01 16-Jan-2012    hmk make GuiSvc a shared lib

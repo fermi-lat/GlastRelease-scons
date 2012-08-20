@@ -5,6 +5,7 @@ $Id$
 @verbatim
 EOH
 
+ overlayRootData-00-04-00 20-Aug-2012    jrb for Windows no-install-headers
  overlayRootData-00-03-04 23-Jan-2012    jrb Johann's patches for gcc41
  overlayRoootData-00-03-03 22-Aug-2011   hmk Increment ClassDef for EventOverlay
  overlayRootData-00-03-02 09-Aug-2010    jrb Support for no-variant-copy SCons build on Windows

@@ -2,6 +2,7 @@
  Package GCRCalib
  EOH
 
+ GCRCalib-01-11-00 20-Aug-2012    jrb for Windows no-install-headers
  GCRCalib-01-10-00 24-May-2012    jrb remove Moment option for init of position and direction at CAL entrance (for Johann)
  GCRCalib-01-09-01 12-Jan-2012  hmk   windows patch
  GCRCalib-01-09-00 08-Dec-2011  hmk   Merge Gaudi v21r7
