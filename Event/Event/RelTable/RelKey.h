@@ -46,8 +46,8 @@ template <typename T1, typename T2, typename T3> class RelKeyMultiMap :
 template <class T1, class T2, class T3> class RelKey 
 {    
 public:   
-    RelKey()       : m_data(0),   m_iterator(0){}
-    RelKey(T1* obj): m_data(obj), m_iterator(0){}
+    RelKey()       : m_data(0) {}     //,   m_iterator(0){}
+    RelKey(T1* obj): m_data(obj) {}   // , m_iterator(0){}
     
    ~RelKey();
     
