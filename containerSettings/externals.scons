@@ -35,7 +35,7 @@ usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.7'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-i1'} ) 
 
 if baseEnv['COMPILERNAME'] == 'vc90':
-    usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03-gl2' })
+    usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03-gl3' })
 elif baseEnv['COMPILERNAME'] == 'gcc44':
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p04' })
 else:

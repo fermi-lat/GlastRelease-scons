@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-09-02 04-Sep-2012 heather move vc90 opt to G4 9.4.p03-gl3
  containerSettings-00-09-01 10-Aug-2012    hmk zlib 1.2.5 for vc90
  containerSettings-00-09-00 08-Aug-2012    hmk Move vc90 to G4 9.4.p03-gl2
     CLHEP 2.1.2.4 and zlib 1.2.5
