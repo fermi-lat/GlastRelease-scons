@@ -261,6 +261,12 @@ StatusCode CalOverlayMergeAlg::execute()
         // Does the identifier for this CalOverlay match an McIntegratingHit in the sim map?
         std::map<idents::VolumeIdentifier,Event::McIntegratingHit*>::iterator calIter = idToMcHitMap.find(overId);
 
+		// If not a pure overlay McIntegratingHit then set iterator to end
+		// This will insure that the overlay information in the McIntegratingHit collection in the TDS is 
+		// included in a unique (to the simulated hits) McIntegratingHit object
+        if (calIter != idToMcHitMap.end() && (calIter->second)->getPackedFlags() != Event::McIntegratingHit::overlayHit) 
+			calIter = idToMcHitMap.end();
+
         // Pointer to the mcHit
         Event::McIntegratingHit* mcHit = 0;
 
