@@ -10,17 +10,17 @@ if baseEnv['COMPILERNAME'] == 'vc90':
 else:
     usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.0.1-i1' })
 
-usedExternals.append({ 'name' : 'cfitsio', 'iversion' : 'v3060A' })
+usedExternals.append({ 'name' : 'cfitsio', 'iversion' : 'v3290-i1' })
 usedExternals.append({ 'name' : 'swig', 'iversion' : '1.3.31-i1' })
 usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-i1' })
 usedExternals.append({ 'name' : 'cppunit', 'iversion' : '1.10.2-i1' })
 
 if baseEnv['COMPILERNAME'] == 'vc71':
     usedExternals.append({ 'name' : 'python', 'iversion' : '2.5.1-i1' })
-elif baseEnv['COMPILERNAME'] == 'gcc44':
-    usedExternals.append({ 'name' : 'python', 'iversion' : '2.7-i1' })
-else:
+elif baseEnv['COMPILERNAME'] == 'gcc34':
     usedExternals.append({ 'name' : 'python', 'iversion' : '2.6.5' })
+else:
+    usedExternals.append({ 'name' : 'python', 'iversion' : '2.7-i1' })
 
 
 if sys.platform == 'win32':
@@ -39,7 +39,7 @@ if baseEnv['COMPILERNAME'] == 'vc90':
 elif baseEnv['COMPILERNAME'] == 'gcc44':
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p04' })
 else:
-    usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
+    usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl3' })
 
 #Missing LDF for rhel5 64-bit
 if baseEnv['COMPILERNAME'] == 'gcc44' or baseEnv['COMPILERNAME'] == 'gcc41':
