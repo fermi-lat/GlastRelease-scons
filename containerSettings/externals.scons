@@ -38,6 +38,8 @@ if baseEnv['COMPILERNAME'] == 'vc90':
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03-gl3' })
 elif baseEnv['COMPILERNAME'] == 'gcc44':
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p04' })
+elif baseEnv['COMPILERNAME'] == 'gcc34':
+    usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl2' })
 else:
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p01-gl3' })
 
