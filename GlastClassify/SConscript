@@ -39,7 +39,7 @@ progEnv.Tool('GlastClassifyLib')
 progEnv.Tool('registerTargets', package = 'GlastClassify',
                    libraryCxts = [[GlastClassify, libEnv]], 
                    binaryCxts = [[apply, progEnv]],
-                   xml = listFiles(['xml/*.xml']),
+                   xml = listFiles(['xml/*'], recursive = True),
                    includes = listFiles(['GlastClassify/*.h']))
 
 
