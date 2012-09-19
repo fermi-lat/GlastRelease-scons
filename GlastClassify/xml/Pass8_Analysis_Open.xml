@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <IMML version="8.0">
-  <Worksheet lastNodeID="7" linkType="orthogonal">
+  <Worksheet lastNodeID="9" linkType="orthogonal">
     <FileInfo>
       <FileName>Pass8_Analysis_Open.xml</FileName>
       <FileDateCreated/>
@@ -22,35 +22,25 @@
     </ComponentComments>
     <ActivityNodeList>
       <ActivityNode engineClass="com.insightful.miner.ReadTextFileEngineNode" guiClass="com.insightful.miner.ReadTextFileNodeModel" id="0" numInputs="0" numOutputs="1">
-        <DisplayInfo labelText="(0) Input" largeIcon="read_text_large.gif" smallIcon="read_text_small.gif" x="76" y="74"/>
+        <DisplayInfo labelText="(0) Input" largeIcon="read_text_large.gif" smallIcon="read_text_small.gif" x="50" y="50"/>
         <ArgumentList>
           <XTProps>
-            <Property name="filePath" value="/a/wain041/g.ki.ki07/kadrlica/fermi/pass8/acd/class/AG-GR-v19r4p1gr14-OVL-000000-class.root"/>
+            <Property name="filePath" value="/a/wain041/g.ki.ki07/kadrlica/software/GlastRelease-scons/20-05-00/output/all_gamma_180GeV-v0-0-merit.root"/>
             <Property name="treeName" value="MeritTuple"/>
           </XTProps>
         </ArgumentList>
       </ActivityNode>
       <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="1" numInputs="1" numOutputs="1">
-        <DisplayInfo labelText="(1) SimpleBestEnergy" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="232" y="74"/>
+        <DisplayInfo labelText="(1) WP8BestEnergy" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="125" y="50"/>
         <ArgumentList>
           <XTProps>
             <Property name="newColumns">
-              <Property name="SimpleBestEnergy">
+              <Property name="WP8BestEnergy">
                 <Property name="dataType" value="Double_t"/>
                 <Property name="expression" value="( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
                 <Property name="type" value="continuous"/>
               </Property>
-              <Property name="SimpleBestLogEnergy">
-                <Property name="dataType" value="Double_t"/>
-                <Property name="expression" value="log10( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
-                <Property name="type" value="continuous"/>
-              </Property>
-              <Property name="SimpleBestEnergy">
-                <Property name="dataType" value="Double_t"/>
-                <Property name="expression" value="( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
-                <Property name="type" value="continuous"/>
-              </Property>
-              <Property name="SimpleBestLogEnergy">
+              <Property name="WP8BestLogEnergy">
                 <Property name="dataType" value="Double_t"/>
                 <Property name="expression" value="log10( (CalNSaturated&gt;0)*(CalCfpEnergyUB)+(CalNSaturated==0)*((CalCfpEnergyUB&gt;0)*CalCfpEnergyUB + (CalCfpEnergyUB&lt;=0)*((EvtEnergyCorrUB&gt;0)*EvtEnergyCorrUB + (EvtEnergyCorrUB&lt;=0)*((CalCfpEnergy&gt;0)*CalCfpEnergy + (CalCfpEnergy&lt;=0)*EvtEnergyCorr))) )"/>
                 <Property name="type" value="continuous"/>
@@ -60,18 +50,18 @@
         </ArgumentList>
       </ActivityNode>
       <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="2" numInputs="1" numOutputs="1">
-        <DisplayInfo labelText="(2) ACD Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="381" y="74"/>
+        <DisplayInfo labelText="(2) ACD Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="125" y="250"/>
         <ArgumentList>
           <XTProps>
             <Property name="newColumns">
               <Property name="Acd2Tkr1VetoSigma">
                 <Property name="dataType" value="Double_t"/>
-                <Property name="expression" value="sqrt( (Acd2Tkr1VetoSigmaMip)^2 + ( SimpleBestLogEnergy * 1/10.*Acd2Tkr1VetoSigmaProj)^2)"/>
+                <Property name="expression" value="sqrt( (Acd2Tkr1VetoSigmaMip)^2 + ( WP8BestLogEnergy * 1/10.*Acd2Tkr1VetoSigmaProj)^2)"/>
                 <Property name="type" value="continuous"/>
               </Property>
               <Property name="Acd2TriggerTileEnergyRatio">
                 <Property name="dataType" value="Double_t"/>
-                <Property name="expression" value="Acd2TriggerTileEnergy/max(10., SimpleBestEnergy) * 100"/>
+                <Property name="expression" value="Acd2TriggerTileEnergy/max(10., WP8BestEnergy) * 100"/>
                 <Property name="type" value="continuous"/>
               </Property>
             </Property>
@@ -79,16 +69,16 @@
         </ArgumentList>
       </ActivityNode>
       <ActivityNode engineClass="com.insightful.miner.CutSetEngineNode" guiClass="com.insightful.miner.CutSetNodeModel" id="3" numInputs="1" numOutputs="1">
-        <DisplayInfo labelText="(3) ACD Prefilters" largeIcon="cutset_large.gif" smallIcon="cutset_small.gif" x="516" y="75"/>
+        <DisplayInfo labelText="(3) CPF Prefilters" largeIcon="cutset_large.gif" smallIcon="cutset_small.gif" x="225" y="250"/>
         <ArgumentList>
           <XTProps>
             <Property name="cutDefinitions">
               <Property name="Cal1ConeVeto">
-                <Property name="cutValue" value="!( Acd2Cal1Energy15 &gt; max(0.75,10/3.*SimpleBestLogEnergy - 13.4) )"/>
+                <Property name="cutValue" value="!( Acd2Cal1Energy15 &gt; max(0.75,10/3.*WP8BestLogEnergy - 13.4) )"/>
                 <Property name="makeOutput" value="false"/>
               </Property>
               <Property name="Tkr1ConeVeto">
-                <Property name="cutValue" value="!( Acd2Tkr1Energy30 &gt; max(0.5,27/4.*SimpleBestLogEnergy - 24.8) )"/>
+                <Property name="cutValue" value="!( Acd2Tkr1Energy30 &gt; max(0.5,27/4.*WP8BestLogEnergy - 24.8) )"/>
                 <Property name="makeOutput" value="false"/>
               </Property>
               <Property name="Tkr1GapVeto">
@@ -104,21 +94,312 @@
                 <Property name="makeOutput" value="false"/>
               </Property>
             </Property>
-            <Property name="cutSetName" value="AcdPrefilters"/>
+            <Property name="cutSetName" value="WP8CpfPrefilters"/>
           </XTProps>
         </ArgumentList>
       </ActivityNode>
       <ActivityNode engineClass="com.insightful.miner.WriteTextFileEngineNode" guiClass="com.insightful.miner.WriteTextFileNodeModel" id="7" numInputs="1" numOutputs="0">
-        <DisplayInfo labelText="(7) Output" largeIcon="read_text_large.gif" smallIcon="read_text_small.gif" x="645" y="75"/>
+        <DisplayInfo labelText="(7) Output" largeIcon="read_text_large.gif" smallIcon="read_text_small.gif" x="750" y="550"/>
         <ArgumentList>
           <XTProps>
             <Property name="deepCopyColumns"/>
-            <Property name="filePath" value="/a/wain041/g.ki.ki07/kadrlica/fermi/pass8/acd/class/output.root"/>
+            <Property name="filePath" value="/nfs/slac/g/ki/ki07/kadrlica/software/GlastRelease-scons/20-05-00/output/all_gamma_180GeV-v0-0-class.root"/>
             <Property name="filterColumns">
               <Property name="Acd2Tkr1VetoSigma"/>
               <Property name="Acd2TriggerTileEnergyRatio"/>
+              <Property name="McSourceName"/>
+              <Property name="McTHDght1Process"/>
+              <Property name="McTHDght2Process"/>
+              <Property name="CTBBestEnergyMethod"/>
+              <Property name="CTBTkrTopology"/>
+              <Property name="CTBBestPSFCat"/>
+              <Property name="TkrTree1XDir"/>
+              <Property name="TkrTree1YDir"/>
+              <Property name="TkrTree1ZDir"/>
+              <Property name="Tkr1CoreAve"/>
+              <Property name="CalLLRms"/>
+              <Property name="XtalRmsTkrCoreDoca"/>
+              <Property name="Tkr1TotFirstScaled"/>
             </Property>
             <Property name="treeName" value="MeritTuple"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.TMVA_PredictEngineNode" guiClass="com.insightful.miner.TMVA_PredictNodeModel" id="8" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(8) Predict: CpfGamProb" largeIcon="predict_large.gif" smallIcon="predict_small.gif" x="325" y="250"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="probability" value="true"/>
+              <Property name="classification" value="true"/>
+              <Property name="agreement" value="true"/>
+              <Property name="probabilityFor"/>
+              <Property name="specifiedCategory"/>
+            </Property>
+            <Property name="copyInputColumns">
+              <Property name="independent" value="true"/>
+              <Property name="dependent" value="true"/>
+              <Property name="other" value="true"/>
+            </Property>
+            <Property name="persistName" value="WP8CTAcdCpfProb"/>
+            <Property name="weightsFile" value="$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.d/weights/WP8CTAcdCpfProb_BDT500D07.weights.xml"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.ModifyColumnsEngineNode" guiClass="com.insightful.miner.ModifyColumnsNodeModel" id="9" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(9) WP8CTCpfGamProb" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="250"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="columns">
+              <Property name="__Predict__prob">
+                <Property name="newName" value="WP8CTCpfGamProb"/>
+                <Property name="isSelected" value="true"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="10" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(10) PSF Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="125" y="150"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="TkrTree1XDir">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="-1.*TkrTree1DirX"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="TkrTree1YDir">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="-1.*TkrTree1DirY"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="TkrTree1ZDir">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="-1.*TkrTree1DirZ"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="WP8VtxTkr1Angle">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="57.29578 * sqrt( (VtxXDir - Tkr1XDir) * (VtxXDir - Tkr1XDir) + (VtxYDir - Tkr1YDir) * (VtxYDir - Tkr1YDir) + (VtxZDir - Tkr1ZDir) * (VtxZDir - Tkr1ZDir) )"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="WP8TkrTree1Tkr1Angle">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="57.29578 * sqrt( (getNew(TkrTree1XDir) - Tkr1XDir) * (getNew(TkrTree1XDir) - Tkr1XDir) + (getNew(TkrTree1YDir) - Tkr1YDir) * (getNew(TkrTree1YDir) - Tkr1YDir) + (getNew(TkrTree1ZDir) - Tkr1ZDir) * (getNew(TkrTree1ZDir) - Tkr1ZDir) )"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.TMVA_PredictEngineNode" guiClass="com.insightful.miner.TMVA_PredictNodeModel" id="11" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(11) Predict: TkrBestDir" largeIcon="predict_large.gif" smallIcon="predict_small.gif" x="325" y="150"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="probability" value="true"/>
+              <Property name="classification" value="true"/>
+              <Property name="agreement" value="true"/>
+              <Property name="probabilityFor"/>
+              <Property name="specifiedCategory"/>
+            </Property>
+            <Property name="copyInputColumns">
+              <Property name="independent" value="true"/>
+              <Property name="dependent" value="true"/>
+              <Property name="other" value="true"/>
+            </Property>
+            <Property name="persistName" value="WP8CTTkrTree1Prob_BDT200D09.weights.xml"/>
+            <Property name="weightsFile" value="$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.d/weights/WP8CTTkrTree1Prob_BDT200D09.weights.xml"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.ModifyColumnsEngineNode" guiClass="com.insightful.miner.ModifyColumnsNodeModel" id="12" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(12) WP8TkrBestDir" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="150"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="columns">
+              <Property name="__Predict__prob">
+                <Property name="newName" value="WP8CTTkrTree1Prob"/>
+                <Property name="isSelected" value="true"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.TMVA_PredictEngineNode" guiClass="com.insightful.miner.TMVA_PredictNodeModel" id="13" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(13) Predict: PSFCORE" largeIcon="predict_large.gif" smallIcon="predict_small.gif" x="575" y="150"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="copyInputColumns">
+              <Property name="dependent" value="true"/>
+              <Property name="independent" value="true"/>
+              <Property name="other" value="true"/>
+            </Property>
+            <Property name="newColumns">
+              <Property name="agreement" value="true"/>
+              <Property name="classification" value="true"/>
+              <Property name="probability" value="true"/>
+              <Property name="probabilityFor"/>
+              <Property name="specifiedCategory"/>
+            </Property>
+            <Property name="persistName" value="WP8CTCORETkrBestDir_BDT200D07NP.weights.xml"/>
+            <Property name="weightsFile" value="$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.d/weights/WP8CTCORETkrBestDir_BDT200D07NP.weights.xml"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="14" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(14) CT Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="700" y="150"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="WP8CTBestXDir">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="TkrTree1XDir*(WP8CTTkrTree1Prob&lt;0.1) + Tkr1XDir*(WP8CTTkrTree1Prob&gt;=0.1)"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="WP8CTBestYDir">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="TkrTree1YDir*(WP8CTTkrTree1Prob&lt;0.1) + Tkr1YDir*(WP8CTTkrTree1Prob&gt;=0.1)"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="WP8CTBestZDir">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="TkrTree1ZDir*(WP8CTTkrTree1Prob&lt;0.1) + Tkr1ZDir*(WP8CTTkrTree1Prob&gt;=0.1)"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+              <Property name="WP8CTCORE">
+                <Property name="dataType" value="Double_t"/>
+                <Property name="expression" value="PREDICT.prob"/>
+                <Property name="type" value="continuous"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.TMVA_PredictEngineNode" guiClass="com.insightful.miner.TMVA_PredictNodeModel" id="15" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(15) Predict: TKR Gam Prob" largeIcon="predict_large.gif" smallIcon="predict_small.gif" x="325" y="350"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="copyInputColumns">
+              <Property name="dependent" value="true"/>
+              <Property name="independent" value="true"/>
+              <Property name="other" value="true"/>
+            </Property>
+            <Property name="newColumns">
+              <Property name="agreement" value="true"/>
+              <Property name="classification" value="true"/>
+              <Property name="probability" value="true"/>
+              <Property name="probabilityFor"/>
+              <Property name="specifiedCategory"/>
+            </Property>
+            <Property name="persistName" value="WP8CTTkrGamProb_BDT500D05.weights.xml"/>
+            <Property name="weightsFile" value="$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.d/weights/WP8CTTkrGamProb_BDT500D05.weights.xml"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.ModifyColumnsEngineNode" guiClass="com.insightful.miner.ModifyColumnsNodeModel" id="16" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(12) WP8TkrGamProb" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="350"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="columns">
+              <Property name="__Predict__prob">
+                <Property name="newName" value="WP8CTTkrGamProb"/>
+                <Property name="isSelected" value="true"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="19" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(19) CAL Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="125" y="450"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="Tkr1CoreAve">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(Tkr1CoreHC/Tkr1Hits)"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="CalLLRms">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(sqrt(CalXPosRmsLL^2+CalYPosRmsLL^2))"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="XtalRmsTkrCoreDoca">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(CTBTkrCoreCalDoca-CalTrkXtalRmsETrunc)"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="Tkr1TotFirstScaled">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(Tkr1ToTFirst*2.5/CTBBestLogEnergy)"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.TMVA_PredictEngineNode" guiClass="com.insightful.miner.TMVA_PredictNodeModel" id="17" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(17) Predict: CAL Gam Prob" largeIcon="predict_large.gif" smallIcon="predict_small.gif" x="325" y="450"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="copyInputColumns">
+              <Property name="dependent" value="true"/>
+              <Property name="independent" value="true"/>
+              <Property name="other" value="true"/>
+            </Property>
+            <Property name="newColumns">
+              <Property name="agreement" value="true"/>
+              <Property name="classification" value="true"/>
+              <Property name="probability" value="true"/>
+              <Property name="probabilityFor"/>
+              <Property name="specifiedCategory"/>
+            </Property>
+            <Property name="persistName" value="WP8CTCalGamProb_BDT500D05.weights.xml"/>
+            <Property name="weightsFile" value="$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.d/weights/WP8CTCalGamProb_BDT500D05.weights.xml"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.ModifyColumnsEngineNode" guiClass="com.insightful.miner.ModifyColumnsNodeModel" id="18" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(18) WP8CalGamProb" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="450"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="columns">
+              <Property name="__Predict__prob">
+                <Property name="newName" value="WP8CTCalGamProb"/>
+                <Property name="isSelected" value="true"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.CreateColumnsEngineNode" guiClass="com.insightful.miner.CreateColumnsNodeModel" id="19" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(19) CAL Variables" largeIcon="create_cols_large.gif" smallIcon="create_cols_small.gif" x="125" y="450"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="newColumns">
+              <Property name="Tkr1CoreAve">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(Tkr1CoreHC/Tkr1Hits)"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="CalLLRms">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(sqrt(CalXPosRmsLL^2+CalYPosRmsLL^2))"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="XtalRmsTkrCoreDoca">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(CTBTkrCoreCalDoca-CalTrkXtalRmsETrunc)"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+              <Property name="Tkr1TotFirstScaled">
+                <Property name="type" value="continuous"/>
+                <Property name="expression" value="(Tkr1ToTFirst*2.5/CTBBestLogEnergy)"/>
+                <Property name="dataType" value="Double_t"/>
+              </Property>
+            </Property>
           </XTProps>
         </ArgumentList>
       </ActivityNode>
@@ -126,10 +407,22 @@
     <TextNodeList/>
     <CollapsedNodeList/>
     <LinkList>
-      <Link fromNode="1" fromPort="0" orthogonal="true" toNode="2" toPort="0"/>
       <Link fromNode="2" fromPort="0" orthogonal="true" toNode="3" toPort="0"/>
       <Link fromNode="0" fromPort="0" orthogonal="true" toNode="1" toPort="0"/>
-      <Link fromNode="3" fromPort="0" orthogonal="true" toNode="7" toPort="0"/>
+      <Link fromNode="3" fromPort="0" orthogonal="true" toNode="8" toPort="0"/>
+      <Link fromNode="8" fromPort="0" orthogonal="true" toNode="9" toPort="0"/>
+      <Link fromNode="1" fromPort="0" orthogonal="true" toNode="10" toPort="0"/>
+      <Link fromNode="10" fromPort="0" orthogonal="true" toNode="11" toPort="0"/>
+      <Link fromNode="11" fromPort="0" orthogonal="true" toNode="12" toPort="0"/>
+      <Link fromNode="12" fromPort="0" orthogonal="true" toNode="13" toPort="0"/>
+      <Link fromNode="13" fromPort="0" orthogonal="true" toNode="14" toPort="0"/>
+      <Link fromNode="14" fromPort="0" orthogonal="true" toNode="2" toPort="0"/>
+      <Link fromNode="9" fromPort="0" orthogonal="true" toNode="15" toPort="0"/>
+      <Link fromNode="15" fromPort="0" orthogonal="true" toNode="16" toPort="0"/>
+      <Link fromNode="17" fromPort="0" orthogonal="true" toNode="18" toPort="0"/>
+      <Link fromNode="16" fromPort="0" orthogonal="true" toNode="19" toPort="0"/>
+      <Link fromNode="19" fromPort="0" orthogonal="true" toNode="17" toPort="0"/>
+      <Link fromNode="18" fromPort="0" orthogonal="true" toNode="7" toPort="0"/>
     </LinkList>
   </Worksheet>
 </IMML>
