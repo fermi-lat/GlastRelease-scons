@@ -197,6 +197,7 @@ NtupleMaker1.Members = {
     "PtValsAlg/PtValsAlg1",   
     "AnalysisNtupleAlg/AnalysisNtupleAlg1",
     "ClassifyAlg/ClassifyAlg1",       
+    "ClassifyAlg/ClassifyAlg2",       
     "FT1Alg/FT1Alg1",                  
     "McCoordsAlg/McCoordsAlg1",  
     "ObfCoordsAlg/ObfCoordsAlg1" 
@@ -204,21 +205,23 @@ NtupleMaker1.Members = {
 ClassifyAlg1.UseTMine = true;
 ClassifyAlg1.TMineCacheFile = "MeritTuple_cache.root";
 ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml";
-//ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Protected.xml";
-
-
-/// ADW: Make production tuple named PrimeTuple
-NtupleMaker2.Members = {
-    "AnalysisNtupleAlg/AnalysisNtupleAlg2",
-    "ClassifyAlg/ClassifyAlg2"
- };
-AnalysisNtupleAlg2.tupleName = "PrimeTuple";
-AnalysisNtupleAlg2.proTuple = true;
-
-ClassifyAlg2.TreeName = "PrimeTuple";
+//ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
 ClassifyAlg2.UseTMine = true;
-ClassifyAlg2.TMineCacheFile = "PrimeTuple_cache.root";
+ClassifyAlg2.TMineCacheFile = "MeritTuple_cache.root";
 ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
+
+// /// ADW: Make production tuple named PrimeTuple
+// NtupleMaker2.Members = {
+//     "AnalysisNtupleAlg/AnalysisNtupleAlg2",
+//     "ClassifyAlg/ClassifyAlg2"
+//  };
+// AnalysisNtupleAlg2.tupleName = "PrimeTuple";
+// AnalysisNtupleAlg2.proTuple = true;
+//  
+// ClassifyAlg2.TreeName = "PrimeTuple";
+// ClassifyAlg2.UseTMine = true;
+// ClassifyAlg2.TMineCacheFile = "PrimeTuple_cache.root";
+// ClassifyAlg2.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.xml";
 
 // default output to GLEAMDATAPATH
 RootTupleSvc.filename            = "${GLEAMDATAPATH}/merit.root";
