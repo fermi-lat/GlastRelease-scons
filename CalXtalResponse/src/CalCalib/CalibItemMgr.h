@@ -73,7 +73,7 @@ public:
 
   /// return serial # for current calib data
   /// return calibration data serial number from CalibSvc, or SERNO_IDEAL, SERNO_NODATA
-  int getSerNo() {return m_serNo;}
+  int getSerNo(); // {return m_serNo;}
 
 protected:
   /** \brief check calib validity period, (re)build local store if necessary
