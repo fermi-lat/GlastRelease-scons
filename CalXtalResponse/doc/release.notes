@@ -2,6 +2,7 @@
  * Package CalXtalResponse
 * EOH *
 
+ CalXtalResponse-01-00-00 21-Sep-2012  lsrea Fix to implement calibration updates in CAL
  CalXtalResponse-00-27-00 17-Aug-2012    jrb for Windows no-install-headers
  CalXtalResponse-00-26-00 05-Dec-2011 HMK Merge in Gaudi v21r7
  CalXtalResponse-00-25-02 16-Feb-2011 TU Importing Bill's end effect correction
