@@ -362,7 +362,7 @@
         </ArgumentList>
       </ActivityNode>
       <ActivityNode engineClass="com.insightful.miner.ModifyColumnsEngineNode" guiClass="com.insightful.miner.ModifyColumnsNodeModel" id="18" numInputs="1" numOutputs="1">
-        <DisplayInfo labelText="(18) WP8CalGamProb" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="450"/>
+        <DisplayInfo labelText="(18) WP8CTCalGamProb" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="450"/>
         <ArgumentList>
           <XTProps>
             <Property name="columns">
@@ -403,6 +403,40 @@
           </XTProps>
         </ArgumentList>
       </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.TMVA_PredictEngineNode" guiClass="com.insightful.miner.TMVA_PredictNodeModel" id="20" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(20) Predict: All Prob" largeIcon="predict_large.gif" smallIcon="predict_small.gif" x="325" y="550"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="copyInputColumns">
+              <Property name="dependent" value="true"/>
+              <Property name="independent" value="true"/>
+              <Property name="other" value="true"/>
+            </Property>
+            <Property name="newColumns">
+              <Property name="agreement" value="true"/>
+              <Property name="classification" value="true"/>
+              <Property name="probability" value="true"/>
+              <Property name="probabilityFor"/>
+              <Property name="specifiedCategory"/>
+            </Property>
+            <Property name="persistName" value="WP8CTAllProb_BDT500D09NP.weights.xml"/>
+            <Property name="weightsFile" value="$(GLASTCLASSIFYXMLPATH)/Pass8_Analysis_Open.d/weights/WP8CTAllProb_BDT500D09NP.weights.xml"/>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
+      <ActivityNode engineClass="com.insightful.miner.ModifyColumnsEngineNode" guiClass="com.insightful.miner.ModifyColumnsNodeModel" id="21" numInputs="1" numOutputs="1">
+        <DisplayInfo labelText="(21) WP8CTAllProb" largeIcon="modify_cols_large.gif" smallIcon="modify_cols_small.gif" x="450" y="550"/>
+        <ArgumentList>
+          <XTProps>
+            <Property name="columns">
+              <Property name="__Predict__prob">
+                <Property name="newName" value="WP8CTAllProb"/>
+                <Property name="isSelected" value="true"/>
+              </Property>
+            </Property>
+          </XTProps>
+        </ArgumentList>
+      </ActivityNode>
     </ActivityNodeList>
     <TextNodeList/>
     <CollapsedNodeList/>
@@ -422,7 +456,9 @@
       <Link fromNode="17" fromPort="0" orthogonal="true" toNode="18" toPort="0"/>
       <Link fromNode="16" fromPort="0" orthogonal="true" toNode="19" toPort="0"/>
       <Link fromNode="19" fromPort="0" orthogonal="true" toNode="17" toPort="0"/>
-      <Link fromNode="18" fromPort="0" orthogonal="true" toNode="7" toPort="0"/>
+      <Link fromNode="18" fromPort="0" orthogonal="true" toNode="20" toPort="0"/>
+      <Link fromNode="20" fromPort="0" orthogonal="true" toNode="21" toPort="0"/>
+      <Link fromNode="21" fromPort="0" orthogonal="true" toNode="7" toPort="0"/>
     </LinkList>
   </Worksheet>
 </IMML>
