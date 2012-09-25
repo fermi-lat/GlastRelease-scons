@@ -67,7 +67,9 @@ public:
   }
   
   virtual StatusCode retrieveObject(const std::string& path, DataObject*& pObject) {
-    return m_dataProviderSvc->retrieveObject(path, pObject);
+    StatusCode sc = m_dataProviderSvc->retrieveObject(path, pObject);
+	if (pObject) sc = m_dataProviderSvc->updateObject(pObject);
+	return sc;
   }
 
   const std::string getCalibPath(const ICalibPathSvc::CalibItem item, const std::string& flavor="") const;
