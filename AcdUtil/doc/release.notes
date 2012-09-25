@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
                EOH
 
+ AcdUtil-03-04-00 25-Sep-2012 TU Add call to updateObject to check calibration validity range
  AcdUtil-03-03-00 20-Aug-2012    jrb for Windows no-install-headers
  AcdUtil-03-02-00 05-Dec-2011    hmk Merge in Gaudi v21r7 upgrade
  AcdUtil-03-01-05 20-May-2011    hmk CLHEP namespace in 2.1.0.1
