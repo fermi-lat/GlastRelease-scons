@@ -1,2 +1,4 @@
 # containerNotes for GlastRelease-scons
 
+2012-09-25 heather Add in SConsFiles update for supersede on Windows
+
