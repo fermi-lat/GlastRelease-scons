@@ -24,7 +24,8 @@ progEnv.Tool('registerTargets', package = 'CalUtil',
              libraryCxts = [[CalUtil, libEnv]],
              testAppCxts = [[test_CalUtil, progEnv]], 
              includes = listFiles(['CalUtil/*'], recursive = 1),
-             xml = ['xml/idealCalib_flight.xml', 'xml/idealCalib_muon.xml'])
+             xml = listFiles(['xml/BiasMap*.txt', 'xml/idealCalib_flight.xml', 'xml/idealCalib_muon.xml']))
+
 
 
 

@@ -95,7 +95,8 @@ StatusCode UBinterpolateTool::initialize()
 
 // Set bias map and parse it to fill data vectors
 void UBinterpolateTool::addBiasMap(std::string mapName, std::string calibFileName)  {
-  
+
+
     m_calibFileName[mapName] = calibFileName;
 
     facilities::Util::expandEnvVar(&m_calibFileName[mapName]);

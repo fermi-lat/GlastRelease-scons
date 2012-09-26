@@ -2131,7 +2131,7 @@ float TkrValsTool::SSDEvaluation(const Event::TkrTrack* track)
 
     double arcLen = m_G4PropTool->getStepArcLen(0);
     bool isFirstPlane = true;
-
+    int previousplane = -1;
     for(int istep = 1; istep < numSteps; ++istep) { 
         volId = m_G4PropTool->getStepVolumeId(istep);
         volId.prepend(prefix);
@@ -2152,8 +2152,7 @@ float TkrValsTool::SSDEvaluation(const Event::TkrTrack* track)
         if(volId.size() != 9) continue; 
         if(!(volId[0]==0 && volId[3]==1)) continue; // !(LAT && TKR)
         if(volId[6]> 1) continue;  //It's a converter or some other tray element!
-        m_VetoPlaneCrossed++;
-
+ 
         // now check if there's a hit near the extrapolated track!
         // if there is, reset the veto counter... we want leading non-hits
         //std::cout << "Tkr1SSDVeto volId " << volId.name() << std::endl;
@@ -2164,6 +2163,9 @@ float TkrValsTool::SSDEvaluation(const Event::TkrTrack* track)
         int face = volId[6];
         int layer = m_tkrGeom->trayToBiLayer(tray, face);
         int plane = m_tkrGeom->trayToPlane(tray, face);
+        if(previousplane==plane) continue; // already looked at this plane
+        previousplane=plane;
+        m_VetoPlaneCrossed++; //
 
         int firstPlane = -1;
         if(isFirstPlane) {

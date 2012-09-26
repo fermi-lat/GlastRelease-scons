@@ -27,7 +27,7 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "ICalEnergySelectionTool.h"
-#include "UBinterpolate.h"
+#include "CalUtil/IUBinterpolateTool.h"
 
 #include <cmath>  // for M_PI, among others
 
@@ -157,8 +157,8 @@ private:
     /// Pointer to the Gaudi data provider service
     DataSvc*                         m_dataSvc;
 
-    /// Unbiaser stolen from Anatup for now... need solution here?
-    UBinterpolate* m_ubInterpolate;
+    /// Unbiaser from CalUtil
+    IUBinterpolateTool* m_ubInterpolateTool;
 
     /// some Geometry
     double m_towerPitch;
@@ -333,7 +333,15 @@ StatusCode CalEnergyClassificationTool::initialize()
     }
 
     // Finally get a hold of the unbiasing interpolation code
-    m_ubInterpolate = new UBinterpolate("$(CALRECONXMLPATH)/BiasMapCalCfpEnergy.txt");
+    // Get the Tool
+    m_ubInterpolateTool = 0;
+    // Recover the ClassifyTool from the land of Gaudi
+    if ((sc = toolSvc()->retrieveTool("UBinterpolateTool", "UBinterpolateTool", m_ubInterpolateTool)).isFailure())
+    {
+        throw GaudiException("Service [UBinterpolateTool] not found", name(), sc);
+    }
+    m_ubInterpolateTool->addBiasMap("Prof","$(CALUTILXMLPATH)/BiasMapCalCfpEnergy.txt"); 
+    //m_ubInterpolate = new UBinterpolate("$(CALRECONXMLPATH)/BiasMapCalCfpEnergy.txt");
     
     return sc;
 }
@@ -458,10 +466,10 @@ bool CalEnergyClassificationTool::setTupleValues(Event::CalEventEnergy*      cal
         m_floatAddrMap["CalCfpTkrRLn"]   = calCfpCorr->find("tkr_RLn")->second;
 
         // need to do the event unbiasing here
-        const float bias = m_ubInterpolate->interpolate(log10(calCfpEnergy), tkrDirZ);
+        const float bias = m_ubInterpolateTool->interpolate("Prof", log10(calCfpEnergy), tkrDirZ);
 
         float calCfpEnergyUB = bias == 0 ? -1 : calCfpEnergy / bias;
-
+        
         m_floatAddrMap["CalCfpEnergyUB"] = calCfpEnergyUB;
     }
     else
