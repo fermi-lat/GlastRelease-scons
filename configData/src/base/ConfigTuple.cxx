@@ -34,44 +34,6 @@ void ConfigBranch::setLeafSuffix(std::string& leafName) const {
   leafName += "/"; leafName += m_type;
 }
 
-
-template <typename T>
-ConfigBranchImpl<T>::ConfigBranchImpl(const char* name, const Char_t type, const ChannelKey& size)
-  :ConfigBranch(name,type,size),m_vals(0){
-  build();
-  static ChannelKey nullKey(0); static T dummy;
-  getVal(nullKey,dummy);
-  setVal(nullKey,dummy);
-}
-
-template <typename T>
-void ConfigBranchImpl<T>::setVal(const ChannelKey& key, T val) {
-  Int_t i = index(key);
-  m_vals[i] = val;
-}
-
-template <typename T>
-void ConfigBranchImpl<T>::getVal(const ChannelKey& key, T& val) const {
-  Int_t i = index(key);
-  m_vals[i] = val;
-}
-
-template <typename T>
-void ConfigBranchImpl<T>::setAll(T val) {
-  Int_t idx = 0;
-  m_bcast = val;
-  for ( Int_t i(0); i < branchSize().index0(); i++ ) {    
-    for ( Int_t j(0); j < branchSize().index1(); j++ ) {
-      for ( Int_t k(0); k < branchSize().index2(); k++ ) {
-	for ( Int_t l(0); l < branchSize().index3(); l++ ) {    
-	  m_vals[idx] = val;
-	  idx++;
-	}    
-      }    
-    }
-  }
-}
-
 template <typename T>
 void ConfigBranchImpl<T>::attach(TTree& tree, const std::string& prefix) const {
   std::string branchName = prefix; branchName += name();
@@ -95,12 +57,6 @@ void ConfigBranchImpl<T>::makeBranch(TTree& tree, const std::string& prefix) con
   
 }
 
-
-template <typename T>
-void ConfigBranchImpl<T>::build() {
-  Int_t bSize = branchSize().index0() * branchSize().index1() * branchSize().index2() * branchSize().index3();
-  m_vals = new T[bSize];
-}
 
 void ConfigTuple::reset() {  
   for ( std::list<ConfigBranch*>::iterator itr = m_branchList.begin();

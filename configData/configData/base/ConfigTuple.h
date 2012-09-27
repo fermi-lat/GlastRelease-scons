@@ -124,7 +124,12 @@ public :
   
   // Standard c'tor, needs a name, this is where the data end up
   // on the output tree
-  ConfigBranchImpl(const char* name, const Char_t type, const ChannelKey& size);
+  ConfigBranchImpl(const char* name, const Char_t type, const ChannelKey& size) :ConfigBranch(name,type,size),m_vals(0){
+    build();
+    static ChannelKey nullKey(0); static T dummy;
+    getVal(nullKey,dummy);
+    setVal(nullKey,dummy);
+  }
 
   // D'tor, no-op
   virtual ~ConfigBranchImpl(){
@@ -134,24 +139,50 @@ public :
   }
 
   // Set a value
-  void setVal(const ChannelKey& key, T val);
+  inline void setVal(const ChannelKey& key, T val) {
+    Int_t i = index(key);
+    m_vals[i] = val;    
+    ;
+  }
+
   // Get a value
-  void getVal(const ChannelKey& key, T& val) const;
+  inline void getVal(const ChannelKey& key, T& val) const {
+  Int_t i = index(key);
+  m_vals[i] = val;
+}
+
 
   // Reset the cached and output values
   virtual void reset() {
     setAll(0);
   }
 
-  void setAll(T val = 0);
-
+  void setAll(T val = 0) {
+    Int_t idx = 0;
+    m_bcast = val;
+    for ( Int_t i(0); i < branchSize().index0(); i++ ) {    
+      for ( Int_t j(0); j < branchSize().index1(); j++ ) {
+	for ( Int_t k(0); k < branchSize().index2(); k++ ) {
+	  for ( Int_t l(0); l < branchSize().index3(); l++ ) {    
+	    m_vals[idx] = val;
+	    idx++;
+	  }    
+	}    
+      }
+    }    
+    ;
+  }
   // Attach this value to a TTree
   virtual void makeBranch(TTree& tree, const std::string& prefix) const;
   virtual void attach(TTree& tree, const std::string& prefix) const;
 
 protected:
 
-  void build();  
+  inline void build() {
+    Int_t bSize = branchSize().index0() * branchSize().index1() * branchSize().index2() * branchSize().index3();
+    m_vals = new T[bSize];
+  }
+
 
 private:
 
