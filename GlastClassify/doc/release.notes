@@ -5,6 +5,8 @@ $Id$
 @verbatim
  * EOH *
 
+ GlastClassify-07-11-00 01-Oct-2012 heather moved P8 xml files to extFiles/
+   pass8Analysis/xml
  GlastClassify-07-10-03 26-Sep-2012 carmelo Added cal-only first prototype
  GlastClassify-07-10-02 21-Sep-2012 kadrlica Added first pass of AllProb; will need update with new ROOT
  GlastClassify-07-10-01 19-Sep-2012 kadrlica Updated Pass8 worksheet with PSF, TKR, and CAL pieces. Added directory for Pass8 weights files.
