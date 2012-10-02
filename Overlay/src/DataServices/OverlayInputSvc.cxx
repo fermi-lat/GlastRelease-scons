@@ -218,11 +218,13 @@ StatusCode OverlayInputSvc::queryInterface(const InterfaceID& riid, void** ppvIn
 {
     StatusCode status = StatusCode::SUCCESS;
 
-    if ( IID_IOverlayDataSvc.versionMatch(riid) )  
-    {
-        *ppvInterface = (IOverlayDataSvc*)this;
-    }
-    else status = Service::queryInterface(riid, ppvInterface);
+//    if ( IID_IOverlayDataSvc.versionMatch(riid) )  
+//    {
+//        *ppvInterface = (IOverlayDataSvc*)this;
+//    }
+//    else status = Service::queryInterface(riid, ppvInterface);
+
+	status = Service::queryInterface(riid, ppvInterface);
 
     return status;
 }
