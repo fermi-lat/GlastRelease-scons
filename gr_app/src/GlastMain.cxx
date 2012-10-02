@@ -61,12 +61,12 @@ int main( int argn, char** argc) {
     //    std::string joboptions_file="src/jobOptions.txt"; // default
   std::string joboptions_file;
 #ifndef SCons    
-  joboptions_file="src/test/jobOptions.txt"; // default
+  joboptions_file="src/jobOptions.txt"; // default
 #else
 #ifdef PACKAGE_NAME
   std::string pkgName(PACKAGE_NAME); 
   joboptions_file = facilities::commonUtilities::getJobOptionsPath(pkgName) +
-    "/test/jobOptions.txt";
+    "/jobOptions.txt";
 #else
   std::cerr << "SCons compile did not specify package name! ";
   return 1;
