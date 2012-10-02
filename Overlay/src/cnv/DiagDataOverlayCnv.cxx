@@ -123,7 +123,7 @@ StatusCode DiagDataOverlayCnv::initialize()
     else 
     {
         // Need to up convert to point to the OverlayDataSvc
-        m_overlayOutputSvc = dynamic_cast<IOverlayDataSvc*>(tmpService);
+        m_overlayOutputSvc = SmartIF<IOverlayDataSvc>(tmpService);
     }
 
     if (m_overlayOutputSvc) m_overlayOutputSvc->registerOutputPath(m_path);

@@ -127,7 +127,7 @@ StatusCode AcdOverlayCnv::initialize()
     else 
     {
         // Need to up convert to point to the OverlayDataSvc
-        m_overlayOutputSvc = dynamic_cast<IOverlayDataSvc*>(tmpService);
+        m_overlayOutputSvc = SmartIF<IOverlayDataSvc>(tmpService);
     }
 
     if (m_overlayOutputSvc) m_overlayOutputSvc->registerOutputPath(m_path);
@@ -158,7 +158,7 @@ StatusCode AcdOverlayCnv::createObj(IOpaqueAddress* pOpaque, DataObject*& refpOb
 
     if (!pDataSvc) return StatusCode::FAILURE;
 
-    IOverlayDataSvc* inputDataSvc = dynamic_cast<IOverlayDataSvc*>(pDataSvc);
+    IOverlayDataSvc* inputDataSvc = SmartIF<IOverlayDataSvc>(pDataSvc);
 
     // Retrieve the pointer to the digi
     EventOverlay* overlayRoot = inputDataSvc->getRootEventOverlay();

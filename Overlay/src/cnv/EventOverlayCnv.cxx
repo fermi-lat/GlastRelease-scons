@@ -130,7 +130,7 @@ StatusCode EventOverlayCnv::initialize()
     else 
     {
         // Need to up convert to point to the OverlayDataSvc
-        m_overlayOutputSvc = dynamic_cast<IOverlayDataSvc*>(tmpService);
+        m_overlayOutputSvc = SmartIF<IOverlayDataSvc>(tmpService);
     }
 
     if (m_overlayOutputSvc) m_overlayOutputSvc->registerOutputPath(m_path);
@@ -161,7 +161,7 @@ StatusCode EventOverlayCnv::createObj(IOpaqueAddress* pOpaque, DataObject*& refp
 
     if (!pDataSvc) return StatusCode::FAILURE;
 
-    IOverlayDataSvc* inputDataSvc = dynamic_cast<IOverlayDataSvc*>(pDataSvc);
+    IOverlayDataSvc* inputDataSvc = SmartIF<IOverlayDataSvc>(pDataSvc);
 
     // Create the new DigiOverlay event to put in the TDS
     Event::EventOverlay* eventTds = new Event::EventOverlay();
