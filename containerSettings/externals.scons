@@ -31,7 +31,7 @@ if sys.platform == 'win32':
 else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i6'})
 
-usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.7'})
+usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.8'})
 usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-i1'} ) 
 
 if baseEnv['COMPILERNAME'] == 'vc90':

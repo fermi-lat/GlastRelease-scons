@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-10-01 01-Oct-2012 heather move to TMineExt 3.2.8
  containerSettings-00-10-00 01-Oct-2012 heather moved P8 xml files to extFiles v0r11
  containerSettings-00-09-04 19-Sep-2012 heather fix geant4 for gcc34
  containerSettings-00-09-03 18-Sep-2012 heather finish removal of compiler subdirectory in externals
