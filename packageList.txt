@@ -73,10 +73,10 @@ OnboardFilter OnboardFilter-04-17-00
 OnboardFilterTds OnboardFilterTds-00-12-00
 
 # Calorimeter
-CalUtil CalUtil-03-15-00
-CalXtalResponse CalXtalResponse-00-27-00
+CalUtil CalUtil-03-15-01
+CalXtalResponse CalXtalResponse-01-00-00
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-19-00
+CalRecon CalRecon-06-19-01
 GCRCalib GCRCalib-01-11-00
 
 # Tracker
@@ -86,7 +86,7 @@ TkrRecon TkrRecon-10-34-00
 
 # ACD
 AcdDigi AcdDigi-03-11-00
-AcdUtil AcdUtil-03-03-00
+AcdUtil AcdUtil-03-04-00
 AcdRecon AcdRecon-05-04-00
 
 # Geant4
@@ -104,7 +104,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-64-00
+AnalysisNtuple AnalysisNtuple-02-64-01
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -120,7 +120,7 @@ HepRepXml HepRepXml-00-10-01
 
 # classification
 classifier classifier-01-07-00
-GlastClassify GlastClassify-07-10-00
+GlastClassify GlastClassify-07-11-00
 
 Interleave Interleave-01-08-00
 
@@ -131,7 +131,7 @@ ConfigSvc ConfigSvc-00-04-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-01-00
-Overlay Overlay-02-03-00
+Overlay Overlay-02-04-01
 overlayRootData overlayRootData-00-04-00
 
 calibGenCAL calibGenCAL-05-09-07
@@ -142,9 +142,9 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-08-00
 
-Gleam Gleam-07-11-07
+Gleam Gleam-07-11-09
 
-SConsFiles SConsFiles-01-02-01
-GlastRelease-scons/containerSettings containerSettings-00-09-02
+SConsFiles SConsFiles-01-04-00
+GlastRelease-scons/containerSettings containerSettings-00-10-01
 
 celestialSources/EarthPhenom EarthPhenom-00-02-00
