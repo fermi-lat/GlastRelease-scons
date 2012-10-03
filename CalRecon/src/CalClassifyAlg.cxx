@@ -15,11 +15,14 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 #include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalClusterMap.h"
 #include "Event/TopLevel/EventModel.h"
 #include <algorithm>
 
 #include "Clustering/StdClusterInfo.h"
 #include "Clustering/MomentsClusterInfo.h"
+
+typedef  XtalDataList::iterator XtalDataListIterator;
 
 
 /**   
@@ -141,10 +144,16 @@ StatusCode CalClassifyAlg::execute()
     Event::CalClusterCol* calClusterCol = 
       SmartDataPtr<Event::CalClusterCol>(eventSvc(),EventModel::CalRecon::CalClusterCol);
 
+    Event::CalClusterMap* calClusterMap = 
+      SmartDataPtr<Event::CalClusterMap>(eventSvc(), EventModel::CalRecon::CalClusterMap) ;
+    Event::CalClusterVec rawClusterVec;
+    if(calClusterMap) rawClusterVec = (*calClusterMap).get(EventModel::CalRecon::CalRawClusterVec);
+
     // Get relation between clusters and xtals
     Event::CalClusterHitTabList* xTal2ClusTabList = SmartDataPtr<Event::CalClusterHitTabList>(eventSvc(),EventModel::CalRecon::CalClusterHitTab);
     Event::CalClusterHitTab* xTal2ClusTab = 0;
     if (xTal2ClusTabList) xTal2ClusTab = new Event::CalClusterHitTab(xTal2ClusTabList);
+
     Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(eventSvc(),EventModel::CalRecon::CalXtalRecCol);
 
     // Call the tool to classify the clusters
@@ -157,34 +166,59 @@ StatusCode CalClassifyAlg::execute()
     int   nCluEgtThr  = 0;
     float cluMaxGProb = 0.;
     int cluMaxGProbId = -1;
+    int iclu2 = 0;
     for ( Event::CalClusterCol::const_iterator cluster = calClusterCol->begin();          
           cluster != calClusterCol->end()-1;          
-          cluster++) {  
-      if ((*cluster)->getMomParams().getEnergy()> m_maxEtoSortByClassification) {nCluEgtThr+=1;}
-      if ((*cluster)->getClassParams().getGamProb()  > cluMaxGProb) {
-        cluMaxGProb = (*cluster)->getClassParams().getGamProb();
-        cluMaxGProbId = std::find(calClusterCol->begin(), calClusterCol->end(), *cluster) - calClusterCol->begin();   
+          cluster++)
+      {  
+        if ((*cluster)->getMomParams().getEnergy()> m_maxEtoSortByClassification) {nCluEgtThr+=1;}
+        if ((*cluster)->getClassParams().getGamProb()  > cluMaxGProb)
+          {
+            cluMaxGProb = (*cluster)->getClassParams().getGamProb();
+            cluMaxGProbId = iclu2;
+            //            cluMaxGProbId = std::find(calClusterCol->begin(), calClusterCol->end(), *cluster) - calClusterCol->begin();   
+          }
+        ++iclu2;
       }
-    }
     
     // iterator to be used in the rotate method below.
     Event::CalClusterCol::iterator cluMaxGProbIt ;
     cluMaxGProbIt = calClusterCol->begin();
     if (cluMaxGProbId > 0) std::advance(cluMaxGProbIt, cluMaxGProbId);
 
-    if (nCluEgtThr==0){
+    Event::CalClusterVec::iterator calClusIter = rawClusterVec.begin();
+    if (cluMaxGProbId > 0) std::advance(calClusIter, cluMaxGProbId);
 
-      if (m_fullSortByClassification){
-        log << MSG::DEBUG << "Clusters sorting: by gam probability." << endreq;
-        sort (calClusterCol->begin(), calClusterCol->end()-1, SortByGamProb); }
-      else { 
-        log << MSG::DEBUG << "Clusters sorting: by energy and then putting the one with highest gam prob first." << endreq;
-        rotate(calClusterCol->begin(), cluMaxGProbIt, cluMaxGProbIt+1 ); }
-    }
-    else {
-      log << MSG::DEBUG << "Clusters sorting: by energy." << endreq;          
-    }
+    if (nCluEgtThr==0)
+      {
+        if (m_fullSortByClassification)
+          {
+            log << MSG::DEBUG << "Clusters sorting: by gam probability." << endreq;
+            sort (calClusterCol->begin(), calClusterCol->end()-1, SortByGamProb);
+            sort (rawClusterVec.begin(), rawClusterVec.end(), SortByGamProb);
+          }
+        else 
+          { 
+            log << MSG::DEBUG << "Clusters sorting: by energy and then putting the one with highest gam prob first. cluMaxGProbId = " << cluMaxGProbId << endreq;
+            rotate(calClusterCol->begin(), cluMaxGProbIt, cluMaxGProbIt+1 );
+            rotate(rawClusterVec.begin(), calClusIter, calClusIter+1 ); 
+          }
+      }
+    else 
+      {
+        log << MSG::DEBUG << "Clusters sorting: by energy." << endreq;          
+      }
 
+    (*calClusterMap)[EventModel::CalRecon::CalRawClusterVec].clear();
+    Event::CalClusterColConItr mstCluster;
+    Event::CalClusterColConItr end = calClusterCol->end();
+    if (calClusterCol->size() > 1){
+      end --;
+    }
+    for (mstCluster = calClusterCol->begin(); mstCluster != end; mstCluster++){
+      (*calClusterMap)[EventModel::CalRecon::CalRawClusterVec].push_back(*mstCluster);
+    }
+    
     int numClusters = 0;
     if(calClusterCol) numClusters = calClusterCol->size();
     log << MSG::DEBUG << "There are " << numClusters << " clusters." << endreq;
@@ -265,12 +299,24 @@ StatusCode CalClassifyAlg::execute()
             // Add cluster into the collection
             log << MSG::DEBUG << "Adding the Uber2 cluster into the collection." << endreq;
             calClusterCol->push_back(myuber2cluster);
-            // reorder such that the last cluster is the uber cluster (and cluster uber2 is the next to last)
-            log << MSG::DEBUG << "Reordering such that the last cluster is the uber cluster (and cluster uber2 is the next to last)." << endreq;
-            rotate(calClusterCol->end()-2,calClusterCol->end()-1,calClusterCol->end());
+            // Loop through the xtals to make the relational table (hmmm... this could be done better...)  - from Tracy
+            for(XtalDataListIterator xTalIter = xTalClus->begin(); xTalIter != xTalClus->end(); xTalIter++)
+              {
+                Event::CalXtalRecData*   xTal         = *xTalIter;
+                Event::CalClusterHitRel* xTal2ClusRel = new Event::CalClusterHitRel(xTal,myuber2cluster);
+                
+                xTal2ClusTab->addRelation(xTal2ClusRel);
+              }
+            // // reorder such that the last cluster is the uber cluster (and cluster uber2 is the next to last)
+            // log << MSG::DEBUG << "Reordering such that the last cluster is the uber cluster (and cluster uber2 is the next to last)." << endreq;
+            // rotate(calClusterCol->end()-2,calClusterCol->end()-1,calClusterCol->end());
+            //
           }
         if(xTalClus) delete xTalClus;
       }
+
+    
+    (*calClusterMap)[EventModel::CalRecon::CalUber2Cluster].push_back(calClusterCol->back());
 
     // For debug
     log << MSG::DEBUG << "Last cluster is always the uber cluster:" << endreq;

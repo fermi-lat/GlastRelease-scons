@@ -358,8 +358,8 @@ StatusCode TkrReconAlg::execute()
 
                log << MSG::DEBUG;
                log << "------- Tkr Recon of new Event  " 
-								   << run << ":" << event << " (" 
-								   << m_eventCount << ") --------";
+                                                                   << run << ":" << event << " (" 
+                                                                   << m_eventCount << ") --------";
                log << endreq;
             }
 

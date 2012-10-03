@@ -411,11 +411,11 @@ StatusCode OverlayValsTool::calculate()
         SmartDataPtr<Event::GemOverlay> gemOverlay(m_dataSvc, m_dataSvc->rootName() + OverlayEventModel::Overlay::GemOverlay);
         if (gemOverlay) m_triggerBits = gemOverlay->getConditionSummary();
 
-	// Recover pointers to CalClusters and Xtals
-	SmartDataPtr<Event::CalClusterMap> pCalClusterMap(m_pEventSvc,EventModel::CalRecon::CalClusterMap); 
-	  	
-	Event::CalClusterVec rawClusterVec;
-	if(pCalClusterMap) rawClusterVec = (*pCalClusterMap).get(EventModel::CalRecon::CalRawClusterVec);
+        // Recover pointers to CalClusters and Xtals
+        SmartDataPtr<Event::CalClusterMap> pCalClusterMap(m_pEventSvc,EventModel::CalRecon::CalClusterMap); 
+                  
+        Event::CalClusterVec rawClusterVec;
+        if(pCalClusterMap) rawClusterVec = (*pCalClusterMap).get(EventModel::CalRecon::CalRawClusterVec);
 
         //
         // Fill overlay energy of clusters
@@ -441,26 +441,26 @@ StatusCode OverlayValsTool::calculate()
 
             int numClusters = rawClusterVec.size();
             double eTotovr   = 0.0;
-	    int iclu = 0;
-	    Event::CalClusterVec::iterator calClusIter = rawClusterVec.begin();
-	    while(calClusIter != rawClusterVec.end())
-	      {
-		Event::CalCluster* cluster = *calClusIter;
-		//
-		m_pCalClusterHitTool->fillRecDataVec(cluster);
-		std::vector<Event::CalXtalRecData*> xtallist = m_pCalClusterHitTool->getRecDataVec();
+            int iclu = 0;
+            Event::CalClusterVec::iterator calClusIter = rawClusterVec.begin();
+            while(calClusIter != rawClusterVec.end())
+              {
+                Event::CalCluster* cluster = *calClusIter;
+                //
+                m_pCalClusterHitTool->fillRecDataVec(cluster);
+                std::vector<Event::CalXtalRecData*> xtallist = m_pCalClusterHitTool->getRecDataVec();
                 eTotovr   = 0.0;
-		//
-		std::vector<Event::CalXtalRecData*>::iterator jlog;
-		for( jlog=xtallist.begin(); jlog != xtallist.end(); ++jlog)
-		  {
-		    Event::CalXtalRecData* recData = *jlog;
-		    int itow=recData->getPackedId().getTower();
-		    int ilay=recData->getPackedId().getLayer();
-		    int icol=recData->getPackedId().getColumn();
-		    eTotovr += xtalovrenergy[itow][ilay][icol];
-		  }
-		//
+                //
+                std::vector<Event::CalXtalRecData*>::iterator jlog;
+                for( jlog=xtallist.begin(); jlog != xtallist.end(); ++jlog)
+                  {
+                    Event::CalXtalRecData* recData = *jlog;
+                    int itow=recData->getPackedId().getTower();
+                    int ilay=recData->getPackedId().getLayer();
+                    int icol=recData->getPackedId().getColumn();
+                    eTotovr += xtalovrenergy[itow][ilay][icol];
+                  }
+                //
                 if(iclu==0)
                   {
                     CAL_Clu1_OverlayEnergy = eTotovr;
@@ -481,10 +481,10 @@ StatusCode OverlayValsTool::calculate()
                   {
                     CAL_Clu5_OverlayEnergy = eTotovr;
                   }     
-		//
-		calClusIter++;
-		++iclu;
-	      }
+                //
+                calClusIter++;
+                ++iclu;
+              }
           }
     }
     

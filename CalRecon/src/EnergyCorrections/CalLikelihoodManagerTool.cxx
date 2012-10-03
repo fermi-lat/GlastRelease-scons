@@ -163,7 +163,7 @@ Event::CalCorToolResult * CalLikelihoodManagerTool::doEnergyCorr
       return 0 ;
   }
 
-  double tkr1Zdir= -tree->getAxisParams()->getEventAxis().z();
+  double tkr1Zdir= tree->getAxisParams()->getEventAxis().z();
   double eMin= cluster->getMomParams().getEnergy();
   double eMax= eMin*5<100.?100.:eMin*5;
 

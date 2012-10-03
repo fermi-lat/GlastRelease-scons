@@ -116,6 +116,7 @@ std::string EventModel::CalRecon::CalClusterCol       = EventModel::CalRecon::Ev
 std::string EventModel::CalRecon::CalClusterMap       = EventModel::CalRecon::Event + "/CalClusterMap";
 std::string EventModel::CalRecon::CalRawClusterVec    = EventModel::CalRecon::Event + "/CalRawClusterVec";
 std::string EventModel::CalRecon::CalUberCluster      = EventModel::CalRecon::Event + "/CalUberCluster";
+std::string EventModel::CalRecon::CalUber2Cluster     = EventModel::CalRecon::Event + "/CalUber2Cluster";
 std::string EventModel::CalRecon::CalEventEnergyCol   = EventModel::CalRecon::Event + "/CalEventEnergyCol";
 std::string EventModel::CalRecon::CalEventEnergyMap   = EventModel::CalRecon::Event + "/CalEventEnergyMap";
 std::string EventModel::CalRecon::CalClusterHitTab    = EventModel::CalRecon::Event + "/CalClusterHitTab";

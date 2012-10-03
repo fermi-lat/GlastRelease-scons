@@ -373,7 +373,7 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
       if (sumOfWeights > 0)
         return (calCluster->getXtalsParams().getXtalEneRms())/sumOfWeights;
       else
-	return -1;
+        return -1;
     }
     else if (varName == "CalXtalEneSkewness") {
         return calCluster->getXtalsParams().getXtalEneSkewness();
@@ -390,9 +390,9 @@ double CalClusterNBClassifyTool::getVariableValue(std::string varName,
       double CALEnergyRaw  = calCluster->getMomParams().getEnergy();
       double ELayer0 = calCluster->at(0).getEnergy();
       if (CALEnergyRaw > 0.0) 
-	return ELayer0/CALEnergyRaw;
+        return ELayer0/CALEnergyRaw;
       else
-	return -1;
+        return -1;
     }
     else if (varName == "MomentRatio") {
         double transRms = calCluster->getMomParams().getTransRms();

@@ -31,9 +31,9 @@ namespace Event { //Namespace Event
 
       /// Access methods.
       inline CalCluster* getHighestEnergyCluster()
-	const { return m_highestEnergyCluster; }
+        const { return m_highestEnergyCluster; }
       inline CalCluster* getHighestGamProbCluster()
-	const { return m_highestGamProbCluster; }
+        const { return m_highestGamProbCluster; }
       
     private:
       /// Pointer to the cluster in the vector with the highest energy.

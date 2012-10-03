@@ -188,9 +188,14 @@ void PDFLikelihood::setEvt(const Event::CalCluster* cluster,
       
     // PhB
     if(!m_manager->m_flight_geom)
-    {
+      {
         nHits += 40; // 45.3*14/16
-    }
+      }
+    else // less noise hits in orbit data
+      {
+        nHits += 38; // 58(v15r0)-20(v17r17)
+      }
+
 
     tkrSumHits()= nHits;
 }
@@ -264,7 +269,7 @@ double PDFLowEnergyCuts::geometricCut(const Event::CalCluster* cluster,
 // distance to the closest crack along the trajectory, weighted by the energy
 // in the layer.
 {
-    Vector pX = tree->getAxisParams()->getEventAxis();
+    Vector pX = -tree->getAxisParams()->getEventAxis();
     Point  x  = tree->getAxisParams()->getEventPosition();
 
     if( fabs(pX[2])<1e-10 ) return 0;

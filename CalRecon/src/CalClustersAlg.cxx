@@ -120,21 +120,21 @@ StatusCode CalClustersAlg::execute()
       // Insure CalRecon/Event directory in TDS
       DataObject * pnode = 0 ;
       if ((eventSvc()->retrieveObject(EventModel::CalRecon::Event,pnode)).isFailure()
-	  && (eventSvc()->registerObject(EventModel::CalRecon::Event,new DataObject)).isFailure()) 
+          && (eventSvc()->registerObject(EventModel::CalRecon::Event,new DataObject)).isFailure()) 
         { 
-	  throw CalException("cannot register Event/CalRecon") ;
+          throw CalException("cannot register Event/CalRecon") ;
         } 
       
       // Look up the CalClusterCol
       Event::CalClusterCol* calClusterCol = 
-	SmartDataPtr<Event::CalClusterCol>(eventSvc(), EventModel::CalRecon::CalClusterCol) ;
+        SmartDataPtr<Event::CalClusterCol>(eventSvc(), EventModel::CalRecon::CalClusterCol) ;
       // It should be the case that no collection exists and we need to create it
       if (!calClusterCol) 
         {
-	  calClusterCol = new Event::CalClusterCol() ;
-	  if ((eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol, calClusterCol)).isFailure()) 
+          calClusterCol = new Event::CalClusterCol() ;
+          if ((eventSvc()->registerObject(EventModel::CalRecon::CalClusterCol, calClusterCol)).isFailure()) 
             {
-	      throw CalException("cannot register CalClusterCol") ;
+              throw CalException("cannot register CalClusterCol") ;
             }
         }
       // If code called on second pass then we need to clear the collection (?)
@@ -142,24 +142,24 @@ StatusCode CalClustersAlg::execute()
       
       // Now do the same for the CalClusterMap object.
       Event::CalClusterMap* calClusterMap = 
-	SmartDataPtr<Event::CalClusterMap>(eventSvc(), EventModel::CalRecon::CalClusterMap) ;
+        SmartDataPtr<Event::CalClusterMap>(eventSvc(), EventModel::CalRecon::CalClusterMap) ;
       // It should be the case that no collection exists and we need to create it
       if (!calClusterMap) 
         {
-	  calClusterMap = new Event::CalClusterMap();
-	  if ((eventSvc()->registerObject(EventModel::CalRecon::CalClusterMap, calClusterMap)).isFailure()) 
-	    {
-	      throw CalException("cannot register CalClusterMap") ;
-	    }
-	}
+          calClusterMap = new Event::CalClusterMap();
+          if ((eventSvc()->registerObject(EventModel::CalRecon::CalClusterMap, calClusterMap)).isFailure()) 
+            {
+              throw CalException("cannot register CalClusterMap") ;
+            }
+        }
       // If code called on second pass then we need to clear the collection (?)
       else calClusterMap->clear();
       
       // Call the tool to find clusters
       if (m_clusteringTool->findClusters(calClusterCol).isFailure()) 
-	{
-	  sc = m_calReconSvc->handleError(name(), "clustering tool failure") ;
-	}
+        {
+          sc = m_calReconSvc->handleError(name(), "clustering tool failure") ;
+        }
       // At this point the calClusterCol object is filled with the "raw" list of clusters
       // from the clustering stage and the uber cluster (at the back of the collection), if
       // more than one cluster is indeed found.
@@ -176,16 +176,16 @@ StatusCode CalClustersAlg::execute()
       Event::CalClusterColConItr mstCluster;
       Event::CalClusterColConItr end = calClusterCol->end();
       if (calClusterCol->size() > 1){
-	end --;
+        end --;
       }
       for (mstCluster = calClusterCol->begin(); mstCluster != end; mstCluster++){
-	(*calClusterMap)[EventModel::CalRecon::CalRawClusterVec].push_back(*mstCluster);
+        (*calClusterMap)[EventModel::CalRecon::CalRawClusterVec].push_back(*mstCluster);
       }
 
       // Display cluster energies.
       Event::CalClusterCol::const_iterator cluster ;
       for (cluster = calClusterCol->begin(); cluster != calClusterCol->end(); cluster++){          
-	log << MSG::DEBUG << "CalCluster Energy: " << (*cluster)->getMomParams().getEnergy() << endreq;
+        log << MSG::DEBUG << "CalCluster Energy: " << (*cluster)->getMomParams().getEnergy() << endreq;
       } 
     }
   // Catch any exceptions here.

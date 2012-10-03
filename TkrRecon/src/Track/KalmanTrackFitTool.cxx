@@ -1207,7 +1207,7 @@ double KalmanTrackFitTool::doSmoother(Event::TkrTrack& track)
         Event::TkrTrackHit& prevPlane    = **prevIter--;
         Event::TkrTrackHit& currentPlane = **prevIter; //**smoothIter;
 
-		double chiSqKF = doSmoothStep(prevPlane, currentPlane);
+                double chiSqKF = doSmoothStep(prevPlane, currentPlane);
 
         chiSqSmooth += chiSqKF;
     }

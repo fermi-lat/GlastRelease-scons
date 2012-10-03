@@ -75,8 +75,8 @@ DECLARE_TOOL_FACTORY(UBinterpolateTool);
 
 // Standard Constructor
 UBinterpolateTool::UBinterpolateTool(const std::string& type,
-				     const std::string& name,
-				     const IInterface* parent):
+                                     const std::string& name,
+                                     const IInterface* parent):
   AlgTool(type, name, parent)
 {
   declareInterface<IUBinterpolateTool>(this);

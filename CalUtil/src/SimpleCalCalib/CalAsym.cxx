@@ -156,8 +156,8 @@ namespace CalUtil {
       }
     }
 
-	delete [] pos;
-	delete [] asym;
+        delete [] pos;
+        delete [] asym;
   }
 
 }; // namespace CalUtil

@@ -99,7 +99,7 @@ Event::CalCorToolResult* CalLastLayerLikelihoodTool::doEnergyCorr(Event::CalClus
         return corResult;
     }
 
-    const Vector& trackDirection = tree->getAxisParams()->getEventAxis();
+    const Vector& trackDirection = -tree->getAxisParams()->getEventAxis();
     const Point&  trackPosition  = tree->getAxisParams()->getEventPosition();
     // CUTS
     // this checks whether a set of PDF parameters exist for this event's

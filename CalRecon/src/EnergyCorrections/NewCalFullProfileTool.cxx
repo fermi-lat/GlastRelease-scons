@@ -631,11 +631,11 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       vv[1] = -tree->getAxisParams()->getEventAxis().y();
       vv[2] = -tree->getAxisParams()->getEventAxis().z();
       if(vv[2]>0)
-	{
-	  vv[0] = -vv[0];
-	  vv[1] = -vv[1];
-	  vv[2] = -vv[2];
-	}
+        {
+          vv[0] = -vv[0];
+          vv[1] = -vv[1];
+          vv[2] = -vv[2];
+        }
 
       SelectCloseCrystals(pp,vv,100);
 

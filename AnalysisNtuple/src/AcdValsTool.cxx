@@ -516,7 +516,7 @@ StatusCode AcdValsTool::calculate()
 
         //Make sure we have valid cluster data and some energy
         double CAL_EnergyRaw = 10.; //Default min. Event Energy
-	if(firstCluster) CAL_EnergyRaw  = firstCluster->getXtalsParams().getXtalCorrEneSum();
+        if(firstCluster) CAL_EnergyRaw  = firstCluster->getXtalsParams().getXtalCorrEneSum();
 
         // Find *Safe* Active Distance for this event given the energy
         double min_ActiveDistance = -300./sqrt(CAL_EnergyRaw/100); //-300mm @ 100 MeV

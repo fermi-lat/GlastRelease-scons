@@ -1042,8 +1042,8 @@ int FindTrackHitsTool::addLeadingHits(TkrTrack* track)
         // Add this to the head of the track
         added_hits++;
         track->insert(track->begin(), trackHit);
-		// WBA: Increment the X or Y hit counters for this track
-		if(trackHit->hitUsedOnFit()) {
+                // WBA: Increment the X or Y hit counters for this track
+                if(trackHit->hitUsedOnFit()) {
             if(trackHit->getStatusBits() & TkrTrackHit::MEASURESX) {
                 int numX = track->getNumXHits() + 1;
                 track->setNumXHits(numX);

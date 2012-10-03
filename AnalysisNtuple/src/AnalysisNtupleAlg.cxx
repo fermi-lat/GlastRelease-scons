@@ -514,18 +514,18 @@ void AnalysisNtupleAlg::removeMc()
  //   std::vector<std::string>::iterator  endIter, beginIter, lastIter, listIter;
  //   //mckIter = find(m_toolnames.begin(), m_toolnames.end(), "McKludge");
  //   endIter   = m_toolnames.end();
-	//beginIter = m_toolnames.begin();
+        //beginIter = m_toolnames.begin();
  //   listIter = endIter;
  //   --listIter;
 
     unsigned int origSize = m_toolnames.size();
 
     unsigned int i;
-	
+        
     // one more try
     std::vector<std::string> temp;
     for(i=0;i<origSize;++i) {
-	if(m_toolnames[i].find("Mc")==std::string::npos) temp.push_back(m_toolnames[i]);
+        if(m_toolnames[i].find("Mc")==std::string::npos) temp.push_back(m_toolnames[i]);
     }
 
     m_toolnames = temp;

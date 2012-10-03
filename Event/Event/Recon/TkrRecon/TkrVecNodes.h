@@ -102,23 +102,23 @@ public:
     const int                           getDepth()                const {return m_depth;}
     // Number of leaves in the tree
     const int                           getNumLeaves()            const {return m_leaves;}
-	// Number of Thin Layer leaves in the tree
+        // Number of Thin Layer leaves in the tree
     const int                           getNumThinLeavesInTree()  const;
-	// Number of Thick Layer leaves in the tree
+        // Number of Thick Layer leaves in the tree
     const int                           getNumThickLeavesInTree() const;
     // number of branches in the tree
     const int                           getNumBranches()          const {return m_branches;}
     // Number of nodes in the tree
     const int                           getNumNodesInTree()       const;
-	   // Number of Thin section nodes in the tree
+           // Number of Thin section nodes in the tree
     const int                           getNumThinNodesInTree()   const;
-	   // Number of Thick nodes in the tree
+           // Number of Thick nodes in the tree
     const int                           getNumThickNodesInTree()  const;
-		   // Number of Blank nodes in the tree
+                   // Number of Blank nodes in the tree
     const int                           getNumBlankNodesInTree()  const;
-	   // Number of Thin rad. lens in the tree
+           // Number of Thin rad. lens in the tree
     const float                         getNumThinRLnInTree()     const;
-	   // Number of Thick rad. lens in the tree
+           // Number of Thick rad. lens in the tree
     const float                         getNumThickRLnInTree()    const;
     // Return the memory used by the tree
     const int                           getMemUsedInTree()        const;
@@ -460,7 +460,7 @@ inline const int TkrVecNode::getNumThinNodesInTree() const
     }
 
     // We always count ourself
-//	int currentBiLayer = getCurrentBiLayer(); 
+//        int currentBiLayer = getCurrentBiLayer(); 
 //    int nodeCount = currentBiLayer > 5 ? 1 : 0;
 
 //    if (!empty())
@@ -477,7 +477,7 @@ inline const int TkrVecNode::getNumThinNodesInTree() const
 }
 inline const int TkrVecNode::getNumThinLeavesInTree() const
 {
-	int nodeCount = 0;
+        int nodeCount = 0;
     if (!empty())
     {
         for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
@@ -485,9 +485,9 @@ inline const int TkrVecNode::getNumThinLeavesInTree() const
             nodeCount += (*nodeItr)->getNumThinLeavesInTree();
         }
     }
-	else {
-		nodeCount = getCurrentBiLayer() > 5 ? 1 : 0;
-	}
+        else {
+                nodeCount = getCurrentBiLayer() > 5 ? 1 : 0;
+        }
     return nodeCount;
 }
 inline const int TkrVecNode::getNumThickNodesInTree() const
@@ -531,7 +531,7 @@ inline const int TkrVecNode::getNumThickNodesInTree() const
         for(TkrVecNodeSet::const_iterator nodeItr = node->begin(); nodeItr != node->end(); nodeItr++)
             nodeQueue.push(*nodeItr);
 
-	    int currentBiLayer = node->getCurrentBiLayer(); 
+            int currentBiLayer = node->getCurrentBiLayer(); 
 
         // For thick section, currentBiLayer must be in range 2-5
         if (currentBiLayer > 1 && currentBiLayer < 6)
@@ -558,7 +558,7 @@ inline const int TkrVecNode::getNumThickNodesInTree() const
 }
 inline const int TkrVecNode::getNumThickLeavesInTree() const
 {
-	int nodeCount = 0;
+        int nodeCount = 0;
     if (!empty())
     {
         for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
@@ -566,9 +566,9 @@ inline const int TkrVecNode::getNumThickLeavesInTree() const
             nodeCount += (*nodeItr)->getNumThickLeavesInTree();
         }
     }
-	else {
-		nodeCount = getCurrentBiLayer() > 1 && getCurrentBiLayer() < 6 ? 1 : 0;
-	}
+        else {
+                nodeCount = getCurrentBiLayer() > 1 && getCurrentBiLayer() < 6 ? 1 : 0;
+        }
     return nodeCount;
 }
 inline const int TkrVecNode::getNumBlankNodesInTree() const
@@ -639,42 +639,42 @@ inline const int TkrVecNode::getNumBlankNodesInTree() const
 inline const float TkrVecNode::getNumThinRLnInTree() const
 {
     // We always count ourself
-	float radLen = 0;
-	if(getCurrentBiLayer()> 5) {
-		if(m_associatedLink){
-			Vector dir = m_associatedLink->getVector();
-			radLen += .045/std::max(.3, fabs(dir.z()));
-		}
-		else radLen += .015;
-	}
+        float radLen = 0;
+        if(getCurrentBiLayer()> 5) {
+                if(m_associatedLink){
+                        Vector dir = m_associatedLink->getVector();
+                        radLen += .045/std::max(.3, fabs(dir.z()));
+                }
+                else radLen += .015;
+        }
     if (!empty())
     {
         for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
         {
-			radLen += (*nodeItr)->getNumThinRLnInTree();
-		}
+                        radLen += (*nodeItr)->getNumThinRLnInTree();
+                }
     }
 
     return radLen;
 }
-	
-	inline const float TkrVecNode::getNumThickRLnInTree() const
+        
+        inline const float TkrVecNode::getNumThickRLnInTree() const
 {
     // We always count ourself
-	float radLen = 0;
-	if(getCurrentBiLayer()< 6 && getCurrentBiLayer() > 1) {
-		if(m_associatedLink){
-			Vector dir = m_associatedLink->getVector();
-			radLen += .20/std::max(.3, fabs(dir.z()));
-		}
-		else radLen += .09;
-	}
+        float radLen = 0;
+        if(getCurrentBiLayer()< 6 && getCurrentBiLayer() > 1) {
+                if(m_associatedLink){
+                        Vector dir = m_associatedLink->getVector();
+                        radLen += .20/std::max(.3, fabs(dir.z()));
+                }
+                else radLen += .09;
+        }
     if (!empty())
     {
         for(TkrVecNodeSet::const_iterator nodeItr = begin(); nodeItr != end(); nodeItr++)
         {
-			radLen += (*nodeItr)->getNumThickRLnInTree();
-		}
+                        radLen += (*nodeItr)->getNumThickRLnInTree();
+                }
     }
 
     return radLen;
@@ -801,8 +801,8 @@ inline void TkrVecNode::resetBestParams()
 
 inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, const TkrVecNode* right) const
 {
-	// This sort comparator is used during the ordering of nodes in trees
-	// It will deal with all nodes, from the leaf up to the head.
+        // This sort comparator is used during the ordering of nodes in trees
+        // It will deal with all nodes, from the leaf up to the head.
     // Check special case that we are that end of the line for one or the other and its just a 
     // "stub". We don't want it to accidently get placed in front of the "real" node!
     if ((left->empty() && left->getNumAnglesInSum() <= 1) || (right->empty() && right->getNumAnglesInSum() <= 1))
@@ -812,11 +812,11 @@ inline const bool TkrVecNodesComparator::operator()(const TkrVecNode* left, cons
     }
 
     // We want to follow a "longest-straightest" mantra, we accomplish this by
-	// weighting the best rms angle amongst branches below by the ratio of the best number of bilayers
+        // weighting the best rms angle amongst branches below by the ratio of the best number of bilayers
     // Use the scaled rms angle to determine straightest...
-	double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
-	double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
-	double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
+        double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
+        double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
+        double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
     
     //if (left->getBestRmsAngle() < right->getBestRmsAngle()) return true;
     if (leftRmsAngle < rightRmsAngle) return true;
@@ -833,20 +833,20 @@ struct TkrVecNodeQueueOrder
 public:
     bool operator()(const Event::TkrVecNode* left, const Event::TkrVecNode* right) const
     {
-		// In contrast to TkrVecNodesComparator, we are only meant to deal with the head node
-		// for a given candidate tree. Note as well that returning "true" here means the left
-		// is "greater" than the right, not "less" (as with TkrVecNodesComparator)
+                // In contrast to TkrVecNodesComparator, we are only meant to deal with the head node
+                // for a given candidate tree. Note as well that returning "true" here means the left
+                // is "greater" than the right, not "less" (as with TkrVecNodesComparator)
 
-		// Last check is to take the branch which is "straightest" 
-		// Use the scaled rms angle to determine straightest...
-		double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
-		double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
-		double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
+                // Last check is to take the branch which is "straightest" 
+                // Use the scaled rms angle to determine straightest...
+                double sclFactor     = double(right->getBestNumBiLayers()) / double(left->getBestNumBiLayers());
+                double leftRmsAngle  = left->getBestRmsAngle()  *  sclFactor * sclFactor;
+                double rightRmsAngle = right->getBestRmsAngle() / (sclFactor * sclFactor);
     
-		if (leftRmsAngle > rightRmsAngle) return true;
+                if (leftRmsAngle > rightRmsAngle) return true;
 
-		// This should maintain strict weak ordering
-		return false;
+                // This should maintain strict weak ordering
+                return false;
     }
 };
 
@@ -859,17 +859,17 @@ public:
     virtual const CLID& clID() const   { return TkrVecNodeQueue::classID(); }
     static const CLID& classID()       { return CLID_TkrVecNodeQueue; }
 
-	//! Since we are a TDS container we must take responsibility for cleaning up the 
-	//! objects we own
-	virtual ~TkrVecNodeQueue()
-	{
-		while(!empty())
-		{
-			Event::TkrVecNode* node = top();
-			pop();
-			delete node;
-		}
-	}
+        //! Since we are a TDS container we must take responsibility for cleaning up the 
+        //! objects we own
+        virtual ~TkrVecNodeQueue()
+        {
+                while(!empty())
+                {
+                        Event::TkrVecNode* node = top();
+                        pop();
+                        delete node;
+                }
+        }
 };
 
 

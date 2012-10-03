@@ -95,21 +95,21 @@ StatusCode McCoordsAlg::initialize()
     // Use the Job options service to get the Algorithm's parameters
     setProperties();
 
-	m_noMC = false;
+        m_noMC = false;
 
     // get a pointer to RootTupleSvc 
     if( (sc = service("RootTupleSvc", rootTupleSvc, true) ). isFailure() ) {
         log << MSG::ERROR << " failed to get the RootTupleSvc" << endreq;
         return sc;
     }
-	try {
+        try {
         m_worker = new McCworker();
-	}
-	catch(std::exception ex) {
-		m_noMC = true;
+        }
+        catch(std::exception ex) {
+                m_noMC = true;
                 log << MSG::INFO << "There are no Mc[X/Y/Z]Dir variables, so McCoordsAlg will be skipped" << endreq;
-		return sc;
-	}
+                return sc;
+        }
 
     // get the GPS instance
     gps = astro::GPS::instance();
@@ -127,7 +127,7 @@ StatusCode McCoordsAlg::execute()
 
     m_count++;
 
-	if(m_noMC) return sc;
+        if(m_noMC) return sc;
 
     // now have the worker do it
     m_worker->evaluate();

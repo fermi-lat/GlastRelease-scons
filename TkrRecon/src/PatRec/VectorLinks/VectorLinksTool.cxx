@@ -48,7 +48,7 @@ public:
     /// Standard Gaudi Tool interface constructor
     VectorLinksTool(const std::string& type, const std::string& name, const IInterface* parent);
     virtual ~VectorLinksTool() {}
-	
+        
     /// @brief Intialization of the tool
     StatusCode initialize();
 
@@ -127,14 +127,14 @@ VectorLinksTool::VectorLinksTool(const std::string& type, const std::string& nam
     declareProperty("maxCombThrottle",   m_maxLinksForThrottle = 100);
     declareProperty("maxRelTableSize",   m_maxRelTableSize     = 300000);
 
-	return;
+        return;
 }
 
 //
 // Initialization of the tool here
 //
 StatusCode VectorLinksTool::initialize()
-{	
+{        
     PatRecBaseTool::initialize();
     StatusCode sc   = StatusCode::SUCCESS;
 

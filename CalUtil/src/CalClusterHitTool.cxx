@@ -26,8 +26,8 @@ class CalClusterHitTool : public AlgTool, virtual public ICalClusterHitTool
 public:
   /// Standard Gaudi Tool interface constructor
   CalClusterHitTool(const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                    const std::string& name,
+                    const IInterface* parent);
   /// Destructor.
   virtual ~CalClusterHitTool() {}
   /// @brief Initialization of the tool.
@@ -54,8 +54,8 @@ DECLARE_TOOL_FACTORY(CalClusterHitTool);
 
 
 CalClusterHitTool::CalClusterHitTool(const std::string& type,
-				     const std::string& name,
-				     const IInterface* parent):
+                                     const std::string& name,
+                                     const IInterface* parent):
   AlgTool(type, name, parent)
 {
   declareInterface<ICalClusterHitTool>(this);

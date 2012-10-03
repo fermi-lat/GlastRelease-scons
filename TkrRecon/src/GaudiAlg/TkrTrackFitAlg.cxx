@@ -189,8 +189,8 @@ StatusCode TkrTrackFitAlg::doTrackFit()
     {
         Event::TkrTrack* track = *trackIter;
 
-		// RJ: don't refit the Cosmic Ray tracks
-		if (!(track->getStatusBits() & Event::TkrTrack::COSMICRAY)) m_FitTool->doTrackFit(track);
+                // RJ: don't refit the Cosmic Ray tracks
+                if (!(track->getStatusBits() & Event::TkrTrack::COSMICRAY)) m_FitTool->doTrackFit(track);
     }
 
     return sc;
@@ -227,10 +227,10 @@ StatusCode TkrTrackFitAlg::doTrackReFit()
     for(Event::TkrTrackColPtr trackIter = trackCol->begin(); trackIter != trackCol->end(); trackIter++)
     {
          Event::TkrTrack* track = *trackIter;
-		 if (!(track->getStatusBits() & Event::TkrTrack::COSMICRAY)) {   // RJ: don't refit cosmic-ray candidates
-			m_AlignTool->alignHits(track);
-			m_FitTool->doTrackReFit(track);
-		 }
+                 if (!(track->getStatusBits() & Event::TkrTrack::COSMICRAY)) {   // RJ: don't refit cosmic-ray candidates
+                        m_AlignTool->alignHits(track);
+                        m_FitTool->doTrackReFit(track);
+                 }
     }
 
     return sc;

@@ -72,8 +72,8 @@ private:
     public:
         sortByClosest(const Point& theRef) : myRef(theRef) {}
         bool operator() (const TkrPoint* left, const TkrPoint* right) const {
-	//std::cout << "dists: " << left->getDistanceSquaredTo(myRef) << " " <<
-	  //right->getDistanceSquaredTo(myRef) << std::endl;
+        //std::cout << "dists: " << left->getDistanceSquaredTo(myRef) << " " <<
+          //right->getDistanceSquaredTo(myRef) << std::endl;
             return left->getDistanceSquaredTo(myRef)<right->getDistanceSquaredTo(myRef);
         } 
     };        

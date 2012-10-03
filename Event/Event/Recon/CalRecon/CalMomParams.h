@@ -44,7 +44,7 @@ namespace Event { //Namespace Event
                  int numIterations, int numCoreXtals, int numXtals,
                  double transRms, double longRms, double longRmsAsym, double longSkewness,
                  double coreEnergyFrac, double fullLength, double dEdxSpread,
-		 double minGhostDoca);
+                 double minGhostDoca);
 
     /// And even more parameters (reflecting the old-fashioned way CalParams constructor).
     CalMomParams(double energy, double eneError,
@@ -57,7 +57,7 @@ namespace Event { //Namespace Event
                  int numIterations, int numCoreXtals, int numXtals,
                  double transRms, double longRms, double longRmsAsym, double longSkewness,
                  double coreEnergyFrac, double fullLength, double dEdxSpread,
-		 double minGhostDoca);
+                 double minGhostDoca);
 
     /// Convenience constructor to be used to replace an old CalParams object directly
     /// (i.e. the specific CalMomParams members are automagically initialized).

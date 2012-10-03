@@ -97,7 +97,7 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
         return corResult;
     }
 
-    const Vector& trackDirection = tree->getAxisParams()->getEventAxis();
+    const Vector& trackDirection = -tree->getAxisParams()->getEventAxis();
     const Point&  trackPosition  = tree->getAxisParams()->getEventPosition();
     // CUTS
     // this checks whether a set of PDF parameters exist for this event's
@@ -152,6 +152,10 @@ Event::CalCorToolResult* CalTkrLikelihoodTool::doEnergyCorr(Event::CalCluster* c
       {
         nHits += 40; // 45.3*14/16
       }
+    else // less noise hits in orbit data                                                                                                                                                                         
+      {                                                                                                                                                                                                           
+        nHits += 38; // 58(v15r0)-20(v17r17)                                                                                                                                                                      
+      }   
 
     int iData= vertexPos;
     if( geometricCut>.4 ) iData+= 16*(geometricCut>.60)+32;

@@ -340,29 +340,29 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
         else if (tkr_RLn < tkr_radLen_nom * .5)  {tkr_RLn  = tkr_radLen_nom * .5;}
 
        // First Tree Based Tracker energy
-		double tkrThinClusters = m_tree->getHeadNode()->getNumThinNodesInTree();
-		double tkrThickClusters = m_tree->getHeadNode()->getNumThickNodesInTree();
-		double tkrBlankClusters = m_tree->getHeadNode()->getNumBlankNodesInTree();
-		double tkrThickLeaves = m_tree->getHeadNode()->getNumThickLeavesInTree();
-		double tkrThinClsCosTheta = tkrThinClusters/fabs(t0.z());
-		double tkrThickClsCosTheta = tkrThickClusters/fabs(t0.z());
-		double tkrBlankClsCosTheta = tkrBlankClusters/fabs(t0.z());
-		double tkrThinClsCosThetaSq = tkrThinClsCosTheta/fabs(t0.z());
-		double tkrThickClsCosThetaSq = tkrThickClsCosTheta/fabs(t0.z()); 
+                double tkrThinClusters = m_tree->getHeadNode()->getNumThinNodesInTree();
+                double tkrThickClusters = m_tree->getHeadNode()->getNumThickNodesInTree();
+                double tkrBlankClusters = m_tree->getHeadNode()->getNumBlankNodesInTree();
+                double tkrThickLeaves = m_tree->getHeadNode()->getNumThickLeavesInTree();
+                double tkrThinClsCosTheta = tkrThinClusters/fabs(t0.z());
+                double tkrThickClsCosTheta = tkrThickClusters/fabs(t0.z());
+                double tkrBlankClsCosTheta = tkrBlankClusters/fabs(t0.z());
+                double tkrThinClsCosThetaSq = tkrThinClsCosTheta/fabs(t0.z());
+                double tkrThickClsCosThetaSq = tkrThickClsCosTheta/fabs(t0.z()); 
 
-		// Coeffecients from linear regression:  2 fits  - Thin and Thick conversions
-		if(topLayer > 5) {
-			tkr_Energy = -0.46*tkrThickLeaves + 1.09*tkrThinClsCosTheta + 4.37*tkrThickClsCosTheta
-				         -1.25*tkrBlankClsCosTheta + .53*tkrThinClsCosThetaSq -.44*tkrThickClsCosThetaSq;
-		}
-		else {
-			tkr_Energy = -0.97*tkrThickLeaves + 4.39*tkrThickClsCosTheta +
-				          1.37*tkrBlankClsCosTheta  -.28*tkrThickClsCosThetaSq;
-		}
-		// Layer normalizations - first 2 layer shouldn't happen
-		double layerCoefs [18] = { 1., 1., 1.022,.981,1.010,1.018,   
-			                       .896, .894, .888, .904, .925, .917, .921, .940, .934, .983, .973, .967};
-		tkr_Energy /= layerCoefs[topLayer];
+                // Coeffecients from linear regression:  2 fits  - Thin and Thick conversions
+                if(topLayer > 5) {
+                        tkr_Energy = -0.46*tkrThickLeaves + 1.09*tkrThinClsCosTheta + 4.37*tkrThickClsCosTheta
+                                         -1.25*tkrBlankClsCosTheta + .53*tkrThinClsCosThetaSq -.44*tkrThickClsCosThetaSq;
+                }
+                else {
+                        tkr_Energy = -0.97*tkrThickLeaves + 4.39*tkrThickClsCosTheta +
+                                          1.37*tkrBlankClsCosTheta  -.28*tkrThickClsCosThetaSq;
+                }
+                // Layer normalizations - first 2 layer shouldn't happen
+                double layerCoefs [18] = { 1., 1., 1.022,.981,1.010,1.018,   
+                                               .896, .894, .888, .904, .925, .917, .921, .940, .934, .983, .973, .967};
+                tkr_Energy /= layerCoefs[topLayer];
     }
 
         // Now do the energy correction and calculation of several vars. used in bkg. rejection
@@ -591,8 +591,8 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
     m_corr_energy = m_corr_energy * ad_hoc_factor;
     m_total_correction = m_corr_energy/m_raw_energy;
 
-	// NOTE:  BIG Change:  leaving out the leakage correction.  It cause too much dispersion below 1 GeV
-	m_corr_energy *= m_leakage_correction; 
+        // NOTE:  BIG Change:  leaving out the leakage correction.  It cause too much dispersion below 1 GeV
+        m_corr_energy *= m_leakage_correction; 
     
         return;
 }

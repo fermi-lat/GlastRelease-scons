@@ -57,10 +57,13 @@ namespace Event { //Namespace Event
       /// This is a convenience function for accessing the vectors with a
       // single element (e.g., the one containing the user cluster).
       inline CalCluster* getFront(std::string key)
-	{ return get(key).front(); }
+        { return get(key).front(); }
       /// Return a pointer to the uber cluster.
       inline CalCluster* getUberCluster()
-	{ return getFront(EventModel::CalRecon::CalUberCluster); }
+        { return getFront(EventModel::CalRecon::CalUberCluster); }
+      /// Return a pointer to the uber2 cluster.
+      inline CalCluster* getUber2Cluster()
+        { return getFront(EventModel::CalRecon::CalUber2Cluster); }
   };
   
   // Iterator typedefs.

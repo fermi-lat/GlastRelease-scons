@@ -311,7 +311,7 @@ StatusCode TkrFilterTool::doFilterStep()
             // then by the stored hits in the bilayer
             for(VecPointVec::iterator vecIter = vecVecIter->begin(); vecIter != vecVecIter->end(); vecIter++)
             {
-		        const Event::TkrVecPoint& vecPoint = *vecIter;
+                        const Event::TkrVecPoint& vecPoint = *vecIter;
 
                 TkrMomentsData momentsData(vecPoint.getPosition(), 1., 0.);
 
