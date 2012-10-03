@@ -10,6 +10,7 @@ def generate(env, **kw):
      env.Tool('ntupleWriterSvcLib')
      env.Tool('OnboardFilterTdsLib')
      env.Tool('CalibDataLib')
+     env.Tool('CalUtilLib')
      #env.Tool('RootIoLib')
      env.Tool('GlastSvcLib')
      env.Tool('AcdUtilLib')
