@@ -19,7 +19,11 @@ def generate(env, **kw):
      env.Tool('addLibrary', library=env['gaudiLibs'])
      env.Tool('addLibrary', library=env['rootLibs'])
      env.Tool('addLibrary', library=env['clhepLibs'])
+
+# For packages which only need to provide access to header files not libs
+# This is in support of non-installed headers on Windows
      if env['PLATFORM']=='win32' and env.get('CONTAINERNAME','')=='GlastRelease':
         env.Tool('findPkgPath', package = 'TkrUtil')
+        env.Tool('findPkgPath', package = 'CalUtil')
 def exists(env):
     return 1;
