@@ -157,7 +157,7 @@ StatusCode TkrOverlayCnv::createObj(IOpaqueAddress* pOpaque, DataObject*& refpOb
 
     if (!pDataSvc) return StatusCode::FAILURE;
 
-    IOverlayDataSvc* inputDataSvc = SmartIF<IOverlayDataSvc>(tmpService);
+    IOverlayDataSvc* inputDataSvc = SmartIF<IOverlayDataSvc>(pDataSvc);
 
     Event::TkrOverlayCol* TkrOverlayTdsCol = 0;
 
