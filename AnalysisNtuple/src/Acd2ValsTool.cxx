@@ -572,9 +572,6 @@ StatusCode Acd2ValsTool::calculate()
   // Recover pointers to ACD Recon results
   SmartDataPtr<Event::AcdReconV2> pACD(m_pEventSvc,EventModel::AcdReconV2::Event);
 
-  // Recover pointers to CalClusters and Xtals(not currently used)
-  //SmartDataPtr<Event::CalClusterCol>   pCals(m_pEventSvc,EventModel::CalRecon::CalClusterCol);
-
   // Recover Track associated info. (not currently used)
   //SmartDataPtr<Event::TkrFitTrackCol>  pTracks(m_pEventSvc,EventModel::TkrRecon::TkrFitTrackCol);
   //SmartDataPtr<Event::TkrVertexCol>    pVerts(m_pEventSvc,EventModel::TkrRecon::TkrVertexCol);
