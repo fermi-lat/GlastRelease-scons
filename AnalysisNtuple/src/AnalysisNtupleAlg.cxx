@@ -511,24 +511,24 @@ void AnalysisNtupleAlg::fixLoadOrder()
 void AnalysisNtupleAlg::removeMc() 
 {
     MsgStream log(msgSvc(), name());
-    std::vector<std::string>::iterator  endIter, lastIter, listIter, thisIter /*, mckIter*/;
-    //mckIter = find(m_toolnames.begin(), m_toolnames.end(), "McKludge");
-    endIter = m_toolnames.end();
-    lastIter = endIter;
-    --lastIter;
+ //   std::vector<std::string>::iterator  endIter, beginIter, lastIter, listIter;
+ //   //mckIter = find(m_toolnames.begin(), m_toolnames.end(), "McKludge");
+ //   endIter   = m_toolnames.end();
+	//beginIter = m_toolnames.begin();
+ //   listIter = endIter;
+ //   --listIter;
 
     unsigned int origSize = m_toolnames.size();
 
-    for(listIter=lastIter; listIter!=--m_toolnames.begin(); --listIter) {
-        /*
-        if(*listIter=="Mc") {
-            thisIter = m_toolnames.erase(listIter);
-            if(mckIter==endIter)  { m_toolnames.insert(thisIter, "McKludge");}
-        } else */
-        if (listIter->find("Mc")!=std::string::npos) {
-            m_toolnames.erase(listIter);
-        }
+    unsigned int i;
+	
+    // one more try
+    std::vector<std::string> temp;
+    for(i=0;i<origSize;++i) {
+	if(m_toolnames[i].find("Mc")==std::string::npos) temp.push_back(m_toolnames[i]);
     }
+
+    m_toolnames = temp;
 
     unsigned int namesSize = m_toolnames.size();
     if(origSize>namesSize) {
@@ -536,7 +536,6 @@ void AnalysisNtupleAlg::removeMc()
             "Real Data Run: Mc tools removed" << endreq
             << "Final list (" << namesSize << " tools remain):"<< endreq;
 
-        unsigned int i;
         for (i=0; i<namesSize; ++i) {
             log << m_toolnames[i]+"ValsTool" << " " ;
         }
