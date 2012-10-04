@@ -32,9 +32,7 @@ TkrVecNodesBuilder::TkrVecNodesBuilder(IDataProviderSvc* dataSvc,
     static std::string tkrVecNodeCol = "/Event/TkrRecon/TkrVecNodeCol";
 
     // Get a new head node collection for the TDS
-//    m_headNodes = new Event::TkrVecNodeCol();
     m_headNodes = new Event::TkrVecNodeQueue();
-//    m_headNodes->clear();
 
     // And store in the TDS
     StatusCode sc = dataSvc->registerObject(tkrVecNodeCol, m_headNodes);
@@ -192,7 +190,7 @@ int TkrVecNodesBuilder::buildTrackElements()
 
     while(headVecItr != headNodes.end())
     {
-        Event::TkrVecNode* headNode = *headVecItr;
+        Event::TkrVecNode* headNode = *headVecItr++;
         bool               keepNode = false;
 
         // Update the parameters to their "final" state
@@ -212,10 +210,9 @@ int TkrVecNodesBuilder::buildTrackElements()
         if (keepNode) m_headNodes->push(headNode);
         else          deleteNode(headNode);
 
-        headVecItr++;
     }
 
-    headNodes.clear();
+//    headNodes.clear();
 
     // Sort the final list
 //    std::sort(m_headNodes->begin(), m_headNodes->end(), Event::TkrVecNodesComparator());

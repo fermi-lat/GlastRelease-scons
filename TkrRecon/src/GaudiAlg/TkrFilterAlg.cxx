@@ -64,7 +64,7 @@ Algorithm(name, pSvcLocator)
     // Is this the first pass? 
     if (name == "TkrFilterFirst")
     {
-        toolName = "TkrFilterTool";
+        toolName = "TkrHoughFilterTool";
     }
 
     // Controls which fit to use

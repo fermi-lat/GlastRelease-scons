@@ -35,7 +35,6 @@ public:
     int    buildTrackElements();
 
     /// Access to the nodes collection
-//    const Event::TkrVecNodeCol*         getVecNodeCol()         const {return m_headNodes;}
     const Event::TkrVecNodeQueue*       getVecNodeCol()         const {return m_headNodes;}
 
     /// Access to relations between points and nodes
