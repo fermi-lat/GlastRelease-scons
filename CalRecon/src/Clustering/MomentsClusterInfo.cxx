@@ -271,8 +271,16 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
       xtalEneRms = xtalEneMomSum2 - xtalEneMomSum*xtalEneMomSum;
       xtalEneSkewness = (xtalEneMomSum3 - 3*xtalEneMomSum*xtalEneRms - 
                          xtalEneMomSum*xtalEneMomSum*xtalEneMomSum);
-      xtalEneRms = sqrt(xtalEneRms);
-      xtalEneSkewness /= (xtalEneRms*xtalEneRms*xtalEneRms);
+      if(xtalEneRms<=0)
+        {
+          xtalEneRms = 0;
+          xtalEneSkewness = 0;
+        }
+      else
+        {
+          xtalEneRms = sqrt(xtalEneRms);
+          xtalEneSkewness /= (xtalEneRms*xtalEneRms*xtalEneRms);
+        }
     }
     if ( !isFinite(xtalEneRms) ) {
       throw CalException("MomentsClusterInfo: infinite xtalEneRms");
