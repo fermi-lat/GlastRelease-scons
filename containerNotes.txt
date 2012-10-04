@@ -1,4 +1,9 @@
 # containerNotes for GlastRelease-scons
 
+2012-10-03 heather Preparing for 20-06-00 tag
+  Updates to CalRecon, CalUtil, Event, Overlay, TkrRecon, calibTkrUtil,
+       AnalysisNtuple
+   gr_app fix to default Gleam JO
+   configData Patches from Johann for rhel6
 2012-09-25 heather Add in SConsFiles update for supersede on Windows
 

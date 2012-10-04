@@ -7,7 +7,7 @@ astro astro-03-14-00
 facilities facilities-02-21-00
 flux flux-08-43-00
 tip tip-02-18-00
-fitsGen fitsGen-06-05-00
+fitsGen fitsGen-06-06-01
 embed_python embed_python-01-06-00
 evtUtils evtUtils-00-02-01
 
@@ -23,7 +23,7 @@ celestialSources/eblAtten eblAtten-00-09-00
 celestialSources/microQuasar microQuasar-01-05-00
 
 # infrastructure
-gr_app gr_app-01-00-00
+gr_app gr_app-01-00-01
 gui gui-03-08-00
 geomrep geomrep-04-04-00
 geometry geometry-03-03-00
@@ -37,7 +37,7 @@ rdbModel rdbModel-02-15-00
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-14-01
+Event Event-14-15-00
 GlastSvc GlastSvc-11-01-00
 GuiSvc GuiSvc-03-11-00
 DetDisplay DetDisplay-03-06-00
@@ -62,7 +62,7 @@ RootConvert RootConvert-01-52-00
 RootIo RootIo-25-05-00
 
 
-configData configData-01-12-00
+configData configData-01-14-00
 Trigger Trigger-07-05-00
 
 FluxSvc FluxSvc-06-59-00
@@ -73,16 +73,16 @@ OnboardFilter OnboardFilter-04-17-00
 OnboardFilterTds OnboardFilterTds-00-12-00
 
 # Calorimeter
-CalUtil CalUtil-03-15-01
+CalUtil CalUtil-03-17-00
 CalXtalResponse CalXtalResponse-01-00-00
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-19-01
+CalRecon CalRecon-06-20-00
 GCRCalib GCRCalib-01-11-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-27-00
-TkrRecon TkrRecon-10-34-00
+TkrRecon TkrRecon-10-35-00
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -104,7 +104,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-64-01
+AnalysisNtuple AnalysisNtuple-02-65-00
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -131,12 +131,12 @@ ConfigSvc ConfigSvc-00-04-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-01-00
-Overlay Overlay-02-04-01
+Overlay Overlay-02-04-05
 overlayRootData overlayRootData-00-04-00
 
 calibGenCAL calibGenCAL-05-09-07
 calibGenACD calibGenACD-04-01-06
-calibTkrUtil calibTkrUtil-02-09-09
+calibTkrUtil calibTkrUtil-02-10-00
 calibGenTKR calibGenTKR-04-08-03
 
 # not used in Gleam, here as a build check
