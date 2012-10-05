@@ -196,8 +196,7 @@ ApplicationMgr.AuditAlgorithms = true;
 NtupleMaker1.Members = {
     "PtValsAlg/PtValsAlg1",   
     "AnalysisNtupleAlg/AnalysisNtupleAlg1",
-    "ClassifyAlg/ClassifyAlg1",       
-    "ClassifyAlg/ClassifyAlg2",       
+    "ClassifyAlg/ClassifyAlg1",              
     "FT1Alg/FT1Alg1",                  
     "McCoordsAlg/McCoordsAlg1",  
     "ObfCoordsAlg/ObfCoordsAlg1" 
