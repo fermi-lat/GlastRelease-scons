@@ -131,7 +131,7 @@ ConfigSvc ConfigSvc-00-04-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-01-00
-Overlay Overlay-02-04-05
+Overlay Overlay-02-04-06
 overlayRootData overlayRootData-00-04-00
 
 calibGenCAL calibGenCAL-05-09-07
@@ -142,7 +142,7 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-08-00
 
-Gleam Gleam-07-11-09
+Gleam Gleam-07-11-14
 
 SConsFiles SConsFiles-01-04-00
 GlastRelease-scons/containerSettings containerSettings-00-10-01

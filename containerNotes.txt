@@ -1,5 +1,7 @@
 # containerNotes for GlastRelease-scons
 
+2012-10-06 heather Pick up patched Overlay and tweaked Gleam basicOptions to 
+  provide unique TMine cache file for ClassifyAlg2 and fix path to P8 xml
 2012-10-03 heather Preparing for 20-06-00 tag
   Updates to CalRecon, CalUtil, Event, Overlay, TkrRecon, calibTkrUtil,
        AnalysisNtuple
