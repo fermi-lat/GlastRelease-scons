@@ -22,14 +22,16 @@ Aims to provide the abstract interface to the Overlay Data service
 
 class EventOverlay;
 
-static const InterfaceID IID_IOverlayDataSvc("IOverlayDataSvc", 1 , 0);
+//static const InterfaceID IID_IOverlayDataSvc("IOverlayDataSvc", 1 , 0);
 
-class IOverlayDataSvc : virtual public IService
+class GAUDI_API IOverlayDataSvc : virtual public IService
 {
 public:
 
     // Retrieve interface ID
-    static const InterfaceID& interfaceID() { return IID_IOverlayDataSvc; }
+//    static const InterfaceID& interfaceID() { return IID_IOverlayDataSvc; }
+	/// InterfaceID
+	DeclareInterfaceID(IOverlayDataSvc, 1, 0);
 
     /** @brief Get pointer to a Root DigiEvent object
     */
