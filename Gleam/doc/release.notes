@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-13 05-Oct-2012  lsrea really restore basicOptions
  Gleam-07-11-12 05-Oct-2012  lsrea put basicOptions back the way it was
  Gleam-07-11-11 05-Oct-2012  lsrea removed ClassifyAlg2 from NtupleMaker1
  Gleam 07-11-10 05-Oct-2012 heather patch basicOptions path for P8 xml file
