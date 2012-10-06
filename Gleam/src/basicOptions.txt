@@ -3,7 +3,7 @@
 // basic Job options file for a Gleam execution
 // $Header$
 
-// primary DLLs, including auditor 
+// primary DLLs, including auditor  
 
 ApplicationMgr.DLLs+= { "GaudiAlg", "GaudiAud"};
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
@@ -196,7 +196,8 @@ ApplicationMgr.AuditAlgorithms = true;
 NtupleMaker1.Members = {
     "PtValsAlg/PtValsAlg1",   
     "AnalysisNtupleAlg/AnalysisNtupleAlg1",
-    "ClassifyAlg/ClassifyAlg1",              
+    "ClassifyAlg/ClassifyAlg1",
+    "ClassifyAlg/ClassifyAlg2", // just for now, note that NtupleMaker2 is disabled              
     "FT1Alg/FT1Alg1",                  
     "McCoordsAlg/McCoordsAlg1",  
     "ObfCoordsAlg/ObfCoordsAlg1" 
