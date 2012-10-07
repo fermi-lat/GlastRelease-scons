@@ -1,5 +1,5 @@
 package AnalysisNtuple
-version v2r66p0
+version v2r66p1
 author Leon Rochester <lsrea@slac.stanford.edu>
 
 branches src cmt doc
@@ -8,6 +8,7 @@ use GlastPolicy v*
 
 # these really belong below the "private" line, but apparently linux can't handle it...
 use TkrUtil     v*
+use CalUtil v*
 
 use G4Propagator v*
 
