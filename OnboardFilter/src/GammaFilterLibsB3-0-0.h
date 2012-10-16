@@ -18,7 +18,7 @@
 class GammaFilterLibsB3_0_0 : virtual public IFilterLibs
 {
 public:
-    GammaFilterLibsB3_0_0();
+  GammaFilterLibsB3_0_0(const std::string& release="B3-0-0");
     virtual ~GammaFilterLibsB3_0_0();
 
     // Flight Software Release associated with these libraries

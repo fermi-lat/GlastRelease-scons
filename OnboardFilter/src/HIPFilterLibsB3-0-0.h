@@ -18,7 +18,7 @@
 class HIPFilterLibsB3_0_0 : virtual public IFilterLibs
 {
 public:
-    HIPFilterLibsB3_0_0();
+  HIPFilterLibsB3_0_0(const std::string& release="B3-0-0");
     virtual ~HIPFilterLibsB3_0_0();
 
     // Flight Software Release associated with these libraries

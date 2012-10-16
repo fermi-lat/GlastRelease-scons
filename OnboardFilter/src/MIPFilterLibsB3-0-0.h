@@ -18,7 +18,7 @@
 class MIPFilterLibsB3_0_0 : virtual public IFilterLibs
 {
 public:
-    MIPFilterLibsB3_0_0();
+    MIPFilterLibsB3_0_0(const std::string& release="B3-0-0");
     virtual ~MIPFilterLibsB3_0_0();
 
     // Flight Software Release associated with these libraries

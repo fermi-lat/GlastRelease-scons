@@ -18,7 +18,7 @@
 class DGNFilterLibsB3_0_0 : virtual public IFilterLibs
 {
 public:
-    DGNFilterLibsB3_0_0();
+  DGNFilterLibsB3_0_0(const std::string& release="B3_0_0");
     virtual ~DGNFilterLibsB3_0_0();
 
     // Flight Software Release associated with these libraries
