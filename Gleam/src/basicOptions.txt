@@ -197,7 +197,7 @@ NtupleMaker1.Members = {
     "PtValsAlg/PtValsAlg1",   
     "AnalysisNtupleAlg/AnalysisNtupleAlg1",
     "ClassifyAlg/ClassifyAlg1",
-    "ClassifyAlg/ClassifyAlg2", // just for now, note that NtupleMaker2 is disabled              
+    //"ClassifyAlg/ClassifyAlg2", // For running Pass8 on the MeritTuple
     "FT1Alg/FT1Alg1",                  
     "McCoordsAlg/McCoordsAlg1",  
     "ObfCoordsAlg/ObfCoordsAlg1" 
@@ -206,9 +206,9 @@ ClassifyAlg1.UseTMine = true;
 ClassifyAlg1.TMineCacheFile = "MeritTuple_cache.root";
 ClassifyAlg1.xmlFileName = "$(GLASTCLASSIFYXMLPATH)/Pass7_Analysis_Protected.xml";
 //ClassifyAlg1.xmlFileName = "$(EXTFILESSYS)/pass8Analysis/xml/Pass8_Analysis_Open.xml";
-ClassifyAlg2.UseTMine = true;
-ClassifyAlg2.TMineCacheFile = "MeritTuple2_cache.root";
-ClassifyAlg2.xmlFileName = "$(EXTFILESSYS)/pass8Analysis/xml/Pass8_Analysis_Open.xml";
+//ClassifyAlg2.UseTMine = true;
+//ClassifyAlg2.TMineCacheFile = "MeritTuple2_cache.root";
+//ClassifyAlg2.xmlFileName = "$(EXTFILESSYS)/pass8Analysis/xml/Pass8_Analysis_Open.xml";
 
 // /// ADW: Make production tuple named PrimeTuple
 // NtupleMaker2.Members = {
