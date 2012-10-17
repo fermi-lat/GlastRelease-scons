@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-15 17-Oct-2012 kadrlica backing out P8 worksheet for now due to memory issues
  Gleam-07-11-14 06-Oct-2012 heather provide unique name for TMine cache file
     associated with ClassifyAlg2
  Gleam-07-11-13 05-Oct-2012  lsrea really restore basicOptions
