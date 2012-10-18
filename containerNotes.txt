@@ -1,5 +1,6 @@
 # containerNotes for GlastRelease-scons
 
+2012-10-17 20-06-03 tagging update to Gleam to remove P8 worksheet from basicOptions.txt
 2012-10-07 Add in missing TkrRecon-10-36-00
 20-06-00 Tagged
 2012-10-06 heather Pick up patched Overlay and tweaked Gleam basicOptions to 
