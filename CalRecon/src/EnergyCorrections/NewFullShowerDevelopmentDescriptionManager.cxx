@@ -1644,7 +1644,7 @@ bool NewMultiFullShowerDevelopmentDescription::Compute(double *pp, double *vv, d
   int mynstep;
   double lengthref;
 
-  if(ppref[2]<0)
+  if(ppref[2]<0 && vv2[2]<-0.001)
     {
       lengthref = fabs(m_fsgm->FSGM_cellVertPitch/vv2[2]);
       mynstep = (int)floor(lengthref/ZStepRef)+1;
