@@ -76,7 +76,7 @@ OnboardFilterTds OnboardFilterTds-00-12-00
 CalUtil CalUtil-03-17-00
 CalXtalResponse CalXtalResponse-01-00-00
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-20-01
+CalRecon CalRecon-06-20-02
 GCRCalib GCRCalib-01-11-00
 
 # Tracker
@@ -144,7 +144,7 @@ detCheck detCheck-01-08-00
 
 Gleam Gleam-07-11-15
 
-SConsFiles SConsFiles-01-05-00
+SConsFiles SConsFiles-01-05-00-gr01
 GlastRelease-scons/containerSettings containerSettings-00-10-01
 
 celestialSources/EarthPhenom EarthPhenom-00-02-00
