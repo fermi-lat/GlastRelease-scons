@@ -21,7 +21,7 @@
 #include "FSWHeaders/CDM_pubdefs.h"
 #endif
 
-#if defined(OBF_3_0_0) || defined(OBF_3_1_0)
+#if defined(OBF_3_0_0) || defined(OBF_3_1_0) || defined(OBF_B3_1_1)
 #include "CDM/CDM_pubdefs.h"
 #endif
 

@@ -26,7 +26,7 @@
 #include "ObfInterface.h"
 
 // FSW includes go here
-#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0)
+#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1)
 #include "CDM/CDM_pubdefs.h"
 #endif
 #ifdef OBF_B1_1_3
@@ -41,7 +41,7 @@
 
 
 // Contains all info for a particular filter's release
-#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0)
+#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1)
 #include "EFC/EFC.h"
 #include "MIPFilterLibsB3-0-0.h"
 #endif
@@ -208,6 +208,8 @@ StatusCode MIPFilterTool::initialize()
         m_filterLibs = new MIPFilterLibsB3_0_0();
 #elif   defined(OBF_B3_1_0)
         m_filterLibs = new MIPFilterLibsB3_0_0("B3-1-0");
+#elif   defined(OBF_B3_1_1)
+        m_filterLibs = new MIPFilterLibsB3_0_0("B3-1-1");
 #endif
 #ifdef OBF_B1_1_3
         m_filterLibs = new MIPFilterLibsB1_1_3();

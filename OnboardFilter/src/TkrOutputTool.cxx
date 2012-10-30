@@ -46,7 +46,7 @@
 
 #include "GFC_DB/GAMMA_DB_instance.h"
 #include "EFC_DB/EFC_DB_sampler.h"
-#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0)
+#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1)
 #include "EFC/GFC_def.h"
 #else
 #include "EFC/../src/GFC_def.h"
@@ -55,7 +55,7 @@
 #ifdef OBF_B1_1_3
 #include "FSWHeaders/EFC.h"
 #endif
-#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0)
+#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1)
 #include "EFC/EFC.h"
 #endif
 
