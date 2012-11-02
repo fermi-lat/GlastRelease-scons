@@ -296,7 +296,7 @@ StatusCode TreeBasedTool::firstPass()
         Point  refPoint(0.,0.,0.);
         Vector refAxis(0., 0., 1.);
         double energy(30.);
-        double refError(100.);
+        double refError(5000.);
 
         // The first/best place to look for this is in the TkrFilterParams, so look
         // up the collection in the TDS
