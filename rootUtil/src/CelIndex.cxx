@@ -41,7 +41,7 @@ Long64_t CelIndex::GetN() const
   return _cel->numEvents() ;
  }
 
-Int_t CelIndex::GetEntryNumberFriend( const TTree * eventLinksChain )
+Long64_t CelIndex::GetEntryNumberFriend( const TTree * eventLinksChain )
  {
   if (_cel==0||_component==0)
    { return -1 ; }

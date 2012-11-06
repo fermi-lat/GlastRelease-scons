@@ -4,6 +4,8 @@
 Coordinator:H.Kelly
  EOH 
 
+ rootUtil-01-05-01 05-Nov-2012 heather update for ROOT v5.34, in CelIndex.* to
+   use Long64 rather than Int32
  rootUtil-01-05-00 20-Aug-2012    jrb for Windows no-install-headers
  rootUtil-01-04-07 04-Mar-2012    jrb 2nd try to fix use of XGetopts
  rootUtil-01-04-06 04-Mar-2012    jrb Use facilities version of XGetopt
