@@ -42,7 +42,7 @@ TkrSplitsSvc::TkrSplitsSvc(const std::string& name,ISvcLocator* svc)
 
     // declare the properties
 
-    declareProperty("splitsFile",       m_splitsFile="");
+	declareProperty("splitsFile",       m_splitsFile="$(TKRUTILJOBOPTIONSPATH)/test/splits_flight.xml");
     // set this to correspond to the actual LAT configuration
     declareProperty("defaultMaxStrips", m_defaultMaxStrips=14);
     declareProperty("maxStripsFile",    m_maxStripsFile="");
