@@ -275,7 +275,7 @@ GcrReconAlg.InitAxis           = "TKR";
 ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
-GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight01/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 //  Randoms definition
