@@ -3,8 +3,8 @@
 
 # in common with ScienceTools
 xmlBase xmlBase-05-06-00
-astro astro-03-14-00
-facilities facilities-02-21-00
+astro astro-03-14-01
+facilities facilities-02-22-01
 flux flux-08-43-00
 tip tip-02-18-00
 fitsGen fitsGen-06-06-01
@@ -63,14 +63,14 @@ RootIo RootIo-25-05-00
 
 
 configData configData-01-14-00
-Trigger Trigger-07-05-00
+Trigger Trigger-07-05-01
 
 FluxSvc FluxSvc-06-59-00
 CRflux CRflux-01-20-00
 
 EbfWriter EbfWriter-01-11-00
-OnboardFilter OnboardFilter-04-17-00
-OnboardFilterTds OnboardFilterTds-00-12-00
+OnboardFilter OnboardFilter-04-18-01
+OnboardFilterTds OnboardFilterTds-00-13-01
 
 # Calorimeter
 CalUtil CalUtil-03-17-00
@@ -81,7 +81,7 @@ GCRCalib GCRCalib-01-11-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
-TkrUtil TkrUtil-03-27-00
+TkrUtil TkrUtil-03-27-01
 TkrRecon TkrRecon-10-36-00
 
 # ACD
@@ -142,9 +142,9 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-08-00
 
-Gleam Gleam-07-11-15
+Gleam Gleam-07-11-16
 
-SConsFiles SConsFiles-01-05-00-gr03
+SConsFiles SConsFiles-01-06-01
 GlastRelease-scons/containerSettings containerSettings-00-10-01
 
 celestialSources/EarthPhenom EarthPhenom-00-02-00
