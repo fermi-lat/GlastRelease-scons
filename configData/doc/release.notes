@@ -4,6 +4,7 @@
  * package manager:M. Kocian
  * EOH *
 
+ configData-01-14-01 11-Nov-2012    jrb Add setupEnvironment() call to test program main
  configData-01-14-00 27-Sep-2012  cohen moves templated methods from cxx to header files in order to compile with gcc4.4
  configData-01-13-00 27-Sep-2012  cohen moves templated methods from cxx to header files in order to compile with gcc4.4
  configData-01-12-00 17-Aug-2012    jrb for Windows no-install-headers
