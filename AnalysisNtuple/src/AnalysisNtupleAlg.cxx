@@ -436,7 +436,7 @@ StatusCode AnalysisNtupleAlg::initialize(){
 
     // default set: Mc is now called after Evt
 
-    std::string toolnames [] = {"Glt", "Acd", "Acd2", "TkrHit", "Tkr", "Tree", "Vtx",  "Cal",  "Evt", "Obf", "Mc", "McTkrHit", ""};
+    std::string toolnames [] = {"Glt", "Acd", "Acd2", "TkrHit", "Tkr", "TkrCR", "Tree", "Vtx",  "Cal",  "Evt", "Obf", "Mc", "McTkrHit", ""};
 
     unsigned int i;
 
