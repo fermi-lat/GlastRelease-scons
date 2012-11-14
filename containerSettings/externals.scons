@@ -28,11 +28,20 @@ if sys.platform == 'win32':
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i2'})
   else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
+elif baseEnv['COMPILERNAME'] == 'gcc41':
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.34.03'})
 else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i6'})
 
-usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.8'})
-usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-i1'} ) 
+if baseEnv['COMPILERNAME'] == 'gcc41':
+    usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.3.2'})
+else:
+    usedExternals.append({ 'name' : 'TMineExt', 'iversion' : '3.2.8'})
+
+if baseEnv['COMPILERNAME'] == 'gcc41':
+    usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-i2'} ) 
+else:
+    usedExternals.append({ 'name' : 'gaudi', 'iversion' : 'v21r7-i1'} ) 
 
 if baseEnv['COMPILERNAME'] == 'vc90':
     usedExternals.append({ 'name' : 'geant4', 'iversion' : '9.4.p03-gl3' })
