@@ -580,7 +580,7 @@ void   TkrVecLinkBuilderTool::setAngleTolerances(double refError, Event::TkrVecP
     // when there are a few number of hits, likely to happen at low energy
     if (expVecPoints < 1.7)
     {
-        double sclFctr = 1.5 - expVecPoints;
+        double sclFctr = 1.7 - expVecPoints;
 
         m_nrmProjDistCut += sclFctr;
 		m_tolerance      *= 2.;
@@ -635,7 +635,7 @@ void   TkrVecLinkBuilderTool::setDocaTolerances(double docaError, Event::TkrVecP
     // when there are a few number of hits, likely to happen at low energy
     if (expVecPoints < 1.7)
     {
-        double sclFctr = 1.5 - expVecPoints;
+        double sclFctr = 1.7 - expVecPoints;
 
         m_nrmProjDistCut += sclFctr;
         m_tolerance      *= 6.;
