@@ -4,9 +4,8 @@
  *
  *                  EOH
 
+ containerSettings-00-10-03 14-Nov-2012 heather python and OBF B3-1-1 update
  containerSettings-00-10-02 13-Nov-2012 heather upgrade ROOT and Gaudi for rhel5-32
- containerSettings-00-11-00 14-Nov-2012 heather set up next RHEL5 GR P8 tag with TMine 3.3.2, ROOT v5.34.03 and
-                        Gaudi v21r7-glr4
  containerSettings-00-10-01 01-Oct-2012 heather move to TMineExt 3.2.8
  containerSettings-00-10-00 01-Oct-2012 heather moved P8 xml files to extFiles v0r11
  containerSettings-00-09-04 19-Sep-2012 heather fix geant4 for gcc34
