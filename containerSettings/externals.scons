@@ -29,7 +29,7 @@ if sys.platform == 'win32':
   else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
 elif baseEnv['COMPILERNAME'] == 'gcc41':
-    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.34.03'})
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.34.03-i1'})
 else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i6'})
 
