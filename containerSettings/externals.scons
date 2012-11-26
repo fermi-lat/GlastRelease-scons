@@ -25,7 +25,7 @@ else:
 
 if sys.platform == 'win32':
   if baseEnv['COMPILERNAME'] == 'vc90' and baseEnv.GetOption('debug'):
-    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.34.03'})
+    usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.34.03-i1'})
   else:
     usedExternals.append({ 'name' : 'ROOT', 'iversion' : 'v5.26.00a-i3'})
 elif baseEnv['COMPILERNAME'] == 'gcc41':

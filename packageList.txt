@@ -145,6 +145,6 @@ detCheck detCheck-01-08-00
 Gleam Gleam-07-11-16
 
 SConsFiles SConsFiles-01-08-07
-GlastRelease-scons/containerSettings containerSettings-00-10-05
+GlastRelease-scons/containerSettings containerSettings-00-10-06
 
 celestialSources/EarthPhenom EarthPhenom-00-02-01
