@@ -3,7 +3,8 @@
 @verbatim
  * package manager:T.Burnett
  * EOH *
-
+ 
+  CalXtalRecData class modified to accomodate the new members and methods to track the xtal saturation.
  Event-14-15-00 03-Oct-2012 heather Add uber2 cluster to CalClusterMap
  Event-14-14-01 28-Aug-2012 heather patch RelKey.h for VC90
  Event-14-14-00 16-Aug-2012    jrb support for Windows no-installed-headers
