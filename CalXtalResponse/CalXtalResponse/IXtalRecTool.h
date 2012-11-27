@@ -71,6 +71,7 @@ class IXtalRecTool : virtual public IAlgTool {
                                Event::CalXtalRecData &xtalRec,
                                CalUtil::CalVec<CalUtil::FaceNum, bool> &belowNoise,
                                CalUtil::CalVec<CalUtil::FaceNum, bool> &saturated,
+                               CalUtil::CalVec<CalUtil::FaceNum, bool> &adcSaturated,
                                INeighborXtalkTool const*const nbrXtalkTool
                                ) = 0;
 };

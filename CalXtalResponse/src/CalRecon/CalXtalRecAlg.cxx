@@ -127,13 +127,16 @@ StatusCode CalXtalRecAlg::execute()
     // used for current range only
     CalVec<FaceNum, bool> belowNoise;
     CalVec<FaceNum, bool> saturated;
+    CalVec<FaceNum, bool> adcSaturated;
 
     // convert adc values into energy/pos
     sc = m_xtalRecTool->calculate(**digiIter,
                                   *recData,
                                   belowNoise,
                                   saturated,
+                                  adcSaturated,
                                   m_xtalkTool);
+    
     // single xtal may not be able to recon, is not failure condition.
     if (sc.isFailure()) continue;
 
@@ -147,8 +150,9 @@ StatusCode CalXtalRecAlg::execute()
     // release it from the auto_ptr so it is not deleted
     m_calXtalRecCol->push_back(recData.release());
   }
-    // This is where the code to deal with the ambiguity has to go.S
-  	sc = dynamic_cast<XtalRecTool*>(m_xtalRecTool)->ambiguity(m_calXtalRecCol);
+
+  // This is where the code to deal with the ambiguity has to go.S
+  sc = dynamic_cast<XtalRecTool*>(m_xtalRecTool)->ambiguity(m_calXtalRecCol);
 
   return StatusCode::SUCCESS;
 }

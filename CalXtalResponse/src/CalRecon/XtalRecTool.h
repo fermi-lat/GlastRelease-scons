@@ -56,6 +56,7 @@ public:
                        Event::CalXtalRecData &xtalRec,
                        CalUtil::CalVec<CalUtil::FaceNum, bool> &belowNoise,
                        CalUtil::CalVec<CalUtil::FaceNum, bool> &saturated,
+                       CalUtil::CalVec<CalUtil::FaceNum, bool> &acdSaturated,
                        INeighborXtalkTool const*const xtalkTool=0);
 
   /// Code to resolve ambiguity region of light asymmetry response
@@ -70,6 +71,7 @@ private:
                                                            const Event::CalDigi::CalXtalReadout &ro,
                                                            CalUtil::CalVec<CalUtil::FaceNum, bool> &belowNoise,
                                                            CalUtil::CalVec<CalUtil::FaceNum, bool> &saturated,
+                                                           CalUtil::CalVec<CalUtil::FaceNum, bool> &acdSaturated,
                                                            INeighborXtalkTool const*const xtalkTool) const;
 
   /** \brief convert large diode CIDAC scale to small diode CIDAC scale

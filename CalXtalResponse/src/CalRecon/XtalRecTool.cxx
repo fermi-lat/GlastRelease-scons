@@ -108,7 +108,7 @@ StatusCode XtalRecTool::initialize() {
 
   //-- EXTRACT DOUBLE CONSTANTS --//
 
-  // doubles are done separately                                                                                                                                                                           
+  // doubles are done separately
   sc = m_detSvc->getNumericConstByName("CsILength", &tmp);
   if (sc.isFailure()) {
     msglog << MSG::ERROR << " constant CsILength not defined" << endreq;
@@ -128,11 +128,13 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &         digi,
                                   Event::CalXtalRecData&         xtalRec,
                                   CalVec<FaceNum, bool>&         belowNoise,
                                   CalVec<FaceNum, bool>&         saturated,
+                                  CalVec<FaceNum, bool>&         adcSaturated,
                                   INeighborXtalkTool const*const xtalkTool) 
 {
     // initialize return values
     fill(belowNoise.begin(), belowNoise.end(), false);
     fill(saturated.begin(), saturated.end(), false);
+    fill(adcSaturated.begin(), adcSaturated.end(), false);
   
     // used for global access routines.
     const XtalIdx xtalIdx(digi.getPackedId());
@@ -153,16 +155,33 @@ StatusCode XtalRecTool::calculate(const Event::CalDigi &         digi,
                                                                                  *ro, 
                                                                                  rngBelowNoise,
                                                                                  saturated,
+                                                                                 adcSaturated,
                                                                                  xtalkTool));
     
         if (!rngRec.get())
             return StatusCode::FAILURE;
 
         /// only retain belowNoise info for first range
-        if (ro == digi.getReadoutCol().begin())
-            copy(rngBelowNoise.begin(), rngBelowNoise.end(), belowNoise.begin());
+        if (ro == digi.getReadoutCol().begin()){
+          copy(rngBelowNoise.begin(), rngBelowNoise.end(), belowNoise.begin());
+        }
 
         xtalRec.addRangeRecData(*(rngRec.get()));
+
+        /// Finally: propagate the ADC saturation information.
+        /// We've been discussing whether we should use the saturated variable, here, and the
+        /// resolution was that we shouldn't. Decision was taken to pick a value slightly lower
+        /// than the 12-bit ADC maximum value, i.e. 4060 to be consistent with the value
+        /// historically choosen by Philippe Bruel in the original implementation.
+        /// That's the reason for introducing the new variable adcSaturated.
+        /// Luca Baldini, November 27, 2012.
+        if (adcSaturated[POS_FACE]){
+          xtalRec.setPosFaceSaturated();
+        }
+        if (adcSaturated[NEG_FACE]){
+          xtalRec.setNegFaceSaturated();
+        }
+        
     } // per range loop
 
     return StatusCode::SUCCESS;
@@ -245,6 +264,7 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
                                                                       const Event::CalDigi::CalXtalReadout &ro,
                                                                       CalVec<FaceNum, bool> &belowNoise,
                                                                       CalVec<FaceNum, bool> &saturated,
+                                                                      CalVec<FaceNum, bool> &adcSaturated,
                                                                       INeighborXtalkTool const*const xtalkTool
                                                                       ) const {
   StatusCode sc;
@@ -323,6 +343,7 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
     if (rng[face] == HEX1) {
       const float h1Limit = tholdCI->getULD(HEX1.val())->getVal();
       if (adc >= h1Limit) saturated[face] = true;
+      if (adc >= CAL_ADC_SATURATION) adcSaturated[face] = true;
     }
 
     ///////////////////////////////////////////////////////////
