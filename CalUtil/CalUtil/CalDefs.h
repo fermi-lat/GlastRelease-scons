@@ -1149,6 +1149,10 @@ namespace CalUtil {
     static const unsigned short N_FIELDS = 2;
   };
   
+  /// Saturation of CAL ADC.
+  /// We deliberately choose a value slightly lower than 2**12 - 1 = 4096, 
+  static const float CAL_ADC_SATURATION = 4060;
+  
 
 }; // namespace CalUtil
 
