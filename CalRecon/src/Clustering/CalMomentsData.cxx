@@ -37,11 +37,19 @@ CalMomentsData::CalMomentsData(Event::CalXtalRecData* recData) :
   m_distToAxis(0.),
   m_coordAlongAxis(0.)
 {
+  /// Set the class members according to the underlying CalXtalRecData object.
   m_basePosition = recData->getPosition();
   m_weight = recData->getEnergy();
-  m_tower = (recData->getPackedId()).getTower();
-  m_layer = (recData->getPackedId()).getLayer();
-  m_column = (recData->getPackedId()).getColumn();
+  m_tower = recData->getTower();
+  m_layer = recData->getLayer();
+  m_column = recData->getColumn();
+  /// Set the saturation bits according to the underlying CalXtalRecData object.
+  if (recData->posFaceSaturated()) {
+    setPosFaceSaturated();
+    }
+  if (recData->negFaceSaturated()) {
+    setNegFaceSaturated();
+    }
 }
 
 const Point& CalMomentsData::getPosition() const
@@ -188,6 +196,6 @@ std::ostream& CalMomentsData::fillStream(std::ostream& s) const
     "Status bits: 0x" << std::hex << m_statusBits << std::dec << "\n"
     "Tower = " << m_tower << ", layer = " << m_layer << ", column = " << m_column << "\n" <<
     "Position = " << m_basePosition << ", corrected position = " << m_corrPosition <<
-    ", correction = " << getFitCorrAmount();
+    ", correction = " << getFitCorrAmount() << ", weight = " << m_weight;
   return s;
 }

@@ -36,29 +36,26 @@ class CalMomentsData
 {
  public:
 
-  /// Status word bits organized like:
-  /// low:   |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-  ///         <   Not  used   > <Analysis status> <Fit  correction>  <Xtal properties>
-  /// high:  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-  ///         <                               Not used                               >
   enum StatusBits {
     /// All empty!
-    ZERO              = 0x0,
+    ZERO               = 0x0,
     /// Longitudinal position right on the xtal edge (i.e. it was outside the xtal).
-    LONG_POS_INVALID  = 0x00000001,
-    /// Saturated.
-    SATURATED         = 0x00000002,
+    LONG_POS_INVALID   = 0x00000001,
+    /// Indicates that the signal in the positive face is saturated.
+    POS_FACE_SATURATED = 0x00000010,
+    /// Indicates that the signal in the negative face is saturated. 
+    NEG_FACE_SATURATED = 0x00000020,
     /// Longitudinal position from the fit available.
-    FIT_POS_AVAILABLE = 0x00000010,
+    FIT_POS_AVAILABLE  = 0x00000100,
     /// The fit axis is passing close to one of the xtal edges.
-    FIT_POS_NEAR_EDGE = 0x00000020,
+    FIT_POS_NEAR_EDGE  = 0x00000200,
     /// Longitudinal position from the fit out of the xtal
     /// (set right on one of the xtal edges when applying the correction).
-    FIT_POS_INVALID   = 0x00000040,
+    FIT_POS_INVALID    = 0x00000400,
     /// Use the corrected longitudinal position (i.e. the value from the fit).
-    USE_FIT_POS       = 0x00000080,
+    USE_FIT_POS        = 0x00000800,
     /// Do not use it in the moments analysis (which is not really used, yet).
-    MASKED            = 0x00000100,
+    MASKED             = 0x00001000,
   };
 
   /// Constructor from all the parameters.
@@ -99,6 +96,13 @@ class CalMomentsData
   inline void setStatusBit(StatusBits bit)         { m_statusBits |=  bit; }
   inline void clearStatusBit(StatusBits bit)       { m_statusBits &= ~bit; }
   inline bool checkStatusBit(StatusBits bit) const { return ( (m_statusBits & bit) != ZERO ); }
+  inline bool posFaceSaturated()             const { return checkStatusBit(POS_FACE_SATURATED); }
+  inline bool negFaceSaturated()             const { return checkStatusBit(NEG_FACE_SATURATED); }
+  inline bool bothFacesSaturated()           const { return (posFaceSaturated() & negFaceSaturated()); }
+  inline bool saturated()                    const { return (posFaceSaturated() | negFaceSaturated()); }
+  inline void setPosFaceSaturated()                { setStatusBit(POS_FACE_SATURATED); }
+  inline void setNegFaceSaturated()                { setStatusBit(NEG_FACE_SATURATED); }
+  inline void setBothFacesSaturated()              { setPosFaceSaturated(); setNegFaceSaturated(); }
   inline void mask()                               { setStatusBit(MASKED); }
   inline void unmask()                             { clearStatusBit(MASKED); }
   inline bool masked()                       const { return checkStatusBit(MASKED); }
