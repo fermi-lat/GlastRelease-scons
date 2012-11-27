@@ -44,7 +44,6 @@ MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc) :
   m_p1(0.,0.,0.)
 {
   m_calnLayers = m_calReconSvc->getCalNLayers();
-  m_saturationadc = 4060;
   // Minuit object
   m_minuit = new TMinuit(5);
   //Sets the function to be minimized
@@ -62,9 +61,6 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalV
     cluster = new Event::CalCluster(0);
     cluster->setProducerName("MomentsClusterInfo");
     cluster->clear();
-
-    // Are there saturated xtals?
-    DetectSaturation();
     
     // Do Philippe's fit.
     fitDirectionCentroid(xTalVec);
@@ -76,29 +72,6 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalV
     fillMomentsData(xTalVec, cluster);
   }
   return cluster;
-}
-
-bool MomentsClusterInfo::xtalSaturated(int tower, int layer, int column) const
-{
-  if ( m_Nsaturated == 0 ) {
-    return false;
-  }
-  else{
-    return m_saturated[tower][layer][column];
-  }
-}
-
-bool MomentsClusterInfo::xtalSaturated(const CalMomentsData& momData) const
-{
-  return xtalSaturated(momData.getTower(), momData.getLayer(),
-                       momData.getColumn());
-}
-
-bool MomentsClusterInfo::xtalSaturated(Event::CalXtalRecData* recData) const
-{
-  return xtalSaturated((recData->getPackedId()).getTower(),
-                       (recData->getPackedId()).getLayer(),
-                       (recData->getPackedId()).getColumn());
 }
 
 
@@ -253,7 +226,7 @@ void MomentsClusterInfo::fillLayerData(const XtalDataList* xTalVec,
         xtalEneMomSum2 += xtalEne*xtalEne;
         xtalEneMomSum3 += xtalEne*xtalEne*xtalEne;
       }
-      if ( xtalSaturated(recData) ) {
+      if ( recData->saturated() ) {
         numSaturatedXtals += 1;
       }
     }
@@ -370,18 +343,18 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
   // Loop through the xtals setting the hits to analyze.
   XtalDataList::const_iterator xtalMax = xtalVec->end();
   XtalDataList::const_iterator xtalIter;
+
   for(xtalIter = xtalVec->begin(); xtalIter != xtalVec->end(); xtalIter++)
     {
       if ( xtalIter == xtalMax ) continue;
       
       CalMomentsData momData(*xtalIter);
       momData.applyFitCorrection(cluster->getFitParams(), m_calReconSvc);
-
+      
       // If the fit is reasonable, we might take advantage of it.
       if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
         // Check whether the xtal is saturated.
-        if ( xtalSaturated(momData) ) {
-          momData.setStatusBit(CalMomentsData::SATURATED);
+        if ( momData.saturated() ) {
           momData.forceFitCorrection();
         }
         // If the longitudinal position is right on the edge of the xtal,
@@ -829,80 +802,5 @@ int MomentsClusterInfo::fitDirectionCentroid(const XtalDataList* xTalVec)
     arglist[0] = 1;
     m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
 
-    return 0;
-}
-
-Point MomentsClusterInfo::GetCorrectedPosition(Point pcrystal, int itower, int ilayer, int icolumn)
-{
-    // set the longitudinal position of crystal to the longitudinal position of the extrapolation of the cal direction using only the transverse information
-    double xyz[3];
-    xyz[0] = pcrystal.x();
-    xyz[1] = pcrystal.y();
-    xyz[2] = pcrystal.z();
-    int itowy = itower/4;
-    int itowx = itower-4*itowy;
-    double minpos,maxpos;
-
-    if(ilayer%2==0)
-    {
-        xyz[0] = m_fit_xcentroid+(xyz[2]-m_fit_zcentroid)/m_fit_zdirection*m_fit_xdirection;
-        minpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowx - m_calReconSvc->getCalCsILength()/2;
-        maxpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowx + m_calReconSvc->getCalCsILength()/2;
-        if(xyz[0]<minpos) xyz[0] = minpos;
-        if(xyz[0]>maxpos) xyz[0] = maxpos;
-    }
-    else
-    {
-        xyz[1] = m_fit_ycentroid+(xyz[2]-m_fit_zcentroid)/m_fit_zdirection*m_fit_ydirection;
-        if(m_calReconSvc->getCalFlightGeom())
-        {
-            minpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowy - m_calReconSvc->getCalCsILength()/2;
-            maxpos = -1.5*m_calReconSvc->getCaltowerPitch()+m_calReconSvc->getCaltowerPitch()*(double)itowy + m_calReconSvc->getCalCsILength()/2;
-        }
-        else
-        {
-            minpos = - m_calReconSvc->getCalCsILength()/2;
-            maxpos = m_calReconSvc->getCalCsILength()/2;
-        }
-        if(xyz[1]<minpos) xyz[1] = minpos;
-        if(xyz[1]>maxpos) xyz[1] = maxpos;
-    }
-
-    Point CorPos(xyz[0],xyz[1],xyz[2]);
-
-    return CorPos;
-}
-
-int MomentsClusterInfo::DetectSaturation()
-{
-    m_Nsaturated = 0;
-    std::memset(m_saturated, false, 16*8*12*sizeof(bool));
-
-    const Event::CalDigiCol *calDigiCol = m_calReconSvc->getDigis();
-
-    if(calDigiCol==NULL) return 0;
-
-    for (Event::CalDigiCol::const_iterator digiIter = calDigiCol->begin(); digiIter != calDigiCol->end(); digiIter++)
-    {
-        const Event::CalDigi calDigi = **digiIter;
-        idents::CalXtalId    id      = calDigi.getPackedId();
-
-        CalUtil::XtalIdx xtalIdx(calDigi.getPackedId());
-
-        for (Event::CalDigi::CalXtalReadoutCol::const_iterator ro =  calDigi.getReadoutCol().begin();ro != calDigi.getReadoutCol().end();ro++)
-        {
-            float adcP     = ro->getAdc(idents::CalXtalId::POS);
-            float adcN     = ro->getAdc(idents::CalXtalId::NEG);
-            int   rangepos = ro->getRange(idents::CalXtalId::POS);
-            int   rangeneg = ro->getRange(idents::CalXtalId::NEG);
-
-            if( (rangepos==3 && adcP>=m_saturationadc) || (rangeneg==3 && adcN>=m_saturationadc))
-            {
-                m_saturated[id.getTower()][id.getLayer()][id.getColumn()] = true;
-                ++m_Nsaturated;
-            }
-        }
-    }
-  
     return 0;
 }
