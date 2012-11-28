@@ -7,19 +7,18 @@
 */
 
 #include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h" 
 
-#include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
 #include "Event/Recon/TkrRecon/TkrTree.h"
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
+#include "CalUtil/ICalClusterHitTool.h"
+
 #include "CalUtil/CalDefs.h"
-#include "Event/Digi/CalDigi.h"
 
 #include <CalRecon/ICalEnergyCorr.h>
 #include "GlastSvc/Reco/IPropagatorSvc.h"
@@ -67,69 +66,68 @@ public:
    */     
 
   Event::CalCorToolResult* doEnergyCorr(Event::CalCluster*, Event::TkrTree* );
-
+  
   int doProfileFit(double *pp, double *vv, double tkr_RLn, MsgStream lm, int optntrye);
-
+  
   double GetRadiationLengthInTracker(Event::TkrTree*);
-
-  int DetectSaturation();
+  
+  int DetectSaturation(Event::CalCluster* cluster);
   
   StatusCode finalize();
     
-private:
-    /// Pointer to the Gaudi data provider service
-    IDataProviderSvc* m_dataSvc;
+private:  
+  /// Detector Service
+  IGlastDetSvc* m_detSvc; 
+  
+  /// G4 Propagator tool
+  IPropagator* m_G4PropTool; 
     
-    /// Detector Service
-    IGlastDetSvc *    m_detSvc; 
+  /// TkrGeometrySvc used for access to tracker geometry info
+  ITkrGeometrySvc* m_tkrGeom;
 
-    /// G4 Propagator tool
-    IPropagator *     m_G4PropTool; 
-    
-    /// TkrGeometrySvc used for access to tracker geometry info
-    ITkrGeometrySvc*  m_tkrGeom;
+  /// Tool to loop over the xtals in a cluster.
+  ICalClusterHitTool* m_calClusterHitTool;
 
-    // in order to handle saturation
-    float m_saturationadc;
-    static int m_Nsaturated;
-    bool m_saturated[16][8][12];
+  // in order to handle saturation
+  static int m_Nsaturated;
+  
+  double m_eTotal;
 
-    double m_eTotal;
+  // some results of the fit
+  double m_amin; // minimum of minimized function
+  double m_par0; // alpha
+  double m_par1; // tmax
+  double m_par2; // energy
+  double m_epar0;
+  double m_epar1;
+  double m_epar2;
+  double m_wideningfactor;
+  double m_lastx0;
+  double m_totx0cal;
+  double m_ierflg;
+  
+  TMinuit* m_minuit;
+  static FullShowerProfileParamsManager *m_fsppm;
+  static FullShowerDevelopmentDescriptionManager *m_fsddm;
+  static double m_elayer_dat[8];
+  static double m_elayer_datsat[8];
+  static double m_elayer_nsat[8];
+  static double m_elayer_fit[8];
+  static double m_eelayer_fit[8];
+  // function passed to Minuit to minimize
+  static void fcn(int & , double *, double &f, double *par, int );
+  static double compute_chi2(double *par);
+  static double compute_deposited_energy(double *par, double z0, double z1);
+  
+  static double m_chisq;
+  static double m_params_contribution;
+  static double m_params_contribution_factor;
+  static double m_totchisq;
+  static int m_optpr;
+  
+  static double m_spy_par[3];
+  static double m_spy_totchisq;
 
-    // some results of the fit
-    double m_amin; // minimum of minimized function
-    double m_par0; // alpha
-    double m_par1; // tmax
-    double m_par2; // energy
-    double m_epar0;
-    double m_epar1;
-    double m_epar2;
-    double m_wideningfactor;
-    double m_lastx0;
-    double m_totx0cal;
-    double m_ierflg;
-
-    TMinuit* m_minuit;
-    static FullShowerProfileParamsManager *m_fsppm;
-    static FullShowerDevelopmentDescriptionManager *m_fsddm;
-    static double m_elayer_dat[8];
-    static double m_elayer_datsat[8];
-    static double m_elayer_nsat[8];
-    static double m_elayer_fit[8];
-    static double m_eelayer_fit[8];
-    // function passed to Minuit to minimize
-    static void fcn(int & , double *, double &f, double *par, int );
-    static double compute_chi2(double *par);
-    static double compute_deposited_energy(double *par, double z0, double z1);
-    
-    static double m_chisq;
-    static double m_params_contribution;
-    static double m_params_contribution_factor;
-    static double m_totchisq;
-    static int m_optpr;
-
-    static double m_spy_par[3];
-    static double m_spy_totchisq;
 private:
   double BIAS0;
   double BIAS1;
@@ -244,13 +242,7 @@ StatusCode CalFullProfileTool::initialize()
     MsgStream log(msgSvc(), name());
     StatusCode sc = StatusCode::SUCCESS;
     log << MSG::DEBUG << "Initializing CalFullProfileTool" <<endreq;
-  
-    //Locate and store a pointer to the data service which allows access to the TDS
-    if ((sc = service("EventDataSvc", m_dataSvc)).isFailure())
-    {
-      throw GaudiException("Service [EventDataSvc] not found", name(), sc);
-    }
-  
+    
     if ((sc = service("GlastDetSvc", m_detSvc, true)).isFailure())
     { 
       throw GaudiException("Service [GlastDetSvc] not found", name(), sc);
@@ -275,6 +267,13 @@ StatusCode CalFullProfileTool::initialize()
         return StatusCode::FAILURE;
     }
 
+    // Find CalClusterHitTool
+    if ((sc = toolSvc->retrieveTool("CalClusterHitTool", m_calClusterHitTool)).isFailure()) {
+      throw GaudiException("Tool [CalClusterHitTool] not found", name(), sc);
+      log << MSG::ERROR << "Couldn't find the CalClusterHitTool!" << endreq;
+      return StatusCode::FAILURE;
+    }
+    
     BIAS0 = 2.655362;
     BIAS1 = 0.007235;
 
@@ -287,7 +286,7 @@ StatusCode CalFullProfileTool::initialize()
     //Sets the function to be minimized
     m_minuit->SetFCN(fcn);
 
-    m_saturationadc = 4060;
+    //m_saturationadc = 4060;
 
     return sc;
 }
@@ -383,7 +382,7 @@ Event::CalCorToolResult* CalFullProfileTool::doEnergyCorr(Event::CalCluster* clu
       }
 
     // Detect saturation must be called before m_fsddm->Compute !!!
-    DetectSaturation();
+    DetectSaturation(cluster);
 
     tkr_RLn = 0;
     if(tree!=NULL)
@@ -846,69 +845,44 @@ int CalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, Msg
   return 1;
 }
 
-int CalFullProfileTool::DetectSaturation()
+int CalFullProfileTool::DetectSaturation(Event::CalCluster* cluster)
 {
+  // Reset variables.
   int i,j,k;
 
-  // Reset m_fsddm variables
-  for(i=0;i<16;++i)
-    for(j=0;j<8;++j)
-      for(k=0;k<12;++k)
+  for (i=0;i<16;++i) {
+    for (j=0;j<8;++j) {
+      for (k=0;k<12;++k) {
         m_fsddm->OffSatu[i][j][k] = 0;
-  
-  for(j=0;j<8;++j)
-    {
-      m_elayer_datsat[j] = 0;
-      m_elayer_nsat[j] = 0;
+      }
     }
+  }
 
-  // Get caldigicol
-  Event::CalDigiCol *calDigiCol = SmartDataPtr<Event::CalDigiCol>(m_dataSvc,EventModel::Digi::CalDigiCol);
-  if(calDigiCol==NULL) return 1;
+  for(j=0;j<8;++j) {
+    m_elayer_datsat[j] = 0;
+    m_elayer_nsat[j] = 0;
+  }
 
-  m_Nsaturated = 0;
-  for(i=0;i<16;++i)
-    for(j=0;j<8;++j)
-      for(k=0;k<12;++k)
-        m_saturated[i][j][k] = false;
+  m_Nsaturated = cluster->getXtalsParams().getNumSaturatedXtals();
 
-  for (Event::CalDigiCol::const_iterator digiIter = calDigiCol->begin(); digiIter != calDigiCol->end(); digiIter++)
-    {
-      const Event::CalDigi calDigi = **digiIter;
-      idents::CalXtalId id = calDigi.getPackedId();
-      CalUtil::XtalIdx xtalIdx(calDigi.getPackedId());
-      for (Event::CalDigi::CalXtalReadoutCol::const_iterator ro =  calDigi.getReadoutCol().begin();ro != calDigi.getReadoutCol().end();ro++)
-        {
-          float adcP = ro->getAdc(idents::CalXtalId::POS);
-          float adcN = ro->getAdc(idents::CalXtalId::NEG);
-          int rangepos = ro->getRange(idents::CalXtalId::POS);
-          int rangeneg = ro->getRange(idents::CalXtalId::NEG);
-          if( (rangepos==3 && adcP>=m_saturationadc) || (rangeneg==3 && adcN>=m_saturationadc))
-            {
-              m_saturated[(int)id.getTower()][(int)id.getLayer()][(int)id.getColumn()] = true;
-              ++m_Nsaturated;
-            }
-        }
+  // If there are no saturated xtals there is nothing to do.
+  if (m_Nsaturated==0) return 0;
+
+  // Otherwise go ahead and loop over the xtals in the cluster.
+  m_calClusterHitTool->fillRecDataVec(cluster);
+  std::vector<Event::CalXtalRecData*> xtalList = m_calClusterHitTool->getRecDataVec();
+  std::vector<Event::CalXtalRecData*>::const_iterator xtalData;
+
+  for (xtalData = xtalList.begin(); xtalData != xtalList.end(); xtalData++){
+    int tower  = (*xtalData)->getTower();
+    int layer  = (*xtalData)->getLayer();
+    int column = (*xtalData)->getColumn();
+    if ((*xtalData)->saturated()){
+      m_fsddm->OffSatu[tower][layer][column] = 1;
+      m_elayer_datsat[layer] += (*xtalData)->getEnergy()/1000;
+      m_elayer_nsat[layer] += 1;
     }
-
-  if(m_Nsaturated==0) return 0;
-  
-  Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(m_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
-  if(calXtalRecCol==NULL)  return 1;
-
-  for(Event::CalXtalRecCol::const_iterator xTalIter=calXtalRecCol->begin(); xTalIter != calXtalRecCol->end(); xTalIter++)
-    {
-      Event::CalXtalRecData* xTalData = *xTalIter;
-      int itow=xTalData->getPackedId().getTower();
-      int ilay=xTalData->getPackedId().getLayer();
-      int icol=xTalData->getPackedId().getColumn();
-      if(m_saturated[itow][ilay][icol])
-        {
-          m_fsddm->OffSatu[itow][ilay][icol] = 1;
-          m_elayer_datsat[ilay] += xTalData->getEnergy()/1000;
-          m_elayer_nsat[ilay] += 1;
-        }
-    }
+  }
 
   return 0;
 }
