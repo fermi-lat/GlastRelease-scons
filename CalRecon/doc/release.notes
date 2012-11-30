@@ -9,6 +9,7 @@ package manager: David Chamont
 
   Minor refactoring to use the new xtal saturation stuff in CalXtalRecData.
   CalFullProfileTool updated to take advantage of the new data structure.
+  CalNewFullProfileTool updated to take advantage of the new data structure.
  CalRecon-06-20-02 20-Oct-2012 bruel patch to address JIRA LPATE-61
  CalRecon-06-20-01 04-Oct-2012 bruel fix CalException problem in 
         MomentClusterInfo
