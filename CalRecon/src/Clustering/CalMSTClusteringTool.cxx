@@ -350,9 +350,14 @@ private:
   // above that we do not grow a tree
   unsigned int   m_maxNumXtals;
   // Parameters to separate trees
+  // 30/11/2012: need to relax the threshold at high energy 
+  // where position is wrong due to saturation
   float m_maxEdgeWeightModel_thrLE;     // (mm) @ 1 MeV
   float m_maxEdgeWeightModel_thrPivEne; // (MeV)
   float m_maxEdgeWeightModel_thrHE;     // (mm) above the pivot
+  float m_maxEdgeWeightModel_thrPivHEne;  // (MeV)
+  float m_maxEdgeWeightModel_thrVHE;      // (mm) @ 1 TeV
+
   // Parameter defining the threshold for the "Trunc" variables.
   double m_truncFrac;
   // Flag to correct for gaps in the MST metrics.
@@ -379,6 +384,8 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 880. );
   declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000. );
   declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 120. );
+  declareProperty ("maxEdgeWeightModel_thrPivHEne" , m_maxEdgeWeightModel_thrPivHEne  = 1e5 );
+  declareProperty ("maxEdgeWeightModel_thrVHE"     , m_maxEdgeWeightModel_thrVHE      = 500. );
   declareProperty ("truncFrac"                   , m_truncFrac                    = 0.05 );
   declareProperty ("correctForGaps"              , m_correctForGaps               = false ); 
 }
@@ -399,12 +406,14 @@ StatusCode CalMSTClusteringTool::initialize()
     }
     
     // check if jobOptions were passed
-    log << MSG::DEBUG << "m_maxNumXtals                  set to " << m_maxNumXtals                  << endreq;
-    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrLE     set to " << m_maxEdgeWeightModel_thrLE     << endreq;
-    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrPivEne set to " << m_maxEdgeWeightModel_thrPivEne << endreq;
-    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrHE     set to " << m_maxEdgeWeightModel_thrHE     << endreq;
-    log << MSG::DEBUG << "m_truncFrac                    set to " << m_truncFrac                    << endreq;
-    log << MSG::DEBUG << "m_correctForGaps               set to " << m_correctForGaps               << endreq;
+    log << MSG::DEBUG << "m_maxNumXtals                    set to " << m_maxNumXtals                  << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrLE       set to " << m_maxEdgeWeightModel_thrLE     << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrPivEne   set to " << m_maxEdgeWeightModel_thrPivEne << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrHE       set to " << m_maxEdgeWeightModel_thrHE     << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrPivHEne  set to " << m_maxEdgeWeightModel_thrPivHEne << endreq;
+    log << MSG::DEBUG << "m_maxEdgeWeightModel_thrVHE      set to " << m_maxEdgeWeightModel_thrVHE     << endreq;
+    log << MSG::DEBUG << "m_truncFrac                      set to " << m_truncFrac                    << endreq;
+    log << MSG::DEBUG << "m_correctForGaps                 set to " << m_correctForGaps               << endreq;
     
     // Cluster filling utility
     // -- To be replaced with a generic version soon
@@ -728,12 +737,21 @@ double CalMSTClusteringTool::getWeightThreshold(double energy)
   // all the edges whose weight is greater that this threshold are trimmed in order to
   // define the clusters. The weight is explicitely energy dependent. In this context "energy"
   // really means the total raw energy in the calorimeter.
-  // The basic parametrization is a negative-slope line (in log10*(energy) below an adjustable
-  // pivot plus a constant above the pivot. The value m_maxEdgeWeightModel_thrLE is to be
-  // intended at 1 MeV, or log10(energy) = 0.
+  // The parametrization is a negative-slope line (in log10*(energy) below an adjustable pivot 
+  // than a constant above the pivot 
+  // than a positive-slope line in log10(energy) abovea second high-energy povot 
+  // The value m_maxEdgeWeightModel_thrLE is to be intended at 1 MeV, or log10(energy) = 0.
 
-  // If the energy is larger that the pivot energy, return the high-energy constant
-  if ( energy > m_maxEdgeWeightModel_thrPivEne ) {
+
+  // If energy greater than high energy pivot:
+  if ( energy > m_maxEdgeWeightModel_thrPivHEne ) {
+    double E1 = log10(m_maxEdgeWeightModel_thrPivHEne)
+    double a  = (m_maxEdgeWeightModel_thrVHE - m_maxEdgeWeightModel_thrHE)/(6 - E1);
+    double b  = (m_maxEdgeWeightModel_thrHE*6 - m_maxEdgeWeightModel_thrVHE*E1)/(6 - E1));
+    return a*log10(energy) + b;
+  }
+  // Else if energy is greater that the pivot energy, but lover than  high energy pivot -> return the high-energy constant
+  else if ( energy > m_maxEdgeWeightModel_thrPivEne ) {
     return m_maxEdgeWeightModel_thrHE;
   }
   // Otherwise define the slope and use it properly.
