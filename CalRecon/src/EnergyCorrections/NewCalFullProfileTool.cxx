@@ -20,6 +20,8 @@
 
 #include "TkrUtil/ITkrGeometrySvc.h"
 
+#include "CalUtil/ICalClusterHitTool.h"
+
 #include "CalUtil/CalDefs.h"
 #include "Event/Digi/CalDigi.h"
 
@@ -74,10 +76,11 @@ public:
 
   double GetRadiationLengthInTracker(Event::TkrTree*);
 
-  int DetectSaturation();
+  int DetectSaturation(Event::CalCluster* cluster);
   double GetCrystalDistanceToTrajectory(Point p0, Vector v0, Point p1, Vector v1, double xtalhalflength);
   int SelectCloseCrystals(double *pptraj, double *vvtraj, double maxdistance);
-  double GetChi2Dist(double *pptraj, double *vvtraj, double fiterror, double *result=NULL);
+  double GetChi2Dist(Event::CalCluster* cluster,
+                     double *pptraj, double *vvtraj, double fiterror, double *result=NULL);
 
   StatusCode finalize();
     
@@ -94,8 +97,10 @@ private:
   /// TkrGeometrySvc used for access to tracker geometry info
   ITkrGeometrySvc*  nm_tkrGeom;
 
+  /// Tool to loop over the xtals in a cluster.
+  ICalClusterHitTool* m_calClusterHitTool;
+
   // in order to handle saturation
-  float nm_saturationadc;
   bool nm_saturated[16][8][12];
   double nm_xtal_energy[16][8][12];
   double nm_xtal_doca[16][8][12];
@@ -342,6 +347,13 @@ StatusCode NewCalFullProfileTool::initialize()
       return StatusCode::FAILURE;
     }
 
+  // Find CalClusterHitTool
+  if ((sc = toolSvc->retrieveTool("CalClusterHitTool", m_calClusterHitTool)).isFailure()) {
+    throw GaudiException("Tool [CalClusterHitTool] not found", name(), sc);
+    log << MSG::ERROR << "Couldn't find the CalClusterHitTool!" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   nm_fsppm = new NewFullShowerProfileParamsManager(0);
   nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,1.85,0.80,0.1);
   
@@ -350,8 +362,6 @@ StatusCode NewCalFullProfileTool::initialize()
   
   //Sets the function to be minimized
   nm_minuit->SetFCN(fcn);
-
-  nm_saturationadc = 4060;
 
   ParXYcor[0] = 0.389137;
   ParXYcor[1] = -0.845238;
@@ -456,7 +466,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
     }
 
   // Detect saturation must be called before nm_fsddm->Compute !!!
-  DetectSaturation();
+  DetectSaturation(cluster);
 
   tkr_RLn = 0;
   if(tree!=NULL)
@@ -608,7 +618,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   CALFIT_seltotchisq = nm_totchisq;
   TKRFIT_seltotchisq = nm_totchisq;
   nm_optselxtalinfit = 0;
-  chi2dist = GetChi2Dist(pp,vv,nm_toterrfit,result);
+  chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
   CALFIT_chisqdist = chi2dist;
   TKRFIT_chisqdist = chi2dist;
   CALFIT_chidist = result[1];
@@ -673,7 +683,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       compute_chi2(fitpar);
       TKRFIT_seltotchisq = nm_totchisq;
       nm_optselxtalinfit = 0;
-      chi2dist = GetChi2Dist(pp,vv,nm_toterrfit,result);
+      chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
       TKRFIT_chisqdist = chi2dist;
       TKRFIT_chidist = result[1];
     }
@@ -997,108 +1007,77 @@ int NewCalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, 
   return 1;
 }
 
-int NewCalFullProfileTool::DetectSaturation()
+int NewCalFullProfileTool::DetectSaturation(Event::CalCluster* cluster)
 {
+  // Reset a bunch of stuff.
   nm_fsddm->NXtal = 0;
   nm_nxtal = 0;
   nm_nxtal_sat = 0;
 
   int i,j,k;
 
-  for(i=0;i<16;++i)
-    for(j=0;j<8;++j)
-      for(k=0;k<12;++k)
-        {
-          nm_xtal_energy[i][j][k] = 0;
-        }
+  for (i=0;i<16;++i) {
+    for (j=0;j<8;++j) {
+      for (k=0;k<12;++k) {
+        nm_xtal_energy[i][j][k] = 0;
+      }
+    }
+  }
 
   // Reset nm_fsddm variables
-  for(i=0;i<16;++i)
-    for(j=0;j<8;++j)
-      for(k=0;k<12;++k)
+  for (i=0;i<16;++i) {
+    for (j=0;j<8;++j) {
+      for (k=0;k<12;++k) {
         nm_fsddm->OffSatu[i][j][k] = -1;
+      }
+    }
+  }
   
-  for(j=0;j<8;++j)
-    {
-      nm_layer_nsat[j] = 0;
-    }
+  for (j=0;j<8;++j) {
+    nm_layer_nsat[j] = 0;
+  }
 
-  for(j=0;j<FSDD_XTAL_NMAX;++j)
-    {
-      nm_extal_dat[j] = 0;
-      nm_extal_fit[j] = 0;
-      nm_xtal_satu[j] = 0;
-      nm_xtal_ilay[j] = -1;
-    }
-
-  // Get caldigicol
-  Event::CalDigiCol *calDigiCol = SmartDataPtr<Event::CalDigiCol>(nm_dataSvc,EventModel::Digi::CalDigiCol);
-  if(calDigiCol==NULL) return 1;
-
-  for(i=0;i<16;++i)
-    for(j=0;j<8;++j)
-      for(k=0;k<12;++k)
-        {
-          nm_saturated[i][j][k] = false;
-        }
-
-  for (Event::CalDigiCol::const_iterator digiIter = calDigiCol->begin(); digiIter != calDigiCol->end(); digiIter++)
-    {
-      const Event::CalDigi calDigi = **digiIter;
-      idents::CalXtalId id = calDigi.getPackedId();
-      CalUtil::XtalIdx xtalIdx(calDigi.getPackedId());
-      for (Event::CalDigi::CalXtalReadoutCol::const_iterator ro =  calDigi.getReadoutCol().begin();ro != calDigi.getReadoutCol().end();ro++)
-        {
-          float adcP = ro->getAdc(idents::CalXtalId::POS);
-          float adcN = ro->getAdc(idents::CalXtalId::NEG);
-          int rangepos = ro->getRange(idents::CalXtalId::POS);
-          int rangeneg = ro->getRange(idents::CalXtalId::NEG);
-          if( (rangepos==3 && adcP>=nm_saturationadc) || (rangeneg==3 && adcN>=nm_saturationadc))
-            {
-              nm_saturated[(int)id.getTower()][(int)id.getLayer()][(int)id.getColumn()] = true;
-            }
-        }
-    }
-
-  Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(nm_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
-  if(calXtalRecCol==NULL)  return 1;
+  for(j=0;j<FSDD_XTAL_NMAX;++j) {
+    nm_extal_dat[j] = 0;
+    nm_extal_fit[j] = 0;
+    nm_xtal_satu[j] = 0;
+    nm_xtal_ilay[j] = -1;
+  }
 
   nm_nxtal = 0;
-  for(Event::CalXtalRecCol::const_iterator xTalIter=calXtalRecCol->begin(); xTalIter != calXtalRecCol->end(); xTalIter++)
-    {
-      Event::CalXtalRecData* xTalData = *xTalIter;
-      int itow=xTalData->getPackedId().getTower();
-      int ilay=xTalData->getPackedId().getLayer();
-      int icol=xTalData->getPackedId().getColumn();
-      nm_xtal_energy[itow][ilay][icol] = xTalData->getEnergy()/1000;
+  
+  m_calClusterHitTool->fillRecDataVec(cluster);
+  std::vector<Event::CalXtalRecData*> xtalList = m_calClusterHitTool->getRecDataVec();
+  std::vector<Event::CalXtalRecData*>::const_iterator xtalData;
 
-      if(nm_saturated[itow][ilay][icol])
-        {
-          //
-          if(nm_saturated[itow][ilay][icol]) nm_layer_nsat[ilay] += 1;
-          //
-          nm_elayer_dat[ilay] -= xTalData->getEnergy()/1000;
-          nm_elayer_datsat[ilay] -= xTalData->getEnergy()/1000;
-          nm_elayer_datsel[ilay] -= xTalData->getEnergy()/1000;
-          //
-          nm_extal_dat[nm_nxtal] = xTalData->getEnergy()/1000;
-          if(nm_saturated[itow][ilay][icol])
-            {
-              nm_xtal_satu[nm_nxtal] = 1;
-            }
-          nm_xtal_dist[nm_nxtal] = 0;
-          nm_xtal_itow[nm_nxtal] = itow;
-          nm_xtal_ilay[nm_nxtal] = ilay;
-          nm_xtal_icol[nm_nxtal] = icol;
-          nm_fsddm->OffSatu[itow][ilay][icol] = nm_nxtal;
-          ++nm_nxtal;
-          nm_fsddm->NXtal = nm_nxtal;
-        }
-      if(nm_nxtal==FSDD_XTAL_NMAX) break;
+  for (xtalData = xtalList.begin(); xtalData != xtalList.end(); xtalData++) {
+    int tower  = (*xtalData)->getTower();
+    int layer  = (*xtalData)->getLayer();
+    int column = (*xtalData)->getColumn();
+    nm_xtal_energy[tower][layer][column] = (*xtalData)->getEnergy()/1000;
+    if ((*xtalData)->saturated()) {
+      nm_saturated[tower][layer][column] = true;
+      nm_layer_nsat[layer] += 1;
+      nm_elayer_dat[layer] -= (*xtalData)->getEnergy()/1000;
+      nm_elayer_datsat[layer] -= (*xtalData)->getEnergy()/1000;
+      nm_elayer_datsel[layer] -= (*xtalData)->getEnergy()/1000;
+      nm_extal_dat[nm_nxtal] = (*xtalData)->getEnergy()/1000;
+      //
+      nm_xtal_satu[nm_nxtal] = 1;
+      
+      nm_xtal_dist[nm_nxtal] = 0;
+      nm_xtal_itow[nm_nxtal] = tower;
+      nm_xtal_ilay[nm_nxtal] = layer;
+      nm_xtal_icol[nm_nxtal] = column;
+      nm_fsddm->OffSatu[tower][layer][column] = nm_nxtal;
+      ++nm_nxtal;
+      nm_fsddm->NXtal = nm_nxtal;
     }
-
+    if(nm_nxtal==FSDD_XTAL_NMAX) break;
+  }
+  
   nm_nxtal_sat = nm_nxtal;
-
+  
   nm_nsatlayer = 0;
   for(j=0;j<8;++j)
     {
@@ -1107,7 +1086,7 @@ int NewCalFullProfileTool::DetectSaturation()
           nm_nsatlayer += 1;
         }
     }
-
+  
   return 0;
 }
 
@@ -1228,7 +1207,8 @@ int NewCalFullProfileTool::SelectCloseCrystals(double *pptraj, double *vvtraj, d
   return 0;
 }
 
-double NewCalFullProfileTool::GetChi2Dist(double *pptraj, double *vvtraj, double fiterror, double *result)
+double NewCalFullProfileTool::GetChi2Dist(Event::CalCluster* cluster,
+                                          double *pptraj, double *vvtraj, double fiterror, double *result)
 {
   if(result)
     {
@@ -1239,8 +1219,7 @@ double NewCalFullProfileTool::GetChi2Dist(double *pptraj, double *vvtraj, double
   double chidist = 0;
   int i;
   
-  Event::CalXtalRecCol* calXtalRecCol = SmartDataPtr<Event::CalXtalRecCol>(nm_dataSvc, EventModel::CalRecon::CalXtalRecCol); 
-  if(calXtalRecCol==NULL)  return chi2dist;
+  if (cluster->getXtalsParams().getNumXtals() == 0) return chi2dist;
 
   double xyz[3];
   double xyzp[3];
@@ -1253,37 +1232,40 @@ double NewCalFullProfileTool::GetChi2Dist(double *pptraj, double *vvtraj, double
   int xtalused[FSDD_XTAL_NMAX];
   for(i=0;i<nm_nxtal;++i) xtalused[i] = 0;
 
-  for(Event::CalXtalRecCol::const_iterator xTalIter=calXtalRecCol->begin(); xTalIter != calXtalRecCol->end(); xTalIter++)
-    {
-      Event::CalXtalRecData* xTalData = *xTalIter;
-      int itow=xTalData->getPackedId().getTower();
-      int ilay=xTalData->getPackedId().getLayer();
-      int icol=xTalData->getPackedId().getColumn();
-      nm_xtal_energy[itow][ilay][icol] = xTalData->getEnergy()/1000;
-      xyz[0] = xTalData->getPosition().x();
-      xyz[1] = xTalData->getPosition().y();
-      xyz[2] = xTalData->getPosition().z();
-      //
-      xtaldatenergy = nm_xtal_energy[itow][ilay][icol];
-      xtalfitenergy = 0;
-      icount = nm_fsddm->OffSatu[itow][ilay][icol];
-      if(icount>-1)
-        {
-          xtalfitenergy = nm_extal_fit[icount];
-          if(icount<nm_nxtal_sat && xtalfitenergy>xtaldatenergy) xtalfitenergy = xtaldatenergy;
-          xtalused[icount] = 1;
-        }
-      lambda = 0;
-      for(i=0;i<3;++i) lambda += (xyz[i]-pptraj[i])*vvtraj[i];
-      for(i=0;i<3;++i) xyzp[i] = pptraj[i]+lambda*vvtraj[i];
-      mydist = 0;
-      for(i=0;i<3;++i) mydist += (xyz[i]-xyzp[i])*(xyz[i]-xyzp[i]);
-      mydist = sqrt(mydist);
-      //
-      chi2dist += (xtaldatenergy-xtalfitenergy)*(xtaldatenergy-xtalfitenergy)/fiterror/fiterror*mydist*mydist;
-      chidist += fabs((xtaldatenergy-xtalfitenergy))/fiterror*mydist*mydist;
-    }
+  // We assume that DetectSaturation has been already called and we don't need to
+  // populate the xtal list one more time.
+  std::vector<Event::CalXtalRecData*> xtalList = m_calClusterHitTool->getRecDataVec();
+  std::vector<Event::CalXtalRecData*>::const_iterator xtalData;
 
+  for (xtalData = xtalList.begin(); xtalData != xtalList.end(); xtalData++){
+    int tower  = (*xtalData)->getTower();
+    int layer  = (*xtalData)->getLayer();
+    int column = (*xtalData)->getColumn();
+    nm_xtal_energy[tower][layer][column] = (*xtalData)->getEnergy()/1000;
+    xyz[0] = (*xtalData)->getPosition().x();
+    xyz[1] = (*xtalData)->getPosition().y();
+    xyz[2] = (*xtalData)->getPosition().z();
+    //
+    xtaldatenergy = nm_xtal_energy[tower][layer][column];
+    xtalfitenergy = 0;
+    icount = nm_fsddm->OffSatu[tower][layer][column];
+    if(icount>-1)
+      {
+        xtalfitenergy = nm_extal_fit[icount];
+        if(icount<nm_nxtal_sat && xtalfitenergy>xtaldatenergy) xtalfitenergy = xtaldatenergy;
+        xtalused[icount] = 1;
+      }
+    lambda = 0;
+    for(i=0;i<3;++i) lambda += (xyz[i]-pptraj[i])*vvtraj[i];
+    for(i=0;i<3;++i) xyzp[i] = pptraj[i]+lambda*vvtraj[i];
+    mydist = 0;
+    for(i=0;i<3;++i) mydist += (xyz[i]-xyzp[i])*(xyz[i]-xyzp[i]);
+    mydist = sqrt(mydist);
+    //
+    chi2dist += (xtaldatenergy-xtalfitenergy)*(xtaldatenergy-xtalfitenergy)/fiterror/fiterror*mydist*mydist;
+    chidist += fabs((xtaldatenergy-xtalfitenergy))/fiterror*mydist*mydist;
+  }
+  
   for(i=0;i<nm_nxtal;++i)
     {
       if(xtalused[i]) continue;
@@ -1293,13 +1275,13 @@ double NewCalFullProfileTool::GetChi2Dist(double *pptraj, double *vvtraj, double
       chi2dist += (xtaldatenergy-xtalfitenergy)*(xtaldatenergy-xtalfitenergy)/fiterror/fiterror*mydist*mydist;
       chidist += fabs((xtaldatenergy-xtalfitenergy))/fiterror*mydist*mydist;
     }
-
+  
   if(result)
     {
       result[0] = chi2dist;
       result[1] = chidist;
     }
-
+  
   return chi2dist;
 }
 
