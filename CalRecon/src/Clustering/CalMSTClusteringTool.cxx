@@ -745,9 +745,9 @@ double CalMSTClusteringTool::getWeightThreshold(double energy)
 
   // If energy greater than high energy pivot:
   if ( energy > m_maxEdgeWeightModel_thrPivHEne ) {
-    double E1 = log10(m_maxEdgeWeightModel_thrPivHEne)
+    double E1 = log10(m_maxEdgeWeightModel_thrPivHEne);
     double a  = (m_maxEdgeWeightModel_thrVHE - m_maxEdgeWeightModel_thrHE)/(6 - E1);
-    double b  = (m_maxEdgeWeightModel_thrHE*6 - m_maxEdgeWeightModel_thrVHE*E1)/(6 - E1));
+    double b  = (m_maxEdgeWeightModel_thrHE*6 - m_maxEdgeWeightModel_thrVHE*E1)/(6 - E1);
     return a*log10(energy) + b;
   }
   // Else if energy is greater that the pivot energy, but lover than  high energy pivot -> return the high-energy constant
