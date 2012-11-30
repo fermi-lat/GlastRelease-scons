@@ -94,6 +94,12 @@ namespace Event { //Namespace Event
     /// Errors in a HepMatrix
     CLHEP::HepMatrix     getAxisErrs()     const ;
 
+    /// Errors in a HepMatrix 
+    /// in 5x5 ACD Representation and in 4x4 Tkr Representation
+    /// see AcdRecon/doc/formulae.tex for definitions
+    CLHEP::HepMatrix     getMomErrsAcdRep() const ;
+    CLHEP::HepMatrix     getMomErrsTkrRep() const ;
+
     /// Direct access to errors
     inline double        getxDirxDir()     const { return m_axisxx; }
     inline double        getxDiryDir()     const { return m_axisxy; }

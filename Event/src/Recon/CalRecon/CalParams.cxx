@@ -163,6 +163,55 @@ CLHEP::HepMatrix Event::CalParams::getAxisErrs() const
   return errs;
 }
 
+CLHEP::HepMatrix Event::CalParams::getMomErrsAcdRep() const
+{ 
+  // @brief Return Cal covariance matrix in 5x5 Acd representation
+  // Acd rep. is (Vx, Vy, Vz, X0, Y0)
+  // this means simply code a matrix with m_axisIJ and m_cenIJ
+  // see AcdRecon/doc/formulae.tex for definitions
+  
+  CLHEP::HepMatrix acdErrs(5,5,1);
+
+  // axis part
+  acdErrs(1,1) = m_axisxx;
+  acdErrs(1,2) = acdErrs(2,1) = m_axisxy;
+  acdErrs(1,3) = acdErrs(3,1) = m_axisxz;
+  acdErrs(2,2) = m_axisyy;
+  acdErrs(2,3) = acdErrs(3,2) = m_axisyz;
+  acdErrs(3,3) = m_axiszz;
+  // centroid part
+  acdErrs(4,4) = m_cenxx;
+  acdErrs(5,5) = m_cenyy;
+  acdErrs(4,5) = acdErrs(5,4) = m_cenxy;
+
+  return acdErrs;
+}
+
+CLHEP::HepMatrix Event::CalParams::getMomErrsTkrRep() const
+{
+  // @brief Return Cal covariance matrix in 4x4 Tkr representation
+  // Tkr rep. is (X0, Sx, Y0, Sy) with Si = Vi/Vz 
+  // The conversion Cov_Tkr = B*Cov_Acd*B.T() with B 4x5
+  // see AcdRecon/doc/formulae.tex for definitions
+
+  CLHEP::HepMatrix acdErrs(5,5,0);
+  acdErrs = getMomErrsAcdRep();
+
+  CLHEP::HepMatrix B(4,5,0);
+  
+  B(1,4) = 1.;
+  B(2,1) = 1./m_clusterAxis.z();
+  B(2,3) = -1.*m_clusterAxis.x()/(m_clusterAxis.z() * m_clusterAxis.z());
+  B(3,5) = 1.;
+  B(4,2) = 1./m_clusterAxis.z();
+  B(4,3) = -1.*m_clusterAxis.y()/(m_clusterAxis.z() * m_clusterAxis.z());
+
+  CLHEP::HepMatrix tkrErrs(4,4,0);
+  tkrErrs = B * acdErrs * B.T();
+  
+  return tkrErrs;
+}
+
 Point Event::CalParams::getCorCentroid(Vector vaxis)
 {
   double rawenergy = m_energy;
