@@ -80,6 +80,8 @@ StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster,
   double sx = 0., sx_z = 0., sx_zz = 0., sx_x = 0., sx_zx = 0.;
   double sy = 0., sy_z = 0., sy_zz = 0., sy_y = 0., sy_zy = 0.;
   double totalEnergy = (*cluster).getXtalsParams().getXtalRawEneSum();
+  m_fitParams.setEnergy(totalEnergy);
+  m_fitParams.setEnergyErr(10*totalEnergy);
 
   // Loop over the layers.
   // Note that, since the weights correspond to errors in the x and y
@@ -148,21 +150,32 @@ StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster,
   Vector axis(xdir, ydir, zdir);
 
   // One more loop to calculate the chisquare.
+  // There are two hard coded numbers, here, to be revised.
+  double chisqScale = 1000.;
+  double minCosDir = 1e-4;
   double chisq = 0.;
+  int ndof = 0;
   for (int layerId = 0; layerId < NUMCALLAYERS; layerId++) {
     double energy = (*cluster)[layerId].getEnergy();
     if (energy > 0) {
       Point position = (*cluster)[layerId].getPosition();
-      double err2 = pow((totalEnergy/energy), powerWeight);
-      if (isx(layerId)){
-        double dy = position.y() - (ycen + (position.z() - zcen)/ydir);
-        chisq += dy*dy/err2;
+      double err2 = chisqScale*pow((totalEnergy/energy), powerWeight);
+      if (isx(layerId)) {
+        if (ydir > minCosDir) {
+          double dy = position.y() - (ycen + (position.z() - zcen)/ydir);
+          chisq += dy*dy/err2;
+          ndof += 1;
+        }
       } else {
-        double dx = position.x() - (xcen + (position.z() - zcen)/xdir);;
-        chisq += dx*dx/err2;
+        if (xdir > minCosDir) {
+          double dx = position.x() - (xcen + (position.z() - zcen)/xdir);;
+          chisq += dx*dx/err2;
+          ndof += 1;
+        }
       }
     }
   }
+  if (ndof > 0) chisq /= ndof;
 
   // Update the CalFitParams container.
   m_fitParams.setCentroid(centroid);
