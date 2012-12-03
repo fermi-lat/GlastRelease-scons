@@ -22,6 +22,25 @@
 inline bool isx(int layerId) { return layerId % 2 == 0; }
 inline bool isy(int layerId) { return layerId % 2 != 0; }
 
+/// Parametrization of the fit weights.
+inline double getTransFitWeight(double layerEnergy, double clusterEnergy)
+{
+  return pow((layerEnergy/clusterEnergy), 1.0);
+}
+
+inline double getLongFitWeight(double layerEnergy, double clusterEnergy)
+{
+  return 3*pow((layerEnergy/clusterEnergy), 1.0);
+}
+
+
+enum fitMode {
+  // Fit using the transverse xtal information only.
+  FIT_MODE_TRANS = 0x1,
+  // Fit using both the transverse and the longitudinal information.
+  FIT_MODE_FULL  = 0x2
+};
+
 
 class CalDirFittingTool : public AlgTool, virtual public ICalDirFittingTool
 {
@@ -34,10 +53,15 @@ public:
   virtual ~CalDirFittingTool() {}
   /// @brief Initialization of the tool.
   StatusCode initialize();
-  /// @brief Fit using only the transverse information separately on the
-  ///        x-z and y-z projections.
-  StatusCode transverseFit2d(Event::CalCluster* cluster,
-                             double powerWeight = 1.);
+  /// @brief Generic 2d (i.e. x-z and y-z views are treated separately)
+  /// fit routine.
+  StatusCode fit2d(Event::CalCluster* cluster, int mode);
+  /// @brief 2d fit using only the transverse information.
+  StatusCode transverseFit2d(Event::CalCluster* cluster);
+  /// @brief 2d fit using only the full (transverse and longitudinal)
+  /// information.
+  StatusCode fullFit2d(Event::CalCluster* cluster);
+  /// @brief Access function to the fit results.
   inline Event::CalFitParams getFitParams() const { return m_fitParams; }
 
 private:
@@ -68,8 +92,20 @@ StatusCode CalDirFittingTool::initialize()
   return sc;
 }
 
-StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster,
-                                              double powerWeight)
+
+StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster)
+{
+  return fit2d(cluster, FIT_MODE_TRANS);
+}
+
+
+StatusCode CalDirFittingTool::fullFit2d(Event::CalCluster* cluster)
+{
+  return fit2d(cluster, FIT_MODE_FULL);
+}
+
+
+StatusCode CalDirFittingTool::fit2d(Event::CalCluster* cluster, int mode)
 {
   // Clear the CalFitParams container.
   m_fitParams.clear();
@@ -79,6 +115,7 @@ StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster,
   double x0 = 0., y0 = 0., z0 = 0., wx = 0., wy = 0., wz = 0.;
   double sx = 0., sx_z = 0., sx_zz = 0., sx_x = 0., sx_zx = 0.;
   double sy = 0., sy_z = 0., sy_zz = 0., sy_y = 0., sy_zy = 0.;
+  double weight;
   double totalEnergy = (*cluster).getXtalsParams().getXtalRawEneSum();
   m_fitParams.setEnergy(totalEnergy);
   m_fitParams.setEnergyErr(10*totalEnergy);
@@ -93,25 +130,35 @@ StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster,
     double energy = (*cluster)[layerId].getEnergy();
     if (energy > 0) {
       Point position = (*cluster)[layerId].getPosition();
-      double err2 =  pow((totalEnergy/energy), powerWeight);
-      if (isx(layerId)){
+      if (isx(layerId) || (mode == FIT_MODE_FULL)) {
+        if (isx(layerId)) {
+          weight = getTransFitWeight(energy, totalEnergy);
+        } else {
+          weight = getLongFitWeight(energy, totalEnergy);
+        }
         ny += 1;
         y0 += energy*position.y();
         wy += energy;
-        sy += 1./err2;
-        sy_z += position.z()/err2;
-        sy_zz += position.z()*position.z()/err2;
-        sy_y += position.y()/err2;
-        sy_zy += position.z()*position.y()/err2;
-      } else {
+        sy += weight;
+        sy_z += position.z()*weight;
+        sy_zz += position.z()*position.z()*weight;
+        sy_y += position.y()*weight;
+        sy_zy += position.z()*position.y()*weight;
+      }
+      if (isy(layerId) || (mode == FIT_MODE_FULL)) {
+        if (isy(layerId)) {
+          weight = getTransFitWeight(energy, totalEnergy);
+        } else {
+          weight = getLongFitWeight(energy, totalEnergy);
+        }
         nx += 1;
         x0 += energy*position.x();
         wx += energy;
-        sx += 1./err2;
-        sx_z += position.z()/err2;
-        sx_zz += position.z()*position.z()/err2;
-        sx_x += position.x()/err2;
-        sx_zx += position.z()*position.x()/err2;
+        sx += weight;
+        sx_z += position.z()*weight;
+        sx_zz += position.z()*position.z()*weight;
+        sx_x += position.x()*weight;
+        sx_zx += position.z()*position.x()*weight;
       }
       z0 += energy*position.z();
       wz += energy;
@@ -151,30 +198,42 @@ StatusCode CalDirFittingTool::transverseFit2d(Event::CalCluster* cluster,
 
   // One more loop to calculate the chisquare.
   // There are two hard coded numbers, here, to be revised.
-  double chisqScale = 1000.;
-  double minCosDir = 1e-4;
+  double chisqScale = 1.e-3;
+  double minCosDir = 1.e-4;
   double chisq = 0.;
   int ndof = 0;
   for (int layerId = 0; layerId < NUMCALLAYERS; layerId++) {
     double energy = (*cluster)[layerId].getEnergy();
     if (energy > 0) {
       Point position = (*cluster)[layerId].getPosition();
-      double err2 = chisqScale*pow((totalEnergy/energy), powerWeight);
-      if (isx(layerId)) {
+      if (isx(layerId) || (mode == FIT_MODE_FULL)) {
         if (ydir > minCosDir) {
+          if (isx(layerId)) {
+            weight = getTransFitWeight(energy, totalEnergy);
+          } else {
+            weight = getLongFitWeight(energy, totalEnergy);
+          }
           double dy = position.y() - (ycen + (position.z() - zcen)/ydir);
-          chisq += dy*dy/err2;
+          chisq += dy*dy*weight*chisqScale;
           ndof += 1;
         }
-      } else {
+      }
+      if (isy(layerId) || (mode == FIT_MODE_FULL)) {
         if (xdir > minCosDir) {
+          if (isy(layerId)) {
+            weight = getTransFitWeight(energy, totalEnergy);
+          } else {
+            weight = getLongFitWeight(energy, totalEnergy);
+          }
           double dx = position.x() - (xcen + (position.z() - zcen)/xdir);;
-          chisq += dx*dx/err2;
+          chisq += dx*dx*weight*chisqScale;
           ndof += 1;
         }
       }
     }
   }
+  // We have 4 fit parameters (2 slopes and two intercepts).
+  ndof -= 4;
   if (ndof > 0) chisq /= ndof;
 
   // Update the CalFitParams container.
