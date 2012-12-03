@@ -5,6 +5,8 @@
 #include "CalUtil/CalDefs.h"
 #include "Event/Digi/CalDigi.h"
 
+#include "idents/CalXtalId.h"
+
 namespace 
 {
     #ifdef WIN32
@@ -38,8 +40,9 @@ double MomentsClusterInfo::m_fit_zdirection = 0;
 int MomentsClusterInfo::m_fit_option = 0;
 
 /// Constructor
-MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc) :
-  m_calReconSvc(calReconSvc), 
+MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, ICalCalibSvc *calCalibSvc) :
+  m_calReconSvc(calReconSvc),
+  m_calCalibSvc(calCalibSvc),  
   m_p0(0.,0.,0.),
   m_p1(0.,0.,0.)
 {
@@ -64,6 +67,9 @@ Event::CalCluster* MomentsClusterInfo::fillClusterInfo(const XtalDataList* xTalV
     
     // Do Philippe's fit.
     fitDirectionCentroid(xTalVec);
+
+    // Perform longitudinal position and energy corrections for saturated crystals
+    CorrectSaturatedXtalLongPositionAndEnergy(xTalVec);
 
     // Calculate basic cluster properties.
     fillLayerData(xTalVec, cluster);
@@ -349,22 +355,23 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
       if ( xtalIter == xtalMax ) continue;
       
       CalMomentsData momData(*xtalIter);
-      momData.applyFitCorrection(cluster->getFitParams(), m_calReconSvc);
-      
-      // If the fit is reasonable, we might take advantage of it.
-      if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
-        // Check whether the xtal is saturated.
-        if ( momData.saturated() ) {
-          momData.forceFitCorrection();
-        }
-        // If the longitudinal position is right on the edge of the xtal,
-        // or if the fit position is close to the xtal edge, use the fit
-        // position.
-        //if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
-        //     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
-        //  momData.enableFitCorrection();
-        //}
-      }    
+
+      // This is done in MomentsClusterInfo::CorrectSaturatedXtalLongPositionAndEnergy (Ph. Bruel, 2012/12/02)
+//       momData.applyFitCorrection(cluster->getFitParams(), m_calReconSvc);
+//       // If the fit is reasonable, we might take advantage of it.
+//       if ( (m_fit_nlayers >= 4) && (m_fit_zdirection > 0.) ) {
+//         // Check whether the xtal is saturated.
+//         if ( momData.saturated() ) {
+//           momData.forceFitCorrection();
+//         }
+//         // If the longitudinal position is right on the edge of the xtal,
+//         // or if the fit position is close to the xtal edge, use the fit
+//         // position.
+//         //if ( momData.checkStatusBit(CalMomentsData::LONG_POS_INVALID) ||
+//         //     momData.checkStatusBit(CalMomentsData::FIT_POS_NEAR_EDGE) ) {
+//         //  momData.enableFitCorrection();
+//         //}
+//       }    
       
       // Put the object into the vector.
       momDataVec.push_back(momData);
@@ -803,4 +810,151 @@ int MomentsClusterInfo::fitDirectionCentroid(const XtalDataList* xTalVec)
     m_minuit->mnexcm("CLEAR", arglist ,1,ierflg);
 
     return 0;
+}
+
+int MomentsClusterInfo::CorrectSaturatedXtalLongPositionAndEnergy(const XtalDataList* xTalVec)
+{
+  if(!m_calCalibSvc) return 0;
+  if( m_fit_nlayers==0 || m_fit_zdirection==0.) return 0;
+
+  Point fitCentroid(m_fit_xcentroid,m_fit_ycentroid,m_fit_zcentroid);
+  Vector fitAxis(m_fit_xdirection,m_fit_ydirection,m_fit_zdirection);
+
+  double xtalcorposition;
+  XtalDataList::const_iterator xTalIter;
+  for(xTalIter = xTalVec->begin(); xTalIter != xTalVec->end(); xTalIter++)
+    {
+      // get pointer to the reconstructed data for given crystal
+      Event::CalXtalRecData* recData = *xTalIter;
+      if(!recData->saturated()) continue;
+      if(recData->longPosCorrected() && recData->energyCorrected()) continue;
+      //
+      xtalcorposition = SetXtalLongPositionFromFitAxis(recData,fitCentroid,fitAxis);
+      SetXtalEnergyFromPosition(recData,xtalcorposition);
+    }
+  return 0;
+}
+
+double MomentsClusterInfo::SetXtalLongPositionFromFitAxis(Event::CalXtalRecData* recData, Point fitCentroid, Vector fitAxis)
+{
+  int tower  = recData->getTower();
+  int layer  = recData->getLayer();
+  int column = recData->getColumn();
+  // Otherwise carry on bravely and store the relevant information.
+  double towerPitch = m_calReconSvc->getCaltowerPitch();
+  double csILength  = m_calReconSvc->getCalCsILength();
+  bool flightGeom   = m_calReconSvc->getCalFlightGeom();
+  //
+  double x = (recData->getPosition()).x();
+  double y = (recData->getPosition()).y();
+  double z = (recData->getPosition()).z();
+  int towerIdy = tower / 4;
+  int towerIdx = tower - 4*towerIdy;
+  //
+  double minCoord;
+  double maxCoord;
+  double distToEdge;
+  // Xtals along the x coordinate first...
+  double nocorposition = 0;
+  double corposition = 0;
+  double xtalcorposition = 0;
+  if ( layer%2==0 ) 
+    {
+      nocorposition = x;
+      minCoord = -1.5*towerPitch + towerPitch*(double)towerIdx - csILength/2;
+      maxCoord = -1.5*towerPitch + towerPitch*(double)towerIdx + csILength/2;
+      distToEdge = std::min( fabs(x - minCoord), fabs(x - maxCoord) );
+
+      x = fitCentroid.x() + (z - fitCentroid.z()) / fitAxis.z() * fitAxis.x();
+      distToEdge = std::min( fabs(x - minCoord), fabs(x - maxCoord) );
+
+      if ( x < minCoord ) 
+	{
+	  x = minCoord;
+	}
+      if ( x > maxCoord ) 
+	{
+	  x = maxCoord;
+	}
+      corposition = x;
+      xtalcorposition = x-(minCoord+maxCoord)/2;
+    }
+  // ... and then xtals along the y coordinate.
+  else 
+    {
+      nocorposition = y;
+      // And this is slightly more complicated as we have to distinguish between the LAT...
+      if ( flightGeom ) 
+	{
+	  minCoord = -1.5*towerPitch + towerPitch*(double)towerIdy - csILength/2;
+	  maxCoord = -1.5*towerPitch + towerPitch*(double)towerIdy + csILength/2;
+	}
+      // ...and the CU.
+      else 
+	{
+	  minCoord = - csILength/2;
+	  maxCoord = csILength/2;
+	}
+      distToEdge = std::min( fabs(y - minCoord), fabs(y - maxCoord) );
+
+      y = fitCentroid.y() + (z - fitCentroid.z()) / fitAxis.z() * fitAxis.y();
+      distToEdge = std::min( fabs(y - minCoord), fabs(y - maxCoord) );
+
+      if ( y < minCoord ) 
+	{
+	  y = minCoord;
+	}
+      if ( y > maxCoord ) 
+	{
+	  y = maxCoord;
+	}
+      corposition = y;
+      xtalcorposition = y-(minCoord+maxCoord)/2;
+    }
+
+  if(!recData->longPosCorrected())
+    {
+      Point corrPos(x,y,z);
+      const Event::CalXtalRecData::CalRangeRecData *rngData = recData->getRangeRecData(0); 
+      Event::CalXtalRecData::CalRangeRecData *rngDataR = const_cast<Event::CalXtalRecData::CalRangeRecData *> (rngData);
+      rngDataR->setPosition(corrPos);
+      recData->setLongPosCorrected();
+    }
+
+  return xtalcorposition;
+}
+
+double MomentsClusterInfo::SetXtalEnergyFromPosition(Event::CalXtalRecData* recData, double xtalposition)
+{
+  if(!recData->saturated()) return 0;
+  if(recData->bothFacesSaturated()) return 0;
+
+  if(recData->energyCorrected()) return 0;
+
+  int tower  = recData->getTower();
+  int layer  = recData->getLayer();
+  int column = recData->getColumn();
+
+  CalUtil::XtalIdx xtalId(recData->getPackedId());
+
+  CalUtil::AsymType myasymtype = CalUtil::ASYM_SS;
+  if(recData->posFaceSaturated() && recData->getRange(0,idents::CalXtalId::NEG)<2) myasymtype = CalUtil::ASYM_LL;
+  else if(recData->negFaceSaturated() && recData->getRange(0,idents::CalXtalId::POS)<2) myasymtype = CalUtil::ASYM_LL;
+
+  float myasym;
+  m_calCalibSvc->evalAsym(xtalId,myasymtype,(float)xtalposition,myasym);
+
+  float corenergy;
+  if(recData->posFaceSaturated())
+    {
+      corenergy = recData->getEnergy(0,idents::CalXtalId::NEG)*exp(myasym);
+      recData->setEnergy(0,idents::CalXtalId::POS,corenergy);
+    }
+  else
+    {
+      corenergy = recData->getEnergy(0,idents::CalXtalId::POS)*exp(-myasym);
+      recData->setEnergy(0,idents::CalXtalId::NEG,corenergy);
+    }
+  
+  return 0;
 }

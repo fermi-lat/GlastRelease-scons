@@ -631,7 +631,8 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   double ppp[3];
   if(tree!=NULL)
     {
-      // switch to neutral direction (head of teh track -> cluster centroid)
+      //
+      // switch to neutral direction (head of the track -> cluster centroid)
       // Not using the neutral axis since Tracy improvement of tree axis precision 2012/06/30
       // so no need of the cluster centroid correction
       pp[0] =  tree->getAxisParams()->getEventPosition().x();
@@ -1055,24 +1056,25 @@ int NewCalFullProfileTool::DetectSaturation(Event::CalCluster* cluster)
     int layer  = (*xtalData)->getLayer();
     int column = (*xtalData)->getColumn();
     nm_xtal_energy[tower][layer][column] = (*xtalData)->getEnergy()/1000;
-    if ((*xtalData)->saturated()) {
-      nm_saturated[tower][layer][column] = true;
-      nm_layer_nsat[layer] += 1;
-      nm_elayer_dat[layer] -= (*xtalData)->getEnergy()/1000;
-      nm_elayer_datsat[layer] -= (*xtalData)->getEnergy()/1000;
-      nm_elayer_datsel[layer] -= (*xtalData)->getEnergy()/1000;
-      nm_extal_dat[nm_nxtal] = (*xtalData)->getEnergy()/1000;
-      //
-      nm_xtal_satu[nm_nxtal] = 1;
-      
-      nm_xtal_dist[nm_nxtal] = 0;
-      nm_xtal_itow[nm_nxtal] = tower;
-      nm_xtal_ilay[nm_nxtal] = layer;
-      nm_xtal_icol[nm_nxtal] = column;
-      nm_fsddm->OffSatu[tower][layer][column] = nm_nxtal;
-      ++nm_nxtal;
-      nm_fsddm->NXtal = nm_nxtal;
-    }
+    if( (*xtalData)->saturated() && !((*xtalData)->energyCorrected()) )
+      {
+	nm_saturated[tower][layer][column] = true;
+	nm_layer_nsat[layer] += 1;
+	nm_elayer_dat[layer] -= (*xtalData)->getEnergy()/1000;
+	nm_elayer_datsat[layer] -= (*xtalData)->getEnergy()/1000;
+	nm_elayer_datsel[layer] -= (*xtalData)->getEnergy()/1000;
+	nm_extal_dat[nm_nxtal] = (*xtalData)->getEnergy()/1000;
+	//
+	nm_xtal_satu[nm_nxtal] = 1;
+	
+	nm_xtal_dist[nm_nxtal] = 0;
+	nm_xtal_itow[nm_nxtal] = tower;
+	nm_xtal_ilay[nm_nxtal] = layer;
+	nm_xtal_icol[nm_nxtal] = column;
+	nm_fsddm->OffSatu[tower][layer][column] = nm_nxtal;
+	++nm_nxtal;
+	nm_fsddm->NXtal = nm_nxtal;
+      }
     if(nm_nxtal==FSDD_XTAL_NMAX) break;
   }
   
@@ -1086,7 +1088,7 @@ int NewCalFullProfileTool::DetectSaturation(Event::CalCluster* cluster)
           nm_nsatlayer += 1;
         }
     }
-  
+
   return 0;
 }
 

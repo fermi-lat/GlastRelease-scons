@@ -24,6 +24,7 @@
 #include "StdClusterInfo.h"
 #include "MomentsClusterInfo.h"
 
+#include "CalXtalResponse/ICalCalibSvc.h"
 
 // A useful typedef 
 typedef  XtalDataList::iterator XtalDataListIterator;
@@ -330,6 +331,8 @@ private:
   //! Event Service member directly useable by concrete classes.
   IDataProviderSvc*  m_dataSvc;
   
+  ICalCalibSvc* m_calCalibSvc;
+
   //! Utility for filling clusters
   ICalClusterFiller* m_clusterInfo;
 
@@ -405,6 +408,11 @@ StatusCode CalMSTClusteringTool::initialize()
         throw GaudiException("Service [EventDataSvc] not found", name(), sc);
     }
     
+    if(service( "CalCalibSvc", m_calCalibSvc, true ).isFailure()) 
+    {
+        throw GaudiException("Service [CalCalibSvc] not found", name(), sc);
+    }
+
     // check if jobOptions were passed
     log << MSG::DEBUG << "m_maxNumXtals                    set to " << m_maxNumXtals                  << endreq;
     log << MSG::DEBUG << "m_maxEdgeWeightModel_thrLE       set to " << m_maxEdgeWeightModel_thrLE     << endreq;
@@ -417,7 +425,7 @@ StatusCode CalMSTClusteringTool::initialize()
     
     // Cluster filling utility
     // -- To be replaced with a generic version soon
-    m_clusterInfo = new MomentsClusterInfo(m_calReconSvc);
+    m_clusterInfo = new MomentsClusterInfo(m_calReconSvc,m_calCalibSvc);
 
     return StatusCode::SUCCESS ;
 }
