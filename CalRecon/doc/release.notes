@@ -6,7 +6,7 @@ package CalRecon
 package manager: David Chamont
 
   * EOH *
-
+  Change CalMSTClusteringTool.cxx, MomentsClusterInfo.cxx, MomentsClusterInfo.h, NewCalFullProfileTool.cxx to be able to change the energy and long position of xtals with only one saturated end.
   Minor refactoring to use the new xtal saturation stuff in CalXtalRecData.
   CalFullProfileTool updated to take advantage of the new data structure.
   CalNewFullProfileTool updated to take advantage of the new data structure.
