@@ -23,8 +23,9 @@ class ICalDirFittingTool : virtual public IAlgTool
  public:
   
   /// Define the interfaces for the derived classes.
-  virtual StatusCode transverseFit2d(Event::CalCluster* cluster,
-                                     double powerWeight = 1.) = 0;
+  virtual StatusCode fit2d(Event::CalCluster* cluster, int mode) = 0;
+  virtual StatusCode transverseFit2d(Event::CalCluster* cluster) = 0;
+  virtual StatusCode fullFit2d(Event::CalCluster* cluster) = 0;
   virtual Event::CalFitParams getFitParams() const = 0;
 
   /// Retrieve interface ID
