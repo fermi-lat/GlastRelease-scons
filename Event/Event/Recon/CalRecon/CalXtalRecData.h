@@ -64,6 +64,8 @@ namespace Event
       XTAL_NEG_FACE_SATURATED   = 0x00000020,
       /// Longitudinal position of a saturated xtal has been corrected.
       XTAL_LONG_COORD_CORRECTED = 0x00000040,
+      /// Energy of a saturated xtal has been corrected.
+      XTAL_ENERGY_CORRECTED = 0x00000080,
       /// When set indicates all crystal information is not good.
       XTAL_BAD                  = 0x80000000
     };
@@ -121,7 +123,14 @@ namespace Event
       /// retrieve energy range from specified face
       inline char getRange(const idents::CalXtalId::XtalFace face) const 
       {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;}
-              
+
+      void setEnergy(const idents::CalXtalId::XtalFace face, double energy)
+      {
+	if(face==idents::CalXtalId::POS)
+	  m_eneP=energy;
+	else 
+	  m_eneM=energy;
+      }
               
     private:
       
@@ -203,6 +212,16 @@ namespace Event
       return (readoutIndex < int(m_recData.size())) ? 
         ((m_recData[readoutIndex])).getEnergy(face) : (short)-1;
     }
+
+    void setEnergy(const unsigned short readoutIndex,
+		     const idents::CalXtalId::XtalFace face, double energy)
+    {
+      if(readoutIndex < int(m_recData.size()))
+	{
+	  ((m_recData[readoutIndex])).setEnergy(face,energy);
+	  setEnergyCorrected();
+	}
+    }
         
         
     /// Retrieve average energy of two faces for the best range
@@ -257,10 +276,12 @@ namespace Event
     inline const bool bothFacesSaturated() const { return (posFaceSaturated() & negFaceSaturated()); }
     inline const bool saturated()          const { return (posFaceSaturated() | negFaceSaturated()); }
     inline const bool longPosCorrected()   const { return (m_statusBits & XTAL_LONG_COORD_CORRECTED); }
+    inline const bool energyCorrected()   const { return (m_statusBits & XTAL_ENERGY_CORRECTED); }
     inline void setPosFaceSaturated()            { setStatusBit(XTAL_POS_FACE_SATURATED); }
     inline void setNegFaceSaturated()            { setStatusBit(XTAL_NEG_FACE_SATURATED); }
     inline void setBothFacesSaturated()          { setPosFaceSaturated(); setNegFaceSaturated(); }
     inline void setLongPosCorrected()            { setStatusBit(XTAL_LONG_COORD_CORRECTED); }
+    inline void setEnergyCorrected()            { setStatusBit(XTAL_ENERGY_CORRECTED); }
 
     // And even more methods to retrieve the geometrical position of the thing without
     // passing through the getPackedId() method.
