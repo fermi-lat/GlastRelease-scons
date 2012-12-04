@@ -869,13 +869,13 @@ double MomentsClusterInfo::SetXtalLongPositionFromFitAxis(Event::CalXtalRecData*
       distToEdge = std::min( fabs(x - minCoord), fabs(x - maxCoord) );
 
       if ( x < minCoord ) 
-	{
-	  x = minCoord;
-	}
+        {
+          x = minCoord;
+        }
       if ( x > maxCoord ) 
-	{
-	  x = maxCoord;
-	}
+        {
+          x = maxCoord;
+        }
       corposition = x;
       xtalcorposition = x-(minCoord+maxCoord)/2;
     }
@@ -885,29 +885,29 @@ double MomentsClusterInfo::SetXtalLongPositionFromFitAxis(Event::CalXtalRecData*
       nocorposition = y;
       // And this is slightly more complicated as we have to distinguish between the LAT...
       if ( flightGeom ) 
-	{
-	  minCoord = -1.5*towerPitch + towerPitch*(double)towerIdy - csILength/2;
-	  maxCoord = -1.5*towerPitch + towerPitch*(double)towerIdy + csILength/2;
-	}
+        {
+          minCoord = -1.5*towerPitch + towerPitch*(double)towerIdy - csILength/2;
+          maxCoord = -1.5*towerPitch + towerPitch*(double)towerIdy + csILength/2;
+        }
       // ...and the CU.
       else 
-	{
-	  minCoord = - csILength/2;
-	  maxCoord = csILength/2;
-	}
+        {
+          minCoord = - csILength/2;
+          maxCoord = csILength/2;
+        }
       distToEdge = std::min( fabs(y - minCoord), fabs(y - maxCoord) );
 
       y = fitCentroid.y() + (z - fitCentroid.z()) / fitAxis.z() * fitAxis.y();
       distToEdge = std::min( fabs(y - minCoord), fabs(y - maxCoord) );
 
       if ( y < minCoord ) 
-	{
-	  y = minCoord;
-	}
+        {
+          y = minCoord;
+        }
       if ( y > maxCoord ) 
-	{
-	  y = maxCoord;
-	}
+        {
+          y = maxCoord;
+        }
       corposition = y;
       xtalcorposition = y-(minCoord+maxCoord)/2;
     }
