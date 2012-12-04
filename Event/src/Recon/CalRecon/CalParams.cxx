@@ -170,7 +170,7 @@ CLHEP::HepMatrix Event::CalParams::getMomErrsAcdRep() const
   // this means simply code a matrix with m_axisIJ and m_cenIJ
   // see AcdRecon/doc/formulae.tex for definitions
   
-  CLHEP::HepMatrix acdErrs(5,5,1);
+  CLHEP::HepMatrix acdErrs(5,5,0);
 
   // axis part
   acdErrs(1,1) = m_axisxx;
@@ -196,19 +196,19 @@ CLHEP::HepMatrix Event::CalParams::getMomErrsTkrRep() const
 
   CLHEP::HepMatrix acdErrs(5,5,0);
   acdErrs = getMomErrsAcdRep();
+  CLHEP::HepMatrix tkrErrs(4,4,0);
 
   CLHEP::HepMatrix B(4,5,0);
+  if (m_clusterAxis.z() !=0){
   
-  B(1,4) = 1.;
-  B(2,1) = 1./m_clusterAxis.z();
-  B(2,3) = -1.*m_clusterAxis.x()/(m_clusterAxis.z() * m_clusterAxis.z());
-  B(3,5) = 1.;
-  B(4,2) = 1./m_clusterAxis.z();
-  B(4,3) = -1.*m_clusterAxis.y()/(m_clusterAxis.z() * m_clusterAxis.z());
-
-  CLHEP::HepMatrix tkrErrs(4,4,0);
-  tkrErrs = B * acdErrs * B.T();
-  
+    B(1,4) = 1.;
+    B(2,1) = 1./m_clusterAxis.z();
+    B(2,3) = -1.*m_clusterAxis.x()/(m_clusterAxis.z() * m_clusterAxis.z());
+    B(3,5) = 1.;
+    B(4,2) = 1./m_clusterAxis.z();
+    B(4,3) = -1.*m_clusterAxis.y()/(m_clusterAxis.z() * m_clusterAxis.z());
+    tkrErrs = B * acdErrs * B.T();
+  }
   return tkrErrs;
 }
 
