@@ -126,10 +126,10 @@ namespace Event
 
       void setEnergy(const idents::CalXtalId::XtalFace face, double energy)
       {
-	if(face==idents::CalXtalId::POS)
-	  m_eneP=energy;
-	else 
-	  m_eneM=energy;
+        if(face==idents::CalXtalId::POS)
+          m_eneP=energy;
+        else 
+          m_eneM=energy;
       }
               
     private:
@@ -214,13 +214,13 @@ namespace Event
     }
 
     void setEnergy(const unsigned short readoutIndex,
-		     const idents::CalXtalId::XtalFace face, double energy)
+                     const idents::CalXtalId::XtalFace face, double energy)
     {
       if(readoutIndex < int(m_recData.size()))
-	{
-	  ((m_recData[readoutIndex])).setEnergy(face,energy);
-	  setEnergyCorrected();
-	}
+        {
+          ((m_recData[readoutIndex])).setEnergy(face,energy);
+          setEnergyCorrected();
+        }
     }
         
         
