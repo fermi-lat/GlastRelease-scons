@@ -5,6 +5,7 @@
  * Package CalUtil
  * EOH *
 
+  Added the new CalTrSizeTool.
   Added the new CalDirFittingTool.
   Added static const float CAL_ADC_SATURATION.
  CalUtil-03-17-00 03-Oct-2012 heather Add unbiasing maps for EvtEnergyCorr (separating front/back)
