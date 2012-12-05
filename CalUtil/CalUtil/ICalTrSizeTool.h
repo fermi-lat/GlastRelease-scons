@@ -20,17 +20,21 @@ static const InterfaceID IID_ICalTrSizeTool("ICalTrSizeTool", 1 , 0);
 
 class ICalTrSizeTool : virtual public IAlgTool
 {
-
  public:
-  
   /// Define the interfaces for the derived classes.
   virtual StatusCode fill(std::vector<Event::CalXtalRecData*> xtalList) = 0;
-  virtual StatusCode calculate(const Point& origin,
-                               const Vector& direction) = 0;
+  virtual StatusCode computeTrSize(const Point& origin,
+                                   const Vector& direction) = 0;
+  virtual StatusCode computeTrSizeTrans(const Point& origin,
+                                        const Vector& direction) = 0;
   virtual double getQuantile(double frac) = 0;
 
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ICalTrSizeTool; }
+
+ private:
+  virtual StatusCode compute(const Point& origin, const Vector& direction,
+                             bool transverse) = 0;
 };
 
 #endif

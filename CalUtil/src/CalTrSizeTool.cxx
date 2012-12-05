@@ -27,7 +27,11 @@ public:
   /// @brief Destructor.
   ~CalTrSizeData() {}
   /// @brief Set the reference axis for the object.
-  void setRefAxis(const Point& origin, const Vector& direction);
+  ///
+  /// If the transverse parameter is true only the transverse xtal information
+  ///  is used.
+  void setRefAxis(const Point& origin, const Vector& direction,
+                  bool transverse = false);
   /// @brief Get the distance to the reference axis.
   inline double getDistToRefAxis() const { return m_distToRefAxis; }
   /// @brief Get the energy.
@@ -57,9 +61,14 @@ CalTrSizeData::CalTrSizeData(Event::CalXtalRecData* recData):
 {}
 
 
-void CalTrSizeData::setRefAxis(const Point& origin, const Vector& direction)
+void CalTrSizeData::setRefAxis(const Point& origin, const Vector& direction,
+                               bool transverse)
 {
-  m_distToRefAxis = (direction.cross(origin - m_position)).mag();
+  if (transverse) {
+    // Do something.
+  } else {
+    m_distToRefAxis = (direction.cross(origin - m_position)).mag();
+  }
 }
 
 
@@ -114,7 +123,6 @@ double CalCumulativeTrSize::getQuantile(double frac)
     double x2 = m_fracVec.at(index);
     double y2 = m_trSizeVec.at(index);
     return y1 + (frac - x1)*(y2 - y1)/(x2 - x1);
-    //return 0.5*(m_trSizeVec.at(index-1) + m_trSizeVec.at(index));
   }
 }
 
@@ -131,11 +139,17 @@ public:
   virtual ~CalTrSizeTool() {}
   /// @brief Initialization of the tool.
   StatusCode initialize();
-  /// @brief 
+  /// @brief Fill the xtal collection.
   StatusCode fill(std::vector<Event::CalXtalRecData*> xtalList);
-  /// @brief
-  StatusCode calculate(const Point& origin, const Vector& direction);
-  /// @brief 
+  /// @brief Do the computation of the cumulative transverse size
+  /// using the full xtal information.
+  StatusCode computeTrSize(const Point& origin, const Vector& direction)
+  { return compute(origin, direction, false); }
+  /// @brief Do the computation of the cumulative transverse size
+  /// using only the transverse xtal information.
+  StatusCode computeTrSizeTrans(const Point& origin, const Vector& direction)
+  { return compute(origin, direction, true); }
+  /// @brief Get a generic quantile of the cumulative transverse size.
   double getQuantile(double frac)
   { return m_cumulativeTrSize.getQuantile(frac); }
 
@@ -146,6 +160,9 @@ private:
   CalCumulativeTrSize m_cumulativeTrSize;
   /// @brief The total energy in the xtal collection.
   double m_totalEnergy;
+  /// @brief Do the actual computation of the cumulative transverse size.
+  StatusCode compute(const Point& origin, const Vector& direction,
+                     bool transverse);
 };
 
 
@@ -177,6 +194,7 @@ StatusCode CalTrSizeTool::fill(std::vector<Event::CalXtalRecData*> xtalList)
   // Clear the underlying xtal vector...
   m_trSizeData.clear();
   m_totalEnergy = 0.;
+  if (xtalList.size() == 0) return StatusCode::FAILURE;
   // ...and fill it starting from the xtal collection.
   std::vector<Event::CalXtalRecData*>::const_iterator xtal;
   for (xtal = xtalList.begin(); xtal != xtalList.end(); xtal++) {
@@ -187,16 +205,17 @@ StatusCode CalTrSizeTool::fill(std::vector<Event::CalXtalRecData*> xtalList)
 }
 
 
-StatusCode CalTrSizeTool::calculate(const Point& origin,
-                                    const Vector& direction)
+StatusCode CalTrSizeTool::compute(const Point& origin, const Vector& direction,
+                                  bool transverse)
 {
   m_cumulativeTrSize.clear();
   double runningEnergy = 0.;
   double runningTrSize = 0.;
+  if (m_trSizeData.size() == 0) return StatusCode::FAILURE;
   // Set the reference axis for the underlying CalTrSize data obejcts.
   for (std::vector<CalTrSizeData>::iterator xtal = m_trSizeData.begin();
        xtal != m_trSizeData.end(); xtal++) {
-    (*xtal).setRefAxis(origin, direction);
+    (*xtal).setRefAxis(origin, direction, transverse);
   }
   // Sort the xtals according to their distance from the reference axis.
   std::sort(m_trSizeData.begin(), m_trSizeData.end());
