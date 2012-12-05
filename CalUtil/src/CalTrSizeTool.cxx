@@ -12,6 +12,10 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+#include "Event/TopLevel/EventModel.h"
 
 #include "CalUtil/ICalTrSizeTool.h"
 
@@ -185,6 +189,7 @@ public:
   StatusCode initialize();
   /// @brief Fill the xtal collection.
   StatusCode fill(std::vector<Event::CalXtalRecData*> xtalList);
+  StatusCode fill(Event::CalCluster* cluster);
   /// @brief Do the computation of the cumulative transverse size
   /// using the full xtal information.
   StatusCode computeTrSize(const Point& origin, const Vector& direction)
@@ -198,6 +203,8 @@ public:
   { return m_cumulativeTrSize.getQuantile(frac); }
 
 private:
+  /// @brief Pointer to the data service.
+  IDataProviderSvc* m_pEventSvc;
   /// @brief The underlying CalTrSizeData objects.
   std::vector<CalTrSizeData> m_trSizeData;
   /// @brief The object storing the cumulative transverse size.
@@ -229,6 +236,11 @@ StatusCode CalTrSizeTool::initialize()
   // Instantiate the message logger.
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "CalTrSizeTool is initializing..," << endreq;
+  // Get a pointer to the event service.
+  sc = serviceLocator()->service("EventDataSvc", m_pEventSvc, true);
+  if (sc.isFailure()){
+    log << MSG::ERROR << "Could not find EventDataSvc" << std::endl;
+  }
   return sc;
 }
 
@@ -246,6 +258,35 @@ StatusCode CalTrSizeTool::fill(std::vector<Event::CalXtalRecData*> xtalList)
     m_totalEnergy += (*xtal)->getEnergy();
   }
   return StatusCode::SUCCESS;
+}
+
+
+StatusCode CalTrSizeTool::fill(Event::CalCluster* cluster)
+{
+  StatusCode sc = StatusCode::SUCCESS;
+  std::vector<Event::CalXtalRecData*> xtalList;
+  xtalList.clear();
+  // Retrieve the list of relations (this is what we store in the TDS).
+  Event::CalClusterHitTabList* tabList =
+    SmartDataPtr<Event::CalClusterHitTabList>
+    (m_pEventSvc, EventModel::CalRecon::CalClusterHitTab);
+  // Construct the relation table from the list.
+  Event::CalClusterHitTab* relTab = 0;
+  if (tabList) {
+    relTab = new Event::CalClusterHitTab(tabList);
+  }
+  // Finally, retrieve the list of associations and fill the m_recDataVec
+  // data member.
+  std::vector<Event::CalClusterHitRel*>relVec = relTab->getRelBySecond(cluster);
+  if (!relVec.empty()) {
+    std::vector<Event::CalClusterHitRel*>::const_iterator it;
+    for (it = relVec.begin(); it != relVec.end(); it++){
+      Event::CalXtalRecData* recData = (*it)->getFirst();
+      xtalList.push_back(recData);
+    }
+  }
+  delete relTab;
+  return fill(xtalList);
 }
 
 

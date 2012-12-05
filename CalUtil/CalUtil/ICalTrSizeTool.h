@@ -14,6 +14,7 @@
 
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Recon/CalRecon/CalXtalRecData.h"
+#include "Event/Recon/CalRecon/CalCluster.h"
 
 
 static const InterfaceID IID_ICalTrSizeTool("ICalTrSizeTool", 1 , 0);
@@ -23,6 +24,7 @@ class ICalTrSizeTool : virtual public IAlgTool
  public:
   /// Define the interfaces for the derived classes.
   virtual StatusCode fill(std::vector<Event::CalXtalRecData*> xtalList) = 0;
+  virtual StatusCode fill(Event::CalCluster* cluster) = 0;
   virtual StatusCode computeTrSize(const Point& origin,
                                    const Vector& direction) = 0;
   virtual StatusCode computeTrSizeTrans(const Point& origin,
