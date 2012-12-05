@@ -36,6 +36,13 @@ public:
   inline double getDistToRefAxis() const { return m_distToRefAxis; }
   /// @brief Get the energy.
   inline double getEnergy() const { return m_energy; }
+  /// @ Retireve the x, y, z coordinates of the hit.
+  inline double x() const { return m_position.x(); }
+  inline double y() const { return m_position.y(); }
+  inline double z() const { return m_position.z(); }
+  /// @brief Check wheter the underlying xtals lies along the x or yaxis.
+  inline bool isx() const { return (m_layer % 2 == 0); }
+  inline bool isy() const { return (m_layer % 2 != 0); }
   /// @brief Define how to sort.
   const bool operator<(const CalTrSizeData& other)  const
   { return m_distToRefAxis < other.getDistToRefAxis(); }
@@ -45,10 +52,20 @@ public:
   { return obj.fillStream(s); }
   
 private:
-  /// @brief xtal position.
+  /// @brief hit position.
   Point m_position;
-  /// @brief xtal energy.
+  /// @brief hit energy.
   double m_energy;
+  /// @brief xtal tower.
+  int m_tower;
+  /// @brief xtal layer.
+  int m_layer;
+  /// @brief xtal column.
+  int m_column;
+  /// @brief The position of the xtal center.
+  Point m_xtalCenter;
+  /// @brief The direction of the xtal axis. 
+  Vector m_xtalAxis;
   /// @brief Distance to the reference axis. 
   double m_distToRefAxis;
 };
@@ -56,17 +73,44 @@ private:
 
 CalTrSizeData::CalTrSizeData(Event::CalXtalRecData* recData):
   m_position(recData->getPosition()),
+  m_tower(recData->getTower()),
+  m_layer(recData->getLayer()),
+  m_column(recData->getColumn()),
   m_energy(recData->getEnergy()),
   m_distToRefAxis(0.)
-{}
+{
+  double towerPitch = 374.5;
+  if (isx()) {
+    m_xtalCenter = Point((m_tower - 4*(m_tower/4) - 1.5)*towerPitch, y(), z());
+    m_xtalAxis = Vector(1., 0., 0.);
+  } else {
+    m_xtalCenter = Point(x(), (m_tower/4 - 1.5)*towerPitch, z());
+    m_xtalAxis = Vector(0., 1., 0.);
+  }
+}
 
 
 void CalTrSizeData::setRefAxis(const Point& origin, const Vector& direction,
                                bool transverse)
 {
   if (transverse) {
-    // Do something.
+    double halfXtalLength = 0.5*326.;
+    // This is the slightly complicated case (credits Philippe Bruel). 
+    Vector vec = m_xtalCenter - origin;
+    double lambda = 1 - pow((m_xtalAxis*direction), 2.);
+    if (lambda != 0) {
+      lambda = (-(vec*m_xtalAxis) +
+                (vec*direction)*(m_xtalAxis*direction))/lambda;
+      if (lambda > halfXtalLength) lambda = halfXtalLength;
+      else if (lambda < -halfXtalLength) lambda = -halfXtalLength;
+      vec += lambda*m_xtalAxis;
+    }
+    double dist = vec.mag2() - pow((vec*direction), 2.);
+    if (dist < 0.) dist = 0.;
+    else dist = sqrt(dist);
+    m_distToRefAxis = dist;
   } else {
+    // And this is the easy case.
     m_distToRefAxis = (direction.cross(origin - m_position)).mag();
   }
 }
@@ -222,6 +266,7 @@ StatusCode CalTrSizeTool::compute(const Point& origin, const Vector& direction,
   // Loop again to build the integral curve.
   for (std::vector<CalTrSizeData>::const_iterator xtal = m_trSizeData.begin();
        xtal != m_trSizeData.end(); xtal++) {
+    //std::cout << *xtal << std::endl;
     double energy = (*xtal).getEnergy();
     double dist = (*xtal).getDistToRefAxis();
     runningEnergy += energy;
