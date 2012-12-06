@@ -15,12 +15,12 @@ void CalMomentsAnalysis::clear()
   // TBD: Need to think about what are the most sensible default values here!
   m_weightSum        = 0.;
   m_centroid         = Point(0.,0.,0.); 
-  m_centroidErr      = CLHEP::HepMatrix(3,3,1);
+  m_centroidErr      = CLHEP::HepMatrix(3,3,0);
   m_moment           = Vector(0.,0.,0.);
   m_axis[0]          = Vector(0.,0.,0.);
   m_axis[1]          = Vector(0.,0.,1.);
   m_axis[2]          = Vector(0.,0.,0.);
-  m_axisErr          = CLHEP::HepMatrix(3,3,1);
+  m_axisErr          = CLHEP::HepMatrix(3,3,0);
   m_fullLength       = 0.;
   m_longRms          = 0.;
   m_transRms         = 0.;
@@ -135,7 +135,7 @@ double CalMomentsAnalysis::doMomentsAnalysis(CalMomentsDataVec& dataVec,
     // Calculate the covariance on the primary axis
     // full calculation based on xtal position: 
     // update both centroid and direction matrix
-    calcCovariance(dataVec, iniCentroid);
+    int covCalcStatus = calcCovariance(dataVec, iniCentroid);
     // simple implementation based on theta/phi error
     //calcCovarianceAxisSimple(m_axis[1]); // REMEMBER: direction is Axis[1]
     //calcCovarianceCentroidSimple(dataVec, m_axis[1], iniCentroid); // Centroid part
@@ -251,7 +251,6 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
     {
       // Do the standard moments analysis
       double localChisq = doMomentsAnalysis(dataVec, centroid, coreRadius);
-
       // Make sure it didn't fail on this iteration
       if ( localChisq < 0. ) {
         break;
@@ -301,9 +300,15 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
 
 
 
-void CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
+int CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
                                         const Point& centroid)
 {
+
+  // There are some problems (maybe numerical) when there are only 2 xtals
+  // Sometime the matrix is not positive defined.
+  // Therefore exit without running in num xtals is <=2
+  if (dataVec.size()<=2) {return 1;}
+
   // This is Bill McConville implementation of cov matrix calculation
   // starting from uncertainties in xtal position and error.
   // It follow the formalism in CalRecon/doc/moments_analysis.pdf 
@@ -472,6 +477,7 @@ void CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
     { const CalMomentsData& dataPoint = *vecIter;
       wtot += dataPoint.getWeight(); 
     }
+
   // real loop for errors
   for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
     {
@@ -557,7 +563,8 @@ void CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
       }
       dz = zlen / sqrt12;
       dw = 0.01*w; // ERROR ON XTAL ENERGY SET TO 1%
-   
+      
+  
       
       //
       dx2 = dx*dx;
@@ -681,6 +688,7 @@ void CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
   m_axisErr = cov;
   m_centroidErr = centroidCovMatrix;
 
+  return 0;
 }
 
 

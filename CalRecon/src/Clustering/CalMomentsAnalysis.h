@@ -46,7 +46,7 @@ class CalMomentsAnalysis
   /// CS: Nov 2012, update to an implementation that uses xtal errors
   void calcCovarianceAxisSimple(Vector momAxis);
   void calcCovarianceCentroidSimple(CalMomentsDataVec& dataVec, Vector momAxis, const Point& centroid);
-  void calcCovariance(CalMomentsDataVec& dataVec, const Point& centroid);
+  int calcCovariance(CalMomentsDataVec& dataVec, const Point& centroid);
 
   /// Access class members...
   inline const double getWeightSum()        const { return m_weightSum; }
