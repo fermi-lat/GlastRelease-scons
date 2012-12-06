@@ -2,6 +2,7 @@
  * Package CalXtalResponse
 * EOH *
 
+ CalXtalResponse-01-01-00 bruel
   Keep track of the ADC saturation at the xtal level.
  CalXtalResponse-01-00-00 21-Sep-2012  lsrea Fix to implement calibration updates in CAL
  CalXtalResponse-00-27-00 17-Aug-2012    jrb for Windows no-install-headers
