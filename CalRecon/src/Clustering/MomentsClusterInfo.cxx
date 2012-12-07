@@ -400,6 +400,11 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
     int numCoreXtals = numXtals - momentsAnalysis.getNumDroppedPoints();
     double longSkewness = momentsAnalysis.getLongSkewness();
     double fullLength = momentsAnalysis.getFullLength();
+    
+    // Get centroid error and axis covariance, before next iteration!
+    // ADW: Sept. 7, 2011 - CS Dec 2012
+    CLHEP::HepMatrix momCentroidErr = momentsAnalysis.getCentroidErr();
+    CLHEP::HepMatrix momAxisErr = momentsAnalysis.getAxisErr();
 
     // That done, recalculate the moments going back to using all the data
     // points but with the iterated moments centroid.
@@ -427,11 +432,7 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
       throw CalException("CalMomentsAnalysis: infinite longSkewness");
     }
 
-    // Place holder for centroid error and axis covariance
-    // ADW: Sept. 7, 2011
-    CLHEP::HepMatrix momCentroidErr = momentsAnalysis.getCentroidErr();
-    CLHEP::HepMatrix momAxisErr = momentsAnalysis.getAxisErr();
-
+   
     // Store the information in the actual cluster: first the CalMomParams
     // container...
     //CLHEP::HepMatrix I_3_3(3, 3, 1);
