@@ -190,7 +190,13 @@ StatusCode PtOverlayCnv::createObj(IOpaqueAddress* pOpaque, DataObject*& refpObj
                          ptRoot.getR(),
                          ptRoot.getBEast(),
                          ptRoot.getBNorth(),
-                         ptRoot.getBUp());
+                         ptRoot.getBUp(),
+						 ptRoot.getLATMode(),
+						 ptRoot.getLATConfig(),
+						 ptRoot.getDataQual(),
+						 ptRoot.getRockAngle(),
+						 ptRoot.getLivetimeFrac()
+						 );
 
 
     // Return the pointer to it
@@ -232,7 +238,13 @@ StatusCode PtOverlayCnv::createRep(DataObject* pObject, IOpaqueAddress*&)
                              ptOverlayTds->getR(),
                              ptOverlayTds->getBEast(),
                              ptOverlayTds->getBNorth(),
-                             ptOverlayTds->getBUp());
+                             ptOverlayTds->getBUp(),
+							 ptOverlayTds->getLATMode(),
+							 ptOverlayTds->getLATConfig(),
+							 ptOverlayTds->getDataQual(),
+							 ptOverlayTds->getRockAngle(),
+							 ptOverlayTds->getLivetimeFrac()
+							 );
 
     // Save the info 
     overlayRoot->setPtOverlay(ptOverlayRoot);

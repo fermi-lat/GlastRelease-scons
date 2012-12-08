@@ -40,7 +40,13 @@ void PtOverlay::initialize(const Double_t  start,
                            const Float_t   R,
                            const Float_t   bEast,
                            const Float_t   bNorth,
-                           const Float_t   bUp) 
+                           const Float_t   bUp,
+						   const Int_t     lat_mode,
+						   const Int_t     lat_config,
+						   const Int_t     data_qual,
+						   const Float_t   rock_angle,
+						   const Float_t   livetime_frac
+						   ) 
 {
     m_start       = start;
     m_sc_position = sc_position;
@@ -58,6 +64,11 @@ void PtOverlay::initialize(const Double_t  start,
     m_bEast       = bEast;
     m_bNorth      = bNorth;
     m_bUp         = bUp;
+	m_lat_mode    = lat_mode;
+	m_lat_config  = lat_config;
+	m_data_qual   = data_qual;
+	m_rock_angle  = rock_angle;
+	m_livetime_frac = livetime_frac;
 }
 
 void PtOverlay::Clear(Option_t *option) {
@@ -78,6 +89,11 @@ void PtOverlay::Clear(Option_t *option) {
     m_bEast       = 0.;
     m_bNorth      = 0.;
     m_bUp         = 0.;
+	m_lat_mode    = 0;
+	m_lat_config  = 0;
+	m_data_qual   = 0;
+	m_rock_angle  = 0.;
+	m_livetime_frac = 0.;
 }
 
 void PtOverlay::Print(Option_t *option) const 

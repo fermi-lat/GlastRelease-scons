@@ -57,7 +57,14 @@ public:
                        const float  R,
                        const float  bEast,
                        const float  bNorth,
-                       const float  bUp
+                       const float  bUp,
+
+                       const int    lat_mode,
+                       const int    lat_config,
+                       const int    data_qual,
+                       const float  rock_angle,
+                       const float  livetime_frac
+
                       );
 
     const double getStartTime()   const {return m_start;}
@@ -79,6 +86,12 @@ public:
     const float  getBNorth()      const {return m_bNorth;}
     const float  getBUp()         const {return m_bUp;}
 
+	const int    getLATMode()      const {return m_lat_mode;}
+	const int    getLATConfig()    const {return m_lat_config;}
+	const int    getDataQual()     const {return m_data_qual;}
+	const float  getRockAngle()    const {return m_rock_angle;}
+	const float  getLivetimeFrac() const {return m_livetime_frac;}   
+
     void setStartTime(double start)         {m_start          = start;}
     void setSC_Position(float* sc_position) {m_sc_position[0] = sc_position[0];
                                              m_sc_position[1] = sc_position[1];
@@ -99,6 +112,12 @@ public:
     void setBEast(float bEast)              {m_bEast          = bEast;}
     void setBNorth(float bNorth)            {m_bNorth         = bNorth;}
     void setBUp(float bUp)                  {m_bUp            = bUp;}
+
+    void setLATMode(int lat_mode)           {m_lat_mode       = lat_mode;}
+    void setLATConfig(int lat_config)       {m_lat_config     = lat_config;}
+    void setDataQual(int data_qual)         {m_data_qual      = data_qual;}
+    void setRockAngle(float rock_angle)     {m_rock_angle     = rock_angle;}
+    void setLivetimeFrac(float livetime_frac) {m_livetime_frac = livetime_frac;}
 
  private:
 
@@ -122,6 +141,12 @@ public:
     float  m_bEast;
     float  m_bNorth;
     float  m_bUp;
+
+    int    m_lat_mode;
+    int    m_lat_config;
+    int    m_data_qual;
+    float  m_rock_angle;
+    float  m_livetime_frac;
  };
 
 
@@ -142,7 +167,13 @@ inline void PtOverlay::initPtOverlay(const double start,
                                      const float  R,
                                      const float  bEast,
                                      const float  bNorth,
-                                     const float  bUp
+                                     const float  bUp,
+
+                                     const int    lat_mode,
+                                     const int    lat_config,
+                                     const int    data_qual,
+                                     const float  rock_angle,
+                                     const float  livetime_frac
                                     )
 {
     m_start          = start;
@@ -165,6 +196,12 @@ inline void PtOverlay::initPtOverlay(const double start,
     m_bEast          = bEast;
     m_bNorth         = bNorth;
     m_bUp            = bUp;
+
+    m_lat_mode       = lat_mode;
+    m_lat_config     = lat_config;
+    m_data_qual      = data_qual;
+    m_rock_angle     = rock_angle;
+    m_livetime_frac  = livetime_frac;
 }
 
 inline void PtOverlay::clear() 
@@ -187,6 +224,11 @@ inline void PtOverlay::clear()
     m_bEast          = 0.;
     m_bNorth         = 0.;
     m_bUp            = 0.;
+    m_lat_mode       = 0;
+    m_lat_config     = 0;
+    m_data_qual      = 0;
+    m_rock_angle     = 0;
+    m_livetime_frac  = 0;
 }
 
 inline std::ostream& PtOverlay::fillStream(std::ostream &s) const{
@@ -199,6 +241,9 @@ inline std::ostream& PtOverlay::fillStream(std::ostream &s) const{
     s << "RA scz: " << m_ra_scz << ", DEC scz: " << m_dec_scz << ", Zenith scz: " << m_zenith_scz << std::endl;
     s << "B: " << m_B << ", L: " << m_L << ", lambda: " << m_lambda << ", R: " << m_R << std::endl;
     s << "bEast: " << m_bEast << ", bNorth: " << m_bNorth << ", bUp: " << m_bUp << std::endl;
+    s << "lat_mode: " << m_lat_mode << ", lat_config: " << m_lat_config << ", data_qual: "
+      << m_data_qual << ", rock_angle: " << m_rock_angle 
+      << ", livetime_frac: " << m_livetime_frac << std::endl;
     return s;
 }
 

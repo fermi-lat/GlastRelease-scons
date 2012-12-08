@@ -40,7 +40,13 @@ public:
                     const Float_t   R,
                     const Float_t   bEast,
                     const Float_t   bNorth,
-                    const Float_t   bUp);
+                    const Float_t   bUp,
+					const Int_t     lat_mode,
+					const Int_t     lat_config,
+					const Int_t     data_qual,
+					const Float_t   rock_angle,
+					const Float_t   livetime_frac
+					);
 
     void Print(Option_t *option="") const;
 
@@ -66,6 +72,12 @@ public:
     const Float_t  getBNorth()       const {return m_bNorth;}
     const Float_t  getBUp()          const {return m_bUp;}
 
+	const Int_t  getLATMode()        const {return m_lat_mode;}
+	const Int_t  getLATConfig()      const {return m_lat_config;}
+	const Int_t  getDataQual()       const {return m_data_qual;}
+	const Float_t  getRockAngle()    const {return m_rock_angle;}
+	const Float_t  getLivetimeFrac() const {return m_livetime_frac;}
+
     void setStartTime(Double_t start)                {m_start       = start;}
     void setSC_Position(const TVector3& sc_position) {m_sc_position = sc_position;}
     void setLatGeo(Float_t lat_geo)                  {m_lat_geo     = lat_geo;}
@@ -84,6 +96,13 @@ public:
     void setBEast(Float_t bEast)                     {m_bEast       = bEast;}
     void setBNorth(Float_t bNorth)                   {m_bNorth      = bNorth;}
     void setBUp(Float_t bUp)                         {m_bUp         = bUp;}
+
+	void setLATMode(Int_t lat_mode)                  {m_lat_mode    = lat_mode;}
+	void setLATConfig(Int_t lat_config)              {m_lat_config  = lat_config;}
+	void setDataQual(Int_t data_qual)                {m_data_qual   = data_qual;}
+	void setRockAngle(Float_t rock_angle)            {m_rock_angle  = rock_angle;}
+	void setLivetimeFrac(Float_t livetime_frac)      {m_livetime_frac = livetime_frac;}
+
     /*@}*/
 
 private:
@@ -108,8 +127,14 @@ private:
     Float_t  m_bEast;
     Float_t  m_bNorth;
     Float_t  m_bUp;
+
+	Int_t    m_lat_mode;
+	Int_t    m_lat_config;
+	Int_t    m_data_qual;
+    Float_t  m_rock_angle;
+	Float_t  m_livetime_frac;
     
-    ClassDef(PtOverlay,1) // Pt variables Overlay Class
+    ClassDef(PtOverlay,2) // Pt variables Overlay Class
 };
 
 #endif
