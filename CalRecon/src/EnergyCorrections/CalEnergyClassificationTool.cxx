@@ -360,6 +360,15 @@ const Event::CalCorToolResult* CalEnergyClassificationTool::selectBestEnergy(Eve
     // Define a pointer to the "corrected" energy result
     const Event::CalCorToolResult* calResult = 0;
 
+    // Ph.Bruel: bypass the classification selection because there is no sense choosing between CalEnergyCorr (only cal energy) and CalFullProfile (event energy)
+    // Just returning CalEnergyCorr
+    if(calEnergy)
+      {
+        calResult = calEnergy->findLast("CalValsCorrTool");
+        if(!calResult) calResult = calEnergy->findLast("CalRawEnergyTool");
+      }
+    return calResult;
+
     // Check that we have some objects in place...
     if (calEnergy && treeClusRel)
     {
