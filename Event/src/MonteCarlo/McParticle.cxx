@@ -46,8 +46,6 @@ void McParticle::initialize( McParticle* mother,
     m_initialPosition = initialPosition;
     m_process = process;
     if( mother != this) mother->m_daughters.push_back(this);
-    m_initialMaterialId = -1;
-    m_initialMaterialName = "";
 }
 
 void McParticle::finalize(const CLHEP::HepLorentzVector& finalMomentum,
@@ -55,8 +53,6 @@ void McParticle::finalize(const CLHEP::HepLorentzVector& finalMomentum,
 {
     m_finalFourMomentum = finalMomentum;
     m_finalPosition = finalPosition;
-    m_finalMaterialId     = -1;
-    m_finalMaterialName   = "";
 }
 
 
