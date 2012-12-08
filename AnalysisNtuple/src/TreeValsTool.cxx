@@ -623,8 +623,8 @@ StatusCode TreeValsTool::calculate()
                     std::sort(docaVec.begin(), docaVec.end());
 
                     // Extract the 68%, 95% and final elements
-                    int idx68 = 0.68 * docaVec.size();
-                    int idx95 = 0.95 * docaVec.size();
+                    int idx68 = (int) 0.68 * docaVec.size();
+                    int idx95 = (int) 0.95 * docaVec.size();
 
                     Tkr_tree1_numLinks   = docaVec.size();
                     Tkr_tree1_calPosDoca = relationItr->second.front()->getTreeClusDoca();

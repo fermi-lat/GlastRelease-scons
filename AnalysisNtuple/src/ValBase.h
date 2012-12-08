@@ -28,7 +28,7 @@ class IDataProviderSvc;
 @author Leon Rochester
 
 */
-namespace {
+//namespace {
 
 // LSR 14-Jul-08 code for ntuple types
 
@@ -62,7 +62,7 @@ namespace {
         void*   m_pointer;
         int     m_dim;
     };
-}
+//}
 
 class ValBase : public IValsTool,  public AlgTool,  virtual public IIncidentListener
 {
