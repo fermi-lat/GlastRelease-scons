@@ -74,6 +74,8 @@ public:
     virtual double clusterWidth(Event::TkrCluster* cluster) const = 0;
 
     virtual const void setFilter( filterType type)    const = 0;
+
+    virtual int GetStripsInfoForNewEvtEnergyCorr(int *Tkr_StripsPerLyr) = 0;
 };
 
 #endif  // _H_ITkrQueryClustersTool

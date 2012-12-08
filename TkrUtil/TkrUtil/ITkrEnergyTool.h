@@ -23,6 +23,10 @@ public:
     /// @brief Defines the method to determine total event energy
     virtual double getTotalEnergy(const Event::TkrTrack* track, double calEnergy) = 0;
 
+    virtual double getEvtEnergyEstimation(const Event::TkrTrack* track) = 0;
+
+    virtual double GetEnergyUB2Correction(int method, int tkr1firstlayer, double tkr1zdir, double energy) = 0;
+
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_ITkrEnergyTool; }
 };
