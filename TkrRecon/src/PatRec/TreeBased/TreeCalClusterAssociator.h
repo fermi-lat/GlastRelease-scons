@@ -34,6 +34,9 @@ public:
     /// Method to build the tree objects
     int                            associateTreeToClusters(Event::TkrTree* tree);
 
+	/// Method to associate a given Tree to the uber and uber2 clusters (if they exist)
+	int                            associateTreeToUbers(Event::TkrTree* tree);
+
     /// Return the Track to relation map
     Event::TreeClusterRelationVec* getTreeToRelationVec(Event::TkrTree* tree);
     Event::TreeToRelationMap*      getTreeToRelationMap()                              {return m_treeToRelationMap;}
