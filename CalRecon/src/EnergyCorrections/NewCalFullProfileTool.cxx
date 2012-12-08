@@ -1051,6 +1051,11 @@ int NewCalFullProfileTool::DetectSaturation(Event::CalCluster* cluster)
   std::vector<Event::CalXtalRecData*> xtalList = m_calClusterHitTool->getRecDataVec();
   std::vector<Event::CalXtalRecData*>::const_iterator xtalData;
 
+  for(i=0;i<16;++i)
+    for(j=0;j<8;++j)
+      for(k=0;k<12;++k)
+        nm_saturated[i][j][k] = false;
+
   for (xtalData = xtalList.begin(); xtalData != xtalList.end(); xtalData++) {
     int tower  = (*xtalData)->getTower();
     int layer  = (*xtalData)->getLayer();
