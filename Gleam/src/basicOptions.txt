@@ -303,10 +303,6 @@ FluxSvc.source_lib += {
 ApplicationMgr.ExtSvc   += { "TkrGeometrySvc"};
 ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 
-// this fixes a HE track pattern recognition problem
-// *** it should be done in TkrRecon ***
-TkrFilterFirst.FilterToolName="TkrCalFilterTool";
-
 // -------------------------------------------
 //  Calibration sevices
 //
