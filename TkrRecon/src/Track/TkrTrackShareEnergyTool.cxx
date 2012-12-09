@@ -220,7 +220,7 @@ StatusCode TkrTrackShareEnergyTool::SetTrackEnergies()
                 double cal_Energy = std::max(tkrEventParams->getEventEnergy(), 0.5*m_control->getMinEnergy());
 
                 // Augment Cal energy with tracker energy loss
-                double ene_total = m_tkrEnergyTool->getTotalEnergy(firstCandTrk, cal_Energy);
+				double ene_total = m_tkrEnergyTool->getEvtEnergyEstimation(firstCandTrk);
 
                 // Now constrain the energies of the first 2 tracks. 
                 //    This isn't valid for non-gamma conversions
