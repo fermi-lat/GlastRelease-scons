@@ -160,7 +160,7 @@ StatusCode TkrTrackShareEnergyTool::SetTrackEnergies()
     Event::TkrTreeCol* treeCol = SmartDataPtr<Event::TkrTreeCol>(m_dataSvc,"/Event/TkrRecon/TkrTreeCol");
 
     // No forest, no work
-    if (treeCol && treeCol->empty()) return sc;
+    if (!treeCol || treeCol->empty()) return sc;
 
 	// Set an iterator to the first Tree in the list (iterator will soon be useful)
 	Event::TkrTreeCol::iterator treeItr = treeCol->begin();
@@ -169,7 +169,7 @@ StatusCode TkrTrackShareEnergyTool::SetTrackEnergies()
 	Event::TkrTree* tree = *treeItr++;
 
     //If candidates, then proceed
-    if (tree->size() > 0)
+	if (!tree->empty())
     {
         Event::TkrTrackCol::iterator trackItr = tree->begin();
 
