@@ -59,11 +59,11 @@ private:
     int   data_qual;
     float rock_angle;
     float livetime_frac;
-    float ft2_start;
-    float ft2_stop;
+    double ft2_start;
+    double ft2_stop;
     //int in_saa  // already have this?
-    //astro::PointingHistory  m_history;
-    std::string             m_filename;
+    astro::PointingHistory*  m_history;
+    std::string              m_filename;
 };
 
 }
