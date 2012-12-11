@@ -323,7 +323,8 @@ StatusCode EvtValsTool::initialize()
         log << MSG::ERROR << "Unable to find tool: " "PsfValsTool" << endreq;
         return sc;
     } else {
-      m_pPsfTool->loadPsf("P7SOURCE_V6MC");
+      sc = m_pPsfTool->loadPsf("P7SOURCE_V6MC");
+      if(sc.isFailure()) return sc;
     }
 
 
