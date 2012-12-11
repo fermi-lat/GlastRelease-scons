@@ -93,7 +93,7 @@ TkrTrackShareEnergyTool::TkrTrackShareEnergyTool(const std::string& type, const 
     // ToolSvc.TkrTrackShareEnergyTool.TupleFileName = "$(GLEAMDATAPATH)/TkrEnergySplitTuple.root";
     // (for example)
     declareProperty("MinCalEnergyRaw",          m_minCalEnergyRaw          = 10.);
-	declareProperty("OneTrackEnergyFraction",   m_oneTrackEnergyFraction   = 0.75);
+	declareProperty("OneTrackEnergyFraction",   m_oneTrackEnergyFraction   = 0.50);
 	declareProperty("FirstTrackEnergyFraction", m_firstTrackEnergyFraction = 0.50);
 
     return;
@@ -218,7 +218,7 @@ StatusCode TkrTrackShareEnergyTool::SetTrackEnergies()
             else
             {
                 // Note that this is the second pass energy from the energy algorithms, not the raw energy
-                double cal_Energy = std::max(tkrEventParams->getEventEnergy(), 0.5*m_control->getMinEnergy());
+                double cal_Energy = std::max(tkrEventParams->getEventEnergy(), m_control->getMinEnergy());
 
                 // Augment Cal energy with tracker energy loss
 				double ene_total = m_tkrEnergyTool->getEvtEnergyEstimation(firstCandTrk);
