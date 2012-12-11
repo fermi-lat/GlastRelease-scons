@@ -21,6 +21,7 @@ $Header$
 #include "TkrUtil/ITkrGeometrySvc.h"
 
 #include "CalUtil/IUBinterpolateTool.h"
+#include "IPsfTool.h"
 
 #include <algorithm>
 /** @class EvtValsTool
@@ -46,6 +47,8 @@ public:
     void fillHeaderInfo();
 
   double GetEnergyUB2Correction(int method, int tkr1firstlayer, double tkr1zdir, double energy);
+
+  void fillPsfInfo(double energy, double theta, bool isFront, double cl_level);
 
 private:
 
@@ -85,6 +88,7 @@ private:
         float EvtECalTrackAngle;
     float EvtEVtxAngle;
     float EvtEVtxDoca;
+    float EvtPsf68;
     unsigned int EvtEventFlags;
 
   float NewEvtEnergyCorr;
@@ -124,6 +128,7 @@ private:
 // EvtVtxEAngle        continuous        VtxAngle*sqrt(EvtEnergySumOpt)/(4.24 -1.98*EvtLogEnergy + .269*EvtLogEnergy^2)/(1.95+2.36*Tkr1ZDir+1.3*Tkr1ZDir^2)
 
   IUBinterpolateTool* m_ubInterpolateTool;
+  IPsfTool* m_pPsfTool;
 
   double UB2logemin;
   double UB2logemax;
@@ -311,6 +316,16 @@ StatusCode EvtValsTool::initialize()
         return sc;
     }
     */
+
+    m_pPsfTool = 0;
+    sc = pToolSvc->retrieveTool("PsfValsTool", m_pPsfTool);
+    if( sc.isFailure() ) {
+        log << MSG::ERROR << "Unable to find tool: " "PsfValsTool" << endreq;
+        return sc;
+    } else {
+      m_pPsfTool->loadPsf("P7SOURCE_V6MC");
+    }
+
 
     // Ph.Bruel: UB2. Introduced when unbias NewEvtEnergyCorr and EvtEnergyCorr (after correction of removal leakage correction)
     // UB2 loge boudaries set to the center of the lowest and highest energy bins of the unbias analyses
@@ -534,6 +549,7 @@ StatusCode EvtValsTool::initialize()
 
     addItem("EvtEVtxAngle",     &EvtEVtxAngle);
     addItem("EvtEVtxDoca",      &EvtEVtxDoca);
+    addItem("EvtPsf68",         &EvtPsf68);
     addItem("EvtEventFlags",      &EvtEventFlags);
 
     addItem("EvtEnergyCorrUB2",&EvtEnergyCorrUB2);
@@ -856,6 +872,12 @@ StatusCode EvtValsTool::calculate()
   EvtJointLogEnergy = 0;
   if(EvtJointEnergy>0) EvtJointLogEnergy = log10(EvtJointEnergy);
 
+  //Compute the expected Psf68, based on Tkr1Theta, Tkr1FirstLayer, and EvtJointEnergy
+  double cl_level=0.68;
+  float tkr1Theta = (m_pTkrTool->getVal("Tkr1Theta",tkr1Theta, nextCheck).isSuccess())?tkr1Theta:0.0;
+  bool isFront = (myfTkr1FirstLayer>=m_tkrGeom->numNoConverter())?true:false;
+  fillPsfInfo(EvtJointEnergy, tkr1Theta*180./M_PI, isFront, cl_level);
+
   return sc;
 }
 
@@ -918,3 +940,12 @@ void EvtValsTool::fillHeaderInfo ()
     }
 }
 
+void EvtValsTool::fillPsfInfo(double energy, double theta, bool isFront,  double cl_level)
+{
+  if(energy<=0) {
+    EvtPsf68 = 0; 
+    return;}
+  MsgStream log(msgSvc(), name());
+  EvtPsf68 = m_pPsfTool->computePsf(cl_level, energy, theta, isFront);
+  log<<MSG::DEBUG<<"energy:"<<" "<< energy<<"Theta(deg):"<< theta<<" Front? "<< isFront<<" PSF68: "<<EvtPsf68<<endreq;
+}
