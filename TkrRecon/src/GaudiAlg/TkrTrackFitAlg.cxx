@@ -85,7 +85,7 @@ Algorithm(name, pSvcLocator)
     // Controls which fit to use
     declareProperty("TrackFitType",   m_TrackFitType="Combo");
     declareProperty("UseGenericFit",  m_GenericFit=true);
-    declareProperty("EnergyToolName", m_energyToolName = "TkrEnergySplitTool");
+    declareProperty("EnergyToolName", m_energyToolName = "TkrTrackShareEnergyTool");
 }
 
 StatusCode TkrTrackFitAlg::initialize()
