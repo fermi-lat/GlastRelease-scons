@@ -522,10 +522,10 @@ double PsfValsTool::computePsf(const double cl_level,
   double current_high=90;
   double current_rad=1;//degrees
   double current_val=10.;//initial value to start while loop
-  std::cout<<energy<<" "<<theta<<std::endl;
+  //std::cout<<energy<<" "<<theta<<std::endl;
   while(std::abs(current_val-cl_level)>eps){
     current_val = psf.angularIntegral(energy,theta,0.,current_rad,0.);
-    std::cout<<current_rad<<" "<<current_val<<" "<<current_low<<" "<<current_high<<std::endl;
+    //std::cout<<current_rad<<" "<<current_val<<" "<<current_low<<" "<<current_high<<std::endl;
     if(current_val>cl_level){
       current_high=current_rad;
     }
