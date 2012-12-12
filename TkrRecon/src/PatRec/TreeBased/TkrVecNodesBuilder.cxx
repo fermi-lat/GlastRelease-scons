@@ -81,7 +81,7 @@ TkrVecNodesBuilder::TkrVecNodesBuilder(IDataProviderSvc* dataSvc,
 
 		kinkFctr = std::max(4.,kinkFctr);
 
-        m_cosKinkCut *= kinkFctr;
+        m_cosKinkCut = cos(kinkFctr * M_PI / 8.);
     }
 
     //if (m_vecPointLinksBldr.getNumTkrVecPointsLinks() < 100)
