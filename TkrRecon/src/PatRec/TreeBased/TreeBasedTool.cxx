@@ -358,7 +358,7 @@ StatusCode TreeBasedTool::firstPass()
             {
                 if (m_doTiming) m_chronoSvc->chronoStart(m_toolNodeTag);
 
-                TkrVecNodesBuilder tkrNodesBldr(m_dataSvc, m_tkrGeom);
+                TkrVecNodesBuilder tkrNodesBldr(m_dataSvc, m_tkrGeom, energy);
 
                 tkrNodesBldr.buildTrackElements();
 
