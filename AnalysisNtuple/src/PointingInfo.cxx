@@ -31,7 +31,7 @@ namespace {
 void PointingInfo::setHistoryFile( const std::string filename)
 {
     m_filename = filename;
-	m_history = new astro::PointingHistory(m_filename);
+	if(filename!="") m_history = new astro::PointingHistory(m_filename);
 }
 
 void PointingInfo::execute( const astro::GPS& gps)

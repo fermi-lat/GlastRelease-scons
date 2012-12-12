@@ -90,7 +90,7 @@ PtValsAlg::PtValsAlg(const std::string& name, ISvcLocator* pSvcLocator)
 
     declareProperty("pointing_info_tree_name",  m_root_tree="MeritTuple");
     // doublet, filename and launch date
-    declareProperty("PointingHistory",   m_pointingHistory); 
+	declareProperty("PointingHistory",   m_pointingHistory); 
     declareProperty("FillNtuple",        m_fillNtuple=true);
 
 }
@@ -125,6 +125,7 @@ StatusCode PtValsAlg::initialize(){
         std::string filename(m_pointingHistory.value()[0]);
         facilities::Util::expandEnvVar(&filename);
         m_filename = filename;
+		m_pointingInfo.setHistoryFile(m_filename);
         double offset = 0;
         std::string jStr;
         if( m_pointingHistory.value().size()>1){
@@ -167,8 +168,6 @@ StatusCode PtValsAlg::initialize(){
         return sc;
     }
     m_pEventSvc = eventsvc;
-
-    m_pointingInfo.setHistoryFile(m_filename);
    
     return sc;
 }
