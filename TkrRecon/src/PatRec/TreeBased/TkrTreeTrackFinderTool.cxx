@@ -203,7 +203,7 @@ TkrTreeTrackFinderTool::TkrTreeTrackFinderTool(const std::string& type, const st
     declareProperty("Tkr2AxisAngSelection",     m_tkr2AxisAngSelection     = 2.   ); //1.);
     declareProperty("TkrTreeAngRatioSelection", m_tkrTreeAngRatioSelection = 2.); //1.025); //1);
     declareProperty("TkrChiSqDiffSelection",    m_chiSqDiffSelection       = 0.);
-    declareProperty("MaxSharedLeadingHits",     m_maxSharedLeadingHits     = 5);
+    declareProperty("MaxSharedLeadingHits",     m_maxSharedLeadingHits     = 2); // 5);
     declareProperty("MaxGaps",                  m_maxGaps                  = 2);
     declareProperty("MaxConsecutiveGaps",       m_maxConsecutiveGaps       = 1);
     declareProperty("FirstTrackEnergyFrac",     m_frstTrackEnergyScaleFctr = 0.75);
@@ -672,10 +672,6 @@ Event::TkrVecNode* TkrTreeTrackFinderTool::findBestLeaf(TkrVecNodeLeafQueue& lea
             leaf = const_cast<Event::TkrVecNode*>(leaf->getParentNode());
         }
 
-        // First pair of hits always shared
-        sharedHitMask  |=  0x03;
-        notAllowedMask &= ~0x03;
-
         // Special handling for the first branch, first call
         if (firstBranch)
         {
@@ -683,10 +679,14 @@ Event::TkrVecNode* TkrTreeTrackFinderTool::findBestLeaf(TkrVecNodeLeafQueue& lea
             leafQueue.pop();
 
             // If shared hits they are from another tree so reject this tree outright
-            if (sharedHitMask & ~0x3) bestLeaf = 0;
+            if (sharedHitMask) bestLeaf = 0;
 
             break;
         }
+
+        // First pair of hits always shared
+        sharedHitMask  |=  0x03;
+        notAllowedMask &= ~0x03;
 
         Event::TkrVecNode* curLeaf = leafQueue.top();
 
