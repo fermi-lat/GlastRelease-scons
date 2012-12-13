@@ -83,7 +83,7 @@ GCRCalib GCRCalib-01-11-00
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-00
-TkrRecon TkrRecon-10-37-03
+TkrRecon TkrRecon-10-37-04
 
 # ACD
 AcdDigi AcdDigi-03-11-00
