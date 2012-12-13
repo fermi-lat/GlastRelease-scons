@@ -976,11 +976,14 @@ StatusCode EvtValsTool::calculate()
   if(EvtJointEnergy>0) EvtJointLogEnergy = log10(EvtJointEnergy);
 
   //Compute the expected Psf68, based on Tkr1Theta, Tkr1FirstLayer, and EvtJointEnergy
+  EvtPsf68=0.;
   double cl_level=0.68;
-  float tkr1Theta = (m_pTkrTool->getVal("Tkr1Theta",tkr1Theta, nextCheck).isSuccess())?tkr1Theta:0.0;
-  bool isFront = (myfTkr1FirstLayer>=m_tkrGeom->numNoConverter())?true:false;
-  fillPsfInfo(EvtJointEnergy, tkr1Theta*180./M_PI, isFront, cl_level);
-
+  float tkrNumTracks = (m_pTkrTool->getVal("TkrNumTracks",tkrNumTracks, nextCheck).isSuccess())?tkrNumTracks:-1.0;
+  if(tkrNumTracks>0) {
+    float tkr1Theta = (m_pTkrTool->getVal("Tkr1Theta",tkr1Theta, nextCheck).isSuccess())?tkr1Theta:-1.0;
+    bool isFront = (myfTkr1FirstLayer>=m_tkrGeom->numNoConverter()+m_tkrGeom->numSuperGlast())?true:false;
+    fillPsfInfo(EvtJointEnergy, tkr1Theta*180./M_PI, isFront, cl_level);
+  }
   return sc;
 }
 
