@@ -167,6 +167,7 @@ private:
 
     /// Parameter to control number of shared leading hits
     int                    m_maxSharedLeadingHits;
+	int                    m_numHitsToBeLeading;
 
     /// Parameter used in track hit finding determining maximum gaps between hits
     int                    m_maxGaps;
@@ -204,6 +205,7 @@ TkrTreeTrackFinderTool::TkrTreeTrackFinderTool(const std::string& type, const st
     declareProperty("TkrTreeAngRatioSelection", m_tkrTreeAngRatioSelection = 2.); //1.025); //1);
     declareProperty("TkrChiSqDiffSelection",    m_chiSqDiffSelection       = 0.);
     declareProperty("MaxSharedLeadingHits",     m_maxSharedLeadingHits     = 2); // 5);
+	declareProperty("NumHitsToBeLeading",       m_numHitsToBeLeading       = 6);
     declareProperty("MaxGaps",                  m_maxGaps                  = 2);
     declareProperty("MaxConsecutiveGaps",       m_maxConsecutiveGaps       = 1);
     declareProperty("FirstTrackEnergyFrac",     m_frstTrackEnergyScaleFctr = 0.75);
@@ -575,7 +577,7 @@ Event::TkrVecNode* TkrTreeTrackFinderTool::findBestLeaf(TkrVecNodeLeafQueue& lea
         Event::TkrVecNode* leaf           = leafQueue.top();
         int                dist2MainBrnch = leaf->getBiLyrs2MainBrch();
         int                numBiLayers    = leaf->getNumBiLayers();
-        int                depthCheck     = numBiLayers - m_maxSharedLeadingHits / 2;
+        int                depthCheck     = numBiLayers - m_numHitsToBeLeading / 2;
 
         // Layer counter and mask for shared hits
         unsigned int sharedHitMask  = 0; 
