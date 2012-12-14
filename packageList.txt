@@ -67,7 +67,7 @@ configData configData-01-14-01
 Trigger Trigger-07-05-01
 
 FluxSvc FluxSvc-06-59-00
-CRflux CRflux-01-20-00
+CRflux CRflux-01-20-01
 
 EbfWriter EbfWriter-01-11-00
 OnboardFilter OnboardFilter-04-18-01
@@ -82,8 +82,8 @@ GCRCalib GCRCalib-01-11-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
-TkrUtil TkrUtil-03-28-00
-TkrRecon TkrRecon-10-37-04
+TkrUtil TkrUtil-03-28-01
+TkrRecon TkrRecon-10-37-05
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-70-03
+AnalysisNtuple AnalysisNtuple-02-70-05
 
 # LDF
 CHS/eventFile eventFile-09-01-00
