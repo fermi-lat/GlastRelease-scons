@@ -132,7 +132,7 @@ ConfigSvc ConfigSvc-00-04-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-02-00
-Overlay Overlay-02-05-00
+Overlay Overlay-02-05-01
 overlayRootData overlayRootData-00-05-00
 
 calibGenCAL calibGenCAL-05-09-07
