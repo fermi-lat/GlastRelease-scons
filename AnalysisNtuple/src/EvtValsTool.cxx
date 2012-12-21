@@ -135,7 +135,7 @@ private:
   int UB2zdirn;
   double UB2zdir[9];
   double UB2zdirbinwidth;
-  double UB2val[6];
+  double UB2val[9];
   double UB2par[2][18][8][6];
 };
 
