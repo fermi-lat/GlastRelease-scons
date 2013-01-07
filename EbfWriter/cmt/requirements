@@ -21,7 +21,7 @@ apply_pattern package_include
 
 private
 #-------------------------------------------------------
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 apply_pattern package_Cshlibflags
 
@@ -33,7 +33,7 @@ macro headers "" WIN32 " ../EbfWriter/*.h *.h"
 library EbfWriter $(headers) *.cxx 
 
 
-apply_pattern generate_rootmap library=EbfWriter
+#apply_pattern generate_rootmap library=EbfWriter
 
 
 private
