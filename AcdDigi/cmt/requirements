@@ -18,7 +18,7 @@ apply_pattern packageShr
 #=============================================================
 private
 
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 apply_pattern package_headers
@@ -28,7 +28,7 @@ library AcdDigi *.cxx \
                 ${AcdDigi_headers}  \
                 ${xml_source}             
 
-apply_pattern generate_rootmap library=AcdDigi
+#apply_pattern generate_rootmap library=AcdDigi
 
 apply_pattern package_Cshlibflags
 private

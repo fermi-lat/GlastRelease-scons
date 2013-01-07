@@ -35,7 +35,7 @@ use GaudiInterface * IExternal
 use ROOT   * IExternal 
 use XMLEXT * IExternal v5r2*
 use MYSQLEXT * IExternal v*
-use RootmapPolicy v* GlastPolicy
+#use RootmapPolicy v* GlastPolicy
 
 use LdfEvent v*
 
@@ -70,7 +70,7 @@ library CalibSvc -import=calibUtil -import=calibRootData -import=CalibData -impo
                         ${CalibSvc_headers}
 
 
-apply_pattern generate_rootmap library=CalibSvc
+#apply_pattern generate_rootmap library=CalibSvc
 
 ## macro WinInclude "" WIN32 "test/*.h test/*.txt"
 

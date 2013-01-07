@@ -18,10 +18,10 @@ private
 use GaudiInterface * IExternal
 use LdfEvent v*
 use Event    v*
-use RootmapPolicy v* GlastPolicy
+#use RootmapPolicy v* GlastPolicy
 
 apply_pattern package_headers
 
 library ConfigSvc *.cxx $(ConfigSvc_headers)
 
-apply_pattern generate_rootmap library=ConfigSvc
+#apply_pattern generate_rootmap library=ConfigSvc

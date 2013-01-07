@@ -23,12 +23,13 @@ apply_pattern package_include
 private
 use GlastSvc         v*
 use facilities       v*
+use st_facilities     v*
 use RootConvert v* -no_auto_imports
 use RootIo           v*
 use AcdUtil          v*
 use OnboardFilterTds v*
 use OverlayEvent     v*
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app           v*
 
 
@@ -65,7 +66,7 @@ apply_pattern package_headers
 
 library AnalysisNtuple *.cxx ${AnalysisNtuple_headers}
 
-apply_pattern generate_rootmap library=AnalysisNtuple
+#apply_pattern generate_rootmap library=AnalysisNtuple
 
 apply_pattern package_Cshlibflags 
 

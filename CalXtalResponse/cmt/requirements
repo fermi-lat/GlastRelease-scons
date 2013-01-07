@@ -38,14 +38,14 @@ private
 #needed only for the test app
 use CalibSvc
 use CalDigi
-use RootmapPolicy * GlastPolicy 
+#use RootmapPolicy * GlastPolicy 
 use gr_app
 #use obf * IExternal
 
 
 apply_pattern package_Cshlibflags 
 
-apply_pattern generate_rootmap library=CalXtalResponse
+#apply_pattern generate_rootmap library=CalXtalResponse
 
 # sets up standard test executable and job options file
 #apply_pattern package_test disable until I figure out how to ser up service

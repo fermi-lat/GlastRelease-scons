@@ -27,7 +27,7 @@ private
 use RootConvert v* -no_auto_imports
 use RootIo
 use CalibSvc
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
@@ -38,7 +38,7 @@ apply_pattern package_headers
 
 library CalDigi *.cxx ${CalDigi_headers}
 
-apply_pattern generate_rootmap library=CalDigi
+#apply_pattern generate_rootmap library=CalDigi
 
 apply_pattern package_Cshlibflags 
 

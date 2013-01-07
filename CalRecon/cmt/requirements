@@ -25,7 +25,7 @@ use astro *
 use G4Propagator *
 use RootConvert v* -no_auto_imports
 use RootIo 
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app
 
 macro_append ROOT_linkopts " -L${ROOT_PATH}/lib -lMinuit " \ 
@@ -46,7 +46,7 @@ library CalRecon  *.cxx ${CalRecon_headers}      \
                   -s=EnergyCorrections ${source} \
                   -s=Utilities         ${source}
 
-apply_pattern generate_rootmap library=CalRecon
+#apply_pattern generate_rootmap library=CalRecon
 
 macro CalRecon_stamps     
 

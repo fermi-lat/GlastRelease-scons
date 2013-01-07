@@ -31,9 +31,9 @@ use G4Propagator *
 use gr_app v*
 use RootConvert v* -no_auto_imports
 use RootIo  v* -no_auto_imports
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
-apply_pattern generate_rootmap library=AcdRecon
+#apply_pattern generate_rootmap library=AcdRecon
 
 public
 apply_pattern declare_joboptions files="-s=../src/test  *.txt"
