@@ -25,7 +25,7 @@ use astro v*
 use facilities v*
 use EbfWriter v* 
 use GuiSvc *
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 apply_pattern package_Cshlibflags
@@ -41,7 +41,7 @@ macro_append cppflags  "" \
 
 library LdfConverter  *.cxx ${LdfConverter_headers}
 
-apply_pattern generate_rootmap library=LdfConverter
+#apply_pattern generate_rootmap library=LdfConverter
 
 apply_pattern package_test
 

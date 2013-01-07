@@ -35,7 +35,7 @@ set PARAMFILESROOT  "${EXTFILESSYS}/gaudi"
 private
 use Event       v*
 use GlastSvc    v*
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 use ntupleWriterSvc v*
 use XMLEXT * IExternal
@@ -61,5 +61,5 @@ library  FluxSvc \
      -s=../src $(source)
 
 
-apply_pattern generate_rootmap library=FluxSvc
+#apply_pattern generate_rootmap library=FluxSvc
 

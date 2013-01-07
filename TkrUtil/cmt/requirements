@@ -32,13 +32,13 @@ use astro *
 # this is added to get the 'set ROOTSYS' from it, but TkrRecon
 #for instance seems to do without it.... to be investigated further
 use ROOT * IExternal
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app v*
 
 library TkrUtil *.cxx ${TkrUtil_headers}
 
 apply_pattern package_Cshlibflags 
-apply_pattern generate_rootmap library=TkrUtil
+#apply_pattern generate_rootmap library=TkrUtil
 
 private # Traudl says we need this
 

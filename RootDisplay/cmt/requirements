@@ -19,7 +19,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app v*
 use xmlUtil *
 
@@ -32,7 +32,7 @@ apply_pattern package_headers
 
 library RootDisplay ${RootDisplay_headers} *.cxx   
 
-apply_pattern generate_rootmap library=RootDisplay
+#apply_pattern generate_rootmap library=RootDisplay
 
 public
 

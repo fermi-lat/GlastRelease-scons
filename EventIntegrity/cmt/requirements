@@ -22,7 +22,7 @@ apply_pattern packageShr
 
 #=============================================================
 private
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app *
 
 # get flags to build shared library
@@ -32,6 +32,6 @@ apply_pattern package_headers
 
 library EventIntegrity  *.cxx ${EventIntegrity_headers}
 
-apply_pattern generate_rootmap library=EventIntegrity
+#apply_pattern generate_rootmap library=EventIntegrity
 
 apply_pattern package_test

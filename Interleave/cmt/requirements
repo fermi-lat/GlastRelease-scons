@@ -37,7 +37,7 @@ use AnalysisNtuple *
 use OnboardFilterTds *
 use RootConvert *
 use RootIo *
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 
 use xmlBase v*
@@ -55,7 +55,7 @@ library Interleave \
  -s=../src $(source) \
  -s=../xml $(xml)
 
-apply_pattern generate_rootmap library=Interleave
+#apply_pattern generate_rootmap library=Interleave
 
 # test program, using local joboptions
 public set JOBOPTIONS ${INTERLEAVEROOT}/src/test/jobOptions.txt

@@ -25,7 +25,7 @@ use xmlBase v5r*
 use TMineExt * IExternal
 
 use ntupleWriterSvc v*
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use ROOT * IExternal
 macro_append ROOT_linkopts " $(ROOT_GUI_libs)"
 macro_append ROOT_cppflags "" WIN32 " /wd4800 "
@@ -41,7 +41,7 @@ library  ClassificationTree -no_share                    \
 
 library  GlastClassify      ClassifyAlg.cxx   ClassifyTool.cxx
 
-apply_pattern generate_rootmap library=GlastClassify
+#apply_pattern generate_rootmap library=GlastClassify
    
 macro_append GlastClassify_linkopts "" \
              Linux " -L${GlastClassify_cmtpath}/lib  -lClassificationTree " \

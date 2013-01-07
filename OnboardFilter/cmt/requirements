@@ -19,7 +19,7 @@ use CRflux v*
 use TkrDigi v*
 use AcdDigi v*
 use CalDigi v*
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use G4Generator *
 use gr_app v*
 
@@ -45,7 +45,7 @@ library OnboardFilter \
     MIPFilterTool.cxx ObfInterface.cxx OnboardFilter.cxx TkrOutputTool.cxx \
     trackProj.cxx *.h 
 
-apply_pattern generate_rootmap library=OnboardFilter
+#apply_pattern generate_rootmap library=OnboardFilter
  
 
 # use this only for the test. TODO: make it cleaner

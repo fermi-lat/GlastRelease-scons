@@ -24,7 +24,7 @@ set ORBgiopMaxMsgSize 40097152
 private
 
 use HepRepSvc
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 
 apply_pattern package_headers
@@ -36,4 +36,4 @@ macro_append HepRepCorba_linkopts   ""\
 library HepRepCorba *.cxx *.cpp \
  ${HepRepCorba_headers}
 
-apply_pattern generate_rootmap library=HepRepCorba
+#apply_pattern generate_rootmap library=HepRepCorba

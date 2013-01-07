@@ -13,7 +13,7 @@ private
 
 use HepRepSvc
 use G4Propagator *
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 use gr_app
 
 apply_pattern package_headers
@@ -22,7 +22,7 @@ apply_pattern package_Cshlibflags
 library HepRepXml *.cxx \
  ${HepRepXml_headers}
 
-apply_pattern generate_rootmap library=HepRepXml
+#apply_pattern generate_rootmap library=HepRepXml
 
 # test program, using local joboptions
 # just tests if the stuff loads... 

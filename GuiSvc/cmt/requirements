@@ -37,9 +37,9 @@ macro WinMain "" \
 private
 
 #use gr_app
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 apply_pattern package_Cshlibflags
-apply_pattern generate_rootmap library=GuiSvc
+#apply_pattern generate_rootmap library=GuiSvc
 
 macro WinJobOptions ""  WIN32  test/jobOptions.txt
 

@@ -16,7 +16,7 @@ apply_pattern packageShr
 
 private
 # get flags to build shared library
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 apply_pattern package_Cshlibflags
 
@@ -26,7 +26,7 @@ apply_pattern package_headers
 
 library ntupleWriterSvc  *.cxx ${ntupleWriterSvc_headers}
 
-apply_pattern generate_rootmap library=ntupleWriterSvc
+#apply_pattern generate_rootmap library=ntupleWriterSvc
 
 # build this for testing
 

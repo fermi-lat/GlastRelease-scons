@@ -47,7 +47,7 @@ set G4ABLADATA                "${G4tableDir}/G4ABLA3.0"
 private
 #this is private to avoid passing on build info to clients
 use Geant4   v9r* IExternal
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 # special code to replace the standared multiple scattering 
 #use GlastMS
@@ -67,7 +67,7 @@ apply_pattern package_Cshlibflags
 macro source "*.cxx" WIN32 "*.h *.cxx"
 library G4Generator -s=../src $(source) -s=../src/Utilities $(source)   
 
-apply_pattern generate_rootmap library=G4Generator
+#apply_pattern generate_rootmap library=G4Generator
 
 # test program 
 public

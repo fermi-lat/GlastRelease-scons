@@ -43,7 +43,7 @@ use Trigger v*
 use AncillaryDataEvent v*
 use ntupleWriterSvc *
 use gr_app v*
-use RootmapPolicy * GlastPolicy
+#use RootmapPolicy * GlastPolicy
 
 macro_append includes ' $(ppcmd)"$(rootUtil_root)" '
 
@@ -55,7 +55,7 @@ macro_append RootIo_cppflags " $(RootPolicy_cppflags) $(root_packages_include) "
 macro source "*.cxx" WIN32 "*.cxx *.h"
 library RootIo  $(root_packages_import) -s=../RootIo $(source) -s=../src $(source)  
 
-apply_pattern generate_rootmap library=RootIo
+#apply_pattern generate_rootmap library=RootIo
 
 apply_pattern package_test
 apply_pattern package_Cshlibflags
