@@ -1061,7 +1061,7 @@ double KalmanTrackFitTool::doFilterStep(Event::TkrTrackHit& referenceHit, Event:
         double norm_term  = 1. + measSlope*measSlope + nonMeasSlp* nonMeasSlp; // this is (1/cosTheta)**2
         double p33        = (1. + measSlope*measSlope) * norm_term;
         double p34        = measSlope * nonMeasSlp * norm_term;
-        double p44        = 1. + nonMeasSlp*nonMeasSlp * norm_term;
+        double p44        = (1. + nonMeasSlp*nonMeasSlp) * norm_term;
 
         // Extract maxtrix params we need to alter here
         double arcLen2    = deltaZ * deltaZ * (1. + measSlope*measSlope);
