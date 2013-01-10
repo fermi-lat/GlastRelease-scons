@@ -27,6 +27,7 @@ $Header$
 #include "Event/TopLevel/Event.h"
 
 #include "Event/Recon/TkrRecon/TkrCluster.h"
+#include "Event/Recon/TkrRecon/TkrTree.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "Event/Recon/TkrRecon/TkrVertex.h"
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
@@ -1026,10 +1027,15 @@ StatusCode TkrValsTool::calculate()
 
     // assemble the list of all tracks for now 
     // later, deal separately with Standard and CR
-    std::vector<Event::TkrTrack*> trackVec = m_pTrackVec->getTrackVec();
-    std::vector<Event::TkrTrack*>* pTracks = &trackVec;
+	// **********************
+	// What should really happen here is that we extract the TkrTree collection from the TDS,
+	// take the first tree on that list and then get the tracks from there
+	SmartDataPtr<Event::TkrTreeCol> treeCol(m_pEventSvc, EventModel::TkrRecon::TkrTreeCol);
 
-    if(!pTracks) return sc;
+	if (!treeCol || treeCol->empty()) return sc;
+
+	Event::TkrTree*     bestTree = treeCol->front();
+	Event::TkrTrackVec* pTracks  = bestTree;
 
     SmartDataPtr<Event::TkrVertexCol>  
         pVerts(m_pEventSvc,EventModel::TkrRecon::TkrVertexCol);

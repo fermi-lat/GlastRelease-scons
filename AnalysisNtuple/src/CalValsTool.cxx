@@ -1392,7 +1392,7 @@ StatusCode CalValsTool::calculate()
                 }
                 else {
                     float tkr1ZDir = -1;
-                    if ( m_pTkrTool->getVal("Tkr1ZDir", tkr1ZDir).isSuccess() ) {
+                    if ( m_pTkrTool->getValCheck("Tkr1ZDir", tkr1ZDir).isSuccess() ) {
                         if ( tkr1ZDir == 0 )
                             tkr1ZDir = -1;
                     }
