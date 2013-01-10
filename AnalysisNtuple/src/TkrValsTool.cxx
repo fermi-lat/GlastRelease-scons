@@ -2052,9 +2052,9 @@ StatusCode TkrValsTool::calculate()
 
     }
 
-    int nextCheck;
+    int nextCheck = CHECK;
     Tkr1ZCntr = 0;
-    if(!(m_pTkrHitTool->getVal("TkrStripsZCntr",Tkr1ZCntr,nextCheck).isSuccess())) Tkr1ZCntr = 0;
+    if(m_pTkrHitTool->getVal("TkrStripsZCntr",Tkr1ZCntr,nextCheck).isFailure()) Tkr1ZCntr = 0;
 
     Tkr1XCntr = 0;
     Tkr1YCntr = 0;
