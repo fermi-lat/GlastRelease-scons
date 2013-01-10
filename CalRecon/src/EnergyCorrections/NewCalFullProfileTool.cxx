@@ -355,7 +355,8 @@ StatusCode NewCalFullProfileTool::initialize()
   }
 
   nm_fsppm = new NewFullShowerProfileParamsManager(0);
-  nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,1.85,0.80,0.1);
+  nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,2*1.85,0.80,0.1);
+  //  nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,1.85,0.80,0.1);
   
   // Minuit object
   nm_minuit = new TMinuit(5);
@@ -434,6 +435,8 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
 {
   Event::CalCorToolResult* corResult = 0;  
   MsgStream lm(msgSvc(), name());
+
+  //  printf("BRUEL NewCalFullProfileTool::doEnergyCorr\n");
   
     if (!cluster)
     {
@@ -452,7 +455,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
 
   if( nm_eTotal<0.4) // to get as low as 3 GeV gamma while rejecting most of mips
     {
-      lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : nm_eTotal<1GeV -> no energy computation" <<endreq;
+      lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : nm_eTotal<300MeV -> no energy computation" <<endreq;
       return corResult;
     }
   
@@ -934,6 +937,8 @@ int NewCalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, 
   nm_spy_par[2] = -1;
   nm_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
   nm_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+
+  //  printf("BRUEL ierflg %d\n",ierflg);
 
   if(ierflg==4)
     {
