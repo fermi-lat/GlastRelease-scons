@@ -2,6 +2,7 @@
  * Package CalXtalResponse
 * EOH *
 
+ CalXtalResponse-01-01-01 11-Jan-2013 bregeon change elx noise gain to 0.32
  CalXtalResponse-01-01-00 bruel
   Keep track of the ADC saturation at the xtal level.
  CalXtalResponse-01-00-00 21-Sep-2012  lsrea Fix to implement calibration updates in CAL
