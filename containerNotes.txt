@@ -1,5 +1,7 @@
 # containerNotes for GlastRelease-scons
 
+2012-01-11 20-08-02 See JIRA LPATE-68
+https://jira.slac.stanford.edu/browse/LPATE-68
 2012-12-14 20-08-00 Preparing for new tag, see JIRA LPATE-64
   Includes updates to AnalysisNtuple, TkrUtil, TkrRecon, CalRecon and
   addition of st_facilities

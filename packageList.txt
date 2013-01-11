@@ -75,15 +75,15 @@ OnboardFilterTds OnboardFilterTds-00-13-01
 
 # Calorimeter
 CalUtil CalUtil-03-18-00
-CalXtalResponse CalXtalResponse-01-01-00
+CalXtalResponse CalXtalResponse-01-01-01
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-22-00
+CalRecon CalRecon-06-22-01
 GCRCalib GCRCalib-01-11-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-01
-TkrRecon TkrRecon-10-37-05
+TkrRecon TkrRecon-10-37-06
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-70-05
+AnalysisNtuple AnalysisNtuple-02-70-07
 
 # LDF
 CHS/eventFile eventFile-09-01-00
