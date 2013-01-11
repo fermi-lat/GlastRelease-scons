@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-22-01 11-Jan-2012 TU Tagging Philippe's fixes for potential divide by zero in energy tools
  CalRecon-06-22-00 08-Dec-2012 bruel: Fix bug in NewCalFullProfile.cxx. Fix 
  leakage correction removal in CalValsCorrTool.cxx. Modify 
  CalEnergyClassificationTool.cxx so that it always returns the parametric energy.
