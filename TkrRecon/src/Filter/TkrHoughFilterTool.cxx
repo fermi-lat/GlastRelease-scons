@@ -1441,7 +1441,7 @@ Event::TkrFilterParams* TkrHoughFilterTool::doMomentsAnalysis(Event::TkrVecPoint
         double arcLen    = link->getVector().dot(linkToPos);
         Point  docaPos   = link->getPosition() + arcLen * link->getVector();
         Vector docaVec   = docaPos - aveDirPos;
-        double       weight = 1. / std::max(0.01, docaVec.magnitude());
+		double       weight = 1. / std::min(100000., std::max(0.1, docaVec.magnitude()));
 
         // Update the centroid if not the highest point
         if (avePos.z() > centroid.z()) centroid = avePos;

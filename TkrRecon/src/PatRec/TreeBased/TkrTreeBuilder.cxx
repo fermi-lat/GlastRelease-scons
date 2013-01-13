@@ -298,7 +298,7 @@ Event::TkrFilterParams* TkrTreeBuilder::findTreeAxis(Event::TkrNodeSiblingMap* s
                 Point  docaPos   = nodePos + arcLen * link->getVector();
                 Vector docaVec   = docaPos - startPos;
                 double docaDist  = docaVec.magnitude();
-                double weight    = 1. / std::max(0.01, docaDist*docaDist);
+				double weight    = 1. / std::min(100000., std::max(0.1, docaDist*docaDist));
 
                 // Main branch gets some respect
 //                if (node->getBiLyrs2MainBrch() < 1) weight *= 10.;
