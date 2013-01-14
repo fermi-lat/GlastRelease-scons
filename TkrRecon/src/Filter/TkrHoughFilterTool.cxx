@@ -349,6 +349,17 @@ namespace
     private:
         AccumulatorBin m_zeroBin;
     };
+
+    class CompareMomentsLinks
+    {
+    public:
+        CompareMomentsLinks() {}
+
+		const bool operator()(const Event::TkrVecPointsLink* left, const Event::TkrVecPointsLink* right) const
+        {
+			return left->getPosition().z() > right->getPosition().z();
+		}
+    };
 };
 
 class TkrHoughFilterTool : public AlgTool, virtual public ITkrFilterTool
