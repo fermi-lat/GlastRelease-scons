@@ -26,7 +26,7 @@ r->useOneTrack(true);
 r->setTotCut(0.9, 1.5); //instead of 1, 1.6
 
 r->inithistos();
-r->Go(10000000);
+r->Go(10000);
 
 sprintf(outROOT,"r0%d_acdtest-1.root", run);
 sprintf(outTXT,"r0%d_acdtest_1.txt", run);
