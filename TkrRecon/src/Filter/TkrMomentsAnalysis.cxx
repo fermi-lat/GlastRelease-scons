@@ -88,6 +88,14 @@ double TkrMomentsAnalysis::doMomentsAnalysis(TkrMomentsDataVec& dataVec, const P
 
     double rad_test = b*b/4. + a*a*a/27.;
 
+	// See if we can save rad_test in the event it is > 0
+	if (rad_test > 0.)
+	{
+		// recompute b by factoring the p out
+		b        = (p*(2.*p*p - 9.*q) + 27.*r)/27.;
+		rad_test = b*b/4. + a*a*a/27.;
+	}
+
     if ((rad_test < 0.) && (Ixy != 0.) && (Ixz != 0.) && (Iyz != 0.))
     {
         // Update the weight and centroid
