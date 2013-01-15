@@ -10,3 +10,4 @@
  calibGenTRG-00-01-01 28-Jul-2012 bregeon first stag
  calibGenTRG-00-01-02 31-Jul-2012 bregeon fix compilation, should now be ok
  calibGenTRG-00-01-03 18-Aug-2012 bregeon fix compilation rhel4-scons
+ calibGenTRG-00-02-00 15-Jan-2013 bregeon Update run numbers, files path and tkr delay for Dec 19 2012 data
