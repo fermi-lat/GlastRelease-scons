@@ -82,7 +82,7 @@ GCRCalib GCRCalib-01-11-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
-TkrUtil TkrUtil-03-28-01
+TkrUtil TkrUtil-03-28-03
 TkrRecon TkrRecon-10-37-06
 
 # ACD
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-70-07
+AnalysisNtuple AnalysisNtuple-02-70-08
 
 # LDF
 CHS/eventFile eventFile-09-01-00
