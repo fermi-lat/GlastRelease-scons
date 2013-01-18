@@ -107,7 +107,8 @@ private:
     double                     m_fracEneFirstTrack;
 
 	/// Set a scale factor for the "refError" if getting from the tracker filter
-	double                     m_refErrorSclFctr;
+	/// between the reference point and the projection of the candidate link
+	double                     m_minRefError;
 
     /// Control for merging clusters
     bool                       m_mergeClusters;
@@ -153,7 +154,7 @@ TreeBasedTool::TreeBasedTool(const std::string& type, const std::string& name, c
 {
     declareProperty("MinEnergy",          m_minEnergy           = 30.);
     declareProperty("FracEneFirstTrack",  m_fracEneFirstTrack   = 0.80);
-	declareProperty("FilterRefErrorScl",  m_refErrorSclFctr     = 10.);
+	declareProperty("MinimumRefError",    m_minRefError         = 30.);
     declareProperty("MergeClusters",      m_mergeClusters       = false);
     declareProperty("NumClustersToMerge", m_nClusToMerge        = 3);
     declareProperty("MergeStripGap",      m_stripGap            = 8);
@@ -300,7 +301,7 @@ StatusCode TreeBasedTool::firstPass()
         Point  refPoint(0.,0.,0.);
         Vector refAxis(0., 0., 1.);
         double energy(30.);
-        double refError(100.);
+        double refError(m_minRefError);
 
         // The first/best place to look for this is in the TkrFilterParams, so look
         // up the collection in the TDS
@@ -315,7 +316,7 @@ StatusCode TreeBasedTool::firstPass()
             refPoint = filterParams->getEventPosition();
             refAxis  = filterParams->getEventAxis();
             energy   = filterParams->getEventEnergy();
-            refError = filterParams->getTransRms() * m_refErrorSclFctr;
+            refError = filterParams->getTransRms();
         }
         // Otherwise default back to the standard TkrEventParams
         else
@@ -349,6 +350,9 @@ StatusCode TreeBasedTool::firstPass()
             // If the energy is zero then there is no axis so set to point "up"
             if (tkrEventParams->getEventEnergy() == 0.) refAxis = Vector(0.,0.,1.);
         }
+
+		// Make sure the refError is not too small
+		refError = std::max(m_minRefError, refError);
 
         Event::TkrVecPointsLinkInfo* tkrVecPointsLinkInfo = m_linkBuilder->getAllLayerLinks(refPoint, refAxis, refError, energy);
 
