@@ -647,6 +647,11 @@ StatusCode TreeValsTool::calculate()
                     Tkr_tree1_calDocaMax = treeDocaVec.back();
 
 					// Since we are here, check the docas for the filter as well. 
+					// But only if there is something there
+					if (!filterDocaVec.empty())
+					{
+
+					// Since we are here, check the docas for the filter as well. 
 					std::sort(filterDocaVec.begin(), filterDocaVec.end());
 
                     // Extract the 68%, 95% and final elements
@@ -658,6 +663,7 @@ StatusCode TreeValsTool::calculate()
 					TFP_calDoca68  = filterDocaVec[idx68];
 					TFP_calDoca95  = filterDocaVec[idx95];
 					TFP_calDocaMax = filterDocaVec.back();
+					}
                 }
             }
 
