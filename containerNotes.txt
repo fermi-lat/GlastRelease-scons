@@ -1,5 +1,6 @@
 # containerNotes for GlastRelease-scons
 
+2012-01-17 20-08-04 Patch to AnalysisNtuple-02-70-10
 2012-01-17 20-08-03 See JIRA LPATE-84
   Patches for TkrUTil-03-28-03 and AnalysisNtuple-02-07-08
 2012-01-11 20-08-02 See JIRA LPATE-68
