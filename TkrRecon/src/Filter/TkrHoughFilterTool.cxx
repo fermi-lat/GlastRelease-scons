@@ -475,7 +475,7 @@ TkrHoughFilterTool::TkrHoughFilterTool(const std::string& type,
     // Define cut on rmsTrans
     declareProperty("numLayersToSkip", m_numLyrsToSkip = 3);
     declareProperty("DoToolTiming",    m_doTiming      = true);
-	declareProperty("MinimumRefError", m_minRefError   = 50.);
+	declareProperty("MinimumRefError", m_minRefError   = 75.);
 
     m_toolTag = this->name();
 
@@ -586,7 +586,7 @@ StatusCode TkrHoughFilterTool::doFilterStep()
     Point  refPoint = tkrEventParams->getEventPosition();
     Vector refAxis  = tkrEventParams->getEventAxis();
     double energy   = tkrEventParams->getEventEnergy();
-    double refError = 2. * tkrEventParams->getTransRms();
+    double refError = tkrEventParams->getTransRms();
 
 	// refError is a critical quantity and if too small can lead to a resolution issue! 
 	refError = std::max(m_minRefError, refError);
