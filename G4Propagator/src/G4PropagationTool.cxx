@@ -104,6 +104,9 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     /// Initial parameters
     Event::TkrTrackParams m_trackPar;
     double                m_zCoord;
+
+    /// Maximum momentum to calculate ms elements
+    double                m_maxMomentum;
 };
 
 //static ToolFactory<G4PropagationTool> g4prop_factory;
@@ -122,6 +125,9 @@ G4PropagationTool::G4PropagationTool(const std::string& type, const std::string&
 
   //Declare additional interface
   declareInterface<IPropagator>(this);
+
+  // Make maximum momentum for calculation of ms errors a controllable parameter
+  declareProperty("MaxMomentumForMS", m_maxMomentum = 50000.);
 
   //Initialize the track parameters
   m_trackPar = Event::TkrTrackParams();
@@ -478,75 +484,82 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
     double scat_angle = 0.; 
     double scat_covr  = 0.; 
     double dist       = 0.;
+    double p33        = 0.;
+    double p34        = 0.;
+    double p44        = 0.;
     double arcLen     = arcLenIn;
 
-    double x0sTotal   = 0.;    /// New stuff!
-
-    if (arcLen < 0) arcLen = getTotalArcLen();
-
-    ConstStepPtr stepPtr = getStepStart();
-
-    while(stepPtr < getStepEnd())
+    // Really nothing to do unless under the incoming momentum limit
+    if (momentum < m_maxMomentum)
     {
-        TransportStepInfo  curStep = *stepPtr++;
+        double x0sTotal   = 0.;    /// New stuff!
 
-        const G4VPhysicalVolume* pCurVolume = curStep.GetVolume();
-        G4Material* pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
+        if (arcLen < 0) arcLen = getTotalArcLen();
 
-        double radLengths = pMaterial->GetRadlen();
-        double x0s        = 10000000.;
-        double s_dist     = curStep.GetArcLen();
-        double s_distp    = s_dist;
+        ConstStepPtr stepPtr = getStepStart();
 
-        if (radLengths > 0.) x0s = s_dist / radLengths;
+        while(stepPtr < getStepEnd())
+        {
+            TransportStepInfo  curStep = *stepPtr++;
 
-        if(dist+s_dist > arcLen) { // pro-rate the last step: s_distp
-            if(s_dist > 0) x0s *= (arcLen - dist)/s_dist;
-            s_distp = arcLen - dist; 
+            const G4VPhysicalVolume* pCurVolume = curStep.GetVolume();
+            G4Material* pMaterial  = pCurVolume->GetLogicalVolume()->GetMaterial();
+
+            double radLengths = pMaterial->GetRadlen();
+            double x0s        = 10000000.;
+            double s_dist     = curStep.GetArcLen();
+            double s_distp    = s_dist;
+
+            if (radLengths > 0.) x0s = s_dist / radLengths;
+
+            if(dist+s_dist > arcLen) { // pro-rate the last step: s_distp
+                if(s_dist > 0) x0s *= (arcLen - dist)/s_dist;
+                s_distp = arcLen - dist; 
+            }
+
+            if(x0s != 0) {
+                ///double ms_Angle = 14.0*sqrt(x0s)*(1+0.038*log(x0s))/momentum; //MeV
+                double ms_Angle = 13.6*sqrt(x0s)/momentum; //MeV  /// New Stuff!!
+                double ms_Dst  = (arcLen - dist - s_distp)*ms_Angle; // Disp. over remaining traj
+                double ms_sDst = s_distp*ms_Angle/1.7320508; // Disp. within step
+                double ms_Dist = ms_Dst*ms_Dst + ms_sDst*ms_sDst;
+
+                x0sTotal += x0s;   /// New Stuff!
+
+                scat_dist  += ms_Dist;
+                scat_angle += ms_Angle*ms_Angle;
+                scat_covr  += sqrt(ms_Dist)*ms_Angle;		  
+            }
+            dist += s_dist;
+            if(dist >= arcLen ) break;
         }
 
-        if(x0s != 0) {
-            ///double ms_Angle = 14.0*sqrt(x0s)*(1+0.038*log(x0s))/momentum; //MeV
-            double ms_Angle = 13.6*sqrt(x0s)/momentum; //MeV  /// New Stuff!!
-            double ms_Dst  = (arcLen - dist - s_distp)*ms_Angle; // Disp. over remaining traj
-            double ms_sDst = s_distp*ms_Angle/1.7320508; // Disp. within step
-            double ms_Dist = ms_Dst*ms_Dst + ms_sDst*ms_sDst;
-
-            x0sTotal += x0s;   /// New Stuff!
-
-            scat_dist  += ms_Dist;
-            scat_angle += ms_Angle*ms_Angle;
-            scat_covr  += sqrt(ms_Dist)*ms_Angle;		  
+        /// New Stuff!!!!!
+        if (x0sTotal > 0.)
+        {
+            double ms_Angle = 13.6*sqrt(x0sTotal)*(1+0.038*log(x0sTotal))/momentum; //MeV  //// New Stuff!!
+            scat_angle = ms_Angle*ms_Angle;
         }
-        dist += s_dist;
-        if(dist >= arcLen ) break;
+        else
+        {
+            scat_angle = 0.;
+        }
+
+        Vector startDir = getStartDir();
+        double slopeX    = startDir.x()/startDir.z(); 
+        double slopeY    = startDir.y()/startDir.z();
+        double norm_term = 1. + slopeX*slopeX + slopeY*slopeY;
+
+        // The below taken from KalParticle (by Bill Atwood) in order to match results
+        // Calc, the matrix elements (see Data Analysis Tech. for HEP, Fruhwirth et al)
+        p33 = (1.+slopeX*slopeX)*norm_term;
+        p34 = slopeX*slopeY*norm_term;
+        p44 = (1.+slopeY*slopeY)*norm_term; 
+
+      //Go from arc-length to Z 
+        scat_dist /=  norm_term;
+        scat_covr /=  sqrt(norm_term);
     }
-
-    /// New Stuff!!!!!
-    if (x0sTotal > 0.)
-    {
-        double ms_Angle = 13.6*sqrt(x0sTotal)*(1+0.038*log(x0sTotal))/momentum; //MeV  //// New Stuff!!
-        scat_angle = ms_Angle*ms_Angle;
-    }
-    else
-    {
-        scat_angle = 0.;
-    }
-
-    Vector startDir = getStartDir();
-    double slopeX    = startDir.x()/startDir.z(); 
-    double slopeY    = startDir.y()/startDir.z();
-    double norm_term = 1. + slopeX*slopeX + slopeY*slopeY;
-
-    // The below taken from KalParticle (by Bill Atwood) in order to match results
-    // Calc, the matrix elements (see Data Analysis Tech. for HEP, Fruhwirth et al)
-    double p33 = (1.+slopeX*slopeX)*norm_term;
-    double p34 = slopeX*slopeY*norm_term;
-    double p44 = (1.+slopeY*slopeY)*norm_term; 
-
-  //Go from arc-length to Z 
-    scat_dist /=  norm_term;
-    scat_covr /=  sqrt(norm_term);
 
     HepMatrix cov(4,4,0);
     cov(1,1) = scat_dist*p33;
