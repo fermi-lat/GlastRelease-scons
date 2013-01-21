@@ -475,7 +475,7 @@ TkrHoughFilterTool::TkrHoughFilterTool(const std::string& type,
     // Define cut on rmsTrans
     declareProperty("numLayersToSkip", m_numLyrsToSkip = 3);
     declareProperty("DoToolTiming",    m_doTiming      = true);
-	declareProperty("MinimumRefError", m_minRefError   = 75.);
+    declareProperty("MinimumRefError", m_minRefError   = 50.);
 
     m_toolTag = this->name();
 

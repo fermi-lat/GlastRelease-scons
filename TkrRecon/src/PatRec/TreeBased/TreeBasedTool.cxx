@@ -154,7 +154,7 @@ TreeBasedTool::TreeBasedTool(const std::string& type, const std::string& name, c
 {
     declareProperty("MinEnergy",          m_minEnergy           = 30.);
     declareProperty("FracEneFirstTrack",  m_fracEneFirstTrack   = 0.80);
-	declareProperty("MinimumRefError",    m_minRefError         = 100.);
+    declareProperty("MinimumRefError",    m_minRefError         = 50.);
     declareProperty("MergeClusters",      m_mergeClusters       = false);
     declareProperty("NumClustersToMerge", m_nClusToMerge        = 3);
     declareProperty("MergeStripGap",      m_stripGap            = 8);
