@@ -829,6 +829,8 @@ double TkrEnergyTool::getEvtEnergyEstimation(const Event::TkrTrack* track)
         }
     }
 
+  if(CalEnergyCorr<=0) CalEnergyCorr = CalEnergyRaw;
+
   double NewEvtEnergyCorr = (CalEnergyCorr+Tkr1StripsEnergyCorr)/0.85;
 
   // Unbias NewEvtEnergyCorr

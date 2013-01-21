@@ -282,6 +282,10 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
   //Make sure we have valid cluster data
   if (!m_cluster) return corResult;
   
+  // Ph.Bruel: avoiding the cases where m_corr_energy even when m_raw_energy>0
+  m_raw_energy   = m_cluster->getXtalsParams().getXtalCorrEneSum();
+  m_corr_energy = m_raw_energy;
+
   // Put here a place holder for Event Axis Calculation!!!!!!!!!!!!!
   if(!m_cluster->checkStatusBit(Event::CalCluster::CENTROID)) return corResult;
   
@@ -369,8 +373,10 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
   
   // Now do the energy correction and calculation of several vars. used in bkg. rejection
   calculate(x0, t0, tkr_RLn, tkr_Energy);
-  
-  if (m_status_bits != Event::CalCorToolResult::ZERO) corResult = loadResults();
+
+  // Ph.Bruel: avoiding the cases where m_corr_energy even when m_raw_energy>0  
+  //  if (m_status_bits != Event::CalCorToolResult::ZERO)
+  corResult = loadResults();
   
   return corResult;
 }
