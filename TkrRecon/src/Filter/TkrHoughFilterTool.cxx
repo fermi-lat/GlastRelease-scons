@@ -1473,7 +1473,8 @@ Event::TkrFilterParams* TkrHoughFilterTool::doMomentsAnalysis(Event::TkrVecPoint
         double arcLen    = link->getVector().dot(linkToPos);
         Point  docaPos   = avePos + arcLen * link->getVector();
         Vector docaVec   = docaPos - refPoint;
-		double       weight = 1. / std::min(100000., std::max(0.1, docaVec.magnitude()));
+        double docaDist  = docaVec.magnitude();
+        double       weight = 1. / std::min(100000., std::max(0.01, docaDist*docaDist));
 
 		// Scale by distance from top
 		double lyrSclFctr = (link->getFirstVecPoint()->getLayer() - botBiLayer + 1) / deltaBiLayer;
