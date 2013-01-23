@@ -21,6 +21,7 @@
 #include "geometry/Point.h"
 #include "geometry/Vector.h"
 
+#include "Event/Recon/TkrRecon/TkrTree.h"
 #include "Event/Recon/TkrRecon/TkrTrack.h"
 #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/GaudiException.h" 
@@ -66,7 +67,7 @@ private:
   StatusCode getCalEntryExitPoints();  // if using TkrRecon, extrapolate Track1 initial dir to verify it enters the CAL
 
   ///gets the First McParticle launched for current event
-  Event::McParticle* GcrReconAlg::findFirstMcParticle();
+  Event::McParticle* findFirstMcParticle();
 
 
   //! Check if the event is a heavy ion candidate.
@@ -300,81 +301,96 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
   
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::SUCCESS;
- 
+  
   Point initPos;
   Vector mcDir;
-
-
+  
+  
   if(m_initAxis == "MC"){
-       if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MC " << endreq;
-
-       // ******the first McParticle initial position (when launched):
-       Event::McParticle* firstMcParticle = findFirstMcParticle();
-
-      const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
-      // casting to Point of initPosition, necessary to define propagator steps
-
-      if(firstMcParticle != 0)
-	    mcDir = Vector(firstMcParticle->initialFourMomentum().vect().unit());
-      else 
-	    mcDir = Vector(-1e9,-1e9,-1e9);
-
-
-      initPos.setX(initPosition.x());
-      initPos.setY(initPosition.y());
-      initPos.setZ(initPosition.z());
-
-
-      // ******the first McParticle initial direction (when launched):
-      m_initDir = Vector(mcDir.x(), mcDir.y(), mcDir.z());  
+    if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==MC " << endreq;
+    
+    // ******the first McParticle initial position (when launched):
+    Event::McParticle* firstMcParticle = findFirstMcParticle();
+    
+    const HepPoint3D& initPosition =firstMcParticle->initialPosition(); //initialPosition of firstMCParticle 
+    // casting to Point of initPosition, necessary to define propagator steps
+    
+    if(firstMcParticle != 0)
+      mcDir = Vector(firstMcParticle->initialFourMomentum().vect().unit());
+    else 
+      mcDir = Vector(-1e9,-1e9,-1e9);
+    
+    
+    initPos.setX(initPosition.x());
+    initPos.setY(initPosition.y());
+    initPos.setZ(initPosition.z());
+    
+    
+    // ******the first McParticle initial direction (when launched):
+    m_initDir = Vector(mcDir.x(), mcDir.y(), mcDir.z());  
   }  
   
   else if(m_initAxis=="TKR"){
-      if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==TKR " << endreq;
-
-      //Locate and store a pointer to the data service
-      DataSvc*           dataSvc;
-      IService* iService = 0;
-      if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
+    if(_debug) log << MSG::DEBUG << " CAL Exit Entry points for initAxis==TKR " << endreq;
+    
+    //Locate and store a pointer to the data service
+    DataSvc*           dataSvc;
+    IService* iService = 0;
+    if ((sc = serviceLocator()->getService("EventDataSvc", iService)).isFailure())
       throw GaudiException("Service [EventDataSvc] not found", name(), sc);
-      dataSvc = dynamic_cast<DataSvc*>(iService);
+    dataSvc = dynamic_cast<DataSvc*>(iService);
+    
+    
+    SmartDataPtr<Event::TkrTrackCol>   pTracks(dataSvc,EventModel::TkrRecon::TkrTrackCol);
+    if(pTracks==0x0||pTracks->empty()){
+      if(_noTkrColCount<5) {
+	log << MSG::INFO << "no TkrTrackCol found : no subsequent processing" << endreq; }
+      if(_noTkrColCount==4) {log << MSG::INFO << "further messages suppressed" << endreq;}
+      _noTkrColCount++;
+      return StatusCode::FAILURE;
+    }
+    SmartDataPtr<Event::TkrTreeCol> treeCol(dataSvc, EventModel::TkrRecon::TkrTreeCol);
+    const Event::TkrTrack* track_1;
+    if (!treeCol==0x0 || treeCol->empty()){
+      track_1 = *pTracks->begin();
+    } else {
+      Event::TkrTree*     bestTree = treeCol->front();
+      track_1 = *bestTree->begin();
+    }
 
-
-      SmartDataPtr<Event::TkrTrackCol>   pTracks(dataSvc,EventModel::TkrRecon::TkrTrackCol);
-
-	    if (pTracks){   
-        	// Count number of tracks
-
-        	int nTracks = pTracks->size();
-
-        	if(_debug) log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
-        	if(nTracks < 1) return StatusCode::FAILURE;
-        	// Get the first Track - it should be the "Best Track"
-        	Event::TkrTrackColConPtr pTrack = pTracks->begin();
-
-		const Event::TkrTrack* track_1 = *pTrack;
-
-		initPos = track_1->getInitialPosition();
-		m_initDir = track_1->getInitialDirection().unit();
-
-	    }
-	    else
-	{
-        if(_noTkrColCount<5) {
-            log << MSG::INFO << "no TkrTrackCol found : no subsequent processing" << endreq;
-        }
-        if(_noTkrColCount==4) {log << MSG::INFO << "further messages suppressed" << endreq;}
-        _noTkrColCount++;
-		return StatusCode::FAILURE;
-	}
+    // if (pTracks){   
+    //   // Count number of tracks
+      
+    //   int nTracks = pTracks->size();
+      
+    //   if(_debug) log << MSG::DEBUG << "nTracks=" << nTracks << endreq;  
+    //   if(nTracks < 1) return StatusCode::FAILURE;
+    //   // Get the first Track - it should be the "Best Track"
+    //   Event::TkrTrackColConPtr pTrack = pTracks->begin();
+      
+    //   const Event::TkrTrack* track_1 = *pTrack;
+      
+      initPos = track_1->getInitialPosition();
+      m_initDir = track_1->getInitialDirection().unit();
+      
+    // }
+    // else
+    //   {
+    //     if(_noTkrColCount<5) {
+    // 	  log << MSG::INFO << "no TkrTrackCol found : no subsequent processing" << endreq;
+    //     }
+    //     if(_noTkrColCount==4) {log << MSG::INFO << "further messages suppressed" << endreq;}
+    //     _noTkrColCount++;
+    // 	return StatusCode::FAILURE;
+    //   }
   }
   else
     {
       log<<MSG::ERROR<<"Invalid property "<<m_initAxis<<endreq;
       return StatusCode::FAILURE;
     }
-
-
+  
+  
   double x0 = initPos.x();
   double y0 = initPos.y();
   double z0 = initPos.z();
