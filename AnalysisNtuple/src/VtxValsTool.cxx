@@ -78,7 +78,6 @@ private:
     //float VTX_ErrAsym;
     float VTX_CovDet;
     //float VTX_ErrAsym;
-    //float VTX_CovDet;
     float VTX_x0;
     float VTX_y0;
     float VTX_z0;
@@ -389,15 +388,7 @@ StatusCode VtxValsTool::calculate()
         2.*sinPhi*cosPhi*VTX_Sxy + cosPhi*cosPhi*VTX_Syy));
     //VTX_ErrAsym     = fabs(VTX_Sxy/(VTX_Sxx + VTX_Syy));
 
-    double xFactor = sqrt(cosPhi*cosPhi + sinPhi*sinPhi*VTX_zdir*VTX_zdir);
-    double yFactor = sqrt(sinPhi*sinPhi + cosPhi*cosPhi*VTX_zdir*VTX_zdir);
-    float VTX_SxxPrj = VTX_Sxx*xFactor*xFactor;
-    float VTX_SyyPrj = VTX_Syy*yFactor*yFactor;
-    float VTX_SxyPrj = VTX_Sxy*xFactor*yFactor;
-    VTX_CovDet = 
-        sqrt(std::max(0.0f, VTX_SxxPrj*VTX_SyyPrj-VTX_SxyPrj*VTX_SxyPrj));
-    //VTX_ErrAsym     = fabs(VTX_Sxy/(VTX_Sxx + VTX_Syy));
-    //VTX_CovDet      = sqrt(std::max(0.0f,VTX_Sxx*VTX_Syy-VTX_Sxy*VTX_Sxy))*VTX_zdir*VTX_zdir;
+    VTX_CovDet      = sqrt(std::max(0.0f,VTX_Sxx*VTX_Syy-VTX_Sxy*VTX_Sxy))*VTX_zdir*VTX_zdir;
     VTX_x0        = x0.x();
     VTX_y0        = x0.y();
     VTX_z0        = x0.z();
