@@ -981,7 +981,8 @@ StatusCode EvtValsTool::calculate()
   
   // Model simple for PSF(68%) 
   EvtPSFModel = sqrt(pow((.061/pow((std::max(EvtEnergyCorr*1.,1.)/100),.8)),2) + (.001745*.001745));
-  
+  m_pPsfTool->setEstimate(EvtPSFModel*180./M_PI);
+
   // Ph.Bruel: Increase maximum energy from 1TeV to 10TteV
   // Log(base 10) of measured energy - useful for parameterizing effects
   EvtLogEnergy = log10(std::min(std::max(EvtEnergyCorr,10.f),10000000.f));

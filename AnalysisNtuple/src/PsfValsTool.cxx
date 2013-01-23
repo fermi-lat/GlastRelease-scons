@@ -472,7 +472,8 @@ PsfValsTool::PsfValsTool(const std::string& type,
   : AlgTool( type, name, parent )
 {    
   // Declare additional interface
-  declareInterface<IPsfTool>(this); 
+  declareInterface<IPsfTool>(this);
+  m_psf_estimate=1.; 
   return;
 }
 
@@ -520,12 +521,14 @@ double PsfValsTool::computePsf(const double cl_level,
   double current_low=0.;
   //high estimate for the containment radius (in degrees)
   double current_high=90;
-  double current_rad=1;//degrees
-  double current_val=10.;//initial value to start while loop
-  //std::cout<<energy<<" "<<theta<<std::endl;
+  //initial value to start while loop :
+  double current_rad=m_psf_estimate;//degrees
+  double current_val=psf.angularIntegral(energy,theta,0.,current_rad,0.);
+  //  std::cout<<"START "<<current_rad<<" "<<current_val<<" "<<energy<<" "<<theta<<" "<<current_low<<" "<<current_high<<std::endl;
+  if(current_val>cl_level){ current_high=current_rad; }  
+  else{ current_low=current_rad; }
+
   while(std::abs(current_val-cl_level)>eps){
-    current_val = psf.angularIntegral(energy,theta,0.,current_rad,0.);
-    //std::cout<<current_rad<<" "<<current_val<<" "<<current_low<<" "<<current_high<<std::endl;
     if(current_val>cl_level){
       current_high=current_rad;
     }
@@ -533,7 +536,10 @@ double PsfValsTool::computePsf(const double cl_level,
       current_low=current_rad;
     }
     current_rad=0.5*(current_low+current_high);
+    current_val = psf.angularIntegral(energy,theta,0.,current_rad,0.);
+    //std::cout<<"RUN "<<current_rad<<" "<<current_val<<" "<<current_low<<" "<<current_high<<std::endl;
   }
+  //  std::cout<<"STOP "<<current_rad<<std::endl;
   return current_rad;
 }
 
