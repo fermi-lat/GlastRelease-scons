@@ -50,6 +50,7 @@
 #include "src/TrackFit/KalmanFilterFit/TrackEnergy/RadLossHitEnergy.h"
 #include "src/TrackFit/KalmanFilterFit/TrackEnergy/MonteCarloHitEnergy.h"
 #include "src/TrackFit/KalmanFilterUtils/KalmanFilterUtils.h"
+#include "src/TrackFit/KalmanFilterFit/HitErrors/ElectronMeasErrs.h"
 #include "src/TrackFit/KalmanFilterFit/HitErrors/SlopeCorrectedMeasErrs.h"
 #include "src/TrackFit/KalmanFilterFit/HitErrors/ClusWidMeasErrs.h"
 #include "src/TrackFit/KalmanFilterFit/HitErrors/StandardMeasErrs.h"
@@ -372,6 +373,10 @@ void KalmanTrackFitTool::setClusErrCompType(const std::string& clusErrorType)
         if (m_HitErrorType == "SlopeCorrected")
         {
             m_fitErrs   = new SlopeCorrectedMeasErrs(m_tkrGeom);
+        }
+        else if (m_HitErrorType == "Electron")
+        {
+            m_fitErrs   = new ElectronMeasErrs(m_tkrGeom);
         }
         else if (m_HitErrorType == "ClusterWidth")
         {
