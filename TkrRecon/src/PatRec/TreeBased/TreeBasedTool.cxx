@@ -790,7 +790,21 @@ public:
                           const Event::TreeClusterRelation* right) const
     {
         // Try sorting simply by closest DOCA or angle
-        if (left->getTreeClusDoca() > right->getTreeClusDoca() || left->getTreeClusCosAngle() < right->getTreeClusCosAngle())
+        int leftNumBiLayers  = left->getTree()->getHeadNode()->getBestNumBiLayers();
+        int rightNumBiLayers = right->getTree()->getHeadNode()->getBestNumBiLayers();
+
+        if (abs(leftNumBiLayers-rightNumBiLayers) > 5)
+        {
+            if (leftNumBiLayers > rightNumBiLayers) return true;
+            else                                    return false;
+        }
+
+        // Otherwise, form a "blended" doca/angle to cluster
+        double leftDocaByAngle  = left->getTreeClusDoca()  / std::min(0.0001,left->getTreeClusCosAngle());
+        double rightDocaByAngle = right->getTreeClusDoca() / std::min(0.0001,right->getTreeClusCosAngle());
+
+        // Try sorting simply by closest DOCA or angle
+        if (leftDocaByAngle > rightDocaByAngle)
         {
             return false;
         }
