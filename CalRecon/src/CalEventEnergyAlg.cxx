@@ -87,9 +87,9 @@ CalEventEnergyAlg::CalEventEnergyAlg( const std::string & name, ISvcLocator * pS
     else
     {
       corrToolVec.push_back("CalValsCorrTool");
-      corrToolVec.push_back("CalFullProfileTool");
+      //      corrToolVec.push_back("CalFullProfileTool");
       corrToolVec.push_back("NewCalFullProfileTool");
-      corrToolVec.push_back("CalLikelihoodManagerTool"); //POL
+      //      corrToolVec.push_back("CalLikelihoodManagerTool"); //POL
 
       energySelectionToolName = "CalEnergyClassificationTool";
     }
