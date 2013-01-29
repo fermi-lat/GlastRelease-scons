@@ -27,7 +27,7 @@ public:
     TreeCalClusterAssociator(Event::CalClusterCol* calClusterCol,
                              IDataProviderSvc*     dataSvc, 
                              ITkrGeometrySvc*      geoSvc,
-                             double                minTreeToClusterDoca = 200.);
+                             double                minTreeToClusterDoca = 2000.);
 
     ~TreeCalClusterAssociator();
 
@@ -44,6 +44,8 @@ public:
     Event::TreeClusterRelationVec* getClusterToRelationVec(Event::CalCluster* cluster);
     Event::ClusterToRelationMap*   getClusterToRelationMap()                           {return m_clusterToRelationMap;}
 
+	/// Given an input Tree, remove all existing relations to Cluster(s)
+	void                           removeTreeClusterRelations(Event::TkrTree* tree);
 private:
 
     /// Pointer to the Cal Cluster collection in the TDS
