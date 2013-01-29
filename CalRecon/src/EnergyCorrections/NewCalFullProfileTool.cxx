@@ -453,7 +453,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   
   nm_eTotal = cluster->getMomParams().getEnergy()/1000.;
 
-  if( nm_eTotal<0.4) // to get as low as 3 GeV gamma while rejecting most of mips
+  if( nm_eTotal<0.75) // set at 750 MeV, which is slightly below the Eraw threshold above which the profile energy is used to build EvtJointEnergy
     {
       lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : nm_eTotal<300MeV -> no energy computation" <<endreq;
       return corResult;
@@ -475,7 +475,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   if(tree!=NULL)
     tkr_RLn = GetRadiationLengthInTracker(tree);
 
-  double CALFIT_fit_energy = 1000.*nm_eTotal;
+  double CALFIT_fit_energy = 0.;
   double CALFIT_energy_err = 0;
   double CALFIT_fitflag = 0;
   double CALFIT_par0 = 0;
@@ -484,7 +484,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   double CALFIT_ycor = 0;
   double CALFIT_alpha = 0;
   double CALFIT_tmax = 0;
-  double CALFIT_tkr_RLn = tkr_RLn;
+  double CALFIT_tkr_RLn = 0.;
   double CALFIT_lastx0 = 0;
   double CALFIT_cal_eff_RLn = 0;
   double CALFIT_totchisq = 0;
@@ -503,7 +503,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   double CALFIT_widening = 0;
   int CALFIT_nxtalsel = 0;
 
-  double TKRFIT_fit_energy = 1000.*nm_eTotal;
+  double TKRFIT_fit_energy = 0.;
   double TKRFIT_energy_err = 0;
   double TKRFIT_fitflag = 0;
   double TKRFIT_par0 = 0;
@@ -529,6 +529,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   double TKRFIT_recv1 = 0;
   double TKRFIT_recv2 = 0;
   double TKRFIT_widening = 0;
+  int TKRFIT_nxtalsel = 0;
 
   double chi2dist;
   double fitpar[3];
@@ -559,73 +560,51 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   pp[1] = corP.y();
   pp[2] = corP.z();
 
-  SelectCloseCrystals(pp,vv,100);
-  CALFIT_nxtalsel = nm_nxtal;
-
-  nm_optselxtalinfit = 0;
-  int CALFIT = doProfileFit(pp,vv,0,lm,1);
-
-  CALFIT_fit_energy = 1000.*nm_energy;
-  CALFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
-  CALFIT_fitflag = nm_ierflg;
-  CALFIT_par0 = nm_par0;
-  CALFIT_par1 = nm_par1;
-  CALFIT_xcor = nm_xcor;
-  CALFIT_ycor = nm_ycor;
-  CALFIT_alpha = nm_alpha;
-  CALFIT_tmax = nm_tmax;
-  CALFIT_tkr_RLn = 0;
-  CALFIT_lastx0 = nm_lastx0;
-  CALFIT_cal_eff_RLn = nm_totx0cal;
-  CALFIT_totchisq = nm_totchisq;
-  CALFIT_chisq = nm_chisq;
-  CALFIT_parcf = nm_params_contribution_factor;
-  CALFIT_parc = nm_params_contribution;
   CALFIT_recp0 = pp[0];
   CALFIT_recp1 = pp[1];
   CALFIT_recp2 = pp[2];
   CALFIT_recv0 = vv[0];
   CALFIT_recv1 = vv[1];
   CALFIT_recv2 = vv[2];
-  CALFIT_widening = nm_wideningfactor;
-          
-  TKRFIT_fit_energy = 1000.*nm_energy;
-  TKRFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
-  TKRFIT_fitflag = nm_ierflg;
-  TKRFIT_par0 = nm_par0;
-  TKRFIT_par1 = nm_par1;
-  TKRFIT_xcor = nm_xcor;
-  TKRFIT_ycor = nm_ycor;
-  TKRFIT_alpha = nm_alpha;
-  TKRFIT_tmax = nm_tmax;
-  TKRFIT_tkr_RLn = 0;
-  TKRFIT_lastx0 = nm_lastx0;
-  TKRFIT_cal_eff_RLn = nm_totx0cal;
-  TKRFIT_totchisq = nm_totchisq;
-  TKRFIT_chisq = nm_chisq;
-  TKRFIT_parcf = nm_params_contribution_factor;
-  TKRFIT_parc = nm_params_contribution;
-  TKRFIT_recp0 = pp[0];
-  TKRFIT_recp1 = pp[1];
-  TKRFIT_recp2 = pp[2];
-  TKRFIT_recv0 = vv[0];
-  TKRFIT_recv1 = vv[1];
-  TKRFIT_recv2 = vv[2];
-  TKRFIT_widening = nm_wideningfactor;
+  
+  SelectCloseCrystals(pp,vv,100);
+  CALFIT_nxtalsel = nm_nxtal;
 
-  fitpar[0] = nm_par0;
-  fitpar[1] = nm_par1;
-  fitpar[2] = nm_par2;
-  nm_optselxtalinfit = 1;
-  compute_chi2(fitpar);
-  CALFIT_seltotchisq = nm_totchisq;
-  TKRFIT_seltotchisq = nm_totchisq;
   nm_optselxtalinfit = 0;
-  chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
-  CALFIT_chisqdist = chi2dist;
-  TKRFIT_chisqdist = chi2dist;
-  CALFIT_chidist = result[1];
-  TKRFIT_chidist = result[1];
+  int CALFIT = doProfileFit(pp,vv,0,lm,1);
+  CALFIT_cal_eff_RLn = nm_fsddm->mintotx0cal;
+  //
+  if(CALFIT)
+    {
+      CALFIT_fit_energy = 1000.*nm_energy;
+      CALFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
+      CALFIT_fitflag = nm_ierflg;
+      CALFIT_par0 = nm_par0;
+      CALFIT_par1 = nm_par1;
+      CALFIT_xcor = nm_xcor;
+      CALFIT_ycor = nm_ycor;
+      CALFIT_alpha = nm_alpha;
+      CALFIT_tmax = nm_tmax;
+      CALFIT_tkr_RLn = 0;
+      CALFIT_lastx0 = nm_lastx0;
+      CALFIT_cal_eff_RLn = nm_totx0cal;
+      CALFIT_totchisq = nm_totchisq;
+      CALFIT_chisq = nm_chisq;
+      CALFIT_parcf = nm_params_contribution_factor;
+      CALFIT_parc = nm_params_contribution;
+      CALFIT_widening = nm_wideningfactor;
+      
+      fitpar[0] = nm_par0;
+      fitpar[1] = nm_par1;
+      fitpar[2] = nm_par2;
+      nm_optselxtalinfit = 1;
+      compute_chi2(fitpar);
+      CALFIT_seltotchisq = nm_totchisq;
+      nm_optselxtalinfit = 0;
+      chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
+      CALFIT_chisqdist = chi2dist;
+      CALFIT_chidist = result[1];
+    }
 
   int TKRFIT = 0;
 
@@ -651,45 +630,51 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
           vv[2] = -vv[2];
         }
 
-      SelectCloseCrystals(pp,vv,100);
-
-      nm_optselxtalinfit = 0;
-      TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
-      //
-      TKRFIT_fit_energy = 1000.*nm_energy;
-      TKRFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
-      TKRFIT_fitflag = nm_ierflg;
-      TKRFIT_par0 = nm_par0;
-      TKRFIT_par1 = nm_par1;
-      TKRFIT_xcor = nm_xcor;
-      TKRFIT_ycor = nm_ycor;
-      TKRFIT_alpha = nm_alpha;
-      TKRFIT_tmax = nm_tmax;
-      TKRFIT_tkr_RLn = tkr_RLn;
-      TKRFIT_lastx0 = nm_lastx0;
-      TKRFIT_cal_eff_RLn = nm_totx0cal;
-      TKRFIT_totchisq = nm_totchisq;
-      TKRFIT_chisq = nm_chisq;
-      TKRFIT_parcf = nm_params_contribution_factor;
-      TKRFIT_parc = nm_params_contribution;
       TKRFIT_recp0 = pp[0];
       TKRFIT_recp1 = pp[1];
       TKRFIT_recp2 = pp[2];
       TKRFIT_recv0 = vv[0];
       TKRFIT_recv1 = vv[1];
       TKRFIT_recv2 = vv[2];
-      TKRFIT_widening = nm_wideningfactor;
+      TKRFIT_tkr_RLn = tkr_RLn;
+      
+      SelectCloseCrystals(pp,vv,100);
+      TKRFIT_nxtalsel = nm_nxtal;
 
-      fitpar[0] = nm_par0;
-      fitpar[1] = nm_par1;
-      fitpar[2] = nm_par2;
-      nm_optselxtalinfit = 1;
-      compute_chi2(fitpar);
-      TKRFIT_seltotchisq = nm_totchisq;
       nm_optselxtalinfit = 0;
-      chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
-      TKRFIT_chisqdist = chi2dist;
-      TKRFIT_chidist = result[1];
+      TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
+      TKRFIT_cal_eff_RLn = nm_fsddm->mintotx0cal;
+      //
+      if(TKRFIT)
+        {
+          TKRFIT_fit_energy = 1000.*nm_energy;
+          TKRFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
+          TKRFIT_fitflag = nm_ierflg;
+          TKRFIT_par0 = nm_par0;
+          TKRFIT_par1 = nm_par1;
+          TKRFIT_xcor = nm_xcor;
+          TKRFIT_ycor = nm_ycor;
+          TKRFIT_alpha = nm_alpha;
+          TKRFIT_tmax = nm_tmax;
+          TKRFIT_lastx0 = nm_lastx0;
+          TKRFIT_cal_eff_RLn = nm_totx0cal;
+          TKRFIT_totchisq = nm_totchisq;
+          TKRFIT_chisq = nm_chisq;
+          TKRFIT_parcf = nm_params_contribution_factor;
+          TKRFIT_parc = nm_params_contribution;
+          TKRFIT_widening = nm_wideningfactor;
+          
+          fitpar[0] = nm_par0;
+          fitpar[1] = nm_par1;
+          fitpar[2] = nm_par2;
+          nm_optselxtalinfit = 1;
+          compute_chi2(fitpar);
+          TKRFIT_seltotchisq = nm_totchisq;
+          nm_optselxtalinfit = 0;
+          chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
+          TKRFIT_chisqdist = chi2dist;
+          TKRFIT_chidist = result[1];
+        }
     }
     
   if(CALFIT==0 && TKRFIT==0)
@@ -736,7 +721,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   corResult->insert(Event::CalCorEneValuePair("recv2",      TKRFIT_recv2));
   corResult->insert(Event::CalCorEneValuePair("widening",   TKRFIT_widening));
   corResult->insert(Event::CalCorEneValuePair("nxtalsat",   nm_nxtal_sat));
-  corResult->insert(Event::CalCorEneValuePair("nxtalsel",   nm_nxtal));
+  corResult->insert(Event::CalCorEneValuePair("nxtalsel",   TKRFIT_nxtalsel));
   corResult->insert(Event::CalCorEneValuePair("nlayersat",  nm_nsatlayer));
 
   if(CALFIT>0)
