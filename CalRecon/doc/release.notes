@@ -7,6 +7,9 @@ package manager: David Chamont
 
   * EOH *
 
+    CalNewCfpSelChiSq = inf in GR 20-08-03 - LPATE-105
+    New Profile fit speed up - LPATE-102
+    Lower MST maxNumXtals default jobOption to 1000. LPATE-102
  CalRecon-06-22-02 23-Jan-2013 TU Tagging Philippe's fix for CalEnergyCorr == 0 when CalEnergyRaw > 0
  CalRecon-06-22-01 11-Jan-2012 TU Tagging Philippe's fixes for potential divide by zero in energy tools
  CalRecon-06-22-00 08-Dec-2012 bruel: Fix bug in NewCalFullProfile.cxx. Fix 
