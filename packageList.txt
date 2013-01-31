@@ -38,7 +38,7 @@ rdbModel rdbModel-02-15-00
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-16-00
+Event Event-14-16-01
 GlastSvc GlastSvc-11-01-00
 GuiSvc GuiSvc-03-11-00
 DetDisplay DetDisplay-03-06-00
@@ -77,13 +77,13 @@ OnboardFilterTds OnboardFilterTds-00-13-01
 CalUtil CalUtil-03-18-00
 CalXtalResponse CalXtalResponse-01-01-01
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-22-02
+CalRecon CalRecon-06-22-03
 GCRCalib GCRCalib-01-12-00
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-04
-TkrRecon TkrRecon-10-38-01
+TkrRecon TkrRecon-10-38-02
 
 # ACD
 AcdDigi AcdDigi-03-11-00
