@@ -830,8 +830,10 @@ void NewFullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, doubl
     }
 }
 
-bool NewFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input)
+bool NewFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input, double zstep_input)
 {
+  ZStepRef = zstep_input;
+
   if(Type!=0)
     {
       //  NewFullShowerDevelopmentDescription WRONG TYPE
@@ -1541,8 +1543,10 @@ double NewMultiFullShowerDevelopmentDescription::GetCrackAngle(double *pp, doubl
 }
 
 
-bool NewMultiFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input)
+bool NewMultiFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double zstep_input)
 {
+  ZStepRef = zstep_input;
+
   int i,j,k,ii;
   int whereincal[4];
   int whereincal2[4];
@@ -1991,8 +1995,8 @@ NewFullShowerDevelopmentDescriptionManager::NewFullShowerDevelopmentDescriptionM
 
   NDevelopment = nxmax;
   DXMax = dxmax;
-  ZStep = zstep_input;;
-  ZStepRef = zstep_input;;
+  ZStep = zstep_input;
+  ZStepRef = zstep_input;
   RadialContainedFraction = radialcontainedfraction_input;
   X0Step = x0step;
 
@@ -2019,8 +2023,10 @@ NewFullShowerDevelopmentDescriptionManager::~NewFullShowerDevelopmentDescription
   if(CurrentFSDD!=NULL) delete CurrentFSDD;
 }
 
-bool NewFullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0_input)
+bool NewFullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0_input, double zstep_input)
 {
+  ZStepRef = zstep_input;
+  
   int i,j,k,l;
   mintotx0cal = 99999999;
   maxtotx0cal = -99999999;
@@ -2047,13 +2053,13 @@ bool NewFullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv,
 
   int optmulti = 1;
 
-  if(optmulti) MFSDDMM->Compute(pp,vv,startx0_input);
+  if(optmulti) MFSDDMM->Compute(pp,vv,startx0_input,ZStepRef);
   
   for(i=0;i<=NDevelopment;++i)
     {
       if(!optmulti)
         {
-          if(!FSDDMM[i]->Compute(pp,vv,startx0_input,XMax[i])) return false;
+          if(!FSDDMM[i]->Compute(pp,vv,startx0_input,XMax[i],ZStepRef)) return false;
         }
       else
         {

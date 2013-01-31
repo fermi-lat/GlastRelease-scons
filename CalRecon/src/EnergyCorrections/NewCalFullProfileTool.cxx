@@ -816,7 +816,21 @@ int NewCalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, 
   nm_fsddm->SetWideningFactor(wideningfactor);
   nm_wideningfactor = wideningfactor;
 
-  if(!nm_fsddm->Compute(pp,vv,tkr_RLn))
+  double logEraw = log10(nm_eTotal);
+  double logErawmin = 0;
+  double logErawmax = 2;
+  if(logEraw<logErawmin)
+    logEraw = logErawmin;
+  else if(logEraw>logErawmax)
+    logEraw = logErawmax;
+  double zstep = (3.0-1.0/(logErawmax-logErawmin)*(logEraw-logErawmin))*1.85;
+  //  printf("BRUEL %f %f\n",logEraw,zstep);
+
+  if(tkr_RLn==0) zstep = (4.0-1.0/(logErawmax-logErawmin)*(logEraw-logErawmin))*1.85;
+
+  //  zstep = 2.*1.85;
+
+  if(!nm_fsddm->Compute(pp,vv,tkr_RLn,zstep))
     {
       lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : Problem during nm_fsddm->Compute. Returning empty corResult." <<endreq;
       return 0;
