@@ -96,9 +96,11 @@ namespace Event {
     // Larger scaled active distance wins
     if ( vetoSigmaProj() < other.vetoSigmaProj()) return true;
     if ( vetoSigmaProj() > other.vetoSigmaProj()) return false;    
-    // Everything looks the same, return false.  
-    // This breaks strict ordering, but maintains strict weak ordering
-    return false;    
+    // Try the acd id
+    if ( getId().id() < other.getId().id() ) return true;
+    if ( getId().id() > other.getId().id() ) return false;
+    // use the pointer address.  
+    return this < &other;    
   }
 
 
