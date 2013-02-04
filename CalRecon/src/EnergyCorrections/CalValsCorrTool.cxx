@@ -114,7 +114,8 @@ private:
     double             m_leakage_correction; // Containment fraction for shower
     double             m_total_correction;// Total multiplicative correction - includes ad-hoc piece - see code
     double             m_raw_energy;      // Raw summed energy from Xtals
-    double             m_corr_energy;     // Fully corrected energy 
+    double             m_corr_energy;     // Fully corrected energy without leakage correction
+    double             m_corrleak_energy; // Fully corrected energy with leakage correction
     double             m_deltaT;          // Difference between predicted energy centriod and meas. centroid
     double             m_t_Pred;          // Predicted energy centriod
     double             m_t;               // Location of measured energy centroid in rad. len.
@@ -285,6 +286,7 @@ Event::CalCorToolResult* CalValsCorrTool::doEnergyCorr(Event::CalCluster* cluste
   // Ph.Bruel: avoiding the cases where m_corr_energy even when m_raw_energy>0
   m_raw_energy   = m_cluster->getXtalsParams().getXtalCorrEneSum();
   m_corr_energy = m_raw_energy;
+  m_corrleak_energy = m_raw_energy;
 
   // Put here a place holder for Event Axis Calculation!!!!!!!!!!!!!
   if(!m_cluster->checkStatusBit(Event::CalCluster::CENTROID)) return corResult;
@@ -413,6 +415,7 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
 
   m_raw_energy   = m_cluster->getMomParams().getEnergy();
   m_corr_energy = m_raw_energy;
+  m_corrleak_energy = m_raw_energy;
   m_cal_pos  = m_cluster->getPosition();
   m_cal_dir  = m_cluster->getDirection();
   
@@ -593,6 +596,7 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
   // Ph.Bruel: disable leakage correction here!!!
 //   // Lump the entire correction into the CAL piece (that's why the addition/subtraction of tkr_energy)
 //   m_corr_energy = (m_corr_energy + tkr_energy)/m_leakage_correction - tkr_energy;
+  m_corrleak_energy = (m_corr_energy + tkr_energy)/m_leakage_correction - tkr_energy;
   
   m_t_Pred      = a1/b1*(TMath::Gamma(a1+1.,b1*m_t_total)/
                          TMath::Gamma(a1,b1*m_t_total)); 
@@ -606,6 +610,7 @@ void CalValsCorrTool::calculate(Point x0, Vector t0, double t_tracker, double tk
   // Apply final correction 
   m_corr_energy = m_corr_energy * ad_hoc_factor;
   m_total_correction = m_corr_energy/m_raw_energy;
+  m_corrleak_energy = m_corrleak_energy * ad_hoc_factor;
 
   // Ph.Bruel: comment the following since the leakage correction has always been disabled
 //   // NOTE:  BIG Change:  leaving out the leakage correction.  It cause too much dispersion below 1 GeV
@@ -629,6 +634,7 @@ Event::CalCorToolResult* CalValsCorrTool::loadResults()
   corResult->setParams(params);
   corResult->setChiSquare(1.);
   (*corResult)["CorrectedEnergy"] = m_corr_energy ;
+  (*corResult)["CorrectedLeakEnergy"] = m_corrleak_energy ;
   (*corResult)["CalTopX0"]        = m_cal_top.x() ;
   (*corResult)["CalTopY0"]        = m_cal_top.y() ;
   (*corResult)["CsIRLn"]          = m_radLen_CsI ;
