@@ -19,6 +19,8 @@ TkrRecon::TkrRecon() {
     m_tkrVecNodesCol      = 0;
     m_tkrFilterParamsCol  = 0;
     m_tkrTreeCol          = 0;
+    m_tkrEventParams         = 0;
+    m_treeClusterRelationCol = 0;
 }
 
 TkrRecon::~TkrRecon() {
@@ -45,6 +47,8 @@ TkrRecon::~TkrRecon() {
     m_tkrFilterParamsCol  = 0;
     if (m_tkrTreeCol)           delete m_tkrTreeCol;
     m_tkrTreeCol          = 0;
+    if (m_treeClusterRelationCol) delete m_treeClusterRelationCol;
+    m_treeClusterRelationCol = 0;
 }
 
 void TkrRecon::initialize() {
@@ -58,6 +62,7 @@ void TkrRecon::initialize() {
     if (!m_tkrVecNodesCol)      m_tkrVecNodesCol      = new TObjArray();
     if (!m_tkrFilterParamsCol)  m_tkrFilterParamsCol  = new TObjArray();
     if (!m_tkrTreeCol)          m_tkrTreeCol          = new TObjArray();
+    if (!m_treeClusterRelationCol) m_treeClusterRelationCol = new TObjArray();
 }
 
 void TkrRecon::Clear(Option_t* option) {
@@ -65,6 +70,21 @@ void TkrRecon::Clear(Option_t* option) {
 
     // Tell the RECON object manager to reset its iterators
     ReconObjectManager::getPointer()->Delete(option);
+
+    // Note that we need to delete the TkrEventParams object here
+    if (m_tkrEventParams) delete m_tkrEventParams;
+    m_tkrEventParams = 0;
+
+    // Also note that the TreeClusterRelation objects are not managed by the Recon object
+    if (m_treeClusterRelationCol)
+    {
+        for(int idx = 0; idx < nTreeClusterRelations(); idx++)
+        {
+            delete m_treeClusterRelationCol->At(idx);
+        }
+
+        m_treeClusterRelationCol->Clear();
+    }
 }
 
 

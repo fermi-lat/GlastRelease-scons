@@ -63,6 +63,8 @@
 #pragma link C++ class TkrTree+;
 #pragma link C++ class TkrFilterParams+;
 #pragma link C++ class TkrTruncationData+;
+#pragma link C++ class TkrEventParams+;
+#pragma link C++ class TreeClusterRelation+;
 #pragma link C++ class TkrDiagnostics+;
 
 #pragma link C++ class reconRootData::TaggerCluster+;

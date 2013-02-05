@@ -11,6 +11,8 @@
 #include "TkrTruncationData.h"
 #include "TkrDiagnostics.h"
 #include "TkrFilterParams.h"
+#include "TkrEventParams.h"
+#include "TreeClusterRelation.h"
 /** 
  * @class TkrRecon
  * @brief Root container for the reconstructed Tracker information 
@@ -69,8 +71,14 @@ public:
     TObjArray* getTkrFilterParamsCol()    {return m_tkrFilterParamsCol;}
     void addTkrFilterParams(TkrFilterParams* filterParams) {m_tkrFilterParamsCol->Add(filterParams);}
 
+    TkrEventParams* getTkrEventParams()   {return m_tkrEventParams;}
+    void addTkrEventParams(TkrEventParams* eventParams) {m_tkrEventParams = eventParams;}
+
     TObjArray* getTkrTreeCol()    {return m_tkrTreeCol;}
     void addTkrTree(TkrTree* tree) {m_tkrTreeCol->Add(tree);}
+
+    TObjArray* getTreeClusterRelationCol()    {return m_treeClusterRelationCol;}
+    void addTreeClusterRelation(TreeClusterRelation* treeClusterRelation) {m_treeClusterRelationCol->Add(treeClusterRelation);}
 
     // Added for macros & interactive access - EAC
     Int_t nCluster() const { return m_clusterCol->GetEntries() ; }    
@@ -83,6 +91,8 @@ public:
     Int_t nTkrVecNodes() const {return m_tkrVecNodesCol->GetEntries();}
     Int_t nTkrTrees() const {return m_tkrTreeCol->GetEntries();}
     Int_t nTkrFilterParams() const {return m_tkrFilterParamsCol->GetEntries();}
+    Int_t nTkrEventParams() const {return m_tkrEventParams ? 1 : 0;}
+    Int_t nTreeClusterRelations() const {return m_treeClusterRelationCol->GetEntries();}
 
     TkrCluster* getCluster(Int_t i) { return i < nCluster() ? dynamic_cast<TkrCluster*>(m_clusterCol->At(i)) : 0; };
     TkrTrack* getTrack(Int_t i) { return i < nTrack() ? dynamic_cast<TkrTrack*>(m_trackCol->At(i)) : 0; };
@@ -94,6 +104,8 @@ public:
     TkrVecNode* getTkrVecNode(Int_t i) { return i < nTkrVecNodes() ? dynamic_cast<TkrVecNode*>(m_tkrVecNodesCol->At(i)) : 0;}
     TkrTree* getTkrTree(Int_t i) { return i < nTkrTrees() ? dynamic_cast<TkrTree*>(m_tkrTreeCol->At(i)) : 0;}
     TkrFilterParams* getTkrFilterParams(Int_t i) { return i < nTkrFilterParams() ? dynamic_cast<TkrFilterParams*>(m_tkrFilterParamsCol->At(i)) : 0;}
+    TkrEventParams* getTkrEventParams(Int_t i) { return m_tkrEventParams;}
+    TreeClusterRelation* getTreeClusterRelation(Int_t i) {return i < nTreeClusterRelations() ? dynamic_cast<TreeClusterRelation*>(m_treeClusterRelationCol->At(i)) : 0;}
     
 
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
@@ -122,6 +134,10 @@ private:
     TObjArray*      m_tkrFilterParamsCol;
     /// collection of TkrTrees
     TObjArray*      m_tkrTreeCol;
+    /// Pointer to the TkrEventParams object (only one per event)
+    TkrEventParams* m_tkrEventParams;
+    /// Pointer to the TreeClusterRelations
+    TObjArray*      m_treeClusterRelationCol;
 
 
     static TkrCluster *keepCluster[16384]; //!
