@@ -62,10 +62,10 @@ public:
     }
 
     // Initializer
-    void initialize(int layer, const Event::TkrCluster* xClus, const Event::TkrCluster* yClus)
+    void initialize(int layer, unsigned int status, const Event::TkrCluster* xClus, const Event::TkrCluster* yClus)
     {
-        m_status    = 0;
         m_layer     = layer;
+        m_status    = status;
         m_pXCluster = xClus;
         m_pYCluster = yClus;
     }
@@ -121,6 +121,9 @@ public:
         Vector diff = refPoint - getPosition();
         return diff.x()*diff.x() + diff.y()*diff.y() + diff.z()*diff.z();    
     }
+
+    // Allow to retrieve the full status word (mainly for root storage)
+    unsigned int getStatusWord() {return m_status;}
 
     //@}
 

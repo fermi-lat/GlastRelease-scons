@@ -137,6 +137,8 @@ public:
     const bool                          canNodeBeShared()         const {return (m_statusBits & NODE_CAN_BE_SHARED)       != 0;}
     const bool                          isOnBestBranch()          const {return (m_statusBits & NODE_ON_BEST_BRANCH)      != 0;}
     const bool                          isOnNextBestBranch()      const {return (m_statusBits & NODE_ON_NEXT_BEST_BRANCH) != 0;}
+    // Access to full status bit mask
+    const unsigned int                  getStatusBits()           const {return m_statusBits;}
     // Get the number of BiLayers from this node along best branch
     const int                           getBestNumBiLayers()      const {return m_bestNumBiLayers;}
     // Get the rms deviations from this node along best branch
