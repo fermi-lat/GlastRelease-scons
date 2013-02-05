@@ -27,21 +27,42 @@ ReconObjectManager* ReconObjectManager::m_pointer = 0;
 #define VERTEXMAXPOOLGROW        50
 #define TRUNCATIONPOOLSIZE       50
 #define TRUNCATIONMAXPOOLGROW    100
+#define VECPOINTPOOLSIZE         500
+#define VECPOINTMAXPOOLGROW      1000
+#define VECPOINTSLINKPOOLSIZE    1000
+#define VECPOINTSLINKMAXPOOLGROW 1000
+#define VECNODEPOOLSIZE          500
+#define VECNODEMAXPOOLGROW       500
+#define TREEPOOLSIZE             20
+#define TREEMAXPOOLGROW          10
+#define FILTERPARAMSPOOLSIZE     20
+#define FILTERPARAMSMAXPOOLGROW  10
+
 
 ReconObjectManager::ReconObjectManager() : m_tkrClusterPool(CLUSTERPOOLSIZE),
                                            m_tkrTrackPool(TRACKPOOLSIZE),
                                            m_tkrTrackHitPool(TRACKHITPOOLSIZE),
                                            m_tkrTrackParamsPool(TRACKPARAMSPOOLSIZE),
                                            m_tkrVertexPool(VERTEXPOOLSIZE),
-                                           m_tkrTruncationPool(TRUNCATIONPOOLSIZE)
+                                           m_tkrTruncationPool(TRUNCATIONPOOLSIZE),
+                                           m_tkrVecPointPool(VECPOINTPOOLSIZE),
+                                           m_tkrVecPointsLinkPool(VECPOINTSLINKPOOLSIZE),
+                                           m_tkrVecNodePool(VECNODEPOOLSIZE),
+                                           m_tkrTreePool(TREEPOOLSIZE),
+                                           m_tkrFilterParamsPool(FILTERPARAMSPOOLSIZE)
 {
     // Set pool iterators to the first item in each pool
-    m_tkrClusterPoolIdx     = m_tkrClusterPool.begin();
-    m_tkrTrackPoolIdx       = m_tkrTrackPool.begin();
-    m_tkrTrackHitPoolIdx    = m_tkrTrackHitPool.begin();
-    m_tkrTrackParamsPoolIdx = m_tkrTrackParamsPool.begin();
-    m_tkrVertexPoolIdx      = m_tkrVertexPool.begin();
-    m_tkrTruncationPoolIdx  = m_tkrTruncationPool.begin();
+    m_tkrClusterPoolIdx       = m_tkrClusterPool.begin();
+    m_tkrTrackPoolIdx         = m_tkrTrackPool.begin();
+    m_tkrTrackHitPoolIdx      = m_tkrTrackHitPool.begin();
+    m_tkrTrackParamsPoolIdx   = m_tkrTrackParamsPool.begin();
+    m_tkrVertexPoolIdx        = m_tkrVertexPool.begin();
+    m_tkrTruncationPoolIdx    = m_tkrTruncationPool.begin();
+    m_tkrVecPointPoolIdx      = m_tkrVecPointPool.begin();
+    m_tkrVecPointsLinkPoolIdx = m_tkrVecPointsLinkPool.begin();
+    m_tkrVecNodePoolIdx       = m_tkrVecNodePool.begin();
+    m_tkrTreePoolIdx          = m_tkrTreePool.begin();
+    m_tkrFilterParamsPoolIdx  = m_tkrFilterParamsPool.begin();
 }
 
 ReconObjectManager* ReconObjectManager::getPointer()
@@ -195,6 +216,126 @@ TkrTruncationData* ReconObjectManager::getNewTkrTruncationData()
     return truncation;
 }
 
+TkrVecPoint* ReconObjectManager::getNewTkrVecPoint()
+{
+    TkrVecPoint* vecPoint = 0;
+
+    // If we have exceeded our pre-allocated list of TkrTrackHits then expand
+    if (m_tkrVecPointPoolIdx == m_tkrVecPointPool.end())
+    {
+        // Add one more TkrVecPoints just before the end... this is really a 
+        // trick to get a valid iterator at the end of the list
+        m_tkrVecPointPoolIdx = m_tkrVecPointPool.insert(m_tkrVecPointPoolIdx, TkrVecPoint());
+
+        // Expand the pool by some reasonable amount
+        int newSize = std::min((int)(2 * m_tkrVecPointPool.size()), (int)VECPOINTMAXPOOLGROW);
+
+        // For good measure expand the pool by the amount we just calculated
+        m_tkrVecPointPool.insert(m_tkrVecPointPool.end(), newSize, TkrVecPoint());
+    }
+
+    // Get the pointer to an available AcdDigi
+    vecPoint = &*m_tkrVecPointPoolIdx++;
+
+    return vecPoint;
+}
+
+TkrVecPointsLink* ReconObjectManager::getNewTkrVecPointsLink()
+{
+    TkrVecPointsLink* vecPointsLink = 0;
+
+    // If we have exceeded our pre-allocated list of TkrTrackHits then expand
+    if (m_tkrVecPointsLinkPoolIdx == m_tkrVecPointsLinkPool.end())
+    {
+        // Add one more TkrVecPointsLinks just before the end... this is really a 
+        // trick to get a valid iterator at the end of the list
+        m_tkrVecPointsLinkPoolIdx = m_tkrVecPointsLinkPool.insert(m_tkrVecPointsLinkPoolIdx, TkrVecPointsLink());
+
+        // Expand the pool by some reasonable amount
+        int newSize = std::min((int)(2 * m_tkrVecPointsLinkPool.size()), (int)VECPOINTSLINKMAXPOOLGROW);
+
+        // For good measure expand the pool by the amount we just calculated
+        m_tkrVecPointsLinkPool.insert(m_tkrVecPointsLinkPool.end(), newSize, TkrVecPointsLink());
+    }
+
+    // Get the pointer to an available AcdDigi
+    vecPointsLink = &*m_tkrVecPointsLinkPoolIdx++;
+
+    return vecPointsLink;
+}
+
+TkrVecNode* ReconObjectManager::getNewTkrVecNode()
+{
+    TkrVecNode* vecNode = 0;
+
+    // If we have exceeded our pre-allocated list of TkrTrackHits then expand
+    if (m_tkrVecNodePoolIdx == m_tkrVecNodePool.end())
+    {
+        // Add one more TkrVecNodes just before the end... this is really a 
+        // trick to get a valid iterator at the end of the list
+        m_tkrVecNodePoolIdx = m_tkrVecNodePool.insert(m_tkrVecNodePoolIdx, TkrVecNode());
+
+        // Expand the pool by some reasonable amount
+        int newSize = std::min((int)(2 * m_tkrVecNodePool.size()), (int)VECNODEMAXPOOLGROW);
+
+        // For good measure expand the pool by the amount we just calculated
+        m_tkrVecNodePool.insert(m_tkrVecNodePool.end(), newSize, TkrVecNode());
+    }
+
+    // Get the pointer to an available AcdDigi
+    vecNode = &*m_tkrVecNodePoolIdx++;
+
+    return vecNode;
+}
+
+TkrTree* ReconObjectManager::getNewTkrTree()
+{
+    TkrTree* tree = 0;
+
+    // If we have exceeded our pre-allocated list of TkrTrackHits then expand
+    if (m_tkrTreePoolIdx == m_tkrTreePool.end())
+    {
+        // Add one more TkrTrees just before the end... this is really a 
+        // trick to get a valid iterator at the end of the list
+        m_tkrTreePoolIdx = m_tkrTreePool.insert(m_tkrTreePoolIdx, TkrTree());
+
+        // Expand the pool by some reasonable amount
+        int newSize = std::min((int)(2 * m_tkrTreePool.size()), (int)TREEMAXPOOLGROW);
+
+        // For good measure expand the pool by the amount we just calculated
+        m_tkrTreePool.insert(m_tkrTreePool.end(), newSize, TkrTree());
+    }
+
+    // Get the pointer to an available AcdDigi
+    tree = &*m_tkrTreePoolIdx++;
+
+    return tree;
+}
+
+TkrFilterParams* ReconObjectManager::getNewTkrFilterParams()
+{
+    TkrFilterParams* filterParams = 0;
+
+    // If we have exceeded our pre-allocated list of TkrTrackHits then expand
+    if (m_tkrFilterParamsPoolIdx == m_tkrFilterParamsPool.end())
+    {
+        // Add one more TkrFilterParamss just before the end... this is really a 
+        // trick to get a valid iterator at the end of the list
+        m_tkrFilterParamsPoolIdx = m_tkrFilterParamsPool.insert(m_tkrFilterParamsPoolIdx, TkrFilterParams());
+
+        // Expand the pool by some reasonable amount
+        int newSize = std::min((int)(2 * m_tkrFilterParamsPool.size()), (int)FILTERPARAMSMAXPOOLGROW);
+
+        // For good measure expand the pool by the amount we just calculated
+        m_tkrFilterParamsPool.insert(m_tkrFilterParamsPool.end(), newSize, TkrFilterParams());
+    }
+
+    // Get the pointer to an available AcdDigi
+    filterParams = &*m_tkrFilterParamsPoolIdx++;
+
+    return filterParams;
+}
+
 void ReconObjectManager::Delete(const char* opt)
 {
     if (opt[0] == 'A') {
@@ -205,13 +346,24 @@ void ReconObjectManager::Delete(const char* opt)
         m_tkrTrackParamsPool.clear();
         m_tkrVertexPool.clear();
         m_tkrTruncationPool.clear();
+        m_tkrVecPointPool.clear();
+        m_tkrVecPointsLinkPool.clear();
+        m_tkrVecNodePool.clear();
+        m_tkrTreePool.clear();
+        m_tkrFilterParamsPool.clear();
 
-        m_tkrClusterPoolIdx     = m_tkrClusterPool.begin();
-        m_tkrTrackPoolIdx       = m_tkrTrackPool.begin();
-        m_tkrTrackHitPoolIdx    = m_tkrTrackHitPool.begin();
-        m_tkrTrackParamsPoolIdx = m_tkrTrackParamsPool.begin();
-        m_tkrVertexPoolIdx      = m_tkrVertexPool.begin();
-        m_tkrTruncationPoolIdx  = m_tkrTruncationPool.begin();
+        m_tkrClusterPoolIdx       = m_tkrClusterPool.begin();
+        m_tkrTrackPoolIdx         = m_tkrTrackPool.begin();
+        m_tkrTrackHitPoolIdx      = m_tkrTrackHitPool.begin();
+        m_tkrTrackParamsPoolIdx   = m_tkrTrackParamsPool.begin();
+        m_tkrVertexPoolIdx        = m_tkrVertexPool.begin();
+        m_tkrTruncationPoolIdx    = m_tkrTruncationPool.begin();
+        m_tkrVecPointPoolIdx      = m_tkrVecPointPool.begin();
+        m_tkrVecPointsLinkPoolIdx = m_tkrVecPointsLinkPool.begin();
+        m_tkrVecNodePoolIdx       = m_tkrVecNodePool.begin();
+        m_tkrTreePoolIdx          = m_tkrTreePool.begin();
+        m_tkrFilterParamsPoolIdx  = m_tkrFilterParamsPool.begin();
+
         return;
     }
 
@@ -252,13 +404,49 @@ void ReconObjectManager::Delete(const char* opt)
         m_tkrTruncationPool.resize(5*TRUNCATIONPOOLSIZE);
     }
 
+    // Now the TkrVecPoint pool
+    if (m_tkrVecPointPool.size() > 5*VECPOINTPOOLSIZE)
+    {
+        m_tkrVecPointPool.resize(5*VECPOINTPOOLSIZE);
+    }
+
+    // Now the TkrVecPointsLink pool
+    if (m_tkrVecPointsLinkPool.size() > 5*VECPOINTSLINKPOOLSIZE)
+    {
+        m_tkrVecPointsLinkPool.resize(5*VECPOINTSLINKPOOLSIZE);
+    }
+
+    // Now the TkrVecNode pool
+    if (m_tkrVecNodePool.size() > 5*VECNODEPOOLSIZE)
+    {
+        m_tkrVecNodePool.resize(5*VECNODEPOOLSIZE);
+    }
+
+    // Now the TkrTree pool
+    if (m_tkrTreePool.size() > 5*TREEPOOLSIZE)
+    {
+        m_tkrTreePool.resize(5*TREEPOOLSIZE);
+    }
+
+    // Now the TkrFilterParams pool
+    if (m_tkrFilterParamsPool.size() > 5*FILTERPARAMSPOOLSIZE)
+    {
+        m_tkrFilterParamsPool.resize(5*FILTERPARAMSPOOLSIZE);
+    }
+
     // Ok, reset iterators to first element of our pools
-    m_tkrClusterPoolIdx     = m_tkrClusterPool.begin();
-    m_tkrTrackPoolIdx       = m_tkrTrackPool.begin();
-    m_tkrTrackHitPoolIdx    = m_tkrTrackHitPool.begin();
-    m_tkrTrackParamsPoolIdx = m_tkrTrackParamsPool.begin();
-    m_tkrVertexPoolIdx      = m_tkrVertexPool.begin();
-    m_tkrTruncationPoolIdx  = m_tkrTruncationPool.begin();
+    m_tkrClusterPoolIdx       = m_tkrClusterPool.begin();
+    m_tkrTrackPoolIdx         = m_tkrTrackPool.begin();
+    m_tkrTrackHitPoolIdx      = m_tkrTrackHitPool.begin();
+    m_tkrTrackParamsPoolIdx   = m_tkrTrackParamsPool.begin();
+    m_tkrVertexPoolIdx        = m_tkrVertexPool.begin();
+    m_tkrTruncationPoolIdx    = m_tkrTruncationPool.begin();
+    m_tkrVecPointPoolIdx      = m_tkrVecPointPool.begin();
+    m_tkrVecPointsLinkPoolIdx = m_tkrVecPointsLinkPool.begin();
+    m_tkrVecNodePoolIdx       = m_tkrVecNodePool.begin();
+    m_tkrTreePoolIdx          = m_tkrTreePool.begin();
+    m_tkrFilterParamsPoolIdx  = m_tkrFilterParamsPool.begin();
+
     return;
 }
 

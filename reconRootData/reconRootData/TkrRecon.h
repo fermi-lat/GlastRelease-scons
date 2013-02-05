@@ -5,10 +5,12 @@
 #include "TObjArray.h"
 
 #include "TkrCluster.h"
+#include "TkrTree.h"
 #include "TkrTrack.h"
 #include "TkrVertex.h"
 #include "TkrTruncationData.h"
 #include "TkrDiagnostics.h"
+#include "TkrFilterParams.h"
 /** 
  * @class TkrRecon
  * @brief Root container for the reconstructed Tracker information 
@@ -55,18 +57,43 @@ public:
     TObjArray *getTruncationDataCol() { return m_truncationDataCol; };
     void addTruncationData(TkrTruncationData* trdata) { m_truncationDataCol->Add(trdata); };
 
+    TObjArray* getTkrVecPointCol()    {return m_tkrVecPointCol;}
+    void addTkrVecPoint(TkrVecPoint* vecPoint) {m_tkrVecPointCol->Add(vecPoint);}
+
+    TObjArray* getTkrVecPointsLinkCol()    {return m_tkrVecPointsLinkCol;}
+    void addTkrVecPointsLink(TkrVecPointsLink* vecPoint) {m_tkrVecPointsLinkCol->Add(vecPoint);}
+
+    TObjArray* getTkrVecNodesCol()    {return m_tkrVecNodesCol;}
+    void addTkrVecNode(TkrVecNode* vecNode) {m_tkrVecNodesCol->Add(vecNode);}
+
+    TObjArray* getTkrFilterParamsCol()    {return m_tkrFilterParamsCol;}
+    void addTkrFilterParams(TkrFilterParams* filterParams) {m_tkrFilterParamsCol->Add(filterParams);}
+
+    TObjArray* getTkrTreeCol()    {return m_tkrTreeCol;}
+    void addTkrTree(TkrTree* tree) {m_tkrTreeCol->Add(tree);}
+
     // Added for macros & interactive access - EAC
     Int_t nCluster() const { return m_clusterCol->GetEntries() ; }    
     Int_t nTrack() const { return m_trackCol->GetEntries() ; }
     Int_t nCRTrack() const { return m_crTrackCol->GetEntries() ; }
     Int_t nVertex() const { return m_vertexCol->GetEntries() ; }
     Int_t nTruncationData() const { return m_truncationDataCol->GetEntries() ; }
+    Int_t nTkrVecPoints() const { return m_tkrVecPointCol->GetEntries();}
+    Int_t nTkrVecPointsLinks() const { return m_tkrVecPointsLinkCol->GetEntries();}
+    Int_t nTkrVecNodes() const {return m_tkrVecNodesCol->GetEntries();}
+    Int_t nTkrTrees() const {return m_tkrTreeCol->GetEntries();}
+    Int_t nTkrFilterParams() const {return m_tkrFilterParamsCol->GetEntries();}
 
     TkrCluster* getCluster(Int_t i) { return i < nCluster() ? dynamic_cast<TkrCluster*>(m_clusterCol->At(i)) : 0; };
     TkrTrack* getTrack(Int_t i) { return i < nTrack() ? dynamic_cast<TkrTrack*>(m_trackCol->At(i)) : 0; };
     TkrTrack* getCRTrack(Int_t i) { return i < nCRTrack() ? dynamic_cast<TkrTrack*>(m_crTrackCol->At(i)) : 0; };
     TkrVertex* getVertex(Int_t i) { return i < nVertex() ? dynamic_cast<TkrVertex*>(m_vertexCol->At(i)) : 0; };
     TkrTruncationData* getTruncationData(Int_t i) { return i < nTruncationData() ? dynamic_cast<TkrTruncationData*>(m_truncationDataCol->At(i)) : 0; };
+    TkrVecPoint* getTkrVecPoint(Int_t i) { return i < nTkrVecPoints() ? dynamic_cast<TkrVecPoint*>(m_tkrVecPointCol->At(i)) : 0;}
+    TkrVecPointsLink* getTkrVecPointsLink(Int_t i) { return i < nTkrVecPointsLinks() ? dynamic_cast<TkrVecPointsLink*>(m_tkrVecPointsLinkCol->At(i)) : 0;}
+    TkrVecNode* getTkrVecNode(Int_t i) { return i < nTkrVecNodes() ? dynamic_cast<TkrVecNode*>(m_tkrVecNodesCol->At(i)) : 0;}
+    TkrTree* getTkrTree(Int_t i) { return i < nTkrTrees() ? dynamic_cast<TkrTree*>(m_tkrTreeCol->At(i)) : 0;}
+    TkrFilterParams* getTkrFilterParams(Int_t i) { return i < nTkrFilterParams() ? dynamic_cast<TkrFilterParams*>(m_tkrFilterParamsCol->At(i)) : 0;}
     
 
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
@@ -85,6 +112,16 @@ private:
     TObjArray *m_truncationDataCol;
     /// ADW: cosmic-ray collection of TkrTrack
     TObjArray *m_crTrackCol;
+    /// collection of TkrVecPoints
+    TObjArray*      m_tkrVecPointCol;
+    /// collection of TkrVecPointsLink
+    TObjArray*      m_tkrVecPointsLinkCol;
+    /// collection of TkrVecNodes
+    TObjArray*      m_tkrVecNodesCol;
+    /// collection of TkrFilterParams
+    TObjArray*      m_tkrFilterParamsCol;
+    /// collection of TkrTrees
+    TObjArray*      m_tkrTreeCol;
 
 
     static TkrCluster *keepCluster[16384]; //!
@@ -94,7 +131,7 @@ private:
     static Int_t indCluster, indTrack, indVertex; //!        
     //, indTruncationData; 
 
-    ClassDef(TkrRecon,9)
+    ClassDef(TkrRecon,10)
 };
 
 #endif

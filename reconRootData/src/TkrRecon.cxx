@@ -14,6 +14,11 @@ TkrRecon::TkrRecon() {
     m_vertexCol   = 0;
     m_diagnostics = 0;
     m_truncationDataCol = 0;
+    m_tkrVecPointCol      = 0;
+    m_tkrVecPointsLinkCol = 0;
+    m_tkrVecNodesCol      = 0;
+    m_tkrFilterParamsCol  = 0;
+    m_tkrTreeCol          = 0;
 }
 
 TkrRecon::~TkrRecon() {
@@ -30,6 +35,16 @@ TkrRecon::~TkrRecon() {
     m_truncationDataCol = 0;
     if (m_diagnostics) delete m_diagnostics;
     m_diagnostics = 0;
+    if (m_tkrVecPointCol)       delete m_tkrVecPointCol;
+    m_tkrVecPointCol      = 0;
+    if (m_tkrVecPointsLinkCol)  delete m_tkrVecPointsLinkCol;
+    m_tkrVecPointsLinkCol = 0;
+    if (m_tkrVecNodesCol)       delete m_tkrVecNodesCol;
+    m_tkrVecNodesCol      = 0;
+    if (m_tkrFilterParamsCol)   delete m_tkrFilterParamsCol;
+    m_tkrFilterParamsCol  = 0;
+    if (m_tkrTreeCol)           delete m_tkrTreeCol;
+    m_tkrTreeCol          = 0;
 }
 
 void TkrRecon::initialize() {
@@ -38,6 +53,11 @@ void TkrRecon::initialize() {
     if (!m_crTrackCol)        m_crTrackCol        = new TObjArray();
     if (!m_vertexCol)         m_vertexCol         = new TObjArray();
     if (!m_truncationDataCol) m_truncationDataCol = new TObjArray();
+    if (!m_tkrVecPointCol)      m_tkrVecPointCol      = new TObjArray();
+    if (!m_tkrVecPointsLinkCol) m_tkrVecPointsLinkCol = new TObjArray();
+    if (!m_tkrVecNodesCol)      m_tkrVecNodesCol      = new TObjArray();
+    if (!m_tkrFilterParamsCol)  m_tkrFilterParamsCol  = new TObjArray();
+    if (!m_tkrTreeCol)          m_tkrTreeCol          = new TObjArray();
 }
 
 void TkrRecon::Clear(Option_t* option) {
