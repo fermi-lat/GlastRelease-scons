@@ -29,7 +29,7 @@
 #ifdef OBF_B1_1_3
 #include "FSWHeaders/CDM_pubdefs.h"
 #endif
-#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1)
+#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1) || defined(OBF_B3_1_3)
 #include "CDM/CDM_pubdefs.h"
 #endif
 
@@ -40,7 +40,7 @@
 #include "XFC/MFC_status.h"
 
 // Contains all info for a particular filter's release
-#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1)
+#if defined(OBF_B3_0_0) || defined(OBF_B3_1_0) || defined(OBF_B3_1_1) || defined(OBF_B3_1_3)
 #include "EFC/EFC.h"
 #include "HIPFilterLibsB3-0-0.h"
 #endif
@@ -206,7 +206,7 @@ StatusCode HIPFilterTool::initialize()
         m_filterLibs = new HIPFilterLibsB3_0_0();
 #elif  defined(OBF_B3_1_0)
         m_filterLibs = new HIPFilterLibsB3_0_0("B3-1-0");
-#elif  defined(OBF_B3_1_1)
+#elif  defined(OBF_B3_1_1) || defined(OBF_B3_1_3)
         m_filterLibs = new HIPFilterLibsB3_0_0("B3-1-1");
 #endif
 #ifdef OBF_B1_1_3
