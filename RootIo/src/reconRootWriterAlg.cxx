@@ -815,6 +815,18 @@ void reconRootWriterAlg::fillTkrTrees(TkrRecon* recon, const Event::TkrTreeCol* 
             secondLeafNodeRoot = (TkrVecNode*) secondLeafNodeRef.GetObject();
         }
 
+        // Don't forget to do the same for the tracks!
+        TRef trackRootRef = m_common.m_tkrTrackMap[treeTds->getBestTrack()];
+
+        TkrTrack* bestTrack   = (TkrTrack*) trackRootRef.GetObject();
+        TkrTrack* secondTrack = 0;
+
+        if (treeTds->size() > 1)
+        {
+            trackRootRef = m_common.m_tkrTrackMap[treeTds->back()];
+            secondTrack  = (TkrTrack*) trackRootRef.GetObject();
+        }
+
         // Get the "filter params" (Tree Axis information)
         TkrFilterParams* filterParamsRoot = convertTkrFilterParams(treeTds->getAxisParams());
 
@@ -825,6 +837,10 @@ void reconRootWriterAlg::fillTkrTrees(TkrRecon* recon, const Event::TkrTreeCol* 
                                  filterParamsRoot,
                                  treeTds->getBestBranchAngleToAxis(),
                                  treeTds->getAxisSeededAngleToAxis() );
+
+        // Add the tracks
+        treeRoot->Add(bestTrack);
+        if (secondTrack) treeRoot->Add(secondTrack);
 
         // Keep relation between Event and Root TkrVecPoints
         TRef ref = treeRoot;
