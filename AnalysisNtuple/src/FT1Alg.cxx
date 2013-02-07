@@ -105,11 +105,13 @@ public:
     Item CTBBestXDir;
     Item CTBBestYDir;
     Item CTBBestZDir;
-    Item CTBBestEnergyProb;
-    Item CTBBestEnergyRatio;
-    Item CTBCORE;
-    Item CTBClassLevel;
-    Item CTBParticleType;
+    // Not used
+    //Item CTBBestEnergyProb;
+    //Item CTBBestEnergyRatio;
+    //Item CTBCORE;
+    // Now done using xml prescription
+    //Item CTBClassLevel;
+    //Item CTBParticleType;
     Item Cal1MomXDir, Cal1MomYDir, Cal1MomZDir;
 
     //FT1 entries to create
@@ -272,11 +274,11 @@ FT1worker::FT1worker()
 , CTBBestXDir("CTBBestXDir")  
 , CTBBestYDir("CTBBestYDir")  
 , CTBBestZDir("CTBBestZDir")
-, CTBBestEnergyProb("CTBBestEnergyProb")
-, CTBBestEnergyRatio("CTBBestEnergyRatio")
-, CTBCORE("CTBCORE")
-, CTBClassLevel("CTBClassLevel")
-, CTBParticleType("CTBParticleType")
+//, CTBBestEnergyProb("CTBBestEnergyProb")
+//, CTBBestEnergyRatio("CTBBestEnergyRatio")
+//, CTBCORE("CTBCORE")
+//, CTBClassLevel("CTBClassLevel")
+//, CTBParticleType("CTBParticleType")
 , Cal1MomXDir("Cal1MomXDir")
 , Cal1MomYDir("Cal1MomYDir")
 , Cal1MomZDir("Cal1MomZDir")
@@ -338,9 +340,7 @@ see <a href="http://glast.gsfc.nasa.gov/ssc/dev/fits_def/definitionFT1.html">FT1
 <tr><td> FT1ConvPoint[X/Y/Z] 
 <td>F<td>  REMOVED! <b>Do not use; no longer filled!</b>
 <tr><td> FT1EventClass
-<td>I<td> 
-   Combination of CTBParticleType and CTBClassLevel
-   see: https://confluence.slac.stanford.edu/display/SCIGRPS/CTBClassLevel+Definition+for+P7
+<td>I<td>  No longer filled here
 </table> 
 */
 #if 0
@@ -373,6 +373,7 @@ void FT1worker::evaluate()
 
     // first calculate the EventClass, pass-7 style
 
+    /* no longer filled here, I'll leave it commented for now
     int particleType = (int)floor(CTBParticleType + 0.001);
     int classLevel   = (int)floor(100*CTBClassLevel + 0.001);
 
@@ -410,6 +411,7 @@ void FT1worker::evaluate()
             m_ft1eventclass = particleType*100 + classLevel/100;
         }
     }
+    */
 
     //
     // Projection of tracker and calorimeter direction into the sky and the Earth
