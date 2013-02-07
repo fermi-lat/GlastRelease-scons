@@ -50,7 +50,7 @@ public:
   virtual ~AcdTkrPoint() {;}
 
   /// Assignment operator
-  AcdTkrPoint& AcdTkrPoint::operator=(const AcdTkrPoint& other);
+  AcdTkrPoint& operator=(const AcdTkrPoint& other);
   
   /// Return the arclength along the track at which the track cross the nominal ACD volume
   /// This is calculated in 3D.  

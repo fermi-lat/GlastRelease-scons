@@ -41,7 +41,7 @@ CalXtalsParams::CalXtalsParams
 void CalXtalsParams::Clear( Option_t * )
 {
   init
-    ( 0.,0.,0.,0.,0.,0.,-1.,0.,TVector3(0.,0.,0.) ) ;
+    ( 0,0,0,0.,0.,0.,-1.,0.,TVector3(0.,0.,0.) ) ;
 }
 
 void CalXtalsParams::init(Int_t numXtals, Int_t numTruncXtals,

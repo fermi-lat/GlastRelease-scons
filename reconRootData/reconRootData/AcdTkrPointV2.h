@@ -45,7 +45,7 @@ public:
   virtual ~AcdTkrPointV2() {;}
 
   /// Assignment operator
-  AcdTkrPointV2& AcdTkrPointV2::operator=(const AcdTkrPointV2& other);
+  AcdTkrPointV2& operator=(const AcdTkrPointV2& other);
     
   inline Int_t getTrackIndex() const {
     return m_trackIndex;
