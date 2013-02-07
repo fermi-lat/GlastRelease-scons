@@ -60,6 +60,9 @@ public:
     TkrVecNode(TkrVecNode*             parent, 
                const TkrVecPointsLink* associatedLink);
 
+    // Also, null constructor for ROOT readback
+    TkrVecNode();
+
     virtual ~TkrVecNode(); 
 
     //! Retrieve pointer to class defininition structure
@@ -172,6 +175,30 @@ public:
 
     // "Proper" removal of a daughter node
     bool removeDaughter(Event::TkrVecNode* node, bool keepBest = true);
+
+    // Special initialization method for use with ROOT readback
+    void initializeInfo(Event::TkrVecPointsLink* associatedLink,
+                        Event::TkrVecNode*       parentNode,
+                        unsigned int             statusBits,
+                        double                   rmsAngleSum,
+                        int                      numAnglesInSum,
+                        int                      leaves,
+                        int                      branches,
+                        int                      depth,
+                        int                      bestNumBiLayers,
+                        double                   bestRmsAngle)
+    {
+        m_associatedLink    = associatedLink;
+        m_parent            = parentNode;
+        m_statusBits        = statusBits;
+        m_rmsAngleSum       = rmsAngleSum;
+        m_numAnglesInSum    = numAnglesInSum;
+        m_leaves            = leaves;
+        m_branches          = branches;
+        m_depth             = depth;
+        m_bestNumBiLayers   = bestNumBiLayers;
+        m_bestRmsAngle      = bestRmsAngle;
+    }
 
 private:
     // For resetting the "best" parameters by going up the parent tree
@@ -286,6 +313,20 @@ inline TkrVecNode::TkrVecNode(TkrVecNode* parent, const TkrVecPointsLink* associ
 
         m_statusBits = (m_statusBits & ~CURRENT_BILAYER_BITS) | ((biLayer << 5) & CURRENT_BILAYER_BITS);
     }
+}
+
+inline TkrVecNode::TkrVecNode() : 
+                              m_associatedLink(0),
+                              m_parent(0),
+                              m_statusBits(0),
+                              m_rmsAngleSum(0.),
+                              m_numAnglesInSum(0),
+                              m_leaves(0),
+                              m_branches(0),
+                              m_depth(1),
+                              m_bestNumBiLayers(0),
+                              m_bestRmsAngle(0.)
+{
 }
 
 inline TkrVecNode::~TkrVecNode()
