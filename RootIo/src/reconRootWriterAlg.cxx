@@ -61,7 +61,7 @@
 */
 
 class reconRootWriterAlg : public Algorithm
-{	
+{   
 public:
     
     reconRootWriterAlg(const std::string& name, ISvcLocator* pSvcLocator);
@@ -818,10 +818,6 @@ void reconRootWriterAlg::fillTkrTrees(TkrRecon* recon, const Event::TkrTreeCol* 
         // Get the "filter params" (Tree Axis information)
         TkrFilterParams* filterParamsRoot = convertTkrFilterParams(treeTds->getAxisParams());
 
-        // We need to add this TkrFilterParams to the recon object so that it will be properly 
-        // managed at end of event time. 
-        recon->addTkrFilterParams(filterParamsRoot);
-
         // Initialize the root TkrVecPoint
         treeRoot->initializeInfo(headNodeRoot, 
                                  bestLeafNodeRoot, 
@@ -1152,11 +1148,11 @@ void reconRootWriterAlg::fillGcrXtal(CalRecon *calRec, Event::GcrXtalCol* gcrXta
     log << MSG::DEBUG << "reconRootWriterAlg::fillGcrXtal BEGIN, gcrXtalColTds->size()=" << gcrXtalColTds->size()<< endreq;   
     
     for (gcrXtalColIterTds = gcrXtalColTds->begin(); gcrXtalColIterTds != gcrXtalColTds->end(); gcrXtalColIterTds++) {
-	
-	//GcrXtal* gcrXtalRoot = new GcrXtal();
+    
+    //GcrXtal* gcrXtalRoot = new GcrXtal();
     GcrXtal* gcrXtalRoot = calRec->addGcrXtal();
     RootPersistence::convert(**gcrXtalColIterTds,*gcrXtalRoot) ; 
-	
+    
        // calRec->addGcrXtal(gcrXtalRoot) ;   
     }   
     
