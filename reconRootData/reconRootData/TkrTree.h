@@ -32,7 +32,7 @@ class TkrTree: public TRefArray
 {
 public:
     // constructors - null case
-    TkrTree() {Clear();}
+    TkrTree();
 
     // constructurs - have the information case
 //    TkrTree(TkrTree* parent, const TkrVecPointsLink* associatedLink);

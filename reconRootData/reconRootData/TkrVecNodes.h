@@ -99,6 +99,8 @@ public:
     const Int_t                         getDepth()                const {return m_depth;}
     // Number of leaves in the tree
     const Int_t                         getNumLeaves()            const {return m_leaves;}
+    // Get the number of branches
+    const Int_t                         getNumBranches()          const {return m_branches;}
     // Get the tree starting layer
     const unsigned char                 getTreeStartLayer()       const;
     // Get the current bilayer
@@ -114,6 +116,8 @@ public:
     const bool                          canNodeBeShared()         const {return (m_statusBits & NODE_CAN_BE_SHARED)       != 0;}
     const bool                          isOnBestBranch()          const {return (m_statusBits & NODE_ON_BEST_BRANCH)      != 0;}
     const bool                          isOnNextBestBranch()      const {return (m_statusBits & NODE_ON_NEXT_BEST_BRANCH) != 0;}
+    // Return the full Status Bits
+    const UInt_t                        getStatusBits()           const {return m_statusBits;}
     // Get the number of BiLayers from this node along best branch
     const Int_t                         getBestNumBiLayers()      const {return m_bestNumBiLayers;}
     // Get the rms deviations from this node along best branch

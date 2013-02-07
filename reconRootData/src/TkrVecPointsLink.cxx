@@ -20,7 +20,7 @@ void TkrVecPointsLink::initializeInfo(const TkrVecPoint* firstPoint, const TkrVe
     // Are start and end points in the same tower?
     if (firstPoint->getXCluster()->getTkrId().getTowerX() == secondPoint->getXCluster()->getTkrId().getTowerX() &&
         firstPoint->getXCluster()->getTkrId().getTowerY() == secondPoint->getXCluster()->getTkrId().getTowerY())
-        m_statusBits = SAMETOWER;
+        m_statusBits |= SAMETOWER;
 
     // Get the slopes in both X and Y to make the direction of this link
     double deltaX  = firstPoint->getXCluster()->getPosition().x() - secondPoint->getXCluster()->getPosition().x();

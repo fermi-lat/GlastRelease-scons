@@ -5,14 +5,24 @@
 
 ClassImp(TkrTree)
 
+TkrTree::TkrTree() : m_headNode(0), 
+                     m_bestLeaf(0), 
+                     m_secondLeaf(0), 
+                     m_axisParams(0), 
+                     m_bestBranchAngleToAxis(0.), 
+                     m_axisSeededAngleToAxis(0.)
+{}
+
 void TkrTree::Clear(Option_t* /* option */) {
     // Make sure everything is properly zeroed
     m_headNode              = 0;
     m_bestLeaf              = 0;
     m_secondLeaf            = 0;
-    m_axisParams            = 0;
     m_bestBranchAngleToAxis = 0.;
     m_axisSeededAngleToAxis = 0.;
+
+    if (m_axisParams) delete m_axisParams;
+    m_axisParams = 0;
 
     TRefArray::Clear();
 }
