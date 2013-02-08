@@ -383,7 +383,7 @@ CalMSTClusteringTool::CalMSTClusteringTool(const std::string & type,
   declareInterface<ICalClusteringTool>(this) ; 
   
   // jobOptions declaration
-  declareProperty ("maxNumXtals"                 , m_maxNumXtals                  = 1000. ); // LPATE-102
+  declareProperty ("maxNumXtals"                 , m_maxNumXtals                  = 1000 ); // LPATE-102
   declareProperty ("maxEdgeWeightModel_thrLE"    , m_maxEdgeWeightModel_thrLE     = 880. );
   declareProperty ("maxEdgeWeightModel_thrPivEne", m_maxEdgeWeightModel_thrPivEne = 1000. );
   declareProperty ("maxEdgeWeightModel_thrHE"    , m_maxEdgeWeightModel_thrHE     = 120. );
