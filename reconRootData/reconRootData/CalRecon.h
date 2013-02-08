@@ -4,6 +4,8 @@
 #include "TObject.h"
 #include "TObjArray.h"
 #include "TClonesArray.h"
+#include "TMap.h"
+#include "TString.h"
 
 #include "CalEventEnergy.h"
 #include "CalXtalRecData.h"
@@ -67,6 +69,9 @@ public:
     GcrXtal* addGcrXtal();
     //void addGcrXtal(GcrXtal* gcrXtal)     { m_gcrXtalCol->Add(gcrXtal); };
     void addGcrTrack(GcrTrack* gcrTrack) {m_gcrTrack = gcrTrack;};
+
+    /// Provide access to the CalClusterMap
+    TMap* getCalClusterMap() { return m_calClusterMap;}
  
 private:
     /// list of CalXtalRecData
@@ -86,7 +91,10 @@ private:
     TObject* m_gcrTrack;
     Int_t m_indGcrXtal;
 
-    ClassDef(CalRecon,5)
+    /// This will contain the CalClusterMap
+    TMap* m_calClusterMap;
+
+    ClassDef(CalRecon,7)
 };
 
 #endif

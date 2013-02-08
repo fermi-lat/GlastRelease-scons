@@ -12,6 +12,7 @@ CalRecon::CalRecon()
     m_mipTrackCol = 0;
     m_gcrXtalCol = 0;
     m_gcrTrack=0;
+    m_calClusterMap = 0;
 
 }
 
@@ -57,6 +58,13 @@ CalRecon::~CalRecon()
         m_gcrTrack = 0;
     }
 
+    if (m_calClusterMap)
+    {
+        m_calClusterMap->DeleteAll();
+        delete m_calClusterMap;
+        m_calClusterMap = 0;
+    }
+
 }
 
 void CalRecon::initialize() 
@@ -68,6 +76,8 @@ void CalRecon::initialize()
 //    if (!m_gcrXtalCol) m_gcrXtalCol = new TObjArray();
     m_gcrXtalCol = 0;
     m_indGcrXtal = -1;
+
+    if (!m_calClusterMap) m_calClusterMap = new TMap();
 }
 
 void CalRecon::Clear(Option_t* /* option */) 
@@ -79,6 +89,7 @@ void CalRecon::Clear(Option_t* /* option */)
     if (m_gcrXtalCol) m_gcrXtalCol->Clear("C");
     m_indGcrXtal = -1;
     if (m_gcrTrack) m_gcrTrack = 0;
+    if (m_calClusterMap) m_calClusterMap->Clear();
 }
 
 void CalRecon::Print(Option_t *option) const 
