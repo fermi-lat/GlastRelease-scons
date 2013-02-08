@@ -53,7 +53,7 @@
  */
 
 class relationRootWriterAlg : public Algorithm
-{	
+{   
 public:
     
     relationRootWriterAlg(const std::string& name, ISvcLocator* pSvcLocator);
@@ -329,6 +329,7 @@ StatusCode relationRootWriterAlg::writeCalReconRelations() {
             calXtalRecDataRoot = (CalXtalRecData*)calXtalRecDataRef.GetObject();
         // It can happen that a noise hit will not have an McIntegratingHit associated
         } else {
+            log << MSG::DEBUG << "Could not located McIntegratingHit TDS/ROOT pair" << endreq;
             //log << MSG::WARNING << "Could not located McIntegratingHit TDS/ROOT pair" << endreq;
             continue;
         }
