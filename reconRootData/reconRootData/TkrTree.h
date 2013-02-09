@@ -15,7 +15,7 @@
 #ifndef ROOT__TkrTree_H
 #define ROOT__TkrTree_H
 
-#include "TRefArray.h"
+#include "TObjArray.h"
 #include "reconRootData/TkrVecNodes.h"
 #include "reconRootData/TkrFilterParams.h"
 #include "reconRootData/TkrTrack.h"
@@ -28,7 +28,7 @@ using namespace std;
 #endif
 #endif
 
-class TkrTree: public TRefArray
+class TkrTree: public TObjArray
 {
 public:
     // constructors - null case

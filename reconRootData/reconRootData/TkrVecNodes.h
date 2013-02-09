@@ -15,8 +15,7 @@
 #ifndef ROOT__TkrVecNodes_H
 #define ROOT__TkrVecNodes_H
 
-#include "TRefArray.h"
-#include "TObject.h"
+#include "TObjArray.h"
 #include "reconRootData/TkrVecPointsLink.h"
 #include <vector>
 #ifndef R__GLOBALSTL
@@ -27,7 +26,7 @@ using namespace std;
 #endif
 #endif
 
-class TkrVecNode: public TRefArray
+class TkrVecNode: public TObjArray
 {
 public:
     // enumerate the status bits

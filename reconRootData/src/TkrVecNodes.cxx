@@ -11,7 +11,7 @@ void TkrVecNode::Clear(Option_t* /* option */) {
     m_parent          = 0;
     m_statusBits      = 0;
     m_rmsAngleSum     = 0.;
-    m_numAnglesInSum  = 0;
+    m_numAnglesInSum  = 0.;
     m_leaves          = 0;
     m_branches        = 0;
     m_depth           = 0;
@@ -19,7 +19,7 @@ void TkrVecNode::Clear(Option_t* /* option */) {
     m_bestRmsAngle    = 0.;
 
     // Don't forget to zap the array of pointers to daughters!
-    TRefArray::Clear();
+    TObjArray::Clear();
 }
 
 void TkrVecNode::Print(Option_t *option) const {

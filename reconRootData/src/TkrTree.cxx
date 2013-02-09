@@ -24,7 +24,7 @@ void TkrTree::Clear(Option_t* /* option */) {
     if (m_axisParams) delete m_axisParams;
     m_axisParams = 0;
 
-    TRefArray::Clear();
+    TObjArray::Clear();
 }
 
 void TkrTree::Print(Option_t *option) const {
