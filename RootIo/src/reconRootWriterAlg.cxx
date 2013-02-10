@@ -16,6 +16,8 @@
 
 #include "Event/Recon/TreeClusterRelation.h"
 
+#include "Event/Recon/CalRecon/CalClusterMap.h"
+
 #include "LdfEvent/EventSummaryData.h"
 
 #include "AncillaryDataEvent/Recon.h"
