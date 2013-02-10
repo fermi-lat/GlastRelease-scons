@@ -38,7 +38,7 @@ rdbModel rdbModel-02-15-00
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-16-01
+Event Event-14-16-02
 GlastSvc GlastSvc-11-01-00
 GuiSvc GuiSvc-03-11-00
 DetDisplay DetDisplay-03-06-00
@@ -50,7 +50,7 @@ EventIntegrity EventIntegrity-00-09-00
 commonRootData commonRootData-02-17-00
 mcRootData mcRootData-02-23-00
 digiRootData digiRootData-11-15-00
-reconRootData reconRootData-09-30-00
+reconRootData reconRootData-10-00-01
 gcrSelectRootData gcrSelectRootData-02-03-00
 rootUtil rootUtil-01-05-01
 rootTestData rootTestData-04-05-00
@@ -60,7 +60,7 @@ AncillaryDataEvent AncillaryDataEvent-01-05-00
 AncillaryDataUtil AncillaryDataUtil-01-01-00
 
 RootConvert RootConvert-01-52-00
-RootIo RootIo-25-05-00
+RootIo RootIo-25-07-01
 
 
 configData configData-01-14-01
@@ -83,7 +83,7 @@ GCRCalib GCRCalib-01-12-00
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-04
-TkrRecon TkrRecon-10-38-02
+TkrRecon TkrRecon-10-38-04
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-00
+AnalysisNtuple AnalysisNtuple-02-71-02
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -143,9 +143,9 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-08-00
 
-Gleam Gleam-07-11-17
+Gleam Gleam-07-11-18
 
-SConsFiles SConsFiles-01-08-09
-GlastRelease-scons/containerSettings containerSettings-00-11-00
+SConsFiles SConsFiles-01-09-00
+GlastRelease-scons/containerSettings containerSettings-00-12-00
 
 celestialSources/EarthPhenom EarthPhenom-00-02-01
