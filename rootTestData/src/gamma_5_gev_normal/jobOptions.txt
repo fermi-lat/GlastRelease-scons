@@ -5,13 +5,13 @@
 //$Header$
 
 // start with the basic program defined in Gleam
-#include "$GLEAMROOT/src/basicOptions.txt"
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 // following, if uncommented, will run the GUI
-//#include "$GLEAMROOT/src/guiOptions.txt"
-//#include "$GLEAMROOT/src/fredOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt"
+//#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"
 
-FluxSvc.source_lib += { "$(ROOTTESTDATAROOT)/src/gamma_5_gev_normal/source_library.xml" } ;
+FluxSvc.source_lib += { "$ROOTTESTXMLPATH/source_library.xml" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 
 //// set root output from merit with following
