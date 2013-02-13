@@ -21,7 +21,8 @@ SlopeCorrectedMeasErrs::SlopeCorrectedMeasErrs(ITkrGeometrySvc* tkrGeom) :
 
 TkrCovMatrix SlopeCorrectedMeasErrs::computeMeasErrs(const Event::TkrTrackParams& newPars, 
                                                      const TkrCovMatrix&          oldCovMat, 
-                                                     const Event::TkrCluster&     cluster)
+                                                     const Event::TkrCluster&     cluster,
+                                                     const double                 sclFctr)
 {
  
     // Compute the Measurement covariance taking into account the 
@@ -42,7 +43,7 @@ TkrCovMatrix SlopeCorrectedMeasErrs::computeMeasErrs(const Event::TkrTrackParams
         slope = newPars.getySlope();
     }
 
-    double error = getError(clusWid, slope);
+    double error = sclFctr * getError(clusWid, slope);
     
     newCov(measured, measured) = error*error;
     newCov(other, other)       = oldCovMat(other,other);

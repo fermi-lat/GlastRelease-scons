@@ -28,7 +28,8 @@ public:
 
     TkrCovMatrix computeMeasErrs(const Event::TkrTrackParams& newPars, 
                                  const TkrCovMatrix&          oldCovMat, 
-                                 const Event::TkrCluster&     cluster);
+                                 const Event::TkrCluster&     cluster,
+								 const double                 sclFctr);
 
 private:
     ITkrGeometrySvc* m_tkrGeom;

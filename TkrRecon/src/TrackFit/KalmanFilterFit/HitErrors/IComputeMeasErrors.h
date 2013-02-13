@@ -21,7 +21,8 @@ public:
 
     virtual TkrCovMatrix computeMeasErrs(const Event::TkrTrackParams& newPars, 
                                          const TkrCovMatrix&          oldCovMat, 
-                                         const Event::TkrCluster&     cluster) = 0;
+                                         const Event::TkrCluster&     cluster,
+										 const double                 sclFctr = 1.) = 0;
 };
 
 

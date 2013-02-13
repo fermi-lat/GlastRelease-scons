@@ -20,7 +20,8 @@ ClusWidMeasErrs::ClusWidMeasErrs(ITkrGeometrySvc* tkrGeom) :
 
 TkrCovMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrTrackParams& /*newPars*/, 
                                               const TkrCovMatrix&          oldCovMat, 
-                                              const Event::TkrCluster&     cluster)
+                                              const Event::TkrCluster&     cluster,
+                                              const double                 sclFctr)
 {
     // Determines the measured position error as the cluster width times the strip resolution
 
@@ -33,7 +34,7 @@ TkrCovMatrix ClusWidMeasErrs::computeMeasErrs(const Event::TkrTrackParams& /*new
 
     if(cluster.getTkrId().getView() == idents::TkrId::eMeasureY) std::swap(measured, other);
 
-    double error = clusWid * m_tkrGeom->siResolution();
+    double error = sclFctr * clusWid * m_tkrGeom->siResolution();
     
     newCov(measured, measured) = error*error;
     newCov(other, other)       = oldCovMat(other,other);

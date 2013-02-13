@@ -20,7 +20,8 @@ StandardMeasErrs::StandardMeasErrs(ITkrGeometrySvc* tkrGeom) :
 
 TkrCovMatrix StandardMeasErrs::computeMeasErrs(const Event::TkrTrackParams& newPars, 
                                                const TkrCovMatrix&          oldCovMat, 
-                                               const Event::TkrCluster&     cluster)
+                                               const Event::TkrCluster&     cluster,
+                                               const double                 sclFctr)
 {
     enum paramIndex {XPOS=1, XSLOPE=2, YPOS=3, YSLOPE=4};
 

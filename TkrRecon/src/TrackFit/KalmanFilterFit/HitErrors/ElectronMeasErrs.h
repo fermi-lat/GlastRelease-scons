@@ -29,7 +29,8 @@ public:
 
     TkrCovMatrix computeMeasErrs(const Event::TkrTrackParams& newPars, 
                                  const TkrCovMatrix&          oldCovMat, 
-                                 const Event::TkrCluster&     cluster);
+                                 const Event::TkrCluster&     cluster,
+								 const double                 sclFctr);
 
 private:
     // Define a private class which is used to compute the measured error
