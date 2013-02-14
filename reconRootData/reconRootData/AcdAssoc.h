@@ -70,7 +70,7 @@ public:
 
   UInt_t nAcdHitPoca() const { return m_hitPocae.GetEntriesFast(); }
 
-  UInt_t nAcdGapPoca() const { return m_hitPocae.GetEntriesFast(); }
+  UInt_t nAcdGapPoca() const { return m_gapPocae.GetEntriesFast(); }
 
   const AcdTkrHitPocaV2* getHitPoca(UInt_t i = 0) const;
 
