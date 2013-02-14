@@ -14,7 +14,7 @@
 * $Header$
 */
 
-class CalParams
+class CalParams : public TObject
 {
 public:
 

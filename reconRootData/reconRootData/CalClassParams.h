@@ -13,7 +13,7 @@
 *
 */
 
-class CalClassParams
+class CalClassParams : public TObject
 {
 public:
 

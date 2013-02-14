@@ -16,16 +16,9 @@
 #define ROOT__TreeClusterRelation_H
 
 #include "TObject.h"
+#include "TRef.h"
 #include "reconRootData/TkrTree.h"
 #include "reconRootData/CalCluster.h"
-#include <vector>
-#ifndef R__GLOBALSTL
-#ifndef WIN32
-using std::vector;
-#else
-using namespace std;
-#endif
-#endif
 
 class TreeClusterRelation: public TObject
 {
@@ -56,10 +49,6 @@ public:
     /// Status word bits organized like:
     ///        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
     ///         <               > <               > <               >  <              >
-    enum StatusBits {CALPARAMS  = 0x0001,  //Set if using Calorimeter parameters
-                     TKRPARAMS  = 0x0002,  //Set if using Tracker parameters
-                     FIRSTPASS  = 0x1000,  //Set if first pass numbers
-                     SECONDPASS = 0x2000}; //Set if second pass numbers used
 
     /// Set data members
     void                     setTree(TkrTree* tree)                         {m_tree             = tree;}
@@ -70,27 +59,25 @@ public:
     void                     setClusEnergy(Double_t energy)                 {m_clusEnergy       = energy;}
 
     /// Recover data members
-    TkrTree*                 getTree()                                      {return m_tree;}
-    CalCluster*              getCluster()                                   {return m_cluster;}
     Double_t                 getTreeClusDoca()                              {return m_treeClusDoca;}
     Double_t                 getTreeClusCosAngle()                          {return m_treeClusCosAngle;}
     Double_t                 getTreeClusDistAtZ()                           {return m_treeClusDistAtZ;}
     Double_t                 getClusEnergy()                                {return m_clusEnergy;}
 
-    const TkrTree*           getTree()                                const {return m_tree;}
-    const CalCluster*        getCluster()                             const {return m_cluster;}
+    const TkrTree*           getTree()                                const {return (const TkrTree*)m_tree.GetObject();}
+    const CalCluster*        getCluster()                             const {return (const CalCluster*)m_cluster.GetObject();}
     const Double_t           getTreeClusDoca()                        const {return m_treeClusDoca;}
     const Double_t           getTreeClusCosAngle()                    const {return m_treeClusCosAngle;}
     const Double_t           getTreeClusDistAtZ()                     const {return m_treeClusDistAtZ;}
     const Double_t           getClusEnergy()                          const {return m_clusEnergy;}
 
 private:
-        TkrTree*    m_tree;
-        CalCluster* m_cluster;
-        Double_t    m_treeClusDoca;
-        Double_t    m_treeClusCosAngle;
-        Double_t    m_treeClusDistAtZ;
-        Double_t    m_clusEnergy;
+    TRef       m_tree;
+    TRef       m_cluster;
+    Double32_t m_treeClusDoca;
+    Double32_t m_treeClusCosAngle;
+    Double32_t m_treeClusDistAtZ;
+    Double32_t m_clusEnergy;
 
     ClassDef(TreeClusterRelation,1)
 };

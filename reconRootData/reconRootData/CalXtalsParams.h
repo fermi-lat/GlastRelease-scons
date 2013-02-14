@@ -18,7 +18,7 @@
 */
 
 
-class CalXtalsParams
+class CalXtalsParams : public TObject
 {
  public:
   
