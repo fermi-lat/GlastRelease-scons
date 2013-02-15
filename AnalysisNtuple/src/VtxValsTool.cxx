@@ -388,7 +388,7 @@ StatusCode VtxValsTool::calculate()
         2.*sinPhi*cosPhi*VTX_Sxy + cosPhi*cosPhi*VTX_Syy));
     //VTX_ErrAsym     = fabs(VTX_Sxy/(VTX_Sxx + VTX_Syy));
 
-    VTX_CovDet      = sqrt(std::max(0.0f,VTX_Sxx*VTX_Syy-VTX_Sxy*VTX_Sxy))*VTX_zdir*VTX_zdir;
+    VTX_CovDet      = sqrt(std::max(0.0f,VTX_Sxx*VTX_Syy-VTX_Sxy*VTX_Sxy))*VTX_zdir*VTX_zdir*fabs(VTX_zdir);
     VTX_x0        = x0.x();
     VTX_y0        = x0.y();
     VTX_z0        = x0.z();
