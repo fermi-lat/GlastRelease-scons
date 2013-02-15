@@ -50,7 +50,7 @@ EventIntegrity EventIntegrity-00-09-00
 commonRootData commonRootData-02-17-00
 mcRootData mcRootData-02-23-00
 digiRootData digiRootData-11-15-00
-reconRootData reconRootData-10-00-01
+reconRootData reconRootData-10-00-02
 gcrSelectRootData gcrSelectRootData-02-03-00
 rootUtil rootUtil-01-05-01
 rootTestData rootTestData-04-05-00
@@ -83,7 +83,7 @@ GCRCalib GCRCalib-01-12-00
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-04
-TkrRecon TkrRecon-10-38-04
+TkrRecon TkrRecon-10-38-07
 
 # ACD
 AcdDigi AcdDigi-03-11-00
