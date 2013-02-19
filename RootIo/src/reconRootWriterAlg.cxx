@@ -960,6 +960,8 @@ TkrTrackHit* reconRootWriterAlg::convertTkrTrackHit(const Event::TkrTrackHit* tr
                     convertTkrTrackParams(trackHitTds->getTrackParams(Event::TkrTrackHit::FILTERED));
     if (trackHitTds->validSmoothedHit())  trackHit->getTrackParams(TkrTrackHit::SMOOTHED) = 
                     convertTkrTrackParams(trackHitTds->getTrackParams(Event::TkrTrackHit::SMOOTHED));
+    if (trackHitTds->validRevFit())       trackHit->getTrackParams(TkrTrackHit::REVFIT) = 
+                    convertTkrTrackParams(trackHitTds->getTrackParams(Event::TkrTrackHit::REVFIT));
     if (trackHitTds->validMaterial())     trackHit->getTrackParams(TkrTrackHit::QMATERIAL) = 
                     convertTkrTrackParams(trackHitTds->getTrackParams(Event::TkrTrackHit::QMATERIAL));
     
