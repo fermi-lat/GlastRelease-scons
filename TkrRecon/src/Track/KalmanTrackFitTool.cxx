@@ -1110,7 +1110,7 @@ double KalmanTrackFitTool::doFilterStep(Event::TkrTrackHit& referenceHit, Event:
 
         // Update this TDS cov mat for fit track angles
         const Event::TkrCluster* cluster = filterHit.getClusterPtr();
-        measCov = m_fitErrs->computeMeasErrs(refHitFilteredParams, measCov, *cluster );
+        measCov = m_fitErrs->computeMeasErrs(refHitFilteredParams, measCov, *cluster, m_hitErrorScaleFactor );
 
         // Extract the measured state vector from the TDS version
         // There must be a better way to do this...

@@ -27,7 +27,7 @@
 #include "Event/Recon/TkrRecon/TkrCluster.h"
 #include "Event/Recon/TkrRecon/TkrEventParams.h"
 #include "Event/Recon/CalRecon/CalEventEnergy.h"
-#include "Event/Recon/CalRecon/CalCluster.h"
+#include "Event/Recon/CalRecon/CalClusterMap.h"
 #include "Event/TopLevel/EventModel.h"
 
 // Utilities, geometry, etc.
@@ -132,11 +132,12 @@ StatusCode TkrCalFilterTool::doFilterStep()
     if (calEventEnergyMap && !calEventEnergyMap->empty())
     {
         // Recover the collection of Cal Clusters in the TDS
-        Event::CalClusterCol* calClusterCol = 
-            SmartDataPtr<Event::CalClusterCol>(m_dataSvc,EventModel::CalRecon::CalClusterCol);
+        Event::CalClusterMap* calClusterMap = 
+            SmartDataPtr<Event::CalClusterMap>(m_dataSvc,EventModel::CalRecon::CalClusterMap);
 
         // Using the first Cluster as the key, recover the "correct" energy relations
-        Event::CalEventEnergyMap::iterator calEnergyItr = calEventEnergyMap->find(calClusterCol->front());
+        Event::CalEventEnergyMap::iterator calEnergyItr 
+            = calEventEnergyMap->find(calClusterMap->getRawClusterVec().front());
 
         if (calEnergyItr != calEventEnergyMap->end())
             calEventEnergy = calEnergyItr->second.front();
