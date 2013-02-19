@@ -129,7 +129,7 @@ StatusCode TkrCalFilterTool::doFilterStep()
     Event::CalEventEnergyMap* calEventEnergyMap = 
             SmartDataPtr<Event::CalEventEnergyMap>(m_dataSvc,EventModel::CalRecon::CalEventEnergyMap);
 
-    if (calEventEnergyMap && !calEventEnergyMap->empty())
+    if (calEventEnergyMap != 0 && !calEventEnergyMap->empty())
     {
         // Recover the collection of Cal Clusters in the TDS
         Event::CalClusterMap* calClusterMap = 

@@ -443,7 +443,9 @@ StatusCode TreeBasedTool::firstPass()
                         if (m_reorderTrees)
                         {
                             // Recover the Cal Cluster Vec
-                            Event::CalClusterVec& calClusterVec = calClusterMap->getRawClusterVec();
+                            Event::CalClusterVec calClusterVec;
+                            
+                            if (calClusterMap) calClusterVec = calClusterMap->getRawClusterVec();
 
                             Event::TreeClusterRelationVec treeRelVec = buildTreeRelVec(m_treeClusterAssociator->getClusterToRelationMap(), 
                                                                                        m_treeClusterAssociator->getTreeToRelationMap(), 
