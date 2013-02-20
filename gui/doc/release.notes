@@ -4,6 +4,7 @@
  @verbatim
  * EOH *
 
+ gui-03-09-00 20-Feb-2013    jrb put Windows-only objects in a separate static lib
  gui-03-08-00 20-Aug-2012    jrb for Windows no-install-headers
  gui-03-07-08 19-Jan-2012    jrb bring closer to current CMT build strategy
  gui-03-07-07 16-Jan-2012    hmk modify gui_app_linkopts to avoid pulling in

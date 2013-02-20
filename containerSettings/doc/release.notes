@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-00-13-00 20-Feb-2013    jrb patches to get Windows Gaudi programs to build properly in all circumstances
  containerSettings-00-12-01 11-Feb-2013    jrb Use obf B3-1-3 on Linux
  containerSettings-00-12-00 10-Feb-2013 heather extFiles v0r12 for p8 worksheet update
  containerSettings-00-11-00 11-Dec-2012 heather add f2c for st_facilities
