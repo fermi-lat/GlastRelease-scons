@@ -1,5 +1,6 @@
 # -*- python -*-
 #$Header$
+import os.path
 Import('baseEnv')
 from fermidebug import fdebug
 
@@ -24,7 +25,11 @@ def GaudiProgram(env, name, source, test, package=''):
             env.AppendUnique(CPPDEFINES = [ourdef])
         setPriorityObject = ''
         if baseEnv['PLATFORM'] == 'win32':
-            setPriorityObject = baseEnv.Object('#gr_app/src/setPriority.cxx')
+            conVarName = 'gr_app_src'
+            if (env.get(conVarName, '') == ''):
+                env.Tool('findPkgPath', package = 'gr_app', subDir = 'src')
+            setPriorityObject = baseEnv.Object(os.path.join(env['gr_app_src'],
+                                                                'setPriority.cxx'))
         if test == 1:
             env['GAUDIPROG'] = 'test'
             env.Install(target='src',
@@ -38,9 +43,8 @@ def GaudiProgram(env, name, source, test, package=''):
             mainObjects = [env.Object('src/GlastMain.cxx')]
             if env['PLATFORM'] == 'win32':
                 objdir = '#/lib/' + env['VARIANT']
-                mainObjects += [objdir + '/WinMain.obj', 
-                                objdir + '/wingui.res', setPriorityObject]
-
+                mainObjects += [setPriorityObject]
+                env.Tool('addLibrary', library = ['guiForMain'])
             return env.Program(name, source + mainObjects)
 
 baseEnv.AddMethod(GaudiProgram)
