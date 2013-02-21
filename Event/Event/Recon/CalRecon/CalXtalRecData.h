@@ -113,14 +113,15 @@ namespace Event
       Point getPosition() const {return m_pos;}
               
       /// Retrieve average energy of two faces for the best range
+      //  was arithmetic mean untill Event-14-16-02
       inline double getEnergy() const
-      {return (getEnergy(idents::CalXtalId::POS) + getEnergy(idents::CalXtalId::NEG))/2;}
+      {return sqrt(getEnergy(idents::CalXtalId::POS)*getEnergy(idents::CalXtalId::NEG));}
       
       /// retrieve energy from specified face
       inline double getEnergy(const idents::CalXtalId::XtalFace face) const
       {return face == idents::CalXtalId::POS ? m_eneP : m_eneM;}
       
-      /// retrieve energy range from specified face
+      /// retrieve range from specified face
       inline char getRange(const idents::CalXtalId::XtalFace face) const 
       {return face == idents::CalXtalId::POS ? m_rangeP : m_rangeM;}
 
