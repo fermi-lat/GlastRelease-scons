@@ -84,9 +84,9 @@ public:
   
   /// Energy and associated error
   Int_t      m_nFitLayers;
-  Double32_t m_chiSquare;
+  Double_t m_chiSquare;
   
-  ClassDef(CalFitParams,2)
+  ClassDef(CalFitParams,3)
    
 } ;
 

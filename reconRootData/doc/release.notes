@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-11-00-00 21-Feb-2013 heather move from Double32 to Double
  reconRootData-10-00-03 21-Feb-2013 bregeon CalXtalRecData::getEnergy() now uses geometric mean - LPATE-87
  reconRootData-10-00-02 14-Feb-2013 TU Fix two readback crashes: ACDreconV2 readback, CalCluster <--> CalXtalRecData relations readback
  reconRootData-10-00-01 09-Feb-2013  TU  Converted TkrTree and TkrVecNodes to TObjArray's instead of TRefArray's

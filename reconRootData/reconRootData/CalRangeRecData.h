@@ -49,9 +49,9 @@ public:
 private:
     
         /// Energy associated with the plus end of the crystal
-    Double32_t m_eneP;
+    Double_t m_eneP;
         /// Energy associated with the minus end of the crystal
-    Double32_t m_eneM;
+    Double_t m_eneM;
         /// Position of the crystal
     TVector3 m_pos;
         /// Range associated with the plus end of the crystal
@@ -59,7 +59,7 @@ private:
         /// Range associated with the minus end of the crystal
     Char_t m_rangeM;
     
-    ClassDef(CalRangeRecData,2)  // Reconstructed CAL xtals
+    ClassDef(CalRangeRecData,3)  // Reconstructed CAL xtals
 };
 
 

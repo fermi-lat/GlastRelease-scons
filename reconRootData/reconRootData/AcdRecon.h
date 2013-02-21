@@ -182,7 +182,7 @@ public:
         static_cast<const AcdTkrIntersection*>((*m_acdTkrIntersectionCol)[i]) : 0;  
     }  
 
-    inline Double32_t getCornerDoca() const { return m_cornerDoca; };
+    inline Double_t getCornerDoca() const { return m_cornerDoca; };
 
     // does "deep" copy onto TClonesArray (w/ placement new)
     AcdTkrPoca* addAcdTkrPoca(AcdTkrPoca& poca);
@@ -271,14 +271,14 @@ public:
 private:
 
     /// Total energy in MeV deposited in the whole ACD system
-    Double32_t m_totEnergy;
+    Double_t m_totEnergy;
     /// Distance of Closest Approach for the reconstructed gamma, 
     /// if there is one
-    Double32_t m_gammaDoca;
+    Double_t m_gammaDoca;
     /// Minimum Distance of Closest Approach for all tracks and all ACD tiles
-    Double32_t m_doca;
+    Double_t m_doca;
     /// New Bill Atwood DOCA calculation using edge of tiles
-    Double32_t m_actDist;
+    Double_t m_actDist;
     /// Total number of ACD tiles above threshold
     Int_t m_tileCount;
     /// Collection of distance of closest approach calculations
@@ -297,17 +297,17 @@ private:
     /// record of the tile with the maximum Active Distance
     AcdId m_maxActDistId;
     /// Total MC Energy (MeV) deposited in the ribbons
-    Double32_t m_totRibbonEnergy;
+    Double_t m_totRibbonEnergy;
     /// Total number of hit ribbons
     Int_t m_ribbonCount;
  
-    Double32_t m_ribbonActDist;
+    Double_t m_ribbonActDist;
     AcdId m_ribbonActDistId;
 
     // Store the expected track intersection points
     TClonesArray *m_acdTkrIntersectionCol;
 
-    Double32_t m_cornerDoca;
+    Double_t m_cornerDoca;
 
     // Store the track-tile( or ribbon) pocas
     TClonesArray *m_acdTkrPocaCol;
@@ -328,7 +328,7 @@ private:
     TClonesArray *m_acdSplashVarCol;
 
     /// New Bill Atwood DOCA calculation using edge of tiles for downward pocas
-    Double32_t m_actDist_down;
+    Double_t m_actDist_down;
 
     /// record of the tile with the maximum Active Distance for downward pocas
     AcdId m_maxActDistId_down;
@@ -337,7 +337,7 @@ private:
     /// downward pocas
     vector<Double_t> m_rowActDistCol_down;
 
-    ClassDef(AcdRecon,16) // Acd Reconstruction data
+    ClassDef(AcdRecon,17) // Acd Reconstruction data
 };
 
 #endif

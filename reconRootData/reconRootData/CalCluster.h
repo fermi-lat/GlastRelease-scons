@@ -94,9 +94,9 @@ private:
     
     /// Old data members retained to allow reading old ROOT files
     CalParams m_params;
-    Double32_t m_rmsLong;
-    Double32_t m_rmsLongAsym;
-    Double32_t m_rmsTrans;
+    Double_t m_rmsLong;
+    Double_t m_rmsLongAsym;
+    Double_t m_rmsTrans;
     Int_t m_numTruncXtals;
     /// end old data members
 
@@ -108,7 +108,7 @@ private:
     CalClassParams m_classParams ;
     std::string m_producerName ;
 
-    ClassDef(CalCluster,10)
+    ClassDef(CalCluster,11)
 };
 
 

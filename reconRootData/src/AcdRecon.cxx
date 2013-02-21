@@ -107,13 +107,13 @@ void AcdRecon::initialize(Double_t e, Double_t ribbonE, Int_t count,
                           Double_t doca, const AcdId &minDocaId, 
                           Double_t actDist,
                           const AcdId &maxActDistId, 
-                          Double32_t ribbonActDist, 
+                          Double_t ribbonActDist, 
                           const AcdId &ribbonActDistId,
                           const std::vector<Double_t> &rowDoca,
                           const std::vector<Double_t> &rowActDist, 
                           const std::vector<AcdId> &idCol,
                           const std::vector<Double_t> &energyCol,
-                          Double32_t cornerDoca) {
+                          Double_t cornerDoca) {
     Clear();
     m_totEnergy = e;
     m_totRibbonEnergy = ribbonE;
@@ -352,7 +352,7 @@ void AcdRecon::Fake( Int_t ievent, Float_t randNum ) {
     std::vector<Double_t> energyCol ;
     energyCol.push_back(f) ;
     energyCol.push_back(2.*f) ;
-    Double32_t cornerDoca = f*randNum ;
+    Double_t cornerDoca = f*randNum ;
     
     initialize(
         energy, ribbonE, count, ribbonCount, gDoca, doca, 

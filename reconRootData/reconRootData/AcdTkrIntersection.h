@@ -121,28 +121,28 @@ private:
     /// Global position of expected hit 
     TVector3      m_location;
     ///  X Position of the expected hit in Tile Coords
-    Double32_t    m_localX;
+    Double_t    m_localX;
     ///  Y Position of the expected hit in Tile Coords
-    Double32_t    m_localY;
+    Double_t    m_localY;
     
     ///  Covariance terms in expected intersection
-    Double32_t    m_localXXCov;        // local X Error squared  (x for Top, x for +-y planes, y for +- x plane) 
-    Double32_t    m_localYYCov;        // local Y Error squared  (y for Top, z for +-x and +-y planes)
-    Double32_t    m_localXYCov;        // correlation term of local X-Y error   
+    Double_t    m_localXXCov;        // local X Error squared  (x for Top, x for +-y planes, y for +- x plane) 
+    Double_t    m_localYYCov;        // local Y Error squared  (y for Top, z for +-x and +-y planes)
+    Double_t    m_localXYCov;        // correlation term of local X-Y error   
 
     ///  Distance from first hit to intersection
-    Double32_t    m_arcLengthToIntersection;
+    Double_t    m_arcLengthToIntersection;
   
     ///  Pathlength through the ACD tile
-    Double32_t    m_pathlengthInTile;
+    Double_t    m_pathlengthInTile;
 
     ///  Mask to say if the tile has a signal, and if it fired discriminators
     UChar_t       m_tileHit;
 
     //   Angle between the track and the detector element plane
-    Double32_t    m_cosTheta;
+    Double_t    m_cosTheta;
 
-    ClassDef(AcdTkrIntersection,2)
+    ClassDef(AcdTkrIntersection,3)
 
 };
 
