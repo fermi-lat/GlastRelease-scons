@@ -15,7 +15,6 @@
 //
 ApplicationMgr.DLLs   += {"GaudiAlg","GaudiAud"};
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
-
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
 
@@ -43,7 +42,8 @@ ApplicationMgr.TopAlg = {"Sequencer/Top"};
 Top.Members = {"Sequencer/Digitization",
                "Sequencer/Calibration",
                "Sequencer/Integrity",
-               "Sequencer/NtupleMaker",
+               "Sequencer/NtupleMaker1",
+               "Sequencer/NtupleMaker2",
                "Sequencer/Output"
                 };
 
@@ -171,7 +171,7 @@ CalReconEnergy.OutputLevel = 5;
 // ACD recon:
 //
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
-Acd.Members = {"AcdReconAlg","AcdReconAlgV2"}; //Turn on ACD recon v2
+Acd.Members = {"AcdReconAlgV2"}; // ACD recon v2 only
 
 //
 // Merit and AnalysisNtuple:
@@ -180,50 +180,42 @@ ApplicationMgr.DLLs   += {"AnalysisNtuple","ntupleWriterSvc","GlastClassify"};
 ApplicationMgr.ExtSvc += {"RootTupleSvc"};
 
 //
-// For dealing with non-MC data:
+// NtupleMaker: FT2, MeritTuple, Classification, FT1 and Obf
 //
-AnalysisNtupleAlg.toolList = {"Glt","Acd","Acd2","TkrHit","Tkr","Vtx","Cal","Evt","Obf"};
-AnalysisNtupleAlg.realData = true; // removes any Mc tools
-
-//
-// FT2:
-//
-NtupleMaker.Members += {"PtValsAlg"}; 
-
-PtValsAlg.PointingHistory = {"FT2_Gleam.fits", "", ""};
+NtupleMaker1.Members = {"PtValsAlg/PtValsAlg1",   
+                        "AnalysisNtupleAlg/AnalysisNtupleAlg1",
+                        "ClassifyAlg/ClassifyAlg1",
+                        "FT1Alg/FT1Alg1",                  
+                        "ObfCoordsAlg/ObfCoordsAlg1" 
+                       };
 
 
+// AnalysisNtuple tools list (AnalysisNtupleAlg, xxxValsTools)
+AnalysisNtupleAlg1.toolList = {"Glt","Acd2","TkrHit","Tkr", "Tree", "Vtx","Cal","Evt","Obf"};
+AnalysisNtupleAlg1.realData = true; // removes any Mc tools
+AnalysisNtupleAlg1.tupleName = "MeritTuple";
+
+// Classification (ClassifyAlg)
+ClassifyAlg1.UseTMine = true;
+ClassifyAlg1.TMineCacheFile = "MeritTuple_cache.root";
+ClassifyAlg1.xmlFileName = "$(EXTFILESSYS)/pass8Analysis/xml/Pass8_Analysis_Open.xml";
+
 //
-// S/C alignment:
+// S/C alignment (FT1Alg)
 //
-FT1Alg.CorrectForAberration = true;
-FT1Alg.AlignmentFlavor      = "vanilla";
+FT1Alg1.CorrectForAberration = true;
+FT1Alg1.AlignmentFlavor      = "vanilla";
 
 
 //
-// Make ntuple:
+// Define the default output sequence (everything)
 //
-NtupleMaker.Members += {"AnalysisNtupleAlg"}; 
-
-//
-// Name of ntuple:
-//
-AnalysisNtupleAlg.tupleName = "MeritTuple";
-
-//
-// Other members of ntuple:
-//
-NtupleMaker.Members += {"ClassifyAlg"}; 
-NtupleMaker.Members += {"FT1Alg"}; 
-NtupleMaker.Members += {"ObfCoordsAlg"};
-
-//
-// Define the output sequence:
-//
-Output.Members  = {"FhSetAlg","FhSetMeritAlg","reconRootWriterAlg"};
-Output.Members += {"CalTupleAlg"};
-Output.Members += {"gcrSelectRootWriterAlg"};
-
+Output.Members  = {"FhSetAlg",
+                   "FhSetMeritAlg",
+                   "reconRootWriterAlg",
+                   "relationRootWriterAlg",
+                   "CalTupleAlg",
+                   "gcrSelectRootWriterAlg"};
 
 //
 // Tracker geometry services:
@@ -232,14 +224,12 @@ ApplicationMgr.ExtSvc += {"TkrGeometrySvc"};
 ApplicationMgr.ExtSvc += {"TkrInitSvc"};
 
 //
-// This fixes a HE track pattern recognition problem
-// *** it should be done in TkrRecon ***
+// Geometry: Use flight geometry, don't remove!
 //
-TkrFilterFirst.FilterToolName = "TkrCalFilterTool";
-
+GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight01/flightSegVols.xml";
 
 //
-// Calibrations:
+// Calibrations
 //
 #include "$GLEAMJOBOPTIONSPATH/jobOptions/pipeline/calibrations.txt"
 
@@ -270,8 +260,8 @@ ApplicationMgr.Runable = "RootIoSvc";
  
 
 
-//
-// The following things can be changed by the user:
+//-------------------------------------------------
+// The following things can be changed by the user
 //
 
 
@@ -280,7 +270,6 @@ ApplicationMgr.Runable = "RootIoSvc";
 //  2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 //
 MessageSvc.OutputLevel = 3;
-
 
 //
 // TKR output:
@@ -305,17 +294,16 @@ ToolSvc.GcrSelectTool.OutputLevel = 4;
 ApplicationMgr.EvtMax = 5;
 
 
-//
-// Geometry: Use flight geometry!
-//
-GlastDetSvc.xmlfile = "$(XMLGEODBSXMLPATH)/flight01/flightSegVols.xml";
-
 
 //
 // Name of input digi Root file:
 //
 digiRootReaderAlg.digiRootFileList = {"digi.root"};
 
+//
+// Name of input FT2 file (PtValsAlg)
+//
+PtValsAlg1.PointingHistory = {"FT2_Gleam.fits", "", ""};
 
 //
 // Name of output Merit Root file:
@@ -328,6 +316,10 @@ RootTupleSvc.filename = "merit.root";
 //
 reconRootWriterAlg.reconRootFile = "recon.root";
 
+//
+// Name of output relation Root file:
+//
+relationRootWriterAlg.rootFile = "relation.root";
 
 //
 // Name of output CAL ntuple:
