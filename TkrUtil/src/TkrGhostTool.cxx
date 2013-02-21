@@ -695,7 +695,7 @@ StatusCode TkrGhostTool::flagEarlyCalClusters()
     std::vector<Event::TkrTrack*> trackVec = m_trackVecTool->getTrackVec();
 
     // Get the vector of "raw" clusters
-    Event::CalClusterVec& calClusterVec = calClusterMap->getRawClusterVec();
+    Event::CalClusterVec calClusterVec = calClusterMap->getRawClusterVec();
 
     unsigned int trackCount, itk;
     double minDoca;
