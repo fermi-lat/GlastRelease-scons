@@ -25,6 +25,7 @@
 #include "MomentsClusterInfo.h"
 
 #include "CalXtalResponse/ICalCalibSvc.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 
 // A useful typedef 
 typedef  XtalDataList::iterator XtalDataListIterator;
@@ -333,6 +334,8 @@ private:
   
   ICalCalibSvc* m_calCalibSvc;
 
+  IGlastDetSvc *m_glastDetSvc;
+
   //! Utility for filling clusters
   ICalClusterFiller* m_clusterInfo;
 
@@ -413,6 +416,11 @@ StatusCode CalMSTClusteringTool::initialize()
         throw GaudiException("Service [CalCalibSvc] not found", name(), sc);
     }
 
+    if(service( "GlastDetSvc", m_glastDetSvc, true ).isFailure()) 
+    {
+        throw GaudiException("Service [GlastDetSvc] not found", name(), sc);
+    }
+        
     // check if jobOptions were passed
     log << MSG::DEBUG << "m_maxNumXtals                    set to " << m_maxNumXtals                  << endreq;
     log << MSG::DEBUG << "m_maxEdgeWeightModel_thrLE       set to " << m_maxEdgeWeightModel_thrLE     << endreq;
@@ -425,7 +433,7 @@ StatusCode CalMSTClusteringTool::initialize()
     
     // Cluster filling utility
     // -- To be replaced with a generic version soon
-    m_clusterInfo = new MomentsClusterInfo(m_calReconSvc,m_calCalibSvc);
+    m_clusterInfo = new MomentsClusterInfo(m_calReconSvc, m_calCalibSvc, m_glastDetSvc);
 
     return StatusCode::SUCCESS ;
 }
@@ -571,14 +579,17 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
         // Second, real sorting.
         m_clusterTree.sort(compare_total_energy);
 
+        
         // Now add the uber tree to the end of our list
         // But only do so if more than one cluster found
         if (m_clusterTree.size() > 1) m_clusterTree.push_back(m_uberTree);
     
+
         //-------------------------------------
         // Convert the results into CalClusters
         calClusterCol->clear() ;
 
+        
         for (std::list<MSTTree>::iterator treeIter = m_clusterTree.begin(); treeIter != m_clusterTree.end(); treeIter++)
           {
             // create a temporary list of xtals
@@ -594,6 +605,7 @@ StatusCode CalMSTClusteringTool::findClusters(Event::CalClusterCol* calClusterCo
               }
 
             // create and fill the cluster - from Tracy
+           
             Event::CalCluster* cluster = m_clusterInfo->fillClusterInfo(xTalClus);
             std::string producerName("CalMSTClusteringTool/") ;
             producerName += cluster->getProducerName() ;

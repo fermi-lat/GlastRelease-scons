@@ -244,6 +244,8 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
   double chisq   = -1.;
   bool iterate   = true;
   Point centroid = inputCentroid;
+  
+  //std::cout << "Begin clu mom an with "<< dataVec.size() << " xtals" << std::endl;
 
   // Iterate until either failure (chisq < 0) or all remaining data points 
   // are within "range" of axis
@@ -294,7 +296,9 @@ double CalMomentsAnalysis::doIterativeMomentsAnalysis(CalMomentsDataVec dataVec,
       // Finally, make sure have enough points remaining to proceed!
       if (dataVec.size() < 3) break;
     }
+  //std::cout << "End clu mom an with "<< dataVec.size() << " xtals" << std::endl;
 
+  
   return chisq;
 }
 
@@ -478,6 +482,8 @@ int CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
       wtot += dataPoint.getWeight(); 
     }
 
+  Vector main_axis = CalMomentsAnalysis::getAxis(1);      
+  
   // real loop for errors
   for(vecIter = dataVec.begin(); vecIter != dataVec.end(); vecIter++)
     {
@@ -493,7 +499,7 @@ int CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
       z2 = z*z;
       w2 = w*w;  
 
-      Vector main_axis = CalMomentsAnalysis::getAxis(1);      
+      
       
       // Error values based on crystal dimensions (Atwood et al 2009). 
       /*
@@ -552,19 +558,20 @@ int CalMomentsAnalysis::calcCovariance(CalMomentsDataVec& dataVec,
       if (dataPoint.isx()){
         // Longitudinal Position Error (from a quick chat with Eric G.)
         // 10 mm for a MIP (~11MeV) than decrease as 1/sqrt(E) up to 1 mm at high E than stable
-        // param as sqrt([0]*[0]/w + [1]*[1]); with [0] = 31; and [1] = 0.8
         // Johan suggested 1 + 9/sqrt(w/10)
-        dx =  1. + 9./sqrt(w/10.);
+        //dx =  1. + 9./sqrt(w/10.);
+	//dx =  4.26 + 5.20/sqrt(w/10.); // from a fit
+        // than we studied it on AG MC and setup a function on CalMomentData
+	dx = dataPoint.getLongitudinalPositionErr(centroid, main_axis);
         dy = tlen / sqrt12;
       }
       else{
-        dy = 1. + 9./sqrt(w/10.); 
+	dy = dataPoint.getLongitudinalPositionErr(centroid, main_axis);
         dx = tlen / sqrt12;
       }
       dz = zlen / sqrt12;
-      dw = 0.01*w; // ERROR ON XTAL ENERGY SET TO 1%
-      
-  
+      //dw = 0.01*w; // ERROR ON XTAL ENERGY SET TO 1%
+      dw = dataPoint.getWeightErr();
       
       //
       dx2 = dx*dx;
@@ -730,11 +737,7 @@ void CalMomentsAnalysis::calcCovarianceAxisSimple(Vector momAxis) {
   /// Write the error matrix
   m_axisErr = cov;
 
-  /// Just a test to see everything is working
-  //cov(1,1) = 1;
-  //cov(2,2) = 2;
-  //cov(3,3) = 3;
-  //return cov;
+ 
 
 }
 

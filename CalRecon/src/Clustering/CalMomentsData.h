@@ -59,7 +59,7 @@ class CalMomentsData
   };
 
   /// Constructor from all the parameters.
-  CalMomentsData(const Point& position, const double weight, int tower, int layer, int column);
+  //CalMomentsData(const Point& position, const double weight, int tower, int layer, int column);
 
   /// Convenience constructor from a Event::CalXtalRecData* recData object.
   CalMomentsData(Event::CalXtalRecData* recData);
@@ -77,6 +77,7 @@ class CalMomentsData
   inline int getColumn()                     const { return m_column; }
   inline double getDistToAxis()              const { return m_distToAxis; }
   inline double getCoordAlongAxis()          const { return m_coordAlongAxis; }
+  inline double getLongitudinalPosition()    const { return m_longitudinalPosition; }
 
   /// Provides set functions.
   inline void setBasePosition(const Point& pos)    { m_basePosition = pos; }
@@ -87,6 +88,7 @@ class CalMomentsData
   inline void setColumn(int column)                { m_column = column; }
   inline void setDistToAxis(double dist)           { m_distToAxis = dist; }
   inline void setCoordAlongAxis(double coord)      { m_coordAlongAxis = coord; }
+  inline void setLongitudinalPosition(double pos)  { m_longitudinalPosition = pos; }
 
   /// Methods to check wheter the underlying xtals lies along the x or y axis.
   bool isx()                                 const { return (m_layer % 2 == 0); }
@@ -94,6 +96,7 @@ class CalMomentsData
 
   /// Manipulate status bits.
   inline void setStatusBit(StatusBits bit)         { m_statusBits |=  bit; }
+  //inline void setXtalStatusBit(StatusBits bit)         { m_xtalRecData->setStatusBits(bit); } // really useful?
   inline void clearStatusBit(StatusBits bit)       { m_statusBits &= ~bit; }
   inline bool checkStatusBit(StatusBits bit) const { return ( (m_statusBits & bit) != ZERO ); }
   inline bool posFaceSaturated()             const { return checkStatusBit(POS_FACE_SATURATED); }
@@ -142,6 +145,17 @@ class CalMomentsData
   /// neater to use this method, followed by the proper get methods.
   void setReferenceAxis(const Point& centroid, const Vector& axis);
 
+  /// function to get the longitudial position error of this xtal
+  /// based on empirical tests with MC allGamma
+  /// centroid and axis inputs allow for an optional correction based on xtal distance to axis.
+  double getLongitudinalPositionErr() const; 
+  double getLongitudinalPositionErr(const Point& centroid, const Vector& axis) const; 
+
+  /// function to get the weight error of this xtal
+  /// based on empirical tests with MC allGamma
+  double getWeightErr() const;
+
+
   /// Define how to sort.
   const bool operator<(const CalMomentsData& right)  const
   {return m_distToAxis < right.getDistToAxis();}
@@ -173,6 +187,11 @@ class CalMomentsData
   double m_distToAxis;
   /// The position along the "axis" of this point (with sign, used to calculate the skewness).
   double m_coordAlongAxis;
+  /// Longitudinal position along xtal, in xtal reference frame (0 at the center)
+  double m_longitudinalPosition;
+
+  
+  Event::CalXtalRecData *m_xtalRecData;
 };
 
 

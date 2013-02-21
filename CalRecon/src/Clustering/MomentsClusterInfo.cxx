@@ -5,7 +5,7 @@
 #include "CalUtil/CalDefs.h"
 #include "Event/Digi/CalDigi.h"
 
-#include "idents/CalXtalId.h"
+
 
 namespace 
 {
@@ -40,9 +40,10 @@ double MomentsClusterInfo::m_fit_zdirection = 0;
 int MomentsClusterInfo::m_fit_option = 0;
 
 /// Constructor
-MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, ICalCalibSvc *calCalibSvc) :
+MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, ICalCalibSvc *calCalibSvc, IGlastDetSvc *detSvc) :
   m_calReconSvc(calReconSvc),
   m_calCalibSvc(calCalibSvc),  
+  m_detSvc(detSvc),
   m_p0(0.,0.,0.),
   m_p1(0.,0.,0.)
 {
@@ -51,6 +52,7 @@ MomentsClusterInfo::MomentsClusterInfo(ICalReconSvc* calReconSvc, ICalCalibSvc *
   m_minuit = new TMinuit(5);
   //Sets the function to be minimized
   m_minuit->SetFCN(fcncal);
+
   return;
 }
 
@@ -355,6 +357,16 @@ void MomentsClusterInfo::fillMomentsData(const XtalDataList* xtalVec,
       if ( xtalIter == xtalMax ) continue;
       
       CalMomentsData momData(*xtalIter);
+      
+      // Fill longitudinal position data, convert Position using XtalRecTool function
+      if (m_detSvc){
+        // Get pointer to the reconstructed data for given crystal.
+        Event::CalXtalRecData* recData = *xtalIter;
+        idents::CalXtalId xtalId = recData->getPackedId();
+        Point pos = recData->getPosition();
+        float xLong = point2Pos(xtalId, pos);
+        momData.setLongitudinalPosition(xLong);
+      }
 
       // This is done in MomentsClusterInfo::CorrectSaturatedXtalLongPositionAndEnergy (Ph. Bruel, 2012/12/02)
 //       momData.applyFitCorrection(cluster->getFitParams(), m_calReconSvc);
@@ -958,4 +970,73 @@ double MomentsClusterInfo::SetXtalEnergyFromPosition(Event::CalXtalRecData* recD
     }
   
   return 0;
+}
+
+
+// This function duplicates the one in CalXtalResponse/src/CalRecon/XtalRecTool.cxx
+// it is not a good idea to have a copy, but I wasn't able to use the XtalRecTool here
+// anyway, this is reference system conversion, so this function will not change in this experiment 
+/** \brief convert 3d point in LAT geometry space to longitudinal pos along cal xtal
+    \param pXtal input position vector
+    \param pos output longitudinal position in mm from center of xtal
+*/
+float  MomentsClusterInfo::point2Pos(const idents::CalXtalId xtalId,
+                                     const Point pXtal) const {
+  
+  // create Volume Identifier for segments 0 & 11 of this crystal
+  // volId info snagged from 
+  // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
+
+  const CalUtil::XtalIdx xtalIdx(xtalId);
+  idents::VolumeIdentifier segm0Id, segm11Id;
+  
+  int   m_nCsISeg;   // number of geometric segments per Xtal
+  //float m_CsILength; //  Xtal length
+  int   m_eLATTowers;// the value of fLATObjects field, defining LAT towers 
+  int   m_eTowerCAL; // the value of fTowerObject field, defining calorimeter module 
+  int   m_eXtal;     // the value of fCellCmp field defining CsI crystal
+  m_detSvc->getNumericConstByName("eLATTowers", &m_eLATTowers);
+  m_detSvc->getNumericConstByName("eTowerCAL",  &m_eTowerCAL);
+  m_detSvc->getNumericConstByName("eXtal",      &m_eXtal);
+  m_detSvc->getNumericConstByName("nCsISeg",    &m_nCsISeg);
+
+  
+  // init seg0 w/ info shared by both.
+  segm0Id.append(m_eLATTowers);
+  segm0Id.append(xtalIdx.getTwr().getRow());
+  segm0Id.append(xtalIdx.getTwr().getCol());
+  segm0Id.append(m_eTowerCAL);
+  segm0Id.append(xtalIdx.getLyr().val());
+  segm0Id.append(xtalIdx.getLyr().getDir().val()); 
+  segm0Id.append(xtalIdx.getCol().val());
+  segm0Id.append(m_eXtal);
+
+  // copy over shared info
+  segm11Id = segm0Id;
+  
+  // init segment specific info.
+  segm0Id.append(0); // segment Id
+  segm11Id.append(m_nCsISeg-1); // set segment number for the last segment
+  
+  HepTransform3D transf;
+
+  //get 3D transformation for segment 0 of this crystal
+  m_detSvc->getTransform3DByID(segm0Id,&transf);
+  //get position of the center of the segment 0
+  const Vector vect0 = transf.getTranslation();
+
+  //get 3D transformation for the last segment of this crystal
+  m_detSvc->getTransform3DByID(segm11Id,&transf);
+  //get position of the center of the last segment
+  const Vector vect11 = transf.getTranslation();
+          
+  Point p0(0., 0., 0.);
+  // position of the crystal center - need to bogus p0 to cast Vector -> Point
+  const Point pCenter = p0 + (vect0+vect11)*0.5; 
+
+  Point hit = p0 +(pXtal - pCenter);
+  float pos = (xtalId.isX()) ?  hit.x() : hit.y();
+
+  return pos;
+
 }

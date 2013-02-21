@@ -15,7 +15,8 @@
 
 #include <algorithm>
 
-
+#include <math.h>
+/*
 CalMomentsData::CalMomentsData(const Point& position, const double weight,
                                int tower, int layer, int column) :
   m_statusBits(ZERO),
@@ -30,12 +31,14 @@ CalMomentsData::CalMomentsData(const Point& position, const double weight,
 { 
   // Nothing to do, here.
 }
+*/
 
 CalMomentsData::CalMomentsData(Event::CalXtalRecData* recData) :
   m_statusBits(ZERO),
   m_corrPosition(Point(-9999., -9999., -9999.)),
   m_distToAxis(0.),
-  m_coordAlongAxis(0.)
+  m_coordAlongAxis(0.),
+  m_xtalRecData(recData)
 {
   /// Set the class members according to the underlying CalXtalRecData object.
   m_basePosition = recData->getPosition();
@@ -50,6 +53,7 @@ CalMomentsData::CalMomentsData(Event::CalXtalRecData* recData) :
   if (recData->negFaceSaturated()) {
     setNegFaceSaturated();
     }
+        
 }
 
 const Point& CalMomentsData::getPosition() const
@@ -182,6 +186,55 @@ double CalMomentsData::calcDistToAxis(const Point& centroid, const Vector& axis)
 double CalMomentsData::calcCoordAlongAxis(const Point& centroid, const Vector& axis)
 {
   return m_coordAlongAxis = (getPosition() - centroid).dot(axis);
+}
+
+double CalMomentsData::getLongitudinalPositionErr() const
+{
+  return getLongitudinalPositionErr(Point(0,0,0), Vector(0.,0.,0.));
+}
+
+double CalMomentsData::getLongitudinalPositionErr(const Point& centroid, const Vector& axis) const
+{
+  // longitudinal error in p0 + p1/sqrt(E/10)
+  // where p0 and p1 depends on x=abs(longPos) 
+  // additional correction for dist/position wrt axis is included in p0
+  
+  double x = fabs(m_longitudinalPosition);
+  double p0 = 0.1 + exp(0.045*x -5.);
+  if (axis != Vector(0.,0.,0.)) { // non null axis: assume non null cntr and eval addidional p0 correction
+    // coordinate along axis - from calcCoordAlongAxis
+    double c = (getPosition() - centroid).dot(axis);
+    // distance to axis - from calcDistToAxis
+    Vector diffVec   = centroid - getPosition();
+    Vector crossProd = axis.cross(diffVec);
+    double d = crossProd.mag();
+    p0 = std::min(8., p0*(1.+0.0073*c +0.11*d - 0.0003*c*d));
+  }
+  double p1 = std::max(4.2 - exp(0.09*x -11.), 0.); // avoid negative values
+  double err = p0 + p1/sqrt(m_weight/10.);    
+  return err;
+}
+
+double CalMomentsData::getWeightErr() const
+{
+  if (m_weight >0 ) {
+
+    //double logw = log10(m_weight);
+    //double err  = ((logw)*0.01*exp(-0.85*logw) + 0.04*exp(-2.3*logw))*m_weight;
+    
+    // same alg as for position, different params
+    // not optimal, but still reasonable...
+    double x = fabs(m_longitudinalPosition);
+    double p0 = 0.000557 + exp(0.0483*x -11.6);
+    double p1 = std::max(0.00821 - exp(0.0358*x -10.5), 0.); // avoid negative values 
+    double err = p0 + p1/sqrt(m_weight/10.);
+
+    return err;
+
+  }
+
+  return 0.;
+
 }
 
 void CalMomentsData::setReferenceAxis(const Point& centroid, const Vector& axis)
