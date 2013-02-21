@@ -91,7 +91,8 @@ private:
     float VTX_Quality; 
     float VTX_Chisq; 
     float VTX_AddedRL;
-    float VTX_Status;
+    
+    unsigned int VTX_Status;
 
     float VTX2_transDoca;
     float VTX2_longDoca;
@@ -107,7 +108,8 @@ private:
     float VTX2_Angle;
     float VTX2_DOCA;
     float VTX2_Head_Sep;
-    float VTX2_Status;
+    
+    unsigned int VTX2_Status;
 
     float VTXN_xdir;
     float VTXN_ydir;
@@ -203,7 +205,7 @@ from the best track. (For 1-track vertices, these would be the same.)
 <tr><td> Vtx2TransDoca
 <td>F<td>   Transverse distance of the 2nd vertex point from the axis of the first vertex
 <tr><Td> Vtx[/2]Status
-<td>F<td>   Summary of track composition and topology.
+<td>U<td>   Summary of track composition and topology.
             See TkrVertex.h in the Event package for the current description.
             The definitions as of GR v7r2 are:
 @verbatim

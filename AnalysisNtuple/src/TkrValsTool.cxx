@@ -178,7 +178,8 @@ private:
     float Tkr_1_WiderFrac;
 
     float Tkr_1_Qual;
-    float Tkr_1_Type;
+    
+    unsigned int Tkr_1_Type;
 
     float Tkr_1_DifHits;
     float Tkr_1_KalEne;
@@ -237,7 +238,9 @@ private:
     float Tkr_2_FirstChisq;
     float Tkr_2_FirstGaps; 
     float Tkr_2_Qual;
-    float Tkr_2_Type;
+    
+    unsigned int Tkr_2_Type;
+    
     float Tkr_2_Hits;
     float Tkr_2_FirstHits;
     float Tkr_2_FirstLayer; 
@@ -482,7 +485,7 @@ Maximum is currently 64, can be negative if chisqared gets large.
 This is used primarily to order the tracks during patrec. 
 <strong>It's not a good idea to cut on this variable!</strong>  
 <tr><td> Tkr[1/2]Type  
-<td>F<td>   These are the status bits from the trackign, containing information
+<td>U<td>   These are the status bits from the trackign, containing information
 about how the track was found and fitted.   
 See Event/Recon/TkrRecon/TkrTrack.h for the current description.     
 As of GlastRelease v17r31 (June 2009), the status word bits organized as follows:
