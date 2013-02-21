@@ -46,10 +46,10 @@ Double_t CalXtalRecData::getEnergy(UShort_t readoutIndex, CalXtalId::XtalFace fa
 };
 
 
+// Method below used arithmetic mean until reconRootData-10-00-01
 Double_t CalXtalRecData::getEnergy() const
 {
-    return (getEnergy(0,CalXtalId::POS)
-        +getEnergy(0,CalXtalId::NEG))/2;
+    return sqrt(getEnergy(0,CalXtalId::POS)*getEnergy(0,CalXtalId::NEG));
 };
 
 
@@ -114,7 +114,7 @@ Bool_t CalXtalRecData::CompareInRange( const CalXtalRecData & ref, const std::st
     Double_t energyP = getEnergy(0,CalXtalId::POS) ;
     Double_t energyN = getEnergy(0,CalXtalId::NEG) ;
     result = result && rootdatautil::CompareInRange(energy,
-      (energyP+energyN)/2.,"Average Energy") ;
+      sqrt(energyP*energyN),"Geometric mean Energy") ;
       
     const CalRangeRecData * rangeRecData = getRangeRecData(0) ;
     result = result && rootdatautil::CompareInRange(energyP,

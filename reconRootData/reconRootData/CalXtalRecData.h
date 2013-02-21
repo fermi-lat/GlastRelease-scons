@@ -7,6 +7,7 @@
 #include "TObject.h"
 #include "TVector3.h"
 #include <vector>
+#include <cmath>
 #ifndef R__GLOBALSTL
 #ifndef WIN32
 using std::vector;
@@ -75,6 +76,7 @@ public:
     
     
     /// Retrieve average energy of two faces for the best range
+    //  Used arithmetic mean until reconRootData-10-00-01
     Double_t getEnergy() const;
     
     /// Retrieve the position for the best range
