@@ -7,7 +7,7 @@
 //      of reconstruction quantities.
 //          
 // Author(s):
-//      Heather Kelly			
+//      Heather Kelly           
 
 #include "AcdReconAlgV2.h"
 
@@ -178,7 +178,7 @@ StatusCode AcdReconAlgV2::initialize ( ) {
       return sc;
     }
 
-    getParameters(); 	
+    getParameters();    
     return sc;
 }
 
@@ -395,10 +395,10 @@ StatusCode AcdReconAlgV2::reconstruct (const Event::AcdDigiCol& digiCol) {
       log << MSG::ERROR << "Failed to register AcdRecon" << endreq;
     }
 
-    // ownership handed to TDS, clear local copies	
+    // ownership handed to TDS, clear local copies  
     acdTkrAssocs.clear();
     acdCalAssocs.clear();
-    acdHits.clear();	
+    acdHits.clear();    
 
     if ( log.level() <= MSG::DEBUG ) {         
       log << MSG::DEBUG << "AcdReconAlgV2::reconstruct() finished" << std::endl << std::endl << endreq;
@@ -468,7 +468,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
         return StatusCode::SUCCESS;
     } else {
       log << MSG::DEBUG << "AcdReconAlgV2::trackDistances using " << tracksTds->size() << " tracks." << endreq;
-    }	
+    }   
 
     // Places to store the track endpoint and direction
     AcdRecon::TrackData upwardExtend;
@@ -498,7 +498,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     const Event::TkrTrackHit* lastHit = (*trackTds)[lastHitIdx];
     downwardExtend.m_energy = lastHit->getEnergy();
     downwardExtend.m_index = iTrack;
-    downwardExtend.m_upward = false;	
+    downwardExtend.m_upward = false;    
     AcdRecon::ReconFunctions::convertToAcdRep(lastHit->getTrackParams(Event::TkrTrackHit::SMOOTHED),
                           lastHit->getZPlane(),downwardExtend);
 
@@ -511,7 +511,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     if ( ! AcdRecon::ReconFunctions::exitsLat(downwardExtend,s_acdVolume,downwardExit) ) {
       log << MSG::WARNING << "AcdRecon::exitsLat() failed on downward end - we'll bravely carry on" << endreq;
       return StatusCode::SUCCESS;
-    }	  
+    }     
     
     // keep track of all the pocas to hit tiles
     AcdRecon::PocaDataMap upwardPocas;
@@ -538,7 +538,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
       sc = m_pocaTool->filter(upwardPocas,upPocasCut);
       if (sc.isFailure()) {
         log << MSG::ERROR << "AcdPocaTool::filter(up) failed" << endreq;
-        return sc;	  
+        return sc;    
       }
       sc = m_pocaTool->filter(downwardPocas,downPocasCut);
       if (sc.isFailure()) { 
@@ -552,7 +552,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     }
     
     // Now extrapolate the track as far as needed, 
-    // this makes the AcdTkrHitPoca, AcdTkrGapPoca, AcdTkrPoint objects	
+    // this makes the AcdTkrHitPoca, AcdTkrGapPoca, AcdTkrPoint objects 
     std::vector<Event::AcdTkrHitPoca*> upHitPocae;
     std::vector<Event::AcdTkrGapPoca*> upGapPocae;
     int ssdVetoUp(0);
@@ -581,7 +581,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     std::vector<Event::AcdTkrGapPoca*> downGapPocae;
     int ssdVetoDown(0);
     float cornerDocaDown(0.);
-    Event::AcdTkrPoint* downPoint(0);		
+    Event::AcdTkrPoint* downPoint(0);       
 
     // extrapolate the track downwards
     const Event::TkrTrackParams& trackParsDown = lastHit->getTrackParams(Event::TkrTrackHit::SMOOTHED); 
@@ -893,7 +893,7 @@ StatusCode AcdReconAlgV2::mcDistances(const Event::AcdHitCol& acdHits,
 
     log << MSG::DEBUG << "AcdReconAlgV2::mcDistances() finished" << endreq;
 
-    return sc;	
+    return sc;  
 }
 
 
@@ -1009,7 +1009,7 @@ StatusCode AcdReconAlgV2::elemDistances(const AcdRecon::TrackData& aTrack,
     sc = m_pocaTool->ribbonDistances(*ribbonDim,aTrack,pocaData);
       } else {
     MsgStream log( msgSvc(), name() );
-    log << MSG::ERROR << "No Poca Tool" << endreq;	
+    log << MSG::ERROR << "No Poca Tool" << endreq;  
     return StatusCode::FAILURE;
       }
       if ( sc.isFailure() ) {
@@ -1046,7 +1046,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
       return StatusCode::SUCCESS;
     } else {
       log << MSG::DEBUG << "AcdReconAlgV2::calClusterDistances using " << calClusterMapTds->getRawClusterVec().size() << " clusters." << endreq;
-    }	
+    }   
 
 
     // Places to store the track endpoint and direction
@@ -1067,7 +1067,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
                                        calMapItr != calClusterMapTds->end();
                                        calMapItr++)
     {
-        Event::CalClusterVec& calClusterVec = calMapItr->second;
+        Event::CalClusterVec calClusterVec = calMapItr->second;
 
         // Inner loop is now over clusters
         for(Event::CalClusterVec::iterator calVecItr  = calClusterVec.begin();
@@ -1132,7 +1132,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
                 sc = m_pocaTool->filter(upwardPocas,upPocasCut);
                 if (sc.isFailure()) {
                     log << MSG::ERROR << "AcdPocaTool::filter(up) failed" << endreq;
-                    return sc;	  
+                    return sc;    
                 }
             }
        
@@ -1141,7 +1141,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
             }
             
             // Now extrapolate the track as far as needed, 
-            // this makes the AcdTkrHitPoca, AcdTkrGapPoca, AcdTkrPoint objects	
+            // this makes the AcdTkrHitPoca, AcdTkrGapPoca, AcdTkrPoint objects 
             std::vector<Event::AcdTkrHitPoca*> upHitPocae;
             std::vector<Event::AcdTkrGapPoca*> upGapPocae;
             int ssdVetoUp(0);
@@ -1394,7 +1394,7 @@ StatusCode AcdReconAlgV2::calcCornerDoca(const AcdRecon::TrackData& track,
     for (iCorner=0; iCorner<4; iCorner++) {
         const Ray& gapRay = m_acdGeoSvc->getCornerGapRay(iCorner);
 
-        // Compute DOCA between the track and gap ray 	
+        // Compute DOCA between the track and gap ray   
     AcdRecon::rayDoca_withCorner(track,gapRay,testArcLen,testRayLen,testDist,testPoint,testDir,testRegion);
 
     // only take forward intersections
@@ -1526,7 +1526,7 @@ StatusCode AcdReconAlgV2::fillAcdEventTopology(const Event::AcdHitCol& acdHits,
     nTilesSideRow[id.row()]++;
     tileEnergySideRow[id.row()] += energy;
     break;
-      }	     
+      }      
     } else if ( id.ribbon() ) {
       ribbonCount++;
       float energy = theHit->ribbonEnergy( Event::AcdHit::A ) + theHit->ribbonEnergy( Event::AcdHit::B );
