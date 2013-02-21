@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-22-04 21-Feb-2013 bregeon Improve errors on crystal energy deposit deposit - LPATE-99
  CalRecon-06-22-03 31-Jan-2013 bregeon Minor updates to speed up things, and a bug fix
     CalNewCfpSelChiSq = inf in GR 20-08-03 - LPATE-105
     New Profile fit speed up - LPATE-102
