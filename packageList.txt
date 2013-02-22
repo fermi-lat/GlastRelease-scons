@@ -10,7 +10,7 @@ tip tip-02-18-01
 fitsGen fitsGen-06-06-04
 embed_python embed_python-01-06-00
 evtUtils evtUtils-00-02-01
-st_facilities st_facilities-00-20-01
+st_facilities st_facilities-00-20-02
 
 # source modeling
 celestialSources celestialSources-01-06-00
@@ -25,7 +25,7 @@ celestialSources/microQuasar microQuasar-01-05-01
 
 # infrastructure
 gr_app gr_app-01-00-01
-gui gui-03-08-00
+gui gui-03-09-00
 geomrep geomrep-04-04-00
 geometry geometry-03-03-00
 xmlUtil xmlUtil-03-05-00
@@ -38,7 +38,7 @@ rdbModel rdbModel-02-15-00
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-16-02
+Event Event-14-16-03
 GlastSvc GlastSvc-11-01-00
 GuiSvc GuiSvc-03-11-00
 DetDisplay DetDisplay-03-06-00
@@ -50,7 +50,7 @@ EventIntegrity EventIntegrity-00-09-00
 commonRootData commonRootData-02-17-00
 mcRootData mcRootData-02-23-00
 digiRootData digiRootData-11-15-00
-reconRootData reconRootData-10-00-02
+reconRootData reconRootData-11-00-00
 gcrSelectRootData gcrSelectRootData-02-03-00
 rootUtil rootUtil-01-05-01
 rootTestData rootTestData-04-05-00
@@ -60,7 +60,7 @@ AncillaryDataEvent AncillaryDataEvent-01-05-00
 AncillaryDataUtil AncillaryDataUtil-01-01-00
 
 RootConvert RootConvert-01-52-00
-RootIo RootIo-25-07-01
+RootIo RootIo-25-07-02
 
 
 configData configData-01-14-01
@@ -70,25 +70,25 @@ FluxSvc FluxSvc-06-59-00
 CRflux CRflux-01-20-01
 
 EbfWriter EbfWriter-01-11-00
-OnboardFilter OnboardFilter-04-18-01
-OnboardFilterTds OnboardFilterTds-00-13-01
+OnboardFilter OnboardFilter-04-18-02
+OnboardFilterTds OnboardFilterTds-00-13-02
 
 # Calorimeter
 CalUtil CalUtil-03-18-00
 CalXtalResponse CalXtalResponse-01-01-01
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-22-03
-GCRCalib GCRCalib-01-12-00
+CalRecon CalRecon-06-22-04
+GCRCalib GCRCalib-01-12-01
 
 # Tracker
 TkrDigi TkrDigi-02-13-02
-TkrUtil TkrUtil-03-28-04
-TkrRecon TkrRecon-10-38-07
+TkrUtil TkrUtil-03-28-05
+TkrRecon TkrRecon-10-38-09
 
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-04-00
-AcdRecon AcdRecon-05-04-00
+AcdRecon AcdRecon-05-04-01
 
 # Geant4
 #GlastMS GlastMS-01-00-01
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-03
+AnalysisNtuple AnalysisNtuple-02-71-05
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -115,7 +115,7 @@ ldfReader ldfReader-07-05-00
 LdfConverter LdfConverter-04-07-00
 
 # HepRep
-HepRepSvc HepRepSvc-00-42-00
+HepRepSvc HepRepSvc-00-42-01
 HepRepCorba HepRepCorba-03-05-02
 HepRepXml HepRepXml-00-10-01
 
@@ -143,9 +143,9 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-08-00
 
-Gleam Gleam-07-11-18
+Gleam Gleam-07-11-19
 
-SConsFiles SConsFiles-01-09-00
-GlastRelease-scons/containerSettings containerSettings-00-12-00
+SConsFiles SConsFiles-01-10-00
+GlastRelease-scons/containerSettings containerSettings-00-13-00
 
 celestialSources/EarthPhenom EarthPhenom-00-02-01
