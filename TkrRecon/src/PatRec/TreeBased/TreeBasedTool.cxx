@@ -784,8 +784,8 @@ public:
                           const Event::TreeClusterRelation* right) const
     {
         // Form a "blended" doca/angle to cluster
-        double leftDocaByAngle  = left->getTreeClusDoca()  / std::max(0.0001,left->getTreeClusCosAngle());
-        double rightDocaByAngle = right->getTreeClusDoca() / std::max(0.0001,right->getTreeClusCosAngle());
+        double leftDocaByAngle  = left->getTreeClusDoca()  / std::max(0.0001,std::fabs(left->getTreeClusCosAngle()));
+        double rightDocaByAngle = right->getTreeClusDoca() / std::max(0.0001,std::fabs(right->getTreeClusCosAngle()));
 
         // Try sorting simply by closest DOCA or angle
         if (leftDocaByAngle < rightDocaByAngle)
@@ -861,7 +861,7 @@ Event::TreeClusterRelationVec TreeBasedTool::buildTreeRelVec(Event::ClusterToRel
                                 int    treeLength = rel->getTree()->getHeadNode()->getBestNumBiLayers();
                                 int deltaLen   = bestTreeLength - treeLength;
 
-                                if (deltaLen > 7 || (deltaLen > 3 && treeCalDoca > calTransRms)) break;
+                                if (deltaLen > 6 || (deltaLen > 2 && treeCalDoca > 3. * calTransRms)) break;
 
                                 lastItr++;
                             }
