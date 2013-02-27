@@ -25,6 +25,7 @@ $Header$
 #include "CalUtil/IUBinterpolateTool.h"
 #include "IPsfTool.h"
 
+#include "facilities/Util.h"                // for expandEnvVar
 #include "CLHEP/Vector/Rotation.h"
 
 #include <algorithm>
@@ -174,6 +175,8 @@ private:
 
   IUBinterpolateTool* m_ubInterpolateTool;
   IPsfTool* m_pPsfTool;
+  std::string m_psfVersion;
+  std::string m_psfPath;
 
   double UB2logemin[3];
   double UB2logemax[3];
@@ -198,6 +201,9 @@ EvtValsTool::EvtValsTool(const std::string& type,
 {    
     // Declare additional interface
     declareInterface<IValsTool>(this);
+
+    declareProperty("psfVersion",m_psfVersion="P7SOURCE_V6MC");
+    declareProperty("psfPath",m_psfPath="$(ANALYSISNTUPLEDATAPATH)");
 }
 
 /** @page anatup_vars 
@@ -389,7 +395,8 @@ StatusCode EvtValsTool::initialize()
         log << MSG::ERROR << "Unable to find tool: " "PsfValsTool" << endreq;
         return sc;
     } else {
-      sc = m_pPsfTool->loadPsf("P7SOURCE_V6MC");
+      facilities::Util::expandEnvVar(&m_psfPath);
+      sc = m_pPsfTool->loadPsf(m_psfVersion, m_psfPath);
       if(sc.isFailure()) return sc;
     }
 
