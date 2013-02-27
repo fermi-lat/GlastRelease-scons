@@ -83,7 +83,7 @@ GCRCalib GCRCalib-01-12-01
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-05
-TkrRecon TkrRecon-10-38-09
+TkrRecon TkrRecon-10-38-10
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -145,7 +145,7 @@ detCheck detCheck-01-08-00
 
 Gleam Gleam-07-11-19
 
-SConsFiles SConsFiles-01-10-00
+SConsFiles SConsFiles-01-10-01
 GlastRelease-scons/containerSettings containerSettings-00-13-00
 
 celestialSources/EarthPhenom EarthPhenom-00-02-01
