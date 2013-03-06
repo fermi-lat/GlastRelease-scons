@@ -637,6 +637,9 @@ void KalmanTrackFitTool::doResidualsCalc(Event::TkrTrack& track)
             Event::TkrTrackParams& revParams = hit->getTrackParams(Event::TkrTrackHit::REVFIT);
             revParams = Event::TkrTrackParams();
         }
+
+        // Set the bit indicating the residuals are here
+        hit->setStatusBit(Event::TkrTrackHit::REVFIT);
     }
 
     return;
