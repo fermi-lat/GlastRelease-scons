@@ -630,6 +630,9 @@ void KalmanTrackFitTool::doResidualsCalc(Event::TkrTrack& track)
 
             // Restore the hit on fit status bit
             hit->setStatusBit(hitOnFitStatusBit);
+
+            // Set the bit indicating the residuals are here
+            hit->setStatusBit(Event::TkrTrackHit::HASREVFIT);
         }
         // Otherwise we make sure the reverse filter params are zero
         else
@@ -639,7 +642,6 @@ void KalmanTrackFitTool::doResidualsCalc(Event::TkrTrack& track)
         }
 
         // Set the bit indicating the residuals are here
-        hit->setStatusBit(Event::TkrTrackHit::REVFIT);
     }
 
     return;
