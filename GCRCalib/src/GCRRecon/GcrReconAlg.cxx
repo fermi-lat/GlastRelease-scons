@@ -351,7 +351,7 @@ StatusCode GcrReconAlg::getCalEntryExitPoints(){
     }
     SmartDataPtr<Event::TkrTreeCol> treeCol(dataSvc, EventModel::TkrRecon::TkrTreeCol);
     const Event::TkrTrack* track_1;
-    if (!treeCol==0x0 || treeCol->empty()){
+    if (treeCol==0x0 || treeCol->empty()){
       track_1 = *pTracks->begin();
     } else {
       Event::TkrTree*     bestTree = treeCol->front();
