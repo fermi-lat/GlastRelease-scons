@@ -61,6 +61,12 @@ Event::BuildMcTracks::BuildMcTracks(IDataProviderSvc* dataSvc)
         const Event::McParticle*       mcPart   = mcPosHit->mcParticle();
         const idents::VolumeIdentifier curVolId = mcPosHit->volumeID();
 
+        // Want only hits directly from parent
+        if (mcPosHit->getPackedFlags() & 0x10000000)
+        {
+            continue;
+        }
+
         try
         {
             idents::TkrId trkId(curVolId);
@@ -78,6 +84,8 @@ Event::BuildMcTracks::BuildMcTracks(IDataProviderSvc* dataSvc)
 
         // If no clusters associated to this McPositionHit, then skip
         int numRels = clusRelVector.size();
+
+        if (numRels == 0) continue;
 
         // Get the cluster associated with this McPositionHit
         Event::ClusMcPosHitRel* clusMcPosHitRel = numRels > 0 ? clusRelVector[0] : 0;

@@ -1,0 +1,75 @@
+//##############################################################
+//
+//  Job options file for TkrRecon test 
+//    
+//  This job reads a short digiRootdata file (and optionally, an mcRootData file)
+//  and processes the digis through TkrRecon.
+//
+//  Tests are performed in test_TkrRecon
+//
+
+// primary DLLs
+
+ApplicationMgr.DLLs+= {"RootIo", "TkrRecon", "TkrUtil"};
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { 
+    "DbEvtSelector/EventSelector" 
+    };
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+//EventSelector.Input = "NONE";
+
+ApplicationMgr.HistogramPersistency = "NONE";
+
+// this doesn't work, add PARAMFILESROOT to cmt requirements
+// ParticlePropertySvc.ParticlePropertiesFile="$(TKRRECONJOBOPTIONSPATH)/test/ParticleTable.txt";
+
+// ----------------------------
+//  Geometry definition
+//
+
+ApplicationMgr.DLLs += {"GlastSvc", "G4Propagator", "G4Generator" };
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+
+GlastDetSvc.topVolume="LAT"; 
+
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
+//GlastDetSvc.visitorMode="recon";
+
+ApplicationMgr.ExtSvc += { "TkrGeometrySvc", "TkrInitSvc" };
+
+// ----------------------------
+//  topalg
+//
+
+ApplicationMgr.TopAlg = {
+    "mcRootReaderAlg",
+    "digiRootReaderAlg",
+    "TkrReconAlg",      
+    "test_TkrRecon"
+    };
+
+ApplicationMgr.DLLs   += { "CalibSvc" };
+
+// seems to be needed to stop CAL calibration from complaining...
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+
+ApplicationMgr.ExtSvc += { "TkrGeometrySvc", "TkrInitSvc" };                        
+
+// filters some random badStrips
+ApplicationMgr.ExtSvc += { "TkrBadStripsSvc" };
+TkrBadStripsSvc.badStripsFile = "$(TKRUTILJOBOPTIONSPATH)/test/badStrips.txt";
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+ApplicationMgr.EvtMax = 5;
+mcRootReaderAlg.mcRootFile="$(ROOTTESTDATADATAPATH)/default/mc.root";
+digiRootReaderAlg.digiRootFile="$(ROOTTESTDATADATAPATH)/default/digi.root";
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################

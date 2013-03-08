@@ -84,8 +84,10 @@ private:
 };
 
 
-static ToolFactory<McGetTrackInfoTool> s_factory;
-const IToolFactory& McGetTrackInfoToolFactory = s_factory;
+//static ToolFactory<McGetTrackInfoTool> s_factory;
+//const IToolFactory& McGetTrackInfoToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(McGetTrackInfoTool);
+
 //
 // Class constructor, no initialization here
 //

@@ -80,7 +80,7 @@ public:
     /// @brief Returns the "straightness" of a given track
     const double                getTrackStraightness(const Event::McParticleRef mcPart, int firstHitIdx=0, int lastHitIdx=40);
     /// @brief Returns the "direction" defined by the first set of hits on a track
-    const Hep3Vector            getTrackDirection(const Event::McParticleRef mcPart, int firstHitIdx=0, int lastHitIdx=40);
+    const CLHEP::Hep3Vector     getTrackDirection(const Event::McParticleRef mcPart, int firstHitIdx=0, int lastHitIdx=40);
     /// @brief Returns track energy loss information (in the tracker only)
     const double                getTrackTotEneLoss(const Event::McParticleRef mcPart);
     const double                getTrackELastHit(const Event::McParticleRef mcPart);
@@ -120,8 +120,10 @@ private:
 };
 
 
-static ToolFactory<McGetEventInfoTool> s_factory;
-const IToolFactory& McGetEventInfoToolFactory = s_factory;
+//static ToolFactory<McGetEventInfoTool> s_factory;
+//const IToolFactory& McGetEventInfoToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(McGetEventInfoTool);
+
 //
 // Class constructor, no initialization here
 //
@@ -608,7 +610,7 @@ const double McGetEventInfoTool::getTrackStraightness(const Event::McParticleRef
                 HepPoint3D hitPos  = getPosition(nextClus);
 
                 // Form a vector between these hits
-                Hep3Vector vecLast = Hep3Vector(hitPos - hitLast).unit();
+                CLHEP::Hep3Vector vecLast = CLHEP::Hep3Vector(hitPos - hitLast).unit();
 
                 // Set up for looping over the remaining hits
                 hitLast = hitPos;
@@ -629,7 +631,7 @@ const double McGetEventInfoTool::getTrackStraightness(const Event::McParticleRef
                     hitPos  = getPosition(cluster);
 
                     // New vector to current hit
-                    Hep3Vector vecNext = Hep3Vector(hitPos - hitLast).unit();
+                    CLHEP::Hep3Vector vecNext = CLHEP::Hep3Vector(hitPos - hitLast).unit();
 
                     // update the track angle
                     double vecAngle = vecNext.angle(vecLast);
@@ -741,7 +743,7 @@ const HepPoint3D McGetEventInfoTool::getPosition(const Event::TkrCluster* cluste
 }
 
 
-const Hep3Vector McGetEventInfoTool::getTrackDirection(const Event::McParticleRef mcPart, int firstHitIdx, int lastHitIdx)
+const CLHEP::Hep3Vector McGetEventInfoTool::getTrackDirection(const Event::McParticleRef mcPart, int firstHitIdx, int lastHitIdx)
 {
     double xSlope = 0.;
     double ySlope = 0.;
@@ -809,7 +811,7 @@ const Hep3Vector McGetEventInfoTool::getTrackDirection(const Event::McParticleRe
         }
     }
 
-    return Hep3Vector(-xSlope,-ySlope,-1.).unit();
+    return CLHEP::Hep3Vector(-xSlope,-ySlope,-1.).unit();
 }
 
 const int McGetEventInfoTool::getTrackHitLayer(const Event::McParticleRef mcPart, int hitIdx )
@@ -1056,10 +1058,10 @@ const int McGetEventInfoTool::getTrackDeltaRange(const Event::McParticleRef mcPa
                 // Looking for energy carried away by delta rays...
                 if (ppty->particle() != "gamma")
                 {
-                    HepPoint3D iniPosition = daughter->initialPosition();
-                    HepPoint3D finPosition = daughter->finalPosition();
-                    Hep3Vector traject     = finPosition - iniPosition;
-                    double     range       = traject.mag();
+                    HepPoint3D        iniPosition = daughter->initialPosition();
+                    HepPoint3D        finPosition = daughter->finalPosition();
+                    CLHEP::Hep3Vector traject     = finPosition - iniPosition;
+                    double            range       = traject.mag();
 
                     aveRange += range;
 

@@ -85,8 +85,9 @@ private:
     IMcGetEventInfoTool*   m_McTracks;
 };
 
-static const AlgFactory<McToolBoxAlg>  Factory;
-const IAlgFactory& McToolBoxAlgFactory = Factory;
+//static const AlgFactory<McToolBoxAlg>  Factory;
+//const IAlgFactory& McToolBoxAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(McToolBoxAlg);
 
 McToolBoxAlg::McToolBoxAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator)  
@@ -142,7 +143,7 @@ StatusCode McToolBoxAlg::execute()
 
     m_McInfo->buildEventStructure();
     m_McInfo->buildMonteCarloTracks();
-    m_McInfo->buildMcPatCandRelations();
+//    m_McInfo->buildMcPatCandRelations();
 
     return StatusCode::SUCCESS;
 }

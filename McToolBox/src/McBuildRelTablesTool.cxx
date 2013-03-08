@@ -63,8 +63,9 @@ private:
     IDataProviderSvc*        m_dataSvc;
 };
 
-static ToolFactory<McBuildRelTablesTool> s_factory;
-const IToolFactory& McBuildRelTablesToolFactory = s_factory;
+//static ToolFactory<McBuildRelTablesTool> s_factory;
+//const IToolFactory& McBuildRelTablesToolFactory = s_factory;
+DECLARE_TOOL_FACTORY(McBuildRelTablesTool);
 
 McBuildRelTablesTool::McBuildRelTablesTool(const std::string& type, const std::string& name, const IInterface* parent) :
                        AlgTool(type, name, parent)
