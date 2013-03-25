@@ -181,24 +181,30 @@ namespace AcdRecon {
   }
 
 
-  void ReconFunctions::convertToAcdRep(const Event::CalParams& calParams,
+  void ReconFunctions::convertToAcdRep(Event::CalParams& calParams,
 				       AcdRecon::TrackData& acdParams) {
-    // set the direction first
-    acdParams.m_dir.set(calParams.getAxis().x(), 
-			calParams.getAxis().y(), 
-			calParams.getAxis().z());
 
+    // Ph.Bruel: use the cal position corrected for the hodoscopic effect (using the cal direction)
+    Vector cal_dir  = calParams.getAxis();
+    Point cal_pos  = calParams.getCentroid();
+    if(cal_dir.z()!=0) cal_pos = calParams.getCorCentroid(cal_dir);
+    
+    // set the direction first    
+    acdParams.m_dir.set(cal_dir.x(), 
+                        cal_dir.y(), 
+                        cal_dir.z());
+    
     // pathlength to get to z=0 (if z-slope = 0, pathlength = 0)
-    double pathLength = fabs(calParams.getAxis().z()) > 1.e-9 ? 
-      -1. * calParams.getCentroid().z() / calParams.getAxis().z() : 0.;      
-    double delX = pathLength * calParams.getAxis().x();
-    double delY = pathLength * calParams.getAxis().y();
-    double delZ = pathLength * calParams.getAxis().z();
+    double pathLength = fabs(cal_dir.z()) > 1.e-9 ? 
+      -1. * cal_pos.z() / cal_dir.z() : 0.;      
+    double delX = pathLength * cal_dir.x();
+    double delY = pathLength * cal_dir.y();
+    double delZ = pathLength * cal_dir.z();
 
     // set the initial position
-    acdParams.m_point.set(calParams.getCentroid().x() + delX, 
-			  calParams.getCentroid().y() + delY,
-			  calParams.getCentroid().z() + delZ);
+    acdParams.m_point.set(cal_pos.x() + delX, 
+			  cal_pos.y() + delY,
+			  cal_pos.z() + delZ);
     
     // Set the reference point at z=0
     acdParams.m_current = acdParams.m_point;    

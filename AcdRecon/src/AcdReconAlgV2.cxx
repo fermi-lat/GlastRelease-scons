@@ -1074,13 +1074,13 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
                                            calVecItr != calClusterVec.end();
                                            calVecItr++)
         {
-            const Event::CalCluster* calClusterTds = *calVecItr;
+            Event::CalCluster* calClusterTds = *calVecItr;
             iCluster++;
 
             // Check to be sure the moments analysis has run (and there is a valid axis)
             if (!calClusterTds->checkStatusBit(Event::CalCluster::MOMENTS)) continue;
 
-            const Event::CalParams clusterParams = calClusterTds->getMomParams();
+            Event::CalParams clusterParams = calClusterTds->getMomParams();
 
             // grab the cluster direction information
             upwardExtend.m_energy = calClusterTds->getMomParams().getEnergy();
@@ -1088,19 +1088,24 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
             upwardExtend.m_upward = true;
             upwardExtend.m_tracker = false;
 
-            upwardExtend.m_dir.set(clusterParams.getAxis().x(), 
-                       clusterParams.getAxis().y(), 
-                       clusterParams.getAxis().z());
+            // Ph.Bruel: use the cal position corrected for the hodoscopic effect (using the cal direction)
+            Vector cal_dir  = clusterParams.getAxis();
+            Point cal_pos  = clusterParams.getCentroid();
+            if(cal_dir.z()!=0) cal_pos = clusterParams.getCorCentroid(cal_dir);
 
-            upwardExtend.m_dir.set(clusterParams.getCentroid().x(), 
-                       clusterParams.getCentroid().y(), 
-                       clusterParams.getCentroid().z());
+            upwardExtend.m_dir.set(cal_dir.x(), 
+                       cal_dir.y(), 
+                       cal_dir.z());
+
+            upwardExtend.m_point.set(cal_pos.x(), 
+                       cal_pos.y(), 
+                       cal_pos.z());
 
             // check if cluster enters the acd 
             bool entersLat = AcdRecon::ReconFunctions::entersLat(upwardExtend,s_acdVolume,upwardExit);
 
             // overwrittes values of upwardExtend
-            AcdRecon::ReconFunctions::convertToAcdRep(calClusterTds->getMomParams(), upwardExtend);
+            AcdRecon::ReconFunctions::convertToAcdRep(clusterParams, upwardExtend);
 
             // get the LAT exit points 
             if ( ! AcdRecon::ReconFunctions::exitsLat(upwardExtend,s_acdVolume,upwardExit) ) {

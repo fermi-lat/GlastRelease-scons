@@ -92,7 +92,7 @@ namespace AcdRecon {
      * @param zRef value of z at ref point
      * @param acdParams the same, in AcdRecon::TrackData rep
      **/
-    void convertToAcdRep(const Event::CalParams& calParams,
+    void convertToAcdRep(Event::CalParams& calParams,
 			 AcdRecon::TrackData& acdParams);
     
     /**
