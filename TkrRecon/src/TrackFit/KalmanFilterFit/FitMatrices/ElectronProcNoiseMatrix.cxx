@@ -71,7 +71,7 @@ KFmatrix& ElectronProcNoiseMatrix::operator()(const Event::TkrTrackHit& referenc
     // cluster and we should be able to accommodate that in an empirical way
     // by looking at the projected and measured cluster widths. 
     // Of course, we require that there is a cluster at this point...
-    if (filterHit.getClusterPtr() != 0)
+    if (filterHit.getClusterPtr() != 0 && !(referenceHit.getStatusBits() & Event::TkrTrackHit::HITHASKINKANG))
     {
         // Begin by setting up to see if we want to do anything
         int    measSlpIdx   = filterHit.getParamIndex(Event::TkrTrackHit::SSDMEASURED, Event::TkrTrackParams::Slope);
