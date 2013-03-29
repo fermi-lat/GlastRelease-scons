@@ -16,6 +16,10 @@
 #include "KalmanFilterDefs.h"
 
 class KalmanFilterInit;
+namespace Event
+{
+    class TkrTrackHit;
+}
 namespace idents {class TkrId;};
 
 class IKalmanFilterMatrix 
@@ -24,8 +28,10 @@ public:
     // Define virtual methods for returning a matrix used in the Kalman Filter Fit
     virtual KFmatrix& operator()(const double &deltaZ) = 0;
     virtual KFmatrix& operator()(const idents::TkrId &id) = 0;
-    virtual KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
-                                 const double& eStart, const double& zStop, bool forward = true) = 0;
+    virtual KFmatrix& operator()(const Event::TkrTrackHit& referenceHit,
+                                 const Event::TkrTrackHit& filterHit, 
+                                 const double&             eStart, 
+                                 bool                      forward = true) = 0;
 };
 
 

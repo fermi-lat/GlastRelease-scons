@@ -30,9 +30,11 @@ public:
 
     // For the remaining methods return "none" 
     KFmatrix& operator()(const double& /* deltaZ */)  {return m_none;}
-    KFmatrix& operator()(const KFvector& /* stateVec */, const double& /* zStart*/, 
-                         const double& /* eStart */, const double& /* zStop */, bool /* forward = true */)
-                                                {return m_none;}
+    KFmatrix& operator()(const Event::TkrTrackHit& /*referenceHit*/, 
+                         const Event::TkrTrackHit& /*filterHit*/,
+                         const double&             /*eStart*/, 
+                         bool                      /*forward = true*/)
+    {return m_none;}
 
 private:
     //std::vector<int> m_projection;

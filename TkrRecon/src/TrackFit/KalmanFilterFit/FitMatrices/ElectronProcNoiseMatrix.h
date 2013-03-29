@@ -1,5 +1,5 @@
 /**
- * @class StdProcNoiseMatrix
+ * @class ElectronProcNoiseMatrix
  *
  * @brief Implementation of a Kalman Filter Process Noise matrix for the Generic Kalman Filter
  *        The "process noise" here is multiple scattering, this class connects to the propogator
@@ -11,22 +11,22 @@
  * $Header$
  */
 
-#ifndef StdProcNoiseMatrix_h
-#define StdProcNoiseMatrix_h
+#ifndef ElectronProcNoiseMatrix_h
+#define ElectronProcNoiseMatrix_h
 
 #include "IProcNoiseMatrix.h"
-#include "GlastSvc/Reco/IPropagator.h"
+#include "TkrUtil/ITkrGeometrySvc.h"
 #include "Event/Recon/TkrRecon/TkrTrackHit.h"
 
 #include <vector>
 
-class StdProcNoiseMatrix : public IProcNoiseMatrix
+class ElectronProcNoiseMatrix : public IProcNoiseMatrix
 {
 public:
 
     // Constructor needs the matrices that transform state vector, covariance matrix
-    StdProcNoiseMatrix(IPropagator* propagator);
-    virtual ~StdProcNoiseMatrix() {};
+    ElectronProcNoiseMatrix(ITkrGeometrySvc* tkrGeom);
+    virtual ~ElectronProcNoiseMatrix() {};
 
     // Implement method to determine the process noise matrix
     KFmatrix& operator()(const Event::TkrTrackHit& referenceHit, 
@@ -42,12 +42,17 @@ public:
     const KFmatrix& getLastStepQ()       {return m_LastStepQ;}
 
 private:
-    IPropagator*        m_propagator;
+    ITkrGeometrySvc* m_tkrGeom;
+    IPropagator*     m_propagator;
 
-    double              m_LastStepRadLen;
-    KFmatrix            m_LastStepQ;
+    double           m_siStripPitch;
+    double           m_siStripDepth;
+    double           m_siStripAspect;
 
-    KFmatrix            m_none;
+    double           m_LastStepRadLen;
+    KFmatrix         m_LastStepQ;
+
+    KFmatrix         m_none;
 };
 
 

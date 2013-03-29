@@ -16,6 +16,7 @@
 #include "CLHEP/Matrix/Vector.h"
 #include "CLHEP/Matrix/Matrix.h"
 #include "TkrUtil/ITkrGeometrySvc.h"
+#include "Event/Recon/TkrRecon/TkrTrackHit.h"
 
 class NoProcNoiseMatrix : public IProcNoiseMatrix
 {
@@ -25,8 +26,10 @@ public:
     NoProcNoiseMatrix(IPropagator* propagator);
     virtual ~NoProcNoiseMatrix() {};
 
-    KFmatrix& operator()(const KFvector& stateVec, const double& zStart, 
-                         const double& eStart, const double& zStop, bool forward = true);
+    KFmatrix& operator()(const Event::TkrTrackHit& referenceHit, 
+                         const Event::TkrTrackHit& filterHit,
+                         const double&             eStart, 
+                         bool                      forward = true);
 
     KFmatrix& operator()(const double& /* deltaZ */)        {return m_none;}
     KFmatrix& operator()(const idents::TkrId& /* id */)     {return m_none;}

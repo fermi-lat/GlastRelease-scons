@@ -28,8 +28,10 @@ public:
 
     // Other two methods return identity matrix (no transport)
     KFmatrix& operator()(const idents::TkrId& /* id */) {return m_I;}
-    KFmatrix& operator()(const KFvector& /*stateVec*/, const double& /*zStart*/, 
-                         const double& /*eStart*/, const double& /*zStop*/, bool /*forward = true*/)
+    KFmatrix& operator()(const Event::TkrTrackHit& /*referenceHit*/, 
+                         const Event::TkrTrackHit& /*filterHit*/,
+                         const double&             /*eStart*/, 
+                         bool                      /*forward = true*/)
                                                   {return m_I;}
 
 private:
