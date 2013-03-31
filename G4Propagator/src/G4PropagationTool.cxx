@@ -537,8 +537,17 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
         /// New Stuff!!!!!
         if (x0sTotal > 0.)
         {
+            static const double oneOverSqrt3 = 1.; // / sqrt(3.);
+            // This returns the rms scattering angle in the plane of scatter
             double ms_Angle = 13.6*sqrt(x0sTotal)*(1+0.038*log(x0sTotal))/momentum; //MeV  //// New Stuff!!
-            scat_angle = ms_Angle*ms_Angle;
+
+            // The 1/sqrt(3) averages out the deviations over the step length
+            scat_angle = oneOverSqrt3*oneOverSqrt3*ms_Angle*ms_Angle;
+
+            // Try this to see if we get consistency
+            double ms_dist = oneOverSqrt3 * arcLen * ms_Angle;
+            scat_dist  = ms_dist*ms_dist;
+            scat_covr  = ms_dist*ms_Angle;
         }
         else
         {
