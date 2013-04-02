@@ -557,6 +557,7 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
         Vector startDir = getStartDir();
         double slopeX    = startDir.x()/startDir.z(); 
         double slopeY    = startDir.y()/startDir.z();
+        // "norm_term" is actually 1 / cos(theta)^2 
         double norm_term = 1. + slopeX*slopeX + slopeY*slopeY;
 
         // The below taken from KalParticle (by Bill Atwood) in order to match results
@@ -565,9 +566,9 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
         p34 = slopeX*slopeY*norm_term;
         p44 = (1.+slopeY*slopeY)*norm_term; 
 
-      //Go from arc-length to Z 
-        scat_dist /=  norm_term;
-        scat_covr /=  sqrt(norm_term);
+        //Go from arc-length to Z - multiply by cos(theta) (or squared as case may be)
+        scat_dist /= norm_term;
+        scat_covr /= 2. * sqrt(norm_term);   // I do not know why I need the factor of two here...
     }
 
     HepMatrix cov(4,4,0);
@@ -576,9 +577,9 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
     cov(3,3) = scat_dist*p44;
     cov(4,4) = scat_angle*p44;
     cov(1,2) = cov(2,1) = -scat_covr*p33;
-    cov(1,3) = cov(3,1) = scat_dist*p34;
+    cov(1,3) = cov(3,1) =  scat_dist*p34;
     cov(1,4) = cov(2,3) = cov(3,2) = cov(4,1) = -scat_covr*p34;
-    cov(2,4) = cov(4,2) = scat_angle*p34;
+    cov(2,4) = cov(4,2) =  scat_angle*p34;
     cov(3,4) = cov(4,3) = -scat_covr*p44; 
   
     return cov;
