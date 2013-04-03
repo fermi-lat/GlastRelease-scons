@@ -10,8 +10,7 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='McToolBox', toBuild='component')
 McToolBox=libEnv.SharedLibrary('McToolBox',
-                              listFiles(['src/*.cxx',
-                                         'src/*.h']))
+                              listFiles(['src/*.cxx']))
 progEnv.Tool('McToolBoxLib')
 
 test_McToolBox = progEnv.GaudiProgram('test_McToolBox',
@@ -21,6 +20,5 @@ test_McToolBox = progEnv.GaudiProgram('test_McToolBox',
 progEnv.Tool('registerTargets', package='McToolBox',
              libraryCxts = [[McToolBox,libEnv]],
              testAppCxts = [[test_McToolBox, progEnv]],
-             includes = listFiles(['McToolBox/*'], recursive = 1),
              xml=listFiles(files = ['xml/*'], recursive = True),
              jo = ['src/test/jobOptions.txt'])
