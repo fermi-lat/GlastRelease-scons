@@ -107,6 +107,9 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
 
     /// Maximum momentum to calculate ms elements
     double                m_maxMomentum;
+
+    /// Ability to switch between methods for determing MS errors
+    bool                  m_useOldSchool;
 };
 
 //static ToolFactory<G4PropagationTool> g4prop_factory;
@@ -127,7 +130,8 @@ G4PropagationTool::G4PropagationTool(const std::string& type, const std::string&
   declareInterface<IPropagator>(this);
 
   // Make maximum momentum for calculation of ms errors a controllable parameter
-  declareProperty("MaxMomentumForMS", m_maxMomentum = 50000.);
+  declareProperty("MaxMomentumForMS", m_maxMomentum  = 50000.);
+  declareProperty("StepByStepMSCalc", m_useOldSchool = false);
 
   //Initialize the track parameters
   m_trackPar = Event::TkrTrackParams();
@@ -528,30 +532,35 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
 
                 scat_dist  += ms_Dist;
                 scat_angle += ms_Angle*ms_Angle;
-                scat_covr  += sqrt(ms_Dist)*ms_Angle;		  
+                scat_covr  += sqrt(ms_Dist)*ms_Angle;
             }
             dist += s_dist;
             if(dist >= arcLen ) break;
         }
 
-        /// New Stuff!!!!!
-        if (x0sTotal > 0.)
+        /// Determine MS elements using total radiation lengths encountered
+        /// in one calculation as opposed to the step by step method
+        if (!m_useOldSchool)
         {
-            static const double oneOverSqrt3 = 1.; // / sqrt(3.);
-            // This returns the rms scattering angle in the plane of scatter
-            double ms_Angle = 13.6*sqrt(x0sTotal)*(1+0.038*log(x0sTotal))/momentum; //MeV  //// New Stuff!!
+            if (x0sTotal > 0.)
+            {
+                // This returns the rms scattering angle in the plane of scatter
+                double ms_Angle = 13.6*sqrt(x0sTotal)*(1+0.038*log(x0sTotal))/momentum; //MeV  
 
-            // The 1/sqrt(3) averages out the deviations over the step length
-            scat_angle = oneOverSqrt3*oneOverSqrt3*ms_Angle*ms_Angle;
+                // The 1/sqrt(3) averages out the deviations over the step length
+                scat_angle = ms_Angle*ms_Angle;
 
-            // Try this to see if we get consistency
-            double ms_dist = oneOverSqrt3 * arcLen * ms_Angle;
-            scat_dist  = ms_dist*ms_dist;
-            scat_covr  = ms_dist*ms_Angle;
-        }
-        else
-        {
-            scat_angle = 0.;
+                // Try this to see if we get consistency
+                double ms_dist = arcLen * ms_Angle;
+                scat_dist  = ms_dist*ms_dist ;
+                scat_covr  = ms_dist*ms_Angle;
+            }
+            else
+            {
+                scat_angle = 0.;
+                scat_dist  = 0.;
+                scat_covr  = 0.;
+            }
         }
 
         Vector startDir = getStartDir();
@@ -568,7 +577,7 @@ HepMatrix G4PropagationTool::getMscatCov(double arcLenIn, double momentum, bool)
 
         //Go from arc-length to Z - multiply by cos(theta) (or squared as case may be)
         scat_dist /= norm_term;
-        scat_covr /= 2. * sqrt(norm_term);   // I do not know why I need the factor of two here...
+        scat_covr /= sqrt(norm_term);
     }
 
     HepMatrix cov(4,4,0);
