@@ -36,7 +36,6 @@ ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
 
 GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
-//GlastDetSvc.visitorMode="recon";
 
 ApplicationMgr.ExtSvc += { "TkrGeometrySvc", "TkrInitSvc" };
 
@@ -48,7 +47,7 @@ ApplicationMgr.TopAlg = {
     "mcRootReaderAlg",
     "digiRootReaderAlg",
     "TkrReconAlg",      
-    "test_TkrRecon"
+    "test_McToolBox"
     };
 
 ApplicationMgr.DLLs   += { "CalibSvc" };
