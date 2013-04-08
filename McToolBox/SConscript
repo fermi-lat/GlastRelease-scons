@@ -20,5 +20,6 @@ test_McToolBox = progEnv.GaudiProgram('test_McToolBox',
 progEnv.Tool('registerTargets', package='McToolBox',
              libraryCxts = [[McToolBox,libEnv]],
              testAppCxts = [[test_McToolBox, progEnv]],
+             includes = listFiles(['McToolBox/*','src/*.h'], recursive = 1),
              xml=listFiles(files = ['xml/*'], recursive = True),
              jo = ['src/test/jobOptions.txt'])
