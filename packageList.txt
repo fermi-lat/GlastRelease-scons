@@ -83,18 +83,18 @@ GCRCalib GCRCalib-01-12-01
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-05
-TkrRecon TkrRecon-10-38-11
+TkrRecon TkrRecon-10-39-01
 
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-04-00
-AcdRecon AcdRecon-05-04-01
+AcdRecon AcdRecon-05-04-02
 
 # Geant4
 #GlastMS GlastMS-01-00-01
 G4Generator G4Generator-06-06-00
 #G4HadronSim G4HadronSim-02-00-01
-G4Propagator G4Propagator-03-01-02
+G4Propagator G4Propagator-03-01-03
 
 # calibration
 calibUtil calibUtil-01-14-00
@@ -143,9 +143,11 @@ calibGenTKR calibGenTKR-04-08-03
 # not used in Gleam, here as a build check
 detCheck detCheck-01-08-00
 
+McToolBox McToolBox-00-02-02
+
 Gleam Gleam-07-11-19
 
-SConsFiles SConsFiles-01-10-03
-GlastRelease-scons/containerSettings containerSettings-00-13-00
+SConsFiles SConsFiles-01-10-04
+GlastRelease-scons/containerSettings containerSettings-00-13-01
 
 celestialSources/EarthPhenom EarthPhenom-00-02-01
