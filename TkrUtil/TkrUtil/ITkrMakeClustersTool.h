@@ -15,7 +15,6 @@
 #include "Event/Digi/TkrDigi.h"
 #include "TkrUtil/ITkrBadStripsSvc.h"
 
-
 // Declaration of the interface ID ( interface id, major version, minor version) 
 static const InterfaceID IID_ITkrMakeClustersTool("ITkrMakeClustersTool", 1 , 0); 
 

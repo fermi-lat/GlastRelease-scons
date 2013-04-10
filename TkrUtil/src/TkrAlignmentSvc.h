@@ -157,9 +157,14 @@ public:
         HepPoint3D& entry, HepPoint3D &exit, HepVector3D dir) const;
     
     HepVector3D deltaReconPoint(const HepPoint3D& point, const HepVector3D& dir, 
-        int layer, int view, alignTask task, const AlignmentConsts* consts) const;
-    void moveReconPoint(HepPoint3D& point, const HepVector3D& dir, 
-        int layer, int view, alignTask task, const AlignmentConsts* consts) const;
+        int layer, int view, 
+        unsigned flags,
+        alignTask task, 
+        const AlignmentConsts* consts
+    ) const;
+  //  void moveReconPoint(HepPoint3D& point, const HepVector3D& dir, 
+  //      int layer, int view, alignTask task, const AlignmentConsts* consts,
+  //      const unsigned flags) const;
 
     /// Get the volId and the local coordinates for the point to be aligned
     idents::VolumeIdentifier getGeometryInfo(int layer, int view, 
@@ -199,7 +204,9 @@ private:
     void applyDelta(
         double pointX, double pointY, double alphaX, double alphaY,
         const AlignmentConsts* alConsts, 
-        double& deltaPointX, double& deltaPointY) const;
+        double& deltaPointX, double& deltaPointY,
+        unsigned int flags = USEALL
+        ) const;
 
     /// set the const mode
     void setMode(std::string pmode) {
@@ -325,6 +332,8 @@ private:
     int m_nFaces;
     int m_nLadders;
     int m_nWafers;
+
+    bool m_useFlags;
 };
 
 

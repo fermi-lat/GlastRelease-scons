@@ -620,7 +620,6 @@ int TkrQueryClustersTool::GetStripsInfoForNewEvtEnergyCorr(int *Tkr_StripsPerLyr
   if (!pClusters) return 0;
   if(pClusters->size()==0) return 0;
   
-  bool isMarked;
   Event::TkrClusterColConItr iter = pClusters->begin();
   for(; iter!=pClusters->end();++iter) 
     {
