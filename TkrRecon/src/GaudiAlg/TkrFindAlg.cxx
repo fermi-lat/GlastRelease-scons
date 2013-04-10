@@ -312,8 +312,12 @@ StatusCode TkrFindAlg::execute()
             AlgTool* findAlgTool = dynamic_cast<AlgTool*>(m_findTool);    
             findAlgTool->setProperty("PatrecMode", "Normal");
         }
-        if (name() != "TkrFindIter") sc = m_findTool->firstPass();
-        else                         sc = m_findTool->secondPass();
+        //std::cout << name() << std::endl;
+        if (name() != "TkrFindIter") {
+            sc = m_findTool->firstPass();
+        } else {
+            sc = m_findTool->secondPass();
+        }
 
         if(m_ghostTool && m_standardGhosts) {
             sc = m_ghostTool->flagEarlyTracks();

@@ -45,7 +45,7 @@ public:
     /// @brief Method to association the Monte Carlo hits into Pattern Candidate tracks
     StatusCode firstPass();
 
-    StatusCode secondPass() {return StatusCode::SUCCESS;}
+    StatusCode secondPass() {return StatusCode::SUCCESS;} 
 
 private:
     /// private method to build an individual Monte Carlo track
@@ -283,6 +283,9 @@ void MonteCarloFindTrackTool::storeTracksInTds(TrackVec& trackVec)
             Event::TkrTrack* track = *trackIter;
     
             // Now reset the energies if we are not in full MC mode
+            track->setStatusBit(Event::TkrTrack::MC);
+                track->setStatusBit(Event::TkrTrack::FOUND);
+
             if (m_useCalEnergy)
             {
                 track->setInitialEnergy(m_energy);

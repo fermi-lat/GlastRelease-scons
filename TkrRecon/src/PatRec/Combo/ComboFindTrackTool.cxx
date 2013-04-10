@@ -1551,8 +1551,11 @@ ComboFindTrackTool::trialReturn ComboFindTrackTool::tryCandidate(int firstLayer,
         // if trial doesn't work, return to continue searching
         return FITFAILED;
     }
-    // Set Cosmic-Ray status bit
-    if (m_searchType==CRAYSEARCH) trial->track()->setStatusBit(Event::TkrTrack::COSMICRAY);
+    // Set Combo or Cosmic-Ray status bit
+    if (m_searchType==CRAYSEARCH) {
+        trial->track()->setStatusBit(Event::TkrTrack::COSMICRAY);
+    } else { trial->track()->setStatusBit(Event::TkrTrack::COMBO);
+    }
 
     setTrackQuality(trial);
     if(trial->track()->getQuality() > m_minQuality) {

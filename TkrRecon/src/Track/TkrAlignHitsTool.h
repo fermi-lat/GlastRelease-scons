@@ -74,8 +74,7 @@ public:
     ///        added to the collection in the TDS.
 
     StatusCode initialize();
-    StatusCode alignHits(const Event::TkrTrack* track
-        /*, alignVector& aVec */);
+    StatusCode alignHits(Event::TkrTrack* track, bool doFirstPoint );
 
 private:
     /// Pointer to the local Tracker geometry service
@@ -84,6 +83,8 @@ private:
     //ITkrFailureModeSvc* m_failSvc;
     /// alignmentsvc
     ITkrAlignmentSvc*   m_alignSvc;
+
+    bool m_useFlags;
 
     /*
     /// Pointer to the Gaudi data provider service
