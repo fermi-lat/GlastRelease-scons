@@ -55,11 +55,13 @@ namespace Event {  // NameSpace
         //         [ Pat Rec Info  ] [Pass ] [ E-Loss] [ Track Energy ]  [Track Fit Status]
         // High bits:
         //        |  0   0   0   0  |  0   0   0   0  |  0   0   0   0  |  0   0   0   0   |
-        //                                     T         M   C   K   C     T   C    [Ghosts]
-        //                                     r   G     C   o   i   o     r   o
-        //                                     i   2         m   n   m     e   s
-        //                                     g   5         b   k   p     e   m
-        //                                     G   5         o
+        //                       A             T         M   C   K   C     T   C    [Ghosts]
+        //                       l             r   G     C   o   i   o     r   o
+        //                       i             i   2         m   n   m     e   s
+        //                       g             g   5         b   k   p     e   m
+        //                       n             G   5         o
+        //                       e
+        //                       d
 
         enum StatusBits {
             FOUND      =   0x00001,  //Set if track has been "found" by pat rec
@@ -90,7 +92,9 @@ namespace Event {  // NameSpace
             MC         = 0x0800000, // set if track was found by MonteCarlo Patrec
 
             GHOST255   = 0x01000000, // set if there are ToT 255's on track
-            TRIGGHOST  = 0x02000000  // set if there are "trigger" ghosts
+            TRIGGHOST  = 0x02000000, // set if there are "trigger" ghosts
+
+            ALIGNED    = 0x010000000 // alignment correction made to this track
         }; 
 
         /// Utility 
@@ -161,7 +165,7 @@ namespace Event {  // NameSpace
         inline void   clearEnergyStatusBits()             {m_statusBits       &= 0xffffff0f;}
         inline void   setRangeEnergy(double x)            {m_rangeEnergy       = x;}
         inline double getRangeEnergy()                    const {return m_rangeEnergy;}
-
+        inline bool   isSet(unsigned int statusBits)      {return statusBits&m_statusBits;}
     private:    
         /// Status
         unsigned int m_statusBits;
