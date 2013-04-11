@@ -572,7 +572,9 @@ StatusCode TreeValsTool::calculate()
                 // If an associated cluster then calculate the docas
                 if (calCluster)
                 {
-                    const Point& clusPos = calCluster->getPosition();
+                  // Ph.Bruel: switch to centroid postion corrected forthe hodoscopic effect
+                  //                  const Point& clusPos = calCluster->getPosition();
+                  Point clusPos = calCluster->getCorPosition(tree->getAxisParams()->getEventAxis());
 
                     // Now we need to visit EVERY link in the tree. To do so we use a list...
                     std::list<const Event::TkrVecNode*> nodeList;
