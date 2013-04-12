@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-07-11-20 12-Apr-2013 heather update JO to turn full chrono stats back on
  Gleam-07-11-19 22-Feb-2013 bregeon Update readigi_runrecon.txt for Pass8
  Gleam-07-11-18 07-Feb-2013 kadrlica Updated basicOptions.txt to default to the Pass8 worksheet
  Gleam-07-11-17 09-Dec-2012 TU Remove override of TkrRecon "filter" in basicOptions.txt

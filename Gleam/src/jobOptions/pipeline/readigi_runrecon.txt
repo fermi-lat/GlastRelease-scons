@@ -17,6 +17,10 @@ ApplicationMgr.DLLs   += {"GaudiAlg","GaudiAud"};
 ApplicationMgr.ExtSvc += {"ChronoStatSvc"};
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
+ChronoStatSvc.PrintSystemTime = true;
+ChronoStatSvc.PrintEllapsedTime = true;
+
+
 
 //
 // Set up basic event loop: 
