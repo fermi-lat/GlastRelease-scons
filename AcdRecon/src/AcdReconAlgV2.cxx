@@ -480,7 +480,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 
     for ( int iTrack(0); iTrack < nTrack; iTrack++) {
 
-    const Event::TkrTrack* trackTds  = trackVec[i];       // The TDS track
+    const Event::TkrTrack* trackTds  = trackVec[iTrack];       // The TDS track
     bool isCR = trackTds->getStatusBits() & Event::TkrTrack::COSMICRAY;
 
     // grap the track direction information
