@@ -974,7 +974,7 @@ StatusCode Acd2ValsTool::calculate()
   if ( ribbon_CR_vetoPoca != 0 ) {
     ACD_CR_ribbon_ActiveDist =  ribbon_CR_vetoPoca->getDoca();
     ACD_CR_ribbon_EnergyPmtA = hitMap[ribbon_CR_vetoPoca->getId()]->ribbonEnergy(Event::AcdHit::A);
-    ACD_CR_ibbon_EnergyPmtB = hitMap[ribbon_CR_vetoPoca->getId()]->ribbonEnergy(Event::AcdHit::B);
+    ACD_CR_ribbon_EnergyPmtB = hitMap[ribbon_CR_vetoPoca->getId()]->ribbonEnergy(Event::AcdHit::B);
   }
 
   if ( gap_vetoPoca != 0 ) {
