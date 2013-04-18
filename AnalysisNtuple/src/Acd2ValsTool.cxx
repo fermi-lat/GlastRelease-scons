@@ -973,9 +973,8 @@ StatusCode Acd2ValsTool::calculate()
   // Now fill in the values for the most likely CR Track-Ribbon Veto Poca
   if ( ribbon_CR_vetoPoca != 0 ) {
     ACD_CR_ribbon_ActiveDist =  ribbon_CR_vetoPoca->getDoca();
-    ACD_CR_ribbon_ActiveLength = ribbon_CR_vetoPoca->getLocalY();
     ACD_CR_ribbon_EnergyPmtA = hitMap[ribbon_CR_vetoPoca->getId()]->ribbonEnergy(Event::AcdHit::A);
-    ACD_rCR_ibbon_EnergyPmtB = hitMap[ribbon_CR_vetoPoca->getId()]->ribbonEnergy(Event::AcdHit::B);
+    ACD_CR_ibbon_EnergyPmtB = hitMap[ribbon_CR_vetoPoca->getId()]->ribbonEnergy(Event::AcdHit::B);
   }
 
   if ( gap_vetoPoca != 0 ) {
