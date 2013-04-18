@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-05-00 18-Apr-2013 echarles Include CR tracks in AcdRecon
  AcdRecon-05-04-02 08-Apr-2013 TU Philippe's updates: using the cal centroid position corrected for the hodoscopic effect
  AcdRecon-05-04-01 21-Feb-2013 TU Converting from CalClusterCol to CalClusterMap (including ubers too)
  AcdRecon-05-04-00 20-Aug-2012    jrb for Windows no-install-headers
