@@ -177,6 +177,14 @@ StatusCode AcdReconAlgV2::initialize ( ) {
       log << MSG::ERROR << "Failed to fill the ACD Pattern Recognition Map" << endreq;
       return sc;
     }
+    
+    // The track vector
+    sc = toolSvc()->retrieveTool("TkrTrackVecTool", m_pTrackVec);
+    if (sc.isFailure()) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Failed to get the TkrTrackVectTool" << endreq;
+      return sc;
+    }   
 
     getParameters();    
     return sc;
@@ -459,16 +467,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     MsgStream   log( msgSvc(), name() );
      
     // Retrieve the information on fit tracks
-    SmartDataPtr<Event::TkrTrackCol> tracksTds(eventSvc(), 
-                           EventModel::TkrRecon::TkrTrackCol);
-    
-    if (!tracksTds) {
-      log << MSG::DEBUG << "No reconstructed tracks found on the TDS" << std::endl
-            << endreq;
-        return StatusCode::SUCCESS;
-    } else {
-      log << MSG::DEBUG << "AcdReconAlgV2::trackDistances using " << tracksTds->size() << " tracks." << endreq;
-    }   
+    std::vector<Event::TkrTrack*> trackVec = m_pTrackVec->getTrackVec();
+    int nTrack = trackVec.size();
 
     // Places to store the track endpoint and direction
     AcdRecon::TrackData upwardExtend;
@@ -478,18 +478,15 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     AcdRecon::ExitData upwardExit;
     AcdRecon::ExitData downwardExit;
 
-    int iTrack(-1);
-    Event::TkrTrackColPtr trkPtr = tracksTds->begin();
-    while(trkPtr != tracksTds->end())
-    {
+    for ( int iTrack(0); iTrack < nTrack; iTrack++) {
 
-        const Event::TkrTrack* trackTds  = *trkPtr++;       // The TDS track
-    iTrack++;
+    const Event::TkrTrack* trackTds  = trackVec[i];       // The TDS track
+    bool isCR = trackTds->getStatusBits() & Event::TkrTrack::COSMICRAY;
 
     // grap the track direction information
     const Event::TkrTrackHit* firstHit = (*trackTds)[0];
     upwardExtend.m_energy = firstHit->getEnergy();
-    upwardExtend.m_index = iTrack;
+    upwardExtend.m_index = isCR ? iTrack + 100 : iTrack;
     upwardExtend.m_upward = true;
     AcdRecon::ReconFunctions::convertToAcdRep(firstHit->getTrackParams(Event::TkrTrackHit::SMOOTHED),
                           firstHit->getZPlane(),upwardExtend);
@@ -497,7 +494,7 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
     const unsigned int lastHitIdx = trackTds->getNumHits() - 1;
     const Event::TkrTrackHit* lastHit = (*trackTds)[lastHitIdx];
     downwardExtend.m_energy = lastHit->getEnergy();
-    downwardExtend.m_index = iTrack;
+    downwardExtend.m_index = isCR ? iTrack + 100 : iTrack;
     downwardExtend.m_upward = false;    
     AcdRecon::ReconFunctions::convertToAcdRep(lastHit->getTrackParams(Event::TkrTrackHit::SMOOTHED),
                           lastHit->getZPlane(),downwardExtend);

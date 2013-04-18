@@ -14,6 +14,8 @@
 #include "Event/Recon/AcdRecon/AcdHit.h"
 #include "Event/Recon/AcdRecon/AcdAssoc.h"
 
+#include "TkrUtil/ITkrTrackVecTool.h"
+
 #include "GaudiKernel/ObjectVector.h"
 
 #include "AcdITkrIntersectToolV2.h"
@@ -284,6 +286,9 @@ class AcdReconAlgV2 : public Algorithm
       /// access to the Glast Detector Service to read in geometry constants from XML files
       IGlastDetSvc *m_glastDetSvc;
       IAcdGeometrySvc *m_acdGeoSvc;
+
+      /// trackVecTool
+      ITkrTrackVecTool* m_pTrackVec;
   
       /// Tolernace for pat-rec hash map
       double           m_patRecTol;
