@@ -74,7 +74,7 @@ public:
     ///        added to the collection in the TDS.
 
     StatusCode initialize();
-    StatusCode alignHits(const Event::TkrTrack* track
+    StatusCode alignHits(Event::TkrTrack* track
         /*, alignVector& aVec */);
 	StatusCode finalize();
 

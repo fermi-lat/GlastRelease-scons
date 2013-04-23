@@ -50,7 +50,7 @@ StatusCode TkrAlignHitsTool::initialize() {
     return sc;
 }
 
-StatusCode TkrAlignHitsTool::alignHits(const Event::TkrTrack* track
+StatusCode TkrAlignHitsTool::alignHits(Event::TkrTrack* track
                                        /*, std::vector<double>& alignVec */)
 {
     StatusCode sc = StatusCode::SUCCESS;
@@ -75,10 +75,7 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrTrack* track
 	} else {
 	    log << MSG::DEBUG << "Track already aligned" << endreq;
 	    return sc;
-	}
-    
-    unsigned trackStatus = track->getStatusBits();
-    
+	}   
       
     bool first = true;
     Event::TkrTrackHitVecConItr pPlane = track->begin();
@@ -114,16 +111,16 @@ StatusCode TkrAlignHitsTool::alignHits(const Event::TkrTrack* track
             first = false;
         }
         
-        double coord, before, after;
+        double coord;
         if(view==idents::TkrId::eMeasureX) {
             coord  = params.getxPosition() + delta.x();
             params.setxPosition(coord);
         } else {
-            coord  = params.getyPosition() + delta.y();
+            coord  = params.getyPosition() + delta.y(); 
             params.setyPosition(coord);
-        }   
-		unsigned status = plane->getStatusBits();
-        if(status&Event::TkrTrackHit::HITHASKINKANG!=0) {
+        }
+
+        if(track->isSet(Event::TkrTrackHit::HITHASKINKANG)) {
            nKinks++;
 		}
            
