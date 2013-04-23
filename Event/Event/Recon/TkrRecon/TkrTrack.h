@@ -165,7 +165,9 @@ namespace Event {  // NameSpace
         inline void   clearEnergyStatusBits()             {m_statusBits       &= 0xffffff0f;}
         inline void   setRangeEnergy(double x)            {m_rangeEnergy       = x;}
         inline double getRangeEnergy()                    const {return m_rangeEnergy;}
-        inline bool   isSet(unsigned int statusBits)      {return statusBits&m_statusBits;}
+
+        inline bool   isSet(unsigned int statusBits) const {return (statusBits&m_statusBits)!=0;}
+
     private:    
         /// Status
         unsigned int m_statusBits;
