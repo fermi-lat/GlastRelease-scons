@@ -94,7 +94,7 @@ namespace Event {  // NameSpace
             GHOST255   = 0x01000000, // set if there are ToT 255's on track
             TRIGGHOST  = 0x02000000, // set if there are "trigger" ghosts
 
-            ALIGNED    = 0x010000000 // alignment correction made to this track
+            ALIGNED    = 0x10000000  // alignment correction made to this track
         }; 
 
         /// Utility 

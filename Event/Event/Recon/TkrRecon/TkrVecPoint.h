@@ -137,6 +137,8 @@ public:
     bool operator!=(const TkrVecPoint& point) const;
     //@}
 
+	void setPosition(Point position) {m_position = position;}
+
 private:
 
     // data members

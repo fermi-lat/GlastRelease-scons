@@ -115,7 +115,10 @@ public:
     
     const bool operator<(const TkrVecPointsLink* right) const {return m_position.z() < right->getPosition().z();}
 
-private:
+	void setPosition(Point pos)           {m_position = pos; }
+	void setVector(Vector dir)            {m_vector = dir; }
+
+ private:
     const TkrVecPoint* m_firstVecPoint;
     const TkrVecPoint* m_secondVecPoint;
     
