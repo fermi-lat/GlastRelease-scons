@@ -14,7 +14,7 @@
 #include "Event/Recon/TkrRecon/TkrTrackHit.h"
 
 // Declare Gaudi object interface ID
-static const CLID& CLID_TkrTrack = InterfaceID("TkrTrack",  2, 0);
+static const CLID& CLID_TkrTrack = InterfaceID("TkrTrack",  3, 0);
 
 namespace Event {  // NameSpace
 
