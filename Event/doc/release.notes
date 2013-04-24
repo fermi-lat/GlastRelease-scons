@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
  
+ Event-14-16-04 23-Apr-2013  lsrea added some methods to facilitate alignment
  Event-14-16-03 21-Feb-2013 bregeon CalRangeRecData::getEnergy() now uses geometric mean - LPATE-87
  Event-14-16-02 07-Feb-2013 TU Small changes to Tree Based Tracking stuff for root IO
  Event-14-16-01 30-Jan-2013 TU Patch from Eric Charles to fix unguarded sort error in AcdTkrHitPoca
