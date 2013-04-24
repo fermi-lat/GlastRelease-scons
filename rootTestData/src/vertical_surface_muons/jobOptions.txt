@@ -13,10 +13,8 @@
 
 FluxAlg.source_name="vertical_surface_muons";
 
-//// set root output from merit with following
+//// set root output to ntuple
 AnalysisNtupleAlg.tupleName = "MeritTuple";
-//DC: obsolete ?
-//MeritAlg.PointingTreeName="Exposure";
 
 TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false; 
@@ -33,7 +31,6 @@ RootTupleSvc.rejectIfBad         = false;
 CalClustersAlg.OutputLevel=4; // too much info
 
 // Number of events to process
-MeritAlg.generated = 10; // for estimation of Aeff
 ApplicationMgr.EvtMax = 10;
 
 MessageSvc.OutputLevel      =3;

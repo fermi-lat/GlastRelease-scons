@@ -11,13 +11,11 @@
 //#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt"
 //#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"
 
-FluxSvc.source_lib += { "$ROOTTESTXMLPATH/source_library.xml" } ;
+FluxSvc.source_lib += { "$ROOTTESTDATAXMLPATH/source_library.xml" } ;
 FluxAlg.source_name = "gamma_5_gev_normal" ;
 
-//// set root output from merit with following
+//// set root output to the ntuple
 AnalysisNtupleAlg.tupleName = "MeritTuple";
-//DC: obsolete ?
-//MeritAlg.PointingTreeName="Exposure";
 
 TriggerAlg.mask = 0; // accept events even if they don't trigger
 TriggerAlg.applyPrescales=false;
@@ -34,7 +32,7 @@ RootTupleSvc.rejectIfBad         = false;
 CalClustersAlg.OutputLevel=4; // too much info
 
 // Number of events to process
-MeritAlg.generated = 10; // for estimation of Aeff
+
 ApplicationMgr.EvtMax = 10;
 
 MessageSvc.OutputLevel      =3;
