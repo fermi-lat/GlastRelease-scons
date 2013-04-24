@@ -4,7 +4,7 @@
 #
 # $Id$
 # Authors: Heather Kelly <heather@slac.stanford.edu>,Leon Rochester <lsrea@slac.stanford.edu>
-# Version: rootTestData-04-06-02
+# Version: rootTestData-04-06-03
 Import('baseEnv')
 Import('listFiles')
 progEnv = baseEnv.Clone()
