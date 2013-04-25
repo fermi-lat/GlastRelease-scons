@@ -66,7 +66,6 @@ Service(name, pSvcLocator)
     declareProperty("recScale",     m_recScale=1.0);
     declareProperty("simScaleVec",  m_simScaleVec);
     declareProperty("recScaleVec",  m_recScaleVec);
-    //declareProperty("useFlags",     m_useFlags = false);
 
     return;
 }
@@ -850,9 +849,10 @@ void TkrAlignmentSvc::calculateWaferConsts(AlignmentConsts& thisWafer) const
 
     // apply scaling
     // which scale?
-    // No! too late to scale, rotations and displacements are mixed by now!
+    // The overall scale can be useful, but the individual scales are tricky
+    //   because all the constants get mixed in the final corrections
+    //   I'll leave them in, but beware!!!!
 
-/*
     double scale;
     std::vector<double> scaleVec;
 
@@ -870,7 +870,6 @@ void TkrAlignmentSvc::calculateWaferConsts(AlignmentConsts& thisWafer) const
     rotX   *= scale*scaleVec[3];
     rotY   *= scale*scaleVec[4];
     rotZ   *= scale*scaleVec[5];
-*/
 
     m_waferConsts = AlignmentConsts(deltaX, deltaY, deltaZ,
         rotX, rotY, rotZ);
