@@ -6,13 +6,14 @@ ClassImp(CalRecon)
 
 CalRecon::CalRecon() 
 {
-    m_eventEnergyCol  = 0;
-    m_xtalRecCol  = 0;
-    m_clusterCol  = 0;
-    m_mipTrackCol = 0;
-    m_gcrXtalCol = 0;
-    m_gcrTrack=0;
-    m_calClusterMap = 0;
+    m_eventEnergyCol    = 0;
+    m_xtalRecCol        = 0;
+    m_clusterCol        = 0;
+    m_mipTrackCol       = 0;
+    m_gcrXtalCol        = 0;
+    m_gcrTrack          = 0;
+    m_calClusterMap     = 0;
+    m_calEventEnergyMap = 0;
 
 }
 
@@ -65,6 +66,13 @@ CalRecon::~CalRecon()
         m_calClusterMap = 0;
     }
 
+    if (m_calEventEnergyMap)
+    {
+        m_calEventEnergyMap->DeleteAll();
+        delete m_calEventEnergyMap;
+        m_calEventEnergyMap = 0;
+    }
+
 }
 
 void CalRecon::initialize() 
@@ -77,7 +85,8 @@ void CalRecon::initialize()
     m_gcrXtalCol = 0;
     m_indGcrXtal = -1;
 
-    if (!m_calClusterMap) m_calClusterMap = new TMap();
+    if (!m_calClusterMap)     m_calClusterMap     = new TMap();
+    if (!m_calEventEnergyMap) m_calEventEnergyMap = new TMap();
 }
 
 void CalRecon::Clear(Option_t* /* option */) 
@@ -90,6 +99,7 @@ void CalRecon::Clear(Option_t* /* option */)
     m_indGcrXtal = -1;
     if (m_gcrTrack) m_gcrTrack = 0;
     if (m_calClusterMap) m_calClusterMap->Clear();
+    if (m_calEventEnergyMap) m_calEventEnergyMap->Clear();
 }
 
 void CalRecon::Print(Option_t *option) const 

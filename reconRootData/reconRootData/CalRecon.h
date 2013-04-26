@@ -8,6 +8,7 @@
 #include "TString.h"
 
 #include "CalEventEnergy.h"
+#include "CalEventEnergyMap.h"
 #include "CalXtalRecData.h"
 #include "CalCluster.h"
 #include "CalMipTrack.h"
@@ -72,6 +73,9 @@ public:
 
     /// Provide access to the CalClusterMap
     TMap* getCalClusterMap() { return m_calClusterMap;}
+
+    /// Provide access to the CalEventEnergyMap
+    TMap* getCalEventEnergyMap() {return m_calEventEnergyMap;}
  
 private:
     /// list of CalXtalRecData
@@ -94,7 +98,10 @@ private:
     /// This will contain the CalClusterMap
     TMap* m_calClusterMap;
 
-    ClassDef(CalRecon,7)
+    /// This will contain the CalEventEnergyMap
+    TMap* m_calEventEnergyMap;
+
+    ClassDef(CalRecon,8)
 };
 
 #endif
