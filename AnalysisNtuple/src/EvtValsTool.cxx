@@ -829,11 +829,11 @@ StatusCode EvtValsTool::initialize()
     
     // load up the map
 
-    addItem("EvtRun",           &EvtRun);
-    addItem("EvtEventId",       &EvtEventId);
-    addItem("EvtEventId64",     &EvtEventId64);
-    addItem("EvtElapsedTime",   &EvtElapsedTime);
-    addItem("EvtLiveTime",      &EvtLiveTime);
+    addItem("EvtRun",           &EvtRun, true);
+    addItem("EvtEventId",       &EvtEventId, true);
+    addItem("EvtEventId64",     &EvtEventId64, true);
+    addItem("EvtElapsedTime",   &EvtElapsedTime, true);
+    addItem("EvtLiveTime",      &EvtLiveTime, true);
 
     addItem("EvtEnergyCorr",    &EvtEnergyCorr,   true);
     addItem("EvtEnergyCorrUB",  &EvtEnergyCorrUB, true);
