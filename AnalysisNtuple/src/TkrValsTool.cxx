@@ -694,6 +694,12 @@ Any gaps above the last plane are not counted. (This may change soon.)
 <td>F<td>   Same as Tkr1KalEne, but for the veto track
 <tr><td> TkrVConEne
 <td>F<td>   Same as Tkr1ConEne, but for the veto track
+
+<tr><td> TkrCovDetC
+<td>F<td>   Determinant of the error matrix, propagated into the preceding converter
+<tr><td> TkrCovDetS[XX/YY/XY]C
+<td>F<td>   Elements of the error matrix, propagated into the preceding converter
+
 </table>
 
 */
@@ -877,10 +883,10 @@ StatusCode TkrValsTool::initialize()
     addItem("Tkr1SXX",        &Tkr_1_Sxx);
     addItem("Tkr1SXY",        &Tkr_1_Sxy);
     addItem("Tkr1SYY",        &Tkr_1_Syy);
-	addItem("Tkr1SXXC",       &Tkr_1_SxxC);
-	addItem("Tkr1SYYC",       &Tkr_1_SyyC);
-	addItem("Tkr1SXYC",       &Tkr_1_SxyC);
-	addItem("Tkr1CovDetC",    &Tkr_1_CovDetC);
+	addItem("Tkr1SXXC",       &Tkr_1_SxxC, true);
+	addItem("Tkr1SYYC",       &Tkr_1_SyyC, true);
+	addItem("Tkr1SXYC",       &Tkr_1_SxyC, true);
+	addItem("Tkr1CovDetC",    &Tkr_1_CovDetC, true);
 
     addItem("Tkr1ToTFirst",   &Tkr_1_ToTFirst, true);
     addItem("Tkr1ToTAve",     &Tkr_1_ToTAve);
