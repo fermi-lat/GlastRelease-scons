@@ -61,7 +61,9 @@
 #pragma link C++ class TkrVecPoint+;
 #pragma link C++ class TkrVecPointsLink+;
 #pragma link C++ class TkrVecNode+;
+#pragma link C++ class TkrVecNodeCompressed+;
 #pragma link C++ class TkrTree+;
+#pragma link C++ class TkrTreeCompressed+;
 #pragma link C++ class TkrFilterParams+;
 #pragma link C++ class TkrTruncationData+;
 #pragma link C++ class TkrEventParams+;

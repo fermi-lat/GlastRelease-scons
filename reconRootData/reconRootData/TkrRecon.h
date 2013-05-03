@@ -6,6 +6,7 @@
 
 #include "TkrCluster.h"
 #include "TkrTree.h"
+#include "TkrTreeCompressed.h"
 #include "TkrTrack.h"
 #include "TkrVertex.h"
 #include "TkrTruncationData.h"
@@ -67,6 +68,7 @@ public:
 
     TObjArray* getTkrVecNodesCol()    {return m_tkrVecNodesCol;}
     void addTkrVecNode(TkrVecNode* vecNode) {m_tkrVecNodesCol->Add(vecNode);}
+    void addTkrVecNodeCompressed(TkrVecNodeCompressed* vecNode) {m_tkrVecNodesCol->Add(vecNode);}
 
     TObjArray* getTkrFilterParamsCol()    {return m_tkrFilterParamsCol;}
     void addTkrFilterParams(TkrFilterParams* filterParams) {m_tkrFilterParamsCol->Add(filterParams);}
@@ -76,6 +78,7 @@ public:
 
     TObjArray* getTkrTreeCol()    {return m_tkrTreeCol;}
     void addTkrTree(TkrTree* tree) {m_tkrTreeCol->Add(tree);}
+    void addTkrTreeCompressed(TkrTreeCompressed* tree) {m_tkrTreeCol->Add(tree);}
 
     TObjArray* getTreeClusterRelationCol()    {return m_treeClusterRelationCol;}
     void addTreeClusterRelation(TreeClusterRelation* treeClusterRelation) {m_treeClusterRelationCol->Add(treeClusterRelation);}
@@ -102,28 +105,29 @@ public:
     TkrVecPoint* getTkrVecPoint(Int_t i) { return i < nTkrVecPoints() ? dynamic_cast<TkrVecPoint*>(m_tkrVecPointCol->At(i)) : 0;}
     TkrVecPointsLink* getTkrVecPointsLink(Int_t i) { return i < nTkrVecPointsLinks() ? dynamic_cast<TkrVecPointsLink*>(m_tkrVecPointsLinkCol->At(i)) : 0;}
     TkrVecNode* getTkrVecNode(Int_t i) { return i < nTkrVecNodes() ? dynamic_cast<TkrVecNode*>(m_tkrVecNodesCol->At(i)) : 0;}
+    TkrVecNodeCompressed* getTkrVecNodeCompressed(Int_t i) { return i < nTkrVecNodes() ? dynamic_cast<TkrVecNodeCompressed*>(m_tkrVecNodesCol->At(i)) : 0;}
     TkrTree* getTkrTree(Int_t i) { return i < nTkrTrees() ? dynamic_cast<TkrTree*>(m_tkrTreeCol->At(i)) : 0;}
+    TkrTreeCompressed* getTkrTreeCompressed(Int_t i) { return i < nTkrTrees() ? dynamic_cast<TkrTreeCompressed*>(m_tkrTreeCol->At(i)) : 0;}
     TkrFilterParams* getTkrFilterParams(Int_t i) { return i < nTkrFilterParams() ? dynamic_cast<TkrFilterParams*>(m_tkrFilterParamsCol->At(i)) : 0;}
     TkrEventParams* getTkrEventParams(Int_t i) { return m_tkrEventParams;}
     TreeClusterRelation* getTreeClusterRelation(Int_t i) {return i < nTreeClusterRelations() ? dynamic_cast<TreeClusterRelation*>(m_treeClusterRelationCol->At(i)) : 0;}
     
-
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
     void addDiagnostics(TkrDiagnostics* diagnostics) { m_diagnostics = diagnostics;};
 
 private:
     /// collection of TkrSiCluster
-    TObjArray *m_clusterCol;
+    TObjArray*      m_clusterCol;
     /// collection of TkrTrack
-    TObjArray *m_trackCol;
+    TObjArray*      m_trackCol;
     /// collection of TkrVertex
-    TObjArray *m_vertexCol;
+    TObjArray*      m_vertexCol;
      /// Diagnostics
-    TkrDiagnostics*   m_diagnostics;
+    TkrDiagnostics* m_diagnostics;
     /// collection of TkrTruncationData
-    TObjArray *m_truncationDataCol;
+    TObjArray*      m_truncationDataCol;
     /// ADW: cosmic-ray collection of TkrTrack
-    TObjArray *m_crTrackCol;
+    TObjArray*      m_crTrackCol;
     /// collection of TkrVecPoints
     TObjArray*      m_tkrVecPointCol;
     /// collection of TkrVecPointsLink
