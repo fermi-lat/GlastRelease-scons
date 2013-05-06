@@ -2,6 +2,7 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-06-02-02 06-May-2013 hmk tag to force a LATEST build
  ntupleWriterSvc-06-02-01 06-May-2013 hmk tag to force a LATEST build
  ntupleWriterSvc-06-02-00 20-Aug-2012    jrb for Windows no-install-headers
  ntupleWriterSvc-06-01-00 09-Dec-2011  hmk   Gaudi v21r7 merge
