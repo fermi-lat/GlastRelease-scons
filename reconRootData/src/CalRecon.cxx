@@ -61,14 +61,14 @@ CalRecon::~CalRecon()
 
     if (m_calClusterMap)
     {
-        m_calClusterMap->DeleteAll();
+        m_calClusterMap->Clear();
         delete m_calClusterMap;
         m_calClusterMap = 0;
     }
 
     if (m_calEventEnergyMap)
     {
-        m_calEventEnergyMap->DeleteAll();
+        m_calEventEnergyMap->Clear();
         delete m_calEventEnergyMap;
         m_calEventEnergyMap = 0;
     }

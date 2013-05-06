@@ -44,7 +44,6 @@
 #pragma link C++ class CalCluster+;
 #pragma link C++ class CalCorToolResult+;
 #pragma link C++ class CalEventEnergy+;
-#pragma link C++ class CalEventEnergyMap+;
 #pragma link C++ class CalRangeRecData+;
 #pragma link C++ class CalXtalRecData+;
 #pragma link C++ class CalMipTrack+;

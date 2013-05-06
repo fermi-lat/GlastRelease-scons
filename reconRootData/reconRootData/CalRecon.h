@@ -8,7 +8,7 @@
 #include "TString.h"
 
 #include "CalEventEnergy.h"
-#include "CalEventEnergyMap.h"
+//#include "CalEventEnergyMap.h"
 #include "CalXtalRecData.h"
 #include "CalCluster.h"
 #include "CalMipTrack.h"
@@ -101,7 +101,7 @@ private:
     /// This will contain the CalEventEnergyMap
     TMap* m_calEventEnergyMap;
 
-    ClassDef(CalRecon,8)
+    ClassDef(CalRecon,7)
 };
 
 #endif
