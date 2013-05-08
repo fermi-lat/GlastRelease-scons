@@ -7,9 +7,11 @@
 #include <cstdlib>
 #include <vector>
 #include "mootCore/MoodConnection.h"
+#include "facilities/commonUtilities.h"
 
 int main(int, char**)    {
 
+  facilities::commonUtilities::setupEnvironment();
   MOOT::MoodConnection* moodCon = 
     new MOOT::MoodConnection(false);  // read only
 

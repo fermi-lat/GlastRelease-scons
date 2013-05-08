@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include "mootCore/MootSys.h"
+#include "facilities/commonUtilities.h"
 
 
 int main(int, char**)    {
@@ -14,6 +15,8 @@ int main(int, char**)    {
   std::string out;
   std::string cmd("pwd");
   int status;
+
+  facilities::commonUtilities::setupEnvironment();
 
   // Issue a command that returns a single line
   bool ret = myUtil.sysCmd(cmd, out, status);
