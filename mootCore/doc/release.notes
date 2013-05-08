@@ -6,6 +6,7 @@
 
    *  EOH  *
 
+ mootCore-01-25-01 08-May-2013    jrb Test programs must call setupEnvironment for SCons builds
  mootCore-01-25-00 17-Aug-2012    jrb for Windows no-install-headers
  mootCore-01-24-09 10-Jul-2012 panetta JIRA LCT-29: update/add intent_v2r12p0.xsd
  mootCore-01-24-08 11-Jun-2012    jrb Eliminate unnecessary step (translating /u/ey/jrb) for read-only connection
