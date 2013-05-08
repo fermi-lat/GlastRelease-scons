@@ -6,7 +6,6 @@ ClassImp(CalRecon)
 
 CalRecon::CalRecon() 
 {
-    m_eventEnergyCol    = 0;
     m_xtalRecCol        = 0;
     m_clusterCol        = 0;
     m_mipTrackCol       = 0;
@@ -19,13 +18,6 @@ CalRecon::CalRecon()
 
 CalRecon::~CalRecon() 
 {
-    if (m_eventEnergyCol) 
-    {
-        m_eventEnergyCol->Delete();
-        delete m_eventEnergyCol;
-        m_eventEnergyCol = 0;
-    }
-    
     if (m_clusterCol) 
     {
         m_clusterCol->Delete();
@@ -77,7 +69,6 @@ CalRecon::~CalRecon()
 
 void CalRecon::initialize() 
 {
-    if (!m_eventEnergyCol)  m_eventEnergyCol  = new TObjArray();
     if (!m_clusterCol)  m_clusterCol  = new TObjArray();
     if (!m_xtalRecCol)  m_xtalRecCol  = new TObjArray();
     if (!m_mipTrackCol) m_mipTrackCol = new TObjArray();
@@ -91,7 +82,6 @@ void CalRecon::initialize()
 
 void CalRecon::Clear(Option_t* /* option */) 
 {
-    if (m_eventEnergyCol)  m_eventEnergyCol->Delete();
     if (m_xtalRecCol)  m_xtalRecCol->Delete();
     if (m_clusterCol)  m_clusterCol->Delete();
     if (m_mipTrackCol) m_mipTrackCol->Delete();
@@ -106,7 +96,6 @@ void CalRecon::Print(Option_t *option) const
 {
     TObject::Print(option);
     std::cout
-        << "# eventEnergies: " << m_eventEnergyCol->GetEntries()
         << " # mipTracks: " << m_mipTrackCol->GetEntries()
         << " # clusters: " << m_clusterCol->GetEntries()
         << " # xtalRecDatas: " << m_xtalRecCol->GetEntries() 
@@ -147,18 +136,23 @@ void CalRecon::Fake( Int_t ievent, Float_t randNum ) {
     initialize() ;
     Clear() ;
 
-    UInt_t ienergy;
-    for (ienergy = 0; ienergy < NUM_EVENT_ENERGIES ; ienergy++ ) {
-        CalEventEnergy * energy = new CalEventEnergy() ;
-        energy->Fake(ievent,ienergy,randNum) ;
-        addCalEventEnergy(energy);
-    }
-
     UInt_t icluster;
     for (icluster = 0; icluster < NUM_CLUSTERS ; icluster++ ) {
         CalCluster *cluster = new CalCluster();
         cluster->Fake(ievent,icluster,randNum) ;
         addCalCluster(cluster);
+    }
+
+    UInt_t ienergy;
+    CalCluster* cluster = (CalCluster*)m_clusterCol->At(0);
+    getCalEventEnergyMap()->SetOwnerKeyValue(kFALSE, kTRUE);
+    TObjArray* energyVecRoot = new TObjArray();
+    energyVecRoot->SetOwner(kFALSE);
+    getCalEventEnergyMap()->Add(cluster,energyVecRoot);
+    for (ienergy = 0; ienergy < NUM_EVENT_ENERGIES ; ienergy++ ) {
+        CalEventEnergy * energy = new CalEventEnergy() ;
+        energy->Fake(ievent,ienergy,randNum) ;
+        energyVecRoot->Add(energy);
     }
 
     UInt_t ixtal;
@@ -199,7 +193,8 @@ Bool_t CalRecon::CompareInRange( CalRecon & ref, const std::string & name ) {
 
     bool result = true ;
 
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalEventEnergy,getCalEventEnergyCol()) && result ;
+    CalCluster* cluster   = (CalCluster*)getCalClusterCol()->At(0);
+    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalEventEnergy,getEventEnergyVec(cluster)) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalCluster,getCalClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalXtalRecData,getCalXtalRecCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalMipTrack,getCalMipTrackCol()) && result ;

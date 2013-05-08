@@ -42,9 +42,6 @@ public:
     Bool_t CompareInRange( CalRecon &, const std::string & name = "" ) ; // for tests
     void Print(Option_t *option="") const;
 
-    /// provide access to list of event energies
-    TObjArray* getCalEventEnergyCol() { return m_eventEnergyCol; };
-
     /// provide access to list of CalClusters
     TObjArray* getCalClusterCol()  { return m_clusterCol; };
 
@@ -58,7 +55,6 @@ public:
     const TClonesArray* getGcrXtalCol() const {  return m_gcrXtalCol; };
     TObject* getGcrTrack(){return m_gcrTrack;};
 
-    void addCalEventEnergy(CalEventEnergy* energy) { m_eventEnergyCol->Add(energy); };
     void addCalCluster(CalCluster* cluster)     { m_clusterCol->Add(cluster); };
     void addXtalRecData(CalXtalRecData *xtal)   { m_xtalRecCol->Add(xtal); };
     void addCalMipTrack(CalMipTrack* track)     { m_mipTrackCol->Add(track); };
@@ -74,6 +70,9 @@ public:
     /// Provide access to the CalClusterMap
     TMap* getCalClusterMap() { return m_calClusterMap;}
 
+    /// Provide access to a CalEventEnergyVec giving a cluster
+    TObjArray* getEventEnergyVec(CalCluster* cluster) {return (TObjArray*)m_calEventEnergyMap->FindObject(cluster);}
+
     /// Provide access to the CalEventEnergyMap
     TMap* getCalEventEnergyMap() {return m_calEventEnergyMap;}
  
@@ -86,9 +85,6 @@ private:
 
     /// list of CalMipTracks
     TObjArray* m_mipTrackCol;
-  
-    /// list of CalEventEnergy
-    TObjArray* m_eventEnergyCol;
 
     ///CL: 08/22/06 list of gcrXtals
     TClonesArray* m_gcrXtalCol;
@@ -101,7 +97,7 @@ private:
     /// This will contain the CalEventEnergyMap
     TMap* m_calEventEnergyMap;
 
-    ClassDef(CalRecon,7)
+    ClassDef(CalRecon,8)
 };
 
 #endif
