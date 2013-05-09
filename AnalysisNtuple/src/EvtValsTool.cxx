@@ -1254,7 +1254,7 @@ double EvtValsTool::GetEnergyUB2Correction(int method, int tkr1firstlayer, doubl
   double emean = 1;
 
   int i,j;
-  double loge,myval;
+  double loge;
   for(i=0;i<UB2zdirn;++i)
     {
       if(method<2)
