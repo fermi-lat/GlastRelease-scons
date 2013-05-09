@@ -72,9 +72,9 @@ int read(const char* fileName, int numEvents) {
          { return -1 ; }
         
         // prepare data
-        AcdRecon * acd = evt->getAcdRecon() ;
-        CalRecon * cal = evt->getCalRecon() ;
-        TkrRecon * tkr = evt->getTkrRecon() ;
+        AcdReconV2 * acd = evt->getAcdReconV2() ;
+        CalRecon   * cal = evt->getCalRecon() ;
+        TkrRecon   * tkr = evt->getTkrRecon() ;
         reconRootData::AdfRecon * adf = evt->getAdfRecon();
         if ((!acd)||(!cal)||(!tkr)||(!adf))
          { return -1 ; }
