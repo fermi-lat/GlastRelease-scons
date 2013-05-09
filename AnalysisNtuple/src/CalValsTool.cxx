@@ -1318,7 +1318,7 @@ StatusCode CalValsTool::calculate()
     SmartDataPtr<Event::CalClusterMap>
       pCalClusterMap(m_pEventSvc,EventModel::CalRecon::CalClusterMap); 
 
-    if(!pCalClusterMap) return sc;
+    if(pCalClusterMap == 0 || pCalClusterMap->empty()) return sc;
 
     Event::CalCluster* uberCluster = (*pCalClusterMap).getUberCluster();
     Event::CalCluster* uber2Cluster = (*pCalClusterMap).getUber2Cluster();
@@ -2771,7 +2771,7 @@ void CalValsTool::zeroVals()
     // This is so zeroing the Cal vals will keep CalEnergyRaw
     SmartDataPtr<Event::CalClusterMap>
       pCalClusterMap(m_pEventSvc,EventModel::CalRecon::CalClusterMap); 
-    if(pCalClusterMap)
+    if(pCalClusterMap != 0 && !pCalClusterMap->empty())
       {
         Event::CalClusterVec rawClusterVec = (*pCalClusterMap).get(EventModel::CalRecon::CalRawClusterVec);
         Event::CalCluster* firstCluster = rawClusterVec.front();
