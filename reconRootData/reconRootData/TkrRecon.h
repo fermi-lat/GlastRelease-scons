@@ -14,6 +14,7 @@
 #include "TkrFilterParams.h"
 #include "TkrEventParams.h"
 #include "TreeClusterRelation.h"
+#include "TkrVecPointInfo.h"
 /** 
  * @class TkrRecon
  * @brief Root container for the reconstructed Tracker information 
@@ -112,44 +113,49 @@ public:
     TkrEventParams* getTkrEventParams(Int_t i) { return m_tkrEventParams;}
     TreeClusterRelation* getTreeClusterRelation(Int_t i) {return i < nTreeClusterRelations() ? dynamic_cast<TreeClusterRelation*>(m_treeClusterRelationCol->At(i)) : 0;}
     
+    TkrVecPointInfo        getTkrVecPointInfo()       {return m_tkrVecPointInfo;}
+    const TkrVecPointInfo& getTkrVecPointInfo() const {return m_tkrVecPointInfo;}
+
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
     void addDiagnostics(TkrDiagnostics* diagnostics) { m_diagnostics = diagnostics;};
 
 private:
     /// collection of TkrSiCluster
-    TObjArray*      m_clusterCol;
+    TObjArray*       m_clusterCol;
     /// collection of TkrTrack
-    TObjArray*      m_trackCol;
+    TObjArray*       m_trackCol;
     /// collection of TkrVertex
-    TObjArray*      m_vertexCol;
+    TObjArray*       m_vertexCol;
      /// Diagnostics
-    TkrDiagnostics* m_diagnostics;
+    TkrDiagnostics*  m_diagnostics;
     /// collection of TkrTruncationData
-    TObjArray*      m_truncationDataCol;
+    TObjArray*       m_truncationDataCol;
     /// ADW: cosmic-ray collection of TkrTrack
-    TObjArray*      m_crTrackCol;
+    TObjArray*       m_crTrackCol;
     /// collection of TkrVecPoints
-    TObjArray*      m_tkrVecPointCol;
+    TObjArray*       m_tkrVecPointCol;
     /// collection of TkrVecPointsLink
-    TObjArray*      m_tkrVecPointsLinkCol;
+    TObjArray*       m_tkrVecPointsLinkCol;
     /// collection of TkrVecNodes
-    TObjArray*      m_tkrVecNodesCol;
+    TObjArray*       m_tkrVecNodesCol;
     /// collection of TkrFilterParams
-    TObjArray*      m_tkrFilterParamsCol;
+    TObjArray*       m_tkrFilterParamsCol;
     /// collection of TkrTrees
-    TObjArray*      m_tkrTreeCol;
+    TObjArray*       m_tkrTreeCol;
     /// Pointer to the TkrEventParams object (only one per event)
-    TkrEventParams* m_tkrEventParams;
+    TkrEventParams*  m_tkrEventParams;
     /// Pointer to the TreeClusterRelations
-    TObjArray*      m_treeClusterRelationCol;
+    TObjArray*       m_treeClusterRelationCol;
 
+    /// Pointer to the TkrVecPointInfo object
+    TkrVecPointInfo  m_tkrVecPointInfo;
 
-    static TkrCluster *keepCluster[16384]; //!
-    static TkrTrack *keepTrack[10000]; //!
-    static TkrVertex *keepVertex[10000]; //!
-    // HMK-v12r7 static TkrTruncationData *keepTruncationData[10000]; //!
-    static Int_t indCluster, indTrack, indVertex; //!        
-    //, indTruncationData; 
+//    static TkrCluster *keepCluster[16384]; //!
+//    static TkrTrack *keepTrack[10000]; //!
+//    static TkrVertex *keepVertex[10000]; //!
+//    // HMK-v12r7 static TkrTruncationData *keepTruncationData[10000]; //!
+//    static Int_t indCluster, indTrack, indVertex; //!        
+//    //, indTruncationData; 
 
     ClassDef(TkrRecon,10)
 };

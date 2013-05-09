@@ -58,6 +58,7 @@
 #pragma link C++ class TkrTrackParams+;
 #pragma link C++ class TkrVertex+;
 #pragma link C++ class TkrVecPoint+;
+#pragma link C++ class TkrVecPointInfo+;
 #pragma link C++ class TkrVecPointsLink+;
 #pragma link C++ class TkrVecNode+;
 #pragma link C++ class TkrVecNodeCompressed+;
