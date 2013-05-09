@@ -40,7 +40,7 @@ public:
 
     virtual ~ReconEvent();
 
-    void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdRecon *acd, AcdReconV2* acdv2);
+    void initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdReconV2* acdv2);
 
     void initEventFlags(UInt_t flags) { m_eventFlags = flags; };
    
@@ -56,8 +56,6 @@ public:
     UInt_t getEventId() { return m_eventId; };
 
     UInt_t getRunId() { return m_runId; };
-
-    AcdRecon* getAcdRecon() { return m_acd; };
 
     AcdReconV2* getAcdReconV2() { return m_acdV2; };
 
@@ -89,11 +87,8 @@ private:
     UInt_t m_eventId;
     /// Run number
     UInt_t m_runId;
-    /// ACD reconstruction data
-    AcdRecon *m_acd;
     /// ACD reconstruction data (new version
     AcdReconV2 *m_acdV2;
-
     /// CAL reconstruction data
     CalRecon *m_cal; 
     /// TKR reconstruction data
@@ -107,7 +102,7 @@ private:
     // Gleam Event Flags
     UInt_t m_gleamEventFlags;
 
-    ClassDef(ReconEvent,6)
+    ClassDef(ReconEvent,7)
 };
 
 #endif

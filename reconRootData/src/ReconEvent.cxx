@@ -6,7 +6,6 @@ ClassImp(ReconEvent)
 ReconEvent::ReconEvent() {
     m_tkr = 0;
     m_cal = 0;
-    m_acd = 0;
     m_acdV2 = 0;
     m_adfRecon = 0;
     Clear();
@@ -24,11 +23,6 @@ ReconEvent::~ReconEvent() {
         delete m_tkr;
         m_tkr = 0;
     }
-
-    if (m_acd) {
-        delete m_acd;
-        m_acd = 0;
-    }
    
     if (m_acdV2) {
         delete m_acdV2;
@@ -44,12 +38,11 @@ ReconEvent::~ReconEvent() {
 
 }
 
-void ReconEvent::initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdRecon *acd, AcdReconV2* acdV2) {
+void ReconEvent::initialize(UInt_t eventId, UInt_t runId, TkrRecon *tkr, CalRecon *cal, AcdReconV2* acdV2) {
     m_eventId = eventId;
     m_runId = runId;
     m_tkr = tkr;
     m_cal = cal;
-    m_acd = acd;
     m_acdV2 = acdV2;
 }
 
@@ -68,10 +61,6 @@ void ReconEvent::Clear(Option_t* /* option */) {
     if (m_tkr) {
         delete m_tkr;
         m_tkr = 0;
-    }
-    if (m_acd) {
-        delete m_acd;
-        m_acd = 0;
     }
     if (m_acdV2) {
         delete m_acdV2;
