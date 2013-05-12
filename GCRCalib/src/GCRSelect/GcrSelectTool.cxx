@@ -222,9 +222,9 @@ DECLARE_TOOL_FACTORY(GcrSelectTool);
 
 //-----------------------------------------------------------------------------------------------------------------
 GcrSelectTool::GcrSelectTool(const std::string & type, 
-			     const std::string & nameIn,
-			     const IInterface * parent ) : AlgTool( type, nameIn, parent ),
-							   m_log(msgSvc(), name())
+                 const std::string & nameIn,
+                 const IInterface * parent ) : AlgTool( type, nameIn, parent ),
+                               m_log(msgSvc(), name())
 { 
   declareInterface<IGcrSelectTool>(this) ; 
 
@@ -398,7 +398,7 @@ void GcrSelectTool::buildLayMatchTrackCrit(){
       if(fstGoodLayFound){
         for(int i=ilay; i<NLAY; i++)
           m_layMatchTrackCrit[i]=-2;
-	  
+      
         return;
       }
       
@@ -446,33 +446,33 @@ void GcrSelectTool::buildLayMatchMultCrit(){
     for (int itow=0;itow<NTOW;itow++)
     {
       bool lastArrayFound =false;
-	 
+     
       for(int iClu=0; iClu<NCOL; iClu++){
-	  
+      
         int nbHitsInCluster=0; 
         if(m_cluArr[itow][ilay][iClu][0]>0)
         {
-	  m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][0]=" << m_cluArr[itow][ilay][iClu][0] << endreq;
+      m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][0]=" << m_cluArr[itow][ilay][iClu][0] << endreq;
           nbClu++;
-	       
-	  m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][1]," << "m_cluArr[" << itow<<"]["<<ilay<<"]["<< iClu <<"][2] = " << m_cluArr[itow][ilay][iClu][1]<<","<< m_cluArr[itow][ilay][iClu][2]<< endreq;	     
+           
+      m_log << MSG::VERBOSE << "m_cluArr[" << itow<<"]["<<ilay<<"]["<<iClu<<"][1]," << "m_cluArr[" << itow<<"]["<<ilay<<"]["<< iClu <<"][2] = " << m_cluArr[itow][ilay][iClu][1]<<","<< m_cluArr[itow][ilay][iClu][2]<< endreq;	     
 
           nbHitsInCluster =  (int)(m_cluArr[itow][ilay][iClu][2] -  m_cluArr[itow][ilay][iClu][1] + 1);
 
-	  m_log << MSG::VERBOSE << "nbHitsInCluster= " << nbHitsInCluster << endreq;
-		 
+      m_log << MSG::VERBOSE << "nbHitsInCluster= " << nbHitsInCluster << endreq;
+         
 
-	      
+          
           if(nbHitsInCluster > maxNbHits)
             maxNbHits = nbHitsInCluster;
-		 
+         
         }
         else
           lastArrayFound=true;
-	      
+          
       }
      
-	   
+       
     }// end of loop on towers
 
     m_log << MSG::VERBOSE << "nbClu= " << nbClu << endreq;
@@ -489,8 +489,8 @@ void GcrSelectTool::buildLayMatchMultCrit(){
       else if(maxNbHits>=3)
         m_layMatchMultCrit[ilay] = 3;
     }
-	
-	  
+    
+      
   }//end of loop on layers
      
   // tag as not good Layers, all layers beyond the first not good layer 
@@ -507,18 +507,18 @@ void GcrSelectTool::buildLayMatchMultCrit(){
     }
     else{   // if layer is not good
       m_log << MSG::VERBOSE << "m_layMatchMultCrit[ " << ilay << "]<>1"<< endreq;
-	  
+      
       int layMatchMultCritCourant = m_layMatchMultCrit[ilay];
       if(m_layMatchMultCrit[ilay] == -1 && !fstLayWithClusters)  // layer is not good but no cluster has been found before 
         continue;
-	
+    
       else{// layer is not good, clusters have been found, every layer beyond this one has to be tagged as bad one
         for(int i=ilay; i<NLAY; i++)
           m_layMatchMultCrit2[i]=layMatchMultCritCourant;
 
         return;
       }    
-	  
+      
     }
       
   }   
@@ -560,7 +560,7 @@ void GcrSelectTool::buildEnergyMap()
   for (itow=0; itow<16; itow++)
     for (ilay=0; ilay<8; ilay++)
       for (icol=0; icol<12; icol++){
-	m_energyMap[itow][ilay][icol]=-1000.0;		
+    m_energyMap[itow][ilay][icol]=-1000.0;		
       }
 
 
@@ -580,11 +580,6 @@ void GcrSelectTool::buildEnergyMap()
       ilay=xTalData->getPackedId().getLayer();
       icol=xTalData->getPackedId().getColumn();
 
-	
-	
-      Event::CalXtalRecData* newXtalData = new Event::CalXtalRecData();
-      newXtalData = xTalData;
-	
       /**Event::CalMipTrack& calMipTrack = *trackIter;
        // Need to create a new CalMipTrack which will be "owned" by the TDS
        Event::CalMipTrack* newMipTrack = new Event::CalMipTrack();
@@ -592,23 +587,23 @@ void GcrSelectTool::buildEnergyMap()
        // Now copy to this new track. This should properly copy all elements (including inherited vector)
        *newMipTrack = calMipTrack;*/
 
-	    
+        
       m_energyMap[itow][ilay][icol] = xTalData->getEnergy();
-	
+    
       if(debugging){
         m_log << MSG::INFO << "CalXtalRecData found at:"<< itow<<"/"<<ilay<<"/"<<icol<<endreq; 
         //m_log << MSG::INFO << "Energy="<< m_energyMap[itow][ilay][icol] <<endreq;
       } 
 
-	    
+        
       //if(debugging)
       //m_log << MSG::INFO << "m_energyMap["<< itow<<"]["<<ilay<<"]["<<icol<<"]= "<< 
       //m_log << MSG::INFO << "m_hitsMap[itow][ilay][icol]->getPosition()= " << m_hitsMap[itow][ilay][icol]->getPosition() << endreq;
       //(m_hitsMap[itow][ilay][icol])->getPosition().printOn(std::cout);
       // m_log << MSG::INFO << "\n" << endreq;
-	    
+        
       numHits++;
-	  
+      
     }
   }
   /**else 
@@ -652,10 +647,10 @@ StatusCode GcrSelectTool::retrieveGcrXtalsMap(){
   for (int iTow=0; iTow<NTOW; iTow++)
     for (int iLay=0; iLay<NLAY; iLay++)
       for (int iCol=0; iCol<NCOL; iCol++)
-	m_gcrXtalsMap[iTow][iLay][iCol]=-1;
-	
+    m_gcrXtalsMap[iTow][iLay][iCol]=-1;
+    
   m_gcrXtalVec.clear();
-	
+    
   //retrieve gcrXtalCol
   gcrXtalCol = SmartDataPtr<Event::GcrXtalCol>(m_dataSvc, EventModel::CalRecon::GcrXtalCol);
     
@@ -678,7 +673,7 @@ StatusCode GcrSelectTool::retrieveGcrXtalsMap(){
 
       m_gcrXtalVec.push_back(Event::GcrXtal(currentGcrXtal->getXtalId(), currentGcrXtal->getPathLength(), currentGcrXtal->getClosestFaceDist(), currentGcrXtal->getCrossedFaces(), currentGcrXtal->getEntryPoint(), currentGcrXtal->getExitPoint()));
       //m_log << MSG::INFO << "m_gcrXtalVec.size()= " << m_gcrXtalVec.size() << endreq ;
-	  
+      
     }
   
     //DEBUG: display McGcrXtalsMap
@@ -785,13 +780,13 @@ float GcrSelectTool::chooseEth(){
     Eth = 100.0;
   else if (passGamma) {
       if(engine4ON)
-	{ 
-	  Eth = 100.0;
-	} 
+    { 
+      Eth = 100.0;
+    } 
       else 
-	{
-	  Eth = 5.0;
-	}
+    {
+      Eth = 5.0;
+    }
     }
   else if (passMIP || passDGN)
     {
@@ -829,7 +824,7 @@ void GcrSelectTool::buildLayMultArr(){
         if(m_energyMap[itow][ilay][icol]>=m_Eth) {
           //m_log << MSG::INFO << "multiplicity increment" << endreq;
           multCurrentLay++;
-	      
+          
         }
       }//end of for icol=0...
       m_layerMultiplicity[itow][ilay] = multCurrentLay;
@@ -867,36 +862,36 @@ void GcrSelectTool::buildCluArr(){
         m_cluArr[itow][ilay][nclu][1]=-1;  //first xtal index in cluster
         m_cluArr[itow][ilay][nclu][2]=-1;  //last  xtal index in cluster
         m_cluArr[itow][ilay][nclu][3]=-1;  //number of hits in cluster
-	      
+          
       }
-	    
-	  
-	  
+        
+      
+      
       int nhl=m_layerMultiplicity[itow][ilay];//nb of hits in this layer
-	     
+         
       if(nhl<1) //no hit in this layer
         continue;
       else
       {
         int nha=0;
         int nhb=0;
-	      
+          
         int nclu=0;
         while((nha<NCOL)&&(nhb<NCOL))
         {
-		 
-		  
+         
+          
           while( (m_energyMap[itow][ilay][nha]<m_Eth) && (nha<NCOL))
           {
             //m_log << MSG::INFO << "Dans while energy<m_Eth, nha= " << nha  << ", m_energyMap[itow][ilay][nha]= " << m_energyMap[itow][ilay][nha] << ", seuilE=" << seuilE << endreq;
             nha++;
-		     
+             
           }
-		    
+            
           //m_log << MSG::INFO << "à la sortie de while En<m_Eth nha= " << nha<< endreq;
           if(nha>=NCOL)
             continue;  
-		   
+           
           //m_log << MSG::INFO << "itow,ilay,nclu=" << itow << "," << ilay << "," << nclu << endreq;
   
           nclu++; //at least one cluster found
@@ -906,18 +901,18 @@ void GcrSelectTool::buildCluArr(){
 
           //look for the last hit of the cluster:
           nhb=nha;
-	
+    
           while( (m_energyMap[itow][ilay][nhb]>=m_Eth) && (nhb<NCOL) )  
           {
             m_cluArr[itow][ilay][nclu][0]+=m_energyMap[itow][ilay][nhb];	
             nhb++;
-		      
+              
           }
-		    
+            
           //m_log << MSG::INFO << "à la sortie de while En>=m_Eth nhb= " << nhb<< endreq;
           if(nhb > NCOL)
             continue;
-		    
+            
           //m_log << MSG::INFO << "m_cluArr[itow][ilay][nclu][2]= " << m_cluArr[itow][ilay][nclu][2]<< endreq;
           if(m_cluArr[itow][ilay][nclu][2]<0)
           {
@@ -933,7 +928,7 @@ void GcrSelectTool::buildCluArr(){
         }//end of while(nha<NCOL && nhb<NCOL)
       }//end of else (hit found for this layer)
     }//end of ilay=0...
-	
+    
   }//end of itow=0....
 
   //m_log << MSG::INFO << "GcrSelectTool END buildCluArr()" << endreq ; 
@@ -977,7 +972,7 @@ int GcrSelectTool::buildHitsMap()
   for (itow=0; itow<NTOW; itow++)
     for (ilay=0; ilay<NLAY; ilay++)
       for (icol=0; icol<NCOL; icol++){
-	m_hitsMap[itow][ilay][icol]=0;		
+    m_hitsMap[itow][ilay][icol]=0;		
       }
 
 
@@ -996,20 +991,20 @@ int GcrSelectTool::buildHitsMap()
       itow=xTalData->getPackedId().getTower();
       ilay=xTalData->getPackedId().getLayer();
       icol=xTalData->getPackedId().getColumn();
-	    
+        
       m_hitsMap[itow][ilay][icol] = xTalData;
-	    
+        
       // m_log << MSG::INFO << "m_hitsMap[itow][ilay][icol]->getPosition()= " << endreq;
       //(m_hitsMap[itow][ilay][icol])->getPosition().printOn(std::cout);
       // m_log << MSG::INFO << "\n" << endreq;
-	    
+        
       numHits++;
-	  
+      
     }
   }
   else 
     m_log << MSG::INFO << "no calXtalRecCol " << endreq;
-	
+    
     
 
   //m_log << MSG::INFO << "END buildHitsMap in GcrSelectTool, numHits= " << numHits << endreq;
@@ -1025,9 +1020,9 @@ void GcrSelectTool::verifyHitsMap(){
     for (int ilay=0; ilay<NLAY; ilay++)
       for (int icol=0; icol<NCOL; icol++){
         Event::CalXtalRecData* xTalData = m_hitsMap[itow][ilay][icol];
-	if(xTalData)
+    if(xTalData)
           m_log << MSG::INFO << "m_hitsMap[" << itow << "][" << ilay << "][" << icol << "]->getPackedId()= " << xTalData->getPackedId()<< endreq;
-			
+            
       }
 
   //m_log << MSG::INFO << "END verifyHitsMap in GcrSelectTool"<< endreq;
@@ -1088,73 +1083,73 @@ void GcrSelectTool::fillDataVectors(){
       
         isGoodCluster = false; 
         //m_log << MSG::INFO << "iclu= " << iclu << endreq;
-	
+    
         if(m_cluArr[itow][ilay][iclu][0]>0.){  // if total energy in cluster >0...
 
           // we create or pickup a gcrClustersVec
-	  if ( (p_gcrLayerVec->at(ilay).getClustersVec()) && !(p_gcrLayerVec->at(ilay).getClustersVec()->empty()) ) // if a ClustersVec has already been associated to this layer..
+      if ( (p_gcrLayerVec->at(ilay).getClustersVec()) && !(p_gcrLayerVec->at(ilay).getClustersVec()->empty()) ) // if a ClustersVec has already been associated to this layer..
             gcrClustersVec = p_gcrLayerVec->at(ilay).getClustersVec(); // we take this clustersVec already present
-	  else
+      else
             gcrClustersVec = new GcrClustersVec();// else, we create a new one.
 
 
-	  
-	  double totalCluCorrEnergy = 0.0;
-	  
-	  int firstCluHitNb = (int)m_cluArr[itow][ilay][iclu][1];
-	  int lastCluHitNb = (int)m_cluArr[itow][ilay][iclu][2];
-	  
-	  GcrHitsVec* gcrHitsVec = new GcrHitsVec();
-	  
-	  //m_log << MSG::INFO << "itow,ilay,iclu= " << itow << "," << ilay << "," << iclu << "| firstCluHitNb,lastCluHitNb = " << firstCluHitNb << "," << lastCluHitNb << endreq ;
-	  
-	  //build gcrHitsVec
-	  double xtalCorrEnergy;
-	  
-	  
-	  //int inferedZ=0;
-	  for(int i=firstCluHitNb; i<=lastCluHitNb; i++){
-	    xtalCorrEnergy= -999.0;
-	    int mapXtal = m_gcrXtalsMap[itow][ilay][i];// if!=-1, there is a corresponding GcrXtal [itow][ilay][i]	    
-	    
-	    bool isGoodHit = (mapXtal != -1); // true if hit is on the predicted track
-	    
-	    if(m_debugging)
+      
+      double totalCluCorrEnergy = 0.0;
+      
+      int firstCluHitNb = (int)m_cluArr[itow][ilay][iclu][1];
+      int lastCluHitNb = (int)m_cluArr[itow][ilay][iclu][2];
+      
+      GcrHitsVec* gcrHitsVec = new GcrHitsVec();
+      
+      //m_log << MSG::INFO << "itow,ilay,iclu= " << itow << "," << ilay << "," << iclu << "| firstCluHitNb,lastCluHitNb = " << firstCluHitNb << "," << lastCluHitNb << endreq ;
+      
+      //build gcrHitsVec
+      double xtalCorrEnergy;
+      
+      
+      //int inferedZ=0;
+      for(int i=firstCluHitNb; i<=lastCluHitNb; i++){
+        xtalCorrEnergy= -999.0;
+        int mapXtal = m_gcrXtalsMap[itow][ilay][i];// if!=-1, there is a corresponding GcrXtal [itow][ilay][i]	    
+        
+        bool isGoodHit = (mapXtal != -1); // true if hit is on the predicted track
+        
+        if(m_debugging)
               m_log << MSG::INFO << "itow,ilay,i: correspondingGcrXtalExist? " << itow << "," << ilay << ","<< i << ":" << (mapXtal!=-1) << endreq;
-	    
+        
 
-	    if(mapXtal != -1){
-	      Event::GcrXtal currentGcrXtal= m_gcrXtalVec.at(mapXtal);
-	      xtalCorrEnergy = correctEnergy(currentGcrXtal.getXtalId(), currentGcrXtal);
-	      
-	      //INFER Z
-	      /**if((xtalCorrEnergy>0) && (ilay==0))
+        if(mapXtal != -1){
+          Event::GcrXtal currentGcrXtal= m_gcrXtalVec.at(mapXtal);
+          xtalCorrEnergy = correctEnergy(currentGcrXtal.getXtalId(), currentGcrXtal);
+          
+          //INFER Z
+          /**if((xtalCorrEnergy>0) && (ilay==0))
                  inferedZ = inferZ(xtalCorrEnergy); /// ATTENTION: Il ne faut pas calculer le Z par Xtal, mais par cluster.
                  /// Voir diagrammes des traces sur le papier 
-						     
+                             
               */
-	      totalCluCorrEnergy+=xtalCorrEnergy;
+          totalCluCorrEnergy+=xtalCorrEnergy;
             }
-	    
+        
             isGoodCluster = isGoodCluster? isGoodCluster:isGoodHit;
 
  
-	    gcrHitsVec->push_back(GcrHit(m_hitsMap[itow][ilay][i], isGoodHit, xtalCorrEnergy));
-	    
-	   
-	  }// end of loop on currentClusters hits
-	  
-	  	  
-	  isGoodCluster = (gcrHitsVec->size() <=2)? isGoodCluster:false;// if the cluster contains more than two hits, this criterium is not satisfied
-	 
-	  gcrClustersVec->push_back(GcrCluster(gcrHitsVec,totalCluCorrEnergy, isGoodCluster));//we calculate total cluster corrected energy from individual hits corrected energy
+        gcrHitsVec->push_back(GcrHit(m_hitsMap[itow][ilay][i], isGoodHit, xtalCorrEnergy));
+        
+       
+      }// end of loop on currentClusters hits
+      
+          
+      isGoodCluster = (gcrHitsVec->size() <=2)? isGoodCluster:false;// if the cluster contains more than two hits, this criterium is not satisfied
+     
+      gcrClustersVec->push_back(GcrCluster(gcrHitsVec,totalCluCorrEnergy, isGoodCluster));//we calculate total cluster corrected energy from individual hits corrected energy
 
           p_gcrLayerVec->at(ilay).setClustersVec(gcrClustersVec);
-	  
-	  
-	  isGoodLayer = isGoodLayer? isGoodCluster:isGoodLayer;// if false, it must remain false, if true, it depends on if currentCluster matches criterium or not
-	}//end of if(m_cluArr[][][])
-	
+      
+      
+      isGoodLayer = isGoodLayer? isGoodCluster:isGoodLayer;// if false, it must remain false, if true, it depends on if currentCluster matches criterium or not
+    }//end of if(m_cluArr[][][])
+    
       }//end of loop on clusters
       
       if(!gcrClustersVec)
@@ -1164,7 +1159,7 @@ void GcrSelectTool::fillDataVectors(){
 
       //m_log << MSG::INFO << "isGoodLayer?" << isGoodLayer << ", gcrClustersVec exists?" << (gcrClustersVec!=NULL) << endreq ; 
       //if(gcrClustersVec)  m_log << MSG::INFO << "gcrClustersVec->size()=" << gcrClustersVec->size() << endreq ; 
-	
+    
       p_gcrLayerVec->at(ilay).setIsGoodLayer(isGoodLayer);
       
       
@@ -1200,19 +1195,19 @@ void GcrSelectTool::verifyDataVectors (){
         m_log << MSG::INFO << "itow,ilay=" << itow << "," << ilay << " currentClustersVec.size()= " << currentClustersVec->size() << endreq;
 
         int iclu=0;
-	       
+           
         for(GcrClustersVec::iterator currentClustersVecIter = currentClustersVec->begin(); currentClustersVecIter != currentClustersVec->end(); currentClustersVecIter++){
           GcrCluster currentCluster = *currentClustersVecIter;
-		 
+         
           GcrHitsVec* currentHitsVec = currentCluster.getHitsVec();
-		 
+         
           if(currentHitsVec){
             m_log << MSG::INFO << "itow,ilay,iclu=" << itow << "," << ilay << "," << iclu << " " << endreq;
             m_log << MSG::INFO << "itow,ilay,iclu=" << itow << "," << ilay << "," << iclu << " gcrHitsVec.size()= " << currentHitsVec->size() << endreq;
             m_log << MSG::INFO << "cluster Total Corr Energy= " << currentCluster.getTotalCorrectedEnergy() << endreq;
             //m_log << MSG::INFO << "ilay:"<< ilay << " currentLay.getIsGoodLayer() " << currentLay.getIsGoodLayer() << " "<< endreq;
             m_log << MSG::INFO << "isGoodCluster= " << currentCluster.getIsGoodCluster() << " " << endreq;
-		   
+           
             int currentHitNb = 0;
             for(GcrHitsVec::iterator currentHitsVecIter = currentHitsVec->begin(); currentHitsVecIter != currentHitsVec->end(); currentHitsVecIter++){
               GcrHit currentHit = *currentHitsVecIter;
@@ -1224,7 +1219,7 @@ void GcrSelectTool::verifyDataVectors (){
           }else //impossible case normally
             m_log << MSG::INFO << "no hitsVec associated to itow,ilay,iclu=" << itow << "," << ilay << "," << iclu  << endreq;
 
-		 
+         
           iclu++;
 
         }// end ofloop on ClustersVec
@@ -1261,16 +1256,16 @@ double GcrSelectTool::correctEnergy(idents::CalXtalId xtalId, Event::GcrXtal gcr
   double pathLength = gcrXtal.getPathLength();
   
   //m_log << MSG::INFO << "pathLength= " << pathLength << " ,xtalHeight= " << xtalHeight << endreq ; 
-	
+    
   //Calculate correctedEnergy;
   correctedEnergy = (depositedEnergy / pathLength) * m_xtalHeight;
   
   //m_log << MSG::INFO << "correctedEnergy= " << correctedEnergy << endreq ; 
-  	
+    
   // m_log << MSG::INFO << "GcrSelectTool END correctEnergy()" << endreq ; 
 
   return correctedEnergy;
-	
+    
 
 
 
@@ -1603,52 +1598,52 @@ int GcrSelectTool::buildSelectedXtalsVec (){
         else   // si la couche n'est pas bonne et que la premiere couche bonne a deja ete trouvée, on arrete tout
           break;
       }
-	 
+     
        
       GcrClustersVec* currentClustersVec = currentLay.getClustersVec();
-	
-	      
+    
+          
       if(currentClustersVec != NULL){
-	 
+     
 
         for(GcrClustersVec::iterator currentClustersVecIter = currentClustersVec->begin(); currentClustersVecIter != currentClustersVec->end(); currentClustersVecIter++){
 
           int cluLay = -1;
           GcrCluster currentCluster = *currentClustersVecIter;
           GcrHitsVec* currentHitsVec = currentCluster.getHitsVec();
- 		 
+         
           if(currentHitsVec){
-		 
+         
             int currentHitNb = 0;
-		   
+           
             double rawEnergy;
             double pathLength;
             double correctedEnergy;
-		   
+           
             double closerFaceDist;
             int crossedFaces;
             Point entryPoint;
             Point exitPoint;
 
-		  
+          
             for(GcrHitsVec::iterator currentHitsVecIter = currentHitsVec->begin(); currentHitsVecIter != currentHitsVec->end(); currentHitsVecIter++){
 
 
               GcrHit currentHit = *currentHitsVecIter;
               //m_log << MSG::INFO << "currentHitNb="<< currentHitNb <<endreq;
-		      
+              
               if(currentHit.getIsGoodHit()){// for the moment, only Xtals that correspond exactly with theoretical track will be stored
- 			 
+             
                 Event::CalXtalRecData* xtalData= currentHit.getXtalData();
                 iitow=xtalData->getPackedId().getTower();
                 iilay=xtalData->getPackedId().getLayer();
                 iicol=xtalData->getPackedId().getColumn();
-			
+            
                 cluLay=iilay;
-			 
+             
                 if(m_debugging)
                   m_log << MSG::INFO << "grab GcrSelectedXtal["<< iitow << "," << iilay << "," << iicol << "]"<<endreq;
-			 	
+                
                 Event::GcrXtal currentGcrXtal= m_gcrXtalVec.at(m_gcrXtalsMap[iitow][iilay][iicol]);
                 rawEnergy = xtalData->getEnergy();// cette energie on l'a sur la table d'energies... cette table sera peut etre a enlever???
                 pathLength    = currentGcrXtal.getPathLength();  /// ATTENTION: y a t'il la possibilite de pointer directement sur GcrXtal au lieu de sur CalXtalRecData dans GcrHit???, non(?) car on a besoin d'aller recuperer l'energie
@@ -1678,19 +1673,19 @@ int GcrSelectTool::buildSelectedXtalsVec (){
                         << "currentCluster.getTotalPathLength()= " << currentCluster.getTotalPathLength()
                         << endreq;
                 }
-			
-			 
+            
+             
                 if(debugging)
                   m_log << MSG::INFO << "grab Xtal["<< iitow << "," << iilay << "," << iicol <<"]"<< endreq ; 
 
                 m_gcrSelectedXtalsVec.push_back(Event::GcrSelectedXtal(xtalData->getPackedId(),rawEnergy,pathLength,correctedEnergy,-1,closerFaceDist,crossedFaces,entryPoint, exitPoint ));
 
               }
-		      
+              
               //m_log << MSG::INFO << "XtalpackedId, iHit=" << currentHit.getXtalData()->getPackedId()<< ","<< currentHitNb << " currentHit corr energy= " << currentHit.getCorrectedEnergy() << endreq;
               currentHitNb++;
             }//end of iteration on GcrHitsVec
-		     
+             
           }// end of if(currentHitsVec)
           else{
             m_log << MSG::INFO << "no currentHitsVec" << endreq;
@@ -1702,19 +1697,19 @@ int GcrSelectTool::buildSelectedXtalsVec (){
               m_log << MSG::INFO << "Cluster TotalPathLength=" << currentCluster.getTotalPathLength()<< endreq;
             }
             m_inferedZ = inferZ(m_xtalHeight*(currentCluster.getTotalRawEnergy() / currentCluster.getTotalPathLength()));
-		 
+         
           }
-	    
+        
  
 
-		 
+         
         }/// end of iteration on clusters
-	       
+           
       }///end of if(currentClustersVec)
       else{
         //m_log << MSG::INFO << "no clustersVec found" << endreq;
-	       
-	       
+           
+           
       }
        
    
