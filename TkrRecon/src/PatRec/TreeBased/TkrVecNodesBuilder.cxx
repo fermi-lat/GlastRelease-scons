@@ -457,6 +457,12 @@ void TkrVecNodesBuilder::attachLinksToNode(Event::TkrVecPointToNodesRel*        
             // Reject outright bad combinations
             if (quadSum > 900.) continue;
         }
+        // Otherwise check to see that we are head node and need to check if the candidate link is allowed
+        else if (!bestNode->getParentNode())
+        {
+            quadSum = checkNodeLinkAssociation(bestNode, nextLink);
+            if (quadSum == -1.) continue;
+        }
 
         // Update angle information at this point
         int    numInSum   = nodeNumInSum + 1;
@@ -577,6 +583,9 @@ double TkrVecNodesBuilder::checkNodeLinkAssociation(Event::TkrVecNode* curNode, 
         &&  curLink->skipsLayers() && !curLink->skip1Layer()) 
          return metric;
 
+    // If we made it here then its a link angle issue so change the value of the default metric
+    metric = -2.;
+
     // Start by updating the rms angle information for the "updateNode"
     if (curNode->getAssociatedLink())
     {
@@ -598,7 +607,7 @@ double TkrVecNodesBuilder::checkNodeLinkAssociation(Event::TkrVecNode* curNode, 
             metric = getLinkAssociation(curNode->getAssociatedLink(), curLink);
 
         // Convention is to return a negative value if metric is "bad"
-        if (metric > 1000.) metric = -1.;
+        if (metric > 1000.) metric = -2.;
     }
 
     return metric;
