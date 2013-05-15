@@ -82,9 +82,9 @@ int read(const char* fileName, int numEvents) {
         cal->Print();
         tkr->Print();
         adf->Print();
-        AcdRecon acdRef ;
-        CalRecon calRef ;
-        TkrRecon tkrRef ;
+        AcdReconV2 acdRef ;
+        CalRecon   calRef ;
+        TkrRecon   tkrRef ;
         reconRootData::AdfRecon adfRef;
          
         // usual tests
