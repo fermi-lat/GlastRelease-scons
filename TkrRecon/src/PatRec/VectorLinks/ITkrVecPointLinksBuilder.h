@@ -36,6 +36,7 @@ class ITkrVecPointsLinkBuilder : virtual public IAlgTool
   virtual Event::TkrVecPointsLinkInfo* getAllLayerLinks(const Point&  refPoint, 
                                                         const Vector& refAxis,
                                                         double        refError = 1000.,
+                                                        double        angError = M_PI,
                                                         double        energy   = 30.)    = 0;
 };
 
