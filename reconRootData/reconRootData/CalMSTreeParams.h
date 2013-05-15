@@ -74,20 +74,20 @@ private:
     /// Sum of the energy of the crystal within the Tree
     /// Total energy is also present in the CalParams container: m_energy
     /// Pan is to keep this as a cross check value here
-    Double_t m_totalEnergy;
+    Double32_t m_totalEnergy;
     /// Energy in the crystal with the maximum energy
-    Double_t m_maxXtalEnergy;
+    Double32_t m_maxXtalEnergy;
     /// Number of edges
     Int_t m_numberOfEdges;
 
     /// More quantities from test_MST.py
     /// Not implemented yet in MSTTree
-    Double_t m_minEdgeLength;
-    Double_t m_maxEdgeLength;
-    Double_t m_meanEdgeLength;
-    Double_t m_meanEdgeLengthTrunc;
-    Double_t m_rmsEdgeLength;
-    Double_t m_rmsEdgeLengthTrunc;
+    Double32_t m_minEdgeLength;
+    Double32_t m_maxEdgeLength;
+    Double32_t m_meanEdgeLength;
+    Double32_t m_meanEdgeLengthTrunc;
+    Double32_t m_rmsEdgeLength;
+    Double32_t m_rmsEdgeLengthTrunc;
 
     ClassDef(CalMSTreeParams,2)
 } ;

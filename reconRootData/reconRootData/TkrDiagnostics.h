@@ -68,14 +68,14 @@ public:
     
 private:
     /// Define here variables to keep diagnostic information for each event
-    UInt_t   m_numClusters;          // Number of clusters this event
-    UInt_t   m_numVecPoints;         // Resulting number of VecPoints this event
-    UInt_t   m_numVecLinks;          // Number of links between VecPoints
-    UInt_t   m_nLinksNonZeroLayers;  // Number of layers with links
-    UInt_t   m_aveNumLinksLayer;     // Average number of links per layer
-    Double_t m_numLinkCombinations;  // Keep track of expected number of combinations
-    UInt_t   m_numTrackElements;     // Number of found TrackElements
-    UInt_t   m_numTkrTracks;         // Number of tracks created 
+    UInt_t     m_numClusters;          // Number of clusters this event
+    UInt_t     m_numVecPoints;         // Resulting number of VecPoints this event
+    UInt_t     m_numVecLinks;          // Number of links between VecPoints
+    UInt_t     m_nLinksNonZeroLayers;  // Number of layers with links
+    UInt_t     m_aveNumLinksLayer;     // Average number of links per layer
+    Double32_t m_numLinkCombinations;  // Keep track of expected number of combinations
+    UInt_t     m_numTrackElements;     // Number of found TrackElements
+    UInt_t     m_numTkrTracks;         // Number of tracks created 
 
     ClassDef(TkrDiagnostics,1)
 };

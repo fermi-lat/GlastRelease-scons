@@ -96,21 +96,21 @@ public:
     void  setLongRmsAve(Double_t longRms)        {m_longRmsAve     = longRms;}
 
 private:
-    UInt_t   m_statusBits;
-    Double_t m_eventEnergy;
-    TVector3 m_eventPosition;
-    TVector3 m_eventAxis;
+    UInt_t     m_statusBits;
+    Double32_t m_eventEnergy;
+    TVector3   m_eventPosition;
+    TVector3   m_eventAxis;
 
     // Keep also some diagnostic information
-    Int_t    m_numBiLayers;
-    Int_t    m_numIterations;
-    Int_t    m_numHitsTotal;
-    Int_t    m_numDropped;
+    Int_t      m_numBiLayers;
+    Int_t      m_numIterations;
+    Int_t      m_numHitsTotal;
+    Int_t      m_numDropped;
 
     // As well as moments output
-    Double_t m_chiSquare;
-    Double_t m_transRms; 
-    Double_t m_longRmsAve;
+    Double32_t m_chiSquare;
+    Double32_t m_transRms; 
+    Double32_t m_longRmsAve;
 
 
     ClassDef(TkrEventParams,1)

@@ -13,8 +13,8 @@ class GcrXtal: public TObject
 private:
     
     CalXtalId m_xtalId;
-    Double_t m_pathLength; 
-    Double_t m_closestFaceDist;
+    Double32_t m_pathLength; 
+    Double32_t m_closestFaceDist;
     Int_t m_crossedFaces;
     TVector3 m_entryPoint;
     TVector3 m_exitPoint;

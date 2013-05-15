@@ -108,16 +108,16 @@ private:
     
     UInt_t                m_statusBits;    // Status bits to describe vertex
 
-    Double_t              m_energy;        // energy associated with vertex
+    Double32_t            m_energy;        // energy associated with vertex
     TVector3              m_position;      // position of vertex
     TVector3              m_direction;     // direction of gamma causing pair conversion vertex
 
-    Double_t              m_chiSquare;     // Spacial chi-square for combining tracks
-    Double_t              m_quality;       // Vertex "Quality" derived from topology & chisq.
-    Double_t              m_arcLen1;       // Signed distance from head of track 1 to VTX
-    Double_t              m_arcLen2;       // Signed distance from head of track 1 to VTX
-    Double_t              m_doca;          // Distance between tracks at VTX location
-    Double_t              m_radlen;        // Integrated radiation lengths from end of track 1
+    Double32_t            m_chiSquare;     // Spacial chi-square for combining tracks
+    Double32_t            m_quality;       // Vertex "Quality" derived from topology & chisq.
+    Double32_t            m_arcLen1;       // Signed distance from head of track 1 to VTX
+    Double32_t            m_arcLen2;       // Signed distance from head of track 1 to VTX
+    Double32_t            m_doca;          // Distance between tracks at VTX location
+    Double32_t            m_radlen;        // Integrated radiation lengths from end of track 1
     
     commonRootData::TkrId m_vtxID;         // Complete TkrId identifying the details of this vertex
                                                    // (This is the TkrId of the first hit after the vertex)

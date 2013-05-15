@@ -170,14 +170,14 @@ private:
     //            0x80000000 is the "this node is sacred" bit
     UInt_t                  m_statusBits;
     // Following give information TO (and including) this node
-    Double_t                m_rmsAngleSum;
+    Double32_t              m_rmsAngleSum;
     Int_t                   m_numAnglesInSum;
     // Following give information FROM (and including) this node
     Int_t                   m_leaves;             // Number of leaves below this node
     Int_t                   m_branches;           // Number of branches (total) below this node
     Int_t                   m_depth;              // "Depth" of tree below this node
     Int_t                   m_bestNumBiLayers;    // Number of bilayers below this node for best branch
-    Double_t                m_bestRmsAngle;       // RMS deviation of links below for best branch
+    Double32_t              m_bestRmsAngle;       // RMS deviation of links below for best branch
 
     ClassDef(TkrVecNodeCompressed,1)
 };

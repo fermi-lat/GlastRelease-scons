@@ -59,9 +59,9 @@ public:
 
 private:
 
-    Double_t m_baricenterPosition;
-    Double_t m_totalPulseHeight;
-    Double_t m_eta;
+    Double32_t m_baricenterPosition;
+    Double32_t m_totalPulseHeight;
+    Double32_t m_eta;
     Double32_t m_x;
     Double32_t m_y;
     Double32_t m_z;

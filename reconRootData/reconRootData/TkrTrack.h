@@ -167,20 +167,20 @@ private:
     UInt_t       m_statusBits;
 
     /// The input energy, and current position and direction
-    Double_t     m_initialEnergy;       // Initial energy at the start of the track
+    Double32_t   m_initialEnergy;       // Initial energy at the start of the track
     TVector3     m_initialPosition;     // Initial position at the start of the track
     TVector3     m_initialDirection;    // Initial direction at the start of the track
 
     // Track quality information
-    Double_t     m_chiSquareFilter;     // Chi-square/dof from Filter stage of fit
-    Double_t     m_chiSquareSmooth;     // "Smoothed" track chi-square/dof
+    Double32_t   m_chiSquareFilter;     // Chi-square/dof from Filter stage of fit
+    Double32_t   m_chiSquareSmooth;     // "Smoothed" track chi-square/dof
     UInt_t       m_nDegreesOfFreedom;   // Number of degrees of freedom for above
-    Double_t     m_rmsResid;            // RMS residuals of track hits to fit
-    Double_t     m_Quality;             // Track "Quality" derived from hit counts & chisq.
+    Double32_t   m_rmsResid;            // RMS residuals of track hits to fit
+    Double32_t   m_Quality;             // Track "Quality" derived from hit counts & chisq.
 
     // Information from the fitter
-    Double_t     m_KalmanEnergy;        // Energy estimate from Kalman Filter Fitter
-    Double_t     m_KalmanThetaMS;       // rms scattering deviation of track
+    Double32_t   m_KalmanEnergy;        // Energy estimate from Kalman Filter Fitter
+    Double32_t   m_KalmanThetaMS;       // rms scattering deviation of track
 
     // Hit gap information
     UInt_t       m_Xgaps;               // Number of x-meas points on track NOT used in fit
@@ -191,12 +191,12 @@ private:
     /// Kalman Filter Track data
     UInt_t       m_numSegmentPoints;    // Effective number of 3D segments that contribute
                                             //   to track direction
-    Double_t     m_chisqSegment;        // Chi-square for this portion of the track
+    Double32_t   m_chisqSegment;        // Chi-square for this portion of the track
     UInt_t       m_nxHits;              // Number of x meas. points USED in fit
     UInt_t       m_nyHits;              // Number of y meas. points USED in fit
-    Double_t     m_KalmanEnergyErr;     // Estimated Error on Kalman Energy
-    Double_t     m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
-    Double_t   m_rangeEnergy;           // energy estimated from the range 
+    Double32_t   m_KalmanEnergyErr;     // Estimated Error on Kalman Energy
+    Double32_t   m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
+    Double32_t   m_rangeEnergy;           // energy estimated from the range 
 
     ClassDef(TkrTrack,5)
 

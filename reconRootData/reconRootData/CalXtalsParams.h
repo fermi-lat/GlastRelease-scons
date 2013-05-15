@@ -62,11 +62,11 @@ class CalXtalsParams : public TObject
   Int_t m_numXtals;
   Int_t m_numTruncXtals;
   Int_t m_numSaturatedXtals;
-  Double_t m_xtalRawEneSum;
-  Double_t m_xtalCorrEneSum;
-  Double_t m_xtalEneMax;
-  Double_t m_xtalEneRms;
-  Double_t m_xtalEneSkewness;
+  Double32_t m_xtalRawEneSum;
+  Double32_t m_xtalCorrEneSum;
+  Double32_t m_xtalEneMax;
+  Double32_t m_xtalEneRms;
+  Double32_t m_xtalEneSkewness;
   TVector3 m_centroid;
   
   ClassDef(CalXtalsParams,2)

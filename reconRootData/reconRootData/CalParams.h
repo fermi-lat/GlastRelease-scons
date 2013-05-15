@@ -103,30 +103,30 @@ public:
 private:
 
     /// Energy and associated error
-    Double_t m_energy;
-    Double_t m_eneError;
+    Double32_t m_energy;
+    Double32_t m_eneError;
 
     /// Cluster centroid
     TVector3  m_clusterCentroid;
 
     /// Error matrix for centroid stored in upper diagonal form
-    Double_t m_cenxx;     // Cov(1,1) = dx * dx 
-    Double_t m_cenxy;     // Cov(1,2) = Cov(2,1) = dx * dy
-    Double_t m_cenxz;     // Cov(1,3) = Cov(3,1) = dx * dz
-    Double_t m_cenyy;     // Cov(2,2) = dy * dy
-    Double_t m_cenyz;     // Cov(2,3) = Cov (3,2)= dy * dz
-    Double_t m_cenzz;     // Cov(3,3) = dz * dz
+    Double32_t m_cenxx;     // Cov(1,1) = dx * dx 
+    Double32_t m_cenxy;     // Cov(1,2) = Cov(2,1) = dx * dy
+    Double32_t m_cenxz;     // Cov(1,3) = Cov(3,1) = dx * dz
+    Double32_t m_cenyy;     // Cov(2,2) = dy * dy
+    Double32_t m_cenyz;     // Cov(2,3) = Cov (3,2)= dy * dz
+    Double32_t m_cenzz;     // Cov(3,3) = dz * dz
 
     /// Cluster axis, assumed to pass through centroid
     TVector3 m_clusterAxis;
 
     /// Error matrix for centroid stored in upper diagonal form
-    Double_t m_axisxx;    // Cov(1,1) = dx * dx 
-    Double_t m_axisxy;    // Cov(1,2) = Cov(2,1) = dx * dy
-    Double_t m_axisxz;    // Cov(1,3) = Cov(3,1) = dx * dz
-    Double_t m_axisyy;    // Cov(2,2) = dy * dy
-    Double_t m_axisyz;    // Cov(2,3) = Cov (3,2)= dy * dz
-    Double_t m_axiszz;    // Cov(3,3) = dz * dz
+    Double32_t m_axisxx;    // Cov(1,1) = dx * dx 
+    Double32_t m_axisxy;    // Cov(1,2) = Cov(2,1) = dx * dy
+    Double32_t m_axisxz;    // Cov(1,3) = Cov(3,1) = dx * dz
+    Double32_t m_axisyy;    // Cov(2,2) = dy * dy
+    Double32_t m_axisyz;    // Cov(2,3) = Cov (3,2)= dy * dz
+    Double32_t m_axiszz;    // Cov(3,3) = dz * dz
     
     ClassDef(CalParams,4)
 } ;

@@ -93,20 +93,20 @@ private:
     CalClusterLayerData m_layers[ROOT_NUMCALLAYERS] ;
     
     /// Old data members retained to allow reading old ROOT files
-    CalParams m_params;
-    Double_t m_rmsLong;
-    Double_t m_rmsLongAsym;
-    Double_t m_rmsTrans;
-    Int_t m_numTruncXtals;
+    CalParams  m_params;
+    Double32_t m_rmsLong;
+    Double32_t m_rmsLongAsym;
+    Double32_t m_rmsTrans;
+    Int_t      m_numTruncXtals;
     /// end old data members
 
     UInt_t m_statusBits ;
-    CalXtalsParams m_xtalsParams ;
+    CalXtalsParams  m_xtalsParams ;
     CalMSTreeParams m_mstParams ;
-    CalFitParams m_fitParams ;
-    CalMomParams m_momParams ;
-    CalClassParams m_classParams ;
-    std::string m_producerName ;
+    CalFitParams    m_fitParams ;
+    CalMomParams    m_momParams ;
+    CalClassParams  m_classParams ;
+    std::string     m_producerName ;
 
     ClassDef(CalCluster,11)
 };

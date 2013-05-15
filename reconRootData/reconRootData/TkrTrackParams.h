@@ -86,22 +86,22 @@ public:
 private:
   
     /// Track parameters
-    Double_t m_xPosition;     // x position parameter
-    Double_t m_xSlope;        // x "Slope" (x slope or tan(theta x)
-    Double_t m_yPosition;     // y position
-    Double_t m_ySlope;        // y "Slope" (y slope or tan(theta y)
+    Double32_t m_xPosition;     // x position parameter
+    Double32_t m_xSlope;        // x "Slope" (x slope or tan(theta x)
+    Double32_t m_yPosition;     // y position
+    Double32_t m_ySlope;        // y "Slope" (y slope or tan(theta y)
 
     /// Track parameter error matrix elements
-    Double_t m_xPos_xPos;     // Cov(1,1) = xPositionErr * xPositionErr
-    Double_t m_xPos_xSlp;     // Cov(1,2) = Cov(2,1) = xPositionErr * xSlopeErr
-    Double_t m_xPos_yPos;     // Cov(1,3) = Cov(3,1) = xPositionErr * yPositionErr
-    Double_t m_xPos_ySlp;     // Cov(1,4) = Cov(4,1) = xPositionERr * ySlopeErr
-    Double_t m_xSlp_xSlp;     // Cov(2,2) = xSlopeErr * xSlopeErr
-    Double_t m_xSlp_yPos;     // Cov(2,3) = Cov(3,2) = xSlopeErr * yPositionErr
-    Double_t m_xSlp_ySlp;     // Cov(2,4) = Cov(4,2) = xSlopeErr * ySlopeErr
-    Double_t m_yPos_yPos;     // Cov(3,3) = yPositionErr * yPositionErr
-    Double_t m_yPos_ySlp;     // Cov(3,4) = Cov(4,3) = yPositionErr * ySlopeErr
-    Double_t m_ySlp_ySlp;     // Cov(4,4) = ySlopeErr * ySlopeErr
+    Double32_t m_xPos_xPos;     // Cov(1,1) = xPositionErr * xPositionErr
+    Double32_t m_xPos_xSlp;     // Cov(1,2) = Cov(2,1) = xPositionErr * xSlopeErr
+    Double32_t m_xPos_yPos;     // Cov(1,3) = Cov(3,1) = xPositionErr * yPositionErr
+    Double32_t m_xPos_ySlp;     // Cov(1,4) = Cov(4,1) = xPositionERr * ySlopeErr
+    Double32_t m_xSlp_xSlp;     // Cov(2,2) = xSlopeErr * xSlopeErr
+    Double32_t m_xSlp_yPos;     // Cov(2,3) = Cov(3,2) = xSlopeErr * yPositionErr
+    Double32_t m_xSlp_ySlp;     // Cov(2,4) = Cov(4,2) = xSlopeErr * ySlopeErr
+    Double32_t m_yPos_yPos;     // Cov(3,3) = yPositionErr * yPositionErr
+    Double32_t m_yPos_ySlp;     // Cov(3,4) = Cov(4,3) = yPositionErr * ySlopeErr
+    Double32_t m_ySlp_ySlp;     // Cov(4,4) = ySlopeErr * ySlopeErr
 
     ClassDef(TkrTrackParams,3)
 

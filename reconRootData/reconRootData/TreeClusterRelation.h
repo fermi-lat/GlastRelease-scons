@@ -74,10 +74,10 @@ public:
 private:
     TRef       m_tree;
     TRef       m_cluster;
-    Double_t m_treeClusDoca;
-    Double_t m_treeClusCosAngle;
-    Double_t m_treeClusDistAtZ;
-    Double_t m_clusEnergy;
+    Double32_t m_treeClusDoca;
+    Double32_t m_treeClusCosAngle;
+    Double32_t m_treeClusDistAtZ;
+    Double32_t m_clusEnergy;
 
     ClassDef(TreeClusterRelation,2)
 };

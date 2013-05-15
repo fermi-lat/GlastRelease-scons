@@ -77,14 +77,14 @@ class CalMomParams : public CalParams
   Int_t m_numIterations;
   Int_t m_numCoreXtals;
   Int_t m_numXtals;
-  Double_t m_transRms;
-  Double_t m_longRms;
-  Double_t m_longRmsAsym;
-  Double_t m_longSkewness;
-  Double_t m_coreEnergyFrac;
-  Double_t m_fullLength;
-  Double_t m_dEdxSpread;
-  Double_t m_minGhostDoca;
+  Double32_t m_transRms;
+  Double32_t m_longRms;
+  Double32_t m_longRmsAsym;
+  Double32_t m_longSkewness;
+  Double32_t m_coreEnergyFrac;
+  Double32_t m_fullLength;
+  Double32_t m_dEdxSpread;
+  Double32_t m_minGhostDoca;
   
   ClassDef(CalMomParams,3)
 

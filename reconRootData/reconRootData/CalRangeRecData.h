@@ -49,9 +49,9 @@ public:
 private:
     
         /// Energy associated with the plus end of the crystal
-    Double_t m_eneP;
+    Double32_t m_eneP;
         /// Energy associated with the minus end of the crystal
-    Double_t m_eneM;
+    Double32_t m_eneM;
         /// Position of the crystal
     TVector3 m_pos;
         /// Range associated with the plus end of the crystal

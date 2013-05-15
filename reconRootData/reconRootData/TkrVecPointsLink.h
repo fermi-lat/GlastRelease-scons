@@ -117,7 +117,7 @@ private:
     TVector3           m_vector;
 
     // Calculated expected maximum scattering angle
-    Double_t           m_maxScatAngle;
+    Double32_t         m_maxScatAngle;
 
     ClassDef(TkrVecPointsLink,1)
 };

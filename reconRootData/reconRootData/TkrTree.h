@@ -97,10 +97,10 @@ private:
     TkrFilterParams*   m_axisParams;
 
     // Angle best leaf track to axis
-    Double_t           m_bestBranchAngleToAxis;
+    Double32_t         m_bestBranchAngleToAxis;
 
     // Angle axis seeded track to axis
-    Double_t           m_axisSeededAngleToAxis;
+    Double32_t         m_axisSeededAngleToAxis;
 
 
     ClassDef(TkrTree,1)

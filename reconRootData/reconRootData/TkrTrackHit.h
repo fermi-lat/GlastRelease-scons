@@ -187,13 +187,13 @@ private:
     UInt_t                m_statusBits;      // See StatusBits enumeration above for definitions
     TkrCluster*           m_cluster;         // Pointer to the cluster associated with this hit
     commonRootData::TkrId m_hitID;           // Complete TkrId identifying the details of this hit/plane
-    Double_t              m_zPlane;          // Z location of plane
-    Double_t              m_energy;          // Energy of track at this plane
-    Double_t              m_radLen;          // Radiation Lengths encountered from the previous hit
-    Double_t              m_activeDist;      // The distance inside (positive) hit SSD (neg. if outside)
-    Double_t              m_chiSquareFilter; // hit chi-square at filter stage of fit
-    Double_t              m_chiSquareRevFit; // hit chi-square at filter stage of fit
-    Double_t              m_chiSquareSmooth; // hit chi-square at smooth stage of fit
+    Double32_t            m_zPlane;          // Z location of plane
+    Double32_t            m_energy;          // Energy of track at this plane
+    Double32_t            m_radLen;          // Radiation Lengths encountered from the previous hit
+    Double32_t            m_activeDist;      // The distance inside (positive) hit SSD (neg. if outside)
+    Double32_t            m_chiSquareFilter; // hit chi-square at filter stage of fit
+    Double32_t            m_chiSquareRevFit; // hit chi-square at filter stage of fit
+    Double32_t            m_chiSquareSmooth; // hit chi-square at smooth stage of fit
         
     TkrTrackParams        m_hitMeas;
     TkrTrackParams        m_hitPred;

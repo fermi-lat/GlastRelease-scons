@@ -84,16 +84,16 @@ private:
 
     // data members
     /// How many layers are we allowed to skip?
-    Int_t    m_maxNumSkippedLayers;
+    Int_t      m_maxNumSkippedLayers;
 
     /// Also keep track of the total number of TkrVecPoints
-    Int_t    m_numVecPoints;
+    Int_t      m_numVecPoints;
 
     /// Keep count of the number of bilayers with TkrVecPoints
-    Int_t    m_numBiLayersWVecPoints;
+    Int_t      m_numBiLayersWVecPoints;
  
     /// Finally, keep track of max possible link combinations
-    Double_t m_maxNumLinkCombinations;
+    Double32_t m_maxNumLinkCombinations;
 
     ClassDef(TkrVecPointInfo,1)
 };
