@@ -82,4 +82,7 @@ CalCalibSvc.FlavorAsym      = "p7repro";
 CalCalibSvc.FlavorPed       = "p7repro";
 CalCalibSvc.FlavorMeVPerDac = "p7repro";
 	 
-FT1Alg.AlignmentFlavor = "p7repro";
+// cover all the bases
+FT1Alg.AlignmentFlavor = "p7repro";     // old style
+FT1Alg1.AlignmentFlavor = "p7repro";    // merituptle
+FT1Alg2.AlignmentFlavor = "p7repro";    // primetuple
