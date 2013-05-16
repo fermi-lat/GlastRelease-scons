@@ -3,6 +3,7 @@
  * $Header$
  *           EOH
 
+ HepRepSvc-00-42-02 16-May-2013 TU Provide protection in CalRecon when reading recon.root files
  HepRepSvc-00-42-01 21-Feb-2013 TU Convert from using CalClusterCol to CalClusterMap
  HepRepSvc-00-42-00 20-Aug-2012    jrb for Windows no-install-headers
  HepRepSvc-00-41-00 08-May-2012  lsrea Mainly fix for display in new Gaudi
