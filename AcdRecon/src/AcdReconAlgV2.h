@@ -190,7 +190,8 @@ class AcdReconAlgV2 : public Algorithm
 
       /// retrieves tracks and calls the DOCA and Active Distance routines
       StatusCode trackDistances(const Event::AcdHitCol& acdHits, 
-				Event::AcdTkrAssocCol& tkrAssocs);
+				Event::AcdTkrAssocCol& tkrAssocs,
+				bool upward = true);
 
       /// try and do the same thing with the CAL clusters
       StatusCode calClusterDistances(const Event::AcdHitCol& acdHits, 
@@ -198,7 +199,8 @@ class AcdReconAlgV2 : public Algorithm
 
       /// retrieves event vertex and calls the DOCA and Active Distance routines
       StatusCode vertexDistances(const Event::AcdHitCol& acdHits, 
-				 Event::AcdTkrAssocCol& tkrAssocs);
+				 Event::AcdTkrAssocCol& tkrAssocs,
+				 bool upward = true);
 
       /// Calculates the point where the paritcle crosses the nominal ACD 
       StatusCode exitPoint(const AcdRecon::TrackData& aTrack, bool forward,
@@ -254,7 +256,7 @@ class AcdReconAlgV2 : public Algorithm
 				      
 
       StatusCode calcCornerDoca(const AcdRecon::TrackData& trackData,
-                                float &dist, const char* forWhom);
+                                float &dist);
 
       /// the tool to calculate the Track intersections w/ the ACD
       AcdITkrIntersectToolV2* m_intersectionTool;
@@ -293,10 +295,15 @@ class AcdReconAlgV2 : public Algorithm
       /// Tolernace for pat-rec hash map
       double           m_patRecTol;
 
-      bool m_calcCornerDoca;
-
+      /// Turn on or off the calculation of the Backsplash variables
       bool m_doBackSplash;
-   
+
+      /// Turn on or off the extrapolations using the vertex solutions
+      bool m_doVertexExtrap;
+      
+      /// Turn on or off the extrapolations using the downgoing solutions
+      bool m_doDownwardExtrap;
+      
       /// map of AcdId and the corresponding hit status 
       AcdRecon::AcdHitMap m_hitMap;
 
@@ -305,6 +312,8 @@ class AcdReconAlgV2 : public Algorithm
 
       /// The map used for pattern recognition
       AcdRecon::AcdPatRecMap* m_patRecMap;
+
+
 
 };
 
