@@ -2961,6 +2961,8 @@ float CalValsTool::CalSSDEvaluation(const Event::CalCluster* cluster)
     // Increase the search region if the propagated error is large enough
     double vetoRgn = (view==0 ? std::max(xVetoRgn, 2*sqrt(newParams(1,1))) : std::max(yVetoRgn, 2*sqrt(newParams(3,3))));
 
+    pQueryClusters->setFilter(ITkrQueryClustersTool::NORMAL);
+    
     int nVetoHits = pQueryClusters->numberOfHitsNear(view, layer, 
                                                      vetoRgn, x_step, t1);
 

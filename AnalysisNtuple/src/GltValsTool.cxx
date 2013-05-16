@@ -358,6 +358,10 @@ StatusCode GltValsTool::calculate()
     //Search for x-y paired layer.... 
     if (pClusters && three_in_a_row)
     {
+    
+        // we only want normal clusters here, no ghosts!
+        m_clusTool->setFilter(ITkrQueryClustersTool::NORMAL);
+        
         // Make a hit count per plane, per tower.  
         layer = nLayers;
         while(layer--)

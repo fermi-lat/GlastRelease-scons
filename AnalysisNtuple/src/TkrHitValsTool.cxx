@@ -208,7 +208,7 @@ StatusCode TkrHitValsTool::initialize()
     {
         throw GaudiException("Service [TkrQueryClustersTool] not found", name(), sc);
     }
-
+    
     // load up the map
 
     addItem("TkrNumHits",             &Tkr_Cnv_Lyr_Hits);       
@@ -303,6 +303,10 @@ StatusCode TkrHitValsTool::calculate()
     if(pClusters->size()==0) return sc;
 
     int layerIdx;
+    
+    // set TkrQueryClustersTool to return only NORMAL clusters
+    m_clusTool->setFilter(ITkrQueryClustersTool::NORMAL);
+
     for(layerIdx=0;layerIdx<_nLayers;++layerIdx) {
         int hitCount = 
             m_clusTool->getClusters(idents::TkrId::eMeasureX,layerIdx).size()

@@ -755,6 +755,10 @@ StatusCode TkrCRValsTool::calculate()
 
     //special stuff here
     TkrCR_1_FirstGapPlane = -1;
+    
+    //set TkrQueryClustersTool to return only normal clusters for the tests
+    //  (even though the CR track may be a ghost!)
+    pQueryClusters->setFilter(ITkrQueryClustersTool::NORMAL);
 
     double radThin  = m_tkrGeom->getAveConv(STANDARD); 
     double radThick = m_tkrGeom->getAveConv(SUPER); 

@@ -85,7 +85,7 @@ private:
     /// GlastDetSvc used for access to detector info
     IGlastDetSvc*          m_detSvc; 
     /// pointer to queryclusterstool
-    ITkrQueryClustersTool* m_queryClusters;
+    //ITkrQueryClustersTool* m_queryClusters; // not used
     /// 
 //    IPropagatorSvc* m_propSvc;
 
