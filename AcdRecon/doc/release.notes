@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-06-00 16-May-2013 echarles Refactor ACD Recon code to allow turning off downgoing extrapolations and vertex extrapolations.  Also, turn them off by default
  AcdRecon-05-05-00 18-Apr-2013 echarles Include CR tracks in AcdRecon
  AcdRecon-05-04-02 08-Apr-2013 TU Philippe's updates: using the cal centroid position corrected for the hodoscopic effect
  AcdRecon-05-04-01 21-Feb-2013 TU Converting from CalClusterCol to CalClusterMap (including ubers too)
