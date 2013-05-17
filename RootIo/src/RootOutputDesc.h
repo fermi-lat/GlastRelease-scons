@@ -13,6 +13,7 @@
 //#include "GaudiKernel/Property.h"
 #include "TTree.h"
 #include "TFile.h"
+#include "Compression.h"
 #include <string>
 
 class RootOutputDesc
@@ -21,10 +22,11 @@ class RootOutputDesc
   
     RootOutputDesc  ( const std::string& outputFile, 
        const std::string & treeName, 
-	   int compressionLevel, const std::string& treeTitle, bool verbose=false ) ;
+	   int compressionLevel, const std::string& treeTitle, bool verbose=false,
+       int compressionAlg = ROOT::kZLIB ) ;
     ~RootOutputDesc() ; 
 
-    bool openFile();
+    bool openFile(int compressionAlg=ROOT::kZLIB);
 
     bool closeFile();
 
