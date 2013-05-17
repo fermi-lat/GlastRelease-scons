@@ -1,5 +1,7 @@
 # containerNotes for GlastRelease-scons
 
+2013-05-17 20-08-13 JIRA LPATE-137
+  Plus updated SConsFiles to include userAlg.sln
 2013-04-08 20-08-12 JIRA LPATE-134
   AcdRecon, introducing McToolBox, TkrRecon, G4Propagator
   and updated P8 XML worksheet in extFiles v0r13
