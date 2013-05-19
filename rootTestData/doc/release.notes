@@ -4,6 +4,7 @@ Coordinator:H.Kelly
 @verbatim
  * EOH *
 
+ rootTestData-04-06-04 18-May-2013  lsrea new data files for latest GR
  rootTestData-04-06-03 23-Apr-2013  lsrea files for GR-20-08-12
  rootTestData-04-06-02 23-Apr-2013  lsrea update files to GR-20-08-12
  rootTestData-04-06-01 11-Feb-2013 heather patch SConscript
