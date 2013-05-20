@@ -4,7 +4,7 @@
 #
 # $Id$
 # Authors: Heather Kelly <heather@slac.stanford.edu>,Leon Rochester <lsrea@slac.stanford.edu>
-# Version: rootTestData-04-06-04
+# Version: rootTestData-04-06-05
 Import('baseEnv')
 Import('listFiles')
 progEnv = baseEnv.Clone()
@@ -13,6 +13,7 @@ jofiles = listFiles(['src/gamma_5_gev_normal/*.txt']) + listFiles(['src/default/
 jofiles.append('src/vertical_surface_muons/redoRecon.txt')
 jofiles.append('src/vertical_surface_muons/redoDigi.txt')
 jofiles.append('src/vertical_surface_muons/jobOptions.txt')
+jofiles.append('src/cal/jobOptions.txt')
                     
 
 progEnv.Tool('registerTargets', 
