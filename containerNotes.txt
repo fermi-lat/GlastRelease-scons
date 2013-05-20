@@ -1,5 +1,7 @@
 # containerNotes for GlastRelease-scons
 
+2013-05-20 20-08-14 patches to AnalysisNtuple, TkrRecon, reconRootData for unit tests
+  picking up latest AcdRecon tag and latest rootTestData
 2013-05-17 20-08-13 JIRA LPATE-137
   Plus updated SConsFiles to include userAlg.sln and astro to match
 ST-09-32-00

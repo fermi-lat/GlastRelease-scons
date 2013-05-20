@@ -50,7 +50,7 @@ EventIntegrity EventIntegrity-00-09-00
 commonRootData commonRootData-02-17-00
 mcRootData mcRootData-02-23-00
 digiRootData digiRootData-11-15-00
-reconRootData reconRootData-12-00-00
+reconRootData reconRootData-12-00-01
 gcrSelectRootData gcrSelectRootData-02-03-00
 rootUtil rootUtil-01-05-01
 rootTestData rootTestData-04-06-04
@@ -83,12 +83,12 @@ GCRCalib GCRCalib-01-12-03
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-07
-TkrRecon TkrRecon-10-39-03
+TkrRecon TkrRecon-10-39-04
 
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-04-00
-AcdRecon AcdRecon-05-05-00
+AcdRecon AcdRecon-05-06-00
 
 # Geant4
 #GlastMS GlastMS-01-00-01
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-13
+AnalysisNtuple AnalysisNtuple-02-71-14
 
 # LDF
 CHS/eventFile eventFile-09-01-00
