@@ -195,10 +195,11 @@ int write(const char* fileName, int numEvents) {
 int main(int argc, char **argv) {
     
     facilities::commonUtilities::setupEnvironment();
-    std::string fileStr("$(RECONROOTDATADATAPATH)/recon-v9r26-v5r26.root");
+    std::string fileStr("$(RECONROOTDATADATAPATH)/recon-v12r0-v5r34.root");
     facilities::Util::expandEnvVar(&fileStr);
     //char * fileName = "recon-v9r11-v5r10.root" ;
     const char *fileName = fileStr.c_str();
+    std::cout << "File = " << fileName << std::endl;
     int numEvents = 10 ;
     
     TString writeString("write") ;

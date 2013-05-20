@@ -189,12 +189,16 @@ void CalRecon::Fake( Int_t ievent, Float_t randNum ) {
 
 #define COMPARE_TOBJ_ARRAY_IN_RANGE(T,m) rootdatautil::TObjArrayCompareInRange<T>(m,ref.m)
 
+#define COMPARE_TMAP_IN_RANGE(T,m) rootdatautil::TObjArrayCompareInRange<T>(m(cluster),ref.m(rclus))
+
 Bool_t CalRecon::CompareInRange( CalRecon & ref, const std::string & name ) {
 
     bool result = true ;
 
+    CalCluster* rclus = (CalCluster*)ref.getCalClusterCol()->At(0);
     CalCluster* cluster   = (CalCluster*)getCalClusterCol()->At(0);
-    result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalEventEnergy,getEventEnergyVec(cluster)) && result ;
+    result = COMPARE_TMAP_IN_RANGE(CalEventEnergy, getEventEnergyVec) && result;
+    //result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalEventEnergy,getEventEnergyVec(cluster)) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalCluster,getCalClusterCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalXtalRecData,getCalXtalRecCol()) && result ;
     result = COMPARE_TOBJ_ARRAY_IN_RANGE(CalMipTrack,getCalMipTrackCol()) && result ;
