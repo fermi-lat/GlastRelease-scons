@@ -76,9 +76,8 @@ void PointingInfo::execute( const astro::GPS& gps)
     in_saa= earth.insideSAA()? 1:0;
     zenith_scz = gps.zenithDir().difference(gps.zAxisDir());
  
-    // sign the rocking angle
-    double temp = pos_km[2]/pos_km.mag();
-    if(dec_scz < temp) zenith_scz *= -1.0;
+    // sign the rocking angle: compare the declination of the zenith with that of the LAT axis
+    if(dec_scz < dec_zenith) zenith_scz *= -1.0;
     zenith_scz *= R2D; // and convert to degrees
 
 	if(m_filename!="") {
