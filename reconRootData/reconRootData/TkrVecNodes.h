@@ -157,7 +157,7 @@ private:
     Int_t                   m_bestNumBiLayers;    // Number of bilayers below this node for best branch
     Double32_t              m_bestRmsAngle;       // RMS deviation of links below for best branch
 
-    ClassDef(TkrVecNode,1)
+    ClassDef(TkrVecNode,2)
 };
 
 

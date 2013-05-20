@@ -86,7 +86,7 @@ public:
   Int_t      m_nFitLayers;
   Double32_t m_chiSquare;
   
-  ClassDef(CalFitParams,3)
+  ClassDef(CalFitParams,4)
    
 } ;
 

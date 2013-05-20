@@ -86,7 +86,7 @@ class CalMomParams : public CalParams
   Double32_t m_dEdxSpread;
   Double32_t m_minGhostDoca;
   
-  ClassDef(CalMomParams,3)
+  ClassDef(CalMomParams,4)
 
 } ;
 

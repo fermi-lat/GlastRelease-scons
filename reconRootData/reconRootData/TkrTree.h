@@ -103,7 +103,7 @@ private:
     Double32_t         m_axisSeededAngleToAxis;
 
 
-    ClassDef(TkrTree,1)
+    ClassDef(TkrTree,2)
 };
 
 

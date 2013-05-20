@@ -63,7 +63,7 @@ private:
     void print() const;
   
  
-    ClassDef(GcrXtal,4)
+    ClassDef(GcrXtal,5)
 };
     
 #endif

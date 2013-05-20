@@ -198,7 +198,7 @@ private:
     Double32_t   m_TkrCal_radlen;       // Integrated Tracker radiation lengths 
     Double32_t   m_rangeEnergy;           // energy estimated from the range 
 
-    ClassDef(TkrTrack,5)
+    ClassDef(TkrTrack,6)
 
 };
 #endif

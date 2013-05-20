@@ -70,7 +70,7 @@ private:
 
     TClonesArray *m_taggerHitCol;
 
-    ClassDef(TaggerCluster,1) // ReconAncillary data beamtest 2006
+    ClassDef(TaggerCluster,2) // ReconAncillary data beamtest 2006
 };
 
 } // end namespace

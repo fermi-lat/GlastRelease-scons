@@ -126,6 +126,6 @@ private:
     //! List of track IDs used by this vertex
     TObjArray             m_tracks;
 
-    ClassDef(TkrVertex,4)
+    ClassDef(TkrVertex,5)
 };
 #endif

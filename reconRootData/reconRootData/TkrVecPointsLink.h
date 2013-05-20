@@ -119,7 +119,7 @@ private:
     // Calculated expected maximum scattering angle
     Double32_t         m_maxScatAngle;
 
-    ClassDef(TkrVecPointsLink,1)
+    ClassDef(TkrVecPointsLink,2)
 };
 
 

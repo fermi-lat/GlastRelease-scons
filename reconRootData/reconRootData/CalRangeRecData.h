@@ -59,7 +59,7 @@ private:
         /// Range associated with the minus end of the crystal
     Char_t m_rangeM;
     
-    ClassDef(CalRangeRecData,3)  // Reconstructed CAL xtals
+    ClassDef(CalRangeRecData,4)  // Reconstructed CAL xtals
 };
 
 

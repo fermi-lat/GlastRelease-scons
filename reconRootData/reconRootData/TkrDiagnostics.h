@@ -77,7 +77,7 @@ private:
     UInt_t     m_numTrackElements;     // Number of found TrackElements
     UInt_t     m_numTkrTracks;         // Number of tracks created 
 
-    ClassDef(TkrDiagnostics,1)
+    ClassDef(TkrDiagnostics,2)
 };
 
 

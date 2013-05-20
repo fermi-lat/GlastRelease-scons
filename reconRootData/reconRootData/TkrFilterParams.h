@@ -128,7 +128,7 @@ private:
     Double32_t m_longRmsAsym;
 
 
-    ClassDef(TkrFilterParams,1)
+    ClassDef(TkrFilterParams,2)
 };
 
 

@@ -113,7 +113,7 @@ private:
     Double32_t m_longRmsAve;
 
 
-    ClassDef(TkrEventParams,1)
+    ClassDef(TkrEventParams,2)
 };
 
 

@@ -202,7 +202,7 @@ private:
     TkrTrackParams        m_hitSmooth;
     TkrTrackParams        m_Qmaterial;  // holds the covariance matrix of the material effects 
 
-    ClassDef(TkrTrackHit,3)
+    ClassDef(TkrTrackHit,4)
 };
 
 //typedef std::vector<TkrTrackHit>                 TkrTrackHitVector;

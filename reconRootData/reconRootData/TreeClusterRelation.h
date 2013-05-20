@@ -79,7 +79,7 @@ private:
     Double32_t m_treeClusDistAtZ;
     Double32_t m_clusEnergy;
 
-    ClassDef(TreeClusterRelation,2)
+    ClassDef(TreeClusterRelation,3)
 };
 
 

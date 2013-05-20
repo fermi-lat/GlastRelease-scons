@@ -53,7 +53,7 @@ private:
     CalParams m_params ;
     TObjArray m_freeAttributes ;
 
-    ClassDef(CalCorToolResult,3)
+    ClassDef(CalCorToolResult,4)
 
 } ;
     

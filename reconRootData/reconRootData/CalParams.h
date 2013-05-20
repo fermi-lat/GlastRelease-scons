@@ -128,7 +128,7 @@ private:
     Double32_t m_axisyz;    // Cov(2,3) = Cov (3,2)= dy * dz
     Double32_t m_axiszz;    // Cov(3,3) = dz * dz
     
-    ClassDef(CalParams,4)
+    ClassDef(CalParams,5)
 } ;
 
 

@@ -69,7 +69,7 @@ class CalXtalsParams : public TObject
   Double32_t m_xtalEneSkewness;
   TVector3 m_centroid;
   
-  ClassDef(CalXtalsParams,2)
+  ClassDef(CalXtalsParams,3)
 } ;
 
 

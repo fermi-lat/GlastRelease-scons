@@ -103,7 +103,7 @@ private:
     Double32_t m_yPos_ySlp;     // Cov(3,4) = Cov(4,3) = yPositionErr * ySlopeErr
     Double32_t m_ySlp_ySlp;     // Cov(4,4) = ySlopeErr * ySlopeErr
 
-    ClassDef(TkrTrackParams,3)
+    ClassDef(TkrTrackParams,4)
 
 };
 #endif

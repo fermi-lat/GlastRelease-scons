@@ -29,7 +29,7 @@ private:
     TVector3   m_position ; // Average position in this layer
     TVector3   m_rmsSpread ; // Quadratic position spread for this layer
 
-    ClassDef(CalClusterLayerData,3)
+    ClassDef(CalClusterLayerData,4)
 
 } ;
     

@@ -89,7 +89,7 @@ private:
     Double32_t m_rmsEdgeLength;
     Double32_t m_rmsEdgeLengthTrunc;
 
-    ClassDef(CalMSTreeParams,2)
+    ClassDef(CalMSTreeParams,3)
 } ;
 
 

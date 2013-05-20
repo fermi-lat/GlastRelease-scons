@@ -71,7 +71,9 @@ public:
     TMap* getCalClusterMap() { return m_calClusterMap;}
 
     /// Provide access to a CalEventEnergyVec giving a cluster
-    TObjArray* getEventEnergyVec(CalCluster* cluster) {return (TObjArray*)m_calEventEnergyMap->FindObject(cluster);}
+    TObjArray* getEventEnergyVec(CalCluster* cluster) {
+        return (TObjArray*)m_calEventEnergyMap->GetValue(cluster);}
+
 
     /// Provide access to the CalEventEnergyMap
     TMap* getCalEventEnergyMap() {return m_calEventEnergyMap;}
