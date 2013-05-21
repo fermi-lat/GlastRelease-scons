@@ -77,7 +77,7 @@ OnboardFilterTds OnboardFilterTds-00-13-02
 CalUtil CalUtil-03-18-00
 CalXtalResponse CalXtalResponse-01-01-01
 CalDigi CalDigi-03-09-00
-CalRecon CalRecon-06-22-04
+CalRecon CalRecon-06-22-05
 GCRCalib GCRCalib-01-12-03
 
 # Tracker
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-14
+AnalysisNtuple AnalysisNtuple-02-71-15
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -137,7 +137,7 @@ overlayRootData overlayRootData-00-05-00
 
 calibGenCAL calibGenCAL-05-09-07
 calibGenACD calibGenACD-04-01-06
-calibTkrUtil calibTkrUtil-02-10-00
+calibTkrUtil calibTkrUtil-02-10-01
 calibGenTKR calibGenTKR-04-08-03
 
 # not used in Gleam, here as a build check
