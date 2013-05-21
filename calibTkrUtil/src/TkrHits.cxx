@@ -1157,10 +1157,13 @@ bool TkrHits::MIPfilter()
   //
   // check ACD variables
   //
-  AcdRecon* acdRecon = m_reconEvent->getAcdRecon();
-  assert(acdRecon != 0);
-  m_acdTileCount = acdRecon->nAcdHit();
-  m_acdTotalEnergy = acdRecon->getEnergy();
+  AcdReconV2* acdRecon = m_reconEvent->getAcdReconV2();
+  assert(acdRecon!= 0);
+  AcdEventTopology& eventTopology = acdRecon->getEventTopology();
+  AcdEventTopology* pTopo = &eventTopology;
+  assert(pTopo!=0);
+  m_acdTileCount = eventTopology.getTileCount();
+  m_acdTotalEnergy = eventTopology.getTotalTileEnergy();
   m_hAcdTileCount->Fill( m_acdTileCount );
   m_hAcdTotalEnergy->Fill( m_acdTotalEnergy );
 
