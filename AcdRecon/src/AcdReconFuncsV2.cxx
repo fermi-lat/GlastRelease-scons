@@ -828,6 +828,15 @@ namespace AcdRecon {
            
     bool enters(false);
 
+    // Check to see if the point is inside the volume already
+    if ( fabs(initialPosition.x()) < acdVol.m_sides && 
+	 fabs(initialPosition.y()) < acdVol.m_sides && 
+	 fabs(initialPosition.z()) > acdVol.m_bottom &&
+	 fabs(initialPosition.z()) < acdVol.m_top ) {
+      // if so, return false;
+      return enters;
+    }
+
     // where does the track start relative to +-X sides
     // and how long before it hits one of the sides
     // this evals to -1 if between sides
@@ -847,7 +856,7 @@ namespace AcdRecon {
 	      xPlaneInter.z() < acdVol.m_top ) {
 	  data.m_arcLength = sToXIntersection;
 	  data.m_x.set(xPlaneInter.x(),xPlaneInter.y(),xPlaneInter.z());
-	  data.m_face = initialPosition.x() < 0 ? 1 : 3;
+	  data.m_face = initialDirection.x() < 0 ? 1 : 3;
 	  enters = true;
 	}
       }
@@ -864,7 +873,7 @@ namespace AcdRecon {
 	1. / initialDirection.y() : (normToYIntersection > 0. ? 1e9 : -1e9);
       sToYIntersection = normToYIntersection * slopeToYIntersection;
       if ( sToYIntersection > 0 && 
-	   ( sToYIntersection < data.m_arcLength || data.m_arcLength < 0 ) ) {    
+	   ( sToYIntersection < data.m_arcLength || data.m_arcLength <= 1e-5 ) ) {
 	// propagate to that point, make sure that other two values inside LAT also
 	HepPoint3D yPlaneInter = initialPosition;  yPlaneInter += sToYIntersection* initialDirection;
 	if (  fabs(yPlaneInter.x()) < acdVol.m_sides  &&
@@ -872,7 +881,7 @@ namespace AcdRecon {
 	      yPlaneInter.z() < acdVol.m_top ) {
 	  data.m_arcLength = sToYIntersection;
 	  data.m_x.set(yPlaneInter.x(),yPlaneInter.y(),yPlaneInter.z());
-	  data.m_face = initialPosition.y() < 0 ? 2 : 4;
+	  data.m_face = initialDirection.y() < 0 ? 2 : 4;
 	  enters = true;
 	}
       }
@@ -883,21 +892,21 @@ namespace AcdRecon {
     double sToZIntersection(-1.);
     if ( initialPosition.z() < acdVol.m_bottom ||
 	 initialPosition.z() > acdVol.m_top ) {
-      double normToZIntersection = initialPosition.z() < 0 ? 
+      double normToZIntersection = initialPosition.z() < acdVol.m_bottom ? 
 	acdVol.m_bottom - initialPosition.z() :    // hits -z side first
 	acdVol.m_top - initialPosition.z();      // hits +z side frist
       const double slopeToZIntersection = fabs(initialDirection.z()) > 1e-9 ? 
 	1. / initialDirection.z() : (normToZIntersection > 0. ? 1e9 : -1e9);
       sToZIntersection = normToZIntersection * slopeToZIntersection;
       if ( sToZIntersection > 0 && 
-	   ( sToZIntersection < data.m_arcLength || data.m_arcLength < 0 ) ) {    
+	   ( sToZIntersection < data.m_arcLength || data.m_arcLength <= 1e-5 ) ) {    
 	// propagate to that point, make sure that other two values inside LAT also
 	HepPoint3D zPlaneInter = initialPosition;  zPlaneInter += sToZIntersection* initialDirection;
 	if (  fabs(zPlaneInter.x()) < acdVol.m_sides  &&
 	      fabs(zPlaneInter.y()) < acdVol.m_sides ) {
 	  data.m_arcLength = sToZIntersection;
 	  data.m_x.set(zPlaneInter.x(),zPlaneInter.y(),zPlaneInter.z());
-	  data.m_face = initialPosition.z() > acdVol.m_top ? 0 : 5;	
+	  data.m_face = initialDirection.z() < 0 ? 0 : 5;	
 	  enters = true;
 	}
       }

@@ -304,6 +304,9 @@ class AcdReconAlgV2 : public Algorithm
       /// Turn on or off the extrapolations using the downgoing solutions
       bool m_doDownwardExtrap;
       
+      /// Turn on or off the extrapolations using the downgoing solutions
+      bool m_doCRTrackExtrap;
+      
       /// map of AcdId and the corresponding hit status 
       AcdRecon::AcdHitMap m_hitMap;
 

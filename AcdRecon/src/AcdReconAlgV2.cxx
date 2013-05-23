@@ -89,6 +89,7 @@ AcdReconAlgV2::AcdReconAlgV2(const std::string& name, ISvcLocator* pSvcLocator) 
   declareProperty("doBackSplash",m_doBackSplash=false);
   declareProperty("doVertexExtrap",m_doVertexExtrap=false);
   declareProperty("doDownwardExtrap",m_doDownwardExtrap=false);
+  declareProperty("doCRTrackExtrap",m_doCRTrackExtrap=true);
   declareProperty("Tolerance",m_patRecTol=50.);
 }
 
@@ -500,14 +501,24 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
       const Event::TkrTrack* trackTds  = trackVec[iTrack];       // The TDS track
       bool isCR = trackTds->getStatusBits() & Event::TkrTrack::COSMICRAY;
       
+      if ( isCR && (!m_doCRTrackExtrap) ) {
+	// skip it
+	continue;
+      }
+
       // grap the track direction information      
       extend.m_index = isCR ? iTrack + 100 : iTrack;
       extend.m_upward = upward;
       const Event::TkrTrackHit* hitToUse(0);
       if (upward) {
-	const Event::TkrTrackHit* hitToUse = (*trackTds)[0];	  
+	hitToUse = (*trackTds)[0];	  
       } else {
-	const Event::TkrTrackHit* hitToUse = (*trackTds)[trackTds->getNumHits() - 1];	  
+	hitToUse = (*trackTds)[trackTds->getNumHits() - 1];	  
+      }
+
+      if (hitToUse == 0){
+	log << MSG::WARNING << "AcdRecon found a null hit on track " << extend.m_index << "  We'll bravely carry on." << endreq;
+	continue;
       }
       extend.m_energy = hitToUse->getEnergy();
       AcdRecon::ReconFunctions::convertToAcdRep(hitToUse->getTrackParams(Event::TkrTrackHit::SMOOTHED),
@@ -1023,7 +1034,10 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
                     return StatusCode::SUCCESS;
                 } else {
                     // Something else happened...
-                    log << MSG::WARNING << "AcdRecon::exitsLat() failed for CalCluster - we'll bravely carry on" << endreq;
+                    log << MSG::WARNING << "AcdRecon::exitsLat() failed for CalCluster - we'll bravely carry on " 
+			<< "v = (" << cal_dir.x() << "," << cal_dir.y() << "," << cal_dir.z() << ") " 		      
+			<< "x = (" << cal_pos.x() << "," << cal_pos.y() << "," << cal_pos.z() << ")" 
+			<< endreq;
                     return StatusCode::SUCCESS;
                 }
             }
