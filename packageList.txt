@@ -88,7 +88,7 @@ TkrRecon TkrRecon-10-39-04
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-04-00
-AcdRecon AcdRecon-05-06-00
+AcdRecon AcdRecon-05-06-01
 
 # Geant4
 #GlastMS GlastMS-01-00-01
