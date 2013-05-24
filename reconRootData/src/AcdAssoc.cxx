@@ -11,10 +11,22 @@ ClassImp(AcdAssoc) ;
 /// Default constructor.  Set everything to default values
 AcdAssoc::AcdAssoc() 
   :TObject(),
+   m_trackIndex(-1),
+   m_upward(kFALSE),
+   m_energy(0.),
+   m_arcLength(0.),
+   m_cov_start(5),
+   m_cov_end(5),
+   m_tkrSSDVeto(-1),
+   m_cornerDoca(0.),   
    m_hitPocae(AcdTkrHitPocaV2::Class()),
    m_gapPocae(AcdTkrGapPocaV2::Class()),
-   m_cov_start(5),
-   m_cov_end(5){   
+   m_energy15(0.),
+   m_energy30(0.),
+   m_energy45(0.),
+   m_triggerEnergy15(0.),
+   m_triggerEnergy30(0.),
+   m_triggerEnergy45(0.){   
   Clear("");
 }
 
@@ -32,25 +44,16 @@ AcdAssoc::AcdAssoc(const AcdAssoc& other)
    m_tkrSSDVeto(other.m_tkrSSDVeto),
    m_cornerDoca(other.m_cornerDoca),
    m_hitPocae(AcdTkrHitPocaV2::Class()),
-   m_gapPocae(AcdTkrGapPocaV2::Class()){
+   m_gapPocae(AcdTkrGapPocaV2::Class()),
+   m_point(other.m_point),
+   m_energy15(other.m_energy15),
+   m_energy30(other.m_energy30),
+   m_energy45(other.m_energy45),
+   m_triggerEnergy15(other.m_triggerEnergy15),
+   m_triggerEnergy30(other.m_triggerEnergy30),
+   m_triggerEnergy45(other.m_triggerEnergy45){      
 }
 
-/// Assignment operator
-AcdAssoc& AcdAssoc::operator=(const AcdAssoc& other)
-{
-  if ( this == &other ) return *this;
-  m_trackIndex = other.m_trackIndex;
-  m_upward = other.m_upward;
-  m_energy = other.m_energy;
-  m_start = other.m_start;
-  m_dir = other.m_dir;
-  m_arcLength = other.m_arcLength;
-  m_cov_start = other.m_cov_start;
-  m_cov_end = other.m_cov_end;
-  m_tkrSSDVeto = other.m_tkrSSDVeto;
-  m_cornerDoca = other.m_cornerDoca;
-  return *this;
-}
 
 const AcdTkrHitPocaV2* AcdAssoc::getHitPoca(UInt_t i) const {
   if ( i >= (UInt_t)m_hitPocae.GetEntriesFast() ) return 0;
@@ -85,9 +88,11 @@ void AcdAssoc::setPoint(const AcdTkrPointV2& point) {
 
 /// set all the values
 void AcdAssoc::set(Int_t index, Bool_t up, Float_t energy, 
-                      const TVector3& start, const TVector3& dir, Float_t arcLength,
-                      const TMatrixDSym& covStart, const TMatrixDSym& covEnd,
-                      Int_t tkrSSDVeto, Float_t cornerDoca)
+		   const TVector3& start, const TVector3& dir, Float_t arcLength,
+		   const TMatrixFSym& covStart, const TMatrixFSym& covEnd,
+ 		   Int_t tkrSSDVeto, Float_t cornerDoca,
+		   float energy15, float energy30, float energy45,
+		   float triggerEnergy15, float triggerEnergy30, float triggerEnergy45)
 {
   m_trackIndex = index;
   m_upward = up;
@@ -99,6 +104,12 @@ void AcdAssoc::set(Int_t index, Bool_t up, Float_t energy,
   m_cov_end = covEnd;
   m_tkrSSDVeto = tkrSSDVeto;
   m_cornerDoca = cornerDoca;
+  m_energy15 = energy15;
+  m_energy30 = energy30;
+  m_energy45 = energy45;
+  m_triggerEnergy15 = triggerEnergy15;
+  m_triggerEnergy30 = triggerEnergy30;
+  m_triggerEnergy45 = triggerEnergy45;      
 }  
 
 
@@ -115,6 +126,12 @@ void AcdAssoc::Clear(Option_t* option)
   m_cov_end.Zero();
   m_tkrSSDVeto = 0;
   m_cornerDoca = 0.;  
+  m_energy15 = 0.;
+  m_energy30 = 0.;
+  m_energy45 = 0.;
+  m_triggerEnergy15 = 0.;
+  m_triggerEnergy30 = 0.;
+  m_triggerEnergy45 = 0.;      
 }
 
 /// Print out this structure

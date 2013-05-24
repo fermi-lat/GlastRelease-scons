@@ -21,7 +21,7 @@ AcdTkrLocalCoordsV2::AcdTkrLocalCoordsV2()
 AcdTkrLocalCoordsV2::AcdTkrLocalCoordsV2(Int_t volume, Float_t arcLength, Float_t cosTheta, 
                                      const TVector3& global, 
                                      const Float_t local[2],const Float_t active[2],
-                                     const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp)
+                                     const TMatrixFSym& localCovProj, const TMatrixFSym& localCovProp)
   :m_volume(volume),
    m_arcLengthPlane(arcLength),
    m_cosTheta(cosTheta),
@@ -84,7 +84,7 @@ AcdTkrLocalCoordsV2& AcdTkrLocalCoordsV2::operator=(const AcdTkrLocalCoordsV2& p
 void AcdTkrLocalCoordsV2::set(Int_t volume, Float_t arcLength, Float_t cosTheta, 
                               const TVector3& global, 
                               const Float_t local[2], const Float_t active[2],
-                              const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp)
+                              const TMatrixFSym& localCovProj, const TMatrixFSym& localCovProp)
 {
   m_volume = volume;
   m_arcLengthPlane = arcLength;

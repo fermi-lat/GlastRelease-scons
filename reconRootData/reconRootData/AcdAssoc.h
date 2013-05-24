@@ -25,6 +25,7 @@
 #include "commonRootData/idents/AcdId.h"
 #include "TVector3.h"
 #include "TMatrixDSym.h"
+#include "TMatrixFSym.h"
 #include "TClonesArray.h"
 #include "AcdTkrPointV2.h"
 
@@ -41,9 +42,6 @@ public:
   
   /// Copy constructor
   AcdAssoc(const AcdAssoc& params);
-
-  /// Assignment operator
-  AcdAssoc& operator=(const AcdAssoc& params);
 
   /// Return the index of the associated track
   inline Int_t getTrackIndex() const {
@@ -64,9 +62,9 @@ public:
   
   inline Float_t getCornerDoca() const { return m_cornerDoca; }
 
-  inline const TMatrixDSym& getCovStart() const { return m_cov_start; }
+  inline const TMatrixFSym& getCovStart() const { return m_cov_start; }
   
-  inline const TMatrixDSym& getCovEnd() const { return m_cov_end; }
+  inline const TMatrixFSym& getCovEnd() const { return m_cov_end; }
 
   UInt_t nAcdHitPoca() const { return m_hitPocae.GetEntriesFast(); }
 
@@ -82,13 +80,27 @@ public:
 
   AcdTkrGapPocaV2* addGapPoca(const AcdTkrGapPocaV2& poca);
 
+  inline Float_t GetEnergy15() const { return m_energy15; }
+
+  inline Float_t GetEnergy30() const { return m_energy30; }
+
+  inline Float_t GetEnergy45() const { return m_energy45; }
+
+  inline Float_t GetTriggerEnergy15() const { return m_triggerEnergy15; }
+
+  inline Float_t GetTriggerEnergy30() const { return m_triggerEnergy30; }
+
+  inline Float_t GetTriggerEnergy45() const { return m_triggerEnergy45; }  
+
   void setPoint(const AcdTkrPointV2& point);
 
   /// set all the values
   void set(Int_t index, Bool_t up, Float_t energy, 
            const TVector3& start, const TVector3& dir, Float_t arcLength,
-           const TMatrixDSym& covStart, const TMatrixDSym& covEnd,
-           Int_t tkrSSDVeto, Float_t cornerDoca);
+           const TMatrixFSym& covStart, const TMatrixFSym& covEnd,
+           Int_t tkrSSDVeto, Float_t cornerDoca,
+	   Float_t energy15, Float_t energy30, Float_t energy45,
+	   Float_t triggerEnergy15, Float_t triggerEnergy30, Float_t triggerEnergy45);
   
   /// reset all the values to their default
   virtual void Clear(Option_t*);
@@ -114,9 +126,9 @@ private:
   
   Float_t         m_arcLength;
   
-  TMatrixDSym     m_cov_start;
+  TMatrixFSym     m_cov_start;
   
-  TMatrixDSym     m_cov_end;     
+  TMatrixFSym     m_cov_end;     
   
   Int_t           m_tkrSSDVeto;
 
@@ -128,7 +140,20 @@ private:
 
   AcdTkrPointV2   m_point;  
 
-  ClassDef(AcdAssoc,1)
+  Float_t         m_energy15;
+
+  Float_t         m_energy30;
+
+  Float_t         m_energy45;
+
+  Float_t         m_triggerEnergy15;
+
+  Float_t         m_triggerEnergy30;
+
+  Float_t         m_triggerEnergy45;
+  
+
+  ClassDef(AcdAssoc,2)
   
 };
 #endif

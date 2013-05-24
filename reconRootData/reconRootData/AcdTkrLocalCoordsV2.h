@@ -4,7 +4,7 @@
 #include "Rtypes.h"
 #include <string>
 
-#include <TMatrixDSym.h>
+#include <TMatrixFSym.h>
 #include <TVector3.h>
 
 /**
@@ -45,7 +45,7 @@ public:
   AcdTkrLocalCoordsV2(Int_t volume, Float_t arcLength, Float_t cosTheta, 
                       const TVector3& global, 
                       const Float_t local[2], const Float_t active[2],
-                      const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp);
+                      const TMatrixFSym& localCovProj, const TMatrixFSym& localCovProp);
   
   AcdTkrLocalCoordsV2(const AcdTkrLocalCoordsV2& other);
   
@@ -75,14 +75,14 @@ public:
   inline float  getActiveX()             const {return m_active[0]; }
   inline float  getActiveY()             const {return m_active[1]; }
 
-  inline const TMatrixDSym& getLocalCovProj() const {return m_localCovProj; };
-  inline const TMatrixDSym& getLocalCovProp() const {return m_localCovProp; };
+  inline const TMatrixFSym& getLocalCovProj() const {return m_localCovProj; };
+  inline const TMatrixFSym& getLocalCovProp() const {return m_localCovProp; };
 
   /// set everything at once
   void set(Int_t volume, Float_t arcLength, Float_t cosTheta, 
            const TVector3& global, 
            const Float_t local[2], const Float_t active[2],
-           const TMatrixDSym& localCovProj, const TMatrixDSym& localCovProp);
+           const TMatrixFSym& localCovProj, const TMatrixFSym& localCovProp);
   
   void copy(const AcdTkrLocalCoordsV2& other);
     
@@ -118,13 +118,13 @@ private:
   Float_t    m_active[2];
 
   ///  Covariance terms in expected intersection
-  TMatrixDSym m_localCovProj;
+  TMatrixFSym m_localCovProj;
   
   ///  Covariance terms in expected intersection
-  TMatrixDSym m_localCovProp;
+  TMatrixFSym m_localCovProp;
 
 
-  ClassDef(AcdTkrLocalCoordsV2,1)
+  ClassDef(AcdTkrLocalCoordsV2,2)
     
 };
 
