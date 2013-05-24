@@ -55,9 +55,11 @@ namespace Event
 
     /// Constructor for use in reconstruction, 
     AcdAssoc(int index, bool up, float energy, 
-                const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-                const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
-                int tkrSSDVeto, float cornerDoca);
+	     const HepPoint3D& start, const HepVector3D& dir, float arcLength,
+	     const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
+	     int tkrSSDVeto, float cornerDoca,
+	     float energy15, float energy30, float energy45,
+	     float triggerEnergy15, float triggerEnergy30, float triggerEnergy45);
     
     /// Destructor is trivial
     virtual ~AcdAssoc() {};
@@ -93,11 +95,26 @@ namespace Event
 
     inline const AcdTkrPoint* getPoint() const { return m_point; }
 
+    inline float GetEnergy15() const { return m_energy15; }
+    
+    inline float GetEnergy30() const { return m_energy30; }
+    
+    inline float GetEnergy45() const { return m_energy45; }
+    
+    inline float GetTriggerEnergy15() const { return m_triggerEnergy15; }
+    
+    inline float GetTriggerEnergy30() const { return m_triggerEnergy30; }
+    
+    inline float GetTriggerEnergy45() const { return m_triggerEnergy45; }  
+    
+
     /// set everything at once
     void set(int index, bool up, float energy, 
              const HepPoint3D& start, const HepVector3D& dir, float arcLength,
              const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
-             int tkrSSDVeto, float cornerDoca);
+             int tkrSSDVeto, float cornerDoca,
+	     float energy15, float energy30, float energy45,
+	     float triggerEnergy15, float triggerEnergy30, float triggerEnergy45);
 
     /// add a hitPoca
     inline void addHitPoca(const AcdTkrHitPoca& poca) {
@@ -149,6 +166,18 @@ namespace Event
     std::vector<const AcdTkrGapPoca*> m_gapPocae;
 
     AcdTkrPoint*    m_point;
+
+    float           m_energy15;
+
+    float           m_energy30;
+    
+    float           m_energy45;
+    
+    float           m_triggerEnergy15;
+    
+    float           m_triggerEnergy30;
+    
+    float           m_triggerEnergy45;
 
   };
 

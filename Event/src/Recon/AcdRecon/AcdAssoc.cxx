@@ -25,7 +25,13 @@ AcdAssoc::AcdAssoc()
    m_cov_start(5,0),
    m_cov_end(5,0),
    m_tkrSSDVeto(0),
-   m_cornerDoca(0){
+   m_cornerDoca(0),
+   m_energy15(0.),
+   m_energy30(0.),
+   m_energy45(0.),
+   m_triggerEnergy15(0.),
+   m_triggerEnergy30(0.),   
+   m_triggerEnergy45(0.){
 }
 
 /// Copy constructor
@@ -39,15 +45,23 @@ AcdAssoc::AcdAssoc(const AcdAssoc& other)
    m_cov_start(other.m_cov_start),
    m_cov_end(other.m_cov_end),
    m_tkrSSDVeto(other.m_tkrSSDVeto),
-   m_cornerDoca(other.m_cornerDoca){
+   m_cornerDoca(other.m_cornerDoca),
+   m_energy15(other.m_energy15),
+   m_energy30(other.m_energy30),
+   m_energy45(other.m_energy45),
+   m_triggerEnergy15(other.m_triggerEnergy15),
+   m_triggerEnergy30(other.m_triggerEnergy30),   
+   m_triggerEnergy45(other.m_triggerEnergy45){  
 }
 
 
 /// Constructor for use in reconstruction, 
 AcdAssoc::AcdAssoc(int index, bool up, float energy, 
-                         const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-                         const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
-                         int tkrSSDVeto, float cornerDoca)
+		   const HepPoint3D& start, const HepVector3D& dir, float arcLength,
+		   const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
+		   int tkrSSDVeto, float cornerDoca,
+		   float energy15, float energy30, float energy45,
+		   float triggerEnergy15, float triggerEnergy30, float triggerEnergy45)		   
   :m_index(index),
    m_upward(up),
    m_energy(energy),
@@ -57,14 +71,22 @@ AcdAssoc::AcdAssoc(int index, bool up, float energy,
    m_cov_start(covStart),
    m_cov_end(covEnd),
    m_tkrSSDVeto(tkrSSDVeto),
-   m_cornerDoca(cornerDoca){
+   m_cornerDoca(cornerDoca),
+   m_energy15(energy15),
+   m_energy30(energy30),
+   m_energy45(energy45),
+   m_triggerEnergy15(triggerEnergy15),
+   m_triggerEnergy30(triggerEnergy30),   
+   m_triggerEnergy45(triggerEnergy45){      
 }
 
 
 void AcdAssoc::set(int index, bool up, float energy, 
-                      const HepPoint3D& start, const HepVector3D& dir, float arcLength,
-                      const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
-                      int tkrSSDVeto, float cornerDoca){
+		   const HepPoint3D& start, const HepVector3D& dir, float arcLength,
+		   const CLHEP::HepSymMatrix& covStart, const CLHEP::HepSymMatrix& covEnd,
+		   int tkrSSDVeto, float cornerDoca,
+		   float energy15, float energy30, float energy45,
+		   float triggerEnergy15, float triggerEnergy30, float triggerEnergy45){		   
   // just in copy everything
   m_index = index;
   m_upward = up;
@@ -76,6 +98,12 @@ void AcdAssoc::set(int index, bool up, float energy,
   m_cov_end = covEnd;
   m_tkrSSDVeto = tkrSSDVeto;
   m_cornerDoca = cornerDoca;
+  m_energy15 = energy15;
+  m_energy30 = energy30;
+  m_energy45 = energy45;
+  m_triggerEnergy15 = triggerEnergy15;
+  m_triggerEnergy30 = triggerEnergy30;   
+  m_triggerEnergy45 = triggerEnergy45;      
 }
 
 void AcdAssoc::writeOut(MsgStream& stream) const
@@ -92,6 +120,9 @@ void AcdAssoc::writeOut(MsgStream& stream) const
          << std::endl
          << m_cov_start
          << m_cov_end
+	 << "Cone Energies: " << m_energy15 << ' ' << m_energy30 << ' ' << m_energy45 
+	 << std::endl
+	 << "Cone Eneriges (Trig): " << m_triggerEnergy15 << ' ' << m_triggerEnergy30 << ' ' << m_triggerEnergy45 
          << endreq;
 }
 
@@ -113,6 +144,12 @@ void AcdAssoc::ini()
   m_cornerDoca = 0.;
   m_hitPocae.clear();
   m_gapPocae.clear();
+  m_energy15 = 0.;
+  m_energy30 = 0.;
+  m_energy45 = 0.;
+  m_triggerEnergy15 = 0.;
+  m_triggerEnergy30 = 0.;
+  m_triggerEnergy45 = 0.;
 }
  
 AcdAssocCol::AcdAssocCol(const std::vector<AcdAssoc*>& acdAssocs) {

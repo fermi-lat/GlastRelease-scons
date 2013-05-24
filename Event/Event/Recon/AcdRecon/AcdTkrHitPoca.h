@@ -27,6 +27,7 @@
 #include "GaudiKernel/IInterface.h"
 
 #include "idents/AcdId.h"
+#include "Event/Recon/AcdRecon/AcdHit.h"
 
 static const CLID& CLID_AcdTkrHitPocaCol = InterfaceID("AcdTkrHitPocaCol", 1, 0);
 
@@ -101,6 +102,90 @@ namespace Event {
     /// Return true if more than 0.001 MIPs
     inline bool hasHit() const {
       return ( m_mips[0] > 0.001 || m_mips[1] > 0.001 );
+    }
+
+    /// Return the calibrated pusle height ( relative to MIP signal ) 
+    ///  This is averaged between the two PMTs if they are both OK, 
+    ///  otherwise only to good one is taken.
+    ///  Zero values are _NOT_ suppresed
+    inline float mips( ) const {
+      unsigned int nVal(0);
+      float val(0.);
+      if ( ! getPmtError(Event::AcdHit::A) ) { nVal++; val += m_mips[Event::AcdHit::A]; }      
+      if ( ! getPmtError(Event::AcdHit::B) ) { nVal++; val += m_mips[Event::AcdHit::B]; }
+      switch ( nVal ) {
+      case 0: val = -1.; break;
+      case 1: break;
+      case 2: val /= 2.; break;
+      }
+      return val;
+    }
+   
+    /// Return the Energy for tiles
+    inline float tileEnergy() const {
+      if ( ! m_id.tile() ) return -1.;
+      static const float MeVMipTile10 = 1.9;
+      static const float MeVMipTile12 = 2.28;
+      float MeVMip = m_id.top() && m_id.row() == 2 ? MeVMipTile12 : MeVMipTile10;
+      return mips() * MeVMip;
+    }
+
+    /// Return the Energy for either PMT on ribbons
+    inline float ribbonEnergy(Event::AcdHit::PmtId id) const {
+      static const float MeVMipRibbon = 0.5;
+      if ( ! m_id.ribbon() ) return -1;
+      return m_mips[id] * MeVMipRibbon;            
+    }
+
+    /// Returns true if pmt flagged as ghost
+    inline bool getGhost(Event::AcdHit::PmtId id) const {
+      static const float GhostThreshold = 0.5;
+      return (m_mips[id] > GhostThreshold) && !getHitMapBit(id);
+    }
+
+    /// Denotes that the PMT was above accept (AKA zero-suppresion) threshold
+    inline bool getAcceptMapBit(Event::AcdHit::PmtId id) const { 
+      return (m_flags[id] & Event::AcdHit::PMT_ACCEPT_MASK) != 0;
+    };
+
+    /// Denotes that the PMT was above hit (veto) threshold
+    inline bool getHitMapBit(Event::AcdHit::PmtId id) const { 
+      return (m_flags[id] & Event::AcdHit::PMT_VETO_MASK) != 0;
+    };
+
+    /// Denotes that a parity error was seen in transmitting the PHA data for this channel
+    inline bool getOddParityError(Event::AcdHit::PmtId id) const {
+      return (m_flags[id] & Event::AcdHit::PMT_ODD_PARITY_ERROR_MASK) != 0;
+    }
+    
+    /// Denotes that a parity error was seen in transmitting the header data in this event
+    inline bool getHeaderParityError(Event::AcdHit::PmtId id) const { 
+      return (m_flags[id] & Event::AcdHit::PMT_HEADER_PARITY_ERROR_MASK) != 0;
+    };
+    
+    /// Denotes that the PMT was flagged as DEAD by the offline calibrations
+    inline bool getPmtDead(Event::AcdHit::PmtId id) const { 
+      return (m_flags[id] & Event::AcdHit::PMT_DEAD_MASK) != 0;
+    };
+
+    /// Denotes that the PMT was flagged as HOT by the offline calibrations
+    inline bool getPmtHot(Event::AcdHit::PmtId id) const { 
+      return (m_flags[id] & Event::AcdHit::PMT_HOT_MASK) != 0;
+    };
+
+    /// Denotes that there is an error associated w/ the PMT (could be Parity, HOT or DEAD)
+    inline bool getPmtError(Event::AcdHit::PmtId id) const { 
+      return (m_flags[id] & Event::AcdHit::PMT_ANY_ERROR_MASK) != 0;
+    };
+
+    /// Returns true if hit flagged as ghost by both PMTs
+    inline bool getGhost( ) const {
+      return ( getGhost(Event::AcdHit::A) && getGhost(Event::AcdHit::B) );
+    }
+
+    /// Returns true if trigger veto bit set for either PMT
+    inline bool getTriggerVeto( ) const {
+      return ( getHitMapBit(Event::AcdHit::A) || getHitMapBit(Event::AcdHit::B) );
     }
 
     /// combine the sigma from the hit with the sigma from the track
