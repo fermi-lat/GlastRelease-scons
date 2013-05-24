@@ -86,10 +86,43 @@ public:
    /** @brief put the pocas into the output map, subject to filtering cuts
    *
    *  @param in all the caculated POCA
-   *  @param only selected POCA objects
+   *  @param out only selected POCA objects
    *  @return Success or Failure
    **/ 
   virtual StatusCode filter(const AcdRecon::PocaDataMap& in, AcdRecon::PocaDataPtrMap& out) = 0;
+
+
+   /** @brief gets the amount of energy in cones 15,30 and 45 degrees around object direction
+   *
+   *  @param hitPocae all the caculated POCA
+   *  @param energy15 -> Energy within 15 degrees of the object
+   *  @param energy30 -> Energy within 30 degrees of the object
+   *  @param energy45 -> Energy within 45 degrees of the object
+   *  @param triggerEnergy15 -> Energy within 15 degrees of the object from triggered tiles
+   *  @param triggerEnergy30 -> Energy within 30 degrees of the object from triggered tiles
+   *  @param triggerEnergy45 -> Energy within 45 degrees of the object from triggered tiles
+   *  @return Success or Failure
+   **/ 
+  virtual StatusCode getConeDistances(const std::vector<Event::AcdTkrHitPoca*>& hitPocae, 
+				      float& energy15, float& energy30, float& energy45,
+				      float& triggerEnergy15, float& triggerEnergy30, float& triggerEnergy45) = 0;
+
+  
+  /** @brief filters out all but the best few POCA for a given object
+   *
+   *  @param hitPocae all the caculated POCA.  Note that this function will remove and delete the POCAe that are not selected
+   *  @param nBest -> The number of poca to save (0 means all)
+   *  @param nHitBest -> The number of poca for hit tiles or ribbon to save (0 means all)
+   *  @param nTrigBest -> The number of poca for triggered tiles or ribbon to save (0 means all)
+   *  @return Success or Failure
+   **/ 
+  virtual StatusCode selectPocae(std::vector<Event::AcdTkrHitPoca*>& hitPocae,
+				 int nBest,
+				 int nHitBest,
+				 int nTrigBest) = 0;
+				 
+ 
+  
 
 } ;
 

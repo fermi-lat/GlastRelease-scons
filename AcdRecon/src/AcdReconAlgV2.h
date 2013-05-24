@@ -306,7 +306,16 @@ class AcdReconAlgV2 : public Algorithm
       
       /// Turn on or off the extrapolations using the downgoing solutions
       bool m_doCRTrackExtrap;
+
+      /// Number of Poca to store per track or cluster
+      int m_nPocaSave;
       
+      /// Number of Hit Poca to store per track or cluster
+      int m_nHitPocaSave;
+     
+      /// Number of Trigger Poca to store per track or cluster
+      int m_nTrigPocaSave;
+     
       /// map of AcdId and the corresponding hit status 
       AcdRecon::AcdHitMap m_hitMap;
 

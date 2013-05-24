@@ -278,3 +278,92 @@ StatusCode AcdPocaToolV2::filter(const AcdRecon::PocaDataMap& in, AcdRecon::Poca
   }
   return sc;
 }
+
+
+// @@brief gets the amount of energy in cones 15,30 and 45 degrees around object direction
+StatusCode AcdPocaToolV2::getConeDistances(const std::vector<Event::AcdTkrHitPoca*>& hitPocae, 
+					   float& energy15, float& energy30, float& energy45,
+					   float& triggerEnergy15, float& triggerEnergy30, float& triggerEnergy45) {
+
+  energy15 = energy30 = energy45 = 0.;
+  triggerEnergy15 = triggerEnergy30 = triggerEnergy45 = 0.;
+  
+  static const double tan45 = 1.;
+  static const double tan30 = 5.77350288616910401e-01;
+  static const double tan15 = 2.67949200239410490e-01;
+    
+  for ( std::vector<Event::AcdTkrHitPoca*>::const_iterator itr = hitPocae.begin(); itr != hitPocae.end(); itr++ ) {
+    const Event::AcdTkrHitPoca* hitPoca = *itr;
+    // Don't include ribbons
+    if ( hitPoca->getId().ribbon() ) continue;
+    if ( hitPoca->hasHit() ) continue;
+
+    float tanAngle = ( -1 * hitPoca->getDoca() )/ hitPoca->getArcLength();
+    float energy = hitPoca->tileEnergy();
+    if (tanAngle < tan45) {
+      if ( ! hitPoca->getGhost() ) {
+	energy45 += energy;
+      }
+      if ( hitPoca->getTriggerVeto() ) {
+	triggerEnergy45 += energy;
+      }
+      if (tanAngle < tan30) {
+	if ( ! hitPoca->getGhost() ) {
+	  energy30 += energy;
+	}
+	if ( hitPoca->getTriggerVeto() ) {
+	  triggerEnergy30 += energy;
+	}
+	if (tanAngle < tan15) {
+	  if ( ! hitPoca->getGhost() ) {
+	    energy15 += energy;
+	  }
+	  if ( hitPoca->getTriggerVeto() ) {
+	    triggerEnergy15 += energy;
+	  }
+	}
+      }      
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+
+// @brief filters out all but the best few POCA for a given object
+StatusCode AcdPocaToolV2::selectPocae(std::vector<Event::AcdTkrHitPoca*>& hitPocae,
+				      int nBest,
+				      int nHitBest,
+				      int nTrigBest) {
+
+  std::list<Event::AcdTkrHitPoca*> toSave;
+  std::list<Event::AcdTkrHitPoca*> toDelete;
+  
+  int nSave(0);
+  int nHitSave(0);
+  int nTrigSave(0);
+
+  for ( std::vector<Event::AcdTkrHitPoca*>::iterator itr = hitPocae.begin(); itr != hitPocae.end(); itr++ ) {
+    Event::AcdTkrHitPoca* hitPoca = *itr;
+    bool save = false;
+    if ( nBest == 0 || nSave < nBest ) save = true;
+    if ( hitPoca->hasHit() && ( nHitBest == 0 || nHitSave < nHitBest ) ) save = true;
+    if ( hitPoca->getTriggerVeto() && ( nTrigBest == 0 || nTrigSave < nTrigBest ) ) save = true;
+    if ( save ) {
+      nSave++;
+      if ( hitPoca->hasHit() ) nHitSave++;
+      if (  hitPoca->getTriggerVeto() ) nTrigSave++;
+      toSave.push_back(hitPoca);
+    } else {
+      toDelete.push_back(hitPoca);
+    }
+  }
+  // clear the vector
+  hitPocae.clear();
+  for ( std::list<Event::AcdTkrHitPoca*>::iterator itrS = toSave.begin(); itrS != toSave.end(); itrS++ ) {
+    hitPocae.push_back(*itrS);
+  }
+  for ( std::list<Event::AcdTkrHitPoca*>::iterator itrD = toDelete.begin(); itrD != toDelete.end(); itrD++ ) {
+    delete *itrD;
+  }  
+  return StatusCode::SUCCESS;  
+}

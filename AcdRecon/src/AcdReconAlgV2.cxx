@@ -90,6 +90,9 @@ AcdReconAlgV2::AcdReconAlgV2(const std::string& name, ISvcLocator* pSvcLocator) 
   declareProperty("doVertexExtrap",m_doVertexExtrap=false);
   declareProperty("doDownwardExtrap",m_doDownwardExtrap=false);
   declareProperty("doCRTrackExtrap",m_doCRTrackExtrap=true);
+  declareProperty("nPocaSave",m_nPocaSave=3);
+  declareProperty("nHitPocaSave",m_nHitPocaSave=2);
+  declareProperty("nTrigPocaSave",m_nTrigPocaSave=2);
   declareProperty("Tolerance",m_patRecTol=50.);
 }
 
@@ -526,7 +529,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
       
       // get the LAT exit points
       if ( ! AcdRecon::ReconFunctions::exitsLat(extend,s_acdVolume,exitData) ) {
-	log << MSG::WARNING << "AcdRecon::exitsLat() failed on " << (upward ? "Upward" : "Downward") << " end - we'll bravely carry on." << endreq;
+	log << MSG::WARNING << "AcdRecon::exitsLat() failed on " << (upward ? "Upward" : "Downward") 
+	    << " end for track " << extend.m_index << endreq;
 	return StatusCode::SUCCESS;
       }
       
@@ -537,7 +541,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
       // calculate all the distances to the hit tiles at once
       sc = hitDistances(extend,acdHits,exitData,pocas);
       if (sc.isFailure()) {
-	log << MSG::ERROR << "AcdReconAlgV2::hitDistances (" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+	log << MSG::ERROR << "AcdReconAlgV2::hitDistances (" << (upward ? "Upward" : "Downward") 
+	    << ") failed for track " << extend.m_index << endreq;
 	return sc;
       }
       
@@ -547,7 +552,8 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
       if ( m_pocaTool != 0 ) {
 	sc = m_pocaTool->filter(pocas,pocasCut);
 	if (sc.isFailure()) {
-	  log << MSG::ERROR << "AcdPocaTool::filter (" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+	  log << MSG::ERROR << "AcdPocaTool::filter (" << (upward ? "Upward" : "Downward") 
+	      << ") failed for track " << extend.m_index << endreq;
 	  return sc;	  
 	}
       }
@@ -569,19 +575,43 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
       sc = extrapolateTrack(trackPars, extend, exitData, 
 			    pocasCut, ssdVeto, hitPocae, gapPocae, trackPoint);
       if (sc.isFailure()) {
-	log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+	log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(" << (upward ? "Upward" : "Downward") 
+	    << ") failed for track " << extend.m_index << endreq;
 	return sc;
       }
       
       sc = calcCornerDoca(extend,cornerDoca);
       if (sc.isFailure()){
-	log << MSG::ERROR << "AcdPocaTool::calcCornerDoca(" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+	log << MSG::ERROR << "AcdPocaTool::calcCornerDoca(" << (upward ? "Upward" : "Downward") 
+	    << ") failed for track " << extend.m_index << endreq;
 	return sc;
       }
       
       // sort the POCAe
       sortPocae(hitPocae,gapPocae);
+
+      // Get the cone energies
+      float energy15(0), energy30(0.), energy45(0.);
+      float triggerEnergy15(0), triggerEnergy30(0.), triggerEnergy45(0.);
       
+      sc = m_pocaTool->getConeDistances(hitPocae,
+					energy15,energy30,energy45,
+					triggerEnergy15,triggerEnergy30,triggerEnergy45);
+      if (sc.isFailure()){
+	log << MSG::ERROR << "AcdPocaTool::getConeDistances(" << (upward ? "Upward" : "Downward") 
+	    << ") failed for track " << extend.m_index  << endreq;
+	return sc;
+      }
+
+      // select only the best POCA
+      sc = m_pocaTool->selectPocae(hitPocae,m_nPocaSave,m_nHitPocaSave,m_nTrigPocaSave);
+      if (sc.isFailure()){
+	log << MSG::ERROR << "AcdPocaTool::selectPocae(" << (upward ? "Upward" : "Downward") 
+	    << ") failed for track"  << extend.m_index << endreq;
+	return sc;
+      }
+      
+
       // Make the assoc object
       HepVector3D propVect = extend.m_current - extend.m_point;
       
@@ -589,11 +619,14 @@ StatusCode AcdReconAlgV2::trackDistances(const Event::AcdHitCol& acdHits,
 	new Event::AcdAssoc(extend.m_index,upward,extend.m_energy,
 			    extend.m_point,extend.m_dir,propVect.mag(),
 			    extend.m_cov_orig,extend.m_cov_prop,
-			    ssdVeto,cornerDoca);
+			    ssdVeto,cornerDoca,
+			    energy15,energy30,energy45,
+			    triggerEnergy15,triggerEnergy30,triggerEnergy45);
       
       sc = fillTkrAssoc(*theAssoc,hitPocae,gapPocae,trackPoint);
       if (sc.isFailure()){
-	log << MSG::ERROR << "AcdPocaTool::fillTkrAssoc(" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+	log << MSG::ERROR << "AcdPocaTool::fillTkrAssoc(" << (upward ? "Upward" : "Downward") 
+	    << ") failed for track"  << extend.m_index << endreq;
 	return sc;
       }
       tkrAssocs.push_back(theAssoc);
@@ -699,13 +732,38 @@ StatusCode AcdReconAlgV2::vertexDistances(const Event::AcdHitCol& acdHits,
       log << MSG::ERROR << "AcdPocaTool::calcCornerDoca(" << (upward ? "Upward" : "Downward") << ") failed." << endreq;
       return sc;
     }
-   
+
+    
+    // sort the POCAe
+    sortPocae(hitPocae,gapPocae);
+    
+    // Get the cone energies
+    float energy15(0), energy30(0.), energy45(0.);
+    float triggerEnergy15(0), triggerEnergy30(0.), triggerEnergy45(0.);
+    
+    sc = m_pocaTool->getConeDistances(hitPocae,
+				      energy15,energy30,energy45,
+				      triggerEnergy15,triggerEnergy30,triggerEnergy45);
+    if (sc.isFailure()){
+      log << MSG::ERROR << "AcdPocaTool::getConeDistances(" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+      return sc;
+    }
+    
+    // select only the best POCA
+    sc = m_pocaTool->selectPocae(hitPocae,m_nPocaSave,m_nHitPocaSave,m_nTrigPocaSave);
+    if (sc.isFailure()){
+      log << MSG::ERROR << "AcdPocaTool::getConeDistances(" << (upward ? "Upward" : "Downward") << ") failed" << endreq;
+      return sc;
+    }
+    
     HepVector3D propVect = extend.m_current - extend.m_point;    
     Event::AcdAssoc* theAssoc = 
       new Event::AcdAssoc(-1,upward,extend.m_energy,
 			  extend.m_point,extend.m_dir,propVect.mag(),
 			  extend.m_cov_orig,extend.m_cov_prop,
-			  ssdVeto,cornerDoca);
+			  ssdVeto,cornerDoca,
+			  energy15,energy30,energy45,
+			  triggerEnergy15,triggerEnergy30,triggerEnergy45);
     sc = fillTkrAssoc(*theAssoc,hitPocae,gapPocae,tkrPoint);
 
     if (sc.isFailure()){
@@ -797,12 +855,38 @@ StatusCode AcdReconAlgV2::mcDistances(const Event::AcdHitCol& acdHits,
       return sc;
     }
 
+    
+    // sort the POCAe
+    sortPocae(hitPocae,gapPocae);
+    
+    // Get the cone energies
+    float energy15(0), energy30(0.), energy45(0.);
+    float triggerEnergy15(0), triggerEnergy30(0.), triggerEnergy45(0.);
+    
+    sc = m_pocaTool->getConeDistances(hitPocae,
+				      energy15,energy30,energy45,
+				      triggerEnergy15,triggerEnergy30,triggerEnergy45);
+    if (sc.isFailure()){
+      log << MSG::ERROR << "AcdPocaTool::getConeDistances(" << (extend.m_upward ? "Upward" : "Downward") << ") failed" << endreq;
+      return sc;
+    }
+    
+    // select only the best POCA
+    sc = m_pocaTool->selectPocae(hitPocae,m_nPocaSave,m_nHitPocaSave,m_nTrigPocaSave);
+    if (sc.isFailure()){
+      log << MSG::ERROR << "AcdPocaTool::getConeDistances(" << (extend.m_upward ? "Upward" : "Downward") << ") failed" << endreq;
+      return sc;
+    }
+      
+
     HepVector3D propVect = extend.m_current - extend.m_point;    
     Event::AcdAssoc* assoc = 
       new Event::AcdAssoc(-2,true,extend.m_energy,
-                 extend.m_point,extend.m_dir,propVect.mag(),
-                 extend.m_cov_orig,extend.m_cov_prop,
-                 ssdVeto,cornerDoca);
+			  extend.m_point,extend.m_dir,propVect.mag(),
+			  extend.m_cov_orig,extend.m_cov_prop,
+			  ssdVeto,cornerDoca,
+			  energy15,energy30,energy45,
+			  triggerEnergy15,triggerEnergy30,triggerEnergy45);
     sc = fillTkrAssoc(*assoc,hitPocae,gapPocae,point);
     if (sc.isFailure()){
       log << MSG::ERROR << "AcdPocaTool::fillTkrAssoc(up) failed" << endreq;
@@ -1048,7 +1132,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
             // calculate all the distances to the hit tiles at once
             sc = hitDistances(upwardExtend,acdHits,upwardExit,upwardPocas);
             if (sc.isFailure()) {
-                log << MSG::ERROR << "AcdReconAlgV2::hitDistances(up) failed" << endreq;
+	        log << MSG::ERROR << "AcdReconAlgV2::hitDistances(up) failed for cluster " << upwardExtend.m_index << endreq;
                 return sc;
             }
         
@@ -1058,7 +1142,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
             if ( m_pocaTool != 0 ) {
                 sc = m_pocaTool->filter(upwardPocas,upPocasCut);
                 if (sc.isFailure()) {
-                    log << MSG::ERROR << "AcdPocaTool::filter(up) failed" << endreq;
+                    log << MSG::ERROR << "AcdPocaTool::filter(up) failed for cluster " << upwardExtend.m_index << endreq;
                     return sc;    
                 }
             }
@@ -1078,7 +1162,7 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
             // extrapolate the track upwards
             sc = m_intersectionTool->makeTkrPoint(upwardExtend,upwardExit,upPoint);
             if ( sc.isFailure() ){
-              log << MSG::ERROR << "AcdTkrIntersectionTool::makeTkrPoint failed" << endreq;
+              log << MSG::ERROR << "AcdTkrIntersectionTool::makeTkrPoint failed for cluster " << upwardExtend.m_index << endreq;
               return sc;
             }
 
@@ -1093,30 +1177,51 @@ StatusCode AcdReconAlgV2::calClusterDistances(const Event::AcdHitCol& acdHits,
             sc = extrapolateTrack(trackParams, upwardExtend, upwardExit, 
                           upPocasCut, ssdVetoUp, upHitPocae, upGapPocae, upPoint);
             if (sc.isFailure()) {
-              log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(up) failed" << endreq;
+              log << MSG::ERROR << "AcdPocaTool::extrapolateTrack(up) failed for cluster " << upwardExtend.m_index << endreq;
               return sc;
             }
 
             sc = calcCornerDoca(upwardExtend,cornerDocaUp);
             if (sc.isFailure()){
-              log << MSG::ERROR << "AcdPocaTool::calcCornerDoca(down) failed" << endreq;
+              log << MSG::ERROR << "AcdPocaTool::calcCornerDoca(down) failed for cluster " << upwardExtend.m_index << endreq;
               return sc;
             }
 
             // sort the POCAe
             sortPocae(upHitPocae,upGapPocae);
 
+	    // Get the cone energies
+	    float energy15(0), energy30(0.), energy45(0.);
+	    float triggerEnergy15(0), triggerEnergy30(0.), triggerEnergy45(0.);
+	    
+	    sc = m_pocaTool->getConeDistances(upHitPocae,
+					      energy15,energy30,energy45,
+					      triggerEnergy15,triggerEnergy30,triggerEnergy45);
+	    if (sc.isFailure()){
+	      log << MSG::ERROR << "AcdPocaTool::getConeDistances( ) failed for cluster " << upwardExtend.m_index << endreq;
+	      return sc;
+	    }
+	    
+	    // select only the best POCA
+	    sc = m_pocaTool->selectPocae(upHitPocae,m_nPocaSave,m_nHitPocaSave,m_nTrigPocaSave);
+	    if (sc.isFailure()){
+	      log << MSG::ERROR << "AcdPocaTool::selectPocae( ) failed for cluster " << upwardExtend.m_index << endreq;
+	      return sc;
+	    }
+ 	    
             HepVector3D propVect = upwardExtend.m_current - upwardExtend.m_point;
 
             Event::AcdAssoc* upAssoc = 
               new Event::AcdAssoc(upwardExtend.m_index,true,upwardExtend.m_energy,
-                         upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
-                         upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
-                         ssdVetoUp,cornerDocaUp);
+				  upwardExtend.m_point,upwardExtend.m_dir,propVect.mag(),
+				  upwardExtend.m_cov_orig,upwardExtend.m_cov_prop,
+				  ssdVetoUp,cornerDocaUp,
+				  energy15,energy30,energy45,
+				  triggerEnergy15,triggerEnergy30,triggerEnergy45);
 
             sc = fillCalAssoc(*upAssoc,upHitPocae,upGapPocae,upPoint);
             if (sc.isFailure()){
-              log << MSG::ERROR << "AcdPocaTool::fillCalAssoc(up) failed" << endreq;
+              log << MSG::ERROR << "AcdPocaTool::fillCalAssoc(up) failed for cluster " << upwardExtend.m_index << endreq;
               return sc;
             }
             calAssocs.push_back(upAssoc);
