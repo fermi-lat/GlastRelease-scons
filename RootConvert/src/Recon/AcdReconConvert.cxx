@@ -3,6 +3,7 @@
 #include <RootConvert/Utilities/Toolkit.h>
 #include <CLHEP/Matrix/Matrix.h>
 #include <TMatrixD.h>
+#include <TMatrixF.h>
 
 namespace RootPersistence {
 
@@ -370,8 +371,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   }
 
   void convert( const Event::AcdAssoc& tds, AcdAssoc& root) {
-    static TMatrixDSym covStart(5);
-    static TMatrixDSym covEnd(5);
+    static TMatrixFSym covStart(5);
+    static TMatrixFSym covEnd(5);
 
     TVector3 start = convert( tds.getStart() );
     TVector3 dir = convert3vector( tds.getDir() );
@@ -381,7 +382,10 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
               start, dir, 
               tds.getArcLength(), 
               covStart, covEnd,
-              tds.getTkrSSDVeto(), tds.getCornerDoca() );
+              tds.getTkrSSDVeto(), tds.getCornerDoca(),
+	      tds.GetEnergy15(),tds.GetEnergy30(),tds.GetEnergy45(),
+	      tds.GetTriggerEnergy15(),tds.GetTriggerEnergy30(),tds.GetTriggerEnergy45());
+	      
 
     AcdTkrHitPocaV2 rootAcdHitPoca;
     int nHitPoca = tds.nHitPoca();
@@ -417,7 +421,10 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
              start, dir, 
              root.getArcLength(), 
              covStart, covEnd,
-             root.getTkrSSDVeto(), root.getCornerDoca() );
+             root.getTkrSSDVeto(), root.getCornerDoca(),
+	     root.GetEnergy15(),root.GetEnergy30(),root.GetEnergy45(),
+	     root.GetTriggerEnergy15(),root.GetTriggerEnergy30(),root.GetTriggerEnergy45());
+	     
 
     int nHitPoca = root.nAcdHitPoca();
     for ( int iHitPoca(0); iHitPoca < nHitPoca; iHitPoca++ ) {
@@ -707,8 +714,8 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   void convert( const Event::AcdTkrLocalCoords& tds, AcdTkrLocalCoordsV2& root) {
     static Float_t active2d[2];
     static Float_t local[2];
-    static TMatrixDSym localProj(2);
-    static TMatrixDSym localProp(2);
+    static TMatrixFSym localProj(2);
+    static TMatrixFSym localProp(2);
     static TVector3 point;
     local[0] = tds.getLocalX();
     local[1] = tds.getLocalY();    
@@ -778,6 +785,28 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
   void convert( const TMatrixDSym& root, HepSymMatrix& tds) {    
     //ADW: Make this function do something...
     //return;
+    if ( root.GetNrows() != tds.num_row() ) return;
+    Int_t size = root.GetNcols();
+    for (int i = 0; i < size; i++) {
+      for (int j = i; j < size; j++) {
+        tds[i][j] = tds[j][i] = root[i][j];
+      }
+    }
+    return;
+  }
+
+  void convert( const HepSymMatrix& tds, TMatrixFSym& root) {
+    if ( tds.num_row() != root.GetNrows() ) return;
+    int size = tds.num_row();
+    for (int i = 0; i < size; i++) {
+      for (int j = i; j < size; j++) {
+        root[i][j] = root[j][i] = tds[i][j];
+      }
+    }
+    return;
+  }
+
+  void convert( const TMatrixFSym& root, HepSymMatrix& tds) {    
     if ( root.GetNrows() != tds.num_row() ) return;
     Int_t size = root.GetNcols();
     for (int i = 0; i < size; i++) {

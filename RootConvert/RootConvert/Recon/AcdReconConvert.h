@@ -88,6 +88,8 @@ namespace RootPersistence {
   void convert( const CLHEP::HepSymMatrix&, TMatrixDSym& );
   void convert( const TMatrixDSym&, CLHEP::HepSymMatrix& );
 
+  void convert( const CLHEP::HepSymMatrix&, TMatrixFSym& );
+  void convert( const TMatrixFSym&, CLHEP::HepSymMatrix& );
 }
 
 #endif
