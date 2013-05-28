@@ -89,6 +89,8 @@ namespace Event {
             fieldTREEBITS    = 15,    // Reserving this 4 bit field for association to trees
             fieldONAGOODTREE =  1,    // This clusters has been associated to a "good" tree
             fieldCOMPOSITE   =  1,    // This cluster is a "composite" cluster from tree based tracking
+            fieldMERGED      =  1,    // This cluster was merged into a super cluster
+            filedMERGERESULT =  1,    // This clusters is the result of merging other clusters
             fieldPLANEOFFSET =  1,    // to calculate Plane number from Tray/Face (1 for LAT)
             fieldLAYEROFFSET =  1     // to calculate Layer number from Plane (0 for LAT)
         };
@@ -106,6 +108,8 @@ namespace Event {
             shiftSAMETRACKD  = 17,
             shiftTREEBITS    = 20,
             shiftCOMPOSITE   = 23,
+            shiftMERGED      = 24,
+            shiftMERGERESULT = 35,
             shiftPLANEOFFSET = 29,
             shiftLAYEROFFSET = 30 
         };
@@ -124,6 +128,8 @@ namespace Event {
             maskTREEBITS    = fieldTREEBITS<<shiftTREEBITS,
             maskONAGOODTREE = fieldONAGOODTREE<<shiftTREEBITS,
             maskCOMPOSITE   = fieldCOMPOSITE<<shiftCOMPOSITE,
+            maskMERGED      = fieldMERGED<<shiftMERGED,
+            maskMERGERESULT = filedMERGERESULT<<shiftMERGERESULT,
             maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
             maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
             maskZAPGHOSTS   = mask255|maskGHOST|maskSAMETRACK|maskDIAGNOSTIC|maskSAMETRACKD,
