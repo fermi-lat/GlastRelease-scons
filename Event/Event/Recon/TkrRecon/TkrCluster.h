@@ -109,7 +109,7 @@ namespace Event {
             shiftTREEBITS    = 20,
             shiftCOMPOSITE   = 23,
             shiftMERGED      = 24,
-            shiftMERGERESULT = 35,
+            shiftMERGERESULT = 25,
             shiftPLANEOFFSET = 29,
             shiftLAYEROFFSET = 30 
         };
