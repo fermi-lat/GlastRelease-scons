@@ -48,7 +48,7 @@
 #include "ClusterAnalysis.h"
 
 // Creat TkrVecPoints if necessary
-#include "src/PatRec/VectorLinks/TkrVecPointsBuilder.h"
+#include "src/PatRec/VectorLinks/ITkrVecPointsBuilder.h"
 
 // Local class definitions for our MST algorithm used below
 namespace
@@ -124,6 +124,9 @@ private:
 
     /// Query Clusters tool
     ITkrQueryClustersTool*                  m_clusTool;
+
+    /// Tool for building TkrVecPoints
+    ITkrVecPointsBuilder*                   m_pointsBuilder;
 
     /// number of layers we are allowed to skip
     int                                     m_numLyrsToSkip;
@@ -250,6 +253,11 @@ StatusCode TkrVecPointsFilterTool::initialize()
         throw GaudiException("Service [TkrQueryClustersTool] not found", name(), sc);
     }
 
+    if( (sc = toolSvc()->retrieveTool("TkrVecPointsBuilderTool", "TkrVecPointsBuilderTool", m_pointsBuilder)).isFailure() )
+    {
+        throw GaudiException("ToolSvc could not find TkrVecPointsBuilderTool", name(), sc);
+    }
+
     return sc;
 }
 
@@ -278,9 +286,9 @@ StatusCode TkrVecPointsFilterTool::doFilterStep()
     if (!tkrVecPointCol)
     {
         // Create the TkrVecPoints...
-        TkrVecPointsBuilder vecPointsBuilder(m_numLyrsToSkip, m_dataSvc, m_tkrGeom, m_clusTool);
-    
-        tkrVecPointCol = SmartDataPtr<Event::TkrVecPointCol>(m_dataSvc, EventModel::TkrRecon::TkrVecPointCol);
+        tkrVecPointCol = m_pointsBuilder->buildTkrVecPoints(m_numLyrsToSkip);
+
+        if (!tkrVecPointCol) return StatusCode::FAILURE;
     }
 
     // The result of all the above should be that our companion TkrVecPointInfo object is 
