@@ -38,7 +38,7 @@ rdbModel rdbModel-02-15-00
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-16-04
+Event Event-14-16-05
 GlastSvc GlastSvc-11-01-00
 GuiSvc GuiSvc-03-11-00
 DetDisplay DetDisplay-03-06-00
@@ -60,7 +60,7 @@ AncillaryDataEvent AncillaryDataEvent-01-05-00
 AncillaryDataUtil AncillaryDataUtil-01-01-00
 
 RootConvert RootConvert-01-52-00
-RootIo RootIo-26-01-00
+RootIo RootIo-26-01-01
 
 
 configData configData-01-14-01
@@ -83,7 +83,7 @@ GCRCalib GCRCalib-01-12-03
 # Tracker
 TkrDigi TkrDigi-02-13-02
 TkrUtil TkrUtil-03-28-07
-TkrRecon TkrRecon-10-39-04
+TkrRecon TkrRecon-10-40-00
 
 # ACD
 AcdDigi AcdDigi-03-11-00
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-15
+AnalysisNtuple AnalysisNtuple-02-71-16
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -147,7 +147,7 @@ McToolBox McToolBox-00-02-02
 
 Gleam Gleam-07-11-21
 
-SConsFiles SConsFiles-01-10-05
+SConsFiles SConsFiles-01-10-06
 GlastRelease-scons/containerSettings containerSettings-00-13-01
 
 celestialSources/EarthPhenom EarthPhenom-00-02-01
