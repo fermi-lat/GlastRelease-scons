@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-12-01-00 03-Jun-2013 echarles Updated ACD to reduce number of stored associations
  reconRootData-12-00-01 20-May-2013 heather updating unit test for CalRecon TMap usage
  reconRootData-12-00-00 15-May-2013 TU Change all variables from Double to Double32
  reconRootData-11-00-00 21-Feb-2013 heather move from Double32 to Double
