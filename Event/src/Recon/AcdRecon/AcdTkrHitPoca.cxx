@@ -4,10 +4,13 @@
 #include "CLHEP/Matrix/Matrix.h"
 
 namespace Event {
-
+  
+  unsigned AcdTkrHitPoca::s_uid = 0;
+  
   /// Default constructor.  Set everything to default values
   AcdTkrHitPoca::AcdTkrHitPoca() 
-    :AcdTkrLocalCoords(),AcdPocaData(){
+    :AcdTkrLocalCoords(),AcdPocaData(),
+    m_uid(s_uid++){
     ini();
   }
 
@@ -30,7 +33,8 @@ namespace Event {
      m_trackIndex(trackIndex),
      m_vetoSigmaHit(vetoSigmaHit),
      m_vetoSigmaProj(vetoSigmaProj),
-     m_vetoSigmaProp(vetoSigmaProp){
+     m_vetoSigmaProp(vetoSigmaProp),
+     m_uid(s_uid++){
     m_mips[0] = mips[0];
     m_mips[1] = mips[1];
     m_flags[0] = flags[0];
@@ -45,7 +49,8 @@ namespace Event {
      m_trackIndex(trackIndex),     
      m_vetoSigmaHit(-1.),
      m_vetoSigmaProj(-1.),
-     m_vetoSigmaProp(-1.){
+     m_vetoSigmaProp(-1.),
+     m_uid(s_uid++){
     m_mips[0] = -1.;
     m_mips[1] = -1.;
     m_flags[0] = 0;
@@ -57,7 +62,8 @@ namespace Event {
 
   /// Copy constructor
   AcdTkrHitPoca::AcdTkrHitPoca(const Event::AcdTkrHitPoca& other)
-    :AcdTkrLocalCoords(other),AcdPocaData(other)
+    :AcdTkrLocalCoords(other),AcdPocaData(other),
+     m_uid(s_uid++)
   {
     set(other.getId(),other.trackIndex(),other.m_mips,
         other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp(),other.m_flags);
@@ -100,7 +106,10 @@ namespace Event {
     if ( getId().id() < other.getId().id() ) return true;
     if ( getId().id() > other.getId().id() ) return false;
     // use the pointer address.  
-    return this < &other;    
+    if ( trackIndex() < other.trackIndex() ) return true;
+    if ( trackIndex() > other.trackIndex() ) return false;
+    
+    return getUID() < other.getUID();
   }
 
 

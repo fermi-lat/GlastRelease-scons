@@ -34,6 +34,10 @@ static const CLID& CLID_AcdTkrHitPocaCol = InterfaceID("AcdTkrHitPocaCol", 1, 0)
 namespace Event {
 
   class AcdTkrHitPoca : public AcdTkrLocalCoords, public AcdPocaData  {
+
+  private:
+  
+   static unsigned s_uid;
     
   public:
     
@@ -205,6 +209,11 @@ namespace Event {
     inline float vetoSigmaProp() const {
       return m_vetoSigmaProp;
     }
+
+    /// return the UID
+    inline unsigned getUID() const {
+      return m_uid;
+    }
         
     /// set all the values
     void set(const idents::AcdId& acdId, int trackIndex,
@@ -240,6 +249,9 @@ namespace Event {
 
     ///  An estimator of the number of sigma needed for this track to hit this element
     float m_vetoSigmaProp;
+    
+    ///  An estimator of the number of sigma needed for this track to hit this element
+    unsigned m_uid;
 
   };
 

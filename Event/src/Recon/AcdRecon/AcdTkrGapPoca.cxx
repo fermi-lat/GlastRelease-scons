@@ -5,9 +5,12 @@
 
 namespace Event {
 
+  unsigned AcdTkrGapPoca::s_uid = 0;
+
   /// Default constructor.  Set everything to default values
   AcdTkrGapPoca::AcdTkrGapPoca() 
-    :AcdTkrLocalCoords(),AcdPocaData(){
+    :AcdTkrLocalCoords(),AcdPocaData(),
+     m_uid(s_uid++){
     ini();
   }
 
@@ -30,7 +33,8 @@ namespace Event {
       m_trackIndex(trackIndex),
       m_vetoSigmaHit(vetoSigmaHit),
       m_vetoSigmaProj(vetoSigmaProj),
-      m_vetoSigmaProp(vetoSigmaProp){
+      m_vetoSigmaProp(vetoSigmaProp),
+      m_uid(s_uid++){
   }
   
   /// Old Constructor for backwards compatiblity  
@@ -42,13 +46,15 @@ namespace Event {
       m_trackIndex(trackIndex),
       m_vetoSigmaHit(-1),
       m_vetoSigmaProj(-1),
-      m_vetoSigmaProp(-1){
+      m_vetoSigmaProp(-1),
+      m_uid(s_uid++){
   }
   
 
   /// Copy constructor
   AcdTkrGapPoca::AcdTkrGapPoca(const Event::AcdTkrGapPoca& other)
-    :AcdTkrLocalCoords(other),AcdPocaData(other)
+    :AcdTkrLocalCoords(other),AcdPocaData(other),
+     m_uid(s_uid++)
   {
     set(other.getId(),other.trackIndex(),
         other.vetoSigmaHit(),other.vetoSigmaProj(),other.vetoSigmaProp());
@@ -80,7 +86,10 @@ namespace Event {
     if ( m_id.asShort() < other.getId().asShort() ) return true;
     if ( m_id.asShort() > other.getId().asShort() ) return false;
     
-    return false;    
+    if ( trackIndex() < other.trackIndex() ) return true;
+    if ( trackIndex() > other.trackIndex() ) return false;
+
+    return getUID() < other.getUID();    
   }
 
 
