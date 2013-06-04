@@ -38,7 +38,7 @@ rdbModel rdbModel-02-15-00
 xmlGeoDbs xmlGeoDbs-01-48-00
 
 # General Gaudi pacakges
-Event Event-14-16-04-gr01
+Event Event-14-16-06
 GlastSvc GlastSvc-11-01-00
 GuiSvc GuiSvc-03-11-00
 DetDisplay DetDisplay-03-06-00
@@ -50,7 +50,7 @@ EventIntegrity EventIntegrity-00-09-00
 commonRootData commonRootData-02-17-00
 mcRootData mcRootData-02-23-00
 digiRootData digiRootData-11-15-00
-reconRootData reconRootData-12-00-01
+reconRootData reconRootData-12-01-00
 gcrSelectRootData gcrSelectRootData-02-03-00
 rootUtil rootUtil-01-05-01
 rootTestData rootTestData-04-06-04
@@ -59,8 +59,8 @@ AdfEvent AdfEvent-00-06-00
 AncillaryDataEvent AncillaryDataEvent-01-05-00
 AncillaryDataUtil AncillaryDataUtil-01-01-00
 
-RootConvert RootConvert-01-52-00
-RootIo RootIo-26-01-01
+RootConvert RootConvert-01-53-00
+RootIo RootIo-26-01-02
 
 
 configData configData-01-14-01
@@ -88,7 +88,7 @@ TkrRecon TkrRecon-10-40-00
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-04-00
-AcdRecon AcdRecon-05-06-01
+AcdRecon AcdRecon-05-07-00
 
 # Geant4
 #GlastMS GlastMS-01-00-01
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-00
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-16
+AnalysisNtuple AnalysisNtuple-02-71-17
 
 # LDF
 CHS/eventFile eventFile-09-01-00
