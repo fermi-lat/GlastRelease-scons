@@ -228,7 +228,7 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
     // Path length corrections are made.
     if ( acdId.tile() ) {
       float expectedMips = 2. / pocaData.m_cosTheta;
-      float sigmaMips = 0.45 / sqrt(pocaData.m_cosTheta);
+      float sigmaMips = 0.45 / sqrt(abs(pocaData.m_cosTheta));
       vetoSigmaHit = ( expectedMips - totalMips ) / sigmaMips;  
     } else {
       float expectedMips = 1.5;
