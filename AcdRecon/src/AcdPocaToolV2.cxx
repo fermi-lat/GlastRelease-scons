@@ -228,7 +228,7 @@ StatusCode AcdPocaToolV2::makePoca(const AcdRecon::TrackData& aTrack,
     // Path length corrections are made.
     if ( acdId.tile() ) {
       float expectedMips = 2. / pocaData.m_cosTheta;
-      float sigmaMips = 0.45 / sqrt(abs(pocaData.m_cosTheta));
+      float sigmaMips = 0.45 / sqrt(fabs(pocaData.m_cosTheta));
       vetoSigmaHit = ( expectedMips - totalMips ) / sigmaMips;  
     } else {
       float expectedMips = 1.5;
@@ -296,7 +296,8 @@ StatusCode AcdPocaToolV2::getConeDistances(const std::vector<Event::AcdTkrHitPoc
     const Event::AcdTkrHitPoca* hitPoca = *itr;
     // Don't include ribbons
     if ( hitPoca->getId().ribbon() ) continue;
-    if ( hitPoca->hasHit() ) continue;
+    // Don't include stuff without hits
+    if ( ! hitPoca->hasHit() ) continue;
 
     float tanAngle = ( -1 * hitPoca->getDoca() )/ hitPoca->getArcLength();
     float energy = hitPoca->tileEnergy();
