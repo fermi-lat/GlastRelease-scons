@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-07-02 05-Jun-2013 echarles Fix two bugs in src/AcdPocaToolV2.cxx
  AcdRecon-05-07-01 05-Jun-2013 echarles protect against negative cos_theta in AcdPocaToolV2.cxx
  AcdRecon-05-07-00 03-Jun-2013 echarles Reduce number of associations stored per track
  AcdRecon-05-06-01 22-May-2013 echarles Protect against missing hitToUse and fix issue with calculating LAT enter point for CAL clusters
