@@ -1,7 +1,9 @@
 # containerNotes for GlastRelease-scons
 
 
-2013-05-31 20-08-15 JIRA LPATE-144 and LPATE-145
+2013-06-05 20-08-16 JIRA LPATE-145 AcdRecon patch to avoid MC segfaults
+  and patch to RootIo to remove some memory leaking
+2013-05-31 20-08-15 JIRA LPATE-144
 2013-05-21 20-08-14 patches to AnalysisNtuple, TkrRecon, reconRootData for unit tests
   picking up latest AcdRecon tag and latest rootTestData
   latest facilities to include supersede handling

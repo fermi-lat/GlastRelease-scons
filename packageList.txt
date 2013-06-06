@@ -60,7 +60,7 @@ AncillaryDataEvent AncillaryDataEvent-01-05-00
 AncillaryDataUtil AncillaryDataUtil-01-01-00
 
 RootConvert RootConvert-01-53-00
-RootIo RootIo-26-01-02
+RootIo RootIo-26-01-03
 
 
 configData configData-01-14-01
@@ -88,7 +88,7 @@ TkrRecon TkrRecon-10-40-00
 # ACD
 AcdDigi AcdDigi-03-11-00
 AcdUtil AcdUtil-03-04-00
-AcdRecon AcdRecon-05-07-00
+AcdRecon AcdRecon-05-07-02
 
 # Geant4
 #GlastMS GlastMS-01-00-01
