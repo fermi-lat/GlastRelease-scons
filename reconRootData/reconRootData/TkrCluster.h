@@ -42,6 +42,11 @@ public:
         fieldALONEEND    = 1,    // cluster is alone in its readout end
         fieldDIAGNOSTIC  = 1,    // ghost cluster discovered from TEM diags
         fieldSAMETRACKD  = 1,    // This cluster from a track with a 255 or a diagnostic ghost
+        fieldTREEBITS    = 15,    // Reserving this 4 bit field for association to trees
+        fieldONAGOODTREE =  1,    // This clusters has been associated to a "good" tree
+        fieldCOMPOSITE   =  1,    // This cluster is a "composite" cluster from tree based tracking
+        fieldMERGED      =  1,    // This cluster was merged into a super cluster
+        filedMERGERESULT =  1,    // This clusters is the result of merging other clusters
         fieldPLANEOFFSET = 1,    // to calculate Plane number from Tray/Face (1 for LAT)
         fieldLAYEROFFSET = 1     // to calculate Layer number from Plane (0 for LAT)
     };
@@ -57,6 +62,10 @@ public:
         shiftALONEEND    = 13,
         shiftDIAGNOSTIC  = 16,
         shiftSAMETRACKD  = 17,
+        shiftTREEBITS    = 20,
+        shiftCOMPOSITE   = 23,
+        shiftMERGED      = 24,
+        shiftMERGERESULT = 25,
         shiftPLANEOFFSET = 29,
         shiftLAYEROFFSET = 30 
     };
@@ -72,6 +81,11 @@ public:
         maskALONEEND    = fieldALONEEND<<shiftALONEEND,
         maskDIAGNOSTIC  = fieldDIAGNOSTIC<<shiftDIAGNOSTIC,
         maskSAMETRACKD  = fieldSAMETRACKD<<shiftSAMETRACKD,
+        maskTREEBITS    = fieldTREEBITS<<shiftTREEBITS,
+        maskONAGOODTREE = fieldONAGOODTREE<<shiftTREEBITS,
+        maskCOMPOSITE   = fieldCOMPOSITE<<shiftCOMPOSITE,
+        maskMERGED      = fieldMERGED<<shiftMERGED,
+        maskMERGERESULT = filedMERGERESULT<<shiftMERGERESULT,
         maskPLANEOFFSET = fieldPLANEOFFSET<<shiftPLANEOFFSET,
         maskLAYEROFFSET = fieldLAYEROFFSET<<shiftLAYEROFFSET,
         maskZAPGHOSTS   = mask255|maskGHOST|maskSAMETRACK|maskDIAGNOSTIC|maskSAMETRACKD,
