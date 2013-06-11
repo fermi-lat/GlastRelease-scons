@@ -48,6 +48,7 @@ CalRecon::~CalRecon()
       
     if (m_gcrTrack) 
     {
+        delete m_gcrTrack;
         m_gcrTrack = 0;
     }
 
