@@ -12,6 +12,7 @@
 #include "GaudiKernel/GaudiException.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/IChronoStatSvc.h"
 
 #include "Event/TopLevel/EventModel.h"
 #include "Event/Recon/CalRecon/CalCluster.h"
@@ -99,6 +100,18 @@ private:
 
   /// Tool to loop over the xtals in a cluster.
   ICalClusterHitTool* m_calClusterHitTool;
+
+    /// Let's keep track of event timing
+    IChronoStatSvc*            m_chronoSvc;
+    bool                       m_doTiming;
+    std::string                m_toolTag;
+    IChronoStatSvc::ChronoTime m_toolTime;
+    std::string                m_satTag;
+    IChronoStatSvc::ChronoTime m_satTime;
+    std::string                m_calProfileTag;
+    IChronoStatSvc::ChronoTime m_calProfileTime;
+    std::string                m_tkrProfileTag;
+    IChronoStatSvc::ChronoTime m_tkrProfileTime;
 
   // in order to handle saturation
   bool nm_saturated[16][8][12];
@@ -304,9 +317,22 @@ NewCalFullProfileTool::NewCalFullProfileTool( const std::string& type,
                                       const IInterface* parent)
   : AlgTool(type,name,parent)
 {
-  // declare base interface for all consecutive concrete classes
-  declareInterface<ICalEnergyCorr>(this);
-  // Declare the properties that may be set in the job options file
+    // declare base interface for all consecutive concrete classes
+    declareInterface<ICalEnergyCorr>(this);
+
+    // Declare the properties that may be set in the job options file
+    declareProperty("DoToolTiming", m_doTiming = true);
+
+    m_toolTag = this->name();
+
+    if (m_toolTag.find(".") < m_toolTag.size())
+    {
+        m_toolTag = m_toolTag.substr(m_toolTag.find(".")+1,m_toolTag.size());
+    }
+
+    m_satTag        = m_toolTag + "_satXtal";
+    m_calProfileTag = m_toolTag + "_CalProfile";
+    m_tkrProfileTag = m_toolTag + "_TkrProfile";
 }
 
 StatusCode NewCalFullProfileTool::initialize()
@@ -332,6 +358,12 @@ StatusCode NewCalFullProfileTool::initialize()
   if ((sc = service("TkrGeometrySvc", nm_tkrGeom, true)).isFailure())
     {
       throw GaudiException("Service [TkrGeometrySvc] not found", name(), sc);
+    }
+        
+    // Find the chrono statistics service
+    if ((sc = service("ChronoStatSvc", m_chronoSvc, true)).isFailure())
+    {
+        throw GaudiException("Service [ChronoSvc] not found", name(), sc);
     }
 
   IToolSvc* toolSvc = 0;
@@ -458,6 +490,16 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : nm_eTotal<300MeV -> no energy computation" <<endreq;
       return corResult;
     }
+
+    // If requested, start the tool timing
+    if (m_doTiming) 
+    {
+        m_toolTime  = 0;
+        m_satTime   = 0;
+
+        m_chronoSvc->chronoStart(m_toolTag);
+        m_chronoSvc->chronoStart(m_satTag);
+    }
   
   // defines global variable to be used for fcn
   for (i=0;i<8;++i)
@@ -471,9 +513,14 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   // Detect saturation must be called before nm_fsddm->Compute !!!
   DetectSaturation(cluster);
 
+  if (m_doTiming) m_chronoSvc->chronoStop(m_satTag);
+
   tkr_RLn = 0;
   if(tree!=NULL)
     tkr_RLn = GetRadiationLengthInTracker(tree);
+
+  // Start the clocks for the profile fit here
+  if (m_doTiming) m_chronoSvc->chronoStart(m_calProfileTag);
 
   double CALFIT_fit_energy = 0.;
   double CALFIT_energy_err = 0;
@@ -606,13 +653,16 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       CALFIT_chidist = result[1];
     }
 
+  // Stop timing for cal fit
+  if (m_doTiming) m_chronoSvc->chronoStop(m_calProfileTag);
+
   int TKRFIT = 0;
 
-  double mynorm;
-  double ppc[3];
-  double ppp[3];
-  if(tree!=NULL)
+    if(tree!=NULL)
     {
+        // Turn on the tkr profile timing
+        if (m_doTiming) m_chronoSvc->chronoStart(m_tkrProfileTag);
+
       //
       // switch to neutral direction (head of the track -> cluster centroid)
       // Not using the neutral axis since Tracy improvement of tree axis precision 2012/06/30
@@ -675,11 +725,15 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
           TKRFIT_chisqdist = chi2dist;
           TKRFIT_chidist = result[1];
         }
+
+        // and now turn it off
+        if (m_doTiming) m_chronoSvc->chronoStop(m_tkrProfileTag);
     }
     
   if(CALFIT==0 && TKRFIT==0)
     {
       lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : No result with cal direction neither with tkr direction." <<endreq;
+      m_chronoSvc->chronoStop(m_toolTag);
       return corResult;
     }
 
@@ -782,6 +836,28 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       corResult->insert(Event::CalCorEneValuePair("calfit_recv2",      0));
       corResult->insert(Event::CalCorEneValuePair("calfit_widening",   0));
       corResult->insert(Event::CalCorEneValuePair("calfit_nxtalsel",   0));
+    }
+
+    // Make sure timer is shut down
+    if (m_doTiming)
+    {
+        m_chronoSvc->chronoStop(m_toolTag);
+    
+        m_toolTime       = m_chronoSvc->chronoDelta(m_toolTag,IChronoStatSvc::USER);
+        m_satTime        = m_chronoSvc->chronoDelta(m_satTag,IChronoStatSvc::USER);
+        m_calProfileTime = m_chronoSvc->chronoDelta(m_calProfileTag,IChronoStatSvc::USER);
+        m_tkrProfileTime = m_chronoSvc->chronoDelta(m_tkrProfileTag,IChronoStatSvc::USER);
+
+        float toolDelta       = static_cast<float>(m_toolTime)*0.000001;
+        float satDelta        = static_cast<float>(m_satTime)*0.000001;
+        float calProfileDelta = static_cast<float>(m_calProfileTime)*0.000001;
+        float tkrProfileDelta = static_cast<float>(m_tkrProfileTime)*0.000001;
+
+        lm << MSG::DEBUG << " total tool  time: " << toolDelta  << " sec" 
+           << MSG::DEBUG << " Saturated Crystal finding time: " << satDelta << " sec"
+           << MSG::DEBUG << " CAL Profile time: " << calProfileDelta << " sec"
+           << MSG::DEBUG << " TKR Profile time: " << tkrProfileDelta << " sec"
+           << endreq ;
     }
 
   return corResult;
