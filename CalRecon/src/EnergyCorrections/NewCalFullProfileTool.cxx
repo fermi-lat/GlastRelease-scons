@@ -61,6 +61,9 @@ public:
   ~NewCalFullProfileTool() {}; 
   
   StatusCode initialize();
+
+    /// @brief start method
+    StatusCode start();
   
   //! Longitudinal profile fitting method
   /*! It performs a longitudinal profile fitting using :
@@ -404,6 +407,29 @@ StatusCode NewCalFullProfileTool::initialize()
   ParXYcor[5] = 791.962123;
 
   return sc;
+}
+
+StatusCode NewCalFullProfileTool::start()
+{
+    // Use this to make sure the event timing is all properly zeroed
+    if (m_doTiming)
+    {
+        m_chronoSvc->chronoStart(m_toolTag);
+        m_chronoSvc->chronoStop(m_toolTag);
+        m_chronoSvc->chronoStart(m_satTag);
+        m_chronoSvc->chronoStop(m_satTag);
+        m_chronoSvc->chronoStart(m_calProfileTag);
+        m_chronoSvc->chronoStop(m_calProfileTag);
+        m_chronoSvc->chronoStart(m_tkrProfileTag);
+        m_chronoSvc->chronoStop(m_tkrProfileTag);
+
+        m_toolTime       = 0;
+        m_satTime        = 0;
+        m_calProfileTime = 0;
+        m_tkrProfileTime = 0;
+    }
+
+    return StatusCode::SUCCESS;
 }
 
 double NewCalFullProfileTool::GetRadiationLengthInTracker(Event::TkrTree* tree)
