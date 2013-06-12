@@ -2,6 +2,7 @@
  Package GCRCalib
  EOH
 
+ GCRCalib-01-12-04 12-Jun-2013 heather fix up use of std::vector to avoid more leaks
  GCRCalib-01-12-03 12-May-2013 TU Fix memory leak in GcrSelectTool
  GCRCalib-01-12-02 08-Mar-2013  cohen fix a boohoo
  GCRCalib-01-12-01 21-Feb-2013 TU Converting from CalClusterCol to CalClusterMap

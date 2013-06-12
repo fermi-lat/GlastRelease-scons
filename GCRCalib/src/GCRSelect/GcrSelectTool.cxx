@@ -1048,13 +1048,13 @@ void GcrSelectTool::fillDataVectors(){
     for (int itow=0; itow<NTOW; itow++){//loop on towers
 
         //create towers vector entry:
-        m_gcrTowersVec.push_back(GcrTower(itow,0));
+        m_gcrTowersVec.push_back(GcrTower(itow));
 
         // create layers vector:
-        GcrLayersVec* gcrLayersVec = new GcrLayersVec();
+        GcrLayersVec gcrLayersVec;
         for (int ilay=0; ilay<NLAY; ilay++){//loop on layers
             //create layers vector entry:
-            gcrLayersVec->push_back(GcrLayer(ilay,0,false,false));
+            gcrLayersVec.push_back(GcrLayer(ilay,0,false,false));
         }
 
         //, and put it into gcrTowersVec
@@ -1075,7 +1075,7 @@ void GcrSelectTool::fillDataVectors(){
             bool isGoodCluster; // does the cluster satisfies predictedTrackCriterium?
             bool isGoodLayer = true;// does the layer satisfies predictedTrackCriterium?
 
-            GcrLayersVec* p_gcrLayerVec = m_gcrTowersVec.at(itow).getLayersVec();
+            GcrLayersVec& p_gcrLayerVec = m_gcrTowersVec.at(itow).getLayersVec();
 
             GcrClustersVec* gcrClustersVec=NULL;
 
@@ -1087,8 +1087,9 @@ void GcrSelectTool::fillDataVectors(){
                 if(m_cluArr[itow][ilay][iclu][0]>0.){  // if total energy in cluster >0...
 
                     // we create or pickup a gcrClustersVec
-                    if ( (p_gcrLayerVec->at(ilay).getClustersVec()) && !(p_gcrLayerVec->at(ilay).getClustersVec()->empty()) ) // if a ClustersVec has already been associated to this layer..
-                        gcrClustersVec = p_gcrLayerVec->at(ilay).getClustersVec(); // we take this clustersVec already present
+                    if ( (p_gcrLayerVec.at(ilay).getClustersVec()) &&
+!(p_gcrLayerVec.at(ilay).getClustersVec()->empty()) ) // if a ClustersVec has already been associated to this layer..
+                        gcrClustersVec = p_gcrLayerVec.at(ilay).getClustersVec(); // we take this clustersVec already present
                     else
                         gcrClustersVec = new GcrClustersVec();// else, we create a new one.
 
@@ -1099,7 +1100,7 @@ void GcrSelectTool::fillDataVectors(){
                     int firstCluHitNb = (int)m_cluArr[itow][ilay][iclu][1];
                     int lastCluHitNb = (int)m_cluArr[itow][ilay][iclu][2];
 
-                    GcrHitsVec* gcrHitsVec = new GcrHitsVec();
+                    GcrHitsVec gcrHitsVec;
 
                     //m_log << MSG::INFO << "itow,ilay,iclu= " << itow << "," << ilay << "," << iclu << "| firstCluHitNb,lastCluHitNb = " << firstCluHitNb << "," << lastCluHitNb << endreq ;
 
@@ -1134,17 +1135,17 @@ void GcrSelectTool::fillDataVectors(){
                         isGoodCluster = isGoodCluster? isGoodCluster:isGoodHit;
 
 
-                        gcrHitsVec->push_back(GcrHit(m_hitsMap[itow][ilay][i], isGoodHit, xtalCorrEnergy));
+                        gcrHitsVec.push_back(GcrHit(m_hitsMap[itow][ilay][i], isGoodHit, xtalCorrEnergy));
 
 
                     }// end of loop on currentClusters hits
 
 
-                    isGoodCluster = (gcrHitsVec->size() <=2)? isGoodCluster:false;// if the cluster contains more than two hits, this criterium is not satisfied
+                    isGoodCluster = (gcrHitsVec.size() <=2)? isGoodCluster:false;// if the cluster contains more than two hits, this criterium is not satisfied
 
                     gcrClustersVec->push_back(GcrCluster(gcrHitsVec,totalCluCorrEnergy, isGoodCluster));//we calculate total cluster corrected energy from individual hits corrected energy
 
-                    p_gcrLayerVec->at(ilay).setClustersVec(gcrClustersVec);
+                    p_gcrLayerVec.at(ilay).setClustersVec(gcrClustersVec);
 
 
                     isGoodLayer = isGoodLayer? isGoodCluster:isGoodLayer;// if false, it must remain false, if true, it depends on if currentCluster matches criterium or not
@@ -1160,7 +1161,7 @@ void GcrSelectTool::fillDataVectors(){
             //m_log << MSG::INFO << "isGoodLayer?" << isGoodLayer << ", gcrClustersVec exists?" << (gcrClustersVec!=NULL) << endreq ; 
             //if(gcrClustersVec)  m_log << MSG::INFO << "gcrClustersVec->size()=" << gcrClustersVec->size() << endreq ; 
 
-            p_gcrLayerVec->at(ilay).setIsGoodLayer(isGoodLayer);
+            p_gcrLayerVec.at(ilay).setIsGoodLayer(isGoodLayer);
 
 
         }//end of loop on layers
@@ -1181,11 +1182,12 @@ void GcrSelectTool::verifyDataVectors (){
     int itow=0;
     for(GcrTowersVec::iterator gcrTowersVecIter = m_gcrTowersVec.begin(); gcrTowersVecIter != m_gcrTowersVec.end(); gcrTowersVecIter++){
         GcrTower currentTow = *gcrTowersVecIter;
-        GcrLayersVec* currentLayersVec = currentTow.getLayersVec();
+        GcrLayersVec& currentLayersVec = currentTow.getLayersVec();
         //m_log << MSG::INFO << "itow:"<< itow << " gcrLayersVec.size()= " << currentLayersVec->size() << endreq;
 
         int ilay=0;
-        for(GcrLayersVec::iterator gcrLayersVecIter= currentLayersVec->begin(); gcrLayersVecIter!= currentLayersVec->end(); gcrLayersVecIter++){
+        for(GcrLayersVec::iterator gcrLayersVecIter= currentLayersVec.begin();
+gcrLayersVecIter!= currentLayersVec.end(); gcrLayersVecIter++){
 
             GcrLayer currentLay = *gcrLayersVecIter;
             m_log << MSG::INFO << "itow,ilay:"<< itow << "," << ilay << " currentLay.getIsGoodLayer() " << currentLay.getIsGoodLayer() << " " << endreq;
@@ -1199,17 +1201,19 @@ void GcrSelectTool::verifyDataVectors (){
                 for(GcrClustersVec::iterator currentClustersVecIter = currentClustersVec->begin(); currentClustersVecIter != currentClustersVec->end(); currentClustersVecIter++){
                     GcrCluster currentCluster = *currentClustersVecIter;
 
-                    GcrHitsVec* currentHitsVec = currentCluster.getHitsVec();
+                    GcrHitsVec& currentHitsVec = currentCluster.getHitsVec();
 
-                    if(currentHitsVec){
+                    if(currentHitsVec.size()>0){
                         m_log << MSG::INFO << "itow,ilay,iclu=" << itow << "," << ilay << "," << iclu << " " << endreq;
-                        m_log << MSG::INFO << "itow,ilay,iclu=" << itow << "," << ilay << "," << iclu << " gcrHitsVec.size()= " << currentHitsVec->size() << endreq;
+                        m_log << MSG::INFO << "itow,ilay,iclu=" << itow << ","
+<< ilay << "," << iclu << " gcrHitsVec.size()= " << currentHitsVec.size() << endreq;
                         m_log << MSG::INFO << "cluster Total Corr Energy= " << currentCluster.getTotalCorrectedEnergy() << endreq;
                         //m_log << MSG::INFO << "ilay:"<< ilay << " currentLay.getIsGoodLayer() " << currentLay.getIsGoodLayer() << " "<< endreq;
                         m_log << MSG::INFO << "isGoodCluster= " << currentCluster.getIsGoodCluster() << " " << endreq;
 
                         int currentHitNb = 0;
-                        for(GcrHitsVec::iterator currentHitsVecIter = currentHitsVec->begin(); currentHitsVecIter != currentHitsVec->end(); currentHitsVecIter++){
+                        for(GcrHitsVec::iterator currentHitsVecIter =
+currentHitsVec.begin(); currentHitsVecIter != currentHitsVec.end(); currentHitsVecIter++){
                             GcrHit currentHit = *currentHitsVecIter;
                             //m_log << MSG::INFO << "XtalpackedId, iHit=" << currentHit.getXtalData()->getPackedId()<< ","<< currentHitNb << " currentHit corr energy= " << currentHit.getCorrectedEnergy() << endreq;
                             m_log << MSG::INFO << "XtalpackedId, iHit=" << currentHit.getXtalData()->getPackedId()<< ","<< currentHitNb << " currentHit isGoodHit= " << currentHit.getIsGoodHit() << " " << endreq;
@@ -1571,12 +1575,13 @@ int GcrSelectTool::inferZ(double correctedEnergy){
 
         for(GcrTowersVec::iterator gcrTowersVecIter = m_gcrTowersVec.begin(); gcrTowersVecIter != m_gcrTowersVec.end(); gcrTowersVecIter++){
             GcrTower currentTow = *gcrTowersVecIter;
-            GcrLayersVec* currentLayersVec = currentTow.getLayersVec();
+            GcrLayersVec& currentLayersVec = currentTow.getLayersVec();
             //m_log << MSG::INFO << "itow:"<< itow << " gcrLayersVec.size()= " << currentLayersVec->size() << endreq;
 
             bool firstGoodLayerFound = false;
 
-            for(GcrLayersVec::iterator gcrLayersVecIter= currentLayersVec->begin(); gcrLayersVecIter!= currentLayersVec->end(); gcrLayersVecIter++){
+            for(GcrLayersVec::iterator gcrLayersVecIter=
+currentLayersVec.begin(); gcrLayersVecIter!= currentLayersVec.end(); gcrLayersVecIter++){
 
                 GcrLayer currentLay = *gcrLayersVecIter;
 
@@ -1610,9 +1615,9 @@ int GcrSelectTool::inferZ(double correctedEnergy){
 
                         int cluLay = -1;
                         GcrCluster currentCluster = *currentClustersVecIter;
-                        GcrHitsVec* currentHitsVec = currentCluster.getHitsVec();
+                        GcrHitsVec& currentHitsVec = currentCluster.getHitsVec();
 
-                        if(currentHitsVec){
+                        if(currentHitsVec.size() > 0){
 
                             int currentHitNb = 0;
 
@@ -1626,7 +1631,8 @@ int GcrSelectTool::inferZ(double correctedEnergy){
                             Point exitPoint;
 
 
-                            for(GcrHitsVec::iterator currentHitsVecIter = currentHitsVec->begin(); currentHitsVecIter != currentHitsVec->end(); currentHitsVecIter++){
+                            for(GcrHitsVec::iterator currentHitsVecIter =
+currentHitsVec.begin(); currentHitsVecIter != currentHitsVec.end(); currentHitsVecIter++){
 
 
                                 GcrHit currentHit = *currentHitsVecIter;

@@ -59,7 +59,7 @@ typedef std::vector<GcrHit> GcrHitsVec;
 class GcrCluster:virtual public ContainedObject {
 public: 
 
-   GcrCluster(GcrHitsVec* hitsVec, double totalCorrectedEnergy, bool isGoodCluster){
+   GcrCluster(const GcrHitsVec& hitsVec, double totalCorrectedEnergy, bool isGoodCluster){
 	   m_hitsVec = hitsVec;
 	   m_totalCorrectedEnergy = totalCorrectedEnergy;
 	   m_isGoodCluster = isGoodCluster;
@@ -67,8 +67,14 @@ public:
 	   m_totalPathLength = -900;
    }
 
+   GcrCluster(double totalCorrectedEnergy, bool isGoodCluster){
+	   m_totalCorrectedEnergy = totalCorrectedEnergy;
+	   m_isGoodCluster = isGoodCluster;
+	   m_totalRawEnergy = -900;
+	   m_totalPathLength = -900;
+   }
 
-   GcrCluster(GcrHitsVec* hitsVec, double totalCorrectedEnergy, bool isGoodCluster, double totalRawEnergy, double totalPathLength){
+   GcrCluster(const GcrHitsVec& hitsVec, double totalCorrectedEnergy, bool isGoodCluster, double totalRawEnergy, double totalPathLength){
 	   m_hitsVec = hitsVec;
 	   m_totalCorrectedEnergy = totalCorrectedEnergy;
 	   m_isGoodCluster = isGoodCluster;
@@ -76,6 +82,16 @@ public:
 	   m_totalPathLength = totalPathLength;
    }
 
+   GcrCluster(double totalCorrectedEnergy, bool isGoodCluster, double totalRawEnergy, double totalPathLength){
+	   m_totalCorrectedEnergy = totalCorrectedEnergy;
+	   m_isGoodCluster = isGoodCluster;
+	   m_totalRawEnergy = totalRawEnergy;
+	   m_totalPathLength = totalPathLength;
+   }
+
+    virtual ~GcrCluster() {
+        m_hitsVec.clear();
+    }
 
    double getTotalCorrectedEnergy(){return m_totalCorrectedEnergy;}
    void setTotalCorrectedEnergy(double totalCorrectedEnergy){m_totalCorrectedEnergy = totalCorrectedEnergy;}
@@ -87,8 +103,8 @@ public:
    void setTotalPathLength(double totalPathLength){m_totalPathLength = totalPathLength;}
 
 
-   GcrHitsVec* getHitsVec(){return m_hitsVec;}
-   void setHitsVec(GcrHitsVec* hitsVec){m_hitsVec = hitsVec;}
+   GcrHitsVec& getHitsVec(){return m_hitsVec;}
+   void setHitsVec(const GcrHitsVec& hitsVec){m_hitsVec = hitsVec;}
 
    bool getIsGoodCluster(){return m_isGoodCluster;}
    void setIsGoodCluster(bool isGoodCluster){m_isGoodCluster = isGoodCluster;}
@@ -97,7 +113,7 @@ public:
 
 private:
 
-   GcrHitsVec* m_hitsVec;
+   GcrHitsVec m_hitsVec;
    float m_totalCorrectedEnergy;
    bool m_isGoodCluster;
    double m_totalRawEnergy;
@@ -163,12 +179,21 @@ typedef std::vector<GcrLayer> GcrLayersVec;
 
 public:
 
-  GcrTower(int towerNb, GcrLayersVec* gcrLayersVec){
+  //GcrTower(int towerNb, GcrLayersVec* gcrLayersVec){
+//	m_towerNb = towerNb;
+//	m_layersVec = gcrLayersVec;
+//  }
+
+  GcrTower(int towerNb){
 	m_towerNb = towerNb;
-	m_layersVec = gcrLayersVec;
   }
-  GcrLayersVec* getLayersVec(){return m_layersVec;}
-  void setLayersVec(GcrLayersVec* layersVec){m_layersVec = layersVec;}
+
+  virtual ~GcrTower() {
+      m_layersVec.clear();
+  }
+
+  GcrLayersVec& getLayersVec(){return m_layersVec;}
+  void setLayersVec(const GcrLayersVec& layersVec){m_layersVec = layersVec;}
 
   int getTowerNb(){return m_towerNb;} 
   void setTowerNb(int towerNb){m_towerNb = towerNb;}
@@ -178,7 +203,7 @@ public:
 private:
 
    int m_towerNb;
-   GcrLayersVec* m_layersVec;
+   GcrLayersVec m_layersVec;
   
 
 };
