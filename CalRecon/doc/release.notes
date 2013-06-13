@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-22-06 13-Jun-2013 TU Add some auditor info to energy recon
  CalRecon-06-22-05 21-May-2013 heather Update unit test to use rootTestData gamma_5_gev_normal data
  CalRecon-06-22-04 21-Feb-2013 bregeon Improve errors on crystal energy deposit deposit - LPATE-99
  CalRecon-06-22-03 31-Jan-2013 bregeon Minor updates to speed up things, and a bug fix
