@@ -17,7 +17,9 @@ namespace CalibData {
   }
 
   CalibTime::CalibTime(double julianDate) : facilities::Timestamp(julianDate)
-  {}
+  {
+    m_gtime = Gaudi::Time(this->getClibTime(), this->getNano());
+  }
 
   // Note Gaudi::Time months have range [0, 11]; 
   // facilities::Timestamp uses [1,12]
