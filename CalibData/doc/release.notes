@@ -4,6 +4,7 @@
 
                     EOH
 
+ CalibData-00-28-01 13-Jun-2013    jrb Bug fix to form of CalibTime constructor which is probably never used -  just in case
  CalibData-00-28-00 17-Aug-2012    jrb for Windows no-install-headers
  CalibData-00-27-02 25-Jan-2012    jrb patch for vc90 compiler
  CalibData-00-27-01 03-Jan-2012    jrb patch: friend myClass -> friend ::myClass  for gcc41 compilation
