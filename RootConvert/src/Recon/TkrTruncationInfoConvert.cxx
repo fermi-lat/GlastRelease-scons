@@ -46,8 +46,8 @@ void convert(const std::pair<Event::SortId, Event::TkrTruncatedPlane> & tdsTrunc
   {
     TIter truncationDataIter(&truncationDataColRoot);
     TkrTruncationData*  truncationDataRoot = 0;
-    static int nRCTrunc = 0;
-    static int nCCTrunc = 0;
+    int nRCTrunc = 0;
+    int nCCTrunc = 0;
     while ((truncationDataRoot = 
             (TkrTruncationData*)truncationDataIter.Next())!=0) {
       int status = truncationDataRoot->getStatus();
