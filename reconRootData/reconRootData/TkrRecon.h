@@ -115,6 +115,7 @@ public:
     
     TkrVecPointInfo        getTkrVecPointInfo()       {return m_tkrVecPointInfo;}
     const TkrVecPointInfo& getTkrVecPointInfo() const {return m_tkrVecPointInfo;}
+	TkrVecPointInfo*       getTkrVecPointInfoPtr()       {return &m_tkrVecPointInfo;}
 
     const TkrDiagnostics* getDiagnostics() { return m_diagnostics;};
     void addDiagnostics(TkrDiagnostics* diagnostics) { m_diagnostics = diagnostics;};
