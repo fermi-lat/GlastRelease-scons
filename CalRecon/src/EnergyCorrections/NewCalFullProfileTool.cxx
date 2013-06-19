@@ -865,25 +865,28 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
     }
 
     // Make sure timer is shut down
-    if (m_doTiming && lm.level() == MSG::DEBUG)
+    if (m_doTiming)
     {
         m_chronoSvc->chronoStop(m_toolTag);
-    
-        m_toolTime       = m_chronoSvc->chronoDelta(m_toolTag,IChronoStatSvc::USER);
-        m_satTime        = m_chronoSvc->chronoDelta(m_satTag,IChronoStatSvc::USER);
-        m_calProfileTime = m_chronoSvc->chronoDelta(m_calProfileTag,IChronoStatSvc::USER);
-        m_tkrProfileTime = m_chronoSvc->chronoDelta(m_tkrProfileTag,IChronoStatSvc::USER);
 
-        float toolDelta       = static_cast<float>(m_toolTime)*0.000001;
-        float satDelta        = static_cast<float>(m_satTime)*0.000001;
-        float calProfileDelta = static_cast<float>(m_calProfileTime)*0.000001;
-        float tkrProfileDelta = static_cast<float>(m_tkrProfileTime)*0.000001;
+        if (lm.level() == MSG::DEBUG)
+        {
+            m_toolTime       = m_chronoSvc->chronoDelta(m_toolTag,IChronoStatSvc::USER);
+            m_satTime        = m_chronoSvc->chronoDelta(m_satTag,IChronoStatSvc::USER);
+            m_calProfileTime = m_chronoSvc->chronoDelta(m_calProfileTag,IChronoStatSvc::USER);
+            m_tkrProfileTime = m_chronoSvc->chronoDelta(m_tkrProfileTag,IChronoStatSvc::USER);
 
-        lm << MSG::DEBUG << " total tool  time: " << toolDelta  << " sec" 
-           << MSG::DEBUG << " Saturated Crystal finding time: " << satDelta << " sec"
-           << MSG::DEBUG << " CAL Profile time: " << calProfileDelta << " sec"
-           << MSG::DEBUG << " TKR Profile time: " << tkrProfileDelta << " sec"
-           << endreq ;
+            float toolDelta       = static_cast<float>(m_toolTime)*0.000001;
+            float satDelta        = static_cast<float>(m_satTime)*0.000001;
+            float calProfileDelta = static_cast<float>(m_calProfileTime)*0.000001;
+            float tkrProfileDelta = static_cast<float>(m_tkrProfileTime)*0.000001;
+
+            lm << MSG::DEBUG << " total tool  time: " << toolDelta  << " sec" 
+               << MSG::DEBUG << " Saturated Crystal finding time: " << satDelta << " sec"
+               << MSG::DEBUG << " CAL Profile time: " << calProfileDelta << " sec"
+               << MSG::DEBUG << " TKR Profile time: " << tkrProfileDelta << " sec"
+               << endreq ;
+        }
     }
 
   return corResult;
