@@ -4,6 +4,7 @@ package manager:H.Kelly
 @verbatim
 * EOH *
 
+ reconRootData-12-01-03 18-Jun-2013  lsrea add pointer access to TkrVecPointInfo
  reconRootData-12-01-02 11-Jun-2013 heather Delete GcrTrack in CalRecon obj
  reconRootData-12-01-01 06-Jun-2013  lsrea Add status bits for trees and merged clustters to TkrCluster
  reconRootData-12-01-00 03-Jun-2013 echarles Updated ACD to reduce number of stored associations
