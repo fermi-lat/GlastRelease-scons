@@ -600,10 +600,18 @@ void reconRootWriterAlg::fillTkrVecPoints(TkrRecon* recon, const Event::TkrVecPo
 void reconRootWriterAlg::fillTkrVecPointInfo( TkrRecon* recon, Event::TkrVecPointInfo* vecPointInfoTds)
 {
     // This is pretty straightforward, we are simply copying a few values from one place to another...
-    recon->getTkrVecPointInfo().inializeInfo(vecPointInfoTds->getMaxNumSkippedLayers(),
-                                             vecPointInfoTds->getNumTkrVecPoints(),
-                                             vecPointInfoTds->getNumBiLayersWVecPoints(),
-                                             vecPointInfoTds->getMaxNumLinkCombinations());
+    int maxSkipped    = vecPointInfoTds->getMaxNumSkippedLayers();
+    int maxNum        = vecPointInfoTds->getNumTkrVecPoints();
+	int maxNumPts     = vecPointInfoTds->getNumBiLayersWVecPoints();
+    double maxCombos  = vecPointInfoTds->getMaxNumLinkCombinations();
+
+
+    (recon->getTkrVecPointInfoPtr())->inializeInfo(maxSkipped, maxNum, maxNumPts, maxCombos);
+
+    MsgStream log(msgSvc(), name());
+
+    log << MSG::DEBUG << "Vec vars: "  << recon->getTkrVecPointInfo().getMaxNumSkippedLayers() << " " 
+		<< recon->getTkrVecPointInfo().getNumTkrVecPoints() << endreq;
 
     return;
 }

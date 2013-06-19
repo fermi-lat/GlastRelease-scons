@@ -756,6 +756,9 @@ StatusCode reconRootReaderAlg::storeTkrVecPointInfo(TkrRecon* tkrRecRoot)
     vecPointInfoTds->setNumBiLayersWVecPoints(tkrRecRoot->getTkrVecPointInfo().getNumBiLayersWVecPoints());
     vecPointInfoTds->setMaxNumLinkCombinations(tkrRecRoot->getTkrVecPointInfo().getMaxNumLinkCombinations());
 
+    log << MSG::DEBUG << "Vec vars " << vecPointInfoTds->getMaxNumSkippedLayers() << " " 
+        << vecPointInfoTds->getNumTkrVecPoints() << endreq;
+
     // Store on the TDS
     sc = eventSvc()->registerObject(EventModel::TkrRecon::TkrVecPointInfo, vecPointInfoTds);
     if (sc.isFailure()) {
