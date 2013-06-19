@@ -679,16 +679,16 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       CALFIT_chidist = result[1];
     }
 
-  // Stop timing for cal fit
-  if (m_doTiming) m_chronoSvc->chronoStop(m_calProfileTag);
+    // Stop timing for cal fit
+    if (m_doTiming) m_chronoSvc->chronoStop(m_calProfileTag);
 
-  int TKRFIT = 0;
+    int TKRFIT = 0;
+        
+    // Turn on the tkr profile timing
+    if (m_doTiming) m_chronoSvc->chronoStart(m_tkrProfileTag);
 
     if(tree!=NULL)
     {
-        // Turn on the tkr profile timing
-        if (m_doTiming) m_chronoSvc->chronoStart(m_tkrProfileTag);
-
       //
       // switch to neutral direction (head of the track -> cluster centroid)
       // Not using the neutral axis since Tracy improvement of tree axis precision 2012/06/30
@@ -751,10 +751,10 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
           TKRFIT_chisqdist = chi2dist;
           TKRFIT_chidist = result[1];
         }
-
-        // and now turn it off
-        if (m_doTiming) m_chronoSvc->chronoStop(m_tkrProfileTag);
     }
+
+    // and now turn it off
+    if (m_doTiming) m_chronoSvc->chronoStop(m_tkrProfileTag);
     
   if(CALFIT==0 && TKRFIT==0)
     {
@@ -865,7 +865,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
     }
 
     // Make sure timer is shut down
-    if (m_doTiming)
+    if (m_doTiming && lm.level() == MSG::DEBUG)
     {
         m_chronoSvc->chronoStop(m_toolTag);
     
