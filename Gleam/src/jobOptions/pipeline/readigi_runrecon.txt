@@ -195,7 +195,7 @@ NtupleMaker1.Members = {"PtValsAlg/PtValsAlg1",
 
 
 // AnalysisNtuple tools list (AnalysisNtupleAlg, xxxValsTools)
-AnalysisNtupleAlg1.toolList = {"Glt","Acd2","TkrHit","Tkr", "Tree", "Vtx","Cal","Evt","Obf"};
+AnalysisNtupleAlg1.toolList = {"Glt", "Acd2", "TkrHit", "TkrCR", "Tkr", "Tree", "Vtx", "Cal", "Evt", "Obf"};
 AnalysisNtupleAlg1.realData = true; // removes any Mc tools
 AnalysisNtupleAlg1.tupleName = "MeritTuple";
 
