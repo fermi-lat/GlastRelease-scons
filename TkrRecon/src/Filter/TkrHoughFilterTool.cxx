@@ -942,6 +942,9 @@ StatusCode TkrHoughFilterTool::doFilterStep()
             // So, first define a map between links and a count of agreement with other links
             std::map<Event::TkrVecPointsLink*, int> linkCountMap;
 
+            // Define a vector which will be used to maintain the ordering of links in the peak bin
+            std::vector<Event::TkrVecPointsLink*>   linkOrderVec;
+
             for(Event::TkrVecPointsLinkPtrVec::iterator outLinkItr  = peakIter->second.begin(); 
                                                         outLinkItr != peakIter->second.end(); 
                                                         outLinkItr++)
@@ -949,6 +952,7 @@ StatusCode TkrHoughFilterTool::doFilterStep()
                 Event::TkrVecPointsLink* outLink = *outLinkItr;
 
                 linkCountMap[outLink]++;
+                linkOrderVec.push_back(outLink);
             
                 for(Event::TkrVecPointsLinkPtrVec::iterator inLinkItr  = outLinkItr + 1; 
                                                             inLinkItr != peakIter->second.end(); 
@@ -972,10 +976,16 @@ StatusCode TkrHoughFilterTool::doFilterStep()
             Point topPoint(0.,0.,-100.);
 
             // Loop through these links first:
-            for(std::map<Event::TkrVecPointsLink*, int>::iterator linkCountMapIter =  linkCountMap.begin();
-                                                                  linkCountMapIter != linkCountMap.end();
-                                                                  linkCountMapIter++)
+//            for(std::map<Event::TkrVecPointsLink*, int>::iterator linkCountMapIter =  linkCountMap.begin();
+//                                                                  linkCountMapIter != linkCountMap.end();
+//                                                                  linkCountMapIter++)
+//            {
+            for(std::vector<Event::TkrVecPointsLink*>::iterator linkOrderIter  = linkOrderVec.begin();
+                                                                linkOrderIter != linkOrderVec.end();
+                                                                linkOrderIter++)
             {
+                std::map<Event::TkrVecPointsLink*, int>::iterator linkCountMapIter = linkCountMap.find(*linkOrderIter);
+
                 int linkCount = linkCountMapIter->second;
 
                 float linkCountFrac = float(linkCount) / float(totNumLinks);
