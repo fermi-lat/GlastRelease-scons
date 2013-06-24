@@ -57,7 +57,9 @@ public:
             m_bestLeaf(bestLeaf), 
             m_secondLeaf(secondLeaf), 
             m_siblingMap(nodeSiblingMap), 
-            m_axisParams(axisParams)
+            m_axisParams(axisParams),
+            m_bestBranchAngleToAxis(0.),
+            m_axisSeededAngleToAxis(0.)
             {TkrTrackVec::clear(); if (track) push_back(track);}
 
     virtual ~TkrTree() 
