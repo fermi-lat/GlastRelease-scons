@@ -79,6 +79,7 @@ void* TkrTruncationData::operator new(size_t /*size*/)
 
     // Since we recycle, make sure these member functions are cleared
     //temp->m_hitCol.clear();
+    temp->Clear();
 
     return temp;
 }
