@@ -921,7 +921,7 @@ void TkrVecNodesBuilder::prunePrimaryBranches(Event::TkrVecNode* headNode)
 
                 if (cosAng < 0.975)
                 {
-                    delete node;
+                    deleteNode(node);
                 }
             }
             else nodeItr++;
