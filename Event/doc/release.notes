@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
  
+ Event-14-16-07 25-Jun-2013 TU Make sure angle variables initialized in constructor for TkrTree
  Event-14-16-06 03-Jun-2013 echarles Protect sorting of AcdTkrHitPoca and AcdTkrGapPoca
  Event-14-16-05 31-May-2013 TU Added some bit definitions to TkrCluster
  Event-14-16-04 23-Apr-2013  lsrea added some methods to facilitate alignment
