@@ -71,6 +71,11 @@ class G4PropagationTool : public ParticleTransporter, public AlgTool, virtual pu
     //! Return volume identifer at given step index
     virtual idents::VolumeIdentifier getStepVolumeId(int stepIdx = -1) const;
 
+    //! Return material name 
+    virtual std::string getMaterialName(int stepIdx = -1)  const;
+    //! Return the index into the material properties table
+    virtual int         getMaterialIndex(int stepIdx = -1) const;
+
     //! Return radiation lengths traversed
     virtual double getRadLength(double arcLen = -1.) const;
     //! Return radiation lengths for this step
@@ -818,6 +823,63 @@ idents::VolumeIdentifier G4PropagationTool::getStepVolumeId(int stepIdx) const
     return constructId(getStep(stepIdx).GetEndPoint(), getStep(stepIdx).GetDirection(), true);
 }
 
+std::string G4PropagationTool::getMaterialName(int stepIdx) const
+{
+    // Purpose and Method:  Returns the name of the material comprising the volume at the requested step
+    // Inputs:  None
+    // Outputs:  a string containing the volume material name
+    // Dependencies: None
+    // Restrictions and Caveats: None
+    std::string materialName = "";
+
+    int idx = stepIdx;
+
+    if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
+
+    const G4VPhysicalVolume* physVol = getStep(idx).GetVolume();
+
+    // Let's be incredibly nervous about this...
+    if (physVol)
+    {
+        const G4LogicalVolume* logVol = physVol->GetLogicalVolume();
+
+        if (logVol)
+        {
+            if (logVol->GetMaterial()) materialName = logVol->GetMaterial()->GetName();
+        }
+    }
+
+    return materialName;
+}
+
+int G4PropagationTool::getMaterialIndex(int stepIdx) const
+{
+    // Purpose and Method:  Returns the index of the material in the material table
+    // Inputs:  None
+    // Outputs:  an integer index for the material
+    // Dependencies: None
+    // Restrictions and Caveats: None
+    int materialIdx = -1;
+
+    int idx = stepIdx;
+
+    if (idx < 0 || idx >= getNumberSteps()) idx = getNumberSteps();
+
+    const G4VPhysicalVolume* physVol = getStep(idx).GetVolume();
+
+    // Let's be incredibly nervous about this...
+    if (physVol)
+    {
+        const G4LogicalVolume* logVol = physVol->GetLogicalVolume();
+
+        if (logVol)
+        {
+            if (logVol->GetMaterial()) materialIdx = logVol->GetMaterial()->GetIndex();
+        }
+    }
+
+    return materialIdx;
+}
 
 /// dump current status, to the stream
 void G4PropagationTool::printOn(std::ostream& str)const
