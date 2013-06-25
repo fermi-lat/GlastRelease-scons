@@ -62,6 +62,11 @@ public:
     //! Return volume identifer at given step index
     virtual idents::VolumeIdentifier getStepVolumeId(int stepIdx = -1) const = 0;
 
+    //! Return material name 
+    virtual std::string getMaterialName(int stepIdx = -1)  const = 0;
+    //! Return the index into the material properties table
+    virtual int         getMaterialIndex(int stepIdx = -1) const = 0;
+
     //! Return radiation lengths traversed
     virtual double getRadLength(double arcLen = -1.) const = 0;
     //! Return radiation lengths for this step
