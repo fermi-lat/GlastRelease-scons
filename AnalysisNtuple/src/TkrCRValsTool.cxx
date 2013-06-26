@@ -160,9 +160,9 @@ private:
     float TkrCR_1_PrjTwrEdge;
     float TkrCR_1_DieEdge;
     float TkrCR_1_TwrGap;
-    float TkrCR_1_xdir;
-    float TkrCR_1_ydir;
-    float TkrCR_1_zdir;
+    double TkrCR_1_xdir;
+    double TkrCR_1_ydir;
+    double TkrCR_1_zdir;
     float TkrCR_1_Phi;
     float TkrCR_1_Theta;
     float TkrCR_1_x0;
@@ -518,7 +518,7 @@ for the predicted energy in each layer, and weighted accordingly.
 So the result is sensitive to the particle type and 
 the chosen energy-loss mechanism.       
 <tr><td> Tkr1[X/Y/Z]Dir  
-<td>F<td>   Track [x/y/z] direction cosine  
+<td>D<td>   Track [x/y/z] direction cosine  
 <tr><td> Tkr1Phi  
 <td>F<td>   Track phi, radians 
 (direction from which particle comes, not particle direction!) 
