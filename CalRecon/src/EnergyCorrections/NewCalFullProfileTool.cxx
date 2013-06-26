@@ -390,7 +390,7 @@ StatusCode NewCalFullProfileTool::initialize()
   }
 
   nm_fsppm = new NewFullShowerProfileParamsManager(0);
-  nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,2*1.85,0.80,0.1);
+  nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,2*1.85,0.80,0.25);
   //  nm_fsddm = new NewFullShowerDevelopmentDescriptionManager(nm_detSvc,14,2.,1.,1.85,0.80,0.1);
   
   // Minuit object
@@ -494,8 +494,6 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   Event::CalCorToolResult* corResult = 0;  
   MsgStream lm(msgSvc(), name());
 
-  //  printf("BRUEL NewCalFullProfileTool::doEnergyCorr\n");
-  
     if (!cluster)
     {
         lm << MSG::DEBUG << "Ending doEnergyCorr: No Cluster" 
@@ -640,55 +638,70 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
   CALFIT_recv1 = vv[1];
   CALFIT_recv2 = vv[2];
   
-  SelectCloseCrystals(pp,vv,100);
-  CALFIT_nxtalsel = nm_nxtal;
+  int CALFIT = 0;
+  int runcalfit = 1;
 
-  nm_optselxtalinfit = 0;
-  int CALFIT = doProfileFit(pp,vv,0,lm,1);
-  CALFIT_cal_eff_RLn = nm_fsddm->mintotx0cal;
-  //
-  if(CALFIT)
+//   double mycaltransrms = cluster->getMomParams().getTransRms();
+//   if(mycaltransrms<=0) mycaltransrms = 1e-5;
+  //  if(nm_eTotal<100000. && log10(mycaltransrms)>1.7) runcalfit = 0;
+  if(nm_eTotal<100000. && vv[2]>-0.1) runcalfit = 0;
+
+  if(runcalfit)
     {
-      CALFIT_fit_energy = 1000.*nm_energy;
-      CALFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
-      CALFIT_fitflag = nm_ierflg;
-      CALFIT_par0 = nm_par0;
-      CALFIT_par1 = nm_par1;
-      CALFIT_xcor = nm_xcor;
-      CALFIT_ycor = nm_ycor;
-      CALFIT_alpha = nm_alpha;
-      CALFIT_tmax = nm_tmax;
-      CALFIT_tkr_RLn = 0;
-      CALFIT_lastx0 = nm_lastx0;
-      CALFIT_cal_eff_RLn = nm_totx0cal;
-      CALFIT_totchisq = nm_totchisq;
-      CALFIT_chisq = nm_chisq;
-      CALFIT_parcf = nm_params_contribution_factor;
-      CALFIT_parc = nm_params_contribution;
-      CALFIT_widening = nm_wideningfactor;
+      SelectCloseCrystals(pp,vv,100);
+      CALFIT_nxtalsel = nm_nxtal;
       
-      fitpar[0] = nm_par0;
-      fitpar[1] = nm_par1;
-      fitpar[2] = nm_par2;
-      nm_optselxtalinfit = 1;
-      compute_chi2(fitpar);
-      CALFIT_seltotchisq = nm_totchisq;
       nm_optselxtalinfit = 0;
-      chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
-      CALFIT_chisqdist = chi2dist;
-      CALFIT_chidist = result[1];
+      CALFIT = doProfileFit(pp,vv,0,lm,1);
+      CALFIT_cal_eff_RLn = nm_fsddm->mintotx0cal;
+      //
+      if(CALFIT)
+        {
+          CALFIT_fit_energy = 1000.*nm_energy;
+          CALFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
+          CALFIT_fitflag = nm_ierflg;
+          CALFIT_par0 = nm_par0;
+          CALFIT_par1 = nm_par1;
+          CALFIT_xcor = nm_xcor;
+          CALFIT_ycor = nm_ycor;
+          CALFIT_alpha = nm_alpha;
+          CALFIT_tmax = nm_tmax;
+          CALFIT_tkr_RLn = 0;
+          CALFIT_lastx0 = nm_lastx0;
+          CALFIT_cal_eff_RLn = nm_totx0cal;
+          CALFIT_totchisq = nm_totchisq;
+          CALFIT_chisq = nm_chisq;
+          CALFIT_parcf = nm_params_contribution_factor;
+          CALFIT_parc = nm_params_contribution;
+          CALFIT_widening = nm_wideningfactor;
+          
+          fitpar[0] = nm_par0;
+          fitpar[1] = nm_par1;
+          fitpar[2] = nm_par2;
+          nm_optselxtalinfit = 1;
+          compute_chi2(fitpar);
+          CALFIT_seltotchisq = nm_totchisq;
+          nm_optselxtalinfit = 0;
+          chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
+          CALFIT_chisqdist = chi2dist;
+          CALFIT_chidist = result[1];
+        }
     }
 
-    // Stop timing for cal fit
-    if (m_doTiming) m_chronoSvc->chronoStop(m_calProfileTag);
+  // Stop timing for cal fit
+  if (m_doTiming) m_chronoSvc->chronoStop(m_calProfileTag);
 
-    int TKRFIT = 0;
-        
-    // Turn on the tkr profile timing
-    if (m_doTiming) m_chronoSvc->chronoStart(m_tkrProfileTag);
+  int TKRFIT = 0;
+  int runtkrfit = 1;
 
-    if(tree!=NULL)
+  double lambda = 0;
+  double dist3d = 0;
+
+  if(tree!=NULL)
     {
+      // Turn on the tkr profile timing
+      if (m_doTiming) m_chronoSvc->chronoStart(m_tkrProfileTag);
+
       //
       // switch to neutral direction (head of the track -> cluster centroid)
       // Not using the neutral axis since Tracy improvement of tree axis precision 2012/06/30
@@ -713,49 +726,66 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
       TKRFIT_recv1 = vv[1];
       TKRFIT_recv2 = vv[2];
       TKRFIT_tkr_RLn = tkr_RLn;
-      
-      SelectCloseCrystals(pp,vv,100);
-      TKRFIT_nxtalsel = nm_nxtal;
 
-      nm_optselxtalinfit = 0;
-      TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
-      TKRFIT_cal_eff_RLn = nm_fsddm->mintotx0cal;
-      //
-      if(TKRFIT)
+//       lambda = 0;
+//       dist3d = 0;
+//       if(CALFIT_recp2!=0)
+//         {
+//           lambda = (CALFIT_recp0-TKRFIT_recp0)*TKRFIT_recv0+(CALFIT_recp1-TKRFIT_recp1)*TKRFIT_recv1+(CALFIT_recp2-TKRFIT_recp2)*TKRFIT_recv2;
+//           dist3d = pow(TKRFIT_recp0+lambda*TKRFIT_recv0-CALFIT_recp0,2)+pow(TKRFIT_recp1+lambda*TKRFIT_recv1-CALFIT_recp1,2)+pow(TKRFIT_recp2+lambda*TKRFIT_recv2-CALFIT_recp2,2);
+//         }
+//       if(dist3d<0) dist3d = 0;
+//       dist3d = sqrt(dist3d);
+//       if(dist3d<1e-5) dist3d = 1e-5;
+
+//       if(nm_eTotal<100000. && log10(dist3d)>1.9) runtkrfit = 0;
+//       runtkrfit = 1;
+
+      if(runtkrfit)
         {
-          TKRFIT_fit_energy = 1000.*nm_energy;
-          TKRFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
-          TKRFIT_fitflag = nm_ierflg;
-          TKRFIT_par0 = nm_par0;
-          TKRFIT_par1 = nm_par1;
-          TKRFIT_xcor = nm_xcor;
-          TKRFIT_ycor = nm_ycor;
-          TKRFIT_alpha = nm_alpha;
-          TKRFIT_tmax = nm_tmax;
-          TKRFIT_lastx0 = nm_lastx0;
-          TKRFIT_cal_eff_RLn = nm_totx0cal;
-          TKRFIT_totchisq = nm_totchisq;
-          TKRFIT_chisq = nm_chisq;
-          TKRFIT_parcf = nm_params_contribution_factor;
-          TKRFIT_parc = nm_params_contribution;
-          TKRFIT_widening = nm_wideningfactor;
+          SelectCloseCrystals(pp,vv,100);
+          TKRFIT_nxtalsel = nm_nxtal;
           
-          fitpar[0] = nm_par0;
-          fitpar[1] = nm_par1;
-          fitpar[2] = nm_par2;
-          nm_optselxtalinfit = 1;
-          compute_chi2(fitpar);
-          TKRFIT_seltotchisq = nm_totchisq;
           nm_optselxtalinfit = 0;
-          chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
-          TKRFIT_chisqdist = chi2dist;
-          TKRFIT_chidist = result[1];
+          TKRFIT = doProfileFit(pp,vv,tkr_RLn,lm,1);
+          TKRFIT_cal_eff_RLn = nm_fsddm->mintotx0cal;
+          //
+          if(TKRFIT)
+            {
+              TKRFIT_fit_energy = 1000.*nm_energy;
+              TKRFIT_energy_err = 1000.*nm_energy*log(10.)*nm_epar2;
+              TKRFIT_fitflag = nm_ierflg;
+              TKRFIT_par0 = nm_par0;
+              TKRFIT_par1 = nm_par1;
+              TKRFIT_xcor = nm_xcor;
+              TKRFIT_ycor = nm_ycor;
+              TKRFIT_alpha = nm_alpha;
+              TKRFIT_tmax = nm_tmax;
+              TKRFIT_lastx0 = nm_lastx0;
+              TKRFIT_cal_eff_RLn = nm_totx0cal;
+              TKRFIT_totchisq = nm_totchisq;
+              TKRFIT_chisq = nm_chisq;
+              TKRFIT_parcf = nm_params_contribution_factor;
+              TKRFIT_parc = nm_params_contribution;
+              TKRFIT_widening = nm_wideningfactor;
+              
+              fitpar[0] = nm_par0;
+              fitpar[1] = nm_par1;
+              fitpar[2] = nm_par2;
+              nm_optselxtalinfit = 1;
+              compute_chi2(fitpar);
+              TKRFIT_seltotchisq = nm_totchisq;
+              nm_optselxtalinfit = 0;
+              chi2dist = GetChi2Dist(cluster, pp,vv,nm_toterrfit,result);
+              TKRFIT_chisqdist = chi2dist;
+              TKRFIT_chidist = result[1];
+            }
         }
-    }
 
-    // and now turn it off
-    if (m_doTiming) m_chronoSvc->chronoStop(m_tkrProfileTag);
-    
+      // and now turn it off
+      if (m_doTiming) m_chronoSvc->chronoStop(m_tkrProfileTag);
+    }
+  
   if(CALFIT==0 && TKRFIT==0)
     {
       lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : No result with cal direction neither with tkr direction." <<endreq;
@@ -868,25 +898,22 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
     if (m_doTiming)
     {
         m_chronoSvc->chronoStop(m_toolTag);
+    
+        m_toolTime       = m_chronoSvc->chronoDelta(m_toolTag,IChronoStatSvc::USER);
+        m_satTime        = m_chronoSvc->chronoDelta(m_satTag,IChronoStatSvc::USER);
+        m_calProfileTime = m_chronoSvc->chronoDelta(m_calProfileTag,IChronoStatSvc::USER);
+        m_tkrProfileTime = m_chronoSvc->chronoDelta(m_tkrProfileTag,IChronoStatSvc::USER);
 
-        if (lm.level() == MSG::DEBUG)
-        {
-            m_toolTime       = m_chronoSvc->chronoDelta(m_toolTag,IChronoStatSvc::USER);
-            m_satTime        = m_chronoSvc->chronoDelta(m_satTag,IChronoStatSvc::USER);
-            m_calProfileTime = m_chronoSvc->chronoDelta(m_calProfileTag,IChronoStatSvc::USER);
-            m_tkrProfileTime = m_chronoSvc->chronoDelta(m_tkrProfileTag,IChronoStatSvc::USER);
+        float toolDelta       = static_cast<float>(m_toolTime)*0.000001;
+        float satDelta        = static_cast<float>(m_satTime)*0.000001;
+        float calProfileDelta = static_cast<float>(m_calProfileTime)*0.000001;
+        float tkrProfileDelta = static_cast<float>(m_tkrProfileTime)*0.000001;
 
-            float toolDelta       = static_cast<float>(m_toolTime)*0.000001;
-            float satDelta        = static_cast<float>(m_satTime)*0.000001;
-            float calProfileDelta = static_cast<float>(m_calProfileTime)*0.000001;
-            float tkrProfileDelta = static_cast<float>(m_tkrProfileTime)*0.000001;
-
-            lm << MSG::DEBUG << " total tool  time: " << toolDelta  << " sec" 
-               << MSG::DEBUG << " Saturated Crystal finding time: " << satDelta << " sec"
-               << MSG::DEBUG << " CAL Profile time: " << calProfileDelta << " sec"
-               << MSG::DEBUG << " TKR Profile time: " << tkrProfileDelta << " sec"
-               << endreq ;
-        }
+        lm << MSG::DEBUG << " total tool  time: " << toolDelta  << " sec" 
+           << MSG::DEBUG << " Saturated Crystal finding time: " << satDelta << " sec"
+           << MSG::DEBUG << " CAL Profile time: " << calProfileDelta << " sec"
+           << MSG::DEBUG << " TKR Profile time: " << tkrProfileDelta << " sec"
+           << endreq ;
     }
 
   return corResult;
@@ -929,13 +956,16 @@ int NewCalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, 
   else if(logEraw>logErawmax)
     logEraw = logErawmax;
   double zstep = (3.0-1.0/(logErawmax-logErawmin)*(logEraw-logErawmin))*1.85;
-  //  printf("BRUEL %f %f\n",logEraw,zstep);
 
   if(tkr_RLn==0) zstep = (4.0-1.0/(logErawmax-logErawmin)*(logEraw-logErawmin))*1.85;
 
   //  zstep = 2.*1.85;
 
-  if(!nm_fsddm->Compute(pp,vv,tkr_RLn,zstep))
+  double totrlnmax = 20;
+  if(log10(nm_eTotal)>0) totrlnmax += 10.*log10(nm_eTotal);
+  //  totrlnmax = 1e9;
+
+  if(!nm_fsddm->Compute(pp,vv,tkr_RLn,zstep,totrlnmax))
     {
       lm << MSG::DEBUG << "NewCalFullProfileTool::doEnergyCorr : Problem during nm_fsddm->Compute. Returning empty corResult." <<endreq;
       return 0;
@@ -1042,7 +1072,6 @@ int NewCalFullProfileTool::doProfileFit(double *pp, double *vv, double tkr_RLn, 
   nm_minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
   nm_minuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
 
-  //  printf("BRUEL ierflg %d\n",ierflg);
 
   if(ierflg==4)
     {

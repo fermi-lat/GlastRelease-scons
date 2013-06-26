@@ -830,7 +830,7 @@ void NewFullShowerDevelopmentDescription::GetTrajectorySegment(double *pp, doubl
     }
 }
 
-bool NewFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input, double zstep_input)
+bool NewFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input, double zstep_input, double totrlnmax)
 {
   ZStepRef = zstep_input;
 
@@ -1254,6 +1254,12 @@ bool NewFullShowerDevelopmentDescription::ConvertToFixedX0(double x0step, NewFul
           for(j=0;j<8;++j) layerfraction[j][ix0] = last_layerfraction[j];
           for(j=0;j<NXtal;++j) xtalfraction[j][ix0] = last_xtalfraction[j];
         }
+//       if(dimm==0)
+//         printf("BRUEL ix0 %d X0 %f dimm %d check %f frac %f %f %f %f %f %f %f %f\n",ix0,X0[ix0],dimm,check[ix0],
+//                layerfraction[0][ix0],layerfraction[1][ix0],layerfraction[2][ix0],layerfraction[3][ix0],layerfraction[4][ix0],layerfraction[5][ix0],layerfraction[6][ix0],layerfraction[7][ix0]);
+//       else
+//         printf("BRUEL ix0 %d X0 %f dimm %d check %f frac %f %f %f %f %f %f %f %f\n",ix0,X0[ix0],dimm,check[ix0],
+//                layerfraction[0][ix0]/x0step,layerfraction[1][ix0]/x0step,layerfraction[2][ix0]/x0step,layerfraction[3][ix0]/x0step,layerfraction[4][ix0]/x0step,layerfraction[5][ix0]/x0step,layerfraction[6][ix0]/x0step,layerfraction[7][ix0]/x0step);
     }
 
   ix0 = NStep-1;
@@ -1543,7 +1549,7 @@ double NewMultiFullShowerDevelopmentDescription::GetCrackAngle(double *pp, doubl
 }
 
 
-bool NewMultiFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double zstep_input)
+bool NewMultiFullShowerDevelopmentDescription::Compute(double *pp, double *vv, double startx0_input, double zstep_input, double totrlnmax)
 {
   ZStepRef = zstep_input;
 
@@ -1938,6 +1944,11 @@ bool NewMultiFullShowerDevelopmentDescription::Compute(double *pp, double *vv, d
               crackmaxfrac[ii] = materialfraction[ii][2][j];
             }
         }
+      if(X0[NDevelopment][j]>totrlnmax) 
+        {
+          NStep = j+1;
+          break;
+        }
     }
 
   for(ii=0;ii<=NDevelopment;++ii)
@@ -2023,7 +2034,7 @@ NewFullShowerDevelopmentDescriptionManager::~NewFullShowerDevelopmentDescription
   if(CurrentFSDD!=NULL) delete CurrentFSDD;
 }
 
-bool NewFullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0_input, double zstep_input)
+bool NewFullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv, double startx0_input, double zstep_input, double totrlnmax)
 {
   ZStepRef = zstep_input;
   
@@ -2053,13 +2064,13 @@ bool NewFullShowerDevelopmentDescriptionManager::Compute(double *pp, double *vv,
 
   int optmulti = 1;
 
-  if(optmulti) MFSDDMM->Compute(pp,vv,startx0_input,ZStepRef);
+  if(optmulti) MFSDDMM->Compute(pp,vv,startx0_input,ZStepRef,totrlnmax);
   
   for(i=0;i<=NDevelopment;++i)
     {
       if(!optmulti)
         {
-          if(!FSDDMM[i]->Compute(pp,vv,startx0_input,XMax[i],ZStepRef)) return false;
+          if(!FSDDMM[i]->Compute(pp,vv,startx0_input,XMax[i],ZStepRef,totrlnmax)) return false;
         }
       else
         {

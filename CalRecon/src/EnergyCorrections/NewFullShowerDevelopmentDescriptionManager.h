@@ -235,7 +235,7 @@ class NewMultiFullShowerDevelopmentDescription{
  public:
   double GoThroughCrack(double *pp, double *vv, double zstep, int nstepmax);
   double GetCrackAngle(double *pp, double *vv, double lambdain, double *pptraj);
-  bool Compute(double *pp, double *vv, double startx0_input, double zstep_input);
+  bool Compute(double *pp, double *vv, double startx0_input, double zstep_input, double totrlnmax);
   void SetWideningFactor(double widfact);
 };
 
@@ -292,7 +292,7 @@ class NewFullShowerDevelopmentDescription{
   void GetTrajectorySegment(double *pp, double *vv, double *ppstart, double *ppend);
 
  public:
-  bool Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input, double zstep_input);
+  bool Compute(double *pp, double *vv, double startx0_input, double x0maxshower_input, double zstep_input, double totrlnmax);
   bool ConvertToFixedX0(double x0step, NewFullShowerDevelopmentDescription *shmm);
   void SetWideningFactor(double widfact);
   void RemoveEmptySteps();
@@ -327,7 +327,7 @@ class NewFullShowerDevelopmentDescriptionManager{
  public:
   NewFullShowerDevelopmentDescriptionManager(IGlastDetSvc *m_detSvc_input, int nxmax, double xmax0, double dxmax, double zstep_input, double radialcontainedfraction_input, double x0step);
   virtual ~NewFullShowerDevelopmentDescriptionManager();
-  bool Compute(double *pp, double *vv, double startx0_input, double zstep_input);
+  bool Compute(double *pp, double *vv, double startx0_input, double zstep_input, double totrlnmax);
   void FillCurrentFSDD(double showerxmax);
   void SetWideningFactor(double widfact);
   void SetCrackExtinctionFactor(double crackext);
