@@ -644,7 +644,7 @@ Event::CalCorToolResult* NewCalFullProfileTool::doEnergyCorr(Event::CalCluster* 
 //   double mycaltransrms = cluster->getMomParams().getTransRms();
 //   if(mycaltransrms<=0) mycaltransrms = 1e-5;
   //  if(nm_eTotal<100000. && log10(mycaltransrms)>1.7) runcalfit = 0;
-  if(nm_eTotal<100000. && vv[2]>-0.1) runcalfit = 0;
+  //  if(nm_eTotal<100000. && vv[2]>-0.1) runcalfit = 0;
 
   if(runcalfit)
     {
