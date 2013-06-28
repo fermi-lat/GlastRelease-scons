@@ -352,7 +352,7 @@ StatusCode CalMipValsTool::calculate()
         else if (m_arcLen<=0)
           ermc=-100.;
         //@@@@@
-        double derr=TMath::ACos(m_xDir*Tkr_1_xdir+
+        derr=TMath::ACos(m_xDir*Tkr_1_xdir+
                                 m_yDir*Tkr_1_ydir+
                                 m_zDir*Tkr_1_zdir);
         // could just be:

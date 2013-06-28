@@ -418,8 +418,8 @@ StatusCode VtxValsTool::calculate()
 
         VTX_Head_Sep = (x1-x2H).magnitude(); 
 
-        cost1t2 = t1*t2; 
-        t1t2  = acos(cost1t2); 
+        double cost1t2 = t1*t2; 
+        double t1t2  = acos(cost1t2); 
         VTX_Angle = t1t2;
         VTX_DOCA  = gamma->getDOCA(); 
         VTX_S1    = gamma->getTkr1ArcLen();
