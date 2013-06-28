@@ -1,6 +1,7 @@
 # containerNotes for GlastRelease-scons
 
 
+2013-06-28 20-08-18 JIRA LPATE-147
 2013-06-13 20-08-17
   Patches to reconRootData and GCRCalib to avoid memory leaks
   JIRA LPATE-146 includes updates to add in audior info from Tracy plus move new 
