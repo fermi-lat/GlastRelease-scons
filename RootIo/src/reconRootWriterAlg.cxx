@@ -195,7 +195,7 @@ Algorithm(name, pSvcLocator)
     declareProperty("writeTruncationInfo", m_writeTruncationInfo=true);
 
     declareProperty("writeTreeBasedInfo",  m_writeTreeBasedInfo=true);
-    declareProperty("WriteFullTreeOutput", m_writeFullTreeOutput=true);
+    declareProperty("WriteFullTreeOutput", m_writeFullTreeOutput=false);
     
     // ADDED FOR THE FILE HEADERS DEMO
     m_headersTool = 0 ;

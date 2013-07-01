@@ -284,7 +284,7 @@ RootIoSvc::RootIoSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("NoFailure", m_noFailure=0);
     declareProperty("RebuildIndex", m_rebuildIndex=false);
     
-    declareProperty("CompressAlg", m_compressAlg="ZLIB");
+    declareProperty("CompressAlg", m_compressAlg="LZMA");   // Was ZLIB (TU 7/1/13)
     // 
     declareProperty("CelRootFileWrite", m_celFileNameWrite="");
     declareProperty("CelRootFileRead", m_celFileNameRead="");
