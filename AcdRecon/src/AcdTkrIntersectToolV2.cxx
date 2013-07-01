@@ -331,7 +331,7 @@ StatusCode AcdTkrIntersectToolV2::fillPocaData(const AcdRecon::TrackData& track,
   HepPoint3D thePoint = track.m_point + (arc *  track.m_dir);
 
   MsgStream log(msgSvc(),name()) ;
-  log << MSG::WARNING << "Missed Poca for ID " << acdId.id() << " at " << thePoint << endreq;  
+  log << MSG::INFO << "Missed Poca for ID " << acdId.id() << " at " << thePoint << endreq;  
   ownedPocaData.push_back( AcdRecon::PocaData() );
   pocaData = &( ownedPocaData.back() );
   pocaData->m_id = acdId;
