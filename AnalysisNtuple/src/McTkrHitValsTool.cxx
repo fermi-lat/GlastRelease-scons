@@ -198,6 +198,9 @@ McTkrHitValsTool::McTkrHitValsTool(const std::string& type,
 <tr><td> mcTHPosHitOthers <td> I <td> Number of McPositionHits none of the above
 <tr><td> mcTHTotalHits <td> I <td> Total number of MC generated Tracker hits 
 <tr><td> McTHPrimInteraction <td> I <td> Primary particle first interaction flag: 0 for conversion, 1 compton, 2 other
+<tr><td> McTHPrimInterMatId <td> I <td> Id of the material in which the first interaction occurs
+<tr><td> McTHPrimInterMatName <td> C <td> Name of the material in which the first interaction occurs
+<tr><td> McTHPrimInter[X/Y/Z]0 <td> F <td> Position of the first interaction
 </table>
 
 */
