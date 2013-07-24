@@ -539,10 +539,14 @@ namespace rdbModel {
         return false;    // unrecognized type
       }
       // look for this field in Row input. If there, overwrite value
+      // EXCEPT for CONTENTSserviceName (col="creator") in which case
+      // input is left alone
       FieldVal* f = row.find(col->getName());
-      if (f) {
-        f->m_val = val;
-        f->m_null = false;
+      if (f)  {
+        if (col->getContentsType() != Column::CONTENTSserviceName) {
+          f->m_val = val;
+          f->m_null = false;
+        }
       } 
       else {
         FieldVal g(col->getName(), val, false);
