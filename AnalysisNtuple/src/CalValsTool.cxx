@@ -2117,8 +2117,31 @@ StatusCode CalValsTool::calculate()
             arclen   = fabs(deltaZ/eCosTheta);
 
             // do the swim
-            m_G4PropTool->setStepStart(xEnd, tEnd);
-            m_G4PropTool->step(arclen);
+            try
+            {
+                m_G4PropTool->setStepStart(xEnd, tEnd);
+                m_G4PropTool->step(arclen);
+            }
+            catch(std::exception& )
+            {
+                MsgStream log(msgSvc(), name());
+                printHeader(log);
+                setAnaTupBit();
+                log << "See previous exception message." << endreq;
+                log << "Skipping skipping further CalValsTool calculations after attempting to propagate track" << endreq;
+                log << "Initial track parameters: pos: " << xEnd << endreq 
+                    << "dir: " << tEnd << " arclen: " << arclen << endreq;
+                return sc;
+            } catch (...) {
+                MsgStream log(msgSvc(), name());
+                printHeader(log);
+                setAnaTupBit();
+                log << "Unknown exception, see previous exception message, if any" << endreq;
+                log << "Skipping skipping further CalValsTool calculations after attempting to propagate track" << endreq;
+                log << "Initial track parameters: pos: " << xEnd << endreq 
+                       << "dir: " << tEnd << " arclen: " << arclen << endreq;
+                return sc;
+            }
 
             // collect the radlens by layer
             int numSteps = m_G4PropTool->getNumberSteps();

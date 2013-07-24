@@ -1410,8 +1410,31 @@ double EvtValsTool::aveRadLens(Point cal_top, Vector t0, double radius, int numS
       // might as well leave this in, probably will need it soon!
       //std::cout << "EvtValsTool propagator " << x0 << " " << t0 << std::endl;
 
-      m_G4PropTool->setStepStart(x0, t0);
-      m_G4PropTool->step(s_min);  
+      try
+      {
+          m_G4PropTool->setStepStart(x0, t0);
+          m_G4PropTool->step(s_min);
+      }
+      catch(std::exception& )
+      {
+          MsgStream log(msgSvc(), name());
+          printHeader(log);
+          setAnaTupBit();
+          log << "See previous exception message." << endreq;
+          log << "Skipping skipping further EvtValsTool calculations after attempting to propagate track" << endreq;
+          log << "Initial track parameters: pos: " << x0 << endreq 
+              << "dir: " << t0 << " arclen: " << s_min << endreq;
+          return StatusCode::SUCCESS;
+      } catch (...) {
+          MsgStream log(msgSvc(), name());
+          printHeader(log);
+          setAnaTupBit();
+          log << "Unknown exception, see previous exception message, if any" << endreq;
+          log << "Skipping skipping further EvtValsTool calculations after attempting to propagate track" << endreq;
+          log << "Initial track parameters: pos: " << x0 << endreq 
+                 << "dir: " << t0 << " arclen: " << s_min << endreq;
+          return StatusCode::SUCCESS;
+      }
       
       // Loop over the propagator steps to extract the materials
       int numSteps = m_G4PropTool->getNumberSteps();
