@@ -1,6 +1,8 @@
 # containerNotes for GlastRelease-scons
 
 
+2013-07-25 20-09-01 AnalysisNtuple 02-71-22 seg fault protection
+  JIRA LPATE-154
 2013-07-01 20-09-00 RootIo patch for JO defaults and AcdRecon mod to 
   log message levels
 2013-06-28 20-08-18 JIRA LPATE-147
