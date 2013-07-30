@@ -26,32 +26,13 @@ AcdAssoc::AcdAssoc()
    m_cov_end(5,0),
    m_tkrSSDVeto(0),
    m_cornerDoca(0),
+   m_point(0),
    m_energy15(0.),
    m_energy30(0.),
    m_energy45(0.),
    m_triggerEnergy15(0.),
    m_triggerEnergy30(0.),   
    m_triggerEnergy45(0.){
-}
-
-/// Copy constructor
-AcdAssoc::AcdAssoc(const AcdAssoc& other)
-  :m_index(other.m_index),
-   m_upward(other.m_upward),
-   m_energy(other.m_energy),
-   m_start(other.m_start),
-   m_dir(other.m_dir),
-   m_arcLength(other.m_arcLength),
-   m_cov_start(other.m_cov_start),
-   m_cov_end(other.m_cov_end),
-   m_tkrSSDVeto(other.m_tkrSSDVeto),
-   m_cornerDoca(other.m_cornerDoca),
-   m_energy15(other.m_energy15),
-   m_energy30(other.m_energy30),
-   m_energy45(other.m_energy45),
-   m_triggerEnergy15(other.m_triggerEnergy15),
-   m_triggerEnergy30(other.m_triggerEnergy30),   
-   m_triggerEnergy45(other.m_triggerEnergy45){  
 }
 
 
@@ -72,6 +53,7 @@ AcdAssoc::AcdAssoc(int index, bool up, float energy,
    m_cov_end(covEnd),
    m_tkrSSDVeto(tkrSSDVeto),
    m_cornerDoca(cornerDoca),
+   m_point(0),
    m_energy15(energy15),
    m_energy30(energy30),
    m_energy45(energy45),
@@ -80,6 +62,12 @@ AcdAssoc::AcdAssoc(int index, bool up, float energy,
    m_triggerEnergy45(triggerEnergy45){      
 }
 
+
+AcdAssoc::~AcdAssoc(){
+  if ( m_point != 0 ) {
+    delete m_point;
+  }
+}
 
 void AcdAssoc::set(int index, bool up, float energy, 
 		   const HepPoint3D& start, const HepVector3D& dir, float arcLength,
@@ -144,6 +132,10 @@ void AcdAssoc::ini()
   m_cornerDoca = 0.;
   m_hitPocae.clear();
   m_gapPocae.clear();
+  if ( m_point != 0 ) {
+    delete m_point;
+  }
+  m_point = 0;
   m_energy15 = 0.;
   m_energy30 = 0.;
   m_energy45 = 0.;
