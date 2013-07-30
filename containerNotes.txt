@@ -1,6 +1,11 @@
 # containerNotes for GlastRelease-scons
 
 
+2013-07-30 20-09-02 Patches for Event and RootConvert from Eric to further
+  protect against bad smooth fit events in TkrValsTools that result in 
+  some portions of the event objects to be not exist.
+  Also get Joanne's patch to SConsFiles that cleans up some supersede 
+  handling
 2013-07-25 20-09-01 AnalysisNtuple 02-71-22 seg fault protection
   JIRA LPATE-154
 2013-07-01 20-09-00 RootIo patch for JO defaults and AcdRecon mod to 
