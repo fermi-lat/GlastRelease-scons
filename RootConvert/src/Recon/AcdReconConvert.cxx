@@ -406,8 +406,10 @@ void convert( const AcdRecon & rootAcdRec, Event::AcdRecon & tdsAcdRec )
     
     AcdTkrPointV2 rootAcdPoint;
     const Event::AcdTkrPoint* acdTkrPointTDS = tds.getPoint();
-    convert(*acdTkrPointTDS,rootAcdPoint);
-    root.setPoint(rootAcdPoint);
+    if ( acdTkrPointTDS != 0 ) {
+      convert(*acdTkrPointTDS,rootAcdPoint);
+      root.setPoint(rootAcdPoint);
+    }
   }
   
   void convert( const AcdAssoc& root, Event::AcdAssoc& tds) { 
