@@ -2,6 +2,8 @@
  * Coordinator:H.Kelly
  *    * EOH *
 
+ ntupleWriterSvc-06-02-03 07-Aug-2013 hmk tag to force latest build to test
+  RHEL5-32 jenkins builds
  ntupleWriterSvc-06-02-02 06-May-2013 hmk tag to force a LATEST build
  ntupleWriterSvc-06-02-01 06-May-2013 hmk tag to force a LATEST build
  ntupleWriterSvc-06-02-00 20-Aug-2012    jrb for Windows no-install-headers
