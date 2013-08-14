@@ -1,6 +1,8 @@
 # containerNotes for GlastRelease-scons
 
 
+2013-08-13 Grab updated packages shared with ST:  astro, evtUtils and
+  celestialSources/EarthPhenom
 2013-07-30 20-09-02 Patches for Event and RootConvert from Eric to further
   protect against bad smooth fit events in TkrValsTools that result in 
   some portions of the event objects to be not exist.
