@@ -1750,7 +1750,8 @@ StatusCode reconRootReaderAlg::storeCalClusterMap(CalRecon *calRecRoot)
         }
     }
 
-    sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterMap, calClusterMapTds);
+    if (!calClusterMapTds->empty()) sc = eventSvc()->registerObject(EventModel::CalRecon::CalClusterMap, calClusterMapTds);
+    else                            delete calClusterMapTds;
 
     return sc;
 }
