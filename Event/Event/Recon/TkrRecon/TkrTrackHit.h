@@ -99,7 +99,8 @@ public:
     /// Default (null) constructor (just in case...)
     TkrTrackHit() : m_statusBits(0), m_cluster(), m_hitID(0,0,0,false), 
                     m_zPlane(0), m_energy(0), m_radLen(0), m_activeDist(0),
-                    m_chiSquareFilter(0.), m_chiSquareSmooth(0.) {}
+                    m_chiSquareFilter(0.), m_chiSquareRevFit(0.), 
+                    m_chiSquareSmooth(0.), m_kinkAngle(0) {}
 
     /// Construct all but the track parameters, they must be set during recon stage
     TkrTrackHit(Event::TkrCluster* cluster,
@@ -112,8 +113,8 @@ public:
                 const double       hitChiSmooth) :
                     m_statusBits(0), m_cluster(cluster), m_hitID(tkrID), m_zPlane(hitZ), 
                     m_energy(hitEnergy), m_radLen(hitRadLen), m_activeDist(hitActDist),
-                    m_chiSquareFilter(hitChiFilter), m_chiSquareSmooth(hitChiSmooth),
-                    m_kinkAngle(0.)
+                    m_chiSquareFilter(hitChiFilter), m_chiSquareRevFit(0.),
+                    m_chiSquareSmooth(hitChiSmooth), m_kinkAngle(0.)
     {
         if (m_cluster != 0)  m_statusBits  = HITISSSD | HITONFIT;
         if (tkrID.hasTray()) m_statusBits |= HASVALIDTKR;
