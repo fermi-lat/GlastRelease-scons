@@ -262,6 +262,12 @@ void ObfValsTool::zeroVals() {
     // We don't want to zero these unless
     //  there's a digi TDS around to restore them from.
     // So we'll do the zeroing in calculate()
+    // Except for the status words
+
+    m_fswGamStatus = _invalid;
+    m_fswMipStatus = _invalid;
+    m_fswHipStatus = _invalid;
+    m_fswDgnStatus = _invalid;
 
     return;
 }
@@ -389,7 +395,6 @@ StatusCode ObfValsTool::calculate()
             m_fswGamPrescaleIndex = LSF_INVALID_UINT;
             m_fswGamPrescaleFactor = LSF_INVALID_UINT;
             m_fswGamState = _invalid;
-            m_fswGamStatus = _invalid;
             m_fswGamEnergy = 0.0;
             m_fswGamStage = _invalid;
             m_fswGamVersion = _invalid;
