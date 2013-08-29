@@ -245,7 +245,7 @@ StatusCode TkrGhostTool::calculateTkrVector(
     int clusSize = clusterCol->size();
     for (i=0;i<clusSize;++i) {
         Event::TkrCluster* clus = (*clusterCol)[i];
-        // NO! NO! //clus->clearStatusBits(Event::TkrCluster::maskZAPGHOSTS);
+        // NO!! NO!! //clus->clearStatusBits(Event::TkrCluster::maskZAPGHOSTS);
         int tower = clus->tower();
         tBits[tower].setBit(clus);
     }
