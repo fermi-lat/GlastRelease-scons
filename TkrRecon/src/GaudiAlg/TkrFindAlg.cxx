@@ -82,6 +82,8 @@ private:
     bool     m_doStandardFinding;
     bool     m_CRGhosts;
     bool     m_standardGhosts;
+    bool     m_doStandardTrackDeghosting;
+    bool     m_doCRTrackDeghosting;
 };
 
 //static const AlgFactory<TkrFindAlg>  Factory;
@@ -94,9 +96,12 @@ Algorithm(name, pSvcLocator)
     declareProperty("TrackFindType",   m_TrackFindType="TreeBased"); 
     declareProperty("DoCRFinding",     m_doCRFinding=true);
     declareProperty("CRGhosts",        m_CRGhosts=true);
+    declareProperty("DoCRTrackDeghosting", m_doCRTrackDeghosting=false);
 
     declareProperty("DoStandardFinding", m_doStandardFinding=true);
     declareProperty("StandardGhosts",    m_standardGhosts=false);
+    declareProperty("DoStandardTrackDeghosting", m_doStandardTrackDeghosting=false);
+
     
 }
 
@@ -296,7 +301,7 @@ StatusCode TkrFindAlg::execute()
         sc = m_CRFindTool->firstPass();
         
         if(m_ghostTool && m_CRGhosts) {
-            sc = m_ghostTool->flagEarlyTracks();
+            if(m_doCRTrackDeghosting) sc = m_ghostTool->flagEarlyTracks();
             sc = m_ghostTool->flagEarlyCalClusters();
         }
     }
@@ -316,7 +321,7 @@ StatusCode TkrFindAlg::execute()
         else                         sc = m_findTool->secondPass();
 
         if(m_ghostTool && m_standardGhosts) {
-            sc = m_ghostTool->flagEarlyTracks();
+            if(m_doStandardTrackDeghosting) sc = m_ghostTool->flagEarlyTracks();
         }
     }
 
