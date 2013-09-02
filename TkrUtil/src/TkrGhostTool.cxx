@@ -581,6 +581,7 @@ StatusCode TkrGhostTool::flagEarlyTracks()
         int ghostCount = 0;
         int _255Count = 0;
         int diagCount = 0;
+        int anyGhostCount = 0;
         while(pHit != track->end()) {
             const Event::TkrTrackHit* hit = *pHit++;
             Event::TkrClusterPtr pClus = hit->getClusterPtr();
@@ -596,9 +597,12 @@ StatusCode TkrGhostTool::flagEarlyTracks()
             if(isDiagGhost) {
                 diagCount++;
             }
+            if(isDiagGhost||isGhost||is255) anyGhostCount++;
         }
 
         if(_255Count==0&&ghostCount==0&&diagCount==0) continue;
+        // just one ghost is probably a good track
+        if(anyGhostCount==1) continue;
 
         // this is some kind of ghost track!
         track->setStatusBit(Event::TkrTrack::GHOST);
