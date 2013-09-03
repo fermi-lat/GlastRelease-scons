@@ -275,12 +275,12 @@ StatusCode AnalysisNtupleAlg::initialize(){
         m_toolvec.push_back(0);
         m_toolnames[i]+="ValsTool";
         sc = pToolSvc->retrieveTool(m_toolnames[i], m_toolvec.back());
-        m_toolvec.back()->setLoadOrder(i);
         if( sc.isFailure() ) {
             log << MSG::ERROR << "Unable to find tool: " 
                 << m_toolnames[i] << endreq;
             return sc;
         }
+        m_toolvec.back()->setLoadOrder(i);
     }
         
     // get a pointer to our ntupleWriterSvc
