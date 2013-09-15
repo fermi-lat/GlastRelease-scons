@@ -4,9 +4,9 @@
   <prim name="tileMat" value="ACD_Polystyrene" type="string" uType="mat">material used for tiles
 </prim>
 <!-- Set ACD core to FOAM05, face to Be pending updated information -->
-  <prim name="ACDSupportCoreMat" value="ACD_FOAM05" type="string" uType="mat">
+  <prim name="ACDSupportCoreMat" value="Al_3lb" type="string" uType="mat">
 Material used in support.  Still need input from engineers about this.</prim>
-  <prim name="ACDSupportFaceMat" value="ACD_Be" type="string" uType="mat">
+  <prim name="ACDSupportFaceMat" value="CarbonFiber" type="string" uType="mat">
 Material used in ACD support.  Still need input from engineers about this.
   </prim>
   <prim name="ribbonMat" value="ACD_Polystyrene" type="string" uType="mat">
