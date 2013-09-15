@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+ xmlGeoDbs-01-48-01 14-Sep-2013  lsrea Use correct materials for ACD support; for gamma conversion test
  xmlGeoDbs-01-48-00 19-Jul-2010  lsrea update materials and dimensions for Pass 8
  xmlGeoDbs-01-47-06 05-Nov-2009    jrb Updates for SCons
    v1r47p5 20-Aug-2008 jrb  1. Correctly locate side tiles by using composition
