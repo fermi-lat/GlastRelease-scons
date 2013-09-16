@@ -5,22 +5,19 @@
 //   new value for flavor field
 //   (optional) If it's a string starting with "prod" or "Prod" use 
 //              production db calib.  Otherwise use calib_test.
+//   .my.cnf needs entry for group copyCalibration including
+//    host, user, password
 
 #include <iostream>
 #include <fstream>
 #include <cstring>
 #include <cstdlib>
-//#include <cstdio>
 #include "rdbModel/Rdb.h"
 #include "rdbModel/RdbException.h"
 #include "rdbModel/Management/Manager.h"
 #include "rdbModel/Management/XercesBuilder.h"
 #include "rdbModel/Db/MysqlConnection.h"
 #include "rdbModel/Db/MysqlResults.h"
-//#include "rdbModel/Tables/Table.h"
-//#include "rdbModel/Tables/Column.h"
-//#include "rdbModel/Tables/Datatype.h"
-//#include "rdbModel/Tables/Assertion.h"
 #include "facilities/Util.h"
 #include "facilities/commonUtilities.h"
 
@@ -34,13 +31,16 @@ int main(int argc, char* argv[]) {
   using rdbModel::FieldVal;
 
   if (argc < 3) {
-    std::cout << "CopyCalibration call looks like this:" << std::cout;
-    std::cout << "CopyCalibration FILEPATH FLAVOR [Test | Prod]" << std::cout;
+    std::cout << "CopyCalibration call looks like this:" << std::endl;
+    std::cout << "CopyCalibration FILEPATH FLAVOR [Test | Prod]" << std::endl;
     std::cout << "FILEPATH is path to file containing list of serial numbers"
               << std::endl;
-    std::cout << "of calibrations to be copied";
+    std::cout << "of calibrations to be copied" << std::endl;
     std::cout << "By default no actual inserts are done unless optional third arg." << std::endl;
     std::cout << "is Prod or Test" << std::endl;
+    std::cout << "For prod inserts, add group [copyCalibration] with suitable values"
+              << std::endl;
+    std::cout << "for host, user, password to .my.cnf" << std::endl;
     exit(0);
   }
   std::string infile = std::string(argv[1]);
