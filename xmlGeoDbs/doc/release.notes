@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+ xmlGeoDbs-01-48-02 18-Sep-2013  lsrea Added 2%X0 btwn tiles and tracker
  xmlGeoDbs-01-48-01 14-Sep-2013  lsrea Use correct materials for ACD support; for gamma conversion test
  xmlGeoDbs-01-48-00 19-Jul-2010  lsrea update materials and dimensions for Pass 8
  xmlGeoDbs-01-47-06 05-Nov-2009    jrb Updates for SCons
