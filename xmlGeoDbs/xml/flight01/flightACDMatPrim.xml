@@ -3,15 +3,9 @@
   <overview>Materials used in the ACD description</overview>
   <prim name="tileMat" value="ACD_Polystyrene" type="string" uType="mat">material used for tiles
 </prim>
-<!-- Try with the test material: Al_9lb -->
-  <prim name="ACDSupportCoreMat" value="ACD_Al_9lb" type="string" uType="mat">
-Material used in support 
-  </prim>
-  <prim name="ACDSupportFaceMat" value="CarbonFiber" type="string" uType="mat">
-Material used in ACD support
-  </prim>
 
-  <prim name="ACDSupportCoreMat" value="ADC_Al_9lb" type="string" uType="mat">
+<!-- Try with the test material: Al_9lb -->
+  <prim name="ACDSupportCoreMat" value="ACD_Al_9lb" type="string" uType="mat"> 
 Material used in support
   </prim>
   <prim name="ACDSupportFaceMat" value="CarbonFiber" type="string" uType="mat">
