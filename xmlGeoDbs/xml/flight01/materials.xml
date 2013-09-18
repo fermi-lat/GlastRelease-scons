@@ -121,6 +121,11 @@
   <addmaterial material="Aluminum"> <natoms n="1" /> </addmaterial>
 </composite>
 
+<composite name="ACD_Al_9lb" densityREF="Al_9lbDensity">
+  <addmaterial material="Aluminum"> <natoms n="1" /> </addmaterial>
+</composite>
+
+
 <composite name="Algrid" density="2.702">
   <addmaterial material="Aluminum"> <natoms n="1" /> </addmaterial>
 </composite>
