@@ -58,9 +58,7 @@ namespace {
 
     double _xTower;
     double _yTower;
-    int   
-
- _tower;
+    int    _tower;
     int    _layer;
     int    _view;
     int    _tray;
