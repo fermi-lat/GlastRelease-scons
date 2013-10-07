@@ -4,6 +4,7 @@
  *
  *                    **EOH**
 
+ xmlGeoDbs-01-48-03 07-Oct-2013  lsrea Mods to add material between ACD tiles and tracker (from Philippe)
  xmlGeoDbs-01-48-02 18-Sep-2013  lsrea Added 2%X0 btwn tiles and tracker
  xmlGeoDbs-01-48-01 14-Sep-2013  lsrea Use correct materials for ACD support; for gamma conversion test
  xmlGeoDbs-01-48-00 19-Jul-2010  lsrea update materials and dimensions for Pass 8
