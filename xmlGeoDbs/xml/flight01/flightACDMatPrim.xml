@@ -4,8 +4,8 @@
   <prim name="tileMat" value="ACD_Polystyrene" type="string" uType="mat">material used for tiles
 </prim>
 
-<!-- Try with the test material: Al_9lb -->
-  <prim name="ACDSupportCoreMat" value="ACD_Al_9lb" type="string" uType="mat"> 
+<!-- Empirical fix (from Philippe) -->
+  <prim name="ACDSupportCoreMat" value="ACD_Al" type="string" uType="mat"> 
 Material used in support
   </prim>
   <prim name="ACDSupportFaceMat" value="CarbonFiber" type="string" uType="mat">

@@ -2,12 +2,10 @@
 <primCategory name="ACDDimPrim">
   <overview>Fundamental solid dimensions and offsets within the ACD.</overview>
 
-  <!-- for the ACD materials test -->
-  
-  <prim name="Al_9lbDensity" value="0.1443" > acd test core density</prim>
+  <!-- Empirical fix (from Philippe) for ACD material -->
+  <!-- corresponds to 6.875 lb hexcell, or 2.29 times denser than 3lb -->
+  <prim name="ACD_Al_Density" value="0.11" > acd test core density</prim>
 
-
-  
 <!-- Stay-clear stuff from LAT-DS-00038 -->
   <prim name="ACDTransOuterSC" value="1796">Maximum transverse outer extent 
    of ACD (from LAT-DS-00038)</prim>

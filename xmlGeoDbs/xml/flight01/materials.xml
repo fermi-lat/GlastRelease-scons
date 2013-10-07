@@ -121,7 +121,9 @@
   <addmaterial material="Aluminum"> <natoms n="1" /> </addmaterial>
 </composite>
 
-<composite name="ACD_Al_9lb" densityREF="Al_9lbDensity"> 
+<!-- Material for empirical fix for ACD material -->
+<!-- See flightACDDimPrim for actual density -->
+<composite name="ACD_Al" densityREF="ACD_Al_Density"> 
   <addmaterial material="Aluminum"> <natoms n="1" /> </addmaterial>
 </composite>
 
