@@ -300,8 +300,8 @@ StatusCode TkrFindAlg::execute()
         findCRAlgTool->setProperty("PatrecMode", "CosmicRay");
         sc = m_CRFindTool->firstPass();
         
-        if(m_ghostTool && m_CRGhosts) {
-            if(m_doCRTrackDeghosting) sc = m_ghostTool->flagEarlyTracks();
+        if(m_ghostTool && m_CRGhosts && m_doCRTrackDeghosting) {
+            sc = m_ghostTool->flagEarlyTracks();
             sc = m_ghostTool->flagEarlyCalClusters();
         }
     }
@@ -320,8 +320,8 @@ StatusCode TkrFindAlg::execute()
         if (name() != "TkrFindIter") sc = m_findTool->firstPass();
         else                         sc = m_findTool->secondPass();
 
-        if(m_ghostTool && m_standardGhosts) {
-            if(m_doStandardTrackDeghosting) sc = m_ghostTool->flagEarlyTracks();
+        if(m_ghostTool && m_standardGhosts && m_doStandardTrackDeghosting) {
+            sc = m_ghostTool->flagEarlyTracks();
         }
     }
 
