@@ -5,6 +5,9 @@
  * $Id$
 * EOH
 
+ Gleam-08-00-00 15-Oct-2013 heather Cleaning up JO files and moving to 
+  updated src/jobOptions/pipeline/calibrations.txt and introducing
+  src/jobOptions/simulations area to store MC related JO files
  Gleam-07-11-22 21-Jun-2013  lsrea Add TkrCRValsTool to readigi_runrecon.txt
  Gleam-07-11-21 16-May-2013  lsrea add FT1Alg1 and FT1Alg2 to calib settings
  Gleam-07-11-20 12-Apr-2013 heather update JO to turn full chrono stats back on

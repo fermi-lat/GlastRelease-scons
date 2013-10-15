@@ -208,7 +208,6 @@ ClassifyAlg1.xmlFileName = "$(EXTFILESSYS)/pass8Analysis/xml/Pass8_Analysis_Open
 // S/C alignment (FT1Alg)
 //
 FT1Alg1.CorrectForAberration = true;
-FT1Alg1.AlignmentFlavor      = "vanilla";
 
 
 //

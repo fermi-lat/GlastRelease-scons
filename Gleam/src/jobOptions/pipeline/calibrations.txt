@@ -1,7 +1,9 @@
 //
-// Job Option file containing calibration stuff 
-// to be included by recon and mc:
+// Job Option file containing calibration stuff to be included by recon:
 //
+// This version uses only 'L1current' calibrations
+//
+
 #include "$CALIBSVCJOBOPTIONSPATH/defaultOptions.txt"
 
 //
@@ -27,28 +29,19 @@ CalibDataSvc.CalibTimeSource = "data";
 //
 // General calibration flavor list (so far!):
 //
-CalibDataSvc.CalibFlavorList = {"vanilla", "p7repro", "flight"};
+CalibDataSvc.CalibFlavorList = {"vanilla", "L1current"};
 
 // Start up a CalCalibSvc:
 ApplicationMgr.ExtSvc += {"CalCalibSvc"};
 
 // Cal flavor:
-CalCalibSvc.DefaultFlavor = "vanilla";
-
+CalCalibSvc.DefaultFlavor = "L1current";
 
 
 //
 // Tracker flavor: 
 //
-TkrReconCalib.calibFlavor = "vanilla";
-
-// the dead GTRC in tower 10, plane 0
-TkrReconCalib.splitsCalibFlavor = "flight";
-
-//
-// Write out bad and hot strips to the log file: Not!
-//
-TkrBadStripsSvc.OutputLevel = 4;
+TkrReconCalib.calibFlavor = "L1current";
 
 
 // Start up an AcdCalibSvc:
@@ -56,33 +49,19 @@ ApplicationMgr.DLLs   += {"AcdUtil"};
 ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 
 // For real data:
-AcdCalibSvc.DefaultFlavor = "vanilla";
+AcdCalibSvc.DefaultFlavor = "L1current";
 //
 ToolSvc.AcdPha2MipTool.ApplyCoherentNoiseCalib = true;
 
-//
-// To get some output about the ideal calibs for the ACD:
-//
-AcdCalibSvc.OutputLevel = 1;
 
 //
 // Only PROD! Default is PROD and DEV!
 //
 CalibMySQLCnvSvc.QualityList = {"PROD"};
 
-
-// And here are the p7repro settings:
-
-TkrReconCalib.deadStripsCalibFlavor        = "p7repro";
-TkrReconCalib.hotStripsCalibFlavor         = "p7repro";
-TkrReconCalib.internalAlignmentCalibFlavor = "p7repro";
-TkrReconCalib.towerAlignmentCalibFlavor    = "p7repro";
+// Other stuff
 	 
-CalCalibSvc.FlavorAsym      = "p7repro";
-CalCalibSvc.FlavorPed       = "p7repro";
-CalCalibSvc.FlavorMeVPerDac = "p7repro";
-	 
-// cover all the bases
-FT1Alg.AlignmentFlavor = "p7repro";     // old style
-FT1Alg1.AlignmentFlavor = "p7repro";    // merituptle
-FT1Alg2.AlignmentFlavor = "p7repro";    // primetuple
+// cover all the bases for boresight alignment
+FT1Alg.AlignmentFlavor = "L1current";     // old style
+FT1Alg1.AlignmentFlavor = "L1current";    // merituptle
+FT1Alg2.AlignmentFlavor = "L1current";    // primetuple
