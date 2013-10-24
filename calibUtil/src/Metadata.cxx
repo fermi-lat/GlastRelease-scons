@@ -272,7 +272,7 @@ namespace calibUtil {
     Assertion::Operator flavorOp(OPTYPEequal, "flavor", flavor, 
                                  FIELDTYPEold, FIELDTYPElit);
                                  //  false, true);
-    Assertion::Operator vstartOp(OPTYPEgreaterThan, timestamp.getString(), 
+    Assertion::Operator vstartOp(OPTYPEgreaterOrEqual, timestamp.getString(), 
                                  "vstart",
                                  FIELDTYPElit, FIELDTYPEold);
     //                      true, false);
