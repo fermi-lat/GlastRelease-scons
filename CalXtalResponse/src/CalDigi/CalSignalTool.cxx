@@ -57,7 +57,7 @@ CalSignalTool::CalSignalTool(const std::string& type,
     declareProperty("CalCalibSvc",         m_calCalibSvcName     = "CalCalibSvc");
     declareProperty("XtalSignalToolName",  m_xtalSignalToolName  = "XtalSignalTool");
     declareProperty("enableNoise",         m_enableNoise         = true);
-    declareProperty("electronicNoiseGain", m_electronicNoiseGain = .32);
+    declareProperty("electronicNoiseGain", m_electronicNoiseGain = 1.0);
     declareProperty("enableXtalNoise",     m_enableXtalNoise     = true);
     declareProperty("enableElecNoise",     m_enableElecNoise     = true);
     declareProperty("PrecalcCalibTool",    m_precalcCalibName    = "PrecalcCalibTool");
