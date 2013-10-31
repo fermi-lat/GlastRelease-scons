@@ -1,0 +1,139 @@
+
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+//<<<--- allGamma.txt - Production Monte Carlo with Overlays
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+
+// 
+//   ===============================================================
+//   The following is meant to serve as the top level Job Options file
+//   for running all gamma simulations with overlays. It reads in the 
+//   basic options file, and related Job Options files to set up the 
+//   run processing and contains the standard set of overrides needed to
+//   taylor this simulation job. 
+//   note that it requires the following environment variables be defined:
+//   GPL_TASKROOT
+//   runname
+//   starttime
+//   GPL_EVENTID
+//   meritrootfilename
+//
+
+// Start by including standard Gleam job options which will set up the 
+// full simulation and reconstrution process
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
+
+// Define base code release for jobinfo metadata in merit file
+RootTupleSvc.jobinfo = "version=20,revision=9,patch=5";
+
+// Include the file that will set up the calibrations used in
+// this simulation/reconstruction job
+#include "$GLEAMJOBOPTIONSPATH/calibration.txt"
+
+// 
+//   ===============================================================
+//   Set up the Overlay 
+// 
+#include "$OVERLAYJOBOPTIONSPATH/MergeAlgs/Overlay.txt"
+
+//   This sets the path to the input overlay files
+OverlayDataSvc.InputXmlFilePath = "/nfs/farm/g/glast/u44/MC-tasks/overlay/17-May-2010/";
+
+//   ************************************************
+//   SHOULD BE SET AS DEFAULT IN OVERLAY.TXT
+//   ************************************************
+// fix: namechange fron AnalysisNtupleAlg to AnalysisNtupleAlg1, SIMREQ-89
+AnalysisNtupleAlg1.toolList={"+","Overlay"};
+
+// 
+//   ===============================================================
+//   This will turn off moot since it is not necessary for simulation
+//
+MootSvc.noMoot = true;
+
+// 
+//   ===============================================================
+//   For the simulation it is necessary to define the orbit behavior
+//   Note these are critical to Overlay: the StartDate is used to pick
+//   the input overlay events, the orbit to choose the set of overlay files
+//   to read from. 
+// 
+FluxAlg.AvoidSAA          =  true;                  // A value of "true" will "turn off" the LAT during SAA
+FluxSvc.StartDate         = "2012-09-16 00:00:00";  // Set the start date for the simulation
+FluxSvc.OrbitInclination  = 25.6;                   // Set the orbit inclination for the simulation
+
+FluxSvc.source_lib       += {"$(GPL_TASKROOT)/config/xml/gamma_library.xml"};
+FluxAlg.sources          += {"all_gamma_562GeV_mcill"};  
+
+//
+//   ===============================================================
+//   Set the starting conditions for this simulation run
+// 
+GlastRandomSvc.RunNumberString="$(runName)";    // run number used for seed: expect env var!
+FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for this run,
+
+ExposureAlg.PrintFrequency = 1000; // from 30 s to 5 min
+
+//
+//   ===============================================================
+//   The default configurations of the Trigger and Onboard Filter are set for 
+//   the data reconstruction to reproduce the results coming down from the LAT
+//   For simulation we want to actually use the results of the Trigger and 
+//   Onboard Filter they way they are used there, so need these overrides
+//   (should this be in basicOption.txt?)
+TriggerAlg.applyPrescales   = true;   // If "true" then prescaling of events will occur
+TriggerAlg.applyWindowMask  = true;   // If "true" then a "window open mask" will be used
+TriggerAlg.applyDeadtime    = true;   // If "true" then deadtime is applied
+
+OnboardFilter.RejectEvents  = false;  // "false" is default in OnboardFilter pkg
+OnboardFilter.FailNoEbfData = false;  // if no EBF data (misses LAT) accept the event (default)
+
+//
+//   ===============================================================
+//   Set the maximum number of events 
+//
+ApplicationMgr.EvtMax   = 20000;    // number of events to generate
+MeritAlg.generated      = 20000;    // allows measure of Aeff
+
+// max compression for recon
+reconRootWriterAlg.compressionLevel = 9;
+
+//
+//   ===============================================================
+//   Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
+//
+CurrentEventAlg.fileName= "$(GPL_EVENTID)";
+
+//
+//   ===============================================================
+//   meritTuple output
+//
+RootTupleSvc.RejectIfBad        = false;             // warning!
+MeritAlg.EventTreeName          = "MeritTuple";
+RootTupleSvc.filename           = "$(meritRootFileName)";
+
+//
+//   ===============================================================
+//   This section is meant for useful/common JO overrides
+//
+
+// This is used in Tkr truncation studies. The default is 14, 
+// current studies override this to 64 
+////TkrSplitsSvc.defaultMaxStrips = 64;
+
+
+// The following disables the GCR Calibration which is not 
+// used in simulation (it would only be useful in background sims)
+Gcr.Members = {};
+
+//
+//   ===============================================================
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//
+MessageSvc.OutputLevel        =3;  // info 
+AcdReconAlg.OutputLevel       =5;  // is it crying wolf??
+CalLikelihoodTool.OutputLevel =4;  // 
+AcdDigiAlg.OutputLevel        =4;  // too much info
+
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+//<<<--- End of allGamma.txt job options file
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
