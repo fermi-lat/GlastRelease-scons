@@ -6,6 +6,7 @@
 
             * EOH *
 
+ FluxSvc-06-59-01 05-Nov-2013 bregeon update orbit inclination
  FluxSvc-06-59-00 17-Aug-2012    jrb for Windows no-install-headers
  FluxSvc-06-58-01 02-Jul-2012  cohen fix an oops
  FluxSvc-06-58-00 02-Jul-2012  cohen New gaudi evaluates env var based properties on the fly
