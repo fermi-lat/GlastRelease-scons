@@ -30,6 +30,7 @@ progEnv.Tool('registerTargets', package = 'Gleam',
 	     binaryCxts = [[Gleam, progEnv]],
          data = ['data/dummy.txt'],
 	     jo = listFiles(['src/*.txt', 'src/test/*.txt',
+                             'src/jobOptions/simulations/*.txt',
 			     'src/jobOptions/pipeline/*.txt']) )
 
 
