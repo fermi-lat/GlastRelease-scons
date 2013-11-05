@@ -49,6 +49,10 @@ Event.Members = {
 
 Event.BranchMembers = {"Generation", "ExposureAlg"};
 
+// ExposureAlg be quiet - LPATE-167
+ExposureAlg.PrintFrequency = 1000; // from 30 s to 5 min
+
+
 // can substitute mcRootReaderAlg here!
 
 Generation.Members = {
@@ -107,7 +111,7 @@ TriggerAlg.mask = "0xffffffff"; // all bits on by default: reject if none set (e
 // The following is to use the ConfigSvc to configure the trigger
 TriggerAlg.engine="ConfigSvc"; // use ConfigSvc to configure trigger engines. The following options control the configuration:
 TriggerAlg.applyPrescales=true; // do trigger engine based prescaling
-//TriggerAlg.applyWindowMask=true; // only use event if the window was open
+TriggerAlg.applyWindowMask=true; // only use event if the window was open
 //TriggerAlg.applyDeadtime=true; // throw away events if GEM is busy
 //TriggerAlg.useGltWordForData=true; //when prescaling data use Glt word instead of Gem word
 
@@ -297,6 +301,10 @@ ApplicationMgr.DLLs +={ "CRflux" };
 FluxSvc.source_lib += {
     "$(CRFLUXXMLPATH)/source_library.xml"};
 
+// Avoid SAA by default - LPATE-167
+FluxAlg.AvoidSAA          =  true;  // A value of "true" will"turn off" the LAT during SAA
+
+
 // -------------------------------------------
 //          tracker services
 //
@@ -314,7 +322,7 @@ ApplicationMgr.ExtSvc   += { "TkrInitSvc"};
 #include "$MOOTSVCJOBOPTIONSPATH/defaultOptions.txt"
 // Configuration.  This gets the configuration from files in the release
 #include "$CONFIGSVCJOBOPTIONSPATH/configOptions_noMoot.txt"
-//MootSvc.noMoot = true;  // turn off MOOT access by default for now
+MootSvc.noMoot = true;  // turn off MOOT access by default for now - LPATE-167
 
 // -------------------------------------------
 //  Calorimeter services
@@ -336,6 +344,7 @@ ToolSvc.OutputLevel=3;    // too verbose in debug
 CalClustersAlg.OutputLevel=4; // too much info
 TkrClusFirst.OutputLevel=4;
 CalDigiAlg.OutputLevel=4;
+AcdDigiAlg.OutputLevel        =4;  // LPATE-167
 TkrAlignmentSvc.OutputLevel=4;
 TkrGeometrySvc.OutputLevel=4;
 EbfWriter.OutputLevel=4;
@@ -343,7 +352,7 @@ ToolSvc.LastLayerCorrTool.OutputLevel=4;
 ToolSvc.OutputLevel=4;
 CalXtalRecAlg.OutputLevel=4;
 CalReconEnergy.OutputLevel=5;
-AcdReconAlg.OutputLevel=4; // suppress INFO complaint about no tracks
+AcdReconAlg.OutputLevel=5; // suppress INFO complaint about no tracks - LPATE-167
 GcrReconAlg.OutputLevel           = 4;
 GcrReconSelect.OutputLevel        = 4;
 GcrSelectAlg.OutputLevel          = 4;
@@ -351,6 +360,7 @@ ToolSvc.GcrReconTool.OutputLevel  = 4;
 ToolSvc.GcrSelectTool.OutputLevel = 4;
 ToolSvc.CalValsTool.OutputLevel   = 3;
 ApplicationMgr.OutputLevel        = 4;
+CalLikelihoodTool.OutputLevel =4; // LPATE-167
 
     
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
