@@ -189,7 +189,7 @@ Algorithm(name, pSvcLocator)
     declareProperty("splitMode", m_splitMode=1);
     declareProperty("bufferSize", m_bufSize=64000);
     // ROOT default compression
-    declareProperty("compressionLevel", m_compressionLevel=1);
+    declareProperty("compressionLevel", m_compressionLevel=9);
     declareProperty("treeName", m_treeName="Recon");
 
     declareProperty("writeTruncationInfo", m_writeTruncationInfo=true);
