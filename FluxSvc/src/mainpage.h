@@ -31,7 +31,7 @@ Usage is primarily via the FluxAlg algorithm, which access the service to genera
     note that if both StartDate and StartTime are specified, the latter is added to form the actual start
     @param FluxSvc.SampleInterval [1.0] Governs the minimum time that must elapse before a the GPS observers
     are notified to update pointing and attitude information.
-    @param FluxSvc.OrbitInclination [25.3] Orbit inclination angle, in degrees for default orbit
+    @param FluxSvc.OrbitInclination [25.6] Orbit inclination angle, in degrees for default orbit
     @param FluxSvc.SAApolyLat  [{}] list of latitudes defining the SAA exclusion polygon
     @param FluxSvc.SAApolyLon  [{}] longitudes
     @param FluxSvc.xmlListFile    [""] name of a file containing a list of xml file names, multiple source_lib entries, consistent with obssim

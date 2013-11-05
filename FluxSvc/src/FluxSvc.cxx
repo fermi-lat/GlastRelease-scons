@@ -337,7 +337,7 @@ FluxSvc::FluxSvc(const std::string& name,ISvcLocator* svc)
     declareProperty("LaunchDate"  , m_times.m_launchDate="");
     declareProperty("StartTimeEnvVar", m_times.m_startTimeEnvVar="");
     declareProperty("SampleInterval", m_sampleInterval=1.0);
-    declareProperty("OrbitInclination", m_orbitInclination=25.3);
+    declareProperty("OrbitInclination", m_orbitInclination=25.6);
 
     declareProperty("SAApolyLat"  , m_SAA_poly_lat);
     declareProperty("SAApolyLon"  , m_SAA_poly_lon);
