@@ -3,16 +3,8 @@
 //<<<--- allGamma.txt - Production Monte Carlo with Overlays
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
 
-// Start by including standard Gleam job options which will set up the 
-// full simulation and reconstrution process
-#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
-
-// Define base code release for jobinfo metadata in merit file
-RootTupleSvc.jobinfo = "version=20,revision=9,patch=5";
-
-// Include the file that will set up the calibrations used in
-// this simulation/reconstruction job
-#include "$GLEAMJOBOPTIONSPATH/calibration.txt"
+// Default allGamma.txt 
+#include "$GLEAMJOBOPTIONSPATH/jobOptions/simulations/allGamma.txt"
 
 // 
 //   ===============================================================
@@ -22,62 +14,6 @@ RootTupleSvc.jobinfo = "version=20,revision=9,patch=5";
 
 //   This sets the path to the input overlay files
 OverlayDataSvc.InputXmlFilePath = "/nfs/farm/g/glast/u44/MC-tasks/overlay/Overlay-maker4";
-
-// 
-//   ===============================================================
-//   For the simulation it is necessary to define the orbit behavior
-// 
-FluxSvc.StartDate         = "2012-09-16 00:00:00";  // Set the start date for the simulation
-
-FluxSvc.source_lib       += {"$(GPL_TASKROOT)/config/xml/gamma_library.xml"};
-FluxAlg.sources          += {"all_gamma_562GeV_mcill"};  
-
-//
-//   ===============================================================
-//   Set the starting conditions for this simulation run
-// 
-GlastRandomSvc.RunNumberString="$(runName)";    // run number used for seed: expect env var!
-FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for this run,
-
-//
-//   ===============================================================
-//   Default configurations of the Trigger and Onboard Filter 
-TriggerAlg.applyDeadtime    = true;   // If "true" then deadtime is applied
-
-//
-//   ===============================================================
-//   Set the maximum number of events 
-//
-ApplicationMgr.EvtMax   = 100;    // number of events to generate
-MeritAlg.generated      = 100;    // allows measure of Aeff
-
-
-//
-//   ===============================================================
-//   Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
-//
-CurrentEventAlg.fileName= "$(GPL_EVENTID)";
-
-//
-//   ===============================================================
-//   output files name
-//
-RootTupleSvc.filename           = "$(meritRootFileName)";
-mcRootWriterAlg.mcRootFile       = "$(mcRootFileName)";
-digiRootWriterAlg.digiRootFile   = "$(digiRootFileName)";
-reconRootWriterAlg.reconRootFile = "$(reconRootFileName)";
-relationRootWriterAlg.rootFile   = "$(relationRootFileName)";
-
-
-// The following disables the GCR Calibration which is not 
-// used in simulation (it would only be useful in background sims)
-Gcr.Members = {};
-
-//
-//   ===============================================================
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-//
-MessageSvc.OutputLevel        =3;  // info 
 
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
 //<<<--- End of allGamma.txt job options file
