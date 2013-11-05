@@ -1,0 +1,84 @@
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+//<<<--- allMuon.txt - Production Monte Carlo 
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+// Include standard Gleam job options
+#include "$INST_DIR/jobOptions/Gleam/basicOptions.txt"
+
+// Define base code release for jobinfo metadata in merit file
+RootTupleSvc.jobinfo = "version=20,revision=9,patch=0";
+
+// NEW CALIBRATION (10/31/2007)
+#include "$INST_DIR/jobOptions/Gleam/calibration.txt"
+
+//SWITCH OFF MOOT
+MootSvc.noMoot = true;
+
+//   ---------------------------------------------
+//          Define orbit, behavior
+FluxAlg.AvoidSAA       =  true;                //turn off during SAA
+FluxSvc.StartDate      = "2012-09-16 00:00:00";  // launch 
+
+// sets run number and start time 
+//GlastRandomSvc.autoSeed = true;
+
+GlastRandomSvc.RunNumberString="$(runName)";    // run number used for seed: expect env var!
+FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for this run,
+
+ExposureAlg.PrintFrequency = 1000; // from 30 s to 5 min
+
+// ------------------------------------------------
+// TKR parameters
+TkrSplitsSvc.defaultMaxStrips = 14;  // default = 64
+
+// JCT : enable CR finding again
+//TkrFindFirst.DoCRFinding = false;
+
+//Try and disable Gcr--- we do not use it anyway.
+Gcr.Members = {};
+
+// ------------------------------------------------
+// background sources
+FluxAlg.sources+={"cosmic_muons"};
+
+ApplicationMgr.EvtMax   = 50000;    // number of events to generate
+MeritAlg.generated      = 50000;    // allows measure of Aeff
+// ------------------------------------------------
+// Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
+CurrentEventAlg.fileName= "$(GPL_EVENTID)";
+//  -------------------------------------------
+//         Trigger, filter
+
+TriggerAlg.applyPrescales=false;     
+
+OnboardFilter.RejectEvents = false;     // "false" is default in OnboardFilter pkg
+OnboardFilter.FailNoEbfData = false;    // if no EBF data (misses LAT) accept the event (default)
+
+//OnboardFilter.FilterList = {0,1,3};                   // enable DGN ("3") except for all{muon/gamma}
+
+// --------------------------------------------
+//       meritTuple output
+//
+RootTupleSvc.RejectIfBad        =false;             // warning!
+MeritAlg.EventTreeName          ="MeritTuple";
+RootTupleSvc.filename           ="$(meritRootFileName)";
+
+FluxSvc.OrbitInclination = 25.6; 
+
+// to beat down the memory leak
+RootIoSvc.RebuildIndex = false;
+
+// new compression algorithm
+RootIoSvc.CompressAlg="LZMA";
+
+// max compression for recon
+reconRootWriterAlg.compressionLevel = 9;
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel        =3;  // info 
+AcdReconAlg.OutputLevel       =5;  // is it crying wolf??
+CalLikelihoodTool.OutputLevel =4;  // 
+AcdDigiAlg.OutputLevel        =4;  // too much info
+
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+//<<<--- End of allGamma.txt job options file
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>

@@ -1,0 +1,103 @@
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+//<<<--- allGamma.txt - Production Monte Carlo 
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+// Include standard Gleam job options
+#include "$INST_DIR/jobOptions/Gleam/basicOptions.txt"
+
+// Define base code release for jobinfo metadata in merit file
+RootTupleSvc.jobinfo = "version=20,revision=9,patch=4";
+
+// NEW CALIBRATION (10/31/2007)
+#include "$INST_DIR/jobOptions/Gleam/calibration.txt"
+
+//SWITCH OFF MOOT
+MootSvc.noMoot = true;
+
+//   ---------------------------------------------
+//          Define orbit, behavior
+FluxAlg.AvoidSAA       =  true;                //turn off during SAA
+FluxSvc.StartDate      = "2012-09-16 00:00:00";  // launch 
+// correct rocking angle for Marcos DATA/MC comparison
+FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)", "2012-09-16 00:00:00","false"}; 
+
+// ------------------------------------------------
+// sets run number and start time 
+// run seeding
+GlastRandomSvc.autoSeed = false;
+GlastRandomSvc.RunNumberString="$(runName)";    // run number used for seed: expect env var!
+FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for this run,
+ExposureAlg.PrintFrequency = 10; // from 30 s to 5 min
+
+// ------------------------------------------------
+//        Define background sources
+FluxSvc.source_lib += {"$(EARTHPHENOMXMLPATH)/EarthPhenom.xml"};
+FluxAlg.sources+={"clock"};
+FluxAlg.sources+={"CrProtonMix"};
+FluxAlg.sources+={"CrElectronMix"};
+FluxAlg.sources+={"CrPositronMix"};
+FluxAlg.sources+={"CrNeutron"};
+FluxAlg.sources+={"CrAlpha"};
+FluxAlg.sources+={"CrHeavyIon"};
+FluxAlg.sources+={"EarthPhenomLimb"};
+// FluxAlg.sources+={"Earth10"};
+
+// --------------------------------------------------
+//          Number of events to generate 
+ApplicationMgr.EvtMax = 450000;     // set to large number for bkgnd runs
+//ApplicationMgr.EvtMax = 450;     // set to large number for bkgnd runs
+
+// ------------------------------------------------
+// TKR parameters
+TkrSplitsSvc.defaultMaxStrips = 14;  // default = 64
+
+// ------------------------------------------------
+// Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
+CurrentEventAlg.fileName= "$(GPL_EVENTID)";
+
+//  -------------------------------------------
+//         Trigger, filter
+// fully enabled!
+// --------------------------------------------
+TriggerAlg.applyWindowMask=true;
+TriggerAlg.applyPrescales=true;
+TriggerAlg.applyDeadtime=true;
+//
+OnboardFilter.RejectEvents = true;     // enable rejection of events by OBF (new with v11r1)
+OnboardFilter.FailNoEbfData = true;    // if no EBF data (misses LAT) reject the event
+
+
+// --------------------------------------------
+//       meritTuple output
+//
+RootTupleSvc.RejectIfBad        =false;             // warning!
+MeritAlg.EventTreeName          ="MeritTuple";
+RootTupleSvc.filename           ="$(meritRootFileName)";
+
+RootIoSvc.RebuildIndex = false;
+
+// Overlay options
+#include "$INST_DIR/jobOptions/Overlay/MergeAlgs/Overlay.txt"
+// to beat down the memory leak
+// fix: namechange fron AnalysisNtupleAlg to AnalysisNtupleAlg1, SIMREQ-89
+AnalysisNtupleAlg1.toolList={"+","Overlay"};
+// move the xml file location
+OverlayDataSvc.InputXmlFilePath =   "/sps/hep/glast/Pipeline2/overlay/Overlay-maker4/";
+
+FluxSvc.OrbitInclination = 25.6; 
+
+// new compression algorithm
+RootIoSvc.CompressAlg="LZMA";
+
+// max compression for recon
+reconRootWriterAlg.compressionLevel = 9;
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+// VR MessageSvc.OutputLevel to 2 for investigation
+MessageSvc.OutputLevel        =3;  // 3info 
+AcdReconAlg.OutputLevel       =5;  // 5is it crying wolf??
+CalLikelihoodTool.OutputLevel =4;  // 4
+AcdDigiAlg.OutputLevel        =4;  // 4too much info
+
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
+//<<<--- End of allGamma.txt job options file
+//<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
