@@ -34,9 +34,8 @@ FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for thi
 //   ===============================================================
 //   Default configurations of the Trigger and Onboard Filter 
 TriggerAlg.applyDeadtime    = true;   // If "true" then deadtime is applied
-//
-OnboardFilter.RejectEvents  = false;   // disable rejection of events by OBF
-OnboardFilter.FailNoEbfData = false;   // if no EBF data (misses LAT) accept the event
+
+
 //
 //   ===============================================================
 //   Set the maximum number of events 
