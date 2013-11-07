@@ -1,35 +1,30 @@
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
-//<<<--- allGamma.txt - Production Monte Carlo 
+//<<<--- background.txt - Production Monte Carlo 
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
-// Include standard Gleam job options
-#include "$INST_DIR/jobOptions/Gleam/basicOptions.txt"
+
+// Start by including standard Gleam job options which will set up the 
+// full simulation and reconstrution process
+#include "$GLEAMJOBOPTIONSPATH/basicOptions.txt"
 
 // Define base code release for jobinfo metadata in merit file
-RootTupleSvc.jobinfo = "version=20,revision=9,patch=4";
+RootTupleSvc.jobinfo = "version=20,revision=9,patch=5";
 
-// NEW CALIBRATION (10/31/2007)
-#include "$INST_DIR/jobOptions/Gleam/calibration.txt"
+// Include the file that will set up the calibrations used in
+// this simulation/reconstruction job
+#include "$GLEAMJOBOPTIONSPATH/calibration.txt"
 
-//SWITCH OFF MOOT
-MootSvc.noMoot = true;
 
-//   ---------------------------------------------
-//          Define orbit, behavior
-FluxAlg.AvoidSAA       =  true;                //turn off during SAA
-FluxSvc.StartDate      = "2012-09-16 00:00:00";  // launch 
-// correct rocking angle for Marcos DATA/MC comparison
-FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)", "2012-09-16 00:00:00","false"}; 
+// 
+//   ===============================================================
+//   For the simulation it is necessary to define the orbit behavior
+// 
+FluxSvc.StartDate      = "2012-09-16 00:00:00";  // Set the start date for the simulation
+FluxAlg.PointingHistory={"$(POINTING_HISTORY_FILE)", "2012-09-16 00:00:00","false"}; // correct rocking angle
 
-// ------------------------------------------------
-// sets run number and start time 
-// run seeding
-GlastRandomSvc.autoSeed = false;
-GlastRandomSvc.RunNumberString="$(runName)";    // run number used for seed: expect env var!
-FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for this run,
-ExposureAlg.PrintFrequency = 10; // from 30 s to 5 min
-
-// ------------------------------------------------
-//        Define background sources
+// 
+//   ===============================================================
+//   Define background sources
+//        
 FluxSvc.source_lib += {"$(EARTHPHENOMXMLPATH)/EarthPhenom.xml"};
 FluxAlg.sources+={"clock"};
 FluxAlg.sources+={"CrProtonMix"};
@@ -41,63 +36,68 @@ FluxAlg.sources+={"CrHeavyIon"};
 FluxAlg.sources+={"EarthPhenomLimb"};
 // FluxAlg.sources+={"Earth10"};
 
-// --------------------------------------------------
-//          Number of events to generate 
+//
+//   ===============================================================
+//   Set the starting conditions for this simulation run
+// 
+GlastRandomSvc.autoSeed        = false;          // make sure no event-by-event seed
+GlastRandomSvc.RunNumberString ="$(runName)";    // run number used for seed: expect env var!
+FluxSvc.StartTimeEnvVar        ="$(startTime)";  // offset from StartDate for this run,
+ExposureAlg.PrintFrequency     = 10;             // 
+
+//
+//   ===============================================================
+//   Default configurations of the Trigger and Onboard Filter 
+TriggerAlg.applyDeadtime    = true;   // If "true" then deadtime is applied
+//
+OnboardFilter.RejectEvents  = true;   // enable rejection of events by OBF
+OnboardFilter.FailNoEbfData = true;   // if no EBF data (misses LAT) reject the event
+
+//
+//   ===============================================================
+//   Set the maximum number of events 
+//
 ApplicationMgr.EvtMax = 450000;     // set to large number for bkgnd runs
-//ApplicationMgr.EvtMax = 450;     // set to large number for bkgnd runs
 
-// ------------------------------------------------
-// TKR parameters
-TkrSplitsSvc.defaultMaxStrips = 14;  // default = 64
-
-// ------------------------------------------------
-// Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
-CurrentEventAlg.fileName= "$(GPL_EVENTID)";
-
-//  -------------------------------------------
-//         Trigger, filter
-// fully enabled!
-// --------------------------------------------
-TriggerAlg.applyWindowMask=true;
-TriggerAlg.applyPrescales=true;
-TriggerAlg.applyDeadtime=true;
 //
-OnboardFilter.RejectEvents = true;     // enable rejection of events by OBF (new with v11r1)
-OnboardFilter.FailNoEbfData = true;    // if no EBF data (misses LAT) reject the event
-
-
-// --------------------------------------------
-//       meritTuple output
+//   ===============================================================
+//   Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
 //
-RootTupleSvc.RejectIfBad        =false;             // warning!
-MeritAlg.EventTreeName          ="MeritTuple";
-RootTupleSvc.filename           ="$(meritRootFileName)";
+CurrentEventAlg.fileName = "$(GPL_EVENTID)";
 
-RootIoSvc.RebuildIndex = false;
+//
+//   ===============================================================
+//   output files name
+//
+RootTupleSvc.filename  = "$(meritRootFileName)";
 
-// Overlay options
-#include "$INST_DIR/jobOptions/Overlay/MergeAlgs/Overlay.txt"
-// to beat down the memory leak
-// fix: namechange fron AnalysisNtupleAlg to AnalysisNtupleAlg1, SIMREQ-89
-AnalysisNtupleAlg1.toolList={"+","Overlay"};
-// move the xml file location
-OverlayDataSvc.InputXmlFilePath =   "/sps/hep/glast/Pipeline2/overlay/Overlay-maker4/";
+//
+//   ===============================================================
+//   Enable GCR Calibration for background sim
+// 
+Reconstruction.Members                  +={"Sequencer/Gcr"};
+Gcr.Members                              = {"GcrReconAlg","GcrSelectAlg"};
+GcrReconAlg.HFC_Or_TriggerEng4           = "ANYFILTER";
+//GcrReconAlg.InitAxis                     = "TKR";
+gcrSelectRootWriterAlg.gcrSelectRootFile = "$(gcrRootFileName)"; 
 
-FluxSvc.OrbitInclination = 25.6; 
+// 
+//   ===============================================================
+//   Set up the Overlay 
+// 
+#include "$OVERLAYJOBOPTIONSPATH/MergeAlgs/Overlay.txt"
 
-// new compression algorithm
-RootIoSvc.CompressAlg="LZMA";
+//   This sets the path to the input overlay files
+OverlayDataSvc.InputXmlFilePath = "/nfs/farm/g/glast/u44/MC-tasks/overlay/Overlay-maker4"; // for SLAC
+//OverlayDataSvc.InputXmlFilePath = "/sps/hep/glast/Pipeline2/overlay/Overlay-maker4/";      // for Lyon
 
-// max compression for recon
-reconRootWriterAlg.compressionLevel = 9;
-
+//
+//   ===============================================================
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-// VR MessageSvc.OutputLevel to 2 for investigation
-MessageSvc.OutputLevel        =3;  // 3info 
-AcdReconAlg.OutputLevel       =5;  // 5is it crying wolf??
-CalLikelihoodTool.OutputLevel =4;  // 4
-AcdDigiAlg.OutputLevel        =4;  // 4too much info
+//
+MessageSvc.OutputLevel        =3;  // info 
+
 
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
-//<<<--- End of allGamma.txt job options file
+//<<<--- End of background.txt job options file
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
