@@ -69,7 +69,11 @@ CurrentEventAlg.fileName = "$(GPL_EVENTID)";
 //   ===============================================================
 //   output files name
 //
-RootTupleSvc.filename  = "$(meritRootFileName)";
+RootTupleSvc.filename            = "$(meritRootFileName)";
+mcRootWriterAlg.mcRootFile       = "$(mcRootFileName)";
+digiRootWriterAlg.digiRootFile   = "$(digiRootFileName)";
+reconRootWriterAlg.reconRootFile = "$(reconRootFileName)";
+relationRootWriterAlg.rootFile   = "$(relationRootFileName)";
 
 //
 //   ===============================================================

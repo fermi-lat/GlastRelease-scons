@@ -55,7 +55,11 @@ CurrentEventAlg.fileName = "$(GPL_EVENTID)";
 //   ===============================================================
 //   output files name
 //
-RootTupleSvc.filename           = "$(meritRootFileName)";
+RootTupleSvc.filename            = "$(meritRootFileName)";
+mcRootWriterAlg.mcRootFile       = "$(mcRootFileName)";
+digiRootWriterAlg.digiRootFile   = "$(digiRootFileName)";
+reconRootWriterAlg.reconRootFile = "$(reconRootFileName)";
+relationRootWriterAlg.rootFile   = "$(relationRootFileName)";
 
 // The following disables the GCR Calibration which is not 
 // used in simulation (it would only be useful in background sims)

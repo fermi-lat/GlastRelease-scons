@@ -1,6 +1,6 @@
 
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
-//<<<--- allElectron.txt - Production Monte Carlo 
+//<<<--- allProton.txt - Production Monte Carlo with Overlays
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
 
 // Start by including standard Gleam job options which will set up the 
@@ -19,9 +19,10 @@ RootTupleSvc.jobinfo = "version=20,revision=9,patch=5";
 //   For the simulation it is necessary to define the orbit behavior
 // 
 FluxSvc.StartDate         = "2012-09-16 00:00:00";  // Set the start date for the simulation
+FluxAlg.PointingHistory   ={"$(POINTING_HISTORY_FILE)", "2012-09-16 00:00:00","false"}; // correct rocking angle
 
-FluxSvc.source_lib       += {"$(GPL_TASKROOT)/config/xml/heeSources.xml"}; 
-FluxAlg.sources          += {"all_electron_10GeV10TeV"};  
+FluxSvc.source_lib       += {"$(GPL_TASKROOT)/config/xml/heeSources.xml"};
+FluxAlg.sources          += {"pE_m1p5_4GeV-10TeV_flx1"};
 
 //
 //   ===============================================================
@@ -34,14 +35,16 @@ FluxSvc.StartTimeEnvVar       ="$(startTime)";  // offset from StartDate for thi
 //   ===============================================================
 //   Default configurations of the Trigger and Onboard Filter 
 TriggerAlg.applyDeadtime    = true;   // If "true" then deadtime is applied
-
+//
+OnboardFilter.RejectEvents  = true;   // enable rejection of events by OBF
+OnboardFilter.FailNoEbfData = true;   // if no EBF data (misses LAT) reject the event
 
 //
 //   ===============================================================
 //   Set the maximum number of events 
 //
-ApplicationMgr.EvtMax   = 200;    // number of events to generate
-MeritAlg.generated      = 200;    // allows measure of Aeff
+ApplicationMgr.EvtMax   = 10000;    // number of events to generate
+MeritAlg.generated      = 10000;    // allows measure of Aeff
 
 
 //
@@ -49,7 +52,6 @@ MeritAlg.generated      = 200;    // allows measure of Aeff
 //   Redirect the eventId.txt file to the local scratch space or risk thrashing NFS to death
 //
 CurrentEventAlg.fileName= "$(GPL_EVENTID)";
-
 
 //
 //   ===============================================================
@@ -71,7 +73,6 @@ relationRootWriterAlg.rootFile   = "$(relationRootFileName)";
 OverlayDataSvc.InputXmlFilePath = "/nfs/farm/g/glast/u44/MC-tasks/overlay/Overlay-maker4"; // for SLAC
 //OverlayDataSvc.InputXmlFilePath = "/sps/hep/glast/Pipeline2/overlay/Overlay-maker4/";      // for Lyon
 
-
 // The following disables the GCR Calibration which is not 
 // used in simulation (it would only be useful in background sims)
 Gcr.Members = {};
@@ -82,7 +83,6 @@ Gcr.Members = {};
 //
 MessageSvc.OutputLevel        =3;  // info 
 
-
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
-//<<<--- End of allElectron.txt job options file
+//<<<--- End of allProton.txt job options file
 //<<<---|||---|||---|||---|||---|||---|||---|||---|||---|||---|||--->>>
