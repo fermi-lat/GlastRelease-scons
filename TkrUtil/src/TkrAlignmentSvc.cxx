@@ -1051,17 +1051,6 @@ HepVector3D TkrAlignmentSvc::deltaReconPoint(const HepPoint3D& point, const HepV
     return -deltaPoint;
 }
 
-//void TkrAlignmentSvc::moveReconPoint(HepPoint3D& point, const HepVector3D& dir, 
-//                                     int layer, int view, alignTask task, 
-//                                     const AlignmentConsts* consts) const
-//{
-//    HepVector3D deltaPoint = deltaReconPoint(point, dir, layer, view, task, consts);
-//
-//    //now subtract(??) this delta from the global point
-//    point += deltaPoint;
-//    return;
-//}
-
 HepPoint3D TkrAlignmentSvc::getTowerCoordinates(
     const HepPoint3D& globalPoint, int& nXTower, int& nYTower) const
 {
@@ -1189,6 +1178,18 @@ void TkrAlignmentSvc::applyDelta(double pointX, double pointY,
         + alphaY*rotTerm;
 
     //std::cout << "   deltaPointX/Y " << deltaPointX << " " << deltaPointY << std::endl;
+}
+
+
+void TkrAlignmentSvc::moveReconPoint(HepPoint3D& point, const HepVector3D& dir, 
+                                     int layer, int view, alignTask task, 
+                                     const AlignmentConsts* consts) const
+{
+    HepVector3D deltaPoint = deltaReconPoint(point, dir, layer, view, task, consts);
+
+    //now subtract(??) this delta from the global point
+    point += deltaPoint;
+    return;
 }
 
 void TkrAlignmentSvc::update(CalibData::TkrTowerAlignCalib* pTowerAlign, 
