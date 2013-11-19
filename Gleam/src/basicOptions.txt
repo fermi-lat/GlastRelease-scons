@@ -143,8 +143,7 @@ Reconstruction.Members={
     "Sequencer/Tkr",
     "Sequencer/Cal2",
     "Sequencer/TkrIter",
-    "Sequencer/Acd",
-    "Sequencer/Gcr"
+    "Sequencer/Acd"
     };
 
 
@@ -180,7 +179,6 @@ mcRootWriterAlg.mcRootFile       = "$(GLEAMDATAPATH)/mc.root";
 digiRootWriterAlg.digiRootFile   = "$(GLEAMDATAPATH)/digi.root";
 reconRootWriterAlg.reconRootFile = "$(GLEAMDATAPATH)/recon.root";
 relationRootWriterAlg.rootFile   = "$(GLEAMDATAPATH)/relations.root";
-gcrSelectRootWriterAlg.gcrSelectRootFile = "$(GLEAMDATAPATH)/gcr.root";
 
 
 // Sets up the meta (event collection) file
@@ -262,16 +260,8 @@ TkrIter.Members = {
 //   ACD recon
 
 ApplicationMgr.DLLs += {"AcdUtil", "AcdRecon"};
-Acd.Members = {"AcdReconAlg","AcdReconAlgV2"};
+Acd.Members = {"AcdReconAlgV2"};
 
-// ----------------------------
-//   GCR
-ApplicationMgr.DLLs += {"GCRCalib"};
-
-Gcr.Members = {"GcrReconAlg","GcrSelectAlg"};
-
-GcrReconAlg.HFC_Or_TriggerEng4 = "ANYFILTER";
-GcrReconAlg.InitAxis           = "TKR";
 
 // ----------------------------
 //  Geometry definition
@@ -362,11 +352,6 @@ ToolSvc.OutputLevel=4;
 CalXtalRecAlg.OutputLevel=4;
 CalReconEnergy.OutputLevel=5;
 AcdReconAlg.OutputLevel=5; // suppress INFO complaint about no tracks - LPATE-167
-GcrReconAlg.OutputLevel           = 4;
-GcrReconSelect.OutputLevel        = 4;
-GcrSelectAlg.OutputLevel          = 4;
-ToolSvc.GcrReconTool.OutputLevel  = 4;
-ToolSvc.GcrSelectTool.OutputLevel = 4;
 ToolSvc.CalValsTool.OutputLevel   = 3;
 ApplicationMgr.OutputLevel        = 4;
 CalLikelihoodTool.OutputLevel =4; // LPATE-167
