@@ -1,0 +1,26 @@
+//##############################################################
+//
+// job option to be included after basicOptions.txt
+// to run the gcr algorithm and write the gcr output file
+//
+
+// Add gcr alg to reconstruction members
+Reconstruction.Members={"Sequencer/Gcr"};
+
+// ----------------------------
+//   Load Library and add algorithms to Gcr top container
+ApplicationMgr.DLLs += {"GCRCalib"};
+Gcr.Members = {"GcrReconAlg","GcrSelectAlg"};
+GcrReconAlg.HFC_Or_TriggerEng4 = "ANYFILTER";
+GcrReconAlg.InitAxis           = "TKR";
+
+
+// Write the output file
+Output.Members += {"gcrSelectRootWriterAlg"};     
+gcrSelectRootWriterAlg.gcrSelectRootFile = "$(gcrRootFileName)";
+
+// Message output level
+GcrReconAlg.OutputLevel           = 4;
+GcrSelectAlg.OutputLevel          = 4;
+ToolSvc.GcrReconTool.OutputLevel  = 4;
+ToolSvc.GcrSelectTool.OutputLevel = 4;
