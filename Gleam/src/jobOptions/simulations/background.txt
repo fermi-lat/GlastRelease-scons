@@ -79,11 +79,8 @@ relationRootWriterAlg.rootFile   = "$(relationRootFileName)";
 //   ===============================================================
 //   Enable GCR Calibration for background sim
 // 
-Reconstruction.Members                  +={"Sequencer/Gcr"};
-Gcr.Members                              = {"GcrReconAlg","GcrSelectAlg"};
-GcrReconAlg.HFC_Or_TriggerEng4           = "ANYFILTER";
-//GcrReconAlg.InitAxis                     = "TKR";
-gcrSelectRootWriterAlg.gcrSelectRootFile = "$(gcrRootFileName)"; 
+#include "$GLEAMJOBOPTIONSPATH/jobOptions/simulations/GCRCalib.txt"
+ 
 
 // 
 //   ===============================================================
