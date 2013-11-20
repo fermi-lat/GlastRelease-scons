@@ -72,10 +72,6 @@ OverlayDataSvc.InputXmlFilePath = "/nfs/farm/g/glast/u44/MC-tasks/overlay/Overla
 //OverlayDataSvc.InputXmlFilePath = "/sps/hep/glast/Pipeline2/overlay/Overlay-maker4/";      // for Lyon
 
 
-// The following disables the GCR Calibration which is not 
-// used in simulation (it would only be useful in background sims)
-Gcr.Members = {};
-
 //
 //   ===============================================================
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
