@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-08-00-03 22-Nov-2013 bregeon Updated job options for simulations - LPATE-168 and LPATE-171
  Gleam-08-00-02 14-Nov-2013 heather tagging bruel's update to basicOptions
   to include Leon's updates to be sure 20-09-05 matches 20-09-02
  Gleam-08-00-01 08-Nov-2013 heather Continuing to update JO for sims as
