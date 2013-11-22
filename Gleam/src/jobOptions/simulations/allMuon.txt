@@ -11,7 +11,7 @@ RootTupleSvc.jobinfo = "version=20,revision=9,patch=5";
 
 // Include the file that will set up the calibrations used in
 // this simulation/reconstruction job
-#include "$GLEAMJOBOPTIONSPATH/calibration.txt"
+#include "$GLEAMJOBOPTIONSPATH/jobOptions/simulations/mc_calibrations.txt"
 
 // 
 //   ===============================================================
