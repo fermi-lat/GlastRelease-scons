@@ -18,16 +18,15 @@ TkrCalibAlg.calibFlavor      = "L1current";
 TkrCalibAlg.deadStripsCalibFlavor = "L1current";
 
 // ACD data
-AcdCalibSvc.DefaultFlavor     = "MC_OktoberFest07";
-AcdCalibSvc.FlavorHighRange   = "ideal";
+AcdCalibSvc.DefaultFlavor = "L1current";
+AcdCalibSvc.FlavorHighRange = "ideal";
 AcdCalibSvc.FlavorCoherentNoise = "ideal";
 
 // ACD sim
-AcdSimCalibSvc.DefaultFlavor   = "MC_OktoberFest07";
-AcdSimCalibSvc.FlavorRange     = "ideal";
+AcdSimCalibSvc.DefaultFlavor = "L1current";
+AcdSimCalibSvc.FlavorRange = "ideal";
 AcdSimCalibSvc.FlavorHighRange = "ideal";
 AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
-AcdSimCalibSvc.FlavorVeto      = "MC_OktoberFest07";
-AcdSimCalibSvc.FlavorCno       = "ideal";
-AcdSimCalibSvc.FlavorRibbon       = "ideal";
-
+AcdSimCalibSvc.FlavorVeto = "MC_OktoberFest07";
+AcdSimCalibSvc.FlavorCno = "ideal";
+AcdSimCalibSvc.FlavorRibbon = "ideal"; 
