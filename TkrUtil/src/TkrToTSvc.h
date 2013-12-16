@@ -106,6 +106,10 @@ private:
     /// flag to use default values if not in calibration file (otherwise use zeros)
     bool   m_useDefaultIfMissing;
 
+    // Philippe's correction
+    double m_linCorr;
+    double m_quadCorr;
+
     /// pointer to geometry service
     ITkrGeometrySvc* m_tkrGeom;
     /// pointer to ToT consts
