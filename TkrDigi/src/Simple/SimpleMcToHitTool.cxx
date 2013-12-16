@@ -39,6 +39,7 @@ SimpleMcToHitTool::SimpleMcToHitTool(const std::string& type,
     declareInterface<IMcToHitTool>(this);
 
     declareProperty("test", m_test = false);
+    declareProperty("fluctuate", m_fluctuate = false);
     declareProperty("alignmentMode", m_alignmentMode=0);
 }
 
@@ -241,7 +242,7 @@ SiPlaneMapContainer::SiPlaneMap SimpleMcToHitTool::createSiHits(
         HepPoint3D planeExit (localExit  + offset);
 
         // the entry into the planeMap is in plane coordinates
-        siPlaneMap[planeId]->score(planeEntry, planeExit, hit, m_test);
+        siPlaneMap[planeId]->score(planeEntry, planeExit, hit, m_fluctuate, m_test);
           }
 
           return siPlaneMap;

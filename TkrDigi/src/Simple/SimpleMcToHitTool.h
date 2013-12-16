@@ -59,6 +59,8 @@ class SimpleMcToHitTool : public AlgTool, virtual public IMcToHitTool {
     bool m_test;
     /// flag to set alignment mode: 0 = original, 1 = single event axis
     int  m_alignmentMode;
+    /// do strip-wise "landau" fluctuations
+    bool m_fluctuate;
 };
 
 #endif
