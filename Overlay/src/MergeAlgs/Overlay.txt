@@ -29,6 +29,7 @@ Digitization.Members = {
     "GemOverlayMergeAlg",
     "DiagDataOverlayMergeAlg",
     "TkrOverlayMergeAlg",
+    "TkrDigiTruncationAlg", // to fix a truncation issue seen by Philipe
     "TkrDigiMergeTruncationAlg/SecondTruncation" // already called in TkrDigi, but can't hurt to do it again (??)
     };
 
