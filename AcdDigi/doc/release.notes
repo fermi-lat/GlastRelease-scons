@@ -3,6 +3,8 @@
  Coordinator:H.Kelly
  EOH 
 
+ AcdDigi-03-12-00 18-Dec-2013 dgreen Tagging David Green (UMD) update for
+  improved zero suppression
  AcdDigi-03-11-00 05-Dec-2011    hmk Merge in Gaudi v21r7 upgrade
  AcdDigi-03-10-05 31-Jan-2011    hmk Drop explicit version for GlastSvc use
  AcdDigi-03-10-04 01-Dec-2010    jrb Make new main branch tag for SCons RM
