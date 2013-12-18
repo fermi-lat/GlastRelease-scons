@@ -16,6 +16,8 @@ CalCalibSvc.DefaultFlavor    = "L1current";
 // TKR
 TkrCalibAlg.calibFlavor      = "L1current";
 TkrCalibAlg.deadStripsCalibFlavor = "L1current";
+TkrCalibAlg.towerAlignmentCalibFlavor    = "L1current";
+TkrCalibAlg.internalAlignmentCalibFlavor = "L1current";
 
 // ACD data
 AcdCalibSvc.DefaultFlavor = "L1current";
@@ -30,3 +32,22 @@ AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
 AcdSimCalibSvc.FlavorVeto = "MC_OktoberFest07";
 AcdSimCalibSvc.FlavorCno = "ideal";
 AcdSimCalibSvc.FlavorRibbon = "ideal"; 
+
+// changes the flavor of the TKR alignment to tkr_simtest
+//   while leaving simulation alone
+// LSR  2013-11-23
+
+// Add another instance of TkrCalibAlg for reconstruction
+
+Tkr.Members = {
+    "TkrCalibAlg/TkrReconCalib",
+    "TkrReconAlg/TkrCluster",
+    "TkrReconAlg/FirstPass"
+    };
+
+CalibDataSvc.CalibFlavorList += { "tkr_simtest" };
+
+TkrReconCalib.calibFlavor = "L1current";
+
+TkrReconCalib.towerAlignmentCalibFlavor    = "tkr_simtest";
+TkrReconCalib.internalAlignmentCalibFlavor = "tkr_simtest";
