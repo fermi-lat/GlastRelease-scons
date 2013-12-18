@@ -1,6 +1,6 @@
 package Gleam
 
-version v8r0p3
+version v8r0p4
 
 author T. Burnett <tburnett@u.washington.edu>
 build_strategy without_installarea
