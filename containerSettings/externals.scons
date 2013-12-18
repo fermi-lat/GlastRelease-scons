@@ -76,7 +76,7 @@ else:
 if sys.platform != 'win32':
     usedExternals.append({ 'name' : 'x11', 'iversion' : '1.0.0' })
 
-usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r14' })
+usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r15' })
 
 # Use old OBF for VC71
 if baseEnv['COMPILERNAME'] == 'vc71':
