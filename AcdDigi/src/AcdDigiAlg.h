@@ -85,6 +85,9 @@ private:
   /// Reduces the light yield, defaults to 1.0
   double m_lightYeildRatio;
 
+  /// JobOptions paramter denoting zero level suppression
+  double m_phaZeroThreshold;
+
   /// Access the methods in the AcdDigiUtil class
   AcdDigiUtil m_util;
   

@@ -43,6 +43,8 @@ Algorithm(name, pSvcLocator) {
     declareProperty("applyCoherentNoise", m_apply_coherent_noise=true);
     declareProperty("edgeEffect", m_edge_effect=true);
     declareProperty("lightYeildRatio", m_lightYeildRatio=1.0);
+    //Change made by D. Green to incorporate zero suppression as a JO
+    declareProperty("phaZeroThreshold", m_phaZeroThreshold=25.0);
 }
 
 
@@ -423,7 +425,8 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
             if ( sc.isFailure() ) return sc;  
         }
 
-        sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,log,makeDigi,phaThreshArr,vetoArr,highArr);
+        //Change made by D. Green to incorporate zero suppression as a JO
+        sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,log,makeDigi,phaThreshArr,vetoArr,highArr,m_phaZeroThreshold);
         if ( sc.isFailure() ) return sc;
 
         // Now do special handling for pure Overlay events

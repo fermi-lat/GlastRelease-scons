@@ -56,7 +56,9 @@ AcdSimCalibData::AcdSimCalibData()
    m_veto_threshold_mips(0.),
    m_xover_mips(0.),
    m_cno_threshold_mips(0.),
-   m_pedestal_highRange(0.)
+   m_pedestal_highRange(0.),
+   //Change made by D. Green to incorporate zero suppression as a JO
+   m_pedestal(0.)
 {;}
 
 StatusCode AcdSimCalibData::latchPePerMeV( ) {
@@ -67,6 +69,13 @@ StatusCode AcdSimCalibData::latchPePerMeV( ) {
 StatusCode AcdSimCalibData::latchPhaThreshold(double countsAbovePed) {
   if  ( m_ped == 0 ) return StatusCode::FAILURE;
   m_threshold_pha = (unsigned short) ( m_ped->getMean() + countsAbovePed );
+  return StatusCode::SUCCESS;
+}
+
+//Change made by D. Green to incorporate zero suppression as a JO
+StatusCode AcdSimCalibData::latchPedestal() {
+  if  ( m_ped == 0 ) return StatusCode::FAILURE;
+  m_pedestal = (unsigned short) ( m_ped->getMean());
   return StatusCode::SUCCESS;
 }
 
@@ -535,11 +544,13 @@ StatusCode AcdDigiUtil::tileEdgeEffect(const Event::McPositionHit *hit, MsgStrea
 
 
 /// Checks all the various thresholds
+///Change made by D. Green to incorporate zero suppression as a JO
 StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mipEquiv[2],
 					const unsigned short phaArr[2], const Event::AcdDigi::Range rangeArr[2], bool applyNoise, 
 					MsgStream& log,
 					bool& makeDigi, 
-					bool phaThreshArr[2], bool vetoArr[2],  bool highArr[2]) {
+					bool phaThreshArr[2], bool vetoArr[2],  bool highArr[2],
+					const double phaZeroThreshold) {
   
   AcdSimCalibData* pmtACalib(0);
   AcdSimCalibData* pmtBCalib(0);
@@ -553,7 +564,8 @@ StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mi
   makeDigi = false;  
   for ( unsigned i(0); i < 2; i++ ) {
     const AcdSimCalibData* calibData = i == 0 ? pmtACalib : pmtBCalib;
-    phaThreshArr[i] = rangeArr[i] == Event::AcdDigi::HIGH ? true : (phaArr[i] >= calibData->threshold_pha());
+  
+    phaThreshArr[i] = rangeArr[i] == Event::AcdDigi::HIGH ? true : (phaArr[i] >= (calibData->pedestal_pha() + phaZeroThreshold));
     double mipVeto = mipEquiv[i];
     double cnoVeto = mipEquiv[i];
     if ( applyNoise ) { 
@@ -644,6 +656,10 @@ StatusCode AcdDigiUtil::fetchCalibData(const idents::AcdId& id, Event::AcdDigi::
   sc = m_calibSvc->getPedestal(id,pmt,ped);
   if ( sc.isFailure() ) return sc;
   pmtCalib->setPedestal(*ped);
+
+  //Change made by D. Green to incorporate zero suppression as a JO
+  sc = pmtCalib->latchPedestal();
+  if ( sc.isFailure() ) return sc;
   sc = pmtCalib->latchPhaThreshold(m_counts_above_pedestal);
   if ( sc.isFailure() ) return sc;
 
