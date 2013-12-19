@@ -3,13 +3,13 @@
 
 # in common with ScienceTools
 xmlBase xmlBase-05-06-01
-astro astro-03-15-01
-facilities facilities-02-22-04
-flux flux-08-43-00
+astro astro-03-15-04
+facilities facilities-02-22-05
+flux flux-08-43-02
 tip tip-02-18-01
 fitsGen fitsGen-06-06-05
 embed_python embed_python-01-07-00
-evtUtils evtUtils-00-02-02
+evtUtils evtUtils-00-02-03
 st_facilities st_facilities-00-20-03
 
 # source modeling
@@ -32,7 +32,7 @@ xmlUtil xmlUtil-03-05-00
 enums enums-03-00-02
 idents idents-02-21-00
 detModel detModel-02-22-00
-rdbModel rdbModel-02-15-00
+rdbModel rdbModel-02-16-01
 
 # geometry description
 xmlGeoDbs xmlGeoDbs-01-48-03
@@ -75,18 +75,18 @@ OnboardFilterTds OnboardFilterTds-00-13-02
 
 # Calorimeter
 CalUtil CalUtil-03-19-00
-CalXtalResponse CalXtalResponse-01-01-01
+CalXtalResponse CalXtalResponse-01-01-03
 CalDigi CalDigi-03-09-00
 CalRecon CalRecon-06-23-01
 GCRCalib GCRCalib-01-12-04
 
 # Tracker
-TkrDigi TkrDigi-02-13-02
-TkrUtil TkrUtil-03-28-11
+TkrDigi TkrDigi-02-13-03
+TkrUtil TkrUtil-03-28-13
 TkrRecon TkrRecon-10-40-05
 
 # ACD
-AcdDigi AcdDigi-03-11-00
+AcdDigi AcdDigi-03-12-00
 AcdUtil AcdUtil-03-04-00
 AcdRecon AcdRecon-05-07-03
 
@@ -97,7 +97,7 @@ G4Generator G4Generator-06-06-00
 G4Propagator G4Propagator-03-02-00
 
 # calibration
-calibUtil calibUtil-01-14-00
+calibUtil calibUtil-01-14-01
 CalibData CalibData-00-28-01
 CalibSvc CalibSvc-00-42-00
 calibRootData calibRootData-01-08-00
@@ -105,7 +105,7 @@ calibRootData calibRootData-01-08-00
 # ntuple
 ntupleWriterSvc ntupleWriterSvc-06-02-02
 merit merit-06-38-00 
-AnalysisNtuple AnalysisNtuple-02-71-22
+AnalysisNtuple AnalysisNtuple-02-71-24
 
 # LDF
 CHS/eventFile eventFile-09-01-00
@@ -115,7 +115,7 @@ ldfReader ldfReader-07-05-00
 LdfConverter LdfConverter-04-07-00
 
 # HepRep
-HepRepSvc HepRepSvc-00-42-02
+HepRepSvc HepRepSvc-00-42-03
 HepRepCorba HepRepCorba-03-05-02
 HepRepXml HepRepXml-00-10-01
 
@@ -132,7 +132,7 @@ ConfigSvc ConfigSvc-00-04-00
 
 # Overlay
 OverlayEvent OverlayEvent-01-02-00
-Overlay Overlay-02-05-02
+Overlay Overlay-02-05-03
 overlayRootData overlayRootData-00-05-00
 
 calibGenCAL calibGenCAL-05-09-07
@@ -145,9 +145,9 @@ detCheck detCheck-01-08-00
 
 McToolBox McToolBox-00-02-02
 
-Gleam Gleam-08-00-02
+Gleam Gleam-08-00-04
 
-SConsFiles SConsFiles-01-11-02
-GlastRelease-scons/containerSettings containerSettings-00-13-02
+SConsFiles SConsFiles-01-11-04
+GlastRelease-scons/containerSettings containerSettings-00-13-03
 
-celestialSources/EarthPhenom EarthPhenom-00-02-01
+celestialSources/EarthPhenom EarthPhenom-00-02-06

@@ -1,6 +1,7 @@
 # containerNotes for GlastRelease-scons
 
 
+2013-12-19 heather JIRA LPATE-171 GlastRelease-20-09-06
 2013-11-14 heather Pick update Gleam from Philippe which includes mods to
   basicOptions to include Leon updates so GR 20-09-02 matches 20-09-05
 2013-11-08  heather continuing working on JIRA LPATE-167 to provide complete
