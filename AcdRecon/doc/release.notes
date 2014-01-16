@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-07-04 16-Jan-2014 echarles Set PHA threshold to 45 counts to make an AcdHit
  AcdRecon-05-07-03 01-Jul-2013 heather change output level from WARNING to
    INFO in AcdTkrIntersectionToolV2 at request of reprocessing
  AcdRecon-05-07-02 05-Jun-2013 echarles Fix two bugs in src/AcdPocaToolV2.cxx
