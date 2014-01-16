@@ -27,9 +27,9 @@ AcdPha2MipTool::AcdPha2MipTool
  { 
    declareInterface<AcdIPha2MipTool>(this) ; 
    declareProperty("AcdCalibSvc",    m_calibSvcName = "AcdCalibSvc");
-   declareProperty("PHATileCut",    m_pha_tile_cut = 0.0);
+   declareProperty("PHATileCut",    m_pha_tile_cut = 45.0);  // Set to 45 to match flight data
    declareProperty("MIPSTileCut",    m_mips_tile_cut = 0.0);
-   declareProperty("PHARibbonCut",    m_pha_ribbon_cut = 0.0);
+   declareProperty("PHARibbonCut",    m_pha_ribbon_cut = 45.0);  // Set to 45 to match flight data
    declareProperty("MIPSRibbonCut",    m_mips_ribbon_cut = 0.0);
    declareProperty("VetoThrehsold",    m_vetoThreshold = 0.4);
    declareProperty("ApplyCoherentNoiseCalib",    m_applyCoherentNoiseCalib = false);
@@ -106,6 +106,7 @@ StatusCode AcdPha2MipTool::makeAcdHits( const Event::AcdDigiCol& digis,
  
   } 
   return StatusCode::SUCCESS ;
+
 }
 
 StatusCode AcdPha2MipTool::makeAcdHit ( const Event::AcdDigi& digi,
