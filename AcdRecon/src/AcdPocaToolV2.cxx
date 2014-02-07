@@ -4,6 +4,7 @@
 
 #include "AcdUtil/AcdTileDim.h"
 #include "AcdUtil/AcdRibbonDim.h"
+#include "AcdUtil/AcdUtilFuncs.h"
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -284,48 +285,9 @@ StatusCode AcdPocaToolV2::filter(const AcdRecon::PocaDataMap& in, AcdRecon::Poca
 StatusCode AcdPocaToolV2::getConeDistances(const std::vector<Event::AcdTkrHitPoca*>& hitPocae, 
 					   float& energy15, float& energy30, float& energy45,
 					   float& triggerEnergy15, float& triggerEnergy30, float& triggerEnergy45) {
-
-  energy15 = energy30 = energy45 = 0.;
-  triggerEnergy15 = triggerEnergy30 = triggerEnergy45 = 0.;
-  
-  static const double tan45 = 1.;
-  static const double tan30 = 5.77350288616910401e-01;
-  static const double tan15 = 2.67949200239410490e-01;
-    
-  for ( std::vector<Event::AcdTkrHitPoca*>::const_iterator itr = hitPocae.begin(); itr != hitPocae.end(); itr++ ) {
-    const Event::AcdTkrHitPoca* hitPoca = *itr;
-    // Don't include ribbons
-    if ( hitPoca->getId().ribbon() ) continue;
-    // Don't include stuff without hits
-    if ( ! hitPoca->hasHit() ) continue;
-
-    float tanAngle = ( -1 * hitPoca->getDoca() )/ hitPoca->getArcLength();
-    float energy = hitPoca->tileEnergy();
-    if (tanAngle < tan45) {
-      if ( ! hitPoca->getGhost() ) {
-	energy45 += energy;
-      }
-      if ( hitPoca->getTriggerVeto() ) {
-	triggerEnergy45 += energy;
-      }
-      if (tanAngle < tan30) {
-	if ( ! hitPoca->getGhost() ) {
-	  energy30 += energy;
-	}
-	if ( hitPoca->getTriggerVeto() ) {
-	  triggerEnergy30 += energy;
-	}
-	if (tanAngle < tan15) {
-	  if ( ! hitPoca->getGhost() ) {
-	    energy15 += energy;
-	  }
-	  if ( hitPoca->getTriggerVeto() ) {
-	    triggerEnergy15 += energy;
-	  }
-	}
-      }      
-    }
-  }
+  bool ok = AcdUtil::UtilFunctions::getConeEnergies(hitPocae,
+						    energy15,energy30,energy45,
+						    triggerEnergy15,triggerEnergy30,triggerEnergy45);
   return StatusCode::SUCCESS;
 }
 
