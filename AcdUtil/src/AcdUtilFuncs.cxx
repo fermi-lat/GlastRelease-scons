@@ -1,5 +1,6 @@
 #include "../AcdUtil/AcdUtilFuncs.h"
 
+#include <set>
 
 namespace AcdUtil {
 

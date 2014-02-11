@@ -14,7 +14,8 @@ testAcdUtilObj = libEnv.SharedObject('src/test/TestAcdUtil.cxx')
 AcdUtilCommon = libEnv.StaticLibrary('AcdUtilCommon',
                                      ['src/AcdTileDim.cxx', 'src/AcdRibbonDim.cxx',
                                       'src/AcdTileFuncs.cxx', 'src/AcdFrameUtil.cxx',
-                                      'src/AcdCalibFuncs.cxx', 'src/RayDoca.cxx'])
+                                      'src/AcdCalibFuncs.cxx', 'src/AcdUtilFuncs.cxx',
+                                      'src/RayDoca.cxx'])
 
 cmpLibEnv.Tool('addLinkDeps', package='AcdUtil', toBuild='component')
 AcdUtil = cmpLibEnv.ComponentLibrary('AcdUtil',
