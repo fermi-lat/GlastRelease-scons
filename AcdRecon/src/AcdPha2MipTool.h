@@ -144,6 +144,17 @@ protected:
   **/
   bool accept(const idents::AcdId& id, float pedSubtracted, float mips) const;
 
+
+  /**
+   * @brief 
+   * 
+   * @param id of channel in question
+   * @param total mips
+   * @return true if hit should be accepted, false otherwise
+  **/
+  bool acceptTotalMips(const idents::AcdId& id, float totalMips) const;
+  
+
 private:
 
   /// cut tiles with pedestal subtracted PHA below this value

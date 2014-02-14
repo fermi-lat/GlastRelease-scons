@@ -163,7 +163,7 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, double& mip
   }
 
   // do PMT B
-  bool hasHitB = digi.getAcceptMapBit(Event::AcdDigi::B) || digi.getVeto(Event::AcdDigi::A);
+  bool hasHitB = digi.getAcceptMapBit(Event::AcdDigi::B) || digi.getVeto(Event::AcdDigi::B);
   if ( hasHitB ) {
     Event::AcdDigi::Range rangeB = digi.getRange(Event::AcdDigi::B);  
     bool ok = rangeB == Event::AcdDigi::LOW ? 
@@ -173,6 +173,15 @@ bool AcdPha2MipTool::getCalibratedValues(const Event::AcdDigi& digi, double& mip
     acceptDigi |= rangeB == Event::AcdDigi::HIGH ? true : accept(digi.getId(),pedSubB,mipsPmtB);
   }
 
+  // Check the total mips.  We need this to deal with single PMT hits.
+  double mipsTotal = mipsPmtA + mipsPmtB;
+  bool acceptTotal = acceptTotalMips(digi.getId(),mipsTotal);
+  if ( ! acceptTotal ) {
+    if ( ! (digi.getRange(Event::AcdDigi::A) == Event::AcdDigi::HIGH || 
+	    digi.getRange(Event::AcdDigi::B) == Event::AcdDigi::HIGH ) ) {
+      acceptDigi = false;
+    } 
+  }
   return true;
 }
 
@@ -212,6 +221,7 @@ bool AcdPha2MipTool::getValues_lowRange(const idents::AcdId& id, Event::AcdDigi:
   }
 
   pedSub = (double)pha - pedestal;
+
   sc = AcdCalib::mipEquivalent_lowRange(pha,pedestal,mipPeak,mips);
   return sc.isFailure() ? false : true;
 
@@ -242,6 +252,18 @@ bool AcdPha2MipTool::accept(const idents::AcdId& id, float pedSubtracted, float 
   } else if ( id.ribbon() ) {
     if ( pedSubtracted < m_pha_ribbon_cut ) return false;
     if ( mips < m_mips_ribbon_cut ) return false;        
+  } else {
+    return false;
+  }
+  return true;
+}
+
+
+bool AcdPha2MipTool::acceptTotalMips(const idents::AcdId& id, float totalMips) const {
+  if ( id.tile() ) {
+    if ( totalMips < 2*m_mips_tile_cut) return false;
+  } else if ( id.ribbon() ) {
+    return true;
   } else {
     return false;
   }
