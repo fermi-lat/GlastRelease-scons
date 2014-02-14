@@ -99,6 +99,9 @@ private:
   std::map<idents::AcdId, std::pair<double, double> > m_mipsMap;
   std::map<idents::AcdId, unsigned int>               m_statusMap;
 
+  unsigned short m_gemDeltaEventTime;
+
+
 };
 
 #endif

@@ -17,6 +17,7 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/DigiEvent.h"
 #include "Event/TopLevel/Event.h"
+#include "Event/Trigger/TriggerInfo.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "AcdUtil/IAcdGeometrySvc.h"
@@ -177,6 +178,20 @@ StatusCode AcdDigiAlg::execute() {
             return sc;
         }
     }
+
+    if ( m_apply_coherent_noise ) {
+      // Get the GEM info (needed for the coherent noise)
+      SmartDataPtr<Event::TriggerInfo> triggerInfo(eventSvc(), "/Event/TriggerInfo");
+      if (!triggerInfo) {
+	log << MSG::INFO << "Cannot find TriggerInfo in TDS, not processing GEM info" << endreq;
+	return sc;
+      }
+
+      m_gemDeltaEventTime = triggerInfo->getDeltaEventTime();
+    } else {
+      m_gemDeltaEventTime = 5000;
+    }
+
 
     // Create the new AcdDigi collection for the TDS
     Event::AcdDigiCol* digiCol = new Event::AcdDigiCol;
@@ -366,20 +381,6 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
 
     std::set<idents::AcdId> doneMap;
 
-    double timeTicks(0.);
-    if ( m_apply_coherent_noise ) 
-    {
-        // No good way to do the coherent noise, so we make it up
-        // Depends on # of ticks, so we throw and exponential with a mean of 2000 ticks
-        // Since this is the only place we have this number, there is no way to take out this
-        // effect with a calibration.  
-        // This should only be used for doing studies.
-        static const unsigned GemOffset(529);
-        static const double meanDeltaGemTime(2000.);
-        timeTicks = CLHEP::RandExponential::shoot(meanDeltaGemTime);
-        timeTicks += GemOffset;
-    }
-
     // Now fill the TDS with AcdDigis
     // Loop over all tiles in the geometry
     for(AcdTileList::const_iterator it=m_tiles.begin(); it!=m_tiles.end(); ++it)
@@ -421,7 +422,7 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
     
         if ( m_apply_coherent_noise ) 
         {
-            sc = m_util.applyCoherentNoiseToPha(acdId,(unsigned)timeTicks,log,phaArr);
+            sc = m_util.applyCoherentNoiseToPha(acdId,(unsigned)m_gemDeltaEventTime,log,phaArr);
             if ( sc.isFailure() ) return sc;  
         }
 

@@ -259,12 +259,30 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit
   StatusCode sc = StatusCode::SUCCESS;
 
   double energy = hit->depositedEnergy();
+  
   // check the edge effect
   if ( edgeEffect ) {
     sc = tileEdgeEffect(hit,log,energy);
     if ( sc.isFailure() ) {
       log << MSG::ERROR << "Couldn't apply edge effect " << hit->volumeID().name() << ' ' << energy << endreq;
       return sc;
+    }
+  }
+
+  double energy_A = energy;
+  double energy_B = energy;
+  
+  // Added in Feb. 2014 by EAC to allow for single hits coming from overlays
+  if ( ( hit->getPackedFlags() & 0xF0000000 ) == (unsigned int)Event::AcdDigi::DIGI_OVERLAY ) { 
+    bool acceptPMT_A = (hit->getPackedFlags() & 0x0000001) != 0;
+    bool acceptPMT_B = (hit->getPackedFlags() & 0x0001000) != 0;
+    if ( acceptPMT_A && ( ! acceptPMT_B ) ) {
+      energy_A += energy_B;
+      energy_B = 0.;
+    }
+    if ( acceptPMT_B && ( ! acceptPMT_A ) ) {
+      energy_B += energy_A;
+      energy_A = 0.;
     }
   }
 
@@ -284,13 +302,13 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit
   double pePerMeV_B = pmtBCalib->pe_per_MeV();
 
   // OK, have the numbers, now just combine them
-  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_A,pe_pmtA);
+  sc = AcdCalib::photoElectronsFromEnergy(energy_A,pePerMeV_A,pe_pmtA);
   if ( sc.isFailure() ) {
     log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT A " << tileId.id() << ' ' << energy << endreq;
     return sc;
   }
 
-  sc = AcdCalib::photoElectronsFromEnergy(energy,pePerMeV_B,pe_pmtB);
+  sc = AcdCalib::photoElectronsFromEnergy(energy_B,pePerMeV_B,pe_pmtB);
   if ( sc.isFailure() ) {
     log << MSG::ERROR << "photoElectronsFromEnergy failed for PMT B " << tileId.id() << ' ' << energy << endreq;
     return sc;
