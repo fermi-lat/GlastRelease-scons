@@ -112,6 +112,20 @@ void AcdHit::setFlags(const Event::AcdDigi& digi)
   
 }
 
+
+void AcdHit::correctAcceptMapBits(bool acceptA, bool acceptB) 
+/// this is to allow us to kill accept map bits for periodic triggers in the overlays
+{
+  // This masks out the accept bit
+  static unsigned short clearAcceptMask(0xFFFE);
+  m_flags[A] &= clearAcceptMask;
+  m_flags[B] &= clearAcceptMask;
+  
+  if (acceptA)  m_flags[A] |= PMT_ACCEPT_MASK;
+  if (acceptB)  m_flags[B] |= PMT_ACCEPT_MASK;
+}
+
+
 AcdHitCol::AcdHitCol(const std::vector<AcdHit*>& acdhits) {
 //Purpose: take ownership of hits from a vector
   for ( std::vector<AcdHit*>::const_iterator itr = acdhits.begin();

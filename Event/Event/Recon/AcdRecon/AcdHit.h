@@ -125,6 +125,9 @@ namespace Event
     void set(const idents::AcdId&, unsigned short flagsA, unsigned short flagsB, 
              unsigned short phaA, unsigned short phaB,
              float mipsPmtA, float mipsPmtB);
+    
+    /// this is to allow us to kill accept map bits for periodic triggers in the overlays
+    void correctAcceptMapBits(bool acceptA, bool acceptB);
 
     /// Returns the id of the tile or ribbon
     inline const idents::AcdId& getAcdId() const { return m_acdId; };
