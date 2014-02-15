@@ -590,7 +590,12 @@ StatusCode AcdDigiUtil::checkThresholds(const idents::AcdId& id, const double mi
       mipVeto += shootGaussian( calibData->veto_width_mips() );
       cnoVeto += shootGaussian( calibData->cno_width_mips() );
     }
-    vetoArr[i] = mipVeto >= calibData->veto_threshold_mips();
+    // Changed in Feb. 2014 by EAC, since the veto for ribbons is turned off
+    if ( id.tile() ) {
+      vetoArr[i] = mipVeto >= calibData->veto_threshold_mips();
+    } else {
+      vetoArr[i] = false;
+    }
     highArr[i] = cnoVeto >= calibData->cno_threshold_mips();
     makeDigi |= phaThreshArr[i] || vetoArr[i] || highArr[i];
   }
