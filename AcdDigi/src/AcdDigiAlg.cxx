@@ -42,6 +42,7 @@ Algorithm(name, pSvcLocator) {
     declareProperty("applyPoisson", m_apply_poisson=true);
     declareProperty("applyGaussianNoise", m_apply_noise=true);
     declareProperty("applyCoherentNoise", m_apply_coherent_noise=true);
+    declareProperty("coherentNoiseInOverlay", m_coherent_noise_in_overlay=true);
     declareProperty("edgeEffect", m_edge_effect=true);
     declareProperty("lightYeildRatio", m_lightYeildRatio=1.0);
     //Change made by D. Green to incorporate zero suppression as a JO
@@ -409,7 +410,7 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
             mipsPmt[0] = itrFind->second.first;
             mipsPmt[1] = itrFind->second.second;;      
         } 
-
+	
         unsigned short phaArr[2] = { 0, 0 };
         Event::AcdDigi::Range rangeArr[2] = { Event::AcdDigi::LOW, Event::AcdDigi::LOW };
         bool phaThreshArr[2] = { false, false };
@@ -417,24 +418,30 @@ StatusCode AcdDigiAlg::makeDigis(const std::map<idents::AcdId, std::pair<double,
         bool highArr[2] = { false, false };
         bool makeDigi(false);
 
+        // Recover the status word for this digi
+        unsigned int statusWord = Event::AcdDigi::DIGI_MC;
+        if (statusMap.find(acdId) != statusMap.end()) statusWord = statusMap.find(acdId)->second;
+
         StatusCode sc = m_util.phaCounts(acdId,mipsPmt,m_apply_noise,log,rangeArr,phaArr);
         if ( sc.isFailure() ) return sc;
     
         if ( m_apply_coherent_noise ) 
-        {
-            sc = m_util.applyCoherentNoiseToPha(acdId,(unsigned)m_gemDeltaEventTime,log,phaArr);
-            if ( sc.isFailure() ) return sc;  
+        {  
+       	    // Make sure we aren't double counting coherent noise from overlays 
+	    bool noiseFromOverlay = m_coherent_noise_in_overlay && ( statusWord & (Event::AcdDigi::DIGI_OVERLAY) != 0 );
+   	    if  ( ! noiseFromOverlay ) 
+	    {     
+                sc = m_util.applyCoherentNoiseToPha(acdId,(unsigned)m_gemDeltaEventTime,log,phaArr);
+		if ( sc.isFailure() ) return sc;  
+	    }
         }
 
         //Change made by D. Green to incorporate zero suppression as a JO
         sc = m_util.checkThresholds(acdId,mipsPmt,phaArr,rangeArr,m_apply_noise,log,makeDigi,phaThreshArr,vetoArr,highArr,m_phaZeroThreshold);
         if ( sc.isFailure() ) return sc;
 
-        // Now do special handling for pure Overlay events
-        // Recover the status word for this digi
-        unsigned int statusWord = Event::AcdDigi::DIGI_MC;
-        if (statusMap.find(acdId) != statusMap.end()) statusWord = statusMap.find(acdId)->second;
 
+        // Now do special handling for pure Overlay events
         // Pure overlay?
         if ((statusWord & (Event::AcdDigi::DIGI_OVERLAY | Event::AcdDigi::DIGI_MC)) == (unsigned int) Event::AcdDigi::DIGI_OVERLAY)
         {

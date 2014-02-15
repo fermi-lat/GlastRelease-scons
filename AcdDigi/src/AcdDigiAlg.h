@@ -77,6 +77,10 @@ private:
   /// to the PHA values
   bool m_apply_coherent_noise;
 
+  /// JobOptions parameter denoting whether or not coherent noise is in the overlay events 
+  /// to the PHA values
+  bool m_coherent_noise_in_overlay;
+
   /// JobOptions parameter denoting whether or not to apply edge effects
   /// according to the position of MC hits.
   bool m_edge_effect;
