@@ -4,6 +4,7 @@ package manager:H.Kelly
 
 EOH
 
+ AcdRecon-05-08-00 17-Feb-2014 echarles Pulled some code out to AcdUtil to allow it to be shared with AnalysisNtuple.  Also changed fit filtering code to also cut on combined signal of both PMTs
  AcdRecon-05-07-04 16-Jan-2014 echarles Set PHA threshold to 45 counts to make an AcdHit
  AcdRecon-05-07-03 01-Jul-2013 heather change output level from WARNING to
    INFO in AcdTkrIntersectionToolV2 at request of reprocessing
