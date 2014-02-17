@@ -4,6 +4,7 @@
  * package manager:T.Burnett
  * EOH *
  
+ Event-14-17-00 17-Feb-2014 echarles Allow for changing flags in AcdHit after construction, needed for the overlays
  Event-14-16-08 29-Jul-2013 echarles null initialize m_point in AcdAssoc
  Event-14-16-07 25-Jun-2013 TU Make sure angle variables initialized in constructor for TkrTree
  Event-14-16-06 03-Jun-2013 echarles Protect sorting of AcdTkrHitPoca and AcdTkrGapPoca
