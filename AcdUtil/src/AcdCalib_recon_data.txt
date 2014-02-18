@@ -2,12 +2,11 @@
 // used for real data:
 
 // The default is vanilla
-AcdCalibSvc.DefaultFlavor = "vanilla";
+AcdCalibSvc.DefaultFlavor = "L1current";
 
 // Don't have High Range or Coherent Noise calibrations yet
 // use "ideal"
 AcdCalibSvc.FlavorHighRange = "ideal";
-AcdCalibSvc.FlavorCoherentNoise = "ideal";
 
 // If this isn't already included
 CalibDataSvc.CalibFlavorList += "ideal";

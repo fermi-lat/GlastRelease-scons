@@ -1,18 +1,16 @@
 // This JO fragment is for the overriding 
 // the ACD calibrations in both data and MC
 
-// The default is MC_OktoberFest07
-AcdSimCalibSvc.DefaultFlavor = "MC_OktoberFest07";
-AcdCalibSvc.DefaultFlavor = "MC_OktoberFest07";
+// The default is L1Current
+AcdSimCalibSvc.DefaultFlavor = "L1current";
+AcdCalibSvc.DefaultFlavor = "L1current";
 
 // Don't have some calibrations yet
 // use "ideal"
 AcdCalibSvc.FlavorHighRange = "ideal";
-AcdCalibSvc.FlavorCoherentNoise = "ideal";
 
 AcdSimCalibSvc.FlavorRange = "ideal";
 AcdSimCalibSvc.FlavorHighRange = "ideal";
-AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
 AcdSimCalibSvc.FlavorCno = "ideal";
 AcdSimCalibSvc.FlavorRibbon = "ideal";
 

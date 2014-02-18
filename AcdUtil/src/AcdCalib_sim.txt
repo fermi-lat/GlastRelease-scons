@@ -1,14 +1,14 @@
 // This JO fragment is for the ACD calibrations to be 
 // used for generating MC data:
 
-// The default is MC_OktoberFest07
-AcdSimCalibSvc.DefaultFlavor = "MC_OktoberFest07";
+// The default is L1current
+AcdSimCalibSvc.DefaultFlavor = "L1current";
 
 // Don't have some calibrations yet
 // use "ideal"
 AcdSimCalibSvc.FlavorRange = "ideal";
 AcdSimCalibSvc.FlavorHighRange = "ideal";
-AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
+AcdSimCalibSvc.FlavorCoherentNoise = "L1current";
 AcdSimCalibSvc.FlavorCno = "ideal";
 AcdSimCalibSvc.FlavorRibbon = "ideal";
 
