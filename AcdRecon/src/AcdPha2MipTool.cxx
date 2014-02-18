@@ -32,7 +32,7 @@ AcdPha2MipTool::AcdPha2MipTool
    declareProperty("PHARibbonCut",    m_pha_ribbon_cut = 0.0);  // For consistency with P8 reprocessing
    declareProperty("MIPSRibbonCut",    m_mips_ribbon_cut = 0.0);
    declareProperty("VetoThrehsold",    m_vetoThreshold = 0.4);
-   declareProperty("ApplyCoherentNoiseCalib",    m_applyCoherentNoiseCalib = false);
+   declareProperty("ApplyCoherentNoiseCalib",    m_applyCoherentNoiseCalib = true);
      
  }
 
