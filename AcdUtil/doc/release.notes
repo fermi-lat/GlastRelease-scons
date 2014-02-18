@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
                EOH
 
+ AcdUtil-03-05-01 18-Feb-2014 echarles Change calibration flavors in job options fragments
  AcdUtil-03-05-00 17-Feb-2014 echarles Pulled some code in to AcdUtil to allow it to be shared with AcdRecon and AnalysisNtuple
  AcdUtil-03-04-00 25-Sep-2012 TU Add call to updateObject to check calibration validity range
  AcdUtil-03-03-00 20-Aug-2012    jrb for Windows no-install-headers
