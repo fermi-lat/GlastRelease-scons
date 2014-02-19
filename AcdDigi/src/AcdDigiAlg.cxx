@@ -17,7 +17,8 @@
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/DigiEvent.h"
 #include "Event/TopLevel/Event.h"
-#include "Event/Trigger/TriggerInfo.h"
+#include "OverlayEvent/GemOverlay.h"
+#include "OverlayEvent/OverlayEventModel.h"
 
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "AcdUtil/IAcdGeometrySvc.h"
@@ -138,6 +139,31 @@ StatusCode AcdDigiAlg::initialize() {
         log << MSG::INFO << "Intiliazed AcdDigiUtil" << endreq;
     }
 
+
+    if ( m_apply_coherent_noise ) {
+      // Convention for multiple input overlay files is that there will be separate OverlayDataSvc's with 
+      // names appended by "_xx", for example OverlayDataSvc_1 for the second input file. 
+      // In order to ensure the data read in goes into a unique section of the TDS we need to modify the 
+      // base root path, which we do by examining the name of the service
+      std::string dataSvcName = "OverlayDataSvc";
+      int         subPos      = name().rfind("_");
+      std::string nameEnding  = subPos > 0 ? name().substr(subPos, name().length() - subPos) : "";
+      
+      if (nameEnding != "") dataSvcName += nameEnding;
+      
+      IService* dataSvc = 0;
+      sc = service(dataSvcName, dataSvc);
+      if (sc.isFailure() ) {
+          log << MSG::ERROR << "  can't get OverlayDataSvc " << endreq;
+	  return sc;
+      }
+
+      // Caste back to the "correct" pointer
+      m_dataSvc = dynamic_cast<DataSvc*>(dataSvc);      
+    } else {
+      m_dataSvc = 0;
+    }
+
     return StatusCode::SUCCESS;
 }
 
@@ -181,14 +207,14 @@ StatusCode AcdDigiAlg::execute() {
     }
 
     if ( m_apply_coherent_noise ) {
-      // Get the GEM info (needed for the coherent noise)
-      SmartDataPtr<Event::TriggerInfo> triggerInfo(eventSvc(), "/Event/TriggerInfo");
-      if (!triggerInfo) {
-	log << MSG::INFO << "Cannot find TriggerInfo in TDS, not processing GEM info" << endreq;
+      SmartDataPtr<Event::GemOverlay> gemOverlay(m_dataSvc, m_dataSvc->rootName() + OverlayEventModel::Overlay::GemOverlay);
+      if( !gemOverlay) {
+	log << MSG::ERROR << "could not find gemOverlay object." << endreq;
 	return sc;
       }
 
-      m_gemDeltaEventTime = triggerInfo->getDeltaEventTime();
+
+      m_gemDeltaEventTime = gemOverlay->getDeltaEventTime();
     } else {
       m_gemDeltaEventTime = 5000;
     }

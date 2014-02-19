@@ -4,6 +4,7 @@ def generate(env, **kw):
         env.Tool('addLibrary', library = ['AcdDigi'])
     env.Tool('AcdUtilLib')
     env.Tool('EventLib')
+    env.Tool('OverlayEventLib')
     env.Tool('GlastSvcLib')
     env.Tool('CalibDataLib')
     env.Tool('xmlBaseLib')

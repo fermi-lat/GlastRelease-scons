@@ -2,6 +2,7 @@
 #define _AcdDigi_AcdDigiAlg_H 1
 
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/DataSvc.h"
 
 #include "idents/AcdId.h"
 
@@ -105,6 +106,9 @@ private:
 
   unsigned short m_gemDeltaEventTime;
 
+  /// This is for the overlays
+  DataSvc* m_dataSvc;
+  
 
 };
 
