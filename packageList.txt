@@ -103,7 +103,7 @@ CalibSvc CalibSvc-00-42-00
 calibRootData calibRootData-01-08-00
 
 # ntuple
-ntupleWriterSvc ntupleWriterSvc-06-02-02
+ntupleWriterSvc ntupleWriterSvc-06-02-03
 merit merit-06-38-00 
 AnalysisNtuple AnalysisNtuple-02-71-24
 
@@ -150,4 +150,4 @@ Gleam Gleam-08-00-04
 SConsFiles SConsFiles-01-11-04
 GlastRelease-scons/containerSettings containerSettings-00-13-03
 
-celestialSources/EarthPhenom EarthPhenom-00-02-06
+celestialSources/EarthPhenom EarthPhenom-00-02-07
