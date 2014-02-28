@@ -25,6 +25,9 @@ MeritAlg.generated = 1000;
 
 OnboardFilter.RejectEvents = true;      // enable OBF
 
+// HMK Feb 20, 2014 Avoiding overlay use in Unit Test 
+AcdDigiAlg.applyCoherentNoise = false;
+
 #include "$GLEAMJOBOPTIONSPATH/calibration.txt"
 
 // test saa boundary mechanism
