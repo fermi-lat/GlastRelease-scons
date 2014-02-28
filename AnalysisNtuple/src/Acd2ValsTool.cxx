@@ -449,8 +449,8 @@ Acd2ValsTool::Acd2ValsTool(const std::string& type,
   declareInterface<IValsTool>(this); 
   
   // Threshold in MIP below which to ignore hits
-  declareProperty("MIPSTileCut",m_mips_tile_cut = 0.1);       // 
-  declareProperty("MIPSRibbonCut",m_mips_ribbon_cut = 0.1);   //
+  declareProperty("MIPSTileCut",m_mips_tile_cut = 0.001);       // 
+  declareProperty("MIPSRibbonCut",m_mips_ribbon_cut = 0.001);   //
 
 
   // Prefix for tuple column names
