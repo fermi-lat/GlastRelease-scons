@@ -75,7 +75,10 @@ else:
 ### hoping we don't actually need this for Windows
 if sys.platform != 'win32':
     usedExternals.append({ 'name' : 'x11', 'iversion' : '1.0.0' })
-    usedExternals.append({ 'name' : 'ruby', 'iversion' : '1.8.6' })
+    if baseEnv['COMPILERNAME'] == 'gcc41':
+        usedExternals.append({ 'name' : 'ruby', 'iversion' : '1.8.6' })
+    if baseEnv['COMPILERNAME'] == 'gcc42':
+        usedExternals.append({ 'name' : 'ruby', 'iversion' : '1.8.7' })
 
 usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r15' })
 
