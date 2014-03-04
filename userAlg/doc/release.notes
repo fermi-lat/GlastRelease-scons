@@ -4,6 +4,8 @@
 @verbatim
  * EOH *
 
+ userAlg-06-07-06 04-Mar-2014    hmk adding AcdDigiAlg.applyCoherentNoise =
+false; after ACD updates to avoid need for Overlays in unit test
  userAlg-06-07-05 16-May-2012    hmk one more CMT rearrangement
  userAlg-06-07-04 11-May-2012    hmk Patch unix builds
  userAlg-06-07-03 03-May-2012    hmk Fix up windows builds
