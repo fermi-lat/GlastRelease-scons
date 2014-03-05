@@ -19,6 +19,9 @@ EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 //EventSelector.PrintFreq = -1;
 ApplicationMgr.HistogramPersistency = "NONE";
 
+// To avoid need for Overlays during unit test March 5, 2014
+AcdDigiAlg.applyCoherentNoise = false;
+
 
 // ----------------------------
 //  a structure for the topalg, using sequencer steps
