@@ -42,7 +42,7 @@ Algorithm(name, pSvcLocator) {
     declareProperty("AcdSimCalibSvc",    m_calibSvcName = "AcdSimCalibSvc");
     declareProperty("applyPoisson", m_apply_poisson=true);
     declareProperty("applyGaussianNoise", m_apply_noise=true);
-    declareProperty("applyCoherentNoise", m_apply_coherent_noise=true);
+    declareProperty("applyCoherentNoise", m_apply_coherent_noise=false);
     declareProperty("coherentNoiseInOverlay", m_coherent_noise_in_overlay=true);
     declareProperty("edgeEffect", m_edge_effect=true);
     declareProperty("lightYeildRatio", m_lightYeildRatio=1.0);
@@ -154,7 +154,8 @@ StatusCode AcdDigiAlg::initialize() {
       IService* dataSvc = 0;
       sc = service(dataSvcName, dataSvc);
       if (sc.isFailure() ) {
-          log << MSG::ERROR << "  can't get OverlayDataSvc " << endreq;
+          log << MSG::ERROR << "  can't get OverlayDataSvc, needed when " <<
+               "AcdDigiAlg.applyCoherentNoise set to true" << endreq;
 	  return sc;
       }
 
