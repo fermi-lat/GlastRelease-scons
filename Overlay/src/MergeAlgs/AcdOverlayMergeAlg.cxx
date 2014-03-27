@@ -18,6 +18,7 @@
 // Glast specific includes
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/Event.h"
+#include "Event/Digi/AcdDigi.h"
 #include "Event/MonteCarlo/McPositionHit.h"
 #include "OverlayEvent/OverlayEventModel.h"
 #include "OverlayEvent/EventOverlay.h"
@@ -236,7 +237,7 @@ StatusCode AcdOverlayMergeAlg::execute()
                         Event::McPositionHit::overlayHit);
 
             // Since this is from overlay, add the acdOverlay status mask to the packed flags
-            mcHit->addPackedMask(acdOverlay->getStatus());
+            mcHit->addPackedMask(acdOverlay->getStatus() | Event::AcdDigi::DIGI_OVERLAY);
 
             mcPosHitCol->push_back(mcHit);
         }
