@@ -274,8 +274,8 @@ StatusCode AcdDigiUtil::photoElectronsFromEnergy_tile(const Event::McPositionHit
   
   // Added in Feb. 2014 by EAC to allow for single hits coming from overlays
   if ( ( hit->getPackedFlags() & 0xF0000000 ) == (unsigned int)Event::AcdDigi::DIGI_OVERLAY ) { 
-    bool acceptPMT_A = (hit->getPackedFlags() & 0x0000001) != 0;
-    bool acceptPMT_B = (hit->getPackedFlags() & 0x0001000) != 0;
+    bool acceptPMT_A = (hit->getPackedFlags() & 0x00000001) != 0;
+    bool acceptPMT_B = (hit->getPackedFlags() & 0x00010000) != 0;
     if ( acceptPMT_A && ( ! acceptPMT_B ) ) {
       energy_A += energy_B;
       energy_B = 0.;
