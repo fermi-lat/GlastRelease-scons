@@ -3,6 +3,7 @@
  Coordinator:H.Kelly
  EOH 
 
+ AcdDigi-03-14-02 27-Mar-2014 echarles Fix typo in bitmask in AcdDigiUtil
  AcdDigi-03-14-01 12-Mar-2014 heather set AcdDigiAlg.applyCoherentNoise to
    false as default to avoid need of Overlays.
  AcdDigi-03-14-00 19-Feb-2014 echarles Fix AcdDigi to get gemDeltaEventTime directly from GemOverlay object
