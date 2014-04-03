@@ -11,10 +11,6 @@
 //#include "$GLEAMJOBOPTIONSPATH/guiOptions.txt"
 //#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"
 
-// Adding new line after ACD updates from Eric Charles, since we are no
-// using Overlays in the unit tests
-AcdDigiAlg.applyCoherentNoise = false;
-
 // add the local source library definitions and specify our test source
 FluxSvc.source_lib += {"$(USERALGXMLPATH)/user_sources.xml"};
 
