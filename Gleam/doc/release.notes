@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-08-00-06 03-Apr-2014 heather remove applyCoherentNoise from unit test
  Gleam-08-00-05 28-Feb-2014 heather Setting AcdDigiAlg.applyCoherentNoise =
 false in unit test since we do not use overlays
  Gleam-08-00-04 18-Dec-2013 carmelo calibration default update
