@@ -77,7 +77,7 @@ if sys.platform != 'win32':
     if baseEnv['COMPILERNAME'] == 'gcc42':
         usedExternals.append({ 'name' : 'ruby', 'iversion' : '1.8.7' })
 
-usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r15' })
+usedExternals.append({ 'name' : 'extFiles', 'iversion' : 'v0r16' })
 
 # Use old OBF for VC71
 if baseEnv['COMPILERNAME'] == 'vc71':
