@@ -23,6 +23,8 @@
 */
 
 #include "calibUtil/Metadata.h"
+#include "facilities/commonUtilities.h"
+#include "facilities/Timestamp.h"
 #include "Coverage.h"
 #include <iostream>
 #include <cstdio>
@@ -60,6 +62,7 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
+  facilities::commonUtilities::setupEnvironment();
 
   //  rdbModel::MysqlConnection* conn = new rdbModel::MysqlConnection();
   // First do read connection to db, see if xml schema is compatible with db

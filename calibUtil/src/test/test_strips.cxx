@@ -6,6 +6,7 @@
 */
 #include "calibUtil/StripSrv.h"
 #include "facilities/Util.h"
+#include "facilities/commonUtilities.h"
 
 #include <string>
 #include <iostream>
@@ -26,6 +27,7 @@ class MyObject : public calibUtil::ClientObject {
 int main(int argc, char* argv[]) {
   using calibUtil::StripSrv;
 
+  facilities::commonUtilities::setupEnvironment();
   std::string name = "$(CALIBUTILXMLPATH)/xml/test/testHot.xml";
   
   if (argc > 1) {

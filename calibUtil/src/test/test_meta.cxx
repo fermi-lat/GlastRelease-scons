@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include "calibUtil/Metadata.h"
+#include "facilities/commonUtilities.h"
 
 void gotIt(unsigned int ser, const std::string& dataFmt,
            const std::string& fmtVersion, const std::string& dataIdent);
@@ -35,6 +36,8 @@ int main(int, char**) {
   Timestamp t_ok("2001-11-10 08:00");
   Timestamp t_none("2000-09-08 10:00");
   Timestamp t_late("2010-12-19");
+
+  facilities::commonUtilities::setupEnvironment();
 
   Metadata::eRet ret = lookup("TKR_DeadChan", t_ok, 
                               Metadata::LEVELDev | Metadata::LEVELTest, 

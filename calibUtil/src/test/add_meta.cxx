@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include "calibUtil/Metadata.h"
+#include "facilities/commonUtiliites.h"
 
 void gotIt(unsigned int ser, const std::string& dataFmt,
            const std::string& fmtVersion, const std::string& dataIdent);
@@ -23,6 +24,7 @@ int main(int, char**) {
 
   Metadata  meta("*", "*", "calib_test");
 
+  faciliites::commonUtilities::setupEnvironment();
   int ser = 
     meta.registerCalib("kazoo","mango", "Test_Gen", "notAFile.xml",
                        "XML", facilities::Timestamp("1990-1-5"),
