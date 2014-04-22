@@ -100,11 +100,11 @@ int main(int argc, char* argv[]) {
   // Sort out instr, flavor, level, ts arguments.  Update local
   // variables if values other than defaults supplied
   if (argc > 2) {
-    if (!strcmp(argv[2], "*")) instr = std::string(argv[2]);
+    if (strcmp(argv[2], "*")) instr = std::string(argv[2]);
     if (argc > 3) {
-      if (!strcmp(argv[3], "*")) flavor = std::string(argv[3]);
+      if (strcmp(argv[3], "*")) flavor = std::string(argv[3]);
       if (argc > 4) {
-        if (!strcmp(argv[4], "*")) level = std::string(argv[4]);
+        if (strcmp(argv[4], "*")) level = std::string(argv[4]);
       }
     }
   }
