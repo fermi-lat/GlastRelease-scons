@@ -673,7 +673,7 @@ unsigned int EbfOutput::format (const EbfAcdData *acd,
        *evtBeg++      = 0x11111111;
        *evtBeg++      = 0x22222222;
 //        contribLength = padEvt(evtBeg,dst)-4; /*Subtract off Descriptor, returned value is bytes*/         
-        contribLength = (dst - evtBeg)*sizeof(dst) - 4; /*Subtract off Descriptor, returned value is bytes*/        
+        contribLength = (dst - evtBeg)*sizeof(*dst) - 4; /*Subtract off Descriptor, returned value is bytes*/        
         m_evtDescriptor = evtBeg; /* Save position of event descriptor */
         m_evtEnd        = dst; /* Save position of the end of the event */
 //        printf("Contribution Length %i (0x%8.8x)\n",contribLength/4,contribLength/4);
