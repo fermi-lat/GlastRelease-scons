@@ -4,6 +4,7 @@
  * @verbatim
  * EOH *
 
+ EbfWriter-01-11-01 24-Nov-2014    jrb Fix for MC running on 64-bit machine
  EbfWriter-01-11-00 20-Aug-2012    jrb for Windows no-install-headers
  EbfWriter-01-10-04 28-Jun-2012    jrb Tag Johann's gcc 4.4 patch
  EbfWriter-01-10-03 12-Jan-2012 heather pathes for windows

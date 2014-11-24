@@ -1,7 +1,7 @@
 package EbfWriter
 # $Header$
 
-version v1r11p0
+version v1r11p1
 author Brian Winer <winer@mps.ohio-state.edu>
 
 use Event          *
