@@ -7,6 +7,7 @@ package manager: David Chamont
 
   * EOH *
 
+ CalRecon-06-23-02 02-Dec-2014 bregeon Fix profile fit bug for RHEL5-32 to RHEL6-64 --- see LPATE-179
  CalRecon-06-23-01 27-Jun-2013 heather tagging for bruel
     run profile for horizontal events
  CalRecon-06-23-00 26-Jun-2013 TU Tagging Philippe's modifications to make profile fit run faster
