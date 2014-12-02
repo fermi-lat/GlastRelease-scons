@@ -220,6 +220,11 @@ double NewCalFullProfileTool::compute_chi2(double *par)
 {
   nm_totchisq = 1e10;
 
+  if(std::isnan(par[0])||std::isnan(par[1])||std::isnan(par[2]))
+    return nm_totchisq;
+
+  nm_totchisq = 1e10+fabs(par[0])+fabs(par[1])+fabs(par[2]);
+
   if(!nm_fsppm->Fill(par)) return nm_totchisq;
 
   double par0[3];
