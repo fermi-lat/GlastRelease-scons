@@ -812,7 +812,7 @@ char * EbfOutput::write (bool writeEbf, unsigned int &length, unsigned int *TdsB
 // Move truncated data up in m_evtBuffer
 // Assumes that EBF_MAX_PACKET_SIZE includes header
           unsigned int *evtRem = m_evtHead;
-          for(int i=0; i<(EBF_MAX_PACKET_SIZE-EVT_HEADER_SIZE*4)/sizeof(evtRem); i++) {
+          for(int i=0; i<(EBF_MAX_PACKET_SIZE-EVT_HEADER_SIZE*4)/sizeof(*evtRem); i++) {
 //            printf("Pointer Position 0x%8.8x Value 0x%8.8x\n",evtRem,*evtRem);
             *evtRem++;
           }  
