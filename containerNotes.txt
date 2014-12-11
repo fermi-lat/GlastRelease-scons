@@ -1,6 +1,7 @@
 # containerNotes for GlastRelease-scons
 
 
+2014-12-11 heather preparing for GR 20-10-00 JIRA LPATE-180
 2014-05-12 heather move to python 2.7.6 and include iPython notebook for
 SLAC installation
 2014-04-08 heather new Release JIRA-175 20-09-09
