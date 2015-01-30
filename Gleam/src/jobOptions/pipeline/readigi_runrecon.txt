@@ -290,6 +290,18 @@ GcrSelectAlg.OutputLevel          = 4;
 ToolSvc.GcrReconTool.OutputLevel  = 4; 
 ToolSvc.GcrSelectTool.OutputLevel = 4; 
 
+//
+// ghost handling options to match P300 reprocessing
+// corresponding to GR 20-09-02, see LPATE-167
+//
+TkrFindFirst.DoCRTrackDeghosting = true; // no deghosting in -04, because we
+may not do CR tracking
+TkrFindIter.DoCRTrackDeghosting = true;
+TkrFindFirst.DoStandardTrackDeghosting = true;
+TkrFindIter.DoStandardTrackDeghosting = true;
+ToolSvc.TkrGhostTool.ClearGhostBits = true; // this was a bug in -02, is false in -04
+ToolSvc.TkrGhostTool.MinimumHitsForGhostTrack = 1; // this is 2 for -04 
+
 
 // 
 // Number of events:
