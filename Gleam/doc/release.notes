@@ -5,6 +5,7 @@
  * $Id$
 * EOH
 
+ Gleam-08-00-09 03-Feb-2015 bregeon update mc_calibration.txt with latest tweaks - LPATE-184
  Gleam-08-00-08 02-Feb-2015 monzani fixed a typo in jobOptions file
  Gleam-08-00-07 30-Jan-2015 bregeon Update default jobOptions/pipeline/readigi_runrecon.txt to match P300 repro ghost handling - LPATE-177
  Gleam-08-00-06 03-Apr-2014 heather remove applyCoherentNoise from unit test
