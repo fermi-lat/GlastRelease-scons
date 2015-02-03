@@ -17,6 +17,8 @@ def generate(env, **kw):
      env.Tool('astroLib')
      env.Tool('facilitiesLib')
      env.Tool('st_facilitiesLib')
+     env.Tool('evtUtilsLib')
+
      env.Tool('addLibrary', library=env['gaudiLibs'])
      env.Tool('addLibrary', library=env['rootLibs'])
      env.Tool('addLibrary', library=env['clhepLibs'])
