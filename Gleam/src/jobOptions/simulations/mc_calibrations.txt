@@ -4,6 +4,8 @@ ApplicationMgr.ExtSvc += {"AcdCalibSvc"};
 // add new flavors to default
 CalibDataSvc.CalibFlavorList = {"ideal"};
 CalibDataSvc.CalibFlavorList += {"MC_OktoberFest07"};
+CalibDataSvc.CalibFlavorList += {"cal_tholdci_simtest"};
+CalibDataSvc.CalibFlavorList += { "tkr_simtest" };
 CalibDataSvc.CalibFlavorList += {"L1current"}; 
 
 // for MSQL connection
@@ -12,6 +14,7 @@ CalibMySQLCnvSvc.QualityList = {"PROD"};
 
 //  CAL
 CalCalibSvc.DefaultFlavor    = "L1current";
+CalCalibSvc.FlavorTholdCI = "cal_tholdci_simtest"; 
 
 // TKR
 TkrCalibAlg.calibFlavor      = "L1current";
@@ -22,14 +25,14 @@ TkrCalibAlg.internalAlignmentCalibFlavor = "L1current";
 // ACD data
 AcdCalibSvc.DefaultFlavor = "L1current";
 AcdCalibSvc.FlavorHighRange = "ideal";
-AcdCalibSvc.FlavorCoherentNoise = "ideal";
+AcdCalibSvc.FlavorCoherentNoise = "L1current"; 
 
 // ACD sim
 AcdSimCalibSvc.DefaultFlavor = "L1current";
 AcdSimCalibSvc.FlavorRange = "ideal";
 AcdSimCalibSvc.FlavorHighRange = "ideal";
-AcdSimCalibSvc.FlavorCoherentNoise = "ideal";
-AcdSimCalibSvc.FlavorVeto = "MC_OktoberFest07";
+AcdSimCalibSvc.FlavorCoherentNoise  =  "L1current";
+AcdSimCalibSvc.FlavorVeto = "L1current";
 AcdSimCalibSvc.FlavorCno = "ideal";
 AcdSimCalibSvc.FlavorRibbon = "ideal"; 
 
@@ -38,16 +41,27 @@ AcdSimCalibSvc.FlavorRibbon = "ideal";
 // LSR  2013-11-23
 
 // Add another instance of TkrCalibAlg for reconstruction
-
 Tkr.Members = {
     "TkrCalibAlg/TkrReconCalib",
     "TkrReconAlg/TkrCluster",
     "TkrReconAlg/FirstPass"
     };
-
-CalibDataSvc.CalibFlavorList += { "tkr_simtest" };
-
 TkrReconCalib.calibFlavor = "L1current";
-
 TkrReconCalib.towerAlignmentCalibFlavor    = "tkr_simtest";
 TkrReconCalib.internalAlignmentCalibFlavor = "tkr_simtest";
+
+//
+// More Tricks that become default for simulations LPATE-184
+// these are not really calibration, but it's convenient to have them here.
+
+//additional JO line to change ACD zero suppression (see SIMREQ-141)
+AcdDigiAlg.phaZeroThreshold = 25.0; 
+
+//P8 PSF in MERIT - point at SLAC by default
+ToolSvc.EvtValsTool.psfPath="/nfs/farm/g/glast/u29/MC-tasks/skySimData/SimCommons/IRFs/P8V1";
+ToolSvc.EvtValsTool.psfVersion="P8_SOURCE_V1";
+
+// ToT quadratic correction
+TkrToTSvc.linearMipCorrection   = 0.9174;  // default = 1.0
+TkrToTSvc.quadraticMipCorrection = 0.0772;  // default = 0.0
+
