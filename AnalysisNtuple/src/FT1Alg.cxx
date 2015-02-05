@@ -190,8 +190,15 @@ StatusCode FT1Alg::initialize()
     std::list<std::string> ft1EvtClassNames;
     m_evtClass->getEvtMapNames(ft1EvtClassNames);
 
+    // Introduce a hack here to rename FT1EventClass and FT1EventType defined in the xml
+    // file DQMEventClass and DQMEventType
+    // FT1EventClass and FT1EventType should be set only in FT1 files - LPATE-183
     for ( std::list<std::string>::const_iterator itr = ft1EvtClassNames.begin(); itr != ft1EvtClassNames.end(); itr++) {
-        addItem(itr->c_str(),*(m_evtClass->getShortMapPtr(*itr)));
+        std::string dqmname(itr->c_str());
+        dqmname.replace(0, 3,"DQM");
+        log<<MSG::DEBUG<<itr->c_str()<<" renamed as "<<dqmname<<" as per LPATE-183"<<endreq;
+        addItem(dqmname.c_str(),*(m_evtClass->getShortMapPtr(*itr)));
+//        addItem(itr->c_str(),*(m_evtClass->getShortMapPtr(*itr)));
     }
 
     // get the GPS instance: 
