@@ -1,6 +1,8 @@
 # containerNotes for GlastRelease-scons
 
 
+2015-02-06 heather updating Gleam, evtUtils, AnalysisNtuple as indicated in
+  JIRA LPATE-182
 2015-02-02 heather preparing for GR 20-10-01 JIRA LPATE-182 bringing packages in agreement with ST
 2014-12-11 heather preparing for GR 20-10-00 JIRA LPATE-180
 2014-05-12 heather move to python 2.7.6 and include iPython notebook for
