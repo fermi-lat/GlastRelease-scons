@@ -148,6 +148,6 @@ McToolBox McToolBox-00-02-02
 Gleam Gleam-08-00-09
 
 SConsFiles SConsFiles-01-15-00
-GlastRelease-scons/containerSettings containerSettings-00-15-00
+GlastRelease-scons/containerSettings containerSettings-00-16-00
 
 celestialSources/EarthPhenom EarthPhenom-00-02-07

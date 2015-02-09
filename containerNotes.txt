@@ -1,6 +1,7 @@
 # containerNotes for GlastRelease-scons
 
 
+2015-02-09 heather move to cfitsio v3370
 2015-02-06 heather updating Gleam, evtUtils, AnalysisNtuple as indicated in
   JIRA LPATE-182
 2015-02-02 heather preparing for GR 20-10-01 JIRA LPATE-182 bringing packages in agreement with ST
