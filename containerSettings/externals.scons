@@ -95,5 +95,10 @@ else:
 #if baseEnv['COMPILERNAME'] != 'vc90':
 usedExternals.append({ 'name' : 'fox', 'iversion' : '1.4.34-i1' })
 
+#   WCSLIB 4.25.1
+usedExternals.append({ 'name' : 'wcslib', 'iversion' : '4.25.1' })
+
+#   HEALPIX 3.20
+usedExternals.append({ 'name' : 'healpix', 'iversion' : '3.20' })
 
 Return("usedExternals")
