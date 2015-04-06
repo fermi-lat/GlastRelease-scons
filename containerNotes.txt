@@ -1,6 +1,8 @@
 # containerNotes for GlastRelease-scons
 
 
+2015-04-06 heather JIRA LPATE-187 pick up new astro and new wcslib and 
+ healpix externals
 2015-02-10 heather back off all external upgrades until problems in unit
   tests are addressed..
 2015-02-09 heather move to cfitsio v3370
