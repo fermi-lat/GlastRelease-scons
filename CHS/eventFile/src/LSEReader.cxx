@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -131,13 +132,15 @@ namespace eventFile {
   {
     // read in the LSE_Info size
     int nitems(0);
-    nitems = fread( &len, sizeof( size_t ), 1, m_FILE );
+    uint32_t flen(0);
+    nitems = fread( &flen, sizeof flen, 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
       ess << "LSEReader::read: error reading LSE_Info size from " << m_name;
       ess << " (" << errno << "=" << strerror( errno ) << ")";
       throw std::runtime_error( ess.str() );
     }
+    len = flen;
 
     // read in the LSE_Info content
     nitems = fread( buf, len, 1, m_FILE );

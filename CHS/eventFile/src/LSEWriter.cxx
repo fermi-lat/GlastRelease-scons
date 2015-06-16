@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <cstring>
 #include <cstdlib>
@@ -161,7 +162,8 @@ namespace eventFile {
     }
 
     // write the object size to the file
-    nitems = fwrite( &len, sizeof( size_t ), 1, m_FILE );
+    uint32_t const flen(static_cast<uint32_t>(len));
+    nitems = fwrite( &flen, sizeof flen, 1, m_FILE );
     if ( nitems != 1 ) {
       std::ostringstream ess;
       ess << "LSEWriter::write: error writing LSE_Info size  to " << m_name;
