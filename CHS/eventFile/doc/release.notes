@@ -50,3 +50,4 @@
  eventFile-09-00-02 03-Mar-2010    jrb use addLinkDeps in SCons build
  eventFile-09-00-03 28-Jun-2012    jrb Tag Johann's gcc 4.4 patches
  eventFile-09-01-00 17-Aug-2012    jrb for Windows no-install-headers
+ eventFile-09-01-01 16-Jun-2015 tether LPATE-188 Fix for 64-bit running
