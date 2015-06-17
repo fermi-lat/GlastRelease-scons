@@ -108,7 +108,7 @@ merit merit-06-38-00
 AnalysisNtuple AnalysisNtuple-02-73-01
 
 # LDF
-CHS/eventFile eventFile-09-01-00
+CHS/eventFile eventFile-09-01-01
 LdfEvent LdfEvent-04-13-00
 lsfData lsfData-04-04-00
 ldfReader ldfReader-07-05-00

@@ -1,6 +1,9 @@
 # containerNotes for GlastRelease-scons
 
 
+2015-06-17 heather Tagging GR 20-10-03
+2015-06-17 heather Respond to JIRA LPATE-188 which resulted in a new
+CHS/eventFile tag 09-01-01
 2015-04-07 heather pick up SConsFiles update for healpix naming convention
 tweak
 2015-04-06 heather JIRA LPATE-187 pick up new astro and new wcslib and 
