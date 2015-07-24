@@ -258,6 +258,9 @@ namespace calibUtil {
     StringVector orderBy;
     orderBy.push_back("update_time desc");
 
+    // Get timestamp string, adjusted for possible leap seconds
+    std::string adjustedTS = timestamp.getString(true);    
+
     std::vector<Assertion::Operator *> conditions;
     conditions.reserve(8);
     Assertion::Operator completeOp(OPTYPEequal, "completion", "OK",
@@ -272,12 +275,12 @@ namespace calibUtil {
     Assertion::Operator flavorOp(OPTYPEequal, "flavor", flavor, 
                                  FIELDTYPEold, FIELDTYPElit);
                                  //  false, true);
-    Assertion::Operator vstartOp(OPTYPEgreaterOrEqual, timestamp.getString(), 
+    Assertion::Operator vstartOp(OPTYPEgreaterOrEqual, adjustedTS,
                                  "vstart",
                                  FIELDTYPElit, FIELDTYPEold);
     //                      true, false);
 
-    Assertion::Operator vendOp(OPTYPElessThan, timestamp.getString(), "vend",
+    Assertion::Operator vendOp(OPTYPElessThan, adjustedTS, "vend",
                                FIELDTYPElit, FIELDTYPEold);
     //                      true, false);
 
