@@ -357,6 +357,8 @@ Event::CalXtalRecData::CalRangeRecData *XtalRecTool::createRangeRecon(const CalU
         sc = xtalkTool->calcXtalkCIDAC(diodeIdx, xtalkCIDAC);
         if (sc.isFailure()) return 0;
         cidac[face] -= xtalkCIDAC;
+        if ( cidac[face] <= 0 )
+            belowNoise[face] = true;
       }
   }
 
