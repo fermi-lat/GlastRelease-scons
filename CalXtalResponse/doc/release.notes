@@ -2,6 +2,7 @@
  * Package CalXtalResponse
 * EOH *
 
+ CalXtalResponse-01-01-04 08-Jan-2016 heather JIRA LPATE-189 patch
  CalXtalResponse-01-01-03 22-Nov-2013 bregeon No change, tag to trigger a LATEST
  CalXtalResponse-01-01-02 31-Oct-2013 Carmelo JIRA LPATE-168 set default
   electronicNoiseGain to 1
