@@ -75,7 +75,7 @@ OnboardFilterTds OnboardFilterTds-00-13-02
 
 # Calorimeter
 CalUtil CalUtil-03-19-00
-CalXtalResponse CalXtalResponse-01-01-03
+CalXtalResponse CalXtalResponse-01-01-04
 CalDigi CalDigi-03-09-00
 CalRecon CalRecon-06-23-02
 GCRCalib GCRCalib-01-12-04
