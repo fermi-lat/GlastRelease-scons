@@ -67,9 +67,9 @@ class CelIndex : public TVirtualIndex
      { fTree = const_cast<TTree*>(tree) ; }
   
     // Unsupported part of the TVirtualIndex interface
-    virtual Long64_t GetEntryNumberWithBestIndex( Int_t, Int_t ) const
+    virtual Long64_t GetEntryNumberWithBestIndex( Long64_t, Long64_t ) const
      { MayNotUse("GetEntryNumberWithBestIndex") ; return 0 ; }
-    virtual Long64_t GetEntryNumberWithIndex( Int_t, Int_t ) const
+    virtual Long64_t GetEntryNumberWithIndex( Long64_t, Long64_t ) const
      { MayNotUse("GetEntryNumberWithIndex") ; return 0; }
     virtual const char * GetMajorName() const
      { MayNotUse("GetMajorName") ; return 0 ; }
