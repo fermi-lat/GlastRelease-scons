@@ -4,6 +4,7 @@
  *
  *                  EOH
 
+ containerSettings-01-00-00 01-Mar-2016 heather Updating Externals for JIRA GRINF-67
  containerSettings-00-18-00 04-Aug-2015 heather upgrade cfitsio to keep up with ST
  containerSettings-00-17-01 07-Apr-2015 heather roll back to cfitio v3290-i1
  containerSettings-00-17-00 27-Mar-2015 echarles added wcslib and healpix to containerSettings/externals.scons
