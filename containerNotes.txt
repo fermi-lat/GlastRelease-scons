@@ -1,6 +1,8 @@
 # containerNotes for GlastRelease-scons
 
 
+2016-03-02 heather Externals Upgrade GRINF-67 and picking up more recent
+           calibUtil (leap seconds) and calibTkrUtl (p8 modifications)
 2016-01-11 heather Tagging GR 20-10-04 which includes 
            CalXtalResponse-01-01-04 in response to LPATE-189
 2015-06-17 heather Tagging GR 20-10-03

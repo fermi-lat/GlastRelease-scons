@@ -97,7 +97,7 @@ G4Generator G4Generator-06-06-00
 G4Propagator G4Propagator-03-02-00
 
 # calibration
-calibUtil calibUtil-01-14-01
+calibUtil calibUtil-01-14-04
 CalibData CalibData-00-28-01
 CalibSvc CalibSvc-00-42-00
 calibRootData calibRootData-01-08-00
@@ -137,7 +137,7 @@ overlayRootData overlayRootData-00-05-00
 
 calibGenCAL calibGenCAL-05-09-07
 calibGenACD calibGenACD-04-01-06
-calibTkrUtil calibTkrUtil-02-10-01
+calibTkrUtil calibTkrUtil-03-00-00
 calibGenTKR calibGenTKR-04-08-03
 
 # not used in Gleam, here as a build check
@@ -147,7 +147,7 @@ McToolBox McToolBox-00-02-02
 
 Gleam Gleam-08-00-09
 
-SConsFiles SConsFiles-01-20-00
-GlastRelease-scons/containerSettings containerSettings-00-17-01
+SConsFiles SConsFiles-01-23-00
+GlastRelease-scons/containerSettings containerSettings-01-00-00
 
 celestialSources/EarthPhenom EarthPhenom-00-02-07
