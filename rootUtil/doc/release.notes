@@ -4,6 +4,7 @@
 Coordinator:H.Kelly
  EOH 
 
+ rootUtil-01-05-02 02-Mar-2016 heather tagging patch for ROOT v5.34.34
  rootUtil-01-05-01 05-Nov-2012 heather update for ROOT v5.34, in CelIndex.* to
    use Long64 rather than Int32
  rootUtil-01-05-00 20-Aug-2012    jrb for Windows no-install-headers
