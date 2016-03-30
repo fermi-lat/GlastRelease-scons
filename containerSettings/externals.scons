@@ -9,7 +9,7 @@ usedExternals.append({ 'name' : 'CLHEP', 'iversion' : '2.1.0.1-i1' })
 
 usedExternals.append({ 'name' : 'cfitsio', 'iversion' : 'v3370' })
 usedExternals.append({ 'name' : 'swig', 'iversion' : '1.3.31-i1' })
-usedExternals.append({ 'name' : 'xerces', 'iversion' : '2.8.0-i1' })
+usedExternals.append({ 'name' : 'xerces', 'iversion' : '3.1.3' })
 usedExternals.append({ 'name' : 'cppunit', 'iversion' : '1.10.2-i1' })
 usedExternals.append({ 'name' : 'f2c', 'iversion' : '3.4-i1' })
 
