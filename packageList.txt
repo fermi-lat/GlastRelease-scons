@@ -3,14 +3,14 @@
 
 # in common with ScienceTools
 xmlBase xmlBase-05-06-01
-astro astro-03-16-01
+astro astro-04-00-01
 facilities facilities-02-23-03
 flux flux-08-44-00
 tip tip-02-18-06
 fitsGen fitsGen-07-01-03
 embed_python embed_python-01-07-01
 evtUtils evtUtils-00-03-01
-st_facilities st_facilities-00-20-05
+st_facilities st_facilities-00-21-00
 
 # source modeling
 celestialSources celestialSources-01-06-00
