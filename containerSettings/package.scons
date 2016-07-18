@@ -1,6 +1,7 @@
 # -*- python -*-
 #$Header$
 import os.path
+import sys
 Import('baseEnv')
 from fermidebug import fdebug
 
@@ -14,6 +15,9 @@ while vstring.count('_') > 3:
     
     
 baseEnv.AppendUnique(CPPDEFINES = vstring)
+if baseEnv.GetOption('opt'):
+    if sys.platform != 'win32':
+        baseEnv.AppendUnique(CCFLAGS = '-g')
 
 #########################                                                                                                                                                                                
 # GlastRelease Builders #                                                                                                                                                                                
