@@ -1,6 +1,8 @@
 # containerNotes for GlastRelease-scons
 
 
+2016-07-27 heather JIRA LSC-13, modification to the build flags
+      should have no change for GR (or TMine) but eliminates -g for ST
 2016-03-29 heather synch up with ST-11-00-00
 2016-03-02 heather Externals Upgrade GRINF-67 and picking up more recent
            calibUtil (leap seconds) and calibTkrUtl (p8 modifications)
