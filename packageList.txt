@@ -2,7 +2,7 @@
 # $Id$
 
 # in common with ScienceTools
-xmlBase xmlBase-05-06-01
+xmlBase xmlBase-05-07-00
 astro astro-04-00-01
 facilities facilities-02-23-03
 flux flux-08-44-00

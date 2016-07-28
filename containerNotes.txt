@@ -1,6 +1,7 @@
 # containerNotes for GlastRelease-scons
 
 
+2016-07-28 heather Also moving to xerces 3.1.3 and associated xmlBase mods
 2016-07-27 heather JIRA LSC-13, modification to the build flags
       should have no change for GR (or TMine) but eliminates -g for ST
 2016-03-29 heather synch up with ST-11-00-00
