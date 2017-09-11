@@ -108,7 +108,7 @@ merit merit-06-38-00
 AnalysisNtuple AnalysisNtuple-02-73-01
 
 # LDF
-CHS/eventFile eventFile-09-01-01
+#CHS/eventFile eventFile-09-01-01
 LdfEvent LdfEvent-04-13-00
 lsfData lsfData-04-04-00
 ldfReader ldfReader-07-05-00
@@ -148,6 +148,6 @@ McToolBox McToolBox-00-02-02
 Gleam Gleam-08-00-09
 
 SConsFiles SConsFiles-01-26-01
-GlastRelease-scons/containerSettings containerSettings-01-02-00
+#GlastRelease-scons/containerSettings containerSettings-01-02-00
 
 celestialSources/EarthPhenom EarthPhenom-00-02-07
