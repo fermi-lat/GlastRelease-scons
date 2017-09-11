@@ -1,6 +1,0 @@
-setup.*
-cleanup.*
-*.bak
-NMake
-Makefile
-*.bat

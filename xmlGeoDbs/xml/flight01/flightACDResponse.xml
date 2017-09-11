@@ -1,9 +1,0 @@
-<!-- $Header$ -->
-<primCategory name="ACDResponse" >
-<overview>Fundamental parameters concerning response and configuration
-of ACD electronics</overview>
-<prim name='acd.efficiency' value='0.9997' uType='none'>Readout 
-effiency of ACD tiles</prim>
-<primEnergy name='acd.vetoThreshold' value='0.0004' units='GeV'>Threshold, 
-calculated as 0.2 * MIP </primEnergy>
-</primCategory>

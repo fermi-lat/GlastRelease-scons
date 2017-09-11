@@ -1,3 +1,0 @@
-// FRED plus joboptions here
-#include "$USERALGJOBOPTIONSPATH/jobOptions.txt"
-#include "$GLEAMJOBOPTIONSPATH/fredOptions.txt"

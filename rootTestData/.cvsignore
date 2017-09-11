@@ -1,8 +1,0 @@
-*.ps
-rh9_gcc32
-rh*
-VC*
-Win*
-build
-*.pyc
-

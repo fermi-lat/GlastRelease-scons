@@ -1,4 +1,0 @@
-
-#include "$CALRECONJOBOPTIONSPATH/test/singleOptions.txt"
-CalClustersAlg.clusteringToolName = "CalSimpleClusteringTool" ;
-

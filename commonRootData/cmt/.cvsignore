@@ -1,6 +1,0 @@
-setup.*
-cleanup.*
-*.make
-*.bak
-NMake
-Makefile

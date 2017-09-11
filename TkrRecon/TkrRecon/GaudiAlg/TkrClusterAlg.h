@@ -1,5 +1,0 @@
-
-#ifndef TKRCLUSTERALG_H
-#define TKRCLUSTERALG_H 
-
-#endif //  TKRCLUSTERALG_H

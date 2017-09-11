@@ -1,1 +1,0 @@
-This is to get SCons to load the data directory

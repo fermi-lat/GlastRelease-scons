@@ -1,9 +1,0 @@
-/////////////////// CalXtalResponse - defaultOptions.txt //////////////////////
-// note - see CalXtalResponse/customOptions.txt for details on all available options
-
-// Start service needed for all Cal calibrations
-ApplicationMgr.ExtSvc += {"CalCalibSvc"};
-
-// "ideal"   - simplistic but always works & doesn't require internet or mysql
-// "vanilla" - defaults to best known calibration for given instrument & time
-CalCalibSvc.DefaultFlavor = "ideal"; // default for all calib types
