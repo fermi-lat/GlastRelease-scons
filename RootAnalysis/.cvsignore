@@ -1,5 +1,0 @@
-*.root
-*.ps
-rh9_gcc32*
-build
-*.pyc

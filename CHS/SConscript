@@ -1,5 +1,0 @@
-# -*- python -*-
-# $Id$
-# Authors: J. Bogart <jrb@slac.stanford.edu>
-# Version: CHS-00-01-01
-# Dummy file so that SCons will know about this directory
